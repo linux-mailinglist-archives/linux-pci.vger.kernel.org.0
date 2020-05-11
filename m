@@ -2,93 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 823C81CDF13
-	for <lists+linux-pci@lfdr.de>; Mon, 11 May 2020 17:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F22401CE028
+	for <lists+linux-pci@lfdr.de>; Mon, 11 May 2020 18:13:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgEKPcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 May 2020 11:32:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53978 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbgEKPcT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 May 2020 11:32:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id k12so18447355wmj.3;
-        Mon, 11 May 2020 08:32:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4/5Nwk9mLhRZScYYCn9683XrSojxRsX8XSuLtfNRp8A=;
-        b=WGJDx612oqrb49MW8+SD+uUXyfJzvaTqDgPbb77Yl7WtLYJphJNU0/ChfaR8Q+LaNY
-         SwmkhK2s/XaJs8HhcguQQHHAwD5dd8XM3HgC48l5bqUzIB/o9yltQbzeru5BKgirMM2j
-         PLPufO8POanZakPa3Yk1HkdNEQM98hu/sT3Bcbc1ewo4QtYaAydHSE/eH4Akr6A7/dF+
-         Y6q28EETeP2m0nTO5CDaSmx2M8Tr6f0lFlbqjPc6jMtexNboYbFvgbwEfVePGe32JrMy
-         Tcet1Ks7dkPNbdOWfexVHYWpKQNSDTFJ0fngbxXcU4wMNnU9jSmlvUQVBWOsw6B7IAzT
-         YT6g==
-X-Gm-Message-State: AGi0PubbTtep7uHHrFqqcN8qbQfa/Z8ClorXAEatRHbZvSV3/tZCSOBX
-        UIB/mLLbQXPxtdnOVLz+YV6dqeC2
-X-Google-Smtp-Source: APiQypK85TB4whX36I8/SG1CyR1R9Kq/5evRMvh5tebUY7NF3E42iOhAs7jNrcK9J3lezxEIt9MiJw==
-X-Received: by 2002:a1c:770e:: with SMTP id t14mr31102935wmi.187.1589211137820;
-        Mon, 11 May 2020 08:32:17 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 7sm20219591wra.50.2020.05.11.08.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:32:17 -0700 (PDT)
-Date:   Mon, 11 May 2020 15:32:15 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>
-Subject: Re: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
-Message-ID: <20200511153215.spcqylnde6p36n6j@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200422195818.35489-1-wei.liu@kernel.org>
- <20200507205831.GA30988@bogus>
+        id S1729463AbgEKQNJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 May 2020 12:13:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:35434 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728556AbgEKQNJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 May 2020 12:13:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A588930E;
+        Mon, 11 May 2020 09:13:08 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02B323F305;
+        Mon, 11 May 2020 09:13:07 -0700 (PDT)
+Date:   Mon, 11 May 2020 17:13:02 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bryce Willey <bryce.steven.willey@gmail.com>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] Documentation: PCI: gave unique labels to sections
+Message-ID: <20200511161302.GA28925@e121166-lin.cambridge.arm.com>
+References: <20200503214926.23748-1-bryce.steven.willey@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507205831.GA30988@bogus>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200503214926.23748-1-bryce.steven.willey@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:58:31PM -0500, Rob Herring wrote:
-> On Wed, Apr 22, 2020 at 07:58:15PM +0000, Wei Liu wrote:
-> > There is a functionally identical function in pci-hyperv.c. Drop it and
-> > use pci_msi_get_hwirq instead.
-> > 
-> > This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> > ---
-> >  arch/x86/include/asm/msi.h          | 4 ++++
-> >  arch/x86/kernel/apic/msi.c          | 5 +++--
-> >  drivers/pci/controller/pci-hyperv.c | 8 +-------
-> >  3 files changed, 8 insertions(+), 9 deletions(-)
+On Sun, May 03, 2020 at 05:49:26PM -0400, Bryce Willey wrote:
+> From: Bryce Willey <Bryce.Steven.Willey@gmail.com>
 > 
-> Would be better if done in a way to remove an x86 dependency. 
+> Made subsection label more specific to avoid sphinx warnings
+> 
+> Exact warning:
+>  Documentation/PCI/endpoint/pci-endpoint.rst:208: WARNING: duplicate label
+> pci/endpoint/pci-endpoint:other apis, other instance in Documentation/PCI/endpoint/pci-endpoint.rst
+> 
+> Signed-off-by: Bryce Willey <Bryce.Steven.Willey@gmail.com>
+> ---
+>  Documentation/PCI/endpoint/pci-endpoint.rst | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 
-This is a good point, Rob. I will see what I can do.
+Applied changes requested and merged in pci/misc, thanks.
 
-Wei.
+Lorenzo
 
+> diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
+> index 0e2311b5617b..7536be445db8 100644
+> --- a/Documentation/PCI/endpoint/pci-endpoint.rst
+> +++ b/Documentation/PCI/endpoint/pci-endpoint.rst
+> @@ -78,8 +78,8 @@ by the PCI controller driver.
+>     Cleanup the pci_epc_mem structure allocated during pci_epc_mem_init().
+>  
+>  
+> -APIs for the PCI Endpoint Function Driver
+> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +EPC APIs for the PCI Endpoint Function Driver
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  This section lists the APIs that the PCI Endpoint core provides to be used
+>  by the PCI endpoint function driver.
+> @@ -117,8 +117,8 @@ by the PCI endpoint function driver.
+>     The PCI endpoint function driver should use pci_epc_mem_free_addr() to
+>     free the memory space allocated using pci_epc_mem_alloc_addr().
+>  
+> -Other APIs
+> -~~~~~~~~~~
+> +Other EPC APIs
+> +~~~~~~~~~~~~~~
+>  
+>  There are other APIs provided by the EPC library. These are used for binding
+>  the EPF device with EPC device. pci-ep-cfs.c can be used as reference for
+> @@ -160,8 +160,8 @@ PCI Endpoint Function(EPF) Library
+>  The EPF library provides APIs to be used by the function driver and the EPC
+>  library to provide endpoint mode functionality.
+>  
+> -APIs for the PCI Endpoint Function Driver
+> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +EPF APIs for the PCI Endpoint Function Driver
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  This section lists the APIs that the PCI Endpoint core provides to be used
+>  by the PCI endpoint function driver.
+> @@ -204,8 +204,8 @@ by the PCI endpoint controller library.
+>     The PCI endpoint controller library invokes pci_epf_linkup() when the
+>     EPC device has established the connection to the host.
+>  
+> -Other APIs
+> -~~~~~~~~~~
+> +Other EPF APIs
+> +~~~~~~~~~~~~~~
+>  
+>  There are other APIs provided by the EPF library. These are used to notify
+>  the function driver when the EPF device is bound to the EPC device.
+> -- 
+> 2.17.1
 > 
-> I guess this would do it:
-> 
-> #define pci_msi_get_hwirq NULL
-> 
-> when GENERIC_MSI_DOMAIN_OPS is enabled.
