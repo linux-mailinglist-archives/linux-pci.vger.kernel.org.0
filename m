@@ -2,115 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 560E11CF2E6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 May 2020 12:52:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C72091CF47B
+	for <lists+linux-pci@lfdr.de>; Tue, 12 May 2020 14:35:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgELKwU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 May 2020 06:52:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:52242 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgELKwT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 May 2020 06:52:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEE3B30E;
-        Tue, 12 May 2020 03:52:18 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA6A43F71E;
-        Tue, 12 May 2020 03:52:17 -0700 (PDT)
-Date:   Tue, 12 May 2020 11:52:11 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com, kishon@ti.com,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH] PCI: dwc: Program outbound ATU upper limit register
-Message-ID: <20200512105211.GA11726@e121166-lin.cambridge.arm.com>
-References: <1585785493-23210-1-git-send-email-alan.mikhak@sifive.com>
+        id S1729778AbgELMfd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 May 2020 08:35:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729773AbgELMfc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 May 2020 08:35:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23735C061A0C
+        for <linux-pci@vger.kernel.org>; Tue, 12 May 2020 05:35:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id d21so5738431ljg.9
+        for <linux-pci@vger.kernel.org>; Tue, 12 May 2020 05:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4+869pZRfZJGBIoOGq9mbn83yXJ+3UvweYCO0bpzAwU=;
+        b=UXp5LWlOcqJH4Otgcn6q2A/q237JlCum+6BEJUbhK3WCudK1bkbQ749omybmNu/3GT
+         144x3LhV8t+xWMxbIoPgDMj+X3EI033ppEuEJhGDane5FEBqRYnOfLaVGLMsxYZvffi8
+         jl/3Mg4YWPlQowpVgZTm6stKpaLrns46uAFa8Mmq/asfIME0nHcs+9Zzez6daQdqXZ+q
+         MvqfSVB/ERfLsc/7464D8pTh8/uX3asXjb5DRGj/wmQFWpsdg3WeX7ex2JBAHeCQZ8mi
+         4phPCqUEkxDkgK59hWRd+l+E1LKLDdKILaREvTtkahvakxfN6ei+ZK7ZpUW3Qelm+UQH
+         ZQTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4+869pZRfZJGBIoOGq9mbn83yXJ+3UvweYCO0bpzAwU=;
+        b=PEgB+pmUF2axO/9s7UYpBhn/t7DflhxZRkLpOFvl9MfmmTrWgEeHrAd+vCHIlQuOti
+         bIV7GvwFv4eM37Gm2B0pDMFSDkgqkTDJDSb3QPR8c2hP4tKwT0+D+286HOMJLPD+uOEk
+         fXOr/RruGzcCXqzT48op9AfownVmBJcWwDH0+ihTikz0evv0fkCN7qXkiq+J5/FdghhJ
+         B+kIB2KEJ0m19bYFZ4PkvlFKj0Whdin9bkcayBSgRrbR1Ysdhz1/xulSiQn2/zKL1Cje
+         LEBzIIcpLyTeTZUdhYydCYZfi+3pgiUVNlknQvbnO8OrijrnsfGBRpJy0XIsUmMILPYP
+         oybA==
+X-Gm-Message-State: AOAM533kia9SVyMRZYQzEG2TIT5ie/e0d6gdC+gKDbCVMYBJUuR8D0WF
+        Z/gQP3t/7Jd2uikowLtXoQp6Z4xdH2JFRIhkflNRFw==
+X-Google-Smtp-Source: ABdhPJwyAmzC6q+bZTHJQiILGIOYXc53TsNeXcXr1K8tekap2deRZGY7SbCRt6J66veik8VTCp6tr6H0vjULsNvGn30=
+X-Received: by 2002:a2e:8087:: with SMTP id i7mr12693709ljg.99.1589286928448;
+ Tue, 12 May 2020 05:35:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585785493-23210-1-git-send-email-alan.mikhak@sifive.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200501224042.141366-1-helgaas@kernel.org>
+In-Reply-To: <20200501224042.141366-1-helgaas@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 May 2020 14:35:17 +0200
+Message-ID: <CACRpkdbkPX3cX9VDoGx9LMLPgDFxwVbWQuKuaSyED5Nek0ATRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] PCI: Check for platform_get_irq() failure consistently
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:58:13PM -0700, Alan Mikhak wrote:
-> From: Alan Mikhak <alan.mikhak@sifive.com>
-> 
-> Function dw_pcie_prog_outbound_atu_unroll() does not program the upper
-> 32-bit ATU limit register. Since ATU programming functions limit the
-> size of the translated region to 4GB by using a u32 size parameter,
-> these issues may combine into undefined behavior for resource sizes
-> with non-zero upper 32-bits.
-> 
-> For example, a 128GB address space starting at physical CPU address of
-> 0x2000000000 with size of 0x2000000000 needs the following values
-> programmed into the lower and upper 32-bit limit registers:
->  0x3fffffff in the upper 32-bit limit register
->  0xffffffff in the lower 32-bit limit register
-> 
-> Currently, only the lower 32-bit limit register is programmed with a
-> value of 0xffffffff but the upper 32-bit limit register is not being
-> programmed. As a result, the upper 32-bit limit register remains at its
-> default value after reset of 0x0.
-> 
-> These issues may combine to produce undefined behavior since the ATU
-> limit address may be lower than the ATU base address. Programming the
-> upper ATU limit address register prevents such undefined behavior despite
-> the region size getting truncated due to the 32-bit size limit.
-> 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++--
->  drivers/pci/controller/dwc/pcie-designware.h | 3 ++-
->  2 files changed, 7 insertions(+), 3 deletions(-)
+On Sat, May 2, 2020 at 12:41 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Applied to pci/dwc, thanks.
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> All callers of platform_get_irq() and related functions interpret a
+> negative return value as an error.  A few also interpret zero as an error.
+>
+> platform_get_irq() should return either a negative error number or a valid
+> non-zero IRQ, so there's no need to check for zero.
+>
+> This series:
+>
+>   - Extends the platform_get_irq() function comment to say it returns a
+>     non-zero IRQ number or a negative error number.
+>
+>   - Adds a WARN() if platform_get_irq() ever *does* return zero (this would
+>     be a bug in the underlying arch code, and most callers are not prepared
+>     for this).
+>
+>   - Updates drivers/pci/ to check consistently using "irq < 0".
+>
+> This is based on Aman's series [1].  I propose to merge this via the PCI
+> tree, given acks from Greg and Thomas.
+>
+> [1] https://lore.kernel.org/r/cover.1583952275.git.amanharitsh123@gmail.com
 
-Lorenzo
+Makes sense to me.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 681548c88282..c92496e36fd5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -244,13 +244,16 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
->  					     u64 pci_addr, u32 size)
->  {
->  	u32 retries, val;
-> +	u64 limit_addr = cpu_addr + size - 1;
->  
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_BASE,
->  				 lower_32_bits(cpu_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_BASE,
->  				 upper_32_bits(cpu_addr));
-> -	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LIMIT,
-> -				 lower_32_bits(cpu_addr + size - 1));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_LIMIT,
-> +				 lower_32_bits(limit_addr));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_LIMIT,
-> +				 upper_32_bits(limit_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_TARGET,
->  				 lower_32_bits(pci_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index a22ea5982817..5ce1aef706c5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -112,9 +112,10 @@
->  #define PCIE_ATU_UNR_REGION_CTRL2	0x04
->  #define PCIE_ATU_UNR_LOWER_BASE		0x08
->  #define PCIE_ATU_UNR_UPPER_BASE		0x0C
-> -#define PCIE_ATU_UNR_LIMIT		0x10
-> +#define PCIE_ATU_UNR_LOWER_LIMIT	0x10
->  #define PCIE_ATU_UNR_LOWER_TARGET	0x14
->  #define PCIE_ATU_UNR_UPPER_TARGET	0x18
-> +#define PCIE_ATU_UNR_UPPER_LIMIT	0x20
->  
->  /*
->   * The default address offset between dbi_base and atu_base. Root controller
-> -- 
-> 2.7.4
-> 
+for the series.
+
+Yours,
+Linus Walleij
