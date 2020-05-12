@@ -2,113 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AED971CFCCD
-	for <lists+linux-pci@lfdr.de>; Tue, 12 May 2020 20:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1881CFE26
+	for <lists+linux-pci@lfdr.de>; Tue, 12 May 2020 21:20:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730717AbgELSGE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 May 2020 14:06:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbgELSGE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 May 2020 14:06:04 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4FD720720;
-        Tue, 12 May 2020 18:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589306764;
-        bh=u6F9DLRbr9iVJIIz0f3H5qz89UqdlJ6qKaSYphCX6ak=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2bwY1ea4D1zVQuZSsqjre852YXMAh6qn1U4AxMFwEpVakTIAx3F7MvxvEccTa7HqG
-         0ipEmFqpAqPt7kskzY3xT2LdKxbAyYWAoffOBznznFDRWntjKrn5FCidcUJekMvi62
-         ZyD3pQqwt6R9ROxTSRhmRqnp1uB+r7/ppVV7NQa0=
-Date:   Tue, 12 May 2020 13:06:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v9 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200512180602.GA273658@bjorn-Precision-5520>
+        id S1728039AbgELTUo convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 12 May 2020 15:20:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48070 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELTUo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 May 2020 15:20:44 -0400
+Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1jYaS8-0002XR-Ms; Tue, 12 May 2020 19:20:33 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id ED86367BB3; Tue, 12 May 2020 12:20:30 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id E8090AC1DB;
+        Tue, 12 May 2020 12:20:30 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        liudongdong 00290354 <liudongdong3@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for non-hotplug capable devices
+In-reply-to: <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <18609.1588812972@famine> <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Comments: In-reply-to sathyanarayanan.kuppuswamy@linux.intel.com
+   message dated "Wed, 06 May 2020 20:32:59 -0700."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512074413.3557835-2-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9907.1589311230.1@famine>
+Content-Transfer-Encoding: 8BIT
+Date:   Tue, 12 May 2020 12:20:30 -0700
+Message-ID: <9908.1589311230@famine>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:43:56PM +0800, Jiaxun Yang wrote:
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
+sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+
+>From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+>If there are non-hotplug capable devices connected to a given
+>port, then during the fatal error recovery(triggered by DPC or
+>AER), after calling reset_link() function, we cannot rely on
+>hotplug handler to detach and re-enumerate the device drivers
+>in the affected bus. Instead, we will have to let the error
+>recovery handler call report_slot_reset() for all devices in
+>the bus to notify about the reset operation. Although this is
+>only required for non hot-plug capable devices, doing it for
+>hotplug capable devices should not affect the functionality.
+
+	Yicong,
+
+	Does the patch below also resolve the issue for you, as with
+your changed version of my original patch?
+
+	-J
+
+>Along with above issue, this fix also applicable to following
+>issue.
+>
+>Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>reset_link()") added support to store status of reset_link()
+>call. Although this fixed the error recovery issue observed if
+>the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+>result from report_frozen_detected. This can cause a failure to
+>recover if _NEED_RESET is returned by report_frozen_detected and
+>report_slot_reset is not invoked.
+>
+>Such an event can be induced for testing purposes by reducing the
+>Max_Payload_Size of a PCIe bridge to less than that of a device
+>downstream from the bridge, and then initiating I/O through the
+>device, resulting in oversize transactions.  In the presence of DPC,
+>this results in a containment event and attempted reset and recovery
+>via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+>invoked, and the device does not recover.
+>
+>[original patch is from jay.vosburgh@canonical.com]
+>[original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+>Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>---
+> drivers/pci/pcie/err.c | 19 +++++++++++++++----
+> 1 file changed, 15 insertions(+), 4 deletions(-)
+>
+>diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>index 14bb8f54723e..db80e1ecb2dc 100644
+>--- a/drivers/pci/pcie/err.c
+>+++ b/drivers/pci/pcie/err.c
+>@@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> 	pci_dbg(dev, "broadcast error_detected message\n");
+> 	if (state == pci_channel_io_frozen) {
+> 		pci_walk_bus(bus, report_frozen_detected, &status);
+>-		status = reset_link(dev);
+>-		if (status != PCI_ERS_RESULT_RECOVERED) {
+>+		status = PCI_ERS_RESULT_NEED_RESET;
+>+	} else {
+>+		pci_walk_bus(bus, report_normal_detected, &status);
+>+	}
+>+
+>+	if (status == PCI_ERS_RESULT_NEED_RESET) {
+>+		if (reset_link) {
+>+			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>+				status = PCI_ERS_RESULT_DISCONNECT;
+>+		} else {
+>+			if (pci_bus_error_reset(dev))
+>+				status = PCI_ERS_RESULT_DISCONNECT;
+>+		}
+>+
+>+		if (status == PCI_ERS_RESULT_DISCONNECT) {
+> 			pci_warn(dev, "link reset failed\n");
+> 			goto failed;
+> 		}
+>-	} else {
+>-		pci_walk_bus(bus, report_normal_detected, &status);
+> 	}
 > 
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>-- 
+>2.17.1
+>
 
-> +static void system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +	u16 tmp;
-> +
-> +	/* 
-> +	 * These devices are not sharing resouces with rest of devices
-> +	 * on host bus and firmware will ensure their BARs are placed
-> +	 * in safe ranges. Also there might be some config registers
-> +	 * in their config space so kernel shouldn't ignore them.
-
-"Firmware ensuring BARs are placed in 'safe' ranges" is not a
-sufficient answer.  As I said before, Linux needs to know both the
-ADDRESS and the SIZE of whatever non-standard BARs these are.
-Otherwise, we're liable to assign that space to a different device.
-
-If you have to hard-code the size, so be it.  That would mean the
-hardware is completely broken, but at least we could make Linux deal
-with it.  If the hardware consumes address space we don't know about,
-we can't deal with that.
-
-> +	 */
-> +	pdev->mmio_always_on = 1;
-> +	pdev->non_compliant_bars = 1;
-> +}
-
-> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where)
-> +{
-> +	unsigned char busnum = bus->number;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-> +
-> +	/*
-> +	 * Do not read more than one device on the bus other than
-> +	 * the host bus 0.
-> +	 */
-
-If the hardware is restricted such that the root bus number must be
-zero, pleae say that explicitly here.  Otherwise, it just looks like
-a bug.
-
-> +	if (priv->flags & FLAG_DEV_FIX && busnum != 0 &&
-> +		PCI_SLOT(devfn) > 0)
-> +		return NULL;
-> +
-> +	/* CFG0 can only access standard space */
-> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
-> +		return cfg0_map(priv, busnum, devfn, where);
-> +
-> +	/* CFG1 can access extended space */
-> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
-> +		return cfg1_map(priv, busnum, devfn, where);
-> +
-> +	return NULL;
-> +}
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
