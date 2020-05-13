@@ -2,147 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 948A81D135E
-	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 14:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE1D1D166A
+	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 15:49:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732910AbgEMM4K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 May 2020 08:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgEMM4I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 May 2020 08:56:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608D6C061A0C;
-        Wed, 13 May 2020 05:56:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id v12so20721753wrp.12;
-        Wed, 13 May 2020 05:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ZvYSZy3tRiVgGxrommSRZgzj0zZx86esquo5YSSVJlY=;
-        b=LjeYk2vBbDldv/l0KEP5R9hh4MAw6ge/KdKd8X0nOXljYjeod0jstszKttwSCs0GNI
-         RbGxIV3nrqL/lTXMpPgoyBbT+GWmzCCnGjE9h6atSQDwdgnUU0uzd3nvnE3A/B9ndH2V
-         6KdsApABnSxKLH9gVNi3GVRIu29vbSd47LO8c1xLSFytwEvBF6RW6vFu4lTnc0Nqf81m
-         oKk0whIebq60H5qwEa4CMrVtT5pNiFEBC8/QUPMz6O+0BQpVhFaSTsN7hu6vDlXIim62
-         qgB//W9iEtH/PZLSOVBkAxZcSOmYPz4H3sruJdc11TXpd5yyw/UeA8MFmf4BzkFOpo5V
-         qRcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ZvYSZy3tRiVgGxrommSRZgzj0zZx86esquo5YSSVJlY=;
-        b=YuurCNbZvgWIUre/xLr88FauMGlQtCYUFZwiKd5NNRAre3gYS6RqOFxmtA51VQQJUx
-         9J0fIWhNe5RTZMy/pXsoZTWfuyJP7rwFzYtnQEVnXH+eEEoQfxS2MrMwzI1NWBffpexJ
-         Y1c5/GsW2ddNzlZHbMdjW+oNmcWcPe9KGY+208rEQQvS5JsHVIaxaxtF60sBW7cz8vY/
-         hxTucXEZq2y4KGAjR8kNYc9Sy9sX/SMdzeuYGyyHDhjtDV6rve7qQ4NA8SJelPKdWD46
-         pgVoYgntFGUDsJUSSqH9vj/rUqJrNUIP4BmU5MBMWqs69WM5uyA7NriSTCVDfxM1J/3u
-         NVdA==
-X-Gm-Message-State: AGi0PuZyRFp+UcW03c3aNTp9zMQFsLXd84fFNltVE9u935pSqgUpoY38
-        YEhPCV4ITZNuKms5bXD07fQ=
-X-Google-Smtp-Source: APiQypJY2NANe8ct5IeGA83GoQ+oOMnFGXo9dSTJfF15HLlU84+nNZU2dVYmm3RJ3HYsgtQf2PxiYQ==
-X-Received: by 2002:adf:93a3:: with SMTP id 32mr19914479wrp.124.1589374566990;
-        Wed, 13 May 2020 05:56:06 -0700 (PDT)
-Received: from AnsuelXPS (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
-        by smtp.gmail.com with ESMTPSA id e5sm24239142wro.3.2020.05.13.05.56.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 05:56:06 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Rob Herring'" <robh@kernel.org>
-Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com> <20200430220619.3169-9-ansuelsmth@gmail.com> <20200507181044.GA15159@bogus> <062301d624a6$8be610d0$a3b23270$@gmail.com> <20200512154544.GA823@bogus> <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
-In-Reply-To: <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
-Subject: R: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF params bindings
-Date:   Wed, 13 May 2020 14:56:03 +0200
-Message-ID: <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
+        id S2388478AbgEMNtT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 May 2020 09:49:19 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:45375 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388095AbgEMNtS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 May 2020 09:49:18 -0400
+Received: from [192.168.1.2] (212-5-158-106.ip.btc-net.bg [212.5.158.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 98D7ACFDC;
+        Wed, 13 May 2020 16:49:13 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1589377754; bh=MPuMCjwAK4ickFvEAphG1V4j7sZJqS/FOfNLWab/sXY=;
+        h=Subject:To:Cc:From:Date:From;
+        b=jW7AnQalVZhBRrCArUUEHXqkzTpbf89eh/IqpUobGlDwwvMUGRc25od3FH3/E6Wz4
+         FxWYcdIsD5Bspw+tenmZdUDFeoHMj3Gtj58jpi10n9FnTgWcwYNVt2N+r6nAPGem6e
+         4B1Lf0CO3RrR/ZzrTJ4e7q4jr9WFv27HZ3P8dDEZd6ExSMdY8kKLizwyCYTsLUBhvh
+         K8PDLra+t6pxilv/ZaiIgq797KaSt4I8i6bvK0anHcKGrsRahHjhq88Bsuh1hwaFhi
+         myYfx9JHkkAUhk85REV/NHhKpRHs6F+i3HPtuRXwwEnAQ1Op7sQVSYmaPKZkv1JGlc
+         e+It4iaLsf1iw==
+Subject: Re: R: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set
+ tx term offset
+To:     ansuelsmth@gmail.com,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>
+Cc:     'Sham Muthayyan' <smuthayy@codeaurora.org>,
+        'Andy Gross' <agross@kernel.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-10-ansuelsmth@gmail.com>
+ <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
+ <02df01d62925$acd160a0$067421e0$@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <37ddf6ac-43c8-f2f1-ce53-e0959084b77c@mm-sol.com>
+Date:   Wed, 13 May 2020 16:49:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
+In-Reply-To: <02df01d62925$acd160a0$067421e0$@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQH0plL6ngkayUAAEEU7BifA9vEwhgIhhTlHAlRDbrkC9wKkJgJCaswEAWN8iguoEGkfMA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> On 5/12/20 6:45 PM, Rob Herring wrote:
-> > On Thu, May 07, 2020 at 09:34:35PM +0200, ansuelsmth@gmail.com
-> wrote:
-> >>> On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
-> >>>> It is now supported the editing of Tx De-Emphasis, Tx Swing and
-> >>>> Rx equalization params on ipq8064. Document this new optional
-> params.
-> >>>>
-> >>>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> >>>> ---
-> >>>>  .../devicetree/bindings/pci/qcom,pcie.txt     | 36
-> +++++++++++++++++++
-> >>>>  1 file changed, 36 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>>> index 6efcef040741..8cc5aea8a1da 100644
-> >>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>>> @@ -254,6 +254,42 @@
-> >>>>  			- "perst-gpios"	PCIe endpoint reset signal line
-> >>>>  			- "wake-gpios"	PCIe endpoint wake signal line
-> >>>>
-> >>>> +- qcom,tx-deemph-gen1:
-> >>>> +	Usage: optional (available for ipq/apq8064)
-> >>>> +	Value type: <u32>
-> >>>> +	Definition: Gen1 De-emphasis value.
-> >>>> +		    For ipq806x should be set to 24.
-> >>>
-> >>> Unless these need to be tuned per board, then the compatible string
-> for
-> >>> ipq806x should imply all these settings.
-> >>>
-> >>
-> >> It was requested by v2 to make this settings tunable. These don't change
-> are
-> >> all the same for every ipq806x SoC. The original implementation had this
-> >> value hardcoded for ipq806x. Should I restore this and drop this patch?
-> >
-> > Yes, please.
-> 
-> I still think that the values for tx deemph and tx swing should be
-> tunable. But I can live with them in the driver if they not break
-> support for apq8064.
-> 
-> The default values in the registers for apq8064 and ipq806x are:
-> 
-> 			default		your change
-> TX_DEEMPH_GEN1		21		24
-> TX_DEEMPH_GEN2_3_5DB	21		24
-> TX_DEEMPH_GEN2_6DB	32		34
-> 
-> TX_SWING_FULL		121		120
-> TX_SWING_LOW		121		120
-> 
-> So until now (without your change) apq8064 worked with default values.
-> 
 
-I will limit this to ipq8064(-v2) if this could be a problem.
 
-> >
-> > Rob
-> >
+On 5/13/20 3:54 PM, ansuelsmth@gmail.com wrote:
+>> Hi Ansuel,
+>>
+>> On 5/1/20 1:06 AM, Ansuel Smith wrote:
+>>> From: Sham Muthayyan <smuthayy@codeaurora.org>
+>>>
+>>> Add tx term offset support to pcie qcom driver need in some revision of
+>>> the ipq806x SoC.
+>>> Ipq8064 have tx term offset set to 7.
+>>> Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
+>>>
+>>> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+>>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+>>> ---
+>>>  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
+>>>  1 file changed, 15 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+>> b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> index da8058fd1925..372d2c8508b5 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> @@ -45,6 +45,9 @@
+>>>  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+>>>
+>>>  #define PCIE20_PARF_PHY_CTRL			0x40
+>>> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12,
+>> 16)
+>>
+>> The mask definition is not correct. Should be GENMASK(20, 16)
+>>
+>>> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+>>> +
+>>>  #define PCIE20_PARF_PHY_REFCLK			0x4C
+>>>  #define PHY_REFCLK_SSP_EN			BIT(16)
+>>>  #define PHY_REFCLK_USE_PAD			BIT(12)
+>>> @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
+>>>  	u32 tx_swing_full;
+>>>  	u32 tx_swing_low;
+>>>  	u32 rx0_eq;
+>>> +	u8 phy_tx0_term_offset;
+>>>  };
+>>>
+>>>  struct qcom_pcie_resources_1_0_0 {
+>>> @@ -318,6 +322,11 @@ static int
+>> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>>>  	if (IS_ERR(res->ext_reset))
+>>>  		return PTR_ERR(res->ext_reset);
+>>>
+>>> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
+>>> +		res->phy_tx0_term_offset = 7;
+>>
+>> Before your change the phy_tx0_term_offser was 0 for apq8064, but here
+>> you change it to 7, why?
+>>
 > 
-> --
-> regards,
-> Stan
+> apq8064 board should use qcom,pcie-apq8064 right? This should be set to 0
+> only with pcie-ipq8064 compatible. Tell me if I'm wrong.
 
+Sorry, my fault. I read the compatible check above as apq8064 but it is ipq.
+
+-- 
+regards,
+Stan
