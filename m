@@ -2,159 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB7541D12EF
-	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 14:40:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1933A1D1351
+	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 14:54:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbgEMMk1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 May 2020 08:40:27 -0400
-Received: from mail-eopbgr40040.outbound.protection.outlook.com ([40.107.4.40]:14094
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726081AbgEMMk0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 May 2020 08:40:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m2kjvHymW4tDRyYrH0p5JYnqU0vRRn+/VJJZciuWzlpt+YashS5etHis9b8W2V4IxQ5s2JM/GKf/HkPDiBNhFNdqWl2mkcv5o1yCZ4mFsFq9cyykzOHxBnr5H7O4zGDoHLaMLmUcuwmg/HlxVVGWgL41yZCgg+LXaPpXBNEGLI2RWo0aQwe/L5PR1bFr0dLsE66SZeXfW/xhlBIpLes7JeRWZmgUPrpOzEBeu/uEN1e9X7MgYRKqOBB324u577id77Dji6XiC1yyDkhEbAcvgh7ZRQ1ILgbOL6r9ecSAn7eJ18lXGAO4abDBaHsxr94Hv9q+GyVPNmiXs9PG1ph42w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AmPEpvTqPxjr5reJpfzeUxLrpuW2f0+lcXHzCdTnPq0=;
- b=fwfq9h0Q1WNPuerNrE8xzbVPFMgbJus4q+eJr0dLeEsPxncol/hRXYicKQM9oBRjsKLNoD4VJK/xpOCPQGH55BtAe8z0o0FTw9lVu+e0Tklxh0srw6ujvnR7VPCO9MHVa0/qS7e2L2cY7fIH02g6AMvHhuQWL7Fe3ekxBTTlYNlqGzeoV9R7f0YY2ohv6pJbhQ45F2XWamPnFqoCSxP09mX6rRKO01Z3I4f5GmQo9E1eMfe3iL1Chudjmc8pxsN0lMIZOaBrc0CnW0PmpwJpXaBRTfdzvGWWhEBQB3ml5h4zx9TY2wsL5XmBTC0/7zJs4ZM8KrX0zvxNQJOk/2MYHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AmPEpvTqPxjr5reJpfzeUxLrpuW2f0+lcXHzCdTnPq0=;
- b=Y3oc9RLhcatilMct7ROAuGR98XPEGlg4o5Er0HGVWm1VxRWpAexhyPlRk3GZhoWbZ2d1vMhgfly2HuGLzm+XB5c/S0BudwvQH7fU27doCOZfFnsVkmQzLpDza/pnWrB0MPBfTXWumfOP9fc91c0eJL5XpMQsOcdYJtnBLqvhwqY=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB4477.eurprd05.prod.outlook.com (2603:10a6:803:4a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Wed, 13 May
- 2020 12:40:20 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2979.033; Wed, 13 May 2020
- 12:40:20 +0000
-Date:   Wed, 13 May 2020 09:40:16 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200513124016.GG19158@mellanox.com>
-References: <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com>
- <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
- <20200508204710.GA78778@otc-nc-03>
- <20200508231610.GO19158@mellanox.com>
- <20200509000909.GA79981@otc-nc-03>
- <20200509122113.GP19158@mellanox.com>
- <MWHPR11MB1645C60468BC6C6009C3DDE28CBF0@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR11MB1645C60468BC6C6009C3DDE28CBF0@MWHPR11MB1645.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0075.namprd02.prod.outlook.com
- (2603:10b6:208:51::16) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        id S1731830AbgEMMyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 May 2020 08:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgEMMyt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 May 2020 08:54:49 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125F8C061A0C;
+        Wed, 13 May 2020 05:54:48 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id v12so20716613wrp.12;
+        Wed, 13 May 2020 05:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=gjKKMxa6xHI1LOhBmFUHbDk1I1ew8jSwGc3Qoec8V+Q=;
+        b=UBNz8U1As5Vt7c5ZDDS1AoaWSmwZKNX6frEeTvbyV71E0BCKVyd2TEF4KA3888hxpS
+         l6mSMgwqDLXr2mFZR7GpBZr0Wkrtw6gCHanK5TOuUuI9qa8Ndv7P98jrySSmVln7LFwJ
+         +O+V5roxN+jRG60EAHChKxZGgr+s0YC4RCi9K2hDcnPf6CY/Zl62PyWvc1hyXzHLarKh
+         PoFqjzdCzb2/0MKKPDcLAAxyZR+gLiRn0CtPGr+Mdp5jZL480s1myIvtg8taa26ANgHg
+         WGPXa6jNEpWIBQ8WY2LjglX2XDGGDBUaRL62Xj13Uj9hmBT2SFyFuzXH2CMMqHjkY3Kq
+         XBBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=gjKKMxa6xHI1LOhBmFUHbDk1I1ew8jSwGc3Qoec8V+Q=;
+        b=DXw+PWej1TzOXWEezifwXEwSVSx5cq6P8BrJejMmDCdruGxTIDIlYC9KSlLikZ3kkA
+         jZKPCydIgRfjIdw0XQe3XnLi9Brbf/bZ1l9OG6sAmTnojNCVkgClzq1hIRz+MoJkUQ4P
+         HzdUhtLDgHBNc8AlTJpJtNL+w2RQOofAEYHH8ZowRCsedE2tM80+VmjA2Gwn86/6qmla
+         6w3iXEXR5+CLWkVktqmR9bI60laQ6xy/xr628ky8UKuY1Y8Maoge4l8lvEWXQjbTEpge
+         lnuBNQtEHotnEtDWFHIvKDWMUslZQcE+K1WRFP2TDvWbYfFEeShoe8plgaHhrFH8hhQD
+         j/Zw==
+X-Gm-Message-State: AGi0PuajDTnPgnUc7IbEFfUrC3W1hrGGDyPTIAQwvipArOMeitpZCVlR
+        fxhWOWh5SQi5XtqGCLGKPo4=
+X-Google-Smtp-Source: APiQypLJGcQe8kgxzp9RurwNj5AFOM4KYK86duozmEFZkimTMBGkUPYtCVcNV/c9bznSQgyJbAP0xA==
+X-Received: by 2002:a5d:4806:: with SMTP id l6mr31495243wrq.121.1589374486610;
+        Wed, 13 May 2020 05:54:46 -0700 (PDT)
+Received: from AnsuelXPS (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
+        by smtp.gmail.com with ESMTPSA id s11sm36459960wms.5.2020.05.13.05.54.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 05:54:45 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200430220619.3169-1-ansuelsmth@gmail.com> <20200430220619.3169-10-ansuelsmth@gmail.com> <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
+In-Reply-To: <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
+Subject: R: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set tx term offset
+Date:   Wed, 13 May 2020 14:54:41 +0200
+Message-ID: <02df01d62925$acd160a0$067421e0$@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR02CA0075.namprd02.prod.outlook.com (2603:10b6:208:51::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 12:40:20 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jYqgK-00088w-M1; Wed, 13 May 2020 09:40:16 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 869f4352-e3e9-4991-79e3-08d7f73acc4a
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4477:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB447757648B6A758AC8639E1ACFBF0@VI1PR05MB4477.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0402872DA1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vPc3LFu6ZXEVxAYt9jRJ1NCJmkqgYppZTQpHIFSq3wHkIXWbov46inDcQ8hDDcASHY/5RQrOM8Zdn30nvb6mbv6eLYxXDu7fwdleTNyJqc3tVLkJs2FyY5aeCL6rYuvKBTp8EDB27pDCy0jXdmZ8/3Bh6ADXOPVE9Y3woii+IbKhJLOc7FJMJ/ObFXzngmfdqyng04jVP+2mbikrL9Tm8xaOFIz5ZBcgDcdU7/ZKcC8/XlDgLjnt7PvFCfapWTCDgr2s1+jrEl2kM4ZrYq8QIs969BWhPtFN3BB0+DGRBc8H49upxpDb096KByT5+f1D2Hs4nd/wPUBg7c+hG57LG9Jmj6dFHcuOCSx14wYzueFi/mSOG4K3r55A210n5ovZAu7Tp0IHTh+guB28A0auOnbvwPheeoNv6y/Cct1WxtKeyTSgXvuxXdgBqIqoRHaFKFOeGP4joMCWPOlpj++AdzzusPHO9qpc6Gcf/OkHGcKZuouZ2Z93BJfGiV9s0Gc4OQ2j7t+MOJ9ljjpEF86b7BYdbIN4MfrnAoGoIwO8blze0UFzuJrjrmyKwQtqEc4Z
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(366004)(346002)(39860400002)(33430700001)(8936002)(7416002)(4326008)(33440700001)(1076003)(478600001)(36756003)(66476007)(66556008)(6916009)(66946007)(316002)(8676002)(9786002)(9746002)(54906003)(5660300002)(86362001)(52116002)(2616005)(186003)(33656002)(26005)(2906002)(24400500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ulx7+QNU/rbfUMI/+8sxEsWYQ1QdTRFN7hUeIK1ZStQbNwzLIsQJa538QGYtloEYXcbri+quPoXTKJzAJcJMRaah25JiQpBGoEsEoCJ4kgYwX6PXMZIOenQQfPreGal8KWnvG5tMsGJcSdyPK/P4Iptx6+fEF3qhouabGfhTJIiC9eZfQJApEQ6Nq4f2LPieQjczT/T+g/ufQivZNbXPYlCogkAhEXL8CAAQEmM6Qvy0Mozpn/neuP2jPSuuI1VvQeMtGTrudCVttx3Yv1EVbJZRJa84+/AZmv9ycgg4Lz1Py6Y7VrMLGxSJVvv9ibfMUCRSPHiqBAEnZOXUxG3WEdBkOmiqjuNhrwusVo00elOM7MR3bpFPlQbVTpwCo9aeB7wq/vKQmGBYbEZ1apiUbc4qDPA+5XA2LtpOSQwq0STWEfJVBgRBue7ofgJud7jvoT5e7evRritWx4fHrT4bjl7PtS1kAQ1ATL5kVq1OEp4=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 869f4352-e3e9-4991-79e3-08d7f73acc4a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 12:40:20.7489
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LIqFDznrelc+E+gYioYfw5hBhcezffB652fcsCB2HfEyuFBO0q9HRZJI2RKZq0uxz/KuF1KokdvlI00FDcWxfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4477
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQH0plL6ngkayUAAEEU7BifA9vEwhgKDdr3rAu/CbUKoPWRmMA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 13, 2020 at 08:30:15AM +0000, Tian, Kevin wrote:
-
-> When talking about virtualization, here the target is unmodified guest 
-> kernel driver which expects seeing the raw controllability of queues 
-> as defined by device spec. In idxd, such controllability includes enable/
-> disable SVA, dedicated or shared WQ, size, threshold, privilege, fault 
-> mode, max batch size, and many other attributes. Different guest OS 
-> has its own policy of using all or partial available controllability. 
+> Hi Ansuel,
 > 
-> When talking about application, we care about providing an efficient
-> programming interface to userspace. For example with uacce, we
-> allow an application to submit vaddr-based workloads to a reserved
-> WQ with kernel bypassed. But it's not necessary to export the raw
-> controllability of the reserved WQ to userspace, and we still rely on
-> kernel driver to configure it including bind_mm. I'm not sure whether 
-> uacce would like to evolve as a generic queue management system
-> including non-SVA and all vendor specific raw capabilities as 
-> expected by all kinds of guest kernel drivers. It sounds like not 
-> worthwhile at this point, given that we already have an highly efficient 
-> SVA interface for user applications.
+> On 5/1/20 1:06 AM, Ansuel Smith wrote:
+> > From: Sham Muthayyan <smuthayy@codeaurora.org>
+> >
+> > Add tx term offset support to pcie qcom driver need in some revision of
+> > the ipq806x SoC.
+> > Ipq8064 have tx term offset set to 7.
+> > Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
+> >
+> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index da8058fd1925..372d2c8508b5 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -45,6 +45,9 @@
+> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+> >
+> >  #define PCIE20_PARF_PHY_CTRL			0x40
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12,
+> 16)
+> 
+> The mask definition is not correct. Should be GENMASK(20, 16)
+> 
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+> > +
+> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> >  #define PHY_REFCLK_SSP_EN			BIT(16)
+> >  #define PHY_REFCLK_USE_PAD			BIT(12)
+> > @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
+> >  	u32 tx_swing_full;
+> >  	u32 tx_swing_low;
+> >  	u32 rx0_eq;
+> > +	u8 phy_tx0_term_offset;
+> >  };
+> >
+> >  struct qcom_pcie_resources_1_0_0 {
+> > @@ -318,6 +322,11 @@ static int
+> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+> >  	if (IS_ERR(res->ext_reset))
+> >  		return PTR_ERR(res->ext_reset);
+> >
+> > +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
+> > +		res->phy_tx0_term_offset = 7;
+> 
+> Before your change the phy_tx0_term_offser was 0 for apq8064, but here
+> you change it to 7, why?
+> 
 
-Like I already said, you should get the people who care about this
-stuff to support emulation in the kernel. I think it has not been
-explained well in past.
+apq8064 board should use qcom,pcie-apq8064 right? This should be set to 0
+only with pcie-ipq8064 compatible. Tell me if I'm wrong.
 
-Most Intel info on SIOV draws a close parallel to SRIOV and I think
-people generally assume, that like SRIOV, SIOV does not include kernel
-side MMIO emulations.
+> > +	else
+> > +		res->phy_tx0_term_offset = 0;
+> > +
+> >  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+> >  	return PTR_ERR_OR_ZERO(res->phy_reset);
+> >  }
+> > @@ -402,6 +411,11 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  	/* enable PCIe clocks and resets */
+> >  	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
+> BIT(0), 0);
+> >
+> > +	/* set TX termination offset */
+> > +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
+> > +			PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
+> 
+> As the mask definition is incorrect you actually clear 12 to 16 bit in
+> the register where is another PHY parameter. Is that was intentional?
+> 
 
-> If in the future, there do have such requirement of delegating raw
-> WQ controllability to pure userspace applications for DMA engines, 
-> and there is be a well-defined uAPI to cover a large common set of 
-> controllability across multiple vendors, we will look at that option for
-> sure.
+Will check this and the wrong genmask.
 
-All this Kernel bypass stuff is 'HW specific' by nature, you should
-not expect to have general interfaces.
+> > +			PHY_CTRL_PHY_TX0_TERM_OFFSET(res-
+> >phy_tx0_term_offset));
+> > +
+> >  	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(res->tx_deemph_gen1) |
+> >  	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(res-
+> >tx_deemph_gen2_3p5db) |
+> >  	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(res-
+> >tx_deemph_gen2_6db),
+> > @@ -1485,6 +1499,7 @@ static int qcom_pcie_probe(struct
+> platform_device *pdev)
+> >  static const struct of_device_id qcom_pcie_match[] = {
+> >  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
+> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
+> > +	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ops_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
+> >  	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
+> >
+> 
+> --
+> regards,
+> Stan
 
-Jason
