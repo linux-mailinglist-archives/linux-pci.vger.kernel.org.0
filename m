@@ -2,72 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E8121D10F9
-	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 13:16:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E9BB1D10FF
+	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 13:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbgEMLQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 May 2020 07:16:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48448 "EHLO mail.kernel.org"
+        id S1731118AbgEMLRZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 May 2020 07:17:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:43658 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbgEMLQy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 May 2020 07:16:54 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FBA5206E5;
-        Wed, 13 May 2020 11:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589368614;
-        bh=40kDCCPvDFkDZnvfE0oEeO/xo+Tmp5VDSTcS0YnGUcs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sXXj67nUm87Aj49o92BvnC3oSAFsTthqZjQKC0eGfYLl0piCJ61Rh/94Vv33cn0qU
-         NlwzFE3k3y3tH6QW1f+W4FOXT00EvVDZ1cSdL1TRZLYm6Pb+OPk/XkfSd3f3oNJF2N
-         +vpKvMCxEV0BPtWUsbbo7nJzNa8KBH7fAK3nsooc=
-Received: by pali.im (Postfix)
-        id E89ED774; Wed, 13 May 2020 13:16:51 +0200 (CEST)
-Date:   Wed, 13 May 2020 13:16:51 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200513111651.q62dqauatryh6xd6@pali>
-References: <20200430080625.26070-1-pali@kernel.org>
+        id S1730286AbgEMLRZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 May 2020 07:17:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9309830E;
+        Wed, 13 May 2020 04:17:24 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8C9C3F71E;
+        Wed, 13 May 2020 04:17:22 -0700 (PDT)
+Date:   Wed, 13 May 2020 12:17:17 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 0/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+Message-ID: <20200513111717.GA32365@e121166-lin.cambridge.arm.com>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 30 April 2020 10:06:13 Pali Rohár wrote:
-> Hello,
+On Tue, May 05, 2020 at 06:13:13PM +0200, Nicolas Saenz Julienne wrote:
+> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+> loaded directly from an EEPROM or, if not present, by the SoC's
+> co-processor, VideoCore. This series adds support for the later.
 > 
-> this is the fourth version of the patch series for Armada 3720 PCIe
-> controller (aardvark). It's main purpose is to fix some bugs regarding
-> buggy ath10k cards, but we also found out some suspicious stuff about
-> the driver and the SOC itself, which we try to address.
+> Note that there are a set of constraints we have to consider:
+>  - We need to make sure the VideoCore firmware interface is up and
+>    running before running the VL805 firmware load call.
 > 
-> Patches are available also in my git branch pci-aardvark:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
+>  - There is no way to discern RPi4's VL805 chip from other platforms',
+>    so we need the firmware load to happen *before* running
+>    quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
+>    5 second wait while the fixup code polls xHC's non-existing state.
+> 
+> By Florian's suggestion I've been spending some time exploring the device
+> link[1] API in order to see if that could save us from explicitly creating
+> probe dependencies between pcie-brcmstb and firmware/raspberrypi (patch #3).
+> Technically these dependencies could be inferred from DT. It turns out Saravana
+> Kannan has been looking at this already. A new boot mechanism, activated with
+> fw_devlink=on takes care of the device probe ordering on devices with
+> consumer/supplier relationships. For now this relationship is created based on
+> the usage of generic DT properties, but has no support for vendor-specifc DT
+> properties, which we'd be forced to use in order to create a relationship
+> between our two devices since our setup is highly non generic. There will
+> probably be at some point support for such properties, and we will then be able
+> to revisit some of this code.
+> 
+> All this is based on the work by Tim Gover in RPi's downstream
+> kernel[2].
+> 
+> [1] https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
+> [2] https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce797238a1ab78bd
+> 
+> ---
+> 
+> Changes since v7:
+>  - Address Stefan's comments
+> 
+> Changes since v6:
+>  - Make rpi_firmware_init_vl805() more robust
+>  - Rewrite comments and patch descriptions to be more accessible to non RPi
+>    fluent people
+>  - Removed Florian's Reviewed-by in patch #2 as function changed
+>    substantially
+>  - Tested with/witout u-boot
+> 
+> Changes since v5:
+>  - Fix issues reported by Kbuild test robot
+> 
+> Changes since v4:
+>  - Addressed Sergei's comments
+>  - Fix potential warning in patch #2
+> 
+> Changes since v3:
+>  - Addressed Greg's comments
+> 
+> There was no v2, my bad.
+> 
+> Changes since v1:
+>  - Addressed Floarians comments
+> 
+> Nicolas Saenz Julienne (4):
+>   soc: bcm2835: Add notify xHCI reset property
+>   firmware: raspberrypi: Introduce vl805 init routine
+>   PCI: brcmstb: Wait for Raspberry Pi's firmware when present
+>   USB: pci-quirks: Add Raspberry Pi 4 quirk
+> 
+>  drivers/firmware/Kconfig                   |  3 +-
+>  drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
+>  drivers/pci/controller/pcie-brcmstb.c      | 17 ++++++
+>  drivers/usb/host/pci-quirks.c              | 16 ++++++
+>  include/soc/bcm2835/raspberrypi-firmware.h |  9 +++-
+>  5 files changed, 104 insertions(+), 2 deletions(-)
 
-Hello! Thanks everybody for review and testing of this patch series.
+Hi Nicolas,
 
-I would like to ask, is there something needed to fix / modify in this
-patch series? If everything is OK, would you Bjorn or Lorenzo take this
-patch series into your tree?
+should I queue this series via the PCI tree ? Just let me know, most of
+the changes are not in the PCI tree, asking in order to
+minimize/simplify conflicts handling if possible.
+
+Lorenzo
