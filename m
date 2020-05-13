@@ -2,117 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 964CD1D19D3
-	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 17:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E2E71D1C82
+	for <lists+linux-pci@lfdr.de>; Wed, 13 May 2020 19:44:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389256AbgEMPr2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 May 2020 11:47:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:49580 "EHLO foss.arm.com"
+        id S1732880AbgEMRoT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 May 2020 13:44:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbgEMPr2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 May 2020 11:47:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8EE931B;
-        Wed, 13 May 2020 08:47:26 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0513B3F305;
-        Wed, 13 May 2020 08:47:24 -0700 (PDT)
-Date:   Wed, 13 May 2020 16:47:19 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 0/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Message-ID: <20200513154719.GA3486@e121166-lin.cambridge.arm.com>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+        id S1732694AbgEMRoT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 May 2020 13:44:19 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F350F205ED;
+        Wed, 13 May 2020 17:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589391859;
+        bh=HdrRFN+sTaaleT85xWbD2FQudGOmu4rjw1g9hBsphZ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=B9cMJuSTeFZphshSIL4eovDHpGvv1pb0f+KdFMsR3CzYzebxVw+1FS27Pbq5XVelC
+         No0wHOKK9YQRBXxPPNn7WI04nteZQWBnm/fIiTPw+s0J9BwpZIP0GNilqdsR6x/PND
+         OhtuPhY3bYf+u3i+eaBOJtYejKLMj2NqoqygpdQE=
+Date:   Wed, 13 May 2020 12:44:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 0/2] PCI: Check for platform_get_irq() failure
+ consistently
+Message-ID: <20200513174416.GA331366@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505161318.26200-1-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200501224042.141366-1-helgaas@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 05, 2020 at 06:13:13PM +0200, Nicolas Saenz Julienne wrote:
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> co-processor, VideoCore. This series adds support for the later.
+On Fri, May 01, 2020 at 05:40:40PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Note that there are a set of constraints we have to consider:
->  - We need to make sure the VideoCore firmware interface is up and
->    running before running the VL805 firmware load call.
+> All callers of platform_get_irq() and related functions interpret a
+> negative return value as an error.  A few also interpret zero as an error.
 > 
->  - There is no way to discern RPi4's VL805 chip from other platforms',
->    so we need the firmware load to happen *before* running
->    quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
->    5 second wait while the fixup code polls xHC's non-existing state.
+> platform_get_irq() should return either a negative error number or a valid
+> non-zero IRQ, so there's no need to check for zero.
 > 
-> By Florian's suggestion I've been spending some time exploring the device
-> link[1] API in order to see if that could save us from explicitly creating
-> probe dependencies between pcie-brcmstb and firmware/raspberrypi (patch #3).
-> Technically these dependencies could be inferred from DT. It turns out Saravana
-> Kannan has been looking at this already. A new boot mechanism, activated with
-> fw_devlink=on takes care of the device probe ordering on devices with
-> consumer/supplier relationships. For now this relationship is created based on
-> the usage of generic DT properties, but has no support for vendor-specifc DT
-> properties, which we'd be forced to use in order to create a relationship
-> between our two devices since our setup is highly non generic. There will
-> probably be at some point support for such properties, and we will then be able
-> to revisit some of this code.
+> This series:
 > 
-> All this is based on the work by Tim Gover in RPi's downstream
-> kernel[2].
+>   - Extends the platform_get_irq() function comment to say it returns a
+>     non-zero IRQ number or a negative error number.
 > 
-> [1] https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
-> [2] https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce797238a1ab78bd
+>   - Adds a WARN() if platform_get_irq() ever *does* return zero (this would
+>     be a bug in the underlying arch code, and most callers are not prepared
+>     for this).
 > 
-> ---
+>   - Updates drivers/pci/ to check consistently using "irq < 0".
 > 
-> Changes since v7:
->  - Address Stefan's comments
+> This is based on Aman's series [1].  I propose to merge this via the PCI
+> tree, given acks from Greg and Thomas.
 > 
-> Changes since v6:
->  - Make rpi_firmware_init_vl805() more robust
->  - Rewrite comments and patch descriptions to be more accessible to non RPi
->    fluent people
->  - Removed Florian's Reviewed-by in patch #2 as function changed
->    substantially
->  - Tested with/witout u-boot
+> [1] https://lore.kernel.org/r/cover.1583952275.git.amanharitsh123@gmail.com
 > 
-> Changes since v5:
->  - Fix issues reported by Kbuild test robot
+> Aman Sharma (1):
+>   PCI: Check for platform_get_irq() failure consistently
 > 
-> Changes since v4:
->  - Addressed Sergei's comments
->  - Fix potential warning in patch #2
+> Bjorn Helgaas (1):
+>   driver core: platform: Clarify that IRQ 0 is invalid
 > 
-> Changes since v3:
->  - Addressed Greg's comments
-> 
-> There was no v2, my bad.
-> 
-> Changes since v1:
->  - Addressed Floarians comments
-> 
-> Nicolas Saenz Julienne (4):
->   soc: bcm2835: Add notify xHCI reset property
->   firmware: raspberrypi: Introduce vl805 init routine
->   PCI: brcmstb: Wait for Raspberry Pi's firmware when present
->   USB: pci-quirks: Add Raspberry Pi 4 quirk
-> 
->  drivers/firmware/Kconfig                   |  3 +-
->  drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
->  drivers/pci/controller/pcie-brcmstb.c      | 17 ++++++
->  drivers/usb/host/pci-quirks.c              | 16 ++++++
->  include/soc/bcm2835/raspberrypi-firmware.h |  9 +++-
->  5 files changed, 104 insertions(+), 2 deletions(-)
+>  drivers/base/platform.c                       | 40 ++++++++++++-------
+>  drivers/pci/controller/dwc/pci-imx6.c         |  4 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c    |  4 +-
+>  .../controller/mobiveil/pcie-mobiveil-host.c  |  4 +-
+>  drivers/pci/controller/pci-aardvark.c         |  3 ++
+>  drivers/pci/controller/pci-v3-semi.c          |  4 +-
+>  drivers/pci/controller/pcie-mediatek.c        |  3 ++
+>  drivers/pci/controller/pcie-tango.c           |  4 +-
+>  8 files changed, 41 insertions(+), 25 deletions(-)
 
-Applied to pci/brcmstb, thanks !
-
-Lorenzo
+Applied with acks from Greg and Linus W to pci/misc for v5.8.
