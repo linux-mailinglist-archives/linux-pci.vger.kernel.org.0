@@ -2,54 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B12521D3E7D
-	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 22:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B8091D3E83
+	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 22:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgENUHa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 May 2020 16:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        id S1729251AbgENUHe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 May 2020 16:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726035AbgENUHa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 May 2020 16:07:30 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E2BC061A0C;
-        Thu, 14 May 2020 13:07:29 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id se13so3870446ejb.9;
-        Thu, 14 May 2020 13:07:29 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726035AbgENUHc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 May 2020 16:07:32 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4BFC061A0C;
+        Thu, 14 May 2020 13:07:32 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id s3so3891eji.6;
+        Thu, 14 May 2020 13:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cQmt30TFAqZp3yOvZIOG5QAMcRr8CjctI3ajbEh56NE=;
-        b=ApMDbkPkRNIC/7RcXmpSwCcvYGJNF485BSW10W+PTcRPdHjRQRRnSgDZgC9dL4dLcZ
-         JO5wK4BbdxmM2pyFjSSy6wjHui7t4pMqh9zGKL9gQFfuAppjsMceZAYYi/M0YJYPObEp
-         DTXpB5VoTaSbeFi/T96dsKzdeXHuOrIhQ/ha4fOq8+9MmKSfP3GzfOExSzDBXD/Aqjfr
-         FpLfUl72IjTNWr3lADuDZ3WRxfEpFdpvdS87vfPuXJB5oNZs9ePpW8x8N676aWYOjt8X
-         Wb9sj3/B9GV0IqdjPbU/x4WmHD10OFpG5eiR0xKbWBoBn9hjAqjxJ4HjRcLY++/IUaNv
-         jx9A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=c+B/Zi3TGJy/wJzPX/sk/wxwAeoUrjIFG+laybuWve4=;
+        b=qOkmZlLoVWQ5EploTJn41sYQhgheLW9OOs3CzTPY/2EutVG1oDegoHqKFJUtaSM2Qo
+         xpIoFwm0jsoUCOF25zNYD/xLrvmt2m7zO87H8JCeztnZ4dmdzjbiW+0KY6cFvivT5ZbC
+         jVu0msbDdG7/GJbFK5tS8HmzQv6xL0T/LcTNcKNpBxrJ0WJczPhy0abQqeJ2zyEydkEm
+         6pp9er5ynoNnbk9Dwh6yPATRXVvP6S+EZBt5ssION7OxxRSfuLtByjsJDC3DDsX0m2Rn
+         ZKPqI5/UJ80kRCU8Krtkirk14txZCECpZoVg6QbvFpp/hr3EnkpznJFtjxAI9NLjRYpn
+         ufHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cQmt30TFAqZp3yOvZIOG5QAMcRr8CjctI3ajbEh56NE=;
-        b=jJVNdxJxcjK4jGgJ+Fl8oRGSvM7pSg/erUUCX7Z1/3V9Xv5c+YcjgW5ZErIfBck060
-         vdtUj+reaTsssgVUNeyaJ+WHNfYsr3CoeDMEMN/zkdwqk31u7uEsX5NoZLGhOH1KiW3y
-         RvEgWnjvqussp/cLN6NSZ+69iTF5IS6ZiMuQ6eYcCd2qqynsvYv+hgLAqQWpNX/pTzAM
-         MnU6b77KXsW3MpVyrPC/v2E1OnQZpsOHdB0gNaZwP5cgVAnk8KMl+CSO7GewgMRE5LsV
-         AheSMlNy/QWWrf/RdTyTHX+O36lS+6Je6gJKrkFQpQmH6BRHfxhmjIBQ7NisbUp3F4EP
-         25oQ==
-X-Gm-Message-State: AOAM531Fe5pYRwaXlubvdLPWWet2zMpG05Nn9xbMac9RidRWzbBNIlFi
-        WQgZtT8qfaf1BEY1Vj/nrUo=
-X-Google-Smtp-Source: ABdhPJyZAqVxxW4F6pijP3vARs0Mzl6g5yvW5S652fmezLr8yo1QqHC5CwiciahBVh46lbuFoEDTFg==
-X-Received: by 2002:a17:906:5795:: with SMTP id k21mr5504825ejq.374.1589486848391;
-        Thu, 14 May 2020 13:07:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=c+B/Zi3TGJy/wJzPX/sk/wxwAeoUrjIFG+laybuWve4=;
+        b=dN9sVoLVTBh7IwwcwVeOoEWhlHj0wAlsDlgjJWD7ZWTaz9sWqlzx7uIDP6du+oCDS9
+         stjq9wIMP3EVwx0EMo+3NrM/MqGVQyiusMoitt2SDw8X4JvzHTgc61VizSjSMCtb1Gc/
+         4mNCgoYV5gEuMDPDGYZYanFEiFnPhmolN539y2BwQNwdiuMwfaYhvV5OaSBPy5rtxYpQ
+         Nj6DbyxdSE0KzDUXCYBqTQ543zSHzZwmASTYsOChsDfJLappoG7lsoh1wo542/zHuH1o
+         A5fX4IH3/KIuIGjFL32mUVU6cXvscxVJwAt97aKJOHfawkDAQmo6hhDbn7IUtXZ8I3BE
+         UM1A==
+X-Gm-Message-State: AOAM530dnxlFqHcB/YY3CRFTLhZn/90wMXOjGg48o1hcW7F1eJhFMfeN
+        pYpIiTgOHFC6Pi5MhHyhgaU=
+X-Google-Smtp-Source: ABdhPJywLf1ZZsSM53mANa5ux9gsqKcoSlDyly9IRC9X+/z6gaVTSejZ5K99Zn3o8HIjWM8YWW0/hA==
+X-Received: by 2002:a17:906:46d3:: with SMTP id k19mr3475034ejs.349.1589486851107;
+        Thu, 14 May 2020 13:07:31 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
-        by smtp.googlemail.com with ESMTPSA id bd10sm1472edb.10.2020.05.14.13.07.26
+        by smtp.googlemail.com with ESMTPSA id bd10sm1472edb.10.2020.05.14.13.07.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 13:07:27 -0700 (PDT)
+        Thu, 14 May 2020 13:07:30 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -60,10 +61,12 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/10] Multiple fixes in PCIe qcom driver
-Date:   Thu, 14 May 2020 22:07:01 +0200
-Message-Id: <20200514200712.12232-1-ansuelsmth@gmail.com>
+Subject: [PATCH v4 01/10] PCI: qcom: Add missing ipq806x clocks in PCIe driver
+Date:   Thu, 14 May 2020 22:07:02 +0200
+Message-Id: <20200514200712.12232-2-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200514200712.12232-1-ansuelsmth@gmail.com>
+References: <20200514200712.12232-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -71,50 +74,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This contains multiple fix for PCIe qcom driver.
-Some optional reset and clocks were missing.
-Fix a problem with no PARF programming that cause kernel lock on load.
-Add support to force gen 1 speed if needed. (due to hardware limitation)
-Add ipq8064 rev 2 support that use a different tx termination offset.
+Aux and Ref clk are missing in PCIe qcom driver. Add support for this
+optional clks for ipq8064/apq8064 SoC.
 
-v4:
-* Fix grammar error across all patch subject
-* Use bulk api for clks
-* Program PARF only in ipq8064 SoC
-* Program tx term only in ipq8064 SoC
-* Drop configurable tx-dempth rx-eq
-* Make added clk optional
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
 
-v3:
-* Fix check reported by checkpatch --strict
-* Rename force_gen1 to gen
-
-v2:
-* Drop iATU programming (already done in pcie init)
-* Use max-link-speed instead of force-gen1 custom definition
-* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
-* Introduce a new variant for different revision of ipq8064
-
-Abhishek Sahu (1):
-  PCI: qcom: Change duplicate PCI reset to phy reset
-
-Ansuel Smith (8):
-  PCI: qcom: Add missing ipq806x clocks in PCIe driver
-  dt-bindings: PCI: qcom: Add missing clks
-  PCI: qcom: Add missing reset for ipq806x
-  dt-bindings: PCI: qcom: Add ext reset
-  PCI: qcom: Use bulk clk api and assert on error
-  PCI: qcom: Define some PARF params needed for ipq8064 SoC
-  PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
-  dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
-
-Sham Muthayyan (1):
-  PCI: qcom: Add Force GEN1 support
-
- .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
- drivers/pci/controller/dwc/pcie-qcom.c        | 171 ++++++++++++------
- 2 files changed, 123 insertions(+), 63 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 5ea527a6bd9f..4bf93ab8c7a7 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
+ 	struct clk *iface_clk;
+ 	struct clk *core_clk;
+ 	struct clk *phy_clk;
++	struct clk *aux_clk;
++	struct clk *ref_clk;
+ 	struct reset_control *pci_reset;
+ 	struct reset_control *axi_reset;
+ 	struct reset_control *ahb_reset;
+@@ -246,6 +248,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+ 	if (IS_ERR(res->phy_clk))
+ 		return PTR_ERR(res->phy_clk);
+ 
++	res->aux_clk = devm_clk_get_optional(dev, "aux");
++	if (IS_ERR(res->aux_clk))
++		return PTR_ERR(res->aux_clk);
++
++	res->ref_clk = devm_clk_get_optional(dev, "ref");
++	if (IS_ERR(res->ref_clk))
++		return PTR_ERR(res->ref_clk);
++
+ 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
+ 	if (IS_ERR(res->pci_reset))
+ 		return PTR_ERR(res->pci_reset);
+@@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+ 	clk_disable_unprepare(res->phy_clk);
++	clk_disable_unprepare(res->aux_clk);
++	clk_disable_unprepare(res->ref_clk);
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+ }
+ 
+@@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_assert_ahb;
+ 	}
+ 
++	ret = clk_prepare_enable(res->core_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable core clock\n");
++		goto err_clk_core;
++	}
++
+ 	ret = clk_prepare_enable(res->phy_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable phy clock\n");
+ 		goto err_clk_phy;
+ 	}
+ 
+-	ret = clk_prepare_enable(res->core_clk);
++	ret = clk_prepare_enable(res->aux_clk);
+ 	if (ret) {
+-		dev_err(dev, "cannot prepare/enable core clock\n");
+-		goto err_clk_core;
++		dev_err(dev, "cannot prepare/enable aux clock\n");
++		goto err_clk_aux;
++	}
++
++	ret = clk_prepare_enable(res->ref_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable ref clock\n");
++		goto err_clk_ref;
+ 	}
+ 
+ 	ret = reset_control_deassert(res->ahb_reset);
+@@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 	return 0;
+ 
+ err_deassert_ahb:
+-	clk_disable_unprepare(res->core_clk);
+-err_clk_core:
++	clk_disable_unprepare(res->ref_clk);
++err_clk_ref:
++	clk_disable_unprepare(res->aux_clk);
++err_clk_aux:
+ 	clk_disable_unprepare(res->phy_clk);
+ err_clk_phy:
++	clk_disable_unprepare(res->core_clk);
++err_clk_core:
+ 	clk_disable_unprepare(res->iface_clk);
+ err_assert_ahb:
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
 -- 
 2.25.1
 
