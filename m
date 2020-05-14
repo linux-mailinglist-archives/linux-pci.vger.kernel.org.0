@@ -2,96 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 041711D3FDC
-	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 23:23:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A2D1D4032
+	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 23:38:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgENVXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 May 2020 17:23:07 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:58283 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgENVXH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 May 2020 17:23:07 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mk0BK-1ioyw50Yo4-00kL24 for <linux-pci@vger.kernel.org>; Thu, 14 May 2020
- 23:23:05 +0200
-Received: by mail-qk1-f169.google.com with SMTP id i14so401759qka.10
-        for <linux-pci@vger.kernel.org>; Thu, 14 May 2020 14:23:04 -0700 (PDT)
-X-Gm-Message-State: AOAM533zgEhH7iTT1pmSTOQcKV6Y3D7cPZxhcKkPpaYwUgeLNLOqtLDM
-        +OPAwF6zSNUcz2Z/Gab2JV8315JxJigo4DVlKSM=
-X-Google-Smtp-Source: ABdhPJxiuVdNPldFByNKdgbwLtBXTlOC6bSY7guaejoVc6sCJoXmoF4j+kCot+mRehcSIh+NVyBLmLCmem6fnGcQIBY=
-X-Received: by 2002:ae9:ed95:: with SMTP id c143mr383762qkg.394.1589491384045;
- Thu, 14 May 2020 14:23:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200513223859.11295-1-robh@kernel.org> <20200513223859.11295-2-robh@kernel.org>
-In-Reply-To: <20200513223859.11295-2-robh@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 14 May 2020 23:22:48 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a274cLVFQWYHos41+J45mx3+Aidt3yYJvp5HvSTJgwAbQ@mail.gmail.com>
-Message-ID: <CAK8P3a274cLVFQWYHos41+J45mx3+Aidt3yYJvp5HvSTJgwAbQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: Fix pci_host_bridge struct device release/free handling
+        id S1727915AbgENViC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 May 2020 17:38:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgENViC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 May 2020 17:38:02 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B2320709;
+        Thu, 14 May 2020 21:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589492281;
+        bh=RwuYZkt7WJHFil5hx9ssMf/OF/Z1FaWM63laCoQtpBk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jha/DdRR33qk4/drdIkPP0DYXbcSu+iT7CIhAIjfqW32AJvvcwTnPfDosR8eXnRY8
+         y2JkTKBsEUZogcTxrnKBQHX1xyPFC+ZR+dxPrkHvSi56VL7ogcrT9piHquZgHb5nlm
+         ug9GJ2TYGBB58OQWY4rLrFL4/5kBdkeVAhROaDIk=
+Date:   Thu, 14 May 2020 16:37:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:DbXg1g24Tq3bohmaEdMpkZfkSKPD+IDZrXNIIoAk14yBo9Na4GB
- Nj80SmvZQWKkzT8yR+90IxZ8N4OR8B9FgT9HcSV3wGc5gaFonoysUF4VLcs6vsrtCHNCAPG
- YhQXOFgW8GnPweZb3K+0qSSwW2aLrIVo/43AWMvhxvA+pSuOdDSlnGr6L7qwycUq1L4ZwE+
- lDWrToumcZ030f3WD/IIg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jKSGsDzkXXg=:RvnKlRC8khCqPO/7FoUBoD
- 45yYuQ3HRGixKu3v2Lprkk73Sd7+qlQDo8kJvlHyFcB3hUSPzaQ/+OvEsT20QjTZAbAaGcLJg
- Hj604YnhpuBkBlmRrmUf23ccTEYKtl8+tDmyVDg9a4kS8LEHfeBMfpbUic1UGXiPvtJgm4Va6
- 8EyHKBOWgE54FJFjAkI7So6F70hoDLEPP6Qt6QX1qre138KVQ4FV31+R1d/83SSgt3UscC5iI
- CWrOuKdRZaVvXJPAoD7P0VkLcVvuauzqucRjbVm7USXFKuFnqv4Ln/ttzzsfsWLEdnrKVplb6
- BvGZ+OOHKlSLgz80+SdKXD0BIDW2DVMe4Qee3ySfjAfhZ0/0HJEAYQ9kP/e5LXT/c+PEEu1PY
- AiENWxCsn/Y02RmK87cefd5IsGHtfy2bmm7DOdW0ANjSETTYVPmhRi8JvAEBGUBrwWeJOsbJj
- uzXYjakqvCemQ85BfkABa0LLVS37SKviJwnk5azayeYeKiE47cKhhgr9w9+cAugvOcrsSJwDo
- nrGEM7y0iBk6tBIioZoz73zFCGIb9Zo87YCKF5BM5rlGF43/Wh6LKLXC3bRkDPmApphXoG+Ij
- hRdRjq1rJXruHMgITd0kTwEDXi5r3rlxhMZ8A2cCFDUZcgVXhYpl4nzzizOajMBA0fJml+u/7
- ipmh1q6psJPBC6kYFEPVw06PcYyjYGvHgrX+ffKcX1GQFBzCfMUA5wrRqW2FiZ8Bs6gQ7hgfV
- iAmJTvGBI/PKcwtTs+Z4H8RNVP5UwyuBk2p1TFcX/MRalUGub0PibwaqGwzgPc2yFp3o6maBt
- ZCdQ/fqbIuc9b0JGsIGDSPi9I0/3/a54mkVgkreHyg+5QTjZ4o=
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] PCI: Fix pci_register_host_bridge()
+ device_register() error handling
+Message-ID: <20200514213759.GA473614@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513223859.11295-1-robh@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:39 AM Rob Herring <robh@kernel.org> wrote:
->
-> The PCI code has several paths where the struct pci_host_bridge is freed
-> directly. This is wrong because it contains a struct device which is
-> refcounted and should be freed using put_device(). This can result in
-> use-after-free errors. I think this problem has existed since 2012 with
-> commit 7b5436635800 ("PCI: add generic device into pci_host_bridge
-> struct"). It generally hasn't mattered as most host bridge drivers are
-> still built-in and can't unbind.
->
-> The problem is a struct device should never be freed directly once
-> device_initialize() is called and a ref is held, but that doesn't happen
-> until pci_register_host_bridge(). There's then a window between
-> allocating the host bridge and pci_register_host_bridge() where kfree
-> should be used. This is fragile and requires callers to do the right
-> thing. To fix this, we need to split device_register() into
-> device_initialize() and device_add() calls, so that the host bridge
-> struct is always freed by using a put_device().
->
-> devm_pci_alloc_host_bridge() is using devm_kzalloc() to allocate struct
-> pci_host_bridge which will be freed directly. Instead, we can use a
-> custom devres action to call put_device().
->
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+On Wed, May 13, 2020 at 05:38:58PM -0500, Rob Herring wrote:
+> If device_register() has an error, we should bail out of
+> pci_register_host_bridge() rather than continuing on.
+> 
+> Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
 > Cc: Arnd Bergmann <arnd@arndb.de>
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
 > Signed-off-by: Rob Herring <robh@kernel.org>
 
-Thanks for working your way through that bit of code
-and fixing my mistakes!
+Both applied to pci/enumeration for v5.8, thanks!
 
-Your description makes a lot of sense and the code looks
-reasonable, but I don't understand my own work enough any
-more to be sure I didn't miss anything.
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/pci/probe.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 77b8a145c39b..e21dc71b1907 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -909,9 +909,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  		goto free;
+>  
+>  	err = device_register(&bridge->dev);
+> -	if (err)
+> +	if (err) {
+>  		put_device(&bridge->dev);
+> -
+> +		goto free;
+> +	}
+>  	bus->bridge = get_device(&bridge->dev);
+>  	device_enable_async_suspend(bus->bridge);
+>  	pci_set_bus_of_node(bus);
+> -- 
+> 2.20.1
+> 
