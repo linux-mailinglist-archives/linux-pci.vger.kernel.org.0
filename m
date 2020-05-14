@@ -2,195 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E49B11D2CE2
-	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 12:31:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A0711D2F12
+	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 14:03:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgENKag (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 May 2020 06:30:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:33884 "EHLO foss.arm.com"
+        id S1726176AbgENMD2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 May 2020 08:03:28 -0400
+Received: from mx.socionext.com ([202.248.49.38]:18126 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgENKad (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 May 2020 06:30:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C93D31B;
-        Thu, 14 May 2020 03:30:32 -0700 (PDT)
-Received: from red-moon.cambridge.arm.com (unknown [10.57.1.235])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80A3E3F305;
-        Thu, 14 May 2020 03:30:31 -0700 (PDT)
-Date:   Thu, 14 May 2020 11:30:28 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] PCI: Fix pci_host_bridge struct device release/free
- handling
-Message-ID: <20200514103028.GA16121@red-moon.cambridge.arm.com>
-References: <20200513223859.11295-1-robh@kernel.org>
- <20200513223859.11295-2-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513223859.11295-2-robh@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726197AbgENMD0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 May 2020 08:03:26 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 14 May 2020 21:03:24 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A9EE060057;
+        Thu, 14 May 2020 21:03:24 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 14 May 2020 21:03:24 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id EBE581A12AD;
+        Thu, 14 May 2020 21:03:23 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v4 0/2]  PCI: Add new UniPhier PCIe endpoint driver
+Date:   Thu, 14 May 2020 21:03:19 +0900
+Message-Id: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 13, 2020 at 05:38:59PM -0500, Rob Herring wrote:
-> The PCI code has several paths where the struct pci_host_bridge is freed
-> directly. This is wrong because it contains a struct device which is
-> refcounted and should be freed using put_device(). This can result in
-> use-after-free errors. I think this problem has existed since 2012 with
-> commit 7b5436635800 ("PCI: add generic device into pci_host_bridge
-> struct"). It generally hasn't mattered as most host bridge drivers are
-> still built-in and can't unbind.
-> 
-> The problem is a struct device should never be freed directly once
-> device_initialize() is called and a ref is held, but that doesn't happen
-> until pci_register_host_bridge(). There's then a window between
-> allocating the host bridge and pci_register_host_bridge() where kfree
-> should be used. This is fragile and requires callers to do the right
-> thing. To fix this, we need to split device_register() into
-> device_initialize() and device_add() calls, so that the host bridge
-> struct is always freed by using a put_device().
-> 
-> devm_pci_alloc_host_bridge() is using devm_kzalloc() to allocate struct
-> pci_host_bridge which will be freed directly. Instead, we can use a
-> custom devres action to call put_device().
-> 
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/probe.c  | 36 +++++++++++++++++++-----------------
->  drivers/pci/remove.c |  2 +-
->  2 files changed, 20 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index e21dc71b1907..e064ded6fbec 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -565,7 +565,7 @@ static struct pci_bus *pci_alloc_bus(struct pci_bus *parent)
->  	return b;
->  }
->  
-> -static void devm_pci_release_host_bridge_dev(struct device *dev)
-> +static void pci_release_host_bridge_dev(struct device *dev)
->  {
->  	struct pci_host_bridge *bridge = to_pci_host_bridge(dev);
->  
-> @@ -574,12 +574,7 @@ static void devm_pci_release_host_bridge_dev(struct device *dev)
->  
->  	pci_free_resource_list(&bridge->windows);
->  	pci_free_resource_list(&bridge->dma_ranges);
-> -}
-> -
-> -static void pci_release_host_bridge_dev(struct device *dev)
-> -{
-> -	devm_pci_release_host_bridge_dev(dev);
-> -	kfree(to_pci_host_bridge(dev));
-> +	kfree(bridge);
->  }
->  
->  static void pci_init_host_bridge(struct pci_host_bridge *bridge)
-> @@ -599,6 +594,8 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
->  	bridge->native_pme = 1;
->  	bridge->native_ltr = 1;
->  	bridge->native_dpc = 1;
-> +
-> +	device_initialize(&bridge->dev);
->  }
->  
->  struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
-> @@ -616,17 +613,25 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
->  }
->  EXPORT_SYMBOL(pci_alloc_host_bridge);
->  
-> +static void devm_pci_alloc_host_bridge_release(void *data)
-> +{
-> +	pci_free_host_bridge(data);
-> +}
-> +
->  struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
->  						   size_t priv)
->  {
-> +	int ret;
->  	struct pci_host_bridge *bridge;
->  
-> -	bridge = devm_kzalloc(dev, sizeof(*bridge) + priv, GFP_KERNEL);
-> +	bridge = pci_alloc_host_bridge(priv);
->  	if (!bridge)
->  		return NULL;
->  
-> -	pci_init_host_bridge(bridge);
-> -	bridge->dev.release = devm_pci_release_host_bridge_dev;
-> +	ret = devm_add_action_or_reset(dev, devm_pci_alloc_host_bridge_release,
-> +				       bridge);
-> +	if (ret)
-> +		return NULL;
->  
->  	return bridge;
->  }
-> @@ -634,10 +639,7 @@ EXPORT_SYMBOL(devm_pci_alloc_host_bridge);
->  
->  void pci_free_host_bridge(struct pci_host_bridge *bridge)
->  {
-> -	pci_free_resource_list(&bridge->windows);
-> -	pci_free_resource_list(&bridge->dma_ranges);
-> -
-> -	kfree(bridge);
-> +	put_device(&bridge->dev);
->  }
->  EXPORT_SYMBOL(pci_free_host_bridge);
->  
-> @@ -908,7 +910,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  	if (err)
->  		goto free;
->  
-> -	err = device_register(&bridge->dev);
-> +	err = device_add(&bridge->dev);
->  	if (err) {
->  		put_device(&bridge->dev);
->  		goto free;
-> @@ -978,7 +980,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  
->  unregister:
->  	put_device(&bridge->dev);
-> -	device_unregister(&bridge->dev);
-> +	device_del(&bridge->dev);
+This series adds PCIe endpoint controller driver for Socionext UniPhier
+SoCs. This controller is based on the DesignWare PCIe core.
 
-I think we need to execute device_del() first, then put_device().
+This driver supports Pro5 SoC only, so Pro5 needs multiple clocks and
+resets in devicetree node.
 
-Thank you for fixing this code path.
+Changes since v3:
+- dt-bindings: Convert with dt-schema
+- Replace with devm_platform_ioremap_resource()
+- Add a commnet that mutex covers raising legacy IRQ
 
-Lorenzo
+Changes since v2:
+- dt-bindings: Add clock-names, reset-names, and fix example for Pro5
+- Remove 'is_legacy' indicating that the compatible is for legacy SoC
+- Use pci_epc_features instead of defining uniphier_soc_data
+- Remove redundant register read access
+- Clean up return code on uniphier_add_pcie_ep()
+- typo: intx -> INTx
 
->  free:
->  	kfree(bus);
-> @@ -2953,7 +2955,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  	return bridge->bus;
->  
->  err_out:
-> -	kfree(bridge);
-> +	put_device(&bridge->dev);
->  	return NULL;
->  }
->  EXPORT_SYMBOL_GPL(pci_create_root_bus);
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index e9c6b120cf45..95dec03d9f2a 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -160,6 +160,6 @@ void pci_remove_root_bus(struct pci_bus *bus)
->  	host_bridge->bus = NULL;
->  
->  	/* remove the host bridge */
-> -	device_unregister(&host_bridge->dev);
-> +	device_del(&host_bridge->dev);
->  }
->  EXPORT_SYMBOL_GPL(pci_remove_root_bus);
-> -- 
-> 2.20.1
-> 
+Changes since v1:
+- dt-bindings: Add Reviewed-by line
+- Fix register value to set EP mode
+- Add error message when failed to get phy
+- Replace INTx assertion time with macro
+
+Kunihiko Hayashi (2):
+  dt-bindings: PCI: Add UniPhier PCIe endpoint controller description
+  PCI: uniphier: Add Socionext UniPhier Pro5 PCIe endpoint controller
+    driver
+
+ .../bindings/pci/socionext,uniphier-pcie-ep.yaml   |  92 +++++
+ MAINTAINERS                                        |   4 +-
+ drivers/pci/controller/dwc/Kconfig                 |  13 +-
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c      | 383 +++++++++++++++++++++
+ 5 files changed, 489 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
+
+-- 
+2.7.4
+
