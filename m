@@ -2,48 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55D971D30F7
-	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 15:17:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FECF1D314D
+	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 15:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgENNRy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 May 2020 09:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727891AbgENNRx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 May 2020 09:17:53 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF298C061A0C;
-        Thu, 14 May 2020 06:17:53 -0700 (PDT)
-Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 84EB620820;
-        Thu, 14 May 2020 13:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1589462273; bh=uqS/qkV/cOZlWr119FMfbm4Ch6cVX5nOp6L8u7qoUlg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOsjAs/jrtrVcBRpPYTQs+4CvCpJ+gDxkA6T7ME0uSlnJzX6IZed5UVY9zKUTSrs0
-         yWZH2TsWoAYbVMFJlch/jnOnCoP48BgASSRA3/SeBtmyQ55k2v0jXCW+CtS5ud3u6f
-         zT2yPNrMt4mEq62O2xSYndSY+P8GvAqZrZ8RbI2IbZX3QZj0cAXrrdLJ8gzJ4HluJp
-         bFp53F7z9g026wk4k77zhLbC1lEqKjgu8uCvS5rLtb7mrD9l89aI1mF+AOkxRmEehE
-         IYF18JhWv6EBLVoDUqDloGUw+NiG+MHjJ+gZxIFIQjqOK1oAISVl/Sa4JVPvXcvA3U
-         hQDR/RHbBBxsQ==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Date:   Thu, 14 May 2020 21:16:41 +0800
-Message-Id: <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
+        id S1726050AbgENNas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 May 2020 09:30:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:29703 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbgENNas (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 May 2020 09:30:48 -0400
+IronPort-SDR: VqrhY55h7FjlJe+pSzP22yHifxr8fTjP75jvxUZtNh/TyNASSoeFhUf5WLEbgEPDqR4ejNalH4
+ 6PqmEe707LBQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 06:30:47 -0700
+IronPort-SDR: 8ZrAJYygMJfH6yIs7UZ9iQkmp/Xn5V/Vs+MwvyLwSqcIhaQlsOLmCSBC9M9kBbq+jEwcl+5DqE
+ H40ZSI4fuhDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
+   d="scan'208";a="437906429"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 14 May 2020 06:30:44 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id F341D3B6; Thu, 14 May 2020 16:30:43 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v2] PCI: Do not use pcie_get_speed_cap() to determine when to start waiting
+Date:   Thu, 14 May 2020 16:30:43 +0300
+Message-Id: <20200514133043.27429-1-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -51,296 +43,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We can now enable generic PCI driver in Kconfig, and remove legacy
-PCI driver code.
+Kai-Heng Feng reported that it takes long time (>1s) to resume
+Thunderbolt connected PCIe devices from both runtime suspend and system
+sleep (s2idle).
 
-Radeon vbios quirk is moved to the platform folder to fit the
-new structure.
+These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
+announces support for speeds > 5 GT/s but it is then capped by the
+second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
+possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
+it ended up waiting for 1100 ms as these ports do not support active
+link layer reporting either.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v9: Fix licenses tag
+PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
+before sending configuration request to the device below, if the port
+does not support speeds > 5 GT/s, and if it does we first need to wait
+for the data link layer to become active before waiting for that 100 ms.
+
+PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
+that support speeds > 5 GT/s must support active link layer reporting so
+instead of looking for the speed we can check for the active link layer
+reporting capability and determine how to wait based on that (as they go
+hand in hand).
+
+While there restructure the code a bit so that the delay is always
+issued in pci_bridge_wait_for_secondary_bus() by passing value of 0 to
+pcie_wait_for_link_delay().
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/mips/Kconfig                  |   1 +
- arch/mips/loongson64/Makefile      |   2 +-
- arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
- arch/mips/pci/Makefile             |   1 -
- arch/mips/pci/fixup-loongson3.c    |  71 ------------------
- arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
- 6 files changed, 31 insertions(+), 189 deletions(-)
- create mode 100644 arch/mips/loongson64/vbios_quirk.c
- delete mode 100644 arch/mips/pci/fixup-loongson3.c
- delete mode 100644 arch/mips/pci/ops-loongson3.c
+v2: Restructured the code a bit so that it should be more readable now
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 0519ca9f00f9..7a4fcc4ade1f 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -480,6 +480,7 @@ config MACH_LOONGSON64
- 	select IRQ_MIPS_CPU
- 	select NR_CPUS_DEFAULT_64
- 	select USE_GENERIC_EARLY_PRINTK_8250
-+	select PCI_DRIVERS_GENERIC
- 	select SYS_HAS_CPU_LOONGSON64
- 	select SYS_HAS_EARLY_PRINTK
- 	select SYS_SUPPORTS_SMP
-diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
-index 6f3c2b47f66f..6f81b822aeae 100644
---- a/arch/mips/loongson64/Makefile
-+++ b/arch/mips/loongson64/Makefile
-@@ -8,5 +8,5 @@ obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o dma.o \
- obj-$(CONFIG_SMP)	+= smp.o
- obj-$(CONFIG_NUMA)	+= numa.o
- obj-$(CONFIG_RS780_HPET) += hpet.o
--obj-$(CONFIG_PCI) += pci.o
- obj-$(CONFIG_SUSPEND) += pm.o
-+obj-$(CONFIG_PCI_QUIRKS) += vbios_quirk.o
-diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
-new file mode 100644
-index 000000000000..9a29e94d3db1
---- /dev/null
-+++ b/arch/mips/loongson64/vbios_quirk.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include <linux/pci.h>
-+#include <loongson.h>
-+
-+static void pci_fixup_radeon(struct pci_dev *pdev)
-+{
-+	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
-+
-+	if (res->start)
-+		return;
-+
-+	if (!loongson_sysconf.vgabios_addr)
-+		return;
-+
-+	pci_disable_rom(pdev);
-+	if (res->parent)
-+		release_resource(res);
-+
-+	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
-+	res->end   = res->start + 256*1024 - 1;
-+	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-+		     IORESOURCE_PCI_FIXED;
-+
-+	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
-+		 PCI_ROM_RESOURCE, res);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, 0x9615,
-+				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
-diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-index 342ce10ef593..438f10955d89 100644
---- a/arch/mips/pci/Makefile
-+++ b/arch/mips/pci/Makefile
-@@ -35,7 +35,6 @@ obj-$(CONFIG_LASAT)		+= pci-lasat.o
- obj-$(CONFIG_MIPS_COBALT)	+= fixup-cobalt.o
- obj-$(CONFIG_LEMOTE_FULOONG2E)	+= fixup-fuloong2e.o ops-loongson2.o
- obj-$(CONFIG_LEMOTE_MACH2F)	+= fixup-lemote2f.o ops-loongson2.o
--obj-$(CONFIG_MACH_LOONGSON64)	+= fixup-loongson3.o ops-loongson3.o
- obj-$(CONFIG_MIPS_MALTA)	+= fixup-malta.o pci-malta.o
- obj-$(CONFIG_PMC_MSP7120_GW)	+= fixup-pmcmsp.o ops-pmcmsp.o
- obj-$(CONFIG_PMC_MSP7120_EVAL)	+= fixup-pmcmsp.o ops-pmcmsp.o
-diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
-deleted file mode 100644
-index 8a741c2c6685..000000000000
---- a/arch/mips/pci/fixup-loongson3.c
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/*
-- * fixup-loongson3.c
-- *
-- * Copyright (C) 2012 Lemote, Inc.
-- * Author: Xiang Yu, xiangy@lemote.com
-- *         Chen Huacai, chenhc@lemote.com
-- *
-- * This program is free software; you can redistribute  it and/or modify it
-- * under  the terms of  the GNU General  Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
-- *
-- * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
-- * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
-- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
-- * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
-- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-- * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
-- * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-- * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- *
-- */
--
--#include <linux/pci.h>
--#include <boot_param.h>
--
--static void print_fixup_info(const struct pci_dev *pdev)
--{
--	dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
--			pdev->vendor, pdev->device, pdev->irq);
--}
--
--int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	print_fixup_info(dev);
--	return dev->irq;
--}
--
--static void pci_fixup_radeon(struct pci_dev *pdev)
--{
--	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
--
--	if (res->start)
--		return;
--
--	if (!loongson_sysconf.vgabios_addr)
--		return;
--
--	pci_disable_rom(pdev);
--	if (res->parent)
--		release_resource(res);
--
--	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
--	res->end   = res->start + 256*1024 - 1;
--	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
--		     IORESOURCE_PCI_FIXED;
--
--	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
--		 PCI_ROM_RESOURCE, res);
--}
--
--DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
--				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
--
--/* Do platform specific device initialization at pci_enable_device() time */
--int pcibios_plat_dev_init(struct pci_dev *dev)
--{
--	return 0;
--}
-diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
-deleted file mode 100644
-index 2f6ad36bdea6..000000000000
---- a/arch/mips/pci/ops-loongson3.c
-+++ /dev/null
-@@ -1,116 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/kernel.h>
--
--#include <asm/mips-boards/bonito64.h>
--
--#include <loongson.h>
--
--#define PCI_ACCESS_READ  0
--#define PCI_ACCESS_WRITE 1
--
--#define HT1LO_PCICFG_BASE      0x1a000000
--#define HT1LO_PCICFG_BASE_TP1  0x1b000000
--
--static int loongson3_pci_config_access(unsigned char access_type,
--		struct pci_bus *bus, unsigned int devfn,
--		int where, u32 *data)
--{
--	unsigned char busnum = bus->number;
--	int function = PCI_FUNC(devfn);
--	int device = PCI_SLOT(devfn);
--	int reg = where & ~3;
--	void *addrp;
--	u64 addr;
--
--	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
--		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
--		if (busnum == 0) {
--			if (device > 31)
--				return PCIBIOS_DEVICE_NOT_FOUND;
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE | addr);
--		} else {
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE_TP1 | addr);
--		}
--	} else if (where < PCI_CFG_SPACE_EXP_SIZE) {  /* extended config */
--		struct pci_dev *rootdev;
--
--		rootdev = pci_get_domain_bus_and_slot(0, 0, 0);
--		if (!rootdev)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr = pci_resource_start(rootdev, 3);
--		if (!addr)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr |= busnum << 20 | device << 15 | function << 12 | reg;
--		addrp = (void *)TO_UNCAC(addr);
+Previous version can be found here:
+
+  https://lore.kernel.org/linux-pci/20200514123105.GW2571@lahna.fi.intel.com/
+
+@Kai-heng, since this patch is slightly different than what you tried, I
+wonder if you could check that it still solves the and does not break
+anything? I tested it myself but it would be nice to get your Tested-by to
+make sure it still works.
+
+ drivers/pci/pci.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 595fcf59843f..590c73dc7e0d 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4660,7 +4660,8 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+  * pcie_wait_for_link_delay - Wait until link is active or inactive
+  * @pdev: Bridge device
+  * @active: waiting for active or inactive?
+- * @delay: Delay to wait after link has become active (in ms)
++ * @delay: Delay to wait after link has become active (in ms). Specify %0
++ *	   for no delay.
+  *
+  * Use this to wait till link becomes active or inactive.
+  */
+@@ -4701,7 +4702,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+ 		msleep(10);
+ 		timeout -= 10;
+ 	}
+-	if (active && ret)
++	if (active && ret && delay)
+ 		msleep(delay);
+ 	else if (ret != active)
+ 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
+@@ -4822,17 +4823,21 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	if (!pcie_downstream_port(dev))
+ 		return;
+ 
+-	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+-		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+-		msleep(delay);
 -	} else {
--		return PCIBIOS_DEVICE_NOT_FOUND;
--	}
--
--	if (access_type == PCI_ACCESS_WRITE)
--		writel(*data, addrp);
--	else {
--		*data = readl(addrp);
--		if (*data == 0xffffffff) {
--			*data = -1;
--			return PCIBIOS_DEVICE_NOT_FOUND;
--		}
--	}
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int devfn,
--				 int where, int size, u32 *val)
--{
--	u32 data = 0;
--	int ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--			bus, devfn, where, &data);
--
--	if (ret != PCIBIOS_SUCCESSFUL)
--		return ret;
--
--	if (size == 1)
--		*val = (data >> ((where & 3) << 3)) & 0xff;
--	else if (size == 2)
--		*val = (data >> ((where & 3) << 3)) & 0xffff;
--	else
--		*val = data;
--
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
--				  int where, int size, u32 val)
--{
--	u32 data = 0;
--	int ret;
--
--	if (size == 4)
--		data = val;
--	else {
--		ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--				bus, devfn, where, &data);
--		if (ret != PCIBIOS_SUCCESSFUL)
--			return ret;
--
--		if (size == 1)
--			data = (data & ~(0xff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--		else if (size == 2)
--			data = (data & ~(0xffff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--	}
--
--	ret = loongson3_pci_config_access(PCI_ACCESS_WRITE,
--			bus, devfn, where, &data);
--
--	return ret;
--}
--
--struct pci_ops loongson_pci_ops = {
--	.read = loongson3_pci_pcibios_read,
--	.write = loongson3_pci_pcibios_write
--};
+-		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
+-			delay);
+-		if (!pcie_wait_for_link_delay(dev, true, delay)) {
++	/*
++	 * Since PCIe spec mandates that all downstream ports that support
++	 * speeds greater than 5 GT/s must support data link layer active
++	 * reporting so if it is supported we poll for the link to become
++	 * active before issuing the mandatory delay.
++	 */
++	if (dev->link_active_reporting) {
++		pci_dbg(dev, "waiting for link to train\n");
++		if (!pcie_wait_for_link_delay(dev, true, 0)) {
+ 			/* Did not train, no need to wait any further */
+ 			return;
+ 		}
+ 	}
++	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
++	msleep(delay);
+ 
+ 	if (!pci_device_is_present(child)) {
+ 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
 -- 
 2.26.2
 
