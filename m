@@ -2,131 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E54331D31DD
-	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 15:54:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BDB11D33D6
+	for <lists+linux-pci@lfdr.de>; Thu, 14 May 2020 17:00:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgENNyq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 May 2020 09:54:46 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5645 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgENNyp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 May 2020 09:54:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ebd4d990000>; Thu, 14 May 2020 06:54:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 14 May 2020 06:54:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 14 May 2020 06:54:45 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 May
- 2020 13:54:45 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 14 May 2020 13:54:45 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ebd4da20000>; Thu, 14 May 2020 06:54:44 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <robh+dt@kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V2] arm64: tegra: Fix flag for 64-bit resources in 'ranges' property
-Date:   Thu, 14 May 2020 19:24:37 +0530
-Message-ID: <20200514135437.29814-1-vidyas@nvidia.com>
+        id S1726232AbgENPAE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 May 2020 11:00:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46960 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgENPAD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 May 2020 11:00:03 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EExlpp130892;
+        Thu, 14 May 2020 09:59:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589468387;
+        bh=s/fQErzjm3QWmzuHGPvhu9iIxEqXqRByZCvFxc1DEN4=;
+        h=From:To:CC:Subject:Date;
+        b=i+2ydMI+oiRlbtVsZIBgxJ+3etcFKZwqw6IA1wtzMtwRNFjkZBGg7soHOrZKxXqES
+         G641ITK0XPozOlrBpY8YYW8WUQusKwx0w3Gf94ErVxicNCm6aaSjEJ5did+txkmv6r
+         Td8ts4DzOqYOSMd4lBA3cWotoRFWo2av+1z2HGXs=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExlHx127031;
+        Thu, 14 May 2020 09:59:47 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 09:59:47 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 09:59:47 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExgAi019279;
+        Thu, 14 May 2020 09:59:42 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 00/19] Implement NTB Controller using multiple PCI EP
+Date:   Thu, 14 May 2020 20:29:08 +0530
+Message-ID: <20200514145927.17555-1-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513191627.8533-1-vidyas@nvidia.com>
-References: <20200513191627.8533-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589464473; bh=DXICL0TvKN5Bjj/5hkcUjklI8U4kBlQs3h95J0TVZpk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=hplbcNEqbps+18VdIACmEYkjZIWgXhs98LXcGzG5np/gkqo3SWgndmaeimfhQaRl8
-         Y6Nu6aF1cY0FjevaHrlCa4vH9GJWqRKvE4iJ+O/DvkM/S8TH5QFaqC46bNyEJxzAno
-         nXJCS324Pr+FpDLZYJSCO+FLoNm1SB4ehSrPcb9SYMlDb25odW8F9q3hSvkUW01qvW
-         yk7hmL9Unh8A5OscVt/YMvSz5tbkCSOD9ily4pTfvqdnhbM3VZY1dvBVluduXIvt9w
-         QrlwvdmRxL/s9TV8U1OLDcdw5z2ocTHS65Zni1mwIc9kqviDKn+yQsjHdk04whpw9o
-         zhPddrupCxalQ==
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
-represent 64-bit resources.
+This series is about implementing SW defined NTB using
+multiple endpoint instances. This series has been tested using
+2 endpoint instances in J7 connected to two DRA7 boards. However there
+is nothing platform specific for the NTB functionality.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-V2:
-* Extended the change to cover other controllers as well
+This was presented in Linux Plumbers Conference. The presentation
+can be found @ [1]
 
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+RFC patch series can be found @ [2]
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index e1ae01c2d039..4bc187a4eacd 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1405,7 +1405,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1450,7 +1450,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1495,7 +1495,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1540,7 +1540,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1585,7 +1585,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1634,7 +1634,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
+This series has been validated after applying [3] and [4]
+
+Changes from RFC:
+1) Converted the DT binding patches to YAML schema and merged the
+   DT binding patches together
+2) NTB documentation is converted to .rst
+3) One HOST can now interrupt the other HOST using MSI-X interrupts
+4) Added support for teardown of memory window and doorbell
+   configuration
+5) Add support to provide support 64-bit memory window size from
+   DT
+
+[1] -> https://www.linuxplumbersconf.org/event/4/contributions/395/attachments/284/481/Implementing_NTB_Controller_Using_PCIe_Endpoint_-_final.pdf
+[2] -> http://lore.kernel.org/r/20190926112933.8922-1-kishon@ti.com
+[3] -> http://lore.kernel.org/r/20200508130646.23939-1-kishon@ti.com
+[4] -> http://lore.kernel.org/r/20200506151429.12255-1-kishon@ti.com
+
+Kishon Vijay Abraham I (19):
+  dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF NTB Device
+  Documentation: PCI: Add specification for the *PCI NTB* function
+    device
+  PCI: endpoint: Add API to get reference to EPC from device-tree
+  PCI: endpoint: Add API to create EPF device from device tree
+  PCI: endpoint: Add "pci-epf-bus" driver
+  PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
+    BAR
+  PCI: endpoint: Add helper API to get the 'next' unreserved BAR
+  PCI: endpoint: Make *_free_bar() to return error codes on failure
+  PCI: endpoint: Remove unused pci_epf_match_device()
+  PCI: endpoint: Make pci_epf_driver ops optional
+  PCI: endpoint: Add helper API to populate header with values from DT
+  PCI: endpoint: Add support to associate secondary EPC with EPF
+  PCI: endpoint: Add pci_epc_ops to map MSI irq
+  PCI: cadence: Implement ->msi_map_irq() ops
+  PCI: endpoint: Add EP function driver to provide NTB functionality
+  PCI: Add TI J721E device to pci ids
+  NTB: Add support for EPF PCI-Express Non-Transparent Bridge
+  NTB: tool: Enable the NTB/PCIe link on the local or remote side of
+    bridge
+  NTB: ntb_perf/ntb_tool: Use PCI device for dma_alloc_coherent()
+
+ Documentation/PCI/endpoint/index.rst          |    1 +
+ Documentation/PCI/endpoint/pci-test-ntb.rst   |  344 +++
+ .../bindings/pci/endpoint/pci-epf-bus.yaml    |   42 +
+ .../bindings/pci/endpoint/pci-epf-device.yaml |   69 +
+ .../bindings/pci/endpoint/pci-epf-ntb.yaml    |   68 +
+ drivers/misc/pci_endpoint_test.c              |    1 -
+ drivers/ntb/hw/Kconfig                        |    1 +
+ drivers/ntb/hw/Makefile                       |    1 +
+ drivers/ntb/hw/epf/Kconfig                    |    5 +
+ drivers/ntb/hw/epf/Makefile                   |    1 +
+ drivers/ntb/hw/epf/ntb_hw_epf.c               |  752 ++++++
+ drivers/ntb/test/ntb_perf.c                   |    3 +-
+ drivers/ntb/test/ntb_tool.c                   |    4 +-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |   50 +
+ drivers/pci/endpoint/Makefile                 |    3 +-
+ drivers/pci/endpoint/functions/Kconfig        |   12 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2038 +++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-test.c |   13 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |    6 +-
+ drivers/pci/endpoint/pci-epc-core.c           |  216 +-
+ drivers/pci/endpoint/pci-epf-bus.c            |   54 +
+ drivers/pci/endpoint/pci-epf-core.c           |  137 +-
+ include/linux/pci-epc.h                       |   43 +-
+ include/linux/pci-epf.h                       |   26 +-
+ include/linux/pci_ids.h                       |    1 +
+ 26 files changed, 3823 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/pci-test-ntb.rst
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
+ create mode 100644 drivers/ntb/hw/epf/Kconfig
+ create mode 100644 drivers/ntb/hw/epf/Makefile
+ create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
+ create mode 100644 drivers/pci/endpoint/pci-epf-bus.c
+
 -- 
 2.17.1
 
