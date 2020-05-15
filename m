@@ -2,68 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F8971D5785
-	for <lists+linux-pci@lfdr.de>; Fri, 15 May 2020 19:22:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A86841D5862
+	for <lists+linux-pci@lfdr.de>; Fri, 15 May 2020 19:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgEORV7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 May 2020 13:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48084 "EHLO mail.kernel.org"
+        id S1726204AbgEORzd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 May 2020 13:55:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:26829 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbgEORV7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 15 May 2020 13:21:59 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35B82073E;
-        Fri, 15 May 2020 17:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589563318;
-        bh=0P8rL+XmxOR/BVtEmlu60acHvGkwGm2FDdjswXIkm68=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GRNC4iSbHX8O2WHd1MLCSQ+5chG8FCYLWzzSuJ1Sdqejq2+A6bxxojc3r++wZatCU
-         VsAw+NehG0ZYH8SSRm4A0HLaqagynOVtuaGeMneX4jImS9u7o8WEQgMdCyR8aNkbYU
-         e9y0qROMvVqwlLtcwPde3eSYl8XtXXZr11HwXh5M=
-Date:   Fri, 15 May 2020 18:21:53 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        bhelgaas@google.com, alex.williamson@redhat.com,
-        robin.murphy@arm.com, dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH 0/4] PCI, iommu: Factor 'untrusted' check for ATS
- enablement
-Message-ID: <20200515172152.GC23334@willie-the-truck>
-References: <20200515104359.1178606-1-jean-philippe@linaro.org>
- <20200515154351.GA6546@infradead.org>
- <20200515171948.GC75440@otc-nc-03>
+        id S1726170AbgEORzd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 15 May 2020 13:55:33 -0400
+IronPort-SDR: UIAnu/tCtLGImoaeSaH/xDDLuq6PRNd6cH37Ojq67LivAPTbGCH5ViLsFeT/Hf04Av5KxYpcLX
+ 76ktuMZAz6gg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:32 -0700
+IronPort-SDR: 9AkNMV+Z5iNMk5sGL13LOjuA8Bfj2b7u7jpkxwSw8qoxmYbxr9oI2Clt3PUW9VKkJf6+R/oAsI
+ S+b3B64VNpYA==
+X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
+   d="scan'208";a="464804635"
+Received: from msethi-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.178.149])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:31 -0700
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+Subject: [RFC PATCH 0/2] PCI: Add basic Compute eXpress Link DVSEC decode
+Date:   Fri, 15 May 2020 10:55:26 -0700
+Message-Id: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515171948.GC75440@otc-nc-03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+This patch series implements basic Designated Vendor-Specific Extended
+Capabilities (DVSEC) decode for Compute eXpress Link devices, a new CPU
+interconnect building upon PCIe. As a basis for the CXL support it provides
+PCI init handling for detection, decode, and caching of CXL device
+capabilities.  Moreover, it makes use of the DVSEC Vendor ID and DVSEC ID so
+as to identify a CXL capable device. (PCIe r5.0, sec 7.9.6.2)
 
-On Fri, May 15, 2020 at 10:19:49AM -0700, Raj, Ashok wrote:
-> On Fri, May 15, 2020 at 08:43:51AM -0700, Christoph Hellwig wrote:
-> > Can you please lift the untrusted flag into struct device?  It really
-> > isn't a PCI specific concept, and we should not have code poking into
-> > pci_dev all over the iommu code.
-> 
-> Just for clarification: All IOMMU's today mostly pertain to only PCI devices
-> and for devices that aren't PCI like HPET for instance we give a PCI
-> identifier. Facilities like ATS for instance require the platform to have 
-> an IOMMU.
-> 
-> what additional problems does moving this to struct device solve?
+DocLink: https://www.computeexpresslink.org/
 
-ATS is PCI specific, but IOMMUs certainly aren't! The vast majority of
-IOMMUs deployed in arm/arm64 SoCs are /not/ using any sort of PCI.
+For your reference, a parallel series of patches have been submitted to enable
+lspci decode of CXL DVSEC and may be tracked.
 
-Will
+Link: https://lore.kernel.org/linux-pci/20200511174618.10589-1-sean.v.kelley@linux.intel.com/
+
+This patch makes use of pending DVSEC related header additions and the
+first patch of that series is included here. It can be sorted out when the
+upstream merge is done.
+
+Link: https://lore.kernel.org/linux-pci/20200508021844.6911-2-david.e.box@linux.intel.com/
+
+Sample dmesg output of a CXL Type 3 device (CXL.io, CXL.mem):
+[    2.997177] pci 0000:6b:00.0: CXL: Cache- IO+ Mem+ Viral- HDMCount 1
+[    2.997188] pci 0000:6b:00.0: CXL: cap ctrl status ctrl2 status2 lock
+[    2.997201] pci 0000:6b:00.0: CXL: 001e 0002 0000 0000 0000 0000
+
+
+David E. Box (1):
+  pci: Add Designated Vendor Specific Capability
+
+Sean V Kelley (1):
+  PCI: Add basic Compute eXpress Link DVSEC decode
+
+ drivers/pci/Kconfig           |  9 ++++
+ drivers/pci/Makefile          |  1 +
+ drivers/pci/cxl.c             | 89 +++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h             |  7 +++
+ drivers/pci/probe.c           |  1 +
+ include/linux/pci.h           |  1 +
+ include/uapi/linux/pci_regs.h |  5 ++
+ 7 files changed, 113 insertions(+)
+ create mode 100644 drivers/pci/cxl.c
+
+--
+2.26.2
+
