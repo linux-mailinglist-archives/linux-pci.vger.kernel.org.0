@@ -2,238 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C633A1D5866
-	for <lists+linux-pci@lfdr.de>; Fri, 15 May 2020 19:56:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 243591D59E8
+	for <lists+linux-pci@lfdr.de>; Fri, 15 May 2020 21:24:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgEORzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 May 2020 13:55:36 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26829 "EHLO mga07.intel.com"
+        id S1726497AbgEOTX0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 May 2020 15:23:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbgEORzf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 15 May 2020 13:55:35 -0400
-IronPort-SDR: stbtdaglhcGp/EGrUkZFsPJI/hmqw3bb/XdyRDzyS4xViGGe9B4RxRjUFW4KvPYJ/+o8PbuZLc
- yqj7S0/y/+xw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:35 -0700
-IronPort-SDR: TBKh+ihMjMtoxPYH+OtfEHSMh9mvSuJosODBNQBSufQTKe072TnEDrjnulbwFEepL7H3HK4iCq
- 8a0UTnYXbaSA==
-X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
-   d="scan'208";a="464804660"
-Received: from msethi-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.178.149])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:34 -0700
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [RFC PATCH 2/2] PCI: Add basic Compute eXpress Link DVSEC decode
-Date:   Fri, 15 May 2020 10:55:28 -0700
-Message-Id: <20200515175528.980103-3-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
-References: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
+        id S1726168AbgEOTX0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 15 May 2020 15:23:26 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 755EB2070A;
+        Fri, 15 May 2020 19:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589570605;
+        bh=DGk67flq+KQe3MmfEiLhY8iGdN/JINkf7O8LuIKtC/8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QxNVJun8XQkMcfEBoPrJvkAbnFg/av12VA2eolkC5G91Xr9t1NY2RYDqYdFNSPwKj
+         r3FbdDfa//wLDxaUAiBnwLy3IDnKUADYGg7Av+k+PxCwo6wbUer1M125D9zfuU1QE0
+         iEAewFBevpHo065mIOMJ4RZZaVdpC+BJj6AzISNA=
+Date:   Fri, 15 May 2020 14:23:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiaochun Lee <lixiaochun.2888@163.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
+Subject: Re: [PATCH v2] x86/PCI: Mark Power Control Unit as having
+ non-compliant BARs
+Message-ID: <20200515192323.GA538104@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1589537271-46459-1-git-send-email-lixiaochun.2888@163.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Compute eXpress Link is a new CPU interconnect created with
-workload accelerators in mind. The interconnect relies on PCIe Electrical
-and Physical interconnect for communication. CXL devices enumerate to the
-OS as an ACPI-described PCIe Root Complex Integrated Endpoint.
+On Fri, May 15, 2020 at 06:07:51AM -0400, Xiaochun Lee wrote:
+> From: Xiaochun Lee <lixc17@lenovo.com>
+> 
+> The device [8086:a26c] is a Power Control Unit of
+> Intel Ice Lake Server Processor and devices [8086:a1ec,a1ed]
+> are the Power Control Unit of Intel Xeon Scalable Processor,
+> kernel treats their pci BARs as a base address register that
+> leading to a boot failure like:
+> "pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)".
 
-This patch introduces the bare minimum support by simply looking for and
-caching the DVSEC CXL Extended Capability. Currently, only CXL.io (which
-is mandatory to be configured by BIOS) is enabled. In future, we will
-also add support for CXL.cache and CXL.mem.
+Do you have a spec that says these are Power Control Units?  The spec
+I found for the C620 PCH claims these are all "MROM" devices related
+to "Enterprise Value Add", "Intel Management Engine", and "Innovation
+Engine" configuration.
 
-DocLink: https://www.computeexpresslink.org/
+I updated the commit log, added [8086:a26d] as mentioned in that spec,
+added a stable tag, and applied the patch below to pci/misc for v5.8.
+Let me know if that doesn't look right.
 
-Originally-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
----
- drivers/pci/Kconfig  |  9 +++++
- drivers/pci/Makefile |  1 +
- drivers/pci/cxl.c    | 89 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h    |  7 ++++
- drivers/pci/probe.c  |  1 +
- include/linux/pci.h  |  1 +
- 6 files changed, 108 insertions(+)
- create mode 100644 drivers/pci/cxl.c
+> The symptoms in Ice Lake processor is:
+> "QU99 ICE LAKE ES1 HCC 24C 185W 3200 L-0"
+> 
+> The information of the device [8086:a26c] list as below:
+> 00:11.0 Unassigned class [ff00]: Intel Corporation Device a26c (rev 03)
+>         Subsystem: Lenovo Device 7811
+>         Flags: fast devsel, NUMA node 0
+>         Expansion ROM at <ignored> [disabled]
+>         Capabilities: [80] Power Management version 3
+> 
+> The symptoms in Xeon Scalable Processor is:
+> "Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz"
+> "Intel(R) Xeon(R) Gold 6252 CPU @ 2.00GHz"
+> 
+> The information of the Device [8086:a1ec] list as below:
+> 00:11.0 Unassigned class [ff00]: Intel Corporation C620 Series Chipset Family MROM 0 [8086:a1ec] (rev 09)
+>         Subsystem: Lenovo Device [17aa:7805]
+>         Latency: 0, Cache Line Size: 64 bytes
+>         NUMA node: 0
+>         Expansion ROM at <ignored> [disabled]
+>         Capabilities: [80] Power Management version 3
+> 
+> There are no other BARs on this devices, so mark the PCU as having
+> non-compliant BARs, therefore we don't try to probe any of them.
+> 
+> Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+> ---
+>  arch/x86/pci/fixup.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> index e723559..d9abc67 100644
+> --- a/arch/x86/pci/fixup.c
+> +++ b/arch/x86/pci/fixup.c
+> @@ -563,6 +563,9 @@ static void twinhead_reserve_killing_zone(struct pci_dev *dev)
+>   * Erratum BDF2
+>   * PCI BARs in the Home Agent Will Return Non-Zero Values During Enumeration
+>   * http://www.intel.com/content/www/us/en/processors/xeon/xeon-e5-v4-spec-update.html
+> + *
+> + * Device [8086:a26c]
+> + * Devices [8086:a1ec,a1ed]
+>   */
+>  static void pci_invalid_bar(struct pci_dev *dev)
+>  {
+> @@ -572,6 +575,9 @@ static void pci_invalid_bar(struct pci_dev *dev)
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
+>  
+>  /*
+>   * Device [1022:7808]
+> -- 
+> 1.8.3.1
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 4bef5c2bae9f..eafb200b320b 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -115,6 +115,15 @@ config XEN_PCIDEV_FRONTEND
- 	  The PCI device frontend driver allows the kernel to import arbitrary
- 	  PCI devices from a PCI backend to support PCI driver domains.
- 
-+config PCI_CXL
-+	bool "Enable PCI Compute eXpress Link"
-+	depends on PCI
-+	help
-+	  Say Y here if you want the PCI core to detect CXL devices, decode, and
-+	  cache the DVSEC CXL Extended Capability as configured by BIOS.
-+
-+	  When in doubt, say N.
-+
- config PCI_ATS
- 	bool
- 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 522d2b974e91..465eee31e999 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_PCI_PF_STUB)	+= pci-pf-stub.o
- obj-$(CONFIG_PCI_ECAM)		+= ecam.o
- obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
- obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
-+obj-$(CONFIG_PCI_CXL)		+= cxl.o
- 
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
-new file mode 100644
-index 000000000000..f02bdd7b77f2
---- /dev/null
-+++ b/drivers/pci/cxl.c
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Compute eXpress Link Support
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/pci.h>
-+#include <linux/pci_regs.h>
-+
-+#define PCI_DVSEC_VENDOR_ID_CXL		0x1e98
-+#define PCI_DVSEC_ID_CXL_DEV		0x0
-+
-+#define PCI_CXL_CAP			0x0a
-+#define PCI_CXL_CTRL			0x0c
-+#define PCI_CXL_STS			0x0e
-+#define PCI_CXL_CTRL2			0x10
-+#define PCI_CXL_STS2			0x12
-+#define PCI_CXL_LOCK			0x14
-+
-+#define PCI_CXL_CACHE			BIT(0)
-+#define PCI_CXL_IO			BIT(1)
-+#define PCI_CXL_MEM			BIT(2)
-+#define PCI_CXL_HDM_COUNT(reg)		(((reg) & (3 << 4)) >> 4)
-+#define PCI_CXL_VIRAL			BIT(14)
-+
-+/*
-+ * pci_find_cxl_capability - Identify and return offset to Vendor-Specific
-+ * capabilities.
-+ *
-+ * CXL makes use of Designated Vendor-Specific Extended Capability (DVSEC)
-+ * to uniquely identify both DVSEC Vendor ID and DVSEC ID aligning with
-+ * PCIe r5.0, sec 7.9.6.2
-+ */
-+static int pci_find_cxl_capability(struct pci_dev *dev)
-+{
-+	u16 vendor, id;
-+	int pos = 0;
-+
-+	while ((pos = pci_find_next_ext_capability(dev, pos,
-+						   PCI_EXT_CAP_ID_DVSEC))) {
-+		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1,
-+				     &vendor);
-+		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
-+		if (vendor == PCI_DVSEC_VENDOR_ID_CXL &&
-+		    id == PCI_DVSEC_ID_CXL_DEV)
-+			return pos;
-+	}
-+
-+	return 0;
-+}
-+
-+void pci_cxl_init(struct pci_dev *dev)
-+{
-+	u16 cap, ctrl, status, ctrl2, status2, lock;
-+	int pos;
-+
-+	/* Only for PCIe */
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	/* Only for Device 0 Function 0, Root Complex Integrated Endpoints */
-+	if (dev->devfn != 0 || (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END))
-+		return;
-+
-+	pos = pci_find_cxl_capability(dev);
-+	if (!pos)
-+		return;
-+
-+	dev->cxl_cap = pos;
-+
-+	pci_read_config_word(dev, pos + PCI_CXL_CAP, &cap);
-+	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
-+	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
-+	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
-+	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
-+	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
-+
-+	dev_info(&dev->dev, "CXL: Cache%c IO%c Mem%c Viral%c HDMCount %d\n",
-+		 (cap & PCI_CXL_CACHE) ? '+' : '-',
-+		 (cap & PCI_CXL_IO) ? '+' : '-',
-+		 (cap & PCI_CXL_MEM) ? '+' : '-',
-+		 (cap & PCI_CXL_VIRAL) ? '+' : '-',
-+		 PCI_CXL_HDM_COUNT(cap));
-+
-+	dev_info(&dev->dev, "CXL: cap ctrl status ctrl2 status2 lock\n");
-+	dev_info(&dev->dev, "CXL: %04x %04x %04x %04x %04x %04x\n",
-+		 cap, ctrl, status, ctrl2, status2, lock);
-+}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6d3f75867106..d9905e2dee95 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -469,6 +469,13 @@ static inline void pci_ats_init(struct pci_dev *d) { }
- static inline void pci_restore_ats_state(struct pci_dev *dev) { }
- #endif /* CONFIG_PCI_ATS */
- 
-+#ifdef CONFIG_PCI_CXL
-+/* Compute eXpress Link */
-+void pci_cxl_init(struct pci_dev *dev);
-+#else
-+static inline void pci_cxl_init(struct pci_dev *dev) { }
-+#endif
-+
- #ifdef CONFIG_PCI_PRI
- void pci_pri_init(struct pci_dev *dev);
- void pci_restore_pri_state(struct pci_dev *pdev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 77b8a145c39b..c55df0ae8f06 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2371,6 +2371,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
-+	pci_cxl_init(dev);		/* Compute eXpress Link */
- 
- 	pcie_report_downtraining(dev);
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 83ce1cdf5676..0c9145f48456 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -315,6 +315,7 @@ struct pci_dev {
- 	u16		aer_cap;	/* AER capability offset */
- 	struct aer_stats *aer_stats;	/* AER stats for this device */
- #endif
-+	u16		cxl_cap;	/* CXL capability offset */
- 	u8		pcie_cap;	/* PCIe capability offset */
- 	u8		msi_cap;	/* MSI capability offset */
- 	u8		msix_cap;	/* MSI-X capability offset */
--- 
-2.26.2
+commit 1574051e52cb ("x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs")
+Author: Xiaochun Lee <lixc17@lenovo.com>
+Date:   Thu May 14 23:31:07 2020 -0400
 
+    x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
+    
+    The Intel C620 Platform Controller Hub has MROM functions that have non-PCI
+    registers (undocumented in the public spec) where BAR 0 is supposed to be,
+    which results in messages like this:
+    
+      pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)
+    
+    Mark these MROM functions as having non-compliant BARs so we don't try to
+    probe any of them.  There are no other BARs on these devices.
+    
+    See the Intel C620 Series Chipset Platform Controller Hub Datasheet,
+    May 2019, Document Number 336067-007US, sec 2.1, 35.5, 35.6.
+    
+    [bhelgaas: commit log, add 0xa26d]
+    Link: https://lore.kernel.org/r/1589513467-17070-1-git-send-email-lixiaochun.2888@163.com
+    Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Cc: stable@vger.kernel.org
+
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index e723559c386a..0c67a5a94de3 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -572,6 +572,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2fc0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26d, pci_invalid_bar);
+ 
+ /*
+  * Device [1022:7808]
