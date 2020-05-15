@@ -2,50 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EC9F1D4D94
-	for <lists+linux-pci@lfdr.de>; Fri, 15 May 2020 14:21:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F400D1D4DF3
+	for <lists+linux-pci@lfdr.de>; Fri, 15 May 2020 14:44:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgEOMVK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 May 2020 08:21:10 -0400
-Received: from 8bytes.org ([81.169.241.247]:43232 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgEOMVK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 15 May 2020 08:21:10 -0400
+        id S1726144AbgEOMov (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 May 2020 08:44:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbgEOMov (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 May 2020 08:44:51 -0400
+X-Greylist: delayed 1423 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 15 May 2020 05:44:51 PDT
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0C2C061A0C
+        for <linux-pci@vger.kernel.org>; Fri, 15 May 2020 05:44:51 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id DEA45379; Fri, 15 May 2020 14:21:05 +0200 (CEST)
-Date:   Fri, 15 May 2020 14:21:04 +0200
+        id E6751379; Fri, 15 May 2020 14:44:49 +0200 (CEST)
+Date:   Fri, 15 May 2020 14:44:48 +0200
 From:   Joerg Roedel <joro@8bytes.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, bhelgaas@google.com,
-        will@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        alex.williamson@redhat.com
-Subject: Re: [PATCH 2/4] iommu/amd: Use pci_ats_supported()
-Message-ID: <20200515122104.GV18353@8bytes.org>
-References: <20200515104359.1178606-1-jean-philippe@linaro.org>
- <20200515104359.1178606-3-jean-philippe@linaro.org>
- <20200515120150.GU18353@8bytes.org>
- <20200515121124.GA784024@myrica>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, ashok.raj@intel.com,
+        lalithambika.krishnakumar@intel.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200515124448.GW18353@8bytes.org>
+References: <CACK8Z6E8pjVeC934oFgr=VB3pULx_GyT2NkzAogdRQJ9TKSX9A@mail.gmail.com>
+ <20200513151929.GA38418@bjorn-Precision-5520>
+ <CACK8Z6F8ncByr92+PUHPAGudZBM4fqKiau+t=JE6P1963et3fQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515121124.GA784024@myrica>
+In-Reply-To: <CACK8Z6F8ncByr92+PUHPAGudZBM4fqKiau+t=JE6P1963et3fQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 15, 2020 at 02:11:24PM +0200, Jean-Philippe Brucker wrote:
-> On Fri, May 15, 2020 at 02:01:50PM +0200, Joerg Roedel wrote:
-> > Hmm, but per patch 1, pci_ats_supported() does not check
-> > pci_ats_disabled(), or do I miss something?
-> 
-> The commit message isn't clear. pci_ats_init() sets dev->ats_cap only if
-> !pci_ats_disabled(), so checking dev->ats_cap in pci_ats_supported()
-> takes pci_ats_disabled() into account.
+On Wed, May 13, 2020 at 02:26:18PM -0700, Rajat Jain wrote:
+> * A driver could be double fetching the memory, causing it to do
+> different things than intended. E.g.
+> * A driver could be (negligently) passing some kernel addresses to the device.
+> * A driver could be using (for memory dereferencing, for e.g.) the
+> address/indices, given by the device, without enough validation.
+> * A driver may negligently be sharing the DMA memory with some other
+> driver data in the same PAGE. Since the IOMMU restrictions are PAGE
+> granular, this might give device access to that driver data.
 
-Right, so the patch is fine:
+The Intel IOMMU driver has a solution for that problem as it has iommu
+based bounce-buffer dma ops. This means that a driver can't
+accidentially share sensitive information on the same page with a
+device.
 
-Reviewed-by: Joerg Roedel <jroedel@suse.de>
+This idea should be generalized and made available for all iommu-drivers
+in the form of integrating it into the dma-iommu code, or have a
+separate generic dma-ops implementation, which does:
+
+	1) Give the device direct access to DMA buffers if they are
+	   IOMMU-page aligned (both start and size).
+
+	2) Use bounce buffering for DMA buffers that don't align with
+	   iommu page-size.
+
+This would at least eliminate this type of attack made possible by
+uncautious drivers.
+
+Regards,
+
+	Joerg
