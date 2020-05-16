@@ -2,91 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A697E1D5F7C
-	for <lists+linux-pci@lfdr.de>; Sat, 16 May 2020 09:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FE571D6162
+	for <lists+linux-pci@lfdr.de>; Sat, 16 May 2020 15:37:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgEPHzO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 May 2020 03:55:14 -0400
-Received: from mga09.intel.com ([134.134.136.24]:5124 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgEPHzO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 16 May 2020 03:55:14 -0400
-IronPort-SDR: W7y8L+6TWDDtJ0JXCxMRIptL68xTNc6iTNRa/klldE8Ntl9ffPCowleCAyDLobLimXsg7hNvuD
- VhtpoChwX47Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 00:55:13 -0700
-IronPort-SDR: r8t2k0YQtuum+uqVt30HSEpEPK/dj7nqY9w1RezkN2c25ACfhR212nsQhW96qAdQwTpj/rbIBW
- qrONSJc9DggA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
-   d="scan'208";a="372908472"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 16 May 2020 00:55:10 -0700
-Received: by lahna (sSMTP sendmail emulation); Sat, 16 May 2020 10:55:10 +0300
-Date:   Sat, 16 May 2020 10:55:10 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Do not use pcie_get_speed_cap() to determine
- when to start waiting
-Message-ID: <20200516075510.GR2571@lahna.fi.intel.com>
-References: <20200515095535.GH2571@lahna.fi.intel.com>
- <20200515205321.GA538705@bjorn-Precision-5520>
+        id S1726276AbgEPNhh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 May 2020 09:37:37 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36166 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgEPNhg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 May 2020 09:37:36 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y22so5562081qki.3
+        for <linux-pci@vger.kernel.org>; Sat, 16 May 2020 06:37:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=rHlQ0n6fppHgm/H6WszgLkI+e2yn+0+N8yRZSyZ3vyw=;
+        b=tY390Z2rpjOBPrnA6Ab19Q38K8iJUHGmy6x7tZWJsbQZbkZm0rz9RQh+GtgaMms/b5
+         D49eICf6z2BEJwzgSOi5+IqusV2gyB8t8VMXA7LTyLPRzpNAPBgrWH3/ZCRw2vtETP34
+         SpA0nzj9lfLAfnTfKJBmxVlim0nZ0YYy+JBBmHAuxKHDvPvblj3UNDrFeTgATi6o2e16
+         hEfLy33PhGNwOHHP63djBuzXhK+pTAfbqnpCxyUnGJkQ/XO/Qf0JYkBpRXgn46yIwMo5
+         SgtBmeRLS0Pd30zWQLiMw7aaUiCWVg5EsFxHgxw483MilvPMAlQZNU6BGIs1N/YOaNUG
+         SaHg==
+X-Gm-Message-State: AOAM532/TAgf28dm0lkuiSJmQmr9qlvlGr5sV8jFabEZi0Iei8PJh7PS
+        EKDBLFMV/Sf+RkfQ4HEgyD0nLiZxVhQ=
+X-Google-Smtp-Source: ABdhPJxNiuJzkyhBsvUoJGnPN6vlFrXwhKdAKsvYXX7cVDfNfbiOx+alnxNTvjR9SLYC/yoeOw6iOw==
+X-Received: by 2002:a37:4351:: with SMTP id q78mr6978428qka.242.1589636255294;
+        Sat, 16 May 2020 06:37:35 -0700 (PDT)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com. [209.85.160.170])
+        by smtp.gmail.com with ESMTPSA id d82sm3863860qke.81.2020.05.16.06.37.34
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 May 2020 06:37:35 -0700 (PDT)
+Received: by mail-qt1-f170.google.com with SMTP id m44so4399820qtm.8
+        for <linux-pci@vger.kernel.org>; Sat, 16 May 2020 06:37:34 -0700 (PDT)
+X-Received: by 2002:aed:3b75:: with SMTP id q50mr8527093qte.23.1589636254629;
+ Sat, 16 May 2020 06:37:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515205321.GA538705@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From:   Marcos Scriven <marcos@scriven.org>
+Date:   Sat, 16 May 2020 14:37:23 +0100
+X-Gmail-Original-Message-ID: <CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com>
+Message-ID: <CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com>
+Subject: [PATCH] PCI: Avoid FLR for AMD Matisse HD Audio and USB Controllers
+To:     linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:53:21PM -0500, Bjorn Helgaas wrote:
-> On Fri, May 15, 2020 at 12:55:35PM +0300, Mika Westerberg wrote:
-> > On Thu, May 14, 2020 at 05:41:32PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, May 14, 2020 at 04:30:43PM +0300, Mika Westerberg wrote:
-> > > > Kai-Heng Feng reported that it takes long time (>1s) to resume
-> > > > Thunderbolt connected PCIe devices from both runtime suspend and system
-> > > > sleep (s2idle).
-> > > > 
-> > > > These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
-> > > > announces support for speeds > 5 GT/s but it is then capped by the
-> > > > second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
-> > > > possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
-> > > > it ended up waiting for 1100 ms as these ports do not support active
-> > > > link layer reporting either.
-> > > 
-> > > I don't think PCI_EXP_LNKCTL2 is relevant here.  I think the lack of
-> > > Data Link Layer Link Active is just a chip erratum.  Is that
-> > > documented anywhere?
-> > 
-> > I think it is relevant because if you hard-code (hardware) LNKCTL2 to
-> > always target 2.5GT/s then it effectively does not need to implement
-> > data link layer active because the link speed never goes higher than
-> > that.
-> 
-> I don't think it's reasonable to expect software to check Link
-> Capabilities 2, then try to write Link Control 2 and figure out
-> whether the target speed is hard-wired.  I think these devices
-> are just broken (at least per spec).
+This patch fixes an FLR bug on the following two devices:
 
-Software does not need to figure that out. It needs to check this field
-if it needs to know the "actual" supported link speed.
+AMD Matisse HD Audio Controller 0x1487
+AMD Matisse USB 3.0 Host Controller 0x149c
 
-Spec specifically allows this:
+As there was already such a quirk for an Intel network device, I have
+renamed that method and updated the comments, trying to make it
+clearer what the specific original devices that were affected are
+(based on the commit message this was original done:
+https://git.thm.de/mhnn55/eco32-linux-ba/commit/f65fd1aa4f9881d5540192d11f7b8ed2fec936db).
 
-  The default value of this field is the highest Link speed supported by
-  the component (as reported in the Max Link Speed field of the Link
-  Capabilities Register) unless the corresponding platform/form factor
-  requires a different default value.
+I have ordered them by hex product ID.
 
-and it even allows hardwiring this:
+I have verified this works on a X570 I AORUS PRO WIFI (rev. 1.0) motherboard.
 
-  Components that support only the 2.5 GT/s speed are permitted to
-  hardwire this field to 0000b.
+
+From 651176ab164ae51e37d5bb86f5948da558744930 Mon Sep 17 00:00:00 2001
+From: Marcos Scriven <marcos@scriven.org>
+Date: Sat, 16 May 2020 14:23:26 +0100
+Subject: [PATCH] PCI: Avoid FLR for:
+
+    AMD Matisse HD Audio Controller 0x1487
+    AMD Matisse USB 3.0 Host Controller 0x149c
+
+These devices advertise a Function Level Reset (FLR) capability, but hang
+when an FLR is triggered.
+
+To reproduce the problem, attach the device to a VM, then detach and try to
+attach again.
+
+Add a quirk to prevent the use of FLR on these devices.
+
+Signed-off-by: Marcos Scriven <marcos@scriven.org>
+---
+ drivers/pci/quirks.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 28c9a2409c50..ff310f0cac22 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5129,13 +5129,23 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+
+-/* FLR may cause some 82579 devices to hang */
+-static void quirk_intel_no_flr(struct pci_dev *dev)
++/*
++ * FLR may cause the following to devices to hang:
++ *
++ * AMD Starship/Matisse HD Audio Controller 0x1487
++ * AMD Matisse USB 3.0 Host Controller 0x149c
++ * Intel 82579LM Gigabit Ethernet Controller 0x1502
++ * Intel 82579V Gigabit Ethernet Controller 0x1503
++ *
++ */
++static void quirk_no_flr(struct pci_dev *dev)
+ {
+     dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+ }
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_intel_no_flr);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_intel_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+
+ static void quirk_no_ext_tags(struct pci_dev *pdev)
+ {
+--
+2.25.1
