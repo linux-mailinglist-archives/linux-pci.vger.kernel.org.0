@@ -2,106 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC1EA1D7A49
-	for <lists+linux-pci@lfdr.de>; Mon, 18 May 2020 15:46:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27D871D7A64
+	for <lists+linux-pci@lfdr.de>; Mon, 18 May 2020 15:50:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgERNq2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 May 2020 09:46:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:41026 "EHLO foss.arm.com"
+        id S1726958AbgERNuL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 May 2020 09:50:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:41130 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbgERNq2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 May 2020 09:46:28 -0400
+        id S1726918AbgERNuK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 May 2020 09:50:10 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A160D101E;
-        Mon, 18 May 2020 06:46:27 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3AEF101E;
+        Mon, 18 May 2020 06:50:09 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A48E43F52E;
-        Mon, 18 May 2020 06:46:25 -0700 (PDT)
-Date:   Mon, 18 May 2020 14:46:14 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 782F53F52E;
+        Mon, 18 May 2020 06:50:08 -0700 (PDT)
+Date:   Mon, 18 May 2020 14:50:06 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200513135643.478ffbda@windsurf.home>
- <87pnb2h7w1.fsf@FE-laptop>
- <20200518103004.6tydnad3apkfn77y@pali>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     robh+dt@kernel.org, amurray@thegoodpenguin.co.uk,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2] arm64: tegra: Fix flag for 64-bit resources in
+ 'ranges' property
+Message-ID: <20200518135006.GB31554@e121166-lin.cambridge.arm.com>
+References: <20200513191627.8533-1-vidyas@nvidia.com>
+ <20200514135437.29814-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200518103004.6tydnad3apkfn77y@pali>
+In-Reply-To: <20200514135437.29814-1-vidyas@nvidia.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:30:04PM +0200, Pali Rohár wrote:
-> On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote:
-> > Hello,
-> > 
-> > > Hello,
-> > >
-> > > On Thu, 30 Apr 2020 10:06:13 +0200
-> > > Pali Rohár <pali@kernel.org> wrote:
-> > >
-> > >> Marek Behún (5):
-> > >>   PCI: aardvark: Improve link training
-> > >>   PCI: aardvark: Add PHY support
-> > >>   dt-bindings: PCI: aardvark: Describe new properties
-> > >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
-> > >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
-> > >> 
-> > >> Pali Rohár (7):
-> > >>   PCI: aardvark: Train link immediately after enabling training
-> > >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
-> > >>     read-only register
-> > >>   PCI: of: Zero max-link-speed value is invalid
-> > >>   PCI: aardvark: Issue PERST via GPIO
-> > >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
-> > >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
-> > >>     macros
-> > >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
-> > >
-> > > Thanks a lot for this work. For a number of reasons, I'm less involved
-> > > in Marvell platform support in Linux, but I reviewed your series and
-> > > followed the discussions around it, and I'm happy to give my:
-> > >
-> > > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> > 
-> > With this acked-by for the series, the reviewed-by from Rob on the
-> > binding and the tested-by, I am pretty confident so I applied the
-> > patches 10, 11 and 12 on mvebu/dt64.
-> > 
-> > Thanks,
-> > 
-> > Gregory
+On Thu, May 14, 2020 at 07:24:37PM +0530, Vidya Sagar wrote:
+> Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+> represent 64-bit resources.
 > 
-> Thank you!
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V2:
+> * Extended the change to cover other controllers as well
 > 
-> Lorenzo, would you now take remaining patches?
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-Yes - even though I have reservations about patch (5) and the
-problem is related to a complete lack of programming model for
-these host controllers and a clear separation between what's
-done in the OS vs bootloader, PERST handling in this host
-bridge is *really* a mess.
-
-I applied 1-9 to pci/aardvark.
+We don't apply DTS patches - so no need to CC linux-pci from now
+onwards on these. Marked as not-applicable.
 
 Lorenzo
+
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> index e1ae01c2d039..4bc187a4eacd 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> @@ -1405,7 +1405,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+> +			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>  			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>  	};
+>  
+> @@ -1450,7 +1450,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+> +			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>  			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>  	};
+>  
+> @@ -1495,7 +1495,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+> +			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>  			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>  	};
+>  
+> @@ -1540,7 +1540,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+> +			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>  			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>  	};
+>  
+> @@ -1585,7 +1585,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+> +			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>  			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>  	};
+>  
+> @@ -1634,7 +1634,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+> +			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>  			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>  	};
+>  
+> -- 
+> 2.17.1
+> 
