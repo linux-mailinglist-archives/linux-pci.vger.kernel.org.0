@@ -2,143 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A3F81D78B4
-	for <lists+linux-pci@lfdr.de>; Mon, 18 May 2020 14:34:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC1EA1D7A49
+	for <lists+linux-pci@lfdr.de>; Mon, 18 May 2020 15:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgERMeh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 May 2020 08:34:37 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55816 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgERMeh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 May 2020 08:34:37 -0400
-Received: from 89-64-86-21.dynamic.chello.pl (89.64.86.21) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 240662dfe3aa87da; Mon, 18 May 2020 14:34:34 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lenb@kernel.org, bhelgaas@google.com, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/2] pci: Add ACPI StorageD3Enable _DSD support
-Date:   Mon, 18 May 2020 14:34:33 +0200
-Message-ID: <1967525.XL736rHnAO@kreacher>
-In-Reply-To: <20200428003214.3764-2-david.e.box@linux.intel.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com> <20200428003214.3764-2-david.e.box@linux.intel.com>
+        id S1726958AbgERNq2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 May 2020 09:46:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:41026 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726800AbgERNq2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 May 2020 09:46:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A160D101E;
+        Mon, 18 May 2020 06:46:27 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A48E43F52E;
+        Mon, 18 May 2020 06:46:25 -0700 (PDT)
+Date:   Mon, 18 May 2020 14:46:14 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
+ Compex wifi cards
+Message-ID: <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
+References: <20200430080625.26070-1-pali@kernel.org>
+ <20200513135643.478ffbda@windsurf.home>
+ <87pnb2h7w1.fsf@FE-laptop>
+ <20200518103004.6tydnad3apkfn77y@pali>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200518103004.6tydnad3apkfn77y@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday, April 28, 2020 2:32:13 AM CEST David E. Box wrote:
-> NVMe storage power management during suspend-to-idle, particularly on
-> laptops, has been inconsistent with some devices working with D3 while
-> others must rely on NVMe APST in order for power savings to be realized.
-> Currently the default is to use APST unless quirked to do otherwise.
-> However newer platforms, like Intel Comet Lake systems, may require NVMe
-> drives to use D3 in order for the PCIe ports to be properly power managed.
-> To make it easier for drivers to choose, these platforms may supply a
-> special "StorageD3Enable" _DSD property under the root port that the device
-> is attached to. If supplied, the driver must use D3 in order for the
-> platform to realize the deepest power savings in suspend-to-idle.
+On Mon, May 18, 2020 at 12:30:04PM +0200, Pali Rohár wrote:
+> On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote:
+> > Hello,
+> > 
+> > > Hello,
+> > >
+> > > On Thu, 30 Apr 2020 10:06:13 +0200
+> > > Pali Rohár <pali@kernel.org> wrote:
+> > >
+> > >> Marek Behún (5):
+> > >>   PCI: aardvark: Improve link training
+> > >>   PCI: aardvark: Add PHY support
+> > >>   dt-bindings: PCI: aardvark: Describe new properties
+> > >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+> > >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
+> > >> 
+> > >> Pali Rohár (7):
+> > >>   PCI: aardvark: Train link immediately after enabling training
+> > >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+> > >>     read-only register
+> > >>   PCI: of: Zero max-link-speed value is invalid
+> > >>   PCI: aardvark: Issue PERST via GPIO
+> > >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
+> > >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+> > >>     macros
+> > >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+> > >
+> > > Thanks a lot for this work. For a number of reasons, I'm less involved
+> > > in Marvell platform support in Linux, but I reviewed your series and
+> > > followed the discussions around it, and I'm happy to give my:
+> > >
+> > > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> > 
+> > With this acked-by for the series, the reviewed-by from Rob on the
+> > binding and the tested-by, I am pretty confident so I applied the
+> > patches 10, 11 and 12 on mvebu/dt64.
+> > 
+> > Thanks,
+> > 
+> > Gregory
 > 
-> Adds support for the _DSD to the pci/acpi layer.
+> Thank you!
 > 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
-> Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/acpi/property.c |  3 +++
->  drivers/pci/pci-acpi.c  | 47 +++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.c       |  6 ++++++
->  drivers/pci/pci.h       |  4 ++++
->  include/linux/pci.h     |  1 +
->  5 files changed, 61 insertions(+)
-> 
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index e601c4511a8b..f09375ab40e4 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
->  	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
->  	GUID_INIT(0x6c501103, 0xc189, 0x4296,
->  		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
-> +	/* D3 Support for storage devivce: 5025030f-842f-4ab4-a561-99a5189762d0 */
-> +	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
-> +		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
->  };
->  
->  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index d21969fba6ab..5df249ebf022 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -972,6 +972,52 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
->  	return val == 1;
->  }
->  
-> +static bool acpi_pci_storage_d3(struct pci_dev *dev)
-> +{
-> +	const struct fwnode_handle *fwnode;
-> +	struct acpi_device *adev;
-> +	struct pci_dev *root;
-> +	acpi_handle handle;
-> +	acpi_status status;
-> +	u8 val;
-> +
-> +	/*
-> +	 * Look for _DSD property specifying that the storage device on
-> +	 * the port must use D3 to support deep platform power savings during
-> +	 * suspend-to-idle
-> +	 */
-> +	root = pci_find_pcie_root_port(dev);
-> +	if (!root)
-> +		return false;
-> +
-> +	adev = ACPI_COMPANION(&root->dev);
-> +	if (root == dev) {
-> +		/*
-> +		 * It is possible that the ACPI companion is not yet bound
-> +		 * for the root port so look it up manually here.
-> +		 */
-> +		if (!adev && !pci_dev_is_added(root))
-> +			adev = acpi_pci_find_companion(&root->dev);
-> +	}
-> +
-> +	if (!adev)
-> +		return false;
-> +
-> +	status = acpi_get_handle(adev->handle, "PXSX", &handle);
-> +	if (ACPI_FAILURE(status))
-> +		return false;
-> +
-> +	adev = acpi_bus_get_acpi_device(handle);
-> +	if (!adev)
-> +		return false;
-> +
-> +	fwnode = acpi_fwnode_handle(adev);
-> +	if (!fwnode_property_read_u8(fwnode, "StorageD3Enable", &val))
-> +		return val == 1;
-> +
-> +	return false;
-> +}
+> Lorenzo, would you now take remaining patches?
 
-Kind of orthogonal to what happens to the second patch in this series, I don't
-think that the PCI changes below are all needed.
+Yes - even though I have reservations about patch (5) and the
+problem is related to a complete lack of programming model for
+these host controllers and a clear separation between what's
+done in the OS vs bootloader, PERST handling in this host
+bridge is *really* a mess.
 
-IMO it would be sufficient to export the function above, maybe as
-pci_acpi_storage_d3(), to drivers, so that they can call it directly as
-desired.
+I applied 1-9 to pci/aardvark.
 
-Since _DSD return data are not allowed by the spec to change between
-subsequent invocations of it, the interested driver may call this function
-once at the device init time and quirk it accordingly if needed.
-
-Cheers!
-
-
-
+Lorenzo
