@@ -2,163 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE9C11D9D84
-	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 19:08:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E1691D9D91
+	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 19:11:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729053AbgESRIr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 May 2020 13:08:47 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17145 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRIr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 13:08:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec412500000>; Tue, 19 May 2020 10:07:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 May 2020 10:08:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 10:08:47 -0700
-Received: from [10.25.75.192] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
- 2020 17:08:42 +0000
-Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
- size >4GB
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
-        "Alan Mikhak" <alan.mikhak@sifive.com>
-References: <20200513190855.23318-1-vidyas@nvidia.com>
- <20200513223508.GA352288@bjorn-Precision-5520>
- <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
- <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
- <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <59c32bed-3a6a-70ba-0052-65d9466a0790@nvidia.com>
-Date:   Tue, 19 May 2020 22:38:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1729320AbgESRK5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 May 2020 13:10:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:52187 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729001AbgESRK5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 May 2020 13:10:57 -0400
+IronPort-SDR: mUdAwHwjaLqzVHZvw2xYplJCqd4YFkaQJFZJoEiJLoxkQd/1UTfAk50jEODfJCKf/iPmaNJGC0
+ k43Gg1CoxXeA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 10:10:56 -0700
+IronPort-SDR: YEfPeTPLf3xKET0vqRozbESjJnBS3MFTOVE2oJhdp6jdCl/X6iv5Zo3fjjH1ObYkx3Y+d4KkDk
+ 1MFbd3hx6BeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="343201225"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 19 May 2020 10:10:55 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 0C8375803C5;
+        Tue, 19 May 2020 10:10:54 -0700 (PDT)
+Message-ID: <8003f408ec9bcf0ea2522122ba4051ffb571e1b7.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] pci: Add ACPI StorageD3Enable _DSD support
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     lenb@kernel.org, bhelgaas@google.com, kbusch@kernel.org,
+        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 19 May 2020 10:10:53 -0700
+In-Reply-To: <1967525.XL736rHnAO@kreacher>
+References: <20200428003214.3764-1-david.e.box@linux.intel.com>
+         <20200428003214.3764-2-david.e.box@linux.intel.com>
+         <1967525.XL736rHnAO@kreacher>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589908048; bh=1rQXPA2oIArWGngeEsdBJMTOxHrSPSleJraforWbcuQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FtKf2DlTg2eG/uj3U/HEi0z+HTvs9Hi0pteXkU9kl9DlFxnV2OezCsGy8yZuGZLQQ
-         xgBxpAjR1lXlIupxRsEX5ZsNEaxuKkHO+7c81P+IFQzhZvgqIG98feDXT9a9C3mBkr
-         jkfh8gBU9D6eB2sdME3SEZdmQPnwdejLGH2oUvEg1YaeeLbRSfJu0mP9Zj/1uTHi3z
-         b7yY0fZ/qplPiV9ZvPRJMisS4NeZsZzpy+6/9zoK7ryMnHkCHsN1V2m4vUDkcIpKzu
-         17aaGJ5g6/u3BtJIV18dIQvwD7FTgWlfgEViQ8DJDStewYrgonTfgjxllTbXmpFOWx
-         +6Kb+RYAkGtTg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, 2020-05-18 at 14:34 +0200, Rafael J. Wysocki wrote:
+> On Tuesday, April 28, 2020 2:32:13 AM CEST David E. Box wrote:
+> > NVMe storage power management during suspend-to-idle, particularly
+> > on
+> > laptops, has been inconsistent with some devices working with D3
+> > while
+> > others must rely on NVMe APST in order for power savings to be
+> > realized.
+> > Currently the default is to use APST unless quirked to do
+> > otherwise.
+> > However newer platforms, like Intel Comet Lake systems, may require
+> > NVMe
+> > drives to use D3 in order for the PCIe ports to be properly power
+> > managed.
+> > To make it easier for drivers to choose, these platforms may supply
+> > a
+> > special "StorageD3Enable" _DSD property under the root port that
+> > the device
+> > is attached to. If supplied, the driver must use D3 in order for
+> > the
+> > platform to realize the deepest power savings in suspend-to-idle.
+> > 
+> > Adds support for the _DSD to the pci/acpi layer.
+> > 
+> > Acked-by: Dan Williams <dan.j.williams@intel.com>
+> > Link: 
+> > https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> >  drivers/acpi/property.c |  3 +++
+> >  drivers/pci/pci-acpi.c  | 47
+> > +++++++++++++++++++++++++++++++++++++++++
+> >  drivers/pci/pci.c       |  6 ++++++
+> >  drivers/pci/pci.h       |  4 ++++
+> >  include/linux/pci.h     |  1 +
+> >  5 files changed, 61 insertions(+)
+> > 
+> > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> > index e601c4511a8b..f09375ab40e4 100644
+> > --- a/drivers/acpi/property.c
+> > +++ b/drivers/acpi/property.c
+> > @@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
+> >  	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-
+> > ba72-9bf5a26ebe5d */
+> >  	GUID_INIT(0x6c501103, 0xc189, 0x4296,
+> >  		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
+> > +	/* D3 Support for storage devivce: 5025030f-842f-4ab4-a561-
+> > 99a5189762d0 */
+> > +	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
+> > +		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
+> >  };
+> >  
+> >  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-
+> > 1319f52a966b */
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > index d21969fba6ab..5df249ebf022 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -972,6 +972,52 @@ static bool acpi_pci_bridge_d3(struct pci_dev
+> > *dev)
+> >  	return val == 1;
+> >  }
+> >  
+> > +static bool acpi_pci_storage_d3(struct pci_dev *dev)
+> > +{
+> > +	const struct fwnode_handle *fwnode;
+> > +	struct acpi_device *adev;
+> > +	struct pci_dev *root;
+> > +	acpi_handle handle;
+> > +	acpi_status status;
+> > +	u8 val;
+> > +
+> > +	/*
+> > +	 * Look for _DSD property specifying that the storage device on
+> > +	 * the port must use D3 to support deep platform power savings
+> > during
+> > +	 * suspend-to-idle
+> > +	 */
+> > +	root = pci_find_pcie_root_port(dev);
+> > +	if (!root)
+> > +		return false;
+> > +
+> > +	adev = ACPI_COMPANION(&root->dev);
+> > +	if (root == dev) {
+> > +		/*
+> > +		 * It is possible that the ACPI companion is not yet
+> > bound
+> > +		 * for the root port so look it up manually here.
+> > +		 */
+> > +		if (!adev && !pci_dev_is_added(root))
+> > +			adev = acpi_pci_find_companion(&root->dev);
+> > +	}
+> > +
+> > +	if (!adev)
+> > +		return false;
+> > +
+> > +	status = acpi_get_handle(adev->handle, "PXSX", &handle);
+> > +	if (ACPI_FAILURE(status))
+> > +		return false;
+> > +
+> > +	adev = acpi_bus_get_acpi_device(handle);
+> > +	if (!adev)
+> > +		return false;
+> > +
+> > +	fwnode = acpi_fwnode_handle(adev);
+> > +	if (!fwnode_property_read_u8(fwnode, "StorageD3Enable", &val))
+> > +		return val == 1;
+> > +
+> > +	return false;
+> > +}
+> 
+> Kind of orthogonal to what happens to the second patch in this
+> series, I don't
+> think that the PCI changes below are all needed.
+> 
+> IMO it would be sufficient to export the function above, maybe as
+> pci_acpi_storage_d3(), to drivers, so that they can call it directly
+> as
+> desired.
+> 
+> Since _DSD return data are not allowed by the spec to change between
+> subsequent invocations of it, the interested driver may call this
+> function
+> once at the device init time and quirk it accordingly if needed.
 
+Yeah this is better. Will do. Thanks.
 
-On 19-May-20 8:28 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
->>
->>
->> On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
->>>> [+cc Alan; please cc authors of relevant commits,
->>>> updated Andrew's email address]
->>>>
->>>> On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
->>>>> commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
->>>>> 32-bits") enables warning for MEM resources of size >4GB but prefetchable
->>>>>    memory resources also come under this category where sizes can go beyond
->>>>> 4GB. Avoid logging a warning for prefetchable memory resources.
->>>>>
->>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>>> ---
->>>>>    drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
->>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> index 42fbfe2a1b8f..a29396529ea4 100644
->>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>>>                       pp->mem = win->res;
->>>>>                       pp->mem->name = "MEM";
->>>>>                       mem_size = resource_size(pp->mem);
->>>>> -                   if (upper_32_bits(mem_size))
->>>>> +                   if (upper_32_bits(mem_size) &&
->>>>> +                       !(win->res->flags & IORESOURCE_PREFETCH))
->>>>>                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
->>>>>                       pp->mem_size = mem_size;
->>>>>                       pp->mem_bus_addr = pp->mem->start - win->offset;
->>>
->>> That warning was added for a reason - why should not we log legitimate
->>> warnings ? AFAIU having resources larger than 4GB can lead to undefined
->>> behaviour given the current ATU programming API.
->> Yeah. I'm all for a warning if the size is larger than 4GB in case of
->> non-prefetchable window as one of the ATU outbound translation
->> channels is being used,
-> 
-> Is it true for all DWC host controllers ? Or there may be another
-> exception whereby we would be forced to disable this warning altogether
-> ?I think so. As I see from the code, ATU's
-Region-0 is used for config space translation
-Region-1 is used for non-prefetchable memory translation
-Region-2 is used for I/O translation
-So, there is no region reserved for translating prefetchable memory regions.
-
-> 
->> but, we are not employing any ATU outbound translation channel for
-> 
-> What does this mean ? "we are not employing any ATU outbound...", is
-> this the tegra driver ? And what guarantees that this warning is not
-> legitimate on DWC host controllers that do use the ATU outbound
-> translation for prefetchable windows ?
-Not Tegra driver but Tegra HW. Tegra HW doesn't need any ATU outbound 
-translation for prefetchable (for that matter any 1-to-1 mapping to 
-generate memory transactions on the PCIe bus).
-The Warning is still valid for both Tegra and other DWC based 
-controllers for non-prefetchable memory translation.
-
-> 
-> Can DWC maintainers chime in and clarify please ?
-> 
->> prefetchable window and they can be greater than 4GB in size for all
->> right reasons. So, logging a warning for prefetchable region doesn't
->> seem correct to me. Please let me know if my understanding is wrong.
-> 
-> I think your patch is wrong and it is applied on top of a patch that
-> is wrong too, so I won't apply yours and it is likely I will revert
-> Alan's because it seems to solve nothing (and warn spuriously).
-> 
-> It is time for people who maintain DWC please to speak up because I
-> don't have the HW details required to make a judgment.
-> 
-> Lorenzo
-> 
->> - Vidya Sagar
->>>
->>> Alan ? I want to understand what's the best course of action before
->>> merging these patches.
->>>
->>> Lorenzo
->>>
