@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 561401D9E70
-	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 20:01:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF4A1D9E74
+	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 20:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgESSBw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 May 2020 14:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33394 "EHLO
+        id S1728865AbgESSBx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 May 2020 14:01:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgESSBv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 14:01:51 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39FEC08C5C1
-        for <linux-pci@vger.kernel.org>; Tue, 19 May 2020 11:01:50 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l11so448138wru.0
-        for <linux-pci@vger.kernel.org>; Tue, 19 May 2020 11:01:50 -0700 (PDT)
+        with ESMTP id S1728762AbgESSBw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 14:01:52 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F3EC08C5C1
+        for <linux-pci@vger.kernel.org>; Tue, 19 May 2020 11:01:52 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u188so220182wmu.1
+        for <linux-pci@vger.kernel.org>; Tue, 19 May 2020 11:01:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Zf1iQq48aeXnoidABo6mI0CyWrUAaSL9I3RQkTUgsJ0=;
-        b=bCh5A9v5wwtAyAyg/G0FWXi26STNFSt0Kq+GVCzS0vvEnWdW5a9ixLb2d9QmIQezHj
-         uFRq+4CDGtZ6QiLSXwJ2xtWoqgXEJrzM7m6m59s69FYbDMwyONPYbc7j2HgVBdfpzcEU
-         siZyz1v6XG942Mrxo6QhyLdkW7H52m/Ex+KnZbmy4CYzsMYyvN696YVjApqM1fwMfa81
-         dRE8xDIZ/VL3Jli+BtbwcYu0rBerfWqclWj9aPoYNWHf4puC+nRCVvdB7yBnD0WCrbYb
-         VgFqYrzB2vlH+2A2cSGkaiDAp31069uOqdqyO0umNmMBbjonD52yN3Zi66t7Hn54fMpJ
-         t/ng==
+        bh=OlE3rnOB9MCKbV81bgfQSo1zIBpkt/AF9XwsE8EZHww=;
+        b=PVltUbDtiUNJUYohQuAJijXOuB5A5bH0xkzVWvUq1H2+e2ibU19HCBKJgHG0LpvJOO
+         Ig0UqvmrBwPjchj2eoYBA6yTE2yZMjt27StiBfvKzwPY0A4BZboeHT5Mq2aJCYWh6O3p
+         Q4Dn6OKJZaLDx+E+zM3jpPFK6EoXV1JbeExIqt2da3BtZrBlufWbqYdyZBpifE02CiWo
+         Dpcps1X5V7yvnFwAb6dgOCso+myoqErPY0GbTB3T56uonYvfNM2sdhN6ZZlzeHJdmz9V
+         sW1KoZznYpI78h/lNulsayaggPntaZw0EAA8Mo+eWW+YEWyHD4MAwpzLho0o134xN2lw
+         mKKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Zf1iQq48aeXnoidABo6mI0CyWrUAaSL9I3RQkTUgsJ0=;
-        b=Qz1CcFbhfmPUN45zv+BOQKS2a2Ok0tePyId75anwYQZrdGn5dve5vlhv1CljxIC6av
-         gwDABemqLWXfU3l0lLAwvcTwds41AJAkiEroCP0dmj1OVT8UwBo1Qam9G/CZLV6Ji3Uu
-         3EfPvIv7J3G9LmzX+3zNkmwD6NkadMsOlziEb8SRQcrG80FniNbXSX08pwy35nfjz05f
-         QvWQghieDxspmr4da5sfsccR23b/MkcaE2oV0d12b7X7SrNvzJsVI6vA0pWwo9XWi2iW
-         kiCSTAPsGhriD4bQtxb/gU7qGdYbMKWDzAAJ5JjWDhCyhPwwe58hi2SfHly+f9GWsi9Y
-         YgIg==
-X-Gm-Message-State: AOAM5306c74zhOLIeCaKGlVON/hz2VRhgvdWODKykcIv7Hw6eZvuq2B9
-        IgOtTcI7yBzs46afc9bX15sZDw==
-X-Google-Smtp-Source: ABdhPJx7LRULm4jaifxoCDUqVqIaTFeb2/VBifNGj7dG0DrAp4tCycMsVx1c1WDIHG+KUypLZSHjsA==
-X-Received: by 2002:adf:e64c:: with SMTP id b12mr87984wrn.131.1589911309705;
-        Tue, 19 May 2020 11:01:49 -0700 (PDT)
+        bh=OlE3rnOB9MCKbV81bgfQSo1zIBpkt/AF9XwsE8EZHww=;
+        b=HaPTmbNTp06hHuGbNEMB8jrQ+SC8YMWmfJgPDds1cQXBlx9ZwnavA/Z2p1H3iaciHL
+         IxfCYeOfsx5nQhaNTk+yBve5DuKFDIce5D4aF3MB4IUubrbY4+88soG1G3IT4Op2dpxM
+         hCBnjt1qs/oCzwFo6YdteRLXNd/G0CJuLKsbCU4YSSZ5y5WrkKR+D7YZE39Ingz20QID
+         jPw3wEBHt1hobkUpioKrf+PEpbYOjNpvuxd4y61Q/fFiqhj+zez5it9bgTFSeVkSv6Lv
+         2CfN0+M9eway9wmukkDW99+xzPN5HOttHeM733UKQQGS7f3rOOOR5ZvdKdmeDNnt9DSO
+         4njQ==
+X-Gm-Message-State: AOAM530I8zcotA3X+za5FtjQkTN7SaPn/589aCyuvJRglO897XOMsCFt
+        Q0rnksRrRNK12qSZGBqv5gF6Ng==
+X-Google-Smtp-Source: ABdhPJxm6LwKarbOgqdR2lNw/X/XowWuMGizAMxxxXwhldyYMSyTlek4+lJ4QVEwMcaSb4ml0HljTw==
+X-Received: by 2002:a1c:2e41:: with SMTP id u62mr615750wmu.91.1589911310989;
+        Tue, 19 May 2020 11:01:50 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id 1sm510496wmz.13.2020.05.19.11.01.48
+        by smtp.gmail.com with ESMTPSA id 1sm510496wmz.13.2020.05.19.11.01.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:01:49 -0700 (PDT)
+        Tue, 19 May 2020 11:01:50 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -58,9 +58,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
         xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v7 07/24] iommu/io-pgtable-arm: Move some definitions to a header
-Date:   Tue, 19 May 2020 19:54:45 +0200
-Message-Id: <20200519175502.2504091-8-jean-philippe@linaro.org>
+Subject: [PATCH v7 08/24] iommu/arm-smmu-v3: Manage ASIDs with xarray
+Date:   Tue, 19 May 2020 19:54:46 +0200
+Message-Id: <20200519175502.2504091-9-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519175502.2504091-1-jean-philippe@linaro.org>
 References: <20200519175502.2504091-1-jean-philippe@linaro.org>
@@ -71,119 +71,93 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Extract some of the most generic TCR defines, so they can be reused by
-the page table sharing code.
+In preparation for sharing some ASIDs with the CPU, use a global xarray to
+store ASIDs and their context. ASID#0 is now reserved, and the ASID
+space is global.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/io-pgtable-arm.h | 30 ++++++++++++++++++++++++++++++
- drivers/iommu/io-pgtable-arm.c | 27 ++-------------------------
- MAINTAINERS                    |  3 +--
- 3 files changed, 33 insertions(+), 27 deletions(-)
- create mode 100644 drivers/iommu/io-pgtable-arm.h
+ drivers/iommu/arm-smmu-v3.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm.h b/drivers/iommu/io-pgtable-arm.h
-new file mode 100644
-index 000000000000..ba7cfdf7afa0
---- /dev/null
-+++ b/drivers/iommu/io-pgtable-arm.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef IO_PGTABLE_ARM_H_
-+#define IO_PGTABLE_ARM_H_
-+
-+#define ARM_LPAE_TCR_TG0_4K		0
-+#define ARM_LPAE_TCR_TG0_64K		1
-+#define ARM_LPAE_TCR_TG0_16K		2
-+
-+#define ARM_LPAE_TCR_TG1_16K		1
-+#define ARM_LPAE_TCR_TG1_4K		2
-+#define ARM_LPAE_TCR_TG1_64K		3
-+
-+#define ARM_LPAE_TCR_SH_NS		0
-+#define ARM_LPAE_TCR_SH_OS		2
-+#define ARM_LPAE_TCR_SH_IS		3
-+
-+#define ARM_LPAE_TCR_RGN_NC		0
-+#define ARM_LPAE_TCR_RGN_WBWA		1
-+#define ARM_LPAE_TCR_RGN_WT		2
-+#define ARM_LPAE_TCR_RGN_WB		3
-+
-+#define ARM_LPAE_TCR_PS_32_BIT		0x0ULL
-+#define ARM_LPAE_TCR_PS_36_BIT		0x1ULL
-+#define ARM_LPAE_TCR_PS_40_BIT		0x2ULL
-+#define ARM_LPAE_TCR_PS_42_BIT		0x3ULL
-+#define ARM_LPAE_TCR_PS_44_BIT		0x4ULL
-+#define ARM_LPAE_TCR_PS_48_BIT		0x5ULL
-+#define ARM_LPAE_TCR_PS_52_BIT		0x6ULL
-+
-+#endif /* IO_PGTABLE_ARM_H_ */
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 04fbd4bf0ff9..f71a2eade04a 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -20,6 +20,8 @@
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index b5467e3e9250..847c7de0a93f 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -667,7 +667,6 @@ struct arm_smmu_device {
  
- #include <asm/barrier.h>
+ #define ARM_SMMU_MAX_ASIDS		(1 << 16)
+ 	unsigned int			asid_bits;
+-	DECLARE_BITMAP(asid_map, ARM_SMMU_MAX_ASIDS);
  
-+#include "io-pgtable-arm.h"
+ #define ARM_SMMU_MAX_VMIDS		(1 << 16)
+ 	unsigned int			vmid_bits;
+@@ -727,6 +726,8 @@ struct arm_smmu_option_prop {
+ 	const char *prop;
+ };
+ 
++static DEFINE_XARRAY_ALLOC1(asid_xa);
 +
- #define ARM_LPAE_MAX_ADDR_BITS		52
- #define ARM_LPAE_S2_MAX_CONCAT_PAGES	16
- #define ARM_LPAE_MAX_LEVELS		4
-@@ -100,23 +102,6 @@
- #define ARM_LPAE_PTE_MEMATTR_DEV	(((arm_lpae_iopte)0x1) << 2)
+ static struct arm_smmu_option_prop arm_smmu_options[] = {
+ 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
+ 	{ ARM_SMMU_OPT_PAGE0_REGS_ONLY, "cavium,cn9900-broken-page1-regspace"},
+@@ -1765,6 +1766,14 @@ static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
+ 	cdcfg->cdtab = NULL;
+ }
  
- /* Register bits */
--#define ARM_LPAE_TCR_TG0_4K		0
--#define ARM_LPAE_TCR_TG0_64K		1
--#define ARM_LPAE_TCR_TG0_16K		2
--
--#define ARM_LPAE_TCR_TG1_16K		1
--#define ARM_LPAE_TCR_TG1_4K		2
--#define ARM_LPAE_TCR_TG1_64K		3
--
--#define ARM_LPAE_TCR_SH_NS		0
--#define ARM_LPAE_TCR_SH_OS		2
--#define ARM_LPAE_TCR_SH_IS		3
--
--#define ARM_LPAE_TCR_RGN_NC		0
--#define ARM_LPAE_TCR_RGN_WBWA		1
--#define ARM_LPAE_TCR_RGN_WT		2
--#define ARM_LPAE_TCR_RGN_WB		3
--
- #define ARM_LPAE_VTCR_SL0_MASK		0x3
++static void arm_smmu_free_asid(struct arm_smmu_ctx_desc *cd)
++{
++	if (!cd->asid)
++		return;
++
++	xa_erase(&asid_xa, cd->asid);
++}
++
+ /* Stream table manipulation functions */
+ static void
+ arm_smmu_write_strtab_l1_desc(__le64 *dst, struct arm_smmu_strtab_l1_desc *desc)
+@@ -2450,10 +2459,9 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+ 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+ 		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
  
- #define ARM_LPAE_TCR_T0SZ_SHIFT		0
-@@ -124,14 +109,6 @@
- #define ARM_LPAE_VTCR_PS_SHIFT		16
- #define ARM_LPAE_VTCR_PS_MASK		0x7
+-		if (cfg->cdcfg.cdtab) {
++		if (cfg->cdcfg.cdtab)
+ 			arm_smmu_free_cd_tables(smmu_domain);
+-			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
+-		}
++		arm_smmu_free_asid(&cfg->cd);
+ 	} else {
+ 		struct arm_smmu_s2_cfg *cfg = &smmu_domain->s2_cfg;
+ 		if (cfg->vmid)
+@@ -2468,14 +2476,15 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+ 				       struct io_pgtable_cfg *pgtbl_cfg)
+ {
+ 	int ret;
+-	int asid;
++	u32 asid;
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+ 	typeof(&pgtbl_cfg->arm_lpae_s1_cfg.tcr) tcr = &pgtbl_cfg->arm_lpae_s1_cfg.tcr;
  
--#define ARM_LPAE_TCR_PS_32_BIT		0x0ULL
--#define ARM_LPAE_TCR_PS_36_BIT		0x1ULL
--#define ARM_LPAE_TCR_PS_40_BIT		0x2ULL
--#define ARM_LPAE_TCR_PS_42_BIT		0x3ULL
--#define ARM_LPAE_TCR_PS_44_BIT		0x4ULL
--#define ARM_LPAE_TCR_PS_48_BIT		0x5ULL
--#define ARM_LPAE_TCR_PS_52_BIT		0x6ULL
--
- #define ARM_LPAE_MAIR_ATTR_SHIFT(n)	((n) << 3)
- #define ARM_LPAE_MAIR_ATTR_MASK		0xff
- #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ecc0749810b0..4ff7b9a5bb7d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1463,8 +1463,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/iommu/arm,smmu*
- F:	drivers/iommu/arm-smmu*
--F:	drivers/iommu/io-pgtable-arm-v7s.c
--F:	drivers/iommu/io-pgtable-arm.c
-+F:	drivers/iommu/io-pgtable-arm*
+-	asid = arm_smmu_bitmap_alloc(smmu->asid_map, smmu->asid_bits);
+-	if (asid < 0)
+-		return asid;
++	ret = xa_alloc(&asid_xa, &asid, &cfg->cd,
++		       XA_LIMIT(1, (1 << smmu->asid_bits) - 1), GFP_KERNEL);
++	if (ret)
++		return ret;
  
- ARM SUB-ARCHITECTURES
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ 	cfg->s1cdmax = master->ssid_bits;
+ 
+@@ -2508,7 +2517,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+ out_free_cd_tables:
+ 	arm_smmu_free_cd_tables(smmu_domain);
+ out_free_asid:
+-	arm_smmu_bitmap_free(smmu->asid_map, asid);
++	arm_smmu_free_asid(&cfg->cd);
+ 	return ret;
+ }
+ 
 -- 
 2.26.2
 
