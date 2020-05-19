@@ -2,250 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63ADC1DA17B
-	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 21:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75AB91DA2A5
+	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 22:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgESTx6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 May 2020 15:53:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:55386 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgESTx6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 May 2020 15:53:58 -0400
-IronPort-SDR: Yzy50tgAj/h/L9TOB29zHLm2Jvmj0SGQ26EnHUmuRXjUrovP2afaJt7oa7faxaH1JSCCiA0RMl
- +IYGhqZO8FHA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 12:53:55 -0700
-IronPort-SDR: 5yUPvJyiI5ojACezJJKD+qA5M0IVQhE8H6B8r4NuEi3aBfC6dQID71J5aCvmOCS0fBJ9IMw5lR
- ADiXKO6T3rWQ==
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="411754621"
-Received: from iwsiah-mobl.amr.corp.intel.com (HELO [10.209.55.229]) ([10.209.55.229])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 12:53:55 -0700
-From:   "Sean V Kelley" <sean.v.kelley@linux.intel.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 3/3] PCI: Add helpers to enable/disable CXL.mem and
- CXL.cache
-Date:   Tue, 19 May 2020 12:53:55 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <06AECD46-68DC-464F-A37E-F57A66E4F00D@linux.intel.com>
-In-Reply-To: <20200518165527.GA935823@bjorn-Precision-5520>
-References: <20200518165527.GA935823@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+        id S1726489AbgESUeq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 May 2020 16:34:46 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34958 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725885AbgESUep (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 16:34:45 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 02B4730D7BF;
+        Tue, 19 May 2020 13:33:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 02B4730D7BF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1589920402;
+        bh=yuPEfulO+iRK9pTGrG+3vEVTPxwnaY2RYoFKfJNpl/4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BGCCEXGcLPBUG5WcSDFpUnH7X6Scj2cn6JSilSFImuyVpUvNUEbcGLaTqCiJFjL3K
+         RC/aTNSU30qAdciwtiidWHRIF/dypocgc+fxv9lyMCer+wWJgYag7fmkpvdu32QtpX
+         rTr1Zk1rKZs1p0VraKIQ5wSOx8XgHzb84gj4JsY0=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4463514008B;
+        Tue, 19 May 2020 13:34:42 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     james.quinlan@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        Dan Williams <dan.j.williams@intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE), Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        iommu@lists.linux-foundation.org (open list:DMA MAPPING HELPERS),
+        Julien Grall <julien.grall@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
+        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
+        ENDPOINT DRIVERS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 00/15] PCI: brcmstb: enable PCIe for STB chips
+Date:   Tue, 19 May 2020 16:33:58 -0400
+Message-Id: <20200519203419.12369-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18 May 2020, at 9:55, Bjorn Helgaas wrote:
+This patchset expands the usefulness of the Broadcom Settop Box PCIe
+controller by building upon the PCIe driver used currently by the
+Raspbery Pi.  Other forms of this patchset were submitted by me years
+ago and not accepted; the major sticking point was the code required
+for the DMA remapping needed for the PCIe driver to work [1].
 
-> On Mon, May 18, 2020 at 09:35:23AM -0700, Sean V Kelley wrote:
->> With these helpers, a device driver can enable/disable access to
->> CXL.mem and CXL.cache. Note that the device driver is responsible for
->> managing the memory area.
->>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
->> ---
->>  drivers/pci/cxl.c | 93 
->> ++++++++++++++++++++++++++++++++++++++++++++---
->>  drivers/pci/pci.h |  8 ++++
->>  2 files changed, 96 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
->> index 4437ca69ad33..0d0a1b82ea98 100644
->> --- a/drivers/pci/cxl.c
->> +++ b/drivers/pci/cxl.c
->> @@ -24,6 +24,88 @@
->>  #define PCI_CXL_HDM_COUNT(reg)		(((reg) & (3 << 4)) >> 4)
->>  #define PCI_CXL_VIRAL			BIT(14)
->>
->> +#define PCI_CXL_CONFIG_LOCK		BIT(0)
->> +
->> +static void pci_cxl_unlock(struct pci_dev *dev)
->> +{
->> +	int pos = dev->cxl_cap;
->> +	u16 lock;
->> +
->> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->> +	lock &= ~PCI_CXL_CONFIG_LOCK;
->> +	pci_write_config_word(dev, pos + PCI_CXL_LOCK, lock);
->> +}
->> +
->> +static void pci_cxl_lock(struct pci_dev *dev)
->> +{
->> +	int pos = dev->cxl_cap;
->> +	u16 lock;
->> +
->> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->> +	lock |= PCI_CXL_CONFIG_LOCK;
->> +	pci_write_config_word(dev, pos + PCI_CXL_LOCK, lock);
->> +}
->
-> Maybe a tiny comment about what PCI_CXL_CONFIG_LOCK does?  I guess
-> these functions don't enforce mutual exclusion (as I first expected a
-> "lock" function to do); they're simply telling the device to accept
-> CTRL changes or something?
+There have been many changes to the DMA and OF subsystems since that
+time, making a cleaner and less intrusive patchset possible.  This
+patchset implements a generalization of "dev->dma_pfn_offset", except
+that instead of a single scalar offset it provides for multiple
+offsets via a function which depends upon the "dma-ranges" property of
+the PCIe host controller.  This is required for proper functionality
+of the BrcmSTB PCIe controller and possibly some other devices.
 
-Agree will add.  DVSEC Lock is intended to signify whether the CTRL bits 
-may be changed.
-It locks certain registers and makes them RO.  This lock is designed to 
-prevent future
-changes to configuration. Not to be confused with enforcing mutual 
-exclusion.
+[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
 
+Jim Quinlan (15):
+  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+  ahci_brcm: fix use of BCM7216 reset controller
+  dt-bindings: PCI: Add bindings for more Brcmstb chips
+  PCI: brcmstb: Add compatibily of other chips
+  PCI: brcmstb: Add suspend and resume pm_ops
+  PCI: brcmstb: Asserting PERST is different for 7278
+  PCI: brcmstb: Add control of rescal reset
+  of: Include a dev param in of_dma_get_range()
+  device core: Add ability to handle multiple dma offsets
+  dma-direct: Invoke dma offset func if needed
+  arm: dma-mapping: Invoke dma offset func if needed
+  PCI: brcmstb: Set internal memory viewport sizes
+  PCI: brcmstb: Accommodate MSI for older chips
+  PCI: brcmstb: Set bus max burst side by chip type
+  PCI: brcmstb: add compatilbe chips to match list
 
->
->> +static int pci_cxl_enable_disable_feature(struct pci_dev *dev, int 
->> enable,
->> +					  u16 feature)
->> +{
->> +	int pos = dev->cxl_cap;
->> +	int ret;
->> +	u16 reg;
->> +
->> +	if (!dev->cxl_cap)
->> +		return -EINVAL;
->
-> "pos"
->
-> "pos" is the typical name for things like this, but sometimes I think
-> the code would be more descriptive if we used things like "cxl",
-> "aer", etc.
+ .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
+ arch/arm/include/asm/dma-mapping.h            |  17 +-
+ drivers/ata/ahci_brcm.c                       |  14 +-
+ drivers/of/address.c                          |  54 ++-
+ drivers/of/device.c                           |   2 +-
+ drivers/of/of_private.h                       |   8 +-
+ drivers/pci/controller/Kconfig                |   4 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 403 +++++++++++++++---
+ include/linux/device.h                        |   9 +-
+ include/linux/dma-direct.h                    |  16 +
+ include/linux/dma-mapping.h                   |  44 ++
+ kernel/dma/Kconfig                            |  12 +
+ 12 files changed, 542 insertions(+), 81 deletions(-)
 
-Will do, makes sense.
+-- 
+2.17.1
 
->
->> +
->> +	/* Only for PCIe */
->> +	if (!pci_is_pcie(dev))
->> +		return -EINVAL;
->
-> Probably not necessary here.  We already checked it in pci_cxi_init().
-
-You are correct.  Will remove.
-
->
->> +	/* Only for Device 0 Function 0, Root Complex Integrated Endpoints 
->> */
->> +	if (dev->devfn != 0 || (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END))
->> +		return -EINVAL;
->> +
->> +	pci_cxl_unlock(dev);
->> +	ret = pci_read_config_word(dev, pos + PCI_CXL_CTRL, &reg);
->> +	if (ret)
->> +		goto lock;
->> +
->> +	if (enable)
->> +		reg |= feature;
->> +	else
->> +		reg &= ~feature;
->> +
->> +	ret = pci_write_config_word(dev, pos + PCI_CXL_CTRL, reg);
->> +
->> +lock:
->> +	pci_cxl_lock(dev);
->> +
->> +	return ret;
->> +}
->> +
->> +int pci_cxl_mem_enable(struct pci_dev *dev)
->> +{
->> +	return pci_cxl_enable_disable_feature(dev, true, PCI_CXL_MEM);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_mem_enable);
->> +
->> +void pci_cxl_mem_disable(struct pci_dev *dev)
->> +{
->> +	pci_cxl_enable_disable_feature(dev, false, PCI_CXL_MEM);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_mem_disable);
->> +
->> +int pci_cxl_cache_enable(struct pci_dev *dev)
->> +{
->> +	return pci_cxl_enable_disable_feature(dev, true, PCI_CXL_CACHE);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_cache_enable);
->> +
->> +void pci_cxl_cache_disable(struct pci_dev *dev)
->> +{
->> +	pci_cxl_enable_disable_feature(dev, false, PCI_CXL_CACHE);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_cache_disable);
->> +
->>  /*
->>   * pci_find_cxl_capability - Identify and return offset to 
->> Vendor-Specific
->>   * capabilities.
->> @@ -73,11 +155,6 @@ void pci_cxl_init(struct pci_dev *dev)
->>  	dev->cxl_cap = pos;
->>
->>  	pci_read_config_word(dev, pos + PCI_CXL_CAP, &cap);
->> -	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
->> -	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
->> -	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
->> -	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
->> -	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->>
->>  	pci_info(dev, "CXL: Cache%c IO%c Mem%c Viral%c HDMCount %d\n",
->>  		FLAG(cap, PCI_CXL_CACHE),
->> @@ -86,6 +163,12 @@ void pci_cxl_init(struct pci_dev *dev)
->>  		FLAG(cap, PCI_CXL_VIRAL),
->>  		PCI_CXL_HDM_COUNT(cap));
->>
->> +	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
->> +	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
->> +	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
->> +	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
->> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->
-> This looks like it's just moving these reads around and isn't actually
-> related to this patch.  Put them where you want them in the first
-> place so the move doesn't clutter this patch.
-
-Looks that way.  I will clean it up.
-
->
->>  	pci_info(dev, "CXL: cap ctrl status ctrl2 status2 lock\n");
->>  	pci_info(dev, "CXL: %04x %04x %04x %04x %04x %04x\n",
->>  		 cap, ctrl, status, ctrl2, status2, lock);
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index d9905e2dee95..6336e16565ac 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -472,8 +472,16 @@ static inline void pci_restore_ats_state(struct 
->> pci_dev *dev) { }
->>  #ifdef CONFIG_PCI_CXL
->>  /* Compute eXpress Link */
->>  void pci_cxl_init(struct pci_dev *dev);
->> +int pci_cxl_mem_enable(struct pci_dev *dev);
->> +void pci_cxl_mem_disable(struct pci_dev *dev);
->> +int pci_cxl_cache_enable(struct pci_dev *dev);
->> +void pci_cxl_cache_disable(struct pci_dev *dev);
->>  #else
->>  static inline void pci_cxl_init(struct pci_dev *dev) { }
->> +static inline int pci_cxl_mem_enable(struct pci_dev *dev) {}
->> +static inline void pci_cxl_mem_disable(struct pci_dev *dev) {}
->> +static inline int pci_cxl_cache_enable(struct pci_dev *dev) {}
->> +static inline void pci_cxl_cache_disable(struct pci_dev *dev) {}
->
-> The stubs in this file aren't completely consistent, but you can be at
-> least locally consistent by including a space between the "{ }".
-
-Will do.
-
-Thanks,
-
-Sean
-
-
->
->>  #endif
->>
->>  #ifdef CONFIG_PCI_PRI
->> -- 
->> 2.26.2
->>
