@@ -2,88 +2,513 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06FDE1DA312
-	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 22:48:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C7471DA412
+	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 23:49:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbgESUsO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 May 2020 16:48:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgESUsO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 16:48:14 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F5FC08C5C0;
-        Tue, 19 May 2020 13:48:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id v12so847993wrp.12;
-        Tue, 19 May 2020 13:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xpflJiHU4zdLwZmN90LpEKHltXEDRGXrv+qECzfEDLY=;
-        b=R6RNR5LpenqpOy8zl32M3K5RWFabYRpxWc+rJqjfraCKJBG/47W1hLMw/abkWqUKsC
-         5dHXVYTgQYvDbF/9j9Kv07dSjMRUOUO0Es99q6bWoNHF+wZ5SHYuUjhLx/LbT5OL1CMt
-         K2frgmRKnRl2VXK/4TCe56y6MeJ5wXXbm9fM4ZZeL7l1fGRndBjhcHyjv2r6+t7caXTg
-         6HexwpWvXo+fFnJwGT/BHyDdq3Y51aNPa6EBnfC5TcQucYN2YX+Sqxb6t/M+eOI3E6QY
-         muD8VhJwzJ11hqGozQ1GaW975jm9h9OkiGVIhJPIj3uCn1M1SJJBwDnV3ZryCd+DxJ6n
-         zTbg==
+        id S1726862AbgESVtc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 May 2020 17:49:32 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51697 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgESVtc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 17:49:32 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f134so729086wmf.1
+        for <linux-pci@vger.kernel.org>; Tue, 19 May 2020 14:49:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xpflJiHU4zdLwZmN90LpEKHltXEDRGXrv+qECzfEDLY=;
-        b=uoXR2nOW7HRq86YQEh7xTm+OfOffvDS028SlYFRphC4rw5+bTsa2z4LHo3RDcSiJxK
-         mIhIXREM+ECevDPZZVgpCcPjiDdusN8tRMIgYdAkbkFQLQsT7jj64/pgm9eRyh3MiCPp
-         KMKES8Bdof3g6s9wHMpqQYF6qdck5bKUOKO83189P296lZGeKYoog7yrkdI1AyuH2BIL
-         GPtNOSkQZ3ocuqx4D2ACpNLqJ/NPVoKvmZVftGA03bEegX0pIcZrfW0lD2vSpgnUDKr5
-         f6lZ1pTVvtqbWTwUJ6cOnl2euuum4NJhppROe2clhs3Wa9JChpb+SGcCcy/hioa55ijW
-         6ZvA==
-X-Gm-Message-State: AOAM53024DrJ2XF8ZR2HzI6JBlH7FJfoc3gKmRyEupd4jR1Cd4GGfjch
-        GoS9sXQgPOJaXqts2XZ6Z7kLNsX4
-X-Google-Smtp-Source: ABdhPJzff/nSXmDRXjYiiCeSKwygMSzTnguy0cU8QBNRytDiAXTnUKP4QM/Pd3b8OU8/Z1xJr6eMlA==
-X-Received: by 2002:a05:6000:128b:: with SMTP id f11mr705232wrx.227.1589921292548;
-        Tue, 19 May 2020 13:48:12 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 77sm676543wrc.6.2020.05.19.13.48.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 13:48:11 -0700 (PDT)
-Subject: Re: [PATCH 01/15] PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-2-james.quinlan@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <0ad02f06-f191-4b69-322b-aa7733f700ae@gmail.com>
-Date:   Tue, 19 May 2020 13:48:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        bh=+lx/ct14dZE2nxT9m7Dy0l0a5/38x+Wn9c0ABY8drGs=;
+        b=pmA5ycN8ZmPiUa8zsSzk7JPBzcJ0jukf9FGhEPxvBKLHzBX+w5GhbyRBZWYxGq4npe
+         qpDFsmcF+1vuLaY+CchKieetgI/5rKBTWpSAM6EGpbku+EzNAnY8vkGyDAWSvrmGbRvs
+         693HYioTvBbNU4qwmqbkdQ4+MxcLmWicWen6hk7nXOWWRdVZz5fB4lOCd8fKgMm2OsuR
+         Hlo0uiGheTvhUW1KfHG2OOOyfmVFPkIL4WnmAuMOEAJpUYutFhwuRobsQ21jdej1vKPK
+         OPwLUV2HZFtJN1qBBnVU4LvKqkdZfDGLhtCSjR3GqcLUYBvhSJqRi/UMEefnFEj0UxVv
+         Gbfg==
+X-Gm-Message-State: AOAM533ONlcgPgMNmGfqo5vBYehiPY8QJWoYX8ICVqBCF0XnyMnj6ZhO
+        uhTYUJO0yO9zcgYNYEXcE1A=
+X-Google-Smtp-Source: ABdhPJxcLJQWVe3QLaqLN6h8IH5wjjs4oxq+Ai1QujB4kRJapuXQlO69UzyqQRTahtClsm3jZBBtmw==
+X-Received: by 2002:a1c:b406:: with SMTP id d6mr1390551wmf.89.1589924967987;
+        Tue, 19 May 2020 14:49:27 -0700 (PDT)
+Received: from localhost.localdomain ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id c25sm952237wmb.44.2020.05.19.14.49.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 14:49:27 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Reference bridge window resources explicitly
+Date:   Tue, 19 May 2020 21:49:26 +0000
+Message-Id: <20200519214926.969196-1-kw@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200519203419.12369-2-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Add definitions to allow for more explicit mapping of P2P and CardBus
+bridge window resources.
 
+Added for P2P:
 
-On 5/19/2020 1:33 PM, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Have PCIE_BRCMSTB depend on ARCH_BRCMSTB.  Also set the
-> default value to ARCH_BRCMSTB.
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+  PCI_BRIDGE_IO_WINDOW
+  PCI_BRIDGE_MEM_WINDOW
+  PCI_BRIDGE_PREF_MEM_WINDOW
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Added for CardBus:
+
+  PCI_CB_BRIDGE_IO_0_WINDOW
+  PCI_CB_BRIDGE_IO_1_WINDOW
+  PCI_CB_BRIDGE_MEM_0_WINDOW
+  PCI_CB_BRIDGE_MEM_1_WINDOW
+
+The old way of addressing resources using an index:
+
+  bridge->resource[PCI_BRIDGE_RESOURCES+0]
+
+Would now be replaced with:
+
+  bridge->resource[PCI_BRIDGE_IO_WINDOW]
+
+Also, correct the PCI quirk for the ALI M7101 chipset.  The second quirk
+used to claimed an I/O resource from the a memory window which is not
+correct.
+
+This patch builds a top of the changes proposed before:
+
+  https://lore.kernel.org/r/20100203233931.10803.39854.stgit@bob.kio
+  https://lore.kernel.org/r/20100212170022.19522.81135.stgit@bob.kio/
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/pci/quirks.c          |  34 +++++-----
+ drivers/pci/setup-bus.c       | 116 ++++++++++++++++++----------------
+ drivers/pcmcia/yenta_socket.c |  22 ++++---
+ include/linux/pci.h           |  14 +++-
+ 4 files changed, 105 insertions(+), 81 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ca9ed5774eb1..4c1934d16873 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -653,8 +653,8 @@ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, PCI_ANY_ID,
+  */
+ static void quirk_ali7101_acpi(struct pci_dev *dev)
+ {
+-	quirk_io_region(dev, 0xE0, 64, PCI_BRIDGE_RESOURCES, "ali7101 ACPI");
+-	quirk_io_region(dev, 0xE2, 32, PCI_BRIDGE_RESOURCES+1, "ali7101 SMB");
++	quirk_io_region(dev, 0xE0, 64, PCI_BRIDGE_IO_WINDOW, "ali7101 ACPI");
++	quirk_io_region(dev, 0xE2, 32, PCI_BRIDGE_IO_WINDOW, "ali7101 SMB");
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AL,	PCI_DEVICE_ID_AL_M7101,		quirk_ali7101_acpi);
+ 
+@@ -720,8 +720,8 @@ static void quirk_piix4_acpi(struct pci_dev *dev)
+ {
+ 	u32 res_a;
+ 
+-	quirk_io_region(dev, 0x40, 64, PCI_BRIDGE_RESOURCES, "PIIX4 ACPI");
+-	quirk_io_region(dev, 0x90, 16, PCI_BRIDGE_RESOURCES+1, "PIIX4 SMB");
++	quirk_io_region(dev, 0x40, 64, PCI_BRIDGE_IO_WINDOW, "PIIX4 ACPI");
++	quirk_io_region(dev, 0x90, 16, PCI_BRIDGE_MEM_WINDOW, "PIIX4 SMB");
+ 
+ 	/* Device resource A has enables for some of the other ones */
+ 	pci_read_config_dword(dev, 0x5c, &res_a);
+@@ -776,12 +776,12 @@ static void quirk_ich4_lpc_acpi(struct pci_dev *dev)
+ 	 */
+ 	pci_read_config_byte(dev, ICH_ACPI_CNTL, &enable);
+ 	if (enable & ICH4_ACPI_EN)
+-		quirk_io_region(dev, ICH_PMBASE, 128, PCI_BRIDGE_RESOURCES,
+-				 "ICH4 ACPI/GPIO/TCO");
++		quirk_io_region(dev, ICH_PMBASE, 128, PCI_BRIDGE_IO_WINDOW,
++				"ICH4 ACPI/GPIO/TCO");
+ 
+ 	pci_read_config_byte(dev, ICH4_GPIO_CNTL, &enable);
+ 	if (enable & ICH4_GPIO_EN)
+-		quirk_io_region(dev, ICH4_GPIOBASE, 64, PCI_BRIDGE_RESOURCES+1,
++		quirk_io_region(dev, ICH4_GPIOBASE, 64, PCI_BRIDGE_MEM_WINDOW,
+ 				"ICH4 GPIO");
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,    PCI_DEVICE_ID_INTEL_82801AA_0,		quirk_ich4_lpc_acpi);
+@@ -801,12 +801,12 @@ static void ich6_lpc_acpi_gpio(struct pci_dev *dev)
+ 
+ 	pci_read_config_byte(dev, ICH_ACPI_CNTL, &enable);
+ 	if (enable & ICH6_ACPI_EN)
+-		quirk_io_region(dev, ICH_PMBASE, 128, PCI_BRIDGE_RESOURCES,
+-				 "ICH6 ACPI/GPIO/TCO");
++		quirk_io_region(dev, ICH_PMBASE, 128, PCI_BRIDGE_IO_WINDOW,
++				"ICH6 ACPI/GPIO/TCO");
+ 
+ 	pci_read_config_byte(dev, ICH6_GPIO_CNTL, &enable);
+ 	if (enable & ICH6_GPIO_EN)
+-		quirk_io_region(dev, ICH6_GPIOBASE, 64, PCI_BRIDGE_RESOURCES+1,
++		quirk_io_region(dev, ICH6_GPIOBASE, 64, PCI_BRIDGE_MEM_WINDOW,
+ 				"ICH6 GPIO");
+ }
+ 
+@@ -911,7 +911,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,   PCI_DEVICE_ID_INTEL_ICH10_1, qui
+ static void quirk_vt82c586_acpi(struct pci_dev *dev)
+ {
+ 	if (dev->revision & 0x10)
+-		quirk_io_region(dev, 0x48, 256, PCI_BRIDGE_RESOURCES,
++		quirk_io_region(dev, 0x48, 256, PCI_BRIDGE_IO_WINDOW,
+ 				"vt82c586 ACPI");
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA,	PCI_DEVICE_ID_VIA_82C586_3,	quirk_vt82c586_acpi);
+@@ -926,10 +926,10 @@ static void quirk_vt82c686_acpi(struct pci_dev *dev)
+ {
+ 	quirk_vt82c586_acpi(dev);
+ 
+-	quirk_io_region(dev, 0x70, 128, PCI_BRIDGE_RESOURCES+1,
+-				 "vt82c686 HW-mon");
+-
+-	quirk_io_region(dev, 0x90, 16, PCI_BRIDGE_RESOURCES+2, "vt82c686 SMB");
++	quirk_io_region(dev, 0x70, 128, PCI_BRIDGE_MEM_WINDOW,
++			"vt82c686 HW-mon");
++	quirk_io_region(dev, 0x90, 16, PCI_BRIDGE_PREF_MEM_WINDOW,
++			"vt82c686 SMB");
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA,	PCI_DEVICE_ID_VIA_82C686_4,	quirk_vt82c686_acpi);
+ 
+@@ -940,8 +940,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA,	PCI_DEVICE_ID_VIA_82C686_4,	quirk_vt
+  */
+ static void quirk_vt8235_acpi(struct pci_dev *dev)
+ {
+-	quirk_io_region(dev, 0x88, 128, PCI_BRIDGE_RESOURCES, "vt8235 PM");
+-	quirk_io_region(dev, 0xd0, 16, PCI_BRIDGE_RESOURCES+1, "vt8235 SMB");
++	quirk_io_region(dev, 0x88, 128, PCI_BRIDGE_IO_WINDOW, "vt8235 PM");
++	quirk_io_region(dev, 0xd0, 16, PCI_BRIDGE_MEM_WINDOW, "vt8235 SMB");
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA,	PCI_DEVICE_ID_VIA_8235,	quirk_vt8235_acpi);
+ 
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index bbcef1a053ab..d7b098df6987 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -583,7 +583,7 @@ static void pci_setup_bridge_io(struct pci_dev *bridge)
+ 		io_mask = PCI_IO_1K_RANGE_MASK;
+ 
+ 	/* Set up the top and bottom of the PCI I/O segment for this bus */
+-	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 0];
++	res = &bridge->resource[PCI_BRIDGE_IO_WINDOW];
+ 	pcibios_resource_to_bus(bridge->bus, &region, res);
+ 	if (res->flags & IORESOURCE_IO) {
+ 		pci_read_config_word(bridge, PCI_IO_BASE, &l);
+@@ -613,7 +613,7 @@ static void pci_setup_bridge_mmio(struct pci_dev *bridge)
+ 	u32 l;
+ 
+ 	/* Set up the top and bottom of the PCI Memory segment for this bus */
+-	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 1];
++	res = &bridge->resource[PCI_BRIDGE_MEM_WINDOW];
+ 	pcibios_resource_to_bus(bridge->bus, &region, res);
+ 	if (res->flags & IORESOURCE_MEM) {
+ 		l = (region.start >> 16) & 0xfff0;
+@@ -640,7 +640,7 @@ static void pci_setup_bridge_mmio_pref(struct pci_dev *bridge)
+ 
+ 	/* Set up PREF base/limit */
+ 	bu = lu = 0;
+-	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
++	res = &bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+ 	pcibios_resource_to_bus(bridge->bus, &region, res);
+ 	if (res->flags & IORESOURCE_PREFETCH) {
+ 		l = (region.start >> 16) & 0xfff0;
+@@ -707,14 +707,14 @@ int pci_claim_bridge_resource(struct pci_dev *bridge, int i)
+ 	if (!pci_bus_clip_resource(bridge, i))
+ 		return -EINVAL;	/* Clipping didn't change anything */
+ 
+-	switch (i - PCI_BRIDGE_RESOURCES) {
+-	case 0:
++	switch (i) {
++	case PCI_BRIDGE_IO_WINDOW:
+ 		pci_setup_bridge_io(bridge);
+ 		break;
+-	case 1:
++	case PCI_BRIDGE_MEM_WINDOW:
+ 		pci_setup_bridge_mmio(bridge);
+ 		break;
+-	case 2:
++	case PCI_BRIDGE_PREF_MEM_WINDOW:
+ 		pci_setup_bridge_mmio_pref(bridge);
+ 		break;
+ 	default:
+@@ -735,18 +735,22 @@ int pci_claim_bridge_resource(struct pci_dev *bridge, int i)
+ static void pci_bridge_check_ranges(struct pci_bus *bus)
+ {
+ 	struct pci_dev *bridge = bus->self;
+-	struct resource *b_res = &bridge->resource[PCI_BRIDGE_RESOURCES];
++	struct resource *b_res;
+ 
+-	b_res[1].flags |= IORESOURCE_MEM;
++	b_res = &bridge->resource[PCI_BRIDGE_MEM_WINDOW];
++	b_res->flags |= IORESOURCE_MEM;
+ 
+-	if (bridge->io_window)
+-		b_res[0].flags |= IORESOURCE_IO;
++	if (bridge->io_window) {
++		b_res = &bridge->resource[PCI_BRIDGE_IO_WINDOW];
++		b_res->flags |= IORESOURCE_IO;
++	}
+ 
+ 	if (bridge->pref_window) {
+-		b_res[2].flags |= IORESOURCE_MEM | IORESOURCE_PREFETCH;
++		b_res = &bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
++		b_res->flags |= IORESOURCE_MEM | IORESOURCE_PREFETCH;
+ 		if (bridge->pref_64_window) {
+-			b_res[2].flags |= IORESOURCE_MEM_64;
+-			b_res[2].flags |= PCI_PREF_RANGE_TYPE_64;
++			b_res->flags |= IORESOURCE_MEM_64 |
++					PCI_PREF_RANGE_TYPE_64;
+ 		}
+ 	}
+ }
+@@ -1105,35 +1109,37 @@ static void pci_bus_size_cardbus(struct pci_bus *bus,
+ 				 struct list_head *realloc_head)
+ {
+ 	struct pci_dev *bridge = bus->self;
+-	struct resource *b_res = &bridge->resource[PCI_BRIDGE_RESOURCES];
++	struct resource *io0_res, *io1_res, *mmio0_res, *mmio1_res;
+ 	resource_size_t b_res_3_size = pci_cardbus_mem_size * 2;
+ 	u16 ctrl;
+ 
+-	if (b_res[0].parent)
++	io0_res = &bridge->resource[PCI_CB_BRIDGE_IO_0_WINDOW];
++	if (io0_res->parent)
+ 		goto handle_b_res_1;
+ 	/*
+ 	 * Reserve some resources for CardBus.  We reserve a fixed amount
+ 	 * of bus space for CardBus bridges.
+ 	 */
+-	b_res[0].start = pci_cardbus_io_size;
+-	b_res[0].end = b_res[0].start + pci_cardbus_io_size - 1;
+-	b_res[0].flags |= IORESOURCE_IO | IORESOURCE_STARTALIGN;
++	io0_res->start = pci_cardbus_io_size;
++	io0_res->end = io0_res->start + pci_cardbus_io_size - 1;
++	io0_res->flags |= IORESOURCE_IO | IORESOURCE_STARTALIGN;
+ 	if (realloc_head) {
+-		b_res[0].end -= pci_cardbus_io_size;
+-		add_to_list(realloc_head, bridge, b_res, pci_cardbus_io_size,
+-				pci_cardbus_io_size);
++		io0_res->end -= pci_cardbus_io_size;
++		add_to_list(realloc_head, bridge, io0_res, pci_cardbus_io_size,
++			    pci_cardbus_io_size);
+ 	}
+ 
+ handle_b_res_1:
+-	if (b_res[1].parent)
++	io1_res = &bridge->resource[PCI_CB_BRIDGE_IO_1_WINDOW];
++	if (io1_res->parent)
+ 		goto handle_b_res_2;
+-	b_res[1].start = pci_cardbus_io_size;
+-	b_res[1].end = b_res[1].start + pci_cardbus_io_size - 1;
+-	b_res[1].flags |= IORESOURCE_IO | IORESOURCE_STARTALIGN;
++	io1_res->start = pci_cardbus_io_size;
++	io1_res->end = io1_res->start + pci_cardbus_io_size - 1;
++	io1_res->flags |= IORESOURCE_IO | IORESOURCE_STARTALIGN;
+ 	if (realloc_head) {
+-		b_res[1].end -= pci_cardbus_io_size;
+-		add_to_list(realloc_head, bridge, b_res+1, pci_cardbus_io_size,
+-				 pci_cardbus_io_size);
++		io1_res->end -= pci_cardbus_io_size;
++		add_to_list(realloc_head, bridge, io1_res, pci_cardbus_io_size,
++			    pci_cardbus_io_size);
+ 	}
+ 
+ handle_b_res_2:
+@@ -1153,21 +1159,22 @@ static void pci_bus_size_cardbus(struct pci_bus *bus,
+ 		pci_read_config_word(bridge, PCI_CB_BRIDGE_CONTROL, &ctrl);
+ 	}
+ 
+-	if (b_res[2].parent)
++	mmio0_res = &bridge->resource[PCI_CB_BRIDGE_MEM_0_WINDOW];
++	if (mmio0_res->parent)
+ 		goto handle_b_res_3;
+ 	/*
+ 	 * If we have prefetchable memory support, allocate two regions.
+ 	 * Otherwise, allocate one region of twice the size.
+ 	 */
+ 	if (ctrl & PCI_CB_BRIDGE_CTL_PREFETCH_MEM0) {
+-		b_res[2].start = pci_cardbus_mem_size;
+-		b_res[2].end = b_res[2].start + pci_cardbus_mem_size - 1;
+-		b_res[2].flags |= IORESOURCE_MEM | IORESOURCE_PREFETCH |
+-				  IORESOURCE_STARTALIGN;
++		mmio0_res->start = pci_cardbus_mem_size;
++		mmio0_res->end = mmio0_res->start + pci_cardbus_mem_size - 1;
++		mmio0_res->flags |= IORESOURCE_MEM | IORESOURCE_PREFETCH |
++				    IORESOURCE_STARTALIGN;
+ 		if (realloc_head) {
+-			b_res[2].end -= pci_cardbus_mem_size;
+-			add_to_list(realloc_head, bridge, b_res+2,
+-				 pci_cardbus_mem_size, pci_cardbus_mem_size);
++			mmio0_res->end -= pci_cardbus_mem_size;
++			add_to_list(realloc_head, bridge, mmio0_res,
++				    pci_cardbus_mem_size, pci_cardbus_mem_size);
+ 		}
+ 
+ 		/* Reduce that to half */
+@@ -1175,15 +1182,16 @@ static void pci_bus_size_cardbus(struct pci_bus *bus,
+ 	}
+ 
+ handle_b_res_3:
+-	if (b_res[3].parent)
++	mmio1_res = &bridge->resource[PCI_CB_BRIDGE_MEM_1_WINDOW];
++	if (mmio1_res->parent)
+ 		goto handle_done;
+-	b_res[3].start = pci_cardbus_mem_size;
+-	b_res[3].end = b_res[3].start + b_res_3_size - 1;
+-	b_res[3].flags |= IORESOURCE_MEM | IORESOURCE_STARTALIGN;
++	mmio1_res->start = pci_cardbus_mem_size;
++	mmio1_res->end = mmio1_res->start + b_res_3_size - 1;
++	mmio1_res->flags |= IORESOURCE_MEM | IORESOURCE_STARTALIGN;
+ 	if (realloc_head) {
+-		b_res[3].end -= b_res_3_size;
+-		add_to_list(realloc_head, bridge, b_res+3, b_res_3_size,
+-				 pci_cardbus_mem_size);
++		mmio1_res->end -= b_res_3_size;
++		add_to_list(realloc_head, bridge, mmio1_res, b_res_3_size,
++			    pci_cardbus_mem_size);
+ 	}
+ 
+ handle_done:
+@@ -1227,7 +1235,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+ 				break;
+ 		hdr_type = -1;	/* Intentionally invalid - not a PCI device. */
+ 	} else {
+-		pref = &bus->self->resource[PCI_BRIDGE_RESOURCES + 2];
++		pref = &bus->self->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+ 		hdr_type = bus->self->hdr_type;
+ 	}
+ 
+@@ -1885,9 +1893,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	struct pci_dev *dev, *bridge = bus->self;
+ 	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
+ 
+-	io_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 0];
+-	mmio_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 1];
+-	mmio_pref_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
++	io_res = &bridge->resource[PCI_BRIDGE_IO_WINDOW];
++	mmio_res = &bridge->resource[PCI_BRIDGE_MEM_WINDOW];
++	mmio_pref_res = &bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+ 
+ 	/*
+ 	 * The alignment of this bridge is yet to be considered, hence it must
+@@ -1960,21 +1968,21 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 		 * Reduce the available resource space by what the
+ 		 * bridge and devices below it occupy.
+ 		 */
+-		res = &dev->resource[PCI_BRIDGE_RESOURCES + 0];
++		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+ 		align = pci_resource_alignment(dev, res);
+ 		align = align ? ALIGN(io.start, align) - io.start : 0;
+ 		used_size = align + resource_size(res);
+ 		if (!res->parent)
+ 			io.start = min(io.start + used_size, io.end + 1);
+ 
+-		res = &dev->resource[PCI_BRIDGE_RESOURCES + 1];
++		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+ 		align = pci_resource_alignment(dev, res);
+ 		align = align ? ALIGN(mmio.start, align) - mmio.start : 0;
+ 		used_size = align + resource_size(res);
+ 		if (!res->parent)
+ 			mmio.start = min(mmio.start + used_size, mmio.end + 1);
+ 
+-		res = &dev->resource[PCI_BRIDGE_RESOURCES + 2];
++		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+ 		align = pci_resource_alignment(dev, res);
+ 		align = align ? ALIGN(mmio_pref.start, align) -
+ 			mmio_pref.start : 0;
+@@ -2027,9 +2035,9 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
+ 		return;
+ 
+ 	/* Take the initial extra resources from the hotplug port */
+-	available_io = bridge->resource[PCI_BRIDGE_RESOURCES + 0];
+-	available_mmio = bridge->resource[PCI_BRIDGE_RESOURCES + 1];
+-	available_mmio_pref = bridge->resource[PCI_BRIDGE_RESOURCES + 2];
++	available_io = bridge->resource[PCI_BRIDGE_IO_WINDOW];
++	available_mmio = bridge->resource[PCI_BRIDGE_MEM_WINDOW];
++	available_mmio_pref = bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+ 
+ 	pci_bus_distribute_available_resources(bridge->subordinate,
+ 					       add_list, available_io,
+diff --git a/drivers/pcmcia/yenta_socket.c b/drivers/pcmcia/yenta_socket.c
+index bf6529b0b5b0..76036ccf2106 100644
+--- a/drivers/pcmcia/yenta_socket.c
++++ b/drivers/pcmcia/yenta_socket.c
+@@ -694,7 +694,7 @@ static int yenta_allocate_res(struct yenta_socket *socket, int nr, unsigned type
+ 	struct pci_bus_region region;
+ 	unsigned mask;
+ 
+-	res = dev->resource + PCI_BRIDGE_RESOURCES + nr;
++	res = &dev->resource[nr];
+ 	/* Already allocated? */
+ 	if (res->parent)
+ 		return 0;
+@@ -711,7 +711,7 @@ static int yenta_allocate_res(struct yenta_socket *socket, int nr, unsigned type
+ 	region.end = config_readl(socket, addr_end) | ~mask;
+ 	if (region.start && region.end > region.start && !override_bios) {
+ 		pcibios_bus_to_resource(dev->bus, res, &region);
+-		if (pci_claim_resource(dev, PCI_BRIDGE_RESOURCES + nr) == 0)
++		if (pci_claim_resource(dev, nr) == 0)
+ 			return 0;
+ 		dev_info(&dev->dev,
+ 			 "Preassigned resource %d busy or not available, reconfiguring...\n",
+@@ -751,14 +751,18 @@ static int yenta_allocate_res(struct yenta_socket *socket, int nr, unsigned type
+ static void yenta_allocate_resources(struct yenta_socket *socket)
+ {
+ 	int program = 0;
+-	program += yenta_allocate_res(socket, 0, IORESOURCE_IO,
+-			   PCI_CB_IO_BASE_0, PCI_CB_IO_LIMIT_0);
+-	program += yenta_allocate_res(socket, 1, IORESOURCE_IO,
+-			   PCI_CB_IO_BASE_1, PCI_CB_IO_LIMIT_1);
+-	program += yenta_allocate_res(socket, 2, IORESOURCE_MEM|IORESOURCE_PREFETCH,
++	program += yenta_allocate_res(socket, PCI_CB_BRIDGE_IO_0_WINDOW,
++			   IORESOURCE_IO, PCI_CB_IO_BASE_0,
++			   PCI_CB_IO_LIMIT_0);
++	program += yenta_allocate_res(socket, PCI_CB_BRIDGE_IO_1_WINDOW,
++			   IORESOURCE_IO, PCI_CB_IO_BASE_1,
++			   PCI_CB_IO_LIMIT_1);
++	program += yenta_allocate_res(socket, PCI_CB_BRIDGE_MEM_0_WINDOW,
++			   IORESOURCE_MEM | IORESOURCE_PREFETCH,
+ 			   PCI_CB_MEMORY_BASE_0, PCI_CB_MEMORY_LIMIT_0);
+-	program += yenta_allocate_res(socket, 3, IORESOURCE_MEM,
+-			   PCI_CB_MEMORY_BASE_1, PCI_CB_MEMORY_LIMIT_1);
++	program += yenta_allocate_res(socket, PCI_CB_BRIDGE_MEM_1_WINDOW,
++			   IORESOURCE_MEM, PCI_CB_MEMORY_BASE_1,
++			   PCI_CB_MEMORY_LIMIT_1);
+ 	if (program)
+ 		pci_setup_cardbus(socket->dev->subordinate);
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 83ce1cdf5676..cdfb07bfdf7d 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -100,9 +100,21 @@ enum {
+ 	PCI_IOV_RESOURCE_END = PCI_IOV_RESOURCES + PCI_SRIOV_NUM_BARS - 1,
+ #endif
+ 
+-	/* Resources assigned to buses behind the bridge */
++/* PCI-to-PCI (P2P) bridge windows */
++#define PCI_BRIDGE_IO_WINDOW		(PCI_BRIDGE_RESOURCES + 0)
++#define PCI_BRIDGE_MEM_WINDOW		(PCI_BRIDGE_RESOURCES + 1)
++#define PCI_BRIDGE_PREF_MEM_WINDOW	(PCI_BRIDGE_RESOURCES + 2)
++
++/* CardBus bridge windows */
++#define PCI_CB_BRIDGE_IO_0_WINDOW	(PCI_BRIDGE_RESOURCES + 0)
++#define PCI_CB_BRIDGE_IO_1_WINDOW	(PCI_BRIDGE_RESOURCES + 1)
++#define PCI_CB_BRIDGE_MEM_0_WINDOW	(PCI_BRIDGE_RESOURCES + 2)
++#define PCI_CB_BRIDGE_MEM_1_WINDOW	(PCI_BRIDGE_RESOURCES + 3)
++
++/* Total number of bridge resources for P2P and CardBus */
+ #define PCI_BRIDGE_RESOURCE_NUM 4
+ 
++	/* Resources assigned to buses behind the bridge */
+ 	PCI_BRIDGE_RESOURCES,
+ 	PCI_BRIDGE_RESOURCE_END = PCI_BRIDGE_RESOURCES +
+ 				  PCI_BRIDGE_RESOURCE_NUM - 1,
 -- 
-Florian
+2.26.2
+
