@@ -2,129 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F6911D9324
-	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 11:18:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A90C1D98A2
+	for <lists+linux-pci@lfdr.de>; Tue, 19 May 2020 15:55:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgESJS2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 May 2020 05:18:28 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:58396 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgESJS1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 05:18:27 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04J9HD1v8024575, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04J9HD1v8024575
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 19 May 2020 17:17:14 +0800
-Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS02.realsil.com.cn
- ([::1]) with mapi id 14.03.0439.000; Tue, 19 May 2020 17:17:12 +0800
-From:   =?utf-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIG1tYzogcnRzeDogQWRkIFNEIEV4cHJlc3MgbW9k?= =?utf-8?Q?e_support_for_RTS5261?=
-Thread-Topic: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-Thread-Index: AQHWG2mdb2Wi+0TUh0G7QGay1iuqfqiL+UQAgAC/B7D//5LPAIABmysAgAtv7gCAFdruEA==
-Date:   Tue, 19 May 2020 09:17:11 +0000
-Message-ID: <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
- <20200427061426.GA11270@infradead.org>
- <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
- <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
- <2A308283684ECD4B896628E09AF5361E028BCB4B@RS-MBS01.realsil.com.cn>
- <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
-In-Reply-To: <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.29.40.150]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726880AbgESNzK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 May 2020 09:55:10 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15738 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726471AbgESNzK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 May 2020 09:55:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec3e5310002>; Tue, 19 May 2020 06:54:57 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 May 2020 06:55:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 06:55:09 -0700
+Received: from [10.25.75.192] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
+ 2020 13:55:06 +0000
+Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
+ size >4GB
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
+        "Alan Mikhak" <alan.mikhak@sifive.com>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+Date:   Tue, 19 May 2020 19:25:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589896497; bh=6vHGEj/TpmJyM9WFsoC2S9lYbY2NhVfAh120Hs1ELGY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=OlXn2hASmaE4CevgDwu0v1G3RrE5I2TjKYMyOLgP7k68AL8XfgtCoxmGdxdTD9X7F
+         UGx0fDakgUdMFEvTzpx4ut11dAur/i4lA+GqSbhA0xAmvpSqv3baLlFwNPbKYD9Y75
+         1n1rO537E5sIOIXaQB+XdKew0XlFZ0SVA7hF6oXho5PaNTsIg3t9wqhGrUtNYKr9Iq
+         hXbECmVgzsG7tUnjilpxm36mmpP+5z9pnCZUcaS2A0k+lpIR5eblhIlgBLzhTgRaAs
+         zdNmN2x9mOPJgRtJ7aqOBj6pzw7NE7urqDcalef0/PS9lFOD2d+jGdNqeggdMFKwCp
+         ZRjMkKWd3SXbQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiBPbiBUdWUsIDI4IEFwciAyMDIwIGF0IDA1OjQ0LCDlhq/plJAgPHJ1aV9mZW5nQHJlYWxzaWwu
-Y29tLmNuPiB3cm90ZToNCj4gPg0KPiA+ID4NCj4gPiA+IE9uIE1vbiwgQXByIDI3LCAyMDIwIGF0
-IDExOjQxIEFNIOWGr+mUkCA8cnVpX2ZlbmdAcmVhbHNpbC5jb20uY24+DQo+IHdyb3RlOg0KPiA+
-ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiA+IE9uIFN1biwgQXByIDI2LCAyMDIwIGF0IDA5OjI1OjQ2
-QU0gKzA4MDAsDQo+ID4gPiA+ID4gcnVpX2ZlbmdAcmVhbHNpbC5jb20uY24NCj4gPiA+IHdyb3Rl
-Og0KPiA+ID4gPiA+ID4gRnJvbTogUnVpIEZlbmcgPHJ1aV9mZW5nQHJlYWxzaWwuY29tLmNuPg0K
-PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFJUUzUyNjEgc3VwcG9ydCBsZWdhY3kgU0QgbW9kZSBh
-bmQgU0QgRXhwcmVzcyBtb2RlLg0KPiA+ID4gPiA+ID4gSW4gU0Q3LngsIFNEIGFzc29jaWF0aW9u
-IGludHJvZHVjZSBTRCBFeHByZXNzIGFzIGEgbmV3IG1vZGUuDQo+ID4gPiA+ID4gPiBTRCBFeHBy
-ZXNzIG1vZGUgaXMgZGlzdGluZ3Vpc2hlZCBieSBDTUQ4Lg0KPiA+ID4gPiA+ID4gVGhlcmVmb3Jl
-LCBDTUQ4IGhhcyBuZXcgYml0IGZvciBTRCBFeHByZXNzLg0KPiA+ID4gPiA+ID4gU0QgRXhwcmVz
-cyBpcyBiYXNlZCBvbiBQQ0llL05WTWUuDQo+ID4gPiA+ID4gPiBSVFM1MjYxIHVzZXMgQ01EOCB0
-byBzd2l0Y2ggdG8gU0QgRXhwcmVzcyBtb2RlLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gU28gaG93
-IGRvZXMgdGhpcyBiaXQgd29yaz8gIFRoZXkgd2F5IEkgaW1hZ2luZWQgU0QgRXhwcmVzcyB0bw0K
-PiA+ID4gPiA+IHdvcmsgaXMgdGhhdCB0aGUgYWN0dWFsIFNEIENhcmQganVzdCBzaG93cyB1cCBh
-cyBhIHJlYWwgUENJZQ0KPiA+ID4gPiA+IGRldmljZSwgc2ltaWxhciB0byBzYXkgVGh1bmRlcmJv
-bHQuDQo+ID4gPiA+DQo+ID4gPiA+IE5ldyBTRCBFeHByZXNzIGNhcmQgaGFzIGR1YWwgbW9kZS4g
-T25lIGlzIFNEIG1vZGUgYW5kIGFub3RoZXIgaXMNCj4gPiA+ID4gUENJZQ0KPiA+ID4gbW9kZS4N
-Cj4gPiA+ID4gSW4gUENJZSBtb2RlLCBpdCBhY3QgYXMgYSBQQ0llIGRldmljZSBhbmQgdXNlIFBD
-SWUgcHJvdG9jb2wgbm90DQo+ID4gPiA+IFRodW5kZXJib2x0DQo+ID4gPiBwcm90b2NvbC4NCj4g
-PiA+DQo+ID4gPiBJIHRoaW5rIHdoYXQgQ2hyaXN0b3BoIHdhcyBhc2tpbmcgYWJvdXQgaXMgd2h5
-IHlvdSBuZWVkIHRvIGlzc3VlIGFueQ0KPiA+ID4gY29tbWFuZHMgYXQgYWxsIGluIFNEIG1vZGUg
-d2hlbiB5b3Ugd2FudCB0byB1c2UgUENJZSBtb2RlIGluc3RlYWQuDQo+ID4gPiBXaGF0IGhhcHBl
-bnMgaWYgeW91IGxvYWQgdGhlIE5WTWUgZHRocml2ZXIgYmVmb3JlIGxvYWRpbmcgdGhlIHJ0czUy
-NjENCj4gZHJpdmVyPw0KPiA+ID4NCj4gPiA+ICAgICAgICBBcm5kDQo+ID4gPg0KPiA+ID4gLS0t
-LS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBl
-LW1haWwuDQo+ID4NCj4gPiBSVFM1MjYxIHN1cHBvcnQgU0QgbW9kZSBhbmQgUENJZS9OVk1lIG1v
-ZGUuIFRoZSB3b3JrZmxvdyBpcyBhcyBmb2xsb3dzLg0KPiA+IDEuUlRTNTI2MSB3b3JrIGluIFNE
-IG1vZGUuDQo+ID4gMi5JZiBjYXJkIGlzIHBsdWdnZWQgaW4sIEhvc3Qgc2VuZCBDTUQ4IHRvIGFz
-ayBjYXJkJ3MgUENJZSBhdmFpbGFiaWxpdHkuDQo+IA0KPiBUaGlzIHNvdW5kcyBsaWtlIHRoZSBj
-YXJkIGluc2VydC9yZW1vdmFsIG5lZWRzIHRvIGJlIG1hbmFnZWQgYnkgdGhlDQo+IHJ0c3hfcGNp
-X3NkbW1jIGRyaXZlciAobW1jKS4NCj4gDQo+ID4gMy5JZiB0aGUgY2FyZCBoYXMgUENJZSBhdmFp
-bGFiaWxpdHksIFJUUzUyNjEgc3dpdGNoIHRvIFBDSWUvTlZNZSBtb2RlLg0KPiANCj4gVGhpcyBz
-d2l0Y2ggaXMgZG9uZSBieSB0aGUgbW1jIGRyaXZlciwgYnV0IGhvdyBkb2VzIHRoZSBQQ0llL05W
-TWUgZHJpdmVyDQo+IGtub3cgd2hlbiB0byB0YWtlIG92ZXI/IElzbid0IHRoZXJlIGEgc3luY2hy
-b25pemF0aW9uIHBvaW50IG5lZWRlZD8NCj4gDQo+ID4gNC5NbWMgZHJpdmVyIGV4aXQgYW5kIE5W
-TWUgZHJpdmVyIHN0YXJ0IHdvcmtpbmcuDQo+IA0KPiBIYXZpbmcgdGhlIG1tYyBkcml2ZXIgdG8g
-ZXhpdCBzZWVtcyB3cm9uZyB0byBtZS4gRWxzZSBob3cgd291bGQgeW91IGhhbmRsZQ0KPiBhIGNh
-cmQgYmVpbmcgcmVtb3ZlZCBhbmQgaW5zZXJ0ZWQgYWdhaW4/DQo+IA0KPiBJbiBwcmluY2lwbGUg
-eW91IHdhbnQgdGhlIG1tYyBjb3JlIHRvIGZhaWwgdG8gZGV0ZWN0IHRoZSBjYXJkIGFuZCB0aGVu
-IGRvIGENCj4gaGFuZG92ZXIsIHNvbWVob3cuIE5vPw0KPiANCj4gQWx0aG91Z2gsIHRvIG1ha2Ug
-dGhpcyB3b3JrIHRoZXJlIGFyZSBhIGNvdXBsZSBvZiBwcm9ibGVtcyB5b3UgbmVlZCB0byBkZWFs
-DQo+IHdpdGguDQo+IA0KPiAxLiBJZiB0aGUgbW1jIGNvcmUgZG9lc24ndCBzdWNjZXNzZnVsbHkg
-ZGV0ZWN0IGEgY2FyZCwgaXQgd2lsbCByZXF1ZXN0IHRoZSBtbWMNCj4gaG9zdCB0byBwb3dlciBv
-ZmYgdGhlIGNhcmQuIEluIHRoaXMgc2l0dWF0aW9uLCB5b3Ugd2FudCB0byBrZWVwIHRoZSBwb3dl
-ciB0byB0aGUNCj4gY2FyZCwgYnV0IGxlYXZlIGl0IHRvIGJlIG1hbmFnZWQgYnkgdGhlIFBDSWUv
-TlZNZSBkcml2ZXIgaW4gc29tZSB3YXkuDQo+IA0KPiAyLiBEdXJpbmcgc3lzdGVtIHJlc3VtZSwg
-dGhlIG1tYyBjb3JlIG1heSB0cnkgdG8gcmVzdG9yZSBwb3dlciBmb3IgYSBjYXJkLA0KPiBlc3Bl
-Y2lhbGx5IGlmIGl0J3MgYSByZW1vdmFibGUgc2xvdCwgYXMgdG8gbWFrZSBzdXJlIGl0IGdldHMg
-ZGV0ZWN0ZWQgaWYgc29tZW9uZQ0KPiBpbnNlcnRlZCBhIGNhcmQgd2hpbGUgdGhlIHN5c3RlbSB3
-YXMgc3VzcGVuZGVkLg0KPiBOb3Qgc3VyZSBpZiB0aGlzIHBsYXlzIHdlbGwgd2l0aCB0aGUgUENJ
-ZS9OVk1lIGRyaXZlcidzIGJlaGF2aW91ci4NCj4gQWdhaW4sIEkgdGhpbmsgc29tZSBraW5kIG9m
-IHN5bmNocm9uaXphdGlvbiBpcyBuZWVkZWQuDQo+IA0KPiA+IDUuSWYgY2FyZCBpcyB1bnBsdWdn
-ZWQsIFJUUzUyNjEgd2lsbCBzd2l0Y2ggdG8gU0QgbW9kZS4NCj4gDQo+IEFscmlnaHQsIGNsZWFy
-bHkgdGhlIG1tYyBkcml2ZXIgaXMgbmVlZGVkIHRvIG1hbmFnZSBjYXJkIGluc2VydC9yZW1vdmFs
-Lg0KPiANCj4gPiBXZSBzaG91bGQgc2VuZCBDTUQ4IGluIFNEIG1vZGUgdG8gYXNrIGNhcmQncyBQ
-Q0llIGF2YWlsYWJpbGl0eSwgYW5kIHRoZQ0KPiBvcmRlciBvZiBOVk1lIGRyaXZlciBhbmQgcnRz
-NTI2MSBkcml2ZXIgZG9lc24ndCBtYXR0ZXIuDQo+IA0KPiBUaGF0IGFzc3VtZXMgdGhlcmUncyBh
-bm90aGVyIHN5bmNocm9uaXphdGlvbiBtZWNoYW5pc20uIE1heWJlIHRoZXJlIGlzLCBidXQNCj4g
-SSBkb24ndCB1bmRlcnN0YW5kIGhvdy4NCj4gDQpJZiBubyBjYXJkIGluIFJUUzUyNjEsIFJUUzUy
-NjEgd29ya3MgaW4gU0QgbW9kZS4gSWYgeW91IHJ1biBjb21tYW5kIGxzcGNpLCB5b3UgY2FuIHNl
-ZSB0aGUgUlRTNTI2MSBkZXZpY2UuDQpXaGVuIGluc2VydCBhIFNEIEV4cHJlc3MgY2FyZCwgTW1j
-IGRyaXZlciB3aWxsIHNlbmQgQ01EOCB0byBhc2sgdGhlIGNhcmQncyBQQ0llIGF2YWlsYWJpbGl0
-eSwgYmVjYXVzZSBpdCdzIGEgU0QgRVhQUkVTUyBjYXJkLA0KUlRTNTI2MSB3aWxsIHN3aXRjaCB0
-byBOVk1lIG1vZGUsIGFmdGVyIHN3aXRjaCBpZiB5b3UgcnVuIGxzcGNpLCB5b3UgY2FuIHNlZSBS
-VFM1MjYxIGRpc2FwcGVhcmVkIGFuZCBhIE5WTWUgZGV2aWNlIHJlcGxhY2VzIFJUUzUyNjEuDQpJ
-biBOVk1lIG1vZGUsIFJUUzUyNjEgb25seSBwcm92aWRlIGEgYnJpZGdlIGJldHdlZW4gU0QgRXhw
-cmVzcyBjYXJkIGFuZCBQQ0llLiBGb3IgTlZNZSBkcml2ZXIsIGp1c3QgbGlrZSBhIG5ldyBOVk1l
-IGRldmljZSBpcyBpbnNlcnRlZC4NCk1tYyBjb3JlIGRvZXNuJ3Qgc3VjY2Vzc2Z1bGx5IGRldGVj
-dCB0aGUgY2FyZCBhbmQgaGFuZG92ZXIgdG8gTlZNZSBkcml2ZXIuIEJlY2F1c2Ugb2YgZGV0ZWN0
-IHRoZSBjYXJkIGZhaWxlZCwNCk1tYyBkcml2ZXIgd2lsbCByZXF1ZXN0IHRoZSBSVFM1MjYxIHRv
-IHBvd2VyIG9mZiB0aGUgY2FyZCwgYnV0IGF0IHRoYXQgdGltZSBwb3dlciBvZmYgdGhlIGNhcmQg
-d2lsbCBub3Qgc3VjY2VlZC4NCldoZW4gdGhlIGNhcmQgaXMgdW5wbHVnZ2VkLCBSVFM1MjYxIHdp
-bGwgc3dpdGNoIHRvIFNEIG1vZGUgYnkgaXRzZWxmIGFuZCBkb24ndCBuZWVkIG1tYyBkcml2ZXIg
-dG8gZG8gYW55dGhpbmcsDQpJZiB5b3UgcnVuIGxzcGNpLCB5b3UgY2FuIHNlZSBOVk1lIGRldmlj
-ZSBkaXNhcHBlYXJlZCBhbmQgUlRTNTI2MSBhcHBlYXJlZCBhZ2Fpbi4NCg0KS2luZCByZWdhcmRz
-DQo=
+
+
+On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
+>> [+cc Alan; please cc authors of relevant commits,
+>> updated Andrew's email address]
+>>
+>> On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
+>>> commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
+>>> 32-bits") enables warning for MEM resources of size >4GB but prefetchable
+>>>   memory resources also come under this category where sizes can go beyond
+>>> 4GB. Avoid logging a warning for prefetchable memory resources.
+>>>
+>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>> ---
+>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> index 42fbfe2a1b8f..a29396529ea4 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>                      pp->mem = win->res;
+>>>                      pp->mem->name = "MEM";
+>>>                      mem_size = resource_size(pp->mem);
+>>> -                   if (upper_32_bits(mem_size))
+>>> +                   if (upper_32_bits(mem_size) &&
+>>> +                       !(win->res->flags & IORESOURCE_PREFETCH))
+>>>                              dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+>>>                      pp->mem_size = mem_size;
+>>>                      pp->mem_bus_addr = pp->mem->start - win->offset;
+> 
+> That warning was added for a reason - why should not we log legitimate
+> warnings ? AFAIU having resources larger than 4GB can lead to undefined
+> behaviour given the current ATU programming API.
+Yeah. I'm all for a warning if the size is larger than 4GB in case of
+non-prefetchable window as one of the ATU outbound translation channels 
+is being used, but, we are not employing any ATU outbound translation 
+channel for prefetchable window and they can be greater than 4GB in size 
+for all right reasons. So, logging a warning for prefetchable region 
+doesn't seem correct to me. Please let me know if my understanding is wrong.
+
+- Vidya Sagar
+> 
+> Alan ? I want to understand what's the best course of action before
+> merging these patches.
+> 
+> Lorenzo
+> 
