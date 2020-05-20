@@ -2,98 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8D3E1DC025
-	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 22:30:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D40EA1DC02E
+	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 22:32:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgETUaZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 May 2020 16:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgETUaZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 May 2020 16:30:25 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8450820708;
-        Wed, 20 May 2020 20:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590006624;
-        bh=qcg/Qu49E2DS3eXuokkXkP+SYKXKPE1qQn/Eyz24upc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ENC5AZWJKAfOFyxzIFQ8srOw9AlF709uZF77fuNEvRAOI5Qi9F8qagECc5RrvOShd
-         Wh/Vu6J6ZtH9qw1bKcPUV4VuB1N8v2N+HMPl+n3YqGFZyONYIlBH2e0WA6545jn9UU
-         S5LoSz4szwgDz0bzPCLe8o+qgG6XlMXEOFUlbfJE=
-Date:   Wed, 20 May 2020 15:30:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: Reference bridge window resources explicitly
-Message-ID: <20200520203022.GA1117009@bjorn-Precision-5520>
+        id S1727000AbgETUcn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 May 2020 16:32:43 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43315 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgETUcm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 May 2020 16:32:42 -0400
+Received: by mail-il1-f193.google.com with SMTP id l20so4668213ilj.10;
+        Wed, 20 May 2020 13:32:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eYhFWnym18cK56HOIXrwGvpqXxigL2vp9VHbqJW4HIM=;
+        b=htOs/8YHKrrPhdjiPxNVXL8GzY1/Wp9B/ieEyf+PE37mm4etEgT0k5Z0mSerek1FBK
+         3JpgBwM7YT1/00XWNgqRrAfvX7N1b9G/LWpEY/5WFSGFDt9QBvEtFcUhpp9ct9wYr4iC
+         7B7YuUIls7E+x8+lFllTqZi4mq3dFFCyaF2xyyKzBtClpzzKiclMfFYI3fcn+0LcrbuX
+         LSRdb42bqP+1pSOaIYVnf83yL8BMt4jKs3bxzHS8XzJZ2epLbLRyV2+iUGaASD5hKxFN
+         2glmHm60gWGyOHYqxLCgYdI5vmSjwHM2qvVxaEc5T+UqGV/+kaUR6CybU75WzGC6EpHe
+         u2rw==
+X-Gm-Message-State: AOAM531v45gnk4Sdl9kP3fRneTrDMK57P+jPRLXI1On35oylT5+Lg6Hv
+        Z+B1liG60wVyowZPqd8VWA==
+X-Google-Smtp-Source: ABdhPJy5QvUn+VTDpkuNaZg6Rlk1g9vHBNfouawM73Pe8LYk585UL8czp90286VGTKxtQBwZeP8+kg==
+X-Received: by 2002:a92:c7a2:: with SMTP id f2mr5670636ilk.71.1590006761646;
+        Wed, 20 May 2020 13:32:41 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id d12sm1884632ill.80.2020.05.20.13.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 13:32:40 -0700 (PDT)
+Received: (nullmailer pid 503923 invoked by uid 1000);
+        Wed, 20 May 2020 20:32:39 -0000
+Date:   Wed, 20 May 2020 14:32:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     roy.zang@nxp.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        Zhiqiang.Hou@nxp.com, jingoohan1@gmail.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com,
+        shawnguo@kernel.org, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, kishon@ti.com,
+        linuxppc-dev@lists.ozlabs.org, amurray@thegoodpenguin.co.uk
+Subject: Re: [PATCH v6 01/11] PCI: designware-ep: Add multiple PFs support
+ for DWC
+Message-ID: <20200520203239.GA503864@bogus>
+References: <20200314033038.24844-1-xiaowei.bao@nxp.com>
+ <20200314033038.24844-2-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520183411.1534621-1-kw@linux.com>
+In-Reply-To: <20200314033038.24844-2-xiaowei.bao@nxp.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:34:09PM +0000, Krzysztof Wilczynski wrote:
-> Add definitions to allow for more explicit mapping of Peer-to-Peer (P2P)
-> and CardBus bridge window resources.
+On Sat, 14 Mar 2020 11:30:28 +0800, Xiaowei Bao wrote:
+> Add multiple PFs support for DWC, due to different PF have different
+> config space, we use func_conf_select callback function to access
+> the different PF's config space, the different chip company need to
+> implement this callback function when use the DWC IP core and intend
+> to support multiple PFs feature.
 > 
-> Added for P2P:
-> 
->   PCI_BRIDGE_RESOURCES + 0 -> PCI_BRIDGE_IO_WINDOW
->   PCI_BRIDGE_RESOURCES + 1 -> PCI_BRIDGE_MEM_WINDOW
->   PCI_BRIDGE_RESOURCES + 2 -> PCI_BRIDGE_PREF_MEM_WINDOW
-> 
-> Added for CardBus:
-> 
->   PCI_BRIDGE_RESOURCES + 0 -> PCI_CB_BRIDGE_IO_0_WINDOW
->   PCI_BRIDGE_RESOURCES + 1 -> PCI_CB_BRIDGE_IO_1_WINDOW
->   PCI_BRIDGE_RESOURCES + 2 -> PCI_CB_BRIDGE_MEM_0_WINDOW
->   PCI_BRIDGE_RESOURCES + 3 -> PCI_CB_BRIDGE_MEM_1_WINDOW
-> 
-> The old way of addressing resources using an index:
-> 
->   bridge->resource[PCI_BRIDGE_RESOURCES+0]
-> 
-> Would now be replaced with:
-> 
->   bridge->resource[PCI_BRIDGE_IO_WINDOW]
-> 
-> This series of patches builds on top of the changes proposed before:
-> 
->   https://lore.kernel.org/r/20100203233931.10803.39854.stgit@bob.kio
->   https://lore.kernel.org/r/20100212170022.19522.81135.stgit@bob.kio
-> 
-> Krzysztof Wilczynski (2):
->   PCI: Move from using PCI_BRIDGE_RESOURCES to bridge resource
->     definitions
->   pcmcia: Use resources definitions when freeing CardBus resources
-> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
-> Changes in v2:
->   Split patches based on the feedback from Bjorn allowing for the
->   patch that correct the PCI quirk for the ALI chipset to be applied
->   independently, if someone needs to cherry-pick it, before updating
->   the said quirk to use definitions for bridge window resources.
+> v2:
+>  - Remove duplicate redundant code.
+>  - Reimplement the PF config space access way.
+> v3:
+>  - Integrate duplicate code for func_select.
+>  - Move PCIE_ATU_FUNC_NUM(pf) (pf << 20) to ((pf) << 20).
+>  - Add the comments for func_conf_select function.
+> v4:
+>  - Correct the commit message.
+> v5:
+>  - No change.
+> v6:
+>  - No change.
 > 
-> Changes in v3:
->   Remove the PCI quirk patch for ALI M7101 chipset as it's not needed.
->   Remove surplus new variables added in pci_bus_size_cardbus().
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 123 ++++++++++++++++--------
+>  drivers/pci/controller/dwc/pcie-designware.c    |  59 ++++++++----
+>  drivers/pci/controller/dwc/pcie-designware.h    |  18 +++-
+>  3 files changed, 142 insertions(+), 58 deletions(-)
 > 
->  drivers/pci/quirks.c          |  37 +++++------
->  drivers/pci/setup-bus.c       | 114 ++++++++++++++++++----------------
->  drivers/pcmcia/yenta_socket.c |  46 +++++++++-----
->  include/linux/pci.h           |  14 ++++-
->  4 files changed, 122 insertions(+), 89 deletions(-)
 
-Applied to pci/enumeration for v5.8, thanks!
+Reviewed-by: Rob Herring <robh@kernel.org>
