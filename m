@@ -2,125 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF6591DAF06
-	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 11:40:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E06801DAF0C
+	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 11:41:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgETJko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 May 2020 05:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgETJko (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 May 2020 05:40:44 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0631BC061A0F;
-        Wed, 20 May 2020 02:40:38 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id x20so2824505ejb.11;
-        Wed, 20 May 2020 02:40:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ADjHdTIqQWA2GKdm5wosIbVA7qcZMOsh9pTvjrEbKGc=;
-        b=atLc/iwFND3LI8tpTOAPuRqxkiJzV6Ul7YMqJqhMS5JHWaH6/pwpYhJK4p5Fqciqc3
-         JyneqrVO/Jzd7emLQpiyMycoytfjo3dudeIbwaGujGCcyyroVrx4bjUMdTsAfqpycZlb
-         83jlB7EgroB0rgoDyBLjVTwsveoE1o2UsKao64q+BWESa9vu5HfIsqDI941gx9Scx1rJ
-         hg5RCYVcbjTxYvxaH7QaFaaf0JuhySw1wn9CX06zOGxJzJLL7gtdHeleJyeOnBcfBx42
-         ONiLBtHfAjMxf1X1/PXSBullG7Di+8b/7V3aTh0wXMTYDYsbxyGe8Ma1X/5OrGlILEVI
-         xeAQ==
+        id S1726525AbgETJlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 May 2020 05:41:17 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33684 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbgETJlR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 May 2020 05:41:17 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z80so2940553qka.0
+        for <linux-pci@vger.kernel.org>; Wed, 20 May 2020 02:41:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ADjHdTIqQWA2GKdm5wosIbVA7qcZMOsh9pTvjrEbKGc=;
-        b=OXnCh884hluHyyWF4cv/fRnQ7TenJ6U9FYWJSg6lsY0f/2iwNDkdMeerwM3kz/HvSU
-         +j/Dx4W3woXTE8qVMTq8oselffGVHIrnkETaTevi0IBCwZ2X4E4IKiYnfJ98W7bMM/gj
-         eV1GMNBlEJT8VClI1551ZjvX2YeOAVm3gn2/du2jwb2VBP5QeRoK4j2TENd8yJRdtnT/
-         71hFPRuE6blqPNu3D+pbfgCCDiHPWwBG8K19eiB+JWgJWDqOABAfXbEQ69ue7MZD3drb
-         OVObTtrd335GNrwbNig2HnnKXcQ4z5mbNvPwxWSk66H0i86OWF79tpianEmnpzTVBkTO
-         ynbg==
-X-Gm-Message-State: AOAM530HRDfYbqR1eFCYjALOLKKSjiTlWMReT95CeZeN9c9fbJYirNaa
-        ejm9p03yVbm/A0lG0oWVdHQ=
-X-Google-Smtp-Source: ABdhPJzwBNPfX8wLJBhheOieRefmuo7Yih3L2ox5kOQGM1KQSaz0kDU4d4/OhNLC9RUb/PXkwrCZ/g==
-X-Received: by 2002:a17:906:3095:: with SMTP id 21mr3090796ejv.32.1589967637648;
-        Wed, 20 May 2020 02:40:37 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id u10sm1325154edb.65.2020.05.20.02.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 02:40:36 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:40:35 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
-Message-ID: <20200520094035.GC2136208@ulmo>
-References: <20200520084012.30190-1-dinghao.liu@zju.edu.cn>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5XY8cfRDtjcst/FqKtRLj6GiNnXzamwiRPLbeQkh4rE=;
+        b=fDBpE3ddtwMionwu8CAYdtO5kL/HnCdDVSONWEHvrcZSB0emzS2mE49/DprNIHAprA
+         5U/TCiM6u7qnR/LVv9/S3kX7G3gD1fSTYeMKVpu9q/ASBMHjhhc5kfEwQjVqXxYNX8GB
+         CLSJLZKl+xggrYJoedMDGRiDxq4uy5z/a/wn3WsqEU+0pdG8x9zanaeAJGvh3k6ShSS5
+         0n7OXL7Uqqhdld4eAdeBlImP9MeTqeC4/veZgrCQeJ8mTxwvTcmJCjgbKyjFB+/m9yCN
+         ai/6s0B15/uei3+KN1+0uVghYW+wmVy4rWBNKqk3RfnuMy/2O5IRYeXBAwaKY8xup18c
+         bQ2g==
+X-Gm-Message-State: AOAM532bc6EvqMyCkdnbvQ3U4mx0o9oAZgpEHQie6wsesmb+jIYQx5gH
+        wsUeLhev639Fo/RTpPkmwf2aGNFGmyo=
+X-Google-Smtp-Source: ABdhPJwdae8c7KCPFT3+wAaA86jLvqUcOB5nFpOkBniDiIs7H/MyR1Bo+5NW6cXL/3GaklswYOc+Zg==
+X-Received: by 2002:ae9:ed95:: with SMTP id c143mr3685676qkg.314.1589967675218;
+        Wed, 20 May 2020 02:41:15 -0700 (PDT)
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
+        by smtp.gmail.com with ESMTPSA id v44sm1839400qtk.79.2020.05.20.02.41.14
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 02:41:14 -0700 (PDT)
+Received: by mail-qt1-f176.google.com with SMTP id t25so2047752qtc.0
+        for <linux-pci@vger.kernel.org>; Wed, 20 May 2020 02:41:14 -0700 (PDT)
+X-Received: by 2002:ac8:44ba:: with SMTP id a26mr4271755qto.323.1589967674428;
+ Wed, 20 May 2020 02:41:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="S1BNGpv0yoYahz37"
-Content-Disposition: inline
-In-Reply-To: <20200520084012.30190-1-dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com>
+ <20200518161730.GA933080@bjorn-Precision-5520> <CAAri2DrvcnMzaO_cCk53xnzA+_ABbxBk_r3LVBCFSQ+U+eQgEg@mail.gmail.com>
+In-Reply-To: <CAAri2DrvcnMzaO_cCk53xnzA+_ABbxBk_r3LVBCFSQ+U+eQgEg@mail.gmail.com>
+From:   Marcos Scriven <marcos@scriven.org>
+Date:   Wed, 20 May 2020 10:41:03 +0100
+X-Gmail-Original-Message-ID: <CAAri2DoF-6A3qcag4etdWh3vQQUGqzfebw6syeU8HFeph5tWQw@mail.gmail.com>
+Message-ID: <CAAri2DoF-6A3qcag4etdWh3vQQUGqzfebw6syeU8HFeph5tWQw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Avoid FLR for AMD Matisse HD Audio and USB Controllers
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, 18 May 2020 at 20:26, Marcos Scriven <marcos@scriven.org> wrote:
+>
+> On Mon, 18 May 2020 at 17:17, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Alex]
+> >
+> > On Sat, May 16, 2020 at 02:37:23PM +0100, Marcos Scriven wrote:
+> > > This patch fixes an FLR bug on the following two devices:
+> > >
+> > > AMD Matisse HD Audio Controller 0x1487
+> > > AMD Matisse USB 3.0 Host Controller 0x149c
+> > >
+> > > As there was already such a quirk for an Intel network device, I have
+> > > renamed that method and updated the comments, trying to make it
+> > > clearer what the specific original devices that were affected are
+> > > (based on the commit message this was original done:
+> > > https://git.thm.de/mhnn55/eco32-linux-ba/commit/f65fd1aa4f9881d5540192d11f7b8ed2fec936db).
+> > >
+> > > I have ordered them by hex product ID.
+> > >
+> > > I have verified this works on a X570 I AORUS PRO WIFI (rev. 1.0) motherboard.
+> >
+> > If we avoid FLR, is there another method used to reset these devices
+> > between attachments to different VMs?  Does the lack of FLR mean we
+> > can leak information between VMs?
+> >
+> > Would additional delay after the FLR work around this, e.g., something
+> > like 51ba09452d11 ("PCI: Delay after FLR of Intel DC P3700 NVMe")?
+> >
+>
+> Thanks for looking at this patch Bjorn.
+>
+> To take your three points:
+>
+> 1. Certainly I can see those devices able to be passed back and forth
+> between host and guest multiple times, once this patch is applied.
+>
+> 2. I don't know the answer to that question; would appreciate guidance
+> on how to determine this. Do you mean perhaps some buffered data in
+> the USB controller, for instance?
+>
+> 3. I have not tried an additional delay. This is the logs I see when
+> the error is occurring:
+>
+> [ 2423.556570] vfio-pci 0000:0c:00.3: not ready 1023ms after FLR; waiting
+> [ 2425.604526] vfio-pci 0000:0c:00.3: not ready 2047ms after FLR; waiting
+> [ 2428.804509] vfio-pci 0000:0c:00.3: not ready 4095ms after FLR; waiting
+> [ 2433.924409] vfio-pci 0000:0c:00.3: not ready 8191ms after FLR; waiting
+> [ 2443.140721] vfio-pci 0000:0c:00.3: not ready 16383ms after FLR; waiting
+> [ 2461.571944] vfio-pci 0000:0c:00.3: not ready 32767ms after FLR; waiting
+> [ 2496.387544] vfio-pci 0000:0c:00.3: not ready 65535ms after FLR; giving up
+>
+> What makes this bug especially bad is the host never recovers, and
+> eventually hangs or crashes.
+>
+> For reference, the delay example you're talking about is:
+>
+> static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+> {
+> if (!pcie_has_flr(dev))
+> return -ENOTTY;
+>
+> if (probe)
+> return 0;
+>
+> pcie_flr(dev);
+>
+> msleep(250);
+>
+> return 0;
+> }
+>
+> I don't know if it would work, but I will try it out and report back.
+>
+> Marcos
+>
+>
 
---S1BNGpv0yoYahz37
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Bjorn/Alex
 
-On Wed, May 20, 2020 at 04:40:12PM +0800, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> it returns an error code. Thus a pairing decrement is needed on
+I have just tried the alternate approach of adding a 250ms delay to
+the function level reset - this unfortunately results in the same
+broken behaviour, with the host itself never recovering.
 
-s/even it/even when it/
+[   76.905410] vfio-pci 0000:0d:00.3: not ready 1023ms after FLR; waiting
+[   79.018014] vfio-pci 0000:0d:00.3: not ready 2047ms after FLR; waiting
+[   82.089390] vfio-pci 0000:0d:00.3: not ready 4095ms after FLR; waiting
+[   87.209416] vfio-pci 0000:0d:00.3: not ready 8191ms after FLR; waiting
+[   96.425440] vfio-pci 0000:0d:00.3: not ready 16383ms after FLR; waiting
+[  114.615491] vfio-pci 0000:0d:00.3: not ready 32767ms after FLR; waiting
+[  149.417712] vfio-pci 0000:0d:00.3: not ready 65535ms after FLR; giving up
 
-> the error handling path to keep the counter balanced.
->=20
-> Also This driver forgets to call pm_runtime_disable() when
+I also tried a full second, to no avail.
 
-s/Also This/Also this/
+What would be the next step in proceeding with the original patch please?
 
-> pm_runtime_get_sync() returns an error code.
->=20
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/pci/controller/pci-tegra.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+How can I allay your concerns on data leaking between VMs?
 
-Otherwise looks correct. It's came as somewhat of a surprise to me that
-pm_runtime_get_sync() increments the usage counter even on failure, but
-it does indeed.
+Thanks for your help with the patch.
 
-With the above fixes to the commit message:
+Marcos
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---S1BNGpv0yoYahz37
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7E+xAACgkQ3SOs138+
-s6Ev0A/+LbNyGHEdbiqOD9y5/qaNsNqqMWMlwIt/mWXfZScDeEIpC3QPIsDtD5xU
-ouYqP8sbmo/0Elu56py6NUKPWEC0xDRX9TwopJ7HwSFa8egl1AjR87eHOgjXFXgd
-EuVB7+7TyE2rxp6UBtqQu1y9PDcTWmjQvyLaXBfQMyZqNaSt7e71yTdsz3cMHVa0
-DnNipyvYDrGUzr/cgadt/kN5FrTGQbgEodLebDnkgzOHVuqeJKuCBGpOGUL2eEKS
-r6fg3zb64SNwzQxB8k5hBek6+S+drfyTRcxzJgJOctehCq9xFA/5COUwdZpdzWQr
-7tD8AVEe+GUb1MS1VugJyVdMe3QecRKCuO7fqJPLjLuy54LCHYJVUyMpWBvVYslf
-Sl1e3ClVjUUt65y3Rtuvf0c7WzhRURoVBycKxsGlwM/nWZ+JjF/eejknZsifFZLQ
-FDtEgX+MWIa0XL59NY419YH1ul6xwTIkK6mU7F+gEkK0E0lcsVyX1ItHKPPJWQ0C
-hsRJCuGMqTlYetZorIzkAuOQCY0qR7qtsif1g+k7y2NeGBtDVDFmrsZjJNw52NRE
-6wDjxlZaCGGAXMu38SqDjUCSuXSSBywODU+BJuD3AyzT3CZ6nU/gfBv4K1QsITQi
-M9Q3U4+kFzKGpLHCVngyRhbZG9IYh012GSJeEDY+K+PX+I+/MU0=
-=0vzD
------END PGP SIGNATURE-----
-
---S1BNGpv0yoYahz37--
+> > > From 651176ab164ae51e37d5bb86f5948da558744930 Mon Sep 17 00:00:00 2001
+> > > From: Marcos Scriven <marcos@scriven.org>
+> > > Date: Sat, 16 May 2020 14:23:26 +0100
+> > > Subject: [PATCH] PCI: Avoid FLR for:
+> > >
+> > >     AMD Matisse HD Audio Controller 0x1487
+> > >     AMD Matisse USB 3.0 Host Controller 0x149c
+> > >
+> > > These devices advertise a Function Level Reset (FLR) capability, but hang
+> > > when an FLR is triggered.
+> > >
+> > > To reproduce the problem, attach the device to a VM, then detach and try to
+> > > attach again.
+> > >
+> > > Add a quirk to prevent the use of FLR on these devices.
+> > >
+> > > Signed-off-by: Marcos Scriven <marcos@scriven.org>
+> > > ---
+> > >  drivers/pci/quirks.c | 18 ++++++++++++++----
+> > >  1 file changed, 14 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index 28c9a2409c50..ff310f0cac22 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -5129,13 +5129,23 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+> > >  }
+> > >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+> > >
+> > > -/* FLR may cause some 82579 devices to hang */
+> > > -static void quirk_intel_no_flr(struct pci_dev *dev)
+> > > +/*
+> > > + * FLR may cause the following to devices to hang:
+> > > + *
+> > > + * AMD Starship/Matisse HD Audio Controller 0x1487
+> > > + * AMD Matisse USB 3.0 Host Controller 0x149c
+> > > + * Intel 82579LM Gigabit Ethernet Controller 0x1502
+> > > + * Intel 82579V Gigabit Ethernet Controller 0x1503
+> > > + *
+> > > + */
+> > > +static void quirk_no_flr(struct pci_dev *dev)
+> > >  {
+> > >      dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+> > >  }
+> > > -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_intel_no_flr);
+> > > -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_intel_no_flr);
+> > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
+> > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
+> > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+> > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+> > >
+> > >  static void quirk_no_ext_tags(struct pci_dev *pdev)
+> > >  {
+> > > --
+> > > 2.25.1
