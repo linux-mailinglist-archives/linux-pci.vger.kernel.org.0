@@ -2,80 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05CA21DC2A6
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 01:07:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEBDE1DC2F6
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 01:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgETXHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 May 2020 19:07:00 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45995 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbgETXHA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 May 2020 19:07:00 -0400
-Received: by mail-il1-f193.google.com with SMTP id b15so5040065ilq.12;
-        Wed, 20 May 2020 16:06:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hpxe6Kf1Y1YKMS1+011D2HXa532cg7CAEDYR3p5RkEw=;
-        b=LdoGNGArJeHLdn8MZq6irDRDbDKJmSU53w3sOyRkH7x6VeV71zRu/B/2DzUVtEUCAi
-         O8Bk/hX4Xgdd6gpMqLXjDfm7sojbJfyAvrhqibcAoQm2AYK+zDYMmjFFQRmHmnESD1IJ
-         9CW/8gkoYh96Moj3ePuRJB+BZl2jwEam+IlL/jvROz5PfUmFnk9ZNI5pOjDE4hthJRQ4
-         5xcwK2eIbyKiwE0YHG0esWp1F6ZhLles/2+dfpbk4iiHjdh0pceR3cz59ufYRUOZnepK
-         E2JXhLVEHHJR5jPEAt5X4C0DOSgSgDmwoSREDSUdU2f3DKo3X+PDAHvhcpWcZeE1chLh
-         ShWg==
-X-Gm-Message-State: AOAM530z2zSnqA2DUuR9iw9avBRTxdGgsoK2I8dncH8Sw70Ah1jz0DYg
-        FgB7Eudq4lNZ+K6nEhb+9A==
-X-Google-Smtp-Source: ABdhPJxjcHECSsdzZdmzcqRS1EuJexuCuPYCn1h85LxDvs0MwMakXDkCfb4HocQNRcy4sUr6NgDWnA==
-X-Received: by 2002:a05:6e02:106d:: with SMTP id q13mr6278919ilj.107.1590016018819;
-        Wed, 20 May 2020 16:06:58 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q13sm1667155ion.36.2020.05.20.16.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:06:58 -0700 (PDT)
-Received: (nullmailer pid 788100 invoked by uid 1000);
-        Wed, 20 May 2020 23:06:57 -0000
-Date:   Wed, 20 May 2020 17:06:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     devicetree@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 2/2] PCI: uniphier: Add Socionext UniPhier Pro5 PCIe
- endpoint controller driver
-Message-ID: <20200520230657.GA788030@bogus>
-References: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1589457801-12796-3-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1728581AbgETX36 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 May 2020 19:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728552AbgETX36 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 May 2020 19:29:58 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A2EE20759;
+        Wed, 20 May 2020 23:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590017397;
+        bh=ml/5Lrb2JgHgCp2VG6AK9LVynTzj51rBivW+PswI6+o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UIPVLuZVgVbu1MDPPDKLeIa1NDT6Suo3tfoROlVkPKt4JxkVPkITrhDdxjUoEDl03
+         u9ml8rR7GHi4lFOgXalX0yl0wEn4QnTR/y1JqjVtTnPzuFQz+J7L9P/r9m4GaAGsTi
+         iDXhPf8tdcezG3ysThtzWSDIe5tNByC/DzJW3Fbs=
+Date:   Wed, 20 May 2020 18:29:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marcos Scriven <marcos@scriven.org>
+Cc:     linux-pci@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Avoid FLR for AMD Matisse HD Audio and USB
+ Controllers
+Message-ID: <20200520232954.GA1124908@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589457801-12796-3-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <CAAri2DoF-6A3qcag4etdWh3vQQUGqzfebw6syeU8HFeph5tWQw@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 May 2020 21:03:21 +0900, Kunihiko Hayashi wrote:
-> Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
-> This controller is based on the DesignWare PCIe core.
+On Wed, May 20, 2020 at 10:41:03AM +0100, Marcos Scriven wrote:
+> On Mon, 18 May 2020 at 20:26, Marcos Scriven <marcos@scriven.org> wrote:
+> >
+> > On Mon, 18 May 2020 at 17:17, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > [+cc Alex]
+> > >
+> > > On Sat, May 16, 2020 at 02:37:23PM +0100, Marcos Scriven wrote:
+> > > > This patch fixes an FLR bug on the following two devices:
+> > > >
+> > > > AMD Matisse HD Audio Controller 0x1487
+> > > > AMD Matisse USB 3.0 Host Controller 0x149c
+> > > >
+> > > > As there was already such a quirk for an Intel network device, I have
+> > > > renamed that method and updated the comments, trying to make it
+> > > > clearer what the specific original devices that were affected are
+> > > > (based on the commit message this was original done:
+> > > > https://git.thm.de/mhnn55/eco32-linux-ba/commit/f65fd1aa4f9881d5540192d11f7b8ed2fec936db).
+> > > >
+> > > > I have ordered them by hex product ID.
+> > > >
+> > > > I have verified this works on a X570 I AORUS PRO WIFI (rev. 1.0) motherboard.
+> > >
+> > > If we avoid FLR, is there another method used to reset these devices
+> > > between attachments to different VMs?  Does the lack of FLR mean we
+> > > can leak information between VMs?
+> > >
+> > > Would additional delay after the FLR work around this, e.g., something
+> > > like 51ba09452d11 ("PCI: Delay after FLR of Intel DC P3700 NVMe")?
+> > >
+> >
+> > Thanks for looking at this patch Bjorn.
+> >
+> > To take your three points:
+> >
+> > 1. Certainly I can see those devices able to be passed back and forth
+> > between host and guest multiple times, once this patch is applied.
+> >
+> > 2. I don't know the answer to that question; would appreciate guidance
+> > on how to determine this. Do you mean perhaps some buffered data in
+> > the USB controller, for instance?
+> >
+> > 3. I have not tried an additional delay. This is the logs I see when
+> > the error is occurring:
+> >
+> > [ 2423.556570] vfio-pci 0000:0c:00.3: not ready 1023ms after FLR; waiting
+> > [ 2425.604526] vfio-pci 0000:0c:00.3: not ready 2047ms after FLR; waiting
+> > [ 2428.804509] vfio-pci 0000:0c:00.3: not ready 4095ms after FLR; waiting
+> > [ 2433.924409] vfio-pci 0000:0c:00.3: not ready 8191ms after FLR; waiting
+> > [ 2443.140721] vfio-pci 0000:0c:00.3: not ready 16383ms after FLR; waiting
+> > [ 2461.571944] vfio-pci 0000:0c:00.3: not ready 32767ms after FLR; waiting
+> > [ 2496.387544] vfio-pci 0000:0c:00.3: not ready 65535ms after FLR; giving up
+> >
+> > What makes this bug especially bad is the host never recovers, and
+> > eventually hangs or crashes.
+> >
+> > For reference, the delay example you're talking about is:
+> >
+> > static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+> > {
+> > if (!pcie_has_flr(dev))
+> > return -ENOTTY;
+> >
+> > if (probe)
+> > return 0;
+> >
+> > pcie_flr(dev);
+> >
+> > msleep(250);
+> >
+> > return 0;
+> > }
+> >
+> > I don't know if it would work, but I will try it out and report back.
+> >
+> > Marcos
+> >
+> >
 > 
-> And add "host" to existing controller descriontions for the host controller
-> in Kconfig.
+> Bjorn/Alex
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  MAINTAINERS                                   |   2 +-
->  drivers/pci/controller/dwc/Kconfig            |  13 +-
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c | 383 ++++++++++++++++++++++++++
->  4 files changed, 396 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> I have just tried the alternate approach of adding a 250ms delay to
+> the function level reset - this unfortunately results in the same
+> broken behaviour, with the host itself never recovering.
 > 
+> [   76.905410] vfio-pci 0000:0d:00.3: not ready 1023ms after FLR; waiting
+> [   79.018014] vfio-pci 0000:0d:00.3: not ready 2047ms after FLR; waiting
+> [   82.089390] vfio-pci 0000:0d:00.3: not ready 4095ms after FLR; waiting
+> [   87.209416] vfio-pci 0000:0d:00.3: not ready 8191ms after FLR; waiting
+> [   96.425440] vfio-pci 0000:0d:00.3: not ready 16383ms after FLR; waiting
+> [  114.615491] vfio-pci 0000:0d:00.3: not ready 32767ms after FLR; waiting
+> [  149.417712] vfio-pci 0000:0d:00.3: not ready 65535ms after FLR; giving up
+> 
+> I also tried a full second, to no avail.
+> 
+> What would be the next step in proceeding with the original patch please?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Implementation of FLR is "strongly recommended" by the spec but is
+optional.  So I don't see a problem with just avoiding it via your
+patch.
+
+I applied it to pci/virtualization for v5.8, thanks!
+
+Bjorn
