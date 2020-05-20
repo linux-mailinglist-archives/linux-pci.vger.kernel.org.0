@@ -2,109 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 132091DB842
-	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 17:32:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E021D1DB918
+	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 18:15:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgETPcy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 May 2020 11:32:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgETPcx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 May 2020 11:32:53 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 342B2C061A0E
-        for <linux-pci@vger.kernel.org>; Wed, 20 May 2020 08:32:52 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id n18so3347864wmj.5
-        for <linux-pci@vger.kernel.org>; Wed, 20 May 2020 08:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eyFn3P2XuGvmapYpvmXsfPpBpNlu7lMJiAWRzcy1I5I=;
-        b=NvU+y8H/jAu6fTaZt01RqQqQcfHxhpgoN7+p0ux0i2Oq8yrHojsDIuAB1TDQoB7+iq
-         ItCOMqP2wSggzqlVIvwuENI+1I2x5hp/8KvEOK36fICyUOgEwdk1sU//8q4oFoHeszEL
-         BjRnMOgCnxRQZfH1h/SzPX0XXFn0xr9ecwlyA3hfQ3L1x2hVGSIVAuixez9uag+O1VRD
-         8S3YP14a5TWEbLnBlF1XfAlBGpRgTaQFWpOUGdRaSTHZZpZIUudxfyNrbORahZXopfyb
-         4eORiSCbkfAw18940CBJ5bBrPzAuTN+maYvUXW9TdE5VklVvU4/z8GEpTB+189e5Em1Q
-         8TaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eyFn3P2XuGvmapYpvmXsfPpBpNlu7lMJiAWRzcy1I5I=;
-        b=tZoFFJu4pEOWbe0f6CQ1Yf9OiC9+xMYNmLwuM5rVLtEOy578DSzuKb+SNkNErWy+Uh
-         kooMzFItC+u2gFb2rvD8XrfJuEyb9yFJSbNkWcuJVuwNM3MesGnRzXgPQJqMPwJjQffn
-         9Q0swSMu9LbXM95S1TykzvVlDaBMWrmZ1XZTfwemEBQyWdhY1Dj1+qmrk60vLarFxPlR
-         TPUSttt08rbTntGvl2y3qlPjNhdHZBd2dBClL0+oXdV6ySzfKSZrTSdJ0TkaCmgizlRg
-         eNIBzYLIxyWorngfNEw10iIWs9DmEVNBeiOONkZktLDzLFnMnuVjwHK4YDaREKfxozn/
-         NVeQ==
-X-Gm-Message-State: AOAM530c6YSvjMs/e2y1kAoy0Ve22n1mqMDiB1GqVyySnZAXL9LnrOuv
-        DualcnRqAAoEA/T6k+arOgcuKVk6EdA=
-X-Google-Smtp-Source: ABdhPJwbawWEUkv2F66a8ndXGjiaJL6hn5qsqFZxdvvcUCO97AbeEjdJDdTC3ZxjJG51qbTRERgXqA==
-X-Received: by 2002:a1c:9ac3:: with SMTP id c186mr5149217wme.150.1589988770732;
-        Wed, 20 May 2020 08:32:50 -0700 (PDT)
-Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id 5sm3395840wmd.19.2020.05.20.08.32.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 08:32:50 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        bhelgaas@google.com
-Cc:     will@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        alex.williamson@redhat.com, hch@infradead.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v2 4/4] iommu/vt-d: Use pci_ats_supported()
-Date:   Wed, 20 May 2020 17:22:03 +0200
-Message-Id: <20200520152201.3309416-5-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520152201.3309416-1-jean-philippe@linaro.org>
-References: <20200520152201.3309416-1-jean-philippe@linaro.org>
+        id S1726737AbgETQPq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 May 2020 12:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgETQPp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 May 2020 12:15:45 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8C120671;
+        Wed, 20 May 2020 16:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589991344;
+        bh=h9MTIGPYQzOllbjEkIgnEniE41lTl+OD7Fs3cDvWlC4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dBQAsnvSt1BuQnO2Uz0LYcXqH8wrzmcE0sMq3dliKDQWy2VD07oQBTPN8C3Xz4q5j
+         EEp4TAFPoo5NVsbBnUlz3FFLpZ4E3P2l4+ULM4f39CP4KxODVhaYOqqg6ZguekD1Z4
+         YSmgsUdQndWtM7LDHv6BuDaL4cZ+TEEM751dZfMc=
+Date:   Wed, 20 May 2020 11:15:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "open list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
+        Julien Grall <julien.grall@arm.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 00/15] PCI: brcmstb: enable PCIe for STB chips
+Message-ID: <20200520161541.GA1089402@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519203419.12369-1-james.quinlan@broadcom.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pci_ats_supported() helper checks if a device supports ATS and is
-allowed to use it. By checking the ATS capability it also integrates the
-pci_ats_disabled() check from pci_ats_init(). Simplify the vt-d checks.
+On Tue, May 19, 2020 at 04:33:58PM -0400, Jim Quinlan wrote:
+> This patchset expands the usefulness of the Broadcom Settop Box PCIe
+> controller by building upon the PCIe driver used currently by the
+> Raspbery Pi.  Other forms of this patchset were submitted by me years
+> ago and not accepted; the major sticking point was the code required
+> for the DMA remapping needed for the PCIe driver to work [1].
+> 
+> There have been many changes to the DMA and OF subsystems since that
+> time, making a cleaner and less intrusive patchset possible.  This
+> patchset implements a generalization of "dev->dma_pfn_offset", except
+> that instead of a single scalar offset it provides for multiple
+> offsets via a function which depends upon the "dma-ranges" property of
+> the PCIe host controller.  This is required for proper functionality
+> of the BrcmSTB PCIe controller and possibly some other devices.
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
+> 
+> Jim Quinlan (15):
+>   PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+>   ahci_brcm: fix use of BCM7216 reset controller
+>   dt-bindings: PCI: Add bindings for more Brcmstb chips
+>   PCI: brcmstb: Add compatibily of other chips
+>   PCI: brcmstb: Add suspend and resume pm_ops
+>   PCI: brcmstb: Asserting PERST is different for 7278
+>   PCI: brcmstb: Add control of rescal reset
+>   of: Include a dev param in of_dma_get_range()
+>   device core: Add ability to handle multiple dma offsets
+>   dma-direct: Invoke dma offset func if needed
+>   arm: dma-mapping: Invoke dma offset func if needed
+>   PCI: brcmstb: Set internal memory viewport sizes
+>   PCI: brcmstb: Accommodate MSI for older chips
+>   PCI: brcmstb: Set bus max burst side by chip type
+>   PCI: brcmstb: add compatilbe chips to match list
 
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
- drivers/iommu/intel-iommu.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+If you have occasion to post a v2 for other reasons,
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 0182cff2c7ac..ed21ce6d1238 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1454,8 +1454,7 @@ static void iommu_enable_dev_iotlb(struct device_domain_info *info)
- 	    !pci_reset_pri(pdev) && !pci_enable_pri(pdev, 32))
- 		info->pri_enabled = 1;
- #endif
--	if (!pdev->untrusted && info->ats_supported &&
--	    pci_ats_page_aligned(pdev) &&
-+	if (info->ats_supported && pci_ats_page_aligned(pdev) &&
- 	    !pci_enable_ats(pdev, VTD_PAGE_SHIFT)) {
- 		info->ats_enabled = 1;
- 		domain_update_iotlb(info->domain);
-@@ -2611,10 +2610,8 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 	if (dev && dev_is_pci(dev)) {
- 		struct pci_dev *pdev = to_pci_dev(info->dev);
- 
--		if (!pdev->untrusted &&
--		    !pci_ats_disabled() &&
--		    ecap_dev_iotlb_support(iommu->ecap) &&
--		    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ATS) &&
-+		if (ecap_dev_iotlb_support(iommu->ecap) &&
-+		    pci_ats_supported(pdev) &&
- 		    dmar_find_matched_atsr_unit(pdev))
- 			info->ats_supported = 1;
- 
--- 
-2.26.2
+s/PCIE_BRCMSTB depends on ARCH_BRCMSTB/Allow PCIE_BRCMSTB on ARCH_BRCMSTB also/
+s/ahci_brcm: fix use of BCM7216 reset controller/ata: ahci_brcm: Fix .../
+s/Add compatibily of other chips/Add bcm7278 register info/
+s/Asserting PERST is different for 7278/Add bcm7278 PERST support/
+s/Set bus max burst side/Set bus max burst size/
+s/add compatilbe chips.*/Add bcm7211, bcm7216, bcm7445, bcm7278 to match list/
 
+Rewrap commit logs to use full 75 character lines (to allow for the 4
+spaces added by git log).
+
+In commit logs, s/This commit// (use imperative mood instead).
+
+In "Accommodate MSI for older chips" commit log, s/commont/common/.
+
+>  .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
+>  arch/arm/include/asm/dma-mapping.h            |  17 +-
+>  drivers/ata/ahci_brcm.c                       |  14 +-
+>  drivers/of/address.c                          |  54 ++-
+>  drivers/of/device.c                           |   2 +-
+>  drivers/of/of_private.h                       |   8 +-
+>  drivers/pci/controller/Kconfig                |   4 +-
+>  drivers/pci/controller/pcie-brcmstb.c         | 403 +++++++++++++++---
+>  include/linux/device.h                        |   9 +-
+>  include/linux/dma-direct.h                    |  16 +
+>  include/linux/dma-mapping.h                   |  44 ++
+>  kernel/dma/Kconfig                            |  12 +
+>  12 files changed, 542 insertions(+), 81 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
