@@ -2,129 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D1AB1DAF92
-	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 12:02:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD6DC1DB03B
+	for <lists+linux-pci@lfdr.de>; Wed, 20 May 2020 12:31:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgETKCA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 May 2020 06:02:00 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:47008 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETKCA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 May 2020 06:02:00 -0400
-Received: from [192.168.1.4] (212-5-158-12.ip.btc-net.bg [212.5.158.12])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 90A62CFEB;
-        Wed, 20 May 2020 13:01:57 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1589968918; bh=DzcUAhFL6G6Vzz7vTvgr6Z/dAJBJLJKn2F3Wqs3Pvzo=;
-        h=Subject:To:Cc:From:Date:From;
-        b=E0onSRN5ou33/t/JrfYkn/kTvcKP3EdES429TX7TYKkOGaqg/2jk0NJFlz6/t9qIe
-         +8l2DqFT36DdjVm0Zm0te3gQh4cZCUTgMra5XppOYwsnwQQi4qykoQtZXAQvj/97c6
-         AA9lGia5yEOlDUBqZOfPgL1uSOuiWtt4Brq1vMgHK5wzAQGkdErBX6QrQzN9hdYt0R
-         JbBwp0Fa/No29c1jstjT4fyRTKVt6QUktBYsBoFHdfBLd/3XpCgCf+71q8to4XcIuo
-         +Jvy4Geib5IGjUkmou+R8LjWvUM2d8LjMicd9Cm3QnkUBK0BffKZ46vuyoJsNNtgmu
-         2hXlM0KaDbkiQ==
-Subject: Re: R: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF
- params bindings
-To:     ansuelsmth@gmail.com, 'Rob Herring' <robh@kernel.org>
-Cc:     'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-9-ansuelsmth@gmail.com> <20200507181044.GA15159@bogus>
- <062301d624a6$8be610d0$a3b23270$@gmail.com> <20200512154544.GA823@bogus>
- <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
- <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <72c588ec-5dd3-6c8a-5ebf-1e01bf2fa96a@mm-sol.com>
-Date:   Wed, 20 May 2020 13:01:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726436AbgETKbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 May 2020 06:31:51 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43179 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgETKbu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 May 2020 06:31:50 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c12so1968650lfc.10
+        for <linux-pci@vger.kernel.org>; Wed, 20 May 2020 03:31:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RfAYY6xCT7oghxcf0si+F3cQB1lL04wBWkTWRakd9FQ=;
+        b=fR5CLnQpEZw03z1USplSeD7ukwteaBGX9uTzufJeywsdYXgOJkb35fvFOEfcOFIihm
+         4cwh7nH9mb2waznL3ssd6+ppqe+5iOK7hR/HfpAVYTUAgF9Wfhs3IumQNHLO36udfHoI
+         IcvpVwUSERZfASz1FRcls6NJudYnUU0WCajor7L5kFCiXbZW2lI+D0xBfGN8amFnTEqM
+         8igoVB6H9SEddvLSBl9kG7EB66kT2dksVMKMMLzac1R6C2ClxbXW6S7pkHa9updFyVJn
+         03HAY+Pcd3Ozq5kERR5ILm6GHK7s+iRfAcrWk3WnkZ2Ago1WPm9QEBAUaaiZXXK9nvdR
+         i/Dg==
+X-Gm-Message-State: AOAM531utszOx8G/EhSUJy5x6TFoUlqpSzz2gMePtj9Et7nDCnNfLbJT
+        ZgDWMlmwImTjN0F9HZ7I33M=
+X-Google-Smtp-Source: ABdhPJyuhnyRbj80v7aUekTvbq/zolWMBeWLlHPm2SrXoj7DKPrimHh76IuDcFTNi1G+17e3tKhQSw==
+X-Received: by 2002:ac2:504e:: with SMTP id a14mr2285597lfm.30.1589970708624;
+        Wed, 20 May 2020 03:31:48 -0700 (PDT)
+Received: from localhost.localdomain ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id v28sm967404lfd.35.2020.05.20.03.31.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 03:31:48 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v2 0/3] PCI: Reference bridge window resources explicitly
+Date:   Wed, 20 May 2020 10:31:44 +0000
+Message-Id: <20200520103147.985326-1-kw@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200519214926.969196-1-kw@linux.com>
+References: <20200519214926.969196-1-kw@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Add definitions to allow for more explicit mapping of Peer-to-Peer (P2P)
+and CardBus bridge window resources.
 
-On 5/13/20 3:56 PM, ansuelsmth@gmail.com wrote:
->> On 5/12/20 6:45 PM, Rob Herring wrote:
->>> On Thu, May 07, 2020 at 09:34:35PM +0200, ansuelsmth@gmail.com
->> wrote:
->>>>> On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
->>>>>> It is now supported the editing of Tx De-Emphasis, Tx Swing and
->>>>>> Rx equalization params on ipq8064. Document this new optional
->> params.
->>>>>>
->>>>>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
->>>>>> ---
->>>>>>  .../devicetree/bindings/pci/qcom,pcie.txt     | 36
->> +++++++++++++++++++
->>>>>>  1 file changed, 36 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>>> index 6efcef040741..8cc5aea8a1da 100644
->>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>>> @@ -254,6 +254,42 @@
->>>>>>  			- "perst-gpios"	PCIe endpoint reset signal line
->>>>>>  			- "wake-gpios"	PCIe endpoint wake signal line
->>>>>>
->>>>>> +- qcom,tx-deemph-gen1:
->>>>>> +	Usage: optional (available for ipq/apq8064)
->>>>>> +	Value type: <u32>
->>>>>> +	Definition: Gen1 De-emphasis value.
->>>>>> +		    For ipq806x should be set to 24.
->>>>>
->>>>> Unless these need to be tuned per board, then the compatible string
->> for
->>>>> ipq806x should imply all these settings.
->>>>>
->>>>
->>>> It was requested by v2 to make this settings tunable. These don't change
->> are
->>>> all the same for every ipq806x SoC. The original implementation had this
->>>> value hardcoded for ipq806x. Should I restore this and drop this patch?
->>>
->>> Yes, please.
->>
->> I still think that the values for tx deemph and tx swing should be
->> tunable. But I can live with them in the driver if they not break
->> support for apq8064.
->>
->> The default values in the registers for apq8064 and ipq806x are:
->>
->> 			default		your change
->> TX_DEEMPH_GEN1		21		24
->> TX_DEEMPH_GEN2_3_5DB	21		24
->> TX_DEEMPH_GEN2_6DB	32		34
->>
->> TX_SWING_FULL		121		120
->> TX_SWING_LOW		121		120
->>
->> So until now (without your change) apq8064 worked with default values.
->>
-> 
-> I will limit this to ipq8064(-v2) if this could be a problem.
+Added for P2P:
 
-I guess you can do it that way, but if new board appear in the future
-with slightly different parameters (for example deemph_gen1 = 23 and so
-on) do we need to add another compatible for that? At the end we will
-have compatibles per board but not per SoC. :(
+  PCI_BRIDGE_RESOURCES + 0 -> PCI_BRIDGE_IO_WINDOW
+  PCI_BRIDGE_RESOURCES + 1 -> PCI_BRIDGE_MEM_WINDOW
+  PCI_BRIDGE_RESOURCES + 2 -> PCI_BRIDGE_PREF_MEM_WINDOW
+
+Added for CardBus:
+
+  PCI_BRIDGE_RESOURCES + 0 -> PCI_CB_BRIDGE_IO_0_WINDOW
+  PCI_BRIDGE_RESOURCES + 1 -> PCI_CB_BRIDGE_IO_1_WINDOW
+  PCI_BRIDGE_RESOURCES + 2 -> PCI_CB_BRIDGE_MEM_0_WINDOW
+  PCI_BRIDGE_RESOURCES + 3 -> PCI_CB_BRIDGE_MEM_1_WINDOW
+
+The old way of addressing resources using an index:
+
+  bridge->resource[PCI_BRIDGE_RESOURCES+0]
+
+Would now be replaced with:
+
+  bridge->resource[PCI_BRIDGE_IO_WINDOW]
+
+This series of patches builds on top of the changes proposed before:
+
+  https://lore.kernel.org/r/20100203233931.10803.39854.stgit@bob.kio
+  https://lore.kernel.org/r/20100212170022.19522.81135.stgit@bob.kio
+
+Also, correct the PCI quirk for the ALI M7101 chipset so that it would
+stop claiming an I/O resource from the memory window which was not
+correct.
+
+Krzysztof Wilczynski (3):
+  PCI: Correct the PCI quirk for the ALI M7101 chipset
+  PCI: Move from using PCI_BRIDGE_RESOURCES to bridge resource
+    definitions
+  pcmcia: Use resources definitions when freeing CardBus resources
+
+---
+Changes in v2:
+  Split patches based on the feedback from Bjorn allowing for the
+  patch that correct the PCI quirk for the ALI chipset to be applied
+  independently, if someone needs to cherry-pick it, before updating
+  the said quirk to use definitions for bridge window resources.
+
+ drivers/pci/quirks.c          |  34 +++++-----
+ drivers/pci/setup-bus.c       | 116 ++++++++++++++++++----------------
+ drivers/pcmcia/yenta_socket.c |  46 +++++++++-----
+ include/linux/pci.h           |  14 +++-
+ 4 files changed, 121 insertions(+), 89 deletions(-)
 
 -- 
-regards,
-Stan
+2.26.2
+
