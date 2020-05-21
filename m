@@ -2,87 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 461861DD4A0
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 19:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3BBC1DD565
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 19:59:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgEURmR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 13:42:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:50902 "EHLO foss.arm.com"
+        id S1729328AbgEUR7X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 13:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgEURmR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 13:42:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F0CE30E;
-        Thu, 21 May 2020 10:42:14 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE2803F68F;
-        Thu, 21 May 2020 10:42:12 -0700 (PDT)
-Date:   Thu, 21 May 2020 18:42:10 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v3 0/2] Fix PCI HyperV device error handling
-Message-ID: <20200521174210.GB29590@e121166-lin.cambridge.arm.com>
-References: <20200507050126.10871-1-weh@microsoft.com>
- <20200511112147.GD24954@e121166-lin.cambridge.arm.com>
- <MW2PR2101MB1052A57E7BE9634821E29E4FD7B70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        id S1727883AbgEUR7X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 May 2020 13:59:23 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36200207FB;
+        Thu, 21 May 2020 17:59:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590083962;
+        bh=e8f1yqwtBuUBfHKfpzlcKEZRrr4tDOCxmfhCFW0pl2w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lK3MdP7JY7NnQltgRgT8QZrBM0RHJyzox4CftMZzO7xemBo2T3kwA9Ofeptq2NrJD
+         uGKLvOzbeXgYMaqpXX3HPc5oy+X9sTsfeZgeglmEE1dzd46fiusx1WzqEoc/O9CBXq
+         uJyA7N/DIUmqlZYu5+Ne+WgVZvwIJaPECbLIqAxg=
+Date:   Thu, 21 May 2020 12:59:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Klaus Doth <kdlnx@doth.eu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        rui_feng@realsil.com.cn
+Subject: Re: Possible bug in drivers/misc/cardreader/rtsx_pcr.c
+Message-ID: <20200521175920.GA1140028@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052A57E7BE9634821E29E4FD7B70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ed62141-8060-dcd2-d1e0-d2381f4930dd@doth.eu>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:39:58AM +0000, Michael Kelley wrote:
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> Sent: Monday, May 11, 2020 4:22 AM
-> > 
-> > On Thu, May 07, 2020 at 01:01:26PM +0800, Wei Hu wrote:
-> > > This series better handles some PCI HyperV error cases in general
-> > > and for kdump case. Some of review comments from previous individual
-> > > patch reviews, including splitting into separate patches, have already
-> > > been incorporated. Thanks Lorenzo Pieralisi for the review and
-> > > suggestions, as well as Michael Kelley's contribution to the commit
-> > > log.
-> > >
-> > > Thanks,
-> > > Wei
-> > >
-> > >
-> > > Wei Hu (2):
-> > >   PCI: hv: Fix the PCI HyperV probe failure path to release resource
-> > >     properly
-> > >   PCI: hv: Retry PCI bus D0 entry when the first attempt failed with
-> > >     invalid device state
-> > >
-> > >  drivers/pci/controller/pci-hyperv.c | 60 ++++++++++++++++++++++++++---
-> > >  1 file changed, 54 insertions(+), 6 deletions(-)
-> > 
-> > Applied to pci/hv, thanks.
-> > 
+On Thu, May 21, 2020 at 01:50:02PM +0200, Klaus Doth wrote:
+> On 5/21/20 10:52 AM, Greg Kroah-Hartman wrote:
+> > On Tue, May 19, 2020 at 07:04:06PM +0200, Klaus Doth wrote:
+> >> Hi,
+> >>
+> >> As per the info from kernelnewbies IRC, I'm sending this also to the PCI
+> >> list.
+> > <snip>
+> >
+> > Can you submit a proposed patch in a format that it can be tested and
+> > possibly submitted in so that we can review this easier?
+> >
+> > Also try cc:ing the author of changes in that code, Rui Feng
+> > <rui_feng@realsil.com.cn>, as well, as they are the best one to review
+> > and comment on your issue.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Lorenzo -- 
+> DMA transfers to and from the SD card stall for 10 seconds and run into
+> timeout on RTS5260 card readers after ASPM was enabled.
 > 
-> Will you be bringing these fixes into 5.7?  The main fix is the 2nd patch, but
-> there wasn't a clear "Fixes:" tag to add because the problem is due more to
-> how Hyper-V operates than a bug in a previous Linux commit.  We have a
-> customer experiencing the problem, so getting the fix into the main tree
-> sooner rather than later is helpful.
+> Adding a short msleep after disabling ASPM fixes the issue on several
+> Dell Precision 7530/7540 systems I tested.
+> 
+> This function is only called when waking up after the chip went into
+> powersave after not transferring data for a few seconds. The added
+> msleep does therefore not change anything in data transfer speed or
+> induce any excessive waiting while data transfers are running, or the
+> chip is sleeping. Only the transistion from sleep to active is affected.
 
-We usually send fixes at -rc* if the bug was introduced in the previous
-release, at the moment this is v5.8 material not planned for such a late
--rc* (ie -rc7). We can send patches to stable and/or apply a Fixes: tag
-if that can help when the commits hit mainline.
+s/transistion/transition/
 
-Lorenzo
+I don't see anything in the PCIe spec that would require a delay here.
+In general, drivers should not be configuration ASPM directly because
+doing it correctly requires knowledge of the upstream component, i.e.,
+a root port or a switch downstream port.
+
+But these chips seem to be pretty buggy in terms of ASPM, so it
+doesn't really surprise me if they're broken here.
+
+That's all to say that I don't know *why* this would be needed, but I
+don't object to it.
+
+> Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+> 
+> ---
+>  drivers/misc/cardreader/rtsx_pcr.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/misc/cardreader/rtsx_pcr.c
+> b/drivers/misc/cardreader/rtsx_pcr.c
+> index 06038b325b02..8b0799cd88c2 100644
+> --- a/drivers/misc/cardreader/rtsx_pcr.c
+> +++ b/drivers/misc/cardreader/rtsx_pcr.c
+> @@ -141,6 +141,7 @@ static void rtsx_comm_pm_full_on(struct rtsx_pcr *pcr)
+>      struct rtsx_cr_option *option = &pcr->option;
+>  
+>      rtsx_disable_aspm(pcr);
+> +    msleep(1);
+>  
+>      if (option->ltr_enabled)
+>          rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+> -- 
+> 2.26.2
+> 
+> 
