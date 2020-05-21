@@ -2,143 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A69CA1DD7BB
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 21:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BBCB1DD7E5
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 22:04:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbgEUT5T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 15:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgEUT5R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 15:57:17 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E75DF20738;
-        Thu, 21 May 2020 19:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590091037;
-        bh=3GAvSfAMUddifLPCHvTDvFY432iF5D80Ue+hjq5ma/k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gLbu0zhdPVgG7Aa7IJPzjZ012leZ59yB44+hm4Djnqe8e9igB7XrDDOqwRrCvIVps
-         VGzPP6kAzLHPckkBWX0D0Xq9iZwTRZN5nDCIv9E4wOlxFcjK/Q0L66P9VnXc+BbvIF
-         b1FuHaozN67QS9jwH61wycwEOTtGQA/LP4ZnnrZo=
-Date:   Thu, 21 May 2020 14:57:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH 08/12] of/irq: make of_msi_map_get_device_domain() bus
- agnostic
-Message-ID: <20200521195715.GA1171267@bjorn-Precision-5520>
+        id S1729864AbgEUUEp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 16:04:45 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35989 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728635AbgEUUEo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 16:04:44 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b91so7594434edf.3
+        for <linux-pci@vger.kernel.org>; Thu, 21 May 2020 13:04:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yJDZCN11nW4faaKrKpnSbEKCbIkin/mvv1AMsJiki+E=;
+        b=baVD7t2sF/SUr6z+GW3QMjyiVf5HUqAy5fiAgCPZOwV+9wD15W1aIaSmPUcH6Hqqw/
+         jm6wLdSK+NCmDoBD0t9wifO4TK5a21TJwUGZxbM5HROSXItQCeFPxetNmDed2TOYPW2L
+         h1w9MOAVVq/7ONyjmYJ3Ujf1KG3DdStMzJ20zi6vS3S2iAGY+ZcQk5dxp+nSY50H/Dwe
+         SBqCnaUnTTh5d+FuwXFamarJ4kixYQrAaOz+OJPyP4lsAAW9aNTzigujW14A/afEEBFh
+         MTs8GW1no+oXM2r1DwL/5pSrJT933j8lg+JMPVGSUvEhiMZ1URCm57J2xucpg8q8E6nj
+         v82Q==
+X-Gm-Message-State: AOAM533daIoKj7ytVSklOU+kJEUsFGCeu1rd8ONpjHPvc0JyBj5ERLgJ
+        4KuGrQbrKEvPFvQ99Osp4E8g8IBEtDI=
+X-Google-Smtp-Source: ABdhPJzmd9IWOoXBtjKW1Maictvz4K6n9TUUsZvbPqYBoiE5v1KOcuiQ5VnuQmjQ7tdVjrEJFwELnw==
+X-Received: by 2002:a05:6402:348:: with SMTP id r8mr377230edw.130.1590091483013;
+        Thu, 21 May 2020 13:04:43 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id h25sm5845637ejx.7.2020.05.21.13.04.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 13:04:40 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI/switchtec: Correct bool variable type assignment
+Date:   Thu, 21 May 2020 20:04:39 +0000
+Message-Id: <20200521200439.1076672-1-kw@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521130008.8266-9-lorenzo.pieralisi@arm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:00:04PM +0100, Lorenzo Pieralisi wrote:
-> From: Diana Craciun <diana.craciun@oss.nxp.com>
-> 
-> of_msi_map_get_device_domain() is PCI specific but it need not be and
-> can be easily changed to be bus agnostic in order to be used by other
-> busses by adding an IRQ domain bus token as an input parameter.
-> 
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
+Use true instead of 1 in the assignment as the variable use_dma_mrpc is
+of a bool type.  Also, resolve the following Coccinelle warning:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci/msi.c
+  drivers/pci/switch/switchtec.c:28:12-24: WARNING: Assignment of 0/1 to
+  bool variable
 
-> ---
->  drivers/of/irq.c       | 8 +++++---
->  drivers/pci/msi.c      | 2 +-
->  include/linux/of_irq.h | 5 +++--
->  3 files changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index a296eaf52a5b..48a40326984f 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -613,18 +613,20 @@ u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
->   * of_msi_map_get_device_domain - Use msi-map to find the relevant MSI domain
->   * @dev: device for which the mapping is to be done.
->   * @rid: Requester ID for the device.
-> + * @bus_token: Bus token
->   *
->   * Walk up the device hierarchy looking for devices with a "msi-map"
->   * property.
->   *
->   * Returns: the MSI domain for this device (or NULL on failure)
->   */
-> -struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 rid)
-> +struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
-> +						u32 bus_token)
->  {
->  	struct device_node *np = NULL;
->  
-> -	__of_msi_map_rid(dev, &np, rid);
-> -	return irq_find_matching_host(np, DOMAIN_BUS_PCI_MSI);
-> +	__of_msi_map_rid(dev, &np, id);
-> +	return irq_find_matching_host(np, bus_token);
->  }
->  
->  /**
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 74a91f52ecc0..9532e1d12d3f 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1556,7 +1556,7 @@ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
->  	u32 rid = pci_dev_id(pdev);
->  
->  	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
-> -	dom = of_msi_map_get_device_domain(&pdev->dev, rid);
-> +	dom = of_msi_map_get_device_domain(&pdev->dev, rid, DOMAIN_BUS_PCI_MSI);
->  	if (!dom)
->  		dom = iort_get_device_domain(&pdev->dev, rid,
->  					     DOMAIN_BUS_PCI_MSI);
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 1214cabb2247..7142a3722758 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -52,7 +52,8 @@ extern struct irq_domain *of_msi_get_domain(struct device *dev,
->  					    struct device_node *np,
->  					    enum irq_domain_bus_token token);
->  extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
-> -						       u32 rid);
-> +							u32 id,
-> +							u32 bus_token);
->  extern void of_msi_configure(struct device *dev, struct device_node *np);
->  u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
->  #else
-> @@ -85,7 +86,7 @@ static inline struct irq_domain *of_msi_get_domain(struct device *dev,
->  	return NULL;
->  }
->  static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
-> -							      u32 rid)
-> +						u32 id, u32 bus_token)
->  {
->  	return NULL;
->  }
-> -- 
-> 2.26.1
-> 
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index e69cac84b605..850cfeb74608 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -25,7 +25,7 @@ static int max_devices = 16;
+ module_param(max_devices, int, 0644);
+ MODULE_PARM_DESC(max_devices, "max number of switchtec device instances");
+ 
+-static bool use_dma_mrpc = 1;
++static bool use_dma_mrpc = true;
+ module_param(use_dma_mrpc, bool, 0644);
+ MODULE_PARM_DESC(use_dma_mrpc,
+ 		 "Enable the use of the DMA MRPC feature");
+-- 
+2.26.2
+
