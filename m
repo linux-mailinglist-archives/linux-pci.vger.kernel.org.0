@@ -2,141 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F8811DC549
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 04:40:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A2901DC558
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 04:47:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgEUCkC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 May 2020 22:40:02 -0400
-Received: from mail-eopbgr680111.outbound.protection.outlook.com ([40.107.68.111]:51877
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        id S1726954AbgEUCrg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 May 2020 22:47:36 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:5686 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727798AbgEUCkC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 May 2020 22:40:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eq+t4RVtl4y+g8xGPx6jaxV+9N8wFD9FxQx49G9gs+EP+fSczWBuSMqliMEBv5EgKe82JlzqDaXo2y0SFjcxEJK0houai/7zQ/iAcgKT6q6otS9Gr607/h5uTVBnA3CEBb59Nr0aTknRNkJIB5bTBbolmX/zXFVaZOr5JgQibVXWAxvQ8Me9eWkXsa9hkyiYHM/DCDTKMfYmdomp4nAdodezHITpDULvPpeC1ve9XpUHGB7yR3W3HTC74En2Mr6/OKf7nOKQ8/zDFK3GIoJ2jPbN56ta00y+acJyQkVfQH+AFFarUCyOWVtDeh+swYhJ7k+Cfe01bVB2JMSDxrUybw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJCn5FPmIIS/h431zQd22jLdo42vFtxF4dOHCH+nt2M=;
- b=LIP1OU3Muc0Jf8I8Reos0idotmdbKvpfDtaArMKxF0eDpf/XIXJUdLrWplErruTCdVKcjGG7g8uOkVQKJ2Q57SIs+Gkm21BBNFiQrlgLkdkchrxqSu9cc1FFaEfgPdZ8lPx57hJaelIBubtt2oNcv8xdW023IAtgZxcNxjFjdGgqJNGnpkbJEeVPlTHSDfUmqa/XPbyy6y9s5zLSi50+Pz0H6xZEZ4vIENVoWpytwPX7niykbHPQvgwANNIIl8TLuO/9NcFbq2Wd+Fp2Y+3Yhf5+Q8jD+YJTcxQujgeLo+ftklO0Kup7eikKSfpznhYUHO8omHGdT9raHyyUDIXNRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJCn5FPmIIS/h431zQd22jLdo42vFtxF4dOHCH+nt2M=;
- b=AK4wW+6dqCOKZpymsV710tzDfPt9cbm5OGqjTiBiHMApsgGpuaEbzGqoRxSn3w3Nc9b7H1EhJtKS8rjzjlazAuRYR11YCObN6hchGnwcm9UXTHns84trzPcjwamUr5ogs24imkt66StEiu6EsPIUsfieBeSqkJdsITmUxHE5U/0=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1098.namprd21.prod.outlook.com (2603:10b6:302:a::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.4; Thu, 21 May
- 2020 02:39:59 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::5a3:a5e0:1e3c:e950]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::5a3:a5e0:1e3c:e950%7]) with mapi id 15.20.3021.002; Thu, 21 May 2020
- 02:39:59 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wei Hu <weh@microsoft.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v3 0/2] Fix PCI HyperV device error handling
-Thread-Topic: [PATCH v3 0/2] Fix PCI HyperV device error handling
-Thread-Index: AQHWJCyh/f5cuxgdoki6x8K/JICAa6iixF2AgA8khTA=
-Date:   Thu, 21 May 2020 02:39:58 +0000
-Message-ID: <MW2PR2101MB1052A57E7BE9634821E29E4FD7B70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200507050126.10871-1-weh@microsoft.com>
- <20200511112147.GD24954@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200511112147.GD24954@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-21T02:39:57Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8263d610-0dba-4e00-a6d5-0de1012866b9;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ce4abb99-648e-4c7b-d42c-08d7fd304158
-x-ms-traffictypediagnostic: MW2PR2101MB1098:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB10982358BD9F77C226F99769D7B70@MW2PR2101MB1098.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:813;
-x-forefront-prvs: 041032FF37
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VLcVYNMBGRyERc2bbpYm+X3+YpDxWbVUujLLkfZkEwL/piLX0xEV8RhYBJ0GYKd/SCSS2HIc5za+y0uaRCP1Wo2g7foUOgjAoMUPVF9uBB1jVrceoo+dOrVtDMwF5IsnUDJ7Ccb6VJJaKn2tjU8g0V7ASAuDmpCVcW0B9kjKum/BZYm156ASsXqpoSlhfjm+O/DG3F42JbFRE92KukQ6JVt88Um9n8wO60QCnvnYHmVw1x4ctCi0J3wwl724zODnEwcKPG6keX+brk9rENqUaoOqRy+KJtfIQ+PnCacu32zLxTZ3IVHQNg279LpmFar4S3egmHhNDPA20vjECoeACw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(346002)(396003)(39860400002)(64756008)(8990500004)(4326008)(478600001)(8676002)(52536014)(107886003)(82950400001)(76116006)(82960400001)(2906002)(9686003)(54906003)(7696005)(66556008)(8936002)(10290500003)(86362001)(110136005)(66946007)(186003)(33656002)(55016002)(316002)(6506007)(66476007)(26005)(5660300002)(66446008)(6636002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: GUru+1kTfn9h2ZyXP3v+jV55jC1BX4YvRSElbkRrZxp92z+QiH9aFiB8N04W+F2/jYQ35AhelYdG8YFjCOgPFXZVb9WQhFXn3onywtipLOdcJaCGnTn5ZhTgUCJwQ0TB7ULgD5wi5fyeva5hOAj2JkdFCc05xzytvsAdfSgY5yj6DtaEncKHkjnY2yMnS9VbmmbpEPP2n+vvvRSTQG98x/Y6VyjcdKHSL6Zr9rsdQ29YG/kS+3KtfgYEVqHI0mQLT+UiFkdn8cwobkUIQFGVtEi43ajJj19AyIZ7thLhO/DQ0yiV5Dx3CXC2Y/9LTUsKgivSVx8bXMZZm3OVz6sPw9rmLgiuwm5dfZQGUF3wr1SWjAtwh3qRtSJ7sNfzxSnlV+K0PGE6UcgRV/wuRR0HR1NYMqgE+md12FCa6dvs7PGYxYt9vHVNi/kGTeHD17JemJVoIwkMzHwshoFuXs4/sHExUXIlm64W6O5C7ffHnGGsY+Tuzm0d3ZOuKbVvJlLe
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce4abb99-648e-4c7b-d42c-08d7fd304158
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 02:39:59.1183
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /Bbwlf+qzf2ye5VX8eq29oANDNJq0ShbxI+tYpF/rvgu65tlHfrZppUmdfOdodQLDT3ujd6vv1tGTXWnJxAS3u1cRWRaxkxEMDRUBzOX2Xs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1098
+        id S1726979AbgEUCrg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 May 2020 22:47:36 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgC3zz6u68VepRblAQ--.49692S4;
+        Thu, 21 May 2020 10:47:15 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] PCI: tegra: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 10:47:09 +0800
+Message-Id: <20200521024709.2368-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgC3zz6u68VepRblAQ--.49692S4
+X-Coremail-Antispam: 1UD129KBjvJXoWrKrW7ZFW3Gr18JF1xZFy5urg_yoW8JrW5pF
+        WDXa4xCF48X3yYkFnIy3WDZFyY9r9Iv34UK3yq9wnrZ3ZxJa4UXr45JFySqF1YqrWvvF1U
+        t3Wj93W7CF45XFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9q1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
+        W8JbIYCTnIWIevJa73UjIFyTuYvjfUO_MaUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwABsj
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> Sent: Monday, May 11, 2=
-020 4:22 AM
->=20
-> On Thu, May 07, 2020 at 01:01:26PM +0800, Wei Hu wrote:
-> > This series better handles some PCI HyperV error cases in general
-> > and for kdump case. Some of review comments from previous individual
-> > patch reviews, including splitting into separate patches, have already
-> > been incorporated. Thanks Lorenzo Pieralisi for the review and
-> > suggestions, as well as Michael Kelley's contribution to the commit
-> > log.
-> >
-> > Thanks,
-> > Wei
-> >
-> >
-> > Wei Hu (2):
-> >   PCI: hv: Fix the PCI HyperV probe failure path to release resource
-> >     properly
-> >   PCI: hv: Retry PCI bus D0 entry when the first attempt failed with
-> >     invalid device state
-> >
-> >  drivers/pci/controller/pci-hyperv.c | 60 ++++++++++++++++++++++++++---
-> >  1 file changed, 54 insertions(+), 6 deletions(-)
->=20
-> Applied to pci/hv, thanks.
->=20
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Lorenzo --=20
+Also, call pm_runtime_disable() when pm_runtime_get_sync() returns
+an error code.
 
-Will you be bringing these fixes into 5.7?  The main fix is the 2nd patch, =
-but
-there wasn't a clear "Fixes:" tag to add because the problem is due more to
-how Hyper-V operates than a bug in a previous Linux commit.  We have a
-customer experiencing the problem, so getting the fix into the main tree
-sooner rather than later is helpful.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/pci/controller/pci-tegra.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thx,
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 3e64ba6a36a8..00236dd65b5b 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2712,7 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err < 0) {
+ 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+-		goto teardown_msi;
++		goto pm_runtime_put;
+ 	}
+ 
+ 	host->busnr = bus->start;
+@@ -2746,7 +2746,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ pm_runtime_put:
+ 	pm_runtime_put_sync(pcie->dev);
+ 	pm_runtime_disable(pcie->dev);
+-teardown_msi:
+ 	tegra_pcie_msi_teardown(pcie);
+ put_resources:
+ 	tegra_pcie_put_resources(pcie);
+-- 
+2.17.1
 
-Michael
