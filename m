@@ -2,87 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A2901DC558
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 04:47:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD1E31DC568
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 05:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgEUCrg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 May 2020 22:47:36 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:5686 "EHLO zju.edu.cn"
+        id S1727825AbgEUDAj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 May 2020 23:00:39 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:8092 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726979AbgEUCrg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 May 2020 22:47:36 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgC3zz6u68VepRblAQ--.49692S4;
-        Thu, 21 May 2020 10:47:15 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        id S1726861AbgEUDAj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 May 2020 23:00:39 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 11:00:15
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Thu, 21 May 2020 11:00:15 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     "Thierry Reding" <thierry.reding@gmail.com>, kjlu@umn.edu,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Vidya Sagar" <vidyas@nvidia.com>,
+        "Andrew Murray" <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] PCI: tegra: Fix runtime PM imbalance on error
-Date:   Thu, 21 May 2020 10:47:09 +0800
-Message-Id: <20200521024709.2368-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgC3zz6u68VepRblAQ--.49692S4
-X-Coremail-Antispam: 1UD129KBjvJXoWrKrW7ZFW3Gr18JF1xZFy5urg_yoW8JrW5pF
-        WDXa4xCF48X3yYkFnIy3WDZFyY9r9Iv34UK3yq9wnrZ3ZxJa4UXr45JFySqF1YqrWvvF1U
-        t3Wj93W7CF45XFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9q1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
-        W8JbIYCTnIWIevJa73UjIFyTuYvjfUO_MaUUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwABsj
+Subject: Re: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200520163739.GA1100601@bjorn-Precision-5520>
+References: <20200520163739.GA1100601@bjorn-Precision-5520>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Message-ID: <a78d156.b93a0.172352c9b6e.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCXPxy_7sVerkDlAQ--.29844W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwADsh
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtIS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
+        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
+        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
+        v26r106r15MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
+        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r
+        48MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS
+        07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14
+        v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWU
+        tVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r4j6F4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvE
+        x4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73U
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
-
-Also, call pm_runtime_disable() when pm_runtime_get_sync() returns
-an error code.
-
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/pci/controller/pci-tegra.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 3e64ba6a36a8..00236dd65b5b 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2712,7 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err < 0) {
- 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
--		goto teardown_msi;
-+		goto pm_runtime_put;
- 	}
- 
- 	host->busnr = bus->start;
-@@ -2746,7 +2746,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- pm_runtime_put:
- 	pm_runtime_put_sync(pcie->dev);
- 	pm_runtime_disable(pcie->dev);
--teardown_msi:
- 	tegra_pcie_msi_teardown(pcie);
- put_resources:
- 	tegra_pcie_put_resources(pcie);
--- 
-2.17.1
-
+VGhhbmsgeW91IGZvciB5b3VyIGFkdmljZS4gSSB0aGluayB0ZWdyYTE5NCBpcyBhIGdvb2QgY2hv
+aWNlIGFuZCAKSSB3aWxsIHVzZSBpdCBpbiB0aGUgbmV4dCBlZGl0aW9uIG9mIHBhdGNoLgoKJnF1
+b3Q7Qmpvcm4gSGVsZ2FhcyZxdW90OyAmbHQ7aGVsZ2Fhc0BrZXJuZWwub3JnJmd0O+WGmemBk++8
+mgo+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDExOjU5OjA4QU0gKzAyMDAsIFRoaWVycnkgUmVk
+aW5nIHdyb3RlOg0KPiA+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDA0OjUyOjIzUE0gKzA4MDAs
+IERpbmdoYW8gTGl1IHdyb3RlOg0KPiA+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVu
+dHMgdGhlIHJ1bnRpbWUgUE0gdXNhZ2UgY291bnRlciBldmVuDQo+ID4gPiBpdCByZXR1cm5zIGFu
+IGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBuZWVkZWQgb24NCj4gPiAN
+Cj4gPiBzL2V2ZW4gaXQvZXZlbiB3aGVuIGl0Lw0KPiA+IA0KPiA+IE1pZ2h0IGFsc28gYmUgYSBn
+b29kIGlkZWEgdG8gdXNlIGEgZGlmZmVyZW50IHN1YmplY3QgcHJlZml4IGJlY2F1c2UgSQ0KPiA+
+IHdhcyBhbG1vc3Qgbm90IGdvaW5nIHRvIGxvb2sgYXQgdGhlIG90aGVyIHBhdGNoLCB0YWtpbmcg
+dGhpcyB0byBiZSBhDQo+ID4gcmVwbGFjZW1lbnQgZm9yIGl0Lg0KPiANCj4gQW1lbi4gIFRoaXMg
+d291bGQgYmUgYSBnb29kIGNoYW5nZSB0byBzdGFydCB1c2luZyAiUENJOiB0ZWdyYTE5NCIgb3IN
+Cj4gc29tZXRoaW5nIGZvciBwY2llLXRlZ3JhMTk0LmMuICBPciB3aWxsIHRoZXJlIGJlIHRlZ3Jh
+MTk1LCB0ZWdyYSAxOTYsDQo+IGV0YyBhZGRlZCB0byB0aGlzIGRyaXZlcj8NCj4gDQo+IEFsc28s
+IHBsZWFzZSBjYXBpdGFsaXplIHRoZSBmaXJzdCB3b3JkIGFuZCAiUE0iIGluIHRoZSBzdWJqZWN0
+czoNCj4gDQo+ICAgUENJOiB0ZWdyYTE5NDogRml4IHJ1bnRpbWUgUE0gaW1iYWxhbmNlIG9uIGVy
+cm9yDQo+IA0KPiBCam9ybg0K
