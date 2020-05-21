@@ -2,60 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 781CF1DC907
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 10:52:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A8C91DCB09
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 12:29:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbgEUIwP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 04:52:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43586 "EHLO mail.kernel.org"
+        id S1727013AbgEUK3Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 06:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728545AbgEUIwP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 04:52:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726977AbgEUK3X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 May 2020 06:29:23 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C9720721;
-        Thu, 21 May 2020 08:52:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7774020721;
+        Thu, 21 May 2020 10:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590051133;
-        bh=7HSD2FPYJhJw5LIUGQCKg0DiB/PRK/rRNeK7roKiAmk=;
+        s=default; t=1590056963;
+        bh=1XPt6kD9iV7o2QBCozeLJ0Q2mmcvZqvbc2tntrfdIJA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AA/ToOaZp9tGA5EJAmfgp1VQWs+0vnFWWFdfR+fBuPAvtaBUesm37kJ/932sU8Z16
-         AK1O4lsJtQcV4a/eBmsN6CVuFblmEDWo2Fj+3VTc/OCatDKUN+Kqp3AKNARgLDnHWW
-         CSXU7GE2ApYvkoMNawymzrbMFPDvK89yIA4LVrX0=
-Date:   Thu, 21 May 2020 10:52:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Klaus Doth <kdlnx@doth.eu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, helgaas@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: Possible bug in drivers/misc/cardreader/rtsx_pcr.c
-Message-ID: <20200521085211.GA2732409@kroah.com>
-References: <b7ff0106-e4e7-5d0f-667b-8552cf5535dc@doth.eu>
+        b=Y246nv7zF5d7co4yRlK1N6muY6PEDZel/9PbdIwVyfa9s8yNWkkbSYEmCXDDHb58M
+         OaUrpHlm3WhIQ/Q8dnyYsFS2GHrihtNqvyuYMfN3P9IgBigrBQMpsXYJo+boBgW9ib
+         I7M6vSvkn7i2VZb8g5eCwf0NwOH0Sedc6cpmqgcY=
+Date:   Thu, 21 May 2020 11:29:18 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        bhelgaas@google.com, robin.murphy@arm.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, ashok.raj@intel.com,
+        alex.williamson@redhat.com, hch@infradead.org
+Subject: Re: [PATCH v2 3/4] iommu/arm-smmu-v3: Use pci_ats_supported()
+Message-ID: <20200521102917.GD5360@willie-the-truck>
+References: <20200520152201.3309416-1-jean-philippe@linaro.org>
+ <20200520152201.3309416-4-jean-philippe@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b7ff0106-e4e7-5d0f-667b-8552cf5535dc@doth.eu>
+In-Reply-To: <20200520152201.3309416-4-jean-philippe@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:04:06PM +0200, Klaus Doth wrote:
-> Hi,
+On Wed, May 20, 2020 at 05:22:02PM +0200, Jean-Philippe Brucker wrote:
+> The new pci_ats_supported() function checks if a device supports ATS and
+> is allowed to use it.
 > 
-> 
-> As per the info from kernelnewbies IRC, I'm sending this also to the PCI
-> list.
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 20 +++++++-------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
 
-<snip>
+Acked-by: Will Deacon <will@kernel.org>
 
-Can you submit a proposed patch in a format that it can be tested and
-possibly submitted in so that we can review this easier?
-
-Also try cc:ing the author of changes in that code, Rui Feng
-<rui_feng@realsil.com.cn>, as well, as they are the best one to review
-and comment on your issue.
-
-thanks,
-
-greg k-h
+Will
