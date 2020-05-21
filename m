@@ -2,381 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C42731DCD97
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 15:00:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5FA61DCE1A
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 15:33:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgEUNA5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 09:00:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:46296 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbgEUNAu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 09:00:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1A64D6E;
-        Thu, 21 May 2020 06:00:49 -0700 (PDT)
-Received: from red-moon.arm.com (unknown [10.57.29.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F9313F305;
-        Thu, 21 May 2020 06:00:47 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Diana Craciun <diana.craciun@oss.nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 12/12] bus: fsl-mc: Add ACPI support for fsl-mc
-Date:   Thu, 21 May 2020 14:00:08 +0100
-Message-Id: <20200521130008.8266-13-lorenzo.pieralisi@arm.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+        id S1729531AbgEUNdf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 09:33:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34326 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729437AbgEUNde (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 09:33:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LDXJmg077067;
+        Thu, 21 May 2020 08:33:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590067999;
+        bh=pIH2fVTWjlGjL7gngSKgJjMkSbsoCQ/O5bKvxJc4rP8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Dr6L788V8crSRNjoyvrsMqPBiTfvHG5japxUVEYhUcE138Qa0SKUbEkNzquQJTXmC
+         I9sDUDkNyaHXQQ4L3sRX0LtGeO79Odaf9iJzUq3RbPD+EoCBft7/MU0bd5mAaof3Th
+         3egN3U9NcA1bZPZeXvf8TEuKlz8e8sipZfJwlacw=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LDXJmt018834
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 08:33:19 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 08:33:19 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 08:33:19 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LDXFFj119241;
+        Thu, 21 May 2020 08:33:16 -0500
+Subject: Re: [PATCH v4 03/14] PCI: cadence: Add support to use custom read and
+ write accessors
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200506151429.12255-1-kishon@ti.com>
+ <20200506151429.12255-4-kishon@ti.com> <20200520220724.GA636352@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <37d2d6c3-232d-adb8-4e0b-e0c699ec435a@ti.com>
+Date:   Thu, 21 May 2020 19:03:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200520220724.GA636352@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Diana Craciun <diana.craciun@oss.nxp.com>
+Hi Rob,
 
-Add ACPI support in the fsl-mc driver. Driver parses MC DSDT table to
-extract memory and other resources.
+On 5/21/2020 3:37 AM, Rob Herring wrote:
+> On Wed, May 06, 2020 at 08:44:18PM +0530, Kishon Vijay Abraham I wrote:
+>> Add support to use custom read and write accessors. Platforms that
+>> don't support half word or byte access or any other constraint
+>> while accessing registers can use this feature to populate custom
+>> read and write accessors. These custom accessors are used for both
+>> standard register access and configuration space register access of
+>> the PCIe host bridge.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/cadence/pcie-cadence.h | 107 +++++++++++++++---
+>>  1 file changed, 94 insertions(+), 13 deletions(-)
+> 
+> Actually, take back my R-by...
+> 
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+>> index df14ad002fe9..70b6b25153e8 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+>> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
+>>  	MSG_ROUTING_GATHER,
+>>  };
+>>  
+>> +struct cdns_pcie_ops {
+>> +	u32	(*read)(void __iomem *addr, int size);
+>> +	void	(*write)(void __iomem *addr, int size, u32 value);
+>> +};
+>> +
+>>  /**
+>>   * struct cdns_pcie - private data for Cadence PCIe controller drivers
+>>   * @reg_base: IO mapped register base
+>> @@ -239,7 +244,7 @@ struct cdns_pcie {
+>>  	int			phy_count;
+>>  	struct phy		**phy;
+>>  	struct device_link	**link;
+>> -	const struct cdns_pcie_common_ops *ops;
+>> +	const struct cdns_pcie_ops *ops;
+>>  };
+>>  
+>>  /**
+>> @@ -299,69 +304,145 @@ struct cdns_pcie_ep {
+>>  /* Register access */
+>>  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
+>>  {
+>> -	writeb(value, pcie->reg_base + reg);
+>> +	void __iomem *addr = pcie->reg_base + reg;
+>> +
+>> +	if (pcie->ops && pcie->ops->write) {
+>> +		pcie->ops->write(addr, 0x1, value);
+>> +		return;
+>> +	}
+>> +
+>> +	writeb(value, addr);
+>>  }
+>>  
+>>  static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
+>>  {
+>> -	writew(value, pcie->reg_base + reg);
+>> +	void __iomem *addr = pcie->reg_base + reg;
+>> +
+>> +	if (pcie->ops && pcie->ops->write) {
+>> +		pcie->ops->write(addr, 0x2, value);
+>> +		return;
+>> +	}
+>> +
+>> +	writew(value, addr);
+>>  }
+> 
+> cdns_pcie_writeb and cdns_pcie_writew are used, so remove them.
+> 
+>>  
+>>  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
+>>  {
+>> -	writel(value, pcie->reg_base + reg);
+>> +	void __iomem *addr = pcie->reg_base + reg;
+>> +
+>> +	if (pcie->ops && pcie->ops->write) {
+>> +		pcie->ops->write(addr, 0x4, value);
+>> +		return;
+>> +	}
+>> +
+>> +	writel(value, addr);
+> 
+> writel isn't broken for you, so you don't need this either.
+> 
+>>  }
+>>  
+>>  static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+>>  {
+>> -	return readl(pcie->reg_base + reg);
+>> +	void __iomem *addr = pcie->reg_base + reg;
+>> +
+>> +	if (pcie->ops && pcie->ops->read)
+>> +		return pcie->ops->read(addr, 0x4);
+>> +
+>> +	return readl(addr);
+> 
+> And neither is readl.
 
-Interrupt (GIC ITS) information is extracted from the MADT table
-by drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
+Sure, I'll remove all the unused functions and avoid using ops for readl and
+writel.
+> 
+>>  }
+>>  
+>>  /* Root Port register access */
+>>  static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
+>>  				       u32 reg, u8 value)
+>>  {
+>> -	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+>> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+>> +
+>> +	if (pcie->ops && pcie->ops->write) {
+>> +		pcie->ops->write(addr, 0x1, value);
+>> +		return;
+>> +	}
+>> +
+>> +	writeb(value, addr);
+>>  }
+>>  
+>>  static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+>>  				       u32 reg, u16 value)
+>>  {
+>> -	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+>> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+>> +
+>> +	if (pcie->ops && pcie->ops->write) {
+>> +		pcie->ops->write(addr, 0x2, value);
+>> +		return;
+>> +	}
+>> +
+>> +	writew(value, addr);
+> 
+> You removed 2 out of 3 calls to this. I think I'd just make the root 
+> port writes always be 32-bit. It is all just one time init stuff 
+> anyways.
+> 
+> Either rework the calls to assemble the data into 32-bits or keep these 
+> functions and do the RMW here.
 
-IORT table is parsed to configure DMA.
+The problem with assembling data into 32-bits is we have to read/write with
+different offsets. We'll give PCI_VENDOR_ID offset for modifying deviceID,
+PCI_INTERRUPT_LINE for modifying INTERRUPT_PIN which might get non-intuitive.
+Similarly in endpoint we read and write to MSI_FLAGS (which is at offset 2) we
+have to directly use MSI capability offset.
 
-Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- drivers/bus/fsl-mc/fsl-mc-bus.c             | 73 +++++++++++++++-----
- drivers/bus/fsl-mc/fsl-mc-msi.c             | 37 +++++-----
- drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 75 ++++++++++++++++++++-
- 3 files changed, 150 insertions(+), 35 deletions(-)
+And doing RMW in the accessors would mean the same RMW op is repeated. So if we
+just have cdns_pcie_rp_writeb() and cdns_pcie_rp_writew(), the same code will
+be repeated here twice.
 
-diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-index 824ff77bbe86..324d49d6df89 100644
---- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-@@ -18,6 +18,8 @@
- #include <linux/bitops.h>
- #include <linux/msi.h>
- #include <linux/dma-mapping.h>
-+#include <linux/acpi.h>
-+#include <linux/iommu.h>
- 
- #include "fsl-mc-private.h"
- 
-@@ -38,6 +40,7 @@ struct fsl_mc {
- 	struct fsl_mc_device *root_mc_bus_dev;
- 	u8 num_translation_ranges;
- 	struct fsl_mc_addr_translation_range *translation_ranges;
-+	void *fsl_mc_regs;
- };
- 
- /**
-@@ -56,6 +59,10 @@ struct fsl_mc_addr_translation_range {
- 	phys_addr_t start_phys_addr;
- };
- 
-+#define FSL_MC_FAPR	0x28
-+#define MC_FAPR_PL	BIT(18)
-+#define MC_FAPR_BMT	BIT(17)
-+
- /**
-  * fsl_mc_bus_match - device to driver matching callback
-  * @dev: the fsl-mc device to match against
-@@ -124,7 +131,10 @@ static int fsl_mc_dma_configure(struct device *dev)
- 	while (dev_is_fsl_mc(dma_dev))
- 		dma_dev = dma_dev->parent;
- 
--	return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
-+	if (dev_of_node(dma_dev))
-+		return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
-+
-+	return acpi_dma_configure_id(dev, DEV_DMA_COHERENT, &input_id);
- }
- 
- static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
-@@ -865,8 +875,11 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
- 	struct fsl_mc_io *mc_io = NULL;
- 	int container_id;
- 	phys_addr_t mc_portal_phys_addr;
--	u32 mc_portal_size;
--	struct resource res;
-+	u32 mc_portal_size, mc_stream_id;
-+	struct resource *plat_res;
-+
-+	if (!iommu_present(&fsl_mc_bus_type))
-+		return -EPROBE_DEFER;
- 
- 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
- 	if (!mc)
-@@ -874,19 +887,33 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, mc);
- 
-+	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	mc->fsl_mc_regs = devm_ioremap_resource(&pdev->dev, plat_res);
-+	if (IS_ERR(mc->fsl_mc_regs))
-+		return PTR_ERR(mc->fsl_mc_regs);
-+
-+	if (IS_ENABLED(CONFIG_ACPI) && !dev_of_node(&pdev->dev)) {
-+		mc_stream_id = readl(mc->fsl_mc_regs + FSL_MC_FAPR);
-+		/*
-+		 * HW ORs the PL and BMT bit, places the result in bit 15 of
-+		 * the StreamID and ORs in the ICID. Calculate it accordingly.
-+		 */
-+		mc_stream_id = (mc_stream_id & 0xffff) |
-+				((mc_stream_id & (MC_FAPR_PL | MC_FAPR_BMT)) ?
-+					0x4000 : 0);
-+		error = acpi_dma_configure_id(&pdev->dev, DEV_DMA_COHERENT,
-+					      &mc_stream_id);
-+		if (error)
-+			dev_warn(&pdev->dev, "failed to configure dma: %d.\n",
-+				 error);
-+	}
-+
- 	/*
- 	 * Get physical address of MC portal for the root DPRC:
- 	 */
--	error = of_address_to_resource(pdev->dev.of_node, 0, &res);
--	if (error < 0) {
--		dev_err(&pdev->dev,
--			"of_address_to_resource() failed for %pOF\n",
--			pdev->dev.of_node);
--		return error;
--	}
--
--	mc_portal_phys_addr = res.start;
--	mc_portal_size = resource_size(&res);
-+	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mc_portal_phys_addr = plat_res->start;
-+	mc_portal_size = resource_size(plat_res);
- 	error = fsl_create_mc_io(&pdev->dev, mc_portal_phys_addr,
- 				 mc_portal_size, NULL,
- 				 FSL_MC_IO_ATOMIC_CONTEXT_PORTAL, &mc_io);
-@@ -903,11 +930,13 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
- 	dev_info(&pdev->dev, "MC firmware version: %u.%u.%u\n",
- 		 mc_version.major, mc_version.minor, mc_version.revision);
- 
--	error = get_mc_addr_translation_ranges(&pdev->dev,
--					       &mc->translation_ranges,
--					       &mc->num_translation_ranges);
--	if (error < 0)
--		goto error_cleanup_mc_io;
-+	if (dev_of_node(&pdev->dev)) {
-+		error = get_mc_addr_translation_ranges(&pdev->dev,
-+						&mc->translation_ranges,
-+						&mc->num_translation_ranges);
-+		if (error < 0)
-+			goto error_cleanup_mc_io;
-+	}
- 
- 	error = dprc_get_container_id(mc_io, 0, &container_id);
- 	if (error < 0) {
-@@ -934,6 +963,7 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
- 		goto error_cleanup_mc_io;
- 
- 	mc->root_mc_bus_dev = mc_bus_dev;
-+	mc_bus_dev->dev.fwnode = pdev->dev.fwnode;
- 	return 0;
- 
- error_cleanup_mc_io:
-@@ -967,11 +997,18 @@ static const struct of_device_id fsl_mc_bus_match_table[] = {
- 
- MODULE_DEVICE_TABLE(of, fsl_mc_bus_match_table);
- 
-+static const struct acpi_device_id fsl_mc_bus_acpi_match_table[] = {
-+	{"NXP0008", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, fsl_mc_bus_acpi_match_table);
-+
- static struct platform_driver fsl_mc_bus_driver = {
- 	.driver = {
- 		   .name = "fsl_mc_bus",
- 		   .pm = NULL,
- 		   .of_match_table = fsl_mc_bus_match_table,
-+		   .acpi_match_table = fsl_mc_bus_acpi_match_table,
- 		   },
- 	.probe = fsl_mc_bus_probe,
- 	.remove = fsl_mc_bus_remove,
-diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-msi.c
-index e7bbff445a83..8edadf05cbb7 100644
---- a/drivers/bus/fsl-mc/fsl-mc-msi.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
-@@ -13,6 +13,7 @@
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/msi.h>
-+#include <linux/acpi_iort.h>
- 
- #include "fsl-mc-private.h"
- 
-@@ -179,25 +180,31 @@ struct irq_domain *fsl_mc_msi_create_irq_domain(struct fwnode_handle *fwnode,
- 
- struct irq_domain *fsl_mc_find_msi_domain(struct device *dev)
- {
--	struct irq_domain *msi_domain = NULL;
-+	struct device *root_dprc_dev;
-+	struct device *bus_dev;
-+	struct irq_domain *msi_domain;
- 	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
- 
--	msi_domain = of_msi_map_get_device_domain(dev, mc_dev->icid,
-+	fsl_mc_get_root_dprc(dev, &root_dprc_dev);
-+	bus_dev = root_dprc_dev->parent;
-+
-+	if (bus_dev->of_node) {
-+		msi_domain = of_msi_map_get_device_domain(dev,
-+						  mc_dev->icid,
- 						  DOMAIN_BUS_FSL_MC_MSI);
- 
--	/*
--	 * if the msi-map property is missing assume that all the
--	 * child containers inherit the domain from the parent
--	 */
--	if (!msi_domain) {
--		struct device *root_dprc_dev;
--		struct device *bus_dev;
--
--		fsl_mc_get_root_dprc(dev, &root_dprc_dev);
--		bus_dev = root_dprc_dev->parent;
--		msi_domain = of_msi_get_domain(bus_dev,
--					       bus_dev->of_node,
--					       DOMAIN_BUS_FSL_MC_MSI);
-+		/*
-+		 * if the msi-map property is missing assume that all the
-+		 * child containers inherit the domain from the parent
-+		 */
-+		if (!msi_domain)
-+
-+			msi_domain = of_msi_get_domain(bus_dev,
-+						bus_dev->of_node,
-+						DOMAIN_BUS_FSL_MC_MSI);
-+	} else {
-+		msi_domain = iort_get_device_domain(dev, mc_dev->icid,
-+						    DOMAIN_BUS_FSL_MC_MSI);
- 	}
- 
- 	return msi_domain;
-diff --git a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c b/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
-index a5c8d577e424..b8b948fb6b2d 100644
---- a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
-+++ b/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
-@@ -7,6 +7,8 @@
-  *
-  */
- 
-+#include <linux/acpi.h>
-+#include <linux/acpi_iort.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
- #include <linux/irq.h>
-@@ -30,7 +32,8 @@ static u32 fsl_mc_msi_domain_get_msi_id(struct irq_domain *domain,
- 	u32 out_id;
- 
- 	of_node = irq_domain_get_of_node(domain);
--	out_id = of_msi_map_id(&mc_dev->dev, of_node, mc_dev->icid);
-+	out_id = of_node ? of_msi_map_id(&mc_dev->dev, of_node, mc_dev->icid) :
-+			iort_msi_map_id(&mc_dev->dev, mc_dev->icid);
- 
- 	return out_id;
- }
-@@ -79,7 +82,67 @@ static const struct of_device_id its_device_id[] = {
- 	{},
- };
- 
--static int __init its_fsl_mc_msi_init(void)
-+static int __init its_fsl_mc_msi_init_one(struct fwnode_handle *handle,
-+					  const char *name)
-+{
-+	struct irq_domain *parent;
-+	struct irq_domain *mc_msi_domain;
-+
-+	parent = irq_find_matching_fwnode(handle, DOMAIN_BUS_NEXUS);
-+	if (!parent || !msi_get_domain_info(parent)) {
-+		pr_err("%s: Unable to locate ITS domain\n", name);
-+		return -ENXIO;
-+	}
-+
-+	mc_msi_domain = fsl_mc_msi_create_irq_domain(handle,
-+						&its_fsl_mc_msi_domain_info,
-+						parent);
-+	if (!mc_msi_domain)
-+		pr_err("ACPIF: unable to create fsl-mc domain\n");
-+
-+	pr_info("fsl-mc MSI: domain created\n");
-+
-+	return 0;
-+}
-+
-+static int __init
-+its_fsl_mc_msi_parse_madt(union acpi_subtable_headers *header,
-+			  const unsigned long end)
-+{
-+	struct acpi_madt_generic_translator *its_entry;
-+	struct fwnode_handle *dom_handle;
-+	const char *node_name;
-+	int err = -ENXIO;
-+
-+	its_entry = (struct acpi_madt_generic_translator *)header;
-+	node_name = kasprintf(GFP_KERNEL, "ITS@0x%lx",
-+			      (long)its_entry->base_address);
-+
-+	dom_handle = iort_find_domain_token(its_entry->translation_id);
-+	if (!dom_handle) {
-+		pr_err("%s: Unable to locate ITS domain handle\n", node_name);
-+		goto out;
-+	}
-+
-+	err = its_fsl_mc_msi_init_one(dom_handle, node_name);
-+	if (!err)
-+		pr_info("fsl-mc MSI: %s domain created\n", node_name);
-+
-+out:
-+	kfree(node_name);
-+	return err;
-+}
-+
-+
-+static int __init its_fsl_mc_acpi_msi_init(void)
-+{
-+	acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_TRANSLATOR,
-+			      its_fsl_mc_msi_parse_madt, 0);
-+
-+	return 0;
-+}
-+
-+static int __init its_fsl_mc_of_msi_init(void)
- {
- 	struct device_node *np;
- 	struct irq_domain *parent;
-@@ -113,4 +176,12 @@ static int __init its_fsl_mc_msi_init(void)
- 	return 0;
- }
- 
-+static int __init its_fsl_mc_msi_init(void)
-+{
-+	its_fsl_mc_of_msi_init();
-+	its_fsl_mc_acpi_msi_init();
-+
-+	return 0;
-+}
-+
- early_initcall(its_fsl_mc_msi_init);
--- 
-2.26.1
+IMHO using ops is a lot cleaner for these cases. IMHO except for removing
+unused functions and not changing readl/writel, others should use ops.
 
+Kindly let me know what you think.
+
+Thanks
+Kishon
