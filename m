@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C57481DCD70
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 15:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73EF81DCD75
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 15:00:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgEUNAX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 09:00:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:46022 "EHLO foss.arm.com"
+        id S1729054AbgEUNA0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 09:00:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:46048 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgEUNAX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 09:00:23 -0400
+        id S1726762AbgEUNAZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 May 2020 09:00:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4ED5B1045;
-        Thu, 21 May 2020 06:00:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FA8A1063;
+        Thu, 21 May 2020 06:00:25 -0700 (PDT)
 Received: from red-moon.arm.com (unknown [10.57.29.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCB9A3F305;
-        Thu, 21 May 2020 06:00:19 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EAC63F305;
+        Thu, 21 May 2020 06:00:22 -0700 (PDT)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Will Deacon <will@kernel.org>,
         Hanjun Guo <guohanjun@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Robin Murphy <robin.murphy@arm.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Marc Zyngier <maz@kernel.org>,
         iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
         Makarand Pawagi <makarand.pawagi@nxp.com>,
         Diana Craciun <diana.craciun@oss.nxp.com>,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH 02/12] ACPI/IORT: Make iort_get_device_domain IRQ domain agnostic
-Date:   Thu, 21 May 2020 13:59:58 +0100
-Message-Id: <20200521130008.8266-3-lorenzo.pieralisi@arm.com>
+Subject: [PATCH 03/12] ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
+Date:   Thu, 21 May 2020 13:59:59 +0100
+Message-Id: <20200521130008.8266-4-lorenzo.pieralisi@arm.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
 References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
@@ -48,128 +48,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-iort_get_device_domain() is PCI specific but it need not be,
-since it can be used to retrieve IRQ domain nexus of any kind
-by adding an irq_domain_bus_token input to it.
-
-Make it PCI agnostic by also renaming the requestor ID input
-to a more generic ID name.
+There is nothing PCI specific in iort_msi_map_rid(). Make it
+a generic function, iort_msi_map_id() and provide a stub
+for iort_msi_map_rid() on top of it to keep current users
+unchanged.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Will Deacon <will@kernel.org>
 Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Sudeep Holla <sudeep.holla@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Robin Murphy <robin.murphy@arm.com>
 Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Marc Zyngier <maz@kernel.org>
 ---
- drivers/acpi/arm64/iort.c | 14 +++++++-------
- drivers/pci/msi.c         |  3 ++-
- include/linux/acpi_iort.h |  7 ++++---
- 3 files changed, 13 insertions(+), 11 deletions(-)
+ drivers/acpi/arm64/iort.c | 12 ++++++------
+ include/linux/acpi_iort.h | 12 ++++++++++--
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 7cfd77b5e6e8..8f2a961c1364 100644
+index 8f2a961c1364..f346a785e0b5 100644
 --- a/drivers/acpi/arm64/iort.c
 +++ b/drivers/acpi/arm64/iort.c
-@@ -567,7 +567,6 @@ static struct acpi_iort_node *iort_find_dev_node(struct device *dev)
- 		node = iort_get_iort_node(dev->fwnode);
- 		if (node)
- 			return node;
--
- 		/*
- 		 * if not, then it should be a platform device defined in
- 		 * DSDT/SSDT (with Named Component node in IORT)
-@@ -658,13 +657,13 @@ static int __maybe_unused iort_find_its_base(u32 its_id, phys_addr_t *base)
+@@ -585,22 +585,22 @@ static struct acpi_iort_node *iort_find_dev_node(struct device *dev)
+ }
+ 
  /**
-  * iort_dev_find_its_id() - Find the ITS identifier for a device
-  * @dev: The device.
-- * @req_id: Device's requester ID
-+ * @id: Device's ID
-  * @idx: Index of the ITS identifier list.
-  * @its_id: ITS identifier.
+- * iort_msi_map_rid() - Map a MSI requester ID for a device
++ * iort_msi_map_id() - Map a MSI input ID for a device
+  * @dev: The device for which the mapping is to be done.
+- * @req_id: The device requester ID.
++ * @input_id: The device input ID.
   *
-  * Returns: 0 on success, appropriate error value otherwise
+- * Returns: mapped MSI RID on success, input requester ID otherwise
++ * Returns: mapped MSI ID on success, input ID otherwise
   */
--static int iort_dev_find_its_id(struct device *dev, u32 req_id,
-+static int iort_dev_find_its_id(struct device *dev, u32 id,
- 				unsigned int idx, int *its_id)
+-u32 iort_msi_map_rid(struct device *dev, u32 req_id)
++u32 iort_msi_map_id(struct device *dev, u32 input_id)
  {
- 	struct acpi_iort_its_group *its;
-@@ -674,7 +673,7 @@ static int iort_dev_find_its_id(struct device *dev, u32 req_id,
+ 	struct acpi_iort_node *node;
+ 	u32 dev_id;
+ 
+ 	node = iort_find_dev_node(dev);
  	if (!node)
- 		return -ENXIO;
+-		return req_id;
++		return input_id;
  
--	node = iort_node_map_id(node, req_id, NULL, IORT_MSI_TYPE);
-+	node = iort_node_map_id(node, id, NULL, IORT_MSI_TYPE);
- 	if (!node)
- 		return -ENXIO;
- 
-@@ -697,19 +696,20 @@ static int iort_dev_find_its_id(struct device *dev, u32 req_id,
-  *
-  * Returns: the MSI domain for this device, NULL otherwise
-  */
--struct irq_domain *iort_get_device_domain(struct device *dev, u32 req_id)
-+struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
-+					  enum irq_domain_bus_token bus_token)
- {
- 	struct fwnode_handle *handle;
- 	int its_id;
- 
--	if (iort_dev_find_its_id(dev, req_id, 0, &its_id))
-+	if (iort_dev_find_its_id(dev, id, 0, &its_id))
- 		return NULL;
- 
- 	handle = iort_find_domain_token(its_id);
- 	if (!handle)
- 		return NULL;
- 
--	return irq_find_matching_fwnode(handle, DOMAIN_BUS_PCI_MSI);
-+	return irq_find_matching_fwnode(handle, bus_token);
+-	iort_node_map_id(node, req_id, &dev_id, IORT_MSI_TYPE);
++	iort_node_map_id(node, input_id, &dev_id, IORT_MSI_TYPE);
+ 	return dev_id;
  }
  
- static void iort_set_device_domain(struct device *dev,
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 6b43a5455c7a..74a91f52ecc0 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1558,7 +1558,8 @@ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
- 	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
- 	dom = of_msi_map_get_device_domain(&pdev->dev, rid);
- 	if (!dom)
--		dom = iort_get_device_domain(&pdev->dev, rid);
-+		dom = iort_get_device_domain(&pdev->dev, rid,
-+					     DOMAIN_BUS_PCI_MSI);
- 	return dom;
- }
- #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
 diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index 8e7e2ec37f1b..08ec6bd2297f 100644
+index 08ec6bd2297f..8c71f92b92ef 100644
 --- a/include/linux/acpi_iort.h
 +++ b/include/linux/acpi_iort.h
-@@ -29,7 +29,8 @@ struct fwnode_handle *iort_find_domain_token(int trans_id);
+@@ -28,7 +28,11 @@ void iort_deregister_domain_token(int trans_id);
+ struct fwnode_handle *iort_find_domain_token(int trans_id);
  #ifdef CONFIG_ACPI_IORT
  void acpi_iort_init(void);
- u32 iort_msi_map_rid(struct device *dev, u32 req_id);
--struct irq_domain *iort_get_device_domain(struct device *dev, u32 req_id);
-+struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
-+					  enum irq_domain_bus_token bus_token);
+-u32 iort_msi_map_rid(struct device *dev, u32 req_id);
++u32 iort_msi_map_id(struct device *dev, u32 id);
++static inline u32 iort_msi_map_rid(struct device *dev, u32 req_id)
++{
++	return iort_msi_map_id(dev, req_id);
++}
+ struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
+ 					  enum irq_domain_bus_token bus_token);
  void acpi_configure_pmsi_domain(struct device *dev);
- int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
- /* IOMMU interface */
-@@ -40,8 +41,8 @@ int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
+@@ -39,8 +43,12 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev);
+ int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
+ #else
  static inline void acpi_iort_init(void) { }
++static inline u32 iort_msi_map_id(struct device *dev, u32 id)
++{ return id; }
  static inline u32 iort_msi_map_rid(struct device *dev, u32 req_id)
- { return req_id; }
--static inline struct irq_domain *iort_get_device_domain(struct device *dev,
--							u32 req_id)
-+static inline struct irq_domain *iort_get_device_domain(
-+	struct device *dev, u32 id, enum irq_domain_bus_token bus_token)
+-{ return req_id; }
++{
++	return iort_msi_map_id(dev, req_id);
++}
+ static inline struct irq_domain *iort_get_device_domain(
+ 	struct device *dev, u32 id, enum irq_domain_bus_token bus_token)
  { return NULL; }
- static inline void acpi_configure_pmsi_domain(struct device *dev) { }
- /* IOMMU interface */
 -- 
 2.26.1
 
