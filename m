@@ -2,148 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB79C1DCB88
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 12:58:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FCF41DCBAA
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 13:09:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgEUK6V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 06:58:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4834 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727864AbgEUK6V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 06:58:21 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A83EBD3A61E79073949C;
-        Thu, 21 May 2020 18:58:18 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 21 May 2020
- 18:58:13 +0800
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>, <bhelgaas@google.com>
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
- <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
-CC:     <jay.vosburgh@canonical.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
-Date:   Thu, 21 May 2020 18:58:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1729046AbgEULJd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 07:09:33 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61244 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbgEULJc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 May 2020 07:09:32 -0400
+IronPort-SDR: JfgrQW/xbtE+ZWkJjtpIqoWHp1JStmwvaShGQMgvrMFmS7M9aiE02guSaBZYsly7WWV4SM2ng5
+ d7mjS4lQO/cg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 04:09:31 -0700
+IronPort-SDR: 9L810EtKFzZxHty/mfV+n4YLLrRLPhCLY5YIaPh36kHtyQPUEZUZAKYf2tlvPZ+1ludx6rtg/y
+ sLlsNUlNodqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
+   d="scan'208";a="283013910"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 21 May 2020 04:09:30 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jbj4s-0006wT-2c; Thu, 21 May 2020 19:09:30 +0800
+Date:   Thu, 21 May 2020 19:09:00 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/virtualization] BUILD SUCCESS
+ efaa35873d66bf4a4903f757333692766e34e448
+Message-ID: <5ec6614c.LIRSJ+SSpOBu42Ev%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
->
->
-> On 5/20/20 1:28 AM, Yicong Yang wrote:
->> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>
->>> If there are non-hotplug capable devices connected to a given
->>> port, then during the fatal error recovery(triggered by DPC or
->>> AER), after calling reset_link() function, we cannot rely on
->>> hotplug handler to detach and re-enumerate the device drivers
->>> in the affected bus. Instead, we will have to let the error
->>> recovery handler call report_slot_reset() for all devices in
->>> the bus to notify about the reset operation. Although this is
->>> only required for non hot-plug capable devices, doing it for
->>> hotplug capable devices should not affect the functionality.
->>>
->>> Along with above issue, this fix also applicable to following
->>> issue.
->>>
->>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->>> reset_link()") added support to store status of reset_link()
->>> call. Although this fixed the error recovery issue observed if
->>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->>> result from report_frozen_detected. This can cause a failure to
->>> recover if _NEED_RESET is returned by report_frozen_detected and
->>> report_slot_reset is not invoked.
->>>
->>> Such an event can be induced for testing purposes by reducing the
->>> Max_Payload_Size of a PCIe bridge to less than that of a device
->>> downstream from the bridge, and then initiating I/O through the
->>> device, resulting in oversize transactions.  In the presence of DPC,
->>> this results in a containment event and attempted reset and recovery
->>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->>> invoked, and the device does not recover.
->>>
->>> [original patch is from jay.vosburgh@canonical.com]
->>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>> ---
->>>   drivers/pci/pcie/err.c | 19 +++++++++++++++----
->>>   1 file changed, 15 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>> index 14bb8f54723e..db80e1ecb2dc 100644
->>> --- a/drivers/pci/pcie/err.c
->>> +++ b/drivers/pci/pcie/err.c
->>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>       pci_dbg(dev, "broadcast error_detected message\n");
->>>       if (state == pci_channel_io_frozen) {
->>>           pci_walk_bus(bus, report_frozen_detected, &status);
->>> -        status = reset_link(dev);
->>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
->>> +        status = PCI_ERS_RESULT_NEED_RESET;
->>> +    } else {
->>> +        pci_walk_bus(bus, report_normal_detected, &status);
->>> +    }
->>> +
->>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
->>> +        if (reset_link) {
->>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->>
->> we'll call reset_link() only if link is frozen. so it may have problem here.
-> you mean before this change right?
-> After this change, reset_link() will be called as long as status is
-> PCI_ERS_RESULT_NEED_RESET.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/virtualization
+branch HEAD: efaa35873d66bf4a4903f757333692766e34e448  PCI: Avoid FLR for AMD Matisse HD Audio & USB 3.0
 
-Yes. I think we should reset the link only if the io is blocked as before. There's
-no reason to reset a normal link.
+elapsed time: 482m
 
-Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
-than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
-We decide whether to do a link reset only by the io state.
+configs tested: 97
+configs skipped: 1
 
-Thanks,
-Yicong
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+m68k                             allyesconfig
+powerpc                         ps3_defconfig
+sh                          r7780mp_defconfig
+arm                           sama5_defconfig
+sh                           se7712_defconfig
+arm                          iop32x_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a001-20200520
+i386                 randconfig-a004-20200520
+i386                 randconfig-a006-20200520
+i386                 randconfig-a003-20200520
+i386                 randconfig-a002-20200520
+i386                 randconfig-a005-20200520
+i386                 randconfig-a013-20200520
+i386                 randconfig-a012-20200520
+i386                 randconfig-a015-20200520
+i386                 randconfig-a011-20200520
+i386                 randconfig-a016-20200520
+i386                 randconfig-a014-20200520
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
->>
->> Thanks,
->> Yicong
->>
->>
->>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>> +        } else {
->>> +            if (pci_bus_error_reset(dev))
->>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>> +        }
->>> +
->>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
->>>               pci_warn(dev, "link reset failed\n");
->>>               goto failed;
->>>           }
->>> -    } else {
->>> -        pci_walk_bus(bus, report_normal_detected, &status);
->>>       }
->>>         if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>
-> .
->
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
