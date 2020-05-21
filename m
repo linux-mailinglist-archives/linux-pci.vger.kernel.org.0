@@ -2,149 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C7981DD1A8
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 17:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5DA61DD443
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 19:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgEUPZa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 11:25:30 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35001 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729977AbgEUPZ3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 11:25:29 -0400
-Received: by mail-oi1-f196.google.com with SMTP id z9so1668421oid.2;
-        Thu, 21 May 2020 08:25:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D0uWGFCD5V34lH8VbU4HglTn4XGZ0Xtya8FxjiL3tQs=;
-        b=iuvaiZEVuNWpi7op0mAKu2ftRLLYgUXDtg6JN+452XA1lMwry4Jm+RLgFd3tQXqXYF
-         nYGgnjqZ6vgWkIQTHIcES9xz0Az/aSFshHUrRHY0xZ5WQhdgmvYVobl8ymEOCzaTdI7i
-         Tx7BCY8kJHZebXSkQcWrfzKNgHW+fQ47vdMpbd3uuBIeqKcBgfFuLwUisXlMhdfSCdRd
-         8V89Odll0vMNuI1YyTtAk7QBCiJyF3Qlo9OrSotVlawHEPtCvubEwa3GJe37+6U5SnR+
-         FrpjFRcctrGW4HEHVnfFlXZ8JK8WTOXHnK2TDnVTGQ1GiUgGMvwfa8hzfd3k8zt5CPKA
-         U9Yw==
-X-Gm-Message-State: AOAM532bfjpjACXuf7JvYfC37LGA+A9uba9JiBl1RyxSDxoyivCJ7CWP
-        tIFRkuSupf6pr8gb4GPRXShle45NtTzkTZyvGPw=
-X-Google-Smtp-Source: ABdhPJzx65YPgki0LhoHsio0Vu+PQ4w0tRMbmKkwz5UC1wTNSZn2a2KZQZdxQKh4XLArhWOniQwE0ntdBIMKQ3qvU94=
-X-Received: by 2002:aca:4254:: with SMTP id p81mr6799233oia.68.1590074728219;
- Thu, 21 May 2020 08:25:28 -0700 (PDT)
+        id S1728867AbgEUR0u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 13:26:50 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52518 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728864AbgEUR0u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 13:26:50 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHLLgG190443;
+        Thu, 21 May 2020 17:26:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=MgkxCsFV38a7Wm3TQBmGlrqbzqH0CEUY75tnU5xc+/M=;
+ b=MNxGwd76rYyZ+9bUtdxxDy60kYW46J5sFIXcHI3P89/FiOPL8AUZxFegfI0WwgFXrNhe
+ 2/5zWH3xJ/jJNzS+h0vI6qqorCRDDNkfEQoUNJjPFAjkSAfrCCEREEakGfihvomis+wR
+ Eq9flqUgfZ/ZbBeuXeiKTh0XeaI6VhoLSINcg2pwKwZJnXZGFANJ6OFZreVtIRxQ4wO+
+ +ZkOyHdQrkchVveUx0XHyefWxb9JFdqvRHYF6MNjNyTM5JT5p9nVWzh3A7vvydtF+Q6l
+ avUh/xIwjR9AhWdP3Fg6LHS9qZ53L7881euFpq0BxXfSebThtRwxWKOZFj7+It9KD6Sx Aw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3127krhtax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 17:26:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHOWQB067775;
+        Thu, 21 May 2020 17:26:41 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 314gm9met1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 17:26:41 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04LHQeuK023027;
+        Thu, 21 May 2020 17:26:40 GMT
+Received: from [10.39.200.114] (/10.39.200.114)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 May 2020 10:26:40 -0700
+Subject: Re: [PATCH] x86/xen: drop an unused parameter gsi_override
+To:     Wei Liu <wei.liu@kernel.org>, linux-pci@vger.kernel.org,
+        Xen Development List <xen-devel@lists.xenproject.org>
+Cc:     linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        konrad.wilk@oracle.com, x86@kernel.org, sstabellini@kernel.org,
+        Michael Kelley <mikelley@microsoft.com>
+References: <20200428153640.76476-1-wei.liu@kernel.org>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ xsFNBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
+ PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
+ MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
+ C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
+ d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
+ woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
+ FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
+ SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
+ Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
+ 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABzTNCb3JpcyBPc3Ry
+ b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT7CwXgEEwECACIFAlH8
+ CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
+ 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
+ JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
+ VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
+ jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
+ qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
+ tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
+ kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
+ m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
+ nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
+ hWwveNeRTkxh+2x1Qb3GT46uzsFNBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
+ Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
+ yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
+ kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
+ KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
+ BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
+ gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
+ XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
+ 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
+ kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
+ SQARAQABwsFfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
+ jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
+ 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
+ PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
+ u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
+ qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
+ t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
+ ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
+ Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
+ 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
+ Jg6OxFYd01z+a+oL
+Message-ID: <c60b771d-b61a-d63d-f593-52e8d07c0dc8@oracle.com>
+Date:   Thu, 21 May 2020 13:26:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200521031355.7022-1-dinghao.liu@zju.edu.cn> <20200521151620.GA1135365@bjorn-Precision-5520>
-In-Reply-To: <20200521151620.GA1135365@bjorn-Precision-5520>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 21 May 2020 17:25:14 +0200
-Message-ID: <CAJZ5v0g1-WrBskdBHQ0vpWEk2E-dSaZcQsZngn84rcjcemoAAA@mail.gmail.com>
-Subject: Re: [PATCH] [v2] PCI: tegra194: Fix runtime PM imbalance on error
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200428153640.76476-1-wei.liu@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005210126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005210125
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 21, 2020 at 5:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On 4/28/20 11:36 AM, Wei Liu wrote:
+> All callers within the same file pass in -1 (no override).
 >
-> [+cc Rafael, linux-pm]
->
-> On Thu, May 21, 2020 at 11:13:49AM +0800, Dinghao Liu wrote:
-> > pm_runtime_get_sync() increments the runtime PM usage counter even
-> > when it returns an error code. Thus a pairing decrement is needed on
-> > the error handling path to keep the counter balanced.
->
-> I didn't realize there were so many drivers with the exact same issue.
-> Can we just squash these all into a single patch so we can see them
-> all together?
->
-> Hmm.  There are over 1300 callers of pm_runtime_get_sync(), and it
-> looks like many of them have similar issues, i.e., they have a pattern
-> like this
->
->   ret = pm_runtime_get_sync(dev);
->   if (ret < 0)
->     return;
->
->   pm_runtime_put(dev);
->
-> where there is not a pm_runtime_put() to match every
-> pm_runtime_get_sync().  Random sample:
->
->   nds32_pmu_reserve_hardware
->   sata_rcar_probe
->   exynos_trng_probe
->   ks_sa_rng_probe
->   omap_aes_probe
->   sun8i_ss_probe
->   omap_aes_probe
->   zynq_gpio_probe
->   amdgpu_hwmon_show_power_avg
->   mtk_crtc_ddp_hw_init
->   ...
->
-> Surely I'm missing something and these aren't all broken, right?
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
 
-If they do what you've said, they are all broken I'm afraid.
 
-They should all be doing something like
 
-    ret = pm_runtime_get_sync(dev);
-    if (ret < 0)
-        goto out;
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-    ...
-
-out:
-    pm_runtime_put(dev);
-
-> Maybe we could put together a coccinelle script to scan the tree for
-> this issue?
->
-> > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-tegra194.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > index ae30a2fd3716..2c0d2ce16b47 100644
-> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > @@ -1623,7 +1623,7 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
-> >       ret = pinctrl_pm_select_default_state(dev);
-> >       if (ret < 0) {
-> >               dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
-> > -             goto fail_pinctrl;
-> > +             goto fail_pm_get_sync;
-> >       }
-> >
-> >       tegra_pcie_init_controller(pcie);
-> > @@ -1650,9 +1650,8 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
-> >
-> >  fail_host_init:
-> >       tegra_pcie_deinit_controller(pcie);
-> > -fail_pinctrl:
-> > -     pm_runtime_put_sync(dev);
-> >  fail_pm_get_sync:
-> > +     pm_runtime_put_sync(dev);
-
-Why not pm_runtime_put()?
-
-> >       pm_runtime_disable(dev);
-> >       return ret;
-> >  }
-> > --
-> > 2.17.1
-> >
