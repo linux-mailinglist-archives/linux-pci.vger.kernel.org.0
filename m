@@ -2,126 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5DA61DD443
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 19:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 823431DD479
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 19:32:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgEUR0u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 13:26:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52518 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728864AbgEUR0u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 13:26:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHLLgG190443;
-        Thu, 21 May 2020 17:26:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=MgkxCsFV38a7Wm3TQBmGlrqbzqH0CEUY75tnU5xc+/M=;
- b=MNxGwd76rYyZ+9bUtdxxDy60kYW46J5sFIXcHI3P89/FiOPL8AUZxFegfI0WwgFXrNhe
- 2/5zWH3xJ/jJNzS+h0vI6qqorCRDDNkfEQoUNJjPFAjkSAfrCCEREEakGfihvomis+wR
- Eq9flqUgfZ/ZbBeuXeiKTh0XeaI6VhoLSINcg2pwKwZJnXZGFANJ6OFZreVtIRxQ4wO+
- +ZkOyHdQrkchVveUx0XHyefWxb9JFdqvRHYF6MNjNyTM5JT5p9nVWzh3A7vvydtF+Q6l
- avUh/xIwjR9AhWdP3Fg6LHS9qZ53L7881euFpq0BxXfSebThtRwxWKOZFj7+It9KD6Sx Aw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3127krhtax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 17:26:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHOWQB067775;
-        Thu, 21 May 2020 17:26:41 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 314gm9met1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 17:26:41 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04LHQeuK023027;
-        Thu, 21 May 2020 17:26:40 GMT
-Received: from [10.39.200.114] (/10.39.200.114)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 10:26:40 -0700
-Subject: Re: [PATCH] x86/xen: drop an unused parameter gsi_override
-To:     Wei Liu <wei.liu@kernel.org>, linux-pci@vger.kernel.org,
-        Xen Development List <xen-devel@lists.xenproject.org>
-Cc:     linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        konrad.wilk@oracle.com, x86@kernel.org, sstabellini@kernel.org,
-        Michael Kelley <mikelley@microsoft.com>
-References: <20200428153640.76476-1-wei.liu@kernel.org>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <c60b771d-b61a-d63d-f593-52e8d07c0dc8@oracle.com>
-Date:   Thu, 21 May 2020 13:26:37 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728694AbgEURcv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 13:32:51 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2240 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726821AbgEURcv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 May 2020 13:32:51 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 9B1807CB299515510B6F;
+        Thu, 21 May 2020 18:32:46 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 21 May 2020 18:32:46 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <linux-acpi@vger.kernel.org>, <linuxarm@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH 0/2] PCI/AER: handling for RCiEPs
+Date:   Fri, 22 May 2020 01:31:32 +0800
+Message-ID: <20200521173134.2456773-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20200428153640.76476-1-wei.liu@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005210126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005210125
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/28/20 11:36 AM, Wei Liu wrote:
-> All callers within the same file pass in -1 (no override).
->
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+This RFC adds minimal AER handling for Root Complex integrated End Points
+(RCiEPs).   These report their errors via a Root Complex Event Collector
+(RCEC).  Note that this series does not provide a driver for said RCEC
+because we do not need to do anything to it on a Hardware-Reduced ACPI
+platform such as the ARM server we wish to support.
 
+My assumption is that anyone needing support will need to enumerate the
+association between the RCEC and RCiEPs, setting the rcec pointer added
+to struct pci_dev.  If an alternate mechanism is preferred let me know.
 
+Open questions are mainly in patch 2 description.  In particular a
+number of the normal reset actions make little sense for an RCiEP (slot
+reset?) so I'm unclear whether we should just call them all anyway or not.
 
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Patch 1 avoids a reset of a register on the root port in a firmware first
+flow.  It can occur for normal EP flow as well. It probably shouldn't,
+but likely effects are minor (as firmware should have reset the register
+already).
+
+All comments welcome.  NB. We only care about the Hardware-Reduced
+firmware first case so I'm more than happy to rip out he hints of
+explicit RCEC support if people would prefer - I just put them in
+for the RFC to show how that just possibly 'might' work.
+
+There are other places that I suspect would need to take the RCEC case
+into account that I have not addressed here.  Whilst we do have real
+hardware RCiEPs, testing here was done with Qemu to allow comparison
+of the flows for RCiEPs and EPs that were otherwise identical.
+It is also easier to add whatever error injection is needed than on
+real hardware.
+
+Only the reduced hardware ACPI case has been tested as we would need
+to add a bunch more stuff to Qemu to test the alternative forms
+of firmware first of kernel first handling (which we don't care about :)
+
+Jonathan Cameron (2):
+  PCI/AER: Do not reset the device status if doing firmware first
+    handling.
+  PCI/AER: Add partial initial support for RCiEPs using RCEC or firmware
+    first
+
+ drivers/pci/pcie/aer.c |  3 +++
+ drivers/pci/pcie/err.c | 61 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h    |  1 +
+ 3 files changed, 65 insertions(+)
+
+-- 
+2.19.1
 
