@@ -2,164 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCFFF1DD740
-	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 21:31:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D6541DD755
+	for <lists+linux-pci@lfdr.de>; Thu, 21 May 2020 21:35:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgEUTbf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 15:31:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26767 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbgEUTbf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 15:31:35 -0400
-IronPort-SDR: RJSZqMaUjxNUuwwJeod1JB0dqTiyLKbP8H2jcKJJYa2VUrAC0jqIZJ80wfzFTUWkvTQSCq4tu0
- tCB8ohaRavbg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 12:31:34 -0700
-IronPort-SDR: Am4Zex30NwTh6gYz5Q9dfPyPuEXJ1wTvaCHUvLj9S+IcOZk3Ownb03X039JFbvq5nA9c7vi+2m
- p/eeM6CqR48w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
-   d="scan'208";a="289859921"
-Received: from irishmed-mobl2.amr.corp.intel.com (HELO [10.254.66.124]) ([10.254.66.124])
-  by fmsmga004.fm.intel.com with ESMTP; 21 May 2020 12:31:33 -0700
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     Yicong Yang <yangyicong@hisilicon.com>, bhelgaas@google.com
-Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
- <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
- <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
-Date:   Thu, 21 May 2020 12:31:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728955AbgEUTf0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 15:35:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728902AbgEUTf0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 15:35:26 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE9DC061A0F
+        for <linux-pci@vger.kernel.org>; Thu, 21 May 2020 12:35:25 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id n5so7609790wmd.0
+        for <linux-pci@vger.kernel.org>; Thu, 21 May 2020 12:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fXTE3yjnFJVJ4RMTP+hFtfV69y3g7idePydsdqEDOvU=;
+        b=Urnx6PIU4w0LHEM/0sVFU0WRGpU3pWxVPEGtXRmDC+zUmRU1/zi1kj16aFQ2P/UaY5
+         75vqXaVwj4O7sN47cqKRUcikoqiL6Rr84nUGLHkMXgk2PH3S0YM30hi1MPtzdQfWK9tT
+         JrBIweGMSKAztPbjtJX/78GjS0zmN6gLpPDq0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fXTE3yjnFJVJ4RMTP+hFtfV69y3g7idePydsdqEDOvU=;
+        b=SNoL125w7KL4dJ0yDIsrkFeyQ2KPkE7xKoLe92BiGjIyvaOoA5Z2DgwQ0kDiJ6u1x5
+         +8LMTfi4T9GefSYJk4vfKgSWduDo6Vmt4S+EAuhK84B6UST7kVKFaMy0mypSmcjZJmKm
+         XmHXem63x9oWMnCUjtaXGjyG5o14UHgPn4IRs3RMUl2fa/Fjp1g+aTCsltCqbp26Ak34
+         /80/CoVeqMBFUjdw9FKFkJKvfsE1jm5J89ienjKgqIlEMgtyPJNnYoxrVctEhlUS0qVh
+         EtqJK5c+tTQbYQ8UiX2d7JvcWhTxDk5xuLHGKNB+XHDMahsx7zdJUrCH3+2uCpijqrjY
+         5Pvw==
+X-Gm-Message-State: AOAM533sD+syLd6kxrwR5js8w0de3aJ09/Zym+cSSuE+TSSU34b7D7PN
+        e4pbG9vfKfqvlkkcvkg1iVAObFUcvB38x9YUdJdtaQ==
+X-Google-Smtp-Source: ABdhPJys3lSyamABhSpV9p1+ZRLgdctlDO3boTGydZwLnsXpdO06hyQIO/CDFT1eH5E1CtdgMMR4vEirWBhO7YFGEFU=
+X-Received: by 2002:a1c:7d02:: with SMTP id y2mr9060596wmc.92.1590089724177;
+ Thu, 21 May 2020 12:35:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+ <20200519203419.12369-5-james.quinlan@broadcom.com> <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
+In-Reply-To: <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 21 May 2020 15:35:11 -0400
+Message-ID: <CA+-6iNyqtFguHJ=sB=nKoghX6PR9ve5OuyafPw88mfSmhe+c8Q@mail.gmail.com>
+Subject: Re: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 5/21/20 3:58 AM, Yicong Yang wrote:
-> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
->>
->>
->> On 5/20/20 1:28 AM, Yicong Yang wrote:
->>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>
->>>> If there are non-hotplug capable devices connected to a given
->>>> port, then during the fatal error recovery(triggered by DPC or
->>>> AER), after calling reset_link() function, we cannot rely on
->>>> hotplug handler to detach and re-enumerate the device drivers
->>>> in the affected bus. Instead, we will have to let the error
->>>> recovery handler call report_slot_reset() for all devices in
->>>> the bus to notify about the reset operation. Although this is
->>>> only required for non hot-plug capable devices, doing it for
->>>> hotplug capable devices should not affect the functionality.
->>>>
->>>> Along with above issue, this fix also applicable to following
->>>> issue.
->>>>
->>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->>>> reset_link()") added support to store status of reset_link()
->>>> call. Although this fixed the error recovery issue observed if
->>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->>>> result from report_frozen_detected. This can cause a failure to
->>>> recover if _NEED_RESET is returned by report_frozen_detected and
->>>> report_slot_reset is not invoked.
->>>>
->>>> Such an event can be induced for testing purposes by reducing the
->>>> Max_Payload_Size of a PCIe bridge to less than that of a device
->>>> downstream from the bridge, and then initiating I/O through the
->>>> device, resulting in oversize transactions.  In the presence of DPC,
->>>> this results in a containment event and attempted reset and recovery
->>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->>>> invoked, and the device does not recover.
->>>>
->>>> [original patch is from jay.vosburgh@canonical.com]
->>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>> ---
->>>>    drivers/pci/pcie/err.c | 19 +++++++++++++++----
->>>>    1 file changed, 15 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>> index 14bb8f54723e..db80e1ecb2dc 100644
->>>> --- a/drivers/pci/pcie/err.c
->>>> +++ b/drivers/pci/pcie/err.c
->>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>>        pci_dbg(dev, "broadcast error_detected message\n");
->>>>        if (state == pci_channel_io_frozen) {
->>>>            pci_walk_bus(bus, report_frozen_detected, &status);
->>>> -        status = reset_link(dev);
->>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
->>>> +        status = PCI_ERS_RESULT_NEED_RESET;
->>>> +    } else {
->>>> +        pci_walk_bus(bus, report_normal_detected, &status);
->>>> +    }
->>>> +
->>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>> +        if (reset_link) {
->>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->>>
->>> we'll call reset_link() only if link is frozen. so it may have problem here.
->> you mean before this change right?
->> After this change, reset_link() will be called as long as status is
->> PCI_ERS_RESULT_NEED_RESET.
-> 
-> Yes. I think we should reset the link only if the io is blocked as before. There's
-> no reason to reset a normal link.
-Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
-possible reset_link options are dpc_reset_link() and aer_root_reset().
-
-In dpc_reset_link() case, the link is already disabled and hence we
-don't need to do another reset. In case of aer_root_reset() it
-uses pci_bus_error_reset() to reset the slot.
-> 
-> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
-> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
-> We decide whether to do a link reset only by the io state.
-> 
-> Thanks,
-> Yicong
-> 
-> 
->>>
->>> Thanks,
->>> Yicong
->>>
->>>
->>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>> +        } else {
->>>> +            if (pci_bus_error_reset(dev))
->>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>> +        }
->>>> +
->>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
->>>>                pci_warn(dev, "link reset failed\n");
->>>>                goto failed;
->>>>            }
->>>> -    } else {
->>>> -        pci_walk_bus(bus, report_normal_detected, &status);
->>>>        }
->>>>          if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>
->> .
->>
-> 
+On Wed, May 20, 2020 at 7:51 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi Jim,
+>
+> On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > Add in compatibility strings and code for three Broadcom STB chips.
+> > Some of the register locations, shifts, and masks are different
+> > for certain chips, requiring the use of different constants based
+> > on of_id.
+> >
+> > We would like to add the following at this time to the match list
+> > but we need to wait until the end of this patchset so that
+> > everything works.
+> >
+> >     { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
+> >     { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
+> >     { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
+> >     { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
+> >
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 103 +++++++++++++++++++++++---
+> >  1 file changed, 91 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> > b/drivers/pci/controller/pcie-brcmstb.c
+> > index 73020b4ff090..c1cf4ea7d3d9 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -120,9 +120,8 @@
+> >  #define  PCIE_EXT_SLOT_SHIFT                         15
+> >  #define  PCIE_EXT_FUNC_SHIFT                         12
+> >
+> > -#define PCIE_RGR1_SW_INIT_1                          0x9210
+> >  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK                      0x1
+> > -#define  PCIE_RGR1_SW_INIT_1_INIT_MASK                       0x2
+> > +#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT             0x0
+> >
+> >  /* PCIe parameters */
+> >  #define BRCM_NUM_PCIE_OUT_WINS               0x4
+> > @@ -152,6 +151,69 @@
+> >  #define SSC_STATUS_SSC_MASK          0x400
+> >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
+> >
+> > +#define IDX_ADDR(pcie)       \
+> > +     (pcie->reg_offsets[EXT_CFG_INDEX])
+> > +#define DATA_ADDR(pcie)      \
+> > +     (pcie->reg_offsets[EXT_CFG_DATA])
+> > +#define PCIE_RGR1_SW_INIT_1(pcie) \
+> > +     (pcie->reg_offsets[RGR1_SW_INIT_1])
+> > +
+> > +enum {
+> > +     RGR1_SW_INIT_1,
+> > +     EXT_CFG_INDEX,
+> > +     EXT_CFG_DATA,
+> > +};
+> > +
+> > +enum {
+> > +     RGR1_SW_INIT_1_INIT_MASK,
+> > +     RGR1_SW_INIT_1_INIT_SHIFT,
+> > +};
+> > +
+> > +enum pcie_type {
+> > +     GENERIC,
+> > +     BCM7278,
+> > +};
+> > +
+> > +struct pcie_cfg_data {
+> > +     const int *reg_field_info;
+> > +     const int *offsets;
+> > +     const enum pcie_type type;
+> > +};
+> > +
+> > +static const int pcie_reg_field_info[] = {
+> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x2,
+> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
+> > +};
+> > +
+> > +static const int pcie_reg_field_info_bcm7278[] = {
+> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x1,
+> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
+> > +};
+> > +
+> > +static const int pcie_offsets[] = {
+> > +     [RGR1_SW_INIT_1] = 0x9210,
+> > +     [EXT_CFG_INDEX]  = 0x9000,
+> > +     [EXT_CFG_DATA]   = 0x9004,
+> > +};
+> > +
+> > +static const struct pcie_cfg_data generic_cfg = {
+> > +     .reg_field_info = pcie_reg_field_info,
+> > +     .offsets        = pcie_offsets,
+> > +     .type           = GENERIC,
+> > +};
+> > +
+> > +static const int pcie_offset_bcm7278[] = {
+> > +     [RGR1_SW_INIT_1] = 0xc010,
+> > +     [EXT_CFG_INDEX] = 0x9000,
+> > +     [EXT_CFG_DATA] = 0x9004,
+> > +};
+> > +
+> > +static const struct pcie_cfg_data bcm7278_cfg = {
+> > +     .reg_field_info = pcie_reg_field_info_bcm7278,
+> > +     .offsets        = pcie_offset_bcm7278,
+> > +     .type           = BCM7278,
+> > +};
+>
+> It's not essential, but if v2 is due I'd suggest factoring out the bcm2728
+> specific structures above, and moving them to patch #15. This will keep a
+> clearer division between the patch introducing the infrastructure and the one
+> adding the support for a new device.
+>
+> > +
+> >  struct brcm_msi {
+> >       struct device           *dev;
+> >       void __iomem            *base;
+> > @@ -176,6 +238,9 @@ struct brcm_pcie {
+> >       int                     gen;
+> >       u64                     msi_target_addr;
+> >       struct brcm_msi         *msi;
+> > +     const int               *reg_offsets;
+> > +     const int               *reg_field_info;
+> > +     enum pcie_type          type;
+> >  };
+> >
+> >  /*
+> > @@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops = {
+> >
+> >  static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32
+> > val)
+> >  {
+> > -     u32 tmp;
+> > +     u32 tmp, mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
+> > +     u32 shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
+>
+> I don't think you need shift here, IIUC u32p_replace_bits() will take care of
+> all the masking and shifting internally, moreover, you'd be able to drop the
+> shift entry from reg_field_info.
+I believe that u32p_replace_bits requires at least one of the value or
+mask to be compile time constants to work and we don't have that here.
+Regards,
+Jim
+>
+> > -     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
+> > -     u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
+> > -     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
+> > +     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+> > +     tmp = (tmp & ~mask) | ((val << shift) & mask);
+> > +     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+> >  }
+>
+> Regards,
+> Nicolas
+>
