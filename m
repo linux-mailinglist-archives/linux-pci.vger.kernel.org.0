@@ -2,122 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 346B51DDFA9
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 08:07:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F6711DE112
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 09:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgEVGHQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 02:07:16 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:28152 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726449AbgEVGHQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 May 2020 02:07:16 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 14:06:51
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Fri, 22 May 2020 14:06:51 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Bjorn Helgaas" <helgaas@kernel.org>, "Kangjie Lu" <kjlu@umn.edu>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        "Rob Herring" <robh@kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        "Jonathan Hunter" <jonathanh@nvidia.com>,
-        "Vidya Sagar" <vidyas@nvidia.com>,
-        "Andrew Murray" <amurray@thegoodpenguin.co.uk>,
-        "Linux PCI" <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Linux PM" <linux-pm@vger.kernel.org>
-Subject: Re: Re: [PATCH] [v2] PCI: tegra194: Fix runtime PM imbalance on
- error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <CAJZ5v0g1-WrBskdBHQ0vpWEk2E-dSaZcQsZngn84rcjcemoAAA@mail.gmail.com>
-References: <20200521031355.7022-1-dinghao.liu@zju.edu.cn>
- <20200521151620.GA1135365@bjorn-Precision-5520>
- <CAJZ5v0g1-WrBskdBHQ0vpWEk2E-dSaZcQsZngn84rcjcemoAAA@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        id S1728214AbgEVHdl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 03:33:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728654AbgEVHdk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 May 2020 03:33:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1982073B;
+        Fri, 22 May 2020 07:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590132818;
+        bh=Vuf16WA2V9OsrlkerdUYPyLnxQpbjETrlHooIjSPzAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J8I5yZbwkID/oNFMyvvNbLFmZL2qvI+1QDWuNI4wuDdW7ABfuerlGGW+agzhyEeCz
+         DdH0TcxwyRX6PvOpzpzxFBlPffFT04rRlp8jNQdwfaLjMcs5FZaWm8miivOnQTOEhQ
+         10vTMQz83vaEhzQuPDALqpiYdSEoULhv7JiG4Qr4=
+Date:   Fri, 22 May 2020 09:33:36 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Klaus Doth <kdlnx@doth.eu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, helgaas@kernel.org,
+        linux-pci@vger.kernel.org, rui_feng@realsil.com.cn
+Subject: Re: Possible bug in drivers/misc/cardreader/rtsx_pcr.c
+Message-ID: <20200522073336.GA929703@kroah.com>
+References: <b7ff0106-e4e7-5d0f-667b-8552cf5535dc@doth.eu>
+ <20200521085211.GA2732409@kroah.com>
+ <3ed62141-8060-dcd2-d1e0-d2381f4930dd@doth.eu>
 MIME-Version: 1.0
-Message-ID: <3b325121.be647.1723afdd028.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgBHf3j7a8deSJr8AQ--.39177W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggIBlZdtOQP3QAAsN
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtCS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUAVWUtwCS07vEYx0Ex4A2jsIE14v26r4j6F4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY64IIrI8v6xkF7I0E8cxan2IY04v7MIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwV
-        W8AwCS07vEc2IjII80xcxEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l
-        V2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67
-        AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_
-        Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVW8JVWxJwCS07vEIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY
-        6I8E87Iv67AKxVW8JVWxJwCS07vEIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
-        VFxhVjvjDU=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ed62141-8060-dcd2-d1e0-d2381f4930dd@doth.eu>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Cj4gT24gVGh1LCBNYXkgMjEsIDIwMjAgYXQgNToxNiBQTSBCam9ybiBIZWxnYWFzIDxoZWxnYWFz
-QGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4KPiA+IFsrY2MgUmFmYWVsLCBsaW51eC1wbV0KPiA+Cj4g
-PiBPbiBUaHUsIE1heSAyMSwgMjAyMCBhdCAxMToxMzo0OUFNICswODAwLCBEaW5naGFvIExpdSB3
-cm90ZToKPiA+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVudHMgdGhlIHJ1bnRpbWUg
-UE0gdXNhZ2UgY291bnRlciBldmVuCj4gPiA+IHdoZW4gaXQgcmV0dXJucyBhbiBlcnJvciBjb2Rl
-LiBUaHVzIGEgcGFpcmluZyBkZWNyZW1lbnQgaXMgbmVlZGVkIG9uCj4gPiA+IHRoZSBlcnJvciBo
-YW5kbGluZyBwYXRoIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4gPgo+ID4gSSBkaWRu
-J3QgcmVhbGl6ZSB0aGVyZSB3ZXJlIHNvIG1hbnkgZHJpdmVycyB3aXRoIHRoZSBleGFjdCBzYW1l
-IGlzc3VlLgo+ID4gQ2FuIHdlIGp1c3Qgc3F1YXNoIHRoZXNlIGFsbCBpbnRvIGEgc2luZ2xlIHBh
-dGNoIHNvIHdlIGNhbiBzZWUgdGhlbQo+ID4gYWxsIHRvZ2V0aGVyPwo+ID4KPiA+IEhtbS4gIFRo
-ZXJlIGFyZSBvdmVyIDEzMDAgY2FsbGVycyBvZiBwbV9ydW50aW1lX2dldF9zeW5jKCksIGFuZCBp
-dAo+ID4gbG9va3MgbGlrZSBtYW55IG9mIHRoZW0gaGF2ZSBzaW1pbGFyIGlzc3VlcywgaS5lLiwg
-dGhleSBoYXZlIGEgcGF0dGVybgo+ID4gbGlrZSB0aGlzCj4gPgo+ID4gICByZXQgPSBwbV9ydW50
-aW1lX2dldF9zeW5jKGRldik7Cj4gPiAgIGlmIChyZXQgPCAwKQo+ID4gICAgIHJldHVybjsKPiA+
-Cj4gPiAgIHBtX3J1bnRpbWVfcHV0KGRldik7Cj4gPgo+ID4gd2hlcmUgdGhlcmUgaXMgbm90IGEg
-cG1fcnVudGltZV9wdXQoKSB0byBtYXRjaCBldmVyeQo+ID4gcG1fcnVudGltZV9nZXRfc3luYygp
-LiAgUmFuZG9tIHNhbXBsZToKPiA+Cj4gPiAgIG5kczMyX3BtdV9yZXNlcnZlX2hhcmR3YXJlCj4g
-PiAgIHNhdGFfcmNhcl9wcm9iZQo+ID4gICBleHlub3NfdHJuZ19wcm9iZQo+ID4gICBrc19zYV9y
-bmdfcHJvYmUKPiA+ICAgb21hcF9hZXNfcHJvYmUKPiA+ICAgc3VuOGlfc3NfcHJvYmUKPiA+ICAg
-b21hcF9hZXNfcHJvYmUKPiA+ICAgenlucV9ncGlvX3Byb2JlCj4gPiAgIGFtZGdwdV9od21vbl9z
-aG93X3Bvd2VyX2F2Zwo+ID4gICBtdGtfY3J0Y19kZHBfaHdfaW5pdAo+ID4gICAuLi4KPiA+Cj4g
-PiBTdXJlbHkgSSdtIG1pc3Npbmcgc29tZXRoaW5nIGFuZCB0aGVzZSBhcmVuJ3QgYWxsIGJyb2tl
-biwgcmlnaHQ/Cj4gCj4gSWYgdGhleSBkbyB3aGF0IHlvdSd2ZSBzYWlkLCB0aGV5IGFyZSBhbGwg
-YnJva2VuIEknbSBhZnJhaWQuCj4gCj4gVGhleSBzaG91bGQgYWxsIGJlIGRvaW5nIHNvbWV0aGlu
-ZyBsaWtlCj4gCj4gICAgIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoZGV2KTsKPiAgICAgaWYg
-KHJldCA8IDApCj4gICAgICAgICBnb3RvIG91dDsKPiAKPiAgICAgLi4uCj4gCj4gb3V0Ogo+ICAg
-ICBwbV9ydW50aW1lX3B1dChkZXYpOwo+IAo+ID4gTWF5YmUgd2UgY291bGQgcHV0IHRvZ2V0aGVy
-IGEgY29jY2luZWxsZSBzY3JpcHQgdG8gc2NhbiB0aGUgdHJlZSBmb3IKPiA+IHRoaXMgaXNzdWU/
-Cj4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVk
-dS5jbj4KPiA+ID4gLS0tCj4gPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXRl
-Z3JhMTk0LmMgfCA1ICsrLS0tCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvcGNpZS10ZWdyYTE5NC5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2Mv
-cGNpZS10ZWdyYTE5NC5jCj4gPiA+IGluZGV4IGFlMzBhMmZkMzcxNi4uMmMwZDJjZTE2YjQ3IDEw
-MDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXRlZ3JhMTk0
-LmMKPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS10ZWdyYTE5NC5j
-Cj4gPiA+IEBAIC0xNjIzLDcgKzE2MjMsNyBAQCBzdGF0aWMgaW50IHRlZ3JhX3BjaWVfY29uZmln
-X3JwKHN0cnVjdCB0ZWdyYV9wY2llX2R3ICpwY2llKQo+ID4gPiAgICAgICByZXQgPSBwaW5jdHJs
-X3BtX3NlbGVjdF9kZWZhdWx0X3N0YXRlKGRldik7Cj4gPiA+ICAgICAgIGlmIChyZXQgPCAwKSB7
-Cj4gPiA+ICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJGYWlsZWQgdG8gY29uZmlndXJlIHNp
-ZGViYW5kIHBpbnM6ICVkXG4iLCByZXQpOwo+ID4gPiAtICAgICAgICAgICAgIGdvdG8gZmFpbF9w
-aW5jdHJsOwo+ID4gPiArICAgICAgICAgICAgIGdvdG8gZmFpbF9wbV9nZXRfc3luYzsKPiA+ID4g
-ICAgICAgfQo+ID4gPgo+ID4gPiAgICAgICB0ZWdyYV9wY2llX2luaXRfY29udHJvbGxlcihwY2ll
-KTsKPiA+ID4gQEAgLTE2NTAsOSArMTY1MCw4IEBAIHN0YXRpYyBpbnQgdGVncmFfcGNpZV9jb25m
-aWdfcnAoc3RydWN0IHRlZ3JhX3BjaWVfZHcgKnBjaWUpCj4gPiA+Cj4gPiA+ICBmYWlsX2hvc3Rf
-aW5pdDoKPiA+ID4gICAgICAgdGVncmFfcGNpZV9kZWluaXRfY29udHJvbGxlcihwY2llKTsKPiA+
-ID4gLWZhaWxfcGluY3RybDoKPiA+ID4gLSAgICAgcG1fcnVudGltZV9wdXRfc3luYyhkZXYpOwo+
-ID4gPiAgZmFpbF9wbV9nZXRfc3luYzoKPiA+ID4gKyAgICAgcG1fcnVudGltZV9wdXRfc3luYyhk
-ZXYpOwo+IAo+IFdoeSBub3QgcG1fcnVudGltZV9wdXQoKT8QCgpHb29kIHF1ZXN0aW9uLiBGb3Ig
-ZnVuY3Rpb25zIHdpdGggUE0gZGVjcmVtZW50IEFQSSBzb21ld2hlcmUsIEkgCndpbGwgYWRvcHQg
-aXQuIElmIHRoaXMgQVBJIGlzIG5vdCBzdWl0YWJsZSBoZXJlLCBwbGVhc2UgdGVsbCBtZS4KCj4g
-Cj4gPiA+ICAgICAgIHBtX3J1bnRpbWVfZGlzYWJsZShkZXYpOwo+ID4gPiAgICAgICByZXR1cm4g
-cmV0Owo+ID4gPiAgfQo+ID4gPiAtLQo+ID4gPiAyLjE3LjEKPiA+ID4K
+On Thu, May 21, 2020 at 01:50:02PM +0200, Klaus Doth wrote:
+> On 5/21/20 10:52 AM, Greg Kroah-Hartman wrote:
+> > On Tue, May 19, 2020 at 07:04:06PM +0200, Klaus Doth wrote:
+> >> Hi,
+> >>
+> >>
+> >> As per the info from kernelnewbies IRC, I'm sending this also to the PCI
+> >> list.
+> > <snip>
+> >
+> > Can you submit a proposed patch in a format that it can be tested and
+> > possibly submitted in so that we can review this easier?
+> >
+> > Also try cc:ing the author of changes in that code, Rui Feng
+> > <rui_feng@realsil.com.cn>, as well, as they are the best one to review
+> > and comment on your issue.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> 
+> DMA transfers to and from the SD card stall for 10 seconds and run into
+> timeout on RTS5260 card readers after ASPM was enabled.
+> 
+> Adding a short msleep after disabling ASPM fixes the issue on several
+> Dell Precision 7530/7540 systems I tested.
+> 
+> This function is only called when waking up after the chip went into
+> powersave after not transferring data for a few seconds. The added
+> msleep does therefore not change anything in data transfer speed or
+> induce any excessive waiting while data transfers are running, or the
+> chip is sleeping. Only the transistion from sleep to active is affected.
+> 
+> 
+> Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+> 
+> ---
+>  drivers/misc/cardreader/rtsx_pcr.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/misc/cardreader/rtsx_pcr.c
+> b/drivers/misc/cardreader/rtsx_pcr.c
+> index 06038b325b02..8b0799cd88c2 100644
+> --- a/drivers/misc/cardreader/rtsx_pcr.c
+> +++ b/drivers/misc/cardreader/rtsx_pcr.c
+> @@ -141,6 +141,7 @@ static void rtsx_comm_pm_full_on(struct rtsx_pcr *pcr)
+>      struct rtsx_cr_option *option = &pcr->option;
+>  
+>      rtsx_disable_aspm(pcr);
+> +    msleep(1);
+>  
+>      if (option->ltr_enabled)
+>          rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+> -- 
+> 2.26.2
+
+Looks sane, can you resend it in a format I can apply it in (i.e. as a
+stand-alone patch with a correct subject line?)
+
+thanks,
+
+greg k-h
