@@ -2,198 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F86A1DDAD9
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 01:17:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9F601DDC60
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 03:04:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgEUXRt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 19:17:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730716AbgEUXRt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 19:17:49 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 693222100A;
-        Thu, 21 May 2020 23:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590103068;
-        bh=EyK2DMGY1yaM+F8516LQrBIpk2NNn0s0Z37DLtuZPEA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CLhLY45tfjDzW/4QzoCLzjzXDitprZjeX6jCl/TTiDNf1smTgNixutkYBE1Ltk7N+
-         bGuj4VCEQRCeGfsupUKY8MgwYvf2v3r3ry5ehzBBz2Vd9XnvyT50v3+/1fYDziASsk
-         an0rGuPaYsEVmZTE5CauU7LzvZWPFnLZ8bU6LsLs=
-Received: by mail-ot1-f53.google.com with SMTP id 63so6893002oto.8;
-        Thu, 21 May 2020 16:17:48 -0700 (PDT)
-X-Gm-Message-State: AOAM531oK31t74ap52p2EU9xCDgZmV0OibQTBzdK8ZPFlcpa+pPQk0NM
-        xNyF4QMq5u61oots8DalIcTpLv615yH7G6zylA==
-X-Google-Smtp-Source: ABdhPJxVgcCXhuH2DfTXSUau1TIQTXIwHoWhmRU4UZnxmjy/ftT6A+o4gIk78ZAgFUEU2gCUM+w/Etpe/R6HZFsyFVk=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr8467347ote.107.1590103067633;
- Thu, 21 May 2020 16:17:47 -0700 (PDT)
+        id S1726737AbgEVBEY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 21:04:24 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:35484 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgEVBEY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 21:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1590109467; x=1621645467;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gD0Mmp36tWWvKenJoMmkqjxvUYivz3GgCXTadY4Oz8w=;
+  b=HBT+Hm9oV6Cz+xEpVqOlnkRNduxZKu1F2pJ20c2pI2b8ZbDTpOE4hjtK
+   V+ezsKv/ct3wJN+DG+djxEWczfUIuUsLuohwFeXuGO5S4l/kAHo29m8Fv
+   TDZj0n+Zyp+fyBY6IzszvB9uR011u7HM7Nk30uWtrGXlwWbOYS460Ca4Q
+   EJ2Q6YsvPFx/myTvJ9Q6CNLrxC3nyl5z4BPisB0PSLkl/V5h8kn9a0b9+
+   8YTK9L4+rQHAzoUtPq5hMqFMz2/PE9mxfEqG6cJbYzsd4piKqgsOK9QQu
+   ninOxUy03BELBq5DwBC/afCXIxMnZfXm7Wl8N2q/JdIFm9bnIWgItB+xy
+   A==;
+IronPort-SDR: B44ijviYw1v1QuWJwGXqWJJooYnMdAYdXte37IjfXtzPeN2gZCv+oZrTaGkzbPi8mZApJMal1d
+ Kox9oo5c4F09yYDkExlHF2ksVSo9J54N1qte/xOsFIVoY3vLdDci0ObPVvW9usLOlTpwoW/C/7
+ s9Nxf+JPOQ03UH+2etv5u1UIiTr6S2ZkiW3R/Zt35amdHAv7LtF4VYnGb+w31dfqLnnUT/jNQ0
+ fIT+Fvb8Yj0zszeHQnPtnOAzPmRjZHRfOZsQOJCEefpNbxxCO0KPaihHsxXC3sViKv4IieVZE9
+ Xdc=
+X-IronPort-AV: E=Sophos;i="5.73,419,1583164800"; 
+   d="scan'208";a="241029128"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 22 May 2020 09:04:37 +0800
+IronPort-SDR: h//N3R+ZbkPdMBVbJ3azzyazXQ6IXamfjYGys/E4IT1UBptKjQ9V3LxBoa7r/eVswNF1Knnh6M
+ 4qHoB2ti0Qdc2VIsOuTkfK/7EycqRlTWA=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 17:54:12 -0700
+IronPort-SDR: AACqdndHAWEilkfGYIKngoypr3umi5vbJCaRoPmbK0qkzwOsO4+CjnpVaXW/N0fP5JJqCfwOGj
+ Ul2DoX96QPaw==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 18:04:11 -0700
+Date:   Fri, 22 May 2020 02:04:06 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Paul Burton <paulburton@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: piix4-poweroff.c I/O BAR usage
+In-Reply-To: <20200520135708.GA1086370@bjorn-Precision-5520>
+Message-ID: <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
+References: <20200520135708.GA1086370@bjorn-Precision-5520>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com> <20200521130008.8266-11-lorenzo.pieralisi@arm.com>
-In-Reply-To: <20200521130008.8266-11-lorenzo.pieralisi@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 21 May 2020 17:17:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLTBxX_3KjiEqMfw0qMaTmj_DdPD3j-yMUvrvONPBSvjg@mail.gmail.com>
-Message-ID: <CAL_JsqLTBxX_3KjiEqMfw0qMaTmj_DdPD3j-yMUvrvONPBSvjg@mail.gmail.com>
-Subject: Re: [PATCH 10/12] of/irq: Make of_msi_map_rid() PCI bus agnostic
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        PCI <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 21, 2020 at 7:00 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> There is nothing PCI bus specific in the of_msi_map_rid()
-> implementation other than the requester ID tag for the input
-> ID space. Rename requester ID to a more generic ID so that
-> the translation code can be used by all busses that require
-> input/output ID translations.
->
-> Leave a wrapper function of_msi_map_rid() in place to keep
-> existing PCI code mapping requester ID syntactically unchanged.
->
-> No functional change intended.
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/of/irq.c       | 28 ++++++++++++++--------------
->  include/linux/of_irq.h | 14 ++++++++++++--
->  2 files changed, 26 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 48a40326984f..25d17b8a1a1a 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -576,43 +576,43 @@ void __init of_irq_init(const struct of_device_id *matches)
->         }
->  }
->
-> -static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
-> -                           u32 rid_in)
-> +static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
-> +                           u32 id_in)
->  {
->         struct device *parent_dev;
-> -       u32 rid_out = rid_in;
-> +       u32 id_out = id_in;
->
->         /*
->          * Walk up the device parent links looking for one with a
->          * "msi-map" property.
->          */
->         for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
-> -               if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
-> -                               "msi-map-mask", np, &rid_out))
-> +               if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
-> +                               "msi-map-mask", np, &id_out))
->                         break;
-> -       return rid_out;
-> +       return id_out;
->  }
->
->  /**
-> - * of_msi_map_rid - Map a MSI requester ID for a device.
-> + * of_msi_map_id - Map a MSI ID for a device.
->   * @dev: device for which the mapping is to be done.
->   * @msi_np: device node of the expected msi controller.
-> - * @rid_in: unmapped MSI requester ID for the device.
-> + * @id_in: unmapped MSI ID for the device.
->   *
->   * Walk up the device hierarchy looking for devices with a "msi-map"
-> - * property.  If found, apply the mapping to @rid_in.
-> + * property.  If found, apply the mapping to @id_in.
->   *
-> - * Returns the mapped MSI requester ID.
-> + * Returns the mapped MSI ID.
->   */
-> -u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
-> +u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in)
->  {
-> -       return __of_msi_map_rid(dev, &msi_np, rid_in);
-> +       return __of_msi_map_id(dev, &msi_np, id_in);
->  }
->
->  /**
->   * of_msi_map_get_device_domain - Use msi-map to find the relevant MSI domain
->   * @dev: device for which the mapping is to be done.
-> - * @rid: Requester ID for the device.
-> + * @id: Device ID.
->   * @bus_token: Bus token
->   *
->   * Walk up the device hierarchy looking for devices with a "msi-map"
-> @@ -625,7 +625,7 @@ struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
->  {
->         struct device_node *np = NULL;
->
-> -       __of_msi_map_rid(dev, &np, id);
-> +       __of_msi_map_id(dev, &np, id);
->         return irq_find_matching_host(np, bus_token);
->  }
->
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 7142a3722758..cf9cb1e545ce 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -55,7 +55,12 @@ extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
->                                                         u32 id,
->                                                         u32 bus_token);
->  extern void of_msi_configure(struct device *dev, struct device_node *np);
-> -u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
-> +u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in);
-> +static inline u32 of_msi_map_rid(struct device *dev,
-> +                                struct device_node *msi_np, u32 rid_in)
-> +{
-> +       return of_msi_map_id(dev, msi_np, rid_in);
-> +}
->  #else
->  static inline int of_irq_count(struct device_node *dev)
->  {
-> @@ -93,10 +98,15 @@ static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev
->  static inline void of_msi_configure(struct device *dev, struct device_node *np)
->  {
->  }
-> +static inline u32 of_msi_map_id(struct device *dev,
-> +                                struct device_node *msi_np, u32 id_in)
-> +{
-> +       return id_in;
-> +}
->  static inline u32 of_msi_map_rid(struct device *dev,
->                                  struct device_node *msi_np, u32 rid_in)
+Hi Bjorn,
 
-Move this out of the ifdef and you only need it declared once.
+ Paul may or may not be reachable anymore, so I'll step in.
 
-But again, I think I'd just kill of_msi_map_rid.
+> This looks like it might be a bug:
+> 
+>   static const int piix4_pm_io_region = PCI_BRIDGE_RESOURCES;
+> 
+>   static int piix4_poweroff_probe(struct pci_dev *dev,
+>                                   const struct pci_device_id *id)
+>   {
+>           ...
+>           /* Request access to the PIIX4 PM IO registers */
+>           res = pci_request_region(dev, piix4_pm_io_region,
+>                                    "PIIX4 PM IO registers");
+> 
+> pci_request_region() takes a BAR number (0-5), but here we're passing
+> PCI_BRIDGE_RESOURCES (13 if CONFIG_PCI_IOV, or 7 otherwise), which is
+> the bridge I/O window.
+> 
+> I don't think this device ([8086:7113]) is a bridge, so that resource
+> should be empty.
 
->  {
-> -       return rid_in;
-> +       return of_msi_map_id(dev, msi_np, rid_in);
->  }
->  #endif
->
-> --
-> 2.26.1
->
+ Hmm, isn't the resource actually set up by `quirk_piix4_acpi' though?
+
+> Based on this spec:
+> https://www.intel.com/Assets/PDF/datasheet/290562.pdf,
+> it looks like it should be the PIIX4 power management function at
+> function 3, which has no standard PCI BARs but does have a PMBA (Power
+> Management Base Address) at 0x40 and an SMBBA (SMBus Base Address) at
+> 0x90 in config space.
+
+ Correct, this is what Malta firmware reports for this function:
+
+Bus = 0x00, Dev = 0x0a, Function = 0x03
+Vendor Id = 0x8086 (Intel), Dev ID = 0x7113 (PIIX4 Power)
+ Min Gnt = 0x00, Max Lat = 0x00, Lat Tim = 0x20
+ Int Pin = None, Int Line = 0x09
+ BAR count = 0x02
+  IO:  Pos = 0x40, Base(CPU/PCI) = 0x18001000/0x00001000, Size = 0x00000100
+  IO:  Pos = 0x90, Base(CPU/PCI) = 0x18001100/0x00001100, Size = 0x00000100
+
+I'm somewhat familiar with this southbridge, although this was looong ago.
+
+> I suppose on an ACPI system the regions described by PMBA and SMBBA
+> might be described via ACPI, since they're not discoverable by
+> standard PCI enumeration?  Pretty sure you don't have ACPI on MIPS
+> though.
+> 
+> Maybe the driver should read PMBA and SMBBA and reserve those regions
+> by hand with request_region()?
+
+ Well, I think `quirk_piix4_acpi' covers it.  It dates back to 2.3.49 
+AFAICT.  I can try to boot my Malta system over the weekend to see if 
+there are any issues with it, but I'm fairly sure there is none here.
+
+  Maciej
