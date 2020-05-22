@@ -2,184 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34AAF1DDD81
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 04:55:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A9B71DDDA6
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 05:08:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgEVCzs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 22:55:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4836 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727770AbgEVCzr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 May 2020 22:55:47 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 158A475D5FA2F00C5850;
-        Fri, 22 May 2020 10:55:45 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 10:55:41 +0800
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>, <bhelgaas@google.com>
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
- <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
- <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
- <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
-CC:     <jay.vosburgh@canonical.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
-Date:   Fri, 22 May 2020 10:56:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1727083AbgEVDIG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 23:08:06 -0400
+Received: from lucky1.263xmail.com ([211.157.147.134]:51196 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgEVDIG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 23:08:06 -0400
+X-Greylist: delayed 470 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 May 2020 23:08:04 EDT
+Received: from localhost (unknown [192.168.167.224])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 1260BAF778;
+        Fri, 22 May 2020 11:00:06 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.64] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P11979T139798356420352S1590116403246432_;
+        Fri, 22 May 2020 11:00:03 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <1bf8029f95bd2f1e48884df3163eacf3>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: linux-rockchip@lists.infradead.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Cc:     shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        linux-rockchip@lists.infradead.org
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_1/2=5d_PCI=3a_rockchip=3a_Enable_IO_base_a?=
+ =?UTF-8?B?bmQgbGltaXQgcmVnaXN0ZXJz44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgt?=
+ =?UTF-8?Q?rockchip-bounces+shawn=2elin=3drock-chips=2ecom=40lists=2einfrade?=
+ =?UTF-8?B?YWQub3Jn5Luj5Y+R44CR?=
+To:     Anand Moon <linux.amoon@gmail.com>
+References: <1590023130-137406-1-git-send-email-shawn.lin@rock-chips.com>
+ <CANAwSgRXuMQaytB4BXL89JQAmU=XutBXj6iMhfKdZp3JwM9a4g@mail.gmail.com>
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <eb0acd3d-92d0-db00-78e4-8a17033f7f0a@rock-chips.com>
+Date:   Fri, 22 May 2020 11:00:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101
+ Thunderbird/77.0
 MIME-Version: 1.0
-In-Reply-To: <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CANAwSgRXuMQaytB4BXL89JQAmU=XutBXj6iMhfKdZp3JwM9a4g@mail.gmail.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-
-On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
->
->
-> On 5/21/20 3:58 AM, Yicong Yang wrote:
->> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
->>>
->>>
->>> On 5/20/20 1:28 AM, Yicong Yang wrote:
->>>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>
->>>>> If there are non-hotplug capable devices connected to a given
->>>>> port, then during the fatal error recovery(triggered by DPC or
->>>>> AER), after calling reset_link() function, we cannot rely on
->>>>> hotplug handler to detach and re-enumerate the device drivers
->>>>> in the affected bus. Instead, we will have to let the error
->>>>> recovery handler call report_slot_reset() for all devices in
->>>>> the bus to notify about the reset operation. Although this is
->>>>> only required for non hot-plug capable devices, doing it for
->>>>> hotplug capable devices should not affect the functionality.
->>>>>
->>>>> Along with above issue, this fix also applicable to following
->>>>> issue.
->>>>>
->>>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->>>>> reset_link()") added support to store status of reset_link()
->>>>> call. Although this fixed the error recovery issue observed if
->>>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->>>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->>>>> result from report_frozen_detected. This can cause a failure to
->>>>> recover if _NEED_RESET is returned by report_frozen_detected and
->>>>> report_slot_reset is not invoked.
->>>>>
->>>>> Such an event can be induced for testing purposes by reducing the
->>>>> Max_Payload_Size of a PCIe bridge to less than that of a device
->>>>> downstream from the bridge, and then initiating I/O through the
->>>>> device, resulting in oversize transactions.  In the presence of DPC,
->>>>> this results in a containment event and attempted reset and recovery
->>>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->>>>> invoked, and the device does not recover.
->>>>>
->>>>> [original patch is from jay.vosburgh@canonical.com]
->>>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->>>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>> ---
->>>>>    drivers/pci/pcie/err.c | 19 +++++++++++++++----
->>>>>    1 file changed, 15 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>>> index 14bb8f54723e..db80e1ecb2dc 100644
->>>>> --- a/drivers/pci/pcie/err.c
->>>>> +++ b/drivers/pci/pcie/err.c
->>>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>>>        pci_dbg(dev, "broadcast error_detected message\n");
->>>>>        if (state == pci_channel_io_frozen) {
->>>>>            pci_walk_bus(bus, report_frozen_detected, &status);
->>>>> -        status = reset_link(dev);
->>>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
->>>>> +        status = PCI_ERS_RESULT_NEED_RESET;
->>>>> +    } else {
->>>>> +        pci_walk_bus(bus, report_normal_detected, &status);
->>>>> +    }
->>>>> +
->>>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>>> +        if (reset_link) {
->>>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->>>>
->>>> we'll call reset_link() only if link is frozen. so it may have problem here.
->>> you mean before this change right?
->>> After this change, reset_link() will be called as long as status is
->>> PCI_ERS_RESULT_NEED_RESET.
+ÔÚ 2020/5/21 18:51, Anand Moon Ð´µÀ:
+> Hi Shawn,
+> 
+> On Thu, 21 May 2020 at 06:35, Shawn Lin <shawn.lin@rock-chips.com> wrote:
 >>
->> Yes. I think we should reset the link only if the io is blocked as before. There's
->> no reason to reset a normal link.
-> Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
-> possible reset_link options are dpc_reset_link() and aer_root_reset().
->
-> In dpc_reset_link() case, the link is already disabled and hence we
-> don't need to do another reset. In case of aer_root_reset() it
-> uses pci_bus_error_reset() to reset the slot.
-
-Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
-hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
-reset for the bridge. That's what I think is unnecessary for a normal link,
-and that's what reset link indicates us to do. The slot reset is introduced
-in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
-
-PCI_ERS_RESULT_NEED_RESET indicates that the driver
-wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
-I don't think it's same as slot reset mentioned above, which is only for hotpluggable
-ones.
-
-Previously, if link is normal and the driver reports PCI_ERS_RESULT_NEED_RESET,
-we'll only call ->slot_reset() without slot reset in reset_link(). Maybe it's better
-to perform just like before.
-
-Thanks.
-
-
+>> According to RK3399 user manual, bit 9 in PCIE_RC_BAR_CONF should
+>> be set, otherwise accessing to IO base and limit registers would
+>> fail.
 >>
->> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
->> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
->> We decide whether to do a link reset only by the io state.
+>> [    0.411318] pci_bus 0000:00: root bus resource [bus 00-1f]
+>> [    0.411822] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff]
+>> [    0.412440] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus address [0xfbe00000-0xfbefffff])
+>> [    0.413665] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> [    0.414698] pci 0000:01:00.0: reg 0x10: initial BAR value 0x00000000 invalid
+>> [    0.415412] pci 0000:01:00.0: reg 0x18: initial BAR value 0x00000000 invalid
+>> [    0.418456] pci 0000:00:00.0: BAR 8: assigned [mem 0xfa000000-0xfa0fffff]
+>> [    0.419065] pci 0000:01:00.0: BAR 1: assigned [mem 0xfa000000-0xfa007fff pref]
+>> [    0.419728] pci 0000:01:00.0: BAR 6: assigned [mem 0xfa008000-0xfa00ffff pref]
+>> [    0.420377] pci 0000:01:00.0: BAR 0: no space for [io  size 0x0100]
+>> [    0.420935] pci 0000:01:00.0: BAR 0: failed to assign [io  size 0x0100]
+>> [    0.421526] pci 0000:01:00.0: BAR 2: no space for [io  size 0x0004]
+>> [    0.422084] pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0004]
+>> [    0.422687] pci 0000:00:00.0: PCI bridge to [bus 01]
+>> [    0.423135] pci 0000:00:00.0:   bridge window [mem 0xfa000000-0xfa0fffff]
+>> [    0.423794] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
+>> [    0.424566] pcieport 0000:00:00.0: Signaling PME through PCIe PME interrupt
+>> [    0.425182] pci 0000:01:00.0: Signaling PME through PCIe PME interrupt
 >>
->> Thanks,
->> Yicong
+>> 01:00.0 Class 0700: Device 1c00:3853 (rev 10) (prog-if 05)
+>>          Subsystem: Device 1c00:3853
+>>          Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+>>          Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>>          Interrupt: pin A routed to IRQ 230
+>>          Region 0: I/O ports at <unassigned> [disabled]
+>>          Region 1: Memory at fa000000 (32-bit, prefetchable) [disabled] [size=32K]
+>>          Region 2: I/O ports at <unassigned> [disabled]
+>>          [virtual] Expansion ROM at fa008000 [disabled] [size=32K]
 >>
->>
->>>>
->>>> Thanks,
->>>> Yicong
->>>>
->>>>
->>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>>> +        } else {
->>>>> +            if (pci_bus_error_reset(dev))
->>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>>> +        }
->>>>> +
->>>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
->>>>>                pci_warn(dev, "link reset failed\n");
->>>>>                goto failed;
->>>>>            }
->>>>> -    } else {
->>>>> -        pci_walk_bus(bus, report_normal_detected, &status);
->>>>>        }
->>>>>          if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>>
->>> .
->>>
->>
-> .
->
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> ---
+> 
+> I have old development board Odroid N1 (RK3399),  It has onboard PCIe
+> 2 dual sata bridge.
+> I have tested this patch, but I am still getting following log on
+> Odroid N1 board.
+> Is their any more configuration needed for sata ports ?
+
+Thanks for testing. I made a mistake that it should be bit 19, so
+can you try using BIT(19)?
+
+> 
+> [    7.444504] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+> [    7.445521] panfrost ff9a0000.gpu: Features: L2:0x07120206
+> Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff
+> JS:0x7
+> [    7.452246] pci 0000:00:00.0: BAR 14: assigned [mem 0xfa000000-0xfa0fffff]
+> [    7.460106] panfrost ff9a0000.gpu: shader_present=0xf l2_present=0x1
+> [    7.466459] pci 0000:01:00.0: BAR 6: assigned [mem
+> 0xfa000000-0xfa00ffff pref]
+> [    7.473679] panfrost ff9a0000.gpu: [drm:panfrost_devfreq_init
+> [panfrost]] Failed to register cooling device
+> [    7.479703] pci 0000:01:00.0: BAR 5: assigned [mem 0xfa010000-0xfa0101ff]
+> [    7.487706] [drm] Initialized panfrost 1.1.0 20180908 for
+> ff9a0000.gpu on minor 0
+> [    7.494343] pci 0000:01:00.0: BAR 4: no space for [io  size 0x0010]
+> [    7.494348] pci 0000:01:00.0: BAR 4: failed to assign [io  size 0x0010]
+> [    7.494352] pci 0000:01:00.0: BAR 0: no space for [io  size 0x0008]
+> [    7.494356] pci 0000:01:00.0: BAR 0: failed to assign [io  size 0x0008]
+> [    7.494360] pci 0000:01:00.0: BAR 2: no space for [io  size 0x0008]
+> [    7.494364] pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0008]
+> [    7.494368] pci 0000:01:00.0: BAR 1: no space for [io  size 0x0004]
+> [    7.494372] pci 0000:01:00.0: BAR 1: failed to assign [io  size 0x0004]
+> [    7.578910] rockchip-vop ff8f0000.vop: Adding to iommu group 3
+> [    7.587074] pci 0000:01:00.0: BAR 3: no space for [io  size 0x0004]
+> [    7.594780] rockchip-vop ff900000.vop: Adding to iommu group 4
+> [    7.607701] pci 0000:01:00.0: BAR 3: failed to assign [io  size 0x0004]
+> 
+> # lspci -v
+> 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd RK3399 PCI
+> Express Root Port (prog-if 00 [Normal decode])
+>          Flags: bus master, fast devsel, latency 0, IRQ 237
+>          Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+>          I/O behind bridge: 00000000-00000fff [size=4K]
+>          Memory behind bridge: fa000000-fa0fffff [size=1M]
+>          Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+>          Capabilities: [80] Power Management version 3
+>          Capabilities: [90] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+>          Capabilities: [b0] MSI-X: Enable- Count=1 Masked-
+>          Capabilities: [c0] Express Root Port (Slot+), MSI 00
+>          Capabilities: [100] Advanced Error Reporting
+>          Capabilities: [274] Transaction Processing Hints
+>          Kernel driver in use: pcieport
+> 
+> 01:00.0 IDE interface: ASMedia Technology Inc. ASM1061 SATA IDE
+> Controller (rev 02) (prog-if 85 [PCI native mode-only controller,
+> supports bus mastering])
+>          Subsystem: ASMedia Technology Inc. ASM1061 SATA IDE Controller
+>          Flags: bus master, fast devsel, latency 0, IRQ 238
+>          I/O ports at <unassigned> [disabled]
+>          I/O ports at <unassigned> [disabled]
+>          I/O ports at <unassigned> [disabled]
+>          I/O ports at <unassigned> [disabled]
+>          I/O ports at <unassigned> [disabled]
+>          Memory at fa010000 (32-bit, non-prefetchable) [size=512]
+>          Expansion ROM at fa000000 [virtual] [disabled] [size=64K]
+>          Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>          Capabilities: [78] Power Management version 3
+>          Capabilities: [80] Express Legacy Endpoint, MSI 00
+>          Capabilities: [100] Virtual Channel
+>          Kernel driver in use: ahci
+> 
+> Best Regards
+> -Anand
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+> 
+> 
+
 
