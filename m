@@ -2,328 +2,299 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0C1D1DDF5E
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 07:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E01B1DDF84
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 07:54:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgEVFcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 01:32:09 -0400
-Received: from mail-eopbgr10089.outbound.protection.outlook.com ([40.107.1.89]:52899
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726421AbgEVFcJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 May 2020 01:32:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MvbeqknbPDlDDp5VfxM1IIHND1Hlk6i2W0Ag5BZ+VSy2QZiMM6PDR2cBNDjUmyvTYOFyjdMZCvMK2v/rjmDJs3E4MZxk/AgnhuxFBj5rS1g981LXe91i1jv4+sF7jTcSl4u6Kv82uEqKcA9NbT1+VigY06Q40ISt+2BoLAqOEX+tYbHnTRtiVVooksJ60vfi2oSjFbbtKGpm6/65GMxCM0qDX/So19B8k3x7A63t2VINnnZnFqkYgdwFmIf+o/kgyrUzMa4pVfdX2AOHxhQcTNOleXJ9Pq4dOaSQ/SjuEfBYH8B+oU0SDyzc3XnfHiVw2QRTF+wJgyDY5sORB6yTwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VR4f1IB/r+vImNDvxHdENzeDfXiXxzGuWKEyQt40AGg=;
- b=YV9mSDkzhlKZzJg0qzaKk1mYL+wd/DHZoKrPaPYS8psQ63Y4eVr4cKVUu45nxVcr7N4am8JXtQrpIzQJkH0PerG5o18+m07zX9CSaNS0mUPJWrqRzNdM2TT8DKWOKCsU8H04elamLlILVjpeUA9G4jJmV2m/mUZ5FPMQkWg99cbdAfcvXfRndCHws0ZfOpZ6c4L9r/+QexciD7znmM43EP9lOLLWfW2ENd5LD+IuUGMo6ZaMrPbr2+m/Xl1Z5c1apo8h8bhayeIIi9bmUEcxrbvEF8iLEvb1iSJAT85MGid42mRY1soeNCKdZ2IIBiiLN7/EEw1d0YXtBm6gQ4T2Ww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VR4f1IB/r+vImNDvxHdENzeDfXiXxzGuWKEyQt40AGg=;
- b=kxvTXm0T8qxMHVxUbkSoPBdME5KY/Rqmk6ensgDgIIAgGlycaqPG7F2rI+xldG8+I3EjzAg6ERCitrF+pRnkW4MpLwZryPRAspqumv69T6a3eswOChzs3gxeTATeGi+H/jD5PvAaP/31DLcT3n5Wgo/8HzR5MsFAGSMx7WsXUV4=
-Received: from AM6PR04MB4984.eurprd04.prod.outlook.com (2603:10a6:20b:7::23)
- by AM6PR04MB4550.eurprd04.prod.outlook.com (2603:10a6:20b:17::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Fri, 22 May
- 2020 05:32:02 +0000
-Received: from AM6PR04MB4984.eurprd04.prod.outlook.com
- ([fe80::5167:8ffa:569e:fa57]) by AM6PR04MB4984.eurprd04.prod.outlook.com
- ([fe80::5167:8ffa:569e:fa57%4]) with mapi id 15.20.3021.024; Fri, 22 May 2020
- 05:32:02 +0000
-From:   Makarand Pawagi <makarand.pawagi@nxp.com>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
+        id S1728097AbgEVFyM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 01:54:12 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53008 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgEVFyM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 May 2020 01:54:12 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M5rquC068318;
+        Fri, 22 May 2020 00:53:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590126832;
+        bh=NshuB9n7qwMmk0C1n2A19PvAX8raMBe1CgqKMTbZRv8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AYQq070JKTsfBEbKIFPWTxHq9qYSEOhjzxZ3Uh0/ZFEQhzAlRCGREtpRYFpOuQD7C
+         hz5I9YZjggvNCMFBCl+j4TeytsHzxqUrCpn1kYYnCFV8wUJADIu63T37pCnTrC7ZPc
+         6jQYM955cFR1cjcIWEpdNo/l2HHSi0F0JHHkvZtI=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M5rqub091641
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 00:53:52 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 00:53:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 00:53:51 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M5rlfU114971;
+        Fri, 22 May 2020 00:53:47 -0500
+Subject: Re: [PATCH 01/19] dt-bindings: PCI: Endpoint: Add DT bindings for PCI
+ EPF NTB Device
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-Subject: RE: [PATCH 12/12] bus: fsl-mc: Add ACPI support for fsl-mc
-Thread-Topic: [PATCH 12/12] bus: fsl-mc: Add ACPI support for fsl-mc
-Thread-Index: AQHWL4EA+tWCI6MmokOtaoHDA2UgG6izlSoA
-Date:   Fri, 22 May 2020 05:32:02 +0000
-Message-ID: <AM6PR04MB49847931D51AD92057043D92EBB40@AM6PR04MB4984.eurprd04.prod.outlook.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200521130008.8266-13-lorenzo.pieralisi@arm.com>
- <3045acd5-0bcf-40c1-e65f-0b740200b2e0@nxp.com>
-In-Reply-To: <3045acd5-0bcf-40c1-e65f-0b740200b2e0@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [117.98.155.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 87e9bf14-772d-4c6f-f75b-08d7fe1174cd
-x-ms-traffictypediagnostic: AM6PR04MB4550:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4550DE4D9940E8B098F6F4B8EBB40@AM6PR04MB4550.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:232;
-x-forefront-prvs: 04111BAC64
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T3Ena4z7HkAbJv6kiwiLfFFO3w6lCXB3N9xPEGc3wxLs27f2xIe6YC4nXoNFIWxMZLgItpnSfnR4qVnYTjc5vv2pdbmBmuuBlSnPMwdcWKu/D42NVSBqwgcbx62yWw2qJG+9uxq5AiGlFONJNx5ZFVE8kTh4QMkL5Laz21+93HrmEmJZvMfr0Y4orRyzmseyHw8SQfaaNW+bgQbQoU9rIZByEsukqqHZcP296i2L4gXxxeoreZpsVEUAgwW08tb2yU13MGymBYMhS5kJEvY9MGZLiLz/zuK3sgA3Hj9A0/xTpnkASV49BsPCXNZIGLCLzQTv4Hr1gACxTfPwb4UvyQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4984.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(186003)(26005)(53546011)(7696005)(316002)(4326008)(8676002)(8936002)(478600001)(33656002)(9686003)(110136005)(55016002)(86362001)(54906003)(5660300002)(71200400001)(66946007)(7416002)(44832011)(6506007)(66556008)(2906002)(64756008)(30864003)(76116006)(66446008)(66476007)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: vvbljHZumA7yjXZKrXxWFnll/qBE2tXt7iYzeKkOmrpdVCDeAJYHHF0ts8Da3WZpGMCQKgs5ttOCfaZpXn4GMdU74WwNmr05thDyUCEjWGJJQQcF1M6slzyyKDY9JCfC6wtvg5CWi1cdyC9wnpK7XXeoVVEhME5SQLTSykFaZPq/xKcWhLAAHqTxWVYJkLHO/xF7hpwFtHUDn21EiHTZJ148kshnNxzyA/V3BUTphHyYO/V3kYsoiCB2te0nFvjZbJENVa7ZvjYKsgHwOo/e7Sew480pfuJ+5rAG+oE6lOw1u8doRo+/6CBLRYQRj8FYVpni2fF6U5ejyfLiJ5Pig2pFCQPesnlkQnFBafYBQhDBg8IKaFgkefcm5do85P5MOeF2WbQRZ46kzEB/yQoGx16rXaEIbXDpF4nvbCA3eDkTqtl4rluuW+7RXy+mjZv9uQ1jb9ObiNqxNY55YoaxeXp7+HDEGD7+cjlJZBsL+lw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>
+References: <20200514145927.17555-1-kishon@ti.com>
+ <20200514145927.17555-2-kishon@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <73193475-5244-554d-df71-df600f70c0d9@ti.com>
+Date:   Fri, 22 May 2020 11:23:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87e9bf14-772d-4c6f-f75b-08d7fe1174cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2020 05:32:02.2579
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QkkfRMSCi+clMnaPgtsg8cf0vpgF02P+zgW9zNvh0giSmLXovQ4ELmP8UFT9Ssp44K7kELWCKrXKSqC+OYxgxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4550
+In-Reply-To: <20200514145927.17555-2-kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMYXVy
-ZW50aXUgVHVkb3IgPGxhdXJlbnRpdS50dWRvckBueHAuY29tPg0KPiBTZW50OiBUaHVyc2RheSwg
-TWF5IDIxLCAyMDIwIDg6MzMgUE0NCj4gVG86IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBp
-ZXJhbGlzaUBhcm0uY29tPjsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-Zw0KPiBDYzogRGlhbmEgTWFkYWxpbmEgQ3JhY2l1biAoT1NTKSA8ZGlhbmEuY3JhY2l1bkBvc3Mu
-bnhwLmNvbT47IE1ha2FyYW5kDQo+IFBhd2FnaSA8bWFrYXJhbmQucGF3YWdpQG54cC5jb20+OyBp
-b21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZzsNCj4gbGludXgtYWNwaUB2Z2VyLmtlcm5l
-bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gcGNpQHZnZXIua2Vy
-bmVsLm9yZzsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFJhZmFlbCBKLiBXeXNv
-Y2tpDQo+IDxyandAcmp3eXNvY2tpLm5ldD47IEpvZXJnIFJvZWRlbCA8am9yb0A4Ynl0ZXMub3Jn
-PjsgSGFuanVuIEd1bw0KPiA8Z3VvaGFuanVuQGh1YXdlaS5jb20+OyBCam9ybiBIZWxnYWFzIDxi
-aGVsZ2Fhc0Bnb29nbGUuY29tPjsgU3VkZWVwDQo+IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNv
-bT47IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+Ow0KPiBDYXRhbGluIE1hcmlu
-YXMgPGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tPjsgV2lsbCBEZWFjb24gPHdpbGxAa2VybmVsLm9y
-Zz47DQo+IE1hcmMgWnluZ2llciA8bWF6QGtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggMTIvMTJdIGJ1czogZnNsLW1jOiBBZGQgQUNQSSBzdXBwb3J0IGZvciBmc2wtbWMNCj4gDQo+
-IEhpIExvcmVuem8sDQo+IA0KPiBPbiA1LzIxLzIwMjAgNDowMCBQTSwgTG9yZW56byBQaWVyYWxp
-c2kgd3JvdGU6DQo+ID4gRnJvbTogRGlhbmEgQ3JhY2l1biA8ZGlhbmEuY3JhY2l1bkBvc3Mubnhw
-LmNvbT4NCj4gPg0KPiA+IEFkZCBBQ1BJIHN1cHBvcnQgaW4gdGhlIGZzbC1tYyBkcml2ZXIuIERy
-aXZlciBwYXJzZXMgTUMgRFNEVCB0YWJsZSB0bw0KPiA+IGV4dHJhY3QgbWVtb3J5IGFuZCBvdGhl
-ciByZXNvdXJjZXMuDQo+ID4NCj4gPiBJbnRlcnJ1cHQgKEdJQyBJVFMpIGluZm9ybWF0aW9uIGlz
-IGV4dHJhY3RlZCBmcm9tIHRoZSBNQURUIHRhYmxlIGJ5DQo+ID4gZHJpdmVycy9pcnFjaGlwL2ly
-cS1naWMtdjMtaXRzLWZzbC1tYy1tc2kuYy4NCj4gPg0KPiA+IElPUlQgdGFibGUgaXMgcGFyc2Vk
-IHRvIGNvbmZpZ3VyZSBETUEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYWthcmFuZCBQYXdh
-Z2kgPG1ha2FyYW5kLnBhd2FnaUBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IERpYW5hIENy
-YWNpdW4gPGRpYW5hLmNyYWNpdW5Ab3NzLm54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGF1
-cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUudHVkb3JAbnhwLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFRo
-ZSBhdXRob3Igb2YgdGhpcyBwYXRjaCBzaG91bGQgYmUgTWFrYXJhbmQuIEkgdGhpbmsgSSBhY2Np
-ZGVudGFseSBicm9rZSBpdCB3aGVuDQo+IHdlIGV4Y2hhbmdlZCB0aGUgcGF0Y2hlcy4gVmVyeSBz
-b3JyeSBhYm91dCBpdC4NCj4gDQogDQpXaWxsIHlvdSBiZSBhYmxlIHRvIGNvcnJlY3QgdGhpcyBv
-ciBzaG91bGQgSSBwb3N0IGFub3RoZXIgcGF0Y2g/DQoNCj4gLS0tDQo+IEJlc3QgUmVnYXJkcywg
-TGF1cmVudGl1DQo+IA0KPiANCj4gPiAgZHJpdmVycy9idXMvZnNsLW1jL2ZzbC1tYy1idXMuYyAg
-ICAgICAgICAgICB8IDczICsrKysrKysrKysrKysrKy0tLS0tDQo+ID4gIGRyaXZlcnMvYnVzL2Zz
-bC1tYy9mc2wtbWMtbXNpLmMgICAgICAgICAgICAgfCAzNyArKysrKy0tLS0tDQo+ID4gIGRyaXZl
-cnMvaXJxY2hpcC9pcnEtZ2ljLXYzLWl0cy1mc2wtbWMtbXNpLmMgfCA3NQ0KPiA+ICsrKysrKysr
-KysrKysrKysrKysrLQ0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE1MCBpbnNlcnRpb25zKCspLCAz
-NSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2J1cy9mc2wtbWMv
-ZnNsLW1jLWJ1cy5jDQo+ID4gYi9kcml2ZXJzL2J1cy9mc2wtbWMvZnNsLW1jLWJ1cy5jIGluZGV4
-IDgyNGZmNzdiYmU4Ni4uMzI0ZDQ5ZDZkZjg5DQo+ID4gMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
-cy9idXMvZnNsLW1jL2ZzbC1tYy1idXMuYw0KPiA+ICsrKyBiL2RyaXZlcnMvYnVzL2ZzbC1tYy9m
-c2wtbWMtYnVzLmMNCj4gPiBAQCAtMTgsNiArMTgsOCBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgv
-Yml0b3BzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tc2kuaD4NCj4gPiAgI2luY2x1ZGUgPGxp
-bnV4L2RtYS1tYXBwaW5nLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9hY3BpLmg+DQo+ID4gKyNp
-bmNsdWRlIDxsaW51eC9pb21tdS5oPg0KPiA+DQo+ID4gICNpbmNsdWRlICJmc2wtbWMtcHJpdmF0
-ZS5oIg0KPiA+DQo+ID4gQEAgLTM4LDYgKzQwLDcgQEAgc3RydWN0IGZzbF9tYyB7DQo+ID4gIAlz
-dHJ1Y3QgZnNsX21jX2RldmljZSAqcm9vdF9tY19idXNfZGV2Ow0KPiA+ICAJdTggbnVtX3RyYW5z
-bGF0aW9uX3JhbmdlczsNCj4gPiAgCXN0cnVjdCBmc2xfbWNfYWRkcl90cmFuc2xhdGlvbl9yYW5n
-ZSAqdHJhbnNsYXRpb25fcmFuZ2VzOw0KPiA+ICsJdm9pZCAqZnNsX21jX3JlZ3M7DQo+ID4gIH07
-DQo+ID4NCj4gPiAgLyoqDQo+ID4gQEAgLTU2LDYgKzU5LDEwIEBAIHN0cnVjdCBmc2xfbWNfYWRk
-cl90cmFuc2xhdGlvbl9yYW5nZSB7DQo+ID4gIAlwaHlzX2FkZHJfdCBzdGFydF9waHlzX2FkZHI7
-DQo+ID4gIH07DQo+ID4NCj4gPiArI2RlZmluZSBGU0xfTUNfRkFQUgkweDI4DQo+ID4gKyNkZWZp
-bmUgTUNfRkFQUl9QTAlCSVQoMTgpDQo+ID4gKyNkZWZpbmUgTUNfRkFQUl9CTVQJQklUKDE3KQ0K
-PiA+ICsNCj4gPiAgLyoqDQo+ID4gICAqIGZzbF9tY19idXNfbWF0Y2ggLSBkZXZpY2UgdG8gZHJp
-dmVyIG1hdGNoaW5nIGNhbGxiYWNrDQo+ID4gICAqIEBkZXY6IHRoZSBmc2wtbWMgZGV2aWNlIHRv
-IG1hdGNoIGFnYWluc3QgQEAgLTEyNCw3ICsxMzEsMTAgQEANCj4gPiBzdGF0aWMgaW50IGZzbF9t
-Y19kbWFfY29uZmlndXJlKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiAgCXdoaWxlIChkZXZfaXNf
-ZnNsX21jKGRtYV9kZXYpKQ0KPiA+ICAJCWRtYV9kZXYgPSBkbWFfZGV2LT5wYXJlbnQ7DQo+ID4N
-Cj4gPiAtCXJldHVybiBvZl9kbWFfY29uZmlndXJlX2lkKGRldiwgZG1hX2Rldi0+b2Zfbm9kZSwg
-MCwgJmlucHV0X2lkKTsNCj4gPiArCWlmIChkZXZfb2Zfbm9kZShkbWFfZGV2KSkNCj4gPiArCQly
-ZXR1cm4gb2ZfZG1hX2NvbmZpZ3VyZV9pZChkZXYsIGRtYV9kZXYtPm9mX25vZGUsIDAsDQo+ICZp
-bnB1dF9pZCk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIGFjcGlfZG1hX2NvbmZpZ3VyZV9pZChkZXYs
-IERFVl9ETUFfQ09IRVJFTlQsICZpbnB1dF9pZCk7DQo+ID4gIH0NCj4gPg0KPiA+ICBzdGF0aWMg
-c3NpemVfdCBtb2RhbGlhc19zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0DQo+ID4gZGV2
-aWNlX2F0dHJpYnV0ZSAqYXR0ciwgQEAgLTg2NSw4ICs4NzUsMTEgQEAgc3RhdGljIGludA0KPiBm
-c2xfbWNfYnVzX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlzdHJ1
-Y3QgZnNsX21jX2lvICptY19pbyA9IE5VTEw7DQo+ID4gIAlpbnQgY29udGFpbmVyX2lkOw0KPiA+
-ICAJcGh5c19hZGRyX3QgbWNfcG9ydGFsX3BoeXNfYWRkcjsNCj4gPiAtCXUzMiBtY19wb3J0YWxf
-c2l6ZTsNCj4gPiAtCXN0cnVjdCByZXNvdXJjZSByZXM7DQo+ID4gKwl1MzIgbWNfcG9ydGFsX3Np
-emUsIG1jX3N0cmVhbV9pZDsNCj4gPiArCXN0cnVjdCByZXNvdXJjZSAqcGxhdF9yZXM7DQo+ID4g
-Kw0KPiA+ICsJaWYgKCFpb21tdV9wcmVzZW50KCZmc2xfbWNfYnVzX3R5cGUpKQ0KPiA+ICsJCXJl
-dHVybiAtRVBST0JFX0RFRkVSOw0KPiA+DQo+ID4gIAltYyA9IGRldm1fa3phbGxvYygmcGRldi0+
-ZGV2LCBzaXplb2YoKm1jKSwgR0ZQX0tFUk5FTCk7DQo+ID4gIAlpZiAoIW1jKQ0KPiA+IEBAIC04
-NzQsMTkgKzg4NywzMyBAQCBzdGF0aWMgaW50IGZzbF9tY19idXNfcHJvYmUoc3RydWN0DQo+ID4g
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+DQo+ID4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShw
-ZGV2LCBtYyk7DQo+ID4NCj4gPiArCXBsYXRfcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBk
-ZXYsIElPUkVTT1VSQ0VfTUVNLCAxKTsNCj4gPiArCW1jLT5mc2xfbWNfcmVncyA9IGRldm1faW9y
-ZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCBwbGF0X3Jlcyk7DQo+ID4gKwlpZiAoSVNfRVJSKG1j
-LT5mc2xfbWNfcmVncykpDQo+ID4gKwkJcmV0dXJuIFBUUl9FUlIobWMtPmZzbF9tY19yZWdzKTsN
-Cj4gPiArDQo+ID4gKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfQUNQSSkgJiYgIWRldl9vZl9ub2Rl
-KCZwZGV2LT5kZXYpKSB7DQo+ID4gKwkJbWNfc3RyZWFtX2lkID0gcmVhZGwobWMtPmZzbF9tY19y
-ZWdzICsgRlNMX01DX0ZBUFIpOw0KPiA+ICsJCS8qDQo+ID4gKwkJICogSFcgT1JzIHRoZSBQTCBh
-bmQgQk1UIGJpdCwgcGxhY2VzIHRoZSByZXN1bHQgaW4gYml0IDE1IG9mDQo+ID4gKwkJICogdGhl
-IFN0cmVhbUlEIGFuZCBPUnMgaW4gdGhlIElDSUQuIENhbGN1bGF0ZSBpdCBhY2NvcmRpbmdseS4N
-Cj4gPiArCQkgKi8NCj4gPiArCQltY19zdHJlYW1faWQgPSAobWNfc3RyZWFtX2lkICYgMHhmZmZm
-KSB8DQo+ID4gKwkJCQkoKG1jX3N0cmVhbV9pZCAmIChNQ19GQVBSX1BMIHwNCj4gTUNfRkFQUl9C
-TVQpKSA/DQo+ID4gKwkJCQkJMHg0MDAwIDogMCk7DQo+ID4gKwkJZXJyb3IgPSBhY3BpX2RtYV9j
-b25maWd1cmVfaWQoJnBkZXYtPmRldiwNCj4gREVWX0RNQV9DT0hFUkVOVCwNCj4gPiArCQkJCQkg
-ICAgICAmbWNfc3RyZWFtX2lkKTsNCj4gPiArCQlpZiAoZXJyb3IpDQo+ID4gKwkJCWRldl93YXJu
-KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gY29uZmlndXJlDQo+IGRtYTogJWQuXG4iLA0KPiA+ICsJ
-CQkJIGVycm9yKTsNCj4gPiArCX0NCj4gPiArDQo+ID4gIAkvKg0KPiA+ICAJICogR2V0IHBoeXNp
-Y2FsIGFkZHJlc3Mgb2YgTUMgcG9ydGFsIGZvciB0aGUgcm9vdCBEUFJDOg0KPiA+ICAJICovDQo+
-ID4gLQllcnJvciA9IG9mX2FkZHJlc3NfdG9fcmVzb3VyY2UocGRldi0+ZGV2Lm9mX25vZGUsIDAs
-ICZyZXMpOw0KPiA+IC0JaWYgKGVycm9yIDwgMCkgew0KPiA+IC0JCWRldl9lcnIoJnBkZXYtPmRl
-diwNCj4gPiAtCQkJIm9mX2FkZHJlc3NfdG9fcmVzb3VyY2UoKSBmYWlsZWQgZm9yICVwT0ZcbiIs
-DQo+ID4gLQkJCXBkZXYtPmRldi5vZl9ub2RlKTsNCj4gPiAtCQlyZXR1cm4gZXJyb3I7DQo+ID4g
-LQl9DQo+ID4gLQ0KPiA+IC0JbWNfcG9ydGFsX3BoeXNfYWRkciA9IHJlcy5zdGFydDsNCj4gPiAt
-CW1jX3BvcnRhbF9zaXplID0gcmVzb3VyY2Vfc2l6ZSgmcmVzKTsNCj4gPiArCXBsYXRfcmVzID0g
-cGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4gPiArCW1j
-X3BvcnRhbF9waHlzX2FkZHIgPSBwbGF0X3Jlcy0+c3RhcnQ7DQo+ID4gKwltY19wb3J0YWxfc2l6
-ZSA9IHJlc291cmNlX3NpemUocGxhdF9yZXMpOw0KPiA+ICAJZXJyb3IgPSBmc2xfY3JlYXRlX21j
-X2lvKCZwZGV2LT5kZXYsIG1jX3BvcnRhbF9waHlzX2FkZHIsDQo+ID4gIAkJCQkgbWNfcG9ydGFs
-X3NpemUsIE5VTEwsDQo+ID4gIAkJCQkgRlNMX01DX0lPX0FUT01JQ19DT05URVhUX1BPUlRBTCwN
-Cj4gJm1jX2lvKTsgQEAgLTkwMywxMSArOTMwLDEzIEBADQo+ID4gc3RhdGljIGludCBmc2xfbWNf
-YnVzX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlkZXZfaW5mbygm
-cGRldi0+ZGV2LCAiTUMgZmlybXdhcmUgdmVyc2lvbjogJXUuJXUuJXVcbiIsDQo+ID4gIAkJIG1j
-X3ZlcnNpb24ubWFqb3IsIG1jX3ZlcnNpb24ubWlub3IsIG1jX3ZlcnNpb24ucmV2aXNpb24pOw0K
-PiA+DQo+ID4gLQllcnJvciA9IGdldF9tY19hZGRyX3RyYW5zbGF0aW9uX3JhbmdlcygmcGRldi0+
-ZGV2LA0KPiA+IC0JCQkJCSAgICAgICAmbWMtPnRyYW5zbGF0aW9uX3JhbmdlcywNCj4gPiAtCQkJ
-CQkgICAgICAgJm1jLT5udW1fdHJhbnNsYXRpb25fcmFuZ2VzKTsNCj4gPiAtCWlmIChlcnJvciA8
-IDApDQo+ID4gLQkJZ290byBlcnJvcl9jbGVhbnVwX21jX2lvOw0KPiA+ICsJaWYgKGRldl9vZl9u
-b2RlKCZwZGV2LT5kZXYpKSB7DQo+ID4gKwkJZXJyb3IgPSBnZXRfbWNfYWRkcl90cmFuc2xhdGlv
-bl9yYW5nZXMoJnBkZXYtPmRldiwNCj4gPiArCQkJCQkJJm1jLT50cmFuc2xhdGlvbl9yYW5nZXMs
-DQo+ID4gKwkJCQkJCSZtYy0NCj4gPm51bV90cmFuc2xhdGlvbl9yYW5nZXMpOw0KPiA+ICsJCWlm
-IChlcnJvciA8IDApDQo+ID4gKwkJCWdvdG8gZXJyb3JfY2xlYW51cF9tY19pbzsNCj4gPiArCX0N
-Cj4gPg0KPiA+ICAJZXJyb3IgPSBkcHJjX2dldF9jb250YWluZXJfaWQobWNfaW8sIDAsICZjb250
-YWluZXJfaWQpOw0KPiA+ICAJaWYgKGVycm9yIDwgMCkgew0KPiA+IEBAIC05MzQsNiArOTYzLDcg
-QEAgc3RhdGljIGludCBmc2xfbWNfYnVzX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4g
-KnBkZXYpDQo+ID4gIAkJZ290byBlcnJvcl9jbGVhbnVwX21jX2lvOw0KPiA+DQo+ID4gIAltYy0+
-cm9vdF9tY19idXNfZGV2ID0gbWNfYnVzX2RldjsNCj4gPiArCW1jX2J1c19kZXYtPmRldi5md25v
-ZGUgPSBwZGV2LT5kZXYuZndub2RlOw0KPiA+ICAJcmV0dXJuIDA7DQo+ID4NCj4gPiAgZXJyb3Jf
-Y2xlYW51cF9tY19pbzoNCj4gPiBAQCAtOTY3LDExICs5OTcsMTggQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBvZl9kZXZpY2VfaWQNCj4gPiBmc2xfbWNfYnVzX21hdGNoX3RhYmxlW10gPSB7DQo+ID4N
-Cj4gPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgZnNsX21jX2J1c19tYXRjaF90YWJsZSk7DQo+
-ID4NCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBmc2xfbWNfYnVzX2Fj
-cGlfbWF0Y2hfdGFibGVbXSA9IHsNCj4gPiArCXsiTlhQMDAwOCIsIDAgfSwNCj4gPiArCXsgfQ0K
-PiA+ICt9Ow0KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKGFjcGksIGZzbF9tY19idXNfYWNwaV9t
-YXRjaF90YWJsZSk7DQo+ID4gKw0KPiA+ICBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBm
-c2xfbWNfYnVzX2RyaXZlciA9IHsNCj4gPiAgCS5kcml2ZXIgPSB7DQo+ID4gIAkJICAgLm5hbWUg
-PSAiZnNsX21jX2J1cyIsDQo+ID4gIAkJICAgLnBtID0gTlVMTCwNCj4gPiAgCQkgICAub2ZfbWF0
-Y2hfdGFibGUgPSBmc2xfbWNfYnVzX21hdGNoX3RhYmxlLA0KPiA+ICsJCSAgIC5hY3BpX21hdGNo
-X3RhYmxlID0gZnNsX21jX2J1c19hY3BpX21hdGNoX3RhYmxlLA0KPiA+ICAJCSAgIH0sDQo+ID4g
-IAkucHJvYmUgPSBmc2xfbWNfYnVzX3Byb2JlLA0KPiA+ICAJLnJlbW92ZSA9IGZzbF9tY19idXNf
-cmVtb3ZlLA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2J1cy9mc2wtbWMvZnNsLW1jLW1zaS5j
-DQo+ID4gYi9kcml2ZXJzL2J1cy9mc2wtbWMvZnNsLW1jLW1zaS5jIGluZGV4IGU3YmJmZjQ0NWE4
-My4uOGVkYWRmMDVjYmI3DQo+ID4gMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9idXMvZnNsLW1j
-L2ZzbC1tYy1tc2kuYw0KPiA+ICsrKyBiL2RyaXZlcnMvYnVzL2ZzbC1tYy9mc2wtbWMtbXNpLmMN
-Cj4gPiBAQCAtMTMsNiArMTMsNyBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvaXJxLmg+DQo+ID4g
-ICNpbmNsdWRlIDxsaW51eC9pcnFkb21haW4uaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L21zaS5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvYWNwaV9pb3J0Lmg+DQo+ID4NCj4gPiAgI2luY2x1ZGUg
-ImZzbC1tYy1wcml2YXRlLmgiDQo+ID4NCj4gPiBAQCAtMTc5LDI1ICsxODAsMzEgQEAgc3RydWN0
-IGlycV9kb21haW4NCj4gPiAqZnNsX21jX21zaV9jcmVhdGVfaXJxX2RvbWFpbihzdHJ1Y3QgZndu
-b2RlX2hhbmRsZSAqZndub2RlLA0KPiA+DQo+ID4gIHN0cnVjdCBpcnFfZG9tYWluICpmc2xfbWNf
-ZmluZF9tc2lfZG9tYWluKHN0cnVjdCBkZXZpY2UgKmRldikgIHsNCj4gPiAtCXN0cnVjdCBpcnFf
-ZG9tYWluICptc2lfZG9tYWluID0gTlVMTDsNCj4gPiArCXN0cnVjdCBkZXZpY2UgKnJvb3RfZHBy
-Y19kZXY7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlICpidXNfZGV2Ow0KPiA+ICsJc3RydWN0IGlycV9k
-b21haW4gKm1zaV9kb21haW47DQo+ID4gIAlzdHJ1Y3QgZnNsX21jX2RldmljZSAqbWNfZGV2ID0g
-dG9fZnNsX21jX2RldmljZShkZXYpOw0KPiA+DQo+ID4gLQltc2lfZG9tYWluID0gb2ZfbXNpX21h
-cF9nZXRfZGV2aWNlX2RvbWFpbihkZXYsIG1jX2Rldi0+aWNpZCwNCj4gPiArCWZzbF9tY19nZXRf
-cm9vdF9kcHJjKGRldiwgJnJvb3RfZHByY19kZXYpOw0KPiA+ICsJYnVzX2RldiA9IHJvb3RfZHBy
-Y19kZXYtPnBhcmVudDsNCj4gPiArDQo+ID4gKwlpZiAoYnVzX2Rldi0+b2Zfbm9kZSkgew0KPiA+
-ICsJCW1zaV9kb21haW4gPSBvZl9tc2lfbWFwX2dldF9kZXZpY2VfZG9tYWluKGRldiwNCj4gPiAr
-CQkJCQkJICBtY19kZXYtPmljaWQsDQo+ID4gIAkJCQkJCSAgRE9NQUlOX0JVU19GU0xfTUNfTVNJ
-KTsNCj4gPg0KPiA+IC0JLyoNCj4gPiAtCSAqIGlmIHRoZSBtc2ktbWFwIHByb3BlcnR5IGlzIG1p
-c3NpbmcgYXNzdW1lIHRoYXQgYWxsIHRoZQ0KPiA+IC0JICogY2hpbGQgY29udGFpbmVycyBpbmhl
-cml0IHRoZSBkb21haW4gZnJvbSB0aGUgcGFyZW50DQo+ID4gLQkgKi8NCj4gPiAtCWlmICghbXNp
-X2RvbWFpbikgew0KPiA+IC0JCXN0cnVjdCBkZXZpY2UgKnJvb3RfZHByY19kZXY7DQo+ID4gLQkJ
-c3RydWN0IGRldmljZSAqYnVzX2RldjsNCj4gPiAtDQo+ID4gLQkJZnNsX21jX2dldF9yb290X2Rw
-cmMoZGV2LCAmcm9vdF9kcHJjX2Rldik7DQo+ID4gLQkJYnVzX2RldiA9IHJvb3RfZHByY19kZXYt
-PnBhcmVudDsNCj4gPiAtCQltc2lfZG9tYWluID0gb2ZfbXNpX2dldF9kb21haW4oYnVzX2RldiwN
-Cj4gPiAtCQkJCQkgICAgICAgYnVzX2Rldi0+b2Zfbm9kZSwNCj4gPiAtCQkJCQkgICAgICAgRE9N
-QUlOX0JVU19GU0xfTUNfTVNJKTsNCj4gPiArCQkvKg0KPiA+ICsJCSAqIGlmIHRoZSBtc2ktbWFw
-IHByb3BlcnR5IGlzIG1pc3NpbmcgYXNzdW1lIHRoYXQgYWxsIHRoZQ0KPiA+ICsJCSAqIGNoaWxk
-IGNvbnRhaW5lcnMgaW5oZXJpdCB0aGUgZG9tYWluIGZyb20gdGhlIHBhcmVudA0KPiA+ICsJCSAq
-Lw0KPiA+ICsJCWlmICghbXNpX2RvbWFpbikNCj4gPiArDQo+ID4gKwkJCW1zaV9kb21haW4gPSBv
-Zl9tc2lfZ2V0X2RvbWFpbihidXNfZGV2LA0KPiA+ICsJCQkJCQlidXNfZGV2LT5vZl9ub2RlLA0K
-PiA+ICsJCQkJCQlET01BSU5fQlVTX0ZTTF9NQ19NU0kpOw0KPiA+ICsJfSBlbHNlIHsNCj4gPiAr
-CQltc2lfZG9tYWluID0gaW9ydF9nZXRfZGV2aWNlX2RvbWFpbihkZXYsIG1jX2Rldi0+aWNpZCwN
-Cj4gPiArDQo+IERPTUFJTl9CVVNfRlNMX01DX01TSSk7DQo+ID4gIAl9DQo+ID4NCj4gPiAgCXJl
-dHVybiBtc2lfZG9tYWluOw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLWdp
-Yy12My1pdHMtZnNsLW1jLW1zaS5jDQo+ID4gYi9kcml2ZXJzL2lycWNoaXAvaXJxLWdpYy12My1p
-dHMtZnNsLW1jLW1zaS5jDQo+ID4gaW5kZXggYTVjOGQ1NzdlNDI0Li5iOGI5NDhmYjZiMmQgMTAw
-NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLWZzbC1tYy1tc2ku
-Yw0KPiA+ICsrKyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtZ2ljLXYzLWl0cy1mc2wtbWMtbXNpLmMN
-Cj4gPiBAQCAtNyw2ICs3LDggQEANCj4gPiAgICoNCj4gPiAgICovDQo+ID4NCj4gPiArI2luY2x1
-ZGUgPGxpbnV4L2FjcGkuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2FjcGlfaW9ydC5oPg0KPiA+
-ICAjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9vZl9h
-ZGRyZXNzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9pcnEuaD4NCj4gPiBAQCAtMzAsNyArMzIs
-OCBAQCBzdGF0aWMgdTMyIGZzbF9tY19tc2lfZG9tYWluX2dldF9tc2lfaWQoc3RydWN0DQo+IGly
-cV9kb21haW4gKmRvbWFpbiwNCj4gPiAgCXUzMiBvdXRfaWQ7DQo+ID4NCj4gPiAgCW9mX25vZGUg
-PSBpcnFfZG9tYWluX2dldF9vZl9ub2RlKGRvbWFpbik7DQo+ID4gLQlvdXRfaWQgPSBvZl9tc2lf
-bWFwX2lkKCZtY19kZXYtPmRldiwgb2Zfbm9kZSwgbWNfZGV2LT5pY2lkKTsNCj4gPiArCW91dF9p
-ZCA9IG9mX25vZGUgPyBvZl9tc2lfbWFwX2lkKCZtY19kZXYtPmRldiwgb2Zfbm9kZSwgbWNfZGV2
-LQ0KPiA+aWNpZCkgOg0KPiA+ICsJCQlpb3J0X21zaV9tYXBfaWQoJm1jX2Rldi0+ZGV2LCBtY19k
-ZXYtPmljaWQpOw0KPiA+DQo+ID4gIAlyZXR1cm4gb3V0X2lkOw0KPiA+ICB9DQo+ID4gQEAgLTc5
-LDcgKzgyLDY3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGl0c19kZXZpY2Vf
-aWRbXSA9IHsNCj4gPiAgCXt9LA0KPiA+ICB9Ow0KPiA+DQo+ID4gLXN0YXRpYyBpbnQgX19pbml0
-IGl0c19mc2xfbWNfbXNpX2luaXQodm9pZCkNCj4gPiArc3RhdGljIGludCBfX2luaXQgaXRzX2Zz
-bF9tY19tc2lfaW5pdF9vbmUoc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmhhbmRsZSwNCj4gPiArCQkJ
-CQkgIGNvbnN0IGNoYXIgKm5hbWUpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBpcnFfZG9tYWluICpw
-YXJlbnQ7DQo+ID4gKwlzdHJ1Y3QgaXJxX2RvbWFpbiAqbWNfbXNpX2RvbWFpbjsNCj4gPiArDQo+
-ID4gKwlwYXJlbnQgPSBpcnFfZmluZF9tYXRjaGluZ19md25vZGUoaGFuZGxlLCBET01BSU5fQlVT
-X05FWFVTKTsNCj4gPiArCWlmICghcGFyZW50IHx8ICFtc2lfZ2V0X2RvbWFpbl9pbmZvKHBhcmVu
-dCkpIHsNCj4gPiArCQlwcl9lcnIoIiVzOiBVbmFibGUgdG8gbG9jYXRlIElUUyBkb21haW5cbiIs
-IG5hbWUpOw0KPiA+ICsJCXJldHVybiAtRU5YSU87DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJbWNf
-bXNpX2RvbWFpbiA9IGZzbF9tY19tc2lfY3JlYXRlX2lycV9kb21haW4oaGFuZGxlLA0KPiA+ICsJ
-CQkJCQkmaXRzX2ZzbF9tY19tc2lfZG9tYWluX2luZm8sDQo+ID4gKwkJCQkJCXBhcmVudCk7DQo+
-ID4gKwlpZiAoIW1jX21zaV9kb21haW4pDQo+ID4gKwkJcHJfZXJyKCJBQ1BJRjogdW5hYmxlIHRv
-IGNyZWF0ZSBmc2wtbWMgZG9tYWluXG4iKTsNCj4gPiArDQo+ID4gKwlwcl9pbmZvKCJmc2wtbWMg
-TVNJOiBkb21haW4gY3JlYXRlZFxuIik7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30N
-Cj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgX19pbml0DQo+ID4gK2l0c19mc2xfbWNfbXNpX3BhcnNl
-X21hZHQodW5pb24gYWNwaV9zdWJ0YWJsZV9oZWFkZXJzICpoZWFkZXIsDQo+ID4gKwkJCSAgY29u
-c3QgdW5zaWduZWQgbG9uZyBlbmQpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBhY3BpX21hZHRfZ2Vu
-ZXJpY190cmFuc2xhdG9yICppdHNfZW50cnk7DQo+ID4gKwlzdHJ1Y3QgZndub2RlX2hhbmRsZSAq
-ZG9tX2hhbmRsZTsNCj4gPiArCWNvbnN0IGNoYXIgKm5vZGVfbmFtZTsNCj4gPiArCWludCBlcnIg
-PSAtRU5YSU87DQo+ID4gKw0KPiA+ICsJaXRzX2VudHJ5ID0gKHN0cnVjdCBhY3BpX21hZHRfZ2Vu
-ZXJpY190cmFuc2xhdG9yICopaGVhZGVyOw0KPiA+ICsJbm9kZV9uYW1lID0ga2FzcHJpbnRmKEdG
-UF9LRVJORUwsICJJVFNAMHglbHgiLA0KPiA+ICsJCQkgICAgICAobG9uZylpdHNfZW50cnktPmJh
-c2VfYWRkcmVzcyk7DQo+ID4gKw0KPiA+ICsJZG9tX2hhbmRsZSA9IGlvcnRfZmluZF9kb21haW5f
-dG9rZW4oaXRzX2VudHJ5LT50cmFuc2xhdGlvbl9pZCk7DQo+ID4gKwlpZiAoIWRvbV9oYW5kbGUp
-IHsNCj4gPiArCQlwcl9lcnIoIiVzOiBVbmFibGUgdG8gbG9jYXRlIElUUyBkb21haW4gaGFuZGxl
-XG4iLA0KPiBub2RlX25hbWUpOw0KPiA+ICsJCWdvdG8gb3V0Ow0KPiA+ICsJfQ0KPiA+ICsNCj4g
-PiArCWVyciA9IGl0c19mc2xfbWNfbXNpX2luaXRfb25lKGRvbV9oYW5kbGUsIG5vZGVfbmFtZSk7
-DQo+ID4gKwlpZiAoIWVycikNCj4gPiArCQlwcl9pbmZvKCJmc2wtbWMgTVNJOiAlcyBkb21haW4g
-Y3JlYXRlZFxuIiwgbm9kZV9uYW1lKTsNCj4gPiArDQo+ID4gK291dDoNCj4gPiArCWtmcmVlKG5v
-ZGVfbmFtZSk7DQo+ID4gKwlyZXR1cm4gZXJyOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICsNCj4gPiAr
-c3RhdGljIGludCBfX2luaXQgaXRzX2ZzbF9tY19hY3BpX21zaV9pbml0KHZvaWQpIHsNCj4gPiAr
-CWFjcGlfdGFibGVfcGFyc2VfbWFkdChBQ1BJX01BRFRfVFlQRV9HRU5FUklDX1RSQU5TTEFUT1Is
-DQo+ID4gKwkJCSAgICAgIGl0c19mc2xfbWNfbXNpX3BhcnNlX21hZHQsIDApOw0KPiA+ICsNCj4g
-PiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IF9faW5pdCBpdHNf
-ZnNsX21jX29mX21zaV9pbml0KHZvaWQpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBkZXZpY2Vfbm9k
-ZSAqbnA7DQo+ID4gIAlzdHJ1Y3QgaXJxX2RvbWFpbiAqcGFyZW50Ow0KPiA+IEBAIC0xMTMsNCAr
-MTc2LDEyIEBAIHN0YXRpYyBpbnQgX19pbml0IGl0c19mc2xfbWNfbXNpX2luaXQodm9pZCkNCj4g
-PiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiArc3RhdGljIGludCBfX2luaXQgaXRzX2Zz
-bF9tY19tc2lfaW5pdCh2b2lkKSB7DQo+ID4gKwlpdHNfZnNsX21jX29mX21zaV9pbml0KCk7DQo+
-ID4gKwlpdHNfZnNsX21jX2FjcGlfbXNpX2luaXQoKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsN
-Cj4gPiArfQ0KPiA+ICsNCj4gPiAgZWFybHlfaW5pdGNhbGwoaXRzX2ZzbF9tY19tc2lfaW5pdCk7
-DQo+ID4NCg==
+Hi RobH,
+
+On 5/14/2020 8:29 PM, Kishon Vijay Abraham I wrote:
+> Add device tree schema for PCI endpoint function bus to which
+> endpoint function devices should be attached. Then add device tree
+> schema for PCI endpoint function device to include bindings thats
+> generic to all endpoint functions. Finally add device tree schema
+> for PCI endpoint NTB function device by including the generic
+> device tree schema for PCIe endpoint function.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../bindings/pci/endpoint/pci-epf-bus.yaml    | 42 +++++++++++
+>  .../bindings/pci/endpoint/pci-epf-device.yaml | 69 +++++++++++++++++++
+>  .../bindings/pci/endpoint/pci-epf-ntb.yaml    | 68 ++++++++++++++++++
+>  3 files changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
+> new file mode 100644
+> index 000000000000..1c504f2e85e4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/endpoint/pci-epf-bus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCI Endpoint Function Bus
+> +
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: pci-epf-bus
+> +
+> +patternProperties:
+> +  "^func@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      PCI Endpoint Function Bus node should have subnodes for each of
+> +      the implemented endpoint function. It should follow the bindings
+> +      specified for endpoint function in
+> +      Documentation/devicetree/bindings/pci/endpoint/
+> +
+> +examples:
+> +  - |
+> +    epf_bus {
+> +      compatible = "pci-epf-bus";
+> +
+> +      func@0 {
+> +        compatible = "pci-epf-ntb";
+> +        epcs = <&pcie0_ep>, <&pcie1_ep>;
+> +        epc-names = "primary", "secondary";
+> +        reg = <0>;
+
+I'm not sure how to represent "reg" property properly for cases like this where
+it represents ID and not a memory resource. I seem to get warning for
+"reg_format" even after adding address-cells and size-cells property in
+epf_bus. Can you give some hints here please?
+
+> +        epf,vendor-id = /bits/ 16 <0x104c>;
+
+I want to make vendor-id and device-id as 16 bits from the beginning at-least
+for PCIe endpoint. So I'm prefixing these properties with "epf,". However I get
+this "do not match any of the regexes:". Can we add "epf" as a standard prefix?
+
+Thanks
+Kishon
+> +        epf,device-id = /bits/ 16 <0xb00d>;
+> +        num-mws = <4>;
+> +        mws-size = <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>;
+> +      };
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
+> new file mode 100644
+> index 000000000000..cee72864c8ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/endpoint/pci-epf-device.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCI Endpoint Function Device
+> +
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: pci-epf-bus
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^func@"
+> +
+> +  epcs:
+> +    description:
+> +      Phandle to the endpoint controller device. Should have "2" entries for
+> +      NTB endpoint function and "1" entry for others.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  epc-names:
+> +    description:
+> +      Must contain an entry for each entry in "epcs" when "epcs" have more than
+> +      one entry.
+> +
+> +  reg:
+> +    maxItems: 0
+> +    description: Must contain the index number of the function.
+> +
+> +  epf,vendor-id:
+> +    description:
+> +      The PCI vendor ID
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint16
+> +
+> +  epf,device-id:
+> +    description:
+> +      The PCI device ID
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint16
+> +
+> +  epf,baseclass-code:
+> +    description: Code to classify the type of operation the function performs
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint8
+> +
+> +  epf,subclass-code:
+> +    description:
+> +      Specifies a base class sub-class, which identifies more specifically the
+> +      operation of the Function
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint8
+> +
+> +  epf,subsys-vendor-id:
+> +    description: Code to identify vendor of the add-in card or subsystem
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint16
+> +
+> +  epf,subsys-id:
+> +    description: Code to specify an id that is specific to a vendor
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint16
+> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
+> new file mode 100644
+> index 000000000000..92c2e522b9e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/endpoint/pci-epf-ntb.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCI Endpoint NTB Function Device
+> +
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +allOf:
+> +  - $ref: "pci-epf-device.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: pci-epf-ntb
+> +
+> +  epcs:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  epc-names:
+> +    items:
+> +      - const: primary
+> +      - const: secondary
+> +
+> +  num-mws:
+> +    description:
+> +      Specify the number of memory windows
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint8
+> +    minimum: 1
+> +    maximum: 4
+> +
+> +  mws-size:
+> +    description:
+> +      List of 'num-mws' entries containing size of each memory window.
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +required:
+> +  - compatible
+> +  - epcs
+> +  - epc-names
+> +  - epf,vendor-id
+> +  - epf,device-id
+> +  - num-mws
+> +  - mws-size
+> +
+> +examples:
+> +  - |
+> +    epf_bus {
+> +      compatible = "pci-epf-bus";
+> +
+> +      func@0 {
+> +        compatible = "pci-epf-ntb";
+> +        reg = <0>;
+> +        epcs = <&pcie0_ep>, <&pcie1_ep>;
+> +        epc-names = "primary", "secondary";
+> +        epf,vendor-id = /bits/ 16 <0x104c>;
+> +        epf,device-id = /bits/ 16 <0xb00d>;
+> +        num-mws = <4>;
+> +        mws-size = <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>;
+> +      };
+> +    };
+> +...
+> 
