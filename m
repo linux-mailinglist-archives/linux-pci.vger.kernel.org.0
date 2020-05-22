@@ -2,46 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CAD71DF32B
-	for <lists+linux-pci@lfdr.de>; Sat, 23 May 2020 01:48:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B68381DF32C
+	for <lists+linux-pci@lfdr.de>; Sat, 23 May 2020 01:48:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbgEVXsh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 19:48:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46654 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731183AbgEVXsh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 May 2020 19:48:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id j8so13282482iog.13
-        for <linux-pci@vger.kernel.org>; Fri, 22 May 2020 16:48:36 -0700 (PDT)
+        id S2387409AbgEVXsj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 19:48:39 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39988 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387404AbgEVXsj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 May 2020 19:48:39 -0400
+Received: by mail-io1-f65.google.com with SMTP id q8so11951847iow.7
+        for <linux-pci@vger.kernel.org>; Fri, 22 May 2020 16:48:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=W4+faHiQpbiKoNArdRYrYzpj6r3I7BpUrWFS3s8f/VI=;
-        b=Y7dAEsH8KoK2WqBd756PciJPvnhcCKAjKPaTDqxkJaMmm4p7cFqXmll1jVZbmhbGeD
-         4YGxhvVFXn9dW7LB6o1ix3k0onSZE/CgT5Jh7fL4nQTnDHUIUa72zMWAd6xSpR7vQ88R
-         u3tgSrRENpaLAiJcXyp5I7sU9WJc+ZEkzrnL7H5tJZ96kn7qG8fdn0mz/efYH1D59x54
-         zTNt3t/ACjyZALU+Mb2RocyIC+8ems6stZTgNiyyjGp5cCVnZOrTfPn2kqQFMhTs14vv
-         uyA9tnlDXlgsrjEDXV3qxGDl+6cQSUgf6ZaGdr4C7x21SbLAa3vZXZIxhLTiH959wqQI
-         YMjw==
-X-Gm-Message-State: AOAM531FQGWptoCwa0UzmSd34HqnQl1p7xS82owrelkf20w4iBf8IDq+
-        3SAVDRdD7/ZZzFhq2b7JOw==
-X-Google-Smtp-Source: ABdhPJzN5mP6wcYyIO0prwZR7WJYYh7QphTWx1pZw96CB3uHi1bA3huv1VVkQoA0SVgvDeTWo4nM+g==
-X-Received: by 2002:a6b:5813:: with SMTP id m19mr5015868iob.88.1590191316081;
-        Fri, 22 May 2020 16:48:36 -0700 (PDT)
+        bh=ThmdbRMtyh+goPlCsRsJutoUCzX5VD3oRn0IWK/oqQw=;
+        b=p77dnAHzCiaXAmwrXE7PDlTvEbAzT8efu4tyqM//L10wDacIt+vqT1Q5sYhYM/nGhT
+         FFoqVZA2szHKIhXewc2KKZiy9ILC2Y8A4JBJUrS5ESD4xTC7g5/GfFLa8yLE1KiUdzmL
+         QWLUqY/cYfSB56WDlJ5z1dm+rPiYr3n7hMuZf6avhFngAHaj8FqL6O22ThemIUo79F80
+         LfuVERyOw5qfnHbKZf/rWa7uwzqvP3F+cxf5i3bNa5SQvQGXFxMohJWalejn/3BqfM/J
+         nFFOg6SoRL1y77h/rf46LpZ9svCZbJr2eCms+ZqDhTpgp9r9BtCU5V/Y6w9r0YjNbjLj
+         n9Ig==
+X-Gm-Message-State: AOAM530VToEh4F8VafMNWbjMEhZuKZhB7pqeeUsqyv02pRi0m+ClX3Sz
+        Ni9Ojhmv0p8z9LSIQJEEVg==
+X-Google-Smtp-Source: ABdhPJyDe0JoDXoIsQG/kMCc3sQ6ItzXn8qXN6+PN/9wYAzSRpPJ6IwR3EmqfjWPoiHq9avExGm3NA==
+X-Received: by 2002:a6b:ee15:: with SMTP id i21mr5318999ioh.179.1590191317148;
+        Fri, 22 May 2020 16:48:37 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id w23sm4390877iod.9.2020.05.22.16.48.35
+        by smtp.googlemail.com with ESMTPSA id w23sm4390877iod.9.2020.05.22.16.48.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 16:48:35 -0700 (PDT)
+        Fri, 22 May 2020 16:48:36 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: [PATCH 02/15] PCI: mvebu: Use struct pci_host_bridge.windows list directly
-Date:   Fri, 22 May 2020 17:48:19 -0600
-Message-Id: <20200522234832.954484-3-robh@kernel.org>
+        linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>
+Subject: [PATCH 03/15] PCI: host-common: Use struct pci_host_bridge.windows list directly
+Date:   Fri, 22 May 2020 17:48:20 -0600
+Message-Id: <20200522234832.954484-4-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522234832.954484-1-robh@kernel.org>
 References: <20200522234832.954484-1-robh@kernel.org>
@@ -56,75 +54,108 @@ There's no need to create a temporary resource list and then splice it to
 struct pci_host_bridge.windows list. Just use pci_host_bridge.windows
 directly. The necessary clean-up is already handled by the PCI core.
 
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Will Deacon <will@kernel.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pci-mvebu.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/pci/controller/pci-host-common.c | 36 ++++++++----------------
+ 1 file changed, 11 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 153a64676bc9..801044523a3d 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -71,7 +71,6 @@ struct mvebu_pcie {
- 	struct platform_device *pdev;
- 	struct mvebu_pcie_port *ports;
- 	struct msi_controller *msi;
--	struct list_head resources;
- 	struct resource io;
- 	struct resource realio;
- 	struct resource mem;
-@@ -961,17 +960,16 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
- {
- 	struct device *dev = &pcie->pdev->dev;
- 	struct device_node *np = dev->of_node;
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	int ret;
- 
--	INIT_LIST_HEAD(&pcie->resources);
--
- 	/* Get the bus range */
- 	ret = of_pci_parse_bus_range(np, &pcie->busn);
- 	if (ret) {
- 		dev_err(dev, "failed to parse bus-range property: %d\n", ret);
- 		return ret;
- 	}
--	pci_add_resource(&pcie->resources, &pcie->busn);
-+	pci_add_resource(&bridge->windows, &pcie->busn);
- 
- 	/* Get the PCIe memory aperture */
- 	mvebu_mbus_get_pcie_mem_aperture(&pcie->mem);
-@@ -981,7 +979,7 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
- 	}
- 
- 	pcie->mem.name = "PCI MEM";
--	pci_add_resource(&pcie->resources, &pcie->mem);
-+	pci_add_resource(&bridge->windows, &pcie->mem);
- 
- 	/* Get the PCIe IO aperture */
- 	mvebu_mbus_get_pcie_io_aperture(&pcie->io);
-@@ -994,10 +992,10 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
- 					 resource_size(&pcie->io) - 1);
- 		pcie->realio.name = "PCI I/O";
- 
--		pci_add_resource(&pcie->resources, &pcie->realio);
-+		pci_add_resource(&bridge->windows, &pcie->realio);
- 	}
- 
--	return devm_request_pci_bus_resources(dev, &pcie->resources);
-+	return devm_request_pci_bus_resources(dev, &bridge->windows);
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index 953de57f6c57..f8f71d99e427 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -21,7 +21,7 @@ static void gen_pci_unmap_cfg(void *ptr)
  }
  
- /*
-@@ -1118,7 +1116,6 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+ static struct pci_config_window *gen_pci_init(struct device *dev,
+-		struct list_head *resources, const struct pci_ecam_ops *ops)
++		struct pci_host_bridge *bridge, const struct pci_ecam_ops *ops)
+ {
+ 	int err;
+ 	struct resource cfgres;
+@@ -29,31 +29,25 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
+ 	struct pci_config_window *cfg;
  
- 	pcie->nports = i;
+ 	/* Parse our PCI ranges and request their resources */
+-	err = pci_parse_request_of_pci_ranges(dev, resources, NULL, &bus_range);
++	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows, NULL, &bus_range);
+ 	if (err)
+ 		return ERR_PTR(err);
  
--	list_splice_init(&pcie->resources, &bridge->windows);
+ 	err = of_address_to_resource(dev->of_node, 0, &cfgres);
+ 	if (err) {
+ 		dev_err(dev, "missing \"reg\" property\n");
+-		goto err_out;
++		return ERR_PTR(err);
+ 	}
+ 
+ 	cfg = pci_ecam_create(dev, &cfgres, bus_range, ops);
+-	if (IS_ERR(cfg)) {
+-		err = PTR_ERR(cfg);
+-		goto err_out;
+-	}
++	if (IS_ERR(cfg))
++		return cfg;
+ 
+ 	err = devm_add_action_or_reset(dev, gen_pci_unmap_cfg, cfg);
+-	if (err) {
+-		goto err_out;
+-	}
+-	return cfg;
++	if (err)
++		return ERR_PTR(err);
+ 
+-err_out:
+-	pci_free_resource_list(resources);
+-	return ERR_PTR(err);
++	return cfg;
+ }
+ 
+ int pci_host_common_probe(struct platform_device *pdev)
+@@ -61,9 +55,7 @@ int pci_host_common_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct pci_host_bridge *bridge;
+ 	struct pci_config_window *cfg;
+-	struct list_head resources;
+ 	const struct pci_ecam_ops *ops;
+-	int ret;
+ 
+ 	ops = of_device_get_match_data(&pdev->dev);
+ 	if (!ops)
+@@ -76,7 +68,7 @@ int pci_host_common_probe(struct platform_device *pdev)
+ 	of_pci_check_probe_only();
+ 
+ 	/* Parse and map our Configuration Space windows */
+-	cfg = gen_pci_init(dev, &resources, ops);
++	cfg = gen_pci_init(dev, bridge, ops);
+ 	if (IS_ERR(cfg))
+ 		return PTR_ERR(cfg);
+ 
+@@ -84,7 +76,6 @@ int pci_host_common_probe(struct platform_device *pdev)
+ 	if (!pci_has_flag(PCI_PROBE_ONLY))
+ 		pci_add_flags(PCI_REASSIGN_ALL_BUS);
+ 
+-	list_splice_init(&resources, &bridge->windows);
  	bridge->dev.parent = dev;
- 	bridge->sysdata = pcie;
- 	bridge->busnr = 0;
+ 	bridge->sysdata = cfg;
+ 	bridge->busnr = cfg->busr.start;
+@@ -92,14 +83,9 @@ int pci_host_common_probe(struct platform_device *pdev)
+ 	bridge->map_irq = of_irq_parse_and_map_pci;
+ 	bridge->swizzle_irq = pci_common_swizzle;
+ 
+-	ret = pci_host_probe(bridge);
+-	if (ret < 0) {
+-		pci_free_resource_list(&resources);
+-		return ret;
+-	}
+-
+ 	platform_set_drvdata(pdev, bridge->bus);
+-	return 0;
++
++	return pci_host_probe(bridge);
+ }
+ EXPORT_SYMBOL_GPL(pci_host_common_probe);
+ 
 -- 
 2.25.1
 
