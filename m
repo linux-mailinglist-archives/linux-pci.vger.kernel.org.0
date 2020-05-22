@@ -2,74 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC861DEC88
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 17:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BE971DECEC
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 18:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbgEVPyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 11:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32794 "EHLO mail.kernel.org"
+        id S1730528AbgEVQLW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 12:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbgEVPyj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 May 2020 11:54:39 -0400
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        id S1730534AbgEVQLW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 May 2020 12:11:22 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83134207F9;
-        Fri, 22 May 2020 15:54:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5112520756;
+        Fri, 22 May 2020 16:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590162879;
-        bh=wGRZvt3Z+867keqt3QAT0Chc0raT1nG9Wgs/nGQRLbY=;
+        s=default; t=1590163881;
+        bh=0JTmKNCOSVfFXsp/l6r6vK0A1aX62Wnt1tZs/rKDZpY=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n/tqVDm2zEEQ4mU7pMZXNvqNl/+Y8L81dHXFkDfcoI4SgD9+fXk86fQkSXltNzcNk
-         B+hEJas5BrQkR05xveBENPvtkW8Vgasbvs5S7fZw37eVL4MaZRqM3KXMXDZ7hqr4Vy
-         n9WATdimBm1rfvbvcAe1tYeVUt6edphAX4TkYLsg=
-Received: by mail-oi1-f175.google.com with SMTP id 23so8471991oiq.8;
-        Fri, 22 May 2020 08:54:39 -0700 (PDT)
-X-Gm-Message-State: AOAM530V0mN0of4VjGyclDDNiSKcoWpJwB86rcP4HSu5l0DLDU3HZW23
-        MR1zGIyFessWFUf4DNf0OdV01SytntOtd52WqA==
-X-Google-Smtp-Source: ABdhPJzQ8I+vECFyhVYyk2x4i27BUXmDXS2vlHoGkAessFkDVhzp1YCya/jmMWgspVusAE/rNHggVAYEsM+awFHIX9U=
-X-Received: by 2002:a05:6808:7cb:: with SMTP id f11mr3196684oij.152.1590162878837;
- Fri, 22 May 2020 08:54:38 -0700 (PDT)
+        b=anRopDlSy27Vri+GchbA7goiaVkxcLQzgTGILyAL2Y3RvkT5TtlBC7txjMwEYL6j7
+         XTGXoWBzRR7Aalhez7WPQA9Skc44AlXum58TyP+6N6k3pksrurLP+rSsrIRRZw5T6e
+         6izbOEHyZyXCnZ4Rmk5yWEfz84A5oy/Qv/baUiVE=
+Received: by mail-ot1-f44.google.com with SMTP id d7so8613586ote.6;
+        Fri, 22 May 2020 09:11:21 -0700 (PDT)
+X-Gm-Message-State: AOAM532k5UsPAP40VoevnSouJirLWONZSKcU0RR+ItZoco7PQHrGXGfc
+        1t4fXEmfNwx9h5JxkCfGcCmhuYHHl5dhzigjfg==
+X-Google-Smtp-Source: ABdhPJyquhMrY30oX4gcFNMGczIxMx6fthKgRqhOMu6BhGxOOW96NQ9jbvSWH8PRVc5mb4SegKMvgChoFfZrDVUK/ys=
+X-Received: by 2002:a9d:51ca:: with SMTP id d10mr5587167oth.129.1590163880607;
+ Fri, 22 May 2020 09:11:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200522033631.32574-1-kishon@ti.com> <20200522033631.32574-4-kishon@ti.com>
-In-Reply-To: <20200522033631.32574-4-kishon@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 22 May 2020 09:54:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
-Message-ID: <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
+References: <20200514145927.17555-1-kishon@ti.com>
+In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 22 May 2020 10:11:09 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
+Message-ID: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
+Subject: Re: [PATCH 00/19] Implement NTB Controller using multiple PCI EP
 To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+        Jonathan Corbet <corbet@lwn.net>,
+        PCI <linux-pci@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-ntb@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Thu, May 14, 2020 at 8:59 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >
-> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
-> 32-bit accesses for reading or writing to Cadence registers. Convert all
-> read and write accesses to 32-bit in Cadence PCIe driver in preparation
-> for adding PCIe support in TI's J721E SoC.
+> This series is about implementing SW defined NTB using
+> multiple endpoint instances. This series has been tested using
+> 2 endpoint instances in J7 connected to two DRA7 boards. However there
+> is nothing platform specific for the NTB functionality.
+>
+> This was presented in Linux Plumbers Conference. The presentation
+> can be found @ [1]
 
-Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
-with this and never can be given the PCI_COMMAND and PCI_STATUS
-registers are in the same word (IIRC, that's the main reason 32-bit
-config space accesses are broken). So this isn't going to work at
-least for EP accesses. And maybe you need a custom .raise_irq() hook
-to minimize any problems (such as making the RMW atomic at least from
-the endpoint's perspective).
+I'd like to know why putting this into DT is better than configfs.
+Does it solve some problem? Doing things in userspace is so much
+easier and more flexible than modifying and updating a DT.
+
+I don't really think the PCI endpoint stuff is mature enough to be
+putting into DT either.
 
 Rob
