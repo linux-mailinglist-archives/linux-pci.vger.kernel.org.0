@@ -2,149 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7D8A1DE6E7
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 14:29:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F271DE6F1
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 14:32:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgEVM33 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 08:29:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEVM30 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 May 2020 08:29:26 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68D0DC061A0E
-        for <linux-pci@vger.kernel.org>; Fri, 22 May 2020 05:29:25 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id w18so10433679ilm.13
-        for <linux-pci@vger.kernel.org>; Fri, 22 May 2020 05:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JJD3j3E6c3pyRvrU9+R7sbQB1f8wU9nKdn/YmVKc7bA=;
-        b=eb1n781cW5blEkkA/Ck1RGV6Z8/5JAyLwpXGBV8x5/c3dE9UBqWyAjShh3pwOA02s7
-         3NK+fweZlr2oT9cNhbDpPkQIaeuB+ax8fik+Tktn6cNKV1rB9XCKhj31qC/ebSjRXyvI
-         BsmH0UnA1tiFSYM1OXcrlBw0qoIZVr5s3mBTY1KKk/6TVT6LfZPfYvUt9oHeZSM6hUa+
-         fQnUHG7+8S65UIzls4j9ytk+VTG5s6+DaOQNpwPtJPV1CwWLHhNDQIqY3sMRpBGreKF3
-         W/zaHzybtYDjzxzJLZ2vDOLmR3vQEfTRkhCdQeb2SAMt6FRYMlvwt+EJnnYplJ4dJ3Yf
-         wQTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JJD3j3E6c3pyRvrU9+R7sbQB1f8wU9nKdn/YmVKc7bA=;
-        b=J5jCvYAjn+wtJPyHJ7rbrvv3pIAvMusx7A37VT4MkPsvQiGo8m6MF8GhnSxP7nueR9
-         COSkjFb6jGve6oEg5rdTgTKLBuXaThc5N8SXFxnMlILg1xf/Vj4xj1SAHqWSOz/ZUFJb
-         5JnNuZokNKBQJWe7X77OzNqR+PxQyp200aTOczIWwKIjLjdkTUMgMWfnguJWfkxatfTh
-         N0nesGR1ybDvvhqTzRd4j3FLJHNHwPCoI4IFdfKe4QcEfCXhbfxVv0iTk22peUf+umcE
-         N80gjfAKhvwMJK06A8UTTJ4R/yPy8mOpcIhyxpAqLfNc1jBKi/MxsjYkJttcOoaW5+OZ
-         8jrA==
-X-Gm-Message-State: AOAM5308a9RABlp6fDdXbefHN1hm814Bia5arco0AvHNLUbh6lpb08Rf
-        r4+SmUkKgSsU+h7S5gpyGVr9tFjO67AlwEB9w2DKE2rI
-X-Google-Smtp-Source: ABdhPJzQZJ5FgbUMim5E//HF8ZMUniTRQdxkQU1QBD3QOfNhKGwoAlq5mGbq1qhsybdANo8UGbqcFLseCWj/Ujr1Vxg=
-X-Received: by 2002:a92:4ca:: with SMTP id 193mr13198203ile.75.1590150564810;
- Fri, 22 May 2020 05:29:24 -0700 (PDT)
+        id S1729344AbgEVMc5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 08:32:57 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:65433 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbgEVMc4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 May 2020 08:32:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1590150775; x=1621686775;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jxpIcUQcFnD1p6i5FtXCqzY/ZBVzyH8VSD5KQpS2Dv4=;
+  b=YJFXzry9FtKA1A4X0muJJ29ab8k1dsQrA9rAVH4IokavErGjk5aMzx/g
+   Obr+eb44p5X4vPYpwQEpm6+5JrzQ+nTNf0zPTrfU/d0CI33mW0gpn5kkB
+   kGz/qlEDlM8YP3FH3fMxIwSJy9WxV27VfSU5eYrUxTNDnL82PrCB1C42b
+   +cGbK+05hZaRwKvKAF6tMSnJPn+TVAqjknFHWzxu0WLlk+X8aFRFY3PeH
+   aN/PRJVg0Q4Rq+RfpSoTayza9quuQ9b0KjmBNOEtMcr6XfZMBzrocXfyT
+   2Gjkir4g3pQoVwIJUpUBLcG6fMVT/yBWTtDVQDR75N6G4JWkteKVprQEM
+   Q==;
+IronPort-SDR: 8ZK7dF8XNyTVqcmAlieJNGc8ljWKTyZ86GajqAeHAD/M66C/8vrpRdodVajKVxcBkEM50NECXu
+ YBTMSqFe48JXgTzgSQSyLrJmj9wfu2YRv5hBNuf4050KcPgOXelT7A7rvuA01zi4F2poQm0tqd
+ +9XCEGEbSmDlxpODFm1UAAA/TFn12r8VbpTFKuWm/zzPj3sKk05Mc5NqQmxODS+16g6CzBrzxn
+ ZQLnS69slGKl0TyJ3Z1hNwIPxOIy1B5i2tA4bQgJNBHP1lqO4f+7ChQDDqssvamLHvoGdm+TiM
+ TYI=
+X-IronPort-AV: E=Sophos;i="5.73,421,1583164800"; 
+   d="scan'208";a="138635476"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 22 May 2020 20:32:55 +0800
+IronPort-SDR: WScRrQ8r1mHxw/nvSIXGkw9RkTs67dwGCoVQv4yu+90OHXk+HHwiMxBw7UF6IJIYihvjXK+fbo
+ dwvyNPLGBY+Cnctpa/GaE7VYL1p90VLKI=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:22:54 -0700
+IronPort-SDR: OHwPvCphzfHlZfMUYqYjBYkAg+mjt1HpcboZgR02qCCB+C6sN2IL/1+cRCfEupoL/XD+oM1Iz8
+ uL5wRqbiGh3g==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:32:55 -0700
+Date:   Fri, 22 May 2020 13:32:50 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Paul Burton <paulburton@kernel.org>
+cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: piix4-poweroff.c I/O BAR usage
+In-Reply-To: <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
+Message-ID: <alpine.LFD.2.21.2005221315360.21168@redsun52.ssa.fujisawa.hgst.com>
+References: <20200520135708.GA1086370@bjorn-Precision-5520> <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com> <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <1590023130-137406-1-git-send-email-shawn.lin@rock-chips.com>
- <CANAwSgRXuMQaytB4BXL89JQAmU=XutBXj6iMhfKdZp3JwM9a4g@mail.gmail.com> <eb0acd3d-92d0-db00-78e4-8a17033f7f0a@rock-chips.com>
-In-Reply-To: <eb0acd3d-92d0-db00-78e4-8a17033f7f0a@rock-chips.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Fri, 22 May 2020 17:59:14 +0530
-Message-ID: <CANAwSgSzoc5TaO6ks9kdN7W+xDo1STbtsA0dUpsk8hqP6swkYg@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzJdIFBDSTogcm9ja2NoaXA6IEVuYWJsZSBJTyBiYXNlIGFuZCBsaQ==?=
-        =?UTF-8?B?bWl0IHJlZ2lzdGVyc+OAkOivt+azqOaEj++8jOmCruS7tueUsWxpbnV4LXJvY2tjaGlwLWJvdW5jZXMr?=
-        =?UTF-8?B?c2hhd24ubGluPXJvY2stY2hpcHMuY29tQGxpc3RzLmluZnJhZGVhZC5vcmfku6Plj5HjgJE=?=
-To:     Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Shawn
+On Thu, 21 May 2020, Paul Burton wrote:
 
-On Fri, 22 May 2020 at 08:30, Shawn Lin <shawn.lin@rock-chips.com> wrote:
->
->
-> =E5=9C=A8 2020/5/21 18:51, Anand Moon =E5=86=99=E9=81=93:
-> > Hi Shawn,
-> >
-> > On Thu, 21 May 2020 at 06:35, Shawn Lin <shawn.lin@rock-chips.com> wrot=
-e:
-> >>
-> >> According to RK3399 user manual, bit 9 in PCIE_RC_BAR_CONF should
-> >> be set, otherwise accessing to IO base and limit registers would
-> >> fail.
-> >>
-> >> [    0.411318] pci_bus 0000:00: root bus resource [bus 00-1f]
-> >> [    0.411822] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfb=
-dfffff]
-> >> [    0.412440] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff]=
- (bus address [0xfbe00000-0xfbefffff])
-> >> [    0.413665] pci 0000:00:00.0: bridge configuration invalid ([bus 00=
--00]), reconfiguring
-> >> [    0.414698] pci 0000:01:00.0: reg 0x10: initial BAR value 0x0000000=
-0 invalid
-> >> [    0.415412] pci 0000:01:00.0: reg 0x18: initial BAR value 0x0000000=
-0 invalid
-> >> [    0.418456] pci 0000:00:00.0: BAR 8: assigned [mem 0xfa000000-0xfa0=
-fffff]
-> >> [    0.419065] pci 0000:01:00.0: BAR 1: assigned [mem 0xfa000000-0xfa0=
-07fff pref]
-> >> [    0.419728] pci 0000:01:00.0: BAR 6: assigned [mem 0xfa008000-0xfa0=
-0ffff pref]
-> >> [    0.420377] pci 0000:01:00.0: BAR 0: no space for [io  size 0x0100]
-> >> [    0.420935] pci 0000:01:00.0: BAR 0: failed to assign [io  size 0x0=
-100]
-> >> [    0.421526] pci 0000:01:00.0: BAR 2: no space for [io  size 0x0004]
-> >> [    0.422084] pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0=
-004]
-> >> [    0.422687] pci 0000:00:00.0: PCI bridge to [bus 01]
-> >> [    0.423135] pci 0000:00:00.0:   bridge window [mem 0xfa000000-0xfa0=
-fffff]
-> >> [    0.423794] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
-> >> [    0.424566] pcieport 0000:00:00.0: Signaling PME through PCIe PME i=
-nterrupt
-> >> [    0.425182] pci 0000:01:00.0: Signaling PME through PCIe PME interr=
-upt
-> >>
-> >> 01:00.0 Class 0700: Device 1c00:3853 (rev 10) (prog-if 05)
-> >>          Subsystem: Device 1c00:3853
-> >>          Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- P=
-arErr- Stepping- SERR- FastB2B- DisINTx-
-> >>          Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbo=
-rt- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> >>          Interrupt: pin A routed to IRQ 230
-> >>          Region 0: I/O ports at <unassigned> [disabled]
-> >>          Region 1: Memory at fa000000 (32-bit, prefetchable) [disabled=
-] [size=3D32K]
-> >>          Region 2: I/O ports at <unassigned> [disabled]
-> >>          [virtual] Expansion ROM at fa008000 [disabled] [size=3D32K]
-> >>
-> >> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> >> ---
-> >
-> > I have old development board Odroid N1 (RK3399),  It has onboard PCIe
-> > 2 dual sata bridge.
-> > I have tested this patch, but I am still getting following log on
-> > Odroid N1 board.
-> > Is their any more configuration needed for sata ports ?
->
-> Thanks for testing. I made a mistake that it should be bit 19, so
-> can you try using BIT(19)?
->
+> I'm reachable but lacking free time & with no access to Malta hardware
+> I can't claim to be too useful here, so thanks for responding :)
 
-Nop enable this bit dose not solve the issue see at my end.
+ Great you're still around!  I hope you're doing good in this difficult 
+time, and overall.  I have recently learnt WaveComp is no more. :(
 
-But as per RK3399 TMR  17.6.7.1.45 Root Complex BAR Configuration Register
-their are many bits that are not tuned correctly.
-I tried to set some bit to BAR Configuration register. but it dose not
-work at my end.
-I feel some more core configuration is missing.
-If I have some update I will share it with you.
+> Before being moved to a driver (which was mostly driven by a desire to
+> migrate Malta to a multi-platform/generic kernel using DT) this code
+> was part of arch/mips/mti-malta/ where I added it in commit
+> b6911bba598f ("MIPS: Malta: add suspend state entry code"). My main
+> motivation at the time was to make QEMU exit after running poweroff,
+> but I did ensure it worked on real Malta boards too (at least Malta-R
+> with CoreFPGA6). Over the years since then it shocked a couple of
+> hardware people to see software power off a Malta - if the original
+> hardware designers had intended that to work then the knowledge had
+> been lost over time :)
 
--Anand
+ Well, the Malta was designed by the Copenhagen team, which was dissolved 
+IIRC back in 2003, so indeed the intent may have been lost in the mist of 
+time.  I did know powering off is possible (same with the Atlas CompactPCI 
+board if you ever came across one, not supported by Linux anymore) as it 
+was inherent to the southbridge, and I remember discussing it once with 
+Chris Shaw back in the MIPS UK days.  I guess the further it went, the 
+more it became forgotten.
+
+ Thanks for confirming it has been verified, though I was sure you did it 
+anyway.
+
+  Maciej
