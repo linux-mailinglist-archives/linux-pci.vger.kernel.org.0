@@ -2,119 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9F601DDC60
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 03:04:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34AAF1DDD81
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 04:55:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgEVBEY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 May 2020 21:04:24 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:35484 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVBEY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 May 2020 21:04:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590109467; x=1621645467;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gD0Mmp36tWWvKenJoMmkqjxvUYivz3GgCXTadY4Oz8w=;
-  b=HBT+Hm9oV6Cz+xEpVqOlnkRNduxZKu1F2pJ20c2pI2b8ZbDTpOE4hjtK
-   V+ezsKv/ct3wJN+DG+djxEWczfUIuUsLuohwFeXuGO5S4l/kAHo29m8Fv
-   TDZj0n+Zyp+fyBY6IzszvB9uR011u7HM7Nk30uWtrGXlwWbOYS460Ca4Q
-   EJ2Q6YsvPFx/myTvJ9Q6CNLrxC3nyl5z4BPisB0PSLkl/V5h8kn9a0b9+
-   8YTK9L4+rQHAzoUtPq5hMqFMz2/PE9mxfEqG6cJbYzsd4piKqgsOK9QQu
-   ninOxUy03BELBq5DwBC/afCXIxMnZfXm7Wl8N2q/JdIFm9bnIWgItB+xy
-   A==;
-IronPort-SDR: B44ijviYw1v1QuWJwGXqWJJooYnMdAYdXte37IjfXtzPeN2gZCv+oZrTaGkzbPi8mZApJMal1d
- Kox9oo5c4F09yYDkExlHF2ksVSo9J54N1qte/xOsFIVoY3vLdDci0ObPVvW9usLOlTpwoW/C/7
- s9Nxf+JPOQ03UH+2etv5u1UIiTr6S2ZkiW3R/Zt35amdHAv7LtF4VYnGb+w31dfqLnnUT/jNQ0
- fIT+Fvb8Yj0zszeHQnPtnOAzPmRjZHRfOZsQOJCEefpNbxxCO0KPaihHsxXC3sViKv4IieVZE9
- Xdc=
-X-IronPort-AV: E=Sophos;i="5.73,419,1583164800"; 
-   d="scan'208";a="241029128"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 22 May 2020 09:04:37 +0800
-IronPort-SDR: h//N3R+ZbkPdMBVbJ3azzyazXQ6IXamfjYGys/E4IT1UBptKjQ9V3LxBoa7r/eVswNF1Knnh6M
- 4qHoB2ti0Qdc2VIsOuTkfK/7EycqRlTWA=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 17:54:12 -0700
-IronPort-SDR: AACqdndHAWEilkfGYIKngoypr3umi5vbJCaRoPmbK0qkzwOsO4+CjnpVaXW/N0fP5JJqCfwOGj
- Ul2DoX96QPaw==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 18:04:11 -0700
-Date:   Fri, 22 May 2020 02:04:06 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     Paul Burton <paulburton@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: piix4-poweroff.c I/O BAR usage
-In-Reply-To: <20200520135708.GA1086370@bjorn-Precision-5520>
-Message-ID: <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
-References: <20200520135708.GA1086370@bjorn-Precision-5520>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        id S1727779AbgEVCzs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 May 2020 22:55:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4836 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727770AbgEVCzr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 May 2020 22:55:47 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 158A475D5FA2F00C5850;
+        Fri, 22 May 2020 10:55:45 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
+ 10:55:41 +0800
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, <bhelgaas@google.com>
+References: <18609.1588812972@famine>
+ <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
+ <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
+ <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
+ <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+CC:     <jay.vosburgh@canonical.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
+Date:   Fri, 22 May 2020 10:56:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
 
- Paul may or may not be reachable anymore, so I'll step in.
 
-> This looks like it might be a bug:
-> 
->   static const int piix4_pm_io_region = PCI_BRIDGE_RESOURCES;
-> 
->   static int piix4_poweroff_probe(struct pci_dev *dev,
->                                   const struct pci_device_id *id)
->   {
->           ...
->           /* Request access to the PIIX4 PM IO registers */
->           res = pci_request_region(dev, piix4_pm_io_region,
->                                    "PIIX4 PM IO registers");
-> 
-> pci_request_region() takes a BAR number (0-5), but here we're passing
-> PCI_BRIDGE_RESOURCES (13 if CONFIG_PCI_IOV, or 7 otherwise), which is
-> the bridge I/O window.
-> 
-> I don't think this device ([8086:7113]) is a bridge, so that resource
-> should be empty.
+On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
+>
+>
+> On 5/21/20 3:58 AM, Yicong Yang wrote:
+>> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
+>>>
+>>>
+>>> On 5/20/20 1:28 AM, Yicong Yang wrote:
+>>>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>
+>>>>> If there are non-hotplug capable devices connected to a given
+>>>>> port, then during the fatal error recovery(triggered by DPC or
+>>>>> AER), after calling reset_link() function, we cannot rely on
+>>>>> hotplug handler to detach and re-enumerate the device drivers
+>>>>> in the affected bus. Instead, we will have to let the error
+>>>>> recovery handler call report_slot_reset() for all devices in
+>>>>> the bus to notify about the reset operation. Although this is
+>>>>> only required for non hot-plug capable devices, doing it for
+>>>>> hotplug capable devices should not affect the functionality.
+>>>>>
+>>>>> Along with above issue, this fix also applicable to following
+>>>>> issue.
+>>>>>
+>>>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>>>>> reset_link()") added support to store status of reset_link()
+>>>>> call. Although this fixed the error recovery issue observed if
+>>>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>>>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+>>>>> result from report_frozen_detected. This can cause a failure to
+>>>>> recover if _NEED_RESET is returned by report_frozen_detected and
+>>>>> report_slot_reset is not invoked.
+>>>>>
+>>>>> Such an event can be induced for testing purposes by reducing the
+>>>>> Max_Payload_Size of a PCIe bridge to less than that of a device
+>>>>> downstream from the bridge, and then initiating I/O through the
+>>>>> device, resulting in oversize transactions.  In the presence of DPC,
+>>>>> this results in a containment event and attempted reset and recovery
+>>>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+>>>>> invoked, and the device does not recover.
+>>>>>
+>>>>> [original patch is from jay.vosburgh@canonical.com]
+>>>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+>>>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>>>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>> ---
+>>>>>    drivers/pci/pcie/err.c | 19 +++++++++++++++----
+>>>>>    1 file changed, 15 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>>>> index 14bb8f54723e..db80e1ecb2dc 100644
+>>>>> --- a/drivers/pci/pcie/err.c
+>>>>> +++ b/drivers/pci/pcie/err.c
+>>>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>>>        pci_dbg(dev, "broadcast error_detected message\n");
+>>>>>        if (state == pci_channel_io_frozen) {
+>>>>>            pci_walk_bus(bus, report_frozen_detected, &status);
+>>>>> -        status = reset_link(dev);
+>>>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
+>>>>> +        status = PCI_ERS_RESULT_NEED_RESET;
+>>>>> +    } else {
+>>>>> +        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>> +    }
+>>>>> +
+>>>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
+>>>>> +        if (reset_link) {
+>>>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>>>>
+>>>> we'll call reset_link() only if link is frozen. so it may have problem here.
+>>> you mean before this change right?
+>>> After this change, reset_link() will be called as long as status is
+>>> PCI_ERS_RESULT_NEED_RESET.
+>>
+>> Yes. I think we should reset the link only if the io is blocked as before. There's
+>> no reason to reset a normal link.
+> Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
+> possible reset_link options are dpc_reset_link() and aer_root_reset().
+>
+> In dpc_reset_link() case, the link is already disabled and hence we
+> don't need to do another reset. In case of aer_root_reset() it
+> uses pci_bus_error_reset() to reset the slot.
 
- Hmm, isn't the resource actually set up by `quirk_piix4_acpi' though?
+Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
+hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
+reset for the bridge. That's what I think is unnecessary for a normal link,
+and that's what reset link indicates us to do. The slot reset is introduced
+in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
 
-> Based on this spec:
-> https://www.intel.com/Assets/PDF/datasheet/290562.pdf,
-> it looks like it should be the PIIX4 power management function at
-> function 3, which has no standard PCI BARs but does have a PMBA (Power
-> Management Base Address) at 0x40 and an SMBBA (SMBus Base Address) at
-> 0x90 in config space.
+PCI_ERS_RESULT_NEED_RESET indicates that the driver
+wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
+I don't think it's same as slot reset mentioned above, which is only for hotpluggable
+ones.
 
- Correct, this is what Malta firmware reports for this function:
+Previously, if link is normal and the driver reports PCI_ERS_RESULT_NEED_RESET,
+we'll only call ->slot_reset() without slot reset in reset_link(). Maybe it's better
+to perform just like before.
 
-Bus = 0x00, Dev = 0x0a, Function = 0x03
-Vendor Id = 0x8086 (Intel), Dev ID = 0x7113 (PIIX4 Power)
- Min Gnt = 0x00, Max Lat = 0x00, Lat Tim = 0x20
- Int Pin = None, Int Line = 0x09
- BAR count = 0x02
-  IO:  Pos = 0x40, Base(CPU/PCI) = 0x18001000/0x00001000, Size = 0x00000100
-  IO:  Pos = 0x90, Base(CPU/PCI) = 0x18001100/0x00001100, Size = 0x00000100
+Thanks.
 
-I'm somewhat familiar with this southbridge, although this was looong ago.
 
-> I suppose on an ACPI system the regions described by PMBA and SMBBA
-> might be described via ACPI, since they're not discoverable by
-> standard PCI enumeration?  Pretty sure you don't have ACPI on MIPS
-> though.
-> 
-> Maybe the driver should read PMBA and SMBBA and reserve those regions
-> by hand with request_region()?
+>>
+>> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
+>> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
+>> We decide whether to do a link reset only by the io state.
+>>
+>> Thanks,
+>> Yicong
+>>
+>>
+>>>>
+>>>> Thanks,
+>>>> Yicong
+>>>>
+>>>>
+>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>> +        } else {
+>>>>> +            if (pci_bus_error_reset(dev))
+>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>> +        }
+>>>>> +
+>>>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
+>>>>>                pci_warn(dev, "link reset failed\n");
+>>>>>                goto failed;
+>>>>>            }
+>>>>> -    } else {
+>>>>> -        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>>        }
+>>>>>          if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>>>>
+>>> .
+>>>
+>>
+> .
+>
 
- Well, I think `quirk_piix4_acpi' covers it.  It dates back to 2.3.49 
-AFAICT.  I can try to boot my Malta system over the weekend to see if 
-there are any issues with it, but I'm fairly sure there is none here.
-
-  Maciej
