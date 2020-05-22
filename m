@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C561DE623
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 14:07:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 199F71DE648
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 14:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgEVMHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 08:07:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:38574 "EHLO mga18.intel.com"
+        id S1729492AbgEVMIX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 08:08:23 -0400
+Received: from mga07.intel.com ([134.134.136.100]:42367 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbgEVMHT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 May 2020 08:07:19 -0400
-IronPort-SDR: TfYg7mEjL8ashudQBcxMabwcmrvoBHIw18ljkb5V/EeLNs48+x6D16S+jo76jReYPEA+NY9+Qd
- Ifm/0usaWRWA==
+        id S1729946AbgEVMIS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 May 2020 08:08:18 -0400
+IronPort-SDR: w1uUebwToMkStmODp2DJ0hSMxnlKjDN6vdOOKtJJrubwHXLAh6gvMN7nkGX3EYMEZvjvadFV4E
+ PcTQhHeZ61TA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:07:17 -0700
-IronPort-SDR: h4W34GDU0qTNmO0jYmBHrU0xsNxtTripVQyrtl8WoZpMUREgNIZHwEABE6H1X48a9pgcex1ZtW
- MQsNCb5rxN+w==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:08:18 -0700
+IronPort-SDR: g6PVF8Excj9Jp3kYW1sutzb6cp5WrttYcARlIWadrbuqcv+1AngecuIPgSpLMUcgupBQ6IR5VP
+ f+Wvu7Dvjnvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
-   d="scan'208";a="309354750"
+   d="scan'208";a="254307456"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 May 2020 05:07:16 -0700
+  by orsmga007.jf.intel.com with ESMTP; 22 May 2020 05:08:16 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jc6SK-0000BP-2A; Fri, 22 May 2020 20:07:16 +0800
-Date:   Fri, 22 May 2020 20:07:05 +0800
+        id 1jc6TI-0007f2-3T; Fri, 22 May 2020 20:08:16 +0800
+Date:   Fri, 22 May 2020 20:07:18 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/hotplug] BUILD SUCCESS
- cfbd83d02da73d984bee314ed3b96bdd3bbe7115
-Message-ID: <5ec7c069./kyp7ZnbaQDe+ehp%lkp@intel.com>
+Subject: [pci:pci/switchtec] BUILD SUCCESS
+ b8af85492fbf1acfb63b1f83e4faafbaa11c73eb
+Message-ID: <5ec7c076.YUa0wgt8singHmin%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,10 +43,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/hotplug
-branch HEAD: cfbd83d02da73d984bee314ed3b96bdd3bbe7115  PCI: shpchp: Make shpchp_unconfigure_device() void
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/switchtec
+branch HEAD: b8af85492fbf1acfb63b1f83e4faafbaa11c73eb  PCI/switchtec: Correct bool variable type assignment
 
-elapsed time: 927m
+elapsed time: 928m
 
 configs tested: 110
 configs skipped: 1
