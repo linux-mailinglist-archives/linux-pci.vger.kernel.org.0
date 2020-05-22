@@ -2,76 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BE971DECEC
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 18:11:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CFE21DED97
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 18:45:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbgEVQLW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 12:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        id S1730419AbgEVQpe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 12:45:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgEVQLW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 May 2020 12:11:22 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        id S1730306AbgEVQpe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 May 2020 12:45:34 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5112520756;
-        Fri, 22 May 2020 16:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFD09206B6;
+        Fri, 22 May 2020 16:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590163881;
-        bh=0JTmKNCOSVfFXsp/l6r6vK0A1aX62Wnt1tZs/rKDZpY=;
+        s=default; t=1590165933;
+        bh=gWcAx6dytA0EAxqcY3HTX1YnP6kIv4ty1exXdCROqww=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=anRopDlSy27Vri+GchbA7goiaVkxcLQzgTGILyAL2Y3RvkT5TtlBC7txjMwEYL6j7
-         XTGXoWBzRR7Aalhez7WPQA9Skc44AlXum58TyP+6N6k3pksrurLP+rSsrIRRZw5T6e
-         6izbOEHyZyXCnZ4Rmk5yWEfz84A5oy/Qv/baUiVE=
-Received: by mail-ot1-f44.google.com with SMTP id d7so8613586ote.6;
-        Fri, 22 May 2020 09:11:21 -0700 (PDT)
-X-Gm-Message-State: AOAM532k5UsPAP40VoevnSouJirLWONZSKcU0RR+ItZoco7PQHrGXGfc
-        1t4fXEmfNwx9h5JxkCfGcCmhuYHHl5dhzigjfg==
-X-Google-Smtp-Source: ABdhPJyquhMrY30oX4gcFNMGczIxMx6fthKgRqhOMu6BhGxOOW96NQ9jbvSWH8PRVc5mb4SegKMvgChoFfZrDVUK/ys=
-X-Received: by 2002:a9d:51ca:: with SMTP id d10mr5587167oth.129.1590163880607;
- Fri, 22 May 2020 09:11:20 -0700 (PDT)
+        b=tGki03yjNbya2Lh/bCN9h0iri/nzH+Vq4KqH3d9PtZz1S0Agw4aarziU175F+WuYY
+         gI+uyvvHJRZg/Yw410lxNK6x004ZGodzg1huJUcmElYKAaTxMIy+T6DRQANn0wZluY
+         LqHXKHCeIKAn7ZWwsLaqgyF096FGeQWKEXA9fu9Y=
+Received: by mail-oi1-f169.google.com with SMTP id j145so9857345oib.5;
+        Fri, 22 May 2020 09:45:33 -0700 (PDT)
+X-Gm-Message-State: AOAM531FQQtpE+G40OhFVWJ5pJsZi/rIKToLXpTlcnI4xUBgB2RUqUvY
+        2yA89eQQzyRtEdQKnIdD83ijaT7ENAW/ysJHlg==
+X-Google-Smtp-Source: ABdhPJyOIimoTTwn+DzTuswuMPzoMXeeAcfiCDmfEtU2Ls/bR0MREniW3isAwKRLWPh6rvnW8cASk2bhta+/P+05dzU=
+X-Received: by 2002:aca:f084:: with SMTP id o126mr3346182oih.106.1590165933079;
+ Fri, 22 May 2020 09:45:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200514145927.17555-1-kishon@ti.com>
-In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 22 May 2020 10:11:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
-Message-ID: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
-Subject: Re: [PATCH 00/19] Implement NTB Controller using multiple PCI EP
+References: <20200506151429.12255-1-kishon@ti.com> <20200506151429.12255-8-kishon@ti.com>
+ <20200520213434.GA583923@bogus> <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
+In-Reply-To: <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 May 2020 10:45:21 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
+Subject: Re: [PATCH v4 07/14] PCI: cadence: Add new *ops* for CPU addr fixup
 To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-ntb@googlegroups.com
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 14, 2020 at 8:59 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Thu, May 21, 2020 at 5:35 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >
-> This series is about implementing SW defined NTB using
-> multiple endpoint instances. This series has been tested using
-> 2 endpoint instances in J7 connected to two DRA7 boards. However there
-> is nothing platform specific for the NTB functionality.
+> Hi Rob,
 >
-> This was presented in Linux Plumbers Conference. The presentation
-> can be found @ [1]
+> On 5/21/2020 3:04 AM, Rob Herring wrote:
+> > On Wed, May 06, 2020 at 08:44:22PM +0530, Kishon Vijay Abraham I wrote:
+> >> Cadence driver uses "mem" memory resource to obtain the offset of
+> >> configuration space address region, memory space address region and
+> >> message space address region. The obtained offset is used to program
+> >> the Address Translation Unit (ATU). However certain platforms like TI's
+> >> J721E SoC require the absolute address to be programmed in the ATU and not
+> >> just the offset.
+> >
+> > Once again, Cadence host binding is broken (or at least the example is).
+> > The 'mem' region shouldn't even exist. It is overlapping the config
+> > space and 'ranges':
+> >
+> >             reg = <0x0 0xfb000000  0x0 0x01000000>,
+> >                   <0x0 0x41000000  0x0 0x00001000>,
+> >                   <0x0 0x40000000  0x0 0x04000000>;
+> >             reg-names = "reg", "cfg", "mem";
+> >
+> >             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+> >                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
+> >
+> >
+> > 16M of registers looks a bit odd. I guess it doesn't matter
+> > unless you have a 32-bit platform and care about your virtual
+> > space. Probably should have been 3 regions for LM, RP, and AT looking
+> > at the driver.
+>
+> The "mem" region in never ioremapped. However $patch removes requiring to add
+> "mem" memory resource.
 
-I'd like to know why putting this into DT is better than configfs.
-Does it solve some problem? Doing things in userspace is so much
-easier and more flexible than modifying and updating a DT.
+I was referring to ioremapping 'reg' region.
 
-I don't really think the PCI endpoint stuff is mature enough to be
-putting into DT either.
+> >
+> > Whatever outbound address translation you need should be based on
+> > 'ranges'.
+>
+> You mean we don't need to add "new *ops* for CPU addr fixup"?. The issue is
+> ranges provides CPU address and PCI address. The CPU will access whatever is
+> populated in ranges to access the PCI bus. However while programming the ATU,
+> we cannot use the CPU address provided in ranges directly (in some platforms)
+> because the controller does not see the full address and only the lower 28bits.
+
+Okay, that is clearer as to what the difference is. I think this
+should be 2 patches. One dropping 'mem' usage and using a mask and the
+2nd making the mask per platform.
+
+Really, the parent node of the PCI controller should probably have
+'ranges' and you could extract a mask from that. Looks like that is
+what you had for DRA7... I'm not sure if ABI stability is important
+for the Cadence platform. I'd assume that's just some IP eval system
+and probably not?
+
+Why do you need an ops here? All you need is a mask value.
+
+> This similar restriction was there with Designware (mostly an integration
+> issue) and we used *ops* to fixup the address that has to be programmed in ATU.
+> The Designware initially used a wrapper so that ranges property can be directly
+> used [1]. However this approach was later removed in [2]
+>
+> [1] -> https://lore.kernel.org/patchwork/patch/468523/
+> [2] -> https://lkml.org/lkml/2015/10/16/232
+
+So while you had the data for a mask in DT, the driver now hardcodes it?
 
 Rob
