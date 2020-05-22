@@ -2,97 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B111DE1EA
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 10:33:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A111DE2BF
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 11:17:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgEVIdc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 04:33:32 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:55183 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729353AbgEVIdb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 May 2020 04:33:31 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N1xZX-1ivw3s247t-012KMI for <linux-pci@vger.kernel.org>; Fri, 22 May 2020
- 10:33:29 +0200
-Received: by mail-qt1-f170.google.com with SMTP id a23so7725832qto.1
-        for <linux-pci@vger.kernel.org>; Fri, 22 May 2020 01:33:29 -0700 (PDT)
-X-Gm-Message-State: AOAM531l+NR8xbn0pFiA0+JMyftlsyaL8DVnxYrY8R9rs46yUz2MSEwH
-        SKIvDO/Zc/mdvmnyoahJw9eitfrK/qy1xoHCGpo=
-X-Google-Smtp-Source: ABdhPJxfcs3ZT2aLA7BYRC5mCrGso5P3kWVVcAYg6XubplVJQy3U52DMRyTk03H8OqhPgepbkOY1b85ob2hkAE1uLdY=
-X-Received: by 2002:ac8:6a09:: with SMTP id t9mr14598461qtr.7.1590136408350;
- Fri, 22 May 2020 01:33:28 -0700 (PDT)
+        id S1729322AbgEVJRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 05:17:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50538 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728068AbgEVJRP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 May 2020 05:17:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4597EB215F;
+        Fri, 22 May 2020 09:17:14 +0000 (UTC)
+Message-ID: <75a1dd87d18103f1e8b0afbd1e0718c74c4a77d4.camel@suse.de>
+Subject: Re: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 May 2020 11:17:08 +0200
+In-Reply-To: <CA+-6iNyqtFguHJ=sB=nKoghX6PR9ve5OuyafPw88mfSmhe+c8Q@mail.gmail.com>
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+         <20200519203419.12369-5-james.quinlan@broadcom.com>
+         <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
+         <CA+-6iNyqtFguHJ=sB=nKoghX6PR9ve5OuyafPw88mfSmhe+c8Q@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-IGhRx3S6S3ntSbJkcWLj"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-References: <b7ff0106-e4e7-5d0f-667b-8552cf5535dc@doth.eu> <20200521085211.GA2732409@kroah.com>
- <b966d133-4e1e-f050-f1ca-67aa7eaf0ca7@doth.eu>
-In-Reply-To: <b966d133-4e1e-f050-f1ca-67aa7eaf0ca7@doth.eu>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 May 2020 10:33:12 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0YwMJmTimtj0_KfKaPuPs3SMvUgj4eDow1jp8CY5Ugng@mail.gmail.com>
-Message-ID: <CAK8P3a0YwMJmTimtj0_KfKaPuPs3SMvUgj4eDow1jp8CY5Ugng@mail.gmail.com>
-Subject: Re: [PATCH] misc: rtsx: Add short delay after exit from ASPM
-To:     Klaus Doth <kdlnx@doth.eu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:v3XsL2AU4aAoMWWd3tJybCqF661HyuPqU351EzJslAQ2UtMFhps
- 5S/AE2ICBCOUjN0HKX6/iZ5+k7ek+4/xa4BFaTddMAPJ+nkTZ1b8YqJe0fPENnnkLZj2qC5
- oTtdN0YNwQZr1T1M5+fgdCPUxSMSL5rkBdFuugXXAgTmfV8Qo+d2h/gT0/11QT5JH9hrkhe
- KiBIQQvqgpfrnsn1PtydQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gnzmTvXto2I=:q9bs+oQh4UCLvWncBTmvS+
- tA/htghikYjhh85rKWAsptuaKDq53hQ8TON23+xCZcfLbSxKs3iGfw8q8MCcLAf/gXw6gvPJM
- j977Rev5SgFfsGVDDyl/VnL64u5qi8X/1KBDBLoZ/OkXOvLVfiO6EktlRZ1BU77C6elOuSBTS
- 0NhoEXtjmnQN/lSmXazIbuxnlWt5Qu9Dn0JBbp/FDGxGjQWAvqLEuG++PqNIUp5OUEDHFW9fu
- qtaLfQ1Hx5yFIx2TLOBrfwmgja3B0c1gEsHl6ysDBlvW5se5CouKvoHF8Lylq6nI1Fzgd7oC0
- zDNEJllxVdHHYB4P+G9Bp3CFeqISk19BD/Q6jqUVOH05piYCHDOLcS1LFPvRXN9e0XaCpqdJg
- 6p4ak3wmbHZ342DKFZdZaY+XlQt0VPHcj/eBNF00GcbRPXfDnjjkUlYcbZsP/CDFV1KHz6srS
- Iz4bZUgCzYz+Htlam+9Fan1utw/PRNBndzkXH9L1CXwjhSS0aBcfMf+cijnTQMQPkq9jtQh/x
- +JN2jilTg2wnGZTsQDlnKxmS3jc6N9BFqVfKJw9DEUU9FddpyabnmHWPfubMTb11cXaIXLI5M
- SH0p68JiY1LDPdKW3DsBvOc16lpOI3eRNB8ny2tlrbTLStsInTmnzMAsZ//d39IYsbvAItUH+
- 5nBPUKbv1vN2idVz9BuufsjpP8yHHiwK6yK619CjZEqyPRa65l3MgSbTl/DsTp9LgCc4brjQl
- jv/yLJsblI9jJjlKTXQCsfSMvYNjhIyCXzIArhlRutApJzuVKnkp+MmwbgYDWoRKxqUS0Kq3A
- samDfMkeRqUFSQ8ZphNc2b8oOI0a+dYTHiLrc9y3GFGFVYgNI8=
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:23 AM Klaus Doth <kdlnx@doth.eu> wrote:
->
-> From: Klaus Doth <kdlnx@doth.eu>
->
-> DMA transfers to and from the SD card stall for 10 seconds and run into
-> timeout on RTS5260 card readers after ASPM was enabled.
->
-> Adding a short msleep after disabling ASPM fixes the issue on several
-> Dell Precision 7530/7540 systems I tested.
->
-> This function is only called when waking up after the chip went into
-> power-save after not transferring data for a few seconds. The added
-> msleep does therefore not change anything in data transfer speed or
-> induce any excessive waiting while data transfers are running, or the
-> chip is sleeping. Only the transition from sleep to active is affected.
->
-> Signed-off-by: Klaus Doth <kdlnx@doth.eu>
-> ---
->  drivers/misc/cardreader/rtsx_pcr.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/misc/cardreader/rtsx_pcr.c
-> b/drivers/misc/cardreader/rtsx_pcr.c
-> index 06038b325b02..8b0799cd88c2 100644
-> --- a/drivers/misc/cardreader/rtsx_pcr.c
-> +++ b/drivers/misc/cardreader/rtsx_pcr.c
-> @@ -141,6 +141,7 @@ static void rtsx_comm_pm_full_on(struct rtsx_pcr *pcr)
->      struct rtsx_cr_option *option = &pcr->option;
->
->      rtsx_disable_aspm(pcr);
-> +    msleep(1);
 
-Your patch looks fine to me, but I think you should put a short version
-of that the changelog text into a code comment next to the msleep().
+--=-IGhRx3S6S3ntSbJkcWLj
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-       Arnd
+On Thu, 2020-05-21 at 15:35 -0400, Jim Quinlan wrote:
+> On Wed, May 20, 2020 at 7:51 AM Nicolas Saenz Julienne
+
+[...]
+
+> > >  /*
+> > > @@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops =3D {
+> > >=20
+> > >  static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pc=
+ie,
+> > > u32
+> > > val)
+> > >  {
+> > > -     u32 tmp;
+> > > +     u32 tmp, mask =3D  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MAS=
+K];
+> > > +     u32 shift =3D pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
+> >=20
+> > I don't think you need shift here, IIUC u32p_replace_bits() will take c=
+are
+> > of
+> > all the masking and shifting internally, moreover, you'd be able to dro=
+p the
+> > shift entry from reg_field_info.
+> I believe that u32p_replace_bits requires at least one of the value or
+> mask to be compile time constants to work and we don't have that here.
+
+Of course, sorry for the noise then.
+
+Regards,
+Nicolas
+
+
+--=-IGhRx3S6S3ntSbJkcWLj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7HmJQACgkQlfZmHno8
+x/70WAf+JoTHq0ZhGNKW8bxgqcUyLEW3dAtHwfItO+wAuflXC/o+CEKjpSFs2+j0
+pG6Vatt7V46ZMMUgZb3clhJxgd2VQ/rJYIRPr8l9E7OplbhGdbmjXMD1CyD4y+j7
+vyGxrliBdi63YKcBdLGwXjuzDG3kn2b35qWONfBb6j5n8N0tfQPUKNbJcw0VxVFB
+0vC0MCEDYxGCWrW0jifLamw1U5OYZTN59aX7BW/9+csiXoWGLdwu8TmO1G3GAUf9
+7hA1B8n9ReG8le34eQbsufe/qRrQuGwaBvjbYkMkOML2N8GL1tNDkglGA7OlAL+h
+pDvQnKJkJltAZ5+bOP4gaILPBLVVzQ==
+=eV6J
+-----END PGP SIGNATURE-----
+
+--=-IGhRx3S6S3ntSbJkcWLj--
+
