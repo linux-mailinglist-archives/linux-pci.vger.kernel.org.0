@@ -2,105 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80A111DE2BF
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 11:17:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79C3B1DE2CC
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 11:18:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbgEVJRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 05:17:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50538 "EHLO mx2.suse.de"
+        id S1729701AbgEVJSa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 05:18:30 -0400
+Received: from galileo.doth.eu ([213.133.100.131]:38374 "EHLO galileo.doth.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgEVJRP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 May 2020 05:17:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4597EB215F;
-        Fri, 22 May 2020 09:17:14 +0000 (UTC)
-Message-ID: <75a1dd87d18103f1e8b0afbd1e0718c74c4a77d4.camel@suse.de>
-Subject: Re: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 22 May 2020 11:17:08 +0200
-In-Reply-To: <CA+-6iNyqtFguHJ=sB=nKoghX6PR9ve5OuyafPw88mfSmhe+c8Q@mail.gmail.com>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
-         <20200519203419.12369-5-james.quinlan@broadcom.com>
-         <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
-         <CA+-6iNyqtFguHJ=sB=nKoghX6PR9ve5OuyafPw88mfSmhe+c8Q@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-IGhRx3S6S3ntSbJkcWLj"
-User-Agent: Evolution 3.36.2 
+        id S1729697AbgEVJSa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 May 2020 05:18:30 -0400
+Subject: [PATCH v2] misc: rtsx: Add short delay after exit from ASPM
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+References: <b7ff0106-e4e7-5d0f-667b-8552cf5535dc@doth.eu>
+ <20200521085211.GA2732409@kroah.com>
+ <b966d133-4e1e-f050-f1ca-67aa7eaf0ca7@doth.eu>
+ <CAK8P3a0YwMJmTimtj0_KfKaPuPs3SMvUgj4eDow1jp8CY5Ugng@mail.gmail.com>
+From:   Klaus Doth <kdlnx@doth.eu>
+Autocrypt: addr=kdlnx@doth.eu; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <fb202fc5-a96e-a6f1-7d4e-5d5821957a79@doth.eu>
+Date:   Fri, 22 May 2020 11:18:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <CAK8P3a0YwMJmTimtj0_KfKaPuPs3SMvUgj4eDow1jp8CY5Ugng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Klaus Doth <kdlnx@doth.eu>
 
---=-IGhRx3S6S3ntSbJkcWLj
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+DMA transfers to and from the SD card stall for 10 seconds and run into
+timeout on RTS5260 card readers after ASPM was enabled.
 
-On Thu, 2020-05-21 at 15:35 -0400, Jim Quinlan wrote:
-> On Wed, May 20, 2020 at 7:51 AM Nicolas Saenz Julienne
+Adding a short msleep after disabling ASPM fixes the issue on several
+Dell Precision 7530/7540 systems I tested.
 
-[...]
+This function is only called when waking up after the chip went into
+power-save after not transferring data for a few seconds. The added
+msleep does therefore not change anything in data transfer speed or
+induce any excessive waiting while data transfers are running, or the
+chip is sleeping. Only the transition from sleep to active is affected.
 
-> > >  /*
-> > > @@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops =3D {
-> > >=20
-> > >  static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pc=
-ie,
-> > > u32
-> > > val)
-> > >  {
-> > > -     u32 tmp;
-> > > +     u32 tmp, mask =3D  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MAS=
-K];
-> > > +     u32 shift =3D pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
-> >=20
-> > I don't think you need shift here, IIUC u32p_replace_bits() will take c=
-are
-> > of
-> > all the masking and shifting internally, moreover, you'd be able to dro=
-p the
-> > shift entry from reg_field_info.
-> I believe that u32p_replace_bits requires at least one of the value or
-> mask to be compile time constants to work and we don't have that here.
+Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+---
+ drivers/misc/cardreader/rtsx_pcr.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Of course, sorry for the noise then.
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c
+b/drivers/misc/cardreader/rtsx_pcr.c
+index 06038b325b02..3a6a6988cf80 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -141,6 +141,9 @@ static void rtsx_comm_pm_full_on(struct rtsx_pcr *pcr)
+     struct rtsx_cr_option *option = &pcr->option;
+ 
+     rtsx_disable_aspm(pcr);
++   
++    /* Fixes DMA transfer timeout issue after disabling ASPM on RTS5260 */
++    msleep(1);
+ 
+     if (option->ltr_enabled)
+         rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+-- 
+2.26.2
 
-Regards,
-Nicolas
-
-
---=-IGhRx3S6S3ntSbJkcWLj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7HmJQACgkQlfZmHno8
-x/70WAf+JoTHq0ZhGNKW8bxgqcUyLEW3dAtHwfItO+wAuflXC/o+CEKjpSFs2+j0
-pG6Vatt7V46ZMMUgZb3clhJxgd2VQ/rJYIRPr8l9E7OplbhGdbmjXMD1CyD4y+j7
-vyGxrliBdi63YKcBdLGwXjuzDG3kn2b35qWONfBb6j5n8N0tfQPUKNbJcw0VxVFB
-0vC0MCEDYxGCWrW0jifLamw1U5OYZTN59aX7BW/9+csiXoWGLdwu8TmO1G3GAUf9
-7hA1B8n9ReG8le34eQbsufe/qRrQuGwaBvjbYkMkOML2N8GL1tNDkglGA7OlAL+h
-pDvQnKJkJltAZ5+bOP4gaILPBLVVzQ==
-=eV6J
------END PGP SIGNATURE-----
-
---=-IGhRx3S6S3ntSbJkcWLj--
 
