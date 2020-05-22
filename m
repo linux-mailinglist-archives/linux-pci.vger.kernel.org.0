@@ -2,144 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 705771DE411
-	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 12:18:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C69711DE4EC
+	for <lists+linux-pci@lfdr.de>; Fri, 22 May 2020 12:56:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgEVKSK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 May 2020 06:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728281AbgEVKSJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 May 2020 06:18:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D16DBC05BD43
-        for <linux-pci@vger.kernel.org>; Fri, 22 May 2020 03:18:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k13so9654985wrx.3
-        for <linux-pci@vger.kernel.org>; Fri, 22 May 2020 03:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rDNDKX0HkLYt94EgaC8KrXxbFTf0b5UZDhkhcEUmDsA=;
-        b=WVJ//CKH4dmTBE0aqIBZXt0aAGFbLb2/HSsz+TTszSD504939LXSss4CoipdpB/CaP
-         UYEC49gciPAa156HBkX3vD6agGFcawT7wJGuqinqgdldtVpJcnYlHy8kYO+4r5wUGW4N
-         dybibnHmXgJPE6Yx//FGirSeVMwet4YQ4pqdD8PfOkmlAM9lkmxvRxK8W5pq10wP/QdV
-         nPZKGtAyqCQjPtUOqPpWTpK7PWQ7g8PDTvbQ9eAr9/mGFFzSg02tY1TfCtIKZQykmP7N
-         B8ikx09FYbHX1EDesimTPNwCJGF8URn5yiI0zH0eo0dpPE+4HsehFV61iZGVMleox6n1
-         gTbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rDNDKX0HkLYt94EgaC8KrXxbFTf0b5UZDhkhcEUmDsA=;
-        b=rSp95WTEIJ8yDRyvAMtozVU/HxQPrb1ZYC13w8Ncwuq9utzLzgwI1WCKB6K+lFeq05
-         UAHxoS6cioufzV1Wko0GdM2v0FD2Eo8RKB6Kv2nqfYqh4b6sYaPn96JFyi8JbhYnu7/i
-         41ocE9z8eq3lo/TF8rKTHbqnFbIUfC9ykAYGlz0TYrZnOSIZVwJ8qKcRyoufd1K9/juA
-         01cULx8GJFmPrJCZDa5aL5Zkbd0vTYPi6p0QTR85fFXa2VDsQZZr0LpMr0R3z6nhRnvK
-         WhoigRsdYTx0gsaTLlDCn3XDxFDe2KYaTswcnYHkiDIePmZFBxqg6hBawnF5HnsquqB2
-         Pd4Q==
-X-Gm-Message-State: AOAM533P/jJf7E+5HTmbcYSagbR4ctETs2JTMKDAo4xdSwFVscfBekPE
-        St/7KEn00WtPtkgltPzdE0B6fA==
-X-Google-Smtp-Source: ABdhPJzB2HI5kI/EmFJDdYOUgVosMpdPIKY9IaspD/NoZu4lv6KFYPamr6Pcq0PBpjpQXhtZ+2g/kQ==
-X-Received: by 2002:a5d:66c5:: with SMTP id k5mr2740621wrw.17.1590142686217;
-        Fri, 22 May 2020 03:18:06 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id d126sm9765981wmd.32.2020.05.22.03.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 03:18:05 -0700 (PDT)
-Date:   Fri, 22 May 2020 12:17:55 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org, joro@8bytes.org,
-        catalin.marinas@arm.com, robin.murphy@arm.com,
-        kevin.tian@intel.com, baolu.lu@linux.intel.com,
-        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org, eric.auger@redhat.com
-Subject: Re: [PATCH v7 13/24] iommu/arm-smmu-v3: Enable broadcast TLB
- maintenance
-Message-ID: <20200522101755.GA3453945@myrica>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-14-jean-philippe@linaro.org>
- <20200521141730.GJ6608@willie-the-truck>
- <0c896ad27b43b2de554cf772f9453d0a@kernel.org>
+        id S1728640AbgEVK4J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 May 2020 06:56:09 -0400
+Received: from galileo.doth.eu ([213.133.100.131]:38504 "EHLO galileo.doth.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728371AbgEVK4J (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 May 2020 06:56:09 -0400
+From:   Klaus Doth <kdlnx@doth.eu>
+Subject: [PATCH v3] misc: rtsx: Add short delay after exit from ASPM
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+References: <b7ff0106-e4e7-5d0f-667b-8552cf5535dc@doth.eu>
+ <20200521085211.GA2732409@kroah.com>
+ <b966d133-4e1e-f050-f1ca-67aa7eaf0ca7@doth.eu>
+ <CAK8P3a0YwMJmTimtj0_KfKaPuPs3SMvUgj4eDow1jp8CY5Ugng@mail.gmail.com>
+Autocrypt: addr=kdlnx@doth.eu; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4434eaa7-2ee3-a560-faee-6cee63ebd6d4@doth.eu>
+Date:   Fri, 22 May 2020 12:56:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c896ad27b43b2de554cf772f9453d0a@kernel.org>
+In-Reply-To: <CAK8P3a0YwMJmTimtj0_KfKaPuPs3SMvUgj4eDow1jp8CY5Ugng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Eric]
+From: Klaus Doth <kdlnx@doth.eu>
 
-On Thu, May 21, 2020 at 03:38:35PM +0100, Marc Zyngier wrote:
-> On 2020-05-21 15:17, Will Deacon wrote:
-> > [+Marc]
-> > 
-> > On Tue, May 19, 2020 at 07:54:51PM +0200, Jean-Philippe Brucker wrote:
-> > > The SMMUv3 can handle invalidation targeted at TLB entries with shared
-> > > ASIDs. If the implementation supports broadcast TLB maintenance,
-> > > enable it
-> > > and keep track of it in a feature bit. The SMMU will then be
-> > > affected by
-> > > inner-shareable TLB invalidations from other agents.
-> > > 
-> > > A major side-effect of this change is that stage-2 translation
-> > > contexts
-> > > are now affected by all invalidations by VMID. VMIDs are all shared
-> > > and
-> > > the only ways to prevent over-invalidation, since the stage-2 page
-> > > tables
-> > > are not shared between CPU and SMMU, are to either disable BTM or
-> > > allocate
-> > > different VMIDs. This patch does not address the problem.
-> > 
-> > This sounds like a potential performance issue, particularly as we
-> > expose
-> > stage-2 contexts via VFIO directly.
+DMA transfers to and from the SD card stall for 10 seconds and run into
+timeout on RTS5260 card readers after ASPM was enabled.
 
-Yes it's certainly going to affect SMMU performance, though I haven't
-measured it. QEMU and kvmtool currently use stage-1 translations instead
-of stage-2, so it won't be a problem until they start using nested
-translation (and unless the SMMU only supports stage-2).
+Adding a short msleep after disabling ASPM fixes the issue on several
+Dell Precision 7530/7540 systems I tested.
 
-In the coming month I'd like to have a look at coordinating VMID
-allocation between KVM and SMMU, for guest SVA. If the guest wants to
-share page tables with the SMMU, the SMMU has to use the same VMIDs as the
-VM to receive broadcast TLBI.
+This function is only called when waking up after the chip went into
+power-save after not transferring data for a few seconds. The added
+msleep does therefore not change anything in data transfer speed or
+induce any excessive waiting while data transfers are running, or the
+chip is sleeping. Only the transition from sleep to active is affected.
 
-Similarly to patch 06 ("arm64: mm: Pin down ASIDs for sharing mm with
-devices") the SMMU would request a VMID allocated by KVM, when setting up
-a nesting VFIO container. One major downside is that the VMID is pinned
-and cannot be recycled on rollover while it's being used for DMA.
+Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+---
+Changes from v2:
+  - Added this changelog. Tabs should now be tabs instead of spaces.
 
-I wonder if we could use this even when page tables aren't shared between
-CPU and SMMU, to avoid splitting the VMID space.
+Changes from v1:
+  - Added comment explaining why the msleep is required
 
-> > Maybe we could reserve some portion
-> > of
-> > VMID space for the SMMU? Marc, what do you reckon?
-> 
-> Certainly doable when we have 16bits VMIDs. With smaller VMID spaces (like
-> on
-> v8.0), this is a bit more difficult (we do have pretty large v8.0 systems
-> around).
+ drivers/misc/cardreader/rtsx_pcr.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It's only an issue if those systems have an SMMUv3 supporting DVM. With
-any luck that doesn't exist?
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+index 06038b325b02..3a6a6988cf80 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -141,6 +141,9 @@ static void rtsx_comm_pm_full_on(struct rtsx_pcr *pcr)
+ 	struct rtsx_cr_option *option = &pcr->option;
+ 
+ 	rtsx_disable_aspm(pcr);
++	
++	/* Fixes DMA transfer timout issue after disabling ASPM on RTS5260 */
++	msleep(1);
+ 
+ 	if (option->ltr_enabled)
+ 		rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+-- 
+2.26.2
 
-> How many VMID bits are we talking about?
-
-That's anyone's guess... One passed-through device per VM would halve the
-VMID space. But the SMMU allocates one VMID for each device assigned to a
-guest, not one per VM (well one per domain, or VFIO container, but I think
-it boils down to one per device with QEMU). So with SR-IOV for example it
-should be pretty easy to reach 256 VMIDs in the SMMU.
-
-Thanks,
-Jean
