@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA8371E032E
-	for <lists+linux-pci@lfdr.de>; Sun, 24 May 2020 23:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A4A1E0330
+	for <lists+linux-pci@lfdr.de>; Sun, 24 May 2020 23:32:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388380AbgEXVci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 May 2020 17:32:38 -0400
+        id S2388387AbgEXVcj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 May 2020 17:32:39 -0400
 Received: from mga02.intel.com ([134.134.136.20]:9322 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388341AbgEXVch (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 24 May 2020 17:32:37 -0400
-IronPort-SDR: 3u3pCgHvk5Y3+AYxtVLbw0xCvhDM0/ZhRqXqHYNUTONmbdHCYu/qzIGZTZG4F7Ch0f6NR6cCY1
- kdfYrcalKgww==
+        id S2387879AbgEXVci (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 24 May 2020 17:32:38 -0400
+IronPort-SDR: 86W8BXYtssQkw0dd2c4k70U5xBUgoJaVWAg3KgsbOQX88unAtkCsr33Gb5+GkJCpNN3tlG/u27
+ FqiW1tBquv9Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
   by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 14:32:37 -0700
-IronPort-SDR: XnCXhDvYZTds7OVsIp0e7fhm2dVK1cKFELNJ3/53gr/u+eGjsGRr0HeJ1Vhhjr8YxsrPExNx6s
- Fx8mocju/WWQ==
+IronPort-SDR: upF5+Dbr1NOazmvmPuFkxoDQJifyYz7OQk9sfIgn/is2Myhd4GHZZ7/MYLn7UJj8KP8MCoSjDq
+ C6dscW2u15zg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,431,1583222400"; 
-   d="scan'208";a="467875393"
+   d="scan'208";a="467875398"
 Received: from tjrondo-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.251.20.235])
-  by fmsmga006.fm.intel.com with ESMTP; 24 May 2020 14:32:36 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 24 May 2020 14:32:37 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v3 2/5] PCI/AER: Remove redundant dev->aer_cap checks.
-Date:   Sun, 24 May 2020 14:32:31 -0700
-Message-Id: <d5ccc7a060ec9cdc234bdae7df8a0a4410f13f42.1590355824.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v3 3/5] ACPI/PCI: Ignore _OSC negotiation result if pcie_ports_native is set.
+Date:   Sun, 24 May 2020 14:32:32 -0700
+Message-Id: <969d4f083f445532bd1cdd98e3ce110574a461b0.1590355824.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1590355824.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1590355824.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -41,58 +41,54 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-pcie_aer_get_firmware_first() includes check for dev->aer_cap.
-So remove redundant dev->aer_cap checks.
+pcie_ports_native is set only if user requests native handling
+of PCIe capabilities via pcie_port_setup command line option.
+User input takes precedence over _OSC based control negotiation
+result. So consider the _OSC negotiated result only if
+pcie_ports_native is unset.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pcie/aer.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ drivers/acpi/pci_root.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 7c4294454df0..5f5ffe2f0986 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -322,9 +322,6 @@ int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- 	if (pcie_aer_get_firmware_first(dev))
- 		return -EIO;
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 9e235c1a75ff..e0039ad3480a 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -914,18 +914,20 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+ 		goto out_release_info;
  
--	if (!dev->aer_cap)
--		return -EIO;
--
- 	return pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
- }
- EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
-@@ -349,13 +346,9 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
+ 	host_bridge = to_pci_host_bridge(bus->bridge);
+-	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+-		host_bridge->native_pcie_hotplug = 0;
+-	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+-		host_bridge->native_shpc_hotplug = 0;
+-	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
+-		host_bridge->native_aer = 0;
+-	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
+-		host_bridge->native_pme = 0;
+-	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+-		host_bridge->native_ltr = 0;
+-	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+-		host_bridge->native_dpc = 0;
++	if (!pcie_ports_native) {
++		if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
++			host_bridge->native_pcie_hotplug = 0;
++		if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
++			host_bridge->native_shpc_hotplug = 0;
++		if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
++			host_bridge->native_aer = 0;
++		if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
++			host_bridge->native_pme = 0;
++		if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
++			host_bridge->native_ltr = 0;
++		if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
++			host_bridge->native_dpc = 0;
++	}
  
- int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- {
--	int pos;
-+	int pos = dev->aer_cap;
- 	u32 status, sev;
- 
--	pos = dev->aer_cap;
--	if (!pos)
--		return -EIO;
--
- 	if (pcie_aer_get_firmware_first(dev))
- 		return -EIO;
- 
-@@ -372,13 +365,9 @@ EXPORT_SYMBOL_GPL(pci_aer_clear_nonfatal_status);
- 
- void pci_aer_clear_fatal_status(struct pci_dev *dev)
- {
--	int pos;
-+	int pos = dev->aer_cap;
- 	u32 status, sev;
- 
--	pos = dev->aer_cap;
--	if (!pos)
--		return;
--
- 	if (pcie_aer_get_firmware_first(dev))
- 		return;
- 
+ 	/*
+ 	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
 -- 
 2.17.1
 
