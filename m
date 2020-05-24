@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA3B71DFC6B
-	for <lists+linux-pci@lfdr.de>; Sun, 24 May 2020 04:16:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7714F1DFC6C
+	for <lists+linux-pci@lfdr.de>; Sun, 24 May 2020 04:16:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388262AbgEXCQ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 23 May 2020 22:16:28 -0400
+        id S2388225AbgEXCQ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 23 May 2020 22:16:29 -0400
 Received: from mga17.intel.com ([192.55.52.151]:63895 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388225AbgEXCQ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 23 May 2020 22:16:27 -0400
-IronPort-SDR: QKFY/kp+kIV3UcRnz5nUGLnTd7B6itPn4caYZSACWPoefAgbpHjAQrxPuHy6RsOYwrwYYioenY
- iBv5VML+dKQQ==
+        id S2388227AbgEXCQ2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 23 May 2020 22:16:28 -0400
+IronPort-SDR: X/6CHMUFpD6l9wZz249gJAji/asewKe6S2ST5osQP9FwP9UW1CCqXzPUe0ChcMHe09sKueTvBk
+ s6xVgQvzaRJg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2020 19:16:27 -0700
-IronPort-SDR: Nz2xoEerEH/BJ6D1HVdYe7IQKLvJESSzDd+dwD/N4S0+79IaKpc5OQ3p6pT0iSFtLWVhj5Wy/W
- QZUPWBrebQLg==
+IronPort-SDR: 3/56dmV7a41DeXK5YTVnNCx9WEn1arPWo4oq4z64EJr+vE0cfkcmDEPBkyBMHq/Diw3Ex/cScQ
+ 87ZTsdjVeC7w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,427,1583222400"; 
-   d="scan'208";a="467599113"
+   d="scan'208";a="413153581"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 23 May 2020 19:16:25 -0700
+  by orsmga004.jf.intel.com with ESMTP; 23 May 2020 19:16:25 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jcgBc-000IHu-OJ; Sun, 24 May 2020 10:16:24 +0800
-Date:   Sun, 24 May 2020 10:15:31 +0800
+        id 1jcgBd-000IK3-45; Sun, 24 May 2020 10:16:25 +0800
+Date:   Sun, 24 May 2020 10:15:47 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/enumeration] BUILD SUCCESS
- 11fdcf05032812bd23cdc42850d1f650376ec09d
-Message-ID: <5ec9d8c3.yQJ/zWBY/VTpL+6Y%lkp@intel.com>
+Subject: [pci:pci/virtualization] BUILD SUCCESS
+ 84e35a52e5ca2f6013b0cdd454cc47d403b157a9
+Message-ID: <5ec9d8d3.0UV7PSyoe1bnrtwm%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,10 +43,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/enumeration
-branch HEAD: 11fdcf05032812bd23cdc42850d1f650376ec09d  pcmcia: Use CardBus window names (PCI_CB_BRIDGE_IO_0_WINDOW etc) when freeing
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/virtualization
+branch HEAD: 84e35a52e5ca2f6013b0cdd454cc47d403b157a9  x86/PCI: Drop unused xen_register_pirq() gsi_override parameter
 
-elapsed time: 3141m
+elapsed time: 3216m
 
 configs tested: 109
 configs skipped: 1
