@@ -2,45 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02C311E0C17
-	for <lists+linux-pci@lfdr.de>; Mon, 25 May 2020 12:47:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBD251E0D71
+	for <lists+linux-pci@lfdr.de>; Mon, 25 May 2020 13:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389848AbgEYKro (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 May 2020 06:47:44 -0400
-Received: from nikam.ms.mff.cuni.cz ([195.113.20.16]:50628 "EHLO
-        nikam.ms.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389484AbgEYKro (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 May 2020 06:47:44 -0400
-X-Greylist: delayed 582 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 May 2020 06:47:43 EDT
-Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
-        id 68D062808B4; Mon, 25 May 2020 12:37:59 +0200 (CEST)
-Date:   Mon, 25 May 2020 12:37:59 +0200
-From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        f.fangjian@huawei.com, huangdaode@hisilicon.com
-Subject: Re: [PATCH v7 0/2] pciutils: Add basic decode support for CXL DVSEC
-Message-ID: <mj+md-20200525.103642.86045.nikam@ucw.cz>
-References: <20200511174618.10589-1-sean.v.kelley@linux.intel.com>
+        id S2390152AbgEYLi4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 May 2020 07:38:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390142AbgEYLi4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 May 2020 07:38:56 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0BA8C061A0E
+        for <linux-pci@vger.kernel.org>; Mon, 25 May 2020 04:38:54 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id h188so10357199lfd.7
+        for <linux-pci@vger.kernel.org>; Mon, 25 May 2020 04:38:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YBa2LSmYu+IPWGoaF/9O6guywPiZMFZ32Kf+5yLy6GU=;
+        b=TgFoBHoLwVPPaGKU6BhV9r1CviGBFvcclk6KZwXVz0HUKDXdISfheqqwBGaG14ujmR
+         jXjohpIZ1lqK6WzX42WBvtMoG5LlLcGuv59CkIuk8vozWxnC45/vC82cOvJFpG5WeHmM
+         I2Kyw+AnIgoSTo7ShHIAGbcvJbSS6RoovI/X6Ap+agiv3c1SMR5NhaLDLj2puV6MA21t
+         Jds0QBLRdNnsDUZM8jQFp+x7oUCtbUgZ9fmn1U7aqnNc7WOV26wwxzZgobMXDyVzDWIT
+         GNIvmTMpuyHiqb5fsjQAUcDt1CcigYhZ+p6LsswOM3XHkzFMD3o/zGqja9FaQiARNTYY
+         A7yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YBa2LSmYu+IPWGoaF/9O6guywPiZMFZ32Kf+5yLy6GU=;
+        b=oj0ixQ6OJioSALNhcIMEnpvFLO3MKiL0DiV7Tqb1O9g7DJzzd7NCR1YtxsVV7+FRjO
+         DeWkwl3LCtLK4C0BPEgn0J3s4imwaB8+U7Xqpj+Qh9AcRAzQgrLOMDjLodGzw4V7tscG
+         1FTowyeDpEepIuq5uY0TK2amRjOU7RDT6LM+T0WT2G5VQ60KEkthkX1cQTCXyL7fVlzA
+         YXZgpSR/gKP/xXldMRkfTF61pU6M0U8z2Uq55x2bl5mC7T93aNGoi6l22gT9NpoPSQRJ
+         2hEPuyePXA/MwWvDribZsrt0zNHCtk4HmJbDXbT3q22v3ScpxNprZgUgfZ0S3XgsDCXQ
+         sawg==
+X-Gm-Message-State: AOAM533v/QXctGMVlDg2P9MEgF3HAndPTNEwSXYgY8dM3xqz1VKSnsQB
+        K05+OlbS3Iz5mGa0vXgIbmF4tXs03+LJpKueRF8TWw==
+X-Google-Smtp-Source: ABdhPJz+FkcbPi11VJu3LgfkrTe0cXWtOkBWtTFSrQTStJdpts2GmEXjlF/K+BUQThYfOfPoiwz6DTUyyg0qROlwY+M=
+X-Received: by 2002:a19:be87:: with SMTP id o129mr10647413lff.217.1590406733156;
+ Mon, 25 May 2020 04:38:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511174618.10589-1-sean.v.kelley@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200522234832.954484-1-robh@kernel.org> <20200522234832.954484-8-robh@kernel.org>
+In-Reply-To: <20200522234832.954484-8-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 13:38:42 +0200
+Message-ID: <CACRpkdbQv7AOBDtGxzMuT_Y3XFysZLyL5hQVzAxiXgFKbVQnVw@mail.gmail.com>
+Subject: Re: [PATCH 07/15] PCI: v3: Use pci_host_probe() to register host
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+On Sat, May 23, 2020 at 1:48 AM Rob Herring <robh@kernel.org> wrote:
 
-I applied your patch (by mistake, I applied v6 first, so the vendor ID change
-is a separate commit).
+> The v3 host driver does the same host registration and bus scanning
+> calls as pci_host_probe, so let's use it instead.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-I have cleaned up the code a bit, so that the DVSEC header is not parsed
-multiple times.
+Sweet!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Could you also update the cap-dvsec-cxl test to match the new vendor ID?
-
-			Have a nice day
-						Martin
+Yours,
+Linus Walleij
