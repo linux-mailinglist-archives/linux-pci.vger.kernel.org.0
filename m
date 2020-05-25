@@ -2,81 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DAAC1E08D9
-	for <lists+linux-pci@lfdr.de>; Mon, 25 May 2020 10:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54E6D1E0AEB
+	for <lists+linux-pci@lfdr.de>; Mon, 25 May 2020 11:43:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbgEYIbo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 May 2020 04:31:44 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34623 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgEYIbo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 May 2020 04:31:44 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b18so13311850oti.1;
-        Mon, 25 May 2020 01:31:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BOHOgMSOtvrMttT8QDeSyXiqFQqVxvPloVdz2ZAYSg4=;
-        b=kUIj48FwJVJflf9L5yyotJkS4lEvvFkwq/qEMupikdAVcHGvWZVqYHZPiS5RFfVU45
-         //GISgykgzlkamgiTNWARuFEQk1L69JMh2Sfev3cosfASJUsjMZ/5UNPUIIzYIMJqVZm
-         WEi4GMXdhp1yHVXp0XcQI0vRZLPJw+9RQ22qc9mOtHg01vo2NdakO6pQNHeB8HOdjWNk
-         JI6J4Fs9Z3m5yUj+ZH/TT7X+CaGRmito6XzNensZNQGi9pdQa1aFkbxzgR+0te63Leqp
-         1dcNHjLOp7SbIGQPbJ1JoNPq/UZ0A7+pw8vpnuHOCJEHNUK3AhAnCzj+O9+bLWGUM39t
-         FagQ==
-X-Gm-Message-State: AOAM530nc89JBZPmLl3grBlNyccxvg2Gw1jJFZ6oeVe6W3XhRkTTVZDH
-        94lV1ZlIIzK3y1/isdIVvgFKVruTsY6aLZqw/z8=
-X-Google-Smtp-Source: ABdhPJyoT2hc9i8qo+WU54flh8sYdL01Pv0pgeI/xRdS+cr2nb+efcfjcYB89kxAekLWsC0yEbwE9MWXQt9HqgEGxdM=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr20466217otw.250.1590395500493;
- Mon, 25 May 2020 01:31:40 -0700 (PDT)
+        id S2389421AbgEYJm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 May 2020 05:42:59 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60794 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389517AbgEYJm7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 May 2020 05:42:59 -0400
+Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
+        by jabberwock.ucw.cz (Postfix) with ESMTPS id 8DBCB1C02C2
+        for <linux-pci@vger.kernel.org>; Mon, 25 May 2020 11:42:57 +0200 (CEST)
+Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
+        id 1D7F71A073D; Mon, 25 May 2020 11:42:57 +0200 (CEST)
+Date:   Mon, 25 May 2020 11:42:57 +0200
+From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] lspci: Decode PCIe Link Capabilities 2
+Message-ID: <mj+md-20200525.094222.61770.albireo@ucw.cz>
+References: <20200521224030.1193617-1-helgaas@kernel.org>
 MIME-Version: 1.0
-References: <20200522234832.954484-1-robh@kernel.org> <20200522234832.954484-13-robh@kernel.org>
-In-Reply-To: <20200522234832.954484-13-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 10:31:29 +0200
-Message-ID: <CAMuHMdX1QCfcxPzpTOEJXYfeAo3=LzuEQxCNFn9VQJa8hN4QxQ@mail.gmail.com>
-Subject: Re: [PATCH 12/15] PCI: rcar: Use pci_host_probe() to register host
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521224030.1193617-1-helgaas@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spamd-Bar: /
+X-Spam-Status: No, score=-0.80
+X-Spamd-Result: default: False [-0.80 / 15.00];
+         ARC_NA(0.00)[];
+         BAYES_HAM(-3.00)[99.99%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         SENDER_REP_HAM(0.00)[asn: 51744(0.20), country: CZ(-0.00), ip: 91.219.245.20(-0.52)];
+         HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
+         AUTH_NA(1.00)[];
+         RCPT_COUNT_FIVE(0.00)[6];
+         HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
+         TO_MATCH_ENVRCPT_SOME(0.00)[];
+         DMARC_NA(0.00)[ucw.cz];
+         NEURAL_HAM(-0.00)[-0.277];
+         R_SPF_NA(0.00)[no SPF record];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         R_DKIM_NA(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
+         MID_RHS_MATCH_FROM(0.00)[];
+         TAGGED_FROM(0.00)[f-250520,linux-pci=vger.kernel.org]
+X-Rspamd-Queue-Id: 8DBCB1C02C2
+Authentication-Results: jabberwock.ucw.cz;
+        dkim=none;
+        dmarc=none;
+        spf=none (jabberwock.ucw.cz: domain of mj@ucw.cz has no SPF policy when checking 91.219.245.20) smtp.mailfrom=mj@ucw.cz
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Hello!
 
-On Sat, May 23, 2020 at 1:50 AM Rob Herring <robh@kernel.org> wrote:
-> The rcar host driver does the same host registration and bus scanning
-> calls as pci_host_probe, so let's use it instead.
->
-> Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Decode Link Capabilities 2, including the Supported Link Speeds Vector,
+> and expand the decoding of Link Status 2.
+> 
+> Bjorn Helgaas (2):
+>   lspci: Decode PCIe Link Capabilities 2, expand Link Status 2
+>   lspci: Use commas more consistently
 
-Thanks for your patch!
+Thanks, applied.
 
-Note that this does have 2 side effects: the "linux,pci-probe-only" DT
-property and the "pcie_scan_all" kernel command line option are now taken
-into account.
-
-Regardless:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+				Martin
