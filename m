@@ -2,44 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1858E1E2544
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:19:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A34071E2567
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:28:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgEZPTU convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 26 May 2020 11:19:20 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:40593 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgEZPTU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:19:20 -0400
-Received: by mail-oo1-f67.google.com with SMTP id f39so976300ooi.7;
-        Tue, 26 May 2020 08:19:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VZBcz6P8XvlHsbrU2eTtG7/ScIEzLwH8fekfbRdSKRQ=;
-        b=axB0+ztMZNPQHmh2T5J1rNX9XSSqUJ1ghF8kZRp21n86wbYCSnhFvdknxHvMgxWxZL
-         rJYrae7L8x9X9tavzKHdELQgCk12rkUHqFsMLw0DOyOPALJ64FjunAwiRSUvz1m3yVhr
-         YEgm3brc/NQ/u+Z1lT5X4ylfv29HXZrhuqdCJ1AntbRSp1wcywD6q2CsIn5JhLuIWysr
-         t+cDgFv5/X0ScpqJLzcNZ5SDMwfmAU1MKJwdysYqI01xgTnA25QVvB21spZSxQ/bSpyO
-         i79CoXuo5QvVoCierl6itgrB8iHESrqx4Z6WWFHlVXuIllaA8n62yLSWiTTNaaTXTJpz
-         LKzQ==
-X-Gm-Message-State: AOAM530hYjiOOErfVOwMBEOEK3O85DOWy81EVO7IHYM6CudnZRKUWkfX
-        Cr6QBA3mlyVEcrw/eY8Zjl1zL0ULWIYdXBscdXM=
-X-Google-Smtp-Source: ABdhPJz6T1ptdbNy/G/lwrqbnMsBUWMLewVuG8K8TUsIgnEptYY3NNFI0VGqY6Fo8CDoDMoNJVTCuZ+6jxk8hfWP6YI=
-X-Received: by 2002:a4a:be07:: with SMTP id l7mr17198759oop.38.1590506358744;
- Tue, 26 May 2020 08:19:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200525182608.1823735-1-kw@linux.com> <20200525182608.1823735-9-kw@linux.com>
- <20200526063521.GC2578492@kroah.com> <20200526150744.GC75990@rocinante>
-In-Reply-To: <20200526150744.GC75990@rocinante>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 May 2020 17:19:07 +0200
-Message-ID: <CAJZ5v0grVQhmk=q9_=CbBa8y_8XbTOeqv-Hb6Hivi6ffKsVHmQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] net/iucv: Use the new device_to_pm() helper to access
- struct dev_pm_ops
-To:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1729118AbgEZP2q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 11:28:46 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:54005 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728626AbgEZP2q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:28:46 -0400
+Received: (qmail 7552 invoked by uid 1000); 26 May 2020 11:28:44 -0400
+Date:   Tue, 26 May 2020 11:28:44 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
@@ -63,37 +40,63 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux PM <linux-pm@vger.kernel.org>,
         linux-s390@vger.kernel.org,
         "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        "open list:ULTRA-WIDEBAND \(UWB\) SUBSYSTEM:" 
         <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH 8/8] net/iucv: Use the new device_to_pm() helper to
+ access struct dev_pm_ops
+Message-ID: <20200526152844.GA5809@rowland.harvard.edu>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-9-kw@linux.com>
+ <20200526063521.GC2578492@kroah.com>
+ <20200526150744.GC75990@rocinante>
+ <CAJZ5v0grVQhmk=q9_=CbBa8y_8XbTOeqv-Hb6Hivi6ffKsVHmQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0grVQhmk=q9_=CbBa8y_8XbTOeqv-Hb6Hivi6ffKsVHmQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 26, 2020 at 5:07 PM Krzysztof Wilczyński <kw@linux.com> wrote:
->
-> Hello Greg,
->
-> [...]
-> > It's "interesting" how using your new helper doesn't actually make the
-> > code smaller.  Perhaps it isn't a good helper function?
->
-> The idea for the helper was inspired by the comment Dan made to Bjorn
-> about Bjorn's change, as per:
->
->   https://lore.kernel.org/driverdev-devel/20191016135002.GA24678@kadam/
->
-> It looked like a good idea to try to reduce the following:
->
->   dev->driver && dev->driver->pm && dev->driver->pm->prepare
->
-> Into something more succinct.  Albeit, given the feedback from yourself
-> and Rafael, I gather that this helper is not really a good addition.
+On Tue, May 26, 2020 at 05:19:07PM +0200, Rafael J. Wysocki wrote:
+> On Tue, May 26, 2020 at 5:07 PM Krzysztof Wilczyński <kw@linux.com> wrote:
+> >
+> > Hello Greg,
+> >
+> > [...]
+> > > It's "interesting" how using your new helper doesn't actually make the
+> > > code smaller.  Perhaps it isn't a good helper function?
+> >
+> > The idea for the helper was inspired by the comment Dan made to Bjorn
+> > about Bjorn's change, as per:
+> >
+> >   https://lore.kernel.org/driverdev-devel/20191016135002.GA24678@kadam/
+> >
+> > It looked like a good idea to try to reduce the following:
+> >
+> >   dev->driver && dev->driver->pm && dev->driver->pm->prepare
+> >
+> > Into something more succinct.  Albeit, given the feedback from yourself
+> > and Rafael, I gather that this helper is not really a good addition.
+> 
+> IMO it could be used for reducing code duplication like you did in the
+> PCI code, but not necessarily in the other places where the code in
+> question is not exactly duplicated.
 
-IMO it could be used for reducing code duplication like you did in the
-PCI code, but not necessarily in the other places where the code in
-question is not exactly duplicated.
+The code could be a little more succinct, although it wouldn't fit every 
+usage.  For example,
 
-Thanks!
+#define pm_do_callback(dev, method) \
+	(dev->driver && dev->driver->pm && dev->driver->pm->callback ? \
+	dev->driver->pm->callback(dev) : 0)
+
+Then the usage is something like:
+
+	ret = pm_do_callback(dev, prepare);
+
+Would this be an overall improvement?
+
+Alan Stern
