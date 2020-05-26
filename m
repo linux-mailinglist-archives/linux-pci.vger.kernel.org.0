@@ -2,493 +2,428 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79E901E31D5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 00:00:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B721E31EA
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 00:02:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390639AbgEZV7y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 17:59:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389342AbgEZV7w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 May 2020 17:59:52 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA36E20888;
-        Tue, 26 May 2020 21:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590530389;
-        bh=xSQFmzVdzoUxfcvu2wRUbVRudyOKHlC9Ggsne2O28nk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wIoyNl8sZb0rcAZMzv0xSyDN6VEKW1zxSlT9y1KKVv7b4drKBPKObOJIjaYLdlH/6
-         IJ30cBvZwr+hEky74P74aVug6w/nwCgxCzshK8HMCbAM0Ry5ToAtS7mzxlvnAIjn/5
-         dDku9Yd/sowosCqsh+m3Wmwooleh9Y1MWqHMkTQE=
-Received: by mail-ot1-f45.google.com with SMTP id d26so17624626otc.7;
-        Tue, 26 May 2020 14:59:49 -0700 (PDT)
-X-Gm-Message-State: AOAM530octb8L1Xzn5XPXC3S/1ZDEVI4b8bWvA64TeaMCdiHI5UIHKMU
-        eSVgUF+Kc7EqQHOTV84QhSfSxEjQIdZXvBP7Uw==
-X-Google-Smtp-Source: ABdhPJxZ29D5JIphVKIB98kPYk/w2fSSW7w/Fywqa7ubkhWimWpMV3z0+WNoryqvUGnpR91IH6G4hNaVN6NQOoMFzv8=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr2269954ote.107.1590530388991;
- Tue, 26 May 2020 14:59:48 -0700 (PDT)
+        id S2391738AbgEZWBr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 18:01:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390639AbgEZWBr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 18:01:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54A8C03E96D
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 15:01:46 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h4so1155394wmb.4
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 15:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SdxC6l3m+bQG91grYSJ7i2ndjfK4R2ucc+n9fkumIc4=;
+        b=aBK0vxQT1l+ZohFwKm07oRm1W2PZ2wGi2DLu96f5egTMeIiVPtpJvEubQVaDSgYRdl
+         8ahJu31JddVKaP288EzASEU/vjnRI/HaINMV43cXsVKanYzuJ6hEuor74EnU3JB95dGh
+         MHjuRC91F0zMY+2KGOBQHsaOmoMXgi+D1r2uw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SdxC6l3m+bQG91grYSJ7i2ndjfK4R2ucc+n9fkumIc4=;
+        b=m4zNXnd9qDf59CWDWINTLZbIGuJ0eQDAjheeqxQxi1/RZJ3mCk01Pau+zfAU2De0kZ
+         AU+utx5mqHuMCScPaNwrpIgkdrsj3BDnp1GYzNfl/LS7zD5G1MxnnAMdcJk7p/GxPru2
+         yTFmPaiKtQFCV96SC1sucU+7CalZVNxGE+gKz+F/PdEBUyOwYX9r0Esy20Io4dxGs3hY
+         rYYxtPKsab9wQ92+TbZpVMh8fEXjHBCDX6kFS4mj4nRd8XPx2iwYZyfOvtzkX+g/IPIn
+         x7OFiVgdDFAF+oM/sym2ev+N6iNWQ+eiCwl/QIwyPPd1wT2PtQNUPASs9JwXix001/qW
+         9dKQ==
+X-Gm-Message-State: AOAM532vde2/HxMrUVwg1AWbftpO2AC9YHDBfXCYP2PlbJQYLNlasH6M
+        SJ12SgLkruSgXdLnr2QL3bUZ4nWv3JqxD8NKE1aE3Xxa
+X-Google-Smtp-Source: ABdhPJwfIgA4eouOfhmDbwylJHRx9EwTl8kvunBH1z0/OXwsP4fk9fbZi9FIiufnG/JQ2WjEz8WJfvRR2+WeJx4b9a8=
+X-Received: by 2002:a1c:7305:: with SMTP id d5mr1190780wmb.85.1590530505131;
+ Tue, 26 May 2020 15:01:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200521080153.5902-1-kishon@ti.com>
-In-Reply-To: <20200521080153.5902-1-kishon@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 26 May 2020 15:59:37 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+ZScKn1BJ9YWcs1uNEmLq5+XOdWfFNfF-S7cAqkYB1KA@mail.gmail.com>
-Message-ID: <CAL_Jsq+ZScKn1BJ9YWcs1uNEmLq5+XOdWfFNfF-S7cAqkYB1KA@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+ <20200526191303.1492-10-james.quinlan@broadcom.com> <20200526205448.GA1634618@smile.fi.intel.com>
+In-Reply-To: <20200526205448.GA1634618@smile.fi.intel.com>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Tue, 26 May 2020 18:01:32 -0400
+Message-ID: <CA+-6iNwQG9bz_EW+zKfDkAF27KrW9Nv2KrG6jQ-Edma7rG6LfQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/14] device core: Add ability to handle multiple dma offsets
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Corey Minyard <minyard@acm.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 21, 2020 at 2:02 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
-> property to configure the number of bits passed through from PCIe
-> address to internal address in Inbound Address Translation register.
-> This only used the NO MATCH BAR.
->
-> However standard PCI dt-binding already defines "dma-ranges" to
-> describe the address ranges accessible by PCIe controller. Add support
-> in Cadence PCIe host driver to parse dma-ranges and configure the
-> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
-> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB.
->
-> This adds support to take the next biggest region in "dma-ranges" and
-> find the smallest BAR that each of the regions fit in and if there is
-> no BAR big enough to hold the region, split the region to see if it can
-> be fitted using multiple BARs.
->
-> "dma-ranges" of J721E will be
-> dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-> Since there is no BAR which can hold 2^48 size, NO_MATCH_BAR will be
-> used here.
->
-> Legacy device tree binding compatibility is maintained by retaining
-> support for "cdns,no-bar-match-nbits".
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> The previous version of the patch can be found @
-> https://lore.kernel.org/linux-arm-kernel/20200508130646.23939-5-kishon@ti.com/
->
-> Changes from v3:
-> *) The whole logic of how we select a BAR to fit a region from
-> dma-ranges has been changed.
->   1) First select the biggest region in "dma-ranges" (after combining
->      adjacent regions)
->   2) Try to fit this region in a smallest available BAR whose size is
->      greater than the region size
->   3) If no such BAR is available try to find biggest availalbe BAR
->      whose size is lesser than the region size and only fit part of the
->      region in that BAR.
->   4) Repeat steps 3 and 4, to fit the remaining region size.
->  .../controller/cadence/pcie-cadence-host.c    | 254 +++++++++++++++++-
->  drivers/pci/controller/cadence/pcie-cadence.h |  28 +-
->  2 files changed, 265 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 6ecebb79057a..cf8b34b71b8f 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -11,6 +11,12 @@
->
->  #include "pcie-cadence.h"
->
-> +static u64 bar_max_size[] = {
-> +       [RP_BAR0] = _ULL(128 * SZ_2G),
-> +       [RP_BAR1] = SZ_2G,
-> +       [RP_NO_BAR] = _BITULL(63),
-> +};
-> +
->  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->                                int where)
->  {
-> @@ -106,6 +112,226 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->         return 0;
->  }
->
-> +static int cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
-> +                                       enum cdns_pcie_rp_bar bar,
-> +                                       u64 cpu_addr, u64 size,
-> +                                       unsigned long flags)
-> +{
-> +       struct cdns_pcie *pcie = &rc->pcie;
-> +       u32 addr0, addr1, aperture, value;
-> +
-> +       if (!rc->avail_ib_bar[bar])
-> +               return -EBUSY;
-> +
-> +       rc->avail_ib_bar[bar] = false;
-> +
-> +       aperture = ilog2(size);
-> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
-> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
-> +       addr1 = upper_32_bits(cpu_addr);
-> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
-> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
-> +
-> +       if (bar == RP_NO_BAR)
-> +               return 0;
-> +
-> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
+Hello Andy,
 
-Why do you need to read this first? If you do, don't you need to clear
-out any fields you're potentially writing?
+On Tue, May 26, 2020 at 4:54 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, May 26, 2020 at 03:12:48PM -0400, Jim Quinlan wrote:
+> > The new field in struct device 'dma_pfn_offset_map' is used to facilitate
+> > the use of multiple pfn offsets between cpu addrs and dma addrs.  It is
+> > similar to 'dma_pfn_offset' except that the offset chosen depends on the
+> > cpu or dma address involved.
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  drivers/of/address.c        | 65 +++++++++++++++++++++++++++++++++++--
+> >  drivers/usb/core/message.c  |  3 ++
+> >  drivers/usb/core/usb.c      |  3 ++
+> >  include/linux/device.h      | 10 +++++-
+> >  include/linux/dma-direct.h  | 10 ++++--
+> >  include/linux/dma-mapping.h | 46 ++++++++++++++++++++++++++
+> >  kernel/dma/Kconfig          | 13 ++++++++
+> >  7 files changed, 144 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/of/address.c b/drivers/of/address.c
+> > index 96d8cfb14a60..a01afffcde7d 100644
+> > --- a/drivers/of/address.c
+> > +++ b/drivers/of/address.c
+> > @@ -918,6 +918,47 @@ void __iomem *of_io_request_and_map(struct device_node *np, int index,
+> >  }
+> >  EXPORT_SYMBOL(of_io_request_and_map);
+> >
+> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > +static int attach_dma_pfn_offset_map(struct device *dev,
+> > +                                  struct device_node *node, int num_ranges)
+> > +{
+> > +     struct of_range_parser parser;
+> > +     struct of_range range;
+> > +     size_t r_size = (num_ranges + 1)
+> > +             * sizeof(struct dma_pfn_offset_region);
+> > +     struct dma_pfn_offset_region *r;
+> > +
+>
+> > +     r = devm_kzalloc(dev, r_size, GFP_KERNEL);
+>
+> devm_?!
 
-> +       if (size + cpu_addr >= SZ_4G) {
-> +               if (!(flags & IORESOURCE_PREFETCH))
-> +                       value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
-> +               value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
-> +       } else {
-> +               if (!(flags & IORESOURCE_PREFETCH))
-> +                       value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
-> +               value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
-> +       }
-> +
-> +       value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
-> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
-> +
-> +       return 0;
-> +}
-> +
-> +static enum cdns_pcie_rp_bar
-> +cdns_pcie_host_find_min_bar(struct cdns_pcie_rc *rc, u64 size)
-> +{
-> +       enum cdns_pcie_rp_bar bar, sel_bar;
-> +
-> +       sel_bar = RP_BAR_UNDEFINED;
-> +       for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
-> +               if (!rc->avail_ib_bar[bar])
-> +                       continue;
-> +
-> +               if (size <= bar_max_size[bar]) {
-> +                       if (sel_bar == RP_BAR_UNDEFINED) {
-> +                               sel_bar = bar;
-> +                               continue;
-> +                       }
-> +
-> +                       if (bar_max_size[bar] < bar_max_size[sel_bar])
-> +                               sel_bar = bar;
-> +               }
-> +       }
-> +
-> +       return sel_bar;
-> +}
-> +
-> +static enum cdns_pcie_rp_bar
-> +cdns_pcie_host_find_max_bar(struct cdns_pcie_rc *rc, u64 size)
-> +{
-> +       enum cdns_pcie_rp_bar bar, sel_bar;
-> +
-> +       sel_bar = RP_BAR_UNDEFINED;
-> +       for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
-> +               if (!rc->avail_ib_bar[bar])
-> +                       continue;
-> +
-> +               if (size >= bar_max_size[bar]) {
-> +                       if (sel_bar == RP_BAR_UNDEFINED) {
-> +                               sel_bar = bar;
-> +                               continue;
-> +                       }
-> +
-> +                       if (bar_max_size[bar] > bar_max_size[sel_bar])
-> +                               sel_bar = bar;
-> +               }
-> +       }
-> +
-> +       return sel_bar;
-> +}
-> +
-> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
-> +                                    struct resource_entry *entry)
-> +{
-> +       u64 cpu_addr, pci_addr, size, winsize;
-> +       struct cdns_pcie *pcie = &rc->pcie;
-> +       struct device *dev = pcie->dev;
-> +       enum cdns_pcie_rp_bar bar;
-> +       unsigned long flags;
-> +       int ret;
-> +
-> +       cpu_addr = entry->res->start;
-> +       pci_addr = entry->res->start - entry->offset;
-> +       flags = entry->res->flags;
-> +       size = resource_size(entry->res);
-> +
-> +       if (entry->offset) {
-> +               dev_err(dev, "PCI addr: %llx must be equal to CPU addr: %llx\n",
-> +                       pci_addr, cpu_addr);
-> +               return -EINVAL;
-> +       }
-> +
-> +       while (size > 0) {
-> +               /*
-> +                * Try to find a minimum BAR whose size is greater than
-> +                * or equal to the remaining resource_entry size. This will
-> +                * fail if the size of each of the available BARs is less than
-> +                * the remaining resource_entry size.
-> +                * If a minimum BAR is found, IB ATU will be configured and
-> +                * exited.
-> +                */
-> +               bar = cdns_pcie_host_find_min_bar(rc, size);
-> +               if (bar != RP_BAR_UNDEFINED) {
-> +                       ret = cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr,
-> +                                                          size, flags);
-> +                       if (ret)
-> +                               dev_err(dev, "IB BAR: %d config failed\n", bar);
-> +                       return ret;
-> +               }
-> +
-> +               /*
-> +                * If the control reaches here, it would mean the remaining
-> +                * resource_entry size cannot be fitted in a single BAR. So we
-> +                * find a maximum BAR whose size is less than or equal to the
-> +                * remaining resource_entry size and split the resource entry
-> +                * so that part of resource entry is fitted inside the maximum
-> +                * BAR. The remaining size would be fitted during the next
-> +                * iteration of the loop.
-> +                * If a maximum BAR is not found, there is no way we can fit
-> +                * this resource_entry, so we error out.
-> +                */
-> +               bar = cdns_pcie_host_find_max_bar(rc, size);
-> +               if (bar == RP_BAR_UNDEFINED) {
-> +                       dev_err(dev, "No free BAR to map cpu_addr %llx\n",
-> +                               cpu_addr);
-> +                       return -EINVAL;
-> +               }
-> +
-> +               winsize = bar_max_size[bar];
-> +               ret = cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, winsize,
-> +                                                  flags);
-> +               if (ret) {
-> +                       dev_err(dev, "IB BAR: %d config failed\n", bar);
-> +                       return ret;
-> +               }
-> +
-> +               size -= winsize;
-> +               cpu_addr += winsize;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
-> +{
-> +       struct resource_entry *entry, *ib_range[CDNS_PCIE_RP_MAX_IB];
-> +       struct cdns_pcie *pcie = &rc->pcie;
-> +       struct device *dev = pcie->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct pci_host_bridge *bridge;
-> +       u32 no_bar_nbits = 32;
-> +       int i = 0, j = 0, err;
-> +       u64 size;
-> +
-> +       bridge = pci_host_bridge_from_priv(rc);
-> +       if (!bridge)
-> +               return -ENOMEM;
-> +
-> +       if (list_empty(&bridge->dma_ranges)) {
-> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
-> +                                    &no_bar_nbits);
-> +               err = cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0,
-> +                                                  (u64)1 << no_bar_nbits, 0);
-> +               if (err)
-> +                       dev_err(dev, "IB BAR: %d config failed\n", RP_NO_BAR);
-> +               return err;
-> +       }
-> +
-> +       memset(ib_range, 0x00, sizeof(ib_range));
-> +       /* Sort the resource entries in descending order by resource size */
+Yes, otherwise if the device gets unbound/bound repeatedly then there
+would be a memory leak.
 
-Use list_sort()
+>
+>
+> Looking at r_size it should be rather kcalloc().
 
-> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-> +               if (i > CDNS_PCIE_RP_MAX_IB - 1) {
-> +                       dev_err(dev, "Ranges exceed maximum supported %d\n",
+Yep.
+>
+>
+> > +     if (!r)
+> > +             return -ENOMEM;
+> > +     dev->dma_pfn_offset_map = r;
+> > +     of_dma_range_parser_init(&parser, node);
+> > +
+> > +     /*
+> > +      * Record all info for DMA ranges array.  We could
+> > +      * just use the of_range struct, but if we did that it
+> > +      * would require more calculations for phys_to_dma and
+> > +      * dma_to_phys conversions.
+> > +      */
+> > +     for_each_of_range(&parser, &range) {
+> > +             r->cpu_beg = range.cpu_addr;
+> > +             r->cpu_end = r->cpu_beg + range.size;
+> > +             r->dma_beg = range.bus_addr;
+> > +             r->dma_end = r->dma_beg + range.size;
+> > +             r->pfn_offset = PFN_DOWN(range.cpu_addr)
+> > +                     - PFN_DOWN(range.bus_addr);
+> > +             r++;
+> > +     }
+> > +     return 0;
+> > +}
+> > +#else
+> > +static int attach_dma_pfn_offset_map(struct device *dev,
+> > +                                  struct device_node *node, int num_ranges)
+> > +{
+> > +     return 0;
+> > +}
+> > +#endif
+> > +
+> >  /**
+> >   * of_dma_get_range - Get DMA range info
+> >   * @dev:     device pointer; only needed for a corner case.
+> > @@ -947,6 +988,8 @@ int of_dma_get_range(struct device *dev, struct device_node *np, u64 *dma_addr,
+> >       struct of_range_parser parser;
+> >       struct of_range range;
+> >       u64 dma_start = U64_MAX, dma_end = 0, dma_offset = 0;
+> > +     bool dma_multi_pfn_offset = false;
+> > +     int num_ranges = 0;
+> >
+> >       while (node) {
+> >               ranges = of_get_property(node, "dma-ranges", &len);
+> > @@ -977,10 +1020,19 @@ int of_dma_get_range(struct device *dev, struct device_node *np, u64 *dma_addr,
+> >               pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
+> >                        range.bus_addr, range.cpu_addr, range.size);
+> >
+> > +             num_ranges++;
+> >               if (dma_offset && range.cpu_addr - range.bus_addr != dma_offset) {
+> > -                     pr_warn("Can't handle multiple dma-ranges with different offsets on node(%pOF)\n", node);
+> > -                     /* Don't error out as we'd break some existing DTs */
+> > -                     continue;
+> > +                     if (!IS_ENABLED(CONFIG_DMA_PFN_OFFSET_MAP)) {
+> > +                             pr_warn("Can't handle multiple dma-ranges with different offsets on node(%pOF)\n", node);
+> > +                             pr_warn("Perhaps set DMA_PFN_OFFSET_MAP=y?\n");
+> > +                             /*
+> > +                              * Don't error out as we'd break some existing
+> > +                              * DTs that are using configs w/o
+> > +                              * CONFIG_DMA_PFN_OFFSET_MAP set.
+> > +                              */
+> > +                             continue;
+> > +                     }
+> > +                     dma_multi_pfn_offset = true;
+> >               }
+> >               dma_offset = range.cpu_addr - range.bus_addr;
+> >
+> > @@ -991,6 +1043,13 @@ int of_dma_get_range(struct device *dev, struct device_node *np, u64 *dma_addr,
+> >                       dma_end = range.bus_addr + range.size;
+> >       }
+> >
+> > +     if (dma_multi_pfn_offset) {
+> > +             dma_offset = 0;
+> > +             ret = attach_dma_pfn_offset_map(dev, node, num_ranges);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> >       if (dma_start >= dma_end) {
+> >               ret = -EINVAL;
+> >               pr_debug("Invalid DMA ranges configuration on node(%pOF)\n",
+> > diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+> > index 6197938dcc2d..aaa3e58f5eb4 100644
+> > --- a/drivers/usb/core/message.c
+> > +++ b/drivers/usb/core/message.c
+> > @@ -1960,6 +1960,9 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
+> >                */
+> >               intf->dev.dma_mask = dev->dev.dma_mask;
+> >               intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
+> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > +             intf->dev.dma_pfn_offset_map = dev->dev.dma_pfn_offset_map;
+> > +#endif
+> >               INIT_WORK(&intf->reset_ws, __usb_queue_reset_device);
+> >               intf->minor = -1;
+> >               device_initialize(&intf->dev);
+> > diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+> > index f16c26dc079d..d2ed4d90e56e 100644
+> > --- a/drivers/usb/core/usb.c
+> > +++ b/drivers/usb/core/usb.c
+> > @@ -612,6 +612,9 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
+> >        */
+> >       dev->dev.dma_mask = bus->sysdev->dma_mask;
+> >       dev->dev.dma_pfn_offset = bus->sysdev->dma_pfn_offset;
+> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > +     dev->dev.dma_pfn_offset_map = bus->sysdev->dma_pfn_offset_map;
+> > +#endif
+> >       set_dev_node(&dev->dev, dev_to_node(bus->sysdev));
+> >       dev->state = USB_STATE_ATTACHED;
+> >       dev->lpm_disable_count = 1;
+> > diff --git a/include/linux/device.h b/include/linux/device.h
+> > index ac8e37cd716a..67a240ad4fc5 100644
+> > --- a/include/linux/device.h
+> > +++ b/include/linux/device.h
+> > @@ -493,6 +493,8 @@ struct dev_links_info {
+> >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
+> >   *           DMA limit than the device itself supports.
+> >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+> > + * @dma_pfn_offset_map:      Like dma_pfn_offset but used when there are multiple
+> > + *           pfn offsets for multiple dma-ranges.
+> >   * @dma_parms:       A low level driver may set these to teach IOMMU code about
+> >   *           segment limitations.
+> >   * @dma_pools:       Dma pools (if dma'ble device).
+> > @@ -578,7 +580,13 @@ struct device {
+> >                                            allocations such descriptors. */
+> >       u64             bus_dma_limit;  /* upstream dma constraint */
+> >       unsigned long   dma_pfn_offset;
+> > -
+> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > +     const struct dma_pfn_offset_region *dma_pfn_offset_map;
+>
+> > +                                     /* Like dma_pfn_offset, but for
+> > +                                      * the unlikely case of multiple
+> > +                                      * offsets. If non-null, dma_pfn_offset
+> > +                                      * will be set to 0. */
+>
+> A bit harder to read comment indented too much and located after the declared variable.
 
-s/Ranges/dma-ranges entries/
+Okay, will change. I was trying to keep the comment style of the other
+variables.
 
-> +                               CDNS_PCIE_RP_MAX_IB);
-> +                       return -EINVAL;
-> +               }
-> +
-> +               j = i - 1;
-> +               while (j >= 0) {
-> +                       size = resource_size(ib_range[j]->res);
-> +                       if (size < resource_size(entry->res)) {
-> +                               ib_range[j + 1] = ib_range[j];
-> +                               j--;
-> +                       }
-> +               }
-> +               ib_range[j + 1] = entry;
-> +               i++;
-> +       }
-> +
-> +       for (i = 0; i < CDNS_PCIE_RP_MAX_IB; i++) {
-> +               if (!ib_range[i])
-> +                       break;
-> +
-> +               err = cdns_pcie_host_bar_config(rc, ib_range[i]);
-> +               if (err) {
-> +                       dev_err(dev, "Fail to configure IB using dma-ranges\n");
-> +                       return err;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->  {
->         struct cdns_pcie *pcie = &rc->pcie;
-> @@ -160,16 +386,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->                 r++;
+> > +#endif
+> >       struct device_dma_parameters *dma_parms;
+> >
+> >       struct list_head        dma_pools;      /* dma pools (if dma'ble) */
+> > diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+> > index 24b8684aa21d..03110a57eabc 100644
+> > --- a/include/linux/dma-direct.h
+> > +++ b/include/linux/dma-direct.h
+> > @@ -14,15 +14,21 @@ extern unsigned int zone_dma_bits;
+> >  static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+> >  {
+> >       dma_addr_t dev_addr = (dma_addr_t)paddr;
+> > +     /* The compiler should remove the 2nd term if !DMA_PFN_OFFSET_MAP */
+> > +     unsigned long dma_pfn_offset = dev->dma_pfn_offset
+> > +             + dma_pfn_offset_from_phys_addr(dev, paddr);
+> >
+> > -     return dev_addr - ((dma_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
+> > +     return dev_addr - ((dma_addr_t)dma_pfn_offset << PAGE_SHIFT);
+> >  }
+> >
+> >  static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+> >  {
+> >       phys_addr_t paddr = (phys_addr_t)dev_addr;
+> > +     /* The compiler should remove the 2nd term if !DMA_PFN_OFFSET_MAP */
+> > +     unsigned long dma_pfn_offset = dev->dma_pfn_offset
+> > +             + dma_pfn_offset_from_dma_addr(dev, paddr);
+> >
+> > -     return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
+> > +     return paddr + ((phys_addr_t)dma_pfn_offset << PAGE_SHIFT);
+> >  }
+> >  #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
+> >
+> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> > index 330ad58fbf4d..91940bba2229 100644
+> > --- a/include/linux/dma-mapping.h
+> > +++ b/include/linux/dma-mapping.h
+> > @@ -256,6 +256,52 @@ static inline void dma_direct_sync_sg_for_cpu(struct device *dev,
+> >  size_t dma_direct_max_mapping_size(struct device *dev);
+> >
+> >  #ifdef CONFIG_HAS_DMA
+> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > +struct dma_pfn_offset_region {
+>
+> > +     phys_addr_t     cpu_beg;
+> > +     phys_addr_t     cpu_end;
+> > +     dma_addr_t      dma_beg;
+> > +     dma_addr_t      dma_end;
+>
+> Perhaps
+>         s,beg,start,
+> in above names
+>
+Okay.
+
+>
+> > +     unsigned long   pfn_offset;
+> > +};
+> > +
+> > +static inline unsigned long dma_pfn_offset_from_dma_addr(struct device *dev,
+> > +                                                      dma_addr_t dma_addr)
+> > +{
+> > +     const struct dma_pfn_offset_region *m = dev->dma_pfn_offset_map;
+>
+> > +     if (m)
+> > +             for (; m->cpu_end; m++)
+>
+> Why not simple
+>
+>         while (m) {
+>                 ...
 >         }
 >
-> -       /*
-> -        * Set Root Port no BAR match Inbound Translation registers:
-> -        * needed for MSI and DMA.
-> -        * Root Port BAR0 and BAR1 are disabled, hence no need to set their
-> -        * inbound translation registers.
-> -        */
-> -       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(rc->no_bar_nbits);
-> -       addr1 = 0;
-> -       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(RP_NO_BAR), addr0);
-> -       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(RP_NO_BAR), addr1);
-> +       err = cdns_pcie_host_map_dma_ranges(rc);
-> +       if (err)
-> +               return err;
+> ?
 >
->         return 0;
->  }
-> @@ -179,10 +398,16 @@ static int cdns_pcie_host_init(struct device *dev,
->                                struct cdns_pcie_rc *rc)
->  {
->         struct resource *bus_range = NULL;
-> +       struct pci_host_bridge *bridge;
->         int err;
+That won't work;  'm' is either null or a valid pointer to an array
+which has an additional entry that is 0-filled..  If non-null, 'm'
+will never turn into NULL via 'm++' and the while loop will not
+terminate.
 >
-> +       bridge = pci_host_bridge_from_priv(rc);
-> +       if (!bridge)
-> +               return -ENOMEM;
-> +
->         /* Parse our PCI ranges and request their resources */
-> -       err = pci_parse_request_of_pci_ranges(dev, resources, NULL, &bus_range);
-> +       err = pci_parse_request_of_pci_ranges(dev, resources,
-> +                                             &bridge->dma_ranges, &bus_range);
->         if (err)
->                 return err;
 >
-> @@ -228,6 +453,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->         struct device_node *np = dev->of_node;
->         struct pci_host_bridge *bridge;
->         struct list_head resources;
-> +       enum cdns_pcie_rp_bar bar;
->         struct cdns_pcie *pcie;
->         struct resource *res;
->         int ret;
-> @@ -239,9 +465,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->         pcie = &rc->pcie;
->         pcie->is_rc = true;
+> > +                     if (dma_addr >= m->dma_beg && dma_addr < m->dma_end)
+> > +                             return m->pfn_offset;
+> > +     return 0;
+> > +}
+> > +
+> > +static inline unsigned long dma_pfn_offset_from_phys_addr(struct device *dev,
+> > +                                                       phys_addr_t paddr)
+> > +{
+> > +     const struct dma_pfn_offset_region *m = dev->dma_pfn_offset_map;
+> > +
 >
-> -       rc->no_bar_nbits = 32;
-> -       of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
-> -
->         rc->vendor_id = 0xffff;
->         of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+> > +     if (m)
+> > +             for (; m->cpu_end; m++)
 >
-> @@ -273,6 +496,9 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->         if (ret)
->                 dev_dbg(dev, "PCIe link never came up\n");
+> Ditto.
 >
-> +       for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-> +               rc->avail_ib_bar[bar] = true;
-> +
->         ret = cdns_pcie_host_init(dev, &resources, rc);
->         if (ret)
->                 return ret;
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index f349f5828a58..a0be87ca9a3a 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -92,6 +92,20 @@
->  #define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS          0x6
->  #define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS 0x7
+> > +                     if (paddr >= m->cpu_beg && paddr < m->cpu_end)
+> > +                             return m->pfn_offset;
+> > +     return 0;
+> > +}
+> > +#else  /* CONFIG_DMA_PFN_OFFSET_MAP */
+> > +static inline unsigned long dma_pfn_offset_from_dma_addr(struct device *dev,
+> > +                                                      dma_addr_t dma_addr)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> > +static inline unsigned long dma_pfn_offset_from_phys_addr(struct device *dev,
+> > +                                                       phys_addr_t paddr)
+> > +{
+> > +     return 0;
+> > +}
+> > +#endif /* CONFIG_DMA_PFN_OFFSET_MAP */
+> > +
+> >  #include <asm/dma-mapping.h>
+> >
+> >  static inline const struct dma_map_ops *get_dma_ops(struct device *dev)
+> > diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> > index 4c103a24e380..ceb7e5e8f501 100644
+> > --- a/kernel/dma/Kconfig
+> > +++ b/kernel/dma/Kconfig
+> > @@ -195,3 +195,16 @@ config DMA_API_DEBUG_SG
+> >         is technically out-of-spec.
+> >
+> >         If unsure, say N.
+> > +
+> > +config DMA_PFN_OFFSET_MAP
+> > +     bool "Uses a DMA range map to calculate PFN offset"
+> > +     depends on PCIE_BRCMSTB
 >
-> +#define LM_RC_BAR_CFG_CTRL_DISABLED(bar)               \
-> +               (CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED << (((bar) * 8) + 6))
-> +#define LM_RC_BAR_CFG_CTRL_IO_32BITS(bar)              \
-> +               (CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS << (((bar) * 8) + 6))
-> +#define LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar)             \
-> +               (CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS << (((bar) * 8) + 6))
-> +#define LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar)        \
-> +       (CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS << (((bar) * 8) + 6))
-> +#define LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar)             \
-> +               (CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS << (((bar) * 8) + 6))
-> +#define LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar)        \
-> +       (CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS << (((bar) * 8) + 6))
-> +#define LM_RC_BAR_CFG_APERTURE(bar, aperture)          \
-> +                                       (((aperture) - 2) << ((bar) * 8))
+> > +     default n
 >
->  /*
->   * Endpoint Function Registers (PCI configuration space for endpoint functions)
-> @@ -176,11 +190,19 @@
->  #define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
->
->  enum cdns_pcie_rp_bar {
-> +       RP_BAR_UNDEFINED = -1,
->         RP_BAR0,
->         RP_BAR1,
->         RP_NO_BAR
->  };
->
-> +#define CDNS_PCIE_RP_MAX_IB    0x3
-> +
-> +struct cdns_pcie_rp_ib_bar {
-> +       u64 size;
-> +       bool free;
-> +};
-> +
->  /* Endpoint Function BAR Inbound PCIe to AXI Address Translation Register */
->  #define CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar) \
->         (CDNS_PCIE_AT_BASE + 0x0840 + (fn) * 0x0040 + (bar) * 0x0008)
-> @@ -266,19 +288,19 @@ struct cdns_pcie {
->   * @bus_range: first/last buses behind the PCIe host controller
->   * @cfg_base: IO mapped window to access the PCI configuration space of a
->   *            single function at a time
-> - * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
-> - *                translation (nbits sets into the "no BAR match" register)
->   * @vendor_id: PCI vendor ID
->   * @device_id: PCI device ID
-> + * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and        RP_NO_BAR if it's free or
+> Redundant.
 
-typo
-
-> + *                available
->   */
->  struct cdns_pcie_rc {
->         struct cdns_pcie        pcie;
->         struct resource         *cfg_res;
->         struct resource         *bus_range;
->         void __iomem            *cfg_base;
-> -       u32                     no_bar_nbits;
->         u32                     vendor_id;
->         u32                     device_id;
-> +       bool                    avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
->  };
+Okay.
 >
->  /**
+> > +     help
+> > +       Some devices have a dma-range that gets converted to
+> > +       a dev->dma_pfn_offset value.  This option is for the
+> > +       atypical case of there being multiple dma-ranges requiring
+> > +       multiple pfn offsets, which are selected from when
+> > +       converting to phys to dma and vice versa.
+> > +
+> > +       If unsure, say N.
+> > --
+> > 2.17.1
+> >
+>
 > --
-> 2.17.1
->
+> With Best Regards,
+> Andy Shevchenko
+
+
+Thanks!
+Jim Quinlan
