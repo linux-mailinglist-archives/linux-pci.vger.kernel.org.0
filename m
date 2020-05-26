@@ -2,104 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A97B1E2149
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 13:50:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8347E1E2155
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 13:53:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732018AbgEZLuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 07:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
+        id S1728486AbgEZLx0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 07:53:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732014AbgEZLuQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 07:50:16 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C98F0C03E96E
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 04:50:16 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id cx22so1338299pjb.1
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 04:50:16 -0700 (PDT)
+        with ESMTP id S1728626AbgEZLxZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 07:53:25 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E0DC03E96F
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 04:53:25 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id y18so1147735iow.3
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 04:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rzP5fzn/E340EPlW7gDpFBlyEkfSVaF1oJz6fYo76k8=;
-        b=cSls9zjl0whNH0eR/l2i02O95OOhgGrNGwM26ZGFvkQW9VtZxJfxlywizJRke/rmbm
-         DjeTG2qfQRIUFCJCYqf3IQGjZY5BYNOiPnuTiljaUSiUooWYyRzwspOmUiqDqG0M0ZC0
-         NH/f8WAxs2sULx5ClU2rSJ/IVPF1eLlml+6rdIo1i25jIwEm+AfsqPAhvJRo8r0X4r3K
-         IiHWdbIh+eGq5kqb6u0B/VzWcIY6fcWtE+dhbKonQdK7ew/58LBw5We1pNCxs/7oweP5
-         Jjm4EUWxVNg2+Xy8U6NcCfQFYKXK3ubEYUyGEqX5s/R/MQ0L946l4eUlakQO2SpHpvOw
-         LfPw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hlMxfZxeMD+DKWmT3pt17RdFPN380iI2WVeOeZ79wkw=;
+        b=t4kZrH+2brZaCI4MrOkR6KZfqPavGym3179KUX4j/ZvYjMZeGwNOrjXyEzeIGYdSAV
+         5PSjV6gaZI3+EepcmOnwgmqSZhsuJiMkZi7Pd8CQCruTBzcT6c5Ley9CH2SsLVshyIt3
+         QNsiKJjobAtOpmroQCiLNENOzYP0eYjZlDsUmDlIgRz7hEU6moYbMyw7UQaxsEmCHNA/
+         qZOM3IaV+rOtSdd1HCCRWWUcEIllNbeZrBRMH2IICgG1iA6wF2ughWfOqEzUP8+mT3/1
+         ycBv0p1napzjkUUxgXfJ/eXiWh48UrP1d6+OA7KfHNjYL+8zAtH4huoUG0QivvNCEAYz
+         ekyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rzP5fzn/E340EPlW7gDpFBlyEkfSVaF1oJz6fYo76k8=;
-        b=TRN/H91bkHYgd8vYqK+oCk3sg7PHI2Ezuq/ypYfAbMKhLB4yuTLeLBfGZrzyuwrpCb
-         JBYvuHplnfjPKQNMurz4hYnKPtiSAvZ5gLH+IRgDnawLmozm2i9CMo91voPLRxeQH4/+
-         VZDsfnqKuGbTNwv/wgYJs136mk5QHNODgZtmarR1JvmKgPHJT01CrYBcCKRzEYh4Y71E
-         uKMKmtJqbhgf5I1jnXyBB6QLa7/TipYf9ABdcmeIP4XbpR56nejAR8ZhobuJpB8E0FXx
-         oPz0ddyhhrQj83JlNypy8T6CHWlHL9xx+61NbIC0py8gndLmf5ZcZYR/oUh0sxXpBTDx
-         w4Jg==
-X-Gm-Message-State: AOAM530bjWAc0zYg+UVvVERH2ZaD8TDx9rLA00dth8GC42cp5Yz1ycpF
-        aZ1lULactvugZlMKm2m8MFnAkQ==
-X-Google-Smtp-Source: ABdhPJzHFiU9uQ9tpgEPP89QRh+ApddGGVo2/M4MgxGlH4yKc3wRc1jVL2ox1xaiLvr1T78JAyGRGQ==
-X-Received: by 2002:a17:90a:4809:: with SMTP id a9mr26082742pjh.196.1590493816386;
-        Tue, 26 May 2020 04:50:16 -0700 (PDT)
-Received: from localhost.localdomain ([45.135.186.9])
-        by smtp.gmail.com with ESMTPSA id c12sm15586567pjm.46.2020.05.26.04.50.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 May 2020 04:50:16 -0700 (PDT)
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-To:     Joerg Roedel <joro@8bytes.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hlMxfZxeMD+DKWmT3pt17RdFPN380iI2WVeOeZ79wkw=;
+        b=KYOfz9JLxt4dkgVGrBzI5b23yBgFa/FW49kSY65+Pykty9oKmaxTAAADhWsTcT9Wqd
+         2H53x3COkYhZb7YVNP71NzUIiVWK/uk+fScxdjaYrILhrLEUh6DNKeKFUKeYbDM6gpu1
+         kh6bkvsxoZimiKBDhkK44sTxoZ49EJzNZsG9YJqJNcjWwjIkluX10EqR45ROGPFYo5AS
+         efB5/9b1drYSGfOeXKGQz+DXlQpHRnJeCKjaVp4CjMnEqxT0I5ejU2670Lz/dkOhHaFN
+         MaeBsMgBjbx/Am5gAVqA8ba+ZHFxut/qnrvM/2bnQL3Ocygdm89Uh4O4yJr3qjDyp/8J
+         NO8g==
+X-Gm-Message-State: AOAM532eujzoiG4SvarKTlEKIY+Xk7d4YRsPi5KJ3GlyaBgYnbT32Jsq
+        DzKZ21XfaNLnHvu0lUF19yzTFA==
+X-Google-Smtp-Source: ABdhPJysJNQt3T6dM953D88S5wdzxi/U/oshKuW/qDlHy6hbQRmFmerb1YPlez4lats+13/+SUWV/g==
+X-Received: by 2002:a5e:a70b:: with SMTP id b11mr8299591iod.63.1590494004490;
+        Tue, 26 May 2020 04:53:24 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id c7sm11123220ilf.36.2020.05.26.04.53.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 04:53:23 -0700 (PDT)
+Subject: Re: [greybus-dev] [PATCH 1/8] driver core: Add helper for accessing
+ Power Management callbacs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-pci@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        linux-acpi@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
+        John Stultz <john.stultz@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        Felipe Balbi <balbi@kernel.org>, Alex Elder <elder@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 2/2] iommu: calling pci_fixup_iommu in iommu_fwspec_init
-Date:   Tue, 26 May 2020 19:49:09 +0800
-Message-Id: <1590493749-13823-3-git-send-email-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-2-kw@linux.com> <20200526063334.GB2578492@kroah.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <41c42552-0f4f-df6a-d587-5c62333aa6a8@linaro.org>
+Date:   Tue, 26 May 2020 06:53:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200526063334.GB2578492@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Calling pci_fixup_iommu in iommu_fwspec_init, which alloc
-iommu_fwnode. Some platform devices appear as PCI but are
-actually on the AMBA bus, and they need fixup in
-drivers/pci/quirks.c handling iommu_fwnode.
-So calling pci_fixup_iommu after iommu_fwnode is allocated.
+On 5/26/20 1:33 AM, Greg Kroah-Hartman wrote:
+> On Mon, May 25, 2020 at 06:26:01PM +0000, Krzysztof Wilczyński wrote:
+>> Add driver_to_pm() helper allowing for accessing the Power Management
+>> callbacs for a particular device.  Access to the callbacs (struct
+>> dev_pm_ops) is normally done through using the pm pointer that is
+>> embedded within the device_driver struct.
+>>
+>> Helper allows for the code required to reference the pm pointer and
+>> access Power Management callbas to be simplified.  Changing the
+>> following:
+>>
+>>    struct device_driver *drv = dev->driver;
+>>    if (dev->driver && dev->driver->pm && dev->driver->pm->prepare) {
+>>        int ret = dev->driver->pm->prepare(dev);
+>>
+>> To:
+>>
+>>    const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+>>    if (pm && pm->prepare) {
+>>        int ret = pm->prepare(dev);
+>>
+>> Or, changing the following:
+>>
+>>       const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>>
+>> To:
+>>       const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+>>
+>> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+>> ---
+>>   include/linux/device/driver.h | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>
+>> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+>> index ee7ba5b5417e..ccd0b315fd93 100644
+>> --- a/include/linux/device/driver.h
+>> +++ b/include/linux/device/driver.h
+>> @@ -236,6 +236,21 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+>>   }
+>>   #endif
+>>   
+>> +/**
+>> + * driver_to_pm - Return Power Management callbacs (struct dev_pm_ops) for
+>> + *                a particular device.
+>> + * @drv: Pointer to a device (struct device_driver) for which you want to access
+>> + *       the Power Management callbacks.
+>> + *
+>> + * Returns a pointer to the struct dev_pm_ops embedded within the device (struct
+>> + * device_driver), or returns NULL if Power Management is not present and the
+>> + * pointer is not valid.
+>> + */
+>> +static inline const struct dev_pm_ops *driver_to_pm(struct device_driver *drv)
+>> +{
+>> +	return drv && drv->pm ? drv->pm : NULL;
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/iommu/iommu.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This could just be:
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 7b37542..fb84c42 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
- 	fwspec->iommu_fwnode = iommu_fwnode;
- 	fwspec->ops = ops;
- 	dev_iommu_fwspec_set(dev, fwspec);
-+
-+	if (dev_is_pci(dev))
-+		pci_fixup_device(pci_fixup_iommu, to_pci_dev(dev));
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(iommu_fwspec_init);
--- 
-2.7.4
+	if (drv)
+		return drv->pm;
+
+	return NULL;
+
+Or if you want to evoke passion in Greg:
+
+	return drv ? drv->pm : NULL;
+
+					-Alex
+
+> I hate ? : lines with a passion, as they break normal pattern mattching
+> in my brain.  Please just spell this all out:
+> 	if (drv && drv->pm)
+> 		return drv->pm;
+> 	return NULL;
+> 
+> Much easier to read, and the compiler will do the exact same thing.
+> 
+> Only place ? : are ok to use in my opinion, are as function arguments.
+> 
+> thanks,
+> 
+> greg k-h
+> _______________________________________________
+> greybus-dev mailing list
+> greybus-dev@lists.linaro.org
+> https://lists.linaro.org/mailman/listinfo/greybus-dev
+> 
 
