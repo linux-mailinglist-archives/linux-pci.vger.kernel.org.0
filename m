@@ -2,95 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1CE11E24AB
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 16:58:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF6E41E24DF
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:01:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgEZO5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 10:57:47 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:37776 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgEZO5r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 10:57:47 -0400
-Received: by mail-ej1-f65.google.com with SMTP id l21so24159170eji.4;
-        Tue, 26 May 2020 07:57:45 -0700 (PDT)
+        id S1729645AbgEZPB0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 11:01:26 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35727 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729368AbgEZPBU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:01:20 -0400
+Received: by mail-ed1-f65.google.com with SMTP id be9so17927985edb.2;
+        Tue, 26 May 2020 08:01:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=h/vc/U48e43hYebkBpRwszhtS9SjYZ2xSvS7nTqAhXk=;
-        b=JPgpJnLNkWjACul1dvYApARVGs2Cs5gfG38iSSaBGT9/l5HFAlskGf9v34VHttoTvd
-         cN9mDEwJ9T2RpslOcBxIh3Ok6hEdzIQwFiiibxZG5vsq7L6QpmZwS2RWsfcLS4DzBhpL
-         2UsyWHHXavFq7+qswrou69yuetvQU/XCZlHtrhiyueM6ERqDLX8Xd3B0xuRVF4u0T/JB
-         3FbgiyyU/xsDy3HAghkLsm0BWrnDttYQlIdKeg33LsCiCJA9GTkm9MSzIjVerh8ATz3W
-         fvX6oKgTZC+77hTsTqts/rPQf8cB7ZzNHFrzvM3tRsKxivdTMljMV9kdwqgl9PT3z9r8
-         ql7g==
-X-Gm-Message-State: AOAM5322H1G4oVJlE4HYNCDokfd3D5xFWS8N3RXUnHQpcWHMowcngU31
-        1wgyg9nuoHj3xOkFpKT+l+Y=
-X-Google-Smtp-Source: ABdhPJzdElVIHtsR0qMTrQLNXyURt2kuG/VwKifaQBwdr8EPvJOXOlo0YVxmLG6Ml176FD4Quk6tgg==
-X-Received: by 2002:a17:906:4406:: with SMTP id x6mr1463667ejo.160.1590505065110;
-        Tue, 26 May 2020 07:57:45 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=/FQ3kSh6QRt/DhDlB1iVTGQKeiQZDzu9nHJXUdnImCk=;
+        b=Z8t+0ViDna1GqYu0FuJehfRYS/Jcck7SOImRHZ2f5+vmElvDmKqdhGrbiza0PQFoTt
+         nalsjBLJi9Q79s5g20dKy/e0n18q+Khn0/p8gZI9dZB80U15lLSz5qnhX5uFuzzbKZMn
+         x4KQnDkvSIgBfa4AbLxdKL1EvjRfMBWoDNrluLDkp57sCOQeUdCYloCUmGkeI8BB/UiM
+         BFijU6JOFX32772XYrmeN7bY3Van/jb3b2Cx4x+XfRsFWS45jAHdivc/2+2TpCLaRuUp
+         SJGPZxO1vFMynhhnmaH0TetzpoXXnE++nOUcYcNNBGD/f3IluaaFR/rsXcd8W9rkqCX8
+         oOgA==
+X-Gm-Message-State: AOAM532oq7IL88Wpbca2U5c5H3ET+SSyEQZM5RVY+JNNatQj5lCvnEif
+        xyEFbVHj1n4AUOfj+E6o9nCVPUlyq8qDssMj
+X-Google-Smtp-Source: ABdhPJzUcDOK5LS647ncdAETZsJMJ8+0djAcX5w/EM0H6iRkO7YVRDADM+BVObYTE4LLegacDOPiCg==
+X-Received: by 2002:a05:6402:31b5:: with SMTP id dj21mr21365281edb.160.1590505277038;
+        Tue, 26 May 2020 08:01:17 -0700 (PDT)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id v3sm149610ejj.14.2020.05.26.07.57.43
+        by smtp.gmail.com with ESMTPSA id f13sm143194edk.36.2020.05.26.08.01.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 07:57:44 -0700 (PDT)
-Date:   Tue, 26 May 2020 16:57:42 +0200
+        Tue, 26 May 2020 08:01:15 -0700 (PDT)
+Date:   Tue, 26 May 2020 17:01:14 +0200
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Ursula Braun <ubraun@linux.ibm.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+To:     Alex Elder <elder@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        linux-acpi@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
         John Stultz <john.stultz@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        greybus-dev@lists.linaro.org, netdev@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 8/8] net/iucv: Use the new device_to_pm() helper to
- access struct dev_pm_ops
-Message-ID: <20200526145742.GA75990@rocinante>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Felipe Balbi <balbi@kernel.org>, Alex Elder <elder@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [greybus-dev] [PATCH 1/8] driver core: Add helper for accessing
+ Power Management callbacs
+Message-ID: <20200526150114.GB75990@rocinante>
 References: <20200525182608.1823735-1-kw@linux.com>
- <20200525182608.1823735-9-kw@linux.com>
- <55c3d2eb-feff-bf33-235d-b89c0abef7b1@linux.ibm.com>
+ <20200525182608.1823735-2-kw@linux.com>
+ <20200526063334.GB2578492@kroah.com>
+ <41c42552-0f4f-df6a-d587-5c62333aa6a8@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <55c3d2eb-feff-bf33-235d-b89c0abef7b1@linux.ibm.com>
+In-Reply-To: <41c42552-0f4f-df6a-d587-5c62333aa6a8@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ursula,
+Hello Alex and Greg,
 
-On 20-05-26 09:07:27, Ursula Braun wrote:
-> 
-> 
-> On 5/25/20 8:26 PM, Krzysztof Wilczyński wrote:
-> > Use the new device_to_pm() helper to access Power Management callbacs
-> > (struct dev_pm_ops) for a particular device (struct device_driver).
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> 
-> pm support is going to be removed (for s390 in general and) for
-> net/iucv/iucv.c with this net-next patch:
 [...]
+> This could just be:
+> 
+> 	if (drv)
+> 		return drv->pm;
+> 
+> 	return NULL;
+> 
+> Or if you want to evoke passion in Greg:
+> 
+> 	return drv ? drv->pm : NULL;
+> 
+> 					-Alex
+> 
+> > I hate ? : lines with a passion, as they break normal pattern mattching
+> > in my brain.  Please just spell this all out:
+> > 	if (drv && drv->pm)
+> > 		return drv->pm;
+> > 	return NULL;
+> > 
+> > Much easier to read, and the compiler will do the exact same thing.
+> > 
+> > Only place ? : are ok to use in my opinion, are as function arguments.
 
-Good to know!  Thank you for letting me know.  I appreciate that.
+I will steer away from the ternary operator next time.  Also, good to
+learn about Greg's preference.
+
+Thank you both!
 
 Krzysztof
