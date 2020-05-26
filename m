@@ -2,126 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 250171E27A7
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 18:49:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CED821E29A1
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 20:06:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731462AbgEZQsR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 12:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731498AbgEZQsP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 12:48:15 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D80C03E97A
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 09:48:15 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c8so2396584iob.6
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 09:48:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CDy85Gj7MYd1kNtILJcUzn7KVIhIM0XshsVeAc/i0tA=;
-        b=dCxwuhqpPbwbXsS8D4GR15Oi/vkWvJ2t6JE5jqhDuEYRBCxiAwo9cWnqARqt/pZ9N3
-         vSDlZ8wDeZydMMsvQgllY5SFL21AkwmUO/yVMpJRwkWuLZ+okFm2plV7st5ZUHxgg7+n
-         nw9y2DMW7Y1odFWc8D0ovkNrkmBQTlf+wVi0icllMuisiL6LQjhD1eU0HTahi0uvVson
-         7H1igoRa7sC3VzH0k6kw37/8QsEYXM6RYbG1TkZAtikaoCp3wlyHVEwAfTjAFYYV3q4L
-         NgflHMgnD8hmupC7gXChsbUVMFzyhgq3aBSV9WdpBp5mfIm6+JpoU8GgF7qXRXSqT3gV
-         qZIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CDy85Gj7MYd1kNtILJcUzn7KVIhIM0XshsVeAc/i0tA=;
-        b=V6+ZPlxp+CBSJ7ormx1Iwuf1i/ui6/LRm826k/IwCZgs/7J7jCfkP3urM6RW954oN4
-         jRcNKXdilHBiJKGez11kfPtIe56vJjBX6fypH2rOH5iOLFokpvwXpgLAXDWoSoSIIa4g
-         4+RfdILogVJk+QqPdN4ht35XRqcuqiulLB6/6nbEoj7G0ylMU25AkfX/ueE5eHUcppIP
-         WoXRCWH1/uce15LWGNLlVEx9RYRlIa4D84FLUzyIFvtifrIAD0++kpZEVsXlCuJCLPdT
-         UUoHWSFygM94rweOP46z4Aawl0EF1Gh2f1VhUSfMxbXJclSnC4rgtectUDYdw4pq0GwG
-         1Oog==
-X-Gm-Message-State: AOAM533NA8S99TFcL4dVbUFTDWlkOjvXU9/KwoYSL9o8hqMxds4Vm0Hn
-        g+Semab86ytLP9v6Sd9x9+TDBA==
-X-Google-Smtp-Source: ABdhPJwt8EDbE+Md3qNwECgPyEhh34GzLnn6Kwx5Q+Egs2R3PU4UAkkaFOOCDwhKuojJpS4rMr4mTQ==
-X-Received: by 2002:a02:2708:: with SMTP id g8mr1921759jaa.52.1590511694529;
-        Tue, 26 May 2020 09:48:14 -0700 (PDT)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id d29sm250489ild.42.2020.05.26.09.48.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 09:48:13 -0700 (PDT)
-Subject: Re: [greybus-dev] [PATCH 8/8] net/iucv: Use the new device_to_pm()
- helper to access struct dev_pm_ops
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-pci@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        linux-acpi@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Felipe Balbi <balbi@kernel.org>, Alex Elder <elder@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20200525182608.1823735-1-kw@linux.com>
- <20200525182608.1823735-9-kw@linux.com> <20200526063521.GC2578492@kroah.com>
- <20200526150744.GC75990@rocinante>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <acb9415a-d0d0-3ebc-b5ae-c26a7dc2114a@linaro.org>
-Date:   Tue, 26 May 2020 11:48:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1727949AbgEZSGx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 14:06:53 -0400
+Received: from mga03.intel.com ([134.134.136.65]:13544 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbgEZSGx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 May 2020 14:06:53 -0400
+IronPort-SDR: D247/DyVAw3Jld+4PYfjzqpA3IBef9yHI0COnLtBIHli/4ObJz255crzRj0jLe95Jwjkq1Y2/0
+ fQkVhTGw+YIQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 11:06:52 -0700
+IronPort-SDR: q+pQDcn4f+N/hEXm8Qvt7pl3Xr3aIrKoloNX8RPGaEGmVHMomEVW9q5KhawnCFSUiDi4jKMJH/
+ JNdh8L62gBFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="468395909"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga005.fm.intel.com with ESMTP; 26 May 2020 11:06:48 -0700
+Date:   Tue, 26 May 2020 11:06:48 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
+Message-ID: <20200526180648.GC35892@otc-nc-03>
+References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
+ <20200504231936.2bc07fe3@x1.home>
+ <20200505061107.GA22974@araj-mobl1.jf.intel.com>
+ <20200505080514.01153835@x1.home>
+ <20200505145605.GA13690@otc-nc-03>
+ <20200505093414.6bae52e0@x1.home>
 MIME-Version: 1.0
-In-Reply-To: <20200526150744.GC75990@rocinante>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505093414.6bae52e0@x1.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/26/20 10:07 AM, Krzysztof Wilczyński wrote:
-> Hello Greg,
-> 
-> [...]
->> It's "interesting" how using your new helper doesn't actually make the
->> code smaller.  Perhaps it isn't a good helper function?
+Hi Alex,
 
-Helper functions often improve code readability, which is
-beneficial even if it doesn't reduce code size or efficiency.
+I was able to find better language in the IOMMU spec that gaurantees 
+the behavior we need. See below.
 
-But I won't argue for or against this particular change.
-It's OK with me either way.
 
-					-Alex
+On Tue, May 05, 2020 at 09:34:14AM -0600, Alex Williamson wrote:
+> On Tue, 5 May 2020 07:56:06 -0700
+> "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> 
+> > On Tue, May 05, 2020 at 08:05:14AM -0600, Alex Williamson wrote:
+> > > On Mon, 4 May 2020 23:11:07 -0700
+> > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> > >   
+> > > > Hi Alex
+> > > > 
+> > > > + Joerg, accidently missed in the Cc.
+> > > > 
+> > > > On Mon, May 04, 2020 at 11:19:36PM -0600, Alex Williamson wrote:  
+> > > > > On Mon,  4 May 2020 21:42:16 -0700
+> > > > > Ashok Raj <ashok.raj@intel.com> wrote:
+> > > > >     
+> > > > > > PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
+> > > > > > 
+> > > > > > PCIe 5.0 Specification.
+> > > > > > 6.12 Access Control Services (ACS)
+> > > > > > Implementation of ACS in RCiEPs is permitted but not required. It is
+> > > > > > explicitly permitted that, within a single Root Complex, some RCiEPs
+> > > > > > implement ACS and some do not. It is strongly recommended that Root Complex
+> > > > > > implementations ensure that all accesses originating from RCiEPs
+> > > > > > (PFs and VFs) without ACS capability are first subjected to processing by
+> > > > > > the Translation Agent (TA) in the Root Complex before further decoding and
+> > > > > > processing. The details of such Root Complex handling are outside the scope
+> > > > > > of this specification.
+> > > > > >   
+> > > > > 
+> > > > > Is the language here really strong enough to make this change?  ACS is
+> > > > > an optional feature, so being permitted but not required is rather
+> > > > > meaningless.  The spec is also specifically avoiding the words "must"
+> > > > > or "shall" and even when emphasized with "strongly", we still only have
+> > > > > a recommendation that may or may not be honored.  This seems like a
+> > > > > weak basis for assuming that RCiEPs universally honor this
+> > > > > recommendation.  Thanks,
+> > > > >     
+> > > > 
+> > > > We are speaking about PCIe spec, where people write it about 5 years ahead
+> > > > and every vendor tries to massage their product behavior with vague
+> > > > words like this..  :)
+> > > > 
+> > > > But honestly for any any RCiEP, or even integrated endpoints, there 
+> > > > is no way to send them except up north. These aren't behind a RP.  
+> > > 
+> > > But they are multi-function devices and the spec doesn't define routing
+> > > within multifunction packages.  A single function RCiEP will already be
+> > > assumed isolated within its own group.  
+> > 
+> > That's right. The other two devices only have legacy PCI headers. So 
+> > they can't claim to be RCiEP's but just integrated endpoints. The legacy
+> > devices don't even have a PCIe header.
+> > 
+> > I honestly don't know why these are groped as MFD's in the first place.
+> > 
+> > >    
+> > > > I did check with couple folks who are part of the SIG, and seem to agree
+> > > > that ACS treatment for RCiEP's doesn't mean much. 
+> > > > 
+> > > > I understand the language isn't strong, but it doesn't seem like ACS should
+> > > > be a strong requirement for RCiEP's and reasonable to relax.
+> > > > 
+> > > > What are your thoughts?   
+> > > 
+> > > I think hardware vendors have ACS at their disposal to clarify when
+> > > isolation is provided, otherwise vendors can submit quirks, but I don't
+> > > see that the "strongly recommended" phrasing is sufficient to assume
+> > > isolation between multifunction RCiEPs.  Thanks,  
+> > 
+> > You point is that integrated MFD endpoints, without ACS, there is no 
+> > gaurantee to SW that they are isolated.
+> > 
+> > As far as a quirk, do you think:
+> > 	- a cmdline optput for integrated endpoints, and RCiEP's suffice?
+> > 	  along with a compile time default that is strict enforcement
+> > 	- typical vid/did type exception list?
+> > 
+> > A more generic way to ask for exception would be scalable until we can stop
+> > those type of integrated devices. Or we need to maintain these device lists
+> > for eternity. 
+> 
+> I don't think the language in the spec is anything sufficient to handle
+> RCiEP uniquely.  We've previously rejected kernel command line opt-outs
+> for ACS, and the extent to which those patches still float around the
+> user community and are blindly used to separate IOMMU groups are a
+> testament to the failure of this approach.  Users do not have a basis
+> for enabling this sort of opt-out.  The benefit is obvious in the IOMMU
+> grouping, but the risk is entirely unknown.  A kconfig option is even
+> worse as that means if you consume a downstream kernel, the downstream
+> maintainers might have decided universally that isolation is less
+> important than functionality.
 
-> The idea for the helper was inspired by the comment Dan made to Bjorn
-> about Bjorn's change, as per:
-> 
->    https://lore.kernel.org/driverdev-devel/20191016135002.GA24678@kadam/
-> 
-> It looked like a good idea to try to reduce the following:
-> 
->    dev->driver && dev->driver->pm && dev->driver->pm->prepare
-> 
-> Into something more succinct.  Albeit, given the feedback from yourself
-> and Rafael, I gather that this helper is not really a good addition.
-> 
-> Thank you everyone and sorry for the commotion!
-> 
-> Krzysztof
-> _______________________________________________
-> greybus-dev mailing list
-> greybus-dev@lists.linaro.org
-> https://lists.linaro.org/mailman/listinfo/greybus-dev
-> 
+We discussed this internally, and Intel vt-d spec does spell out clearly 
+in Section 3.16 Root-Complex Peer to Peer Considerations. The spec clearly
+calls out that all p2p must be done on translated addresses and therefore
+must go through the IOMMU.
 
+I suppose they should also have some similar platform gauranteed behavior
+for RCiEP's or MFD's *Must* behave as follows. The language is strict and
+when IOMMU is enabled in the platform, everything is sent up north to the
+IOMMU agent.
+
+3.16 Root-Complex Peer to Peer Considerations
+When DMA remapping is enabled, peer-to-peer requests through the
+Root-Complex must be handled
+as follows:
+• The input address in the request is translated (through first-level,
+  second-level or nested translation) to a host physical address (HPA).
+  The address decoding for peer addresses must be done only on the 
+  translated HPA. Hardware implementations are free to further limit 
+  peer-to-peer accesses to specific host physical address regions 
+  (or to completely disallow peer-forwarding of translated requests).
+• Since address translation changes the contents (address field) of the PCI
+  Express Transaction Layer Packet (TLP), for PCI Express peer-to-peer 
+  requests with ECRC, the Root-Complex hardware must use the new ECRC 
+  (re-computed with the translated address) if it decides to forward 
+  the TLP as a peer request.
+• Root-ports, and multi-function root-complex integrated endpoints, may
+  support additional peerto-peer control features by supporting PCI Express
+  Access Control Services (ACS) capability. Refer to ACS capability in 
+  PCI Express specifications for details.
+
+> to indicate where devices are isolated.  The hardware can do this
+> itself by implementing ACS, otherwise we need quirks.  I think we've
+> also generally been reluctant to accept quirks that provide a blanket
+> opt-out for a vendor because doing so is akin to trying to predict the
+> future (determining the behavior of all current and previous hardware
+> is generally a sufficiently impossible task already).  Perhaps if a
+> vendor has a published internal policy regarding RCiEP isolation and is
+> willing to stand by a quirk, there might be room to negotiate.  Thanks,
+> 
+> Alex
+> 
