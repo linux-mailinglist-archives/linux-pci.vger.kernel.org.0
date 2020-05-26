@@ -2,31 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 004341E1E5E
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 11:22:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D6A91E1E62
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 11:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388547AbgEZJWi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 05:22:38 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:34270 "EHLO
+        id S2388586AbgEZJWt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 05:22:49 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:34282 "EHLO
         vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388425AbgEZJWi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 05:22:38 -0400
+        with ESMTP id S2388425AbgEZJWt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 05:22:49 -0400
 Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 60E4520CF0;
-        Tue, 26 May 2020 09:22:35 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 99C1820CF1;
+        Tue, 26 May 2020 09:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1590484957; bh=Ke6cPvHXKiPrY2g75japQ2FrKO93C44dRXKjeYxEPWg=;
+        t=1590484968; bh=1A7r30/ddO3YA2iwUg/iQ9hDTh5suKpgGWHi+jEZjWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMUpl24If/+8mkwsrw/bpSV6FPS+dZVqxHXbXIXR0OGzseXXu/Ll66WOTRfSdDg4F
-         BuLLdFhK0/oYr7mHwSh62zBUfD14DMczkU1MeKgivX/atv1H03P/HNXp/ZfO4aDqZ5
-         y/Fe0yA44osE4+WlhaWRIm15c0wdPH2EqTShad60FL21seQGat+SR+ivda4AsUvbya
-         GJAv2k8nOSKW1C/ekrNYJN79fPoOyRH00xhmQqK+Pa/WPGNNGkFKy20QdGDwhNsyWL
-         CIrkHAhYkodQ/A1k9gzbHDL0C1VDGKXI/dtbDub0WXl445INtnJCJFIvSxwDIoM85/
-         piu33YpZl5Glw==
+        b=dDVgagmLdmWB27rdrU+DYce+G6UbOoqtem4yEuPVs8vU4ceVlKwyyGBaVLXGYDyC1
+         T9b/7rFsjCK1gZQhRcgRepMcCB5cwiUh0nDXz82gY97MszRvpGCAq4uZ+yq4avhcZq
+         YH0xzxtARQE6FsVV9Bo4ldiIgzQAU6DfaRGH0nY7MSWPuhA0ZIYcK2S+hot8x2sRx/
+         dBzmTHttwwKwv+L6Y/IvAtLZwxdcjndcPd4UWKt60T2DbpfzgaYO2Ew+9Et7v8wbmj
+         aQTf8eLrVMwQosJguKomKZXCfcogVbktToSasgvndzNxr5PK2jdFAA0vx0LpBn+9+y
+         Gyjl1FHPL/jOA==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -35,9 +34,9 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Paul Burton <paulburton@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mips@vger.kernel.org
-Subject: [PATCH v11 3/5] dt-bindings: Document Loongson PCI Host Controller
-Date:   Tue, 26 May 2020 17:21:14 +0800
-Message-Id: <20200526092130.145550-4-jiaxun.yang@flygoat.com>
+Subject: [PATCH v11 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
+Date:   Tue, 26 May 2020 17:21:15 +0800
+Message-Id: <20200526092130.145550-5-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200526092130.145550-1-jiaxun.yang@flygoat.com>
 References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
@@ -49,83 +48,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI host controller found on Loongson PCHs and SoCs.
+Add PCI Host controller node for Loongson64 with RS780E PCH dts.
+Note that PCI interrupts are probed via legacy way, as different
+machine have different interrupt arrangement, we can't cover all
+of them in dt.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/pci/loongson.yaml     | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/loongson.yaml b/Documentation/devicetree/bindings/pci/loongson.yaml
-new file mode 100644
-index 000000000000..30e7cf1aeb87
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/loongson.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/loongson.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+index 8687c4f7370a..d0d5d60a8697 100644
+--- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
++++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+@@ -9,6 +9,18 @@ bus@10000000 {
+ 				0 0x40000000 0 0x40000000 0 0x40000000
+ 				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space */>;
+ 
++		pci@1a000000 {
++			compatible = "loongson,rs780e-pci";
++			device_type = "pci";
++			#address-cells = <3>;
++			#size-cells = <2>;
 +
-+title: Loongson PCI Host Controller
++			reg = <0 0x1a000000 0 0x02000000>;
 +
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
++			ranges = <0x01000000 0 0x00004000 0 0x18004000 0 0x00004000>,
++				 <0x02000000 0 0x40000000 0 0x40000000 0 0x40000000>;
++		};
 +
-+description: |+
-+  PCI host controller found on Loongson PCHs and SoCs.
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: loongson,ls2k-pci
-+      - const: loongson,ls7a-pci
-+      - const: loongson,rs780e-pci
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: CFG0 standard config space register
-+      - description: CFG1 extended config space register
-+
-+  ranges:
-+    minItems: 1
-+    maxItems: 3
-+
-+
-+required:
-+  - compatible
-+  - reg
-+  - ranges
-+
-+examples:
-+  - |
-+
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        pcie@1a000000 {
-+            compatible = "loongson,rs780e-pci";
-+            device_type = "pci";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+
-+            // CPU_PHYSICAL(2)  SIZE(2)
-+            reg = <0x0 0x1a000000  0x0 0x2000000>;
-+
-+            // BUS_ADDRESS(3)  CPU_PHYSICAL(2)  SIZE(2)
-+            ranges = <0x01000000 0x0 0x00004000  0x0 0x00004000  0x0 0x00004000>,
-+                     <0x02000000 0x0 0x40000000  0x0 0x40000000  0x0 0x40000000>;
-+        };
-+    };
-+...
+ 		isa {
+ 			compatible = "isa";
+ 			#address-cells = <2>;
 -- 
 2.27.0.rc0
 
