@@ -2,94 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1C461E24FD
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:07:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4A241E250D
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:10:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgEZPHt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 11:07:49 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:43297 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgEZPHt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:07:49 -0400
-Received: by mail-ej1-f65.google.com with SMTP id a2so24155918ejb.10;
-        Tue, 26 May 2020 08:07:47 -0700 (PDT)
+        id S1728442AbgEZPKC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 11:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbgEZPKC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:10:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73246C03E96D;
+        Tue, 26 May 2020 08:10:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ci23so1453104pjb.5;
+        Tue, 26 May 2020 08:10:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/PAeTgH6EFfvFnpLdTFbvRq34natBIZioqoaAH9SV2M=;
+        b=HxB2pwcs6+tFYMRqTRFvA3B4DE7SDOWWHJUaPBdyIalvBVvvFiLWZJSIqcYWnuDseR
+         sJXwr7rNgWLZcHsBzjpfSckHpLQKlwNMV7q7V9oiGy7LzXlaorNXCBuTTOAuJG9RLIvt
+         GowoodB7JPF/OEWXGrel5fsDSvMBIuk9flZiIkkayRE+9VcCCJ4JvqTIOK5opqYi8OfX
+         dQokAdXLqxTeEKZmBEKcLY08Z1XxZzrm3j5sY3R/ui8qmdr09Tqv76HE23P03qJfynrx
+         Q0LKyxVAsugZZ5cWCiSOhKq1JdobwxVG7VS255FHV7eaQuPUETz7ciUqi096ne5aWPLq
+         D61A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KjgTih7A660W8l2Ai5zV0xie7l2fjS3cquiqxZY0eUs=;
-        b=lj0xOxS+RFiPf9SsOq/2HiLpzJM8NqDxbOEmL6gK5IWHwUO1MvEcGdGh/ue2UIwHEs
-         g1fuHrUZTMNafI1bJQlUpKzxnH0gIOZ2sDFdr3agSkIZjUNbR+E+3qyAH8GhAbdq+JQO
-         uowDnKKCjJIGxSvbMpLth3SFSzzIFsGZtL8EgFNZpGPyXxh2/PdBvnFAGRG+aE0vP4A8
-         Jk5rQMDzbtDospNqOqOlXNmu5iNO6beaa8MWhQt6lm/O3dx5IYX2B9t6zjPUsAQuBYGW
-         +1KPD8SnieaYmzDNPUcPPHZqGVuJBVrp4k5fShXQmCcuIFEyUovshFaMOKky8Wl3YcdI
-         ToQA==
-X-Gm-Message-State: AOAM5306iPBdlX3xOO+3pC8x3R7m9tVCiXk0LcQ01D98VdJJ/LLCrMTi
-        8Sp0+ggbBZLudgHz0UkIczY=
-X-Google-Smtp-Source: ABdhPJzpF2izaI7HGirZOZ/xZQdcIiUyWXIQKdVRDh55kJz8UdqLFQpxuDMPANNvmQBg9fruG2pCcw==
-X-Received: by 2002:a17:906:8748:: with SMTP id hj8mr1609977ejb.335.1590505666414;
-        Tue, 26 May 2020 08:07:46 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id t22sm137834ejr.93.2020.05.26.08.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 08:07:45 -0700 (PDT)
-Date:   Tue, 26 May 2020 17:07:44 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Johan Hovold <johan@kernel.org>,
-        Alex Elder <elder@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        greybus-dev@lists.linaro.org, netdev@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 8/8] net/iucv: Use the new device_to_pm() helper to
- access struct dev_pm_ops
-Message-ID: <20200526150744.GC75990@rocinante>
-References: <20200525182608.1823735-1-kw@linux.com>
- <20200525182608.1823735-9-kw@linux.com>
- <20200526063521.GC2578492@kroah.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/PAeTgH6EFfvFnpLdTFbvRq34natBIZioqoaAH9SV2M=;
+        b=Gf8GRJaLhlCIsr3sAVhqxLDtfP+xW8qy2olHXaxw4dDPb3rJjgD/SNVhj8wpClDtYf
+         N13If/7VRVQ05LAAdTuSY2xfvvdZ2tXrQuzsA72fkz+bl1OBqbcslUFHRpFIsmiwlY5z
+         wN/kgbIGdXRTqaNJ/Fo8gWkNzpowqF37un3aFMLtDuZKnaL3TJgzPvCbsiCKoEbVCDyk
+         0pDNMMesd/zQBCJjRxfWMlbp092+Xj1I/N7uX0NYzZY7Pn0OkTBa237h+C6UYz1KfexJ
+         ZFr9ee8VLro17ZTzfr2Vh9x+R8r0qmDXGOt/D47XpTRib2pGnuH+ZaR9Kabkgp6220Vl
+         xlIg==
+X-Gm-Message-State: AOAM532Iy5QfksSP/hFJzZiufWRZeoVysNSnu+M+hS5iGyKR7slwoUnt
+        8Fuln0VHdiLk/aaymEXJ1pQ=
+X-Google-Smtp-Source: ABdhPJztqf+j91YDUmH604FAJKzvq76tLyH27bxF6Wn8v7Ve+rWa8JAQfaFRXeMbI/9knlgwQHgfdA==
+X-Received: by 2002:a17:902:bd0a:: with SMTP id p10mr1532434pls.102.1590505801956;
+        Tue, 26 May 2020 08:10:01 -0700 (PDT)
+Received: from localhost ([144.34.194.82])
+        by smtp.gmail.com with ESMTPSA id a2sm15530771pfl.28.2020.05.26.08.10.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 08:10:01 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     tjoseph@cadence.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, jonnyc@amazon.com,
+        thomas.petazzoni@bootlin.com, pratyush.anand@gmail.com,
+        linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1] PCI: controller: Remove duplicate error message
+Date:   Tue, 26 May 2020 23:09:54 +0800
+Message-Id: <20200526150954.4729-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200526063521.GC2578492@kroah.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Greg,
+It will print an error message by itself when
+devm_pci_remap_cfg_resource() goes wrong. so remove the duplicate
+error message.
 
-[...]
-> It's "interesting" how using your new helper doesn't actually make the
-> code smaller.  Perhaps it isn't a good helper function?
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  4 +---
+ drivers/pci/controller/dwc/pcie-al.c               | 13 +++----------
+ drivers/pci/controller/dwc/pcie-armada8k.c         |  1 -
+ drivers/pci/controller/dwc/pcie-spear13xx.c        |  1 -
+ 4 files changed, 4 insertions(+), 15 deletions(-)
 
-The idea for the helper was inspired by the comment Dan made to Bjorn
-about Bjorn's change, as per:
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 8c2543f28ba0..60bfb5bcbd37 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -234,10 +234,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+ 	rc->cfg_base = devm_pci_remap_cfg_resource(dev, res);
+-	if (IS_ERR(rc->cfg_base)) {
+-		dev_err(dev, "missing \"cfg\"\n");
++	if (IS_ERR(rc->cfg_base))
+ 		return PTR_ERR(rc->cfg_base);
+-	}
+ 	rc->cfg_res = res;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
+diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+index 270868f3859a..d57d4ee15848 100644
+--- a/drivers/pci/controller/dwc/pcie-al.c
++++ b/drivers/pci/controller/dwc/pcie-al.c
+@@ -67,13 +67,8 @@ static int al_pcie_init(struct pci_config_window *cfg)
+ 	dev_dbg(dev, "Root port dbi res: %pR\n", res);
+ 
+ 	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+-	if (IS_ERR(al_pcie->dbi_base)) {
+-		long err = PTR_ERR(al_pcie->dbi_base);
+-
+-		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
+-			res, err);
+-		return err;
+-	}
++	if (IS_ERR(al_pcie->dbi_base))
++		return PTR_ERR(al_pcie->dbi_base);
+ 
+ 	cfg->priv = al_pcie;
+ 
+@@ -408,10 +403,8 @@ static int al_pcie_probe(struct platform_device *pdev)
+ 
+ 	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
+-	if (IS_ERR(pci->dbi_base)) {
+-		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
++	if (IS_ERR(pci->dbi_base))
+ 		return PTR_ERR(pci->dbi_base);
+-	}
+ 
+ 	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+ 	if (!ecam_res) {
+diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+index 49596547e8c2..896b95d6917c 100644
+--- a/drivers/pci/controller/dwc/pcie-armada8k.c
++++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+@@ -317,7 +317,6 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+ 	base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, base);
+ 	if (IS_ERR(pci->dbi_base)) {
+-		dev_err(dev, "couldn't remap regs base %p\n", base);
+ 		ret = PTR_ERR(pci->dbi_base);
+ 		goto fail_clkreg;
+ 	}
+diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
+index 7d0cdfd8138b..cdfde1bd7d8e 100644
+--- a/drivers/pci/controller/dwc/pcie-spear13xx.c
++++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
+@@ -273,7 +273,6 @@ static int spear13xx_pcie_probe(struct platform_device *pdev)
+ 	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+ 	if (IS_ERR(pci->dbi_base)) {
+-		dev_err(dev, "couldn't remap dbi base %p\n", dbi_base);
+ 		ret = PTR_ERR(pci->dbi_base);
+ 		goto fail_clk;
+ 	}
+-- 
+2.25.0
 
-  https://lore.kernel.org/driverdev-devel/20191016135002.GA24678@kadam/
-
-It looked like a good idea to try to reduce the following:
-
-  dev->driver && dev->driver->pm && dev->driver->pm->prepare
-
-Into something more succinct.  Albeit, given the feedback from yourself
-and Rafael, I gather that this helper is not really a good addition.
-
-Thank you everyone and sorry for the commotion!
-
-Krzysztof
