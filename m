@@ -2,106 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33F3D1E2518
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA6041E2522
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:13:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbgEZPKl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 11:10:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729286AbgEZPKk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:10:40 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4503C03E979
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 08:10:40 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a5so1546771pjh.2
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 08:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=zuN1PH7d2dfCgGQO7mbhwyoBsWzuZEv+CGEfJv0Zw+c=;
-        b=D+4nQ0vWQOUObnvWLE2c2rqZVSpP4vHdMdjPbiYho4sYugLqtt6WRlJ+HEBBjO+1lQ
-         2eR7eboY09he7DRe3bVtn422CDYVxb587PRQ/F+XM06FycTChxmMLph4uSQfy6rrhj88
-         Uj/F+naAfokobOjg7tIBJp6aRXQKGJrWwM0M5NQhdl2IHrzkJZx4YN7V8c4YmU5AiA4m
-         2klNrqpTzCwkPVLI9ZrzKuMoCf/oP8Y0Egww1cMRgelz+NygXiJoljRrWYfv9E+KnDQ2
-         1VULYXUIQtH0XM1HRyfnK3yn7EbRcnN61uIfb9jjlWUJ7wTomFrOFYUYdUmZtFvN1GcP
-         jAQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zuN1PH7d2dfCgGQO7mbhwyoBsWzuZEv+CGEfJv0Zw+c=;
-        b=Kw54J/+vq17tuwnyUEXv27e9A8ArCmuQVZ1KFCsl6nlny2eg8JLDHb/ZMm2/APXBq/
-         AvK95R9uJ8VH2R0EIYEwgLoL5M52R6nZdN7ko2kiB/Z4QiMz6pbn/uXsm3ppq925ROSU
-         GHW3R7spqAfMUWeX8vFtmEXIka80QGaQMZyVRXRywVFb3Wh5mXOSAQf3vH61Z+tLIJ6v
-         Q51R3xHC4l7ISrrTSiyV3cTyFp0uCWHHd+3FrlbEW0itEJDty/3uyMruF5BxXgUOJI0V
-         FXtQWjjCuZ0M7n1d7pMxrgyt7sdQVSuuL+2/g185onQAyOVydK1RN9ujXSfCsEL8ENoL
-         CTCA==
-X-Gm-Message-State: AOAM532wukcRkojyHzliYnqdmOFF1+ZCPquiLsORarhyHu2qwd0DTn2K
-        +sD82dNUoGucLn49JzVHpdMD9Q==
-X-Google-Smtp-Source: ABdhPJwe+1sgmh2OwBptymAExtulFHEpnY96Q4RDulxomLppHnhiwFUYKKMDqrVR8wVFmvAPxb4eUQ==
-X-Received: by 2002:a17:90a:1a17:: with SMTP id 23mr27507707pjk.198.1590505839978;
-        Tue, 26 May 2020 08:10:39 -0700 (PDT)
-Received: from [10.140.0.202] ([45.135.186.12])
-        by smtp.gmail.com with ESMTPSA id i197sm3623225pfe.30.2020.05.26.08.10.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 08:10:39 -0700 (PDT)
-Subject: Re: [PATCH 1/2] PCI: Introduce PCI_FIXUP_IOMMU
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
- <1590493749-13823-2-git-send-email-zhangfei.gao@linaro.org>
- <20200526144644.GA20784@infradead.org>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <39144dc0-3b04-3127-978b-bd8487dd06e0@linaro.org>
-Date:   Tue, 26 May 2020 23:09:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1729080AbgEZPNF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 11:13:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728205AbgEZPNF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 May 2020 11:13:05 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDDE12078C;
+        Tue, 26 May 2020 15:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590505984;
+        bh=mLAN8D6oIJoa3xggwgfTsbQUrUGKyiAShX7jqMOfqpQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TwwVC+24PxfZ9n8pI3uZo1gP7BUT14m+GVWVUjEuzJ19b989LBWKZjSDjv/kPV1ex
+         L6uQJSmJPjTj8IXOAE5zqwykadOzOqlPyc4fH9x/KqRNyGBVD62xdvunQ1MvXvKizj
+         2XBl6a+OPGFq6NlEgOuIG4xeKo2Nm0kKRMRoalz8=
+Received: by mail-oi1-f179.google.com with SMTP id j145so18969007oib.5;
+        Tue, 26 May 2020 08:13:04 -0700 (PDT)
+X-Gm-Message-State: AOAM531+aFI0HyQnJlBo0CYWapiZsZzGwyXGu/0pWcg16srZRy5Ken2n
+        yiH5UP3Jxvshw3ntVYqbrJ6QpB8gK0fyrf6zJg==
+X-Google-Smtp-Source: ABdhPJxnWdsB33/h+eNDJFncCR1n3OmMuD+wbzq8824aW+7RwYNdy8Fq+5CjchUFaYrWK3vesXy9roYP9HkRJfjTDcY=
+X-Received: by 2002:aca:f084:: with SMTP id o126mr14928427oih.106.1590505984103;
+ Tue, 26 May 2020 08:13:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526144644.GA20784@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200522033631.32574-1-kishon@ti.com> <20200522033631.32574-4-kishon@ti.com>
+ <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com> <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
+In-Reply-To: <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 26 May 2020 09:12:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+Message-ID: <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
+ perform only 32-bit accesses
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Christoph
+On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Rob,
+>
+> On 5/22/2020 9:24 PM, Rob Herring wrote:
+> > On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
+> >> 32-bit accesses for reading or writing to Cadence registers. Convert all
+> >> read and write accesses to 32-bit in Cadence PCIe driver in preparation
+> >> for adding PCIe support in TI's J721E SoC.
+> >
+> > Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
+> > with this and never can be given the PCI_COMMAND and PCI_STATUS
+> > registers are in the same word (IIRC, that's the main reason 32-bit
+> > config space accesses are broken). So this isn't going to work at
+>
+> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
+> could be reset while raising legacy interrupt. While this cannot be avoided for
+> TI's J721E, other platforms doesn't have to have this limitation.
+> > least for EP accesses. And maybe you need a custom .raise_irq() hook
+> > to minimize any problems (such as making the RMW atomic at least from
+> > the endpoint's perspective).
+>
+> This is to make sure EP doesn't update in-consistent state when RC is updating
+> the PCI_STATUS register? Since this involves two different systems, how do we
+> make this atomic?
 
-On 2020/5/26 下午10:46, Christoph Hellwig wrote:
-> On Tue, May 26, 2020 at 07:49:08PM +0800, Zhangfei Gao wrote:
->> Some platform devices appear as PCI but are actually on the AMBA bus,
->> and they need fixup in drivers/pci/quirks.c handling iommu_fwnode.
->> Here introducing PCI_FIXUP_IOMMU, which is called after iommu_fwnode
->> is allocated, instead of reusing PCI_FIXUP_FINAL since it will slow
->> down iommu probing as all devices in fixup final list will be
->> reprocessed.
-> Who is going to use this?  I don't see a single user in the series.
-We will add iommu fixup in drivers/pci/quirks.c, handling
+You can't make it atomic WRT both systems, but is there locking around
+each RMW? Specifically, are preemption and interrupts disabled to
+ensure time between a read and write are minimized? You wouldn't want
+interrupts disabled during the delay too though (i.e. around
+.raise_irq()).
 
-fwspec->can_stall, which is introduced in
+BTW, I've asked this question before, but aren't PCI legacy interrupts
+level triggered? If so, isn't generating a pulse wrong?
 
-https://www.spinics.net/lists/linux-pci/msg94559.html
-
-Unfortunately, the patch does not catch v5.8, so we have to wait.
-And we want to check whether this is a right method to solve this issue.
-
-Thanks
-
+Rob
