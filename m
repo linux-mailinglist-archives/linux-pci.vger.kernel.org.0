@@ -2,109 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66BCF1E1FCD
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 12:36:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 648AB1E2138
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 13:49:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbgEZKgI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 26 May 2020 06:36:08 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44980 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgEZKgH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 06:36:07 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f18so15836136otq.11;
-        Tue, 26 May 2020 03:36:06 -0700 (PDT)
+        id S1731992AbgEZLtt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 07:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731988AbgEZLts (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 07:49:48 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15943C08C5C1
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 04:49:48 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s10so9988010pgm.0
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 04:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=aQLHuck/H6hUhxdEpWbnpYG+y4hFu1KRyBN1f+7zkW8=;
+        b=XirmZKzM+LLXAtNZtlVmQwpy7SRWcMC0TYlRFk6EZGxsqxO252W3y8Nbx4uWD13qJw
+         t6QjUR70f+5VrzW+sLYKnb8N8Jp5p/D00A51Ue/rxj4SAEosbp4CeVDJsJSIvPSWRds6
+         /mk9A2jA56M7p0pSDTmMSNjOjPAWeCn/FACm5/I5azIw1lC3WMp2WR3XnbKbz9xqsl2/
+         ulTm4r8T6NUFIzbvPYU2rllFJGPgCXxuSK2bWEK8Oovu2ZNsAUny/uwETLINLVVqPbNh
+         AC58/ztbWIjpzc0KrCChbcnxAr9RxwVmBX0Q6vVr6ifmh4olUxNMQiOLvWnSfEcQiZg/
+         3Emw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OP8/hxzSora7+RyKmdWGrhPbxw1jS07GePgn3bcs4Ls=;
-        b=c3uGYnrCb4WAGHZya8YQv3RDUmJ/iiligWaOKn8wjfpV6U65Cn+8P6/8We9RY7VPtq
-         WVO8PaEN3ZnluyQhcXt0N8r5TRkyvnCduaHHOdNx9nCECB95hckaw0sDD5uyk8Nn2QKu
-         4gvjRqM2nDflIKrbTKV/pirTNdtUlTyUoiyzenvnBJ1wIy8O4zwHHA8UOX7+4gSJzhAm
-         hcGSnaL4shRqSiAdcGS+tX0IMhd1J7bAattoBquo+F8QEF4b0cibfEMexFGyHrhAU1ho
-         MyMPIi+HTS5QCj8XKC+wRD34gPgMWUuSHGLmaRBDq20pXlFYwQyq8tgBaEUIV4BzrVX0
-         D1Iw==
-X-Gm-Message-State: AOAM533HtqFz8V6nIu1fgbPJqBp/IXkPI8Zs9ruj9GgQHQbhvJuyeNXF
-        s+xvlroxpkP7LQrddggsqwfl9h26kfXyLjRyJ5Q=
-X-Google-Smtp-Source: ABdhPJy1GHMjiBmqkoqcnOQswjrf3GtFhFuljSG5cgXHe0ZrV2FGIT0iVHs8J6BfXHu/3+89V/CmkBUjqTdpcpTHsMI=
-X-Received: by 2002:a9d:6c0f:: with SMTP id f15mr346512otq.118.1590489366099;
- Tue, 26 May 2020 03:36:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200525182608.1823735-1-kw@linux.com> <20200525182608.1823735-3-kw@linux.com>
- <CAJZ5v0jQUmdDYmJsP43Ja3urpVLUxe-yD_Hm_Jd2LtCoPiXsrQ@mail.gmail.com> <20200526094518.GA4600@amd>
-In-Reply-To: <20200526094518.GA4600@amd>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 May 2020 12:35:55 +0200
-Message-ID: <CAJZ5v0ibtOMFDtCcyfmGeE15uR-+hQLw8tr6bfbp4aR4V7C3vA@mail.gmail.com>
-Subject: Re: [PATCH 2/8] ACPI: PM: Use the new device_to_pm() helper to access
- struct dev_pm_ops
-To:     Pavel Machek <pavel@denx.de>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aQLHuck/H6hUhxdEpWbnpYG+y4hFu1KRyBN1f+7zkW8=;
+        b=Mr+07gMe7i2CgoFhq1RpnXOErWFSdy8SKbEjx8eOm30na318wH5rqge1RZ4O1oYlC4
+         pPGfvaHyyW+gNTJaz0qFskSAouUqf+JHVTKsEKxVk71SCTNokJKnfWt0WA8y+ZqUS1/q
+         5snfzlCp9Pfok4R5zf3+kr4wz+9+bCAoKL6F7ArFr5+NLg+LbuvATgNFEVnnt8cod8dz
+         mSgoV0S7fEQzu2YHL7oAkggWy1mgpP7VhrPrRN2QdYi35BnIW1HbqzN5aTVzEAchRQad
+         eUogh5qzQUEZ+ST4+HZxPFN8kvL1NUnhe11cUblvwAZl6AO83j6bF1yWqEp/477N7nQM
+         wsaw==
+X-Gm-Message-State: AOAM533R3wnEJA4DWJExBmo2nBBAEBbbCFDxTQ/0K+L3q3sMhxhyHVl5
+        dpL5nqUOCftpRiNNWqbzsCBuxQ==
+X-Google-Smtp-Source: ABdhPJwWqcev50wczjJKTLuB5KeWjX6Xh40o0PZ2aKsrj0RnXDD5TWs804Gl6GBeG4uho5hk5LIVkg==
+X-Received: by 2002:a63:33c6:: with SMTP id z189mr714101pgz.426.1590493787584;
+        Tue, 26 May 2020 04:49:47 -0700 (PDT)
+Received: from localhost.localdomain ([45.135.186.9])
+        by smtp.gmail.com with ESMTPSA id c12sm15586567pjm.46.2020.05.26.04.49.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 May 2020 04:49:46 -0700 (PDT)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        greybus-dev@lists.linaro.org, netdev <netdev@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>
+Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Date:   Tue, 26 May 2020 19:49:07 +0800
+Message-Id: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:45 AM Pavel Machek <pavel@denx.de> wrote:
->
-> On Tue 2020-05-26 10:37:36, Rafael J. Wysocki wrote:
-> > On Mon, May 25, 2020 at 8:26 PM Krzysztof Wilczyński <kw@linux.com> wrote:
-> > >
-> > > Use the new device_to_pm() helper to access Power Management callbacs
-> > > (struct dev_pm_ops) for a particular device (struct device_driver).
-> > >
-> > > No functional change intended.
-> > >
-> > > Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> > > ---
-> > >  drivers/acpi/device_pm.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> > > index 5832bc10aca8..b98a32c48fbe 100644
-> > > --- a/drivers/acpi/device_pm.c
-> > > +++ b/drivers/acpi/device_pm.c
-> > > @@ -1022,9 +1022,10 @@ static bool acpi_dev_needs_resume(struct device *dev, struct acpi_device *adev)
-> > >  int acpi_subsys_prepare(struct device *dev)
-> > >  {
-> > >         struct acpi_device *adev = ACPI_COMPANION(dev);
-> > > +       const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
-> >
-> > I don't really see a reason for this change.
-> >
-> > What's wrong with the check below?
->
-> Duplicated code. Yes, compiler can sort it out, but... new version
-> looks better to me.
+Some platform devices appear as PCI but are actually on the AMBA bus,
+and they need fixup in drivers/pci/quirks.c handling iommu_fwnode.
+Here introducing PCI_FIXUP_IOMMU, which is called after iommu_fwnode
+is allocated, instead of reusing PCI_FIXUP_FINAL since it will slow
+down iommu probing as all devices in fixup final list will be
+reprocessed, suggested by Joerg, [1]
 
-So the new code would not be duplicated?
+For example:
+Hisilicon platform device need fixup in
+drivers/pci/quirks.c handling fwspec->can_stall, which is introduced in [2]
 
-Look at the other patches in the series then. :-)
++static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
++{
++    struct iommu_fwspec *fwspec;
++
++    pdev->eetlp_prefix_path = 1;
++    fwspec = dev_iommu_fwspec_get(&pdev->dev);
++    if (fwspec)
++        fwspec->can_stall = 1;
++}
++
++DECLARE_PCI_FIXUP_IOMMU(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
++DECLARE_PCI_iFIXUP_IOMMU(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva); 
+
+[1] https://www.spinics.net/lists/iommu/msg44591.html
+[2] https://www.spinics.net/lists/linux-pci/msg94559.html
+
+Zhangfei Gao (2):
+  PCI: Introduce PCI_FIXUP_IOMMU
+  iommu: calling pci_fixup_iommu in iommu_fwspec_init
+
+ drivers/iommu/iommu.c             | 4 ++++
+ drivers/pci/quirks.c              | 7 +++++++
+ include/asm-generic/vmlinux.lds.h | 3 +++
+ include/linux/pci.h               | 8 ++++++++
+ 4 files changed, 22 insertions(+)
+
+-- 
+2.7.4
+
