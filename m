@@ -2,156 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC76C1E2713
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 18:31:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 250171E27A7
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 18:49:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388798AbgEZQbs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 12:31:48 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6429 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388061AbgEZQbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 May 2020 12:31:47 -0400
-IronPort-SDR: 9vZ38h09S1z4w9W9NckCQ5emXMxXQz3ttFg/FbVRsUBoGCieDNQqyLV25MkYewdMiE+oVQrOqE
- wCkaezxmoAdw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 09:31:47 -0700
-IronPort-SDR: RPVI1RWdZmwUlXZkC/Frkhwl4xUn62jixuAWwg2PMqd32lq1fSW5gve35zRGadMEXUx9AcWuji
- NoFFdqEgRrOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="375749892"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 26 May 2020 09:31:45 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jdcUT-000FJp-1G; Wed, 27 May 2020 00:31:45 +0800
-Date:   Wed, 27 May 2020 00:30:52 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 48e3ddc3de522eceb6d90c27a8d8ee9a347e03f0
-Message-ID: <5ecd443c.tc+zY7GHkSlimGoF%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1731462AbgEZQsR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 12:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731498AbgEZQsP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 12:48:15 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D80C03E97A
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 09:48:15 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id c8so2396584iob.6
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 09:48:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CDy85Gj7MYd1kNtILJcUzn7KVIhIM0XshsVeAc/i0tA=;
+        b=dCxwuhqpPbwbXsS8D4GR15Oi/vkWvJ2t6JE5jqhDuEYRBCxiAwo9cWnqARqt/pZ9N3
+         vSDlZ8wDeZydMMsvQgllY5SFL21AkwmUO/yVMpJRwkWuLZ+okFm2plV7st5ZUHxgg7+n
+         nw9y2DMW7Y1odFWc8D0ovkNrkmBQTlf+wVi0icllMuisiL6LQjhD1eU0HTahi0uvVson
+         7H1igoRa7sC3VzH0k6kw37/8QsEYXM6RYbG1TkZAtikaoCp3wlyHVEwAfTjAFYYV3q4L
+         NgflHMgnD8hmupC7gXChsbUVMFzyhgq3aBSV9WdpBp5mfIm6+JpoU8GgF7qXRXSqT3gV
+         qZIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CDy85Gj7MYd1kNtILJcUzn7KVIhIM0XshsVeAc/i0tA=;
+        b=V6+ZPlxp+CBSJ7ormx1Iwuf1i/ui6/LRm826k/IwCZgs/7J7jCfkP3urM6RW954oN4
+         jRcNKXdilHBiJKGez11kfPtIe56vJjBX6fypH2rOH5iOLFokpvwXpgLAXDWoSoSIIa4g
+         4+RfdILogVJk+QqPdN4ht35XRqcuqiulLB6/6nbEoj7G0ylMU25AkfX/ueE5eHUcppIP
+         WoXRCWH1/uce15LWGNLlVEx9RYRlIa4D84FLUzyIFvtifrIAD0++kpZEVsXlCuJCLPdT
+         UUoHWSFygM94rweOP46z4Aawl0EF1Gh2f1VhUSfMxbXJclSnC4rgtectUDYdw4pq0GwG
+         1Oog==
+X-Gm-Message-State: AOAM533NA8S99TFcL4dVbUFTDWlkOjvXU9/KwoYSL9o8hqMxds4Vm0Hn
+        g+Semab86ytLP9v6Sd9x9+TDBA==
+X-Google-Smtp-Source: ABdhPJwt8EDbE+Md3qNwECgPyEhh34GzLnn6Kwx5Q+Egs2R3PU4UAkkaFOOCDwhKuojJpS4rMr4mTQ==
+X-Received: by 2002:a02:2708:: with SMTP id g8mr1921759jaa.52.1590511694529;
+        Tue, 26 May 2020 09:48:14 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id d29sm250489ild.42.2020.05.26.09.48.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 09:48:13 -0700 (PDT)
+Subject: Re: [greybus-dev] [PATCH 8/8] net/iucv: Use the new device_to_pm()
+ helper to access struct dev_pm_ops
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-pci@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        linux-acpi@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Felipe Balbi <balbi@kernel.org>, Alex Elder <elder@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-9-kw@linux.com> <20200526063521.GC2578492@kroah.com>
+ <20200526150744.GC75990@rocinante>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <acb9415a-d0d0-3ebc-b5ae-c26a7dc2114a@linaro.org>
+Date:   Tue, 26 May 2020 11:48:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200526150744.GC75990@rocinante>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: 48e3ddc3de522eceb6d90c27a8d8ee9a347e03f0  Merge branch 'remotes/lorenzo/pci/v3-semi'
+On 5/26/20 10:07 AM, Krzysztof Wilczyński wrote:
+> Hello Greg,
+> 
+> [...]
+>> It's "interesting" how using your new helper doesn't actually make the
+>> code smaller.  Perhaps it isn't a good helper function?
 
-elapsed time: 6876m
+Helper functions often improve code readability, which is
+beneficial even if it doesn't reduce code size or efficiency.
 
-configs tested: 98
-configs skipped: 1
+But I won't argue for or against this particular change.
+It's OK with me either way.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+					-Alex
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-m68k                             allyesconfig
-sparc                            allyesconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a001-20200526
-i386                 randconfig-a004-20200526
-i386                 randconfig-a003-20200526
-i386                 randconfig-a006-20200526
-i386                 randconfig-a002-20200526
-i386                 randconfig-a005-20200526
-x86_64               randconfig-a002-20200521
-x86_64               randconfig-a006-20200521
-x86_64               randconfig-a005-20200521
-x86_64               randconfig-a004-20200521
-x86_64               randconfig-a003-20200521
-x86_64               randconfig-a001-20200521
-i386                 randconfig-a013-20200521
-i386                 randconfig-a012-20200521
-i386                 randconfig-a015-20200521
-i386                 randconfig-a011-20200521
-i386                 randconfig-a016-20200521
-i386                 randconfig-a014-20200521
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+> The idea for the helper was inspired by the comment Dan made to Bjorn
+> about Bjorn's change, as per:
+> 
+>    https://lore.kernel.org/driverdev-devel/20191016135002.GA24678@kadam/
+> 
+> It looked like a good idea to try to reduce the following:
+> 
+>    dev->driver && dev->driver->pm && dev->driver->pm->prepare
+> 
+> Into something more succinct.  Albeit, given the feedback from yourself
+> and Rafael, I gather that this helper is not really a good addition.
+> 
+> Thank you everyone and sorry for the commotion!
+> 
+> Krzysztof
+> _______________________________________________
+> greybus-dev mailing list
+> greybus-dev@lists.linaro.org
+> https://lists.linaro.org/mailman/listinfo/greybus-dev
+> 
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
