@@ -2,129 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2BFB1E19A5
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 04:45:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE6191E1B52
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 08:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgEZCpU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 May 2020 22:45:20 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:55860 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgEZCpU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 May 2020 22:45:20 -0400
-X-Greylist: delayed 395 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 May 2020 22:45:19 EDT
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49WJ781tVwz9vKbK
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 02:38:44 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Q3PIB1HQ_FQj for <linux-pci@vger.kernel.org>;
-        Mon, 25 May 2020 21:38:44 -0500 (CDT)
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727873AbgEZGdj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 02:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbgEZGdi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 May 2020 02:33:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49WJ7808nKz9vKbG
-        for <linux-pci@vger.kernel.org>; Mon, 25 May 2020 21:38:43 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49WJ7808nKz9vKbG
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49WJ7808nKz9vKbG
-Received: by mail-il1-f198.google.com with SMTP id w16so16596097ilm.2
-        for <linux-pci@vger.kernel.org>; Mon, 25 May 2020 19:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=T2pyZeWX2xec+ABdMSwYqLtzMRs3/3YjO1fw5oaVquU=;
-        b=QrkWi+59wzuuP/esokdUKbXtJZTN1ik3pHrfAJIkMVshbZGSE1sx38s6j2J10klopp
-         uBSwcdBVUFJ8WUhzv9aCl3BLWo9s3Ipr4ForP9F3PsMURdRbHQcztqiPOnAoydBCoh2n
-         Zn9AoBvWL8M5A0Tgg1thLFT5Kfq6TVJhSw9i2NGNCIsggZ5GIu+8ZtR9BbXCdbScob/V
-         1UY+QVUtuJbGM7lS929r9xyYBzD5zPjVzbRHRxxvxh8htzlm86KHw9S5PR/NzEVoMQ03
-         i9zOoEHadZfe92uyr7JTC/CAh9rg7VKxP3yLXww1rfCmuH6O0Mf+dmHxXKnJLULBQWmM
-         6S1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=T2pyZeWX2xec+ABdMSwYqLtzMRs3/3YjO1fw5oaVquU=;
-        b=adrC+R17ZVEwpVXvGDgUH+V3khvEoqkl6adfbQd3nRy7Ld5DuBzK4cH0KI4wH7Wo4v
-         Uf6Kcr2QVOighi+94yYpBGFFqf0NI6FclrwenzpmtIs+XDTueTJzXRHyrr2IAEMi7vtl
-         a84Bd1Nv/pM2ZHjPVmGNd+al8UuniHvAd4ZI7R7lzjbWpxh2d+EmgIFAOE/a9gl7po1m
-         /u2mK1WdJpb1MjoNhvwRt2MnZYVzI5G6RP1GXl+TA0k92PFox48cEwBU+9LtOYVlL2t4
-         /Crq7oKr7scQSmsjMRmzaHhVLAq3ZH6lLr9dNIniJ7+p2eHuHQeOtJ2yCSpHKjfjPoYO
-         F08w==
-X-Gm-Message-State: AOAM530hNwtP9PO0yxNcwD9WMxZvWOZ2ZCNmjJpOim3LDlIJg+YhWD83
-        G6AVNX/jlvWBNr5+kyW14e0yOQY1zSLyQQ3LB28lfHgh5OP7M47V08aALTi0Cc1CDuEMWOYGVH3
-        +CHA255nW8Z51KRVcbiyOma1i
-X-Received: by 2002:a92:d2ca:: with SMTP id w10mr27598001ilg.141.1590460723484;
-        Mon, 25 May 2020 19:38:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyxUlisi2OBDfGcYZPt6a3J73pAP0NhbInGJihnQnLZHFBPNyxHuTnFkRnboV3hBIBHQBy0Zg==
-X-Received: by 2002:a92:d2ca:: with SMTP id w10mr27597982ilg.141.1590460723159;
-        Mon, 25 May 2020 19:38:43 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id f10sm10058337ilj.85.2020.05.25.19.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 19:38:42 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     svarbanov@mm-sol.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, helgaas@google.com,
-        p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kjlu@umn.edu, wu000273@umn.edu
-Subject: [PATCH] PCI: qcom: fix several error-hanlding problem.
-Date:   Mon, 25 May 2020 21:38:35 -0500
-Message-Id: <20200526023835.5468-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 493922073B;
+        Tue, 26 May 2020 06:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590474816;
+        bh=ekoHJmuDYgfF1SuG9z404kGqxsTf0Kd2lPtuC2TdX78=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=upgmfSg6+hyi2RnYD15UKVCUWWpzVmk35guz+ryNT4da9EZJ7evbDVNO0PKMLrqsQ
+         +fGZzarS6/XMZfmdW21nbzBX5BfMvv+D0W3fk0eD7I2f2aKeRnpBAyI0v+M2ILIryk
+         7qnBc+AjLpsROB+BxZwolVoeKKpBh4GZdOQAKZLI=
+Date:   Tue, 26 May 2020 08:33:34 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Johan Hovold <johan@kernel.org>,
+        Alex Elder <elder@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        greybus-dev@lists.linaro.org, netdev@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 1/8] driver core: Add helper for accessing Power
+ Management callbacs
+Message-ID: <20200526063334.GB2578492@kroah.com>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-2-kw@linux.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200525182608.1823735-2-kw@linux.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Mon, May 25, 2020 at 06:26:01PM +0000, Krzysztof Wilczyński wrote:
+> Add driver_to_pm() helper allowing for accessing the Power Management
+> callbacs for a particular device.  Access to the callbacs (struct
+> dev_pm_ops) is normally done through using the pm pointer that is
+> embedded within the device_driver struct.
+> 
+> Helper allows for the code required to reference the pm pointer and
+> access Power Management callbas to be simplified.  Changing the
+> following:
+> 
+>   struct device_driver *drv = dev->driver;
+>   if (dev->driver && dev->driver->pm && dev->driver->pm->prepare) {
+>       int ret = dev->driver->pm->prepare(dev);
+> 
+> To:
+> 
+>   const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+>   if (pm && pm->prepare) {
+>       int ret = pm->prepare(dev);
+> 
+> Or, changing the following:
+> 
+>      const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+> 
+> To:
+>      const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+> 
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> ---
+>  include/linux/device/driver.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+> index ee7ba5b5417e..ccd0b315fd93 100644
+> --- a/include/linux/device/driver.h
+> +++ b/include/linux/device/driver.h
+> @@ -236,6 +236,21 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+>  }
+>  #endif
+>  
+> +/**
+> + * driver_to_pm - Return Power Management callbacs (struct dev_pm_ops) for
+> + *                a particular device.
+> + * @drv: Pointer to a device (struct device_driver) for which you want to access
+> + *       the Power Management callbacks.
+> + *
+> + * Returns a pointer to the struct dev_pm_ops embedded within the device (struct
+> + * device_driver), or returns NULL if Power Management is not present and the
+> + * pointer is not valid.
+> + */
+> +static inline const struct dev_pm_ops *driver_to_pm(struct device_driver *drv)
+> +{
+> +	return drv && drv->pm ? drv->pm : NULL;
 
-In function qcom_pcie_probe(), there are several error-handling problem.
-1. pm_runtime_put() should be called after pm_runtime_get_sync() failed,
-because refcount will be increased even pm_runtime_get_sync() returns 
-an error.
-2. pm_runtime_disable() are called twice, after the call of phy_init() and
-dw_pcie_host_init() failed.
-Fix these problem by pm_runtime_put() after the call of call 
-pm_runtime_get_sync() failed. Also removing the redundant 
-pm_runtime_disable().
+I hate ? : lines with a passion, as they break normal pattern mattching
+in my brain.  Please just spell this all out:
+	if (drv && drv->pm)
+		return drv->pm;
+	return NULL;
 
-Fixes: 6e5da6f7d824 ("PCI: qcom: Fix error handling in runtime PM support")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Much easier to read, and the compiler will do the exact same thing.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 138e1a2d21cc..10393ab607bf 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1340,8 +1340,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
--		pm_runtime_disable(dev);
--		return ret;
-+		goto err_pm_runtime_put;
- 	}
- 
- 	pci->dev = dev;
-@@ -1401,7 +1400,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 
- 	ret = phy_init(pcie->phy);
- 	if (ret) {
--		pm_runtime_disable(&pdev->dev);
- 		goto err_pm_runtime_put;
- 	}
- 
-@@ -1410,7 +1408,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	ret = dw_pcie_host_init(pp);
- 	if (ret) {
- 		dev_err(dev, "cannot initialize host\n");
--		pm_runtime_disable(&pdev->dev);
- 		goto err_pm_runtime_put;
- 	}
- 
--- 
-2.17.1
+Only place ? : are ok to use in my opinion, are as function arguments.
 
+thanks,
+
+greg k-h
