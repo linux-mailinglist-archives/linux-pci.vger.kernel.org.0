@@ -2,105 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C53E1E2A24
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 20:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 404751E2D03
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 21:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgEZSfC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 14:35:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38312 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgEZSfC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 May 2020 14:35:02 -0400
-IronPort-SDR: HLgmo8LAcD1WrfC8fnTadiTCz9SptjwJGTBN+2nidyVz/xZLVFH6dcNoUJmTYkL5MfJpOwqgjc
- U5OG73fNRUmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 11:35:01 -0700
-IronPort-SDR: Y+FI5ZVcXxa++6tH2EuB5e/A5meiAUK4eJ01+7jBspT26gqSwzsmUGMfjWsRBeKJNwkIM55H1/
- AZzrs7JRxjpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="291295609"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga004.fm.intel.com with ESMTP; 26 May 2020 11:34:57 -0700
-Date:   Tue, 26 May 2020 11:34:57 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
-Message-ID: <20200526183457.GC36356@otc-nc-03>
-References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
- <20200504231936.2bc07fe3@x1.home>
- <20200505061107.GA22974@araj-mobl1.jf.intel.com>
- <20200505080514.01153835@x1.home>
- <20200505145605.GA13690@otc-nc-03>
- <20200505093414.6bae52e0@x1.home>
- <20200526180648.GC35892@otc-nc-03>
- <20200526122654.7ac087b3@x1.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526122654.7ac087b3@x1.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S2404237AbgEZTNU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 15:13:20 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45826 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389966AbgEZTNT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 15:13:19 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 3A98130D62B;
+        Tue, 26 May 2020 12:13:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 3A98130D62B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590520396;
+        bh=+b41cKto7oBml6gbt0P3Uc1iMp9Snf8kHAJBk8ILXSc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kMVkvfh2RF6stG81DoEIP5rW2Bb1X314UrWcAaVH2vesNfHDGDr6KhshbNA46ZHix
+         7ZwntfMj7r7NDOxK4+O77jSehqnV1xcgzxPORE2AO6ggOOFgMQnDPaBIK+8fl7+mZP
+         rhW1OIwreN8UcomYfGhgxrbXcaiUc4E8Vm+33GjA=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 6F1C914008B;
+        Tue, 26 May 2020 12:13:13 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Corey Minyard <minyard@acm.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE), Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        iommu@lists.linux-foundation.org (open list:DMA MAPPING HELPERS),
+        Julien Grall <julien.grall@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+        Mark Brown <broonie@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>
+Subject: [PATCH v2 00/14] PCI: brcmstb: enable PCIe for STB chips
+Date:   Tue, 26 May 2020 15:12:39 -0400
+Message-Id: <20200526191303.1492-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 26, 2020 at 12:26:54PM -0600, Alex Williamson wrote:
-> > > 
-> > > I don't think the language in the spec is anything sufficient to handle
-> > > RCiEP uniquely.  We've previously rejected kernel command line opt-outs
-> > > for ACS, and the extent to which those patches still float around the
-> > > user community and are blindly used to separate IOMMU groups are a
-> > > testament to the failure of this approach.  Users do not have a basis
-> > > for enabling this sort of opt-out.  The benefit is obvious in the IOMMU
-> > > grouping, but the risk is entirely unknown.  A kconfig option is even
-> > > worse as that means if you consume a downstream kernel, the downstream
-> > > maintainers might have decided universally that isolation is less
-> > > important than functionality.  
-> > 
-> > We discussed this internally, and Intel vt-d spec does spell out clearly 
-> > in Section 3.16 Root-Complex Peer to Peer Considerations. The spec clearly
-> > calls out that all p2p must be done on translated addresses and therefore
-> > must go through the IOMMU.
-> > 
-> > I suppose they should also have some similar platform gauranteed behavior
-> > for RCiEP's or MFD's *Must* behave as follows. The language is strict and
-> > when IOMMU is enabled in the platform, everything is sent up north to the
-> > IOMMU agent.
-> > 
-> > 3.16 Root-Complex Peer to Peer Considerations
-> > When DMA remapping is enabled, peer-to-peer requests through the
-> > Root-Complex must be handled
-> > as follows:
-> > • The input address in the request is translated (through first-level,
-> >   second-level or nested translation) to a host physical address (HPA).
-> >   The address decoding for peer addresses must be done only on the 
-> >   translated HPA. Hardware implementations are free to further limit 
-> >   peer-to-peer accesses to specific host physical address regions 
-> >   (or to completely disallow peer-forwarding of translated requests).
-> > • Since address translation changes the contents (address field) of the PCI
-> >   Express Transaction Layer Packet (TLP), for PCI Express peer-to-peer 
-> >   requests with ECRC, the Root-Complex hardware must use the new ECRC 
-> >   (re-computed with the translated address) if it decides to forward 
-> >   the TLP as a peer request.
-> > • Root-ports, and multi-function root-complex integrated endpoints, may
-> >   support additional peerto-peer control features by supporting PCI Express
-> >   Access Control Services (ACS) capability. Refer to ACS capability in 
-> >   PCI Express specifications for details.
-> 
-> That sounds like it might be a reasonable basis for quirking all RCiEPs
-> on VT-d platforms if Intel is willing to stand behind it.  Thanks,
-> 
+v2:
+Commit: "device core: Add ability to handle multiple dma offsets"
+  o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
+  o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
+  o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
+  o dev->dma_pfn_map => dev->dma_pfn_offset_map
+  o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
+  o In device.h: s/const void */const struct dma_pfn_offset_region */
+  o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
+    guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
+  o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
+    dev->dma_pfn_offset_map is copied as well.
+  o Merged two of the DMA commits into one (Christoph).
 
-Sounds good.. that's what i hear from our platform teams. If there is a
-violation it would be a bug in silicon.  
+Commit "arm: dma-mapping: Invoke dma offset func if needed":
+  o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
+
+Other commits' changes:
+  o Removed need for carrying of_id var in priv (Nicolas)
+  o Commit message rewordings (Bjorn)
+  o Commit log messages filled to 75 chars (Bjorn)
+  o devm_reset_control_get_shared())
+    => devm_reset_control_get_optional_shared (Philipp)
+  o Add call to reset_control_assert() in PCIe remove routines (Philipp)
+
+v1:
+This patchset expands the usefulness of the Broadcom Settop Box PCIe
+controller by building upon the PCIe driver used currently by the
+Raspbery Pi.  Other forms of this patchset were submitted by me years
+ago and not accepted; the major sticking point was the code required
+for the DMA remapping needed for the PCIe driver to work [1].
+
+There have been many changes to the DMA and OF subsystems since that
+time, making a cleaner and less intrusive patchset possible.  This
+patchset implements a generalization of "dev->dma_pfn_offset", except
+that instead of a single scalar offset it provides for multiple
+offsets via a function which depends upon the "dma-ranges" property of
+the PCIe host controller.  This is required for proper functionality
+of the BrcmSTB PCIe controller and possibly some other devices.
+
+[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
+
+Jim Quinlan (14):
+  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+  ata: ahci_brcm: Fix use of BCM7216 reset controller
+  dt-bindings: PCI: Add bindings for more Brcmstb chips
+  PCI: brcmstb: Add bcm7278 reigister info
+  PCI: brcmstb: Add suspend and resume pm_ops
+  PCI: brcmstb: Add bcm7278 PERST support
+  PCI: brcmstb: Add control of rescal reset
+  of: Include a dev param in of_dma_get_range()
+  device core: Add ability to handle multiple dma offsets
+  arm: dma-mapping: Invoke dma offset func if needed
+  PCI: brcmstb: Set internal memory viewport sizes
+  PCI: brcmstb: Accommodate MSI for older chips
+  PCI: brcmstb: Set bus max burst size by chip type
+  PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
+ arch/arm/include/asm/dma-mapping.h            |  13 +-
+ drivers/ata/ahci_brcm.c                       |  14 +-
+ drivers/of/address.c                          |  69 ++-
+ drivers/of/device.c                           |   2 +-
+ drivers/of/of_private.h                       |   8 +-
+ drivers/pci/controller/Kconfig                |   3 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 408 +++++++++++++++---
+ drivers/usb/core/message.c                    |   3 +
+ drivers/usb/core/usb.c                        |   3 +
+ include/linux/device.h                        |  10 +-
+ include/linux/dma-direct.h                    |  10 +-
+ include/linux/dma-mapping.h                   |  46 ++
+ kernel/dma/Kconfig                            |  13 +
+ 14 files changed, 559 insertions(+), 83 deletions(-)
+
+-- 
+2.17.1
+
