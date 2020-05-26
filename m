@@ -2,345 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 391C21E1E6D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 11:23:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5343E1E1ECC
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 11:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbgEZJXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 05:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbgEZJXB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 05:23:01 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D86C03E97E;
-        Tue, 26 May 2020 02:23:01 -0700 (PDT)
-Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 9EB1E20CF4;
-        Tue, 26 May 2020 09:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1590484981; bh=Won1jtExROhKo2kiWFOyGzp50UUElZfp+GngZmfr3dM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j1t7+X+lIpjR/5SAzyh7on9SvG1dk2xuCC9LjMkOSGiX08Mf6V85ZU6kJadP2yMiN
-         x55cjJ+CBmPReP+KCVD2l61gamBtkcstgrhi+NzCMHAWXsvyeZ0SLepUBkQqHlB2Mv
-         nojTCVr+ijqC5HgrF3+gPcmwoRhvji6ausuOpa0r4ufhNHYkZovg0jZ4ImA8kmsfJv
-         /Y43pF9de56bqTN28LhX0aPcRrXWMdtB+LUDVmzH8RpWXcWOY5OUrNJrNC7110vIoi
-         zRwm+B22HoNyl2zj/Fxmuva/RtCbvTlSsKvUurotDaM3KiU9eqS+3BBsw6UTBPlTfn
-         Iu/a918df2Fow==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
+        id S2388651AbgEZJiy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 05:38:54 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38137 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388460AbgEZJiy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 05:38:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e1so19724897wrt.5;
+        Tue, 26 May 2020 02:38:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ok53FF3ob85NQ3kaOmkDOVfvfrQyMjF4yDCUjHtVYOU=;
+        b=MVqw4cpdBpWPt3uLAFe87iH4rvDwliMVgA9OKx1x3+ZIuOWXY5rK3X99Mv5Mz/xfBG
+         mC9Sk2axRxKKQb1O85Voc2bT5wZhaSLE0GdXdAlOe+BGgvoPjMlC9H6TWUjy2ZQbgu18
+         9cmEMHc+DxyVcwHjfbOx4ANhanT3AxspWAej9jikvP2tw1QZW0j4yhqnXLX4DIlvZQf2
+         1uvnUyQJnSW6z6YHhdZpQQOm4dpWN6t8ged0/W/yGJUwvXCZL7HiDq6B11AvRiowLYdi
+         1+Im300UugfQn1tjU254KEnT9HnLxiK0noVYDaum589hOKKGIvzNxBoiy2FWXl7pWRGI
+         uTeg==
+X-Gm-Message-State: AOAM530HXBN+o/klPkoqZ0xwDzMytwX4cuyPPJQH9Fmys5Frn9EpexQU
+        ER8PLuAe/EUa9M6+35N2QAjAqqEg
+X-Google-Smtp-Source: ABdhPJyx1bwlQiUXpBhsXKw9pC/WSAdrM9iOef2uVPf7AY+mlydpS0OKd3PhkTqLeC/FiDOn0YvykA==
+X-Received: by 2002:adf:a396:: with SMTP id l22mr18769444wrb.76.1590485932051;
+        Tue, 26 May 2020 02:38:52 -0700 (PDT)
+Received: from debian (82.149.115.87.dyn.plus.net. [87.115.149.82])
+        by smtp.gmail.com with ESMTPSA id w15sm142131wmk.30.2020.05.26.02.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 02:38:51 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:38:49 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH v11 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Date:   Tue, 26 May 2020 17:21:16 +0800
-Message-Id: <20200526092130.145550-6-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200526092130.145550-1-jiaxun.yang@flygoat.com>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200526092130.145550-1-jiaxun.yang@flygoat.com>
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] PCI: hv: Use struct_size() helper
+Message-ID: <20200526093849.keva4hp775m4dzuo@debian>
+References: <20200525164319.GA13596@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525164319.GA13596@embeddedor>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We can now enable generic PCI driver in Kconfig, and remove legacy
-PCI driver code.
+On Mon, May 25, 2020 at 11:43:19AM -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct hv_dr_state {
+> 	...
+>         struct hv_pcidev_description func[];
+> };
+> 
+> struct pci_bus_relations {
+> 	...
+>         struct pci_function_description func[];
+> } __packed;
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following forms:
+> 
+> offsetof(struct hv_dr_state, func) +
+> 	(sizeof(struct hv_pcidev_description) *
+> 	(relations->device_count))
+> 
+> offsetof(struct pci_bus_relations, func) +
+> 	(sizeof(struct pci_function_description) *
+> 	(bus_rel->device_count))
+> 
+> with:
+> 
+> struct_size(dr, func, relations->device_count)
+> 
+> and
+> 
+> struct_size(bus_rel, func, bus_rel->device_count)
+> 
+> respectively.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Radeon vbios quirk is moved to the platform folder to fit the
-new structure.
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v9: Fix licenses tag
----
- arch/mips/Kconfig                  |   1 +
- arch/mips/loongson64/Makefile      |   2 +-
- arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
- arch/mips/pci/Makefile             |   1 -
- arch/mips/pci/fixup-loongson3.c    |  71 ------------------
- arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
- 6 files changed, 31 insertions(+), 189 deletions(-)
- create mode 100644 arch/mips/loongson64/vbios_quirk.c
- delete mode 100644 arch/mips/pci/fixup-loongson3.c
- delete mode 100644 arch/mips/pci/ops-loongson3.c
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 0519ca9f00f9..7a4fcc4ade1f 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -480,6 +480,7 @@ config MACH_LOONGSON64
- 	select IRQ_MIPS_CPU
- 	select NR_CPUS_DEFAULT_64
- 	select USE_GENERIC_EARLY_PRINTK_8250
-+	select PCI_DRIVERS_GENERIC
- 	select SYS_HAS_CPU_LOONGSON64
- 	select SYS_HAS_EARLY_PRINTK
- 	select SYS_SUPPORTS_SMP
-diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
-index 6f3c2b47f66f..6f81b822aeae 100644
---- a/arch/mips/loongson64/Makefile
-+++ b/arch/mips/loongson64/Makefile
-@@ -8,5 +8,5 @@ obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o dma.o \
- obj-$(CONFIG_SMP)	+= smp.o
- obj-$(CONFIG_NUMA)	+= numa.o
- obj-$(CONFIG_RS780_HPET) += hpet.o
--obj-$(CONFIG_PCI) += pci.o
- obj-$(CONFIG_SUSPEND) += pm.o
-+obj-$(CONFIG_PCI_QUIRKS) += vbios_quirk.o
-diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
-new file mode 100644
-index 000000000000..9a29e94d3db1
---- /dev/null
-+++ b/arch/mips/loongson64/vbios_quirk.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include <linux/pci.h>
-+#include <loongson.h>
-+
-+static void pci_fixup_radeon(struct pci_dev *pdev)
-+{
-+	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
-+
-+	if (res->start)
-+		return;
-+
-+	if (!loongson_sysconf.vgabios_addr)
-+		return;
-+
-+	pci_disable_rom(pdev);
-+	if (res->parent)
-+		release_resource(res);
-+
-+	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
-+	res->end   = res->start + 256*1024 - 1;
-+	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-+		     IORESOURCE_PCI_FIXED;
-+
-+	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
-+		 PCI_ROM_RESOURCE, res);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, 0x9615,
-+				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
-diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-index 342ce10ef593..438f10955d89 100644
---- a/arch/mips/pci/Makefile
-+++ b/arch/mips/pci/Makefile
-@@ -35,7 +35,6 @@ obj-$(CONFIG_LASAT)		+= pci-lasat.o
- obj-$(CONFIG_MIPS_COBALT)	+= fixup-cobalt.o
- obj-$(CONFIG_LEMOTE_FULOONG2E)	+= fixup-fuloong2e.o ops-loongson2.o
- obj-$(CONFIG_LEMOTE_MACH2F)	+= fixup-lemote2f.o ops-loongson2.o
--obj-$(CONFIG_MACH_LOONGSON64)	+= fixup-loongson3.o ops-loongson3.o
- obj-$(CONFIG_MIPS_MALTA)	+= fixup-malta.o pci-malta.o
- obj-$(CONFIG_PMC_MSP7120_GW)	+= fixup-pmcmsp.o ops-pmcmsp.o
- obj-$(CONFIG_PMC_MSP7120_EVAL)	+= fixup-pmcmsp.o ops-pmcmsp.o
-diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
-deleted file mode 100644
-index 8a741c2c6685..000000000000
---- a/arch/mips/pci/fixup-loongson3.c
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/*
-- * fixup-loongson3.c
-- *
-- * Copyright (C) 2012 Lemote, Inc.
-- * Author: Xiang Yu, xiangy@lemote.com
-- *         Chen Huacai, chenhc@lemote.com
-- *
-- * This program is free software; you can redistribute  it and/or modify it
-- * under  the terms of  the GNU General  Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
-- *
-- * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
-- * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
-- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
-- * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
-- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-- * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
-- * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-- * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- *
-- */
--
--#include <linux/pci.h>
--#include <boot_param.h>
--
--static void print_fixup_info(const struct pci_dev *pdev)
--{
--	dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
--			pdev->vendor, pdev->device, pdev->irq);
--}
--
--int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	print_fixup_info(dev);
--	return dev->irq;
--}
--
--static void pci_fixup_radeon(struct pci_dev *pdev)
--{
--	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
--
--	if (res->start)
--		return;
--
--	if (!loongson_sysconf.vgabios_addr)
--		return;
--
--	pci_disable_rom(pdev);
--	if (res->parent)
--		release_resource(res);
--
--	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
--	res->end   = res->start + 256*1024 - 1;
--	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
--		     IORESOURCE_PCI_FIXED;
--
--	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
--		 PCI_ROM_RESOURCE, res);
--}
--
--DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
--				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
--
--/* Do platform specific device initialization at pci_enable_device() time */
--int pcibios_plat_dev_init(struct pci_dev *dev)
--{
--	return 0;
--}
-diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
-deleted file mode 100644
-index 2f6ad36bdea6..000000000000
---- a/arch/mips/pci/ops-loongson3.c
-+++ /dev/null
-@@ -1,116 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/kernel.h>
--
--#include <asm/mips-boards/bonito64.h>
--
--#include <loongson.h>
--
--#define PCI_ACCESS_READ  0
--#define PCI_ACCESS_WRITE 1
--
--#define HT1LO_PCICFG_BASE      0x1a000000
--#define HT1LO_PCICFG_BASE_TP1  0x1b000000
--
--static int loongson3_pci_config_access(unsigned char access_type,
--		struct pci_bus *bus, unsigned int devfn,
--		int where, u32 *data)
--{
--	unsigned char busnum = bus->number;
--	int function = PCI_FUNC(devfn);
--	int device = PCI_SLOT(devfn);
--	int reg = where & ~3;
--	void *addrp;
--	u64 addr;
--
--	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
--		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
--		if (busnum == 0) {
--			if (device > 31)
--				return PCIBIOS_DEVICE_NOT_FOUND;
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE | addr);
--		} else {
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE_TP1 | addr);
--		}
--	} else if (where < PCI_CFG_SPACE_EXP_SIZE) {  /* extended config */
--		struct pci_dev *rootdev;
--
--		rootdev = pci_get_domain_bus_and_slot(0, 0, 0);
--		if (!rootdev)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr = pci_resource_start(rootdev, 3);
--		if (!addr)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr |= busnum << 20 | device << 15 | function << 12 | reg;
--		addrp = (void *)TO_UNCAC(addr);
--	} else {
--		return PCIBIOS_DEVICE_NOT_FOUND;
--	}
--
--	if (access_type == PCI_ACCESS_WRITE)
--		writel(*data, addrp);
--	else {
--		*data = readl(addrp);
--		if (*data == 0xffffffff) {
--			*data = -1;
--			return PCIBIOS_DEVICE_NOT_FOUND;
--		}
--	}
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int devfn,
--				 int where, int size, u32 *val)
--{
--	u32 data = 0;
--	int ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--			bus, devfn, where, &data);
--
--	if (ret != PCIBIOS_SUCCESSFUL)
--		return ret;
--
--	if (size == 1)
--		*val = (data >> ((where & 3) << 3)) & 0xff;
--	else if (size == 2)
--		*val = (data >> ((where & 3) << 3)) & 0xffff;
--	else
--		*val = data;
--
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
--				  int where, int size, u32 val)
--{
--	u32 data = 0;
--	int ret;
--
--	if (size == 4)
--		data = val;
--	else {
--		ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--				bus, devfn, where, &data);
--		if (ret != PCIBIOS_SUCCESSFUL)
--			return ret;
--
--		if (size == 1)
--			data = (data & ~(0xff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--		else if (size == 2)
--			data = (data & ~(0xffff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--	}
--
--	ret = loongson3_pci_config_access(PCI_ACCESS_WRITE,
--			bus, devfn, where, &data);
--
--	return ret;
--}
--
--struct pci_ops loongson_pci_ops = {
--	.read = loongson3_pci_pcibios_read,
--	.write = loongson3_pci_pcibios_write
--};
--- 
-2.27.0.rc0
-
+FAOD I expect this patch to go through pci tree.
