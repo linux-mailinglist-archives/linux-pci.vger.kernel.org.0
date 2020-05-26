@@ -2,152 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4A241E250D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:10:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33F3D1E2518
+	for <lists+linux-pci@lfdr.de>; Tue, 26 May 2020 17:10:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgEZPKC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 11:10:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52868 "EHLO
+        id S1729869AbgEZPKl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 11:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgEZPKC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:10:02 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73246C03E96D;
-        Tue, 26 May 2020 08:10:02 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ci23so1453104pjb.5;
-        Tue, 26 May 2020 08:10:02 -0700 (PDT)
+        with ESMTP id S1729286AbgEZPKk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 11:10:40 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4503C03E979
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 08:10:40 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a5so1546771pjh.2
+        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 08:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/PAeTgH6EFfvFnpLdTFbvRq34natBIZioqoaAH9SV2M=;
-        b=HxB2pwcs6+tFYMRqTRFvA3B4DE7SDOWWHJUaPBdyIalvBVvvFiLWZJSIqcYWnuDseR
-         sJXwr7rNgWLZcHsBzjpfSckHpLQKlwNMV7q7V9oiGy7LzXlaorNXCBuTTOAuJG9RLIvt
-         GowoodB7JPF/OEWXGrel5fsDSvMBIuk9flZiIkkayRE+9VcCCJ4JvqTIOK5opqYi8OfX
-         dQokAdXLqxTeEKZmBEKcLY08Z1XxZzrm3j5sY3R/ui8qmdr09Tqv76HE23P03qJfynrx
-         Q0LKyxVAsugZZ5cWCiSOhKq1JdobwxVG7VS255FHV7eaQuPUETz7ciUqi096ne5aWPLq
-         D61A==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=zuN1PH7d2dfCgGQO7mbhwyoBsWzuZEv+CGEfJv0Zw+c=;
+        b=D+4nQ0vWQOUObnvWLE2c2rqZVSpP4vHdMdjPbiYho4sYugLqtt6WRlJ+HEBBjO+1lQ
+         2eR7eboY09he7DRe3bVtn422CDYVxb587PRQ/F+XM06FycTChxmMLph4uSQfy6rrhj88
+         Uj/F+naAfokobOjg7tIBJp6aRXQKGJrWwM0M5NQhdl2IHrzkJZx4YN7V8c4YmU5AiA4m
+         2klNrqpTzCwkPVLI9ZrzKuMoCf/oP8Y0Egww1cMRgelz+NygXiJoljRrWYfv9E+KnDQ2
+         1VULYXUIQtH0XM1HRyfnK3yn7EbRcnN61uIfb9jjlWUJ7wTomFrOFYUYdUmZtFvN1GcP
+         jAQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/PAeTgH6EFfvFnpLdTFbvRq34natBIZioqoaAH9SV2M=;
-        b=Gf8GRJaLhlCIsr3sAVhqxLDtfP+xW8qy2olHXaxw4dDPb3rJjgD/SNVhj8wpClDtYf
-         N13If/7VRVQ05LAAdTuSY2xfvvdZ2tXrQuzsA72fkz+bl1OBqbcslUFHRpFIsmiwlY5z
-         wN/kgbIGdXRTqaNJ/Fo8gWkNzpowqF37un3aFMLtDuZKnaL3TJgzPvCbsiCKoEbVCDyk
-         0pDNMMesd/zQBCJjRxfWMlbp092+Xj1I/N7uX0NYzZY7Pn0OkTBa237h+C6UYz1KfexJ
-         ZFr9ee8VLro17ZTzfr2Vh9x+R8r0qmDXGOt/D47XpTRib2pGnuH+ZaR9Kabkgp6220Vl
-         xlIg==
-X-Gm-Message-State: AOAM532Iy5QfksSP/hFJzZiufWRZeoVysNSnu+M+hS5iGyKR7slwoUnt
-        8Fuln0VHdiLk/aaymEXJ1pQ=
-X-Google-Smtp-Source: ABdhPJztqf+j91YDUmH604FAJKzvq76tLyH27bxF6Wn8v7Ve+rWa8JAQfaFRXeMbI/9knlgwQHgfdA==
-X-Received: by 2002:a17:902:bd0a:: with SMTP id p10mr1532434pls.102.1590505801956;
-        Tue, 26 May 2020 08:10:01 -0700 (PDT)
-Received: from localhost ([144.34.194.82])
-        by smtp.gmail.com with ESMTPSA id a2sm15530771pfl.28.2020.05.26.08.10.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 May 2020 08:10:01 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     tjoseph@cadence.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, jonnyc@amazon.com,
-        thomas.petazzoni@bootlin.com, pratyush.anand@gmail.com,
-        linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v1] PCI: controller: Remove duplicate error message
-Date:   Tue, 26 May 2020 23:09:54 +0800
-Message-Id: <20200526150954.4729-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=zuN1PH7d2dfCgGQO7mbhwyoBsWzuZEv+CGEfJv0Zw+c=;
+        b=Kw54J/+vq17tuwnyUEXv27e9A8ArCmuQVZ1KFCsl6nlny2eg8JLDHb/ZMm2/APXBq/
+         AvK95R9uJ8VH2R0EIYEwgLoL5M52R6nZdN7ko2kiB/Z4QiMz6pbn/uXsm3ppq925ROSU
+         GHW3R7spqAfMUWeX8vFtmEXIka80QGaQMZyVRXRywVFb3Wh5mXOSAQf3vH61Z+tLIJ6v
+         Q51R3xHC4l7ISrrTSiyV3cTyFp0uCWHHd+3FrlbEW0itEJDty/3uyMruF5BxXgUOJI0V
+         FXtQWjjCuZ0M7n1d7pMxrgyt7sdQVSuuL+2/g185onQAyOVydK1RN9ujXSfCsEL8ENoL
+         CTCA==
+X-Gm-Message-State: AOAM532wukcRkojyHzliYnqdmOFF1+ZCPquiLsORarhyHu2qwd0DTn2K
+        +sD82dNUoGucLn49JzVHpdMD9Q==
+X-Google-Smtp-Source: ABdhPJwe+1sgmh2OwBptymAExtulFHEpnY96Q4RDulxomLppHnhiwFUYKKMDqrVR8wVFmvAPxb4eUQ==
+X-Received: by 2002:a17:90a:1a17:: with SMTP id 23mr27507707pjk.198.1590505839978;
+        Tue, 26 May 2020 08:10:39 -0700 (PDT)
+Received: from [10.140.0.202] ([45.135.186.12])
+        by smtp.gmail.com with ESMTPSA id i197sm3623225pfe.30.2020.05.26.08.10.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 08:10:39 -0700 (PDT)
+Subject: Re: [PATCH 1/2] PCI: Introduce PCI_FIXUP_IOMMU
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
+ <1590493749-13823-2-git-send-email-zhangfei.gao@linaro.org>
+ <20200526144644.GA20784@infradead.org>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <39144dc0-3b04-3127-978b-bd8487dd06e0@linaro.org>
+Date:   Tue, 26 May 2020 23:09:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200526144644.GA20784@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It will print an error message by itself when
-devm_pci_remap_cfg_resource() goes wrong. so remove the duplicate
-error message.
+Hi, Christoph
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c |  4 +---
- drivers/pci/controller/dwc/pcie-al.c               | 13 +++----------
- drivers/pci/controller/dwc/pcie-armada8k.c         |  1 -
- drivers/pci/controller/dwc/pcie-spear13xx.c        |  1 -
- 4 files changed, 4 insertions(+), 15 deletions(-)
+On 2020/5/26 下午10:46, Christoph Hellwig wrote:
+> On Tue, May 26, 2020 at 07:49:08PM +0800, Zhangfei Gao wrote:
+>> Some platform devices appear as PCI but are actually on the AMBA bus,
+>> and they need fixup in drivers/pci/quirks.c handling iommu_fwnode.
+>> Here introducing PCI_FIXUP_IOMMU, which is called after iommu_fwnode
+>> is allocated, instead of reusing PCI_FIXUP_FINAL since it will slow
+>> down iommu probing as all devices in fixup final list will be
+>> reprocessed.
+> Who is going to use this?  I don't see a single user in the series.
+We will add iommu fixup in drivers/pci/quirks.c, handling
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8c2543f28ba0..60bfb5bcbd37 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -234,10 +234,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
- 	rc->cfg_base = devm_pci_remap_cfg_resource(dev, res);
--	if (IS_ERR(rc->cfg_base)) {
--		dev_err(dev, "missing \"cfg\"\n");
-+	if (IS_ERR(rc->cfg_base))
- 		return PTR_ERR(rc->cfg_base);
--	}
- 	rc->cfg_res = res;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
-diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-index 270868f3859a..d57d4ee15848 100644
---- a/drivers/pci/controller/dwc/pcie-al.c
-+++ b/drivers/pci/controller/dwc/pcie-al.c
-@@ -67,13 +67,8 @@ static int al_pcie_init(struct pci_config_window *cfg)
- 	dev_dbg(dev, "Root port dbi res: %pR\n", res);
- 
- 	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
--	if (IS_ERR(al_pcie->dbi_base)) {
--		long err = PTR_ERR(al_pcie->dbi_base);
--
--		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
--			res, err);
--		return err;
--	}
-+	if (IS_ERR(al_pcie->dbi_base))
-+		return PTR_ERR(al_pcie->dbi_base);
- 
- 	cfg->priv = al_pcie;
- 
-@@ -408,10 +403,8 @@ static int al_pcie_probe(struct platform_device *pdev)
- 
- 	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
- 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
--	if (IS_ERR(pci->dbi_base)) {
--		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
-+	if (IS_ERR(pci->dbi_base))
- 		return PTR_ERR(pci->dbi_base);
--	}
- 
- 	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
- 	if (!ecam_res) {
-diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-index 49596547e8c2..896b95d6917c 100644
---- a/drivers/pci/controller/dwc/pcie-armada8k.c
-+++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-@@ -317,7 +317,6 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
- 	base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
- 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, base);
- 	if (IS_ERR(pci->dbi_base)) {
--		dev_err(dev, "couldn't remap regs base %p\n", base);
- 		ret = PTR_ERR(pci->dbi_base);
- 		goto fail_clkreg;
- 	}
-diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-index 7d0cdfd8138b..cdfde1bd7d8e 100644
---- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-+++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-@@ -273,7 +273,6 @@ static int spear13xx_pcie_probe(struct platform_device *pdev)
- 	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
- 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
- 	if (IS_ERR(pci->dbi_base)) {
--		dev_err(dev, "couldn't remap dbi base %p\n", dbi_base);
- 		ret = PTR_ERR(pci->dbi_base);
- 		goto fail_clk;
- 	}
--- 
-2.25.0
+fwspec->can_stall, which is introduced in
+
+https://www.spinics.net/lists/linux-pci/msg94559.html
+
+Unfortunately, the patch does not catch v5.8, so we have to wait.
+And we want to check whether this is a right method to solve this issue.
+
+Thanks
 
