@@ -2,105 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F621E3DB3
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 11:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07CDE1E3E19
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 11:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgE0JjF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 05:39:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgE0JjF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 05:39:05 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3709DC061A0F
-        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 02:39:05 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u188so2370991wmu.1
-        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 02:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ma4u4XMWVxhpm3lD4oFGEfaNlly6DyjC8Gxwotb9TKs=;
-        b=WXjQEVV83bRPYCR6LgwSP7gKE0qWLHR4Mnqw7P8noGQQ24OMhB75T8jRtIYlWMpWHY
-         MySHznY6zRSBwHKVYmHsysbE+174PlXCVINNqJQjYg/72BEdEN0K/YKDNyN2QBDIuFxt
-         R0Oq37rjAYoXARsBmbhgrlZSfqvOCc9gdGAOg9wpUOynvLbCDDIhxm3cCxh1xAWM53Kj
-         /qMG3/aahORuZGKeMGZO2hruY7t1qM0Ejp5rLqR+i+9f80Efp9dXuIIn0b0rnCOeFxCi
-         Q4RCOaOgvO5K4/5OBdHDdj2Yo2pvfTSwcO3cdr45feco2zONM3j9uMw4Ntt8RCKXreoL
-         IzCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ma4u4XMWVxhpm3lD4oFGEfaNlly6DyjC8Gxwotb9TKs=;
-        b=k69KVXtZQ805mOTaBAXPXZ5FhP0wVbfveygz7PAtlxw2AEIi83uBP+efQ/CySWhG6o
-         yAJRthcxyGcdgvLpg8fY0qvi5FtYp5MeEdkvDgpnUEJLTwDRY9ybP/taC/9SgF7s02lX
-         Kp5Pf1S5K8r4YGm3jFRji0Xn5lkzMQOfitnBDX5dsu0Bms5ZxxvVENZT8E+kTJ8rsITu
-         9PwzAt4pEDmNJUmEjexEY9xNOxOgdWBOHi9Gr/jlNPHhvEncy7Lp4juTlk9lBB5DljnC
-         nKiyCQYmJtoTDTPzIyTHn6eJwuYZZO0VgHV1CWgBQoYhqfByBDPIYUiF9ORBnZThpNMH
-         T4qQ==
-X-Gm-Message-State: AOAM531bkZoExLQ6yVO5wFEirwRnG6G6/x8Yi+uQl7wYRvj0o42onaUz
-        Tt+gRGA8zWFSGJTPuBopYHdTPdo8+vU=
-X-Google-Smtp-Source: ABdhPJwRHl1VsOw+wNkIidN7cnKb04trFlt4YsFqaYnPmLrEQw89lrhHnt4yDc5lSDmieVnQqqyCXA==
-X-Received: by 2002:a1c:b354:: with SMTP id c81mr3432193wmf.136.1590572343528;
-        Wed, 27 May 2020 02:39:03 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id h20sm2275362wma.6.2020.05.27.02.39.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 02:39:03 -0700 (PDT)
-Date:   Wed, 27 May 2020 11:38:52 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        bhelgaas@google.com
-Cc:     will@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        alex.williamson@redhat.com, hch@infradead.org
-Subject: Re: [PATCH v2 0/4] PCI, iommu: Factor 'untrusted' check for ATS
- enablement
-Message-ID: <20200527093852.GC265288@myrica>
-References: <20200520152201.3309416-1-jean-philippe@linaro.org>
+        id S1729550AbgE0JyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 May 2020 05:54:08 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:32817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgE0JyH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 05:54:07 -0400
+Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MBltK-1jjLKT2c6m-00CDQl; Wed, 27 May 2020 11:54:05 +0200
+Received: by mail-qv1-f47.google.com with SMTP id dh1so10830611qvb.13;
+        Wed, 27 May 2020 02:54:05 -0700 (PDT)
+X-Gm-Message-State: AOAM533l6opv8qtsuRCknZJWxN9mxqkxakKQZXRox1ZB6l8pPY/cujqk
+        libGPswclU007e0F2M3O/sNDzmsOyV7OYa0nueM=
+X-Google-Smtp-Source: ABdhPJwFY+9e2QwGxBuOVJhyvZzHkmdup67C33Hon0tX+xYCanXD6siiWNyzzW3vpc4K6tTqx9WsMyOJzXh6HoLxoPA=
+X-Received: by 2002:a05:6214:370:: with SMTP id t16mr24222212qvu.197.1590573244279;
+ Wed, 27 May 2020 02:54:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520152201.3309416-1-jean-philippe@linaro.org>
+References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org> <20200527090007.GA179718@kroah.com>
+In-Reply-To: <20200527090007.GA179718@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 27 May 2020 11:53:48 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
+Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:7K2loUdsuzT4IObBECaTn5y/oTwu9Qnf7fQGq3o3+5XHTkSeubV
+ RkTn504d1Z3tqqH5zotfEfCbYHNzcz7ngEoG4h5+ogwKwxhFOdzfXXT1uY0AWLucWB2PLHR
+ dqkjxVfhTidDANOLpVF1+u7kI0XC3zFrDVIpU5sBiApHBh/4OxfJ/bzSbYnmnvJuFl8225L
+ jAT9cXT8IQvkLTSHkfbQw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DbAEUAVsBkM=:7+j/lOP7swsqLFFxJSAwFf
+ ItEC3r0lBQC310bf0/c3QzQbF84sZuRnNiMCBE8TLhSAeUv8xxYikqgF650oIKqNymmHdt004
+ F08oVFVZ7aXRpfvfjzEqavIlw8j/Ba95gvaqi3+x/Ncc6rtSxY5xU7cOl9RynkZqVURxlYKLo
+ 4LH7Ws/t0aqA9WXGeQ3k1+u+lfkfcGVir/daeX3QTAXmKku/spJl4u1B+3c+clr1WnFVWg5ar
+ oLk9Ow3KVtUp+KvVJAcvYPa9FuuzDVkUWrgvKr0EwP02DFcRzAqBdIRfvTMw003Rq6+4BIXyM
+ am1JdeZ35CoJGUTxe538lEdwobpe8YPs8+jvs5R5+rqWmex/KC7FyTvX5WX6Gwu2+2v3aPQXj
+ ZiZ1Ik7xwSRDWe0DgulC3XwlE5EyI/Yp8Zxx/dt3ETB7WyDtIX5DFfxAX26bQnIi0kh1S1kkm
+ zJuSO4KrO8HvLJvF/BHhg5xEy1w03Mfq9JMNWZabgxKxd1+gnQw6QHxW3CElkr+t0N0nqD38R
+ xu1XrBBdgctMN74gdHWvaIsNDLVASuOOxKKZBmBwebuQ9twv9IJdWU49lUPxaLRPaAkUq8kpb
+ uP4EwQG4f7mreMQykVlroIbC+XRj3fdte3PFEs570mYw3gWbb2lsEmFtCV/0Hp+ndYulb/D58
+ JgQwRg7AASPjMOo1Aat8IywGuyGp+RxqwQbKsofsnCas2HojPD37fSuxyCGj8RGqiLbn+02EY
+ OQpuJmkC3a32velZ0MjS2ODlSOp8TPOGiGQhZsLoqwauWQCWJlkz9GL3Fzh4bHSiU5Q8VkJbg
+ UJYRC664fnWhVVjS/xKOLJofbn8Sr9EmixSWQ3D+C4mSpPjUjU=
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Joerg, Bjorn,
+On Wed, May 27, 2020 at 11:00 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, May 26, 2020 at 07:49:07PM +0800, Zhangfei Gao wrote:
+> > Some platform devices appear as PCI but are actually on the AMBA bus,
+>
+> Why would these devices not just show up on the AMBA bus and use all of
+> that logic instead of being a PCI device and having to go through odd
+> fixes like this?
 
-On Wed, May 20, 2020 at 05:21:59PM +0200, Jean-Philippe Brucker wrote:
-> IOMMU drivers currently check themselves if a device is untrusted
-> (plugged into an external-facing port) before enabling ATS. Move the
-> check to drivers/pci. The only functional change should be to the AMD
-> IOMMU driver. With this change all IOMMU drivers block 'Translated' PCIe
-> transactions and Translation Requests from untrusted devices.
+There is a general move to having hardware be discoverable even with
+ARM processors. Having on-chip devices be discoverable using PCI config
+space is how x86 SoCs usually do it, and that is generally a good thing
+as it means we don't need to describe them in DT
 
-This seems ready for v5.8. I guess it could go through the IOMMU tree
-since there are a little more IOMMU changes?
+I guess as the hardware designers are still learning about it, this is not
+always done correctly. In general, we can also describe PCI devices on
+DT and do fixups during the probing there, but I suspect that won't work
+as easily using ACPI probing, so the fixup is keyed off the hardware ID,
+again as is common for x86 on-chip devices.
 
-Thanks,
-Jean
-> 
-> Since v1 [1] I added tags, addressed comments on patches 1 and 3, and
-> fixed a regression in patch 3.
-> 
-> [1] https://lore.kernel.org/linux-iommu/20200515104359.1178606-1-jean-philippe@linaro.org/
-> 
-> Jean-Philippe Brucker (4):
->   PCI/ATS: Only enable ATS for trusted devices
->   iommu/amd: Use pci_ats_supported()
->   iommu/arm-smmu-v3: Use pci_ats_supported()
->   iommu/vt-d: Use pci_ats_supported()
-> 
->  include/linux/pci-ats.h     |  3 +++
->  drivers/iommu/amd_iommu.c   | 12 ++++--------
->  drivers/iommu/arm-smmu-v3.c | 20 +++++++-------------
->  drivers/iommu/intel-iommu.c |  9 +++------
->  drivers/pci/ats.c           | 18 +++++++++++++++++-
->  5 files changed, 34 insertions(+), 28 deletions(-)
-> 
-> -- 
-> 2.26.2
-> 
+      Arnd
