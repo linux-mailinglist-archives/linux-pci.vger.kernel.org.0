@@ -2,95 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07CDE1E3E19
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 11:54:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EDC21E3F5F
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 12:49:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgE0JyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 05:54:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:32817 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgE0JyH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 05:54:07 -0400
-Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MBltK-1jjLKT2c6m-00CDQl; Wed, 27 May 2020 11:54:05 +0200
-Received: by mail-qv1-f47.google.com with SMTP id dh1so10830611qvb.13;
-        Wed, 27 May 2020 02:54:05 -0700 (PDT)
-X-Gm-Message-State: AOAM533l6opv8qtsuRCknZJWxN9mxqkxakKQZXRox1ZB6l8pPY/cujqk
-        libGPswclU007e0F2M3O/sNDzmsOyV7OYa0nueM=
-X-Google-Smtp-Source: ABdhPJwFY+9e2QwGxBuOVJhyvZzHkmdup67C33Hon0tX+xYCanXD6siiWNyzzW3vpc4K6tTqx9WsMyOJzXh6HoLxoPA=
-X-Received: by 2002:a05:6214:370:: with SMTP id t16mr24222212qvu.197.1590573244279;
- Wed, 27 May 2020 02:54:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org> <20200527090007.GA179718@kroah.com>
-In-Reply-To: <20200527090007.GA179718@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 11:53:48 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
-Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1729115AbgE0Ktv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 May 2020 06:49:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54206 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbgE0Ktv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 06:49:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnZnC113309;
+        Wed, 27 May 2020 05:49:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590576575;
+        bh=PD+boL1tjck4sdCDgLl/S8WZdUjIHY0I5B2iMdPDagU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QWadH3xOFV3pgUzj6qG4hBxcxtI/8N/9aKAye8xOuN2atXdd1fS2UpjsWwMsVoL+V
+         xFmgJHBBGy11xtVTT7TaGZUKtvV0oXI7CctJ+U/7+S8RWjiTIBMKHpzaAa1aV3Srh/
+         dbKabKVR9yggVeExJmbzECP8fdGOUjsBZ6+wvMIk=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnZKX073235;
+        Wed, 27 May 2020 05:49:35 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 05:49:35 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 05:49:35 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnV0o056154;
+        Wed, 27 May 2020 05:49:32 -0500
+Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
+ perform only 32-bit accesses
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:7K2loUdsuzT4IObBECaTn5y/oTwu9Qnf7fQGq3o3+5XHTkSeubV
- RkTn504d1Z3tqqH5zotfEfCbYHNzcz7ngEoG4h5+ogwKwxhFOdzfXXT1uY0AWLucWB2PLHR
- dqkjxVfhTidDANOLpVF1+u7kI0XC3zFrDVIpU5sBiApHBh/4OxfJ/bzSbYnmnvJuFl8225L
- jAT9cXT8IQvkLTSHkfbQw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DbAEUAVsBkM=:7+j/lOP7swsqLFFxJSAwFf
- ItEC3r0lBQC310bf0/c3QzQbF84sZuRnNiMCBE8TLhSAeUv8xxYikqgF650oIKqNymmHdt004
- F08oVFVZ7aXRpfvfjzEqavIlw8j/Ba95gvaqi3+x/Ncc6rtSxY5xU7cOl9RynkZqVURxlYKLo
- 4LH7Ws/t0aqA9WXGeQ3k1+u+lfkfcGVir/daeX3QTAXmKku/spJl4u1B+3c+clr1WnFVWg5ar
- oLk9Ow3KVtUp+KvVJAcvYPa9FuuzDVkUWrgvKr0EwP02DFcRzAqBdIRfvTMw003Rq6+4BIXyM
- am1JdeZ35CoJGUTxe538lEdwobpe8YPs8+jvs5R5+rqWmex/KC7FyTvX5WX6Gwu2+2v3aPQXj
- ZiZ1Ik7xwSRDWe0DgulC3XwlE5EyI/Yp8Zxx/dt3ETB7WyDtIX5DFfxAX26bQnIi0kh1S1kkm
- zJuSO4KrO8HvLJvF/BHhg5xEy1w03Mfq9JMNWZabgxKxd1+gnQw6QHxW3CElkr+t0N0nqD38R
- xu1XrBBdgctMN74gdHWvaIsNDLVASuOOxKKZBmBwebuQ9twv9IJdWU49lUPxaLRPaAkUq8kpb
- uP4EwQG4f7mreMQykVlroIbC+XRj3fdte3PFEs570mYw3gWbb2lsEmFtCV/0Hp+ndYulb/D58
- JgQwRg7AASPjMOo1Aat8IywGuyGp+RxqwQbKsofsnCas2HojPD37fSuxyCGj8RGqiLbn+02EY
- OQpuJmkC3a32velZ0MjS2ODlSOp8TPOGiGQhZsLoqwauWQCWJlkz9GL3Fzh4bHSiU5Q8VkJbg
- UJYRC664fnWhVVjS/xKOLJofbn8Sr9EmixSWQ3D+C4mSpPjUjU=
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devicetree@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200522033631.32574-1-kishon@ti.com>
+ <20200522033631.32574-4-kishon@ti.com>
+ <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
+ <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
+ <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b3663862-44df-867f-0824-28802909f224@ti.com>
+Date:   Wed, 27 May 2020 16:19:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:00 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, May 26, 2020 at 07:49:07PM +0800, Zhangfei Gao wrote:
-> > Some platform devices appear as PCI but are actually on the AMBA bus,
->
-> Why would these devices not just show up on the AMBA bus and use all of
-> that logic instead of being a PCI device and having to go through odd
-> fixes like this?
+Hi Rob,
 
-There is a general move to having hardware be discoverable even with
-ARM processors. Having on-chip devices be discoverable using PCI config
-space is how x86 SoCs usually do it, and that is generally a good thing
-as it means we don't need to describe them in DT
+On 5/26/2020 8:42 PM, Rob Herring wrote:
+> On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/22/2020 9:24 PM, Rob Herring wrote:
+>>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>
+>>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
+>>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
+>>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
+>>>> for adding PCIe support in TI's J721E SoC.
+>>>
+>>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
+>>> with this and never can be given the PCI_COMMAND and PCI_STATUS
+>>> registers are in the same word (IIRC, that's the main reason 32-bit
+>>> config space accesses are broken). So this isn't going to work at
+>>
+>> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
+>> could be reset while raising legacy interrupt. While this cannot be avoided for
+>> TI's J721E, other platforms doesn't have to have this limitation.
+>>> least for EP accesses. And maybe you need a custom .raise_irq() hook
+>>> to minimize any problems (such as making the RMW atomic at least from
+>>> the endpoint's perspective).
+>>
+>> This is to make sure EP doesn't update in-consistent state when RC is updating
+>> the PCI_STATUS register? Since this involves two different systems, how do we
+>> make this atomic?
+> 
+> You can't make it atomic WRT both systems, but is there locking around
+> each RMW? Specifically, are preemption and interrupts disabled to
+> ensure time between a read and write are minimized? You wouldn't want
+> interrupts disabled during the delay too though (i.e. around
+> .raise_irq()).
 
-I guess as the hardware designers are still learning about it, this is not
-always done correctly. In general, we can also describe PCI devices on
-DT and do fixups during the probing there, but I suspect that won't work
-as easily using ACPI probing, so the fixup is keyed off the hardware ID,
-again as is common for x86 on-chip devices.
+Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
+pointed below that delay for legacy interrupt is wrong and it has to be fixed
+(with a later series).
 
-      Arnd
+How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
+changing the default implementation to perform only 32-bit access (used for
+legacy interrupt, msi-x interrupt and while writing standard headers) and it's
+not okay only for legacy interrupts for platforms other than TI.
+
+So just for legacy interrupt, you want me to add a different accessor which
+does not perform 32-bit writes (while we add a different .raise_irq for TI
+platform?
+> 
+> BTW, I've asked this question before, but aren't PCI legacy interrupts
+> level triggered? If so, isn't generating a pulse wrong?
+
+You are right. This is wrong and it has to be fixed. I'll work on this later.
+
+Thanks
+Kishon
