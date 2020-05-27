@@ -2,165 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BAC11E3607
+	by mail.lfdr.de (Postfix) with ESMTP id C84F41E3608
 	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 05:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgE0DAp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 23:00:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35682 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725893AbgE0DAo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 May 2020 23:00:44 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3C20BF272BC3D1B5F2DA;
-        Wed, 27 May 2020 11:00:42 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.213) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 27 May 2020
- 11:00:31 +0800
-Subject: Re: [PATCH v7 18/24] iommu/arm-smmu-v3: Add support for Hardware
- Translation Table Update
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <fenghua.yu@intel.com>, <kevin.tian@intel.com>,
-        <jacob.jun.pan@linux.intel.com>, <jgg@ziepe.ca>,
-        <catalin.marinas@arm.com>, <joro@8bytes.org>,
-        <robin.murphy@arm.com>, <hch@infradead.org>,
-        <zhangfei.gao@linaro.org>, <Jonathan.Cameron@huawei.com>,
-        <felix.kuehling@amd.com>, <xuzaibo@huawei.com>, <will@kernel.org>,
-        <christian.koenig@amd.com>, <baolu.lu@linux.intel.com>,
-        Wang Haibin <wanghaibin.wang@huawei.com>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-19-jean-philippe@linaro.org>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <4eea10e0-1343-8d7d-ba8d-214d05558c76@huawei.com>
-Date:   Wed, 27 May 2020 11:00:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1728324AbgE0DAq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 23:00:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgE0DAp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 23:00:45 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA26C061A0F;
+        Tue, 26 May 2020 20:00:44 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id v11so5221124ilh.1;
+        Tue, 26 May 2020 20:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xLWhCgU2S6HH+t1BqREDGsvSaeOzuvQP8Gfjxf/Kt3E=;
+        b=huzwxoBgAVypsEtuCEDTwI9YwZPMEBBStD4ROhMIxIMFriWoG8yiwOHEsQqngfmayo
+         O5VjtflYEXH0BvmhX+as4qIgMBa9rigWlni+zpnV0ChrHyDRgJNpmGaGLi4Oa+BPFuOu
+         lxcCSaT8n2ePCsdjRHWppkhqzj+zytS/YsaIb1QAly4npukjJNsVXrpKe6QNYrfP4uNw
+         Z1+O+crziZstJNcFABUal8CU83evVvEgSo9nmJM91pqJzyL2pu3lZIQk+t7JHsi322gg
+         2MSptGc3Iz29gFTqTS4kkCmODY8ugm5raiTWVOTCI4wsZlEhkPgutKFuoVu0Zl8Pa1TT
+         Y4Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xLWhCgU2S6HH+t1BqREDGsvSaeOzuvQP8Gfjxf/Kt3E=;
+        b=gCB420t/79bK0x6B1+chM3uYwGUGFFCdivAUF1XA/vnHuhKyTpNu1hRV5/UsevUS0v
+         KuxepeWsbZhnn1iD5EMf3BNZEfD7oifCm53d3MeS/JLy+h5NWtSyTG5GbImqWOFdYGgN
+         3xV2m6q7bMINvFSlBtcHEPvdEC99yRqLrbaTWTTHMUkVaxsN1AF1q8BBERWsk9iRtDp5
+         BFygYMZJk9t8sgNEUNLad1veKmVHw+aVbciNht9qBBGxT4Gww28NDV2bOGuh6XhHTHyc
+         8N4a1M4OFUHWx1+w0f4sA5Cdnj7Bd3StwG+IIOddDuCRrRWeItNW14XMwVczDlpKuaPs
+         ewbA==
+X-Gm-Message-State: AOAM531vR9Fqzxklst3rsfPfp9fmurLP8sDciJwkdHguCd158TQDX7Sj
+        5SAZ0/JNU3oCCOs+p5jQBjeje/YdXZdXKA3AigA=
+X-Google-Smtp-Source: ABdhPJx9gdtsbAHXbFZYiVWF9TaOJ0gewllmhhZdaoEI8StN7Z/a2OWO6Eiq/i7kZ+oHcibcBGX+ou33o8pu6NnK2eY=
+X-Received: by 2002:a92:c94f:: with SMTP id i15mr3759079ilq.185.1590548443615;
+ Tue, 26 May 2020 20:00:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200519175502.2504091-19-jean-philippe@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.213]
-X-CFilter-Loop: Reflected
+References: <18609.1588812972@famine> <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com> <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
+ <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com> <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+ <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com> <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
+In-Reply-To: <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 27 May 2020 13:00:32 +1000
+Message-ID: <CAOSf1CHTUyQ5o_ThkaPUkGjtTSK1UOkxSmKAWY3n3bdrVcjacA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Yicong Yang <yangyicong@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ashok.raj@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean,
+On Wed, May 27, 2020 at 12:00 PM Kuppuswamy, Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+> Hi,
+>
+> On 5/21/20 7:56 PM, Yicong Yang wrote:
+> >
+> >
+> > On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
+> >>
+> > Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
+> > hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
+> > reset for the bridge. That's what I think is unnecessary for a normal link,
+> > and that's what reset link indicates us to do. The slot reset is introduced
+> > in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
+>
+> IIUC, pci_bus_reset() will do slot reset if its supported (hot-plug
+> capable slots). If its not supported then it will attempt secondary
+> bus reset. So secondary bus reset will be attempted only if slot
+> reset is not supported.
+>
+> Since reported_error_detected() requests us to do reset, we will have
+> to attempt some kind of reset before we call ->slot_reset() right?
 
-This patch only enables HTTU bits in CDs. Is it also neccessary to enable
-HTTU bits in STEs in this patch?
+Yes, the driver returns PCI_ERS_RESULT_NEED_RESET from
+->error_detected() to indicate that it doesn't know how to recover
+from the error. How that reset is performed doesn't really matter, but
+it does need to happen.
 
-On 2020/5/20 1:54, Jean-Philippe Brucker wrote:
-> If the SMMU supports it and the kernel was built with HTTU support,
-> enable hardware update of access and dirty flags. This is essential for
-> shared page tables, to reduce the number of access faults on the fault
-> queue. Normal DMA with io-pgtables doesn't currently use the access or
-> dirty flags.
-> 
-> We can enable HTTU even if CPUs don't support it, because the kernel
-> always checks for HW dirty bit and updates the PTE flags atomically.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 1386d4d2bc60..6a368218f54c 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -58,6 +58,8 @@
->  #define IDR0_ASID16			(1 << 12)
->  #define IDR0_ATS			(1 << 10)
->  #define IDR0_HYP			(1 << 9)
-> +#define IDR0_HD				(1 << 7)
-> +#define IDR0_HA				(1 << 6)
->  #define IDR0_BTM			(1 << 5)
->  #define IDR0_COHACC			(1 << 4)
->  #define IDR0_TTF			GENMASK(3, 2)
-> @@ -311,6 +313,9 @@
->  #define CTXDESC_CD_0_TCR_IPS		GENMASK_ULL(34, 32)
->  #define CTXDESC_CD_0_TCR_TBI0		(1ULL << 38)
->  
-> +#define CTXDESC_CD_0_TCR_HA		(1UL << 43)
-> +#define CTXDESC_CD_0_TCR_HD		(1UL << 42)
-> +
 
->  #define CTXDESC_CD_0_AA64		(1UL << 41)
->  #define CTXDESC_CD_0_S			(1UL << 44)
->  #define CTXDESC_CD_0_R			(1UL << 45)
-> @@ -663,6 +668,8 @@ struct arm_smmu_device {
->  #define ARM_SMMU_FEAT_E2H		(1 << 16)
->  #define ARM_SMMU_FEAT_BTM		(1 << 17)
->  #define ARM_SMMU_FEAT_SVA		(1 << 18)
-> +#define ARM_SMMU_FEAT_HA		(1 << 19)
-> +#define ARM_SMMU_FEAT_HD		(1 << 20)
->  	u32				features;
->  
->  #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
-> @@ -1718,10 +1725,17 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
->  		 * this substream's traffic
->  		 */
->  	} else { /* (1) and (2) */
-> +		u64 tcr = cd->tcr;
-> +
->  		cdptr[1] = cpu_to_le64(cd->ttbr & CTXDESC_CD_1_TTB0_MASK);
->  		cdptr[2] = 0;
->  		cdptr[3] = cpu_to_le64(cd->mair);
->  
-> +		if (!(smmu->features & ARM_SMMU_FEAT_HD))
-> +			tcr &= ~CTXDESC_CD_0_TCR_HD;
-> +		if (!(smmu->features & ARM_SMMU_FEAT_HA))
-> +			tcr &= ~CTXDESC_CD_0_TCR_HA;
-> +
->  		/*
->  		 * STE is live, and the SMMU might read dwords of this CD in any
->  		 * order. Ensure that it observes valid values before reading
-> @@ -1729,7 +1743,7 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
->  		 */
->  		arm_smmu_sync_cd(smmu_domain, ssid, true);
->  
-> -		val = cd->tcr |
-> +		val = tcr |
->  #ifdef __BIG_ENDIAN
->  			CTXDESC_CD_0_ENDI |
->  #endif
-> @@ -1958,10 +1972,12 @@ static struct arm_smmu_ctx_desc *arm_smmu_alloc_shared_cd(struct mm_struct *mm)
->  		return old_cd;
->  	}
->  
-> +	/* HA and HD will be filtered out later if not supported by the SMMU */
->  	tcr = FIELD_PREP(CTXDESC_CD_0_TCR_T0SZ, 64ULL - VA_BITS) |
->  	      FIELD_PREP(CTXDESC_CD_0_TCR_IRGN0, ARM_LPAE_TCR_RGN_WBWA) |
->  	      FIELD_PREP(CTXDESC_CD_0_TCR_ORGN0, ARM_LPAE_TCR_RGN_WBWA) |
->  	      FIELD_PREP(CTXDESC_CD_0_TCR_SH0, ARM_LPAE_TCR_SH_IS) |
-> +	      CTXDESC_CD_0_TCR_HA | CTXDESC_CD_0_TCR_HD |
->  	      CTXDESC_CD_0_TCR_EPD1 | CTXDESC_CD_0_AA64;
->  
->  	switch (PAGE_SIZE) {
-> @@ -4454,6 +4470,12 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
->  			smmu->features |= ARM_SMMU_FEAT_E2H;
->  	}
->  
-> +	if (reg & (IDR0_HA | IDR0_HD)) {
+> > PCI_ERS_RESULT_NEED_RESET indicates that the driver
+> > wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
+> > I don't think it's same as slot reset mentioned above, which is only for hotpluggable
+> > ones.
+> What you think is the correct reset implementation ? Is it something
+> like this?
+>
+> if (hotplug capable)
+>     try_slot_reset()
+> else
+>     do_nothing()
 
-> +		smmu->features |= ARM_SMMU_FEAT_HA;
-> +		if (reg & IDR0_HD)
-> +			smmu->features |= ARM_SMMU_FEAT_HD;
-> +	}
-> +
+Looks broken to me, but all the reset handling is a rat's nest so
+maybe I'm missing something. In the case of a DPC trip the link is
+disabled which has the side-effect of hot-resetting the downstream
+device. Maybe it's fine?
 
->  	/*
->  	 * If the CPU is using VHE, but the SMMU doesn't support it, the SMMU
->  	 * will create TLB entries for NH-EL1 world and will miss the
-> 
+As an aside, why do we have both ->slot_reset() and ->reset_done() in
+the error handling callbacks? Seems like their roles are almost
+identical.
 
--- 
-Thanks,
-Xiang
-
+Oliver
