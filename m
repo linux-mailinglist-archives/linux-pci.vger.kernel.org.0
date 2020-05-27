@@ -2,128 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EDC21E3F5F
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 12:49:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 571451E403A
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 13:38:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgE0Ktv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 06:49:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54206 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbgE0Ktv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 06:49:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnZnC113309;
-        Wed, 27 May 2020 05:49:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590576575;
-        bh=PD+boL1tjck4sdCDgLl/S8WZdUjIHY0I5B2iMdPDagU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QWadH3xOFV3pgUzj6qG4hBxcxtI/8N/9aKAye8xOuN2atXdd1fS2UpjsWwMsVoL+V
-         xFmgJHBBGy11xtVTT7TaGZUKtvV0oXI7CctJ+U/7+S8RWjiTIBMKHpzaAa1aV3Srh/
-         dbKabKVR9yggVeExJmbzECP8fdGOUjsBZ6+wvMIk=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnZKX073235;
-        Wed, 27 May 2020 05:49:35 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 05:49:35 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 05:49:35 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnV0o056154;
-        Wed, 27 May 2020 05:49:32 -0500
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1730065AbgE0Lia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 May 2020 07:38:30 -0400
+Received: from elvis.franken.de ([193.175.24.41]:41050 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729709AbgE0Li2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 May 2020 07:38:28 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jduO3-00011U-02; Wed, 27 May 2020 13:38:19 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id A0EB8C0594; Wed, 27 May 2020 13:34:29 +0200 (CEST)
+Date:   Wed, 27 May 2020 13:34:29 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devicetree@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200522033631.32574-1-kishon@ti.com>
- <20200522033631.32574-4-kishon@ti.com>
- <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
- <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
- <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b3663862-44df-867f-0824-28802909f224@ti.com>
-Date:   Wed, 27 May 2020 16:19:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
+Message-ID: <20200527113429.GC13537@alpha.franken.de>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
+ <20200522142550.GB15261@alpha.franken.de>
+ <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
+ <20200522223656.GA22313@alpha.franken.de>
+ <20200526091227.GB19547@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526091227.GB19547@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
-
-On 5/26/2020 8:42 PM, Rob Herring wrote:
-> On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Rob,
->>
->> On 5/22/2020 9:24 PM, Rob Herring wrote:
->>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>
->>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
->>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
->>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
->>>> for adding PCIe support in TI's J721E SoC.
->>>
->>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
->>> with this and never can be given the PCI_COMMAND and PCI_STATUS
->>> registers are in the same word (IIRC, that's the main reason 32-bit
->>> config space accesses are broken). So this isn't going to work at
->>
->> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
->> could be reset while raising legacy interrupt. While this cannot be avoided for
->> TI's J721E, other platforms doesn't have to have this limitation.
->>> least for EP accesses. And maybe you need a custom .raise_irq() hook
->>> to minimize any problems (such as making the RMW atomic at least from
->>> the endpoint's perspective).
->>
->> This is to make sure EP doesn't update in-consistent state when RC is updating
->> the PCI_STATUS register? Since this involves two different systems, how do we
->> make this atomic?
+On Tue, May 26, 2020 at 10:12:27AM +0100, Lorenzo Pieralisi wrote:
+> On Sat, May 23, 2020 at 12:36:56AM +0200, Thomas Bogendoerfer wrote:
+> > On Fri, May 22, 2020 at 04:22:11PM +0100, Lorenzo Pieralisi wrote:
+> > > On Fri, May 22, 2020 at 04:25:50PM +0200, Thomas Bogendoerfer wrote:
+> > > > On Thu, May 14, 2020 at 09:16:41PM +0800, Jiaxun Yang wrote:
+> > > > > We can now enable generic PCI driver in Kconfig, and remove legacy
+> > > > > PCI driver code.
+> > > > > 
+> > > > > Radeon vbios quirk is moved to the platform folder to fit the
+> > > > > new structure.
+> > > > > 
+> > > > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > > > > --
+> > > > > v9: Fix licenses tag
+> > > > > ---
+> > > > >  arch/mips/Kconfig                  |   1 +
+> > > > >  arch/mips/loongson64/Makefile      |   2 +-
+> > > > >  arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
+> > > > >  arch/mips/pci/Makefile             |   1 -
+> > > > >  arch/mips/pci/fixup-loongson3.c    |  71 ------------------
+> > > > >  arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
+> > > > >  6 files changed, 31 insertions(+), 189 deletions(-)
+> > > > >  create mode 100644 arch/mips/loongson64/vbios_quirk.c
+> > > > >  delete mode 100644 arch/mips/pci/fixup-loongson3.c
+> > > > >  delete mode 100644 arch/mips/pci/ops-loongson3.c
+> > > > 
+> > > > Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > 
+> > > This patch (so the series) does not apply to v5.7-rc1 which is our
+> > > baseline. I reiterate the point, isn't it better to take the whole
+> > > series through the MIPS tree ?
+> > 
+> > sounds better then
+> > 
+> > > Failing that, the series has to
+> > > be rebased (or split differently so that it can be taken through
+> > > different trees), just let me know.
+> > 
+> > so let's take via mips-next. So can I add your Acked-by to the
+> > first three patches ?
 > 
-> You can't make it atomic WRT both systems, but is there locking around
-> each RMW? Specifically, are preemption and interrupts disabled to
-> ensure time between a read and write are minimized? You wouldn't want
-> interrupts disabled during the delay too though (i.e. around
-> .raise_irq()).
+> I have acked patch 2, you have all required ACKs to get this series via
+> the MIPS tree now, apologies for the delay.
 
-Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
-pointed below that delay for legacy interrupt is wrong and it has to be fixed
-(with a later series).
+perfect, thanks.
 
-How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
-changing the default implementation to perform only 32-bit access (used for
-legacy interrupt, msi-x interrupt and while writing standard headers) and it's
-not okay only for legacy interrupts for platforms other than TI.
+Thomas.
 
-So just for legacy interrupt, you want me to add a different accessor which
-does not perform 32-bit writes (while we add a different .raise_irq for TI
-platform?
-> 
-> BTW, I've asked this question before, but aren't PCI legacy interrupts
-> level triggered? If so, isn't generating a pulse wrong?
 
-You are right. This is wrong and it has to be fixed. I'll work on this later.
-
-Thanks
-Kishon
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
