@@ -2,62 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBFB21E426A
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 14:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 569951E435B
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 15:18:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgE0MgZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 08:36:25 -0400
-Received: from 8bytes.org ([81.169.241.247]:44942 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbgE0MgZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 May 2020 08:36:25 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 78345247; Wed, 27 May 2020 14:36:24 +0200 (CEST)
-Date:   Wed, 27 May 2020 14:36:22 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, bhelgaas@google.com,
-        will@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        alex.williamson@redhat.com, hch@infradead.org
-Subject: Re: [PATCH v2 0/4] PCI, iommu: Factor 'untrusted' check for ATS
- enablement
-Message-ID: <20200527123622.GI5221@8bytes.org>
-References: <20200520152201.3309416-1-jean-philippe@linaro.org>
+        id S1730162AbgE0NSv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 May 2020 09:18:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730259AbgE0NSq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 09:18:46 -0400
+X-Greylist: delayed 132 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 27 May 2020 06:18:45 PDT
+Received: from msa13.plala.or.jp (msa13.plala.or.jp [IPv6:2400:7800:0:502e::13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E583FC08C5C3
+        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 06:18:45 -0700 (PDT)
+Received: from mwebp13 ([172.23.13.133]) by msa13.plala.or.jp with ESMTP
+          id <20200527130852.YBZV25516.msa13.plala.or.jp@mwebp13>;
+          Wed, 27 May 2020 22:08:52 +0900
+Date:   Wed, 27 May 2020 22:08:51 +0900
+From:   "Mrs.Judith Rice" <hamurafujimi@tmail.plala.or.jp>
+Reply-To: jonesevansje@gmail.com
+Message-ID: <20200527220852.BUXYK.796.root@mwebp13>
+Subject: Spende
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520152201.3309416-1-jean-philippe@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+X-Priority: 3 (Normal)
+Sensitivity: Normal
+X-VirusScan: Outbound; mvir-ac13; Wed, 27 May 2020 22:08:52 +0900
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:21:59PM +0200, Jean-Philippe Brucker wrote:
-> IOMMU drivers currently check themselves if a device is untrusted
-> (plugged into an external-facing port) before enabling ATS. Move the
-> check to drivers/pci. The only functional change should be to the AMD
-> IOMMU driver. With this change all IOMMU drivers block 'Translated' PCIe
-> transactions and Translation Requests from untrusted devices.
-> 
-> Since v1 [1] I added tags, addressed comments on patches 1 and 3, and
-> fixed a regression in patch 3.
-> 
-> [1] https://lore.kernel.org/linux-iommu/20200515104359.1178606-1-jean-philippe@linaro.org/
-> 
-> Jean-Philippe Brucker (4):
->   PCI/ATS: Only enable ATS for trusted devices
->   iommu/amd: Use pci_ats_supported()
->   iommu/arm-smmu-v3: Use pci_ats_supported()
->   iommu/vt-d: Use pci_ats_supported()
-> 
->  include/linux/pci-ats.h     |  3 +++
->  drivers/iommu/amd_iommu.c   | 12 ++++--------
->  drivers/iommu/arm-smmu-v3.c | 20 +++++++-------------
->  drivers/iommu/intel-iommu.c |  9 +++------
->  drivers/pci/ats.c           | 18 +++++++++++++++++-
->  5 files changed, 34 insertions(+), 28 deletions(-)
+Attn:
 
-Applied, thanks.
+Es tut uns leid, dass wir Sie aufgrund eines Mismanagent of Beneficaries-Fonds von unseren ernannten Zonal Managern versp&#228;tet kontaktiert haben. Bitte beachten Sie, dass Sie qualifiziert sind, die Zahlung von 900.000,00 USD an der ATM-Karte mit neunhunderttausend Dollar zu erhalten.
+
+Als Entsch&#228;digung von WORLD BANK / IWF (Internationaler W&#228;hrungsfonds) f&#252;r die automatisch &#252;ber einen E-Mail-Wahlautomaten gezogenen, die in der Vergangenheit noch nicht abgeschlossene Transaktionen hatten.
+
+F&#252;r weitere Informationen kontaktieren Sie bitte Rev.EVANS JONES ( jonesevansje@gmail.com )
+
+Bitte senden Sie ihm Ihre pers&#246;nlichen Daten wie:
+
+Vollst&#228;ndiger Name:
+Wohnanschrift:
+Telefonnummer:
+Herkunftsland:
+
+Gr&#252;&#223;e,
+Mrs. Judith Rice
+
