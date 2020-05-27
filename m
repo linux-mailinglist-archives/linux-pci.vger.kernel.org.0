@@ -2,271 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF3FB1E3395
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 01:19:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39ED01E34BF
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 03:33:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389108AbgEZXTD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 19:19:03 -0400
-Received: from mga02.intel.com ([134.134.136.20]:56939 "EHLO mga02.intel.com"
+        id S1725941AbgE0Bb0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 21:31:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:41569 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389998AbgEZXSq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 May 2020 19:18:46 -0400
-IronPort-SDR: xnm71vJn2YPyt9eq2UsiJczgdrqRUlK4Nv/lAFoRvW/8S1cyYQKl2GUk3B5aKU/tAR9JZRfTNI
- gtgpqCWR7SsQ==
+        id S1725287AbgE0BbZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 May 2020 21:31:25 -0400
+IronPort-SDR: 5IffN1pzqW0sLvxqlaf43Ux9xvM6E+sVP0MMj9W0jW5HHnCYDuZvyB6M93wD/PPxaV5feQT3Zy
+ 2v+a+1ZB+Nbw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 16:18:43 -0700
-IronPort-SDR: cMKoAraDSuLLkp7akVigeGtU02GrsQmHmTd3LQoehP4eRJsd0uXWrH/1t2/ArLpfNoRbnMPitE
- pVqj8YlLKMBA==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 18:31:21 -0700
+IronPort-SDR: oWuNtWRlFd0Vj6tKVlEOh7CUkO3QN5UyX9xK8LsWnnRoulkmj92dHw0rFRyfPl5QYfbMYRhxC3
+ jhkjPnpBscPQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="291378695"
-Received: from zalvear-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.254.67.58])
-  by fmsmga004.fm.intel.com with ESMTP; 26 May 2020 16:18:43 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v4 5/5] PCI/AER: Replace pcie_aer_get_firmware_first() with pcie_aer_is_native()
-Date:   Tue, 26 May 2020 16:18:29 -0700
-Message-Id: <9a37f53a4e6ff4942ff8e18dbb20b00e16c47341.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+   d="scan'208";a="270284626"
+Received: from zalvear-mobl.amr.corp.intel.com (HELO [10.254.67.58]) ([10.254.67.58])
+  by orsmga006.jf.intel.com with ESMTP; 26 May 2020 18:31:20 -0700
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     Yicong Yang <yangyicong@hisilicon.com>, bhelgaas@google.com
+Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+References: <18609.1588812972@famine>
+ <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
+ <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
+ <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
+ <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+ <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
+Date:   Tue, 26 May 2020 18:31:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi,
 
-Commit c100beb9ccfb ("PCI/AER: Use only _OSC to determine AER ownership")
-removed the dependency of HEST table in determining the status of AER
-ownership. But AER driver still uses HEST table parsed result in
-verifying the AER ownership status in some of its API's. So remove HEST
-table dependency, and instead use pcie_aer_is_native() to verify the AER
-native ownership status.
+On 5/21/20 7:56 PM, Yicong Yang wrote:
+> 
+> 
+> On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>>
+>> On 5/21/20 3:58 AM, Yicong Yang wrote:
+>>> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
+>>>>
+>>>>
+>>>> On 5/20/20 1:28 AM, Yicong Yang wrote:
+>>>>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>>
+>>>>>> If there are non-hotplug capable devices connected to a given
+>>>>>> port, then during the fatal error recovery(triggered by DPC or
+>>>>>> AER), after calling reset_link() function, we cannot rely on
+>>>>>> hotplug handler to detach and re-enumerate the device drivers
+>>>>>> in the affected bus. Instead, we will have to let the error
+>>>>>> recovery handler call report_slot_reset() for all devices in
+>>>>>> the bus to notify about the reset operation. Although this is
+>>>>>> only required for non hot-plug capable devices, doing it for
+>>>>>> hotplug capable devices should not affect the functionality.
+>>>>>>
+>>>>>> Along with above issue, this fix also applicable to following
+>>>>>> issue.
+>>>>>>
+>>>>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>>>>>> reset_link()") added support to store status of reset_link()
+>>>>>> call. Although this fixed the error recovery issue observed if
+>>>>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>>>>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+>>>>>> result from report_frozen_detected. This can cause a failure to
+>>>>>> recover if _NEED_RESET is returned by report_frozen_detected and
+>>>>>> report_slot_reset is not invoked.
+>>>>>>
+>>>>>> Such an event can be induced for testing purposes by reducing the
+>>>>>> Max_Payload_Size of a PCIe bridge to less than that of a device
+>>>>>> downstream from the bridge, and then initiating I/O through the
+>>>>>> device, resulting in oversize transactions.  In the presence of DPC,
+>>>>>> this results in a containment event and attempted reset and recovery
+>>>>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+>>>>>> invoked, and the device does not recover.
+>>>>>>
+>>>>>> [original patch is from jay.vosburgh@canonical.com]
+>>>>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+>>>>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>>>>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>> ---
+>>>>>>     drivers/pci/pcie/err.c | 19 +++++++++++++++----
+>>>>>>     1 file changed, 15 insertions(+), 4 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>>>>> index 14bb8f54723e..db80e1ecb2dc 100644
+>>>>>> --- a/drivers/pci/pcie/err.c
+>>>>>> +++ b/drivers/pci/pcie/err.c
+>>>>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>>>>         pci_dbg(dev, "broadcast error_detected message\n");
+>>>>>>         if (state == pci_channel_io_frozen) {
+>>>>>>             pci_walk_bus(bus, report_frozen_detected, &status);
+>>>>>> -        status = reset_link(dev);
+>>>>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
+>>>>>> +        status = PCI_ERS_RESULT_NEED_RESET;
+>>>>>> +    } else {
+>>>>>> +        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
+>>>>>> +        if (reset_link) {
+>>>>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>>>>>
+>>>>> we'll call reset_link() only if link is frozen. so it may have problem here.
+>>>> you mean before this change right?
+>>>> After this change, reset_link() will be called as long as status is
+>>>> PCI_ERS_RESULT_NEED_RESET.
+>>>
+>>> Yes. I think we should reset the link only if the io is blocked as before. There's
+>>> no reason to reset a normal link.
+>> Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
+>> possible reset_link options are dpc_reset_link() and aer_root_reset().
+>>
+>> In dpc_reset_link() case, the link is already disabled and hence we
+>> don't need to do another reset. In case of aer_root_reset() it
+>> uses pci_bus_error_reset() to reset the slot.
+> 
+> Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
+> hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
+> reset for the bridge. That's what I think is unnecessary for a normal link,
+> and that's what reset link indicates us to do. The slot reset is introduced
+> in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
 
-Also remove unused HEST table parsing helper functions from AER driver.
+IIUC, pci_bus_reset() will do slot reset if its supported (hot-plug
+capable slots). If its not supported then it will attempt secondary
+bus reset. So secondary bus reset will be attempted only if slot
+reset is not supported.
 
-We can reintroduce HEST table parser once the usage of FIRMWARE_FIRST bit
-is clarified in PCI/AER specification.
+Since reported_error_detected() requests us to do reset, we will have
+to attempt some kind of reset before we call ->slot_reset() right?
+What is the side effect in calling secondary bus reset?
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/pcie/aer.c     | 113 ++++---------------------------------
- drivers/pci/pcie/dpc.c     |   2 +-
- drivers/pci/pcie/portdrv.h |  13 +----
- 3 files changed, 13 insertions(+), 115 deletions(-)
+> 
+> PCI_ERS_RESULT_NEED_RESET indicates that the driver
+> wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
+> I don't think it's same as slot reset mentioned above, which is only for hotpluggable
+> ones.
+What you think is the correct reset implementation ? Is it something
+like this?
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 5f5ffe2f0986..12fa67c9ed9c 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -211,115 +211,22 @@ void pcie_ecrc_get_policy(char *str)
- }
- #endif	/* CONFIG_PCIE_ECRC */
- 
--#ifdef CONFIG_ACPI_APEI
--static inline int hest_match_pci(struct acpi_hest_aer_common *p,
--				 struct pci_dev *pci)
--{
--	return   ACPI_HEST_SEGMENT(p->bus) == pci_domain_nr(pci->bus) &&
--		 ACPI_HEST_BUS(p->bus)     == pci->bus->number &&
--		 p->device                 == PCI_SLOT(pci->devfn) &&
--		 p->function               == PCI_FUNC(pci->devfn);
--}
--
--static inline bool hest_match_type(struct acpi_hest_header *hest_hdr,
--				struct pci_dev *dev)
--{
--	u16 hest_type = hest_hdr->type;
--	u8 pcie_type = pci_pcie_type(dev);
--
--	if ((hest_type == ACPI_HEST_TYPE_AER_ROOT_PORT &&
--		pcie_type == PCI_EXP_TYPE_ROOT_PORT) ||
--	    (hest_type == ACPI_HEST_TYPE_AER_ENDPOINT &&
--		pcie_type == PCI_EXP_TYPE_ENDPOINT) ||
--	    (hest_type == ACPI_HEST_TYPE_AER_BRIDGE &&
--		(dev->class >> 16) == PCI_BASE_CLASS_BRIDGE))
--		return true;
--	return false;
--}
--
--struct aer_hest_parse_info {
--	struct pci_dev *pci_dev;
--	int firmware_first;
--};
--
--static int hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr)
--{
--	if (hest_hdr->type == ACPI_HEST_TYPE_AER_ROOT_PORT ||
--	    hest_hdr->type == ACPI_HEST_TYPE_AER_ENDPOINT ||
--	    hest_hdr->type == ACPI_HEST_TYPE_AER_BRIDGE)
--		return 1;
--	return 0;
--}
--
--static int aer_hest_parse(struct acpi_hest_header *hest_hdr, void *data)
--{
--	struct aer_hest_parse_info *info = data;
--	struct acpi_hest_aer_common *p;
--	int ff;
--
--	if (!hest_source_is_pcie_aer(hest_hdr))
--		return 0;
--
--	p = (struct acpi_hest_aer_common *)(hest_hdr + 1);
--	ff = !!(p->flags & ACPI_HEST_FIRMWARE_FIRST);
--
--	/*
--	 * If no specific device is supplied, determine whether
--	 * FIRMWARE_FIRST is set for *any* PCIe device.
--	 */
--	if (!info->pci_dev) {
--		info->firmware_first |= ff;
--		return 0;
--	}
--
--	/* Otherwise, check the specific device */
--	if (p->flags & ACPI_HEST_GLOBAL) {
--		if (hest_match_type(hest_hdr, info->pci_dev))
--			info->firmware_first = ff;
--	} else
--		if (hest_match_pci(p, info->pci_dev))
--			info->firmware_first = ff;
--
--	return 0;
--}
-+#define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
-+				 PCI_EXP_DEVCTL_FERE | PCI_EXP_DEVCTL_URRE)
- 
--static void aer_set_firmware_first(struct pci_dev *pci_dev)
-+int pcie_aer_is_native(struct pci_dev *dev)
- {
--	int rc;
--	struct aer_hest_parse_info info = {
--		.pci_dev	= pci_dev,
--		.firmware_first	= 0,
--	};
--
--	rc = apei_hest_parse(aer_hest_parse, &info);
-+	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
- 
--	if (rc)
--		pci_dev->__aer_firmware_first = 0;
--	else
--		pci_dev->__aer_firmware_first = info.firmware_first;
--	pci_dev->__aer_firmware_first_valid = 1;
--}
--
--int pcie_aer_get_firmware_first(struct pci_dev *dev)
--{
- 	if (!dev->aer_cap)
- 		return 0;
- 
--	if (pcie_ports_native)
--		return 0;
--
--	if (!dev->__aer_firmware_first_valid)
--		aer_set_firmware_first(dev);
--	return dev->__aer_firmware_first;
-+	return host->native_aer;
- }
--#endif
--
--#define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
--				 PCI_EXP_DEVCTL_FERE | PCI_EXP_DEVCTL_URRE)
- 
- int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- {
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	return pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-@@ -328,7 +235,7 @@ EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
- 
- int pci_disable_pcie_error_reporting(struct pci_dev *dev)
- {
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	return pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
-@@ -349,7 +256,7 @@ int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- 	int pos = dev->aer_cap;
- 	u32 status, sev;
- 
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	/* Clear status bits for ERR_NONFATAL errors only */
-@@ -368,7 +275,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
- 	int pos = dev->aer_cap;
- 	u32 status, sev;
- 
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return;
- 
- 	/* Clear status bits for ERR_FATAL errors only */
-@@ -415,7 +322,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
- 
- int pci_aer_clear_status(struct pci_dev *dev)
- {
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	return pci_aer_raw_clear_status(dev);
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 762170423fdd..0993d51abf03 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -284,7 +284,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	int status;
- 	u16 ctl, cap;
- 
--	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-+	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
- 
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index e4999f24ad92..0ac20feef24e 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -27,8 +27,10 @@
- 
- #ifdef CONFIG_PCIEAER
- int pcie_aer_init(void);
-+int pcie_aer_is_native(struct pci_dev *dev);
- #else
- static inline int pcie_aer_init(void) { return 0; }
-+static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
- #endif
- 
- #ifdef CONFIG_HOTPLUG_PCI_PCIE
-@@ -145,16 +147,5 @@ static inline bool pcie_pme_no_msi(void) { return false; }
- static inline void pcie_pme_interrupt_enable(struct pci_dev *dev, bool en) {}
- #endif /* !CONFIG_PCIE_PME */
- 
--#ifdef CONFIG_ACPI_APEI
--int pcie_aer_get_firmware_first(struct pci_dev *pci_dev);
--#else
--static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
--{
--	if (pci_dev->__aer_firmware_first_valid)
--		return pci_dev->__aer_firmware_first;
--	return 0;
--}
--#endif
--
- struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
- #endif /* _PORTDRV_H_ */
--- 
-2.17.1
-
+if (hotplug capable)
+    try_slot_reset()
+else
+    do_nothing()
+> 
+> Previously, if link is normal and the driver reports PCI_ERS_RESULT_NEED_RESET,
+> we'll only call ->slot_reset() without slot reset in reset_link(). Maybe it's better
+> to perform just like before.
+> 
+> Thanks.
+> 
+> 
+>>>
+>>> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
+>>> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
+>>> We decide whether to do a link reset only by the io state.
+>>>
+>>> Thanks,
+>>> Yicong
+>>>
+>>>
+>>>>>
+>>>>> Thanks,
+>>>>> Yicong
+>>>>>
+>>>>>
+>>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>>> +        } else {
+>>>>>> +            if (pci_bus_error_reset(dev))
+>>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>>> +        }
+>>>>>> +
+>>>>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
+>>>>>>                 pci_warn(dev, "link reset failed\n");
+>>>>>>                 goto failed;
+>>>>>>             }
+>>>>>> -    } else {
+>>>>>> -        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>>>         }
+>>>>>>           if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>>>>>
+>>>> .
+>>>>
+>>>
+>> .
+>>
+> 
