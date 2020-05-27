@@ -2,130 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A0531E35F3
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 04:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BAC11E3607
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 05:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgE0Czq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 May 2020 22:55:46 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:34964 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbgE0Czq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 May 2020 22:55:46 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49WwSK3t6Hz9vFJ5
-        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 02:55:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mH7gOMZnPiWi for <linux-pci@vger.kernel.org>;
-        Tue, 26 May 2020 21:55:45 -0500 (CDT)
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49WwSK1rgHz9vFHw
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 21:55:45 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49WwSK1rgHz9vFHw
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49WwSK1rgHz9vFHw
-Received: by mail-il1-f198.google.com with SMTP id v14so19367056ilm.10
-        for <linux-pci@vger.kernel.org>; Tue, 26 May 2020 19:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=dd9TczXeKWbVN5d9i1e4JepiH139Y9rdVzxnRRWNp88=;
-        b=I1PT9sPm4WcUrEiIQ1S3ZUiObaUysFl97PlWe/VAhRNCrhzJQYyNP6Hn0V7cnJgFFt
-         lsV96KMIvxM54AHjO3cYchqFRc+FKWUXtW/OM1RC1akTgSX7tD/7TkU3W81P7/msPPl/
-         nlIxYzM+L8dZIibGy9mPKMpz2UxflLKrBL88CD4TvyNFY/83OKQGL9PJvsc03Ms6QcFz
-         +w4T7/sIuDVeyKCUjaquACx5V6x+btMUYqqgecYnuA4tTutQaa+oixCHaLBzpcCrM+DN
-         nw42UaBY6C8vSUU1etu/J4ha6ajphVS13rLf0kyDr8t+GWLCdageKidRCvz/MxxgX2Su
-         /DrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dd9TczXeKWbVN5d9i1e4JepiH139Y9rdVzxnRRWNp88=;
-        b=lCjBa79HMAdaHpI/C9SEjtlVnGFgsc34BcnQ6SlCn1GjN+xoK79heEQxHTcAvYfiyv
-         AuKyrs/9nryHajoIyqjeMhjPTTg0V+DZ44gEI9RsV9KeZcOD5zhZcMmV8i//zGecECxG
-         mW4o4QqCmKW1cKxB+U3yZhSOrd1OL2+sfBRMV1Wyq5odFk8d8ourzOD4vLWU3CX44MQw
-         6nVuetq+CwYi8bad+h30972P0rQltrnHtDO0dB2T7j/U13a0UDdQ1+ecDuMZbhrsnOcy
-         b05oMVDCdh5JF4edzgBUrScJ69pKH4gYjD3elwLmiSZR8PdypadJJjIRiAxqTWn3c7CN
-         GTNA==
-X-Gm-Message-State: AOAM530X3/7X7vEb9WIGaHbU4E0YS2bR+kcN5sEMql+5Vlbd2LQmzW9h
-        MUJuALaC7HTiAoS56K4HrPdxqEaugRaQIk5J5tQ2NyGapEd0FVaCJRfz5ZKDsgcSKEZsYZYpHVM
-        tqfH359Jr/QIJ/xq8NODr6R+l
-X-Received: by 2002:a92:58d6:: with SMTP id z83mr3895929ilf.129.1590548144630;
-        Tue, 26 May 2020 19:55:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzHYUY+uSNCCON7fyGW5rBDCaOJIjvP0uCMCJ/fAmp1UOgXVlUABz74vZTjaLO5+Tbkt+YNig==
-X-Received: by 2002:a92:58d6:: with SMTP id z83mr3895912ilf.129.1590548144188;
-        Tue, 26 May 2020 19:55:44 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id j17sm882047ilq.79.2020.05.26.19.55.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 19:55:43 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     svarbanov@mm-sol.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, helgaas@google.com,
-        p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus.Elfring@web.de, kjlu@umn.edu, wu000273@umn.edu
-Subject: [PATCH V2] PCI: qcom: Improve exception handling in qcom_pcie_probe().
-Date:   Tue, 26 May 2020 21:55:31 -0500
-Message-Id: <20200527025531.32357-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        id S1728322AbgE0DAp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 May 2020 23:00:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35682 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725893AbgE0DAo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 May 2020 23:00:44 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3C20BF272BC3D1B5F2DA;
+        Wed, 27 May 2020 11:00:42 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.213) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 27 May 2020
+ 11:00:31 +0800
+Subject: Re: [PATCH v7 18/24] iommu/arm-smmu-v3: Add support for Hardware
+ Translation Table Update
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     <fenghua.yu@intel.com>, <kevin.tian@intel.com>,
+        <jacob.jun.pan@linux.intel.com>, <jgg@ziepe.ca>,
+        <catalin.marinas@arm.com>, <joro@8bytes.org>,
+        <robin.murphy@arm.com>, <hch@infradead.org>,
+        <zhangfei.gao@linaro.org>, <Jonathan.Cameron@huawei.com>,
+        <felix.kuehling@amd.com>, <xuzaibo@huawei.com>, <will@kernel.org>,
+        <christian.koenig@amd.com>, <baolu.lu@linux.intel.com>,
+        Wang Haibin <wanghaibin.wang@huawei.com>
+References: <20200519175502.2504091-1-jean-philippe@linaro.org>
+ <20200519175502.2504091-19-jean-philippe@linaro.org>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <4eea10e0-1343-8d7d-ba8d-214d05558c76@huawei.com>
+Date:   Wed, 27 May 2020 11:00:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <20200519175502.2504091-19-jean-philippe@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.213]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+Hi Jean,
 
-This function contained improvable implementation details according to
-exception handling.
-1. pm_runtime_put() should be called after pm_runtime_get_sync() failed,
-because the reference count will be increased despite of the failure.
-Thus add the missed function call.
-2. pm_runtime_disable() are called twice, after the call of phy_init() and
-dw_pcie_host_init() failed. Thus remove redundant function calls.
+This patch only enables HTTU bits in CDs. Is it also neccessary to enable
+HTTU bits in STEs in this patch?
 
+On 2020/5/20 1:54, Jean-Philippe Brucker wrote:
+> If the SMMU supports it and the kernel was built with HTTU support,
+> enable hardware update of access and dirty flags. This is essential for
+> shared page tables, to reduce the number of access faults on the fault
+> queue. Normal DMA with io-pgtables doesn't currently use the access or
+> dirty flags.
+> 
+> We can enable HTTU even if CPUs don't support it, because the kernel
+> always checks for HW dirty bit and updates the PTE flags atomically.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 1386d4d2bc60..6a368218f54c 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -58,6 +58,8 @@
+>  #define IDR0_ASID16			(1 << 12)
+>  #define IDR0_ATS			(1 << 10)
+>  #define IDR0_HYP			(1 << 9)
+> +#define IDR0_HD				(1 << 7)
+> +#define IDR0_HA				(1 << 6)
+>  #define IDR0_BTM			(1 << 5)
+>  #define IDR0_COHACC			(1 << 4)
+>  #define IDR0_TTF			GENMASK(3, 2)
+> @@ -311,6 +313,9 @@
+>  #define CTXDESC_CD_0_TCR_IPS		GENMASK_ULL(34, 32)
+>  #define CTXDESC_CD_0_TCR_TBI0		(1ULL << 38)
+>  
+> +#define CTXDESC_CD_0_TCR_HA		(1UL << 43)
+> +#define CTXDESC_CD_0_TCR_HD		(1UL << 42)
+> +
 
-Fixes: 6e5da6f7d824 ("PCI: qcom: Fix error handling in runtime PM support")
-Co-developed-by: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- V2: words adjustments and fix some typos 
- drivers/pci/controller/dwc/pcie-qcom.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+>  #define CTXDESC_CD_0_AA64		(1UL << 41)
+>  #define CTXDESC_CD_0_S			(1UL << 44)
+>  #define CTXDESC_CD_0_R			(1UL << 45)
+> @@ -663,6 +668,8 @@ struct arm_smmu_device {
+>  #define ARM_SMMU_FEAT_E2H		(1 << 16)
+>  #define ARM_SMMU_FEAT_BTM		(1 << 17)
+>  #define ARM_SMMU_FEAT_SVA		(1 << 18)
+> +#define ARM_SMMU_FEAT_HA		(1 << 19)
+> +#define ARM_SMMU_FEAT_HD		(1 << 20)
+>  	u32				features;
+>  
+>  #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
+> @@ -1718,10 +1725,17 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  		 * this substream's traffic
+>  		 */
+>  	} else { /* (1) and (2) */
+> +		u64 tcr = cd->tcr;
+> +
+>  		cdptr[1] = cpu_to_le64(cd->ttbr & CTXDESC_CD_1_TTB0_MASK);
+>  		cdptr[2] = 0;
+>  		cdptr[3] = cpu_to_le64(cd->mair);
+>  
+> +		if (!(smmu->features & ARM_SMMU_FEAT_HD))
+> +			tcr &= ~CTXDESC_CD_0_TCR_HD;
+> +		if (!(smmu->features & ARM_SMMU_FEAT_HA))
+> +			tcr &= ~CTXDESC_CD_0_TCR_HA;
+> +
+>  		/*
+>  		 * STE is live, and the SMMU might read dwords of this CD in any
+>  		 * order. Ensure that it observes valid values before reading
+> @@ -1729,7 +1743,7 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  		 */
+>  		arm_smmu_sync_cd(smmu_domain, ssid, true);
+>  
+> -		val = cd->tcr |
+> +		val = tcr |
+>  #ifdef __BIG_ENDIAN
+>  			CTXDESC_CD_0_ENDI |
+>  #endif
+> @@ -1958,10 +1972,12 @@ static struct arm_smmu_ctx_desc *arm_smmu_alloc_shared_cd(struct mm_struct *mm)
+>  		return old_cd;
+>  	}
+>  
+> +	/* HA and HD will be filtered out later if not supported by the SMMU */
+>  	tcr = FIELD_PREP(CTXDESC_CD_0_TCR_T0SZ, 64ULL - VA_BITS) |
+>  	      FIELD_PREP(CTXDESC_CD_0_TCR_IRGN0, ARM_LPAE_TCR_RGN_WBWA) |
+>  	      FIELD_PREP(CTXDESC_CD_0_TCR_ORGN0, ARM_LPAE_TCR_RGN_WBWA) |
+>  	      FIELD_PREP(CTXDESC_CD_0_TCR_SH0, ARM_LPAE_TCR_SH_IS) |
+> +	      CTXDESC_CD_0_TCR_HA | CTXDESC_CD_0_TCR_HD |
+>  	      CTXDESC_CD_0_TCR_EPD1 | CTXDESC_CD_0_AA64;
+>  
+>  	switch (PAGE_SIZE) {
+> @@ -4454,6 +4470,12 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+>  			smmu->features |= ARM_SMMU_FEAT_E2H;
+>  	}
+>  
+> +	if (reg & (IDR0_HA | IDR0_HD)) {
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 138e1a2d21cc..10393ab607bf 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1340,8 +1340,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
--		pm_runtime_disable(dev);
--		return ret;
-+		goto err_pm_runtime_put;
- 	}
- 
- 	pci->dev = dev;
-@@ -1401,7 +1400,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 
- 	ret = phy_init(pcie->phy);
- 	if (ret) {
--		pm_runtime_disable(&pdev->dev);
- 		goto err_pm_runtime_put;
- 	}
- 
-@@ -1410,7 +1408,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	ret = dw_pcie_host_init(pp);
- 	if (ret) {
- 		dev_err(dev, "cannot initialize host\n");
--		pm_runtime_disable(&pdev->dev);
- 		goto err_pm_runtime_put;
- 	}
- 
+> +		smmu->features |= ARM_SMMU_FEAT_HA;
+> +		if (reg & IDR0_HD)
+> +			smmu->features |= ARM_SMMU_FEAT_HD;
+> +	}
+> +
+
+>  	/*
+>  	 * If the CPU is using VHE, but the SMMU doesn't support it, the SMMU
+>  	 * will create TLB entries for NH-EL1 world and will miss the
+> 
+
 -- 
-2.17.1
+Thanks,
+Xiang
 
