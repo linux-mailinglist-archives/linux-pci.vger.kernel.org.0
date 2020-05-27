@@ -2,124 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CA2B1E4A65
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 18:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95AF31E4B1C
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 18:56:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391275AbgE0Qh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 12:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39748 "EHLO mail.kernel.org"
+        id S1726587AbgE0Q4X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 May 2020 12:56:23 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24076 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388698AbgE0Qh6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 May 2020 12:37:58 -0400
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E6E420C56;
-        Wed, 27 May 2020 16:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590597477;
-        bh=1ElavpxIOb162jTK3qnHRLYZHlidGmYNpnubB2FcWVo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CSc6KbFP5IFSMVcU25BkGBaUGo+R9FqeOUCt0o2DX9mgcvg9JruRp4Qn39hDf4q0i
-         qVL3+P2ip5hAxLC9gyhnXqNnQsMatS0i6bSAKMCmov1ZykA8eVNixPS2WD7udS6r79
-         jzeA3QvVJfUAzMRLrHRZJGYtHCoTKuSbOuKSzCpY=
-Received: by mail-ot1-f50.google.com with SMTP id o13so49841otl.5;
-        Wed, 27 May 2020 09:37:57 -0700 (PDT)
-X-Gm-Message-State: AOAM533hGsrLGktGZHWCHsNJKYbPWWGHxCzLDRHIUnh0XfBROLtkf0xt
-        RqKoCUEC5KojnsSjn6jJBXiwK/wut8ktQA6+WQ==
-X-Google-Smtp-Source: ABdhPJypzvc3q05z4AIUaGBF+aU21FPPXvUjMSTRC9ZOMkYJnnpBx8mSfd2Yxm6R6AYCBI8u4iJP95DuhMIdrGo2nfU=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr4952847ote.107.1590597476323;
- Wed, 27 May 2020 09:37:56 -0700 (PDT)
+        id S1731071AbgE0Q4X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 May 2020 12:56:23 -0400
+IronPort-SDR: Io9eTP1wKiyxR/X56jmHBzlH3aC4xDP8Bq6GoS+EbIMOgGkw3xIj2JVDo6cVYiHkJ5yPgTzEOY
+ OG0HGAzZDmlA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 09:56:21 -0700
+IronPort-SDR: ujYw5J0Ds55WcBUIgiqzIcxegHTqrsY0WWGCVy3NeTygRwye5U4hftzMqLpuzODQa4HMMQxVfB
+ fjuemY8Z6qaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="302522288"
+Received: from jderrick-mobl.amr.corp.intel.com ([10.209.128.69])
+  by orsmga008.jf.intel.com with ESMTP; 27 May 2020 09:56:20 -0700
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <iommu@lists.linux-foundation.org>
+Cc:     <linux-pci@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH v1 0/3] iommu/vt-d: real DMA sub-device info allocation
+Date:   Wed, 27 May 2020 10:56:14 -0600
+Message-Id: <20200527165617.297470-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200522033631.32574-1-kishon@ti.com> <20200522033631.32574-4-kishon@ti.com>
- <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
- <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com> <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
- <b3663862-44df-867f-0824-28802909f224@ti.com>
-In-Reply-To: <b3663862-44df-867f-0824-28802909f224@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 27 May 2020 10:37:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
-Message-ID: <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 27, 2020 at 4:49 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Rob,
->
-> On 5/26/2020 8:42 PM, Rob Herring wrote:
-> > On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >>
-> >> Hi Rob,
-> >>
-> >> On 5/22/2020 9:24 PM, Rob Herring wrote:
-> >>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >>>>
-> >>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
-> >>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
-> >>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
-> >>>> for adding PCIe support in TI's J721E SoC.
-> >>>
-> >>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
-> >>> with this and never can be given the PCI_COMMAND and PCI_STATUS
-> >>> registers are in the same word (IIRC, that's the main reason 32-bit
-> >>> config space accesses are broken). So this isn't going to work at
-> >>
-> >> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
-> >> could be reset while raising legacy interrupt. While this cannot be avoided for
-> >> TI's J721E, other platforms doesn't have to have this limitation.
-> >>> least for EP accesses. And maybe you need a custom .raise_irq() hook
-> >>> to minimize any problems (such as making the RMW atomic at least from
-> >>> the endpoint's perspective).
-> >>
-> >> This is to make sure EP doesn't update in-consistent state when RC is updating
-> >> the PCI_STATUS register? Since this involves two different systems, how do we
-> >> make this atomic?
-> >
-> > You can't make it atomic WRT both systems, but is there locking around
-> > each RMW? Specifically, are preemption and interrupts disabled to
-> > ensure time between a read and write are minimized? You wouldn't want
-> > interrupts disabled during the delay too though (i.e. around
-> > .raise_irq()).
->
-> Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
-> pointed below that delay for legacy interrupt is wrong and it has to be fixed
-> (with a later series).
+This set adds the support for real DMA sub-devices to have device_domain_info,
+leading to the correct domain type being used.
 
-But you don't need a lock everywhere. You need locks in the callers
-(and only sometimes).
+This applies on Joerg's origin/next. This also applies against v5.6.12
+and v5.7-rc7 with some API modifications, making it a stable candidate
+that fixes the issue reported in [1].
 
-> How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
-> changing the default implementation to perform only 32-bit access (used for
-> legacy interrupt, msi-x interrupt and while writing standard headers) and it's
-> not okay only for legacy interrupts for platforms other than TI.
+For v5.6.12 and v5.7-rc7, identity_mapping() would return 0 for real DMA
+sub-devices due to not having valid device_domain_info, leading to
+__intel_map_single() paths. This is a problem if the real DMA device
+started in IDENTITY, leading to a NULL Pointer Dereference:
 
-Now I'm wondering how set_msi is not racy in the current code with the
-host setting/clearing PCI_MSI_FLAGS_ENABLE? Maybe that bit is RO from
-the EP side?
+	__intel_map_single()
+		domain = find_domain(dev);
+			dev = &pci_real_dma_dev(to_pci_dev(dev))->dev;
+			info = dev->archdata.iommu;
+			return info->domain;
 
-Ultimately I think you're going to have to provide your own endpoint
-functions or you need accessors for specific registers like
-PCI_MSI_FLAGS. Then for example, you just rely on the 2 bytes before
-PCI_MSI_FLAGS being reserved and do a 32-bit access without a RMW.
-Trying to abstract this at the register read/write level is going to
-be fragile.
+		iommu = domain_get_iommu(domain)
+			if (WARN_ON(domain->domain.type != IOMMU_DOMAIN_DMA))
+				return NULL;
 
-Rob
+		cap_zlr(iommu->cap) <-- NULL Pointer Deref
+
+This issue was also fixed by 6fc7020cf298 ("iommu/vt-d: Apply per-device
+dma_ops") due to removing identity_mapping() paths.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=207575
+
+Jon Derrick (3):
+  iommu/vt-d: Only clear real DMA device's context entries
+  iommu/vt-d: Allocate domain info for real DMA sub-devices
+  iommu/vt-d: Remove real DMA lookup in find_domain
+
+ drivers/iommu/intel-iommu.c | 31 +++++++++++++++++++++++--------
+ include/linux/intel-iommu.h |  1 +
+ 2 files changed, 24 insertions(+), 8 deletions(-)
+
+-- 
+1.8.3.1
+
