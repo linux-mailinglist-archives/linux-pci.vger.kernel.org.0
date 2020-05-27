@@ -2,85 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 862C71E3D02
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 11:01:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58F621E3DB3
+	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 11:39:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388339AbgE0JBp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 05:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388213AbgE0JBp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 May 2020 05:01:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC1F20723;
-        Wed, 27 May 2020 09:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590570104;
-        bh=Ly0PPgLoVOdP2MHz53CmBLAFstCS5mfpl1WpLZ15gps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=onCoAOhnzHO9z1pUO0//RWYJLmKfFMRTqXoBIY+gdObr+17e6nwXXsvWN0RMThy9e
-         uwLwAnL2f9xW9oLDKOWZn/Nzmaln1ON7ULTIQPpaM1zsoyYnkrxXXpwhUkArhx2hE2
-         yEEIJrw8f7A1SPpbRQGH1EvlHjbsZMtVrqHdWmVk=
-Date:   Wed, 27 May 2020 11:01:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] PCI: Introduce PCI_FIXUP_IOMMU
-Message-ID: <20200527090142.GC179718@kroah.com>
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
- <1590493749-13823-2-git-send-email-zhangfei.gao@linaro.org>
- <20200526144644.GA20784@infradead.org>
- <39144dc0-3b04-3127-978b-bd8487dd06e0@linaro.org>
+        id S1727804AbgE0JjF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 May 2020 05:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgE0JjF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 05:39:05 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3709DC061A0F
+        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 02:39:05 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u188so2370991wmu.1
+        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 02:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ma4u4XMWVxhpm3lD4oFGEfaNlly6DyjC8Gxwotb9TKs=;
+        b=WXjQEVV83bRPYCR6LgwSP7gKE0qWLHR4Mnqw7P8noGQQ24OMhB75T8jRtIYlWMpWHY
+         MySHznY6zRSBwHKVYmHsysbE+174PlXCVINNqJQjYg/72BEdEN0K/YKDNyN2QBDIuFxt
+         R0Oq37rjAYoXARsBmbhgrlZSfqvOCc9gdGAOg9wpUOynvLbCDDIhxm3cCxh1xAWM53Kj
+         /qMG3/aahORuZGKeMGZO2hruY7t1qM0Ejp5rLqR+i+9f80Efp9dXuIIn0b0rnCOeFxCi
+         Q4RCOaOgvO5K4/5OBdHDdj2Yo2pvfTSwcO3cdr45feco2zONM3j9uMw4Ntt8RCKXreoL
+         IzCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ma4u4XMWVxhpm3lD4oFGEfaNlly6DyjC8Gxwotb9TKs=;
+        b=k69KVXtZQ805mOTaBAXPXZ5FhP0wVbfveygz7PAtlxw2AEIi83uBP+efQ/CySWhG6o
+         yAJRthcxyGcdgvLpg8fY0qvi5FtYp5MeEdkvDgpnUEJLTwDRY9ybP/taC/9SgF7s02lX
+         Kp5Pf1S5K8r4YGm3jFRji0Xn5lkzMQOfitnBDX5dsu0Bms5ZxxvVENZT8E+kTJ8rsITu
+         9PwzAt4pEDmNJUmEjexEY9xNOxOgdWBOHi9Gr/jlNPHhvEncy7Lp4juTlk9lBB5DljnC
+         nKiyCQYmJtoTDTPzIyTHn6eJwuYZZO0VgHV1CWgBQoYhqfByBDPIYUiF9ORBnZThpNMH
+         T4qQ==
+X-Gm-Message-State: AOAM531bkZoExLQ6yVO5wFEirwRnG6G6/x8Yi+uQl7wYRvj0o42onaUz
+        Tt+gRGA8zWFSGJTPuBopYHdTPdo8+vU=
+X-Google-Smtp-Source: ABdhPJwRHl1VsOw+wNkIidN7cnKb04trFlt4YsFqaYnPmLrEQw89lrhHnt4yDc5lSDmieVnQqqyCXA==
+X-Received: by 2002:a1c:b354:: with SMTP id c81mr3432193wmf.136.1590572343528;
+        Wed, 27 May 2020 02:39:03 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id h20sm2275362wma.6.2020.05.27.02.39.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 02:39:03 -0700 (PDT)
+Date:   Wed, 27 May 2020 11:38:52 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        bhelgaas@google.com
+Cc:     will@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, ashok.raj@intel.com,
+        alex.williamson@redhat.com, hch@infradead.org
+Subject: Re: [PATCH v2 0/4] PCI, iommu: Factor 'untrusted' check for ATS
+ enablement
+Message-ID: <20200527093852.GC265288@myrica>
+References: <20200520152201.3309416-1-jean-philippe@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <39144dc0-3b04-3127-978b-bd8487dd06e0@linaro.org>
+In-Reply-To: <20200520152201.3309416-1-jean-philippe@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:09:57PM +0800, Zhangfei Gao wrote:
-> Hi, Christoph
-> 
-> On 2020/5/26 下午10:46, Christoph Hellwig wrote:
-> > On Tue, May 26, 2020 at 07:49:08PM +0800, Zhangfei Gao wrote:
-> > > Some platform devices appear as PCI but are actually on the AMBA bus,
-> > > and they need fixup in drivers/pci/quirks.c handling iommu_fwnode.
-> > > Here introducing PCI_FIXUP_IOMMU, which is called after iommu_fwnode
-> > > is allocated, instead of reusing PCI_FIXUP_FINAL since it will slow
-> > > down iommu probing as all devices in fixup final list will be
-> > > reprocessed.
-> > Who is going to use this?  I don't see a single user in the series.
-> We will add iommu fixup in drivers/pci/quirks.c, handling
-> 
-> fwspec->can_stall, which is introduced in
-> 
-> https://www.spinics.net/lists/linux-pci/msg94559.html
-> 
-> Unfortunately, the patch does not catch v5.8, so we have to wait.
-> And we want to check whether this is a right method to solve this issue.
+Hi Joerg, Bjorn,
 
-We can't take new apis without a real user, so please submit them all at
-once.
+On Wed, May 20, 2020 at 05:21:59PM +0200, Jean-Philippe Brucker wrote:
+> IOMMU drivers currently check themselves if a device is untrusted
+> (plugged into an external-facing port) before enabling ATS. Move the
+> check to drivers/pci. The only functional change should be to the AMD
+> IOMMU driver. With this change all IOMMU drivers block 'Translated' PCIe
+> transactions and Translation Requests from untrusted devices.
 
-thanks,
+This seems ready for v5.8. I guess it could go through the IOMMU tree
+since there are a little more IOMMU changes?
 
-greg k-h
+Thanks,
+Jean
+> 
+> Since v1 [1] I added tags, addressed comments on patches 1 and 3, and
+> fixed a regression in patch 3.
+> 
+> [1] https://lore.kernel.org/linux-iommu/20200515104359.1178606-1-jean-philippe@linaro.org/
+> 
+> Jean-Philippe Brucker (4):
+>   PCI/ATS: Only enable ATS for trusted devices
+>   iommu/amd: Use pci_ats_supported()
+>   iommu/arm-smmu-v3: Use pci_ats_supported()
+>   iommu/vt-d: Use pci_ats_supported()
+> 
+>  include/linux/pci-ats.h     |  3 +++
+>  drivers/iommu/amd_iommu.c   | 12 ++++--------
+>  drivers/iommu/arm-smmu-v3.c | 20 +++++++-------------
+>  drivers/iommu/intel-iommu.c |  9 +++------
+>  drivers/pci/ats.c           | 18 +++++++++++++++++-
+>  5 files changed, 34 insertions(+), 28 deletions(-)
+> 
+> -- 
+> 2.26.2
+> 
