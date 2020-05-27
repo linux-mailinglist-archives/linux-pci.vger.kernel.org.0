@@ -2,147 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 092931E50B5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 May 2020 23:49:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BD8C1E50E5
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 00:06:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgE0Vs6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 17:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgE0Vs6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 May 2020 17:48:58 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32E2420899;
-        Wed, 27 May 2020 21:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590616137;
-        bh=VxwMLFdqxnAPqgauCV5/DmruSIHLnC3MfEd40C7RVU8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IpcKZczFI5hF0S/9QZvgZXV01DR4F6ARqI3uemTIeFK8l/MTr9yu6EHtp015tu7hI
-         mAAnFzMQXfnTBxcLPAZ3Unkl1HD+yThZSGFX10dc/5CuJQPgbMKvHC0Xh4B1YyvFww
-         tNkDwHQBm/+uzNzRpAKSMHCow//9CCvSTA9a4dWQ=
-Date:   Wed, 27 May 2020 16:48:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] PCI: Rename _DSM constants to align with PCI Firmware
- specification
-Message-ID: <20200527214855.GA267502@bjorn-Precision-5520>
+        id S1725681AbgE0WGe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 May 2020 18:06:34 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54076 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0WGe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 May 2020 18:06:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RM6JMC027110;
+        Wed, 27 May 2020 17:06:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590617179;
+        bh=wHq3GUk6tsshZfXmIGKnDN4gAiFx1/8S5VNAsQF6aUI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OrUSiKp5bsBc5ZXTvXvnjoBh7y5cW5Pl1xWZ+u16iP4DZrzl9cE38cGyolacbSAwn
+         Zo+9OrtH66DhqQeKxD07qnql0hbgqaYBbryCQY8AULI9Cvtd5PK9VUA6lM8p2URc2F
+         crKYqnkUMugBmcwsHOn0IuUdAJ5EIz/C8KZ9Y5D0=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RM6JpY043916
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 17:06:19 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 17:06:19 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 17:06:18 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RM6EbP092800;
+        Wed, 27 May 2020 17:06:15 -0500
+Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
+ perform only 32-bit accesses
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devicetree@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200522033631.32574-1-kishon@ti.com>
+ <20200522033631.32574-4-kishon@ti.com>
+ <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
+ <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
+ <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+ <b3663862-44df-867f-0824-28802909f224@ti.com>
+ <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <457db3ae-e68a-d2fc-ba5f-5393ad464413@ti.com>
+Date:   Thu, 28 May 2020 03:36:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526213905.2479381-1-kw@linux.com>
+In-Reply-To: <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 26, 2020 at 09:39:05PM +0000, Krzysztof Wilczyński wrote:
-> Rename PCI-related _DSM constants to better align them with the PCI
-> Firmware specification (see PCI Firmware Specification, Revision 3.2,
-> Section 4.6., p. 58).  All the constants names should correlate more
-> strongly with the descriptions in the aforementioned specification to
-> make them unambiguous.
-> 
-> Additionally, all of the renamed constants will use the DSM_ prefix,
-> similarly to the PCI _OSC constants that use the OSC_ prefix, to make it
-> clear what these are.
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+Hi Rob,
 
-Applied to pci/misc for v5.8, thanks!
-
-> ---
->  drivers/acpi/pci_root.c  |  2 +-
->  drivers/pci/pci-acpi.c   |  4 ++--
->  drivers/pci/pci-label.c  |  4 ++--
->  include/linux/pci-acpi.h | 10 ++++++----
->  4 files changed, 11 insertions(+), 9 deletions(-)
+On 5/27/2020 10:07 PM, Rob Herring wrote:
+> On Wed, May 27, 2020 at 4:49 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/26/2020 8:42 PM, Rob Herring wrote:
+>>> On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> On 5/22/2020 9:24 PM, Rob Herring wrote:
+>>>>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>>>
+>>>>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
+>>>>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
+>>>>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
+>>>>>> for adding PCIe support in TI's J721E SoC.
+>>>>>
+>>>>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
+>>>>> with this and never can be given the PCI_COMMAND and PCI_STATUS
+>>>>> registers are in the same word (IIRC, that's the main reason 32-bit
+>>>>> config space accesses are broken). So this isn't going to work at
+>>>>
+>>>> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
+>>>> could be reset while raising legacy interrupt. While this cannot be avoided for
+>>>> TI's J721E, other platforms doesn't have to have this limitation.
+>>>>> least for EP accesses. And maybe you need a custom .raise_irq() hook
+>>>>> to minimize any problems (such as making the RMW atomic at least from
+>>>>> the endpoint's perspective).
+>>>>
+>>>> This is to make sure EP doesn't update in-consistent state when RC is updating
+>>>> the PCI_STATUS register? Since this involves two different systems, how do we
+>>>> make this atomic?
+>>>
+>>> You can't make it atomic WRT both systems, but is there locking around
+>>> each RMW? Specifically, are preemption and interrupts disabled to
+>>> ensure time between a read and write are minimized? You wouldn't want
+>>> interrupts disabled during the delay too though (i.e. around
+>>> .raise_irq()).
+>>
+>> Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
+>> pointed below that delay for legacy interrupt is wrong and it has to be fixed
+>> (with a later series).
 > 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index ac8ad6cb82aa..ee4d0bf717fd 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -938,7 +938,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  	 * assignments made by firmware for this host bridge.
->  	 */
->  	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
-> -	                        IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
-> +				DSM_PCI_IGNORE_BOOT_CONFIG, NULL);
->  	if (obj && obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 0)
->  		host_bridge->preserve_config = 1;
->  	ACPI_FREE(obj);
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index d21969fba6ab..a2e9f01434de 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1128,7 +1128,7 @@ void acpi_pci_add_bus(struct pci_bus *bus)
->  		return;
->  
->  	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
-> -				RESET_DELAY_DSM, NULL);
-> +				DSM_PCI_POWER_ON_RESET_DELAY, NULL);
->  	if (!obj)
->  		return;
->  
-> @@ -1193,7 +1193,7 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
->  		pdev->d3cold_delay = 0;
->  
->  	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 3,
-> -				FUNCTION_DELAY_DSM, NULL);
-> +				DSM_PCI_DEVICE_READINESS_DURATIONS, NULL);
->  	if (!obj)
->  		return;
->  
-> diff --git a/drivers/pci/pci-label.c b/drivers/pci/pci-label.c
-> index a5910f942857..69db1fd10f21 100644
-> --- a/drivers/pci/pci-label.c
-> +++ b/drivers/pci/pci-label.c
-> @@ -178,7 +178,7 @@ static int dsm_get_label(struct device *dev, char *buf,
->  		return -1;
->  
->  	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 0x2,
-> -				DEVICE_LABEL_DSM, NULL);
-> +				DSM_PCI_PCIE_DEVICE_NAME, NULL);
->  	if (!obj)
->  		return -1;
->  
-> @@ -218,7 +218,7 @@ static bool device_has_dsm(struct device *dev)
->  		return false;
->  
->  	return !!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 0x2,
-> -				1 << DEVICE_LABEL_DSM);
-> +				1 << DSM_PCI_PCIE_DEVICE_NAME);
->  }
->  
->  static umode_t acpi_index_string_exist(struct kobject *kobj,
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 2d155bfb8fbf..21b32fe47607 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -107,10 +107,12 @@ static inline void acpiphp_check_host_bridge(struct acpi_device *adev) { }
->  #endif
->  
->  extern const guid_t pci_acpi_dsm_guid;
-> -#define IGNORE_PCI_BOOT_CONFIG_DSM	0x05
-> -#define DEVICE_LABEL_DSM		0x07
-> -#define RESET_DELAY_DSM			0x08
-> -#define FUNCTION_DELAY_DSM		0x09
-> +
-> +/* _DSM Definitions for PCI */
-> +#define DSM_PCI_IGNORE_BOOT_CONFIG		0x05
-> +#define DSM_PCI_PCIE_DEVICE_NAME		0x07
-> +#define DSM_PCI_POWER_ON_RESET_DELAY		0x08
-> +#define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
->  
->  #ifdef CONFIG_PCIE_EDR
->  void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
-> -- 
-> 2.26.2
+> But you don't need a lock everywhere. You need locks in the callers
+> (and only sometimes).
+
+Okay, the locks should be added only for registers where HOST can also write to
+the same register? Maybe only raise_irq then..
+
+> 
+>> How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
+>> changing the default implementation to perform only 32-bit access (used for
+>> legacy interrupt, msi-x interrupt and while writing standard headers) and it's
+>> not okay only for legacy interrupts for platforms other than TI.
+> 
+> Now I'm wondering how set_msi is not racy in the current code with the
+> host setting/clearing PCI_MSI_FLAGS_ENABLE? Maybe that bit is RO from
+> the EP side?
+
+set_msi/set_msix is a one time configuration that is invoked before the host
+establishes the link with the endpoint. I don't think we have to consider this
+as racy.
+
+Thanks
+Kishon
+
+> 
+> Ultimately I think you're going to have to provide your own endpoint
+> functions or you need accessors for specific registers like
+> PCI_MSI_FLAGS. Then for example, you just rely on the 2 bytes before
+> PCI_MSI_FLAGS being reserved and do a 32-bit access without a RMW.
+> Trying to abstract this at the register read/write level is going to
+> be fragile
+> 
+> Rob
 > 
