@@ -2,83 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB75E1E63FE
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 16:32:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 216151E6433
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 16:41:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391109AbgE1OcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 May 2020 10:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37944 "EHLO mail.kernel.org"
+        id S1725948AbgE1OlN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 10:41:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:53730 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391060AbgE1OcI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 May 2020 10:32:08 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F098207D3;
-        Thu, 28 May 2020 14:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590676328;
-        bh=akyLuHeiAlZIZHfR0soky+wL6Do/cboTPXXRrmLbVcM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=d2K+pAeTDZ5RpezmH6ZH/G46972OO1eS9ejtgl4eRc+z7CDanFwXHD1jvVuStpsI5
-         fwr7nmGoeDP3rq4Ie9BtO8Gr19T8OYE3cDJ41T8Iz8Mgrg0s9egdszpU5+1TEu6Rgk
-         rRysRM5YScuyL1XYDRPU9YQDjqjugHwQLtkIgmaI=
-Received: by pali.im (Postfix)
-        id 8BC2B865; Thu, 28 May 2020 16:32:05 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        id S1725928AbgE1OlM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 May 2020 10:41:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEF3BD6E;
+        Thu, 28 May 2020 07:41:11 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F11383F52E;
+        Thu, 28 May 2020 07:41:09 -0700 (PDT)
+Date:   Thu, 28 May 2020 15:41:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card connected
-Date:   Thu, 28 May 2020 16:31:41 +0200
-Message-Id: <20200528143141.29956-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] PCI: hv: Use struct_size() helper
+Message-ID: <20200528144107.GB28290@e121166-lin.cambridge.arm.com>
+References: <20200525164319.GA13596@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525164319.GA13596@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When there is no PCIe card connected and advk_pcie_rd_conf() or
-advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-root bridge, the aardvark driver throws the following error message:
+On Mon, May 25, 2020 at 11:43:19AM -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct hv_dr_state {
+> 	...
+>         struct hv_pcidev_description func[];
+> };
+> 
+> struct pci_bus_relations {
+> 	...
+>         struct pci_function_description func[];
+> } __packed;
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following forms:
+> 
+> offsetof(struct hv_dr_state, func) +
+> 	(sizeof(struct hv_pcidev_description) *
+> 	(relations->device_count))
+> 
+> offsetof(struct pci_bus_relations, func) +
+> 	(sizeof(struct pci_function_description) *
+> 	(bus_rel->device_count))
+> 
+> with:
+> 
+> struct_size(dr, func, relations->device_count)
+> 
+> and
+> 
+> struct_size(bus_rel, func, bus_rel->device_count)
+> 
+> respectively.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 22 ++++++++--------------
+>  1 file changed, 8 insertions(+), 14 deletions(-)
 
-  advk-pcie d0070000.pcie: config read/write timed out
+Applied to pci/hv, thanks.
 
-Obviously accessing PCIe registers of disconnected card is not possible.
+Lorenzo
 
-Extend check in advk_pcie_valid_device() function for validating
-availability of PCIe bus. If PCIe link is down, then the device is marked
-as Not Found and the driver does not try to access these registers.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/pci/controller/pci-aardvark.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 90ff291c24f0..53a4cfd7d377 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
- 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
- 		return false;
- 
-+	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-+		return false;
-+
- 	return true;
- }
- 
--- 
-2.20.1
-
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 892f3a742117a..bf40ff09c99d6 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2213,10 +2213,8 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>  	struct hv_dr_state *dr;
+>  	int i;
+>  
+> -	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+> -		     (sizeof(struct hv_pcidev_description) *
+> -		      (relations->device_count)), GFP_NOWAIT);
+> -
+> +	dr = kzalloc(struct_size(dr, func, relations->device_count),
+> +		     GFP_NOWAIT);
+>  	if (!dr)
+>  		return;
+>  
+> @@ -2250,10 +2248,8 @@ static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
+>  	struct hv_dr_state *dr;
+>  	int i;
+>  
+> -	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+> -		     (sizeof(struct hv_pcidev_description) *
+> -		      (relations->device_count)), GFP_NOWAIT);
+> -
+> +	dr = kzalloc(struct_size(dr, func, relations->device_count),
+> +		     GFP_NOWAIT);
+>  	if (!dr)
+>  		return;
+>  
+> @@ -2447,9 +2443,8 @@ static void hv_pci_onchannelcallback(void *context)
+>  
+>  				bus_rel = (struct pci_bus_relations *)buffer;
+>  				if (bytes_recvd <
+> -				    offsetof(struct pci_bus_relations, func) +
+> -				    (sizeof(struct pci_function_description) *
+> -				     (bus_rel->device_count))) {
+> +					struct_size(bus_rel, func,
+> +						    bus_rel->device_count)) {
+>  					dev_err(&hbus->hdev->device,
+>  						"bus relations too small\n");
+>  					break;
+> @@ -2462,9 +2457,8 @@ static void hv_pci_onchannelcallback(void *context)
+>  
+>  				bus_rel2 = (struct pci_bus_relations2 *)buffer;
+>  				if (bytes_recvd <
+> -				    offsetof(struct pci_bus_relations2, func) +
+> -				    (sizeof(struct pci_function_description2) *
+> -				     (bus_rel2->device_count))) {
+> +					struct_size(bus_rel2, func,
+> +						    bus_rel2->device_count)) {
+>  					dev_err(&hbus->hdev->device,
+>  						"bus relations v2 too small\n");
+>  					break;
+> -- 
+> 2.26.2
+> 
