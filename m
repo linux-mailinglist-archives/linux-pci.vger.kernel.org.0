@@ -2,76 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 032481E65D0
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 17:19:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D05901E662A
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 17:33:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404230AbgE1PT1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 May 2020 11:19:27 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34743 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404149AbgE1PT0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 11:19:26 -0400
-Received: by mail-il1-f195.google.com with SMTP id v11so522331ilh.1;
-        Thu, 28 May 2020 08:19:25 -0700 (PDT)
+        id S2404396AbgE1PdT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 11:33:19 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:33014 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404218AbgE1PdS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 11:33:18 -0400
+Received: by mail-oo1-f66.google.com with SMTP id q6so5822386oot.0;
+        Thu, 28 May 2020 08:33:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5kBEZPlNqzKPyCgrp/KWIwOTiSVLQMBol2Vgbb91EpM=;
-        b=MM1PuxzpqwTUehG7kwhCLrTNuKmCNylscFq0rcDhM6R7rFAGG3ZHG+hq0cRrsxO6Ku
-         sRMGYnY3c7x7LFWYEBah3koE+3Ut67yVZl27KE949sM+pL76+oshChxho2bucOFA76Ny
-         5Hqa/fTooJiZWVD1GcANLMuwOwjGI66hiXAs5c9NacgfHWXAHzN6koE7pceU5AzEhqmS
-         bXrTZbMqeVjvbaD55+4283EMhjn+QpxgcsvjKMFV3ev+hiGpkhxs0c0HHaAxJK5qIa+u
-         dunTDE2VyfofG8NxAeI8l1w9KEIj2upHlJyK5PMVkmjOtSIYXdhTepvtYwrBi8hSBmO5
-         Bf8w==
-X-Gm-Message-State: AOAM5335qDZG27izfSauiRbLwMe0+24cE1c9hJqwrX0Q2UW+wRBhi8aA
-        Ea+VFfY6TL5hT5ecxQ0iLw==
-X-Google-Smtp-Source: ABdhPJwibNiFPrIx377+XuzcIXNpytt1Fqw5yA5j7iuroWojsn3v5IBwUqhYpDxPaOr7/N2GzRdyqw==
-X-Received: by 2002:a92:1b86:: with SMTP id f6mr3430564ill.9.1590679165207;
-        Thu, 28 May 2020 08:19:25 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u66sm3018630ilc.61.2020.05.28.08.19.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:19:24 -0700 (PDT)
-Received: (nullmailer pid 94809 invoked by uid 1000);
-        Thu, 28 May 2020 15:19:23 -0000
-Date:   Thu, 28 May 2020 09:19:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     linux-pci@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: Add UniPhier PCIe endpoint
- controller description
-Message-ID: <20200528151923.GA94755@bogus>
-References: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1589457801-12796-2-git-send-email-hayashi.kunihiko@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BwvPrfZ8wSg4ph9zMdOEHVQNrGJxP0cUS3oI9/YOGpQ=;
+        b=QpwqjFTsadK3mu7urI3IfM1rL6tr9ztPKMnoyrW7GQqMX5igix/k9dhHLHJKlX+QoI
+         XBBoQSXFkwTM3UbSizQhWIndyeBKKk/1TjOK5wgzYCqYOVL9Mh3Hf5vqvbsiZcAKVH2U
+         i5m4Z3iR7AAXWrMp+pTab7419V0Yf8Moo3G3dM5JSTJDjNasCsFH2Q3N8y3VTXDLUbiQ
+         VYms1wPIp8aymnP4bneBUlrU0U+vp+MmMoXqlUbAC/pP6SHCNNIsiyHkdOUiHAMNpetR
+         FGIubYztWG5GSahTJrFvbyq56zPluCH5YtmAS7fEUpHNBoZaJtYtifg6rs4WO4OcCgeO
+         sX1Q==
+X-Gm-Message-State: AOAM533NAu2ppUzQserN6stdvj2DRLSH+vNElmo1XKqd42FoWSzqxH4S
+        7I4AxZXGoUxOohLtIwrdZYqsYFguYz4bSXbIuko=
+X-Google-Smtp-Source: ABdhPJzYnIPD026r8y0hPgfUlAn0bDcx+vTjLCisCeIZ4o+tCY/6uQdRsn4J2v/VaqLjNOwZ97xJOv6mtqydzoFJdxQ=
+X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr2914462oot.1.1590679997128;
+ Thu, 28 May 2020 08:33:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589457801-12796-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 28 May 2020 17:33:06 +0200
+Message-ID: <CAMuHMdVNi2dwrbsX9Zbxo3GGaGZ6EwtsVhFFORNTYkcGfynkQQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] R8A7742 add support for HSUSB and USB2.0/3.0
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 May 2020 21:03:20 +0900, Kunihiko Hayashi wrote:
-> Add DT bindings for PCIe controller implemented in UniPhier SoCs
-> when configured in endpoint mode. This controller is based on
-> the DesignWare PCIe core.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../bindings/pci/socionext,uniphier-pcie-ep.yaml   | 92 ++++++++++++++++++++++
->  MAINTAINERS                                        |  2 +-
->  2 files changed, 93 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-> 
+Hi Lorenzo,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Thu, May 28, 2020 at 4:21 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+> On Sun, May 24, 2020 at 10:37:49PM +0100, Lad Prabhakar wrote:
+> > This patch series adds support for HSUSB, USB2.0 and USB3.0 to
+> > R8A7742 SoC DT.
+> >
+> > This patch series applies on-top of [1].
+> >
+> > [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=288491
+>
+> I think Geert will pull this series, so I'd drop it from the PCI
+> patchwork unless there is a reason I should not, please let me know.
+
+I'll take the DTS patches only.
+
+You may want to take 2/8, or leave it to Rob.
+
+> > Lad Prabhakar (8):
+> >   dt-bindings: phy: rcar-gen2: Add r8a7742 support
+> >   dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
+> >   dt-bindings: usb: renesas,usbhs: Add support for r8a7742
+> >   dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
+> >   dt-bindings: usb: usb-xhci: Document r8a7742 support
+> >   ARM: dts: r8a7742: Add USB 2.0 host support
+> >   ARM: dts: r8a7742: Add USB-DMAC and HSUSB device nodes
+> >   ARM: dts: r8a7742: Add xhci support
+> >
+> >  .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |   1 +
+> >  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |   3 +-
+> >  .../devicetree/bindings/phy/rcar-gen2-phy.txt      |   3 +-
+> >  .../devicetree/bindings/usb/renesas,usbhs.yaml     |   1 +
+> >  Documentation/devicetree/bindings/usb/usb-xhci.txt |   1 +
+> >  arch/arm/boot/dts/r8a7742.dtsi                     | 173 +++++++++++++++++++++
+> >  6 files changed, 180 insertions(+), 2 deletions(-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
