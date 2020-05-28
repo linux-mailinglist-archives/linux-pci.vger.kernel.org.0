@@ -2,117 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 538A11E57F2
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 08:53:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA20A1E5807
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 08:59:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726006AbgE1Gxi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 May 2020 02:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgE1Gxe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 02:53:34 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB9CC08C5C4
-        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 23:53:34 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 5so2603829pjd.0
-        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 23:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=zbKuT3nrBchNOXLtoqggayeJJOXuYIPFyuAneEl5VZE=;
-        b=WeIYDG9i+HPcpC+T7wLyd72laBytTR0RvEwehEj45sRWw4OKQzXYNNFynXnVehee4d
-         Xz6/jjgw409iODdX8f+4nfB4ksOmJlLeRUjPatyd73dc4YdD/O6i/XN42ATrsS/CHqC2
-         Hj1KqTS/6K1rdwTjZSmW73Clu5pi1g+wvul9mqCnXjpkHb3po6GXlCny3fXX4LNkVWWh
-         +Rf0+FfG/tiIkuRFgH2XUOnYBAJUB98HYAgq5RhcSvah+qLAhflgOXk0g/sakA7NLXbh
-         qEjIntovK2YBpTUr74m+FL9V9Iy1pdy/deZKUseiSeBwZTjQlJikyz4UUCdSr+OwEHgX
-         9Dug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zbKuT3nrBchNOXLtoqggayeJJOXuYIPFyuAneEl5VZE=;
-        b=SH+DBWYDrAxeUc+pv5yvKfbSI01JiF8LJl9vvXS70S2Ds1NcGPfzVUzkHhq6fkNBMR
-         0T/ofZndwuEi2/m/8WOSZQ7AR3zXq5T4LfoKS3asQsxyMI+hG4XfV+eaPQ/9wea+ufi4
-         13eGBaxxM2M5r4WzKXH52KRuFRXvXQqqjAUqSsDREhY14oY2Vl9+eFmqBerKwINss9Vt
-         sC0DIzHblxAEyQ71DJG7X6yfCseTJIJ7p+8mSFsM7WCbQAWWGWeZ5NlWFbTAp9x3Kduo
-         VciOM1N2v/8fNCc6pGDKIdNrZEJ3RLkaIk261v0puMmWzDzgIQwvKjUOT4UU1GutjzCl
-         9mBw==
-X-Gm-Message-State: AOAM531GtqIoGomDF5c0MmVih7zkzeScMYYw+MCm7IyGtdgoZQ7X5piv
-        gTAUGP7y+uXxk1jgsExvDQ81UFhpLqhdIw==
-X-Google-Smtp-Source: ABdhPJzZUXUIWStr7BtNwklBZN744dC8lv7AAZWH3qxAABW36QOxKh3qydTDu9mclcxQ1QgO9lDG4g==
-X-Received: by 2002:a17:90a:d317:: with SMTP id p23mr2285917pju.107.1590648813784;
-        Wed, 27 May 2020 23:53:33 -0700 (PDT)
-Received: from [10.140.6.42] ([45.135.186.12])
-        by smtp.gmail.com with ESMTPSA id g18sm3799582pfq.146.2020.05.27.23.53.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 23:53:33 -0700 (PDT)
-Subject: Re: [PATCH 2/2] iommu: calling pci_fixup_iommu in iommu_fwspec_init
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
- <1590493749-13823-3-git-send-email-zhangfei.gao@linaro.org>
- <20200527090115.GB179718@kroah.com>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <e8293663-7fb8-ee57-0b9f-b3057b8aae7d@linaro.org>
-Date:   Thu, 28 May 2020 14:53:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725819AbgE1G7E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 02:59:04 -0400
+Received: from mga17.intel.com ([192.55.52.151]:50203 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbgE1G7E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 May 2020 02:59:04 -0400
+IronPort-SDR: Cv12EPUbqU/9hbxnBmEcuIUNGQasy+mxviEyKlQuMpgEriUL7UgyUxUHr2ZqojUFKNYZwx1Wjz
+ EZ6Fiv+e+O0g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 23:59:03 -0700
+IronPort-SDR: r3uhcUHtN+Unc52bFgwWqmKLrtoPUpmFeeXHBuq20TESLN6GFaH9ys0ak/J+baCfJQerDF+RNU
+ 55MC0i4pjCow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="442844492"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.30.232]) ([10.255.30.232])
+  by orsmga005.jf.intel.com with ESMTP; 27 May 2020 23:59:00 -0700
+Cc:     baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v1 1/3] iommu/vt-d: Only clear real DMA device's context
+ entries
+To:     Jon Derrick <jonathan.derrick@intel.com>,
+        iommu@lists.linux-foundation.org
+References: <20200527165617.297470-1-jonathan.derrick@intel.com>
+ <20200527165617.297470-2-jonathan.derrick@intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <199f788c-f00e-6bd9-49fe-9fcc06bef431@linux.intel.com>
+Date:   Thu, 28 May 2020 14:59:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200527090115.GB179718@kroah.com>
+In-Reply-To: <20200527165617.297470-2-jonathan.derrick@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 2020/5/28 0:56, Jon Derrick wrote:
+> Domain context mapping can encounter issues with sub-devices of a real
+> DMA device. A sub-device cannot have a valid context entry due to it
+> potentially aliasing another device's 16-bit ID. It's expected that
+> sub-devices of the real DMA device uses the real DMA device's requester
+> when context mapping.
+> 
+> This is an issue when a sub-device is removed where the context entry is
+> cleared for all aliases. Other sub-devices are still valid, resulting in
+> those sub-devices being stranded without valid context entries.
+> 
+> The correct approach is to use the real DMA device when programming the
+> context entries. The insertion path is correct because device_to_iommu()
+> will return the bus and devfn of the real DMA device. The removal path
+> needs to only operate on the real DMA device, otherwise the entire
+> context entry would be cleared for all sub-devices of the real DMA
+> device.
+> 
+> This patch also adds a helper to determine if a struct device is a
+> sub-device of a real DMA device.
+> 
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
 
+Fixes: 2b0140c69637e ("iommu/vt-d: Use pci_real_dma_dev() for mapping")
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-On 2020/5/27 下午5:01, Greg Kroah-Hartman wrote:
-> On Tue, May 26, 2020 at 07:49:09PM +0800, Zhangfei Gao wrote:
->> Calling pci_fixup_iommu in iommu_fwspec_init, which alloc
->> iommu_fwnode. Some platform devices appear as PCI but are
->> actually on the AMBA bus, and they need fixup in
->> drivers/pci/quirks.c handling iommu_fwnode.
->> So calling pci_fixup_iommu after iommu_fwnode is allocated.
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> ---
->>   drivers/iommu/iommu.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 7b37542..fb84c42 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
->>   	fwspec->iommu_fwnode = iommu_fwnode;
->>   	fwspec->ops = ops;
->>   	dev_iommu_fwspec_set(dev, fwspec);
->> +
->> +	if (dev_is_pci(dev))
->> +		pci_fixup_device(pci_fixup_iommu, to_pci_dev(dev));
-> Why can't the caller do this as it "knows" it is a PCI device at that
-> point in time, right?
-Putting fixup here is because
-1. iommu_fwspec has been allocated
-2. iommu_fwspec_init will be called by of_pci_iommu_init and 
-iort_pci_iommu_init, covering both acpi and dt
-
-Thanks
+Best regards,
+baolu
