@@ -2,78 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C8BA1E576C
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 08:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F9CF1E57DB
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 08:47:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgE1GSz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 May 2020 02:18:55 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:40887 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726913AbgE1GSy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 02:18:54 -0400
-X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=k9n3h0/X69wAHhYT1nFTsKcL3wy3KEtSe7PgG0o+trw=;
-        b=hIAZb1puZnLEPVjq5jDmEkjVsbzUDIAt6MA0YBUDYkSkrXCtKWMYhOx7bqxk1MEBjozlQmX9srmcs67BfeqDYGT+EMtoEOAVnv9cvBYun9/Na6JQsNKGjFxIRNUB+2P0SSEGwb7wViOOFuUdFPTj7vHeJskAeY0zxtmq/2qBYrE=;
-X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1704384534; Thu, 28 May 2020 14:18:49 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 28 May 2020 14:18:47 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 28 May 2020 14:18:46 +0800
-From:   <chuanjia.liu@mediatek.com>
-To:     <robh+dt@kernel.org>, <ryder.lee@mediatek.com>,
-        <matthias.bgg@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <bhelgaas@google.com>,
-        <chuanjia.liu@mediatek.com>, <jianjun.wang@mediatek.com>,
-        <yong.wu@mediatek.com>, <srv_heupstream@mediatek.com>
-Subject: [PATCH v2 0/4] Spilt PCIe node to comply with hardware design
-Date:   Thu, 28 May 2020 14:16:44 +0800
-Message-ID: <20200528061648.32078-1-chuanjia.liu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        id S1725839AbgE1GrM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 02:47:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgE1GrL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 02:47:11 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86522C08C5C4
+        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 23:47:10 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so11132200plt.5
+        for <linux-pci@vger.kernel.org>; Wed, 27 May 2020 23:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=bofUGbEFbdnCpZWFs8DHvdOjPGm9ZoW5dSffBdf+/48=;
+        b=i9zZJ+TNeNvRcNidmG6piUlVvLM12Ql3gwyE+1zs9+dJy5yzwRheejuryIIdaoZ4Oy
+         PpqV4KZbIEBAopt3QeSB7kIlzfJ/gbWqRtjQdJUqsTEvr+QSDb1MpiutTS4mt27VJCUT
+         wGolKhdBUMCO/4xP7K+wFV4wv+9gh0GtSNTZB22oVGKXEuXTwgUf3S6zOwCFXqSedPwS
+         YFXT5ssn5iSuHWecgXg/mm3uDYHzC4v6XDBneViordfQVzOqzgDXeZa++mqrl38Mj+tu
+         hrnxug4U/nOg29Qjc/NWFC05jy+tQ7In0/wAskn4wZvpS2yEdT1qW9PePMneSuSNMFTS
+         bNdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=bofUGbEFbdnCpZWFs8DHvdOjPGm9ZoW5dSffBdf+/48=;
+        b=SmmUxBJdFmmsUmlrj0e91JkJmzGVS7kuIIYD2A2hctNzY2u490nPmlQogjscfOyLzp
+         e2dOQZSwUw9b6ZxAA9UgC23K1apAbx+Vg/N5VvyRCJyOvL8j+siQmbr4V62BdDBkW/c0
+         8GFf96iOtgZKWKpyS+XeJyiV66FHrUZmkFmasp4aV2iFYi3C74SHX+C/5iMsS158p/DF
+         alpRpYC6JO70RztxD5vbw3kdr9ircpYl2NAoYJAKuokgu9Hsn4Vf1haRQfDCkPLGcgnE
+         0UtrJW4Z4bs2ShATZJ0PwxNMkhyQwNcYQDfEUpudmtjtXJSyng94YMvko0f388NiTj9v
+         aquA==
+X-Gm-Message-State: AOAM5309b8Ae8Hiz2sl/6+QGX01SWrMZbR/1X511adTL4iQE3GsUEpNK
+        2KEhvW9YlYUNvQis011sjuff1BQKXG6zWQ==
+X-Google-Smtp-Source: ABdhPJxLtsDA5liLh4kIqfAgfwRAV1r9YEZbncwuClIEToyTcjpXKMtzdNc0SaVnvBbQN+Q0kn7IoQ==
+X-Received: by 2002:a17:90a:de8b:: with SMTP id n11mr2312350pjv.87.1590648429749;
+        Wed, 27 May 2020 23:47:09 -0700 (PDT)
+Received: from [10.140.6.42] ([45.135.186.12])
+        by smtp.gmail.com with ESMTPSA id 188sm3707241pfu.165.2020.05.27.23.46.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 23:47:09 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <20200527181842.GA256680@bjorn-Precision-5520>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <83bd3d72-3a0c-d9b6-54ad-5bc0dbc5be7d@linaro.org>
+Date:   Thu, 28 May 2020 14:46:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 8CF1375321BD3043410D80C9D460D099090CF36CFC4DCB666F3A8866FC761E1E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200527181842.GA256680@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-VGhlcmUgYXJlIHR3byBpbmRlcGVuZGVudCBQQ0llIGNvbnRyb2xsZXJzIGluIE1UMjcxMi9NVDc2
-MjIgcGxhdGZvcm0sDQphbmQgZWFjaCBvZiB0aGVtIHNob3VsZCBjb250YWluIGFuIGluZGVwZW5k
-ZW50IE1TSSBkb21haW4uDQoNCkluIGN1cnJlbnQgYXJjaGl0ZWN0dXJlLCBNU0kgZG9tYWluIHdp
-bGwgYmUgaW5oZXJpdGVkIGZyb20gdGhlIHJvb3QNCmJyaWRnZSwgYW5kIGFsbCBvZiB0aGUgZGV2
-aWNlcyB3aWxsIHNoYXJlIHRoZSBzYW1lIE1TSSBkb21haW4uDQpIZW5jZSB0aGF0LCB0aGUgUENJ
-ZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkgaWYgdGhlIGlycSBudW1iZXINCndoaWNo
-IHJlcXVpcmVkIGlzIG1vcmUgdGhhbiAzMi4NCg0KU3BsaXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQy
-NzEyL01UNzYyMiBwbGF0Zm9ybSB0byBmaXggTVNJIGlzc3VlIGFuZA0KY29tcGx5IHdpdGggdGhl
-IGhhcmR3YXJlIGRlc2lnbi4NCg0KY2hhbmdlIG5vdGU6DQp2MjogY2hhbmdlIHRoZSBhbGxvY2F0
-aW9uIG9mIG10MjcxMiBQQ0llIE1NSU8gc3BhY2UgZHVlIHRvIHRoZSBhbGxjYXRpb24NCnNpemUg
-aXMgbm90IHJpZ2h0IGluIHYxLg0KDQpjaHVhbmppYS5saXUgKDQpOg0KICBkdC1iaW5kaW5nczog
-UENJOiBNZWRpYXRlazogVXBkYXRlIFBDSWUgYmluZGluZw0KICBQQ0k6IG1lZGlhdGVrOiBVc2Ug
-cmVnbWFwIHRvIGdldCBzaGFyZWQgcGNpZS1jZmcgYmFzZQ0KICBhcm02NDogZHRzOiBtZWRpYXRl
-azogU3BsaXQgUENJZSBub2RlIGZvciBNVDI3MTIvTVQ3NjIyDQogIEFSTTogZHRzOiBtZWRpYXRl
-azogVXBkYXRlIG10NzYyOSBQQ0llIG5vZGUNCg0KIC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0ZWst
-cGNpZS1jZmcueWFtbCAgICAgICB8ICAzOCArKysrKw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9tZWRpYXRlay1wY2llLnR4dCB8IDE0NCArKysrKysrKysrKy0tLS0tLS0NCiBhcmNoL2Fy
-bS9ib290L2R0cy9tdDc2MjktcmZiLmR0cyAgICAgICAgICAgICAgfCAgIDMgKy0NCiBhcmNoL2Fy
-bS9ib290L2R0cy9tdDc2MjkuZHRzaSAgICAgICAgICAgICAgICAgfCAgMjMgKy0tDQogYXJjaC9h
-cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDI3MTJlLmR0c2kgICAgIHwgIDc1ICsrKysrLS0tLQ0K
-IC4uLi9kdHMvbWVkaWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzICB8ICAxNiArLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLXJmYjEuZHRzICB8ICAgNiArLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kgICAgICB8ICA2OCArKysr
-KystLS0NCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYyAgICAgICAgfCAg
-MjUgKystDQogOSBmaWxlcyBjaGFuZ2VkLCAyNTggaW5zZXJ0aW9ucygrKSwgMTQwIGRlbGV0aW9u
-cygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGNpL21lZGlhdGVrLXBjaWUtY2ZnLnlhbWwNCg0KLS0NCjIuMTguMA0KDQo=
+Hi, Bjorn
+
+On 2020/5/28 上午2:18, Bjorn Helgaas wrote:
+> On Tue, May 26, 2020 at 07:49:07PM +0800, Zhangfei Gao wrote:
+>> Some platform devices appear as PCI but are actually on the AMBA bus,
+>> and they need fixup in drivers/pci/quirks.c handling iommu_fwnode.
+>> Here introducing PCI_FIXUP_IOMMU, which is called after iommu_fwnode
+>> is allocated, instead of reusing PCI_FIXUP_FINAL since it will slow
+>> down iommu probing as all devices in fixup final list will be
+>> reprocessed, suggested by Joerg, [1]
+> Is this slowdown significant?  We already iterate over every device
+> when applying PCI_FIXUP_FINAL quirks, so if we used the existing
+> PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
+> adding two more iterations to the loop in pci_do_fixups() that tries
+> to match quirks against the current device.  I doubt that would be a
+> measurable slowdown.
+I do not notice the difference when compared fixup_iommu and fixup_final 
+via get_jiffies_64,
+since in our platform no other pci fixup is registered.
+
+Here the plan is adding pci_fixup_device in iommu_fwspec_init,
+so if using fixup_final the iteration will be done again here.
+
+>
+>> For example:
+>> Hisilicon platform device need fixup in
+>> drivers/pci/quirks.c handling fwspec->can_stall, which is introduced in [2]
+>>
+>> +static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+>> +{
+>> +    struct iommu_fwspec *fwspec;
+>> +
+>> +    pdev->eetlp_prefix_path = 1;
+>> +    fwspec = dev_iommu_fwspec_get(&pdev->dev);
+>> +    if (fwspec)
+>> +        fwspec->can_stall = 1;
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_IOMMU(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+>> +DECLARE_PCI_iFIXUP_IOMMU(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+>>
+>> [1] https://www.spinics.net/lists/iommu/msg44591.html
+>> [2] https://www.spinics.net/lists/linux-pci/msg94559.html
+> If you reference these in the commit logs, please use lore.kernel.org
+> links instead of spinics.
+Got it, thanks Bjorn.
+
+
 
