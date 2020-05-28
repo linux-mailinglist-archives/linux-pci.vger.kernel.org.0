@@ -2,85 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F3A01E63AC
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 16:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB75E1E63FE
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 16:32:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390980AbgE1OV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 May 2020 10:21:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:53386 "EHLO foss.arm.com"
+        id S2391109AbgE1OcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 10:32:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390958AbgE1OVy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 May 2020 10:21:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81A5FD6E;
-        Thu, 28 May 2020 07:21:53 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 682B73F52E;
-        Thu, 28 May 2020 07:21:51 -0700 (PDT)
-Date:   Thu, 28 May 2020 15:21:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S2391060AbgE1OcI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 May 2020 10:32:08 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F098207D3;
+        Thu, 28 May 2020 14:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590676328;
+        bh=akyLuHeiAlZIZHfR0soky+wL6Do/cboTPXXRrmLbVcM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=d2K+pAeTDZ5RpezmH6ZH/G46972OO1eS9ejtgl4eRc+z7CDanFwXHD1jvVuStpsI5
+         fwr7nmGoeDP3rq4Ie9BtO8Gr19T8OYE3cDJ41T8Iz8Mgrg0s9egdszpU5+1TEu6Rgk
+         rRysRM5YScuyL1XYDRPU9YQDjqjugHwQLtkIgmaI=
+Received: by pali.im (Postfix)
+        id 8BC2B865; Thu, 28 May 2020 16:32:05 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 0/8] R8A7742 add support for HSUSB and USB2.0/3.0
-Message-ID: <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card connected
+Date:   Thu, 28 May 2020 16:31:41 +0200
+Message-Id: <20200528143141.29956-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, May 24, 2020 at 10:37:49PM +0100, Lad Prabhakar wrote:
-> Hi All,
-> 
-> This patch series adds support for HSUSB, USB2.0 and USB3.0 to
-> R8A7742 SoC DT.
-> 
-> This patch series applies on-top of [1].
-> 
-> [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=288491
+When there is no PCIe card connected and advk_pcie_rd_conf() or
+advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+root bridge, the aardvark driver throws the following error message:
 
-I think Geert will pull this series, so I'd drop it from the PCI
-patchwork unless there is a reason I should not, please let me know.
+  advk-pcie d0070000.pcie: config read/write timed out
 
-Thanks,
-Lorenzo
+Obviously accessing PCIe registers of disconnected card is not possible.
 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (8):
->   dt-bindings: phy: rcar-gen2: Add r8a7742 support
->   dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
->   dt-bindings: usb: renesas,usbhs: Add support for r8a7742
->   dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
->   dt-bindings: usb: usb-xhci: Document r8a7742 support
->   ARM: dts: r8a7742: Add USB 2.0 host support
->   ARM: dts: r8a7742: Add USB-DMAC and HSUSB device nodes
->   ARM: dts: r8a7742: Add xhci support
-> 
->  .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |   1 +
->  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |   3 +-
->  .../devicetree/bindings/phy/rcar-gen2-phy.txt      |   3 +-
->  .../devicetree/bindings/usb/renesas,usbhs.yaml     |   1 +
->  Documentation/devicetree/bindings/usb/usb-xhci.txt |   1 +
->  arch/arm/boot/dts/r8a7742.dtsi                     | 173 +++++++++++++++++++++
->  6 files changed, 180 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+Extend check in advk_pcie_valid_device() function for validating
+availability of PCIe bus. If PCIe link is down, then the device is marked
+as Not Found and the driver does not try to access these registers.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/pci/controller/pci-aardvark.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 90ff291c24f0..53a4cfd7d377 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+ 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+ 		return false;
+ 
++	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
++		return false;
++
+ 	return true;
+ }
+ 
+-- 
+2.20.1
+
