@@ -2,127 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 812711E6D7D
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 23:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25BE61E6DCD
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 23:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436547AbgE1VSp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 May 2020 17:18:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61069 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436543AbgE1VSn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 May 2020 17:18:43 -0400
-IronPort-SDR: BC49y7K5BgYLTB0PeyRL5FEzNMFM674uOqPUmJoo5GOQoHQnabDEY6cZE45lSblC38aaRGYCbG
- Q6KCJOWBQDCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 14:18:42 -0700
-IronPort-SDR: 4AScpdRfM/Qz6G0HI8poSM3B9H5Mqkq5vrBTOmecqUhhBSB1772DdFAAsj45uU0XmppsLIFVUS
- 1ihVdZLx2rfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,446,1583222400"; 
-   d="scan'208";a="311045002"
-Received: from vvhadaga-mobl.amr.corp.intel.com (HELO [10.254.98.146]) ([10.254.98.146])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 May 2020 14:18:42 -0700
-Subject: Re: [PATCH] PCI: ERR: Don't override the status returned by
- error_detect()
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ruscur@russell.cc,
-        sbobroff@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com
-References: <20200527083130.4137-1-Zhiqiang.Hou@nxp.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <84a2bc7e-7556-96ff-6cd5-988d432ad8e3@linux.intel.com>
-Date:   Thu, 28 May 2020 14:18:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2436662AbgE1Vig (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 17:38:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40562 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2436603AbgE1Vie (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 17:38:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590701911;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MbsA++b9/YQf0c8XVRARDqrsuyImeixJij3EPZWrlZg=;
+        b=e964r0qCaRukarUAco6F4XsHmIryB0zfMpZCLQqlwo1NlSpz6IqGcepH+yYtBn9a2wBZ/I
+        yWdlv7KsonjpQOf6FLkLavCyEJkhQR8eyx8FHFrCk09AiYI4as2hTSdL1+xqn83FDxP7kx
+        UduBQ1OXXRTiKxZEzQsSvLbqRAX1jZs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-ChD0PkExNeeUshi1V09zKw-1; Thu, 28 May 2020 17:38:29 -0400
+X-MC-Unique: ChD0PkExNeeUshi1V09zKw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2BDB107ACCA;
+        Thu, 28 May 2020 21:38:27 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A20A760C80;
+        Thu, 28 May 2020 21:38:26 +0000 (UTC)
+Date:   Thu, 28 May 2020 15:38:26 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Ashok Raj <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>
+Subject: Re: [PATCH] PCI: Relax ACS requirement for Intel RCiEP devices.
+Message-ID: <20200528153826.257a0145@x1.home>
+In-Reply-To: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
+References: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20200527083130.4137-1-Zhiqiang.Hou@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Thu, 28 May 2020 13:57:42 -0700
+Ashok Raj <ashok.raj@intel.com> wrote:
 
-On 5/27/20 1:31 AM, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-> overrode the 'status' returned by the error_detect() call back function,
-> which is depended on by the next step. This overriding makes the Endpoint
-> driver's required info (kept in the var status) lost, so it results in the
-> fatal errors' recovery failed and then kernel panic.
-Can you explain why updating status affects the recovery ?
-> 
-> In the e1000e case, the error logs:
-> pcieport 0002:00:00.0: AER: Uncorrected (Fatal) error received: 0002:01:00.0
-> e1000e 0002:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
-> pcieport 0002:00:00.0: AER: Root Port link has been reset
-As per above commit log, it looks like link is reset correctly.
-> SError Interrupt on CPU0, code 0xbf000002 -- SError
-> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
-> Hardware name: LS1046A RDB Board (DT)
-> pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
-> pc : __pci_enable_msix_range+0x4c8/0x5b8
-> lr : __pci_enable_msix_range+0x480/0x5b8
-> sp : ffff80001116bb30
-> x29: ffff80001116bb30 x28: 0000000000000003
-> x27: 0000000000000003 x26: 0000000000000000
-> x25: ffff00097243e0a8 x24: 0000000000000001
-> x23: ffff00097243e2d8 x22: 0000000000000000
-> x21: 0000000000000003 x20: ffff00095bd46080
-> x19: ffff00097243e000 x18: ffffffffffffffff
-> x17: 0000000000000000 x16: 0000000000000000
-> x15: ffffb958fa0e9948 x14: ffff00095bd46303
-> x13: ffff00095bd46302 x12: 0000000000000038
-> x11: 0000000000000040 x10: ffffb958fa101e68
-> x9 : ffffb958fa101e60 x8 : 0000000000000908
-> x7 : 0000000000000908 x6 : ffff800011600000
-> x5 : ffff00095bd46800 x4 : ffff00096e7f6080
-> x3 : 0000000000000000 x2 : 0000000000000000
-> x1 : 0000000000000000 x0 : 0000000000000000
-> Kernel panic - not syncing: Asynchronous SError Interrupt
-> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
-> 
-> I think it's the expected result that "if the initial value of error
-> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER
-> then even after successful recovery (using reset_link()) pcie_do_recovery()
-> will report the recovery result as failure" which is described in
-> commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()").
-> 
-> Refer to the Documentation/PCI/pci-error-recovery.rst.
-> As the error_detect() is mandatory callback if the pci_err_handlers is
-> implemented, if it return the PCI_ERS_RESULT_DISCONNECT, it means the
-> driver doesn't want to recover at all;
-> For the case PCI_ERS_RESULT_NO_AER_DRIVER, if the pci_err_handlers is not
-> implemented, the failure is more expected.
-> 
-> Fixes: commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> All Intel platforms guarantee that all root complex implementations
+> must send transactions up to IOMMU for address translations. Hence for
+> RCiEP devices that are Vendor ID Intel, can claim exception for lack of
+> ACS support.
+>=20
+>=20
+> 3.16 Root-Complex Peer to Peer Considerations
+> When DMA remapping is enabled, peer-to-peer requests through the
+> Root-Complex must be handled
+> as follows:
+> =E2=80=A2 The input address in the request is translated (through first-l=
+evel,
+>   second-level or nested translation) to a host physical address (HPA).
+>   The address decoding for peer addresses must be done only on the
+>   translated HPA. Hardware implementations are free to further limit
+>   peer-to-peer accesses to specific host physical address regions
+>   (or to completely disallow peer-forwarding of translated requests).
+> =E2=80=A2 Since address translation changes the contents (address field) =
+of
+>   the PCI Express Transaction Layer Packet (TLP), for PCI Express
+>   peer-to-peer requests with ECRC, the Root-Complex hardware must use
+>   the new ECRC (re-computed with the translated address) if it
+>   decides to forward the TLP as a peer request.
+> =E2=80=A2 Root-ports, and multi-function root-complex integrated endpoint=
+s, may
+>   support additional peerto-peer control features by supporting PCI Expre=
+ss
+>   Access Control Services (ACS) capability. Refer to ACS capability in
+>   PCI Express specifications for details.
+>=20
+> Since Linux didn't give special treatment to allow this exception, certain
+> RCiEP MFD devices are getting grouped in a single iommu group. This
+> doesn't permit a single device to be assigned to a guest for instance.
+>=20
+> In one vendor system: Device 14.x were grouped in a single IOMMU group.
+>=20
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.3
+>=20
+> After the patch:
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+>=20
+> 14.0 and 14.2 are integrated devices, but legacy end points.
+> Whereas 14.3 was a PCIe compliant RCiEP.
+>=20
+> 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+> Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+>=20
+> This permits assigning this device to a guest VM.
+>=20
+> Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
+
+I don't really understand this Fixes tag.  This seems like a feature,
+not a fix.  If you want it in stable releases as a feature, request it
+via Cc: stable@vger.kernel.org.  I'd drop that tag, that's my nit.
+Otherwise:
+
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> To: Joerg Roedel <joro@8bytes.org>
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: iommu@lists.linux-foundation.org
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
+> Cc: Mark Scott <mscott@forcepoint.com>,
+> Cc: Romil Sharma <rsharma@forcepoint.com>
+> Cc: Ashok Raj <ashok.raj@intel.com>
 > ---
->   drivers/pci/pcie/err.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 14bb8f54723e..84f72342259c 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -165,8 +165,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	pci_dbg(dev, "broadcast error_detected message\n");
->   	if (state == pci_channel_io_frozen) {
->   		pci_walk_bus(bus, report_frozen_detected, &status);
-> -		status = reset_link(dev);
-> -		if (status != PCI_ERS_RESULT_RECOVERED) {
-> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
->   			pci_warn(dev, "link reset failed\n");
->   			goto failed;
->   		}
-> 
+> v2: Moved functionality from iommu to pci quirks - Alex Williamson
+>=20
+>  drivers/pci/quirks.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>=20
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 28c9a2409c50..63373ca0a3fe 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4682,6 +4682,20 @@ static int pci_quirk_mf_endpoint_acs(struct pci_de=
+v *dev, u16 acs_flags)
+>  		PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
+>  }
+> =20
+> +static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
+> +{
+> +	/*
+> +	 * RCiEP's are required to allow p2p only on translated addresses.
+> +	 * Refer to Intel VT-d specification Section 3.16 Root-Complex Peer
+> +	 * to Peer Considerations
+> +	 */
+> +	if (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_RC_END)
+> +		return -ENOTTY;
+> +
+> +	return pci_acs_ctrl_enabled(acs_flags,
+> +		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+> +}
+> +
+>  static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+>  {
+>  	/*
+> @@ -4764,6 +4778,7 @@ static const struct pci_dev_acs_enabled {
+>  	/* I219 */
+>  	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
+>  	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
+> +	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
+>  	/* QCOM QDF2xxx root ports */
+>  	{ PCI_VENDOR_ID_QCOM, 0x0400, pci_quirk_qcom_rp_acs },
+>  	{ PCI_VENDOR_ID_QCOM, 0x0401, pci_quirk_qcom_rp_acs },
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
