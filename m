@@ -2,84 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C83B81E5E90
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 13:42:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F3A01E63AC
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 16:22:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388441AbgE1LmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 May 2020 07:42:25 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:36776 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388427AbgE1LmY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 07:42:24 -0400
-Received: by mail-oo1-f66.google.com with SMTP id 18so917748ooy.3;
-        Thu, 28 May 2020 04:42:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nY9Gt3iZipKBlqZgOSR97jgJqUKPR4PYBCZrqkRD0Pc=;
-        b=JzsFST+jErypp1LcyKrkMqwK2FA07sE74xqXLiSkLmCsZWR6tN0H4LXznJNgjHugB/
-         +uKwggk8Bi+cCv4BIs+kQc9qyLrZezCoZLTcf/+ATZsveKBTUAdp1Y+bhtUMo9gtEBez
-         LQhMKntvtbSP101g2+vVqHWDjzDyKF3HL5DjWiMpfTDyn5+hg7zJS1mLrlburLgRqbDv
-         5Wr5Md3BmrKpEuioLxLC8erJ+9wc+LyA14XThSO3o5150Kg/Z+1UfuMzjo69cuUot5uD
-         nXSPC/NbSp9XQrFLkxOhlpbmcKtaqzNSdJCOV5f0wdhoM3+HApgj4rHRL0dDsQKiLs9E
-         HfJA==
-X-Gm-Message-State: AOAM530xE9jiTjEbYjF4UzRMdMEMuG/Z3ouK3y1zGJsJXqOulT57Mzsk
-        RiFzw2w+vTSWwBQ8hyDAii9AEy52Lyy7nP8wdx4=
-X-Google-Smtp-Source: ABdhPJzCOOgSLNbe3FHx2kCPFngkCbw8PjNF5b6OpmqSKFrub/Fk3eVTdV8/ZRvazaCaBO22RP7sIbATlLWeAXMMtZk=
-X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr2124959oot.1.1590666143690;
- Thu, 28 May 2020 04:42:23 -0700 (PDT)
+        id S2390980AbgE1OV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 10:21:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:53386 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390958AbgE1OVy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 May 2020 10:21:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81A5FD6E;
+        Thu, 28 May 2020 07:21:53 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 682B73F52E;
+        Thu, 28 May 2020 07:21:51 -0700 (PDT)
+Date:   Thu, 28 May 2020 15:21:39 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 0/8] R8A7742 add support for HSUSB and USB2.0/3.0
+Message-ID: <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
+References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-References: <1590655125-23949-1-git-send-email-yangyicong@hisilicon.com>
-In-Reply-To: <1590655125-23949-1-git-send-email-yangyicong@hisilicon.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 28 May 2020 13:42:10 +0200
-Message-ID: <CAJZ5v0g9O5r7tpLMN7SJu+KZEeEcdeTKeQ=hEo5r+VJzc6g08Q@mail.gmail.com>
-Subject: Re: [PATCH] PCI/ASPM: Print correct ASPM status when _OSC failed
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 28, 2020 at 10:39 AM Yicong Yang <yangyicong@hisilicon.com> wrote:
->
-> Previously we'll print wrong ASPM status if _OSC method return
-> failed. For example, if ASPM is enabled by setting pcie_aspm=force,
-> we get message below:
->
->     acpi PNP0A08:02: _OSC failed (AE_NOT_FOUND); disabling ASPM
->
-> Fix it and print correct ASPM status when _OSC failed.
->
-> Fixes: 1ad61b612b95 ("PCI/ACPI: Correct error message for ASPM disabling")
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->  drivers/acpi/pci_root.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index ac8ad6c..5140b26 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -456,7 +456,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->
->                 dev_info(&device->dev, "_OSC failed (%s)%s\n",
->                          acpi_format_exception(status),
-> -                        pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
-> +                        pcie_aspm_support_enabled() ? "" : "; disabling ASPM");
->                 return;
->         }
->
-> --
+On Sun, May 24, 2020 at 10:37:49PM +0100, Lad Prabhakar wrote:
+> Hi All,
+> 
+> This patch series adds support for HSUSB, USB2.0 and USB3.0 to
+> R8A7742 SoC DT.
+> 
+> This patch series applies on-top of [1].
+> 
+> [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=288491
 
-Applied as 5.8 material under the "ACPI: PCI: Fix the ASPM part of the
-_OSC failure message" subject and with a different changelog.
+I think Geert will pull this series, so I'd drop it from the PCI
+patchwork unless there is a reason I should not, please let me know.
 
-Thanks!
+Thanks,
+Lorenzo
+
+> Cheers,
+> Prabhakar
+> 
+> Lad Prabhakar (8):
+>   dt-bindings: phy: rcar-gen2: Add r8a7742 support
+>   dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
+>   dt-bindings: usb: renesas,usbhs: Add support for r8a7742
+>   dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
+>   dt-bindings: usb: usb-xhci: Document r8a7742 support
+>   ARM: dts: r8a7742: Add USB 2.0 host support
+>   ARM: dts: r8a7742: Add USB-DMAC and HSUSB device nodes
+>   ARM: dts: r8a7742: Add xhci support
+> 
+>  .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |   1 +
+>  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |   3 +-
+>  .../devicetree/bindings/phy/rcar-gen2-phy.txt      |   3 +-
+>  .../devicetree/bindings/usb/renesas,usbhs.yaml     |   1 +
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt |   1 +
+>  arch/arm/boot/dts/r8a7742.dtsi                     | 173 +++++++++++++++++++++
+>  6 files changed, 180 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
