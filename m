@@ -2,136 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D217C1E54D0
-	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 05:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C8BA1E576C
+	for <lists+linux-pci@lfdr.de>; Thu, 28 May 2020 08:18:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgE1D5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 May 2020 23:57:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:61851 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgE1D5Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 May 2020 23:57:24 -0400
-IronPort-SDR: kkNArJ+smRrZ9sjhjx+bvXgPRL9jbTlNPwjW+0ptniy7p6zmZL0pGoSSYIm2+FIqx1rYfF7f5P
- lQDYgWMus1EA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 20:57:24 -0700
-IronPort-SDR: 3S6L/iXfskcvbYhIzRmImXaUvfA2+HKW5UtcpSeXhdWNdrII+EDGo/MfL2BQhBOrSfj2BQ2edd
- z31UXpJcgA5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="414459895"
-Received: from davidowe-mobl.amr.corp.intel.com (HELO [10.255.229.1]) ([10.255.229.1])
-  by orsmga004.jf.intel.com with ESMTP; 27 May 2020 20:57:23 -0700
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     Yicong Yang <yangyicong@hisilicon.com>, bhelgaas@google.com
-Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
- <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
- <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
- <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
- <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
- <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
- <d59a5ec4-1a83-6cd4-805e-24e0a611cc3c@hisilicon.com>
- <9b2aecd8-b474-31b7-7cd2-1a8633a2485d@linux.intel.com>
- <a4bb15a1-2524-b4f7-524b-840ae41f9b49@hisilicon.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <7b15ffd4-ac9b-6753-63a7-dc6e2bfa30c8@linux.intel.com>
-Date:   Wed, 27 May 2020 20:57:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1727087AbgE1GSz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 May 2020 02:18:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:40887 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726913AbgE1GSy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 May 2020 02:18:54 -0400
+X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=k9n3h0/X69wAHhYT1nFTsKcL3wy3KEtSe7PgG0o+trw=;
+        b=hIAZb1puZnLEPVjq5jDmEkjVsbzUDIAt6MA0YBUDYkSkrXCtKWMYhOx7bqxk1MEBjozlQmX9srmcs67BfeqDYGT+EMtoEOAVnv9cvBYun9/Na6JQsNKGjFxIRNUB+2P0SSEGwb7wViOOFuUdFPTj7vHeJskAeY0zxtmq/2qBYrE=;
+X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1704384534; Thu, 28 May 2020 14:18:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 28 May 2020 14:18:47 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 28 May 2020 14:18:46 +0800
+From:   <chuanjia.liu@mediatek.com>
+To:     <robh+dt@kernel.org>, <ryder.lee@mediatek.com>,
+        <matthias.bgg@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <bhelgaas@google.com>,
+        <chuanjia.liu@mediatek.com>, <jianjun.wang@mediatek.com>,
+        <yong.wu@mediatek.com>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v2 0/4] Spilt PCIe node to comply with hardware design
+Date:   Thu, 28 May 2020 14:16:44 +0800
+Message-ID: <20200528061648.32078-1-chuanjia.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <a4bb15a1-2524-b4f7-524b-840ae41f9b49@hisilicon.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8CF1375321BD3043410D80C9D460D099090CF36CFC4DCB666F3A8866FC761E1E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+VGhlcmUgYXJlIHR3byBpbmRlcGVuZGVudCBQQ0llIGNvbnRyb2xsZXJzIGluIE1UMjcxMi9NVDc2
+MjIgcGxhdGZvcm0sDQphbmQgZWFjaCBvZiB0aGVtIHNob3VsZCBjb250YWluIGFuIGluZGVwZW5k
+ZW50IE1TSSBkb21haW4uDQoNCkluIGN1cnJlbnQgYXJjaGl0ZWN0dXJlLCBNU0kgZG9tYWluIHdp
+bGwgYmUgaW5oZXJpdGVkIGZyb20gdGhlIHJvb3QNCmJyaWRnZSwgYW5kIGFsbCBvZiB0aGUgZGV2
+aWNlcyB3aWxsIHNoYXJlIHRoZSBzYW1lIE1TSSBkb21haW4uDQpIZW5jZSB0aGF0LCB0aGUgUENJ
+ZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkgaWYgdGhlIGlycSBudW1iZXINCndoaWNo
+IHJlcXVpcmVkIGlzIG1vcmUgdGhhbiAzMi4NCg0KU3BsaXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQy
+NzEyL01UNzYyMiBwbGF0Zm9ybSB0byBmaXggTVNJIGlzc3VlIGFuZA0KY29tcGx5IHdpdGggdGhl
+IGhhcmR3YXJlIGRlc2lnbi4NCg0KY2hhbmdlIG5vdGU6DQp2MjogY2hhbmdlIHRoZSBhbGxvY2F0
+aW9uIG9mIG10MjcxMiBQQ0llIE1NSU8gc3BhY2UgZHVlIHRvIHRoZSBhbGxjYXRpb24NCnNpemUg
+aXMgbm90IHJpZ2h0IGluIHYxLg0KDQpjaHVhbmppYS5saXUgKDQpOg0KICBkdC1iaW5kaW5nczog
+UENJOiBNZWRpYXRlazogVXBkYXRlIFBDSWUgYmluZGluZw0KICBQQ0k6IG1lZGlhdGVrOiBVc2Ug
+cmVnbWFwIHRvIGdldCBzaGFyZWQgcGNpZS1jZmcgYmFzZQ0KICBhcm02NDogZHRzOiBtZWRpYXRl
+azogU3BsaXQgUENJZSBub2RlIGZvciBNVDI3MTIvTVQ3NjIyDQogIEFSTTogZHRzOiBtZWRpYXRl
+azogVXBkYXRlIG10NzYyOSBQQ0llIG5vZGUNCg0KIC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0ZWst
+cGNpZS1jZmcueWFtbCAgICAgICB8ICAzOCArKysrKw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BjaS9tZWRpYXRlay1wY2llLnR4dCB8IDE0NCArKysrKysrKysrKy0tLS0tLS0NCiBhcmNoL2Fy
+bS9ib290L2R0cy9tdDc2MjktcmZiLmR0cyAgICAgICAgICAgICAgfCAgIDMgKy0NCiBhcmNoL2Fy
+bS9ib290L2R0cy9tdDc2MjkuZHRzaSAgICAgICAgICAgICAgICAgfCAgMjMgKy0tDQogYXJjaC9h
+cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDI3MTJlLmR0c2kgICAgIHwgIDc1ICsrKysrLS0tLQ0K
+IC4uLi9kdHMvbWVkaWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzICB8ICAxNiArLQ0K
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLXJmYjEuZHRzICB8ICAgNiArLQ0K
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kgICAgICB8ICA2OCArKysr
+KystLS0NCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYyAgICAgICAgfCAg
+MjUgKystDQogOSBmaWxlcyBjaGFuZ2VkLCAyNTggaW5zZXJ0aW9ucygrKSwgMTQwIGRlbGV0aW9u
+cygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGNpL21lZGlhdGVrLXBjaWUtY2ZnLnlhbWwNCg0KLS0NCjIuMTguMA0KDQo=
 
-
-On 5/26/20 11:41 PM, Yicong Yang wrote:
->>> We should do slot reset if driver required, but it's different from the `slot reset` in pci_bus_error_reset().
->>> Previously we don't do a slot reset and call ->slot_reset() directly, I don't know the certain reason.
->> IIUC, your concern is whether it is correct to trigger reset for
->> pci_channel_io_normal case right ? Please correct me if my
->> assumption is incorrect.
-> right.
-> 
->> If its true, then why would report_error_detected() will return
->> PCI_ERS_*_NEED_RESET for pci_channel_io_normal case ? If
->> report_error_detected() requests reset in pci_channel_io_normal
->> case then I think we should give preference to it.
-> If we get PCI_ERS_*_NEED_RESET, we should do slot reset, no matter it's a
-> hotpluggable slot or not.
-
-pci_slot_reset() function itself has dependency on hotplug ops. So
-what kind of slot reset is needed for non-hotplug case?
-
-static int pci_slot_reset(struct pci_slot *slot, int probe)
-{
-	int rc;
-
-	if (!slot || !pci_slot_resetable(slot))
-		return -ENOTTY;
-
-	if (!probe)
-		pci_slot_lock(slot);
-
-	might_sleep();
-
-	rc = pci_reset_hotplug_slot(slot->hotplug, probe);
-
-	if (!probe)
-		pci_slot_unlock(slot);
-
-	return rc;
-}
-
-static int pci_reset_hotplug_slot(struct hotplug_slot *hotplug, int probe)
-{
-	int rc = -ENOTTY;
-
-	if (!hotplug || !try_module_get(hotplug->owner))
-		return rc;
-
-	if (hotplug->ops->reset_slot)
-		rc = hotplug->ops->reset_slot(hotplug, probe);
-
-	module_put(hotplug->owner);
-
-	return rc;
-}
-   And we shouldn't do it here in reset_link(), that's
-> two separate things.  The `slot reset` done in aer_root_reset() is only for *link
-> reset*, as there may have some side effects to perform secondary bus reset directly
-> for hotpluggable slot, as mentioned in commit c4eed62a2143, so it use slot reset
-> to do the reset link things.
-> 
-> As for slot reset required by the driver, we should perform it later just before the
-> ->slot_reset(). I noticed the TODO comments there and we should implement
-> it if it's necessary.
-I agree.
-> 
-> It lies in line 183, drivers/pcie/err.c:
-> 
->      if (status == PCI_ERS_RESULT_NEED_RESET) {
->          /*
->           * TODO: Should call platform-specific
->           * functions to reset slot before calling
->           * drivers' slot_reset callbacks?
->           */
->          status = PCI_ERS_RESULT_RECOVERED;
->          pci_dbg(dev, "broadcast slot_reset message\n");
->          pci_walk_bus(bus, report_slot_reset, &status);
->      }
-> 
-> 
