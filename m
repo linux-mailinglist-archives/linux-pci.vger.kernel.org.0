@@ -2,172 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1ED1E8594
-	for <lists+linux-pci@lfdr.de>; Fri, 29 May 2020 19:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 772921E85A7
+	for <lists+linux-pci@lfdr.de>; Fri, 29 May 2020 19:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgE2Rqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 May 2020 13:46:39 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34281 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgE2Rqh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 May 2020 13:46:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id m81so268061ioa.1;
-        Fri, 29 May 2020 10:46:36 -0700 (PDT)
+        id S1725913AbgE2RtC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 May 2020 13:49:02 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39959 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2RtC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 May 2020 13:49:02 -0400
+Received: by mail-io1-f65.google.com with SMTP id q8so233545iow.7;
+        Fri, 29 May 2020 10:49:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uFnVyxyYwJVoCZ3HaonYsIsN3iwvAc7JxY9rKZpt/K8=;
-        b=l226eS410I+Nw/TOFLAp1FhLh1I1GeQhc7SD+Ldf3t+CTKJPAmVoXhY+IKPVWjj/r2
-         razrkwqmRVUgw3dlhVUs3OcYdfr5c9mFY8/3+Pm6W1ALo4RC4Q8oJuB8nsleuiIIpMgs
-         8cffKVb3x1ECSVyW3ozg+xwiScajiffOyJPGt+T0T7paG61h9MaTdaeNb0aJcxUXpTz1
-         geCGVhRa8vFjWjqsA1VX4RtNzTWzvide01y/9RGRK5EgsCkubU0Qkp2gDbC1rVUjcNRn
-         NGdia5jLl1y8/OmeY7pz2TA3rk9mOk3bRzq9V3rvMy7MXBv/e0gRwQtry+fODTTXIAYt
-         ROPQ==
-X-Gm-Message-State: AOAM531iKL0w/yZnV0egcyV5aDwcW2v5l8ghBXwo3+8R4hBLIvqYQoxZ
-        +5uzNz5vaUVt/BvZwlnWYA==
-X-Google-Smtp-Source: ABdhPJwjS3w7ZtKakac5v5DKPoWn+fDmbQuB2ZUlOeCmiF3wBEkiaj9LvMIYSiXwx3MBAzX8lp3xHQ==
-X-Received: by 2002:a02:a78e:: with SMTP id e14mr8439243jaj.9.1590774395987;
-        Fri, 29 May 2020 10:46:35 -0700 (PDT)
+        bh=BLn5568WhOcT6+u2ym9/jBhSyqxnYH4n/L9rj2t60QE=;
+        b=d54Y283E1oQ+RjivvIpjdY9uNABr5wdispcYRSKOHcKa9/rUU34cTLD3XdajfnzzhS
+         FDFS/frsja7WGqBBmoDx9cvAp/dh+A9b504SX8x3NwTQJcGDnOoI5tU3AA5Nb6HvUvQy
+         QlJ0a578sr6ytgdqOzjJ2VyU7DUAwz5FNQOgQPuyy55+kdT5gYl64R8oB7BI+SIbsJDh
+         Fn4HG7ms2wSFzurdV6NebxCkPVzOI3HUPUZkHnya7L93gsW6w57D7iJeIBYnoLfxaYVD
+         4+yScvvXkk5+NO6LukXr9A1qjTJYWg7XJUryX0UOxCdjzquhBvW46DLWD1Z+pjd/liYF
+         NyiA==
+X-Gm-Message-State: AOAM53259brQHbu8tkTd9wo8PEiTLcvulzL/TY3G9AXUwJ3Ct+a1SEk9
+        JP1MuK57hR+lwPpywtMsxg==
+X-Google-Smtp-Source: ABdhPJy7YUF3lpxrD7YMnpI0UvB3HdDPYFVO6rRfufgNQwXAXOB9FeWO8U/8UblJM9K1CPtEmWfdwQ==
+X-Received: by 2002:a02:1443:: with SMTP id 64mr2603674jag.43.1590774540749;
+        Fri, 29 May 2020 10:49:00 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j2sm4022503ioo.8.2020.05.29.10.46.34
+        by smtp.gmail.com with ESMTPSA id t22sm4001987iom.49.2020.05.29.10.48.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:46:35 -0700 (PDT)
-Received: (nullmailer pid 2640143 invoked by uid 1000);
-        Fri, 29 May 2020 17:46:34 -0000
-Date:   Fri, 29 May 2020 11:46:34 -0600
+        Fri, 29 May 2020 10:49:00 -0700 (PDT)
+Received: (nullmailer pid 2643995 invoked by uid 1000);
+        Fri, 29 May 2020 17:48:58 -0000
+Date:   Fri, 29 May 2020 11:48:58 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Jim Quinlan <james.quinlan@broadcom.com>
 Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Corey Minyard <minyard@acm.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
+        Julien Grall <julien.grall@arm.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/14] dt-bindings: PCI: Add bindings for more Brcmstb
- chips
-Message-ID: <20200529174634.GA2630216@bogus>
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v2 00/14] PCI: brcmstb: enable PCIe for STB chips
+Message-ID: <20200529174858.GA2640397@bogus>
 References: <20200526191303.1492-1-james.quinlan@broadcom.com>
- <20200526191303.1492-4-james.quinlan@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526191303.1492-4-james.quinlan@broadcom.com>
+In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 26, 2020 at 03:12:42PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
+On Tue, May 26, 2020 at 03:12:39PM -0400, Jim Quinlan wrote:
+> v2:
+> Commit: "device core: Add ability to handle multiple dma offsets"
+>   o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
+>   o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
+>   o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
+>   o dev->dma_pfn_map => dev->dma_pfn_offset_map
+>   o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
+>   o In device.h: s/const void */const struct dma_pfn_offset_region */
+>   o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
+>     guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
+>   o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
+>     dev->dma_pfn_offset_map is copied as well.
+>   o Merged two of the DMA commits into one (Christoph).
 > 
-> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
->   7211 (STB version of RPi4).
-> - add new property 'brcm,scb-sizes'
-> - add new property 'resets'
-> - add new property 'reset-names'
-> - allow 'ranges' and 'dma-ranges' to have more than one item and update
->   the example to show this.
+> Commit "arm: dma-mapping: Invoke dma offset func if needed":
+>   o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
 > 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
->  1 file changed, 36 insertions(+), 4 deletions(-)
+> Other commits' changes:
+>   o Removed need for carrying of_id var in priv (Nicolas)
+>   o Commit message rewordings (Bjorn)
+>   o Commit log messages filled to 75 chars (Bjorn)
+>   o devm_reset_control_get_shared())
+>     => devm_reset_control_get_optional_shared (Philipp)
+>   o Add call to reset_control_assert() in PCIe remove routines (Philipp)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 8680a0f86c5a..66a7df45983d 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -14,7 +14,13 @@ allOf:
->  
->  properties:
->    compatible:
-> -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> +    items:
-> +      - enum:
-
-Don't need items here. Just change the const to enum.
-
-> +          - brcm,bcm2711-pcie # The Raspberry Pi 4
-> +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-> +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
->  
->    reg:
->      maxItems: 1
-> @@ -34,10 +40,12 @@ properties:
->        - const: msi
->  
->    ranges:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 4
->  
->    dma-ranges:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 6
->  
->    clocks:
->      maxItems: 1
-> @@ -58,8 +66,30 @@ properties:
->  
->    aspm-no-l0s: true
->  
-> +  resets:
-> +    description: for "brcm,bcm7216-pcie", must be a valid reset
-> +      phandle pointing to the RESCAL reset controller provider node.
-> +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +  reset-names:
-> +    items:
-> +      - const: rescal
-
-These are going to need to be an if/then schema if they only apply to 
-certain compatible(s).
-
-> +
-> +  brcm,scb-sizes:
-> +    description: (u32, u32) tuple giving the 64bit PCIe memory
-> +      viewport size of a memory controller.  There may be up to
-> +      three controllers, and each size must be a power of two
-> +      with a size greater or equal to the amount of memory the
-> +      controller supports.
-
-This sounds like what dma-ranges should express?
-
-If not, we do have 64-bit size if that what you need.
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - items:
-> +          minItems: 2
-> +          maxItems: 6
-> +
->  required:
->    - reg
-> +  - ranges
->    - dma-ranges
->    - "#interrupt-cells"
->    - interrupts
-> @@ -93,7 +123,9 @@ examples:
->                      msi-parent = <&pcie0>;
->                      msi-controller;
->                      ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> -                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> +                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
-> +                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
->                      brcm,enable-ssc;
-> +                    brcm,scb-sizes = <0x0 0x80000000 0x0 0x80000000>;
->              };
->      };
-> -- 
-> 2.17.1
+> v1:
+> This patchset expands the usefulness of the Broadcom Settop Box PCIe
+> controller by building upon the PCIe driver used currently by the
+> Raspbery Pi.  Other forms of this patchset were submitted by me years
+> ago and not accepted; the major sticking point was the code required
+> for the DMA remapping needed for the PCIe driver to work [1].
 > 
+> There have been many changes to the DMA and OF subsystems since that
+> time, making a cleaner and less intrusive patchset possible.  This
+> patchset implements a generalization of "dev->dma_pfn_offset", except
+> that instead of a single scalar offset it provides for multiple
+> offsets via a function which depends upon the "dma-ranges" property of
+> the PCIe host controller.  This is required for proper functionality
+> of the BrcmSTB PCIe controller and possibly some other devices.
+
+If you can enable the h/w support without the multiple offset support, 
+then I'd split up this series. The latter part might take a bit more 
+time.
+
+Rob
