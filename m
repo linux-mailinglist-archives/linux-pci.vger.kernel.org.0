@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 304601E888A
-	for <lists+linux-pci@lfdr.de>; Fri, 29 May 2020 22:07:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 154A51E888C
+	for <lists+linux-pci@lfdr.de>; Fri, 29 May 2020 22:07:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgE2UGu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 May 2020 16:06:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5394 "EHLO huawei.com"
+        id S1728291AbgE2UGz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 May 2020 16:06:55 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5314 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726926AbgE2UGu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 29 May 2020 16:06:50 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B02AE644CBE28D916EC3;
-        Sat, 30 May 2020 04:06:47 +0800 (CST)
+        id S1726926AbgE2UGy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 29 May 2020 16:06:54 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B498D3ACF996C87EBE9A;
+        Sat, 30 May 2020 04:06:52 +0800 (CST)
 Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.91.30) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 30 May 2020 04:06:38 +0800
+ 14.3.487.0; Sat, 30 May 2020 04:06:42 +0800
 From:   Shiju Jose <shiju.jose@huawei.com>
 To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
@@ -24,11 +24,11 @@ To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <lenb@kernel.org>, <tony.luck@intel.com>,
         <dan.carpenter@oracle.com>, <gregkh@linuxfoundation.org>,
         <zhangliguang@linux.alibaba.com>, <tglx@linutronix.de>
-CC:     Shiju Jose <shiju.jose@huawei.com>, <linuxarm@huawei.com>,
-        <yangyicong@hisilicon.com>
-Subject: [PATCH RESEND v8 1/2] ACPI / APEI: Add support to notify the vendor specific HW errors
-Date:   Fri, 29 May 2020 21:04:42 +0100
-Message-ID: <20200529200443.736-2-shiju.jose@huawei.com>
+CC:     Yicong Yang <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH RESEND v8 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+Date:   Fri, 29 May 2020 21:04:43 +0100
+Message-ID: <20200529200443.736-3-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -40,253 +40,397 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to report the vendor specific non-fatal HW errors
-to the drivers for the error recovery.
+From: Yicong Yang <yangyicong@hisilicon.com>
 
+The HiSilicon HIP PCIe controller is capable of handling errors
+on root port and perform port reset separately at each root port.
+
+This patch add error handling driver for HIP PCIe controller to log
+and report recoverable errors. Perform root port reset and restore
+link status after the recovery.
+
+Following are some of the PCIe controller's recoverable errors
+1. completion transmission timeout error.
+2. CRS retry counter over the threshold error.
+3. ECC 2 bit errors
+4. AXI bresponse/rresponse errors etc.
+
+The driver placed in the drivers/pci/controller/ because the
+HIP PCIe controller does not use DWC ip.
+
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+--
+drivers/pci/controller/Kconfig           |   8 +
+drivers/pci/controller/Makefile          |   1 +
+drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
+3 files changed, 345 insertions(+)
+create mode 100644 drivers/pci/controller/pcie-hisi-error.c
 ---
- drivers/acpi/apei/ghes.c | 130 ++++++++++++++++++++++++++++++++++++++-
- include/acpi/ghes.h      |  28 +++++++++
- 2 files changed, 157 insertions(+), 1 deletion(-)
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 321 +++++++++++++++++++++++
+ 3 files changed, 330 insertions(+)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 24c9642e8fc7..2d10709b2eb5 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -33,6 +33,7 @@
- #include <linux/irq_work.h>
- #include <linux/llist.h>
- #include <linux/genalloc.h>
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 91bfdb784829..7ba4b94f8604 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -258,6 +258,14 @@ config PCI_HYPERV_INTERFACE
+ 	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+ 	  have a common interface with the Hyper-V PCI frontend driver.
+ 
++config PCIE_HISI_ERR
++	depends on ARM64 || COMPILE_TEST
++	depends on ACPI
++	bool "HiSilicon HIP PCIe controller error handling driver"
++	help
++	  Say Y here if you want error handling support
++	  for the PCIe controller's errors on HiSilicon HIP SoCs
++
+ source "drivers/pci/controller/dwc/Kconfig"
+ source "drivers/pci/controller/mobiveil/Kconfig"
+ source "drivers/pci/controller/cadence/Kconfig"
+diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+index 158c59771824..ab3a528bf988 100644
+--- a/drivers/pci/controller/Makefile
++++ b/drivers/pci/controller/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+ obj-$(CONFIG_VMD) += vmd.o
+ obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
++obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
+ # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+ obj-y				+= dwc/
+ obj-y				+= mobiveil/
+diff --git a/drivers/pci/controller/pcie-hisi-error.c b/drivers/pci/controller/pcie-hisi-error.c
+new file mode 100644
+index 000000000000..7886df01fd8a
+--- /dev/null
++++ b/drivers/pci/controller/pcie-hisi-error.c
+@@ -0,0 +1,321 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Driver for handling the PCIe controller errors on
++ * HiSilicon HIP SoCs.
++ *
++ * Copyright (c) 2018-2019 HiSilicon Limited.
++ */
++
++#include <linux/acpi.h>
++#include <acpi/ghes.h>
++#include <linux/delay.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
 +#include <linux/kfifo.h>
- #include <linux/pci.h>
- #include <linux/pfn.h>
- #include <linux/aer.h>
-@@ -63,6 +64,11 @@
- #define GHES_ESTATUS_CACHES_SIZE	4
- 
- #define GHES_ESTATUS_IN_CACHE_MAX_NSEC	10000000000ULL
++#include <linux/spinlock.h>
 +
-+#define GHES_EVENT_RING_SIZE	256
-+#define GHES_GDATA_POOL_MIN_ALLOC_ORDER	3
-+#define GHES_GDATA_POOL_MIN_SIZE	65536
++#define	HISI_PCIE_ERR_INFO_SIZE	1024
 +
- /* Prevent too many caches are allocated because of RCU */
- #define GHES_ESTATUS_CACHE_ALLOCED_MAX	(GHES_ESTATUS_CACHES_SIZE * 3 / 2)
- 
-@@ -122,6 +128,19 @@ static DEFINE_MUTEX(ghes_list_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
- 
-+struct ghes_event_entry {
-+	struct acpi_hest_generic_data *gdata;
-+	int error_severity;
++/* HISI PCIe controller error definitions */
++#define HISI_PCIE_ERR_MISC_REGS	33
++
++#define HISI_PCIE_SUB_MODULE_ID_AP	0
++#define HISI_PCIE_SUB_MODULE_ID_TL	1
++#define HISI_PCIE_SUB_MODULE_ID_MAC	2
++#define HISI_PCIE_SUB_MODULE_ID_DL	3
++#define HISI_PCIE_SUB_MODULE_ID_SDI	4
++
++#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
++#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
++#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
++#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
++#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
++#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
++#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
++#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
++#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
++#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
++
++#define HISI_ERR_SEV_RECOVERABLE	0
++#define HISI_ERR_SEV_FATAL		1
++#define HISI_ERR_SEV_CORRECTED		2
++#define HISI_ERR_SEV_NONE		3
++
++static guid_t hisi_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
++			0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
++
++#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
++#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
++#define HISI_PCIE_CORE_PORT_ID(v)        (((v) % 8) << 1)
++
++struct hisi_pcie_error_data {
++	u64	val_bits;
++	u8	version;
++	u8	soc_id;
++	u8	socket_id;
++	u8	nimbus_id;
++	u8	sub_module_id;
++	u8	core_id;
++	u8	port_id;
++	u8	err_severity;
++	u16	err_type;
++	u8	reserv[2];
++	u32	err_misc[HISI_PCIE_ERR_MISC_REGS];
 +};
 +
-+static DEFINE_KFIFO(ghes_event_ring, struct ghes_event_entry,
-+		    GHES_EVENT_RING_SIZE);
++struct hisi_pcie_error_private {
++	struct notifier_block	nb;
++	struct platform_device	*pdev;
++};
 +
-+static DEFINE_SPINLOCK(ghes_event_ring_lock);
-+
-+static struct gen_pool *ghes_gdata_pool;
-+static unsigned long ghes_gdata_pool_size_request;
-+
- static struct gen_pool *ghes_estatus_pool;
- static unsigned long ghes_estatus_pool_size_request;
- 
-@@ -188,6 +207,40 @@ int ghes_estatus_pool_init(int num_ghes)
- 	return -ENOMEM;
- }
- 
-+int ghes_gdata_pool_init(void)
++static char *hisi_pcie_sub_module_name(u8 id)
 +{
-+	unsigned long addr, len;
-+	int rc;
++	switch (id) {
++	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
++	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
++	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
++	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
++	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
++	}
 +
-+	ghes_gdata_pool = gen_pool_create(GHES_GDATA_POOL_MIN_ALLOC_ORDER, -1);
-+	if (!ghes_gdata_pool)
-+		return -ENOMEM;
++	return "unknown";
++}
 +
-+	if (ghes_gdata_pool_size_request < GHES_GDATA_POOL_MIN_SIZE)
-+		ghes_gdata_pool_size_request = GHES_GDATA_POOL_MIN_SIZE;
++static char *hisi_pcie_error_severity(u8 err_sev)
++{
++	switch (err_sev) {
++	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
++	case HISI_ERR_SEV_FATAL: return "fatal";
++	case HISI_ERR_SEV_CORRECTED: return "corrected";
++	case HISI_ERR_SEV_NONE: return "none";
++	}
 +
-+	len = ghes_gdata_pool_size_request;
-+	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-+	if (!addr)
-+		goto err_pool_alloc;
++	return "unknown";
++}
 +
-+	vmalloc_sync_mappings();
++static int hisi_pcie_port_reset(struct platform_device *pdev,
++				u32 chip_id, u32 port_id)
++{
++	struct device *dev = &pdev->dev;
++	acpi_handle handle = ACPI_HANDLE(dev);
++	union acpi_object arg[3];
++	struct acpi_object_list arg_list;
++	acpi_status s;
++	unsigned long long data = 0;
 +
-+	rc = gen_pool_add(ghes_gdata_pool, addr, PAGE_ALIGN(len), -1);
-+	if (rc)
-+		goto err_pool_add;
++	arg[0].type = ACPI_TYPE_INTEGER;
++	arg[0].integer.value = chip_id;
++	arg[1].type = ACPI_TYPE_INTEGER;
++	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
++	arg[2].type = ACPI_TYPE_INTEGER;
++	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
++
++	arg_list.count = 3;
++	arg_list.pointer = arg;
++
++	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
++	if (ACPI_FAILURE(s)) {
++		dev_err(dev, "No RST method\n");
++		return -EIO;
++	}
++
++	if (data) {
++		dev_err(dev, "Failed to Reset\n");
++		return -EIO;
++	}
 +
 +	return 0;
-+
-+err_pool_add:
-+	vfree((void *)addr);
-+
-+err_pool_alloc:
-+	gen_pool_destroy(ghes_gdata_pool);
-+
-+	return -ENOMEM;
 +}
 +
- static int map_gen_v2(struct ghes *ghes)
- {
- 	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
-@@ -247,6 +300,10 @@ static struct ghes *ghes_new(struct acpi_hest_generic *generic)
- 		goto err_unmap_status_addr;
- 	}
- 
-+	ghes_gdata_pool_size_request += generic->records_to_preallocate *
-+					generic->max_sections_per_record *
-+					generic->max_raw_data_length;
-+
- 	return ghes;
- 
- err_unmap_status_addr:
-@@ -490,6 +547,68 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #endif
- }
- 
-+static BLOCKING_NOTIFIER_HEAD(ghes_event_notify_list);
-+
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ *
-+ * return 0 : SUCCESS, non-zero : FAIL
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb)
++static int hisi_pcie_port_do_recovery(struct platform_device *dev,
++				      u32 chip_id, u32 port_id)
 +{
-+	return blocking_notifier_chain_register(&ghes_event_notify_list, nb);
++	acpi_status s;
++	struct device *device = &dev->dev;
++	acpi_handle root_handle = ACPI_HANDLE(device);
++	struct acpi_pci_root *pci_root;
++	struct pci_bus *root_bus;
++	struct pci_dev *pdev;
++	u32 domain, busnr, devfn;
++
++	s = acpi_get_parent(root_handle, &root_handle);
++	if (ACPI_FAILURE(s))
++		return -ENODEV;
++	pci_root = acpi_pci_find_root(root_handle);
++	if (!pci_root)
++		return -ENODEV;
++	root_bus = pci_root->bus;
++	domain = pci_root->segment;
++
++	busnr = root_bus->number;
++	devfn = PCI_DEVFN(port_id, 0);
++	pdev = pci_get_domain_bus_and_slot(domain, busnr, devfn);
++	if (!pdev) {
++		dev_info(device, "Fail to get root port %04x:%02x:%02x.%d device\n",
++			 domain, busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
++		return -ENODEV;
++	}
++
++	pci_stop_and_remove_bus_device_locked(pdev);
++	pci_dev_put(pdev);
++
++	if (hisi_pcie_port_reset(dev, chip_id, port_id))
++		return -EIO;
++
++	/*
++	 * The initialization time of subordinate devices after
++	 * hot reset is no more than 1s, which is required by
++	 * the PCI spec v5.0 sec 6.6.1. The time will shorten
++	 * if Readiness Notifications mechanisms are used. But
++	 * wait 1s here to adapt any conditions.
++	 */
++	ssleep(1UL);
++
++	/* add root port and downstream devices */
++	pci_lock_rescan_remove();
++	pci_rescan_bus(root_bus);
++	pci_unlock_rescan_remove();
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
 +
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb)
++static void hisi_pcie_handle_error(const struct hisi_pcie_error_data *error,
++				   struct platform_device *pdev)
 +{
-+	blocking_notifier_chain_unregister(&ghes_event_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
++	char buf[HISI_PCIE_ERR_INFO_SIZE];
++	char *p = buf, *end = buf + sizeof(buf);
++	struct device *dev = &pdev->dev;
++	u32 i;
++	int rc;
 +
-+static void ghes_event_work_func(struct work_struct *work)
-+{
-+	struct ghes_event_entry entry;
-+	u32 len;
++	if (error->val_bits == 0) {
++		dev_warn(dev, "%s: no valid error information\n", __func__);
++		return;
++	}
 +
-+	while (kfifo_get(&ghes_event_ring, &entry)) {
-+		blocking_notifier_call_chain(&ghes_event_notify_list,
-+					     entry.error_severity,
-+					     entry.gdata);
-+		len = acpi_hest_get_record_size(entry.gdata);
-+		gen_pool_free(ghes_gdata_pool, (unsigned long)entry.gdata, len);
++	/* Logging */
++	p += snprintf(p, end - p, "[ Table version=%d ", error->version);
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
++		p += snprintf(p, end - p, "SOC ID=%d ", error->soc_id);
++
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
++		p += snprintf(p, end - p, "socket ID=%d ", error->socket_id);
++
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
++		p += snprintf(p, end - p, "nimbus ID=%d ", error->nimbus_id);
++
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
++		p += snprintf(p, end - p, "sub module=%s ",
++			      hisi_pcie_sub_module_name(error->sub_module_id));
++
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
++		p += snprintf(p, end - p, "core ID=core%d ", error->core_id);
++
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
++		p += snprintf(p, end - p, "port ID=port%d ", error->port_id);
++
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
++		p += snprintf(p, end - p, "error severity=%s ",
++			      hisi_pcie_error_severity(error->err_severity));
++
++	if (error->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
++		p += snprintf(p, end - p, "error type=0x%x ", error->err_type);
++
++	p += snprintf(p, end - p, "]\n");
++	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
++	dev_info(dev, "%s\n", buf);
++
++	dev_info(dev, "Reg Dump:\n");
++	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
++		if (error->val_bits &
++				BIT_ULL(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
++			dev_info(dev,
++				 "ERR_MISC_%d=0x%x\n", i, error->err_misc[i]);
++	}
++
++	/* Recovery for the PCIe controller errors */
++	if (error->err_severity == HISI_ERR_SEV_RECOVERABLE) {
++		/* try reset PCI port for the error recovery */
++		rc = hisi_pcie_port_do_recovery(pdev, error->socket_id,
++			HISI_PCIE_PORT_ID(error->core_id, error->port_id));
++		if (rc) {
++			dev_info(dev, "fail to do hisi pcie port reset\n");
++			return;
++		}
 +	}
 +}
 +
-+static DECLARE_WORK(ghes_event_work, ghes_event_work_func);
-+
-+static void ghes_handle_non_standard_event(struct acpi_hest_generic_data *gdata,
-+					   int sev)
++static int hisi_pcie_notify_error(struct notifier_block *nb,
++				  unsigned long event, void *data)
 +{
-+	u32 len;
-+	struct ghes_event_entry event_entry;
++	struct acpi_hest_generic_data *gdata = data;
++	const struct hisi_pcie_error_data *error_data =
++				acpi_hest_get_payload(gdata);
++	struct hisi_pcie_error_private *priv =
++			container_of(nb, struct hisi_pcie_error_private, nb);
++	struct platform_device *pdev = priv->pdev;
++	struct device *dev = &pdev->dev;
++	u8 socket;
 +
-+	len = acpi_hest_get_record_size(gdata);
-+	event_entry.gdata = (void *)gen_pool_alloc(ghes_gdata_pool, len);
-+	if (event_entry.gdata) {
-+		memcpy(event_entry.gdata, gdata, len);
-+		event_entry.error_severity = sev;
++	if (device_property_read_u8(dev, "socket", &socket))
++		return NOTIFY_DONE;
 +
-+		if (kfifo_in_spinlocked(&ghes_event_ring, &event_entry, 1,
-+					&ghes_event_ring_lock))
-+			schedule_work(&ghes_event_work);
-+		else
-+			pr_warn(GHES_PFX "ghes event queue full\n");
-+	}
++	if (!guid_equal((guid_t *)gdata->section_type, &hisi_pcie_sec_type) ||
++	    error_data->socket_id != socket)
++		return NOTIFY_DONE;
++
++	hisi_pcie_handle_error(error_data, pdev);
++
++	return NOTIFY_OK;
 +}
 +
- static void ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
-@@ -527,6 +646,7 @@ static void ghes_do_proc(struct ghes *ghes,
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
-+			ghes_handle_non_standard_event(gdata, sev);
- 			log_non_standard_event(sec_type, fru_id, fru_text,
- 					       sec_sev, err,
- 					       gdata->error_data_length);
-@@ -1334,7 +1454,7 @@ static int __init ghes_init(void)
- 
- 	rc = platform_driver_register(&ghes_platform_driver);
- 	if (rc)
--		goto err;
-+		goto exit;
- 
- 	rc = apei_osc_setup();
- 	if (rc == 0 && osc_sb_apei_support_acked)
-@@ -1346,8 +1466,16 @@ static int __init ghes_init(void)
- 	else
- 		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
- 
-+	rc = ghes_gdata_pool_init();
-+	if (rc) {
-+		pr_warn(GHES_PFX "ghes_gdata_pool_init failed\n");
-+		goto err;
++static int hisi_pcie_error_handler_probe(struct platform_device *pdev)
++{
++	struct hisi_pcie_error_private *priv;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->nb.notifier_call = hisi_pcie_notify_error;
++	priv->pdev = pdev;
++	ret = ghes_register_event_notifier(&priv->nb);
++	if (ret) {
++		dev_err(&pdev->dev, "%s : ghes_register_event_notifier fail\n",
++			__func__);
++		return ret;
 +	}
 +
- 	return 0;
- err:
-+	platform_driver_unregister(&ghes_platform_driver);
-+exit:
- 	return rc;
- }
- device_initcall(ghes_init);
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index e3f1cddb4ac8..a3dd82069069 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -50,6 +50,34 @@ enum {
- 	GHES_SEV_PANIC = 0x3,
- };
- 
++	platform_set_drvdata(pdev, priv);
 +
-+#ifdef CONFIG_ACPI_APEI_GHES
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ *
-+ * Return : 0 - SUCCESS, non-zero - FAIL.
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb);
-+
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb);
-+#else
-+static inline int ghes_register_event_notifier(struct notifier_block *nb)
-+{
-+	return -ENODEV;
++	return 0;
 +}
 +
-+static inline void ghes_unregister_event_notifier(struct notifier_block *nb)
++static int hisi_pcie_error_handler_remove(struct platform_device *pdev)
 +{
-+}
-+#endif
++	struct hisi_pcie_error_private *priv = platform_get_drvdata(pdev);
 +
- int ghes_estatus_pool_init(int num_ghes);
- 
- /* From drivers/edac/ghes_edac.c */
++	ghes_unregister_event_notifier(&priv->nb);
++	kfree(priv);
++
++	return 0;
++}
++
++static const struct acpi_device_id hisi_pcie_acpi_match[] = {
++	{ "HISI0361", 0 },
++	{ }
++};
++
++static struct platform_driver hisi_pcie_error_handler_driver = {
++	.driver = {
++		.name	= "hisi-pcie-error-handler",
++		.acpi_match_table = hisi_pcie_acpi_match,
++	},
++	.probe		= hisi_pcie_error_handler_probe,
++	.remove		= hisi_pcie_error_handler_remove,
++};
++module_platform_driver(hisi_pcie_error_handler_driver);
++
++MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
