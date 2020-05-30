@@ -2,131 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BA8F1E910B
-	for <lists+linux-pci@lfdr.de>; Sat, 30 May 2020 14:02:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BD2D1E9438
+	for <lists+linux-pci@lfdr.de>; Sun, 31 May 2020 00:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgE3MCr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 30 May 2020 08:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgE3MCr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 May 2020 08:02:47 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA9AC03E969
-        for <linux-pci@vger.kernel.org>; Sat, 30 May 2020 05:02:46 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id mb16so4708868ejb.4
-        for <linux-pci@vger.kernel.org>; Sat, 30 May 2020 05:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=Qxa3M/MvhiqYKdmf/w4n6AgdA8qRvXt1CZdlD0nn0dE=;
-        b=V5JEhX+GECWPyRQqPDQJdi5geznMXyJZx8MY8e6NlzfAooWiBWpSEfenSLtcvUuzIZ
-         EA14NrnXxgOwrmZN2ehvhCuSLYnnQM0zSnQde/3r6fuYVBlxlf/WBBudM+4W+EhYjTB4
-         NaeAmEEJjpCpqMdZywqR+wrwbfovGywYBkNPFDE5n4Ez7CUBMSpNKWcm/Yh/UV6SDpgD
-         RJBRpxRS+euuwmmQuJn97F11/lJoCZi7Y5doeKxQmC3HGklRkwsUMzI+byBGuQO9jKNP
-         PFJlFwW3bMl8g2SpSuhyku+tRQXAa8bim9Nqiss/+z2s40ASlSooGQfSuPCc1R0cNNDq
-         B8YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=Qxa3M/MvhiqYKdmf/w4n6AgdA8qRvXt1CZdlD0nn0dE=;
-        b=FCg7B2HI9q9ocB+8IvyMoy+bpi4eNG0SadTxk0OMDLe0EYndgbv7NofLrqEhV4axjX
-         HPzulfAhih0ebooDlrKrF0ThEkGhBhHI6CBwRQN4VICW+ElMkyu4sss2EurWivabkObD
-         nXowWbDzdwfMXc2A93WuyZBaG7f8QE5Dkm/b2tlaJNVoPER3kK95fEL2ogtRtsse4iMc
-         6OeVG0UyCW8EqRKJNWZyTcsY9YfJ3yUBCO73Kef6L4eL7UJSqrlRbb0pyc05Gt0d/XAH
-         10xxtoOMfMAQCpuzLqb7kqhGTryc9KhOLjGROBT3zOJyvn0u2uEBDOuNFlX8OtbtUohk
-         1fyQ==
-X-Gm-Message-State: AOAM531Tb3gP6WwAyXfrsHP5VuCotCcpeacJpGm+ud3pp81sImNiSp1/
-        8XLesRZZTM2erFdeanDQCMj3uDY4kj9Is+i6PNI=
-X-Google-Smtp-Source: ABdhPJzUTWhwW/ulsaKguYvv2NHip2y4pUitCeKpMk4aL1vZPIYOYQj7ZeKw2xmSvtd13XRVedQbgcLKd1HVlS3XinY=
-X-Received: by 2002:a17:906:51c9:: with SMTP id v9mr5063911ejk.337.1590840165280;
- Sat, 30 May 2020 05:02:45 -0700 (PDT)
+        id S1729183AbgE3WZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 30 May 2020 18:25:39 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55378 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729083AbgE3WZi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 May 2020 18:25:38 -0400
+Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+         client-signature RSA-PSS (1024 bits) client-digest SHA256)
+        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
+        by jabberwock.ucw.cz (Postfix) with ESMTPS id ED5911C0BD2
+        for <linux-pci@vger.kernel.org>; Sun, 31 May 2020 00:25:36 +0200 (CEST)
+Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
+        id C47761A103F; Sun, 31 May 2020 00:25:36 +0200 (CEST)
+Date:   Sun, 31 May 2020 00:25:36 +0200
+From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To:     Linux-PCI Mailing List <linux-pci@vger.kernel.org>
+Subject: pciutils-3.7.0 released
+Message-ID: <mj+md-20200530.222433.78612.albireo@ucw.cz>
 MIME-Version: 1.0
-Reply-To: rmst227@gmail.com
-Received: by 2002:a17:906:f0a:0:0:0:0 with HTTP; Sat, 30 May 2020 05:02:44
- -0700 (PDT)
-From:   "MUSTAFA.R" <rm2568590@gmail.com>
-Date:   Sat, 30 May 2020 14:02:44 +0200
-X-Google-Sender-Auth: 853U8ilJjxiedja0sMjPnFZzN7k
-Message-ID: <CANvJxG3nUw8fLEy5tVu6-yN1GcQQWc2eBHp87aNCzcy800XmfQ@mail.gmail.com>
-Subject: Assalamualaikum My Dear Friend,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spamd-Bar: /
+X-Spam-Status: No, score=-0.60
+X-Spamd-Result: default: False [-0.60 / 15.00];
+         MID_RHS_MATCH_FROM(0.00)[];
+         ARC_NA(0.00)[];
+         BAYES_HAM(-3.00)[99.99%];
+         FROM_HAS_DN(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         SENDER_REP_HAM(0.00)[asn: 51744(0.22), country: CZ(-0.00), ip: 91.219.245.20(-0.52)];
+         DMARC_NA(0.00)[ucw.cz];
+         AUTH_NA(1.00)[];
+         RCPT_COUNT_ONE(0.00)[1];
+         HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
+         TO_DN_ALL(0.00)[];
+         HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
+         NEURAL_HAM(-0.00)[-0.475];
+         R_SPF_NA(0.00)[no SPF record];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         R_DKIM_NA(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
+         TAGGED_FROM(0.00)[f-310520,linux-pci=vger.kernel.org];
+         R_MIXED_CHARSET(0.20)[subject]
+X-Rspamd-Queue-Id: ED5911C0BD2
+Authentication-Results: jabberwock.ucw.cz;
+        dkim=none;
+        dmarc=none;
+        spf=none (jabberwock.ucw.cz: domain of mj@ucw.cz has no SPF policy when checking 91.219.245.20) smtp.mailfrom=mj@ucw.cz
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Assalamualaikum My Dear Friend,
+Hello world!\n
 
-Before I introduce myself, I wish to inform you that this letter is
-not a hoax mail and I urge you to treat it serious. This letter must
-come to you as a big surprise, but I believe it is only a day that
-people meet and become great friends and business partners. Please I
-want you to read this letter very carefully and I must apologize for
-barging this message into your mail box without any formal
-introduction due to the urgency and confidentiality of this business
-and I know that this message will come to you as a surprise. Please
-this is not a joke and I will not like you to joke with it ok, with
-due respect to your person and much sincerity of purpose, I make this
-contact with you as I believe that you can be of great assistance to
-me. My name is Mr.Rasheed Umaru Mustafa, from Burkina Faso, West
-Africa. I work in Bank Of Africa United Bank for Africa (UBA) as telex
-manager, please see this as a confidential message and do not reveal
-it to another person and let me know whether you can be of assistance
-regarding my proposal below because it is top secret.
+I released version 3.7.0 of the pciutils.
 
-I am about to retire from active Banking service to start a new life
-but I am skeptical to reveal this particular secret to a stranger. You
-must assure me that everything will be handled confidentially because
-we are not going to suffer again in life. It has been 10 years now
-that most of the greedy African Politicians used our bank to launder
-money overseas through the help of their Political advisers. Most of
-the funds which they transferred out of the shores of Africa were gold
-and oil money that was supposed to have been used to develop the
-continent. Their Political advisers always inflated the amounts before
-transferring to foreign accounts, so I also used the opportunity to
-divert part of the funds hence I am aware that there is no official
-trace of how much was transferred as all the accounts used for such
-transfers were being closed after transfer.I acted as the Bank Officer
-to most of the politicians and when I discovered that they were using
-me to succeed in their greedy act; I also cleaned some of their
-banking records from the Bank files and no one cared to ask me because
-the money was too much for them to control. They laundered over
-$5billion Dollars during the process.
+From the changelog:
 
-Before I sent this message to you, I have already diverted
-($10.5million Dollars) to an escrow account belonging to no one in the
-bank. The bank isanxious now to know who the beneficiary to the funds
-is because they have made a lot of profits with the funds. It is more
-than Eight years now and most of the politicians are no longer using
-our bank to transfer funds overseas. The ($10.5million Dollars) has
-been laying waste in our bank and I don=E2=80=99t want to retire from the b=
-ank
-without transferring the funds to a foreign account to enable me share
-the proceeds with the receiver (a foreigner). The money will be shared
-60% for me and 40% for you. There is no one coming to ask you about
-the funds because I secured everything. I only want you to assist me
-by providing a reliable bank account where the funds can be
-transferred.
+	* Released as 3.7.0.
 
-You are not to face any difficulties or legal implications as I am
-going to handle the transfer personally. If you are capable of
-receiving the funds,
-do let me know immediately to enable me give you a detailed
-information on what to do. For me, I have not stolen the money from
-anyone because the other people that took the whole money did not face
-any problems. This is my chance to grab my own life opportunity but
-you must keep the details of the funds secret to avoid any leakages as
-no one in the bank knows about my plans. Please get back to me if you
-are interested and capable to handle this project, I shall intimate
-you on what to do when I hear from your confirmation and acceptance.
-If you are capable of being my trusted associate, do declare your
-consent to me I am looking forward to hearing from you immediately for
-further information.
+	* Added or improved the following capabilities: Designated Vendor-Specific,
+	  Compute eXpress Link, Resizable BARs, VF Resizable BARs, Link
+	  Capabilities 2, Link Status 2.
 
-Thanks with my best regards.
-Mr.Rasheed.U.Mustafa.
+	* On Linux, lspci can show IOMMU groups.
+
+	* setpci can be asked to skip bus scan and operate on a device
+	  completely specified by its domain/bus/dev/func address. This
+	  involved major internal cleanup.
+
+	* The above feature of setpci uses the pci_get_dev() function,
+	  which obtains a struct pci_dev without doing a bus scan. This was
+	  always possible, but apparently little used, because back-ends
+	  frequently choked when operating on such devices. Fixed a lot
+	  of minor bugs related to this.
+
+	* Also, back-ends which do not support domains now correctly fail when
+	  trying to access devices outside domain 0.
+
+	* Semantics of pci_fill_info() and pci_dev->known_fields was underspecified,
+	  which lead to inconsistencies between back-ends. Improved documentation
+	  to give a more precise definition and updated all back-ends to conform
+	  to it. Most importantly, pci_dev->known_fields shows all fields requested
+	  over the lifetime of the pci_dev, but never those which are not supported
+	  by the back-end.
+
+	* As usually, updated pci.ids to the current snapshot of the database.
+
+If you are aware of a patch which was not merged, please let me know.
+
+				Have a nice fortnight
+-- 
+Martin `MJ' Mareš                        <mj@ucw.cz>   http://mj.ucw.cz/
+United Computer Wizards, Prague, Czech Republic, Europe, Earth, Universe
+And God said: E = 1/2mv^2 - Ze^2/r ...and there *was* light!
