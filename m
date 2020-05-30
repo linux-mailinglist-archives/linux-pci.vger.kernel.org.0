@@ -2,74 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34AEC1E90D6
-	for <lists+linux-pci@lfdr.de>; Sat, 30 May 2020 13:33:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BA8F1E910B
+	for <lists+linux-pci@lfdr.de>; Sat, 30 May 2020 14:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgE3Ldz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 30 May 2020 07:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39634 "EHLO
+        id S1728304AbgE3MCr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 30 May 2020 08:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgE3Ldz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 May 2020 07:33:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8790AC03E969;
-        Sat, 30 May 2020 04:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uBs5qA4b4HpHoQWurKlW7KyHPg6+1oDn7PTuK57+Tk0=; b=IMwvZtlWkoReIdDdp8GfPd1IaK
-        rweQ97xMVVudMr4rghIG7Ph4wDb5B+v3ELxgAMCXyaDZWLjmFlqnlrv0K3NzIPUgF9nJFKYpjtGUH
-        Zl1heV2A1hGNxoL+wBQKhjercn0Nr4cMI2jMWEzdtJmsWvsjRxlixrXQHFUjo5Ao8jDRDYfJfmSmh
-        0iDrdxI/B5ZUELjBcIwR2I31rBDm+cy3ghjORls71Te+oqG9qUl9IEu5bdZwwutgG7HWD/Uq88Jgk
-        UzWS5VtFOTGHIJ4o7mb3sF2OvC6KloCsEbEwrONDPhCylf3wLwRIOTfHOFyPJhgz+j3/14wKkpDl/
-        1vZSxPPw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jezkG-0004GI-MC; Sat, 30 May 2020 11:33:44 +0000
-Date:   Sat, 30 May 2020 04:33:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Garrett <mjg59@srcf.ucam.org>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
- CONFIG_PCIEASPM by default")
-Message-ID: <20200530113344.GA2834@infradead.org>
-References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
- <20200529202135.GA461617@bjorn-Precision-5520>
- <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
- <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
- <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
- <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
- <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
+        with ESMTP id S1726860AbgE3MCr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 May 2020 08:02:47 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA9AC03E969
+        for <linux-pci@vger.kernel.org>; Sat, 30 May 2020 05:02:46 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id mb16so4708868ejb.4
+        for <linux-pci@vger.kernel.org>; Sat, 30 May 2020 05:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=Qxa3M/MvhiqYKdmf/w4n6AgdA8qRvXt1CZdlD0nn0dE=;
+        b=V5JEhX+GECWPyRQqPDQJdi5geznMXyJZx8MY8e6NlzfAooWiBWpSEfenSLtcvUuzIZ
+         EA14NrnXxgOwrmZN2ehvhCuSLYnnQM0zSnQde/3r6fuYVBlxlf/WBBudM+4W+EhYjTB4
+         NaeAmEEJjpCpqMdZywqR+wrwbfovGywYBkNPFDE5n4Ez7CUBMSpNKWcm/Yh/UV6SDpgD
+         RJBRpxRS+euuwmmQuJn97F11/lJoCZi7Y5doeKxQmC3HGklRkwsUMzI+byBGuQO9jKNP
+         PFJlFwW3bMl8g2SpSuhyku+tRQXAa8bim9Nqiss/+z2s40ASlSooGQfSuPCc1R0cNNDq
+         B8YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=Qxa3M/MvhiqYKdmf/w4n6AgdA8qRvXt1CZdlD0nn0dE=;
+        b=FCg7B2HI9q9ocB+8IvyMoy+bpi4eNG0SadTxk0OMDLe0EYndgbv7NofLrqEhV4axjX
+         HPzulfAhih0ebooDlrKrF0ThEkGhBhHI6CBwRQN4VICW+ElMkyu4sss2EurWivabkObD
+         nXowWbDzdwfMXc2A93WuyZBaG7f8QE5Dkm/b2tlaJNVoPER3kK95fEL2ogtRtsse4iMc
+         6OeVG0UyCW8EqRKJNWZyTcsY9YfJ3yUBCO73Kef6L4eL7UJSqrlRbb0pyc05Gt0d/XAH
+         10xxtoOMfMAQCpuzLqb7kqhGTryc9KhOLjGROBT3zOJyvn0u2uEBDOuNFlX8OtbtUohk
+         1fyQ==
+X-Gm-Message-State: AOAM531Tb3gP6WwAyXfrsHP5VuCotCcpeacJpGm+ud3pp81sImNiSp1/
+        8XLesRZZTM2erFdeanDQCMj3uDY4kj9Is+i6PNI=
+X-Google-Smtp-Source: ABdhPJzUTWhwW/ulsaKguYvv2NHip2y4pUitCeKpMk4aL1vZPIYOYQj7ZeKw2xmSvtd13XRVedQbgcLKd1HVlS3XinY=
+X-Received: by 2002:a17:906:51c9:: with SMTP id v9mr5063911ejk.337.1590840165280;
+ Sat, 30 May 2020 05:02:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Reply-To: rmst227@gmail.com
+Received: by 2002:a17:906:f0a:0:0:0:0 with HTTP; Sat, 30 May 2020 05:02:44
+ -0700 (PDT)
+From:   "MUSTAFA.R" <rm2568590@gmail.com>
+Date:   Sat, 30 May 2020 14:02:44 +0200
+X-Google-Sender-Auth: 853U8ilJjxiedja0sMjPnFZzN7k
+Message-ID: <CANvJxG3nUw8fLEy5tVu6-yN1GcQQWc2eBHp87aNCzcy800XmfQ@mail.gmail.com>
+Subject: Assalamualaikum My Dear Friend,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 30, 2020 at 08:14:34AM +0100, Matthew Garrett wrote:
-> On Sat, May 30, 2020 at 08:33:50AM +0200, Heiner Kallweit wrote:
-> 
-> > It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
-> > select CONFIG_PCIEASPM by default") and that's what triggered the
-> > problem. If there's no easy solution, then maybe it's best to revert
-> > the change for now.
-> 
-> Oh, sorry, I was looking at mainline. CONFIG_PCIEASPM should 
-> *definitely* be enabled by default - platforms expect the OS to support 
-> it. If we want to get rid of default y then I think it'd make more sense 
-> to have a CONFIG_DISABLE_PCIEASPM that's under EXPERT, and people who 
-> really want to disable the code can do so.
+Assalamualaikum My Dear Friend,
 
-I think the fact that the EXPERT didn't get removed in the above bug
-is a defintive bug.  But I'd go further and think the CONFIG_PCIEASPM
-option should be removed entirely.  There is absolutely no good reason
-to not build this small amount of code if PCIe support is enabled.
+Before I introduce myself, I wish to inform you that this letter is
+not a hoax mail and I urge you to treat it serious. This letter must
+come to you as a big surprise, but I believe it is only a day that
+people meet and become great friends and business partners. Please I
+want you to read this letter very carefully and I must apologize for
+barging this message into your mail box without any formal
+introduction due to the urgency and confidentiality of this business
+and I know that this message will come to you as a surprise. Please
+this is not a joke and I will not like you to joke with it ok, with
+due respect to your person and much sincerity of purpose, I make this
+contact with you as I believe that you can be of great assistance to
+me. My name is Mr.Rasheed Umaru Mustafa, from Burkina Faso, West
+Africa. I work in Bank Of Africa United Bank for Africa (UBA) as telex
+manager, please see this as a confidential message and do not reveal
+it to another person and let me know whether you can be of assistance
+regarding my proposal below because it is top secret.
+
+I am about to retire from active Banking service to start a new life
+but I am skeptical to reveal this particular secret to a stranger. You
+must assure me that everything will be handled confidentially because
+we are not going to suffer again in life. It has been 10 years now
+that most of the greedy African Politicians used our bank to launder
+money overseas through the help of their Political advisers. Most of
+the funds which they transferred out of the shores of Africa were gold
+and oil money that was supposed to have been used to develop the
+continent. Their Political advisers always inflated the amounts before
+transferring to foreign accounts, so I also used the opportunity to
+divert part of the funds hence I am aware that there is no official
+trace of how much was transferred as all the accounts used for such
+transfers were being closed after transfer.I acted as the Bank Officer
+to most of the politicians and when I discovered that they were using
+me to succeed in their greedy act; I also cleaned some of their
+banking records from the Bank files and no one cared to ask me because
+the money was too much for them to control. They laundered over
+$5billion Dollars during the process.
+
+Before I sent this message to you, I have already diverted
+($10.5million Dollars) to an escrow account belonging to no one in the
+bank. The bank isanxious now to know who the beneficiary to the funds
+is because they have made a lot of profits with the funds. It is more
+than Eight years now and most of the politicians are no longer using
+our bank to transfer funds overseas. The ($10.5million Dollars) has
+been laying waste in our bank and I don=E2=80=99t want to retire from the b=
+ank
+without transferring the funds to a foreign account to enable me share
+the proceeds with the receiver (a foreigner). The money will be shared
+60% for me and 40% for you. There is no one coming to ask you about
+the funds because I secured everything. I only want you to assist me
+by providing a reliable bank account where the funds can be
+transferred.
+
+You are not to face any difficulties or legal implications as I am
+going to handle the transfer personally. If you are capable of
+receiving the funds,
+do let me know immediately to enable me give you a detailed
+information on what to do. For me, I have not stolen the money from
+anyone because the other people that took the whole money did not face
+any problems. This is my chance to grab my own life opportunity but
+you must keep the details of the funds secret to avoid any leakages as
+no one in the bank knows about my plans. Please get back to me if you
+are interested and capable to handle this project, I shall intimate
+you on what to do when I hear from your confirmation and acceptance.
+If you are capable of being my trusted associate, do declare your
+consent to me I am looking forward to hearing from you immediately for
+further information.
+
+Thanks with my best regards.
+Mr.Rasheed.U.Mustafa.
