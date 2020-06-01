@@ -2,132 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E06E1EB10E
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 23:40:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F84B1EB133
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 23:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgFAVkZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jun 2020 17:40:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12253 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgFAVkZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:40:25 -0400
-IronPort-SDR: z8IuNLHPZvVL2m2yFgJmg+7Tb20prJHrfDUjA4gki/VpZD37kzpwu0i3Y4PT3V8e/kQNPpWD72
- bhmGDnUmtr3A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 14:40:24 -0700
-IronPort-SDR: VgXfb6U2XTqaiIxQec+3VLJOmXxCfX10MydJvZqZJ9Uc2tFJYHQfaOqxLazuZEf+hWo2qcN/jG
- TvV6jUr8NK/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="257389245"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga007.jf.intel.com with ESMTP; 01 Jun 2020 14:40:23 -0700
-Date:   Mon, 1 Jun 2020 14:40:23 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] PCI: Relax ACS requirement for Intel RCiEP devices.
-Message-ID: <20200601214023.GA15310@otc-nc-03>
-References: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
- <20200601212519.GA758937@bjorn-Precision-5520>
+        id S1728829AbgFAVnG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jun 2020 17:43:06 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:38459 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728846AbgFAVnF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jun 2020 17:43:05 -0400
+Received: by mail-il1-f193.google.com with SMTP id b5so4720446iln.5;
+        Mon, 01 Jun 2020 14:43:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=h6bmu3CJcmV/9le9YJQNFFMA2nIiHEqBi68n/JP+HZg=;
+        b=GIBpUgXLGNQtvFt1EWaoJF3RlvYpSbbvRcJ0vLAJkJ9CWrSptqT1gHLtcB0/6T0k0v
+         reao62fnjV0XRf5TCK4DpU+XtH7ep1fKtL0A/DbGVMgeKnlbEWjmEMwjmhzphAWRqmXO
+         Oop1FBDbk4TACltLAzmMSOqbUlw3475yR7dQ6bFIEM0q5nu2bRLWgOa60dIT4gG6yjyR
+         etKx1r4fmvInn7F/8YXDofYZIWHPzYi66JD50XyHm/a9/sehxaYlrgkue4vOFo900r8T
+         S9u9rTBYj6IVRZDdm2eW/HrkyT4ES3PrqDA+0ZEEQ1AOrdpt4fi3LqZVRdtkf2UFBrxW
+         zC3g==
+X-Gm-Message-State: AOAM533467UdltmP5nTId3MNKEV26T91g75gVlFZScGmlxOmEQz7JJC1
+        aw4zBLAsTa4hFB+02hOumw==
+X-Google-Smtp-Source: ABdhPJyjdTs1k1AJmK5ghDCtRiwra/ZwCyc7YXPiOjDJbc7itj5xSqUIw+cqQ9LzQTmIn5vJwpBTSQ==
+X-Received: by 2002:a05:6e02:e53:: with SMTP id l19mr5346647ilk.96.1591047783964;
+        Mon, 01 Jun 2020 14:43:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id g4sm387323ilj.45.2020.06.01.14.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 14:43:03 -0700 (PDT)
+Received: (nullmailer pid 1554558 invoked by uid 1000);
+        Mon, 01 Jun 2020 21:43:02 -0000
+Date:   Mon, 1 Jun 2020 15:43:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v2 5/5] PCI: uniphier: Add error message when failed to
+ get phy
+Message-ID: <20200601214302.GA1538223@bogus>
+References: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1589536743-6684-6-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200601212519.GA758937@bjorn-Precision-5520>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1589536743-6684-6-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 04:25:19PM -0500, Bjorn Helgaas wrote:
-> On Thu, May 28, 2020 at 01:57:42PM -0700, Ashok Raj wrote:
-> > All Intel platforms guarantee that all root complex implementations
-> > must send transactions up to IOMMU for address translations. Hence for
-> > RCiEP devices that are Vendor ID Intel, can claim exception for lack of
-> > ACS support.
-> > 
-> > 
-> > 3.16 Root-Complex Peer to Peer Considerations
-> > When DMA remapping is enabled, peer-to-peer requests through the
-> > Root-Complex must be handled
-> > as follows:
-> > • The input address in the request is translated (through first-level,
-> >   second-level or nested translation) to a host physical address (HPA).
-> >   The address decoding for peer addresses must be done only on the
-> >   translated HPA. Hardware implementations are free to further limit
-> >   peer-to-peer accesses to specific host physical address regions
-> >   (or to completely disallow peer-forwarding of translated requests).
-> > • Since address translation changes the contents (address field) of
-> >   the PCI Express Transaction Layer Packet (TLP), for PCI Express
-> >   peer-to-peer requests with ECRC, the Root-Complex hardware must use
-> >   the new ECRC (re-computed with the translated address) if it
-> >   decides to forward the TLP as a peer request.
-> > • Root-ports, and multi-function root-complex integrated endpoints, may
-> >   support additional peerto-peer control features by supporting PCI Express
-> >   Access Control Services (ACS) capability. Refer to ACS capability in
-> >   PCI Express specifications for details.
-> > 
-> > Since Linux didn't give special treatment to allow this exception, certain
-> > RCiEP MFD devices are getting grouped in a single iommu group. This
-> > doesn't permit a single device to be assigned to a guest for instance.
-> > 
-> > In one vendor system: Device 14.x were grouped in a single IOMMU group.
-> > 
-> > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> > /sys/kernel/iommu_groups/5/devices/0000:00:14.3
-> > 
-> > After the patch:
-> > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> > /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
-> > 
-> > 14.0 and 14.2 are integrated devices, but legacy end points.
-> > Whereas 14.3 was a PCIe compliant RCiEP.
-> > 
-> > 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
-> > Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-> > 
-> > This permits assigning this device to a guest VM.
-> > 
-> > Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > To: Joerg Roedel <joro@8bytes.org>
-> > To: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: iommu@lists.linux-foundation.org
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
-> > Cc: Mark Scott <mscott@forcepoint.com>,
-> > Cc: Romil Sharma <rsharma@forcepoint.com>
-> > Cc: Ashok Raj <ashok.raj@intel.com>
+On Fri, May 15, 2020 at 06:59:03PM +0900, Kunihiko Hayashi wrote:
+> Even if phy driver doesn't probe, the error message can't be distinguished
+> from other errors. This displays error message caused by the phy driver
+> explicitly.
 > 
-> Tentatively applied to pci/virtualization for v5.8, thanks!
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> The spec says this handling must apply "when DMA remapping is
-> enabled".  The patch does not check whether DMA remapping is enabled.
-> 
-> Is there any case where DMA remapping is *not* enabled, and we rely on
-> this patch to tell us whether the device is isolated?  It sounds like
-> it may give the wrong answer in such a case?
-> 
-> Can you confirm that I don't need to worry about this?  
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 493f105..7ae9688 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -468,8 +468,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>  		return PTR_ERR(priv->rst);
+>  
+>  	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+> -	if (IS_ERR(priv->phy))
+> -		return PTR_ERR(priv->phy);
+> +	if (IS_ERR(priv->phy)) {
+> +		ret = PTR_ERR(priv->phy);
+> +		dev_err(dev, "Failed to get phy (%d)\n", ret);
 
-I think all of this makes sense only when DMA remapping is enabled.
-Otherwise there is no enforcement for isolation. 
+This will print an error on EPROBE_DEFERRED which isn't an error.
 
-Cheers,
-Ashok
+> +		return ret;
+> +	}
+>  
+>  	platform_set_drvdata(pdev, priv);
+>  
+> -- 
+> 2.7.4
+> 
