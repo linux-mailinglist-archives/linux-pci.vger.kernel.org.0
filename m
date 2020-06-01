@@ -2,78 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B641EB083
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 22:57:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DC001EB09B
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 23:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgFAU4o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jun 2020 16:56:44 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39793 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgFAU4o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jun 2020 16:56:44 -0400
-Received: by mail-il1-f195.google.com with SMTP id p5so9691152ile.6;
-        Mon, 01 Jun 2020 13:56:43 -0700 (PDT)
+        id S1727863AbgFAVC7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jun 2020 17:02:59 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35817 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgFAVC6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jun 2020 17:02:58 -0400
+Received: by mail-io1-f67.google.com with SMTP id s18so8523914ioe.2;
+        Mon, 01 Jun 2020 14:02:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=BITL98F0854rJrS/8AfTCyNP8QqONyxvkx/UcCn4Ghw=;
-        b=q4bRL5W17pyk3cIFE7+BS7X420whtK0D2FBcPs1fj4UjBJI2CT+/d4G/0EWVFFb8DW
-         KvmUzZ56r+kMaLBv1dc0Je/IN42RJ+778VmhwCGSYojuz++Xn85MRkoVyGPMFVXhCF0I
-         7XYkkqvyykBavFk2O7ZVx5Hb5nqzYpONWGoj8hVLY0vvcBUSOyGlHe8cRBKVwDMB4Gsg
-         26BNtG8X83GHOsXfZ7cjCISpOg8ncXRgCTMjA4znCCAWEQTiBab2tSbHFOlqaWwNoNXj
-         TEVuUD2ZsWbYJU/1hvd1fwH3WtM1kCszXxPOJmdTAk72CtIwc4gt8AqPXBY9RGcSboel
-         +wCg==
-X-Gm-Message-State: AOAM532mk6vz+pJ+fwU+soEjGk7diPP9ODSpBT5vTYu/AXzGX0H3c0iI
-        KFUHxZ5Tzc5SMmVr8NPV8A==
-X-Google-Smtp-Source: ABdhPJyuuvB/FS5C1fkxV/PLo1BQ2+acgAR7znlJ1e9A2P9nFp3yvEkY29q7lcPuS8p0Oy5o7R46aQ==
-X-Received: by 2002:a92:b644:: with SMTP id s65mr23068196ili.205.1591045002799;
-        Mon, 01 Jun 2020 13:56:42 -0700 (PDT)
+        bh=Q2KafSWPk9m9zR6lVEGJ97Ox8H0TePRPBQbpHWvp5CM=;
+        b=PutXRLzPfONEARMsFgiDhG2CRv9UzlOz1L5IsNT1bAJ1pN/rBaALaqXgy7+7WW0sKZ
+         kUaiCB35rInWDQSb/tfpcCfFRnOX8E9rNjajJwyCCgFUdiPH3JjQqGVqp6pUMtT3g8CV
+         sXCaZFjKRfHXd5q/Xc9HaA0iiChTw968pB65M+Ik1M18niZIrrbyAtCiwtFS5ruAas6n
+         0sf/Bc7HwQddZnSboRwq4VowkypWfqL569zEZEbI8PSgoQeNUnpJyd4VA1C/m42j/sp/
+         fix12+1khHEBAzpu3Mqx8pQmzvgpVBmcYzuq9/3ahVNmU14nVXMZLA8NDqNYww6yfCEC
+         60bA==
+X-Gm-Message-State: AOAM532yFdLrAQTtfJT1t2afGMAoJEn/XVSsu8TZqPpSQvcdYiF8DWYO
+        Y7C2wSfJ8faP8bCgq8ExOQ==
+X-Google-Smtp-Source: ABdhPJwz55UCxWtYCo6t6r1ao+TKYwaYb4M8xkoqdmM8u+abMjxVNihr3yUCVvMg+jM/9hTtJN2+Bg==
+X-Received: by 2002:a5d:9d03:: with SMTP id j3mr20290937ioj.176.1591045377082;
+        Mon, 01 Jun 2020 14:02:57 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id h71sm368014ili.43.2020.06.01.13.56.41
+        by smtp.gmail.com with ESMTPSA id q7sm325060ilj.78.2020.06.01.14.02.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 13:56:42 -0700 (PDT)
-Received: (nullmailer pid 1480899 invoked by uid 1000);
-        Mon, 01 Jun 2020 20:56:40 -0000
-Date:   Mon, 1 Jun 2020 14:56:40 -0600
+        Mon, 01 Jun 2020 14:02:55 -0700 (PDT)
+Received: (nullmailer pid 1491019 invoked by uid 1000);
+        Mon, 01 Jun 2020 21:02:54 -0000
+Date:   Mon, 1 Jun 2020 15:02:54 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
+Cc:     linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 01/10] PCI: qcom: Add missing ipq806x clocks in PCIe
- driver
-Message-ID: <20200601205640.GA1480847@bogus>
+Subject: Re: [PATCH v4 06/10] PCI: qcom: Use bulk clk api and assert on error
+Message-ID: <20200601210254.GA1490941@bogus>
 References: <20200514200712.12232-1-ansuelsmth@gmail.com>
- <20200514200712.12232-2-ansuelsmth@gmail.com>
+ <20200514200712.12232-7-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514200712.12232-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200514200712.12232-7-ansuelsmth@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 May 2020 22:07:02 +0200, Ansuel Smith wrote:
-> Aux and Ref clk are missing in PCIe qcom driver. Add support for this
-> optional clks for ipq8064/apq8064 SoC.
+On Thu, 14 May 2020 22:07:07 +0200, Ansuel Smith wrote:
+> Rework 2.1.0 revision to use bulk clk api and fix missing assert on
+> reset_control_deassert error.
 > 
-> Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
 > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
->  1 file changed, 33 insertions(+), 5 deletions(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 131 +++++++++----------------
+>  1 file changed, 46 insertions(+), 85 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
