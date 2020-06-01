@@ -2,185 +2,420 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA7191E9F50
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 09:34:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37FAB1E9F5D
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 09:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbgFAHeI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jun 2020 03:34:08 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:51747 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFAHeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jun 2020 03:34:08 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0517XTuV4022257, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn ([172.29.17.3])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0517XTuV4022257
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 1 Jun 2020 15:33:29 +0800
-Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS02.realsil.com.cn
- ([::1]) with mapi id 14.03.0439.000; Mon, 1 Jun 2020 15:33:28 +0800
-From:   =?utf-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIG1tYzogcnRzeDogQWRkIFNEIEV4cHJlc3MgbW9k?= =?utf-8?Q?e_support_for_RTS5261?=
-Thread-Topic: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-Thread-Index: AQHWG2mdb2Wi+0TUh0G7QGay1iuqfqiL+UQAgAC/B7D//5LPAIABmysAgAtv7gCAFdruEIAJECCAgAtQDdA=
-Date:   Mon, 1 Jun 2020 07:33:27 +0000
-Message-ID: <2A308283684ECD4B896628E09AF5361E59AD1194@RS-MBS01.realsil.com.cn>
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
- <20200427061426.GA11270@infradead.org>
- <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
- <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
- <2A308283684ECD4B896628E09AF5361E028BCB4B@RS-MBS01.realsil.com.cn>
- <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
- <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
- <CAPDyKFo9X9ghjCeF_kGE2BhB+3QiMAMbD1Qz53saXshxy9odVg@mail.gmail.com>
-In-Reply-To: <CAPDyKFo9X9ghjCeF_kGE2BhB+3QiMAMbD1Qz53saXshxy9odVg@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.29.40.150]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1726072AbgFAHgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jun 2020 03:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgFAHgX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jun 2020 03:36:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038BCC061A0E;
+        Mon,  1 Jun 2020 00:36:23 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w68so2257685pfb.3;
+        Mon, 01 Jun 2020 00:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=q3NTTsQFKZ4hMjP2eqJhNI9pBK8Rfe+kjRBcs7DOkXQ=;
+        b=At7bTKSUSK+ldpbk0YAp6ixR5vIwBzlo00V23/Lne2e2bAlHq6ml03fLXRdnXrAIx/
+         05j96qf3V6w8nUdpBAL8I7OtMwkNyZDjFzvF1PnvHR/v7+HRcKg7Tm6cVFVSgnPNs9b4
+         M/AunGMXnkQdh2zyibqIW/MOH2ywun6kbBVR0qFrsQYhNarXq1OjkAA+lbOqvENmAu+P
+         IfV1RNQZJP1dx7NZNZqLmcCcKP5ES5vc372srePfGnbbTFeiDm+K1btfIDjonx9C/qnz
+         +m5YDZpvuWOSqrHkHpXsZPr3LkhwKlYDcPzvXDmYxbXNMD3xo4XCnyNftIParMuQGRWj
+         1Mtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=q3NTTsQFKZ4hMjP2eqJhNI9pBK8Rfe+kjRBcs7DOkXQ=;
+        b=h/K9Z+vekM45c4YphNR8MHkFW4UQbc9KLZsfv2P6JuHNEt8o4MF/v7wPPi+wTa6SyI
+         EqVpPXf6lOFYyMrz6M6teTwcDoB94Epm9+Asuyxc7Anbm7JZHAfd07CzDgeNSrhH9DvM
+         adQDOgNS/87dKrc4tIRQy3FJBTTB3y+oukiQpIxEydmXsXf1vOU80LytKLOVw4L2CyR2
+         Uvg4BaDDi7GCcD8TaGz7poUvtLAQk/CWTFj1rd6kD2EmecgDb1J3kS1anjb4PqVHgcph
+         OcPzqezQE0NzJm3Hmj1ElwCgn93zIGwI+riFFzjMJxboZrm+FiL3nVwP7sUIEQ6GhzUk
+         hg7w==
+X-Gm-Message-State: AOAM5307XOgs6EGyJvqOnHcBrcTRIqo9+wK9Wl2YI1RkP/ORvz4jDwXZ
+        JrqT1qBB7yqs9YcjzTBIUmg=
+X-Google-Smtp-Source: ABdhPJwWqTg3zCaYfCb9oT0C5BmccJpQQPIBlIucjBdjc4EMdW9eGZB2KFH+FyVhxfACBkNgyt9WnA==
+X-Received: by 2002:a63:454c:: with SMTP id u12mr18381241pgk.153.1590996982359;
+        Mon, 01 Jun 2020 00:36:22 -0700 (PDT)
+Received: from localhost.localdomain ([101.12.48.8])
+        by smtp.gmail.com with ESMTPSA id r3sm6469603pjj.21.2020.06.01.00.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 00:36:21 -0700 (PDT)
+From:   Richard Hsu <saraon640529@gmail.com>
+To:     Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
+        Jesse1_Chang@asmedia.com.tw, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, bhelgaas@google.com
+Cc:     linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
+        Richard Hsu <saraon640529@gmail.com>
+Subject: [PATCH] gpio:asm28xx-18xx: new driver
+Date:   Mon,  1 Jun 2020 15:36:04 +0800
+Message-Id: <20200601073604.26289-1-saraon640529@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiANCj4gT24gVHVlLCAxOSBNYXkgMjAyMCBhdCAxMToxOCwg5Yav6ZSQIDxydWlfZmVuZ0ByZWFs
-c2lsLmNvbS5jbj4gd3JvdGU6DQo+ID4NCj4gPiA+IE9uIFR1ZSwgMjggQXByIDIwMjAgYXQgMDU6
-NDQsIOWGr+mUkCA8cnVpX2ZlbmdAcmVhbHNpbC5jb20uY24+IHdyb3RlOg0KPiA+ID4gPg0KPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gT24gTW9uLCBBcHIgMjcsIDIwMjAgYXQgMTE6NDEgQU0g5Yav6ZSQ
-IDxydWlfZmVuZ0ByZWFsc2lsLmNvbS5jbj4NCj4gPiA+IHdyb3RlOg0KPiA+ID4gPiA+ID4NCj4g
-PiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IE9uIFN1biwgQXByIDI2LCAyMDIwIGF0IDA5OjI1OjQ2
-QU0gKzA4MDAsDQo+ID4gPiA+ID4gPiA+IHJ1aV9mZW5nQHJlYWxzaWwuY29tLmNuDQo+ID4gPiA+
-ID4gd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gRnJvbTogUnVpIEZlbmcgPHJ1aV9mZW5nQHJlYWxz
-aWwuY29tLmNuPg0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gUlRTNTI2MSBzdXBw
-b3J0IGxlZ2FjeSBTRCBtb2RlIGFuZCBTRCBFeHByZXNzIG1vZGUuDQo+ID4gPiA+ID4gPiA+ID4g
-SW4gU0Q3LngsIFNEIGFzc29jaWF0aW9uIGludHJvZHVjZSBTRCBFeHByZXNzIGFzIGEgbmV3IG1v
-ZGUuDQo+ID4gPiA+ID4gPiA+ID4gU0QgRXhwcmVzcyBtb2RlIGlzIGRpc3Rpbmd1aXNoZWQgYnkg
-Q01EOC4NCj4gPiA+ID4gPiA+ID4gPiBUaGVyZWZvcmUsIENNRDggaGFzIG5ldyBiaXQgZm9yIFNE
-IEV4cHJlc3MuDQo+ID4gPiA+ID4gPiA+ID4gU0QgRXhwcmVzcyBpcyBiYXNlZCBvbiBQQ0llL05W
-TWUuDQo+ID4gPiA+ID4gPiA+ID4gUlRTNTI2MSB1c2VzIENNRDggdG8gc3dpdGNoIHRvIFNEIEV4
-cHJlc3MgbW9kZS4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gU28gaG93IGRvZXMgdGhp
-cyBiaXQgd29yaz8gIFRoZXkgd2F5IEkgaW1hZ2luZWQgU0QgRXhwcmVzcw0KPiA+ID4gPiA+ID4g
-PiB0byB3b3JrIGlzIHRoYXQgdGhlIGFjdHVhbCBTRCBDYXJkIGp1c3Qgc2hvd3MgdXAgYXMgYSBy
-ZWFsDQo+ID4gPiA+ID4gPiA+IFBDSWUgZGV2aWNlLCBzaW1pbGFyIHRvIHNheSBUaHVuZGVyYm9s
-dC4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBOZXcgU0QgRXhwcmVzcyBjYXJkIGhhcyBkdWFs
-IG1vZGUuIE9uZSBpcyBTRCBtb2RlIGFuZCBhbm90aGVyDQo+ID4gPiA+ID4gPiBpcyBQQ0llDQo+
-ID4gPiA+ID4gbW9kZS4NCj4gPiA+ID4gPiA+IEluIFBDSWUgbW9kZSwgaXQgYWN0IGFzIGEgUENJ
-ZSBkZXZpY2UgYW5kIHVzZSBQQ0llIHByb3RvY29sDQo+ID4gPiA+ID4gPiBub3QgVGh1bmRlcmJv
-bHQNCj4gPiA+ID4gPiBwcm90b2NvbC4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEkgdGhpbmsgd2hh
-dCBDaHJpc3RvcGggd2FzIGFza2luZyBhYm91dCBpcyB3aHkgeW91IG5lZWQgdG8gaXNzdWUNCj4g
-PiA+ID4gPiBhbnkgY29tbWFuZHMgYXQgYWxsIGluIFNEIG1vZGUgd2hlbiB5b3Ugd2FudCB0byB1
-c2UgUENJZSBtb2RlDQo+IGluc3RlYWQuDQo+ID4gPiA+ID4gV2hhdCBoYXBwZW5zIGlmIHlvdSBs
-b2FkIHRoZSBOVk1lIGR0aHJpdmVyIGJlZm9yZSBsb2FkaW5nIHRoZQ0KPiA+ID4gPiA+IHJ0czUy
-NjENCj4gPiA+IGRyaXZlcj8NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICAgICAgICBBcm5kDQo+ID4g
-PiA+ID4NCj4gPiA+ID4gPiAtLS0tLS1QbGVhc2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJl
-Zm9yZSBwcmludGluZyB0aGlzIGUtbWFpbC4NCj4gPiA+ID4NCj4gPiA+ID4gUlRTNTI2MSBzdXBw
-b3J0IFNEIG1vZGUgYW5kIFBDSWUvTlZNZSBtb2RlLiBUaGUgd29ya2Zsb3cgaXMgYXMNCj4gZm9s
-bG93cy4NCj4gPiA+ID4gMS5SVFM1MjYxIHdvcmsgaW4gU0QgbW9kZS4NCj4gPiA+ID4gMi5JZiBj
-YXJkIGlzIHBsdWdnZWQgaW4sIEhvc3Qgc2VuZCBDTUQ4IHRvIGFzayBjYXJkJ3MgUENJZSBhdmFp
-bGFiaWxpdHkuDQo+ID4gPg0KPiA+ID4gVGhpcyBzb3VuZHMgbGlrZSB0aGUgY2FyZCBpbnNlcnQv
-cmVtb3ZhbCBuZWVkcyB0byBiZSBtYW5hZ2VkIGJ5IHRoZQ0KPiA+ID4gcnRzeF9wY2lfc2RtbWMg
-ZHJpdmVyIChtbWMpLg0KPiA+ID4NCj4gPiA+ID4gMy5JZiB0aGUgY2FyZCBoYXMgUENJZSBhdmFp
-bGFiaWxpdHksIFJUUzUyNjEgc3dpdGNoIHRvIFBDSWUvTlZNZSBtb2RlLg0KPiA+ID4NCj4gPiA+
-IFRoaXMgc3dpdGNoIGlzIGRvbmUgYnkgdGhlIG1tYyBkcml2ZXIsIGJ1dCBob3cgZG9lcyB0aGUg
-UENJZS9OVk1lDQo+ID4gPiBkcml2ZXIga25vdyB3aGVuIHRvIHRha2Ugb3Zlcj8gSXNuJ3QgdGhl
-cmUgYSBzeW5jaHJvbml6YXRpb24gcG9pbnQgbmVlZGVkPw0KPiA+ID4NCj4gPiA+ID4gNC5NbWMg
-ZHJpdmVyIGV4aXQgYW5kIE5WTWUgZHJpdmVyIHN0YXJ0IHdvcmtpbmcuDQo+ID4gPg0KPiA+ID4g
-SGF2aW5nIHRoZSBtbWMgZHJpdmVyIHRvIGV4aXQgc2VlbXMgd3JvbmcgdG8gbWUuIEVsc2UgaG93
-IHdvdWxkIHlvdQ0KPiA+ID4gaGFuZGxlIGEgY2FyZCBiZWluZyByZW1vdmVkIGFuZCBpbnNlcnRl
-ZCBhZ2Fpbj8NCj4gPiA+DQo+ID4gPiBJbiBwcmluY2lwbGUgeW91IHdhbnQgdGhlIG1tYyBjb3Jl
-IHRvIGZhaWwgdG8gZGV0ZWN0IHRoZSBjYXJkIGFuZA0KPiA+ID4gdGhlbiBkbyBhIGhhbmRvdmVy
-LCBzb21laG93LiBObz8NCj4gPiA+DQo+ID4gPiBBbHRob3VnaCwgdG8gbWFrZSB0aGlzIHdvcmsg
-dGhlcmUgYXJlIGEgY291cGxlIG9mIHByb2JsZW1zIHlvdSBuZWVkDQo+ID4gPiB0byBkZWFsIHdp
-dGguDQo+ID4gPg0KPiA+ID4gMS4gSWYgdGhlIG1tYyBjb3JlIGRvZXNuJ3Qgc3VjY2Vzc2Z1bGx5
-IGRldGVjdCBhIGNhcmQsIGl0IHdpbGwNCj4gPiA+IHJlcXVlc3QgdGhlIG1tYyBob3N0IHRvIHBv
-d2VyIG9mZiB0aGUgY2FyZC4gSW4gdGhpcyBzaXR1YXRpb24sIHlvdQ0KPiA+ID4gd2FudCB0byBr
-ZWVwIHRoZSBwb3dlciB0byB0aGUgY2FyZCwgYnV0IGxlYXZlIGl0IHRvIGJlIG1hbmFnZWQgYnkg
-dGhlDQo+IFBDSWUvTlZNZSBkcml2ZXIgaW4gc29tZSB3YXkuDQo+ID4gPg0KPiA+ID4gMi4gRHVy
-aW5nIHN5c3RlbSByZXN1bWUsIHRoZSBtbWMgY29yZSBtYXkgdHJ5IHRvIHJlc3RvcmUgcG93ZXIg
-Zm9yIGENCj4gPiA+IGNhcmQsIGVzcGVjaWFsbHkgaWYgaXQncyBhIHJlbW92YWJsZSBzbG90LCBh
-cyB0byBtYWtlIHN1cmUgaXQgZ2V0cw0KPiA+ID4gZGV0ZWN0ZWQgaWYgc29tZW9uZSBpbnNlcnRl
-ZCBhIGNhcmQgd2hpbGUgdGhlIHN5c3RlbSB3YXMgc3VzcGVuZGVkLg0KPiA+ID4gTm90IHN1cmUg
-aWYgdGhpcyBwbGF5cyB3ZWxsIHdpdGggdGhlIFBDSWUvTlZNZSBkcml2ZXIncyBiZWhhdmlvdXIu
-DQo+ID4gPiBBZ2FpbiwgSSB0aGluayBzb21lIGtpbmQgb2Ygc3luY2hyb25pemF0aW9uIGlzIG5l
-ZWRlZC4NCj4gPiA+DQo+ID4gPiA+IDUuSWYgY2FyZCBpcyB1bnBsdWdnZWQsIFJUUzUyNjEgd2ls
-bCBzd2l0Y2ggdG8gU0QgbW9kZS4NCj4gPiA+DQo+ID4gPiBBbHJpZ2h0LCBjbGVhcmx5IHRoZSBt
-bWMgZHJpdmVyIGlzIG5lZWRlZCB0byBtYW5hZ2UgY2FyZCBpbnNlcnQvcmVtb3ZhbC4NCj4gPiA+
-DQo+ID4gPiA+IFdlIHNob3VsZCBzZW5kIENNRDggaW4gU0QgbW9kZSB0byBhc2sgY2FyZCdzIFBD
-SWUgYXZhaWxhYmlsaXR5LA0KPiA+ID4gPiBhbmQgdGhlDQo+ID4gPiBvcmRlciBvZiBOVk1lIGRy
-aXZlciBhbmQgcnRzNTI2MSBkcml2ZXIgZG9lc24ndCBtYXR0ZXIuDQo+ID4gPg0KPiA+ID4gVGhh
-dCBhc3N1bWVzIHRoZXJlJ3MgYW5vdGhlciBzeW5jaHJvbml6YXRpb24gbWVjaGFuaXNtLiBNYXli
-ZSB0aGVyZQ0KPiA+ID4gaXMsIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQgaG93Lg0KPiA+ID4NCj4g
-PiBJZiBubyBjYXJkIGluIFJUUzUyNjEsIFJUUzUyNjEgd29ya3MgaW4gU0QgbW9kZS4gSWYgeW91
-IHJ1biBjb21tYW5kIGxzcGNpLA0KPiB5b3UgY2FuIHNlZSB0aGUgUlRTNTI2MSBkZXZpY2UuDQo+
-IA0KPiBSaWdodC4NCj4gDQo+IFRoZSBydHN4X3BjaV9kcml2ZXIgKGRyaXZlcnMvbWlzYy9jYXJk
-cmVhZGVyL3J0c3hfcGNyLmMpIGhhcyByZWdpc3RlcmVkIGl0c2VsZg0KPiBhcyBhIHBjaSBkcml2
-ZXIgYW5kIGJlZW4gcHJvYmVkIHN1Y2Nlc3NmdWxseSwgSSBhc3N1bWUuIFRoZW4gZHVyaW5nDQo+
-IHJ0c3hfcGNpX3Byb2JlKCkgYW4gbWZkIGRldmljZSBpcyBhZGRlZCB2aWEgbWZkX2FkZF9kZXZp
-Y2VzKCksIHdoaWNoDQo+IGNvcnJlc3BvbmRzIHRvIHRoZSBydHN4X3BjaV9zZG1tYw0KPiAoZHJp
-dmVycy9tbWMvaG9zdC9ydHN4X3BjaV9zZG1tYy5jKSBwbGF0Zm9ybSBkcml2ZXIuDQo+IA0KPiA+
-IFdoZW4gaW5zZXJ0IGEgU0QgRXhwcmVzcyBjYXJkLCBNbWMgZHJpdmVyIHdpbGwgc2VuZCBDTUQ4
-IHRvIGFzayB0aGUNCj4gPiBjYXJkJ3MgUENJZSBhdmFpbGFiaWxpdHksIGJlY2F1c2UgaXQncyBh
-IFNEIEVYUFJFU1MgY2FyZCwNCj4gDQo+IE9rYXksIHNvIHRoaXMgd2lsbCB0aGVuIGJlIGEgcGFy
-dCBvZiB0aGUgcnRzeF9wY2lfc2RtbWMgZHJpdmVyJ3MgcHJvYmUgc2VxdWVuY2UuDQo+IE9yIG1v
-cmUgZXhhY3RseSwgd2hlbiBydHN4X3BjaV9zZG1tY19kcnZfcHJvYmUoKSBjb21wbGV0ZXMgc3Vj
-Y2Vzc2Z1bGx5LCBhDQo+IG1tYyByZXNjYW4gd29yayBiZWNvbWVzIHNjaGVkdWxlZCB0byB0cnkg
-dG8gZGV0ZWN0IGFuIFNEL01NQyBjYXJkLiBUaGVuDQo+IHRoZSBDTUQ4IGNvbW1hbmQgaXMgc2Vu
-dC4uLg0KPiANCj4gPiBSVFM1MjYxIHdpbGwgc3dpdGNoIHRvIE5WTWUgbW9kZSwgYWZ0ZXIgc3dp
-dGNoIGlmIHlvdSBydW4gbHNwY2ksIHlvdSBjYW4gc2VlDQo+IFJUUzUyNjEgZGlzYXBwZWFyZWQg
-YW5kIGEgTlZNZSBkZXZpY2UgcmVwbGFjZXMgUlRTNTI2MS4NCj4gDQo+IENhbiB5b3UgZWxhYm9y
-YXRlIG1vcmUgZXhhY3RseSBob3cgdGhpcyBtYW5hZ2VkPw0KPiANCj4gSXQga2luZCBvZiBzb3Vu
-ZHMgbGlrZSB0aGUgb3JpZ2luYWwgUENJIGRldmljZSBpcyBiZWluZyBkZWxldGVkPyBIb3cgaXMg
-dGhpcw0KPiBtYW5hZ2VkPw0KPiANCj4gSW4gYW55IGNhc2UsIHRoZSBydHN4X3BjaV9kcml2ZXIn
-cyAtPnJlbW92ZSgpIGNhbGxiYWNrLCBydHN4X3BjaV9yZW1vdmUoKSwNCj4gc2hvdWxkIGJlIGlu
-dm9rZWQsIEkgYXNzdW1lPw0KPiANCj4gVGhhdCB3b3VsZCB0aGVuIGxlYWQgdG8gdGhhdCBtZmRf
-cmVtb3ZlX2RldmljZXMoKSBnZXRzIGNhbGxlZCwgd2hpY2ggbWFrZXMNCj4gdGhlIC0+cmVtb3Zl
-KCkgY2FsbGJhY2sgb2YgdGhlIHJ0c3hfcGNpX3NkbW1jIGRyaXZlciwNCj4gcnRzeF9wY2lfc2Rt
-bWNfZHJ2X3JlbW92ZSgpLCB0byBiZSBpbnZva2VkLiBDb3JyZWN0Pw0KPiANClllcywgYWZ0ZXIg
-UlRTNTI2MSBzd2l0Y2ggdG8gTlZNZSBtb2RlLCBydHN4X3BjaV9yZW1vdmUoKSBhbmQgcnRzeF9w
-Y2lfc2RtbWNfZHJ2X3JlbW92ZSgpIHdpbGwgYmUgaW52b2tlZC4NCg0KPiA+IEluIE5WTWUgbW9k
-ZSwgUlRTNTI2MSBvbmx5IHByb3ZpZGUgYSBicmlkZ2UgYmV0d2VlbiBTRCBFeHByZXNzIGNhcmQg
-YW5kDQo+IFBDSWUuIEZvciBOVk1lIGRyaXZlciwganVzdCBsaWtlIGEgbmV3IE5WTWUgZGV2aWNl
-IGlzIGluc2VydGVkLg0KPiANCj4gSSBkb24ndCB1bmRlcnN0YW5kIHdoYXQgdGhhdCBtZWFucywg
-YnV0IEkgYW0gYWxzbyBub3QgYW4gZXhwZXJ0IG9uIFBDSS9OVk1lLg0KPiBDYXJlIHRvIGV4cGxh
-aW4gbW9yZT8NCj4gDQpJbiBOVk1lIG1vZGUsIFNEIEV4cHJlc3MgY2FyZCBjb25uZWN0IHRoZSBj
-b21wdXRlciB2aWEgUENJZS4NCklOIFNEIG1vZGUsIGNhcmQgY29ubmVjdCBjb21wdXRlciB2aWEg
-cmVhZGVyLg0KDQo+ID4gTW1jIGNvcmUgZG9lc24ndCBzdWNjZXNzZnVsbHkgZGV0ZWN0IHRoZSBj
-YXJkIGFuZCBoYW5kb3ZlciB0byBOVk1lDQo+ID4gZHJpdmVyLiBCZWNhdXNlIG9mIGRldGVjdCB0
-aGUgY2FyZCBmYWlsZWQsDQo+IA0KPiBIb3cgZG8geW91IG1ha2Ugc3VyZSB0aGF0IHRoZSBydHN4
-X3BjaV9zZG1tYyBkcml2ZXIgaXMgbGVhdmluZyB0aGUgY2FyZCBpbiB0aGUNCj4gY29ycmVjdCBz
-dGF0ZSBmb3IgTlZNZT8NCj4gDQo+IEZvciBleGFtcGxlLCB0aGUgbW1jIGNvcmUgaGFzIGEgbG9v
-cCByZS10cnlpbmcgd2l0aCBhIGxvd2VyIGluaXRpYWxpemF0aW9uDQo+IGZyZXF1ZW5jeSBmb3Ig
-dGhlIGNhcmQgKDQwMEtIeiwgMzAwS0h6LCAyMDBLSHosIDEwMEtIeikuIFRoaXMgd2lsbCBjYXVz
-ZQ0KPiBhZGRpdGlvbmFsIHJlcXVlc3RzIHRvIHRoZSBydHN4X3BjaV9zZG1tYyBkcml2ZXIuDQo+
-IA0KPiA+IE1tYyBkcml2ZXIgd2lsbCByZXF1ZXN0IHRoZSBSVFM1MjYxIHRvIHBvd2VyIG9mZiB0
-aGUgY2FyZCwgYnV0IGF0IHRoYXQgdGltZQ0KPiBwb3dlciBvZmYgdGhlIGNhcmQgd2lsbCBub3Qg
-c3VjY2VlZC4NCj4gDQo+IFllcywgYXNzdW1pbmcgbm8gY2FyZCB3YXMgZm91bmQsIHRoZSBtbWMg
-Y29yZSBjYWxscyBtbWNfcG93ZXJfb2ZmKCkuDQo+IFRocyBsZWFkcyB0byB0aGUgcnRzeF9wY2lf
-c2RtbWMgZHJpdmVyJ3MgLT5zZXRfaW9zKCkgY2FsbGJhY2sgYmVpbmcgaW52b2tlZCwNCj4gcmVx
-dWVzdGluZyB0aGUgY2FyZCB0byBiZSBwb3dlcmVkIG9mZi4gSSBkb24ndCBzZWUgaG93IHlvdSBh
-cmUgbWFuYWdpbmcgdGhpcywNCj4gd2hhdCBhbSBJIG1pc3Npbmc/DQo+IA0KQmVmb3JlIHBvd2Vy
-IG9mZiBjYXJkIGFuZCByZS10cnlpbmcgaW5pdGlhbGl6YXRpb24sIHJ0c3ggZHJpdmVyIHNldHMg
-UlRTNTI2MSAweEZGNTUgYml0ND0wLg0KQWZ0ZXIgc2V0IDB4RkY1NSBiaXQ0PTAsIFJUUzUyNjEg
-Y2FuJ3QgcmVjZWl2ZSBhbnkgQ01EIGZyb20gUENJZSBhbmQgcHJlcGFyZSBmb3IgZGV2aWNlIGRp
-c2FwcGVhci4NClRoZXJlZm9yZSwgTU1DIGRyaXZlciBjYW4ndCBjaGFuZ2UgY2FyZCBzdGF0dXMu
-DQoNCj4gQXMgc3RhdGVkIGFib3ZlLCBJIGFzc3VtZSB5b3UgdGhlIGNvcnJlc3BvbmRpbmcgcGxh
-dGZvcm0gZGV2aWNlIGZvcg0KPiBydHN4X3BjaV9zZG1tYyBiZWluZyBkZWxldGVkIGFuZCB0aHVz
-IHRyaWdnZXJpbmcgdGhlDQo+IHJ0c3hfcGNpX3NkbW1jX2Rydl9yZW1vdmUoKSBiZWluZyBjYWxs
-ZWQuIENvcnJlY3Q/IElmIG5vdCwgaG93IGRvZXMgdGhlDQo+IGRyaXZlciBtYW5hZ2UgdGhpcz8N
-Cj4gDQpZZXMuDQoNCj4gPiBXaGVuIHRoZSBjYXJkIGlzIHVucGx1Z2dlZCwgUlRTNTI2MSB3aWxs
-IHN3aXRjaCB0byBTRCBtb2RlIGJ5IGl0c2VsZg0KPiA+IGFuZCBkb24ndCBuZWVkIG1tYyBkcml2
-ZXIgdG8gZG8gYW55dGhpbmcsDQo+IA0KPiBPa2F5Lg0KPiANCj4gU28gdGhhdCBtZWFucyB0aGUg
-cnRzeF9wY2lfc2RtbWMgZHJpdmVyIGlzIGJlaW5nIHByb2JlZCBhZ2Fpbj8NCj4gDQpZZXMuDQoN
-Cj4gPiBJZiB5b3UgcnVuIGxzcGNpLCB5b3UgY2FuIHNlZSBOVk1lIGRldmljZSBkaXNhcHBlYXJl
-ZCBhbmQgUlRTNTI2MSBhcHBlYXJlZA0KPiBhZ2Fpbi4NCj4gDQo+IEkgc2VlLg0KPiANCktpbmQg
-cmVnYXJkcw0KDQo=
+Hi Bjorn Helgaas,
+ 1. What are the other functions and where is the other driver?
+ >PCI bus and GPIO can be considered as two functions independently.
+ And the driver is located at drivers/gpio/gpio-amd8111.c
+
+ 2.We end up with multiple drivers controlling the device without
+any coordination between them?
+ >Yes,because two functions are independently in the device,and
+the main driver for PCI bus function is more important.We wish
+they can't be affected and coordinated between two drivers
+as much as possible.If main driver is affected,it is more
+serious.
+ In our case,we have gpio registers on pci configuration space
+of asm28xx pci-e bridge(with main pci bus driver).If we want
+to use it by another driver that use gpio subsystem /sys/class/
+gpio/(sysfs interface).I find the driver(gpio-amd8111.c) that
+meet our request.Sorry! i am not best friend with git,and
+reply mail in the same way. 
+
+
+Hi Bartosz Golaszewski,
+ Thank you.And i have studied PCI MFD device in drivers/mfd.
+Maybe,it is not what i am looking for.This type of device
+include core and miscellaneous function drivers.And function
+drivers export resources(io/mem/dma) to sysfs.Fist,we can't
+implement another pci bus driver as core driver,and secondly,
+it don't use gpio subsystem with /sys/class/gpio/(sysfs
+interface).
+ So,you will review this driver and upstream to mainline
+kernel?
+
+ BR,
+ Richard
+
+Signed-off-by: Richard Hsu <saraon640529@gmail.com>
+---
+ drivers/gpio/Kconfig             |   7 +
+ drivers/gpio/Makefile            |   1 +
+ drivers/gpio/gpio-asm28xx-18xx.c | 278 +++++++++++++++++++++++++++++++
+ 3 files changed, 286 insertions(+)
+ create mode 100644 drivers/gpio/gpio-asm28xx-18xx.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 1b96169d84f7..932f128f18c9 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -113,6 +113,13 @@ config GPIO_AMDPT
+ 	  driver for GPIO functionality on Promontory IOHub
+ 	  Require ACPI ASL code to enumerate as a platform device.
+ 
++config GPIO_ASM28XX
++	tristate "Asmedia 28XX/18XX GPIO support"
++	depends on PCI
++	select GPIO_GENERIC
++	help
++	  Driver for GPIO functionality on Asmedia 28XX and 18XX PCI-E Bridge.
++
+ config GPIO_ASPEED
+ 	tristate "Aspeed GPIO support"
+ 	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index b2cfc21a97f3..0cee016f9d2f 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -31,6 +31,7 @@ obj-$(CONFIG_GPIO_AMD8111)		+= gpio-amd8111.o
+ obj-$(CONFIG_GPIO_AMD_FCH)		+= gpio-amd-fch.o
+ obj-$(CONFIG_GPIO_AMDPT)		+= gpio-amdpt.o
+ obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
++obj-$(CONFIG_GPIO_ASM28XX)		+= gpio-asm28xx-18xx.o
+ obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
+ obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+= gpio-aspeed-sgpio.o
+ obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
+diff --git a/drivers/gpio/gpio-asm28xx-18xx.c b/drivers/gpio/gpio-asm28xx-18xx.c
+new file mode 100644
+index 000000000000..8c1972044c80
+--- /dev/null
++++ b/drivers/gpio/gpio-asm28xx-18xx.c
+@@ -0,0 +1,278 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Asmedia 28xx/18xx GPIO driver
++ *
++ * Copyright (C) 2020 ASMedia Technology Inc.
++ * Author: Richard Hsu <Richard_Hsu@asmedia.com.tw>
++ */
++
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/gpio/driver.h>
++#include <linux/pci.h>
++#include <linux/spinlock.h>
++#include <linux/pm_runtime.h>
++#include <linux/bits.h>
++
++
++/* GPIO registers offsets */
++#define ASM_GPIO_CTRL		0x920
++#define ASM_GPIO_OUTPUT		0x928
++#define ASM_GPIO_INPUT		0x930
++#define ASM_REG_SWITCH		0xFFF
++
++#define ASM_REG_SWITCH_CTL	0x01
++
++#define ASM_GPIO_PIN5		5
++#define ASM_GPIO_DEFAULT	0
++
++
++#define PCI_DEVICE_ID_ASM_28XX_PID1	0x2824
++#define PCI_DEVICE_ID_ASM_28XX_PID2	0x2812
++#define PCI_DEVICE_ID_ASM_28XX_PID3	0x2806
++#define PCI_DEVICE_ID_ASM_18XX_PID1	0x1824
++#define PCI_DEVICE_ID_ASM_18XX_PID2	0x1812
++#define PCI_DEVICE_ID_ASM_18XX_PID3	0x1806
++#define PCI_DEVICE_ID_ASM_81XX_PID1	0x812a
++#define PCI_DEVICE_ID_ASM_81XX_PID2	0x812b
++#define PCI_DEVICE_ID_ASM_80XX_PID1	0x8061
++
++/*
++ * Data for PCI driver interface
++ *
++ * This data only exists for exporting the supported
++ * PCI ids via MODULE_DEVICE_TABLE.  We do not actually
++ * register a pci_driver, because someone else might one day
++ * want to register another driver on the same PCI id.
++ */
++static const struct pci_device_id pci_tbl[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID3), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID3), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_81XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_81XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_80XX_PID1), 0 },
++	{ 0, },	/* terminate list */
++};
++MODULE_DEVICE_TABLE(pci, pci_tbl);
++
++struct asm28xx_gpio {
++	struct gpio_chip	chip;
++	struct pci_dev		*pdev;
++	spinlock_t		lock;
++};
++
++void pci_config_pm_runtime_get(struct pci_dev *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device *parent = dev->parent;
++
++	if (parent)
++		pm_runtime_get_sync(parent);
++	pm_runtime_get_noresume(dev);
++	/*
++	 * pdev->current_state is set to PCI_D3cold during suspending,
++	 * so wait until suspending completes
++	 */
++	pm_runtime_barrier(dev);
++	/*
++	 * Only need to resume devices in D3cold, because config
++	 * registers are still accessible for devices suspended but
++	 * not in D3cold.
++	 */
++	if (pdev->current_state == PCI_D3cold)
++		pm_runtime_resume(dev);
++}
++
++void pci_config_pm_runtime_put(struct pci_dev *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device *parent = dev->parent;
++
++	pm_runtime_put(dev);
++	if (parent)
++		pm_runtime_put_sync(parent);
++}
++
++static int asm28xx_gpio_request(struct gpio_chip *chip, unsigned offset)
++{
++	if (offset == ASM_GPIO_PIN5)
++		return -ENODEV;
++
++	return 0;
++}
++
++static void asm28xx_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_OUTPUT, &temp);
++	if (value)
++		temp |= BIT(offset);
++	else
++		temp &= ~BIT(offset);
++
++	pci_write_config_byte(agp->pdev, ASM_GPIO_OUTPUT, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx gpio %d set %d reg=%02x\n", offset, value, temp);
++}
++
++static int asm28xx_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_INPUT, &temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx GPIO Pin %d get reg=%02x\n", offset, temp);
++	return (temp & BIT(offset)) ? 1 : 0;
++}
++
++static int asm28xx_gpio_dirout(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_CTRL, &temp);
++	temp |= BIT(offset);
++	pci_write_config_byte(agp->pdev, ASM_GPIO_CTRL, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx dirout gpio %d  reg=%02x\n", offset, temp);
++
++	return 0;
++}
++
++static int asm28xx_gpio_dirin(struct gpio_chip *chip, unsigned offset)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_CTRL, &temp);
++	temp &= ~BIT(offset);
++	pci_write_config_byte(agp->pdev, ASM_GPIO_CTRL, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx dirin gpio %d  reg=%02x\n", offset, temp);
++
++	return 0;
++}
++
++static struct asm28xx_gpio gp = {
++	.chip = {
++		.label		= "ASM28XX-18XX GPIO",
++		.owner		= THIS_MODULE,
++		.ngpio		= 8,
++		.request	= asm28xx_gpio_request,
++		.set		= asm28xx_gpio_set,
++		.get		= asm28xx_gpio_get,
++		.direction_output = asm28xx_gpio_dirout,
++		.direction_input = asm28xx_gpio_dirin,
++	},
++};
++
++static int __init asm28xx_gpio_init(void)
++{
++	int err = -ENODEV;
++	struct pci_dev *pdev = NULL;
++	const struct pci_device_id *ent;
++	u8 temp;
++	unsigned long flags;
++	int type;
++
++	/* We look for our device - Asmedia 28XX and 18XX Bridge
++	 * I don't know about a system with two such bridges,
++	 * so we can assume that there is max. one device.
++	 *
++	 * We can't use plain pci_driver mechanism,
++	 * as the device is really a multiple function device,
++	 * main driver that binds to the pci_device is an bus
++	 * driver and have to find & bind to the device this way.
++	 */
++
++	for_each_pci_dev(pdev) {
++		ent = pci_match_id(pci_tbl, pdev);
++		if (ent) {
++			/* Because GPIO Registers only work on Upstream port. */
++			type = pci_pcie_type(pdev);
++			if (type == PCI_EXP_TYPE_UPSTREAM) {
++				dev_info(&pdev->dev, "ASMEDIA-28xx/18xx Init Upstream detected\n");
++				goto found;
++			}
++		}
++	}
++	goto out;
++
++found:
++	gp.pdev = pdev;
++	gp.chip.parent = &pdev->dev;
++
++	spin_lock_init(&gp.lock);
++
++	err = gpiochip_add_data(&gp.chip, &gp);
++	if (err) {
++		dev_err(&pdev->dev, "GPIO registering failed (%d)\n", err);
++		goto out;
++	}
++
++	pci_config_pm_runtime_get(pdev);
++
++	/* Set PCI_CFG_Switch bit = 1,then we can access GPIO Registers. */
++	spin_lock_irqsave(&gp.lock, flags);
++	pci_read_config_byte(pdev, ASM_REG_SWITCH, &temp);
++	temp |= ASM_REG_SWITCH_CTL;
++	pci_write_config_byte(pdev, ASM_REG_SWITCH, temp);
++	pci_read_config_byte(pdev, ASM_REG_SWITCH, &temp);
++	spin_unlock_irqrestore(&gp.lock, flags);
++
++	pci_config_pm_runtime_put(pdev);
++	dev_err(&pdev->dev, "ASMEDIA-28xx/18xx Init SWITCH = 0x%x\n", temp);
++out:
++	return err;
++}
++
++static void __exit asm28xx_gpio_exit(void)
++{
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(gp.pdev);
++
++	spin_lock_irqsave(&gp.lock, flags);
++	/* Set GPIO Registers to default value. */
++	pci_write_config_byte(gp.pdev, ASM_GPIO_OUTPUT, ASM_GPIO_DEFAULT);
++	pci_write_config_byte(gp.pdev, ASM_GPIO_INPUT, ASM_GPIO_DEFAULT);
++	pci_write_config_byte(gp.pdev, ASM_GPIO_CTRL, ASM_GPIO_DEFAULT);
++	/* Clear PCI_CFG_Switch bit = 0,then we can't access GPIO Registers. */
++	pci_write_config_byte(gp.pdev, ASM_REG_SWITCH, ASM_GPIO_DEFAULT);
++	spin_unlock_irqrestore(&gp.lock, flags);
++	pci_config_pm_runtime_put(gp.pdev);
++
++	gpiochip_remove(&gp.chip);
++}
++
++module_init(asm28xx_gpio_init);
++module_exit(asm28xx_gpio_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Richard Hsu <Richard_Hsu@asmedia.com.tw>");
++MODULE_DESCRIPTION("ASMedia 28xx 18xx GPIO Driver");
+-- 
+2.17.1
+
