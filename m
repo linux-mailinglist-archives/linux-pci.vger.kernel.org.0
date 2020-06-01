@@ -2,79 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61EAB1EA695
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 17:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 105D51EA69E
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 17:15:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgFAPNl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jun 2020 11:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38854 "EHLO mail.kernel.org"
+        id S1727769AbgFAPOr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jun 2020 11:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgFAPNl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:13:41 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726075AbgFAPOp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Jun 2020 11:14:45 -0400
+Received: from [192.168.68.109] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A431C20738;
-        Mon,  1 Jun 2020 15:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2C6C20738;
+        Mon,  1 Jun 2020 15:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591024421;
-        bh=xCkd2fICeOT9Ubja+5vo62mABuxHHRilmgEk9G4WHwk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EYDb/OHT+pWpoo4RcVx+H1fEMIm5fhsJZ7hQWUeU4Gg1D4EDLU+t796v8MXUvc/pc
-         uAgIgKYINjVWVd/mL3SqvTGJq1nI4p8g+gtpqxYjCTBkMeOmK5eGHsnyGMMbiwQcm3
-         s3mE945pSdBwHTqRlXBUdPO9CAJNcov8kUS7E4EM=
-Date:   Mon, 1 Jun 2020 10:13:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        s=default; t=1591024484;
+        bh=ZEZ0ym3z4cWoMapFRnQouGecwlLb2uuHkk+kjlht0Hw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=1hNev6fGAYWR6isNkuT0U/MxEWQrCo5H/X4v3prURxwDjd/BzFOuz8JvPEYAKUuNr
+         MR68fEzOMUtv1i2OQuaKzQRXmZqptwqw2IKTyeSlOe+0Yytfi5OslASZQrJvD+abSc
+         ypbM3zqG9ouCEXHsKagy1mbuHT2nb23We8ibQQhs=
+Subject: Re: [PATCH] PCI/ASPM: Print correct ASPM status when _OSC failed
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
- CONFIG_PCIEASPM by default")
-Message-ID: <20200530123421.GA532471@bjorn-Precision-5520>
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>
+References: <1590655125-23949-1-git-send-email-yangyicong@hisilicon.com>
+ <CAJZ5v0g9O5r7tpLMN7SJu+KZEeEcdeTKeQ=hEo5r+VJzc6g08Q@mail.gmail.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <6f6aa87f-7c4d-61f6-f8c2-42ad05b5c845@kernel.org>
+Date:   Mon, 1 Jun 2020 11:14:45 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200530113344.GA2834@infradead.org>
+In-Reply-To: <CAJZ5v0g9O5r7tpLMN7SJu+KZEeEcdeTKeQ=hEo5r+VJzc6g08Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 30, 2020 at 04:33:44AM -0700, Christoph Hellwig wrote:
-> On Sat, May 30, 2020 at 08:14:34AM +0100, Matthew Garrett wrote:
-> > On Sat, May 30, 2020 at 08:33:50AM +0200, Heiner Kallweit wrote:
-> > 
-> > > It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
-> > > select CONFIG_PCIEASPM by default") and that's what triggered the
-> > > problem. If there's no easy solution, then maybe it's best to revert
-> > > the change for now.
-> > 
-> > Oh, sorry, I was looking at mainline. CONFIG_PCIEASPM should 
-> > *definitely* be enabled by default - platforms expect the OS to support 
-> > it. If we want to get rid of default y then I think it'd make more sense 
-> > to have a CONFIG_DISABLE_PCIEASPM that's under EXPERT, and people who 
-> > really want to disable the code can do so.
-> 
-> I think the fact that the EXPERT didn't get removed in the above bug
-> is a defintive bug.  But I'd go further and think the CONFIG_PCIEASPM
-> option should be removed entirely.  There is absolutely no good reason
-> to not build this small amount of code if PCIe support is enabled.
+On 5/28/2020 7:42 AM, Rafael J. Wysocki wrote:
+>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+>> index ac8ad6c..5140b26 100644
+>> --- a/drivers/acpi/pci_root.c
+>> +++ b/drivers/acpi/pci_root.c
+>> @@ -456,7 +456,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>>
+>>                 dev_info(&device->dev, "_OSC failed (%s)%s\n",
+>>                          acpi_format_exception(status),
+>> -                        pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
+>> +                        pcie_aspm_support_enabled() ? "" : "; disabling ASPM");
+>>                 return;
+>>         }
+>>
+>> --
+> Applied as 5.8 material under the "ACPI: PCI: Fix the ASPM part of the
+> _OSC failure message" subject and with a different changelog.
 
-That might be a good solution.  I don't really want a situation where
-leaving CONFIG_PCIEASPM unset is "known to break PME."
 
-ASPM support has historically been fragile, and it's actually a
-significant amount of code (~10KB on my x86), which is larger than
-many other things for which we have config options.  But we do have
-boot-time and run-time ways to disable it.
+I'm confused. The original change would print ASPM is getting disabled
+only when ASPM is supported. Now, we are printing disabling ASPM when
+ASPM is not supported.
 
-Another possibility might be to make it so Linux always advertises
-ASPM support, but doesn't actually *do* anything unless
-CONFIG_PCIEASPM is set.  I don't think advertising ASPM support means
-the OS is required to change whatever configuration firmware did.
+Now, we reverted the change and went back to incorrect behavior again.
 
-Bjorn
+Am I missing something?
