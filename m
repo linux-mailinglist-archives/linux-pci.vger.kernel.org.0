@@ -2,158 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09F811EB160
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jun 2020 23:57:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FDE41EB18A
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 00:13:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgFAV5D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jun 2020 17:57:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49847 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729727AbgFAV5D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jun 2020 17:57:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591048621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+8x7s6vw7v2g1Fw/ZCFRr/iC2dQUap8Sq6pXb0oimto=;
-        b=Ib0rTkWKq93ANdMZxSrFWt9hlzJBNPfznqBtBgL9WkMa1D/iabx4kcv5D+dVwsBWrh1W5b
-        eL2oAFc7lEEqjh4nX1MAP0QSP5ExPJsFRMiwkmRBcl4suS1XqJn/vtpN3AeIgypwT6bN3u
-        ALusu1edC04ThFWuDzCwsF7h7l7a+Hg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-128NCfkrMMyJcvUPflPFvg-1; Mon, 01 Jun 2020 17:56:59 -0400
-X-MC-Unique: 128NCfkrMMyJcvUPflPFvg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32C69100A8E7;
-        Mon,  1 Jun 2020 21:56:57 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E137A19C4F;
-        Mon,  1 Jun 2020 21:56:55 +0000 (UTC)
-Date:   Mon, 1 Jun 2020 15:56:55 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>
-Subject: Re: [PATCH] PCI: Relax ACS requirement for Intel RCiEP devices.
-Message-ID: <20200601155655.1519bc86@x1.home>
-In-Reply-To: <20200601214023.GA15310@otc-nc-03>
-References: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
-        <20200601212519.GA758937@bjorn-Precision-5520>
-        <20200601214023.GA15310@otc-nc-03>
-Organization: Red Hat
+        id S1728428AbgFAWN2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jun 2020 18:13:28 -0400
+Received: from mail-il1-f169.google.com ([209.85.166.169]:40150 "EHLO
+        mail-il1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgFAWN2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jun 2020 18:13:28 -0400
+Received: by mail-il1-f169.google.com with SMTP id t8so10421384ilm.7;
+        Mon, 01 Jun 2020 15:13:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=u/K0WP1l+S2GcJnU0hImQFyJlJg7afttDd6dL6wNR0s=;
+        b=Fi9Mng/R0dlQb5Ztlueshh2UUDWomTkfdpPect48lAiWmv9N7fJvaGgoJp/0XFJ0L5
+         AA+NqO/9pp8kUxW34cBn0OZIiUpp7bsj9xwfzHEN3sHybb+CAPe1Y7UgjM26YVkzB1xn
+         FCjJ04qBigSXBF4YoNDcfDLO1/0ZsAY7r3Q8zR9RAxUmqayydSwl4MS4vWHpn5hBgAsv
+         4Fzrnahbt+DRStQLLAufcu2NzExCPBYB8AB5U+6r5MtsxjR7p1R8EKXF+4i3dnlbOUSY
+         7vS9PUDkl0lUzOLcNCBgmZIozRSy8kEx9citSgkERjNIphhWdxCIMM343hXijgqFny/z
+         NPCQ==
+X-Gm-Message-State: AOAM532WBQ4XHuf9ljXt5gZj02nI3pZceHQsQB1YNu/BZAMEjgIC+l+l
+        EqQTEuxbMwjeLuBj/g+G7w==
+X-Google-Smtp-Source: ABdhPJw7TTct/NTs7/1Xtdll5C5FrVfNlSwqolhiKMR2OuZ39yvyQUpvMY03HJxl5RvUc47lC/fNEA==
+X-Received: by 2002:a92:778b:: with SMTP id s133mr20588388ilc.99.1591049607389;
+        Mon, 01 Jun 2020 15:13:27 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id f26sm265694ion.23.2020.06.01.15.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 15:13:26 -0700 (PDT)
+Received: (nullmailer pid 1602852 invoked by uid 1000);
+        Mon, 01 Jun 2020 22:13:25 -0000
+Date:   Mon, 1 Jun 2020 16:13:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     thomas.petazzoni@bootlin.com, bhelgaas@google.com,
+        pratyush.anand@gmail.com, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, tjoseph@cadence.com, jonnyc@amazon.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
+Message-ID: <20200601221325.GA1602793@bogus>
+References: <20200526150954.4729-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526150954.4729-1-zhengdejin5@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 1 Jun 2020 14:40:23 -0700
-"Raj, Ashok" <ashok.raj@intel.com> wrote:
+On Tue, 26 May 2020 23:09:54 +0800, Dejin Zheng wrote:
+> It will print an error message by itself when
+> devm_pci_remap_cfg_resource() goes wrong. so remove the duplicate
+> error message.
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c |  4 +---
+>  drivers/pci/controller/dwc/pcie-al.c               | 13 +++----------
+>  drivers/pci/controller/dwc/pcie-armada8k.c         |  1 -
+>  drivers/pci/controller/dwc/pcie-spear13xx.c        |  1 -
+>  4 files changed, 4 insertions(+), 15 deletions(-)
+> 
 
-> On Mon, Jun 01, 2020 at 04:25:19PM -0500, Bjorn Helgaas wrote:
-> > On Thu, May 28, 2020 at 01:57:42PM -0700, Ashok Raj wrote: =20
-> > > All Intel platforms guarantee that all root complex implementations
-> > > must send transactions up to IOMMU for address translations. Hence for
-> > > RCiEP devices that are Vendor ID Intel, can claim exception for lack =
-of
-> > > ACS support.
-> > >=20
-> > >=20
-> > > 3.16 Root-Complex Peer to Peer Considerations
-> > > When DMA remapping is enabled, peer-to-peer requests through the
-> > > Root-Complex must be handled
-> > > as follows:
-> > > =E2=80=A2 The input address in the request is translated (through fir=
-st-level,
-> > >   second-level or nested translation) to a host physical address (HPA=
-).
-> > >   The address decoding for peer addresses must be done only on the
-> > >   translated HPA. Hardware implementations are free to further limit
-> > >   peer-to-peer accesses to specific host physical address regions
-> > >   (or to completely disallow peer-forwarding of translated requests).
-> > > =E2=80=A2 Since address translation changes the contents (address fie=
-ld) of
-> > >   the PCI Express Transaction Layer Packet (TLP), for PCI Express
-> > >   peer-to-peer requests with ECRC, the Root-Complex hardware must use
-> > >   the new ECRC (re-computed with the translated address) if it
-> > >   decides to forward the TLP as a peer request.
-> > > =E2=80=A2 Root-ports, and multi-function root-complex integrated endp=
-oints, may
-> > >   support additional peerto-peer control features by supporting PCI E=
-xpress
-> > >   Access Control Services (ACS) capability. Refer to ACS capability in
-> > >   PCI Express specifications for details.
-> > >=20
-> > > Since Linux didn't give special treatment to allow this exception, ce=
-rtain
-> > > RCiEP MFD devices are getting grouped in a single iommu group. This
-> > > doesn't permit a single device to be assigned to a guest for instance.
-> > >=20
-> > > In one vendor system: Device 14.x were grouped in a single IOMMU grou=
-p.
-> > >=20
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.3
-> > >=20
-> > > After the patch:
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> > > /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
-> > >=20
-> > > 14.0 and 14.2 are integrated devices, but legacy end points.
-> > > Whereas 14.3 was a PCIe compliant RCiEP.
-> > >=20
-> > > 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
-> > > Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI=
- 00
-> > >=20
-> > > This permits assigning this device to a guest VM.
-> > >=20
-> > > Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
-> > > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > > To: Joerg Roedel <joro@8bytes.org>
-> > > To: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: iommu@lists.linux-foundation.org
-> > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
-> > > Cc: Mark Scott <mscott@forcepoint.com>,
-> > > Cc: Romil Sharma <rsharma@forcepoint.com>
-> > > Cc: Ashok Raj <ashok.raj@intel.com> =20
-> >=20
-> > Tentatively applied to pci/virtualization for v5.8, thanks!
-> >=20
-> > The spec says this handling must apply "when DMA remapping is
-> > enabled".  The patch does not check whether DMA remapping is enabled.
-> >=20
-> > Is there any case where DMA remapping is *not* enabled, and we rely on
-> > this patch to tell us whether the device is isolated?  It sounds like
-> > it may give the wrong answer in such a case?
-> >=20
-> > Can you confirm that I don't need to worry about this?   =20
->=20
-> I think all of this makes sense only when DMA remapping is enabled.
-> Otherwise there is no enforcement for isolation.=20
-
-Yep, without an IOMMU all devices operate in the same IOVA space and we
-have no isolation.  We only enable ACS when an IOMMU driver requests it
-and it's only used by IOMMU code to determine IOMMU grouping of
-devices.  Thanks,
-
-Alex
-
+Reviewed-by: Rob Herring <robh@kernel.org>
