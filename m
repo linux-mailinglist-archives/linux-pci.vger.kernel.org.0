@@ -2,204 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3224F1EC4AB
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 23:56:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6629D1EC4B3
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 23:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgFBV4A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jun 2020 17:56:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
+        id S1727898AbgFBV5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jun 2020 17:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBVz7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 17:55:59 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6BFC08C5C0
-        for <linux-pci@vger.kernel.org>; Tue,  2 Jun 2020 14:55:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so4346096wmh.4
-        for <linux-pci@vger.kernel.org>; Tue, 02 Jun 2020 14:55:59 -0700 (PDT)
+        with ESMTP id S1727794AbgFBV5q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 17:57:46 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345F3C08C5C0;
+        Tue,  2 Jun 2020 14:57:46 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x14so224146wrp.2;
+        Tue, 02 Jun 2020 14:57:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pC4aWKB/tDCD8vk19vY98cQZrnpY1VLP07nYFKTadOU=;
-        b=WhxoEIQrmXsVVkA1mZVZKHhKg98bXnh64aQouQ50aCjmPZ6Go6IUNqkNkmRLQtsbLz
-         +8NZpw9RcHfUiShiva+naYN2YYMjHReQHnCpy4waamumHgcoQ/UijyjLt/TKis5pTg8i
-         nb1O9KeHNB7EcwoVeXRMywsXvcUbbhlj84SoU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x7AN5XUNLuQTYg56C70ga61tHZwFYIHa2AHQltczmFg=;
+        b=U0M5kO/8jyb/C740fEOYcR40kb1ux5x8uoxnQ9CONuX5Qf2+HD4+DUjHVay4hDowBx
+         emMBMfxfr0F+a7T6SH/gc6www4bjdTGBTxtrIr+bz30R+/swZKMnVC/CfMPIImjvUB8f
+         B+jsJqM46921FPCCtudANp8fvg9Ajl5OeqGjiehUVoiYQ9ovWDxjK72hDl+R1Ab/MV2Q
+         O4aS08d2IrlbGJYXzYfOJNRJ4YhXUGrNCYKN3RckPEaPwYX0cCQi9RovM/eUg9DYZ7Yt
+         +s7RQRJ6Ie3Mf8+yNLYSrqdr7fHtNKS47Um0woaZYpsO2nq9dMLoneWLzGRhnrlk2X7/
+         /bGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pC4aWKB/tDCD8vk19vY98cQZrnpY1VLP07nYFKTadOU=;
-        b=nFzDaK3B5pgZ/1W9hB3YjtXt2KIytBhYBTqop81EJnMZZ5AAKu++6aK7qQGodQYRRQ
-         5kMXuao1ulWaQKlbvZKZjKqfV251srD1ZKfnvn+Q0Fu6ACxjeGwNsHNRau8qhmNn8ozS
-         pz+ieiXoYpMOGgYNd3WWlevqHeaDI0/LL+hpjgRudtjYQKwIVRaghFSpohDxc7tejLxq
-         PplMhkvykFt6U96b61VXK20dBpL+k+LIWkyz1PofDYN5sxNWh/31NBvLMSWWh5lQUVd6
-         if5w2EASunaZXy2/zO0aBy6FJL6ybbDY5o7bY/ySC+Xs/VRBUH915Zejtd/ttREc8Ag0
-         H1Bg==
-X-Gm-Message-State: AOAM531fyP2+o/avhUB5fAjaKERS9ROJJj9TMonJKZtcB9F/FjrGlS/M
-        +wTHFyliXCISvf183X87KRNEgt79ES/7L1R9m81/9j1U
-X-Google-Smtp-Source: ABdhPJwV813+YIcH+IIsN44nF4R01Z3ZJCDnktHPUm8naM80EtbshruegyltyRNHVxPWX8Q2oaB7+zkMkg3Lra2ICo8=
-X-Received: by 2002:a05:600c:280c:: with SMTP id m12mr6141691wmb.92.1591134957775;
- Tue, 02 Jun 2020 14:55:57 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x7AN5XUNLuQTYg56C70ga61tHZwFYIHa2AHQltczmFg=;
+        b=OjggjLVx2nMtuanJ+LlJkL8bPMWBeuvSixewFMHiwQDjnsiSupjzZU40gQSlxHxz1U
+         FA3LA/VOQiZEfvS3orfnjkeo0r8xizt9ZVJWWOOIL46UJcCKViaaIGr078muQlfe8wwd
+         vMI1rmXDIM/pN6EI//NPWWMW5sPpHd08uOxdEAUG38kz/y57z7wu9J5aeoIqKZn26l8Q
+         Xm07pBwrstz/g2p31VlE8c7RL8HUWNZtGhEsJ5wjmqMA80CXfTOsxgSta0wmIeyH3FL1
+         y7TXDEUzpT6XrGq+8Zt3c0kbh+QOAE6wdtsNNaobeb73DgwI1Gu+yKkOudF+kwtO/Car
+         Z+qw==
+X-Gm-Message-State: AOAM531g5I8zROVlA/PKvzThJF8k8cXxM4Su6Qvc0TUp8uzlM4pIerna
+        JKA0KZUJi8CkxTVNVRmMB+3tFu5I
+X-Google-Smtp-Source: ABdhPJy4YSjVEqczNAzcxEmsNN/lUYdvDuqjTKqzm2pWbMKypz5vH+9xQ5nc74+DxdvTResbkxAWHA==
+X-Received: by 2002:adf:e58c:: with SMTP id l12mr28203147wrm.34.1591135064541;
+        Tue, 02 Jun 2020 14:57:44 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b201sm208844wmb.36.2020.06.02.14.57.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 14:57:44 -0700 (PDT)
+Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+ <20200505161318.26200-5-nsaenzjulienne@suse.de>
+ <7cbe4da8ba4a1524824473f8c58720f412a00fc2.camel@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <edcbc0a6-f901-d8ff-748f-73017397799d@gmail.com>
+Date:   Tue, 2 Jun 2020 14:57:40 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
- <20200526191303.1492-4-james.quinlan@broadcom.com> <20200529174634.GA2630216@bogus>
- <CA+-6iNwWBFYHVKiwwJ95DYQ5zmc5uBo1cgZzd6rpD++aQWgGpw@mail.gmail.com> <CAL_JsqKtASTzACSNn8BgmEBqf0eyR8RB_tjY7aUnvK+2GYXTbg@mail.gmail.com>
-In-Reply-To: <CAL_JsqKtASTzACSNn8BgmEBqf0eyR8RB_tjY7aUnvK+2GYXTbg@mail.gmail.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Tue, 2 Jun 2020 17:55:44 -0400
-Message-ID: <CA+-6iNxK7WaE2c_kwZDk3j7BiVkFdS-FaL5U1TP_DNvBNGgi3w@mail.gmail.com>
-Subject: Re: [PATCH v2 03/14] dt-bindings: PCI: Add bindings for more Brcmstb chips
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7cbe4da8ba4a1524824473f8c58720f412a00fc2.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 5:41 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Jun 2, 2020 at 2:53 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
-> >
-> > On Fri, May 29, 2020 at 1:46 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Tue, May 26, 2020 at 03:12:42PM -0400, Jim Quinlan wrote:
-> > > > From: Jim Quinlan <jquinlan@broadcom.com>
-> > > >
-> > > > - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
-> > > >   7211 (STB version of RPi4).
-> > > > - add new property 'brcm,scb-sizes'
-> > > > - add new property 'resets'
-> > > > - add new property 'reset-names'
-> > > > - allow 'ranges' and 'dma-ranges' to have more than one item and update
-> > > >   the example to show this.
-> > > >
-> > > > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> > > > ---
-> > > >  .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
-> > > >  1 file changed, 36 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > index 8680a0f86c5a..66a7df45983d 100644
-> > > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > @@ -14,7 +14,13 @@ allOf:
-> > > >
-> > > >  properties:
-> > > >    compatible:
-> > > > -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> > > > +    items:
-> > > > +      - enum:
-> > >
-> > > Don't need items here. Just change the const to enum.
-> > >
-> > > > +          - brcm,bcm2711-pcie # The Raspberry Pi 4
-> > > > +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> > > > +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-> > > > +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-> > > > +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
-> > > >
-> > > >    reg:
-> > > >      maxItems: 1
-> > > > @@ -34,10 +40,12 @@ properties:
-> > > >        - const: msi
-> > > >
-> > > >    ranges:
-> > > > -    maxItems: 1
-> > > > +    minItems: 1
-> > > > +    maxItems: 4
-> > > >
-> > > >    dma-ranges:
-> > > > -    maxItems: 1
-> > > > +    minItems: 1
-> > > > +    maxItems: 6
-> > > >
-> > > >    clocks:
-> > > >      maxItems: 1
-> > > > @@ -58,8 +66,30 @@ properties:
-> > > >
-> > > >    aspm-no-l0s: true
-> > > >
-> > > > +  resets:
-> > > > +    description: for "brcm,bcm7216-pcie", must be a valid reset
-> > > > +      phandle pointing to the RESCAL reset controller provider node.
-> > > > +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> > > > +
-> > > > +  reset-names:
-> > > > +    items:
-> > > > +      - const: rescal
-> > >
-> > > These are going to need to be an if/then schema if they only apply to
-> > > certain compatible(s).
-> >
-> > Why is that -- the code is general enough to handle its presence or
-> > not (it is an optional compatibility)>
->
-> Because an if/then schema expresses in a parse-able form what your
-> 'description' does in free form text.
->
-> Presumably a 'resets' property for !brcm,bcm7216-pcie is invalid, so
-> we should check that. The schema shouldn't be just what some driver
-> happens to currently allow. Also, it's not a driver's job to validate
-> DT, so it shouldn't check any of this.
-Got it, will fix.
->
-> > > > +  brcm,scb-sizes:
-> > > > +    description: (u32, u32) tuple giving the 64bit PCIe memory
-> > > > +      viewport size of a memory controller.  There may be up to
-> > > > +      three controllers, and each size must be a power of two
-> > > > +      with a size greater or equal to the amount of memory the
-> > > > +      controller supports.
-> > >
-> > > This sounds like what dma-ranges should express?
-> >
-> > There is some overlap but this contains information that is not in the
-> > dma-ranges.  Believe me I tried.
->
-> I don't understand. If you had 3 dma-ranges entries, you'd have 3
-> sizes. Can you expand or show me what you tried?
-Here is a simple example: suppose you have two dma-ranges.  This could
-be from one of two cases:
 
-- Both dma-ranges are from the same memory controller (the second
-range is the "extended" region).
-- One dma-range can be from memc0 and the other can be from memc1; the
-extensions are not used.
 
-The driver has to determine (a)  how many memory controllers there are
-and (b) what the size should be for each of them.  It is impossible to
-do this with the case above.
+On 6/2/2020 3:05 AM, Nicolas Saenz Julienne wrote:
+> On Tue, 2020-05-05 at 18:13 +0200, Nicolas Saenz Julienne wrote:
+>> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+>> loaded directly from an EEPROM or, if not present, by the SoC's
+>> VideoCore. Inform VideoCore that VL805 was just reset.
+>>
+>> Also, as this creates a dependency between USB_PCI and VideoCore's
+>> firmware interface, and since USB_PCI can't be set as a module neither
+>> this can. Reflect that on the firmware interface Kconfg.
+>>
+>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>> ---
+> 
+> It was pointed out to me on the u-boot mailing lists that all this could be
+> implemented trough a reset controller. In other words have xhci get the reset
+> controller trough device-tree, assert it, ultamately causing the firmware
+> routine to be run.
 
->
-> > > If not, we do have 64-bit size if that what you need.
-> >
-> > IIRC I tried the 64-bit size but the YAML validator did not like it;
-> > it wanted numbers like  <0x1122334455667788> while dtc wanted <
-> > 0x11223344 0x55667788>.  I gave up trying and switched to u32.
->
-> You used the /bits/ annotation for dtc?:
->
-> /bits/ 64 <0x1122334455667788>
->
-> I also made a recent fix to dt-schema around handling of 64-bit sizes,
-> so update if you have problems still.
-I didn't try the /bits/ so I'll pursue this.
+That is actually a clever way to solve that problem.
 
-Thanks,
-Jim
+> 
+> As much as it pains me to go over stuff that's already 'fixed', it seems to me
+> it's a better solution. On one hand we get over the device-tree dependency mess
+> (see patch #3), and on the other we transform a pci-quirk into something less
+> hacky.
+> 
+> That said, before getting my hands dirty, I was wondering if there is any
+> obvious reasons why I shouldn't do this, note that:
+> 
+> - We're talking here of a PCIe XCHI device, maybe there's an issue integrating
+>   it with DT, given the fact that, as of today, it's not really represented
+>   there.
 
->
-> Rob
+You can always provide a PCIe device representation within the Device
+Tree, this is not very common, but it is sometimes useful for e.g.:
+assigning MAC addresses, see this example for instance:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi#n647
+
+(does not assign a MAC address, but it could). This should allow your
+XHCI pci_device::of_node pointer to point to node declared in the Device
+Tree. There you could add a 'resets' property accordingly.
+
+> 
+> - There is no reset controller support in xhci-pci, maybe there are good
+>   reasons why. For instance, it's not something that's reflected in any way in
+>   the spec.
+
+It seems to me this is not usually necessary for PC systems, so it was
+not really needed until now. Maybe you can write a small wrapper around
+xhci-pci.c, similar to what xhci-plat.c does which is responsible for
+grabbing and releasing the reset.
+-- 
+Florian
