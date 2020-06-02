@@ -2,271 +2,248 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79C561EC08B
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 18:58:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6F9F1EC0B2
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 19:07:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgFBQ6S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jun 2020 12:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgFBQ6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 12:58:18 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2639C05BD1E;
-        Tue,  2 Jun 2020 09:58:17 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t16so1574567plo.7;
-        Tue, 02 Jun 2020 09:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LIjfTJ4DdiiIcLP5CjE0lWVk9AhFk6AUOUnkDHt+370=;
-        b=AeTRhTpSm3aw7y/d345Qq0V06bM1nHRj1nf4vTaRD8uBYXrXLS94pJpTuYduKVaF7C
-         +W3VwRQeQ4ZhSAuXcmYeieLakcF/I2nvcTHNQ1FLZb6nVLXF5UHV1khxfBPPWNQldx5x
-         Sbv81T9Czd962sohpoo3tvrX6dDRFskcRf9f2bG7CSwBqL6E5y4mPfWlB9uJdfQUBTh1
-         ao0klsRuinJjsXRHqZne/PNq5XG546U65XYuIb3vkGLAz3Orh3EJiPlO6qKHvo4SP/2q
-         sc3zBZ++bSrip5ufzP+i/i8n1fKFNEqPR9kTA3kU8Ceo6vyM14pfh4Kg2JQD59lugBya
-         wl3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LIjfTJ4DdiiIcLP5CjE0lWVk9AhFk6AUOUnkDHt+370=;
-        b=SWjvy+x14x+kBeiL7ErjpxVOFWX2VqG7u4CY9Q8ZE0wKC2wWymSTdUPyxZCurfwYgK
-         A7ZdP46YL51kbu9up6sJXan7VhhYVuoecpjKAUIboRkEAMa9LAxwQWiqM5HjJQ5ZL2IP
-         L+WAzC+ObAKpzAwOjb0ucwL36NHrsrpYGtsxMPUWaK9g+Ny68lphEcLTW6WQMG3x6VOA
-         oDuZh12dqyanDyrYqNCp/NCtRGIsAPQQzieDfUiGfniJWhRbaiiKxynzB+wLohU8yEvP
-         Ly2OWZOLF9nNxSbESPwPxvCH9KNv9vq9RscR+2LV0K3gYh7gyxAsWyxOiel7rpD9T/4i
-         AwRA==
-X-Gm-Message-State: AOAM5338kQ6K1BOHoEhKmOT8VXJamzP8HbolTGDVESbvG2qEXgJJzUDB
-        oowfpvPd0B5lu34sdzU1nEw=
-X-Google-Smtp-Source: ABdhPJzE+ZRVE+vWcGRIAamdV5nVx0mRpuM1p+EliwYXz+L/Cg6i9i/7PjnlvMzMsXNIu5PQAKVQpQ==
-X-Received: by 2002:a17:902:b40e:: with SMTP id x14mr15877182plr.285.1591117097444;
-        Tue, 02 Jun 2020 09:58:17 -0700 (PDT)
-Received: from localhost ([162.211.223.96])
-        by smtp.gmail.com with ESMTPSA id a12sm2521202pjw.35.2020.06.02.09.58.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 09:58:16 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 00:58:09 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     tjoseph@cadence.com, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, thierry.reding@gmail.com,
-        toan@os.amperecomputing.com, ley.foon.tan@intel.com,
-        shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] PCI: controller: convert to
- devm_platform_ioremap_resource_byname()
-Message-ID: <20200602165809.GA7011@nuc8i5>
-References: <20200601143345.24965-1-zhengdejin5@gmail.com>
- <20200601222229.GA1613213@bogus>
+        id S1726019AbgFBRHU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jun 2020 13:07:20 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:58034 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725969AbgFBRHT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 13:07:19 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C19CB403BB;
+        Tue,  2 Jun 2020 17:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1591117639; bh=++9dOwBPuNwE08U7KknoLw79l8LM3t7sdlA9mRjkLDg=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=OmiXCK4DuW/KnNmxfxQPqiL53RaZk52yrTD4P28Qn54X+CEHQsTtTFSBwVaksLRDd
+         kh2szq8DsxRIHZAsvb1FCg7QTWBS1c4qodrW+2T1UlyeG3sRGkyxH0/PrMfuXOTXJM
+         UQCQUXehMuv/DxfpEBj+C1FLc5wnfTxfHIJJMvvrBk+Mr9+qJdAifIZLy8TrfAPnOl
+         QsFTgOptezS2ORnr5RrRrr0QHGPX7Z+3BYFHvTRf3inYFB/wKuUgUAPUZkiGl7EloH
+         IpQGAuG9vBX4gs58wYIN5OY1AgBdFaRVal42YQkKF18YKeCioFO4Ks1Hk/4DvrxwUy
+         FT7A0i943LuEA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B4F33A0083;
+        Tue,  2 Jun 2020 17:07:17 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 2 Jun 2020 10:07:18 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Tue, 2 Jun 2020 10:07:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QkEzT2Z0SI5Z5o4A+nVOPLjAg92QbnKVqCmOhFMWazXxUcpzSjuhQmBaoZLI5J3zjwrOGLxvTCu1qmHW2/4U6HGOPPxqYcl/M5gASQDmun3GO9f8gCndMSpble3dqQ7dBC1yaqVaRjgj4dBbHnb3QFAwRskKk5GYOQLOOsBV1M/ENnWIi8rC7xnoWdQ4rn0foL4kT3T69GKgVNkJ5YTAysNfH+96Dn1Wt8deS84zzaQuBK8Tbr8VBfGRWjA6eXQfG03M2htOZHUxXTN5A1ZiVLErP5rfVv0H2KTqOPjJnC/gD3x7fDwt1mI9CmxOOQCqinWMAceZk8VhP8MdjLOqmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qkYZfOCoVYvIv3qV7ADLLByjHhpiUDNkAlJlcQ5eWM0=;
+ b=SghB/SZtaIR7iBuKm80hd8cGbHUK+2Hw76jFIkZCogVQJO78+GlMNi3aEdzmqF/s+4eg/pP4eqbc1eHuTHVcJlZoxBCIQi0AvncMKyxGGdsIte0X27IXkTylwviXRJTAMPT+WRaScCLBDGGb/mkFQ+GAkY8SEq9PO/8sQSrhKlkB38OT9gch4+Kk898Fq6vNEBMvGTmOo0EMrihuwH17NXOrlhEjedsiWLo8AdU+bBCH7sZ1/vsBOBLyGqdZnSH4QUX5B7WfDKEsUMru063o8DEcnaKiZ2O01n7eDFy35E0oezVzb52Lo/k0CpBfNc9cMAxdZyScAb7Ghsm5ibDBSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qkYZfOCoVYvIv3qV7ADLLByjHhpiUDNkAlJlcQ5eWM0=;
+ b=EwiBnEp1YZQKAOWSdz2KH+MIu2eS2SQQvTL4x+GBiQdiRi70JOlQG/rwB9DPjLGbAythYFlSXuTWVG+zPK7WP8KU2S+Rh8DkKKQ9RXOZjzJWp8IZ2ruQOauk9H49G+qqgms555Ra62ZY3423I1jsybdqs1kIhluYdBW98e8bsTo=
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
+ DM5PR12MB2487.namprd12.prod.outlook.com (2603:10b6:4:af::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3066.18; Tue, 2 Jun 2020 17:07:15 +0000
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32]) by DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32%5]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
+ 17:07:15 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: RE: [PATCH 0/2] PCI: dwc: Add support to handle prefetchable memory
+ separately
+Thread-Topic: [PATCH 0/2] PCI: dwc: Add support to handle prefetchable memory
+ separately
+Thread-Index: AQHWOMYE7ODbO2RSVE6Pntnec2wuFqjFjjdg
+Date:   Tue, 2 Jun 2020 17:07:15 +0000
+Message-ID: <DM5PR12MB127675E8C053755CB82A54BCDA8B0@DM5PR12MB1276.namprd12.prod.outlook.com>
+References: <20200602100940.10575-1-vidyas@nvidia.com>
+In-Reply-To: <20200602100940.10575-1-vidyas@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTgwNzhiYzljLWE0ZjMtMTFlYS05OGI4LWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFw4MDc4YmM5ZS1hNGYzLTExZWEtOThiOC1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjE5NTYiIHQ9IjEzMjM1NTkxMjMzNzc2?=
+ =?us-ascii?Q?OTcyNyIgaD0iR3FZWlVvSEJYSWdQY3FoaWNNUTJ0MzY3ZVFvPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?L3hOQkNBRG5XQWM4dDNHNXZCbXE5enkzY2JtOEdhcjBPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFFbU1la3dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0d65408d-3ed0-4e86-3617-08d807176682
+x-ms-traffictypediagnostic: DM5PR12MB2487:
+x-microsoft-antispam-prvs: <DM5PR12MB2487DC520181F684C923F4CBDA8B0@DM5PR12MB2487.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0422860ED4
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xEvhBVk6alzQ19fjeWPtyjsJoahwPxRswikrIcdLDu0+4S3wiqeRkDHJkZaqZr+BXMNw0mCVBlWYEr846xP6iVoDiii4ojofb2Gm16sq+uMfwXy9zSdjHMT/E8U8SZ0Z0xQNwMhjU5iGACL+G/r6IQ9fpui7I5RQvVarowrVg/DPybJqzffU8M2y13SAttecDJYMoUmeQzEN2nOUfSi1vLEZR0Hu7A10kPGWWsIVgcO9jESOKaomFHT6bx3dO+3XQDde+DbzQAd0BeulwDIvZyAkQ83Ss+5XcVh86dL0lt6+C81idzHTaylDhRuF8pUzT1j0eXTsirwyOMAjG1WeGQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(366004)(136003)(396003)(54906003)(478600001)(64756008)(66476007)(66446008)(316002)(110136005)(66556008)(76116006)(66946007)(5660300002)(7696005)(86362001)(52536014)(6506007)(33656002)(53546011)(83380400001)(8936002)(26005)(8676002)(186003)(4326008)(2906002)(55016002)(9686003)(71200400001)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: FA8xPdkI8M06f3jChpYOWSfYa5PgpSECJOoTLm2ZNiYV306OA4kMQL9GqLYISWfc/mfrRmWfDDaI2T0pnqr5vfXR1trTUqbB1D18NGrOWCaQ5nqOp79cCYXJP0h/BVNW11AJ0WgCW2X3vubyA7LipoishtpF8lz3b5Bwn6V3+BC2x/lKRUF7eVSHzPAFEQ1iHNF4FeyjRNHQO0tmR36JPgg/TKVKiHdrQ2/E+J/e/WdjGg4wudML7PLT75TnrZdcElJxSQSAKhw3kmESIaZ+qUaY2qyO8unHMXK70Bb6BXvgcSwh5eVc8aO9xSvbrhwxeGwuaK2S8Xl6guunRXCqQPmV4pFG4n+WsIPaY3WOBVpJDs0E49MOz4EcEKkID+aEl0322ZRRyl0+uWg9IfpUH0uxyu6BD8DVynI3vji9o2QrvgmIfjKP3Q0RXO3/jN4t4HISmNGTu6ZviQWun8wWHuSj2/ldI8tcYmD4qreoVrY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601222229.GA1613213@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d65408d-3ed0-4e86-3617-08d807176682
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2020 17:07:15.7407
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xlvXf/JNsJ5FkpbiXXwc4zHHCqigdZq7jrZsNabNawQDHGhCikS5KuwCp1AMlJxIWYEB1eTvkLnkOjW2nX+Mpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2487
+X-OriginatorOrg: synopsys.com
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 04:22:29PM -0600, Rob Herring wrote:
-> On Mon, Jun 01, 2020 at 10:33:45PM +0800, Dejin Zheng wrote:
-> > Use devm_platform_ioremap_resource_byname() to simplify codes.
-> > it contains platform_get_resource_byname() and devm_ioremap_resource().
-> > 
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> >  drivers/pci/controller/cadence/pcie-cadence-ep.c   | 3 +--
-> >  drivers/pci/controller/cadence/pcie-cadence-host.c | 3 +--
-> >  drivers/pci/controller/pci-tegra.c                 | 8 +++-----
-> >  drivers/pci/controller/pci-xgene.c                 | 3 +--
-> >  drivers/pci/controller/pcie-altera-msi.c           | 3 +--
-> >  drivers/pci/controller/pcie-altera.c               | 9 +++------
-> >  drivers/pci/controller/pcie-mediatek.c             | 4 +---
-> >  drivers/pci/controller/pcie-rockchip.c             | 5 ++---
-> >  drivers/pci/controller/pcie-xilinx-nwl.c           | 7 +++----
-> >  9 files changed, 16 insertions(+), 29 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > index 1c15c8352125..74ffa03fde5f 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > @@ -408,8 +408,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-> >  
-> >  	pcie->is_rc = false;
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
-> > -	pcie->reg_base = devm_ioremap_resource(dev, res);
-> > +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
-> >  	if (IS_ERR(pcie->reg_base)) {
-> >  		dev_err(dev, "missing \"reg\"\n");
-> >  		return PTR_ERR(pcie->reg_base);
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > index 8c2543f28ba0..dcc460a54875 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > @@ -225,8 +225,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-> >  	rc->device_id = 0xffff;
-> >  	of_property_read_u32(np, "device-id", &rc->device_id);
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
-> > -	pcie->reg_base = devm_ioremap_resource(dev, res);
-> > +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
-> >  	if (IS_ERR(pcie->reg_base)) {
-> >  		dev_err(dev, "missing \"reg\"\n");
-> >  		return PTR_ERR(pcie->reg_base);
-> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > index e3e917243e10..3e608383df66 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -1462,7 +1462,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
-> >  {
-> >  	struct device *dev = pcie->dev;
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> > -	struct resource *pads, *afi, *res;
-> > +	struct resource *res;
-> >  	const struct tegra_pcie_soc *soc = pcie->soc;
-> >  	int err;
-> >  
-> > @@ -1486,15 +1486,13 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
-> >  		}
-> >  	}
-> >  
-> > -	pads = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pads");
-> > -	pcie->pads = devm_ioremap_resource(dev, pads);
-> > +	pcie->pads = devm_platform_ioremap_resource_byname(pdev, "pads");
-> >  	if (IS_ERR(pcie->pads)) {
-> >  		err = PTR_ERR(pcie->pads);
-> >  		goto phys_put;
-> >  	}
-> >  
-> > -	afi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "afi");
-> > -	pcie->afi = devm_ioremap_resource(dev, afi);
-> > +	pcie->afi = devm_platform_ioremap_resource_byname(pdev, "afi");
-> >  	if (IS_ERR(pcie->afi)) {
-> >  		err = PTR_ERR(pcie->afi);
-> >  		goto phys_put;
-> > diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-> > index d1efa8ffbae1..1431a18eb02c 100644
-> > --- a/drivers/pci/controller/pci-xgene.c
-> > +++ b/drivers/pci/controller/pci-xgene.c
-> > @@ -355,8 +355,7 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
-> >  	if (IS_ERR(port->csr_base))
-> >  		return PTR_ERR(port->csr_base);
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> > -	port->cfg_base = devm_ioremap_resource(dev, res);
-> > +	port->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
-> >  	if (IS_ERR(port->cfg_base))
-> >  		return PTR_ERR(port->cfg_base);
-> >  	port->cfg_addr = res->start;
-> > diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> > index 16d938920ca5..613e19af71bd 100644
-> > --- a/drivers/pci/controller/pcie-altera-msi.c
-> > +++ b/drivers/pci/controller/pcie-altera-msi.c
-> > @@ -228,8 +228,7 @@ static int altera_msi_probe(struct platform_device *pdev)
-> >  	mutex_init(&msi->lock);
-> >  	msi->pdev = pdev;
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
-> > -	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
-> > +	msi->csr_base = devm_platform_ioremap_resource_byname(pdev, "csr");
-> >  	if (IS_ERR(msi->csr_base)) {
-> >  		dev_err(&pdev->dev, "failed to map csr memory\n");
-> >  		return PTR_ERR(msi->csr_base);
-> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> > index 24cb1c331058..7200e40ffa26 100644
-> > --- a/drivers/pci/controller/pcie-altera.c
-> > +++ b/drivers/pci/controller/pcie-altera.c
-> > @@ -696,17 +696,14 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
-> >  {
-> >  	struct device *dev = &pcie->pdev->dev;
-> >  	struct platform_device *pdev = pcie->pdev;
-> > -	struct resource *cra;
-> > -	struct resource *hip;
-> >  
-> > -	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
-> > -	pcie->cra_base = devm_ioremap_resource(dev, cra);
-> > +	pcie->cra_base = devm_platform_ioremap_resource_byname(pdev, "Cra");
-> >  	if (IS_ERR(pcie->cra_base))
-> >  		return PTR_ERR(pcie->cra_base);
-> >  
-> >  	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
-> > -		hip = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Hip");
-> > -		pcie->hip_base = devm_ioremap_resource(&pdev->dev, hip);
-> > +		pcie->hip_base =
-> > +			devm_platform_ioremap_resource_byname(pdev, "Hip");
-> >  		if (IS_ERR(pcie->hip_base))
-> >  			return PTR_ERR(pcie->hip_base);
-> >  	}
-> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > index ebfa7d5a4e2d..d8e38276dbe3 100644
-> > --- a/drivers/pci/controller/pcie-mediatek.c
-> > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > @@ -905,7 +905,6 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
-> >  			       int slot)
-> >  {
-> >  	struct mtk_pcie_port *port;
-> > -	struct resource *regs;
-> >  	struct device *dev = pcie->dev;
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> >  	char name[10];
-> > @@ -916,8 +915,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
-> >  		return -ENOMEM;
-> >  
-> >  	snprintf(name, sizeof(name), "port%d", slot);
-> > -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-> > -	port->base = devm_ioremap_resource(dev, regs);
-> > +	port->base = devm_platform_ioremap_resource_byname(pdev, name);
-> >  	if (IS_ERR(port->base)) {
-> >  		dev_err(dev, "failed to map port%d base\n", slot);
-> >  		return PTR_ERR(port->base);
-> > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-> > index c53d1322a3d6..904dec0d3a88 100644
-> > --- a/drivers/pci/controller/pcie-rockchip.c
-> > +++ b/drivers/pci/controller/pcie-rockchip.c
-> > @@ -45,9 +45,8 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
-> >  			return -EINVAL;
-> >  	}
-> >  
-> > -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > -					    "apb-base");
-> > -	rockchip->apb_base = devm_ioremap_resource(dev, regs);
-> > +	rockchip->apb_base =
-> > +		devm_platform_ioremap_resource_byname(pdev, "apb-base");
-> >  	if (IS_ERR(rockchip->apb_base))
-> >  		return PTR_ERR(rockchip->apb_base);
-> >  
-> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > index 9bd1427f2fd6..06d5ca33d008 100644
-> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > @@ -777,14 +777,13 @@ static int nwl_pcie_parse_dt(struct nwl_pcie *pcie,
-> >  	struct device *dev = pcie->dev;
-> >  	struct resource *res;
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "breg");
-> > -	pcie->breg_base = devm_ioremap_resource(dev, res);
-> > +	pcie->breg_base = devm_platform_ioremap_resource_byname(pdev, "breg");
-> >  	if (IS_ERR(pcie->breg_base))
-> >  		return PTR_ERR(pcie->breg_base);
-> >  	pcie->phys_breg_base = res->start;
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pcireg");
-> > -	pcie->pcireg_base = devm_ioremap_resource(dev, res);
-> > +	pcie->pcireg_base =
-> > +		devm_platform_ioremap_resource_byname(pdev, "pcireg");
-> >  	if (IS_ERR(pcie->pcireg_base))
-> >  		return PTR_ERR(pcie->pcireg_base);
-> >  	pcie->phys_pcie_reg_base = res->start;
-> 
-> As 0-day pointed out, this hunk should be dropped as the phys address is 
-> needed.
->
-Rob, You are right, Sincerely thank you for helping me! I will sent the
-patch v2.
+On Tue, Jun 2, 2020 at 11:9:38, Vidya Sagar <vidyas@nvidia.com> wrote:
 
-BR,
-Dejin
-> Rob
+> In this patch series,
+> Patch-1
+> adds required infrastructure to deal with prefetchable memory region
+> information coming from 'ranges' property of the respective device-tree n=
+ode
+> separately from non-prefetchable memory region information.
+> Patch-2
+> Adds support to use ATU region-3 for establishing the mapping between CPU
+> addresses and PCIe bus addresses.
+> It also changes the logic to determine whether mapping is required or not=
+ by
+> checking both CPU address and PCIe bus address for both prefetchable and
+> non-prefetchable regions. If the addresses are same, then, it is understo=
+od
+> that 1:1 mapping is in place and there is no need to setup ATU mapping
+> whereas if the addresses are not the same, then, there is a need to setup=
+ ATU
+> mapping. This is certainly true for Tegra194 and what I heard from our HW
+> engineers is that it should generally be true for any DWC based implement=
+ation
+> also.
+> Hence, I request Synopsys folks (Jingoo Han & Gustavo Pimentel ??) to con=
+firm
+> the same so that this particular patch won't cause any regressions for ot=
+her
+> DWC based platforms.
+
+Hi Vidya,
+
+Unfortunately due to the COVID-19 lockdown, I can't access my development=20
+prototype setup to test your patch.
+It might take some while until I get the possibility to get access to it=20
+again.
+
+-Gustavo
+
+>=20
+> Vidya Sagar (2):
+>   PCI: dwc: Add support to handle prefetchable memory separately
+>   PCI: dwc: Use ATU region to map prefetchable memory region
+>=20
+>  .../pci/controller/dwc/pcie-designware-host.c | 46 ++++++++++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.c  |  6 ++-
+>  drivers/pci/controller/dwc/pcie-designware.h  |  8 +++-
+>  3 files changed, 45 insertions(+), 15 deletions(-)
+>=20
+> --=20
+> 2.17.1
+
+
