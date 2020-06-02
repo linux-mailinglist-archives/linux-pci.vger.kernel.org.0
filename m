@@ -2,158 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9ED41EB8A5
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 11:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 852921EB90F
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 12:05:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFBJiu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jun 2020 05:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgFBJit (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 05:38:49 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76869C05BD43
-        for <linux-pci@vger.kernel.org>; Tue,  2 Jun 2020 02:38:48 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id w7so5859620edt.1
-        for <linux-pci@vger.kernel.org>; Tue, 02 Jun 2020 02:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W0EAxKYZ1cy7EQz5SmmqXsQnpOBPA6z8vgEtS2GOSuY=;
-        b=drH65z9QCFx7VpluTZaPf8cNXvMnji1Zw2v13zTnotv2QHpST54MDbm33aYUQRGTJv
-         0QULZlT5uAkEZuTvOhzrSMqJ9YapVqZYDij+6jchFqzqcjtUcMPrwrCgKP7ct/hpwUiK
-         Icvl+0uC9vWI4KC69z0KY8jHbZGlZhyLd3kpE57L7bfJ4Cpt8dz+qs04+Y0J/gRKD0gE
-         SYD0xd89cpu3EFRcQji9vlrDA7Dv0jvvwKCxGAp1AJ9A5QTEgCe3eZQGd6LNx6AU6Aus
-         M68A0D5RvptQcClwn9HKmhlxaZARlTB0HTQQ4CBTd55q9gyNSOhbya3xERNyLzArDc6X
-         iOUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W0EAxKYZ1cy7EQz5SmmqXsQnpOBPA6z8vgEtS2GOSuY=;
-        b=lQjVKM4e1K2kwdRAs9mqJV+KTJppJ/5edICo5XNMj/hWG/wCm60EL56sIovrWe4tee
-         odAMs9Zbya8tw8NlbsvpRjp4xk9zg2Je5KEMLVTQvkDJIRMja1GBmEne6vqOvM1V1+Rw
-         HSyZgmT/MzacN5Kny//krToz2ZPNlBZWHYoDmRSHBrMnQYnMcKVYa+AfgZt8Apr5KBOx
-         BpHjuBEco0pezax0PURW8ZLzSDRy2OW+joO6KUnKgyLtw2YtRc1qqhIP8BnwnZGlsVdj
-         EXPE/cBhG5VU8eSkFvyYu3DRnGR6jj32VlBE8eqFJZZSY+EruYqLDgk0Nvob6YG9YV1Q
-         rHFA==
-X-Gm-Message-State: AOAM531C2lWCmisbmQPBu302k+/xeAFE+9G6wgFg9YrRk2QdNFm5aB3J
-        tM41xveljQhco4z5Gsy2f32gsQ==
-X-Google-Smtp-Source: ABdhPJwh69GX0fxQPd28WCwoX+IJ3u/GdmphexSL7+uh9AzkMYiU+9haAje2FoMpFLt799mKYxxrDw==
-X-Received: by 2002:a05:6402:17e6:: with SMTP id t6mr24443948edy.243.1591090727183;
-        Tue, 02 Jun 2020 02:38:47 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id j5sm1319532edk.53.2020.06.02.02.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 02:38:46 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 11:38:36 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>,
-        "felix.kuehling@amd.com" <felix.kuehling@amd.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>
-Subject: Re: [PATCH v7 21/24] iommu/arm-smmu-v3: Add stall support for
- platform devices
-Message-ID: <20200602093836.GA1029680@myrica>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-22-jean-philippe@linaro.org>
- <4741b6c45d1a43b69041ecb5ce0be0d5@huawei.com>
+        id S1726110AbgFBKFZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jun 2020 06:05:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46340 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgFBKFZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:05:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8F90EAD12;
+        Tue,  2 Jun 2020 10:05:25 +0000 (UTC)
+Message-ID: <7cbe4da8ba4a1524824473f8c58720f412a00fc2.camel@suse.de>
+Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 02 Jun 2020 12:05:20 +0200
+In-Reply-To: <20200505161318.26200-5-nsaenzjulienne@suse.de>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+         <20200505161318.26200-5-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ePWuOhLXkyI0rM3f0PjZ"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4741b6c45d1a43b69041ecb5ce0be0d5@huawei.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Shameer,
 
-On Mon, Jun 01, 2020 at 12:42:15PM +0000, Shameerali Kolothum Thodi wrote:
-> >  /* IRQ and event handlers */
-> > +static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
-> > +{
-> > +	int ret;
-> > +	u32 perm = 0;
-> > +	struct arm_smmu_master *master;
-> > +	bool ssid_valid = evt[0] & EVTQ_0_SSV;
-> > +	u8 type = FIELD_GET(EVTQ_0_ID, evt[0]);
-> > +	u32 sid = FIELD_GET(EVTQ_0_SID, evt[0]);
-> > +	struct iommu_fault_event fault_evt = { };
-> > +	struct iommu_fault *flt = &fault_evt.fault;
-> > +
-> > +	/* Stage-2 is always pinned at the moment */
-> > +	if (evt[1] & EVTQ_1_S2)
-> > +		return -EFAULT;
-> > +
-> > +	master = arm_smmu_find_master(smmu, sid);
-> > +	if (!master)
-> > +		return -EINVAL;
-> > +
-> > +	if (evt[1] & EVTQ_1_READ)
-> > +		perm |= IOMMU_FAULT_PERM_READ;
-> > +	else
-> > +		perm |= IOMMU_FAULT_PERM_WRITE;
-> > +
-> > +	if (evt[1] & EVTQ_1_EXEC)
-> > +		perm |= IOMMU_FAULT_PERM_EXEC;
-> > +
-> > +	if (evt[1] & EVTQ_1_PRIV)
-> > +		perm |= IOMMU_FAULT_PERM_PRIV;
-> > +
-> > +	if (evt[1] & EVTQ_1_STALL) {
-> > +		flt->type = IOMMU_FAULT_PAGE_REQ;
-> > +		flt->prm = (struct iommu_fault_page_request) {
-> > +			.flags = IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE,
-> > +			.pasid = FIELD_GET(EVTQ_0_SSID, evt[0]),
-> > +			.grpid = FIELD_GET(EVTQ_1_STAG, evt[1]),
-> > +			.perm = perm,
-> > +			.addr = FIELD_GET(EVTQ_2_ADDR, evt[2]),
-> > +		};
-> > +
-> 
-> > +		if (ssid_valid)
-> > +			flt->prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
-> 
-> Do we need to set this for STALL mode only support? I had an issue with this
-> being set on a vSVA POC based on our D06 zip device(which is a "fake " pci dev
-> that supports STALL mode but no PRI). The issue is, CMDQ_OP_RESUME doesn't
-> have any ssid or SSV params and works on sid and stag only.
+--=-ePWuOhLXkyI0rM3f0PjZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I don't understand the problem, arm_smmu_page_response() doesn't set SSID
-or SSV when sending a CMDQ_OP_RESUME. Could you detail the flow of a stall
-event and RESUME command in your prototype?  Are you getting issues with
-the host driver or the guest driver?
+On Tue, 2020-05-05 at 18:13 +0200, Nicolas Saenz Julienne wrote:
+> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+> loaded directly from an EEPROM or, if not present, by the SoC's
+> VideoCore. Inform VideoCore that VL805 was just reset.
+>=20
+> Also, as this creates a dependency between USB_PCI and VideoCore's
+> firmware interface, and since USB_PCI can't be set as a module neither
+> this can. Reflect that on the firmware interface Kconfg.
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-We do need to forward the SSV flag all the way to the guest driver, so the
-guest can find the faulting address space using the SSID. Once the guest
-handled the fault, then we don't send the SSID back to the host as part of
-the RESUME command.
+It was pointed out to me on the u-boot mailing lists that all this could be
+implemented trough a reset controller. In other words have xhci get the res=
+et
+controller trough device-tree, assert it, ultamately causing the firmware
+routine to be run.
 
-Thanks,
-Jean
+As much as it pains me to go over stuff that's already 'fixed', it seems to=
+ me
+it's a better solution. On one hand we get over the device-tree dependency =
+mess
+(see patch #3), and on the other we transform a pci-quirk into something le=
+ss
+hacky.
 
-> Hence, it is difficult for
-> Qemu SMMUv3 to populate this fields while preparing a page response. I can see
-> that this flag is being checked in iopf_handle_single() (patch 04/24) as well. For POC,
-> I used a temp fix[1] to work around this. Please let me know your thoughts.
-> 
-> Thanks,
-> Shameer
-> 
-> 1. https://github.com/hisilicon/kernel-dev/commit/99ff96146e924055f38d97a5897e4becfa378d15
-> 
+That said, before getting my hands dirty, I was wondering if there is any
+obvious reasons why I shouldn't do this, note that:
+
+- We're talking here of a PCIe XCHI device, maybe there's an issue integrat=
+ing
+  it with DT, given the fact that, as of today, it's not really represented
+  there.
+
+- There is no reset controller support in xhci-pci, maybe there are good
+  reasons why. For instance, it's not something that's reflected in any way=
+ in
+  the spec.
+
+Regards,
+Nicolas
+
+>=20
+> Changes since v5:
+>  - Fix Kconfig issue with allmodconfig
+>=20
+> Changes since v4:
+>  - Do not split up error message
+>=20
+> Changes since v3:
+>  - Add more complete error message
+>=20
+> Changes since v1:
+>  - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
+>    gets compiled when needed.
+>=20
+>  drivers/firmware/Kconfig      |  3 ++-
+>  drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
+>  2 files changed, 18 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index 8007d4aa76dc..b42140cff8ac 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -178,8 +178,9 @@ config ISCSI_IBFT
+>  	  Otherwise, say N.
+> =20
+>  config RASPBERRYPI_FIRMWARE
+> -	tristate "Raspberry Pi Firmware Driver"
+> +	bool "Raspberry Pi Firmware Driver"
+>  	depends on BCM2835_MBOX
+> +	default USB_PCI
+>  	help
+>  	  This option enables support for communicating with the firmware on th=
+e
+>  	  Raspberry Pi.
+> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.=
+c
+> index 92150ecdb036..0b949acfa258 100644
+> --- a/drivers/usb/host/pci-quirks.c
+> +++ b/drivers/usb/host/pci-quirks.c
+> @@ -16,6 +16,9 @@
+>  #include <linux/export.h>
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+> +
+> +#include <soc/bcm2835/raspberrypi-firmware.h>
+> +
+>  #include "pci-quirks.h"
+>  #include "xhci-ext-caps.h"
+> =20
+> @@ -1243,11 +1246,24 @@ static void quirk_usb_handoff_xhci(struct pci_dev
+> *pdev)
+> =20
+>  static void quirk_usb_early_handoff(struct pci_dev *pdev)
+>  {
+> +	int ret;
+> +
+>  	/* Skip Netlogic mips SoC's internal PCI USB controller.
+>  	 * This device does not need/support EHCI/OHCI handoff
+>  	 */
+>  	if (pdev->vendor =3D=3D 0x184e)	/* vendor Netlogic */
+>  		return;
+> +
+> +	if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=3D 0x3483=
+) {
+> +		ret =3D rpi_firmware_init_vl805(pdev);
+> +		if (ret) {
+> +			/* Firmware might be outdated, or something failed */
+> +			dev_warn(&pdev->dev,
+> +				 "Failed to load VL805's firmware: %d. Will
+> continue to attempt to work, but bad things might happen. You should fix
+> this...\n",
+> +				 ret);
+> +		}
+> +	}
+> +
+>  	if (pdev->class !=3D PCI_CLASS_SERIAL_USB_UHCI &&
+>  			pdev->class !=3D PCI_CLASS_SERIAL_USB_OHCI &&
+>  			pdev->class !=3D PCI_CLASS_SERIAL_USB_EHCI &&
+
+
+--=-ePWuOhLXkyI0rM3f0PjZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7WJGAACgkQlfZmHno8
+x/6SjQf/Qywc5xMG/WfuS5YbTgjiJzIg9nJVk2umtOVQOaE6cXK6I2HUcLXKSphG
+ZAIxOSd8yG38RZGU/E/XCiWpYe0uEjJYnR4gKLF4/QsTwWKvjXvksXvcZYD/d4/U
+JJeFUPeutvO90Q3WSiUowjt0/uEaH8PDdYSvPfqe/DZt6loaIHXJXhv8M1e/R8a8
+Jatksa8pTD5uVBYYJFgY83Mrwd/SJ8/LthiE5FCHc1z1L3sbaChf+26xKtvn3iHU
+j1taE9o84y6m2IqDVDLZVeU2yuYt/VPOsnA5JarsZX/y1HoFg9OdoJL7GTazUefj
+q6BBn3BmYTUIQvDBgXg/JY1MYyNoEA==
+=5e/e
+-----END PGP SIGNATURE-----
+
+--=-ePWuOhLXkyI0rM3f0PjZ--
+
