@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D841EBB06
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 13:57:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 093EF1EBB09
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 13:57:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgFBLyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jun 2020 07:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35128 "EHLO
+        id S1728442AbgFBLyx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jun 2020 07:54:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgFBLyt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 07:54:49 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEC3C061A0E;
-        Tue,  2 Jun 2020 04:54:49 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f5so2816902wmh.2;
-        Tue, 02 Jun 2020 04:54:48 -0700 (PDT)
+        with ESMTP id S1726977AbgFBLyw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 07:54:52 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E85AC061A0E;
+        Tue,  2 Jun 2020 04:54:52 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r9so2634367wmh.2;
+        Tue, 02 Jun 2020 04:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qi0pxCVqozd5V1/C140EBqHG2/fFl/8biYimGdOF39g=;
-        b=Ea6DeRGE2KT1Qqmq3jiwAFlEKfxaL6cvAKSsaHQe0qJQJKriCeT6ufldt/bZNNjQfJ
-         yQ/nFOzxOSkLPtd7MeLQbasnO/Ck/x3m0jqSQPJgn5EHOOh0qKKPtbC3utC5WizyuhT7
-         80TdFRe//3FOefXmdyUuSNvzt+Hm1sOd4bwyWNJ70Pm/qRLu9qiiJvGgiJUapWS5K4NU
-         tawisumfIJXZVQHThtq/lsh1u/Ws/Hgj9dapHg7keed/rX80KuhSl9X29JTO7Lo1hbVA
-         X8pH6Oh2uajXysk7IF6raUA7/HmmPBKC8Invr9dvqy4Ii2cbxs6kRLVHs7CfxYqmJZF+
-         BDYg==
+        bh=ZIcmPOVlQLoKdIP9dCKqwaemztdzBXHNcMiHg1REgA4=;
+        b=rrhDAFlwRPU2Hsv2t+7LvyG/zgJmK6lK9gOB+dHLw5rq9qVS466XSatL6Tb9i9EZTo
+         wHLRmXaQgsGrwlPf8/6CDpUHFKjnYdGzMmvdQGuMaMqHXOTVY7iMFsaXOPmyCk93JPTB
+         j5FcNqKUVah++Xw3+SmnWjaKl22I30IIUUAcfDWDx3u3qbB5jlFVf+H6TJAzftFFN0LE
+         ru4fNnw5GNbXEofHf3pOKAT/u+9vnCMlml6NhuhEU5IYhU4JLhUIelfnHjQQWNp5yvAC
+         u7S1t6nhhoILxPa3kCSB5VqEGMzRJ+PHnU4vELxfitvwrPGNu3QU2WDNdSueEiA8IIoJ
+         zUEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qi0pxCVqozd5V1/C140EBqHG2/fFl/8biYimGdOF39g=;
-        b=L2P1lyKZysXUFrtYDi+l6apNVJe/BRjCJXHgBOMuAazokwQqx81Pq5xe7R/SIKqZF2
-         u8DYgod2f+a1HKy6PtHdiVMZfRtd4N1uODEO/Sfszo0atUPe/iDw4upYqMC6uHYnSSR7
-         Ect8CGxq5uPoW7ppNzmd2TXaGg+BgxZUtr0rdnqGxIZ/rNv4nVGswWfmM+Ylt9bimwTl
-         ZNAWCiXrnGxkLvcpuFNDO05mgq5trAgQlduMgzEufvBrR3QDdfIes8eslE3dMHGy7Uat
-         0VcK4oWepwCGC7lIQsEfGE1mFdD+Qv0Ur0KVtoOotE915Jpc9N7sYRO2c5+CFCQZefl8
-         Jkhg==
-X-Gm-Message-State: AOAM533a6jbmYkEPsXu34/U7Ggst6T6P/UKu8CmM8AhgsZNlDKlSBOBc
-        FMiKEF5r2GsSfMFSDzt5n+g=
-X-Google-Smtp-Source: ABdhPJyTwZiSryX5MIZpidIgIJi9LcUpN/z/chFF+oGj5J6XeYxB7Tv7kw9xlUyI/1o1pG1R/x/zJQ==
-X-Received: by 2002:a05:600c:287:: with SMTP id 7mr2871659wmk.91.1591098887652;
-        Tue, 02 Jun 2020 04:54:47 -0700 (PDT)
+        bh=ZIcmPOVlQLoKdIP9dCKqwaemztdzBXHNcMiHg1REgA4=;
+        b=DTFFiNI6+oitusK7dL0KMuhjOWQfHFNuESSGxpdwJAT/BgwzNQFhSPr/m7+TVwhKmD
+         aEHwRfnK6XkJ8ZAf24B2apJ8+J+fdfGkfWCsUXUXbP4YPTFPK6CSHegP6F/xq29Icmoa
+         kbbFrVcTbI8nz8jv1kIUzRQw+VXrlHEZEWFxBFtOR78DmUmeudh/6fuI2B34du83OxyG
+         ReS4TxbHa8giSJT/BgpvAR0gmN/0Fsqp3OhnXzrx8wOBwhFXZzIUnsdO7jt+AHNu8T+j
+         Egr2smgZkVBCngdJ1ceiSXCm8+MOfKB9Zafepm6eLWjpIXrOPAgsvuN0busKySGV0Ide
+         zTdQ==
+X-Gm-Message-State: AOAM5300Z83UzwwkujHhIxCOEy1QAIEtutnNpVq9DoTQ78ykkH3TXxr0
+        XcAt7dyia4FDnL49zEAjcEg=
+X-Google-Smtp-Source: ABdhPJzY2wnE8+8cukerL3Mxa1QbxixDeB9Tr3wcjXgPg4xTwNkPmFRgx5XwFjsvWf0VVkNQDjO19w==
+X-Received: by 2002:a1c:3dd6:: with SMTP id k205mr3784197wma.87.1591098890897;
+        Tue, 02 Jun 2020 04:54:50 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host9-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.9])
-        by smtp.googlemail.com with ESMTPSA id b18sm3273777wrn.88.2020.06.02.04.54.45
+        by smtp.googlemail.com with ESMTPSA id b18sm3273777wrn.88.2020.06.02.04.54.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 04:54:46 -0700 (PDT)
+        Tue, 02 Jun 2020 04:54:50 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,9 +60,9 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 09/11] PCI: qcom: Add ipq8064 rev2 variant
-Date:   Tue,  2 Jun 2020 13:53:50 +0200
-Message-Id: <20200602115353.20143-10-ansuelsmth@gmail.com>
+Subject: [PATCH v5 10/11] dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
+Date:   Tue,  2 Jun 2020 13:53:51 +0200
+Message-Id: <20200602115353.20143-11-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200602115353.20143-1-ansuelsmth@gmail.com>
 References: <20200602115353.20143-1-ansuelsmth@gmail.com>
@@ -73,36 +73,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ipq8064-v2 have tx term offset set to 0. Introduce this variant to permit
-different offset based on the revision.
+Document qcom,pcie-ipq8064-v2 needed to use different phy_tx0_term_offset.
+In ipq8064 phy_tx0_term_offset is 7. In ipq8064 v2 other SoC it's set to 0
+by default.
 
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pci/qcom,pcie.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 2cd6d1456210..259b627bf890 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -366,7 +366,8 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	val &= ~BIT(0);
- 	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
- 
--	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-+	if (of_device_is_compatible(node, "qcom,pcie-ipq8064") ||
-+	    of_device_is_compatible(node, "qcom,pcie-ipq8064-v2")) {
- 		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
- 			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
- 			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
-@@ -1464,6 +1465,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
- 	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
-+	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ops_2_1_0 },
- 	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index 6efcef040741..02bc81bb8b2d 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -5,6 +5,7 @@
+ 	Value type: <stringlist>
+ 	Definition: Value should contain
+ 			- "qcom,pcie-ipq8064" for ipq8064
++			- "qcom,pcie-ipq8064-v2" for ipq8064 rev 2 or ipq8065
+ 			- "qcom,pcie-apq8064" for apq8064
+ 			- "qcom,pcie-apq8084" for apq8084
+ 			- "qcom,pcie-msm8996" for msm8996 or apq8096
 -- 
 2.25.1
 
