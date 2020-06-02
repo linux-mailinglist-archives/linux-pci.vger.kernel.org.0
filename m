@@ -2,132 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6629D1EC4B3
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jun 2020 23:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F02C91EC51F
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 00:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgFBV5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jun 2020 17:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgFBV5q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jun 2020 17:57:46 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345F3C08C5C0;
-        Tue,  2 Jun 2020 14:57:46 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x14so224146wrp.2;
-        Tue, 02 Jun 2020 14:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x7AN5XUNLuQTYg56C70ga61tHZwFYIHa2AHQltczmFg=;
-        b=U0M5kO/8jyb/C740fEOYcR40kb1ux5x8uoxnQ9CONuX5Qf2+HD4+DUjHVay4hDowBx
-         emMBMfxfr0F+a7T6SH/gc6www4bjdTGBTxtrIr+bz30R+/swZKMnVC/CfMPIImjvUB8f
-         B+jsJqM46921FPCCtudANp8fvg9Ajl5OeqGjiehUVoiYQ9ovWDxjK72hDl+R1Ab/MV2Q
-         O4aS08d2IrlbGJYXzYfOJNRJ4YhXUGrNCYKN3RckPEaPwYX0cCQi9RovM/eUg9DYZ7Yt
-         +s7RQRJ6Ie3Mf8+yNLYSrqdr7fHtNKS47Um0woaZYpsO2nq9dMLoneWLzGRhnrlk2X7/
-         /bGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x7AN5XUNLuQTYg56C70ga61tHZwFYIHa2AHQltczmFg=;
-        b=OjggjLVx2nMtuanJ+LlJkL8bPMWBeuvSixewFMHiwQDjnsiSupjzZU40gQSlxHxz1U
-         FA3LA/VOQiZEfvS3orfnjkeo0r8xizt9ZVJWWOOIL46UJcCKViaaIGr078muQlfe8wwd
-         vMI1rmXDIM/pN6EI//NPWWMW5sPpHd08uOxdEAUG38kz/y57z7wu9J5aeoIqKZn26l8Q
-         Xm07pBwrstz/g2p31VlE8c7RL8HUWNZtGhEsJ5wjmqMA80CXfTOsxgSta0wmIeyH3FL1
-         y7TXDEUzpT6XrGq+8Zt3c0kbh+QOAE6wdtsNNaobeb73DgwI1Gu+yKkOudF+kwtO/Car
-         Z+qw==
-X-Gm-Message-State: AOAM531g5I8zROVlA/PKvzThJF8k8cXxM4Su6Qvc0TUp8uzlM4pIerna
-        JKA0KZUJi8CkxTVNVRmMB+3tFu5I
-X-Google-Smtp-Source: ABdhPJy4YSjVEqczNAzcxEmsNN/lUYdvDuqjTKqzm2pWbMKypz5vH+9xQ5nc74+DxdvTResbkxAWHA==
-X-Received: by 2002:adf:e58c:: with SMTP id l12mr28203147wrm.34.1591135064541;
-        Tue, 02 Jun 2020 14:57:44 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b201sm208844wmb.36.2020.06.02.14.57.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 14:57:44 -0700 (PDT)
-Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
- <20200505161318.26200-5-nsaenzjulienne@suse.de>
- <7cbe4da8ba4a1524824473f8c58720f412a00fc2.camel@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <edcbc0a6-f901-d8ff-748f-73017397799d@gmail.com>
-Date:   Tue, 2 Jun 2020 14:57:40 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        id S1728358AbgFBWgV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jun 2020 18:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbgFBWgV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jun 2020 18:36:21 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D011206C3;
+        Tue,  2 Jun 2020 22:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591137380;
+        bh=/mIo8q1mMTXO4fFd8iQWpQDeSXxkevBUGxI6osoTx9A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=v78wUJyl7H1wwkooJ5aVeAaY398gyz5qtAYJluYJaD0UkvlE2S017rCqfURZugebt
+         Mff3Ar2aB5MrR1dB9hc9n16m6ZsuYiJmk/3mntyxoDaOWr8RjfCtKqr6DOpUR2H3HI
+         UlCv/n89h+NOMsCnlBp/Y+sZSCw6lK1zSSqv41vc=
+Date:   Tue, 2 Jun 2020 17:36:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sinan Kaya <okaya@kernel.org>
+Cc:     Yicong Yang <yangyicong@hisilicon.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH] PCI/ASPM: Print correct ASPM status when _OSC failed
+Message-ID: <20200602223618.GA845676@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <7cbe4da8ba4a1524824473f8c58720f412a00fc2.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd5ba708-18a9-fd42-8cf1-af32ef367d5e@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 6/2/2020 3:05 AM, Nicolas Saenz Julienne wrote:
-> On Tue, 2020-05-05 at 18:13 +0200, Nicolas Saenz Julienne wrote:
->> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
->> loaded directly from an EEPROM or, if not present, by the SoC's
->> VideoCore. Inform VideoCore that VL805 was just reset.
->>
->> Also, as this creates a dependency between USB_PCI and VideoCore's
->> firmware interface, and since USB_PCI can't be set as a module neither
->> this can. Reflect that on the firmware interface Kconfg.
->>
->> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->> ---
+On Tue, Jun 02, 2020 at 01:50:37PM -0400, Sinan Kaya wrote:
+> Bjorn,
 > 
-> It was pointed out to me on the u-boot mailing lists that all this could be
-> implemented trough a reset controller. In other words have xhci get the reset
-> controller trough device-tree, assert it, ultamately causing the firmware
-> routine to be run.
-
-That is actually a clever way to solve that problem.
-
+> On 6/1/2020 9:57 PM, Yicong Yang wrote:
+> > well, Sinan's words make sense to me. But I'm still confused that, the message
+> > says we're "disabling ASPM" but ASPM maybe enabled if we designate
+> > pcie_aspm=force as I mentioned in the commit message. Will it be possible if
+> > we replace "disabling" to "disabled" or we can do something else to make
+> > the message reflect the real status of ASPM?
 > 
-> As much as it pains me to go over stuff that's already 'fixed', it seems to me
-> it's a better solution. On one hand we get over the device-tree dependency mess
-> (see patch #3), and on the other we transform a pci-quirk into something less
-> hacky.
-> 
-> That said, before getting my hands dirty, I was wondering if there is any
-> obvious reasons why I shouldn't do this, note that:
-> 
-> - We're talking here of a PCIe XCHI device, maybe there's an issue integrating
->   it with DT, given the fact that, as of today, it's not really represented
->   there.
+> What do you think?
 
-You can always provide a PCIe device representation within the Device
-Tree, this is not very common, but it is sometimes useful for e.g.:
-assigning MAC addresses, see this example for instance:
+ASPM is a mess in general, and the whole "no_aspm" dance for delaying
+setting of aspm_disabled is ... well, it's confusing at best.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi#n647
+These "_OSC failed" messages are confusing to users as well.  They
+lead to bug reports against Linux (when it's usually a BIOS problem)
+and users booting with "pcie_aspm=force" (which is a poor user
+experience and potentially dangerous since the platform hasn't granted
+us control of the PCIe Capability).
 
-(does not assign a MAC address, but it could). This should allow your
-XHCI pci_device::of_node pointer to point to node declared in the Device
-Tree. There you could add a 'resets' property accordingly.
+And it's not even specific to ASPM; when _OSC fails, we don't take
+over *any* PCIe features.  At least, we're not *supposed* to -- I
+don't think we're very careful about random things in the PCIe
+capability.
 
-> 
-> - There is no reset controller support in xhci-pci, maybe there are good
->   reasons why. For instance, it's not something that's reflected in any way in
->   the spec.
+What if we just removed the ASPM text from the message completely,
+e.g., something like this:
 
-It seems to me this is not usually necessary for PC systems, so it was
-not really needed until now. Maybe you can write a small wrapper around
-xhci-pci.c, similar to what xhci-plat.c does which is responsible for
-grabbing and releasing the reset.
--- 
-Florian
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 800a3d26d24b..49fdb07061b1 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -453,9 +453,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 		if ((status == AE_NOT_FOUND) && !is_pcie)
+ 			return;
+ 
+-		dev_info(&device->dev, "_OSC failed (%s)%s\n",
+-			 acpi_format_exception(status),
+-			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
++		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
++			 acpi_format_exception(status));
+ 		return;
+ 	}
+ 
+@@ -516,7 +515,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 	} else {
+ 		decode_osc_control(root, "OS requested", requested);
+ 		decode_osc_control(root, "platform willing to grant", control);
+-		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
++		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+ 			acpi_format_exception(status));
+ 
+ 		/*
