@@ -2,193 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 550CB1ED05F
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 14:58:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 417A21ED067
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 14:59:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgFCM5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jun 2020 08:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgFCM5n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jun 2020 08:57:43 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A28C08C5C0
-        for <linux-pci@vger.kernel.org>; Wed,  3 Jun 2020 05:57:41 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id r125so1225170lff.13
-        for <linux-pci@vger.kernel.org>; Wed, 03 Jun 2020 05:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dCxVfxCrSSvJ1heapBVBhtwf6LbvPjf1sTBIQx1UBaM=;
-        b=IQUmjbdCDziM8wOcD5JwWxDWgCqYExkvwyTsNu4BaU5djWrB/6LZr5jocRhVSLt02u
-         ss6vOIas9V/vMnYoRwNZWxX17OjcnTaCHJSzWAGCMJ1tQyHXIHTSkI8pdZro2Vs9TmJC
-         ddhvuSG85jXvqykzYV+OyrsGIdePfWkqlTfXGyRNP6AFeBK9SU/UNOvMV7wNe2sxGHsZ
-         FIo8hcWOjb6p6VYSWTrzkAs2akFq73RT+1iU82MqyvzCXaX8iOXTVh4iHFUQX9iKP67M
-         iJVBizLXZ1bDRIRgaNJoBrUvn1yF+74hPocpaLC9OEuyqj/G7HX/WFTGEC5PkKEt90qF
-         IGbg==
+        id S1725920AbgFCM75 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jun 2020 08:59:57 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44176 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCM75 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jun 2020 08:59:57 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x202so1677933oix.11;
+        Wed, 03 Jun 2020 05:59:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dCxVfxCrSSvJ1heapBVBhtwf6LbvPjf1sTBIQx1UBaM=;
-        b=a1BQly+h8RPlVF4NU+umAinHVJGt9CDvg617WQQhVB5HewiViAZH7l6ZH/W5KsukI3
-         xGCLc2iB41d1DzsuUfCR8sEogzEkB6Cd3ViFoIBN7MPGbzuILGsZ2aXhBoS3OuWoVhnY
-         riifYzRAHio03MRz0R/SQ46xlnpfsZ+SB6XIw/kk3mKyRS7/Bc50SOPdOp6uYSGI/wcv
-         SN9IsK2A+LibNTXrsL2trbvp4/Sh+xjtnh6V8MxZNuEtwja2G4f6o+szagIFxum29Z5z
-         uRfsw1PMglF3Bgp+aW2nZDrCTRziFr5L0DS9IAOkGOmN10nMkbFKOMZmaOnzHH6ewe0H
-         jL2Q==
-X-Gm-Message-State: AOAM530CNuJNj0dUVvrARO/gkvgW25YIg8Z3J+E6QbOAZN+JfWx32qRB
-        kBpNxr5r+SOiMWT6ApeVPE2012jwt0iQ/c1N8dHfTQ==
-X-Google-Smtp-Source: ABdhPJzB+kUOYneJzg/WXbkmONQu6HxudYdBz/co21M/29F544KJW1AnlEw+zmhPMZGik7mL4D5BzVGhcIEOFgkmtH8=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr2412645lfn.21.1591189059461;
- Wed, 03 Jun 2020 05:57:39 -0700 (PDT)
+        bh=2Avu73/RJTh7C6Zmn+PcLBAe4m5stgzWhjrslzFHSP0=;
+        b=jLBYOsarKhBG1YjFV/TG4X7FBYzGobFAle04Iem7aVuYJlfmKA0OkBRc4fD85sefgA
+         xynxspEy2ns7UCdY92TQQavM3S7mE6TraiUakHygcVd9HiZOkZNfAm8YSta9gVM8eEXB
+         JuR+YCcTsh9yhzCc4TLVWO3refpFZCeT21eMXgbcJbSxUUnM3GqZjkF2J81JzS1+psTY
+         Insobt2yKwoU9oouR6WQAmL9hO7thnsDclQDoGCIj8otP3kb6FVmdtAjDZFpwY6svsrj
+         Gt80x2HrKuMJ7dhhzANdDLxydvvfIlPxBXRUHCvizSFuL5Uw5Equ/20c55fn9LfRe52l
+         05kg==
+X-Gm-Message-State: AOAM530F2VPVFjkOVSMFj5paXRcurRKAY34cTyiG4VDERpyLyFhJ1Puv
+        9kFcyKLrbo9UZLFQ04OlE/SxYoJCceN1C7T90dE=
+X-Google-Smtp-Source: ABdhPJyJxV8ci7Gy/UVsoeIn0CieAgfklfLjvV2MpzQ0tBaMdkhQIJdMlqCuRQORLGmugftLli0nlNv4Wp4+0GUfdek=
+X-Received: by 2002:aca:eb56:: with SMTP id j83mr6404375oih.110.1591189195627;
+ Wed, 03 Jun 2020 05:59:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
- <20200601232542.GA473883@bjorn-Precision-5520> <20200602050626.GA2174820@kroah.com>
- <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
- <20200603060751.GA465970@kroah.com> <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com>
-In-Reply-To: <20200603121613.GA1488883@kroah.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Wed, 3 Jun 2020 05:57:02 -0700
-Message-ID: <CACK8Z6EzYxh8WS8h8y6WdF8PnwUixQvFy6JASuzJ_tRsVfu5Fw@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <dd5ba708-18a9-fd42-8cf1-af32ef367d5e@kernel.org> <20200602223618.GA845676@bjorn-Precision-5520>
+In-Reply-To: <20200602223618.GA845676@bjorn-Precision-5520>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 3 Jun 2020 14:59:41 +0200
+Message-ID: <CAJZ5v0ixNmH_h5OFQrH4HV0E2ie_=PsN0vj7wBBjASTH51Esuw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ASPM: Print correct ASPM status when _OSC failed
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Sinan Kaya <okaya@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Greg,
-
-Thanks for looking into this thread.
-
-On Wed, Jun 3, 2020 at 5:16 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Jun 3, 2020 at 12:36 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Wed, Jun 03, 2020 at 04:51:18AM -0700, Rajat Jain wrote:
-> > Hello,
+> On Tue, Jun 02, 2020 at 01:50:37PM -0400, Sinan Kaya wrote:
+> > Bjorn,
 > >
-> > >
-> > > > Thanks for the pointer! I'm still looking at the details yet, but a
-> > > > quick look (usb_dev_authorized()) seems to suggest that this API is
-> > > > "device based". The multiple levels of "authorized" seem to take shape
-> > > > from either how it is wired or from userspace choice. Once authorized,
-> > > > USB device or interface is authorized to be used by *anyone* (can be
-> > > > attached to any drivers). Do I understand it right that it does not
-> > > > differentiate between drivers?
-> > >
-> > > Yes, and that is what you should do, don't fixate on drivers.  Users
-> > > know how to control and manage devices.  Us kernel developers are
-> > > responsible for writing solid drivers and getting them merged into the
-> > > kernel tree and maintaining them over time.  Drivers in the kernel
-> > > should always be trusted, ...
+> > On 6/1/2020 9:57 PM, Yicong Yang wrote:
+> > > well, Sinan's words make sense to me. But I'm still confused that, the message
+> > > says we're "disabling ASPM" but ASPM maybe enabled if we designate
+> > > pcie_aspm=force as I mentioned in the commit message. Will it be possible if
+> > > we replace "disabling" to "disabled" or we can do something else to make
+> > > the message reflect the real status of ASPM?
 > >
-> > 1) Yes, I agree that this would be ideal, and this should be our
-> > mission. I should clarify that I may have used the wrong term
-> > "Trusted/Certified drivers". I didn't really mean that the drivers may
-> > be malicious by intent. What I really meant is that a driver may have
-> > an attack surface, which is a vulnerability that may be exploited.
+> > What do you think?
 >
-> Any code has such a thing, proving otherwise is a tough problem :)
+> ASPM is a mess in general, and the whole "no_aspm" dance for delaying
+> setting of aspm_disabled is ... well, it's confusing at best.
 >
-> > Realistically speaking, finding vulnerabilities in drivers, creating
-> > attacks to exploit them, and fixing them is a never ending cat and
-> > mouse game. At Least "identifying the vulnerabilities" part is better
-> > performed by security folks rather than driver writers.
+> These "_OSC failed" messages are confusing to users as well.  They
+> lead to bug reports against Linux (when it's usually a BIOS problem)
+> and users booting with "pcie_aspm=force" (which is a poor user
+> experience and potentially dangerous since the platform hasn't granted
+> us control of the PCIe Capability).
 >
-> Are you sure about that?  It's hard to prove a negative :)
+> And it's not even specific to ASPM; when _OSC fails, we don't take
+> over *any* PCIe features.  At least, we're not *supposed* to -- I
+> don't think we're very careful about random things in the PCIe
+> capability.
 >
-> > Earlier in the
-> > thread I had mentioned certain studies/projects that identified and
-> > exploited such vulnerabilities in the drivers. I should have used the
-> > term "Vetted Drivers" maybe to convey the intent better - drivers that
-> > have been vetted by a security focussed team (admin). What I'm
-> > advocating here is an administrator's right to control the drivers
-> > that he wants to allow for external ports on his systems.
+> What if we just removed the ASPM text from the message completely,
+> e.g., something like this:
 >
-> That's an odd thing, but sure, if you want to write up such a policy for
-> your systems, great.  But that policy does not belong in the kernel, it
-> belongs in userspace.
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 800a3d26d24b..49fdb07061b1 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -453,9 +453,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>                 if ((status == AE_NOT_FOUND) && !is_pcie)
+>                         return;
+>
+> -               dev_info(&device->dev, "_OSC failed (%s)%s\n",
+> -                        acpi_format_exception(status),
+> -                        pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
+> +               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> +                        acpi_format_exception(status));
+>                 return;
+>         }
+>
+> @@ -516,7 +515,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>         } else {
+>                 decode_osc_control(root, "OS requested", requested);
+>                 decode_osc_control(root, "platform willing to grant", control);
+> -               dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
+> +               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+>                         acpi_format_exception(status));
+>
+>                 /*
 
-Agree.
+Looks good to me.
 
->
-> > 2) In addition to the problem of driver negligences / vulnerabilities
-> > to be exploited, we ran into another problem with the "whitelist
-> > devices only" approach. We did start with the "device based" approach
-> > only initially - but quickly realized that anything we use to
-> > whitelist an external device can only be based on the info provided by
-> > *that device* itself. So until we have devices that exchange
-> > certificates with kernel [1], it is easy for a malicious device to
-> > spoof a whitelisted device (by presenting the same VID:DID or any
-> > other data that is used by us to whitelist it).
-> >
-> > [1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
-> >
-> > I hope that helps somewhat clarify how / why we reached here?
->
-> Kind of, I still think all you need to do is worry about controlling the
-> devices and if a driver should bind to it or not.
-
-Agree. That is precisely what this RFC had in mind: (1) controlling
-whether a device is authorized and if so (2) What drivers can bind to
-it.
-
->  Again, much like USB
-> has been doing for a very long time now.  The idea of "spoofing" ids
-> also is not new, and has been around for a very long time as well, and
-> again, the controls that the USB core gives you allows you to make any
-> type of policy decision you want to, in userspace.
->
-> So please, in summary:
->         - don't think this is some new type of thing, it's an old issue
->           transferred to yet-another-hardware-bus.  Not to say this is
->           not important, just please look at the work that others have
->           done in the past to help mitigate and solve this (reading the
->           Wireless USB spec should help you out here too, as they
->           detailed all of this.)
->         - do copy what USB did, by moving that logic into the driver
->           core so that all busses who want to take advantage of this
->           type of functionality, easily can do so.
-
-Understood, will keep that in mind. I may first present a "PCI
-subsystem only" draft just to get a feel for it, since that is more
-familiar to me and also already has some bits and pieces we need for
-this.
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> thanks,
->
-> greg k-h
+Cheers!
