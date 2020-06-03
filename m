@@ -2,104 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FEAB1EC87E
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 06:48:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 399C71EC941
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 08:07:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725867AbgFCEsI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jun 2020 00:48:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
+        id S1725810AbgFCGHz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jun 2020 02:07:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgFCEsH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Jun 2020 00:48:07 -0400
-Received: from [192.168.68.109] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725792AbgFCGHy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:07:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21F2F20659;
-        Wed,  3 Jun 2020 04:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1240C2065C;
+        Wed,  3 Jun 2020 06:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591159686;
-        bh=AphOIH+6/GvyTneJ0nSOFmpaZ59ec5x3izoW69DhFeE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=l/aYsdB+rRcGwHkyRN59EyKAvQL/uZlLu8xldmNf3Wc7qYrcl8zTaOyfsJml7UsZ3
-         Ok9vkWgpuQJqWJh3hqWiOrdJfvgZcocrElW8mNVGf2d+dm0pJIIFJRa+J5vcKz+rRF
-         anA0Dh8yET8tV6mNSBsF1R6d7BIQcNUH8Is59wlg=
-Subject: Re: [PATCH] PCI/ASPM: Print correct ASPM status when _OSC failed
-To:     Sean V Kelley <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Yicong Yang <yangyicong@hisilicon.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-References: <20200602223618.GA845676@bjorn-Precision-5520>
- <B2282A82-EEA4-40F8-B7F5-1D7AE7E3B573@intel.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <faaf2c47-6039-74fb-e5d2-91a5b3705459@kernel.org>
-Date:   Wed, 3 Jun 2020 00:48:04 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        s=default; t=1591164473;
+        bh=VG3pHSr/9ExD+ftESX8H3WG/eux5qg75Y/6AYihJIGI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nGNmmc3wZvta5Q9yTCfjC+cNGoWkPIahRxpC7+K9Sogzw+6snhMyo8mOFgEDPTvd8
+         hRhRV050MeSUWm+970fkY+AWVpjnEnp93Xcub2+P0NjejUgj63GbOig1PAHULzmItM
+         X0vS7R64VvXdVA/EbiZiMGqNGUbWTFdLmyV1EtdQ=
+Date:   Wed, 3 Jun 2020 08:07:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatxjain@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200603060751.GA465970@kroah.com>
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520>
+ <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <B2282A82-EEA4-40F8-B7F5-1D7AE7E3B573@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/2/2020 7:21 PM, Sean V Kelley wrote:
-
-
-Thanks,
-
->> -        dev_info(&device->dev, "_OSC failed (%s)%s\n",
->> -             acpi_format_exception(status),
->> -             pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
->> +        dev_info(&device->dev, "_OSC: platform retains control of
->> PCIe features (%s)\n",
->> +             acpi_format_exception(status));
->>          return;
->>      }
->>
->> @@ -516,7 +515,7 @@ static void negotiate_os_control(struct
->> acpi_pci_root *root, int *no_aspm,
->>      } else {
->>          decode_osc_control(root, "OS requested", requested);
->>          decode_osc_control(root, "platform willing to grant", control);
->> -        dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
->> +        dev_info(&device->dev, "_OSC: platform retains control of
->> PCIe features (%s)\n",
->>              acpi_format_exception(status));
->>
+On Wed, Jun 03, 2020 at 02:27:33AM +0000, Rajat Jain wrote:
+> On Mon, Jun 1, 2020 at 10:06 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Jun 01, 2020 at 06:25:42PM -0500, Bjorn Helgaas wrote:
+> > > [+cc Greg, linux-kernel for wider exposure]
+> >
+> > Thanks for the cc:, missed this...
+> >
+> > >
+> > > On Tue, May 26, 2020 at 09:30:08AM -0700, Rajat Jain wrote:
+> > > > On Thu, May 14, 2020 at 7:18 PM Rajat Jain <rajatja@google.com> wrote:
+> > > > > On Thu, May 14, 2020 at 12:13 PM Raj, Ashok <ashok.raj@intel.com> wrote:
+> > > > > > On Wed, May 13, 2020 at 02:26:18PM -0700, Rajat Jain wrote:
+> > > > > > > On Wed, May 13, 2020 at 8:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > On Fri, May 01, 2020 at 04:07:10PM -0700, Rajat Jain wrote:
+> > > > > > > > > Hi,
+> > > > > > > > >
+> > > > > > > > > Currently, the PCI subsystem marks the PCI devices as "untrusted", if
+> > > > > > > > > the firmware asks it to:
+> > > > > > > > >
+> > > > > > > > > 617654aae50e ("PCI / ACPI: Identify untrusted PCI devices")
+> > > > > > > > > 9cb30a71acd4 ("PCI: OF: Support "external-facing" property")
+> > > > > > > > >
+> > > > > > > > > An "untrusted" device indicates a (likely external facing) device that
+> > > > > > > > > may be malicious, and can trigger DMA attacks on the system. It may
+> > > > > > > > > also try to exploit any vulnerabilities exposed by the driver, that
+> > > > > > > > > may allow it to read/write unintended addresses in the host (e.g. if
+> > > > > > > > > DMA buffers for the device, share memory pages with other driver data
+> > > > > > > > > structures or code etc).
+> > > > > > > > >
+> > > > > > > > > High Level proposal
+> > > > > > > > > ===============
+> > > > > > > > > Currently, the "untrusted" device property is used as a hint to enable
+> > > > > > > > > IOMMU restrictions (on Intel), disable ATS (on ARM) etc. We'd like to
+> > > > > > > > > go a step further, and allow the administrator to build a list of
+> > > > > > > > > whitelisted drivers for these "untrusted" devices. This whitelist of
+> > > > > > > > > drivers are the ones that he trusts enough to have little or no
+> > > > > > > > > vulnerabilities. (He may have built this list of whitelisted drivers
+> > > > > > > > > by a combination of code analysis of drivers, or by extensive testing
+> > > > > > > > > using PCIe fuzzing etc). We propose that the administrator be allowed
+> > > > > > > > > to specify this list of whitelisted drivers to the kernel, and the PCI
+> > > > > > > > > subsystem to impose this behavior:
+> > > > > > > > >
+> > > > > > > > > 1) The "untrusted" devices can bind to only "whitelisted drivers".
+> > > > > > > > > 2) The other devices (i.e. dev->untrusted=0) can bind to any driver.
+> > > > > > > > >
+> > > > > > > > > Of course this behavior is to be imposed only if such a whitelist is
+> > > > > > > > > provided by the administrator.
+> > > >
+> > > > I haven't heard much on this proposal after the initial inputs (to
+> > > > which I responded). Essentially, I agree that IO-MMU and ACS
+> > > > restrictions need to be put in plcase. But I think we need this
+> > > > additionally. Does this look acceptable to you? I wanted to start
+> > > > spinning out the patches, but wanted to see if there are any pending
+> > > > comments or concerns.
+> > >
+> > > I think it makes sense to code this up and see what it would look
+> > > like.  The bare minimum seems like a driver "bind-to-external-devices"
+> > > bit that's visible in sysfs plus something in the driver probe path
+> > > that checks it.  Neither is inherently PCI-specific, but maybe the
+> > > right place will become obvious when implementing it.
 > 
+> 
+> Agree. I'll try to code it up.
+> 
+> My proposal became PCI specific because
+> 
+> * The need for my proposal arrived out of the potentially malicious
+> *external* devices that can (NOW, with the advent of thunderbolt)
+> directly DMA into the CPU memory space. PCI (enabled by Thunderbolt 3
+> and USB4) is the only interface that fits the bill for laptops at
+> least (There are few more interfaces that allow DMA directly into host
+> memory such as LPC etc, but they are all internal so far).
 
-feel free to include my reviewed by.
+Again, that fits in exactly with what USB does, so you should just steal
+that code and move it into the driver core for all busses to use.
 
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
+> > > I'm also not sure about the administrative details of this.  Certain
+> > > versions of the driver may be trusted while others are untrusted.
+> > > That would all have to be managed in userspace, so it's not really our
+> > > problem, but it sounds like a hassle.  Putting the information in the
+> > > driver itself would reduce that.
+> 
+> I agree to the points you are making. *
+> 
+> - Who do you think should certify the driver? The driver maintainer?
+> Do we really think driver authors / maintainers will responsibly
+> update this field? Also, how often?
 
+No, that way lies madness, don't have "certified" drivers or anything
+like that.  Just put policy in place for if you can trust the _device_
+or not.
+
+> - Also, this being a policy decision, and thus best left outside the kernel?
+
+Yes.  There are tools already that do this today for USB, take a look at
+how they work for examples of the process.
+
+> Thanks for the pointer! I'm still looking at the details yet, but a
+> quick look (usb_dev_authorized()) seems to suggest that this API is
+> "device based". The multiple levels of "authorized" seem to take shape
+> from either how it is wired or from userspace choice. Once authorized,
+> USB device or interface is authorized to be used by *anyone* (can be
+> attached to any drivers). Do I understand it right that it does not
+> differentiate between drivers?
+
+Yes, and that is what you should do, don't fixate on drivers.  Users
+know how to control and manage devices.  Us kernel developers are
+responsible for writing solid drivers and getting them merged into the
+kernel tree and maintaining them over time.  Drivers in the kernel
+should always be trusted, if not, then we have bigger architectural
+issues we need to deal with.
+
+thanks,
+
+greg k-h
