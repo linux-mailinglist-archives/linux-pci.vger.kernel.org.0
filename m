@@ -2,184 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 399C71EC941
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 08:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 231221ECAAD
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 09:39:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbgFCGHz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jun 2020 02:07:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgFCGHy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:07:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1240C2065C;
-        Wed,  3 Jun 2020 06:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591164473;
-        bh=VG3pHSr/9ExD+ftESX8H3WG/eux5qg75Y/6AYihJIGI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nGNmmc3wZvta5Q9yTCfjC+cNGoWkPIahRxpC7+K9Sogzw+6snhMyo8mOFgEDPTvd8
-         hRhRV050MeSUWm+970fkY+AWVpjnEnp93Xcub2+P0NjejUgj63GbOig1PAHULzmItM
-         X0vS7R64VvXdVA/EbiZiMGqNGUbWTFdLmyV1EtdQ=
-Date:   Wed, 3 Jun 2020 08:07:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatxjain@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200603060751.GA465970@kroah.com>
-References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
- <20200601232542.GA473883@bjorn-Precision-5520>
- <20200602050626.GA2174820@kroah.com>
- <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+        id S1725868AbgFCHjE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jun 2020 03:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgFCHjD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jun 2020 03:39:03 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406DEC05BD43
+        for <linux-pci@vger.kernel.org>; Wed,  3 Jun 2020 00:39:03 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g10so848712wmh.4
+        for <linux-pci@vger.kernel.org>; Wed, 03 Jun 2020 00:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hLQ9Ov0eKr85gKa7olFwe6f0SlVLYGl5nrVG5b+LzPg=;
+        b=BaA7HqoJAJJh2tIRtyNtCnJJ+ARabjO7t5qWHkwfey6v8O/bYqibUoJb7g2lNYfNoZ
+         ifRC05Pi1fFsLS0xec3/ZwWH5HsiqKmSLEV1fLmRpATey18HMYDmWin9n3Lkz4IawUOQ
+         xlEYpZp5UmMhs18ikzeusxNZVkL8Zx3ToEbKvsz7PW6G3ARdQwBq0YY+pC+k6oMkgPG9
+         WS33Jb4rH9VdYT1yaXMb7+k5Kf1kqlPXl8+BOa8wlHnCW3navM5sN6dA2DpyHeZobAy9
+         jaGeJhzWEgaTqAFNlLtfzmz/6tmkY5sIGP7K7i1KqYqmIFqvLzdVzqj+ASM+V0Ps5U09
+         v7mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hLQ9Ov0eKr85gKa7olFwe6f0SlVLYGl5nrVG5b+LzPg=;
+        b=mEdVEklfComiIdQdXHjwx+TmKvonj32SqOvUcbFqRPRXP6z0OIEMMQ5rJR9Pym/csq
+         FP7ccNBHTZ+GK4tmak+g0LeDaD5yeUvh7HxZeIuU11sQtVddgicRaL1+KDyOEebtRF06
+         6o9kP+FwMppuGqsAzwVnME2ix9X0NfmIv1ckIfu16VIMz2wTx0eKqlHx4Mm0T8f2SZ4W
+         zYYt6ezR9Y0iGY1tVj8MJjsbBPzy2Vl0MrjTG5Zmx3wQf5SEyvyWDlgChe1udZyREib7
+         89ObNU93Z1d35qY4rcc/vT3HQkh+xMI5Iw9HxkC8ssE6oN/orrEAf4xlwAS/lUT+WA2a
+         3SWQ==
+X-Gm-Message-State: AOAM532nuFCCEiKHS8Z9SZejn8i6BXhWiCUCFszCR3xyeRN5dnDPSHW1
+        Li1qoJs4dsxbMbo/AO8LAvjPeQ==
+X-Google-Smtp-Source: ABdhPJx2CVWTxoCwkjfPm8H6OgQs2Q+1IKumvn68jhcLFzJkSHw/NXJvs00yy3+6Xok2VEhmklRBbQ==
+X-Received: by 2002:a1c:5a0b:: with SMTP id o11mr7245089wmb.74.1591169941832;
+        Wed, 03 Jun 2020 00:39:01 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id t129sm1796108wmf.41.2020.06.03.00.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 00:39:01 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 09:38:51 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "felix.kuehling@amd.com" <felix.kuehling@amd.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v7 21/24] iommu/arm-smmu-v3: Add stall support for
+ platform devices
+Message-ID: <20200603073851.GA3198@myrica>
+References: <20200519175502.2504091-1-jean-philippe@linaro.org>
+ <20200519175502.2504091-22-jean-philippe@linaro.org>
+ <4741b6c45d1a43b69041ecb5ce0be0d5@huawei.com>
+ <20200602093836.GA1029680@myrica>
+ <1517c4d97b5849e6b6d32e7d7ed35289@huawei.com>
+ <20200602114611.GB1029680@myrica>
+ <c165fe41230f49baba991f1a416a4739@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+In-Reply-To: <c165fe41230f49baba991f1a416a4739@huawei.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 02:27:33AM +0000, Rajat Jain wrote:
-> On Mon, Jun 1, 2020 at 10:06 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jun 01, 2020 at 06:25:42PM -0500, Bjorn Helgaas wrote:
-> > > [+cc Greg, linux-kernel for wider exposure]
-> >
-> > Thanks for the cc:, missed this...
-> >
-> > >
-> > > On Tue, May 26, 2020 at 09:30:08AM -0700, Rajat Jain wrote:
-> > > > On Thu, May 14, 2020 at 7:18 PM Rajat Jain <rajatja@google.com> wrote:
-> > > > > On Thu, May 14, 2020 at 12:13 PM Raj, Ashok <ashok.raj@intel.com> wrote:
-> > > > > > On Wed, May 13, 2020 at 02:26:18PM -0700, Rajat Jain wrote:
-> > > > > > > On Wed, May 13, 2020 at 8:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > On Fri, May 01, 2020 at 04:07:10PM -0700, Rajat Jain wrote:
-> > > > > > > > > Hi,
-> > > > > > > > >
-> > > > > > > > > Currently, the PCI subsystem marks the PCI devices as "untrusted", if
-> > > > > > > > > the firmware asks it to:
-> > > > > > > > >
-> > > > > > > > > 617654aae50e ("PCI / ACPI: Identify untrusted PCI devices")
-> > > > > > > > > 9cb30a71acd4 ("PCI: OF: Support "external-facing" property")
-> > > > > > > > >
-> > > > > > > > > An "untrusted" device indicates a (likely external facing) device that
-> > > > > > > > > may be malicious, and can trigger DMA attacks on the system. It may
-> > > > > > > > > also try to exploit any vulnerabilities exposed by the driver, that
-> > > > > > > > > may allow it to read/write unintended addresses in the host (e.g. if
-> > > > > > > > > DMA buffers for the device, share memory pages with other driver data
-> > > > > > > > > structures or code etc).
-> > > > > > > > >
-> > > > > > > > > High Level proposal
-> > > > > > > > > ===============
-> > > > > > > > > Currently, the "untrusted" device property is used as a hint to enable
-> > > > > > > > > IOMMU restrictions (on Intel), disable ATS (on ARM) etc. We'd like to
-> > > > > > > > > go a step further, and allow the administrator to build a list of
-> > > > > > > > > whitelisted drivers for these "untrusted" devices. This whitelist of
-> > > > > > > > > drivers are the ones that he trusts enough to have little or no
-> > > > > > > > > vulnerabilities. (He may have built this list of whitelisted drivers
-> > > > > > > > > by a combination of code analysis of drivers, or by extensive testing
-> > > > > > > > > using PCIe fuzzing etc). We propose that the administrator be allowed
-> > > > > > > > > to specify this list of whitelisted drivers to the kernel, and the PCI
-> > > > > > > > > subsystem to impose this behavior:
-> > > > > > > > >
-> > > > > > > > > 1) The "untrusted" devices can bind to only "whitelisted drivers".
-> > > > > > > > > 2) The other devices (i.e. dev->untrusted=0) can bind to any driver.
-> > > > > > > > >
-> > > > > > > > > Of course this behavior is to be imposed only if such a whitelist is
-> > > > > > > > > provided by the administrator.
+On Tue, Jun 02, 2020 at 12:12:30PM +0000, Shameerali Kolothum Thodi wrote:
+> > > > > > +		if (ssid_valid)
+> > > > > > +			flt->prm.flags |=
+> > > > IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
+> > > > >
+> > > > > Do we need to set this for STALL mode only support? I had an issue
+> > > > > with this being set on a vSVA POC based on our D06 zip
+> > > > > device(which is a "fake " pci dev that supports STALL mode but no
+> > > > > PRI). The issue is, CMDQ_OP_RESUME doesn't have any ssid or SSV
+> > > > > params and works on sid
+> > > > and stag only.
 > > > >
-> > > > I haven't heard much on this proposal after the initial inputs (to
-> > > > which I responded). Essentially, I agree that IO-MMU and ACS
-> > > > restrictions need to be put in plcase. But I think we need this
-> > > > additionally. Does this look acceptable to you? I wanted to start
-> > > > spinning out the patches, but wanted to see if there are any pending
-> > > > comments or concerns.
+> > > > I don't understand the problem, arm_smmu_page_response() doesn't set
+> > > > SSID or SSV when sending a CMDQ_OP_RESUME. Could you detail the flow
+> > > > of a stall event and RESUME command in your prototype?  Are you
+> > > > getting issues with the host driver or the guest driver?
 > > >
-> > > I think it makes sense to code this up and see what it would look
-> > > like.  The bare minimum seems like a driver "bind-to-external-devices"
-> > > bit that's visible in sysfs plus something in the driver probe path
-> > > that checks it.  Neither is inherently PCI-specific, but maybe the
-> > > right place will become obvious when implementing it.
+> > > The issue is on the host side iommu_page_response(). The flow is
+> > > something like below.
+> > >
+> > > Stall: Host:-
+> > >
+> > > arm_smmu_handle_evt()
+> > >   iommu_report_device_fault()
+> > >     vfio_pci_iommu_dev_fault_handler()
+> > >
+> > > Stall: Qemu:-
+> > >
+> > > vfio_dma_fault_notifier_handler()
+> > >   inject_faults()
+> > >     smmuv3_inject_faults()
+> > >
+> > > Stall: Guest:-
+> > >
+> > > arm_smmu_handle_evt()
+> > >   iommu_report_device_fault()
+> > >     iommu_queue_iopf
+> > >   ...
+> > >   iopf_handle_group()
+> > >     iopf_handle_single()
+> > >       handle_mm_fault()
+> > >         iopf_complete()
+> > >            iommu_page_response()
+> > >              arm_smmu_page_response()
+> > >                arm_smmu_cmdq_issue_cmd(CMDQ_OP_RESUME)
+> > >
+> > > Resume: Qemu:-
+> > >
+> > > smmuv3_cmdq_consume(SMMU_CMD_RESUME)
+> > >   smmuv3_notify_page_resp()
+> > >     vfio:ioctl(page_response)  --> struct iommu_page_response is filled
+> > >                              with only version, grpid and code.
+> > >
+> > > Resume: Host:-
+> > >   ioctl(page_response)
+> > >     iommu_page_response()  --> fails as the pending req has PASID_VALID
+> > flag
+> > >                              set and it checks for a match.
+> > 
+> > I believe the fix needs to be here. It's also wrong for PRI since not all PCIe
+> > endpoint require a PASID in the page response. Could you try the attached
+> > patch?
 > 
-> 
-> Agree. I'll try to code it up.
-> 
-> My proposal became PCI specific because
-> 
-> * The need for my proposal arrived out of the potentially malicious
-> *external* devices that can (NOW, with the advent of thunderbolt)
-> directly DMA into the CPU memory space. PCI (enabled by Thunderbolt 3
-> and USB4) is the only interface that fits the bill for laptops at
-> least (There are few more interfaces that allow DMA directly into host
-> memory such as LPC etc, but they are all internal so far).
+> Going through the patch, yes, that will definitely fix the issue. But isn't it better if
+> the request itself indicate whether it expects a response msg with a valid pasid or
+> not? The response msg can come from userspace as well(vSVA) and if for some reason
+> doesn't set it for a req that expects pasid then it should be an error, right? In the temp
+> fix I had, I introduced another flag to indicate the endpoint has PRI support or not and
+> used that to verify the pasid requirement. But for the PRI case you mentioned 
+> above, not sure it is easy to get that information or not. May be I am complicating things
+> here :)
 
-Again, that fits in exactly with what USB does, so you should just steal
-that code and move it into the driver core for all busses to use.
+No you're right, we shouldn't send back malformed responses to the SMMU. I
+suppose we can store a flag "PASID required" in the fault and check that
+against the response. If we have to discard the guest's response, then we
+can either fake a response (abort the stall) right away, or wait for the
+response timeout to kick, which will do the same.
 
-> > > I'm also not sure about the administrative details of this.  Certain
-> > > versions of the driver may be trusted while others are untrusted.
-> > > That would all have to be managed in userspace, so it's not really our
-> > > problem, but it sounds like a hassle.  Putting the information in the
-> > > driver itself would reduce that.
-> 
-> I agree to the points you are making. *
-> 
-> - Who do you think should certify the driver? The driver maintainer?
-> Do we really think driver authors / maintainers will responsibly
-> update this field? Also, how often?
-
-No, that way lies madness, don't have "certified" drivers or anything
-like that.  Just put policy in place for if you can trust the _device_
-or not.
-
-> - Also, this being a policy decision, and thus best left outside the kernel?
-
-Yes.  There are tools already that do this today for USB, take a look at
-how they work for examples of the process.
-
-> Thanks for the pointer! I'm still looking at the details yet, but a
-> quick look (usb_dev_authorized()) seems to suggest that this API is
-> "device based". The multiple levels of "authorized" seem to take shape
-> from either how it is wired or from userspace choice. Once authorized,
-> USB device or interface is authorized to be used by *anyone* (can be
-> attached to any drivers). Do I understand it right that it does not
-> differentiate between drivers?
-
-Yes, and that is what you should do, don't fixate on drivers.  Users
-know how to control and manage devices.  Us kernel developers are
-responsible for writing solid drivers and getting them merged into the
-kernel tree and maintaining them over time.  Drivers in the kernel
-should always be trusted, if not, then we have bigger architectural
-issues we need to deal with.
-
-thanks,
-
-greg k-h
+Thanks,
+Jean
