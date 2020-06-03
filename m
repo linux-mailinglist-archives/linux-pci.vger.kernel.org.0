@@ -2,112 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B25421ED0A0
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 15:19:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6EF41ED0C6
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 15:29:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgFCNTy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jun 2020 09:19:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47438 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725780AbgFCNTy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:19:54 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3D677AE57E255F573E1A;
-        Wed,  3 Jun 2020 21:19:52 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 21:19:44 +0800
-Subject: Re: [PATCH v2] ACPI: PCI: Remove ASPM text from _OSC failure message
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200602223618.GA845676@bjorn-Precision-5520>
- <B2282A82-EEA4-40F8-B7F5-1D7AE7E3B573@intel.com>
- <faaf2c47-6039-74fb-e5d2-91a5b3705459@kernel.org>
- <03d2a6ca-78de-2d39-5428-2949c2017099@hisilicon.com>
- <CAJZ5v0hxwcbembJGDRdf_nBRaTzcO73L1YJ2TT3BYxaihV6orA@mail.gmail.com>
-CC:     Sinan Kaya <okaya@kernel.org>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
+        id S1725867AbgFCN3S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jun 2020 09:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725833AbgFCN3S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:29:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A22020679;
+        Wed,  3 Jun 2020 13:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591190958;
+        bh=xp8S5uRdLpHTssSel0DvZQsI7IRlTP5pP3UlhihHxkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K5gXOOyg9zFDn5uQLf3I5QYs0e7Y5q38gkxDjvrAVk/SqXTV/2XaWPrDZpAvcSDWr
+         ii6fkTLI+uftI1ORJFo5lN7CfFeLGRMfZ00GNfAn2F1xWGn+8OGsiksqLQ2Y3AH1bM
+         /TzIHYQWMmpaN9fXL03NtGgj/otRH6tLUhwoykVM=
+Date:   Wed, 3 Jun 2020 15:29:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <0e531765-0398-001f-c157-bab459f4aa94@hisilicon.com>
-Date:   Wed, 3 Jun 2020 21:19:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200603132915.GA1584791@kroah.com>
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520>
+ <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com>
+ <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EzYxh8WS8h8y6WdF8PnwUixQvFy6JASuzJ_tRsVfu5Fw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hxwcbembJGDRdf_nBRaTzcO73L1YJ2TT3BYxaihV6orA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6EzYxh8WS8h8y6WdF8PnwUixQvFy6JASuzJ_tRsVfu5Fw@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/6/3 21:02, Rafael J. Wysocki wrote:
-> On Wed, Jun 3, 2020 at 2:15 PM Yicong Yang <yangyicong@hisilicon.com> wrote:
->> Previously the _OSC failed message is rather confusing, as if we
->> forcibly enable ASPM by set pcie_aspm=force, we'll get the message
->> below, which doesn't the reflect the real status.
->>
->>   acpi PNP0A08:02: _OSC failed (AE_NOT_FOUND); disabling ASPM
->>
->> Reword the _OSC failure message and remove the ASPM text to make
->> it clear. As if _OSC failed we're not supposed to take over any
->> PCIe features including ASPM. After the Patch it'll look like:
->>
->>   acpi PNP0A08:02: _OSC: platform retains control of PCIe features (AE_NOT_FOUND)
->>
->> No functional change intended.
->>
->> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> Reviewed-by: Sinan Kaya <okaya@kernel.org>
-> This is a Bjorn's patch to which you have added a changelog and posted
-> as yours.  It is not OK to do things like that.
+On Wed, Jun 03, 2020 at 05:57:02AM -0700, Rajat Jain wrote:
+> > So please, in summary:
+> >         - don't think this is some new type of thing, it's an old issue
+> >           transferred to yet-another-hardware-bus.  Not to say this is
+> >           not important, just please look at the work that others have
+> >           done in the past to help mitigate and solve this (reading the
+> >           Wireless USB spec should help you out here too, as they
+> >           detailed all of this.)
+> >         - do copy what USB did, by moving that logic into the driver
+> >           core so that all busses who want to take advantage of this
+> >           type of functionality, easily can do so.
+> 
+> Understood, will keep that in mind. I may first present a "PCI
+> subsystem only" draft just to get a feel for it, since that is more
+> familiar to me and also already has some bits and pieces we need for
+> this.
 
-Please ignore this Patch !
+Why?  Do it right the first time.  To waste reviewer's time on something
+that you know you have to throw away and do it "correctly" again, is not
+very nice.  I know I would put you on the bottom of my "patches to
+review" list if you did that to me :)
 
-Sorry for my mistake and thanks for pointing it out.
+thanks,
 
->
->> ---
->>  drivers/acpi/pci_root.c | 7 +++----
->>  1 file changed, 3 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index ac8ad6c..8dd7f14 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -454,9 +454,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->>   if ((status == AE_NOT_FOUND) && !is_pcie)
->>   return;
->>
->> - dev_info(&device->dev, "_OSC failed (%s)%s\n",
->> - acpi_format_exception(status),
->> - pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
->> + dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
->> + acpi_format_exception(status));
->>   return;
->>   }
->>
->> @@ -517,7 +516,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->>   } else {
->>   decode_osc_control(root, "OS requested", requested);
->>   decode_osc_control(root, "platform willing to grant", control);
->> - dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
->> + dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
->>   acpi_format_exception(status));
->>
->>   /*
->> --
->> 2.8.1
->>
->> .
->>
-> .
->
-
+greg k-h
