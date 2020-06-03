@@ -2,68 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44E731ECBFA
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 10:55:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A8FC1ECE15
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jun 2020 13:15:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgFCIzJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jun 2020 04:55:09 -0400
-Received: from mx.socionext.com ([202.248.49.38]:18852 "EHLO mx.socionext.com"
+        id S1725906AbgFCLPG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jun 2020 07:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgFCIyz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:54:55 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 03 Jun 2020 17:54:53 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 02E8860057;
-        Wed,  3 Jun 2020 17:54:54 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 3 Jun 2020 17:54:54 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 616C01A12AD;
-        Wed,  3 Jun 2020 17:54:53 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1725882AbgFCLPG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:15:06 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 885C02067B;
+        Wed,  3 Jun 2020 11:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591182905;
+        bh=DIzdZtES3weee8kFjADfjxp0jxzg8+EHuNSTFll5o64=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dHtLL2bjjmWlybWqZVA7JugSObOSlVQlMOrxeXn8QK/b8Ox/RqzeafeE5m5ch1Izs
+         Tz1D7UKIVGzJUyx6siommZjcz7WJlmZrcScBIPFjDjjWJANJMLTnAV9K+k1W5XgjN2
+         DRGRpfciWQDzfqPiZ5dCG1Z2jQ8NYtIkuq4PJjPo=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jgRMO-00HQQ8-22; Wed, 03 Jun 2020 12:15:04 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jun 2020 12:15:04 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 6/6] PCI: uniphier: Use devm_platform_ioremap_resource_byname()
-Date:   Wed,  3 Jun 2020 17:54:41 +0900
-Message-Id: <1591174481-13975-7-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 1/6] PCI: dwc: Add msi_host_isr() callback
+In-Reply-To: <1591174481-13975-2-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591174481-13975-2-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <95bb3ffbfab4923854e20266c6b0b098@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use devm_platform_ioremap_resource_byname() to simplify the code a bit.
+On 2020-06-03 09:54, Kunihiko Hayashi wrote:
+> This adds msi_host_isr() callback function support to describe
+> SoC-dependent service triggered by MSI.
+> 
+> For example, when AER interrupt is triggered by MSI, the callback 
+> function
+> reads SoC-dependent registers and detects that the interrupt is from 
+> AER,
+> and invoke AER interrupts related to MSI.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++----
+>  drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 0a4a5aa..9b628a2 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -112,13 +112,13 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port 
+> *pp)
+>  static void dw_chained_msi_isr(struct irq_desc *desc)
+>  {
+>  	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	struct pcie_port *pp;
+> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+> 
+> -	chained_irq_enter(chip, desc);
+> +	if (pp->ops->msi_host_isr)
+> +		pp->ops->msi_host_isr(pp);
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/controller/dwc/pcie-uniphier.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Why is this call outside of the enter/exit guards?
+Do you still need to execute the standard handler?
 
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index 3b51561..ce47622 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -452,8 +452,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->pci.atu_base))
- 		priv->pci.atu_base = NULL;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
--	priv->base = devm_ioremap_resource(dev, res);
-+	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
+> 
+> -	pp = irq_desc_get_handler_data(desc);
+> +	chained_irq_enter(chip, desc);
+>  	dw_handle_msi_irq(pp);
+> -
+>  	chained_irq_exit(chip, desc);
+>  }
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> b/drivers/pci/controller/dwc/pcie-designware.h
+> index 656e00f..e741967 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -170,6 +170,7 @@ struct dw_pcie_host_ops {
+>  	void (*scan_bus)(struct pcie_port *pp);
+>  	void (*set_num_vectors)(struct pcie_port *pp);
+>  	int (*msi_host_init)(struct pcie_port *pp);
+> +	void (*msi_host_isr)(struct pcie_port *pp);
+>  };
+> 
+>  struct pcie_port {
+
+Thanks,
+
+         M.
 -- 
-2.7.4
-
+Jazz is not dead. It just smells funny...
