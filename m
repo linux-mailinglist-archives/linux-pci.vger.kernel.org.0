@@ -2,125 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8406A1EE566
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jun 2020 15:33:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C511EE69D
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jun 2020 16:27:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgFDNdd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Jun 2020 09:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728450AbgFDNdd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Jun 2020 09:33:33 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B37AC08C5C3
-        for <linux-pci@vger.kernel.org>; Thu,  4 Jun 2020 06:33:33 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n9so2202478plk.1
-        for <linux-pci@vger.kernel.org>; Thu, 04 Jun 2020 06:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=RAV9/dNL++xiGiHR5A9Oc9TEhWA76VZjoAgyK161SVY=;
-        b=zPMPr/YxyP3965QTpRI2+WUxZFPPhZUrUCBk07JsMf7SI3dYonyONF/w0DXsy+H5hG
-         o/oJJjSdmpLtc+dJQvwp1leBctiT2Vq3wT+tqHFjb6xHMsfoWEaS9zvqmiv6i6Kypmcz
-         NuPrUukPkRrFI2m5XEndHGed2uTmcHb8pnRTofbn4DegJcnfjQFGe7zPoyuv2QGsXbWh
-         HH8bumkNPHc1m7ilS8Jcj/cIvN+irGawDlQl1LsOKy9ICdejCXO3r2FVOYnWv/nVXOPx
-         WfGKGP7iB52c9x+wjbCYhrs/rUdGBBvxGsKjhZBtuKFDffKB+jr+YPAY9FHogJdNolMo
-         B2Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=RAV9/dNL++xiGiHR5A9Oc9TEhWA76VZjoAgyK161SVY=;
-        b=V+Lh1cejq+d3JgpFKN9OPxooTCbq2z+m08DeofP1nhXLtHkd+7sXSeTjLawe6Gg4cO
-         nT4yTplP5kJek7oscgjx5APAaBgcaTrtDmHHwJ4ibTjhTRplvBT2S4GAACdQ2QldMBlL
-         a13wk8b0M0kRF/zC/4hqo6FzWgPM8ZTczGX5rY78c4IvZks6ipnr4J5G2Dnr3WNhVf3t
-         d9CV9C3nxQ4MRNNEjWF+LQN3Pg1Ji0EacorhWA5kEABXbpATpCZyjiTt4owiZt0mVEaC
-         sxvYUytGJiI+gjTv+6ayXCewUPL7+fKTFPrm0qKGQZ6pU+80lzgcN4c4K1M+EoOQL0rc
-         G/mQ==
-X-Gm-Message-State: AOAM533ojMMkl4FCnd17QZMq5Gjpl7Yt5nBgxN24qdLijfh20NA/XFBH
-        BHv/vpsG9GgtbX+AWVk54GLZa+m0hiOOeQ==
-X-Google-Smtp-Source: ABdhPJyHAP7hdkjk0QRqpIxnyq/8FeJd16IwaXCeqaVfm7NZUPFQxKr/IxN2WFjd4DugkV/BUTo0Ew==
-X-Received: by 2002:a17:902:7d85:: with SMTP id a5mr4997837plm.106.1591277612461;
-        Thu, 04 Jun 2020 06:33:32 -0700 (PDT)
-Received: from [10.158.2.42] ([45.135.186.31])
-        by smtp.gmail.com with ESMTPSA id y6sm5569040pjw.15.2020.06.04.06.33.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 06:33:31 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-To:     Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        id S1728663AbgFDO1M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Jun 2020 10:27:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:45180 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728496AbgFDO1M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:27:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC7EA2B;
+        Thu,  4 Jun 2020 07:27:11 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 384F03F305;
+        Thu,  4 Jun 2020 07:27:09 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 15:27:03 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        PCI <linux-pci@vger.kernel.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20200601174104.GA734973@bjorn-Precision-5520>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <779f4044-cf6a-b0d3-916f-0274450c07d3@linaro.org>
-Date:   Thu, 4 Jun 2020 21:33:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH 06/12] of/iommu: Make of_map_rid() PCI agnostic
+Message-ID: <20200604142703.GA476@e121166-lin.cambridge.arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200521130008.8266-7-lorenzo.pieralisi@arm.com>
+ <CAL_JsqK5aiEMAZpqgTmrOq=HPRSFEoQWJrpR2YA0hziEtLMwrg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200601174104.GA734973@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK5aiEMAZpqgTmrOq=HPRSFEoQWJrpR2YA0hziEtLMwrg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, May 21, 2020 at 04:47:19PM -0600, Rob Herring wrote:
+> On Thu, May 21, 2020 at 7:00 AM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > There is nothing PCI specific (other than the RID - requester ID)
+> > in the of_map_rid() implementation, so the same function can be
+> > reused for input/output IDs mapping for other busses just as well.
+> >
+> > Rename the RID instances/names to a generic "id" tag and provide
+> > an of_map_rid() wrapper function so that we can leave the existing
+> > (and legitimate) callers unchanged.
+> 
+> It's not all that clear to a casual observer that RID is a PCI thing,
+> so I don't know that keeping it buys much. And there's only 3 callers.
 
+Yes I agree - I think we can remove the _rid interface.
 
-On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
-> On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
->> On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
->>> Is this slowdown significant?  We already iterate over every device
->>> when applying PCI_FIXUP_FINAL quirks, so if we used the existing
->>> PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
->>> adding two more iterations to the loop in pci_do_fixups() that tries
->>> to match quirks against the current device.  I doubt that would be a
->>> measurable slowdown.
->> I don't know how significant it is, but I remember people complaining
->> about adding new PCI quirks because it takes too long for them to run
->> them all. That was in the discussion about the quirk disabling ATS on
->> AMD Stoney systems.
->>
->> So it probably depends on how many PCI devices are in the system whether
->> it causes any measureable slowdown.
-> I found this [1] from Paul Menzel, which was a slowdown caused by
-> quirk_usb_early_handoff().  I think the real problem is individual
-> quirks that take a long time.
->
-> The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
-> course, they're only run for matching devices anyway.  So I'd rather
-> keep them as PCI_FIXUP_FINAL than add a whole new phase.
->
-Thanks Bjorn for taking time for this.
-If so, it would be much simpler.
+> > No functionality change intended.
+> >
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/iommu/of_iommu.c |  2 +-
+> >  drivers/of/base.c        | 42 ++++++++++++++++++++--------------------
+> >  include/linux/of.h       | 17 +++++++++++++++-
+> >  3 files changed, 38 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> > index 20738aacac89..ad96b87137d6 100644
+> > --- a/drivers/iommu/of_iommu.c
+> > +++ b/drivers/iommu/of_iommu.c
+> > @@ -145,7 +145,7 @@ static int of_fsl_mc_iommu_init(struct fsl_mc_device *mc_dev,
+> >         struct of_phandle_args iommu_spec = { .args_count = 1 };
+> >         int err;
+> >
+> > -       err = of_map_rid(master_np, mc_dev->icid, "iommu-map",
+> > +       err = of_map_id(master_np, mc_dev->icid, "iommu-map",
+> 
+> I'm not sure this is an improvement because I'd refactor this function
+> and of_pci_iommu_init() into a single function:
+> 
+> of_bus_iommu_init(struct device *dev, struct device_node *np, u32 id)
+> 
+> Then of_pci_iommu_init() becomes:
+> 
+> of_pci_iommu_init()
+> {
+>   return of_bus_iommu_init(info->dev, info->np, alias);
+> }
+> 
+> And replace of_fsl_mc_iommu_init call with:
+> err = of_bus_iommu_init(dev, master_np, to_fsl_mc_device(dev)->icid);
 
-+++ b/drivers/iommu/iommu.c
-@@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct 
-fwnode_handle *iommu_fwnode,
-         fwspec->iommu_fwnode = iommu_fwnode;
-         fwspec->ops = ops;
-         dev_iommu_fwspec_set(dev, fwspec);
-+
-+       if (dev_is_pci(dev))
-+               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
-+
+I will follow up on this on patch 7.
 
-Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
-Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
-Will send this when 5.8-rc1 is open.
+> >                          "iommu-map-mask", &iommu_spec.np,
+> >                          iommu_spec.args);
+> >         if (err)
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index ae03b1218b06..e000e17bd602 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -2201,15 +2201,15 @@ int of_find_last_cache_level(unsigned int cpu)
+> >  }
+> >
+> >  /**
+> > - * of_map_rid - Translate a requester ID through a downstream mapping.
+> > + * of_map_id - Translate a requester ID through a downstream mapping.
+> 
+> Still a requester ID?
 
-Thanks
+Fixed, thanks.
+
+Lorenzo
