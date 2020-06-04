@@ -2,44 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4C651EDA0A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jun 2020 02:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A8E81EDB73
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jun 2020 04:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgFDAj7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jun 2020 20:39:59 -0400
-Received: from mx.socionext.com ([202.248.49.38]:25906 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgFDAj7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Jun 2020 20:39:59 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 04 Jun 2020 09:39:56 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id B2B3160057;
-        Thu,  4 Jun 2020 09:39:56 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 4 Jun 2020 09:39:56 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 380EB4036D;
-        Thu,  4 Jun 2020 09:39:56 +0900 (JST)
-Received: from [10.213.29.200] (unknown [10.213.29.200])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id CDDA5120136;
-        Thu,  4 Jun 2020 09:39:55 +0900 (JST)
-Subject: Re: [PATCH] PCI: uniphier: Fix some error handling in
- uniphier_pcie_ep_probe()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
+        id S1726118AbgFDC4a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jun 2020 22:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgFDC4a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jun 2020 22:56:30 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28561C03E96D;
+        Wed,  3 Jun 2020 19:56:30 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id w7so3449190edt.1;
+        Wed, 03 Jun 2020 19:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CgBPhORK8BDXStxy7iglUZzxBGtxWPV9iURqby3XwmE=;
+        b=N6Eho2OyzAmXXGuG63SRWOa9R4QlHG+qpRjZ6daDg1hO9NR0aet2gMbSke29k7O1qw
+         6mIdM6yoQ7NJoj/6gokTPrfn/Zg7Taqn+z57cXmLydYwi1b5WoxyMtGHh5BRkNQTkafp
+         VGLrMH63C6swkwg9ITCBxBnkpsNQP0JiJGnzN020O8Abl++Y6HxRPazJRioyx0KFcadE
+         knj1KUm0SSjKU9aV+M1bWMl0IHEuR2qj/qjMbCdtB5wyUZ71lUEXI7+7bM0Tx0REczI3
+         Rrv1eY1gHseAJ8KSn1t5aMMXtHoSpT6tOzd+TWAweQvKu+cWHZZIYnQy3nHXXd1x+b/W
+         MrYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CgBPhORK8BDXStxy7iglUZzxBGtxWPV9iURqby3XwmE=;
+        b=UYHpHzwju+ucgNqW4YnusbfdBGGSA/shjdU98PQryg3q2VrcJvic++ISK2o7bHU4Zz
+         3ioTzDjSwAB9Dc5QROhQYZkrgVIko25xzm7r3Ce8jjhMnb8SFv0VFVMuX7b9l4zHJMDu
+         ejmzOHCbqttZss6WMWMVSuyulworszrvBtBJo5N9HoDuLGRvl0alxdFuy6GsxJC04hzm
+         int6Iv764WHWlCe/8rTICvd3D9a75qgEvJ2aQqYUvemAaMKpUGH6upALGTQnxnRI03TQ
+         I6EeJg3PHgz/YsfGcO2lPrI8DFtAqWknXBMc+Kfzx8muV/7CGkjJ/WUHJE+lBOdBVAsV
+         AQKw==
+X-Gm-Message-State: AOAM533UbnUYTJWccJTXcC0za0Jx3SaAYwbbvW4mPBaei3IQiphv5u5b
+        5YmeYhKIAALHI9cKtf2/pQ+IAP1K
+X-Google-Smtp-Source: ABdhPJztfvBspyA3sbFNMMaWRB9lVRm2xItqVmhoCIGh0cVoE0Jd1GUVN3hEHHCI3E/71BWMBrZVuw==
+X-Received: by 2002:a50:8707:: with SMTP id i7mr2289118edb.180.1591239388635;
+        Wed, 03 Jun 2020 19:56:28 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id j31sm946828edb.12.2020.06.03.19.56.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 19:56:27 -0700 (PDT)
+Subject: Re: [PATCH v3 11/13] PCI: brcmstb: Accommodate MSI for older chips
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200603175207.GB18931@mwanda>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <9446f66c-a976-0b04-6866-10c2dca3f2ec@socionext.com>
-Date:   Thu, 4 Jun 2020 09:39:55 +0900
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200603192058.35296-1-james.quinlan@broadcom.com>
+ <20200603192058.35296-12-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <9c35053c-22b5-c9bc-13fd-1e83e980d56d@gmail.com>
+Date:   Wed, 3 Jun 2020 19:56:23 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200603175207.GB18931@mwanda>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200603192058.35296-12-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -47,43 +79,19 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dan,
 
-On 2020/06/04 2:52, Dan Carpenter wrote:
-> This code is checking the wrong variable.  It should be checking
-> "clk_gio" instead of "clk".  The "priv->clk" pointer is NULL at this
-> point so the condition is false.
+
+On 6/3/2020 12:20 PM, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
 > 
-> Fixes: 006564dee8253 ("PCI: uniphier: Add Socionext UniPhier Pro5 PCIe endpoint controller driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->   drivers/pci/controller/dwc/pcie-uniphier-ep.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> Older BrcmSTB chips do not have a separate register for MSI interrupts; the
+> MSIs are in a register that also contains unrelated interrupts.  In
+> addition, the interrupts lie in bits [31..24] for these legacy chips.  This
+> commit provides common code for both legacy and non-legacy MSI interrupt
+> registers.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> index 0f36aa33d2e50..1483559600610 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> @@ -324,8 +324,8 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
->   		return PTR_ERR(priv->base);
->   
->   	priv->clk_gio = devm_clk_get(dev, "gio");
-> -	if (IS_ERR(priv->clk))
-> -		return PTR_ERR(priv->clk);
-> +	if (IS_ERR(priv->clk_gio))
-> +		return PTR_ERR(priv->clk_gio);
->   
->   	priv->rst_gio = devm_reset_control_get_shared(dev, "gio");
->   	if (IS_ERR(priv->rst_gio))
-> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 
-Thank you for pointing out.
-Certainly this is a wrong check.
-
-Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-
-Thanks,
-
----
-Best Regards
-Kunihiko Hayashi
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
