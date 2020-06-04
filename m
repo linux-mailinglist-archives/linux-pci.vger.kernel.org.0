@@ -2,85 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDC361EE480
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jun 2020 14:35:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8406A1EE566
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jun 2020 15:33:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgFDMfv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Jun 2020 08:35:51 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:57872 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726264AbgFDMfv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Jun 2020 08:35:51 -0400
-Received: from Internal Mail-Server by MTLPINE2 (envelope-from ayal@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 4 Jun 2020 15:35:49 +0300
-Received: from dev-l-vrt-210.mtl.labs.mlnx (dev-l-vrt-210.mtl.labs.mlnx [10.234.210.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 054CZneB007097;
-        Thu, 4 Jun 2020 15:35:49 +0300
-Received: from dev-l-vrt-210.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Debian-8ubuntu1) with ESMTP id 054CZmE9012267;
-        Thu, 4 Jun 2020 15:35:48 +0300
-Received: (from ayal@localhost)
-        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 054CZmmI012266;
-        Thu, 4 Jun 2020 15:35:48 +0300
-From:   Aya Levin <ayal@mellanox.com>
-To:     Ding Tianhong <dingtianhong@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        Tal Gilboa <talgi@mellanox.com>, linux-pci@vger.kernel.org
-Subject: Adding support for Relaxed ordering on a non-root device
-Date:   Thu,  4 Jun 2020 15:35:48 +0300
-Message-Id: <1591274148-12230-1-git-send-email-ayal@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
+        id S1728447AbgFDNdd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Jun 2020 09:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728450AbgFDNdd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Jun 2020 09:33:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B37AC08C5C3
+        for <linux-pci@vger.kernel.org>; Thu,  4 Jun 2020 06:33:33 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n9so2202478plk.1
+        for <linux-pci@vger.kernel.org>; Thu, 04 Jun 2020 06:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=RAV9/dNL++xiGiHR5A9Oc9TEhWA76VZjoAgyK161SVY=;
+        b=zPMPr/YxyP3965QTpRI2+WUxZFPPhZUrUCBk07JsMf7SI3dYonyONF/w0DXsy+H5hG
+         o/oJJjSdmpLtc+dJQvwp1leBctiT2Vq3wT+tqHFjb6xHMsfoWEaS9zvqmiv6i6Kypmcz
+         NuPrUukPkRrFI2m5XEndHGed2uTmcHb8pnRTofbn4DegJcnfjQFGe7zPoyuv2QGsXbWh
+         HH8bumkNPHc1m7ilS8Jcj/cIvN+irGawDlQl1LsOKy9ICdejCXO3r2FVOYnWv/nVXOPx
+         WfGKGP7iB52c9x+wjbCYhrs/rUdGBBvxGsKjhZBtuKFDffKB+jr+YPAY9FHogJdNolMo
+         B2Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=RAV9/dNL++xiGiHR5A9Oc9TEhWA76VZjoAgyK161SVY=;
+        b=V+Lh1cejq+d3JgpFKN9OPxooTCbq2z+m08DeofP1nhXLtHkd+7sXSeTjLawe6Gg4cO
+         nT4yTplP5kJek7oscgjx5APAaBgcaTrtDmHHwJ4ibTjhTRplvBT2S4GAACdQ2QldMBlL
+         a13wk8b0M0kRF/zC/4hqo6FzWgPM8ZTczGX5rY78c4IvZks6ipnr4J5G2Dnr3WNhVf3t
+         d9CV9C3nxQ4MRNNEjWF+LQN3Pg1Ji0EacorhWA5kEABXbpATpCZyjiTt4owiZt0mVEaC
+         sxvYUytGJiI+gjTv+6ayXCewUPL7+fKTFPrm0qKGQZ6pU+80lzgcN4c4K1M+EoOQL0rc
+         G/mQ==
+X-Gm-Message-State: AOAM533ojMMkl4FCnd17QZMq5Gjpl7Yt5nBgxN24qdLijfh20NA/XFBH
+        BHv/vpsG9GgtbX+AWVk54GLZa+m0hiOOeQ==
+X-Google-Smtp-Source: ABdhPJyHAP7hdkjk0QRqpIxnyq/8FeJd16IwaXCeqaVfm7NZUPFQxKr/IxN2WFjd4DugkV/BUTo0Ew==
+X-Received: by 2002:a17:902:7d85:: with SMTP id a5mr4997837plm.106.1591277612461;
+        Thu, 04 Jun 2020 06:33:32 -0700 (PDT)
+Received: from [10.158.2.42] ([45.135.186.31])
+        by smtp.gmail.com with ESMTPSA id y6sm5569040pjw.15.2020.06.04.06.33.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 06:33:31 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <20200601174104.GA734973@bjorn-Precision-5520>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <779f4044-cf6a-b0d3-916f-0274450c07d3@linaro.org>
+Date:   Thu, 4 Jun 2020 21:33:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200601174104.GA734973@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
-
-I am writing to you regarding your commits titled: 
-1. a99b646afa8a PCI: Disable PCIe Relaxed Ordering if unsupported 
-2. 87e09cdec4da PCI: Disable Relaxed Ordering for some Intel processors
-
-While adding support to relaxed ordering on Mellanox Ethernet driver I
-tried to avoid the Intel's bug with pcie_relaxed_ordering_enabled.
-Expecting this to return False on Haswell and Broadwell CPU. I run
-this API on: Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz (I think it is
-a Haswell, right?) and the API returned True. What am I missing?
-
-In addition, I saw your comment in pci_configure_relaxed_ordering
-(pasted below) the non-root ports are not handled since Peer-to-Peer
-DMA is another can of warms. Could you elaborate on the complexity?
-What is the effort to extend this to non-root ports?
-
-Thanks,
-Aya
-
----------------------------------------------------------------------
-static void pci_configure_relaxed_ordering(struct pci_dev *dev)
-{
-	struct pci_dev *root;
-
-	/* PCI_EXP_DEVICE_RELAX_EN is RsvdP in VFs */
-	if (dev->is_virtfn)
-		return;
-
-	if (!pcie_relaxed_ordering_enabled(dev))
-		return;
-
-	/*
-	 * For now, we only deal with Relaxed Ordering issues with Root
-	 * Ports. Peer-to-Peer DMA is another can of worms.
-	 */
-	root = pci_find_pcie_root_port(dev);
-	if (!root)
-		return;
-
-	if (root->dev_flags & PCI_DEV_FLAGS_NO_RELAXED_ORDERING) {
-		pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
-					   PCI_EXP_DEVCTL_RELAX_EN);
-		pci_info(dev, "Relaxed Ordering disabled because the Root Port didn't support it\n");
-	}
-}
 
 
+On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
+> On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
+>> On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
+>>> Is this slowdown significant?  We already iterate over every device
+>>> when applying PCI_FIXUP_FINAL quirks, so if we used the existing
+>>> PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
+>>> adding two more iterations to the loop in pci_do_fixups() that tries
+>>> to match quirks against the current device.  I doubt that would be a
+>>> measurable slowdown.
+>> I don't know how significant it is, but I remember people complaining
+>> about adding new PCI quirks because it takes too long for them to run
+>> them all. That was in the discussion about the quirk disabling ATS on
+>> AMD Stoney systems.
+>>
+>> So it probably depends on how many PCI devices are in the system whether
+>> it causes any measureable slowdown.
+> I found this [1] from Paul Menzel, which was a slowdown caused by
+> quirk_usb_early_handoff().  I think the real problem is individual
+> quirks that take a long time.
+>
+> The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
+> course, they're only run for matching devices anyway.  So I'd rather
+> keep them as PCI_FIXUP_FINAL than add a whole new phase.
+>
+Thanks Bjorn for taking time for this.
+If so, it would be much simpler.
+
++++ b/drivers/iommu/iommu.c
+@@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct 
+fwnode_handle *iommu_fwnode,
+         fwspec->iommu_fwnode = iommu_fwnode;
+         fwspec->ops = ops;
+         dev_iommu_fwspec_set(dev, fwspec);
++
++       if (dev_is_pci(dev))
++               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
++
+
+Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+Will send this when 5.8-rc1 is open.
+
+Thanks
