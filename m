@@ -2,126 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4BC71EF0AD
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 06:47:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 446BE1EF105
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 07:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgFEErh convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 5 Jun 2020 00:47:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59018 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFEErh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jun 2020 00:47:37 -0400
-Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1jh4GM-0005KP-Mp; Fri, 05 Jun 2020 04:47:27 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id DF8785FEE7; Thu,  4 Jun 2020 21:47:24 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id D88F59FB38;
-        Thu,  4 Jun 2020 21:47:24 -0700 (PDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-Subject: Re: [PATCH v2 1/2] PCI/ERR: Fix fatal error recovery for non-hotplug capable devices
-In-reply-to: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Comments: In-reply-to sathyanarayanan.kuppuswamy@linux.intel.com
-   message dated "Thu, 04 Jun 2020 14:50:01 -0700."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        id S1726129AbgFEF6M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jun 2020 01:58:12 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12200 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEF6M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jun 2020 01:58:12 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed9dee80000>; Thu, 04 Jun 2020 22:58:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 04 Jun 2020 22:58:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 04 Jun 2020 22:58:12 -0700
+Received: from [10.26.75.201] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jun
+ 2020 05:58:06 +0000
+Subject: Re: [PATCH] PCI: tegra: handle failure case of pm_runtime_get_sync
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <emamd001@umn.edu>, <wu000273@umn.edu>, <kjlu@umn.edu>,
+        <smccaman@umn.edu>
+References: <20200605031239.6638-1-navid.emamdoost@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e595b755-ea15-48d6-1f2a-c485f0f365e2@nvidia.com>
+Date:   Fri, 5 Jun 2020 06:58:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <25282.1591332444.1@famine>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 04 Jun 2020 21:47:24 -0700
-Message-ID: <25283.1591332444@famine>
+In-Reply-To: <20200605031239.6638-1-navid.emamdoost@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591336680; bh=Zxo+XIWDWIDysHCmFEE3tbCGmetg7DRYJxfLrViJhUQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hveDJFAKrA7r8IOeIGe4ehhOK2mbZtfQY641B3zD5t7OouvmjkCq9exxG+v2xrrT7
+         pTP+SBvzrj5vVuPX00upHU8RzekW+rviB/rYJaO/bI/P1q0wjMe0Vtoyv+iag0bsxc
+         HtKVbmkZ8ioQqAvlffEDhNbODfHGxZuzA0c610hcbnMvQpD1FICsohSok5n9kxuxLg
+         VYOBrrSqSbJ4aAlr8Qwwrg8+6CMv42XU+xO8vvEpC7b6iJXLDhCelobFJXb+7EhvBa
+         tEcTa3i6ve4/trfzakTWaI+uh+39KZvXJihLNMNWjil057nhJOWg0IJemosVAh0LSM
+         iFZhI2b9LKNtA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-sathyanarayanan.kuppuswamy@linux.intel.com wrote:
 
->From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
->Fatal (DPC) error recovery is currently broken for non-hotplug
->capable devices. With current implementation, after successful
->fatal error recovery, non-hotplug capable device state won't be
->restored properly. You can find related issues in following links.
->
->https://lkml.org/lkml/2020/5/27/290
->https://lore.kernel.org/linux-pci/12115.1588207324@famine/
->https://lkml.org/lkml/2020/3/28/328
->
->Current fatal error recovery implementation relies on hotplug handler
->for detaching/re-enumerating the affected devices/drivers on DLLSC
->state changes. So when dealing with non-hotplug capable devices,
->recovery code does not restore the state of the affected devices
->correctly. Correct implementation should call report_slot_reset()
->function after resetting the link to restore the state of the
->device/driver.
->
->So use PCI_ERS_RESULT_NEED_RESET as error status for successful
->reset_link() operation and use PCI_ERS_RESULT_DISCONNECT for failure
->case. PCI_ERS_RESULT_NEED_RESET error state will ensure slot_reset()
->is called after reset link operation which will also fix the above
->mentioned issue.
->
->[original patch is from jay.vosburgh@canonical.com]
->[original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
->Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On 05/06/2020 04:12, Navid Emamdoost wrote:
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count. Call pm_runtime_put if
+> pm_runtime_get_sync fails.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 3e64ba6a36a8..3d4b448fd8df 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2712,6 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  	err = pm_runtime_get_sync(pcie->dev);
+>  	if (err < 0) {
+>  		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+> +		pm_runtime_put_sync(pcie->dev);
+>  		goto teardown_msi;
+>  	}
 
-	I've tested this patch set on one of our test machines, and it
-resolves the issue.  I plan to test with other systems tomorrow.
+Same thing for this patch, there is already a put in the error path and
+so it is not necessary to add the put call here. Just update the goto
+label.
 
-	-J
+Jon
 
->---
-> drivers/pci/pcie/err.c | 24 ++++++++++++++++++++++--
-> 1 file changed, 22 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->index 14bb8f54723e..5fe8561c7185 100644
->--- a/drivers/pci/pcie/err.c
->+++ b/drivers/pci/pcie/err.c
->@@ -165,8 +165,28 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> 	pci_dbg(dev, "broadcast error_detected message\n");
-> 	if (state == pci_channel_io_frozen) {
-> 		pci_walk_bus(bus, report_frozen_detected, &status);
->-		status = reset_link(dev);
->-		if (status != PCI_ERS_RESULT_RECOVERED) {
->+		/*
->+		 * After resetting the link using reset_link() call, the
->+		 * possible value of error status is either
->+		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
->+		 * PCI_ERS_RESULT_NEED_RESET (success case).
->+		 * So ignore the return value of report_error_detected()
->+		 * call for fatal errors. Instead use
->+		 * PCI_ERS_RESULT_NEED_RESET as initial status value.
->+		 *
->+		 * Ignoring the status return value of report_error_detected()
->+		 * call will also help in case of EDR mode based error
->+		 * recovery. In EDR mode AER and DPC Capabilities are owned by
->+		 * firmware and hence report_error_detected() call will possibly
->+		 * return PCI_ERS_RESULT_NO_AER_DRIVER. So if we don't ignore
->+		 * the return value of report_error_detected() then
->+		 * pcie_do_recovery() would report incorrect status after
->+		 * successful recovery. Ignoring PCI_ERS_RESULT_NO_AER_DRIVER
->+		 * in non EDR case should not have any functional impact.
->+		 */
->+		status = PCI_ERS_RESULT_NEED_RESET;
->+		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
->+			status = PCI_ERS_RESULT_DISCONNECT;
-> 			pci_warn(dev, "link reset failed\n");
-> 			goto failed;
-> 		}
->-- 
->2.17.1
->
-
----
-	-Jay Vosburgh, jay.vosburgh@canonical.com
+-- 
+nvpublic
