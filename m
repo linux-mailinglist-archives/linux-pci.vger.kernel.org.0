@@ -2,141 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 178BC1EEF8C
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 04:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B780C1EEFC2
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 05:12:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgFECg7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Jun 2020 22:36:59 -0400
-Received: from mx.socionext.com ([202.248.49.38]:40148 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgFECg7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:36:59 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 05 Jun 2020 11:36:56 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 64803605FA;
-        Fri,  5 Jun 2020 11:36:56 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 5 Jun 2020 11:36:56 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id CEDE91A01BB;
-        Fri,  5 Jun 2020 11:36:08 +0900 (JST)
-Received: from [10.213.29.9] (unknown [10.213.29.9])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 5D105120133;
-        Fri,  5 Jun 2020 11:36:08 +0900 (JST)
-Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1725968AbgFEDMr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Jun 2020 23:12:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgFEDMr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Jun 2020 23:12:47 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D0EC08C5C0;
+        Thu,  4 Jun 2020 20:12:46 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b5so8183100iln.5;
+        Thu, 04 Jun 2020 20:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Bwy3kLbPJLykuSYZEsLy4fGgrjBMNY4QghQaNEXTtao=;
+        b=minHNrYKJRdYHWBYj4vN7Rb/TAGIa2odYSuDObBhK7QokvuNPQVPNbVaVi5uKij9JM
+         HzQsSfEMUepG6RwIwvXO3Z/Kz3a8Ene3LxdZvVs7eGjVyywQJ3teK8k8ZZv/tBnq8Enp
+         VX3KgHaVBkC/0QG+z6+hxrNZhB9Na00xSC+4wHVcmydicW8DgzzrcsmNlRUa/Sq783Se
+         KyyGvIewIje/bwRFDs5ZkbPpxhuT0SLEsvhTuPxMrci1betWf68FX7C6QA5kK5wMqY1k
+         qjQEesTBNeE0g8H0257ofiIw7KGD0OYRc3Yp7qGGg2oDvMsRcbBQPokXsQJRiwRASJ0J
+         hEfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Bwy3kLbPJLykuSYZEsLy4fGgrjBMNY4QghQaNEXTtao=;
+        b=V/YbDdtKVbBSRNeNWSKZb7TMspWoIMsmyp8glrYp+MRqWsiyUJR3Hdfn9/Z7/CZy35
+         KAUpDf4z01dY5z2ChJEj7fpIhbalRF0vtc1xcaq/nSnzaSJwZz4YFTY1U4x9ObDGbT2D
+         KQg/aNccBv3aD7uxDs271AuTmqvDx1opeaeqeNJek8huqydkx963rluKWDmoQeZ2qmrI
+         lBlnrDV1Qa8tsc391BKYEmmfiY1hkcDh8ei2dnJigSywFK8Y6Wl8YGxPsHoGtcLX7L1X
+         HcvYwkNfTlpMA6JV5ox+4djqsC/qoLZisCQc/X0EldJ2YnSK4Ls5iiTiBrITCgjcFh7w
+         bhZg==
+X-Gm-Message-State: AOAM531WGTQH8V5cYyyNu2ct0LKwv+By8UNE5kWa7ViMnNqrwP1RGNVD
+        OuTeROAOCqqQS+kKi3AIT/o=
+X-Google-Smtp-Source: ABdhPJymLCD7irIm72PYWJoFekESbRyoxTq1Bfb0WvWMHqV/VHJFkRKN3Wuo/+2aJY3jVun6wOy0HA==
+X-Received: by 2002:a92:cb91:: with SMTP id z17mr6552981ilo.305.1591326765968;
+        Thu, 04 Jun 2020 20:12:45 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id k126sm767149iof.50.2020.06.04.20.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 20:12:45 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
- <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
- <2e07d3d3-515b-57e1-0a36-8892bc38bb7b@socionext.com>
- <9cbfdacba32c5e351fd9e14444768666@kernel.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <1d98ef53-fe81-6de2-bd65-dd88d6875cb8@socionext.com>
-Date:   Fri, 5 Jun 2020 11:36:08 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <9cbfdacba32c5e351fd9e14444768666@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] PCI: tegra: handle failure case of pm_runtime_get_sync
+Date:   Thu,  4 Jun 2020 22:12:39 -0500
+Message-Id: <20200605031239.6638-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Marc,
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-On 2020/06/04 19:11, Marc Zyngier wrote:
-> On 2020-06-04 10:43, Kunihiko Hayashi wrote:
-> 
-> [...]
-> 
->>>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
->>>>  {
->>>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
->>>>      struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>      struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->>>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
->>>> -    unsigned long reg;
->>>> -    u32 val, bit, virq;
->>>> +    u32 val, virq;
->>>>
->>>> -    /* INT for debug */
->>>>      val = readl(priv->base + PCL_RCV_INT);
->>>>
->>>>      if (val & PCL_CFG_BW_MGT_STATUS)
->>>>          dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
->>>> +
->>>>      if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->>>>          dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
->>>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->>>> -        dev_dbg(pci->dev, "Root Error\n");
->>>> -    if (val & PCL_CFG_PME_MSI_STATUS)
->>>> -        dev_dbg(pci->dev, "PME Interrupt\n");
->>>> +
->>>> +    if (pci_msi_enabled()) {
->>>
->>> This checks whether the kernel supports MSIs. Not that they are
->>> enabled in your controller. Is that really what you want to do?
->>
->> The below two status bits are valid when the interrupt for MSI is asserted.
->> That is, pci_msi_enabled() is wrong.
->>
->> I'll modify the function to check the two bits only if this function is
->> called from MSI handler.
->>
->>>
->>>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
->>>> +            dev_dbg(pci->dev, "Root Error Status\n");
->>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->>>> +            generic_handle_irq(virq);
->>>> +        }
->>>> +
->>>> +        if (val & PCL_CFG_PME_MSI_STATUS) {
->>>> +            dev_dbg(pci->dev, "PME Interrupt\n");
->>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->>>> +            generic_handle_irq(virq);
->>>> +        }
->>>
->>> These two cases do the exact same thing, calling the same interrupt.
->>> What is the point of dealing with them independently?
->>
->> Both PME and AER are asserted from MSI-0, and each handler checks its own
->> status bit in the PCIe register (aer_irq() in pcie/aer.c and pcie_pme_irq()
->> in pcie/pme.c).
->> So I think this handler calls generic_handle_irq() for the same MSI-0.
-> 
-> So what is wrong with
-> 
->          if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
->                     PCL_CFG_PME_MSI_STATUS)) {
->                  // handle interrupt
->          }
-> 
-> ?
-
-No problem.
-I'll rewrite it in the same way as yours in handling interrupts.
-
-> If you have two handlers for the same interrupt, this is a shared
-> interrupt and each handler will be called in turn.
-Yes, MSI-0 is shared with PME and AER, and it will be like that.
-
-Thank you,
-
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
-Best Regards
-Kunihiko Hayashi
+ drivers/pci/controller/pci-tegra.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 3e64ba6a36a8..3d4b448fd8df 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2712,6 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err < 0) {
+ 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
++		pm_runtime_put_sync(pcie->dev);
+ 		goto teardown_msi;
+ 	}
+ 
+-- 
+2.17.1
+
