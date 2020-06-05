@@ -2,61 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF181EEFD1
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 05:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16F111EEFDE
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 05:23:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgFEDTs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Jun 2020 23:19:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
+        id S1726114AbgFEDX0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Jun 2020 23:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFEDTs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Jun 2020 23:19:48 -0400
+        with ESMTP id S1725954AbgFEDX0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Jun 2020 23:23:26 -0400
 Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629D3C08C5C0;
-        Thu,  4 Jun 2020 20:19:48 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id u13so2534704iol.10;
-        Thu, 04 Jun 2020 20:19:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 124DBC08C5C0;
+        Thu,  4 Jun 2020 20:23:23 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id j8so8727413iog.13;
+        Thu, 04 Jun 2020 20:23:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=ylwAjWlfQX7Ys6bdlykQN32LK5oaEYcVBjgpUdc+/vA=;
-        b=KK7ot4ZFYdD12OBdHD2GsBClTx8K2XN7pjcrX+ddjRtEIKjnZ31JFQ7DWyru7gsPJj
-         4aFUdXfUFdJJjYDQBxpnCisN8JdWiYpgWyNPnJDGW+26SbJ7AIFParIJ8QDaESRG5lnQ
-         1032Cv87obeHTCAz13sAC4hjgm8uTdXXrgq75L3RtXkGtfGZwFkLTzV6xYvHY7XjXN/9
-         8BNLQWmDADmrnIPFCpwIfzM/dz/wD+mxumBYknvjRUGy7W71O5J+lsS32yT6FEpptYXY
-         KzVu6xW/T7dGAg7T0HOA/vtzQ8IOMmQqyYVG4sYvN+zMdXRkBB08BBxcFBMjRvGJTdYV
-         /vqw==
+        bh=liGwaubP6mRdOHGTrmXeXAs4GL+KhvggzrIcxZzyx0s=;
+        b=BsECjqK/peoemX1wSKgJWtYnYAwXEFm3muWD8NLgko+6QYL8xjksliOJm54JMZ2qq9
+         iuJDTR4sFH2cIsTu/toCDJpvHQ1JRzzbloU7G3Ne8r1uRgTQ5TcwDMKPwjp9M0nfBiv7
+         mJu75OQe0m1Epn/xL78C/zwsVAHPMVGDDqy+UcJzyahDNgbiWiMWrMbNvGMiaGC8Rl1y
+         Xrqy98jXFQVy/d3Rk4Kk9qzcJjQ26Y3fSqAiqFjGUj5oln6jgWiS1J7zHSHrSMKNcjUd
+         DBxjZ6GhvEIMT1w/t95w3j4K2AfZY6SbXPmGsVYpRz3o+RO6KnsXmSda17GAqdW9U0TQ
+         y7Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ylwAjWlfQX7Ys6bdlykQN32LK5oaEYcVBjgpUdc+/vA=;
-        b=kzpJOOpk3rbDr2c9cHd8bVC8tXQpECNrvkoyys8DWvzKASndNTCjBta6hg4Zm008Jh
-         rxMWsYVEmNKDS7a+9MYtrH5vrUDysZK2qi3/HNmZiXqeZ7qOjRZFA2o4cdGO7APb/3Ow
-         LR/LCrqcSMUNUrHUmFYWjA19Sce/Mi0h9PM9KnWWW1jf4Mg9EYms9NbQZT0Iz/r2bU6e
-         PL79lCpz2PHgLXU3m6WL1IXkT5vo5nM4aPig+LZAuk1triHGsYicmkAze509ILUIZ/1S
-         sCY8jiV0zSH/hh1lBneK77WbSb1n/ulWQcFYEAKPtUTkJzISGV8LkGVo5eeA9DV8a65K
-         V0gA==
-X-Gm-Message-State: AOAM5310c2CabxAueMBLs1mK10sijsZLjutXczBFeYjjD9rxOr6I5G2f
-        fnC7uuL2+8PcDUAc3rYShoA=
-X-Google-Smtp-Source: ABdhPJzLs8qIoBTbIt3TB55cLL2yH9uHS++YiThxgv1FN+Hf0kF/axU36oWmvgm9ybtr1c0xQGYPxA==
-X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr6825745iot.44.1591327187717;
-        Thu, 04 Jun 2020 20:19:47 -0700 (PDT)
+        bh=liGwaubP6mRdOHGTrmXeXAs4GL+KhvggzrIcxZzyx0s=;
+        b=TRDpcQgE4CZagH/SD+oZ/67FsJRbiPBWFkqK0OXAmXfGg/z0c+rPm9Wr2zwAhANDNQ
+         UvxAXV22WRBQoTJKAJLVYUlpAsAwyp9DxKT+k8Vy2DSIc9d5iaRXHQLPoCRH0l+fk0Fv
+         GxXgJ+3kGG+mI/TkIzRRfLDDTIma35EHieNoLFzrW8rjGY2aYJQ6GkmY9VaVfNnj/VLL
+         ETTxhAyNVA5z/ue+133IZBRTHiOhXEcFbHCvAF5e+1U7L7zWpwd/iAT/Hli3VOI4FttZ
+         YrvzKotigM3NYpIPl5Um6gzsjZ/jm8TNZV4lDaKn2OKceSd9lyYBSNBz1jB865Wml80R
+         IovQ==
+X-Gm-Message-State: AOAM532upp7g+NIkdw7kzzqngwKZ4IL+KVcLTb89KnyV3ot56I8Vyy/x
+        2Eif4HSgyV5QVKuWn4z7WlY=
+X-Google-Smtp-Source: ABdhPJyOP4IZmR82ZM345ctXo67aV+7jNU5IS3XlCDu55+aWNLOqM3cD5hOm3ggE4dnuAOCV+l3B/g==
+X-Received: by 2002:a02:2581:: with SMTP id g123mr6733130jag.35.1591327402381;
+        Thu, 04 Jun 2020 20:23:22 -0700 (PDT)
 Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id w78sm2403655ilk.14.2020.06.04.20.19.47
+        by smtp.googlemail.com with ESMTPSA id 13sm2315880ilg.24.2020.06.04.20.23.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 20:19:47 -0700 (PDT)
+        Thu, 04 Jun 2020 20:23:21 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
+To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
         Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] PCI: dwc: pci-dra7xx: handle failure case of pm_runtime_get_sync
-Date:   Thu,  4 Jun 2020 22:19:40 -0500
-Message-Id: <20200605031940.27911-1-navid.emamdoost@gmail.com>
+Subject: [PATCH] PCI: rcar: handle the failure case of pm_runtime_get_sync
+Date:   Thu,  4 Jun 2020 22:23:15 -0500
+Message-Id: <20200605032315.39071-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -69,30 +69,30 @@ pm_runtime_get_sync fails.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/pci/controller/dwc/pci-dra7xx.c | 4 +---
+ drivers/pci/controller/pcie-rcar.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 3b0e58f2de58..83986f5f2be7 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -932,7 +932,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
- 		dev_err(dev, "pm_runtime_get_sync failed\n");
--		goto err_get_sync;
-+		goto err_gpio;
+diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+index 759c6542c5c8..6b4181c0710e 100644
+--- a/drivers/pci/controller/pcie-rcar.c
++++ b/drivers/pci/controller/pcie-rcar.c
+@@ -1137,7 +1137,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err < 0) {
+ 		dev_err(pcie->dev, "pm_runtime_get_sync failed\n");
+-		goto err_pm_disable;
++		goto err_pm_put;
  	}
  
- 	reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
-@@ -1001,8 +1001,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	err = rcar_pcie_get_resources(pcie);
+@@ -1208,8 +1208,6 @@ static int rcar_pcie_probe(struct platform_device *pdev)
  
- err_gpio:
+ err_pm_put:
  	pm_runtime_put(dev);
 -
--err_get_sync:
+-err_pm_disable:
  	pm_runtime_disable(dev);
- 	dra7xx_pcie_disable_phy(dra7xx);
+ 	pci_free_resource_list(&pcie->resources);
  
 -- 
 2.17.1
