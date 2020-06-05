@@ -2,75 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBF051EED80
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jun 2020 23:50:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 178BC1EEF8C
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 04:37:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgFDVuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Jun 2020 17:50:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51375 "EHLO mga06.intel.com"
+        id S1726148AbgFECg7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Jun 2020 22:36:59 -0400
+Received: from mx.socionext.com ([202.248.49.38]:40148 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgFDVuQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:50:16 -0400
-IronPort-SDR: /j1t3sHS4vz4aksmJx4kPCcGx76S2x1C5xFSAD6P4tV9EsDAWHxS5qm1OYe/rVa2VXHQN+uOf9
- Fv+mNVn+p6kQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 14:50:15 -0700
-IronPort-SDR: Ugz5LZYBjpvfRGCIR4ijK/ILuN55zOSwrie98TaKaVI++HwJ9SGaajqx1cTr+2HNMNdArRSJaD
- VnVUMUQVrFRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
-   d="scan'208";a="313018643"
-Received: from unknown (HELO localhost.localdomain) ([10.254.105.50])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Jun 2020 14:50:15 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v2 2/2] PCI/ERR: Add reset support for non fatal errors
-Date:   Thu,  4 Jun 2020 14:50:02 -0700
-Message-Id: <18ab6cc7b34dab7630978195248ea031540ba9f1.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1726026AbgFECg7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:36:59 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 05 Jun 2020 11:36:56 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 64803605FA;
+        Fri,  5 Jun 2020 11:36:56 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 5 Jun 2020 11:36:56 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id CEDE91A01BB;
+        Fri,  5 Jun 2020 11:36:08 +0900 (JST)
+Received: from [10.213.29.9] (unknown [10.213.29.9])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 5D105120133;
+        Fri,  5 Jun 2020 11:36:08 +0900 (JST)
+Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
+ <2e07d3d3-515b-57e1-0a36-8892bc38bb7b@socionext.com>
+ <9cbfdacba32c5e351fd9e14444768666@kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <1d98ef53-fe81-6de2-bd65-dd88d6875cb8@socionext.com>
+Date:   Fri, 5 Jun 2020 11:36:08 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <9cbfdacba32c5e351fd9e14444768666@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi Marc,
 
-PCI_ERS_RESULT_NEED_RESET error status implies the device is
-requesting a slot reset and a notification about slot reset
-completion via ->slot_reset() callback.
+On 2020/06/04 19:11, Marc Zyngier wrote:
+> On 2020-06-04 10:43, Kunihiko Hayashi wrote:
+> 
+> [...]
+> 
+>>>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
+>>>>  {
+>>>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>>>      struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>>      struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>>>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
+>>>> -    unsigned long reg;
+>>>> -    u32 val, bit, virq;
+>>>> +    u32 val, virq;
+>>>>
+>>>> -    /* INT for debug */
+>>>>      val = readl(priv->base + PCL_RCV_INT);
+>>>>
+>>>>      if (val & PCL_CFG_BW_MGT_STATUS)
+>>>>          dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>>>> +
+>>>>      if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>>>          dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>>>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>>> -        dev_dbg(pci->dev, "Root Error\n");
+>>>> -    if (val & PCL_CFG_PME_MSI_STATUS)
+>>>> -        dev_dbg(pci->dev, "PME Interrupt\n");
+>>>> +
+>>>> +    if (pci_msi_enabled()) {
+>>>
+>>> This checks whether the kernel supports MSIs. Not that they are
+>>> enabled in your controller. Is that really what you want to do?
+>>
+>> The below two status bits are valid when the interrupt for MSI is asserted.
+>> That is, pci_msi_enabled() is wrong.
+>>
+>> I'll modify the function to check the two bits only if this function is
+>> called from MSI handler.
+>>
+>>>
+>>>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
+>>>> +            dev_dbg(pci->dev, "Root Error Status\n");
+>>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
+>>>> +            generic_handle_irq(virq);
+>>>> +        }
+>>>> +
+>>>> +        if (val & PCL_CFG_PME_MSI_STATUS) {
+>>>> +            dev_dbg(pci->dev, "PME Interrupt\n");
+>>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
+>>>> +            generic_handle_irq(virq);
+>>>> +        }
+>>>
+>>> These two cases do the exact same thing, calling the same interrupt.
+>>> What is the point of dealing with them independently?
+>>
+>> Both PME and AER are asserted from MSI-0, and each handler checks its own
+>> status bit in the PCIe register (aer_irq() in pcie/aer.c and pcie_pme_irq()
+>> in pcie/pme.c).
+>> So I think this handler calls generic_handle_irq() for the same MSI-0.
+> 
+> So what is wrong with
+> 
+>          if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>                     PCL_CFG_PME_MSI_STATUS)) {
+>                  // handle interrupt
+>          }
+> 
+> ?
 
-But in non-fatal errors case, if report_error_detected() or
-report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET
-then current pcie_do_recovery() implementation does not do the
-requested explicit slot reset, instead just calls the ->slot_reset()
-callback on all affected devices. Notifying about the slot reset
-completion without resetting it incorrect. So add this support.
+No problem.
+I'll rewrite it in the same way as yours in handling interrupts.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> If you have two handlers for the same interrupt, this is a shared
+> interrupt and each handler will be called in turn.
+Yes, MSI-0 is shared with PME and AER, and it will be like that.
+
+Thank you,
+
 ---
- drivers/pci/pcie/err.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 5fe8561c7185..94d1c2ff7b40 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -206,6 +206,9 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 		 * functions to reset slot before calling
- 		 * drivers' slot_reset callbacks?
- 		 */
-+		if (state != pci_channel_io_frozen)
-+			pci_reset_bus(dev);
-+
- 		status = PCI_ERS_RESULT_RECOVERED;
- 		pci_dbg(dev, "broadcast slot_reset message\n");
- 		pci_walk_bus(bus, report_slot_reset, &status);
--- 
-2.17.1
-
+Best Regards
+Kunihiko Hayashi
