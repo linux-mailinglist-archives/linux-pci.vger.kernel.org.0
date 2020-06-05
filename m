@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8CAE1EF475
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 11:45:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 335391EF478
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 11:45:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgFEJom (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jun 2020 05:44:42 -0400
-Received: from mx.socionext.com ([202.248.49.38]:45667 "EHLO mx.socionext.com"
+        id S1726386AbgFEJoo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jun 2020 05:44:44 -0400
+Received: from mx.socionext.com ([202.248.49.38]:45675 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbgFEJol (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:44:41 -0400
+        id S1726277AbgFEJom (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:44:42 -0400
 Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 05 Jun 2020 18:44:39 +0900
+  by mx.socionext.com with ESMTP; 05 Jun 2020 18:44:40 +0900
 Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 8EA4A18010B;
-        Fri,  5 Jun 2020 18:44:39 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 5 Jun 2020 18:44:39 +0900
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 9648C18010B;
+        Fri,  5 Jun 2020 18:44:40 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 5 Jun 2020 18:44:40 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id EF85B1A12AD;
-        Fri,  5 Jun 2020 18:44:38 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 35E6C1A12AD;
+        Fri,  5 Jun 2020 18:44:40 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -33,57 +33,59 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v4 0/6] PCI: uniphier: Add features for UniPhier PCIe host controller
-Date:   Fri,  5 Jun 2020 18:44:30 +0900
-Message-Id: <1591350276-15816-1-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v4 1/6] PCI: dwc: Add msi_host_isr() callback
+Date:   Fri,  5 Jun 2020 18:44:31 +0900
+Message-Id: <1591350276-15816-2-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591350276-15816-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1591350276-15816-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series adds some features for UniPhier PCIe host controller.
+This adds msi_host_isr() callback function support to describe
+SoC-dependent service triggered by MSI.
 
-- Add support for PME and AER invoked by MSI interrupt
-- Add iATU register view support for PCIe version >= 4.80
-- Add an error message when failing to get phy driver
+For example, when AER interrupt is triggered by MSI, the callback function
+reads SoC-dependent registers and detects that the interrupt is from AER,
+and invoke AER interrupts related to MSI.
 
-This adds a new function called by MSI handler in DesignWare PCIe framework,
-that invokes PME and AER funcions to detect the factor from SoC-dependent
-registers.
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 3 +++
+ drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+ 2 files changed, 4 insertions(+)
 
-Changes since v3:
-- Move msi_host_isr() call into dw_handle_msi_irq()
-- Move uniphier_pcie_misc_isr() call into the guard of chained_irq
-- Use a bool argument is_msi instead of pci_msi_enabled()
-- Consolidate handler calls for the same interrupt
-- Fix typos in commit messages
-
-Changes since v2:
-- Avoid printing phy error message in case of EPROBE_DEFER
-- Fix iATU register mapping method
-- dt-bindings: Add Acked-by: line
-- Fix typos in commit messages
-- Use devm_platform_ioremap_resource_byname()
-
-Changes since v1:
-- Add check if struct resource is NULL
-- Fix warning in the type of dev_err() argument
-
-Kunihiko Hayashi (6):
-  PCI: dwc: Add msi_host_isr() callback
-  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
-  dt-bindings: PCI: uniphier: Add iATU register description
-  PCI: uniphier: Add iATU register support
-  PCI: uniphier: Add error message when failed to get phy
-  PCI: uniphier: Use devm_platform_ioremap_resource_byname()
-
- .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
- drivers/pci/controller/dwc/pcie-designware-host.c  |  3 +
- drivers/pci/controller/dwc/pcie-designware.h       |  1 +
- drivers/pci/controller/dwc/pcie-uniphier.c         | 73 +++++++++++++++++-----
- 4 files changed, 63 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 0a4a5aa..026edb1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -83,6 +83,9 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+ 	u32 status, num_ctrls;
+ 	irqreturn_t ret = IRQ_NONE;
+ 
++	if (pp->ops->msi_host_isr)
++		pp->ops->msi_host_isr(pp);
++
+ 	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+ 
+ 	for (i = 0; i < num_ctrls; i++) {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 656e00f..e741967 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -170,6 +170,7 @@ struct dw_pcie_host_ops {
+ 	void (*scan_bus)(struct pcie_port *pp);
+ 	void (*set_num_vectors)(struct pcie_port *pp);
+ 	int (*msi_host_init)(struct pcie_port *pp);
++	void (*msi_host_isr)(struct pcie_port *pp);
+ };
+ 
+ struct pcie_port {
 -- 
 2.7.4
 
