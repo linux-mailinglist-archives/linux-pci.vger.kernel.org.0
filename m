@@ -2,143 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9677E1EF287
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 09:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 049531EF2A3
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jun 2020 10:02:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFEHzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jun 2020 03:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFEHzn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jun 2020 03:55:43 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E74FC08C5C2
-        for <linux-pci@vger.kernel.org>; Fri,  5 Jun 2020 00:55:42 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q8so9265954iow.7
-        for <linux-pci@vger.kernel.org>; Fri, 05 Jun 2020 00:55:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fn6d0rG1WRm22xj2b5NGQoFjGmqWjK3x4gd/gH4cTe0=;
-        b=napgGUjtBstHaKnWWAcYRE9+wyJbxk66BBMEEh1vAYPPhh3BsNVWTmF+SaM6DRStHz
-         KhfmvrVL7amdp1nsprW+RWRzE0G49LBt4ZFeCXwhSmmzsjzwRmky5fhUA3GFffzqTrW5
-         0DlLgeH3O6rSTZ+w/JYgqQb0mMFgdGnYDe9IstCdBCqss5qYcgDv32OySW1Mji0SNTUI
-         H3Ah1CzDBPOTiTZH8Xd/d4lnTrK223b1zYtDlvy7bNiMdzs2ago3OOb3TM/q3UICmpfy
-         jmvesJKZOY6QDyxB3Irvhcxnnsti0+4q9fIcyx0I2VamPkEUjRX3qNm9JBGIncXr6hFv
-         ufVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fn6d0rG1WRm22xj2b5NGQoFjGmqWjK3x4gd/gH4cTe0=;
-        b=DwcT3rCW6adpzvlW3jqbcjTlLgz41QAIivknrg1u8HWJb3IR64qfTpDeT50VKKOmmX
-         jVHgPhXekPjYszOF+Uu634PAU9j6dph5J6746B6rxJsOwcu/OQOpVz1kBRM331kPvLgX
-         Hhn0JLkdvTWBjbiWszXC/s5lkT1qoVxlY+obZ/kmRnZowtIL6Eyk3cOth9tmNZO2yjoa
-         1c39ERnRJ7S9CY5vhamBFxvkWVkJEinD2NQqGyvuIJRXeeKHVst3nhS0hXaL1f22X6Q5
-         Z0wwaP2vJDA/Xp7f++U6UVtO9OvBZ6HzvfHTrNXrqq1RQ/nw6Wwrri4lxHKdEr37rIkm
-         LJEA==
-X-Gm-Message-State: AOAM533oKzw6nBcejxvO4J2imJGcYXzx/H1L/ZeeCqtQMUIZ5Wknnon/
-        v2TA+5au5pTscD36iMmuHCG5n56j3fLNQ99rqUkD0w==
-X-Google-Smtp-Source: ABdhPJzySjsrYJWlwo+qyiiIvYJv/b1UsVHtFdnZqKiqFRi+LK2PxUf4HI42eeakb5whjKDNylTXeyddpLy8O/Gu5M4=
-X-Received: by 2002:a02:a003:: with SMTP id a3mr7313081jah.102.1591343741504;
- Fri, 05 Jun 2020 00:55:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMpxmJX8U-uNYJPQxmkox=YTSvXVPrWss2y5MS81_bg43Co8Lg@mail.gmail.com>
- <20200604175515.GA1076951@bjorn-Precision-5520>
-In-Reply-To: <20200604175515.GA1076951@bjorn-Precision-5520>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 5 Jun 2020 09:55:30 +0200
-Message-ID: <CAMRc=McWFpFAC3ziWdOEYkc0YwkN-Jqf7vZpxbCBLPoe=oewdg@mail.gmail.com>
-Subject: Re: [PATCH] gpio:asm28xx-18xx: new driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Richard Hsu <saraon640529@gmail.com>,
-        Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
-        Jesse1_Chang@asmedia.com.tw,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726127AbgFEICd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jun 2020 04:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgFEICd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:02:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5698F206E6;
+        Fri,  5 Jun 2020 08:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591344151;
+        bh=CoHBeLSQsOKCK9e3iScbJC0JUQmuPB+yRgWT4d8b4gs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=stGKkPV722UeONEGXfEv2y787Ta/WZWF2yhccvfSP7ncJJr/f7lSI9+/KjwqeeCcP
+         VSpMi4eQ1r7LYHitD0hIo7+ML6XptTjgZV/zOhD8SkqokxSO9tbJ9O60UJZQu96oT+
+         c6i5GWQMsO4ervgj3MrYCu8uUjTaM4Vdwczx1VrU=
+Date:   Fri, 5 Jun 2020 10:02:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200605080229.GC2209311@kroah.com>
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520>
+ <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com>
+ <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-czw., 4 cze 2020 o 19:55 Bjorn Helgaas <helgaas@kernel.org> napisa=C5=82(a)=
-:
->
-> > > +       /* We look for our device - Asmedia 28XX and 18XX Bridge
-> > > +        * I don't know about a system with two such bridges,
-> > > +        * so we can assume that there is max. one device.
-> > > +        *
-> > > +        * We can't use plain pci_driver mechanism,
-> > > +        * as the device is really a multiple function device,
-> > > +        * main driver that binds to the pci_device is an bus
-> > > +        * driver and have to find & bind to the device this way.
-> > > +        */
-> > > +
-> > > +       for_each_pci_dev(pdev) {
-> > > +               ent =3D pci_match_id(pci_tbl, pdev);
-> > > +               if (ent) {
-> > > +                       /* Because GPIO Registers only work on Upstre=
-am port. */
-> > > +                       type =3D pci_pcie_type(pdev);
-> > > +                       if (type =3D=3D PCI_EXP_TYPE_UPSTREAM) {
-> > > +                               dev_info(&pdev->dev, "ASMEDIA-28xx/18=
-xx Init Upstream detected\n");
-> > > +                               goto found;
-> > > +                       }
-> > > +               }
-> > > +       }
-> > > +       goto out;
-> > > +
+On Thu, Jun 04, 2020 at 12:38:18PM -0700, Rajat Jain wrote:
+> Hello,
+> 
+> I spent some more thoughts into this...
+> 
+> On Wed, Jun 3, 2020 at 5:16 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > Bjorn: is this approach really correct? It looks very strange to me
-> > and even if we were to do this kind of lookup I'd expect there to be a
-> > real pci device registered as child of pdev here so that we can have a
-> > proper driver in place with probe() et al.
->
-> No, this is pretty broken.  The model is that one PCI device goes with
-> one driver.  If there are two bits of functionality associated with a
-> single PCI device, it's up to the single PCI driver to sort that out.
->
-> The comment above mentions "multiple function device," which may lead
-> to some confusion about the terminology.  In the PCI specs, the
-> smallest addressable unit of PCI hardware is the "Function."  A
-> "Device" may consist of one or more Functions.  A Device with more
-> than one Function is referred to in the spec as a "Multi-Function
-> Device".
->
-> These PCI Functions are addressed by a (domain, bus, device, function)
-> tuple.  For example, my system has these:
->
->   0000:00:14.0 Intel USB 3.0 xHCI Controller
->   0000:00:14.2 Intel Thermal Subsystem
->
-> These two Functions are parts of the 0000:00:14 Multi-Function Device.
->
-> In Linux, a "struct pci_dev" refers to a single Function, so there's
-> a pci_dev for 0000:00:14.0 and another for 0000:00:14.2.  These are
-> pretty much independent, and can be claimed by two separate drivers.
->
-> But I think the "multiple function device" comment in *this* patch
-> probably doesn't refer to a "Multi-Function Device" as used in the PCI
-> specs.  It probably means a single PCI Function that has two kinds of
-> functionality.
->
-> In the Linux model, that means the Function should be claimed by a
-> single driver, and that driver is responsible for coordinating the two
-> pieces of functionality.
->
+> > On Wed, Jun 03, 2020 at 04:51:18AM -0700, Rajat Jain wrote:
+> > > Hello,
+> > >
+> > > >
+> > > > > Thanks for the pointer! I'm still looking at the details yet, but a
+> > > > > quick look (usb_dev_authorized()) seems to suggest that this API is
+> > > > > "device based". The multiple levels of "authorized" seem to take shape
+> > > > > from either how it is wired or from userspace choice. Once authorized,
+> > > > > USB device or interface is authorized to be used by *anyone* (can be
+> > > > > attached to any drivers). Do I understand it right that it does not
+> > > > > differentiate between drivers?
+> > > >
+> > > > Yes, and that is what you should do, don't fixate on drivers.  Users
+> > > > know how to control and manage devices.  Us kernel developers are
+> > > > responsible for writing solid drivers and getting them merged into the
+> > > > kernel tree and maintaining them over time.  Drivers in the kernel
+> > > > should always be trusted, ...
+> > >
+> > > 1) Yes, I agree that this would be ideal, and this should be our
+> > > mission. I should clarify that I may have used the wrong term
+> > > "Trusted/Certified drivers". I didn't really mean that the drivers may
+> > > be malicious by intent. What I really meant is that a driver may have
+> > > an attack surface, which is a vulnerability that may be exploited.
+> >
+> > Any code has such a thing, proving otherwise is a tough problem :)
+> >
+> > > Realistically speaking, finding vulnerabilities in drivers, creating
+> > > attacks to exploit them, and fixing them is a never ending cat and
+> > > mouse game. At Least "identifying the vulnerabilities" part is better
+> > > performed by security folks rather than driver writers.
+> >
+> > Are you sure about that?  It's hard to prove a negative :)
+> >
+> > > Earlier in the
+> > > thread I had mentioned certain studies/projects that identified and
+> > > exploited such vulnerabilities in the drivers. I should have used the
+> > > term "Vetted Drivers" maybe to convey the intent better - drivers that
+> > > have been vetted by a security focussed team (admin). What I'm
+> > > advocating here is an administrator's right to control the drivers
+> > > that he wants to allow for external ports on his systems.
+> >
+> > That's an odd thing, but sure, if you want to write up such a policy for
+> > your systems, great.  But that policy does not belong in the kernel, it
+> > belongs in userspace.
+> >
+> > > 2) In addition to the problem of driver negligences / vulnerabilities
+> > > to be exploited, we ran into another problem with the "whitelist
+> > > devices only" approach. We did start with the "device based" approach
+> > > only initially - but quickly realized that anything we use to
+> > > whitelist an external device can only be based on the info provided by
+> > > *that device* itself. So until we have devices that exchange
+> > > certificates with kernel [1], it is easy for a malicious device to
+> > > spoof a whitelisted device (by presenting the same VID:DID or any
+> > > other data that is used by us to whitelist it).
+> > >
+> > > [1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
+> > >
+> > > I hope that helps somewhat clarify how / why we reached here?
+> >
+> > Kind of, I still think all you need to do is worry about controling the
+> > devices and if a driver should bind to it or not.  Again, much like USB
+> > has been doing for a very long time now.  The idea of "spoofing" ids
+> > also is not new, and has been around for a very long time as well, and
+> > again, the controls that the USB core gives you allows you to make any
+> > type of policy decision you want to, in userspace.
+> 
+> Er, *currently* it doesn't allow the userspace to make the particular
+> policy I want to, right? Specifically, today an administrator can not
+> control which USB *drivers* he wants to allow on an *external* USB
+> port.
 
-Thanks for the detailed explanation!
+Not true, you can do that today with the explicit binding/unbinding of
+devices to drivers in userspace.  Been there for many decades :)
 
-Richard: in this case I think it's pretty clear now that whatever
-driver supports the "bridge" mentioned in the comment - needs to be
-extended with GPIO functionality.
+But, think this through, since when do you have _multiple_ drivers that
+have support to control the same type of device?  We almost never allow
+that in the kernel today as that way lies madness (no heiarchy of
+drivers to bind to what devices and so on.)
 
-Bart
+We always strive to keep a one-to-one mapping of "this device is only
+allowed to be controlled by this one driver" today, why would you want
+to change that basic premise now?
+
+> He can only control which USB devices he wants to authorize, but
+> once authorized, they are free to bind to any of the USB drivers.
+
+Since when do different drivers control the same type of USB device?  :)
+
+> So if I want to allow the administrator to implement a policy that
+> allows him to control the drivers for external ports, we'll need to
+> enhance the current code (whether we want to do it specific to a bus,
+> or more generically in the driver core). Are we on the same page?
+> 
+> To implement the policy that I want to in the driver core, what is
+> missing today in driver core is a distinction between "internal" and
+> "external" devices. Some buses have this knowledge locally today (PCI
+> has "untrusted" flag which can be used, USB uses hcd->wireless and
+> hub->port->connect_type) but it is not shared with the core.
+
+Note the wireless USB code should now be gone from the tree.  If you see
+any remants of it floating around, let me know and I will remove them, I
+think there might be a few bits left that I missed.
+
+> So just to make sure if I'm thinking in the right direction, this is
+> what I'm thinking:
+> 
+> 1) The device core needs a notion of internal vs external devices (a
+> flag) - a knowledge that needs to be filled in by the bus as it
+> discovers the device.
+
+Nope, don't go down this path.  We tried to do this for USB where the
+BIOS tells us that a device is "internal" vs. "external" but in reality,
+BIOSes get this wrong and it's not always all that useful.
+
+And why would you somehow "trust" a device that is in your system more
+than one is not?  The same driver binds to it no matter what (as I state
+above), so you should be able to trust it the same.
+
+> 2) The driver core needs to allow an admin to provide a whitelist of
+> drivers for external devices. (Via Command line or a driver flag.
+> Default = everything is whitelisted).
+
+Again, nope, no difference, see above.
+
+> 3) While matching a driver to a device, the driver core needs to
+> impose the whitelist if the device is external, and if the
+> administrator has provided a whitelist.
+
+Ick, no, again, work on a per-device authorized setting.  That way it
+works the same all across the system.  Don't get stuck in a "external
+vs. internal" discussion as this will get messy really quickly (think
+about "internal" devices with "external" links to them like PCI
+"drawers" of devices that we currently support on large systems.  Or
+things like thunderbolt hubs with "internal" devices like I have on my
+desktop right now.
+
+In summary, if a driver is "trusted enough" to control an internal
+device, it should be "trusted enough" to control an external device.  If
+not, then fix that driver so that you do "trust" it.
+
+thanks,
+
+greg k-h
