@@ -2,331 +2,411 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7422E1F03AD
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jun 2020 01:54:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E4421F041B
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jun 2020 03:09:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgFEXyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jun 2020 19:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54764 "EHLO
+        id S1728515AbgFFBJJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jun 2020 21:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgFEXyO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jun 2020 19:54:14 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB028C08C5C2;
-        Fri,  5 Jun 2020 16:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=USt2sdJct6z8UZHsPCAARNSZemWwo+p3AbzLJl1NmdM=; b=njFtWvgjKG0GQDA+KD2jRxd7U
-        TmVwzps63HvnrwdrPlfQGTudZZDlqibn5huBKxuLsqP7IgsYXwjAd82w1SPVYtBjj1uTWXba7nD40
-        fp8zJxyI556YTC96KDYPjI/jaMiokKuQCkOyUwFETFWXIaGyo1s5SpA7GHfzeDORgmn8NZGg7o1UG
-        g9nhJzW9mJc4wut3cbW57nh5Zu/oqntwhfJY9hEGTm1dkn4r+wt+6QwuI9YkXITaEmHOaRLSALFf/
-        Mb9XpdNLWmrpMzYJsrEk55ZCDx8SVDgOLq33RBNh93hAzMMdi4jylJF1R+Yu7eZwWe1RGDl9fv8w8
-        Yb+eV2u5w==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39380)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jhM9q-0003HZ-9p; Sat, 06 Jun 2020 00:53:54 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jhM9f-0007tx-Ig; Sat, 06 Jun 2020 00:53:43 +0100
-Date:   Sat, 6 Jun 2020 00:53:43 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200605235343.GG1605@shell.armlinux.org.uk>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <20200229095550.GX25745@shell.armlinux.org.uk>
- <20200229110456.GY25745@shell.armlinux.org.uk>
+        with ESMTP id S1728316AbgFFBJI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jun 2020 21:09:08 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20220C08C5C2
+        for <linux-pci@vger.kernel.org>; Fri,  5 Jun 2020 18:09:08 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id 82so6859669lfh.2
+        for <linux-pci@vger.kernel.org>; Fri, 05 Jun 2020 18:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zoVEQR6GPscTqlYvtSNOl7DmB4HK4kweQaFuT/04k/0=;
+        b=S0hKb3Hscs1j9nZwdqwiRI2pSC3Mcwh4pRKKOJJnvBu3qJ17S8z5Zv8Z+BiPWoqO37
+         5PvQCMpBpyTF5RXqoVbivFbe9zc2mr8rtDEG+DGZuKwC6iXhP6t6jtgcwpDZVTGBK3/N
+         Cak+3VYL6Y8cMeCSa5Mc3AFgbx0cLoBqcojnoXPbYZb1HPfGhBGnMzKJgbNv9rrbtNHq
+         frAmS1wxFNllUoTAiRqOITnG+uaElxWh+Xt1sLcQOCfKaLujJrOBzQ/pR8QbeE27cof2
+         TJWhG7lnaHSfj4daoGX503jRnlRiRh99TOemXBm0ESloFJHzLeYtgXR5w+AKUhn9jljW
+         kwyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zoVEQR6GPscTqlYvtSNOl7DmB4HK4kweQaFuT/04k/0=;
+        b=FYXsAHcBcCtNN7cDkFGXoVON89jfAr3Hr44rj8qjw67Edk9doABEbPTA+/lCkRKEja
+         dRaVoR5kTXgnfhVCvXE6D/yr1IEtEOsmcD78d3c5BY7ztUB6IEk/TnY8rZLbIJHXVVRR
+         buWZGnrDIbXkOUSP4aWBTAccs8jT5WS14KLSiLVGD/l/6r5HvJs3OArvTy4QgtfUBK9q
+         mz3x9LPuzPy+TJfmsxX6+olwWvqu/iaz2Wtv5LkvDQesGI4qIpNRYJPMSdYtO/ZIinrw
+         f556IEfWDUrp7aOXqDpQDauzFGTaxhjlrEiwKnoe4MrBtHpeff54rGe4f/uDQCxl5eNb
+         YAYw==
+X-Gm-Message-State: AOAM531kV5x5d49tRA/oB0McJwHVms9/pt4sO3a7YYgteG9EX01tepcc
+        9EVqjbBV6NbU1+qBAWq984cqaUfQ21iFoXtLP8w5rg==
+X-Google-Smtp-Source: ABdhPJy9xjJGJUtZyrUmvXYeaMERXTqZPN9HY0IXQU8im9bJVICItGA9AmOgu8OQyU1BqDWpXDf0F7El+cfkrQm2HlM=
+X-Received: by 2002:ac2:5473:: with SMTP id e19mr6638828lfn.21.1591405745700;
+ Fri, 05 Jun 2020 18:09:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229110456.GY25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520> <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com> <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com> <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+ <20200605080229.GC2209311@kroah.com>
+In-Reply-To: <20200605080229.GC2209311@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Fri, 5 Jun 2020 18:08:28 -0700
+Message-ID: <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 11:04:56AM +0000, Russell King - ARM Linux admin wrote:
-> Adding Ted and Andreas...
-> 
-> Here's the debugfs -n "id" output for dpkg.status.5.gz (which is fine,
-> and probably a similar size):
-> 
-> debugfs:  id <917527>
-> 0000  a481 0000 30ff 0300 bd8e 475e bd77 4f5e  ....0.....G^.wO^
-> 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> 0060  0000 0000 0000 0000 4000 0000 8087 3800  ........@.....8.
-> 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> *
-> 0140  0000 0000 c40b 4c0a 0000 0000 0000 0000  ......L.........
-> 0160  0000 0000 0000 0000 0000 0000 3884 0000  ............8...
-> 0200  2000 95f2 44b8 bdc9 a4d2 9883 c861 dc92   ...D........a..
-> 0220  bd31 4a5e ecc5 260c 0000 0000 0000 0000  .1J^..&.........
-> 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> *
-> 
-> and for the affected inode:
-> debugfs:  id <917524>
-> 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-> 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-> 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> *
-> 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-> 0160  0000 0000 0000 0000 0000 0000 af23 0000  .............#..
-> 0200  2000 1cc3 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
-> 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-> 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> *
-> 
-> and "stat" output:
-> debugfs:  stat <917527>
-> Inode: 917527   Type: regular    Mode:  0644   Flags: 0x80000
-> Generation: 172755908    Version: 0x00000000:00000001
-> User:     0   Group:     0   Project:     0   Size: 261936
-> File ACL: 0
-> Links: 1   Blockcount: 512
-> Fragment:  Address: 0    Number: 0    Size: 0
->  ctime: 0x5e4f77bd:c9bdb844 -- Fri Feb 21 06:25:01 2020
->  atime: 0x5e478ebd:92dc61c8 -- Sat Feb 15 06:25:01 2020
->  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-> crtime: 0x5e4a31bd:0c26c5ec -- Mon Feb 17 06:25:01 2020
-> Size of extra inode fields: 32
-> Inode checksum: 0xf2958438
-> EXTENTS:
-> (0-63):3704704-3704767
-> debugfs:  stat <917524>
-> Inode: 917524   Type: regular    Mode:  0644   Flags: 0x80000
-> Generation: 3033515103    Version: 0x00000000:00000001
-> User:     0   Group:     0   Project:     0   Size: 261936
-> File ACL: 0
-> Links: 1   Blockcount: 512
-> Fragment:  Address: 0    Number: 0    Size: 0
->  ctime: 0x5e4f77bd:c8c995ac -- Fri Feb 21 06:25:01 2020
->  atime: 0x5e463d3d:dfad3e58 -- Fri Feb 14 06:25:01 2020
->  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-> crtime: 0x5e48e03d:51714db0 -- Sun Feb 16 06:25:01 2020
-> Size of extra inode fields: 32
-> Inode checksum: 0xc31c23af
-> EXTENTS:
-> (0-63):3705024-3705087
-> 
-> When using sif (set_inode_info) to re-set the UID to 0 on this (so
-> provoke the checksum to be updated):
-> 
-> debugfs:  id <917524>
-> 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-> 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-> 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> *
-> 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-> 0160  0000 0000 0000 0000 0000 0000 b61f 0000  ................
->                                     ^^^^
-> 0200  2000 aa15 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
->            ^^^^
-> 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-> 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> *
-> 
-> The values with "^^^^" are the checksum, which are the only values
-> that have changed here - the checksum is now 0x15aa1fb6 rather than
-> 0xc31c23af.
-> 
-> With that changed, running e2fsck -n on the filesystem results in a
-> pass:
-> 
-> root@cex7:~# e2fsck -n /dev/nvme0n1p2
-> e2fsck 1.44.5 (15-Dec-2018)
-> Warning: skipping journal recovery because doing a read-only filesystem check.
-> /dev/nvme0n1p2 contains a file system with errors, check forced.
-> Pass 1: Checking inodes, blocks, and sizes
-> Pass 2: Checking directory structure
-> Pass 3: Checking directory connectivity
-> Pass 4: Checking reference counts
-> Pass 5: Checking group summary information
-> /dev/nvme0n1p2: 121163/2097152 files (0.1% non-contiguous), 1349227/8388608 blocks
-> 
-> and the file now appears to be intact (being a gzip file, gzip verifies
-> that the contents are now as it expects.)
-> 
-> So, it looks like the _only_ issue is that the checksum on the inode
-> became invalid, which seems to suggest that it *isn't* a NVMe nor PCIe
-> issue.
-> 
-> I wonder whether the journal would contain anything useful, but I don't
-> know how to use debugfs to find that out - while I can dump the journal,
-> I'd need to know which block contains the inode, and then work out where
-> in the journal that block was going to be written.  If that would help,
-> let me know ASAP as I'll hold off rebooting the platform for a while
-> (which means the filesystem will remain as-is - and yes, I have the
-> debugfs file for e2undo to put stuff back.)  Maybe it's possible to pull
-> the block number out of the e2undo file?
-> 
-> tune2fs says:
-> 
-> Checksum type:            crc32c
-> Checksum:                 0x682f91b9
-> 
-> I guess this is what is used to checksum the inodes?  If so, it's using
-> the kernel's crc32c-generic driver (according to /proc/crypto).
-> 
-> Could it be a race condition, or some problem that's specific to the
-> ARM64 kernel that's provoking this corruption?
+Hello Greg,
 
-Hi,
+Thank you for continuing to work with me through this.
 
-The corruption has returned this evening:
+On Fri, Jun 5, 2020 at 1:02 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 04, 2020 at 12:38:18PM -0700, Rajat Jain wrote:
+> > Hello,
+> >
+> > I spent some more thoughts into this...
+> >
+> > On Wed, Jun 3, 2020 at 5:16 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Wed, Jun 03, 2020 at 04:51:18AM -0700, Rajat Jain wrote:
+> > > > Hello,
+> > > >
+> > > > >
+> > > > > > Thanks for the pointer! I'm still looking at the details yet, but a
+> > > > > > quick look (usb_dev_authorized()) seems to suggest that this API is
+> > > > > > "device based". The multiple levels of "authorized" seem to take shape
+> > > > > > from either how it is wired or from userspace choice. Once authorized,
+> > > > > > USB device or interface is authorized to be used by *anyone* (can be
+> > > > > > attached to any drivers). Do I understand it right that it does not
+> > > > > > differentiate between drivers?
+> > > > >
+> > > > > Yes, and that is what you should do, don't fixate on drivers.  Users
+> > > > > know how to control and manage devices.  Us kernel developers are
+> > > > > responsible for writing solid drivers and getting them merged into the
+> > > > > kernel tree and maintaining them over time.  Drivers in the kernel
+> > > > > should always be trusted, ...
+> > > >
+> > > > 1) Yes, I agree that this would be ideal, and this should be our
+> > > > mission. I should clarify that I may have used the wrong term
+> > > > "Trusted/Certified drivers". I didn't really mean that the drivers may
+> > > > be malicious by intent. What I really meant is that a driver may have
+> > > > an attack surface, which is a vulnerability that may be exploited.
+> > >
+> > > Any code has such a thing, proving otherwise is a tough problem :)
+> > >
+> > > > Realistically speaking, finding vulnerabilities in drivers, creating
+> > > > attacks to exploit them, and fixing them is a never ending cat and
+> > > > mouse game. At Least "identifying the vulnerabilities" part is better
+> > > > performed by security folks rather than driver writers.
+> > >
+> > > Are you sure about that?  It's hard to prove a negative :)
+> > >
+> > > > Earlier in the
+> > > > thread I had mentioned certain studies/projects that identified and
+> > > > exploited such vulnerabilities in the drivers. I should have used the
+> > > > term "Vetted Drivers" maybe to convey the intent better - drivers that
+> > > > have been vetted by a security focussed team (admin). What I'm
+> > > > advocating here is an administrator's right to control the drivers
+> > > > that he wants to allow for external ports on his systems.
+> > >
+> > > That's an odd thing, but sure, if you want to write up such a policy for
+> > > your systems, great.  But that policy does not belong in the kernel, it
+> > > belongs in userspace.
+> > >
+> > > > 2) In addition to the problem of driver negligences / vulnerabilities
+> > > > to be exploited, we ran into another problem with the "whitelist
+> > > > devices only" approach. We did start with the "device based" approach
+> > > > only initially - but quickly realized that anything we use to
+> > > > whitelist an external device can only be based on the info provided by
+> > > > *that device* itself. So until we have devices that exchange
+> > > > certificates with kernel [1], it is easy for a malicious device to
+> > > > spoof a whitelisted device (by presenting the same VID:DID or any
+> > > > other data that is used by us to whitelist it).
+> > > >
+> > > > [1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
+> > > >
+> > > > I hope that helps somewhat clarify how / why we reached here?
+> > >
+> > > Kind of, I still think all you need to do is worry about controling the
+> > > devices and if a driver should bind to it or not.  Again, much like USB
+> > > has been doing for a very long time now.  The idea of "spoofing" ids
+> > > also is not new, and has been around for a very long time as well, and
+> > > again, the controls that the USB core gives you allows you to make any
+> > > type of policy decision you want to, in userspace.
+> >
+> > Er, *currently* it doesn't allow the userspace to make the particular
+> > policy I want to, right? Specifically, today an administrator can not
+> > control which USB *drivers* he wants to allow on an *external* USB
+> > port.
+>
+> Not true, you can do that today with the explicit binding/unbinding of
+> devices to drivers in userspace.  Been there for many decades :)
 
-[25094.614718] EXT4-fs error (device nvme0n1p2): ext4_lookup:1707: inode #271688: comm mandb: iget: checksum invalid
-[25094.623781] Aborting journal on device nvme0n1p2-8.
-[25094.627419] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
-[25094.628206] EXT4-fs error (device nvme0n1p2):
-ext4_journal_check_start:83: Detected aborted journal
-root@cex7:[~]:<506> debugfs /dev/nvme0n1p2
-debugfs 1.44.5 (15-Dec-2018)
-debugfs:  id <271688>
-0000  a481 0000 f108 0000 2518 fd5d 2518 fd5d  ........%..]%..]
-0020  9f49 715c 0000 0000 0000 0100 0800 0000  .Iq\............
-0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-0060  0000 0000 0000 0000 0100 0000 ed19 1100  ................
-0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
-0140  0000 0000 b42f 4f06 0000 0000 0000 0000  ...../O.........
-0160  0000 0000 0000 0000 0000 0000 c9cf 0000  ................
-0200  2000 8d83 086d bebf 0000 0000 086d bebf   ....m.......m..
-0220  2518 fd5d 086d bebf 0000 0000 0000 0000  %..].m..........
-0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
+Not sure if I understood. Can you please elaborate how that helps
+implement the policy I want?
 
-debugfs:  stat <271688>
-Inode: 271688   Type: regular    Mode:  0644   Flags: 0x80000
-Generation: 105852852    Version: 0x00000000:00000001
-User:     0   Group:     0   Project:     0   Size: 2289
-File ACL: 0
-Links: 1   Blockcount: 8
-Fragment:  Address: 0    Number: 0    Size: 0
- ctime: 0x5dfd1825:bfbe6d08 -- Fri Dec 20 18:51:17 2019
- atime: 0x5dfd1825:bfbe6d08 -- Fri Dec 20 18:51:17 2019
- mtime: 0x5c71499f:00000000 -- Sat Feb 23 13:24:47 2019
- crtime: 0x5dfd1825:bfbe6d08 -- Fri Dec 20 18:51:17 2019
-Size of extra inode fields: 32
-Inode checksum: 0x838dcfc9
-EXTENTS:
-(0):1120749
-debugfs:
-root@cex7:[~]:<509> e2fsck -n /dev/nvme0n1p2
-e2fsck 1.44.5 (15-Dec-2018)
-Warning: skipping journal recovery because doing a read-only filesystem check.
-/dev/nvme0n1p2 contains a file system with errors, check forced.
-Pass 1: Checking inodes, blocks, and sizes
-Pass 2: Checking directory structure
-Pass 3: Checking directory connectivity
-Pass 4: Checking reference counts
-Pass 5: Checking group summary information
-/dev/nvme0n1p2: 147476/2097152 files (0.1% non-contiguous), 1542719/8388608 blocks
+>
+> But, think this through, since when do you have _multiple_ drivers that
+> have support to control the same type of device?  We almost never allow
+> that in the kernel today as that way lies madness (no heiarchy of
+> drivers to bind to what devices and so on.)
+>
+> We always strive to keep a one-to-one mapping of "this device is only
+> allowed to be controlled by this one driver" today, why would you want
+> to change that basic premise now?
 
-This time, the machine has not been powered down for a very long time,
-although I've booted 5.7 (plus the additional patches including several
-workarounds in the PCIe driver so my Mellanox card works) on it earlier
-today. I did notice that debian decided to run a fsck on the filesystem
-at reboot, which is a little weird as it's ext4, and found nothing wrong.
+No, I don't want to change that premise. Multiple drivers for a single
+device is not the goal at all.
 
-Hmm, I just tried:
+>
+> > He can only control which USB devices he wants to authorize, but
+> > once authorized, they are free to bind to any of the USB drivers.
+>
+> Since when do different drivers control the same type of USB device?  :)
 
-root@cex7:[~]:<514> hdparm -f /dev/nvme0n1p2
-root@cex7:[~]:<515> hdparm -f /dev/nvme0n1
-root@cex7:[~]:<517> e2fsck -n /dev/nvme0n1p2
-e2fsck 1.44.5 (15-Dec-2018)
-Warning: skipping journal recovery because doing a read-only filesystem
-check.
-/dev/nvme0n1p2 contains a file system with errors, check forced.
-Pass 1: Checking inodes, blocks, and sizes
-Pass 2: Checking directory structure
-Entry 'mainlog.2.gz' in /var/log/exim4 (917613) has deleted/unused inode 922603.  Clear? no
+Sorry, I should have used better wording:
+"..., a malicious device can choose which (authorized/whitelisted)
+device to spoof, and *thus* choose a driver to attach to"
+Since the only data admin can use to decide to authorize the device,
+is provided by device itself, authorization is really just a farce.
 
-Entry 'mainlog.2.gz' in /var/log/exim4 (917613) has an incorrect filetype (was 1, should be 0).
-Fix? no
+From Documentation/usb/authorization.rst:
+"Just checking if the class, type and protocol match something is the worse
+security verification you can make (or the best, for someone willing
+to break it). If you need something secure, use crypto and Certificate
+Authentication or stuff like that."
 
-Pass 3: Checking directory connectivity
-Pass 4: Checking reference counts
-Unattached inode 920748
-Connect to /lost+found? no
+Truth be told, there is nothing else really available today. While
+certificate exchanges may be the future, the challenge is to deal with
+devices at hand.
 
-Pass 5: Checking group summary information
-Block bitmap differences:  +(9259--9280) -3703011 -3703044 -3703053 +3736187 -3827722 -3830272 +3906363 +3911697 +3911699 +3911701 +3911703 +3913228
-Fix? no
+> > So if I want to allow the administrator to implement a policy that
+> > allows him to control the drivers for external ports, we'll need to
+> > enhance the current code (whether we want to do it specific to a bus,
+> > or more generically in the driver core). Are we on the same page?
+> >
+> > To implement the policy that I want to in the driver core, what is
+> > missing today in driver core is a distinction between "internal" and
+> > "external" devices. Some buses have this knowledge locally today (PCI
+> > has "untrusted" flag which can be used, USB uses hcd->wireless and
+> > hub->port->connect_type) but it is not shared with the core.
+>
+> Note the wireless USB code should now be gone from the tree.  If you see
+> any remants of it floating around, let me know and I will remove them, I
+> think there might be a few bits left that I missed.
+>
+> > So just to make sure if I'm thinking in the right direction, this is
+> > what I'm thinking:
+> >
+> > 1) The device core needs a notion of internal vs external devices (a
+> > flag) - a knowledge that needs to be filled in by the bus as it
+> > discovers the device.
+>
+> Nope, don't go down this path.  We tried to do this for USB where the
+> BIOS tells us that a device is "internal" vs. "external" but in reality,
+> BIOSes get this wrong and it's not always all that useful.
+>
+> And why would you somehow "trust" a device that is in your system more
+> than one is not?  The same driver binds to it no matter what (as I state
+> above), so you should be able to trust it the same.
 
-Free blocks count wrong for group #113 (12615, counted=12606).
-Fix? no
+There are multiple reasons for trust level to be different for
+"internal" vs "external" devices. Speaking for the laptop world at
+least (and I suspect same is true for most of OEM products):
 
-Free blocks count wrong (6845889, counted=6845880).
-Fix? no
+1) The hardware, firmware, and in some cases even the supply chain is
+quite tightly controlled and audited for "internal devices". OTOH, we
+don't even know what an "external device" may look like.
 
-Inode bitmap differences: Group 112 inode bitmap does not match checksum.
-IGNORED.
-Block bitmap differences: Group 113 block bitmap does not match checksum.
-IGNORED.
+2) Most of the internal devices are soldered on board, and can't be
+accessed by a malicious person, atleast without the owner knowing.
+OTOH, external device attack is very easy (Imagine malicious user
+plugging in a USB stick on an unattended laptop / internet cafes /
+airports etc) - the owner wouldn't even know.
 
-/dev/nvme0n1p2: ********** WARNING: Filesystem still has errors **********
+3) Internal devices do not physically travel to another system. OTOH,
+external devices, even if not malicious, may get infected since they
+travel between multiple systems.
 
-/dev/nvme0n1p2: 147476/2097152 files (0.1% non-contiguous), 1542719/8388608 blocks
+4) New devices' support (new drivers) keeps on getting added in the
+kernel (which is a good thing!). But that means while the "internal
+device space" is fixed at product release, the "external device space"
+is unbounded and keeps on increasing. It is good from a functionality
+point of view, but not from a security point of view.
 
-which looks less good, and is likely to be e2fsck reading off the media
-rather than using what was in the kernel cache.  However, still nothing
-for the offending inode, who's raw data remains unchanged from what I've
-quoted above from debugfs.
+>
+> > 2) The driver core needs to allow an admin to provide a whitelist of
+> > drivers for external devices. (Via Command line or a driver flag.
+> > Default = everything is whitelisted).
+>
+> Again, nope, no difference, see above.
+>
+> > 3) While matching a driver to a device, the driver core needs to
+> > impose the whitelist if the device is external, and if the
+> > administrator has provided a whitelist.
+>
+> Ick, no, again, work on a per-device authorized setting.  That way it
+> works the same all across the system.  Don't get stuck in a "external
+> vs. internal" discussion as this will get messy really quickly (think
+> about "internal" devices with "external" links to them like PCI
+> "drawers" of devices that we currently support on large systems.  Or
+> things like thunderbolt hubs with "internal" devices like I have on my
+> desktop right now.
 
-It /seems/ to be pointing at the data on the media changing, possibly
-buggy firmware on the nvme (ADATA SX8200PNP) drive, maybe? Or maybe
-undiscovered bugs in the Mobiveil PCIe hardware corrupting transfers
-to the nvme?
+Good point. I'm not good at terminologies - by "external", I meant
+anything that is not in the physical boundary of the host system as
+shipped. It should be defined by the individual buses who learn it
+from the platform (BIOS / Device tree / Discovery process etc).
 
-The problem is, this is rather undebuggable as it happens so rarely. :(
+>
+> In summary, if a driver is "trusted enough" to control an internal
+> device, it should be "trusted enough" to control an external device.  If
+> not, then fix that driver so that you do "trust" it.
 
-I'm becoming very discouraged to touch nvme ever again by this, as this
-is my first and only experience of that technology.  I'm considering
-getting some conventional SATA HDDs and junking nvme on the basis of
-it being an unreliable technology.
+That is indeed our goal, and we do intend to inspect and send patch
+fixes upstream. However the problem is inspecting drivers for security
+and finding and fixing issues is a long drawn process - and has a lot
+of dependencies on different maintainers. It is not possible to front
+load all the effort and release the product only when *all* drivers
+are fixed (We want to begin with a *NULL* whitelist of drivers and
+then build it *slowly*). OTOH, it would be unfair to block a product
+because not all drivers could be inspected or fixed in time for
+security issues.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+I feel that I have failed to explain the problems clearly. I'm copying
+a blurb earlier from this thread, which explains the context and the
+problem we're trying to solve.
+
+================ BEGIN ============================
+So here is our dilemma. In the laptop world:
+
+1) Today (Pre-Thunderbolt 3 / Pre-USB4), there is a mix of trusted /
+untrusted drivers that we (or any OEMs) are shipping on their laptops.
+Yes, there is some (calculated) risk that everyone is taking - because
+currently PCI bus does not extend outside the laptop *easily*. Yes I
+understand systems may have external PCI slots, but that is rather
+rare in the laptop world I think. The risks of the existing drivers
+are limited to the devices that were built into the system, and since
+the drivers, firmware updates, (and supply chain in some cases) are
+controlled by us, such internal devices are conceivably more secure
+than something random that the user may plug in. If the user opens the
+chassis to replace a piece of hardware with something else, all bets
+are off. Yes, we're still susceptible to the NIC driver attacks that
+you talk about it along with other potential vulnerabilities, but this
+is just convey our current baseline level of risk/security.
+
+2) Now, we want to enable technology of tomorrow :-) (Thunderbolt 3 /
+USB4) on laptops, which allows to very *easily* extend the internal
+PCI bus to the outside devices. Note it doesn't require to open a
+laptop, and anyone can plug a device onto a port. This throws the
+system open to a lot of DMA attacks now, which it did not have to deal
+with earlier. Essentially with the advent of technology to expand PCIe
+outside of system chassis, the attacks have become much more easier,
+we can no longer control or monitor device hardware or firmware, and
+thus the level of risk has clearly increased. So what we are trying to
+find here, is a good path to enable these new technologies, that keeps
+keeps our baseline level of risk/security unchanged, and to also not
+regress in functionality in supporting devices as much as possible.
+
+3) Now you are certainly right that one path could be a binary
+decision to ship or not ship a driver, or fix any issues with the
+driver, or change the driver to differentiate between external and
+internal ports. However, there are multiple factors that pose
+practical problems (why regress internal devices that we tightly
+control? Why regress systems that don't have such external ports? Need
+to front load all effort in vetting the drivers before hand before the
+first release. Work with each and individual driver etc).
+
+4) The other path that this proposal aims to take is that by applying
+a whitelist of drivers to external ports only, we're going to be able
+to *slowly* build this whitelist. We can start with a NULL whitelist.
+Which means that existing internal devices continue to work, and
+external devices on PCI don't pose a risk. With ACS and IOMMU
+restrictions in place, the security/risk baseline remains unchanged.
+The existing devices are not regressed. As we vet and whitelist the
+drivers, we start supporting more and more USB4 and Thunderbolt3
+devices. Until then, those devices when plugged, can continue to work
+in the "USB / legacy mode" (I forgot what it is called).
+
+5) To give an example, assume we don't trust the PCI nvme driver and
+don't want to whitelist it for external devices given there are so
+many off the shelf devices with questionable firmware. But we
+certainly need to enable it for internal NVME devices (that we may
+have audited the firmware for, and control our supply chain) in order
+to boot. With my proposal, until we whitelist it, the internal devices
+continue to work, the external NVMEs switch to "USB storage device"
+mode and thus go via a USB bridge so they cannot directly DMA into
+host memory directly. Keep in mind that whitelisting a driver may be
+handled by a separate security team, and may take long time depending
+on the driver. The proposal allows us to release laptops with
+Thunderbolt3/USB4 support and add peripheral support as we go.
+
+6) Also small nit: consider the other scenario (I think this may not
+be as important but still worth a thought). Assume the security team
+finds a new vulnerability in a whitelisted driver, and want to take it
+out of whitelist. Now, this really isn't possible if there was no
+distinction between internal / external devices, and an internal
+device uses that driver to boot.
+
+================ END ============================
+
+I feel I've described a problem, looked around to see what is
+available, and tried to explain why it doesn't work for us given the
+constraints. When it comes to security, the world is far from ideal.
+Though in principle a "driver vulnerability" applies equally to any
+device, in reality the threat vector is different for "internal" vs
+"external" devices.
+
+I feel a lot of resistance to the proposal, however, I'm not hearing
+any realistic solutions that may help us to move forward. We want to
+go with a solution that is acceptable upstream as that is our mission,
+and also helps the community, however the behemoth task of "inspect
+all drivers and fix them" before launching a product is really an
+unfair ask I feel :-(. Can you help us by suggesting a proposal that
+does not require us to trust a driver equally for internal / external
+devices?
+
+Looking for some guidance here.
+
+Thanks & Best Regards,
+
+Rajat
+
+>
+> thanks,
+>
+> greg k-h
