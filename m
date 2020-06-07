@@ -2,56 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B85A1F083C
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jun 2020 21:15:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F971F0A38
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jun 2020 08:18:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgFFTPQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Jun 2020 15:15:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728861AbgFFTPP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 6 Jun 2020 15:15:15 -0400
-Subject: Re: [GIT PULL] PCI changes for v5.8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591470914;
-        bh=0OAUsjS8ejSBSUuqOzZpCMvyYK4oslAfpDIzBCWdxSw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=lYP4Epxw9HvlYtrG8RJaC5X78zPB7U/r+Jh6iF5VnwvOpHLs9SKJ0xeWxCTIv6mya
-         jHMYxLuXBj/T/qmWYZpiw1XLn3tW2opguMbH+jkseYWvMyFFPoYZZFF+YTbi6lIHoH
-         +Ie1vuBjNT/T6QmaXAfQpcNPyykRre5DePlUIddo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200605202257.GA1152522@bjorn-Precision-5520>
-References: <20200605202257.GA1152522@bjorn-Precision-5520>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200605202257.GA1152522@bjorn-Precision-5520>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
- tags/pci-v5.8-changes
-X-PR-Tracked-Commit-Id: 2bd81cd04a3f5eb873cc81fa16c469377be3b092
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3925c3bbdf886f1ddf64461b9b380e1bb36f90c1
-Message-Id: <159147091458.3313.10169776897827819725.pr-tracker-bot@kernel.org>
-Date:   Sat, 06 Jun 2020 19:15:14 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
+        id S1726288AbgFGGSf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Jun 2020 02:18:35 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:57224 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726192AbgFGGSd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 7 Jun 2020 02:18:33 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Sun, 7 Jun 2020 14:18:15
+ +0800 (GMT+08:00)
+X-Originating-IP: [10.192.85.18]
+Date:   Sun, 7 Jun 2020 14:18:15 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Marek Vasut" <marek.vasut@gmail.com>
+Cc:     kjlu@umn.edu,
+        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] PCI: rcar: fix runtime pm imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <5cf73d31-33ab-b9ba-c9d5-faa3977484eb@gmail.com>
+References: <20200520082228.26881-1-dinghao.liu@zju.edu.cn>
+ <5cf73d31-33ab-b9ba-c9d5-faa3977484eb@gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Message-ID: <176a80c.fc77b.1728d6dfd9b.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgDnX0OnhtxeMzVaAA--.20998W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUABlZdtOcIbQAQss
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUblCS07vEb7Iv0x
+        C_Jr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkI7II2jI8vz4vEwIxGrwCS07vE42xK82IY6x8ErcxFaV
+        Av8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lV2xY
+        6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14v26r106r1rMIAIbVC2zV
+        AF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE14v26r1j6r1xMIAIbVCI42IY
+        6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
+        0DMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2z280aVCY1x0267AKxVWU
+        JVW8JbIYCTnIWIevJa73U
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Fri, 5 Jun 2020 15:22:57 -0500:
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.8-changes
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3925c3bbdf886f1ddf64461b9b380e1bb36f90c1
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+PiA+ICAKPiA+ICBlcnJfcG1fcHV0Ogo+IAo+IFlvdSBtaWdodCB3YW50IHRvIHJlbW92ZSB0aGlz
+IGxhYmVsIHRvby4KClRoYW5rIHlvdSBmb3IgcG9pbnRpbmcgb3V0IHRoaXMhIEkgd2lsbCBmaXgg
+dGhpcyBpbiB0aGUgCm5leHQgdmVyc2lvbiBvZiBwYXRjaC4K
