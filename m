@@ -2,154 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A77861F1F29
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 20:42:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98AAD1F1FE2
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 21:28:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgFHSmC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Jun 2020 14:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgFHSmA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Jun 2020 14:42:00 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF672C08C5C3
-        for <linux-pci@vger.kernel.org>; Mon,  8 Jun 2020 11:41:58 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id i27so10867663ljb.12
-        for <linux-pci@vger.kernel.org>; Mon, 08 Jun 2020 11:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xdYVMi4TB1AynZV/TE42S+K8GYgFVjpwEvPiHdeHwW0=;
-        b=IUlTeRvUgK8FEJG+Sn6jQfueJQe1C/imU4WYRWV2PuXL0DIMXxcRLd3RBoYavNHScZ
-         vX2zz4xElfE07LNxxcY2PcKOxWZWYDTr8eMWppKxcAh/KsojiLKR0rLTYeoejnobKNG2
-         pZZpZMagWFDlGfMHVB9lzDhGFxuyRd9QkEU5pjXEJUfHLdAGS+6qV2MaQqpWxMcvG49q
-         Iulw8WcBepoCEeFsp2tPHSSde26hUfJCgue82fduBrgy5NlOaekOMZ0Hch2/fBWLkiYF
-         8BspwkgWLKWZedKJ76UM/ofI/g9mHhZeGTfF/87eYzZ17X6TjR5lB+2Y3N9AL7r9yqi1
-         gSjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xdYVMi4TB1AynZV/TE42S+K8GYgFVjpwEvPiHdeHwW0=;
-        b=nWiQt04+VObzf+US2VDSxJcUxfQ7+sn2u2NVDDaefqL9QPlFBh5UptqMTTCg2eRDhs
-         3OPx2dUtfDXla4Hy6pycGWabz1XcBS9VFH3MbjM167JeKWR4bsuTP6mlzo8Xj6XBwUD/
-         c0VE182mVAgttkWDUAWm8GDcRIewY4abYWbbBdzGzM8hCVsKw9PDcfLL+XihpV0+tYea
-         NJApphwVbZhfR1oathNV8lsguxEOIKYOK4tPbZr8T82kZ0r+a54R9pxpanY7xj7yEY9/
-         zkR1lVQI4X1Go9fpsvMTRxTpSpivhO3f+nyf0+ggKfAcb1U+FC1+PMIhBYBslKI59pfT
-         PMAQ==
-X-Gm-Message-State: AOAM533UzZFek1S/X0Crv2ytGyQOEXqaQ6lQ3RQ6+y56xiDAaPkZPhRj
-        2uSnbzMhAAWVlLjzXW47kg+PyMcXel7l4RQsKp9Yiw==
-X-Google-Smtp-Source: ABdhPJzTbJz0aBGuHmzGA+lFFgmNz5sWB5R746ny52RgSF2CDnKe0/GyLz0cvZeq0OMLOIp+8mvZ6xdkOTsXbpZwDuA=
-X-Received: by 2002:a2e:908f:: with SMTP id l15mr7160592ljg.307.1591641716733;
- Mon, 08 Jun 2020 11:41:56 -0700 (PDT)
+        id S1726452AbgFHT1b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Jun 2020 15:27:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39542 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgFHT1a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Jun 2020 15:27:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E1636AE41;
+        Mon,  8 Jun 2020 19:27:31 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        robh@kernel.org, mathias.nyman@linux.intel.com,
+        Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 0/9] Raspberry Pi 4 USB firmware initialization rework
+Date:   Mon,  8 Jun 2020 21:26:52 +0200
+Message-Id: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200602050626.GA2174820@kroah.com> <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
- <20200603060751.GA465970@kroah.com> <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com> <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com> <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com> <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
- <20200608175015.GA457685@kroah.com> <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
-In-Reply-To: <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 8 Jun 2020 11:41:19 -0700
-Message-ID: <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Jesse Barnes <jsbarnes@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jesse and Greg,
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+co-processor, VideoCore. This series reworks how we handle this.
 
-On Mon, Jun 8, 2020 at 11:30 AM Jesse Barnes <jsbarnes@google.com> wrote:
->
-> > > I think your suggestion to disable driver binding once the initial
-> > > bus/slot devices have been bound will probably work for this
-> > > situation.  I just wanted to be clear that without some auditing,
-> > > fuzzing, and additional testing, we simply have to assume that drivers
-> > > are *not* secure and avoid using them on untrusted devices until we're
-> > > fairly confident they can handle them (whether just misbehaving or
-> > > malicious), in combination with other approaches like IOMMUs of
-> > > course.  And this isn't because we don't trust driver authors or
-> > > kernel developers to dtrt, it's just that for many devices (maybe USB
-> > > is an exception) I think driver authors haven't had to consider this
-> > > case much, and so I think it's prudent to expect bugs in this area
-> > > that we need to find & fix.
-> >
-> > For USB, yes, we have now had to deal with "untrusted devices" lieing
-> > about their ids and sending us horrible data.  That's all due to the
-> > fuzzing tools that have been written over the past few years, and now we
-> > have some of those in the kernel tree itself to help with that testing.
+The previous solution makes use of PCI quirks and exporting platform
+specific functions. Albeit functional it feels pretty shoehorned. This
+proposes an alternative way of handling the triggering of the xHCI chip
+initialization trough means of a reset controller.
 
-This is great to hear! I tried to look up but didn't find anything
-else in-kernel, except the kcov support to export coverage info for
-userspace fuzzers. Can you please give us some pointers for in-kernel
-fuzzing tools?
+The benefits are pretty evident: less platform churn in core xHCI code,
+and no explicit device dependency management in pcie-brcmstb.
 
-> >
-> > For PCI, heh, good luck, those assumptions about "devices sending valid
-> > data" are everywhere, if our experience with USB is any indication.
-> >
-> > But, to take USB as an example, this is exactly what the USB
-> > "authorized" flag is there for, it's a "trust" setting that userspace
-> > has control over.  This came from the wireless USB spec, where it was
-> > determined that you could not trust devices.  So just use that same
-> > model here, move it to the driver core for all busses to use and you
-> > should be fine.
-> >
-> > If that doesn't meet your needs, please let me know the specifics of
-> > why, with patches :)
->
-> Yeah will do for sure.  I don't want to carry a big infra for this on our own!
->
-> > Now, as to you all getting some sort of "Hardware flag" to determine
-> > "inside" vs. "outside" devices, hah, good luck!  It took us a long time
-> > to get that for USB, and even then, BIOSes lie and get it wrong all the
-> > time.  So you will have to also deal with that in some way, for your
-> > userspace policy.
->
-> I think that's inherently platform specific to some extent.  We can do
-> it with our coreboot based firmware, but there's no guarantee other
-> vendors will adopt the same approach.  But I think at least for the
-> ChromeOS ecosystem we can come up with something that'll work, and
-> allow us to dtrt in userspace wrt driver binding.
+Note that patch #1 depend on another series[1].
 
-Agree, we can work with our firmware teams to get that right, and then
-expose it from kernel to userspace to help it implement the policy we
-want.
+The series is based on next-20200605.
 
-Thanks & Best Regards,
+[1] https://lwn.net/ml/linux-kernel/cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech/
 
-Rajat
+---
 
->
-> Thanks,
-> Jesse
+Nicolas Saenz Julienne (9):
+  dt-bindings: reset: Add a binding for the RPi Firmware USB reset
+  reset: Add Raspberry Pi 4 firmware USB reset controller
+  ARM: dts: bcm2711: Add firmware usb reset node
+  ARM: dts: bcm2711: Add reset controller to xHCI node
+  usb: xhci-pci: Add support for reset controllers
+  Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
+  usb: host: pci-quirks: Bypass xHCI quirks for Raspberry Pi 4
+  Revert "firmware: raspberrypi: Introduce vl805 init routine"
+  Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
+
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  21 +++
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  12 ++
+ drivers/firmware/Kconfig                      |   3 +-
+ drivers/firmware/raspberrypi.c                |  61 ---------
+ drivers/pci/controller/pcie-brcmstb.c         |  17 ---
+ drivers/reset/Kconfig                         |   9 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-raspberrypi-usb.c         | 122 ++++++++++++++++++
+ drivers/usb/host/pci-quirks.c                 |  22 ++--
+ drivers/usb/host/xhci-pci.c                   |   9 ++
+ include/soc/bcm2835/raspberrypi-firmware.h    |   7 -
+ 11 files changed, 184 insertions(+), 100 deletions(-)
+ create mode 100644 drivers/reset/reset-raspberrypi-usb.c
+
+-- 
+2.26.2
+
