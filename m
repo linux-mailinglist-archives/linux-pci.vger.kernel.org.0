@@ -2,125 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE0BB1F203B
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 21:43:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C22841F203D
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 21:43:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgFHTnl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Jun 2020 15:43:41 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52999 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgFHTnl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Jun 2020 15:43:41 -0400
-X-Originating-IP: 86.210.146.109
-Received: from windsurf (lfbn-tou-1-915-109.w86-210.abo.wanadoo.fr [86.210.146.109])
-        (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8305660005;
-        Mon,  8 Jun 2020 19:43:36 +0000 (UTC)
-Date:   Mon, 8 Jun 2020 21:43:35 +0200
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Shmuel Hazan <sh@tkos.co.il>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Chris ackham <chris.packham@alliedtelesis.co.nz>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH] pci: pci-mvebu: setup BAR0 to internal-regs
-Message-ID: <20200608214335.156baaaa@windsurf>
-In-Reply-To: <20200608144024.1161237-1-sh@tkos.co.il>
-References: <20200608144024.1161237-1-sh@tkos.co.il>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726541AbgFHTnw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Jun 2020 15:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgFHTnu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Jun 2020 15:43:50 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96355C08C5C2;
+        Mon,  8 Jun 2020 12:43:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y17so18740078wrn.11;
+        Mon, 08 Jun 2020 12:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eEhDs2ggMl3f7hmWAszT3Wg5EUHjiX8ZgjgQtEPz3Ew=;
+        b=SeSuA/P6scbWq1Qmh2zpCSo7IcLTN9rnSoi07mfc7qWyYZK3Q3DYVo1VijgnOfNSdj
+         r3vywNV9pCi0Afub1pOlwByjOut9ps2B/DjTMiU5XIHXPtx+bTupvONWl3wUj4GIE7XN
+         7jmRn6U7u8Pw/6rqoy/LtoA1lwlByDxJbr48VQnlu+vjMfCDHjLY9HJJNEbvNCOb1HQq
+         TYmx6d3y0qxRkn+koJEEJZLsxEDTZ7IqpiKn8n2+Si8QeluqpJvK+HQ9Jdmp0U6KjUMa
+         Kdj9DY+26aXNWHArUb4TSzFok6Mz7H+tkNNgznU8lsMAe76hlbeSdAtfqawe6Y879Sf8
+         khgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eEhDs2ggMl3f7hmWAszT3Wg5EUHjiX8ZgjgQtEPz3Ew=;
+        b=QrpnTQhx3uIB+ojPsXS8T+TW+5IVIqXZZfypcnSqaoAb301zdGUGb8WL5EFdX4fMwC
+         DSU1p0FxznQ+RN7enY/WYbDyPLcur0i2ermKFxNR+2ff1eAfPIxRpJDHMEKSj+VcO8sr
+         sXs0ALua6OJLw6RRa80F0fnfU86pRYPOMuU4LpLvZv0XXDzTqfaMEpFH74IczoSlaX88
+         amZ7ZkXGva2gcWrXb8+wm91Hj/EvV3hWMTIHf6QXj1QojZMLCVo7On7gNdNhMX++56+U
+         UtsDTkAVzVmrrGqZb15hyIfQRwUpWh5iX+n7Gnsj4/5Kr3JQe+jRTTiZ2Xqeb+7MeARo
+         QvaA==
+X-Gm-Message-State: AOAM531TGQJ6lYUA69y3RNz49CT8PJuM3oL9YvhDGj4qancL2EOBCfwF
+        KBvsaQYX+YsqJ6Ps4EHqQ2g=
+X-Google-Smtp-Source: ABdhPJzbDt2pJwcpzdBFvHOLRZ0TDUp8Aq/TBRc5TkHGktIAfaGaZUxUEu/MKNMBoXEBH6K2qQduMg==
+X-Received: by 2002:a5d:4b47:: with SMTP id w7mr385678wrs.234.1591645429157;
+        Mon, 08 Jun 2020 12:43:49 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id t129sm538664wmf.41.2020.06.08.12.43.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 12:43:48 -0700 (PDT)
+Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        robh@kernel.org, mathias.nyman@linux.intel.com,
+        Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, lorenzo.pieralisi@arm.com
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+ <20200608192701.18355-6-nsaenzjulienne@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+Date:   Mon, 8 Jun 2020 12:43:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200608192701.18355-6-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon,  8 Jun 2020 17:40:25 +0300
-Shmuel Hazan <sh@tkos.co.il> wrote:
 
-> From: Shmuel H <sh@tkos.co.il>
+
+On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> Some atypical users of xhci-pci might need to manually reset their xHCI
+> controller before starting the HCD setup. Check if a reset controller
+> device is available to the PCI bus and trigger a reset.
 > 
-> Set the port's BAR0 address to the SOC's internal registers address. By default, this register will point to 0xd0000000, which is not correct.
-> 
-> Signed-off-by: Shmuel Hazan <sh@tkos.co.il>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
-> Sending again since I forgot to include a number of email addresses. 
+>  drivers/usb/host/xhci-pci.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Without this patch the wil6210 driver fails on interface up as follows:
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index ef513c2fb843..45f70facdfcd 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+>  #include <linux/acpi.h>
+> +#include <linux/reset.h>
+>  
+>  #include "xhci.h"
+>  #include "xhci-trace.h"
+> @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	struct xhci_hcd *xhci;
+>  	struct usb_hcd *hcd;
+>  	struct xhci_driver_data *driver_data;
+> +	struct reset_control *reset;
+>  
+>  	driver_data = (struct xhci_driver_data *)id->driver_data;
+>  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
+> @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  			return retval;
+>  	}
+>  
+> +	reset = devm_reset_control_get(&dev->bus->dev, NULL);
+
+Should not this be devm_reset_control_get_optional()?
+
+> +	if (IS_ERR(reset)) {
+> +		retval = PTR_ERR(reset);
+> +		return retval;
+> +	}
+> +	reset_control_reset(reset);
+> +
+>  	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
+>  	pm_runtime_get_noresume(&dev->dev);
+>  
 > 
-> # ip link set wlan0 up
-> [   46.142664] wil6210 0000:01:00.0 wlan0: wil_reset: Use firmware
-> <wil6210.fw> + board <wil6210.brd>
-> [   48.244216] wil6210 0000:01:00.0 wlan0: wil_wait_for_fw_ready:
-> Firmware not ready
-> ip: SIOCSIFFLAGS: Device timeout
 
-Do you have any idea why this particular would not work, while many
-other PCIe devices do ?
-
-> 
-> With this patch, interface up succeeds:
-> 
-> # ip link set wlan0 up
-> [   53.632667] wil6210 0000:01:00.0 wlan0: wil_reset: Use firmware
-> <wil6210.fw> + board <wil6210.brd>
-> [   53.666560] wil6210 0000:01:00.0 wlan0: wmi_evt_ready: FW ver.
-> 5.2.0.18(SW 18); MAC 40:0e:85:c0:77:5c; 0 MID's
-> [   53.676636] wil6210 0000:01:00.0 wlan0: wil_wait_for_fw_ready: FW
-> ready after 20 ms. HW version 0x00000002
-> [   53.686478] wil6210 0000:01:00.0 wlan0:
-> wil_configure_interrupt_moderation: set ITR_TX_CNT_TRSH = 500 usec
-> [   53.696191] wil6210 0000:01:00.0 wlan0:
-> wil_configure_interrupt_moderation: set ITR_TX_IDL_CNT_TRSH = 13 usec
-> [   53.706156] wil6210 0000:01:00.0 wlan0:
-> wil_configure_interrupt_moderation: set ITR_RX_CNT_TRSH = 500 usec
-> [   53.715855] wil6210 0000:01:00.0 wlan0:
-> wil_configure_interrupt_moderation: set ITR_RX_IDL_CNT_TRSH = 13 usec
-> [   53.725819] wil6210 0000:01:00.0 wlan0: wil_refresh_fw_capabilities:
-> keep_radio_on_during_sleep (0)
-> 
-> Tested on Armada 38x based system.
-> 
-> Another related bit of information is this U-Boot commit:
-> 
->   https://gitlab.denx.de/u-boot/u-boot/commit/193a1e9f196b7fb7e913a70936c8a49060a1859c
-> 
-> It looks like some other devices are also affected the BAR0
-> initialization.
-> However, by default, u-boot won't initialize any PCI bus. Which
-> will cause the BAR0 register to stay on its default value. 
-
-Perhaps you want to include more of these details in the commit log.
-
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 153a64676bc9..4a00e1b81b4f 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -203,6 +203,11 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
->  	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(1));
->  	mvebu_writel(port, ((size - 1) & 0xffff0000) | 1,
->  		     PCIE_BAR_CTRL_OFF(1));
-> +	
-> +	/* Point BAR0 to the device's internal registers (internal-regs on 
-> +	 * a38x, orion and more) */
-> +	mvebu_writel(port, 0xf1000000, PCIE_BAR_LO_OFF(0));
-
-Some Armada 370/XP platforms really do use 0xd0000000 as the base
-address of the internal registers. This information is available in the
-DT. I think you could simply take the base address of the PCIe
-controller, round down to 1 MB (which is the size of the internal
-registers window) and that would give you the right address.
-
-However, it would be good to understand this a little bit better.
-
-Is this something you're seeing with mainline U-Boot only ? Or also
-with the vendor U-Boot ? Only with this specific PCIe device ?
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Florian
