@@ -2,154 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BFA81F1129
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 03:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 919BB1F1195
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 04:54:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgFHBtJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Jun 2020 21:49:09 -0400
-Received: from mail-eopbgr1310098.outbound.protection.outlook.com ([40.107.131.98]:2117
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728106AbgFHBtJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 7 Jun 2020 21:49:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ObHdg+ERru0vw/uy3WZg+6d9Yx2mYd9w58GdjvE4jcCwJMKNrt5iuQrpUJz396aOisDZPTd3nqTxXPNQn82/wp4hkgY6ETwXMQucOaXrUFPafV7gP/IDKyTWyFIcoZ1XuZA7jFobey7rJvYBERJ15IGf3hAnXuaRqxmtDet57jnW3cei9FZ0bw+eSXhX1G7sgauV9pOpFb0A3Aw46TfT5puZ98OryGsru4Ef4PIPyYydj1J9q7NPWgxfqVQEyYvnCj05fuIiljnRs4DX3TDa5mvAYaibJVu9DB7fzM2BEPJdfkRX/C3BAZ+y1zeogbcbsZ8VlEg630ol8PB3qQ3wyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1XaGzB4IfuEA47m+wIkfxPqgtDStoBtC8hqFWlrsge0=;
- b=Br08GEKbBB4HTpU4d9Lnprkg4G8evuaEyhMi3inhw35ghVFfqpKDyKy/nfw0/R+xDcw4jxU3PNh5nRjaQV1nWbG5txW6lALiH4q7lZHAKayjoTOsMMZ8t5wfnY3AAxKLtWQQYSvapDKCINb9fWiM+SYqZOAY79t2dhwQi1hz0bfV1To0SBZWh49id0ZhYEjji5Vgb13FZIcoFrP7dxcfE4OQj/hiT9IIuA5mIFSB5rhEEf9XG7o08sULaFjrFIBiU1t4WNixK4Z2bg3tokOLPG2nZaMstHzpTDlzaIutToqLVBjppKEaAliMDcYRXXpmmTP9fmKiuPRAH1br/AFaaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        id S1728913AbgFHCyd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Jun 2020 22:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgFHCyb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Jun 2020 22:54:31 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE1CC08C5C6
+        for <linux-pci@vger.kernel.org>; Sun,  7 Jun 2020 19:54:30 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i12so5137589pju.3
+        for <linux-pci@vger.kernel.org>; Sun, 07 Jun 2020 19:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1XaGzB4IfuEA47m+wIkfxPqgtDStoBtC8hqFWlrsge0=;
- b=ar+tXOUHX4pV/KW4yLbSEEuXOfTp5FsS91nYZE1zj2+RdiryJdD4s1iSVFLgg8P+v/2XJNY54sQGNOMV6T9Y9TWSmL0mNDfKIivA7SizG35plIn4ku1/NstvbBU6V+Tk1yohYiPrF2sUtTAbVO/k6UxxiYUp3MfSZF28utAQHd4=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TY2PR01MB2890.jpnprd01.prod.outlook.com (2603:1096:404:7a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.23; Mon, 8 Jun
- 2020 01:49:04 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43%3]) with mapi id 15.20.3066.023; Mon, 8 Jun 2020
- 01:49:04 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, "kjlu@umn.edu" <kjlu@umn.edu>
-CC:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=TNiiby0GhibJHmG02ytGWtb3GrXv/h2IE3SFE6qK8wY=;
+        b=izDTLbNFapAPFawYa8bP5L1UpCxlkSTCCzx2ye/9STM1DqXymdysNnGkX12FV0/OIo
+         tKcjXEIEuxSNO572pWS545T9DoQqGqTM8DmMcj/pjObZb/s4KuucXPV8lxnGJsPOEWOP
+         creFxg4Q8lnO5UPN6FiY9AkscKdJteM1nKY+Qmci5RctGzZp1Lm8RhpxAeqkzQiUCQxI
+         Gn/htYffz0hnLWeWv7zjKwwzU0TiNbE2IVaAoUldJmQdAcEGN9qicP3+rskQKiUOfzQ9
+         T1+IF9bYkLx6QP/gZ6BWN651hoOpft0Cc6Lq2cjMJoEoVussc3m5Gv9e47HSM5NkG+Yl
+         PSSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=TNiiby0GhibJHmG02ytGWtb3GrXv/h2IE3SFE6qK8wY=;
+        b=eiQ0idfp1gOV6UCxMTOjBbT6VCzeUkrlCfb86V3+vwosfWgAmjjPGI1HwdCCVnfyYX
+         ldTgqoCE1YVpr2SE0nYUcdWMYVuggrnEqN5nl8syYlMLGv6AQJWG9jztHQ24KfAb6pci
+         R50SICjeRf2E5CZDOrc37IVVwr3ne9HRCBenzH7fyqGKCdoEME1hw9OFrYadXhrdcoIG
+         dbnVhU1qVmvYRihqpVYtIroQ8IiGh85xglMHnAY/Ykg9lEPMZKtBPA3NeZ32gzqSJAA3
+         r9+Z2eBk2/OXtF/6zO6d7deLjGA8p2GSwBNNzwbyTBNYW1MKbEmV5j3a1c9u+r1vV9Aq
+         h9EQ==
+X-Gm-Message-State: AOAM530qvWbLM/K8Wt+ZgWx+m1V+LCwo+PPZmmgIv4MlsO0RlHqByXq5
+        2VWTtFfKWNBMMMurTswn5NqXGdIJ2HWeXw==
+X-Google-Smtp-Source: ABdhPJxkqD1zFPHkx/wch8a4hS4Dcd7qZB1Ug7k+ig+u/wKNnkcnbqH/JdvGWQP6MIHxl1bz+Ni7fQ==
+X-Received: by 2002:a17:90a:f3c4:: with SMTP id ha4mr15260604pjb.18.1591584870012;
+        Sun, 07 Jun 2020 19:54:30 -0700 (PDT)
+Received: from [10.80.2.98] ([45.135.186.73])
+        by smtp.gmail.com with ESMTPSA id t9sm9533489pjs.16.2020.06.07.19.54.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 19:54:29 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] [v2] PCI: rcar: Fix runtime PM imbalance on error
-Thread-Topic: [PATCH] [v2] PCI: rcar: Fix runtime PM imbalance on error
-Thread-Index: AQHWPK55A5hD61SJZES1zQODpY1sK6jN8Qxw
-Date:   Mon, 8 Jun 2020 01:49:04 +0000
-Message-ID: <TY2PR01MB36925A93AA081BF478CA8DB8D8850@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <20200607093134.6393-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200607093134.6393-1-dinghao.liu@zju.edu.cn>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: zju.edu.cn; dkim=none (message not signed)
- header.d=none;zju.edu.cn; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 230b62a2-aea0-4105-ec5e-08d80b4e1fe7
-x-ms-traffictypediagnostic: TY2PR01MB2890:
-x-microsoft-antispam-prvs: <TY2PR01MB28907402AE1CB312F2BC66B6D8850@TY2PR01MB2890.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-forefront-prvs: 042857DBB5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hN8yQa8fTqZoZPXhIKJMiI6X/p2OVeVpQftq3Eh2ndMhgqla0z45/EDOlQstxAhD2oF7zTB9WW0VtVfThN/3n5UUU03GleSinI3t57AKUYWD7xablkbGw9WeibxNHNF/2c1bK/SHBdh636jSp1lPPVRZA6jNtk9+BsRkPxFdrLzg3rA96LE/oTeQgqUuRNMWjzeXIi0LMlaQ2RUl3ZWc/Sea8kgcQSPjtRA+kQYiCdhqyxFzYJihFz/x9TKl0ENNcHg2QPugXuVQ58bfAcr4nrErBhQUHnYMaxnANfI56aZV9rR9mViDN3aIMEwifeqBNaDvXCHW3O2t2wokdOBPoA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(346002)(376002)(396003)(55016002)(8676002)(9686003)(478600001)(86362001)(2906002)(8936002)(7696005)(110136005)(54906003)(76116006)(316002)(64756008)(71200400001)(66446008)(66556008)(4326008)(66946007)(66476007)(26005)(6506007)(55236004)(52536014)(186003)(33656002)(5660300002)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Zb4fCDlCE1W/l2E9Ys6ryqL+dTuOPKvnpe6Zu3BtZZw3pkfcJ4ak7gdtvcUNeZNlU8g6kwiKF4qkKeSj8uHVnsJVB8Il5UP1Pcvjht8bliTdWk1CgIP3bLofMbHkBBwZ92bzWrCV7m4DA+X4DM4HfYJQikFMohyzgK9A9gGb7mZK6xxHK5wEFCqIdD7LtJ26qItx/flwJAPnyFg8l1WoPwt+B7eDL5SlmIIU7+6rvJaDS2dQ4ZKoM/qqMcf6bnoPeqTmFbdy4EPiVpqEFsjscgaqwYAF+Oh8gwUYdyYCmFfJBSQmlX1dy/+5O9/b3ZL9spUXKii4o/ZojRqk4WnhLrQf00/Iq1mxcwqAQatRsInZ8q5C6kzBQ2sJMFGF/gESTqYpzb1hlK81kx46H5bj/cWW9LYE4zVNGMe5RtyoW2q8nXpO88U+0zGJPlL9oCilhh4uReSzHOhyx9wKwnH8i2p0EZb30o++KJ3Zu4nB0UdMt0rzulFWoeTae6eLTKAr
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <20200605231909.GA1155454@bjorn-Precision-5520>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <be91b0f0-c685-789d-6868-1c8ebd62b770@linaro.org>
+Date:   Mon, 8 Jun 2020 10:54:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 230b62a2-aea0-4105-ec5e-08d80b4e1fe7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2020 01:49:04.2213
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t9wKaMo0zDUJ+LUox5ur1AkNa9trQRVxx2/nGmg9h2AOwgtz6IpXlxF8858E0JbHiDZ0tXBu+zYsFo50jk9Z2G+sSw0azbM0NtCT2x8pJxD5j/avPvVzWFisQ0qoteWl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2890
+In-Reply-To: <20200605231909.GA1155454@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dinghao,
+Hi, Bjorn
 
-> From: Dinghao Liu, Sent: Sunday, June 7, 2020 6:32 PM
->=20
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> the call returns an error code. Thus a corresponding decrement is
-> needed on the error handling path to keep the counter balanced.
->=20
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
+> On Thu, Jun 04, 2020 at 09:33:07PM +0800, Zhangfei Gao wrote:
+>> On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
+>>> On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
+>>>> On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
+>>>>> Is this slowdown significant?  We already iterate over every device
+>>>>> when applying PCI_FIXUP_FINAL quirks, so if we used the existing
+>>>>> PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
+>>>>> adding two more iterations to the loop in pci_do_fixups() that tries
+>>>>> to match quirks against the current device.  I doubt that would be a
+>>>>> measurable slowdown.
+>>>> I don't know how significant it is, but I remember people complaining
+>>>> about adding new PCI quirks because it takes too long for them to run
+>>>> them all. That was in the discussion about the quirk disabling ATS on
+>>>> AMD Stoney systems.
+>>>>
+>>>> So it probably depends on how many PCI devices are in the system whether
+>>>> it causes any measureable slowdown.
+>>> I found this [1] from Paul Menzel, which was a slowdown caused by
+>>> quirk_usb_early_handoff().  I think the real problem is individual
+>>> quirks that take a long time.
+>>>
+>>> The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
+>>> course, they're only run for matching devices anyway.  So I'd rather
+>>> keep them as PCI_FIXUP_FINAL than add a whole new phase.
+>>>
+>> Thanks Bjorn for taking time for this.
+>> If so, it would be much simpler.
+>>
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
+>> fwnode_handle *iommu_fwnode,
+>>          fwspec->iommu_fwnode = iommu_fwnode;
+>>          fwspec->ops = ops;
+>>          dev_iommu_fwspec_set(dev, fwspec);
+>> +
+>> +       if (dev_is_pci(dev))
+>> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
+>> +
+>>
+>> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+>> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+>> Will send this when 5.8-rc1 is open.
+> Wait, this whole fixup approach seems wrong to me.  No matter how you
+> do the fixup, it's still a fixup, which means it requires ongoing
+> maintenance.  Surely we don't want to have to add the Vendor/Device ID
+> for every new AMBA device that comes along, do we?
+>
+>
+Here the fake pci device has standard PCI cfg space, but physical 
+implementation is base on AMBA
+They can provide pasid feature.
+However,
+1, does not support tlp since they are not real pci devices.
+2. does not support pri, instead support stall (provided by smmu)
+And stall is not a pci feature, so it is not described in struct 
+pci_dev, but in struct iommu_fwspec.
+So we use this fixup to tell pci system that the devices can support 
+stall, and hereby support pasid.
 
-Thank you for your patch! I think we can add Fixes tag like below.
-
-Fixes: 0df6150e7ceb ("PCI: rcar: Use runtime PM to control controller clock=
-")
-
-And, I reviewed this patch. So,
-
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
-
-> ---
->=20
-> Changelog:
->=20
-> v2: - Remove unnecessary 'err_pm_put' label.
->       Refine commit message.
-> ---
->  drivers/pci/controller/pcie-rcar.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/=
-pcie-rcar.c
-> index 759c6542c5c8..f9595ab54bc4 100644
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -1143,7 +1143,7 @@ static int rcar_pcie_probe(struct platform_device *=
-pdev)
->  	err =3D rcar_pcie_get_resources(pcie);
->  	if (err < 0) {
->  		dev_err(dev, "failed to request resources: %d\n", err);
-> -		goto err_pm_put;
-> +		goto err_pm_disable;
->  	}
->=20
->  	err =3D clk_prepare_enable(pcie->bus_clk);
-> @@ -1206,10 +1206,8 @@ static int rcar_pcie_probe(struct platform_device =
-*pdev)
->  	irq_dispose_mapping(pcie->msi.irq2);
->  	irq_dispose_mapping(pcie->msi.irq1);
->=20
-> -err_pm_put:
-> -	pm_runtime_put(dev);
-> -
->  err_pm_disable:
-> +	pm_runtime_put(dev);
->  	pm_runtime_disable(dev);
->  	pci_free_resource_list(&pcie->resources);
->=20
-> --
-> 2.17.1
-
+Thanks
