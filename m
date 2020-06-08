@@ -2,95 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A70741F1FC6
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 21:28:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE0BB1F203B
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jun 2020 21:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgFHT1n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Jun 2020 15:27:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39732 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgFHT1m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:27:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 86AA3AFFB;
-        Mon,  8 Jun 2020 19:27:43 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        robh@kernel.org, mathias.nyman@linux.intel.com,
-        Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
-        helgaas@kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 9/9] Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
-Date:   Mon,  8 Jun 2020 21:27:01 +0200
-Message-Id: <20200608192701.18355-10-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200608192701.18355-1-nsaenzjulienne@suse.de>
-References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+        id S1726409AbgFHTnl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Jun 2020 15:43:41 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52999 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgFHTnl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Jun 2020 15:43:41 -0400
+X-Originating-IP: 86.210.146.109
+Received: from windsurf (lfbn-tou-1-915-109.w86-210.abo.wanadoo.fr [86.210.146.109])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8305660005;
+        Mon,  8 Jun 2020 19:43:36 +0000 (UTC)
+Date:   Mon, 8 Jun 2020 21:43:35 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Shmuel Hazan <sh@tkos.co.il>
+Cc:     Jason Cooper <jason@lakedaemon.net>,
+        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Chris ackham <chris.packham@alliedtelesis.co.nz>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH] pci: pci-mvebu: setup BAR0 to internal-regs
+Message-ID: <20200608214335.156baaaa@windsurf>
+In-Reply-To: <20200608144024.1161237-1-sh@tkos.co.il>
+References: <20200608144024.1161237-1-sh@tkos.co.il>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This reverts commit 44331189f9082c7e659697bbac1747db3def73e7.
+On Mon,  8 Jun 2020 17:40:25 +0300
+Shmuel Hazan <sh@tkos.co.il> wrote:
 
-Now that the VL805 init routine is run through a reset controller driver
-the dependencies are being taken care of by the device core. No need to
-do it manually here.
+> From: Shmuel H <sh@tkos.co.il>
+> 
+> Set the port's BAR0 address to the SOC's internal registers address. By default, this register will point to 0xd0000000, which is not correct.
+> 
+> Signed-off-by: Shmuel Hazan <sh@tkos.co.il>
+> ---
+> Sending again since I forgot to include a number of email addresses. 
+> 
+> Without this patch the wil6210 driver fails on interface up as follows:
+> 
+> # ip link set wlan0 up
+> [   46.142664] wil6210 0000:01:00.0 wlan0: wil_reset: Use firmware
+> <wil6210.fw> + board <wil6210.brd>
+> [   48.244216] wil6210 0000:01:00.0 wlan0: wil_wait_for_fw_ready:
+> Firmware not ready
+> ip: SIOCSIFFLAGS: Device timeout
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/pci/controller/pcie-brcmstb.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+Do you have any idea why this particular would not work, while many
+other PCIe devices do ?
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 7730ea845ff2..752f5b331579 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -28,8 +28,6 @@
- #include <linux/string.h>
- #include <linux/types.h>
- 
--#include <soc/bcm2835/raspberrypi-firmware.h>
--
- #include "../pci.h"
- 
- /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-@@ -931,26 +929,11 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
--	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
- 	struct resource *res;
- 	int ret;
- 
--	/*
--	 * We have to wait for Raspberry Pi's firmware interface to be up as a
--	 * PCI fixup, rpi_firmware_init_vl805(), depends on it. This driver's
--	 * probe can race with the firmware interface's (see
--	 * drivers/firmware/raspberrypi.c) and potentially break the PCI fixup.
--	 */
--	fw_np = of_find_compatible_node(NULL, NULL,
--					"raspberrypi,bcm2835-firmware");
--	if (fw_np && !rpi_firmware_get(fw_np)) {
--		of_node_put(fw_np);
--		return -EPROBE_DEFER;
--	}
--	of_node_put(fw_np);
--
- 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENOMEM;
+> 
+> With this patch, interface up succeeds:
+> 
+> # ip link set wlan0 up
+> [   53.632667] wil6210 0000:01:00.0 wlan0: wil_reset: Use firmware
+> <wil6210.fw> + board <wil6210.brd>
+> [   53.666560] wil6210 0000:01:00.0 wlan0: wmi_evt_ready: FW ver.
+> 5.2.0.18(SW 18); MAC 40:0e:85:c0:77:5c; 0 MID's
+> [   53.676636] wil6210 0000:01:00.0 wlan0: wil_wait_for_fw_ready: FW
+> ready after 20 ms. HW version 0x00000002
+> [   53.686478] wil6210 0000:01:00.0 wlan0:
+> wil_configure_interrupt_moderation: set ITR_TX_CNT_TRSH = 500 usec
+> [   53.696191] wil6210 0000:01:00.0 wlan0:
+> wil_configure_interrupt_moderation: set ITR_TX_IDL_CNT_TRSH = 13 usec
+> [   53.706156] wil6210 0000:01:00.0 wlan0:
+> wil_configure_interrupt_moderation: set ITR_RX_CNT_TRSH = 500 usec
+> [   53.715855] wil6210 0000:01:00.0 wlan0:
+> wil_configure_interrupt_moderation: set ITR_RX_IDL_CNT_TRSH = 13 usec
+> [   53.725819] wil6210 0000:01:00.0 wlan0: wil_refresh_fw_capabilities:
+> keep_radio_on_during_sleep (0)
+> 
+> Tested on Armada 38x based system.
+> 
+> Another related bit of information is this U-Boot commit:
+> 
+>   https://gitlab.denx.de/u-boot/u-boot/commit/193a1e9f196b7fb7e913a70936c8a49060a1859c
+> 
+> It looks like some other devices are also affected the BAR0
+> initialization.
+> However, by default, u-boot won't initialize any PCI bus. Which
+> will cause the BAR0 register to stay on its default value. 
+
+Perhaps you want to include more of these details in the commit log.
+
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 153a64676bc9..4a00e1b81b4f 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -203,6 +203,11 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+>  	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(1));
+>  	mvebu_writel(port, ((size - 1) & 0xffff0000) | 1,
+>  		     PCIE_BAR_CTRL_OFF(1));
+> +	
+> +	/* Point BAR0 to the device's internal registers (internal-regs on 
+> +	 * a38x, orion and more) */
+> +	mvebu_writel(port, 0xf1000000, PCIE_BAR_LO_OFF(0));
+
+Some Armada 370/XP platforms really do use 0xd0000000 as the base
+address of the internal registers. This information is available in the
+DT. I think you could simply take the base address of the PCIe
+controller, round down to 1 MB (which is the size of the internal
+registers window) and that would give you the right address.
+
+However, it would be good to understand this a little bit better.
+
+Is this something you're seeing with mainline U-Boot only ? Or also
+with the vendor U-Boot ? Only with this specific PCIe device ?
+
+Thomas
 -- 
-2.26.2
-
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
