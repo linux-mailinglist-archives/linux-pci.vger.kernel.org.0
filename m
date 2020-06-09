@@ -2,40 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 261021F36D0
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 11:17:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B6FB1F36D3
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 11:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgFIJRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 05:17:35 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29500 "EHLO mga17.intel.com"
+        id S1728133AbgFIJR5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 05:17:57 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29544 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbgFIJRd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:17:33 -0400
-IronPort-SDR: 3kmh86Nis7upl5xLjq5xZ7RDbyoEcoIJHjKsxU8UE2VZSJDQLDlvv5VpXj/fNkjmaPhD/c0YQt
- f8/HPzCjvocw==
+        id S1726923AbgFIJR4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:17:56 -0400
+IronPort-SDR: 3IQZXn/EQhDdVdXMApFMtjiM2Cqc1KPdn4sgi1jJZ8Mkg+sKmesFRPq2eLAyGfcvb/qYSkZ2yA
+ OBdp0DQQJN5A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:17:32 -0700
-IronPort-SDR: JfF7AGgMn2eedLms7XY99tHf3FYV0HFR3OP3C7FYUcBk0W9FdhdfYKzuJ3kUbU+pIKYdq4plft
- gPeMTJ2fvskg==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:17:55 -0700
+IronPort-SDR: r4kAbd1yIygKTXh+u0HT9cULu5ZjkqXVYC0+p4eTSP9FDzipXLeT23fNYyP50gDc4Wn70HPRhe
+ NiAtvofwd80Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="379686682"
+   d="scan'208";a="447062288"
 Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jun 2020 02:17:30 -0700
+  by orsmga005.jf.intel.com with ESMTP; 09 Jun 2020 02:17:53 -0700
 From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Pascal van Leeuwen <pascalvanl@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/15] crypto: inside-secure - Use PCI_IRQ_MSI_TYPES where appropriate
-Date:   Tue,  9 Jun 2020 11:17:26 +0200
-Message-Id: <20200609091728.973-1-piotr.stankiewicz@intel.com>
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 06/15] dmaengine: dw-edma: Use PCI_IRQ_MSI_TYPES  where appropriate
+Date:   Tue,  9 Jun 2020 11:17:47 +0200
+Message-Id: <20200609091751.1065-1-piotr.stankiewicz@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
 References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
@@ -49,25 +48,23 @@ of interrupt, or any type of message signalled interrupt, leverage it.
 
 Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Reviewed-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 ---
- drivers/crypto/inside-secure/safexcel.c | 2 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-index 2cb53fbae841..1b2faa2a6ab0 100644
---- a/drivers/crypto/inside-secure/safexcel.c
-+++ b/drivers/crypto/inside-secure/safexcel.c
-@@ -1567,7 +1567,7 @@ static int safexcel_probe_generic(void *pdev,
- 		ret = pci_alloc_irq_vectors(pci_pdev,
- 					    priv->config.rings + 1,
- 					    priv->config.rings + 1,
--					    PCI_IRQ_MSI | PCI_IRQ_MSIX);
-+					    PCI_IRQ_MSI_TYPES);
- 		if (ret < 0) {
- 			dev_err(dev, "Failed to allocate PCI MSI interrupts\n");
- 			return ret;
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index dc85f55e1bb8..46defe30ac25 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -117,7 +117,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 
+ 	/* IRQs allocation */
+ 	nr_irqs = pci_alloc_irq_vectors(pdev, 1, pdata->irqs,
+-					PCI_IRQ_MSI | PCI_IRQ_MSIX);
++					PCI_IRQ_MSI_TYPES);
+ 	if (nr_irqs < 1) {
+ 		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
+ 			nr_irqs);
 -- 
 2.17.2
 
