@@ -2,40 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11F6C1F36DF
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 11:18:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 405FE1F36E3
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 11:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgFIJSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 05:18:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4040 "EHLO mga03.intel.com"
+        id S1728306AbgFIJTB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 05:19:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29612 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbgFIJSa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:18:30 -0400
-IronPort-SDR: l0dkD4nT8XHCetHA3RgUdpJqp2DQm3OPI76qYbZP7YDGIv9GZtASe5HhXQaUsTEawbi0SXJ4hx
- jU+X58FaQ8yw==
+        id S1728104AbgFIJTB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:19:01 -0400
+IronPort-SDR: 5AuB9ru6QkibTWZWfg6GK6xvf3XXElVFQ2VOekvlZAlw14+qW0uPe8XzUU5g2tKnhMk0kD4gZD
+ Pw3hQEcn15EA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:18:30 -0700
-IronPort-SDR: +olPD0zhM290Umf18+sPDZZPw+ga0IPL2XIZkaoeeqo0oJ41smWh9kqflrscC/dJF2qDz6FjPb
- 0bIpyVbyCFaw==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:19:00 -0700
+IronPort-SDR: o4jZ4AQQVIZ8gej6Nqdy/HrrJ+Vd8uxwT+dXiQc+6NCJ8FfWM2l8t07LGWKt+I9RvhE9O7HfOZ
+ tsxC3xPFy0Rg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="314149665"
+   d="scan'208";a="306205547"
 Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jun 2020 02:18:27 -0700
+  by orsmga008.jf.intel.com with ESMTP; 09 Jun 2020 02:18:58 -0700
 From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@intel.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
-Date:   Tue,  9 Jun 2020 11:18:22 +0200
-Message-Id: <20200609091823.1346-1-piotr.stankiewicz@intel.com>
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 09/15] media: ddbridge: Use PCI_IRQ_MSI_TYPES where appropriate
+Date:   Tue,  9 Jun 2020 11:18:39 +0200
+Message-Id: <20200609091841.1430-1-piotr.stankiewicz@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
 References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
@@ -50,33 +47,22 @@ of interrupt, or any type of message signalled interrupt, leverage it.
 Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- drivers/infiniband/hw/qib/qib_pcie.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/pci/ddbridge/ddbridge-main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_pcie.c b/drivers/infiniband/hw/qib/qib_pcie.c
-index 3dc6ce033319..caff44d2c12c 100644
---- a/drivers/infiniband/hw/qib/qib_pcie.c
-+++ b/drivers/infiniband/hw/qib/qib_pcie.c
-@@ -213,7 +213,7 @@ int qib_pcie_params(struct qib_devdata *dd, u32 minw, u32 *nent)
- 	u16 linkstat, speed;
- 	int nvec;
- 	int maxvec;
--	unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
-+	unsigned int flags;
+diff --git a/drivers/media/pci/ddbridge/ddbridge-main.c b/drivers/media/pci/ddbridge/ddbridge-main.c
+index 03dc9924fa2c..ff5c33d7a736 100644
+--- a/drivers/media/pci/ddbridge/ddbridge-main.c
++++ b/drivers/media/pci/ddbridge/ddbridge-main.c
+@@ -106,7 +106,7 @@ static void ddb_irq_msi(struct ddb *dev, int nr)
  
- 	if (!pci_is_pcie(dd->pcidev)) {
- 		qib_dev_err(dd, "Can't find PCI Express capability!\n");
-@@ -225,7 +225,9 @@ int qib_pcie_params(struct qib_devdata *dd, u32 minw, u32 *nent)
- 	}
- 
- 	if (dd->flags & QIB_HAS_INTX)
--		flags |= PCI_IRQ_LEGACY;
-+		flags = PCI_IRQ_ALL_TYPES;
-+	else
-+		flags = PCI_IRQ_MSI_TYPES;
- 	maxvec = (nent && *nent) ? *nent : 1;
- 	nvec = pci_alloc_irq_vectors(dd->pcidev, 1, maxvec, flags);
- 	if (nvec < 0)
+ 	if (msi && pci_msi_enabled()) {
+ 		stat = pci_alloc_irq_vectors(dev->pdev, 1, nr,
+-					     PCI_IRQ_MSI | PCI_IRQ_MSIX);
++					     PCI_IRQ_MSI_TYPES);
+ 		if (stat >= 1) {
+ 			dev->msi = stat;
+ 			dev_info(dev->dev, "using %d MSI interrupt(s)\n",
 -- 
 2.17.2
 
