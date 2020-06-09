@@ -2,37 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 405FE1F36E3
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 11:19:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5427B1F36EA
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 11:19:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgFIJTB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 05:19:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29612 "EHLO mga17.intel.com"
+        id S1728373AbgFIJTR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 05:19:17 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4903 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbgFIJTB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:19:01 -0400
-IronPort-SDR: 5AuB9ru6QkibTWZWfg6GK6xvf3XXElVFQ2VOekvlZAlw14+qW0uPe8XzUU5g2tKnhMk0kD4gZD
- Pw3hQEcn15EA==
+        id S1728104AbgFIJTP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:19:15 -0400
+IronPort-SDR: XsDo5P/Co/74B7/Ic7s4204uum73imScqId6rP9CJPjHkIeFUAEn6Y1TglNGpKYcvWxVViZETI
+ 48oSY5c67yUw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:19:00 -0700
-IronPort-SDR: o4jZ4AQQVIZ8gej6Nqdy/HrrJ+Vd8uxwT+dXiQc+6NCJ8FfWM2l8t07LGWKt+I9RvhE9O7HfOZ
- tsxC3xPFy0Rg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:19:15 -0700
+IronPort-SDR: 15YJQR1U+wZ/oPcTRvFeV+F+/MC0LmREO3KWkdSokSXsxbiOfh1Ct+DDy/fBpHuEvWraUhYWb1
+ f0tRbv+dEWRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="306205547"
+   d="scan'208";a="295775697"
 Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by orsmga008.jf.intel.com with ESMTP; 09 Jun 2020 02:18:58 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jun 2020 02:19:13 -0700
 From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefano Garzarella <sgarzare@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/15] media: ddbridge: Use PCI_IRQ_MSI_TYPES where appropriate
-Date:   Tue,  9 Jun 2020 11:18:39 +0200
-Message-Id: <20200609091841.1430-1-piotr.stankiewicz@intel.com>
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 10/15] vmw_vmci: Use PCI_IRQ_ALL_TYPES where appropriate
+Date:   Tue,  9 Jun 2020 11:19:10 +0200
+Message-Id: <20200609091911.1517-1-piotr.stankiewicz@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
 References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
@@ -47,22 +50,23 @@ of interrupt, or any type of message signalled interrupt, leverage it.
 Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- drivers/media/pci/ddbridge/ddbridge-main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/vmw_vmci/vmci_guest.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/ddbridge/ddbridge-main.c b/drivers/media/pci/ddbridge/ddbridge-main.c
-index 03dc9924fa2c..ff5c33d7a736 100644
---- a/drivers/media/pci/ddbridge/ddbridge-main.c
-+++ b/drivers/media/pci/ddbridge/ddbridge-main.c
-@@ -106,7 +106,7 @@ static void ddb_irq_msi(struct ddb *dev, int nr)
- 
- 	if (msi && pci_msi_enabled()) {
- 		stat = pci_alloc_irq_vectors(dev->pdev, 1, nr,
--					     PCI_IRQ_MSI | PCI_IRQ_MSIX);
-+					     PCI_IRQ_MSI_TYPES);
- 		if (stat >= 1) {
- 			dev->msi = stat;
- 			dev_info(dev->dev, "using %d MSI interrupt(s)\n",
+diff --git a/drivers/misc/vmw_vmci/vmci_guest.c b/drivers/misc/vmw_vmci/vmci_guest.c
+index cc8eeb361fcd..ea300573f652 100644
+--- a/drivers/misc/vmw_vmci/vmci_guest.c
++++ b/drivers/misc/vmw_vmci/vmci_guest.c
+@@ -584,8 +584,7 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
+ 	error = pci_alloc_irq_vectors(pdev, VMCI_MAX_INTRS, VMCI_MAX_INTRS,
+ 			PCI_IRQ_MSIX);
+ 	if (error < 0) {
+-		error = pci_alloc_irq_vectors(pdev, 1, 1,
+-				PCI_IRQ_MSIX | PCI_IRQ_MSI | PCI_IRQ_LEGACY);
++		error = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
+ 		if (error < 0)
+ 			goto err_remove_bitmap;
+ 	} else {
 -- 
 2.17.2
 
