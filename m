@@ -2,88 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5411F4581
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 20:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACF751F467F
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 20:44:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388808AbgFISRD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 14:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45556 "EHLO
+        id S1728995AbgFISoN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 14:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388803AbgFISQ4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jun 2020 14:16:56 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D117C05BD1E;
-        Tue,  9 Jun 2020 11:16:56 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r9so3734094wmh.2;
-        Tue, 09 Jun 2020 11:16:56 -0700 (PDT)
+        with ESMTP id S1728410AbgFISoL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jun 2020 14:44:11 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB008C05BD1E;
+        Tue,  9 Jun 2020 11:44:09 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t16so8375542plo.7;
+        Tue, 09 Jun 2020 11:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ug8wVISZ12XWMBvX4HHfCm0Fc+Zf7t4MD5f5/8sqw/s=;
-        b=aO1nwJ4j0QobhNHEzgQZPBk/MtjQ5+6OjtVmG/ySo4zqByYb+/ekvWrbJg4WzX9ZJY
-         /yl3MaUYY8i+0jByrV8k5+GXrRGgSjnvFRctKbNH7aps+d97KS6NYURBz/1/C3Io6U1h
-         W3rWAyB+szhELBy3FnhZZF3ILg+PGEEKLfXnR0ArptM5dYaomVp1X8QWGprM6oPG9hWe
-         62odnXYw+OmDgiPQgPLig5QSs5bOC0gvs8tGXlcB/jy2ySj4gsgF1sIFqa7IwumGfTSp
-         vkOQ0BKvJrSY5SD83Jx1gJ4h642264tiLIO3jkKWPDsni6NTRfxYHgY0a7INa4EyzvZ5
-         IU3A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uU2WSCc5fTUsgnysxzRNJxs8r/CkSU3tfyTjN091RxU=;
+        b=p9vwKPysRmyJpJidWcr/XZ5LPsj43gV5ylOJjIZy175anrIA0q0aXevn1w6L/tHw/2
+         CilRpz/A8s2Xgv66x+c5mJz9vnhs1M0AgkR2ZcF8llNB8ODgtv7yARYe8yqWxe67VcSl
+         eIXVmSioCEdDx/33i6p7MvUfrvtYy0/HDQhyuhDHJ58n7e+r5VBzSLiCXZSxfQG0tRcR
+         HhEnSrEO2ZuW9ibsFl4klHuJQsc7z0gSzT+Z3WRuhOoCOCAzEQ5MKiVF31zRcd6kdTFq
+         FfHFfprwiRoFz7vM50w46S4UN0PGMn6qorzg0xzKNinpDPZFMCCj1pEYjInhfYtc+Hwn
+         77PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ug8wVISZ12XWMBvX4HHfCm0Fc+Zf7t4MD5f5/8sqw/s=;
-        b=K5QIoMlADkgskwNxisWM5JGVeW3JwlBYYtIUSkZuePJR4wipPTjSFR8rFGHgnms+Me
-         jlnBNm6SV4nyQZtRh9E6EcvSTLPIyhpzXGJz7mX7N/9u8oyF1DcVYs6C+0CHDtDhp9SD
-         BV3AxNMHVUWHzuw6p/8ofYvuhCycVRjOfMG/3SiJuLU+t5rNDpmz79WNKQcR7W9ntZEj
-         quiCUWpJi9a9Yb8/jqfulXYkca66OeyNedXGjBfiD6sZJgYS5W9FfluC3MBbugEbYLtD
-         Ks4y6nJNjFUhwnN2mb1ucw73jajKCMSyZrMBw4/+Ic3v738+LJUhVgMBCjcGjQn0fZrv
-         x5rw==
-X-Gm-Message-State: AOAM531Czij67blz0CWIOy+xEkd1b/X+2uy/n63avrfHzIBvQnPIVp0T
-        k5uio6LMW7kjOBrvaAuUyfFBjRjU
-X-Google-Smtp-Source: ABdhPJxOL4Ecmn0J0+sDHkxj1gGfa8vi3rcCIlrDSLzWe0OKpWBizVJBPiBgM6xRFNZZy0uAqRJF5g==
-X-Received: by 2002:a1c:544d:: with SMTP id p13mr5596028wmi.25.1591726614810;
-        Tue, 09 Jun 2020 11:16:54 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id b8sm4705442wrs.36.2020.06.09.11.16.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 11:16:54 -0700 (PDT)
-Subject: Re: [PATCH v2 3/9] ARM: dts: bcm2711: Add firmware usb reset node
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
- <20200609175003.19793-4-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <1994ce6d-0599-3203-b512-a4e93528910b@gmail.com>
-Date:   Tue, 9 Jun 2020 11:16:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uU2WSCc5fTUsgnysxzRNJxs8r/CkSU3tfyTjN091RxU=;
+        b=dkMXabmKuCPIb5VuIkPE1uZtBPiMOxP210rDM8F8s8hLxvUZbOk62Sa83CztWrRRkZ
+         8Hk4HBs+e2a+KcjzfM+7iugzHmr2ZpXPNhQ4UDwNKCKZWkfwgOLICnFx6GBmR3ZFWP0H
+         8hyB+/j8ubJMRGnsnwClMb2dSPlwjU0KC9xsJhbNVMI9SZVEVP+ZtlxXZu6Kj71FaHWB
+         YCrkaTZPyd77J4XU7sx+sT8Lny0TW4duJTDYL0+A1MQejJRxp8F+UvymUhqRYz9fsay7
+         tObUhi0Lk1ewnzz8MgRMhCkTMt+ivLJHmdAIaO/rtc5gjGFmwhLSgh/DPhsyBsP3lv3K
+         6KwA==
+X-Gm-Message-State: AOAM532dEr6b2R3vs9OQWko320/Mr8cQ7j3lEJDMFTZHrKwKHhBfqG/F
+        3Iudu+X/8eqRnnyAGAMEemN0GMx7bAJxsxr8NVs=
+X-Google-Smtp-Source: ABdhPJx0RiX4lxJ3jtBScoX+hSRo7BJa7PbBAuUa09WsYVDwWWg5oyAqW2t/Zz4dsplunUK1BR4yGxVPksOs9RAEVnw=
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr6162606pjr.181.1591728249457;
+ Tue, 09 Jun 2020 11:44:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200609175003.19793-4-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de> <20200609175003.19793-8-nsaenzjulienne@suse.de>
+In-Reply-To: <20200609175003.19793-8-nsaenzjulienne@suse.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 Jun 2020 21:43:57 +0300
+Message-ID: <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] usb: host: pci-quirks: Bypass xHCI quirks for
+ Raspberry Pi 4
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        USB <linux-usb@vger.kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jun 9, 2020 at 8:50 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> The board doesn't need the quirks to be run, and takes care of its own
+> initialization trough a reset controller device. So let's bypass them.
 
+through
 
-On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
-> Now that the reset driver exposing Raspberry Pi 4's firmware based USB
-> reset routine is available, let's add the device tree node exposing it.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+...
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> +       if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483 &&
+> +           of_device_is_compatible(of_get_parent(pdev->bus->dev.of_node),
+> +                                   "brcm,bcm2711-pcie"))
+> +               return;
+
+No put?
+
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
