@@ -2,115 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2BEB1F4803
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 22:23:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C7001F4896
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 23:04:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733166AbgFIUX5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 16:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbgFIUX4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jun 2020 16:23:56 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F9DC05BD1E;
-        Tue,  9 Jun 2020 13:23:56 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l26so4021537wme.3;
-        Tue, 09 Jun 2020 13:23:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ck1C6EXNHUjnwGhraJCX8UhZ310w3SODnS0Nvhpy7Ok=;
-        b=kCzVd5FILPb4egqErBHlATnOzfXPIbTWCRF8E98PDByFmSR91m7L94+UvwP+svZ4Dj
-         6R4uQ6sjO1OcpaMoRA/A99bINYdE3a5QamoJEqb8pPN/gwku6piVEwr5omelIVFse3Xu
-         YzarWMs7HObw6skg1BIbwg8ncKddn+/3xzWtyFtNdPnizy5iPTb3qrzqnPC5Q1v2tZKi
-         ZWdq9W4KX5No9iMpALXa9dApY7lkCO5o5GoLj6o27jtI1+cBrmwVg6bVlFmMmZ/srBJG
-         +PVMg0Vx68kelE+hzEkcFe8NZO9bQ1fknbV9Ro1zSy4Azu9o7KvCgzgvwjqqTKsmYWo6
-         O8dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ck1C6EXNHUjnwGhraJCX8UhZ310w3SODnS0Nvhpy7Ok=;
-        b=s0aPEHL3PJ8+rdNeBavtqbbMPYsAYx56mt3acTe8xtTSVoNHC1xZeXiqlLMxjhERw3
-         xoOC9equ1mWCxhEs4B9YsyLNmGdw9W97g4Ah6k+FwLl+uDQrCZnqDR8KVq6crmPBn1C8
-         xQijLMSYu5QVME8KkJJFryb/cu+eceT2R5oeIQhvsaITwfbyV07890faYyL1AfU/66T/
-         uixJJvNANoVSMTb0v4+Z8OpwoIde67ueEcOl18sjDBnDIQ42XiyudW+tFzrIjF43pG/T
-         RyroHwCQrc1LYJ87jf3w+Fi0nRF+PgIyrIMQY889ZHkiTaOMKJWOzFkW2Htp5qrxIcnE
-         /EwA==
-X-Gm-Message-State: AOAM532qNAHmvX15BgSGQvL0pEWWr2isk8coV37Luh9zoqZ5uWAPNx3r
-        JfYmTpCDkjwNPL0sUNl/Z6cm68fSHHQTV9Wu7ec=
-X-Google-Smtp-Source: ABdhPJwihJefCyui3E30tzcKp6cIuhvys9g/LJ6hC/9nbSQ9EPyOHipcwlZJG5XUXe+Q9lkGOQXaHWSptAQdy7oGtqY=
-X-Received: by 2002:a1c:541d:: with SMTP id i29mr438556wmb.73.1591734235174;
- Tue, 09 Jun 2020 13:23:55 -0700 (PDT)
+        id S1726888AbgFIVEE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 17:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgFIVEC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jun 2020 17:04:02 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F19920734;
+        Tue,  9 Jun 2020 21:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591736642;
+        bh=+/YoObOnMTDr/Y8JbI9ZCCUUmEH6TYbQ6zaa5y0pJ34=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eWWyU3V/twwncnFiKsfRI/Dw6AP48xi4InRBRSrOY2/B4bTSH30r2sa6yQY1cu/x+
+         PcHuEl/kz/e6+wYxEd2sMi4JQjN4uC/aDh7WWb6W/9m29cHvl6fkE7R7yH5tWDXQyj
+         dUvc/2Xxcln6+QeuMlKWp/tV6P7x1gN1uFcCJNhk=
+Date:   Tue, 9 Jun 2020 16:04:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rajat Jain <rajatja@google.com>, Rajat Jain <rajatxjain@gmail.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200609210400.GA1461839@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200609091148.32749-1-piotr.stankiewicz@intel.com> <20200609091804.1220-1-piotr.stankiewicz@intel.com>
-In-Reply-To: <20200609091804.1220-1-piotr.stankiewicz@intel.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 9 Jun 2020 16:23:44 -0400
-Message-ID: <CADnq5_N95PjqU4nMgZBL_PoNKk8ourb_k9HLGvR_RN5FeZ3tkg@mail.gmail.com>
-Subject: Re: [PATCH v3 07/15] drm/amdgpu: Use PCI_IRQ_MSI_TYPES where appropriate
-To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Aurabindo Pillai <mail@aurabindo.in>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        shaoyunl <shaoyun.liu@amd.com>, Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607113632.GA49147@kroah.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 5:18 AM Piotr Stankiewicz
-<piotr.stankiewicz@intel.com> wrote:
->
-> Seeing as there is shorthand available to use when asking for any type
-> of interrupt, or any type of message signalled interrupt, leverage it.
->
-> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
 
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+> Your "problem" I think can be summed up a bit more concise:
+> 	- you don't trust kernel drivers to be "secure" for untrusted
+> 	  devices
+> 	- you only want to bind kernel drivers to "internal" devices
+> 	  automatically as you "trust" drivers in that situation.
+> 	- you want to only bind specific kernel drivers that you somehow
+> 	  feel are "secure" to untrusted devices "outside" of a system
+> 	  when those devices are added to the system.
+> 
+> Is that correct?
+> 
+> If so, fine, you can do that today with the bind/unbind ability of
+> drivers, right?  After boot with your "trusted" drivers bound to
+> "internal" devices, turn off autobind of drivers to devices and then
+> manually bind them when you see new devices show up, as those "must" be
+> from external devices (see the bind/unbind files that all drivers export
+> for how to do this, and old lwn.net articles, this feature has been
+> around for a very long time.)
+> 
+> I know for USB you can do this, odds are PCI you can turn off
+> autobinding as well, as I think this is a per-bus flag somewhere.  If
+> that's not exported to userspace, should be trivial to do so, should be
+> somewere in the driver model already...
+> 
+> Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
+> sysfs for all busses.  Do those not work for you?
+> 
+> My other points are the fact that you don't want to put policy in the
+> kernel, and I think that you can do everything you want in userspace
+> today, except maybe the fact that trying to determine what is "inside"
+> and "outside" is not always easy given that most hardware does not
+> export this information properly, if at all.  Go work with the firmware
+> people on that issue please, that would be most helpful for everyone
+> involved to get that finally straightened out.
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> index 0cc4c67f95f7..97141aa81f32 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> @@ -248,17 +248,8 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
->         adev->irq.msi_enabled = false;
->
->         if (amdgpu_msi_ok(adev)) {
-> -               int nvec = pci_msix_vec_count(adev->pdev);
-> -               unsigned int flags;
-> -
-> -               if (nvec <= 0) {
-> -                       flags = PCI_IRQ_MSI;
-> -               } else {
-> -                       flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
-> -               }
->                 /* we only need one vector */
-> -               nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, flags);
-> -               if (nvec > 0) {
-> +               if (pci_alloc_irq_vectors(adev->pdev, 1, 1, PCI_IRQ_MSI_TYPES) > 0) {
->                         adev->irq.msi_enabled = true;
->                         dev_dbg(adev->dev, "using MSI/MSI-X.\n");
->                 }
-> --
-> 2.17.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+To sketch this out, my understanding of how this would work is:
+
+  - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+    today, but doing so would be trivial.  I think I would prefer a
+    sysfs name like "external" so it's more descriptive and less of a
+    judgment.
+
+    This comes from either the DT "external-facing" property or the
+    ACPI "ExternalFacingPort" property.  
+
+  - All devices present at boot are enumerated.  Any statically built
+    drivers will bind to them before any userspace code runs.
+
+    If you want to keep statically built drivers from binding, you'd
+    need to invent some mechanism so pci_driver_init() could clear
+    drivers_autoprobe after registering pci_bus_type.
+
+  - Early userspace code prevents modular drivers from automatically
+    binding to PCI devices:
+
+      echo 0 > /sys/bus/pci/drivers_autoprobe
+
+    This prevents modular drivers from binding to all devices, whether
+    present at boot or hot-added.
+
+  - Userspace code uses the sysfs "bind" file to control which drivers
+    are loaded and can bind to each device, e.g.,
+
+      echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
+
+Is that what you're thinking?  Is that enough for the control you
+need, Rajat?
