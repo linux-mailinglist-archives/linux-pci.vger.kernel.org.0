@@ -2,93 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACF751F467F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 20:44:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2BEB1F4803
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 22:23:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgFISoN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 14:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
+        id S1733166AbgFIUX5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 16:23:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgFISoL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jun 2020 14:44:11 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB008C05BD1E;
-        Tue,  9 Jun 2020 11:44:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t16so8375542plo.7;
-        Tue, 09 Jun 2020 11:44:09 -0700 (PDT)
+        with ESMTP id S1728272AbgFIUX4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jun 2020 16:23:56 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F9DC05BD1E;
+        Tue,  9 Jun 2020 13:23:56 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id l26so4021537wme.3;
+        Tue, 09 Jun 2020 13:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uU2WSCc5fTUsgnysxzRNJxs8r/CkSU3tfyTjN091RxU=;
-        b=p9vwKPysRmyJpJidWcr/XZ5LPsj43gV5ylOJjIZy175anrIA0q0aXevn1w6L/tHw/2
-         CilRpz/A8s2Xgv66x+c5mJz9vnhs1M0AgkR2ZcF8llNB8ODgtv7yARYe8yqWxe67VcSl
-         eIXVmSioCEdDx/33i6p7MvUfrvtYy0/HDQhyuhDHJ58n7e+r5VBzSLiCXZSxfQG0tRcR
-         HhEnSrEO2ZuW9ibsFl4klHuJQsc7z0gSzT+Z3WRuhOoCOCAzEQ5MKiVF31zRcd6kdTFq
-         FfHFfprwiRoFz7vM50w46S4UN0PGMn6qorzg0xzKNinpDPZFMCCj1pEYjInhfYtc+Hwn
-         77PQ==
+        bh=ck1C6EXNHUjnwGhraJCX8UhZ310w3SODnS0Nvhpy7Ok=;
+        b=kCzVd5FILPb4egqErBHlATnOzfXPIbTWCRF8E98PDByFmSR91m7L94+UvwP+svZ4Dj
+         6R4uQ6sjO1OcpaMoRA/A99bINYdE3a5QamoJEqb8pPN/gwku6piVEwr5omelIVFse3Xu
+         YzarWMs7HObw6skg1BIbwg8ncKddn+/3xzWtyFtNdPnizy5iPTb3qrzqnPC5Q1v2tZKi
+         ZWdq9W4KX5No9iMpALXa9dApY7lkCO5o5GoLj6o27jtI1+cBrmwVg6bVlFmMmZ/srBJG
+         +PVMg0Vx68kelE+hzEkcFe8NZO9bQ1fknbV9Ro1zSy4Azu9o7KvCgzgvwjqqTKsmYWo6
+         O8dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uU2WSCc5fTUsgnysxzRNJxs8r/CkSU3tfyTjN091RxU=;
-        b=dkMXabmKuCPIb5VuIkPE1uZtBPiMOxP210rDM8F8s8hLxvUZbOk62Sa83CztWrRRkZ
-         8Hk4HBs+e2a+KcjzfM+7iugzHmr2ZpXPNhQ4UDwNKCKZWkfwgOLICnFx6GBmR3ZFWP0H
-         8hyB+/j8ubJMRGnsnwClMb2dSPlwjU0KC9xsJhbNVMI9SZVEVP+ZtlxXZu6Kj71FaHWB
-         YCrkaTZPyd77J4XU7sx+sT8Lny0TW4duJTDYL0+A1MQejJRxp8F+UvymUhqRYz9fsay7
-         tObUhi0Lk1ewnzz8MgRMhCkTMt+ivLJHmdAIaO/rtc5gjGFmwhLSgh/DPhsyBsP3lv3K
-         6KwA==
-X-Gm-Message-State: AOAM532dEr6b2R3vs9OQWko320/Mr8cQ7j3lEJDMFTZHrKwKHhBfqG/F
-        3Iudu+X/8eqRnnyAGAMEemN0GMx7bAJxsxr8NVs=
-X-Google-Smtp-Source: ABdhPJx0RiX4lxJ3jtBScoX+hSRo7BJa7PbBAuUa09WsYVDwWWg5oyAqW2t/Zz4dsplunUK1BR4yGxVPksOs9RAEVnw=
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr6162606pjr.181.1591728249457;
- Tue, 09 Jun 2020 11:44:09 -0700 (PDT)
+        bh=ck1C6EXNHUjnwGhraJCX8UhZ310w3SODnS0Nvhpy7Ok=;
+        b=s0aPEHL3PJ8+rdNeBavtqbbMPYsAYx56mt3acTe8xtTSVoNHC1xZeXiqlLMxjhERw3
+         xoOC9equ1mWCxhEs4B9YsyLNmGdw9W97g4Ah6k+FwLl+uDQrCZnqDR8KVq6crmPBn1C8
+         xQijLMSYu5QVME8KkJJFryb/cu+eceT2R5oeIQhvsaITwfbyV07890faYyL1AfU/66T/
+         uixJJvNANoVSMTb0v4+Z8OpwoIde67ueEcOl18sjDBnDIQ42XiyudW+tFzrIjF43pG/T
+         RyroHwCQrc1LYJ87jf3w+Fi0nRF+PgIyrIMQY889ZHkiTaOMKJWOzFkW2Htp5qrxIcnE
+         /EwA==
+X-Gm-Message-State: AOAM532qNAHmvX15BgSGQvL0pEWWr2isk8coV37Luh9zoqZ5uWAPNx3r
+        JfYmTpCDkjwNPL0sUNl/Z6cm68fSHHQTV9Wu7ec=
+X-Google-Smtp-Source: ABdhPJwihJefCyui3E30tzcKp6cIuhvys9g/LJ6hC/9nbSQ9EPyOHipcwlZJG5XUXe+Q9lkGOQXaHWSptAQdy7oGtqY=
+X-Received: by 2002:a1c:541d:: with SMTP id i29mr438556wmb.73.1591734235174;
+ Tue, 09 Jun 2020 13:23:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de> <20200609175003.19793-8-nsaenzjulienne@suse.de>
-In-Reply-To: <20200609175003.19793-8-nsaenzjulienne@suse.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 9 Jun 2020 21:43:57 +0300
-Message-ID: <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] usb: host: pci-quirks: Bypass xHCI quirks for
- Raspberry Pi 4
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        USB <linux-usb@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com> <20200609091804.1220-1-piotr.stankiewicz@intel.com>
+In-Reply-To: <20200609091804.1220-1-piotr.stankiewicz@intel.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 9 Jun 2020 16:23:44 -0400
+Message-ID: <CADnq5_N95PjqU4nMgZBL_PoNKk8ourb_k9HLGvR_RN5FeZ3tkg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/15] drm/amdgpu: Use PCI_IRQ_MSI_TYPES where appropriate
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Aurabindo Pillai <mail@aurabindo.in>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        shaoyunl <shaoyun.liu@amd.com>, Sam Ravnborg <sam@ravnborg.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 8:50 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+On Tue, Jun 9, 2020 at 5:18 AM Piotr Stankiewicz
+<piotr.stankiewicz@intel.com> wrote:
 >
-> The board doesn't need the quirks to be run, and takes care of its own
-> initialization trough a reset controller device. So let's bypass them.
+> Seeing as there is shorthand available to use when asking for any type
+> of interrupt, or any type of message signalled interrupt, leverage it.
+>
+> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-through
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 
-...
-
-> +       if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483 &&
-> +           of_device_is_compatible(of_get_parent(pdev->bus->dev.of_node),
-> +                                   "brcm,bcm2711-pcie"))
-> +               return;
-
-No put?
-
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> index 0cc4c67f95f7..97141aa81f32 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> @@ -248,17 +248,8 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
+>         adev->irq.msi_enabled = false;
+>
+>         if (amdgpu_msi_ok(adev)) {
+> -               int nvec = pci_msix_vec_count(adev->pdev);
+> -               unsigned int flags;
+> -
+> -               if (nvec <= 0) {
+> -                       flags = PCI_IRQ_MSI;
+> -               } else {
+> -                       flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
+> -               }
+>                 /* we only need one vector */
+> -               nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, flags);
+> -               if (nvec > 0) {
+> +               if (pci_alloc_irq_vectors(adev->pdev, 1, 1, PCI_IRQ_MSI_TYPES) > 0) {
+>                         adev->irq.msi_enabled = true;
+>                         dev_dbg(adev->dev, "using MSI/MSI-X.\n");
+>                 }
+> --
+> 2.17.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
