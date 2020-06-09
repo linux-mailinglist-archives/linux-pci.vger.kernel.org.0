@@ -2,100 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF32A1F3FB5
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 17:44:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ECE81F3FCA
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jun 2020 17:49:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbgFIPoV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 11:44:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32389 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgFIPoU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:44:20 -0400
-IronPort-SDR: x1PQhVfJKw0oFPhiHMSQ8hhoLNtys/bqJI8HJeO/Q/3BO4TaxxKyx4gyz1jl5AE3TXqjwIfrag
- raTnV4UDgCfQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 08:44:19 -0700
-IronPort-SDR: B3OCjkA00+WDlux1lmQ1P9O1e4pJaj2LD9l02uW46lOwaDhjnF5OXOF6p9F2gYMvkW+Gnsg+Ka
- 2B7QtNL69Agg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
-   d="scan'208";a="379769157"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 09 Jun 2020 08:44:16 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 09 Jun 2020 18:44:16 +0300
-Date:   Tue, 9 Jun 2020 18:44:16 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
-Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
-Message-ID: <20200609154416.GU247495@lahna.fi.intel.com>
-References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
+        id S1730067AbgFIPtQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 11:49:16 -0400
+Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:41222 "EHLO
+        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1729538AbgFIPtM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jun 2020 11:49:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gzpWaNjDvCeUY2xxp6peZc5kvZV+ww7/pZ37AoN8uNo=; b=St82luIsjVHMwZfLIUADVV6Uep
+        s2wvq8UDXGUWSV1Gr1ZXVoWqz6iAt9n+Jx/c/nJQrJ6znmW253uYMBUhZDG/GBUnrtDD0JJ6q8HKa
+        oystQW5RPiTAf7TKgdX3PycWWrZfaaPtGRKyd8jLwUk3ZafOY9TvaiKw6DZfl3ugsO6GVHnfi0HsB
+        4LbRE4fQMO3TdoHDmlS0A7IAKQe8tVwdfHAhy2HVdScai3Z1jN1IIf5wrmbok9keGvFOM8i+/sGDj
+        Rnsr8Ld5otHcos8//30//fyGc9rJF54cYhpiqqsX0EV4hueT9jzPLtjKuRlxHHye8se9ldfLsNn0e
+        vVU2uXbg==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jigUr-0005iA-LG; Tue, 09 Jun 2020 09:49:09 -0600
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609091440.497-1-piotr.stankiewicz@intel.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <0e0c77e7-b4fb-67f3-5c31-0de6a1ff39f6@deltatee.com>
+Date:   Tue, 9 Jun 2020 09:49:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200609091440.497-1-piotr.stankiewicz@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, jian-hong@endlessm.com, rdunlap@infradead.org, rafael.j.wysocki@intel.com, andriy.shevchenko@intel.com, linux-pci@vger.kernel.org, bhelgaas@google.com, piotr.stankiewicz@intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH v3 01/15] PCI/MSI: Forward MSI-X vector enable error code
+ in pci_alloc_irq_vectors_affinity()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 05:39:21PM +0200, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> On the Intel Cannon Point-LP laptop Dell Precision 3540 with a dedicated AMD
-> graphics card (both graphics devices can be used) with Debian Sid/unstable
-> with Linux 5.6.14, running lspci takes quite some time, and the screen even
-> flickers a short moment before the result is displayed.
-> 
-> Tracing lspci with strace, shows that the close() function of the three
-> devices takes from
-> 
-> •   00:1d.0 PCI bridge: Intel Corporation Cannon Point-LP PCI Express Root
-> Port #9
-> 
-> •   04:00.0 System peripheral: Intel Corporation JHL6340 Thunderbolt 3 NHI
-> (C step) [Alpine Ridge 2C 2016] (rev 02)
-> 
-> •   3b:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Lexa
-> XT [Radeon PRO WX 3100]
-> 
-> takes from 270 ms to 2.5 s.
-> 
-> > 11:43:21.714391 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:04:00.0/config", O_RDONLY) = 3
-> > 11:43:21.714448 pread64(3, "\206\200\331\25\6\4\20\0\2\0\200\10 \0\0\0\0\0\0\352\0\0\4\352\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0(\20\272\10\0\0\0\0\
-> > 200\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
-> > 11:43:24.487818 close(3)                = 0
-> 
-> > 11:43:24.489508 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:00:1d.0/config", O_RDONLY) = 3
-> > 11:43:24.489598 pread64(3, "\206\200\260\235\7\4\20\0\360\0\4\6\20\0\201\0\0\0\0\0\0\0\0\0\0;;\00000\0  \354 \354\1\300\21\320\0\0\0\0\0\0\0\0\0\0\0\0
-> > @\0\0\0\0\0\0\0\377\1\22\0", 64, 0) = 64
-> > 11:43:24.966661 close(3)                = 0
-> 
-> > 11:43:24.988544 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:3b:00.0/config", O_RDONLY) = 3
-> > 11:43:24.988584 pread64(3, "\2\20\205i\7\4\20\0\0\0\200\3\20\0\0\0\f\0\0\300\0\0\0\0\f\0\0\320\0\0\0\0\0010\0\0\0\0 \354\0\0\0\0(\20\272\10\0\0$\354H\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
-> > 11:43:25.252745 close(3)
-> 
-> Unfortunately, I forgot to collect the tree output, but hopefully the
-> attached Linux messages and strace of lspci output will be enough for the
-> start.
-> 
-> Please tell me, if you want me to create a bug report in the Linux bug
-> tracker.
 
-Can you try this commit?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/pm&id=ec411e02b7a2e785a4ed9ed283207cd14f48699d
+On 2020-06-09 3:14 a.m., Piotr Stankiewicz wrote:
+> When debugging an issue where I was asking the PCI machinery to enable a
+> set of MSI-X vectors, without falling back on MSI, I ran across a
+> behaviour which seems odd. The pci_alloc_irq_vectors_affinity() will
+> always return -ENOSPC on failure, when allocating MSI-X vectors only,
+> whereas with MSI fallback it will forward any error returned by
+> __pci_enable_msi_range(). This is a confusing behaviour, so have the
+> pci_alloc_irq_vectors_affinity() forward the error code from
+> __pci_enable_msix_range() when appropriate.
+> 
+> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 
-It should be in the mainline already as well.
+Looks fine to me:
 
-Note we still need to obey the delays required by the PCIe spec so 100ms
-after the link is trained but this one should at least get it down from
-1100ms.
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Thanks!
+
+> ---
+>  drivers/pci/msi.c | 22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 6b43a5455c7a..cade9be68b09 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -1191,8 +1191,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  				   struct irq_affinity *affd)
+>  {
+>  	struct irq_affinity msi_default_affd = {0};
+> -	int msix_vecs = -ENOSPC;
+> -	int msi_vecs = -ENOSPC;
+> +	int nvecs = -ENOSPC;
+>  
+>  	if (flags & PCI_IRQ_AFFINITY) {
+>  		if (!affd)
+> @@ -1203,17 +1202,16 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  	}
+>  
+>  	if (flags & PCI_IRQ_MSIX) {
+> -		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
+> -						    max_vecs, affd, flags);
+> -		if (msix_vecs > 0)
+> -			return msix_vecs;
+> +		nvecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
+> +						affd, flags);
+> +		if (nvecs > 0)
+> +			return nvecs;
+>  	}
+>  
+>  	if (flags & PCI_IRQ_MSI) {
+> -		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
+> -						  affd);
+> -		if (msi_vecs > 0)
+> -			return msi_vecs;
+> +		nvecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
+> +		if (nvecs > 0)
+> +			return nvecs;
+>  	}
+>  
+>  	/* use legacy IRQ if allowed */
+> @@ -1231,9 +1229,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  		}
+>  	}
+>  
+> -	if (msix_vecs == -ENOSPC)
+> -		return -ENOSPC;
+> -	return msi_vecs;
+> +	return nvecs;
+>  }
+>  EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+>  
+> 
