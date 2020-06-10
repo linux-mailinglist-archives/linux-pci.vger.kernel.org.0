@@ -2,119 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB20B1F4FDA
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 10:00:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3A391F518B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 11:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgFJIAe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 04:00:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFJIAd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 04:00:33 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF46C03E96B
-        for <linux-pci@vger.kernel.org>; Wed, 10 Jun 2020 01:00:33 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bh7so651109plb.11
-        for <linux-pci@vger.kernel.org>; Wed, 10 Jun 2020 01:00:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=FigR6Fu5ol375mSGWPn8xPCDdjv0gWOe2L/pdNKXlMU=;
-        b=JfDwzSE1KL+Q3A2TyU/jrhZCyadqfoBvLT8/R1PiG7xIUCM9Np6BoUuvUThDVaPg8g
-         BBcjRPSEvm7MKSwK6/6K9Fi+fCJ6glJxWTocuPbALAaJDHZUB6U1FgovZ/xxExGhG8rF
-         fHpATrWhTB88V6xY/+U6CWxgy9fQoMI0/C9fbgUiK3NcPhIzEYHxXDsCeNaWpUUiovtO
-         AdPGmoG+P5SK0964eCJdCf5aB102wsxPXShkx84U+V5Oa74EJJp7p/5s40c6MbV3Hxpp
-         2u40QuCnikfdSGIoh9UWqCCr6ZWo/IZYU78O8pz787ZET6ttaHdTHxNsRh/bwm/YG+Z+
-         y2KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=FigR6Fu5ol375mSGWPn8xPCDdjv0gWOe2L/pdNKXlMU=;
-        b=esPxOl5f+d93lJvTHzKqADHLmNN93vrFNkMFJN6OMSFWn8PbwvZMENoZRPe0WoNfWb
-         C+LFM1UaKvOQGBNVDHLH7wcySN0eHUCcp5PN3ZKwp5KZLOPiyMIg9BXoUV+AMXHjnyjS
-         z1vOKIp8AFNh2G5U8jltTbEAvBo0wVdcv+lvJXrn8KNZUuCOpLbsIxsik5t4dcpi3kWd
-         U3dqdzM5wESnt/w6hGo5UzX2yiX8UmzqtLPDu5GJpa2Yaum0M7hP1UZDIdNSJb02kk4I
-         y8PtVJtG5lvXajbDDygRs3Dq0ps6tkA7Xw8mNYZ7Ik5NjDvMy+huLvOPy07JUVfzvswP
-         to8w==
-X-Gm-Message-State: AOAM530ZT93xwlsoddKYlfcXtV3TS03RVxRkOTQ7c6HB061i1wteFgLm
-        MDuJSOK0RCTF4XU3UDAF/cdyYg==
-X-Google-Smtp-Source: ABdhPJzY4RL5uoL9pRdeLuYeuNjs4x/6PpiYJXQajEAvHLXl1ObfWln4wZQ6tkSwkGLsn5ipTX/Fqw==
-X-Received: by 2002:a17:902:ee12:: with SMTP id z18mr1884864plb.274.1591776032640;
-        Wed, 10 Jun 2020 01:00:32 -0700 (PDT)
-Received: from [10.175.1.226] ([45.135.186.20])
-        by smtp.gmail.com with ESMTPSA id g19sm11992320pfo.209.2020.06.10.01.00.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 01:00:32 -0700 (PDT)
-Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, kenneth-lee-2012@foxmail.com,
-        Wangzhou <wangzhou1@hisilicon.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
- <20200610074633.GA6844@myrica>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
-Date:   Wed, 10 Jun 2020 16:00:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727939AbgFJJwV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 05:52:21 -0400
+Received: from mga01.intel.com ([192.55.52.88]:32460 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbgFJJwV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:52:21 -0400
+IronPort-SDR: cduVAJmSd528RDmgIk+Mld6BseDiHugEed6+7LwJJmXVKZ2ISNf7Sz1KzUlKw3aIqJMAmfXDEK
+ Y8yid7HmNRZw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 02:52:20 -0700
+IronPort-SDR: ZzvQkhgHvZvcqUrsFkdxNV042deSsHvS0fa9T3uHHvJaSIVqlnf2duh5G5SMtRJVqC7f+Ipxy2
+ DRs7ZtW3wSyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,495,1583222400"; 
+   d="scan'208";a="380013092"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 10 Jun 2020 02:52:18 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 10 Jun 2020 12:52:17 +0300
+Date:   Wed, 10 Jun 2020 12:52:17 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
+Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
+Message-ID: <20200610095217.GE247495@lahna.fi.intel.com>
+References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
+ <20200609154416.GU247495@lahna.fi.intel.com>
+ <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
 MIME-Version: 1.0
-In-Reply-To: <20200610074633.GA6844@myrica>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 08:18:07AM +0200, Paul Menzel wrote:
+> Thank you for replying so quickly. Hopefully, I’ll be able to test the
+> commit tomorrow.
+> 
+> One question though. The commit talks about resuming from suspend. I
+> understand that training happens there.
+> 
+> In my case the system is already running. So I wonder, why link(?) training
+> would still happening.
 
-
-On 2020/6/10 下午3:46, Jean-Philippe Brucker wrote:
-> On Wed, Jun 10, 2020 at 12:18:14PM +0800, Zhangfei Gao wrote:
->> Some platform devices appear as PCI and have PCI cfg space,
->> but are actually on the AMBA bus.
->> They can support PASID via smmu stall feature, but does not
->> support tlp since they are not real pci devices.
->> So remove tlp as a PASID dependency.
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> ---
->>   drivers/pci/ats.c | 3 ---
->>   1 file changed, 3 deletions(-)
->>
->> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->> index 390e92f..8e31278 100644
->> --- a/drivers/pci/ats.c
->> +++ b/drivers/pci/ats.c
->> @@ -344,9 +344,6 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
->>   	if (WARN_ON(pdev->pasid_enabled))
->>   		return -EBUSY;
->>   
->> -	if (!pdev->eetlp_prefix_path)
->> -		return -EINVAL;
->> -
-> This check is useful, and follows the PCI specification (4.0r1.0
-> 2.2.10.2 End-End TLP Prefix Processing: "Software should ensure that TLPs
-> containing End-End TLP Prefixes are not sent to components that do not
-> support them.")
-Thanks Jean,
->
-> Why not set the eetlp_prefix_path bit from a PCI quirk?  Unlike the stall
-> problem from the other thread, this one looks like a simple design mistake
-> that can be fixed easily in future iterations of the platform: just set
-> the "End-End TLP Prefix Supported" bit in the Device Capability 2 Register
-> of all bridges.
-Yes, we can still set eetlp_prefix_path bit from a PCI quirk.
-
-And we also have considered adding this bit in Device Capability 2 
-Register in future silicon.
-But we hesitated that it does reflect the real function: from register, 
-it can support tlp, but in fact, it does not.
-
-Thanks
-
+It also includes runtime PM so when the PCIe topology goes into D3cold
+the links are "down" so once you run tool such as lspci the links need
+to be re-trained to be able to access the devices connected to them.
