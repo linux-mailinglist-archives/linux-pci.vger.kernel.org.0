@@ -2,130 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E6C1F4AE9
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 03:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C4DC1F4B82
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 04:40:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgFJBeV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jun 2020 21:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgFJBeU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jun 2020 21:34:20 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2BAC05BD1E;
-        Tue,  9 Jun 2020 18:34:20 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id d5so358064ios.9;
-        Tue, 09 Jun 2020 18:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D4aH15SSO22KRv//RjmrlnG6X17+Svv1DvzlLOVYd3o=;
-        b=ngW+kKhf6SJziSfTZxxL1vNqjFom7hR4s8X5dKIgSrGLPkxXs6wCdBfRQGBtTVRK36
-         zYnUTutj8F0hMquKcz4NFDLCE78ekqy1E3wyRLtad+MT1uFKqrBmrxObe906H2J2xaLB
-         bGhShr7/lQ8d93ms4GpqM55lPr8iGTNBFovmwJuNAO4nkLXsXCl74MBFcX7cQ6JdDZuq
-         eLYVcam3zXwvINE2GUyUM31tmZm+M7KEqNWgIyq4CdRAPtMJmyTUwNeynK6QuDzRdid6
-         TRs1If3lM8Mv3gBb5Fk9t4qCDo4qhHvOGj6gBaRYHxfJsnFUyqRJA7fbDZqYlNlMvReh
-         pFYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D4aH15SSO22KRv//RjmrlnG6X17+Svv1DvzlLOVYd3o=;
-        b=t+RQ8dJ7+gxpsCdwmAbIdFUFqS0CrUNPo/GnkqqmWG0HzjIHYbabe/4mKBi6D03PUz
-         kCc/55ZPCk43yOlEm2K+gMEzUXZd8YIczxISMZbSbIfomo1rjEIQ6873tCAOaIlOmK45
-         Ay/xuFBMhtPqgfNLBBo0vRihtJM4pyFFsX9RlUQdLNBgGaK9gvOF2CSZ7mWNIPmWDYxs
-         N37NahaUgbN9ColtHtt8wRML+kQlCJIns6d5aZ2h+f9WqNx7XyoPpkiZt2wTUzW4aIs6
-         89Iuewk8U7LXdGZDEqHO+n6F1SaNxvWfOVRdF1VWuTdxdR3jtUfcMcS5ymR8cK08QwBp
-         O6IA==
-X-Gm-Message-State: AOAM531EBru0nKYye4RaOgGg2wqQGKyaXq6By80ypJamzk+VkB364Pk6
-        WrtQefgNpZYHRvEYhoG/lZFZ0uwo5gcd7XlznLk=
-X-Google-Smtp-Source: ABdhPJwEMTnnLXlPXBnlrmuAt383evVY9uUlUpumRO3Nas7YGaGR+fO7L1y902PECLdfkFXgVneS4zHjpxOHXTP6mVE=
-X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr977606iow.75.1591752859010;
- Tue, 09 Jun 2020 18:34:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
-In-Reply-To: <20200609210400.GA1461839@bjorn-Precision-5520>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 10 Jun 2020 11:34:06 +1000
-Message-ID: <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        id S1725944AbgFJCkY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jun 2020 22:40:24 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:50216 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725927AbgFJCkW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jun 2020 22:40:22 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT9_3R+BeKBdAAA--.3191S2;
+        Wed, 10 Jun 2020 10:39:51 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] PCI: Loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+Date:   Wed, 10 Jun 2020 10:39:50 +0800
+Message-Id: <1591756790-12081-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxT9_3R+BeKBdAAA--.3191S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrW3Wr18tF4UGF48ZryrZwb_yoW8Gr17p3
+        45Aa17KF4ftrs8A3WDX3yDGas8ZF93G34kCFWfuwnFgasxXa4UWry2k3ZYvF4UJrZ7XayU
+        ZayDCw18Can8ur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+        Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
+        xVA2Y2ka0xkIwI1lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
+        Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUbN6pPUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 7:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> To sketch this out, my understanding of how this would work is:
->
->   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
->     today, but doing so would be trivial.  I think I would prefer a
->     sysfs name like "external" so it's more descriptive and less of a
->     judgment.
->
->     This comes from either the DT "external-facing" property or the
->     ACPI "ExternalFacingPort" property.
+Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
+for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
+has no effect.
 
-I don't think internal / external is the right distinction to be
-making. We have a similar trust issue with the BMC in servers even
-though they're internal devices. They're typically network accessible
-and infrequently updated so treating them as trustworthy isn't a great
-idea. We have been slowly de-privileging the BMC over the last few
-years, but the PCIe interface isn't locked down enough for my liking
-since the SoCs we use do allow software to set the VDID and perform
-arbitrary DMAs (thankfully limited to 32bit). If we're going to add in
-infrastructure for handling possibly untrustworthy PCI devices then
-I'd like to use that for BMCs too.
+Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
->   - All devices present at boot are enumerated.  Any statically built
->     drivers will bind to them before any userspace code runs.
->
->     If you want to keep statically built drivers from binding, you'd
->     need to invent some mechanism so pci_driver_init() could clear
->     drivers_autoprobe after registering pci_bus_type.
->
->   - Early userspace code prevents modular drivers from automatically
->     binding to PCI devices:
->
->       echo 0 > /sys/bus/pci/drivers_autoprobe
->
->     This prevents modular drivers from binding to all devices, whether
->     present at boot or hot-added.
+This patch is based on mips-next tree.
 
-I don't see why this is preferable to just disabling autoprobe for
-untrusted devices. That would dovetail nicely with Rajat's whitelist
-idea if we want to go down that route and I think we might want to.
-The BMC usually provides some form of VGA console and we'd like that
-to continue working out-of-the-box without too much user (or distro)
-intervention.
+ drivers/pci/controller/pci-loongson.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Oliver
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 459009c..58b862a 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+ {
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+ }
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_0, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_1, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_2, bridge_class_quirk);
+ 
+ static void system_bus_quirk(struct pci_dev *pdev)
+-- 
+2.1.0
+
