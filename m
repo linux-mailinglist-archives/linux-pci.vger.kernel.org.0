@@ -2,105 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DDD31F4F72
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 09:47:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB20B1F4FDA
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 10:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgFJHqq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 03:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
+        id S1726652AbgFJIAe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 04:00:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgFJHqp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 03:46:45 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE35C03E96B
-        for <linux-pci@vger.kernel.org>; Wed, 10 Jun 2020 00:46:45 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q11so1092467wrp.3
-        for <linux-pci@vger.kernel.org>; Wed, 10 Jun 2020 00:46:45 -0700 (PDT)
+        with ESMTP id S1726081AbgFJIAd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 04:00:33 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF46C03E96B
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jun 2020 01:00:33 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh7so651109plb.11
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jun 2020 01:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Awbgv42OMXGb6ctOD7E4FBtvK9ls7UGron4i9/J0u1w=;
-        b=BptUjTfvTvB5LiiymmCDDSbS8OMNpZTb6zRCZtjzKJEyulu4PyOPyHpvfNYbD0fJBa
-         SKgfne31eOEXdfN1GV/veMWiYl+cHbGK8Hy8oNUN54Br2HERl4B9nZMtawM3IBLcyWWy
-         BuLB2yDdUkPCWL4zHD5C9x8YJjIQid97OrN/bIUPE6TUFaDCeYRc1RdQr3H+W3FW3St8
-         SUGpW0OxDcSSLIdiBmUW6Nx4DZzrKTs4VDbxzBCEk59zUIFLD+Pv+PLA4g+8HuCFs21/
-         QsauO9rl/YnIBk1eqhThpNCidjlBQVC7rV0oB614eZ+QEtCdI3JIbQCauFQIm4mfXoQV
-         WcGg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=FigR6Fu5ol375mSGWPn8xPCDdjv0gWOe2L/pdNKXlMU=;
+        b=JfDwzSE1KL+Q3A2TyU/jrhZCyadqfoBvLT8/R1PiG7xIUCM9Np6BoUuvUThDVaPg8g
+         BBcjRPSEvm7MKSwK6/6K9Fi+fCJ6glJxWTocuPbALAaJDHZUB6U1FgovZ/xxExGhG8rF
+         fHpATrWhTB88V6xY/+U6CWxgy9fQoMI0/C9fbgUiK3NcPhIzEYHxXDsCeNaWpUUiovtO
+         AdPGmoG+P5SK0964eCJdCf5aB102wsxPXShkx84U+V5Oa74EJJp7p/5s40c6MbV3Hxpp
+         2u40QuCnikfdSGIoh9UWqCCr6ZWo/IZYU78O8pz787ZET6ttaHdTHxNsRh/bwm/YG+Z+
+         y2KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Awbgv42OMXGb6ctOD7E4FBtvK9ls7UGron4i9/J0u1w=;
-        b=FIYSoJuYip54WL7IfdT9dYMbY+DQPSN2zWq7hTxl+fL7mz8sRQs2XLs4uVGtNK8Qh1
-         EagAlNwlnPl3xNub0SftetJ7UBNNgj7D8CEvHZMop2zVCX1wr37FMSPlux+uUoej3z4K
-         mooIB6AyAuMmPL8rf8kLQd0gTSXqTFIYA7L0EEQsp/YnSgjqYuus0A+Ihvv130Tc8Ewj
-         ipil+tyWJxsZOo7YAVXHb7xm0Ap1+TOZbf//bUivOQYU+r80faKS2SLMZyBBbFQ6xEHy
-         4XLmfBrdiFzjxIAnmGUnAqS5YKvPmatkLoIIbLRgn4Is7Eey3gN8jmhDHt/GCiE6b5QG
-         Jazg==
-X-Gm-Message-State: AOAM533grEgYyicaXz1TdDxUJXk73NHRLNo9/Xn3abNxQvArLDx1cF2Y
-        23mX/66/eYZnsMMj8En979/Jqw==
-X-Google-Smtp-Source: ABdhPJzkV9QPPpMLfpxD7CIlFFiHZCG/SnoIDk6DQokkgAFu5bO6biRCrF7dhJ/EXug3tzFjbGxgqg==
-X-Received: by 2002:adf:f4d2:: with SMTP id h18mr2129295wrp.370.1591775204095;
-        Wed, 10 Jun 2020 00:46:44 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id d5sm6908771wrb.14.2020.06.10.00.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 00:46:43 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 09:46:33 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=FigR6Fu5ol375mSGWPn8xPCDdjv0gWOe2L/pdNKXlMU=;
+        b=esPxOl5f+d93lJvTHzKqADHLmNN93vrFNkMFJN6OMSFWn8PbwvZMENoZRPe0WoNfWb
+         C+LFM1UaKvOQGBNVDHLH7wcySN0eHUCcp5PN3ZKwp5KZLOPiyMIg9BXoUV+AMXHjnyjS
+         z1vOKIp8AFNh2G5U8jltTbEAvBo0wVdcv+lvJXrn8KNZUuCOpLbsIxsik5t4dcpi3kWd
+         U3dqdzM5wESnt/w6hGo5UzX2yiX8UmzqtLPDu5GJpa2Yaum0M7hP1UZDIdNSJb02kk4I
+         y8PtVJtG5lvXajbDDygRs3Dq0ps6tkA7Xw8mNYZ7Ik5NjDvMy+huLvOPy07JUVfzvswP
+         to8w==
+X-Gm-Message-State: AOAM530ZT93xwlsoddKYlfcXtV3TS03RVxRkOTQ7c6HB061i1wteFgLm
+        MDuJSOK0RCTF4XU3UDAF/cdyYg==
+X-Google-Smtp-Source: ABdhPJzY4RL5uoL9pRdeLuYeuNjs4x/6PpiYJXQajEAvHLXl1ObfWln4wZQ6tkSwkGLsn5ipTX/Fqw==
+X-Received: by 2002:a17:902:ee12:: with SMTP id z18mr1884864plb.274.1591776032640;
+        Wed, 10 Jun 2020 01:00:32 -0700 (PDT)
+Received: from [10.175.1.226] ([45.135.186.20])
+        by smtp.gmail.com with ESMTPSA id g19sm11992320pfo.209.2020.06.10.01.00.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 01:00:32 -0700 (PDT)
+Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>, kenneth-lee-2012@foxmail.com,
         Wangzhou <wangzhou1@hisilicon.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
-Message-ID: <20200610074633.GA6844@myrica>
 References: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200610074633.GA6844@myrica>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
+Date:   Wed, 10 Jun 2020 16:00:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
+In-Reply-To: <20200610074633.GA6844@myrica>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 12:18:14PM +0800, Zhangfei Gao wrote:
-> Some platform devices appear as PCI and have PCI cfg space,
-> but are actually on the AMBA bus.
-> They can support PASID via smmu stall feature, but does not
-> support tlp since they are not real pci devices.
-> So remove tlp as a PASID dependency.
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  drivers/pci/ats.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 390e92f..8e31278 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -344,9 +344,6 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
->  	if (WARN_ON(pdev->pasid_enabled))
->  		return -EBUSY;
->  
-> -	if (!pdev->eetlp_prefix_path)
-> -		return -EINVAL;
-> -
 
-This check is useful, and follows the PCI specification (4.0r1.0
-2.2.10.2 End-End TLP Prefix Processing: "Software should ensure that TLPs
-containing End-End TLP Prefixes are not sent to components that do not
-support them.")
 
-Why not set the eetlp_prefix_path bit from a PCI quirk?  Unlike the stall
-problem from the other thread, this one looks like a simple design mistake
-that can be fixed easily in future iterations of the platform: just set
-the "End-End TLP Prefix Supported" bit in the Device Capability 2 Register
-of all bridges.
+On 2020/6/10 下午3:46, Jean-Philippe Brucker wrote:
+> On Wed, Jun 10, 2020 at 12:18:14PM +0800, Zhangfei Gao wrote:
+>> Some platform devices appear as PCI and have PCI cfg space,
+>> but are actually on the AMBA bus.
+>> They can support PASID via smmu stall feature, but does not
+>> support tlp since they are not real pci devices.
+>> So remove tlp as a PASID dependency.
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> ---
+>>   drivers/pci/ats.c | 3 ---
+>>   1 file changed, 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+>> index 390e92f..8e31278 100644
+>> --- a/drivers/pci/ats.c
+>> +++ b/drivers/pci/ats.c
+>> @@ -344,9 +344,6 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+>>   	if (WARN_ON(pdev->pasid_enabled))
+>>   		return -EBUSY;
+>>   
+>> -	if (!pdev->eetlp_prefix_path)
+>> -		return -EINVAL;
+>> -
+> This check is useful, and follows the PCI specification (4.0r1.0
+> 2.2.10.2 End-End TLP Prefix Processing: "Software should ensure that TLPs
+> containing End-End TLP Prefixes are not sent to components that do not
+> support them.")
+Thanks Jean,
+>
+> Why not set the eetlp_prefix_path bit from a PCI quirk?  Unlike the stall
+> problem from the other thread, this one looks like a simple design mistake
+> that can be fixed easily in future iterations of the platform: just set
+> the "End-End TLP Prefix Supported" bit in the Device Capability 2 Register
+> of all bridges.
+Yes, we can still set eetlp_prefix_path bit from a PCI quirk.
 
-Thanks,
-Jean
+And we also have considered adding this bit in Device Capability 2 
+Register in future silicon.
+But we hesitated that it does reflect the real function: from register, 
+it can support tlp, but in fact, it does not.
+
+Thanks
+
