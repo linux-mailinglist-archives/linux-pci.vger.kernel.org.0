@@ -2,103 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AD431F5870
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 17:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E6EF1F5888
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 18:07:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgFJP5O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 11:57:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43328 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgFJP5O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:57:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0ACD7AD0D;
-        Wed, 10 Jun 2020 15:57:16 +0000 (UTC)
-Message-ID: <07cdfbbacb0f48e3671f4c7197a1ea58d99845e1.camel@suse.de>
-Subject: Re: [PATCH v2 7/9] usb: host: pci-quirks: Bypass xHCI quirks for
- Raspberry Pi 4
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
+        id S1730461AbgFJQHK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 12:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727813AbgFJQHJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 12:07:09 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DC2C03E96B;
+        Wed, 10 Jun 2020 09:07:08 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id m21so1773104eds.13;
+        Wed, 10 Jun 2020 09:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JY2Z05wEjT8R9Sg8HziVbw08CeVdBXBZ3omkpyDUIzA=;
+        b=dnV4ZJgJdAsDZJy/TPbwjrsCspuam2T88UdIM3M6XgPm+h2Ttt+oZtBt/m4PI3c3zF
+         JoxNomgqAf1ZkdsKW+heA/d5GPNxl9HeiOCy1VrIbYf8zxW0hnsohInNDqjrIPn3yKH9
+         nT831LHonxnwqHRgvSyCKUfKbDWZ2R32qwtEutL4KWz4oHkadp7pjg/qgREVO9YNxrrr
+         DUofDtrbAKkY0B4kwIg691RvVYMB2bjhRqNN9yd+swWuY4vr0g7BiLaJAj1ubFZ1JYQ2
+         Vw+qDjNtm25yCxNrago1akR8LUODwg/x7KHD1VVWNdLUOgVy40EOBZZoHvvL8h+IBpk/
+         yanA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JY2Z05wEjT8R9Sg8HziVbw08CeVdBXBZ3omkpyDUIzA=;
+        b=BrFNB4u+8K4EB+NAsWlC+ut2rHLzo5lpzlcVF7Oz+0fcmhaDMZbANytZGFFH6alEvK
+         EdcGoRRMi9KvOTcsJipSOVOGsNhvGVIO3Lf9hpgnsAf7JY6ENcUUtnRhp5ZO9dbmwFOF
+         xl/nOCJ/GFN4ldgk7KeZa8GktQuyFI0jxMJLMoYMYpFicjxsxYHzRcsHGEkAWZ6C9yTn
+         70j++U4h6CR6aKRNSeyYPe+h02R3HgR1J9zMpTHf03zkdeai9eKfgicmWqs0I7HwwuFI
+         QlQGMW+3VqhRNFu8HR6GQQu6V/pMAb14IhgpG5f5w315A8oI+MEzqZKeriwlwKg1O1ew
+         zAag==
+X-Gm-Message-State: AOAM533Klr7mslrq5AzGouTXDr5KLTRJPUAwtMjobVhwXk4QTw3zkoAC
+        +QSCFtZ8lvgv0QEs1/xz17Q=
+X-Google-Smtp-Source: ABdhPJznD/qmqCNCqlkejLt5TscQD+1ezVWRuD6Ejw2gkqK/isOjk1bLru4xuGEqt4Vn+Y46ApM3tg==
+X-Received: by 2002:a50:aacc:: with SMTP id r12mr3044815edc.219.1591805226842;
+        Wed, 10 Jun 2020 09:07:06 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-79-35-249-242.retail.telecomitalia.it. [79.35.249.242])
+        by smtp.googlemail.com with ESMTPSA id ce25sm56067edb.45.2020.06.10.09.06.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 09:07:06 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        USB <linux-usb@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Date:   Wed, 10 Jun 2020 17:57:10 +0200
-In-Reply-To: <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
-         <20200609175003.19793-8-nsaenzjulienne@suse.de>
-         <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-WmpqyWN/a5eP/Qxbeom/"
-User-Agent: Evolution 3.36.2 
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 00/12] Multiple fixes in PCIe qcom driver
+Date:   Wed, 10 Jun 2020 18:06:42 +0200
+Message-Id: <20200610160655.27799-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This contains multiple fix for PCIe qcom driver.
+Some optional reset and clocks were missing.
+Fix a problem with no PARF programming that cause kernel lock on load.
+Add support to force gen 1 speed if needed. (due to hardware limitation)
+Add ipq8064 rev 2 support that use a different tx termination offset.
 
---=-WmpqyWN/a5eP/Qxbeom/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+v6:
+* Replace custom define
+* Move define not used in 07 to 08
 
-Hi Andy,
-Thanks for the review.
+v5:
+* Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
 
-On Tue, 2020-06-09 at 21:43 +0300, Andy Shevchenko wrote:
-> On Tue, Jun 9, 2020 at 8:50 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > The board doesn't need the quirks to be run, and takes care of its own
-> > initialization trough a reset controller device. So let's bypass them.
->=20
-> through
+v4:
+* Fix grammar error across all patch subject
+* Use bulk api for clks
+* Program PARF only in ipq8064 SoC
+* Program tx term only in ipq8064 SoC
+* Drop configurable tx-dempth rx-eq
+* Make added clk optional
 
-Noted
+v3:
+* Fix check reported by checkpatch --strict
+* Rename force_gen1 to gen
 
-> ...
->=20
-> > +       if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=
-=3D 0x3483 &&
-> > +           of_device_is_compatible(of_get_parent(pdev->bus->dev.of_nod=
-e),
-> > +                                   "brcm,bcm2711-pcie"))
-> > +               return;
->=20
-> No put?
+v2:
+* Drop iATU programming (already done in pcie init)
+* Use max-link-speed instead of force-gen1 custom definition
+* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+* Introduce a new variant for different revision of ipq8064
 
-Missed that, sorry.
+Abhishek Sahu (1):
+  PCI: qcom: Change duplicate PCI reset to phy reset
 
-Regards,
-Nicolas
+Ansuel Smith (10):
+  PCI: qcom: Add missing ipq806x clocks in PCIe driver
+  dt-bindings: PCI: qcom: Add missing clks
+  PCI: qcom: Add missing reset for ipq806x
+  dt-bindings: PCI: qcom: Add ext reset
+  PCI: qcom: Use bulk clk api and assert on error
+  PCI: qcom: Define some PARF params needed for ipq8064 SoC
+  PCI: qcom: Add support for tx term offset for rev 2.1.0
+  PCI: qcom: Add ipq8064 rev2 variant
+  dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
+  PCI: qcom: Replace define with standard value
 
+Sham Muthayyan (1):
+  PCI: qcom: Add Force GEN1 support
 
---=-WmpqyWN/a5eP/Qxbeom/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
+ 2 files changed, 128 insertions(+), 73 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7hAtYACgkQlfZmHno8
-x/6pWQf/YjKJWkjl0Ry3wqgSqq6nMS36oLTSH/79Hi6/YsHTATPPaFZVfYKGHySy
-dMxtJVZ+/SUqUHcRJrl6st0RcuPMrs6y76YD/JFuDjzUTOMUcaVme2biY/nDWEEA
-1ToKs4Ia2m7bounaSimqF0w9oCjKOegt0sFWLKSCK4EGLwsSOZ2LWbSP3ctfWS1Z
-hw6QmkXus2BIZwI/QkTIZ86PK2SujUFKAkiVJFdfyYcbwNCZpWy2iK8s7pffLyyR
-t15gNXP8ocI2PVnm/DlN/HtlbQfWwB7HjeQp3FI92pNLh/KaRP8+hEhuqasynyLf
-nnR5NeCeENrzGhC4sE28IAlygd+kvw==
-=UAUo
------END PGP SIGNATURE-----
-
---=-WmpqyWN/a5eP/Qxbeom/--
+-- 
+2.25.1
 
