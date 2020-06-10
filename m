@@ -2,56 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C42421F58A7
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 18:08:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF271F58A2
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 18:08:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbgFJQHz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 12:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
+        id S1730554AbgFJQHr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 12:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730494AbgFJQHg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 12:07:36 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2EEC03E96B;
-        Wed, 10 Jun 2020 09:07:36 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id q19so3194588eja.7;
-        Wed, 10 Jun 2020 09:07:36 -0700 (PDT)
+        with ESMTP id S1730538AbgFJQHj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 12:07:39 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C89C03E96F;
+        Wed, 10 Jun 2020 09:07:38 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id o26so1800436edq.0;
+        Wed, 10 Jun 2020 09:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JBawc5k6GxDTKkYoHLQZS2nVPl6YhwGiJUu0dW6sBLY=;
-        b=Gw+n06Xh+9mlnB6Qq6ff5reYXGcVg6OypuPAc0+0amLiFLWO70fTOpvE88LwYtjYkZ
-         qj4398gCR9Azojwj+5EXAw2iNhdVo/DIT9JkKQ0eODsIjmK7bTD5yy/fmd0lvG+1p4Vp
-         zDzubVYds6eTSQVLTeGLqXx0CROZpxuYKDYEamwupuH3sUnJ76gqrX1YgiyFS4ayb7se
-         UN6S60jMRDuI0co55E7l7VbLcHtuwmUsyM/gmavNdIRmGKtpPbhGU1fUcwdT8Eea4Xi5
-         VLFIYKx7oDGI8eGWqPDxhwD2wd7L+2+JQiJKZi/a68PIObreeL0XiW+GnRo6ihDZ0Y/Z
-         AdGA==
+        bh=dd+Z0yjxtztXOTLMBUJZUOa3hEnZCJ80Y/mxXHp3PO8=;
+        b=FEePfPFgVZZCcpcfMbca3kv5qq8lzcNem0TgiIVvPpHFnrRotBAN9YB5aQmHNhWhKQ
+         aLiTvuCsFYiGd9JQQ9svqpqieWGj3TSHdWevq2KLr3Rr55eiyL/KHbDEUurSZFeObQ62
+         cGbttj7Yr+7cZYP/G4BEtTokTTNmiKA3cG3yE0sV0Y6UpkohjfW28kTFhfGMnhsn38/z
+         HAIjsgcHlej5FedyfeIojDGj7G3ltRT6chJ5urtbVzVAZsSO2xbdeI5CC5yORrOYLh3C
+         lomqJr0d4/ObImbSj2hjtmPlPkzzODpO7QlGH65ZHXND2ugo+ED/8m/XVMDYshbP/9+f
+         TkCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JBawc5k6GxDTKkYoHLQZS2nVPl6YhwGiJUu0dW6sBLY=;
-        b=ta0Sk4EG4Qavr7m9/PZCL6+liMfaObD8vAS5QLhDog9w3VZ8crYQ44DbWApXVN9nH/
-         96PyLXjsZcSaZNgfq5YXJXZL1wZSQ2cIfdPdS3gealKFAscKbwmu1JnOWkZTby89cNFD
-         iESv4C7ATjyEvjExqpdP+B6ixtX78dVSJX6T/uqSkPPepqOWj8bupPqbqi6lS6oFfK7O
-         MDEspLtuTxrpUg3Epg/12PnbS5Xt3OiA1pUJsV+/rcigRXrovWkcfWA6vZoblLYwK3iP
-         exPH0nZ20M+RqCiWweu1KAjAefiED3L2UZdvJrby3fGEoP5PCLDntv5Va+MIjkHCEi0b
-         WHYw==
-X-Gm-Message-State: AOAM532xr4FKPcb/1KX2p59pfpTfzFZ53+GgcJobAsJiRR4WYj+4FLA4
-        wWspuhP7wTnroYn3E9TkRkM=
-X-Google-Smtp-Source: ABdhPJwiYTeGguvYZa0LgBVb566b/fEUL0GY/Kiywrpja0bmnzGWRJkmgPhiqMJdaI6XG2yTlc7VOA==
-X-Received: by 2002:a17:906:e0cf:: with SMTP id gl15mr4290108ejb.501.1591805255138;
-        Wed, 10 Jun 2020 09:07:35 -0700 (PDT)
+        bh=dd+Z0yjxtztXOTLMBUJZUOa3hEnZCJ80Y/mxXHp3PO8=;
+        b=uGqyTlnme+mZZ29VW53rtyXmQkQxsKKQ0sTxp2ZNPfkrGcV8TBt7uZVA2g+QRB3q8a
+         YNQozaXIHO62QL1yKjeJ8iWndyRz8PK3FlDsg7o1Myv+Tmc3c8tkF65aC7HYVYmWvDwy
+         Lp+sIXvJ/y6aMJSaQcz8FdD52ObicsDroRDqoEciBZSps30/4zWygQ2Tz7Co5whmufxC
+         vFR6KQ1cRWnCsYijuf8qrS2t5iibORLbXJ1ZTMzuFAZogsi+0VU2SN3DGYHT2gzzTXoU
+         mO3tq0zyJtvD4hno8FnNk8mO6obrrphVtSUu9OjAn8A6rQ89WPYDLse4hznxWcREufhw
+         tMmQ==
+X-Gm-Message-State: AOAM533wb/AYM1ZFt3m8x04KcwqsklbryYB+qBRc/b5K3gSwQsqa70TV
+        HL+MhvRn/x83YJgLlfoR5y0=
+X-Google-Smtp-Source: ABdhPJy2QXHTerysK0MjqZYcEjsPjCtx7EmQmhU2ZSQ6TRAOctZNgcI5WHuK8Ee76OAhZaUlgdyklA==
+X-Received: by 2002:aa7:c752:: with SMTP id c18mr3034215eds.55.1591805257335;
+        Wed, 10 Jun 2020 09:07:37 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host-79-35-249-242.retail.telecomitalia.it. [79.35.249.242])
-        by smtp.googlemail.com with ESMTPSA id ce25sm56067edb.45.2020.06.10.09.07.33
+        by smtp.googlemail.com with ESMTPSA id ce25sm56067edb.45.2020.06.10.09.07.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 09:07:34 -0700 (PDT)
+        Wed, 10 Jun 2020 09:07:36 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -61,9 +60,9 @@ Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 11/12] PCI: qcom: Add Force GEN1 support
-Date:   Wed, 10 Jun 2020 18:06:53 +0200
-Message-Id: <20200610160655.27799-12-ansuelsmth@gmail.com>
+Subject: [PATCH v6 12/12] PCI: qcom: Replace define with standard value
+Date:   Wed, 10 Jun 2020 18:06:54 +0200
+Message-Id: <20200610160655.27799-13-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200610160655.27799-1-ansuelsmth@gmail.com>
 References: <20200610160655.27799-1-ansuelsmth@gmail.com>
@@ -74,72 +73,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sham Muthayyan <smuthayy@codeaurora.org>
+Lots of define are actually already defined in pci_regs.h, directly use
+the standard defines.
 
-Add Force GEN1 support needed in some ipq8064 board that needs to limit
-some PCIe line to gen1 for some hardware limitation. This is set by the
-max-link-speed binding and needed by some soc based on ipq8064. (for
-example Netgear R7800 router)
-
-Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 259b627bf890..c40921589122 100644
+index c40921589122..a23d3d886479 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -27,6 +27,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
+@@ -40,11 +40,6 @@
+ #define L23_CLK_RMV_DIS				BIT(2)
+ #define L1_CLK_RMV_DIS				BIT(1)
  
-+#include "../../pci.h"
- #include "pcie-designware.h"
+-#define PCIE20_COMMAND_STATUS			0x04
+-#define CMD_BME_VAL				0x4
+-#define PCIE20_DEVICE_CONTROL2_STATUS2		0x98
+-#define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+-
+ #define PCIE20_PARF_PHY_CTRL			0x40
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+@@ -73,8 +68,8 @@
+ #define CFG_BRIDGE_SB_INIT			BIT(0)
  
- #define PCIE20_PARF_SYS_CTRL			0x00
-@@ -99,6 +100,8 @@
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
+ #define PCIE20_CAP				0x70
+-#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + 0xC)
+-#define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT	(BIT(10) | BIT(11))
++#define PCIE20_DEVICE_CONTROL2_STATUS2		(PCIE20_CAP + PCI_EXP_DEVCTL2)
++#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + PCI_EXP_LNKCAP)
+ #define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
+ #define PCIE_CAP_LINK1_VAL			0x2FD7F
  
-+#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
-+
- #define DEVICE_TYPE_RC				0x4
+@@ -1095,15 +1090,15 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 		pcie->parf + PCIE20_PARF_SYS_CTRL);
+ 	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
  
- #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-@@ -195,6 +198,7 @@ struct qcom_pcie {
- 	struct phy *phy;
- 	struct gpio_desc *reset;
- 	const struct qcom_pcie_ops *ops;
-+	int gen;
- };
+-	writel(CMD_BME_VAL, pci->dbi_base + PCIE20_COMMAND_STATUS);
++	writel(PCI_COMMAND_MASTER, pci->dbi_base + PCI_COMMAND);
+ 	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
+ 	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + PCIE20_CAP_LINK_1);
  
- #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-@@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	/* wait for clock acquisition */
- 	usleep_range(1000, 1500);
+ 	val = readl(pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
+-	val &= ~PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT;
++	val &= ~PCI_EXP_LNKCAP_ASPMS;
+ 	writel(val, pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
  
-+	if (pcie->gen == 1) {
-+		val = readl(pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-+		val |= PCI_EXP_LNKSTA_CLS_2_5GB;
-+		writel(val, pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-+	}
+-	writel(PCIE_CAP_CPL_TIMEOUT_DISABLE, pci->dbi_base +
++	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base +
+ 		PCIE20_DEVICE_CONTROL2_STATUS2);
  
- 	/* Set the Max TLP size to 2K, instead of using default of 4K */
- 	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
-@@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_pm_runtime_put;
- 	}
- 
-+	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-+	if (pcie->gen < 0)
-+		pcie->gen = 2;
-+
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
- 	pcie->parf = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(pcie->parf)) {
+ 	return 0;
 -- 
 2.25.1
 
