@@ -2,55 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BBE31F589C
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 18:08:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C42421F58A7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 18:08:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbgFJQHh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 12:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50656 "EHLO
+        id S1730564AbgFJQHz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 12:07:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730528AbgFJQHe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 12:07:34 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6084C03E96F;
-        Wed, 10 Jun 2020 09:07:33 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id p20so3163769ejd.13;
-        Wed, 10 Jun 2020 09:07:33 -0700 (PDT)
+        with ESMTP id S1730494AbgFJQHg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 12:07:36 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2EEC03E96B;
+        Wed, 10 Jun 2020 09:07:36 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q19so3194588eja.7;
+        Wed, 10 Jun 2020 09:07:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZIcmPOVlQLoKdIP9dCKqwaemztdzBXHNcMiHg1REgA4=;
-        b=XZId+kqzhEi16ADYn9UF8ygFXk5SH0ej/H5Fbz/qBQO7EKQTbrA31hza5a9uuwg1qY
-         R2Ta2p/5jXwEbU8NKmjPt9XAKrE2lHnzuimLLZ4bN638YfuSZDLp3Y92yRgz6tEIeuaY
-         pZ327mRywwATOIbKGxpqCfIrhum5FOsNIYUldzEi0FtN7SNXIya9uQu+GKikYJQjSCYZ
-         2D8as6OSR1mL0nUBW4d0/sGaIwG/YLoVVP2Pvu0M16zqrOyuSRf9+aHUhcswiL0WTgb/
-         MOFPQdUlfb2J+79XZpujH3pmbCG/Wyi2omUnbltMdXlKzTrhJVXkxnuCAreKpvz+TVem
-         emKg==
+        bh=JBawc5k6GxDTKkYoHLQZS2nVPl6YhwGiJUu0dW6sBLY=;
+        b=Gw+n06Xh+9mlnB6Qq6ff5reYXGcVg6OypuPAc0+0amLiFLWO70fTOpvE88LwYtjYkZ
+         qj4398gCR9Azojwj+5EXAw2iNhdVo/DIT9JkKQ0eODsIjmK7bTD5yy/fmd0lvG+1p4Vp
+         zDzubVYds6eTSQVLTeGLqXx0CROZpxuYKDYEamwupuH3sUnJ76gqrX1YgiyFS4ayb7se
+         UN6S60jMRDuI0co55E7l7VbLcHtuwmUsyM/gmavNdIRmGKtpPbhGU1fUcwdT8Eea4Xi5
+         VLFIYKx7oDGI8eGWqPDxhwD2wd7L+2+JQiJKZi/a68PIObreeL0XiW+GnRo6ihDZ0Y/Z
+         AdGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZIcmPOVlQLoKdIP9dCKqwaemztdzBXHNcMiHg1REgA4=;
-        b=lD1TPohP2RrnQuX3w6dL+pXXNVTYNPPn0DmIsEVJqIaOzqbvJrAETle5nw2lGZa/IG
-         z50GCeK2J0GmKQa3R0LPqvhclfcFP+JSpn1ZxbV14dWl3O4lm01CxWm8fpbAlSuy3BBO
-         JXPH8tN62S3fSfdVZ4gonaStX2J6pku8TUANNzyy96i8HBa1TWTl4rkh4W9YAOIE3xyx
-         IRWySMYydNYwJgJDftQmTxhXouALDFCnowgR/yce5znkyKqrsPRX47LfFr+oSfkwdAds
-         HhmgvJ/Xq/GHdfFedaKcwUykuvhcXKhcuf5R07rlXUkW5am9DhEg8nd3Sdy7hKgJJJx9
-         c2Hw==
-X-Gm-Message-State: AOAM531ndZ9XIJw3fkks4ZvCOUe5IQO/6J4EkvzdcYhRqba0DSU+RGcF
-        /SMinsaoQ3sMz4oHg0CN+B8=
-X-Google-Smtp-Source: ABdhPJz/z0uv04oFo6Ksal5X8QjDiPKT0GLx7HBWK77h+M6TKECl0WPlUJd694bF0JH9Cml7V8haAQ==
-X-Received: by 2002:a17:906:e2d5:: with SMTP id gr21mr3905582ejb.219.1591805252537;
-        Wed, 10 Jun 2020 09:07:32 -0700 (PDT)
+        bh=JBawc5k6GxDTKkYoHLQZS2nVPl6YhwGiJUu0dW6sBLY=;
+        b=ta0Sk4EG4Qavr7m9/PZCL6+liMfaObD8vAS5QLhDog9w3VZ8crYQ44DbWApXVN9nH/
+         96PyLXjsZcSaZNgfq5YXJXZL1wZSQ2cIfdPdS3gealKFAscKbwmu1JnOWkZTby89cNFD
+         iESv4C7ATjyEvjExqpdP+B6ixtX78dVSJX6T/uqSkPPepqOWj8bupPqbqi6lS6oFfK7O
+         MDEspLtuTxrpUg3Epg/12PnbS5Xt3OiA1pUJsV+/rcigRXrovWkcfWA6vZoblLYwK3iP
+         exPH0nZ20M+RqCiWweu1KAjAefiED3L2UZdvJrby3fGEoP5PCLDntv5Va+MIjkHCEi0b
+         WHYw==
+X-Gm-Message-State: AOAM532xr4FKPcb/1KX2p59pfpTfzFZ53+GgcJobAsJiRR4WYj+4FLA4
+        wWspuhP7wTnroYn3E9TkRkM=
+X-Google-Smtp-Source: ABdhPJwiYTeGguvYZa0LgBVb566b/fEUL0GY/Kiywrpja0bmnzGWRJkmgPhiqMJdaI6XG2yTlc7VOA==
+X-Received: by 2002:a17:906:e0cf:: with SMTP id gl15mr4290108ejb.501.1591805255138;
+        Wed, 10 Jun 2020 09:07:35 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host-79-35-249-242.retail.telecomitalia.it. [79.35.249.242])
-        by smtp.googlemail.com with ESMTPSA id ce25sm56067edb.45.2020.06.10.09.07.30
+        by smtp.googlemail.com with ESMTPSA id ce25sm56067edb.45.2020.06.10.09.07.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 09:07:31 -0700 (PDT)
+        Wed, 10 Jun 2020 09:07:34 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
+Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -60,9 +61,9 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 10/12] dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
-Date:   Wed, 10 Jun 2020 18:06:52 +0200
-Message-Id: <20200610160655.27799-11-ansuelsmth@gmail.com>
+Subject: [PATCH v6 11/12] PCI: qcom: Add Force GEN1 support
+Date:   Wed, 10 Jun 2020 18:06:53 +0200
+Message-Id: <20200610160655.27799-12-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200610160655.27799-1-ansuelsmth@gmail.com>
 References: <20200610160655.27799-1-ansuelsmth@gmail.com>
@@ -73,28 +74,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Document qcom,pcie-ipq8064-v2 needed to use different phy_tx0_term_offset.
-In ipq8064 phy_tx0_term_offset is 7. In ipq8064 v2 other SoC it's set to 0
-by default.
+From: Sham Muthayyan <smuthayy@codeaurora.org>
 
+Add Force GEN1 support needed in some ipq8064 board that needs to limit
+some PCIe line to gen1 for some hardware limitation. This is set by the
+max-link-speed binding and needed by some soc based on ipq8064. (for
+example Netgear R7800 router)
+
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 6efcef040741..02bc81bb8b2d 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -5,6 +5,7 @@
- 	Value type: <stringlist>
- 	Definition: Value should contain
- 			- "qcom,pcie-ipq8064" for ipq8064
-+			- "qcom,pcie-ipq8064-v2" for ipq8064 rev 2 or ipq8065
- 			- "qcom,pcie-apq8064" for apq8064
- 			- "qcom,pcie-apq8084" for apq8084
- 			- "qcom,pcie-msm8996" for msm8996 or apq8096
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 259b627bf890..c40921589122 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -27,6 +27,7 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
++#include "../../pci.h"
+ #include "pcie-designware.h"
+ 
+ #define PCIE20_PARF_SYS_CTRL			0x00
+@@ -99,6 +100,8 @@
+ #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+ #define SLV_ADDR_SPACE_SZ			0x10000000
+ 
++#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
++
+ #define DEVICE_TYPE_RC				0x4
+ 
+ #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+@@ -195,6 +198,7 @@ struct qcom_pcie {
+ 	struct phy *phy;
+ 	struct gpio_desc *reset;
+ 	const struct qcom_pcie_ops *ops;
++	int gen;
+ };
+ 
+ #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+@@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 	/* wait for clock acquisition */
+ 	usleep_range(1000, 1500);
+ 
++	if (pcie->gen == 1) {
++		val = readl(pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
++		val |= PCI_EXP_LNKSTA_CLS_2_5GB;
++		writel(val, pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
++	}
+ 
+ 	/* Set the Max TLP size to 2K, instead of using default of 4K */
+ 	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
+@@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 		goto err_pm_runtime_put;
+ 	}
+ 
++	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
++	if (pcie->gen < 0)
++		pcie->gen = 2;
++
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
+ 	pcie->parf = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(pcie->parf)) {
 -- 
 2.25.1
 
