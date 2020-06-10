@@ -2,39 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26F471F5832
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 17:49:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AD431F5870
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 17:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgFJPtf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 11:49:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39862 "EHLO mx2.suse.de"
+        id S1728941AbgFJP5O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 11:57:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43328 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730351AbgFJPtd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:49:33 -0400
+        id S1728899AbgFJP5O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:57:14 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3BCFCAD7D;
-        Wed, 10 Jun 2020 15:49:35 +0000 (UTC)
-Message-ID: <1f486fc41030df8c74bf021b02e59f007bf9d14e.camel@suse.de>
-Subject: Re: [PATCH v2 5/9] usb: xhci-pci: Add support for reset controllers
+        by mx2.suse.de (Postfix) with ESMTP id 0ACD7AD0D;
+        Wed, 10 Jun 2020 15:57:16 +0000 (UTC)
+Message-ID: <07cdfbbacb0f48e3671f4c7197a1ea58d99845e1.camel@suse.de>
+Subject: Re: [PATCH v2 7/9] usb: host: pci-quirks: Bypass xHCI quirks for
+ Raspberry Pi 4
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     tim.gover@raspberrypi.org, mathias.nyman@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        andy.shevchenko@gmail.com, lorenzo.pieralisi@arm.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, helgaas@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Wed, 10 Jun 2020 17:49:28 +0200
-In-Reply-To: <d452ddb8-cd30-1bfc-7b72-af3412e22ed4@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        USB <linux-usb@vger.kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Date:   Wed, 10 Jun 2020 17:57:10 +0200
+In-Reply-To: <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
 References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
-         <20200609175003.19793-6-nsaenzjulienne@suse.de>
-         <d452ddb8-cd30-1bfc-7b72-af3412e22ed4@gmail.com>
+         <20200609175003.19793-8-nsaenzjulienne@suse.de>
+         <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-p+TvsQpoIbGXnKb+ob9S"
+        protocol="application/pgp-signature"; boundary="=-WmpqyWN/a5eP/Qxbeom/"
 User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
@@ -43,93 +49,56 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---=-p+TvsQpoIbGXnKb+ob9S
+--=-WmpqyWN/a5eP/Qxbeom/
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+Hi Andy,
+Thanks for the review.
 
-On Tue, 2020-06-09 at 11:13 -0700, Florian Fainelli wrote:
+On Tue, 2020-06-09 at 21:43 +0300, Andy Shevchenko wrote:
+> On Tue, Jun 9, 2020 at 8:50 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > The board doesn't need the quirks to be run, and takes care of its own
+> > initialization trough a reset controller device. So let's bypass them.
 >=20
-> On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
-> > Some atypical users of xhci-pci might need to manually reset their xHCI
-> > controller before starting the HCD setup. Check if a reset controller
-> > device is available to the PCI bus and trigger a reset.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >  - Use proper reset API
-> >  - Make code simpler
-> >=20
-> >  drivers/usb/host/xhci-pci.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > index ef513c2fb843..6e96affa4ceb 100644
-> > --- a/drivers/usb/host/xhci-pci.c
-> > +++ b/drivers/usb/host/xhci-pci.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/module.h>
-> >  #include <linux/acpi.h>
-> > +#include <linux/reset.h>
-> > =20
-> >  #include "xhci.h"
-> >  #include "xhci-trace.h"
-> > @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, cons=
-t
-> > struct pci_device_id *id)
-> >  	struct xhci_hcd *xhci;
-> >  	struct usb_hcd *hcd;
-> >  	struct xhci_driver_data *driver_data;
-> > +	struct reset_control *reset;
-> > =20
-> >  	driver_data =3D (struct xhci_driver_data *)id->driver_data;
-> >  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
-> > @@ -347,6 +349,11 @@ static int xhci_pci_probe(struct pci_dev *dev, con=
-st
-> > struct pci_device_id *id)
-> >  			return retval;
-> >  	}
-> > =20
-> > +	reset =3D devm_reset_control_get_optional_exclusive(&dev->bus->dev, N=
-ULL);
-> > +	if (IS_ERR(reset))
-> > +		return PTR_ERR(reset);
-> > +	reset_control_reset(reset);
+> through
+
+Noted
+
+> ...
 >=20
-> Sorry for not catching this earlier, since this is a generic integration
-> with the reset controller API, should not you also add a
-> reset_control_reset() to hcd_pci_resume() for symmetry?
+> > +       if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=
+=3D 0x3483 &&
+> > +           of_device_is_compatible(of_get_parent(pdev->bus->dev.of_nod=
+e),
+> > +                                   "brcm,bcm2711-pcie"))
+> > +               return;
+>=20
+> No put?
 
-Agreed, if the RPi4 supported suspend/resume, which AFAIK doesn't, an extra
-reset would be needed as pcie-brcmstb performs a fundamental reset on resum=
-e
-forcing us to reinitialize vl805.
+Missed that, sorry.
 
-Thanks!
+Regards,
 Nicolas
 
 
---=-p+TvsQpoIbGXnKb+ob9S
+--=-WmpqyWN/a5eP/Qxbeom/
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7hAQgACgkQlfZmHno8
-x/6Fzgf8CkpRsxb++ft8vkQZu512oFbwoacT+zoJ74u+pVjwyS77fNOhO2Guu5/b
-LFcIThixpQXCsNbhbJ7ioJ+S/+ZLgITbcd9DpBFqsyWeoPGJUQU+uLpViwauaRTJ
-7spzpPtmApUR5s3zC5zTT2w3DKdHyMSnco9nX1URRO6HMD1iVbm2WOzDOI/MC4w/
-y8j3XjcaaFvusXOYe5J0JzFNvvLr8oqVj7gQSJQOaLbPg9nfvCQT/gjWiz/G9tqS
-000fU5+zSJ1wCMw22lWR6WOppHi4/w8YIswcVeat+d6RwA/oCs1soywj1XvApDBh
-6blr3s73GBC82xV02R8fcfG+AaroUQ==
-=DneD
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7hAtYACgkQlfZmHno8
+x/6pWQf/YjKJWkjl0Ry3wqgSqq6nMS36oLTSH/79Hi6/YsHTATPPaFZVfYKGHySy
+dMxtJVZ+/SUqUHcRJrl6st0RcuPMrs6y76YD/JFuDjzUTOMUcaVme2biY/nDWEEA
+1ToKs4Ia2m7bounaSimqF0w9oCjKOegt0sFWLKSCK4EGLwsSOZ2LWbSP3ctfWS1Z
+hw6QmkXus2BIZwI/QkTIZ86PK2SujUFKAkiVJFdfyYcbwNCZpWy2iK8s7pffLyyR
+t15gNXP8ocI2PVnm/DlN/HtlbQfWwB7HjeQp3FI92pNLh/KaRP8+hEhuqasynyLf
+nnR5NeCeENrzGhC4sE28IAlygd+kvw==
+=UAUo
 -----END PGP SIGNATURE-----
 
---=-p+TvsQpoIbGXnKb+ob9S--
+--=-WmpqyWN/a5eP/Qxbeom/--
 
