@@ -2,110 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 814731F4E03
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 08:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F4B01F4E8C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 09:08:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgFJGSL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 02:18:11 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:42201 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726035AbgFJGSL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:18:11 -0400
-Received: from [192.168.178.35] (unknown [88.130.155.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 04AE620646DCF;
-        Wed, 10 Jun 2020 08:18:08 +0200 (CEST)
-Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+        id S1726307AbgFJHIc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 03:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbgFJHIb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 03:08:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC23EC03E96B;
+        Wed, 10 Jun 2020 00:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Uz81Z+0BCBNqLv4PQFmkR/zfQQ+FgD1974AzuRQ6XTg=; b=LaT2eRoYttZjSzfpscy3GH1Bgz
+        cmrv+2X+EcRvPARdeRGxi2ZZcElfyYLyNY2gOPbjMH73bC0SzCvdWQaUnQNsbhjSN/l7EFvwDl4id
+        hoM9IzulHRSVPoeXuND/BBiPWYi9/RhduLG9jFdKRjd8bSSqp1ipDXmUJf69Pi98QGXr19JrqA+L7
+        v/W1ZPdsemFSgMZyfVjcRiKeGAC7q50Hu/5I6WfF1QZkoY60Xtfpyt4xru99E+235tv+GK67GHivH
+        CXXj0VDiU/As2RT5RzLxmAwzXA+c0lEW6iaWluKaK5SeLH36uzj4PNJF/ePxJ071DRjKrW7iWA5MQ
+        4KIoTAKQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jiuqa-00086x-9d; Wed, 10 Jun 2020 07:08:28 +0000
+Date:   Wed, 10 Jun 2020 00:08:28 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
-References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
- <20200609154416.GU247495@lahna.fi.intel.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
-Date:   Wed, 10 Jun 2020 08:18:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Denis Efremov <efremov@linux.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/15] PCI: Add macro for message signalled interrupt
+ types
+Message-ID: <20200610070828.GA29678@infradead.org>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609162243.9102-1-piotr.stankiewicz@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200609154416.GU247495@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609162243.9102-1-piotr.stankiewicz@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Mika,
+On Tue, Jun 09, 2020 at 06:22:40PM +0200, Piotr Stankiewicz wrote:
+> There are several places in the kernel which check/ask for MSI or MSI-X
+> interrupts. It would make sense to have a macro which defines all types
+> of message signalled interrupts, to use in such situations. Add
+> PCI_IRQ_MSI_TYPES, for this purpose.
 
+To state my objection voices in patch 3 here again:
 
-Am 09.06.20 um 17:44 schrieb Mika Westerberg:
-> On Tue, Jun 09, 2020 at 05:39:21PM +0200, Paul Menzel wrote:
+I think this is a very bad idea.  Everyone knows what MSI and MSI-X
+mean and that directly maps to specification.  The new IMS interrupt
+scheme from the Intel SIOV spec for example is a message signalled
+interrupt type as well and should not be picked up automatically.
 
->> On the Intel Cannon Point-LP laptop Dell Precision 3540 with a dedicated AMD
->> graphics card (both graphics devices can be used) with Debian Sid/unstable
->> with Linux 5.6.14, running lspci takes quite some time, and the screen even
->> flickers a short moment before the result is displayed.
->>
->> Tracing lspci with strace, shows that the close() function of the three
->> devices takes from
->>
->> •   00:1d.0 PCI bridge: Intel Corporation Cannon Point-LP PCI Express Root
->> Port #9
->>
->> •   04:00.0 System peripheral: Intel Corporation JHL6340 Thunderbolt 3 NHI
->> (C step) [Alpine Ridge 2C 2016] (rev 02)
->>
->> •   3b:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Lexa
->> XT [Radeon PRO WX 3100]
->>
->> takes from 270 ms to 2.5 s.
->>
->>> 11:43:21.714391 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:04:00.0/config", O_RDONLY) = 3
->>> 11:43:21.714448 pread64(3, "\206\200\331\25\6\4\20\0\2\0\200\10 \0\0\0\0\0\0\352\0\0\4\352\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0(\20\272\10\0\0\0\0\
->>> 200\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
->>> 11:43:24.487818 close(3)                = 0
->>
->>> 11:43:24.489508 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:00:1d.0/config", O_RDONLY) = 3
->>> 11:43:24.489598 pread64(3, "\206\200\260\235\7\4\20\0\360\0\4\6\20\0\201\0\0\0\0\0\0\0\0\0\0;;\00000\0  \354 \354\1\300\21\320\0\0\0\0\0\0\0\0\0\0\0\0
->>> @\0\0\0\0\0\0\0\377\1\22\0", 64, 0) = 64
->>> 11:43:24.966661 close(3)                = 0
->>
->>> 11:43:24.988544 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:3b:00.0/config", O_RDONLY) = 3
->>> 11:43:24.988584 pread64(3, "\2\20\205i\7\4\20\0\0\0\200\3\20\0\0\0\f\0\0\300\0\0\0\0\f\0\0\320\0\0\0\0\0010\0\0\0\0 \354\0\0\0\0(\20\272\10\0\0$\354H\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
->>> 11:43:25.252745 close(3)
->>
->> Unfortunately, I forgot to collect the tree output, but hopefully the
->> attached Linux messages and strace of lspci output will be enough for the
->> start.
->>
->> Please tell me, if you want me to create a bug report in the Linux bug
->> tracker.
-> 
-> Can you try this commit?
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/pm&id=ec411e02b7a2e785a4ed9ed283207cd14f48699d
-> 
-> It should be in the mainline already as well.
-> 
-> Note we still need to obey the delays required by the PCIe spec so 100ms
-> after the link is trained but this one should at least get it down from
-> 1100ms.
-
-Thank you for replying so quickly. Hopefully, I’ll be able to test the 
-commit tomorrow.
-
-One question though. The commit talks about resuming from suspend. I 
-understand that training happens there.
-
-In my case the system is already running. So I wonder, why link(?) 
-training would still happening.
-
-
-Kind regards,
-
-Paul
+If we want to change anything in this area we should probably remove
+PCI_IRQ_ALL_TYPES instead..
