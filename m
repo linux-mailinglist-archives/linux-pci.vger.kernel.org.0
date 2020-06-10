@@ -2,62 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3A391F518B
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 11:52:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 424501F5239
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 12:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgFJJwV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 05:52:21 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32460 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgFJJwV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:52:21 -0400
-IronPort-SDR: cduVAJmSd528RDmgIk+Mld6BseDiHugEed6+7LwJJmXVKZ2ISNf7Sz1KzUlKw3aIqJMAmfXDEK
- Y8yid7HmNRZw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 02:52:20 -0700
-IronPort-SDR: ZzvQkhgHvZvcqUrsFkdxNV042deSsHvS0fa9T3uHHvJaSIVqlnf2duh5G5SMtRJVqC7f+Ipxy2
- DRs7ZtW3wSyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,495,1583222400"; 
-   d="scan'208";a="380013092"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 10 Jun 2020 02:52:18 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 10 Jun 2020 12:52:17 +0300
-Date:   Wed, 10 Jun 2020 12:52:17 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
-Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
-Message-ID: <20200610095217.GE247495@lahna.fi.intel.com>
-References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
- <20200609154416.GU247495@lahna.fi.intel.com>
- <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
+        id S1728194AbgFJK15 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 10 Jun 2020 06:27:57 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:49669 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgFJK15 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jun 2020 06:27:57 -0400
+Received: from windsurf.home (lfbn-tou-1-915-109.w86-210.abo.wanadoo.fr [86.210.146.109])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 12554200008;
+        Wed, 10 Jun 2020 10:27:50 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 12:27:50 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     "Shmuel H." <sh@tkos.co.il>
+Cc:     Jason Cooper <jason@lakedaemon.net>,
+        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Chris ackham <chris.packham@alliedtelesis.co.nz>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH] pci: pci-mvebu: setup BAR0 to internal-regs
+Message-ID: <20200610122750.389c990f@windsurf.home>
+In-Reply-To: <df64c0b9-cba7-c92e-c32d-804a75796f83@tkos.co.il>
+References: <20200608144024.1161237-1-sh@tkos.co.il>
+        <20200608214335.156baaaa@windsurf>
+        <df64c0b9-cba7-c92e-c32d-804a75796f83@tkos.co.il>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 08:18:07AM +0200, Paul Menzel wrote:
-> Thank you for replying so quickly. Hopefully, I’ll be able to test the
-> commit tomorrow.
-> 
-> One question though. The commit talks about resuming from suspend. I
-> understand that training happens there.
-> 
-> In my case the system is already running. So I wonder, why link(?) training
-> would still happening.
+Hello,
 
-It also includes runtime PM so when the PCIe topology goes into D3cold
-the links are "down" so once you run tool such as lspci the links need
-to be re-trained to be able to access the devices connected to them.
+On Tue, 9 Jun 2020 14:21:07 +0300
+"Shmuel H." <sh@tkos.co.il> wrote:
+
+> Unfortunately, there is almost no documentation about the purpose of
+> this register apart from this cryptic sentence:
+> 
+>      "BAR0 is dedicated to internal register access" (Marvell a38x
+> functional docs, section 19.8).
+> 
+> I can only assume that only specific devices trigger the need for the
+> PCIe controller to access the SoC's internal registers and therefore
+> will fail to operate properly.
+
+In fact, section 10.2.6 of the Armada XP datasheet, about MSI/MSI-X
+support gives a hint: in order for the device to do a write to the MSI
+doorbell address, it needs to write to a register in the "internal
+registers" space". So it makes a lot of sense that this BAR0 has to be
+configured.
+
+Could you try to boot your system without your patch, and with the
+pci=nomsi argument on the kernel command line ? This will prevent the
+driver from using MSI, so it should fallback to legacy IRQs. If that
+works, then we have the confirmation the issue is MSI related. This
+will be useful just to have a good commit message that explains the
+problem, because otherwise I am fine with your patch.
+
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
