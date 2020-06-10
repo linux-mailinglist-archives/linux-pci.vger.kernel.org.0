@@ -2,65 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AA651F56AE
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 16:17:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A9361F57EF
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jun 2020 17:37:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgFJORS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jun 2020 10:17:18 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:54731 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgFJORS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:17:18 -0400
-Received: from [192.168.42.142] (unknown [212.29.212.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPSA id 3EDB044004C;
-        Wed, 10 Jun 2020 17:17:16 +0300 (IDT)
-Subject: Re: [RFC PATCH] pci: pci-mvebu: setup BAR0 to internal-regs
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Chris ackham <chris.packham@alliedtelesis.co.nz>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200608144024.1161237-1-sh@tkos.co.il>
- <20200608214335.156baaaa@windsurf>
-From:   "Shmuel H." <sh@tkos.co.il>
-Message-ID: <ae84b87c-665b-7619-7cb0-a1fd58b17d8f@tkos.co.il>
-Date:   Wed, 10 Jun 2020 17:17:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1730240AbgFJPhW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jun 2020 11:37:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34026 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726955AbgFJPhV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:37:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 345F3AD75;
+        Wed, 10 Jun 2020 15:37:23 +0000 (UTC)
+Message-ID: <252b688105ddff381798ec3150066288762178b0.camel@suse.de>
+Subject: Re: [PATCH v2 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Date:   Wed, 10 Jun 2020 17:37:15 +0200
+In-Reply-To: <c3dc9b7e-4440-7e8a-3da8-b147c48c4c40@gmail.com>
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
+         <20200609175003.19793-2-nsaenzjulienne@suse.de>
+         <c3dc9b7e-4440-7e8a-3da8-b147c48c4c40@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-n+aTWdme6r8Au4n90Rrf"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-In-Reply-To: <20200608214335.156baaaa@windsurf>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
 
-On 6/8/20 10:43 PM, Thomas Petazzoni wrote:
-> Some Armada 370/XP platforms really do use 0xd0000000 as the base
-> address of the internal registers. This information is available in the
-> DT. I think you could simply take the base address of the PCIe
-> controller, round down to 1 MB (which is the size of the internal
-> registers window) and that would give you the right address.
+--=-n+aTWdme6r8Au4n90Rrf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Apparently, the PCIe controller is outside of the internal registers space.
+Hi Florian, thanks for the review :)
 
-I could try to use a similar code as in
-arch/arm/mach-mvebu/pm.c:mvebu_internal_reg_base or get the first child
-of "internal-regs" and call of_translate_address on it with one zero cell.
+On Tue, 2020-06-09 at 11:07 -0700, Florian Fainelli wrote:
+>=20
+> On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
+> > The firmware running on the RPi VideoCore can be used to reset and
+> > initialize HW controlled by the firmware.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >=20
+> > ---
+> >=20
+> > Changes since v1:
+> >  - Correct cells binding as per Florian's comment
+> >  - Change compatible string to be more generic
+> >=20
+> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
+835-
+> > firmware.yaml
+> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > index b48ed875eb8e..23a885af3a28 100644
+> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > @@ -39,6 +39,22 @@ properties:
+> >        - compatible
+> >        - "#clock-cells"
+> > =20
+> > +  reset:
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: raspberrypi,firmware-reset
+> > +
+> > +      "#reset-cells":
+> > +        const: 1
+> > +        description: >
+>=20
+> Is this a stray '>' character? If so, with that fixed:
 
-Do you have a better solution?
+No, it marks the formatting of the text below. | will keep the formatting a=
+s
+is, > will leave the formatting to whatever is going to use it.
 
-Thanks,
+Regards,
+Nicolas
 
--- 
-- Shmuel Hazan
 
-mailto:sh@tkos.co.il | tel:+972-523-746-435 | http://tkos.co.il
+--=-n+aTWdme6r8Au4n90Rrf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7g/isACgkQlfZmHno8
+x/5KnggAkIaMw+no0jjwGGwmLpYNI37OtXTlkJh7+vxBbP3/KDoYuOKodikYKYi7
+06IGVl60YiOtYKZmeBUpt5vxCnGpFdccflCssnih0CSXLSUYSA+0+XQ7/8WI+wDF
+iyBAZWn+BTleK3nJRM1EzWuiJvsH6hqE0X9SWqrH549wvJUKoh/EPMllsrrl2rr4
+k3MTRQ1qUaDh+m+ZxKA14Ah1Gwhm1nOnx0LLti9+W02o270Y7dQnWwzfXwlGJHPi
+kCkA5gj9PzDFq9+csd+n8ek73GJEoyQEsgphDBQbQCVb3uMpioF4jqdDxQaKFC21
+NG2lzd8rO+0Rlc3UUvOFg+sB04SUcg==
+=8jr+
+-----END PGP SIGNATURE-----
+
+--=-n+aTWdme6r8Au4n90Rrf--
 
