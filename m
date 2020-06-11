@@ -2,87 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F2111F69AA
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 16:12:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 749BA1F6AA5
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 17:13:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgFKOLc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jun 2020 10:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgFKOLc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:11:32 -0400
-Received: from [192.168.68.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA002083E;
-        Thu, 11 Jun 2020 14:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591884691;
-        bh=zh1lFs+8r4VDNriEOLadueTPZsr+K0w3KsIGgXTzDyI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=bPAGjp5cf9bE8U4Ygi+28VpSCI5xVC3F2lsZWm57e4cZnkGBZ5J526sRiSUk0onPh
-         46d5JaKTOPS8n2MFjufRykDUD+XH8Vjb6/EJ2t1H1onyETccRXukXg7uMwG1Fs7cUR
-         Ik/cDD+t1Vi5pKaPTFTCz0GN5d9ID75kiKF/w4bc=
-Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
+        id S1728426AbgFKPNS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Jun 2020 11:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgFKPNR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jun 2020 11:13:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41DDC08C5C1;
+        Thu, 11 Jun 2020 08:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=w3fBHCM88Jt6cDakKyk4xboQWGAsFcwZYcNUwD/n+nU=; b=UtaPwmTzyZIQm0eT7m6SNXoJB4
+        VEIPQTkfTTpUfAvEF37o1G0jHd+Y95AGyX9dzVYfoFBWjXPQqXXilnzEKOcByAGTvQgHp9w8nTqO7
+        QwU9tb6KWeI0n0NbVqy/Hr16C2/p28CsawrQGVa+KMM+AXybJtvEB9SXqJYZhiyS1WGqT3nPV4lyo
+        RDAnri9zQcK1XjCgw6xAnoDbnQWYZQt22FfD98tO6SIoYY6HnWAzOd4zHxUzduoq6ChG6oJO8MfhA
+        213c7hJBlrrRX/bXaMqCavMXmm6oVJttLCkFhfB5KeGtlWzbPuwfjdaiV1ZXwcX2PI+n/c44fsTcx
+        6dkEYKAg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjOt3-0001iB-3j; Thu, 11 Jun 2020 15:13:01 +0000
+Date:   Thu, 11 Jun 2020 08:13:01 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, kenneth-lee-2012@foxmail.com,
-        Wangzhou <wangzhou1@hisilicon.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
- <20200610074633.GA6844@myrica>
- <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <a849234d-453a-8faa-93dd-12ea1b0165ab@kernel.org>
-Date:   Thu, 11 Jun 2020 10:11:30 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: Re: [PATCH v2 01/14] Documentation: PCI: Add specification for the
+ *PCI NTB* function device
+Message-ID: <20200611151301.GB8681@bombadil.infradead.org>
+References: <20200611130525.22746-1-kishon@ti.com>
+ <20200611130525.22746-2-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611130525.22746-2-kishon@ti.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/10/2020 4:00 AM, Zhangfei Gao wrote:
->> Why not set the eetlp_prefix_path bit from a PCI quirk?  Unlike the stall
->> problem from the other thread, this one looks like a simple design
->> mistake
->> that can be fixed easily in future iterations of the platform: just set
->> the "End-End TLP Prefix Supported" bit in the Device Capability 2
->> Register
->> of all bridges.
-> Yes, we can still set eetlp_prefix_path bit from a PCI quirk.
+On Thu, Jun 11, 2020 at 06:35:12PM +0530, Kishon Vijay Abraham I wrote:
+> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
+> @@ -0,0 +1,344 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=================
+> +PCI NTB Function
+> +=================
+> +
+> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +PCI NTB Function allows two different systems (or hosts) to communicate
+> +with each other by configurig the endpoint instances in such a way that
+> +transactions from one system is routed to the other system.
 
-I agree. Vendor specific quirk should be the way to go here if it is not
-compliant with the spec.
+At no point in this document do you expand "NTB" into Non-Transparent
+Bridge.  The above paragraph probably also needs to say something like "By
+making each host appear as a device to the other host".  Although maybe
+that's not entirely accurate?  It's been a few years since I last played
+with NTBs.
 
+So how about the following opening paragraph:
+
+PCI Non Transparent Bridges (NTB) allow two host systems to communicate
+with each other by exposing each host as a device to the other host.
+NTBs typically support the ability to generate interrupts on the remote
+machine, expose memory ranges as BARs and perform DMA.  They also support
+scratchpads which are areas of memory within the NTB that are accessible
+from both machines.
+
+... feel free to fix that up if my memory is out of date or corrupted.
