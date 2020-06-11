@@ -2,232 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC641F68C3
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 15:07:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 412721F68EE
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 15:17:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgFKNGu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jun 2020 09:06:50 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56618 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728282AbgFKNGr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jun 2020 09:06:47 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BD6Y4j085542;
-        Thu, 11 Jun 2020 08:06:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591880794;
-        bh=gIasfhB7kWsDgMz33iBPDD5XtaEwVi4iD+o+7fTFAb4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Lk7WX+WMQUDt2GH7O3S/FT3qau4RwbWAPEVGrjAsttVwykFM/Uaxxixy2z+weyXLe
-         ERbOTbHkpq+2Ufe+BxFbSpbXyDhcJduveCJ2oHdEhgW57CDyUe0ZQ86WDn/CwHrNWt
-         YRBwjxpnYdAtQdauKIUD7WQ1meH8nuvptd+o1Qos=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BD6YA8058925
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Jun 2020 08:06:34 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
- Jun 2020 08:06:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 11 Jun 2020 08:06:33 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BD5PZF082585;
-        Thu, 11 Jun 2020 08:06:29 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-Subject: [PATCH v2 14/14] Documentation: PCI: Add userguide for PCI endpoint NTB function
-Date:   Thu, 11 Jun 2020 18:35:25 +0530
-Message-ID: <20200611130525.22746-15-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200611130525.22746-1-kishon@ti.com>
-References: <20200611130525.22746-1-kishon@ti.com>
+        id S1728047AbgFKNRZ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 11 Jun 2020 09:17:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49921 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726159AbgFKNRZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:17:25 -0400
+IronPort-SDR: 9R2trFvioucbU8xyZT5QAoRTxHZGzRSkamKM35CzKFb6cOGg3kCplC27cJqejCK+nmSvRNoGzq
+ Bgy/QYjE+I2A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 06:17:24 -0700
+IronPort-SDR: 0RMRR5n95P1uk3MlcdKOxaQeBrPwufjj7jl7v3NUh8LU0cqZZtPToZs4jvC6LstL2Yf/qvG2VR
+ RN6MiYiRAYqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="289537525"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga002.jf.intel.com with ESMTP; 11 Jun 2020 06:17:24 -0700
+Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 11 Jun 2020 06:17:24 -0700
+Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.74]) by
+ fmsmsx124.amr.corp.intel.com ([169.254.8.63]) with mapi id 14.03.0439.000;
+ Thu, 11 Jun 2020 06:17:24 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
+        "Dalessandro, Dennis" <dennis.dalessandro@intel.com>,
+        "Marciniszyn, Mike" <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
+Thread-Topic: [PATCH v3 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where
+ appropriate
+Thread-Index: AQHWPj8EsjfpQ0WavE+AvROCK2Jb1qjTZ31w
+Date:   Thu, 11 Jun 2020 13:17:22 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010F35E258@fmsmsx107.amr.corp.intel.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609091823.1346-1-piotr.stankiewicz@intel.com>
+In-Reply-To: <20200609091823.1346-1-piotr.stankiewicz@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add documentation to help users use pci-epf-ntb function driver and
-existing host side NTB infrastructure for NTB functionality.
+>-----Original Message-----
+>From: linux-rdma-owner@vger.kernel.org <linux-rdma-
+>owner@vger.kernel.org> On Behalf Of Piotr Stankiewicz
+>Sent: Tuesday, June 9, 2020 5:18 AM
+>To: Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org
+>Cc: Stankiewicz, Piotr <piotr.stankiewicz@intel.com>; Dalessandro, Dennis
+><dennis.dalessandro@intel.com>; Marciniszyn, Mike
+><mike.marciniszyn@intel.com>; Doug Ledford <dledford@redhat.com>;
+>Jason Gunthorpe <jgg@ziepe.ca>; Arnd Bergmann <arnd@arndb.de>;
+>Shevchenko, Andriy <andriy.shevchenko@intel.com>; linux-
+>rdma@vger.kernel.org; linux-kernel@vger.kernel.org
+>Subject: [PATCH v3 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
+>
+>Seeing as there is shorthand available to use when asking for any type
+>of interrupt, or any type of message signalled interrupt, leverage it.
+>
+>Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+>Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>---
+> drivers/infiniband/hw/qib/qib_pcie.c | 6 ++++--
+> 1 file changed, 4 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/infiniband/hw/qib/qib_pcie.c
+>b/drivers/infiniband/hw/qib/qib_pcie.c
+>index 3dc6ce033319..caff44d2c12c 100644
+>--- a/drivers/infiniband/hw/qib/qib_pcie.c
+>+++ b/drivers/infiniband/hw/qib/qib_pcie.c
+>@@ -213,7 +213,7 @@ int qib_pcie_params(struct qib_devdata *dd, u32
+>minw, u32 *nent)
+> 	u16 linkstat, speed;
+> 	int nvec;
+> 	int maxvec;
+>-	unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
+>+	unsigned int flags;
+>
+> 	if (!pci_is_pcie(dd->pcidev)) {
+> 		qib_dev_err(dd, "Can't find PCI Express capability!\n");
+>@@ -225,7 +225,9 @@ int qib_pcie_params(struct qib_devdata *dd, u32
+>minw, u32 *nent)
+> 	}
+>
+> 	if (dd->flags & QIB_HAS_INTX)
+>-		flags |= PCI_IRQ_LEGACY;
+>+		flags = PCI_IRQ_ALL_TYPES;
+>+	else
+>+		flags = PCI_IRQ_MSI_TYPES;
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/PCI/endpoint/index.rst         |   1 +
- Documentation/PCI/endpoint/pci-ntb-howto.rst | 141 +++++++++++++++++++
- 2 files changed, 142 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
+Thinking about lines of code, this patch could probably just be:
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index ae6d25621058..74aa7e713299 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -12,3 +12,4 @@ PCI Endpoint Framework
-    pci-test-function
-    pci-test-howto
-    pci-ntb-function
-+   pci-ntb-howto
-diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-new file mode 100644
-index 000000000000..88a672c7d6ca
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-@@ -0,0 +1,141 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================
-+PCI NTB EPF User Guide
-+======================
-+
-+:Author: Kishon Vijay Abraham I <kishon@ti.com>
-+
-+This document is a guide to help users use pci-epf-ntb function driver
-+and ntb_hw_epf host driver for NTB functionality. The list of steps to
-+be followed in the host side and EP side is given below. For the hardware
-+configuration and internals of NTB using configurable endpoints see
-+Documentation/PCI/endpoint/pci-ntb-function.rst
-+
-+Endpoint Device
-+===============
-+
-+Endpoint Controller Devices
-+---------------------------
-+
-+For implementing NTB functionality atleast two endpoint controller devices
-+are required.
-+To find the list of endpoint controller devices in the system::
-+
-+        # ls /sys/class/pci_epc/
-+          2900000.pcie-ep  2910000.pcie-ep
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+	# ls /sys/kernel/config/pci_ep/controllers
-+	  2900000.pcie-ep  2910000.pcie-ep
-+
-+
-+Endpoint Function Drivers
-+-------------------------
-+
-+To find the list of endpoint function drivers in the system::
-+
-+	# ls /sys/bus/pci-epf/drivers
-+	  pci_epf_ntb   pci_epf_ntb
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+	# ls /sys/kernel/config/pci_ep/functions
-+	  pci_epf_ntb   pci_epf_ntb
-+
-+
-+Creating pci-epf-ntb Device
-+----------------------------
-+
-+PCI endpoint function device can be created using the configfs. To create
-+pci-epf-ntb device, the following commands can be used::
-+
-+	# mount -t configfs none /sys/kernel/config
-+	# cd /sys/kernel/config/pci_ep/
-+	# mkdir functions/pci_epf_ntb/func1
-+
-+The "mkdir func1" above creates the pci-epf-ntb function device that will
-+be probed by pci_epf_ntb driver.
-+
-+The PCI endpoint framework populates the directory with the following
-+configurable fields::
-+
-+	# ls functions/pci_epf_ntb/func1
-+          baseclass_code    deviceid          msi_interrupts    pci-epf-ntb.0
-+          progif_code       secondary         subsys_id         vendorid
-+          cache_line_size   interrupt_pin     msix_interrupts   primary
-+          revid             subclass_code     subsys_vendor_id
-+
-+The PCI endpoint function driver populates these entries with default values
-+when the device is bound to the driver. The pci-epf-ntb driver populates
-+vendorid with 0xffff and interrupt_pin with 0x0001::
-+
-+	# cat functions/pci_epf_ntb/func1/vendorid
-+	  0xffff
-+	# cat functions/pci_epf_ntb/func1/interrupt_pin
-+	  0x0001
-+
-+
-+Configuring pci-epf-ntb Device
-+-------------------------------
-+
-+The user can configure the pci-epf-ntb device using configfs entry. In order
-+to change the vendorid and the number of MSI interrupts device, the following
-+commands can be used::
-+
-+	# echo 0x104c > functions/pci_epf_ntb/func1/vendorid
-+	# echo 0xb00d > functions/pci_epf_ntb/func1/deviceid
-+
-+
-+Binding pci-epf-ntb Device to EP Controller
-+--------------------------------------------
-+
-+NTB function device should be attached to two PCIe endpoint controllers
-+connected to the two hosts. Use the 'primary' and 'secondary' entries
-+inside NTB function device to attach one PCIe endpoint controller to
-+primary interface and the other PCIe endpoint controller to the secondary
-+interface. ::
-+
-+        # ln -s controllers/2900000.pcie-ep/ functions/pci-epf-ntb/func1/primary
-+        # ln -s controllers/2910000.pcie-ep/ functions/pci-epf-ntb/func1/secondary
-+
-+Once the above step is completed, both the PCI endpoint controllers is ready to
-+establish a link with the host.
-+
-+
-+Start the Link
-+--------------
-+
-+In order for the endpoint device to establish a link with the host, the _start_
-+field should be populated with '1'. For NTB, both the PCIe endpoint controllers
-+should establish link with the host::
-+
-+        #echo 1 > controllers/2900000.pcie-ep/start
-+        #echo 1 > controllers/2910000.pcie-ep/start
-+
-+
-+RootComplex Device
-+==================
-+
-+lspci Output
-+------------
-+
-+Note that the devices listed here correspond to the value populated in 1.4
-+above::
-+
-+        # lspci
-+        0000:00:00.0 PCI bridge: Texas Instruments Device b00d
-+        0000:01:00.0 RAM memory: Texas Instruments Device b00d
-+
-+
-+Using ntb_hw_epf Device
-+-----------------------
-+
-+The host side software follows the standard NTB software architecture in Linux.
-+All the existing client side NTB utilities like NTB Transport Client and NTB
-+Netdev, NTB Ping Pong Test Client and NTB Tool Test Clientcan be used with NTB
-+function device.
-+
-+For more information on NTB see
-+Documentation/driver-api/ntb.rst
--- 
-2.17.1
+-	unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
++	unsigned int flags = PCI_IRQ_MSI_TYPES;
+
+Or maybe even:
+
+-	unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
++	unsigned int flags = PCI_IRQ_ALL_TYPES;
+
+- 	if (dd->flags & QIB_HAS_INTX)
+-		flags |= PCI_IRQ_LEGACY;
+
+?
+
+M
+
+> 	maxvec = (nent && *nent) ? *nent : 1;
+> 	nvec = pci_alloc_irq_vectors(dd->pcidev, 1, maxvec, flags);
+> 	if (nvec < 0)
+>--
+>2.17.2
 
