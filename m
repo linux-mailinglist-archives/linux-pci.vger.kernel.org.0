@@ -2,135 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E3AC1F6298
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 09:35:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 132E31F66B3
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 13:32:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgFKHfL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jun 2020 03:35:11 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:56288 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726706AbgFKHfL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:35:11 -0400
-Received: from [192.168.1.5] (212-5-158-114.ip.btc-net.bg [212.5.158.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 6254ECFF7;
-        Thu, 11 Jun 2020 10:35:02 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1591860906; bh=aiqBHTY8ZPxp5JouTm8Ngv3wTrmfhGm7s2gTLjEFSx8=;
-        h=Subject:To:Cc:From:Date:From;
-        b=dZj3xWSXccc198xS9g5MVVlz1PdQpRk3Q7znQWDLD2LBPDmW05qC9AtYlHZvUy86h
-         wxBz2JQ2yaxKs2+S0Pou3mc+qas1Me/UpFjqOCH0HD6AXGjlsMjk6o0dPTV5jY2d18
-         xRuJb3y0aWlEEhnZymkqSAcML5ieHYIN2rL+GevLdzPk05FnY2rQj2ieLZPbdb2IXd
-         jrWyL226HQsBGlOM61lWIN4n+zjbGnnX0cNoZpQaox1oeSq8fGQHbXY8045XKJV9f5
-         uMMvI64zw/DWmUgWnDz0GGGsmYUO9l2xg+BvAuou5ehuKFE5y5rMowe6eSOSGqqweZ
-         WA0iZ/DXGDHKA==
-Subject: Re: [PATCH v6 11/12] PCI: qcom: Add Force GEN1 support
-To:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200610160655.27799-1-ansuelsmth@gmail.com>
- <20200610160655.27799-12-ansuelsmth@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <a2e85e3e-0b4e-5a9b-4b35-b37de6d64bd8@mm-sol.com>
-Date:   Thu, 11 Jun 2020 10:34:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200610160655.27799-12-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727025AbgFKLcx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Jun 2020 07:32:53 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57974 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726959AbgFKLcv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:32:51 -0400
+Received: from ticat.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH99fFuJe6e1AAA--.2135S2;
+        Thu, 11 Jun 2020 19:32:47 +0800 (CST)
+From:   Peng Fan <fanpeng@loongson.cn>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH] tools: PCI: Fix memory leak in run_test
+Date:   Thu, 11 Jun 2020 19:32:46 +0800
+Message-Id: <1591875166-12243-1-git-send-email-fanpeng@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxH99fFuJe6e1AAA--.2135S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw1kWry3uw17tF4UWw48JFb_yoWxurg_K3
+        W2qwn7Wr45Xry8tasxA345WFyxCan8Wr4xWayftF47uFWvkan09F97ZrWkGF45Gw4avF9I
+        kwnrAFy0vw17CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gw4l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU8wIhUUUUU=
+X-CM-SenderInfo: xidq1vtqj6z05rqj20fqof0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ansuel,
+We should free "test" before the return of run_test.
 
-Sorry that I didn't make this comment earlier.
+Signed-off-by: Peng Fan <fanpeng@loongson.cn>
+---
+ tools/pci/pcitest.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The subject and description are misleading. The patch itself is not
-forcing anything (the DT is filling the gen to 1), so please fix that.
-
-On 6/10/20 7:06 PM, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
-> 
-> Add Force GEN1 support needed in some ipq8064 board that needs to limit
-> some PCIe line to gen1 for some hardware limitation. This is set by the
-> max-link-speed binding and needed by some soc based on ipq8064. (for
-> example Netgear R7800 router)
-> 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 259b627bf890..c40921589122 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -27,6 +27,7 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  
->  #define PCIE20_PARF_SYS_CTRL			0x00
-> @@ -99,6 +100,8 @@
->  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
->  #define SLV_ADDR_SPACE_SZ			0x10000000
->  
-> +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
-> +
->  #define DEVICE_TYPE_RC				0x4
->  
->  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> @@ -195,6 +198,7 @@ struct qcom_pcie {
->  	struct phy *phy;
->  	struct gpio_desc *reset;
->  	const struct qcom_pcie_ops *ops;
-> +	int gen;
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	/* wait for clock acquisition */
->  	usleep_range(1000, 1500);
->  
-> +	if (pcie->gen == 1) {
-> +		val = readl(pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +		val |= PCI_EXP_LNKSTA_CLS_2_5GB;
-> +		writel(val, pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +	}
->  
->  	/* Set the Max TLP size to 2K, instead of using default of 4K */
->  	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
-> @@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> +	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-> +	if (pcie->gen < 0)
-> +		pcie->gen = 2;
-> +
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
->  	pcie->parf = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(pcie->parf)) {
-> 
-
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 0a1344c..7c20332 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -47,6 +47,7 @@ static int run_test(struct pci_test *test)
+ 	fd = open(test->device, O_RDWR);
+ 	if (fd < 0) {
+ 		perror("can't open PCI Endpoint Test device");
++		free(test);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -151,6 +152,7 @@ static int run_test(struct pci_test *test)
+ 
+ 	fflush(stdout);
+ 	close(fd);
++	free(test);
+ 	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+ }
+ 
 -- 
-regards,
-Stan
+2.1.0
+
