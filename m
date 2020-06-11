@@ -2,145 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B83F1F6944
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 15:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2111F69AA
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jun 2020 16:12:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgFKNoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jun 2020 09:44:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51480 "EHLO mail.kernel.org"
+        id S1728039AbgFKOLc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Jun 2020 10:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgFKNoO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:44:14 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726905AbgFKOLc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:11:32 -0400
+Received: from [192.168.68.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99BB7207ED;
-        Thu, 11 Jun 2020 13:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA002083E;
+        Thu, 11 Jun 2020 14:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591883053;
-        bh=xVUiCstzwxRiqsIstYcB/oExcpYP3mQ06Uzbjsb1RaA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fCcWdDxUhizLu05tim7PdziyoQm0TsunDkVTg5gnd7NVQ1v3Z0WssIgGmBFQfHtjv
-         RhzS1KxhkAIB/8lcKjWTAKHFcrZKT3jWnGdHyhvzRbe6z7xUsGSLs5/OdaMspITUr5
-         l7XwqkZoKSdNXIH6IjuwKxi8iamLy2XFOjKChtzg=
-Date:   Thu, 11 Jun 2020 08:44:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
+        s=default; t=1591884691;
+        bh=zh1lFs+8r4VDNriEOLadueTPZsr+K0w3KsIGgXTzDyI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bPAGjp5cf9bE8U4Ygi+28VpSCI5xVC3F2lsZWm57e4cZnkGBZ5J526sRiSUk0onPh
+         46d5JaKTOPS8n2MFjufRykDUD+XH8Vjb6/EJ2t1H1onyETccRXukXg7uMwG1Fs7cUR
+         Ik/cDD+t1Vi5pKaPTFTCz0GN5d9ID75kiKF/w4bc=
+Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-Message-ID: <20200611134410.GA1586057@bjorn-Precision-5520>
+        Arnd Bergmann <arnd@arndb.de>, kenneth-lee-2012@foxmail.com,
+        Wangzhou <wangzhou1@hisilicon.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200610074633.GA6844@myrica>
+ <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <a849234d-453a-8faa-93dd-12ea1b0165ab@kernel.org>
+Date:   Thu, 11 Jun 2020 10:11:30 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
+In-Reply-To: <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d8a7ec4-b578-a97a-7835-453806f4e3ef@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:54:45AM +0800, Zhangfei Gao wrote:
-> On 2020/6/10 上午12:49, Bjorn Helgaas wrote:
-> > On Tue, Jun 09, 2020 at 11:15:06AM +0200, Arnd Bergmann wrote:
-> > > On Tue, Jun 9, 2020 at 6:02 AM Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-> > > > On 2020/6/9 上午12:41, Bjorn Helgaas wrote:
-> > > > > On Mon, Jun 08, 2020 at 10:54:15AM +0800, Zhangfei Gao wrote:
-> > > > > > On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
-> > > > > > > > +++ b/drivers/iommu/iommu.c
-> > > > > > > > @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
-> > > > > > > > fwnode_handle *iommu_fwnode,
-> > > > > > > >            fwspec->iommu_fwnode = iommu_fwnode;
-> > > > > > > >            fwspec->ops = ops;
-> > > > > > > >            dev_iommu_fwspec_set(dev, fwspec);
-> > > > > > > > +
-> > > > > > > > +       if (dev_is_pci(dev))
-> > > > > > > > +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
-> > > > > > > > +
-> > > > > > > > 
-> > > > > > > > Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
-> > > > > > > > Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
-> > > > > > > > Will send this when 5.8-rc1 is open.
-> > > > > > > Wait, this whole fixup approach seems wrong to me.  No matter how you
-> > > > > > > do the fixup, it's still a fixup, which means it requires ongoing
-> > > > > > > maintenance.  Surely we don't want to have to add the Vendor/Device ID
-> > > > > > > for every new AMBA device that comes along, do we?
-> > > > > > > 
-> > > > > > Here the fake pci device has standard PCI cfg space, but physical
-> > > > > > implementation is base on AMBA
-> > > > > > They can provide pasid feature.
-> > > > > > However,
-> > > > > > 1, does not support tlp since they are not real pci devices.
-> > > > > > 2. does not support pri, instead support stall (provided by smmu)
-> > > > > > And stall is not a pci feature, so it is not described in struct pci_dev,
-> > > > > > but in struct iommu_fwspec.
-> > > > > > So we use this fixup to tell pci system that the devices can support stall,
-> > > > > > and hereby support pasid.
-> > > > > This did not answer my question.  Are you proposing that we update a
-> > > > > quirk every time a new AMBA device is released?  I don't think that
-> > > > > would be a good model.
-> > > > Yes, you are right, but we do not have any better idea yet.
-> > > > Currently we have three fake pci devices, which support stall and pasid.
-> > > > We have to let pci system know the device can support pasid, because of
-> > > > stall feature, though not support pri.
-> > > > Do you have any other ideas?
-> > > It sounds like the best way would be to allocate a PCI capability for it, so
-> > > detection can be done through config space, at least in future devices,
-> > > or possibly after a firmware update if the config space in your system
-> > > is controlled by firmware somewhere.  Once there is a proper mechanism
-> > > to do this, using fixups to detect the early devices that don't use that
-> > > should be uncontroversial. I have no idea what the process or timeline
-> > > is to add new capabilities into the PCIe specification, or if this one
-> > > would be acceptable to the PCI SIG at all.
-> > That sounds like a possibility.  The spec already defines a
-> > Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
-> > be a candidate.
-> Will investigate this, thanks Bjorn
+On 6/10/2020 4:00 AM, Zhangfei Gao wrote:
+>> Why not set the eetlp_prefix_path bit from a PCI quirk?  Unlike the stall
+>> problem from the other thread, this one looks like a simple design
+>> mistake
+>> that can be fixed easily in future iterations of the platform: just set
+>> the "End-End TLP Prefix Supported" bit in the Device Capability 2
+>> Register
+>> of all bridges.
+> Yes, we can still set eetlp_prefix_path bit from a PCI quirk.
 
-FWIW, there's also a Vendor-Specific Capability that can appear in the
-first 256 bytes of config space (the Vendor-Specific Extended
-Capability must appear in the "Extended Configuration Space" from
-0x100-0xfff).
+I agree. Vendor specific quirk should be the way to go here if it is not
+compliant with the spec.
 
-> > > If detection cannot be done through PCI config space, the next best
-> > > alternative is to pass auxiliary data through firmware. On DT based
-> > > machines, you can list non-hotpluggable PCIe devices and add custom
-> > > properties that could be read during device enumeration. I assume
-> > > ACPI has something similar, but I have not done that.
-> Yes, thanks Arnd
-> > ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
-> > like this better than a PCI capability because the property you need
-> > to expose is not a PCI property.
-> _DSM may not workable, since it is working in runtime.
-> We need stall information in init stage, neither too early (after allocation
-> of iommu_fwspec)
-> nor too late (before arm_smmu_add_device ).
-
-I'm not aware of a restriction on when _DSM can be evaluated.  I'm
-looking at ACPI v6.3, sec 9.1.1.  Are you seeing something different?
-
-> By the way, It would be a long time if we need modify either pcie
-> spec or acpi spec.  Can we use pci_fixup_device in iommu_fwspec_init
-> first, it is relatively simple and meet the requirement of platform
-> device using pasid, and they are already in product.
-
-Neither the PCI Vendor-Specific Capability nor the ACPI _DSM requires
-a spec change.  Both can be completely vendor-defined.
