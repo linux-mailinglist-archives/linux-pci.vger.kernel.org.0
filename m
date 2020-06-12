@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC9611F7E33
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 22:48:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87A1D1F7E37
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 22:48:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgFLUsR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Jun 2020 16:48:17 -0400
-Received: from mga18.intel.com ([134.134.136.126]:65310 "EHLO mga18.intel.com"
+        id S1726397AbgFLUsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Jun 2020 16:48:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1168 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgFLUsR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:48:17 -0400
-IronPort-SDR: /AMq4vIQzi9x+yFRB0xvCw+2uMzbdjv32tZNHVO/FNrRD9hr/sv+WwBvo5YK2M/S98CvRFSAS4
- Esp0RiNvz2KQ==
+        id S1726387AbgFLUsS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Jun 2020 16:48:18 -0400
+IronPort-SDR: 9P098SalwTvKwqfOF9//WVn7gWAJTSED4hIMylUglgtv1On6+xyn7Jyegs74dMpa2DhHjU/Rcf
+ KVWAEOvexEzQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 13:48:15 -0700
-IronPort-SDR: 4NjQm8C+pO5dahmYLr9aLSNxsQI3iPrulmY0iZIV1TRQ+RfaIf8wugJooB1goa9bH+hO+N2gkq
- l4xr+WQwfPhw==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 13:48:17 -0700
+IronPort-SDR: 3MfeTCozN7FPSQrnsX3nzouD+Rf998ENV6PE36NyhpvxXUaau82Z14vNnqGRZYkZULZiFrq52M
+ dLP7f54KZ0jw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,504,1583222400"; 
-   d="scan'208";a="448426985"
+   d="scan'208";a="275863120"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 12 Jun 2020 13:48:14 -0700
+  by orsmga006.jf.intel.com with ESMTP; 12 Jun 2020 13:48:17 -0700
 Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id DE0F95803C5;
-        Fri, 12 Jun 2020 13:48:14 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 516885803C5;
+        Fri, 12 Jun 2020 13:48:17 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
         bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
@@ -34,9 +34,9 @@ To:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
 Cc:     "David E. Box" <david.e.box@linux.intel.com>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
-Date:   Fri, 12 Jun 2020 13:48:19 -0700
-Message-Id: <20200612204820.20111-2-david.e.box@linux.intel.com>
+Subject: [PATCH V2 2/2] drivers/nvme: Add support for ACPI StorageD3Enable property
+Date:   Fri, 12 Jun 2020 13:48:20 -0700
+Message-Id: <20200612204820.20111-3-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200428003214.3764-1-david.e.box@linux.intel.com>
 References: <20200428003214.3764-1-david.e.box@linux.intel.com>
@@ -47,124 +47,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-StorageD3Enable is a boolean property that indicates that the platform
-wants to use D3 for PCIe storage drives during suspend-to-idle. It is a
-BIOS work around that is currently in use on shipping systems like some
-Intel Comet Lake platforms. It is meant to change default driver policy for
-suspend that may cause higher power consumption.
+This patch implements a solution for a BIOS hack used on some currently
+shipping Intel systems to address issues with power management policy
+decisions concerning PCIe NVMe drives. Some newer Intel platforms, like
+some Comet Lake systems, require that PCIe devices use D3 when doing
+suspend-to-idle in order to allow the platform to realize maximum power
+savings. This is particularly needed to support ATX power supply shutdown
+on desktop systems. In order to ensure this happens for root ports with
+storage devices, Microsoft apparently created this ACPI _DSD property as a
+way to override their driver policy. To my knowledge this property has not
+been discussed with the NVME specification body.
 
-Add the DSD property for recognition by fwnode calls and provide an
-exported symbol for device drivers to use to read the property as needed.
+Though the solution is not ideal, it addresses a problem that also affects
+Linux since the NVMe driver's default policy of using NVMe APST during
+suspend-to-idle would lead to higher power consumption for these platforms.
+
+The patch uses the previously added pci_acpi_storage_d3 function to check
+for the StorageD3Enable property during probe and enables D3 as a quirk if
+set.  It also provides a 'noacpi' module parameter to allow skipping the
+quirk if needed.
+
+Tested on:
+PM961 NVMe SED Samsung 512GB
+INTEL SSDPEKKF512G8
 
 Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/acpi/property.c |  3 +++
- drivers/pci/pci-acpi.c  | 59 +++++++++++++++++++++++++++++++++++++++++
- include/linux/pci.h     |  2 ++
- 3 files changed, 64 insertions(+)
+ drivers/nvme/host/pci.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index e601c4511a8b..c2e2ae774a19 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
- 	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
- 	GUID_INIT(0x6c501103, 0xc189, 0x4296,
- 		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
-+	/* Storage device needs D3 GUID: 5025030f-842f-4ab4-a561-99a5189762d0 */
-+	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
-+		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
- };
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 4e79e412b276..427505c47e79 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -78,6 +78,10 @@ static unsigned int poll_queues;
+ module_param(poll_queues, uint, 0644);
+ MODULE_PARM_DESC(poll_queues, "Number of queues to use for polled IO.");
  
- /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index d21969fba6ab..732df524e09c 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -972,6 +972,65 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 	return val == 1;
- }
++static bool noacpi;
++module_param(noacpi, bool, 0444);
++MODULE_PARM_DESC(noacpi, "disable all acpi bios quirks");
++
+ struct nvme_dev;
+ struct nvme_queue;
  
-+/**
-+ * pci_acpi_storage_d3 - whether root port requests D3 for idle suspend
-+ * @pdev: PCI device to check
-+ *
-+ * Returns true if the ACPI companion device contains the "StorageD3Enable"
-+ * _DSD property and the value is 1. This indicates that the root port is
-+ * used by a storage device and the platform is requesting D3 for the
-+ * device during suspend to idle in order to support platform pm.
-+ */
-+bool pci_acpi_storage_d3(struct pci_dev *dev)
-+{
-+	const struct fwnode_handle *fwnode;
-+	struct acpi_device *adev;
-+	struct pci_dev *root;
-+	acpi_handle handle;
-+	acpi_status status;
-+	bool ret = false;
-+	u8 val;
-+
-+	/*
-+	 * Look for _DSD property specifying that the storage device on
-+	 * the port must use D3 to support deep platform power savings during
-+	 * suspend-to-idle
-+	 */
-+	root = pci_find_pcie_root_port(dev);
-+	if (!root)
-+		return false;
-+
-+	adev = ACPI_COMPANION(&root->dev);
-+	if (!adev) {
+@@ -2777,6 +2781,16 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	quirks |= check_vendor_combination_bug(pdev);
+ 
++	if (!noacpi && pci_acpi_storage_d3(pdev)) {
 +		/*
-+		 * It is possible that the ACPI companion is not yet bound
-+		 * for the root port so look it up manually here.
++		 * Some systems use a bios work around to ask for D3 on
++		 * platforms that support kernel managed suspend.
 +		 */
-+		if (!adev && !pci_dev_is_added(root))
-+			adev = acpi_pci_find_companion(&root->dev);
++		dev_info(&pdev->dev,
++			 "platform quirk: setting simple suspend\n");
++		quirks |= NVME_QUIRK_SIMPLE_SUSPEND;
 +	}
 +
-+	if (!adev)
-+		return false;
-+
-+	status = acpi_get_handle(adev->handle, "PXSX", &handle);
-+	if (ACPI_FAILURE(status))
-+		return false;
-+
-+	adev = acpi_bus_get_acpi_device(handle);
-+	if (!adev)
-+		return false;
-+
-+	fwnode = acpi_fwnode_handle(adev);
-+	if (!fwnode_property_read_u8(fwnode, "StorageD3Enable", &val))
-+		ret = (val == 1);
-+
-+	acpi_bus_put_acpi_device(adev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pci_acpi_storage_d3);
-+
- static bool acpi_pci_power_manageable(struct pci_dev *dev)
- {
- 	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 83ce1cdf5676..396fcb269a60 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2318,10 +2318,12 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
- void
- pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
- bool pci_pr3_present(struct pci_dev *pdev);
-+bool pci_acpi_storage_d3(struct pci_dev *dev);
- #else
- static inline struct irq_domain *
- pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
- static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
-+static inline bool pci_acpi_storage_d3(struct pci_dev *dev) { return false; }
- #endif
- 
- #ifdef CONFIG_EEH
+ 	/*
+ 	 * Double check that our mempool alloc size will cover the biggest
+ 	 * command we support.
 -- 
 2.20.1
 
