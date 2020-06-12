@@ -2,121 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 887DC1F7943
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 16:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FE7D1F7A6C
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 17:11:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgFLODJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Jun 2020 10:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLODJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Jun 2020 10:03:09 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED08FC03E96F;
-        Fri, 12 Jun 2020 07:03:08 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x14so9869261wrp.2;
-        Fri, 12 Jun 2020 07:03:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aZNRsGSij8yEXoRL33rsv2fSZi9pkwOnUqRTKVPOJGo=;
-        b=q8MOxvbMRb9Z74pxJ+Jrzy7qklzY2KHArIxgRj8vVsXInKI4DuhFQ5iqFjH4IUE5ZM
-         1durRcrUVyUc0Sh5RDI27snx3KAGRx+MYEKxRcFVeefnmh+BYJHXmD5nIaOM4ogk2E+k
-         usnRW3zkoJ/2GakAhV+uoZaDHMnh6UOJ4P9VW+SbKAoO6d7sYTPsDVNx4DUZH/OFWUJt
-         geQPgCTReP5jnl3RUXINU0pRsuEc4ZC2RrXprn3ZL+89xu2wF9M2HlAR5hGv+rxvmsQ4
-         Z34NS7TH5FshnKcKTzjABzPVya1Nidlm6YuofMltEIkuBRASt1r9qkiZJ56SrJ6/CN6a
-         436A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aZNRsGSij8yEXoRL33rsv2fSZi9pkwOnUqRTKVPOJGo=;
-        b=On8AF+PC0FVg0neyAR0cRmE/6QMM//ypdDMslyv2wydcIiW1qBVfxZl4VbWEGJvaDj
-         CGI73JcC4a7zECJTXpKcT5OtqqNUZXK+Sz2IF+arGg2Cmz+PRX6b9t8N75bl8kXJhs8G
-         khVmEsNosPUAhNE9pB4HB3lunn1aiHqfCU/uRsnH5OaN+DvP3aWvLHnWe4f4BvoPr2wp
-         K0hZUmN5SO9sIVvgYx3i6iq5rE/cfPJDt8hYy7wRRbQ2Iobo6HEH9tahoV2uZIftqRHL
-         rdxQRCl68heEb8EJy0Ug9834D8UtSJdkwgJqGZOxKb7TxQFn///ij4y71tw/WLmUP2bT
-         R00A==
-X-Gm-Message-State: AOAM530S01Gf8D4EzU6C1z1y2OZ/KmL3GCR/1ZhWEttSAoCOEfs85EKP
-        etAK6hrwCRd7v6g9rOH5w1Q=
-X-Google-Smtp-Source: ABdhPJzYiaoohxqrCEND9i4JKTHNRjwkvz2Le3u67elvIdpD2gyXz0emLtxheJa5nuG+0InojSn7Og==
-X-Received: by 2002:adf:db47:: with SMTP id f7mr15772418wrj.101.1591970587680;
-        Fri, 12 Jun 2020 07:03:07 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id y80sm9047336wmc.34.2020.06.12.07.03.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 07:03:06 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH] PCI: tegra: Remove PLL power supplies
-Date:   Fri, 12 Jun 2020 16:03:05 +0200
-Message-Id: <20200612140305.2343139-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        id S1726257AbgFLPLR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Jun 2020 11:11:17 -0400
+Received: from mga09.intel.com ([134.134.136.24]:16985 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgFLPLR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Jun 2020 11:11:17 -0400
+IronPort-SDR: HUiCym2u5oAucKpHPMLIaH4mili8nEQVNYbX+/Geq1d+3/QLnGBavlnKTlCa5YMHTju+CKrk6y
+ 06USnvGvZeTQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 08:11:16 -0700
+IronPort-SDR: gWYtmwS4CqAZdgOvyx7dX8ZDmyOqJ8Y4Fncp77qtakbVb+6bOLwLOrg3dsdSHXoyVoGIl5GBnZ
+ RVwuMDRwmTLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="271925759"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by orsmga003.jf.intel.com with ESMTP; 12 Jun 2020 08:11:16 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.250]) by
+ ORSMSX108.amr.corp.intel.com ([169.254.2.62]) with mapi id 14.03.0439.000;
+ Fri, 12 Jun 2020 08:11:16 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "andrzej.jakowski@linux.intel.com" <andrzej.jakowski@linux.intel.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+Subject: Re: [PATCH v3 1/2] PCI: vmd: Filter resource type bits from shadow
+ register
+Thread-Topic: [PATCH v3 1/2] PCI: vmd: Filter resource type bits from shadow
+ register
+Thread-Index: AQHWNJ6/KA9BUx6s/UuCJV3Lsz6Rn6i/VTmAgABYZACAAAgMAIAUwX2AgAEXAYCAABUAgA==
+Date:   Fri, 12 Jun 2020 15:11:15 +0000
+Message-ID: <8466e3ff386547a3bbaf578c3099dd12d545a7f8.camel@intel.com>
+References: <20200528030240.16024-1-jonathan.derrick@intel.com>
+         <20200528030240.16024-3-jonathan.derrick@intel.com>
+         <20200529103315.GC12270@e121166-lin.cambridge.arm.com>
+         <163e8cb37ece0c8daa6d6e5fd7fcae47ba4fa437.camel@intel.com>
+         <20200529161824.GA17642@e121166-lin.cambridge.arm.com>
+         <f1d36b8fc4ab7aacf6efca19303b04a5b4f8189c.camel@intel.com>
+         <20200612135443.GA25653@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200612135443.GA25653@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.209.129.249]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D2235C0C9FC0184E9366125CF83DC4A3@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
-
-The Tegra PCI controller driver doesn't need to control the PLL power
-supplies directly, but rather uses the pads provided by the XUSB pad
-controller, which in turn is responsible for supplying power to the
-PLLs.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 235b456698fc..f87a09d21eb0 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2025,7 +2025,7 @@ static int tegra_pcie_get_regulators(struct tegra_pcie *pcie, u32 lane_mask)
- 		pcie->supplies[i++].supply = "hvdd-pex";
- 		pcie->supplies[i++].supply = "vddio-pexctl-aud";
- 	} else if (of_device_is_compatible(np, "nvidia,tegra210-pcie")) {
--		pcie->num_supplies = 6;
-+		pcie->num_supplies = 3;
- 
- 		pcie->supplies = devm_kcalloc(pcie->dev, pcie->num_supplies,
- 					      sizeof(*pcie->supplies),
-@@ -2033,14 +2033,11 @@ static int tegra_pcie_get_regulators(struct tegra_pcie *pcie, u32 lane_mask)
- 		if (!pcie->supplies)
- 			return -ENOMEM;
- 
--		pcie->supplies[i++].supply = "avdd-pll-uerefe";
- 		pcie->supplies[i++].supply = "hvddio-pex";
- 		pcie->supplies[i++].supply = "dvddio-pex";
--		pcie->supplies[i++].supply = "dvdd-pex-pll";
--		pcie->supplies[i++].supply = "hvdd-pex-pll-e";
- 		pcie->supplies[i++].supply = "vddio-pex-ctl";
- 	} else if (of_device_is_compatible(np, "nvidia,tegra124-pcie")) {
--		pcie->num_supplies = 7;
-+		pcie->num_supplies = 4;
- 
- 		pcie->supplies = devm_kcalloc(dev, pcie->num_supplies,
- 					      sizeof(*pcie->supplies),
-@@ -2050,11 +2047,8 @@ static int tegra_pcie_get_regulators(struct tegra_pcie *pcie, u32 lane_mask)
- 
- 		pcie->supplies[i++].supply = "avddio-pex";
- 		pcie->supplies[i++].supply = "dvddio-pex";
--		pcie->supplies[i++].supply = "avdd-pex-pll";
- 		pcie->supplies[i++].supply = "hvdd-pex";
--		pcie->supplies[i++].supply = "hvdd-pex-pll-e";
- 		pcie->supplies[i++].supply = "vddio-pex-ctl";
--		pcie->supplies[i++].supply = "avdd-pll-erefe";
- 	} else if (of_device_is_compatible(np, "nvidia,tegra30-pcie")) {
- 		bool need_pexa = false, need_pexb = false;
- 
--- 
-2.24.1
-
+T24gRnJpLCAyMDIwLTA2LTEyIGF0IDE0OjU0ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gT24gVGh1LCBKdW4gMTEsIDIwMjAgYXQgMDk6MTY6NDhQTSArMDAwMCwgRGVycmljaywg
+Sm9uYXRoYW4gd3JvdGU6DQo+IA0KPiBbLi4uXQ0KPiANCj4gPiA+ID4gPiBIaSBKb24sDQo+ID4g
+PiA+ID4gDQo+ID4gPiA+ID4gaXQgbG9va3MgbGlrZSBJIGNhbiB0YWtlIHRoaXMgcGF0Y2ggZm9y
+IHY1Ljggd2hlcmVhcyBwYXRjaCAyIGRlcGVuZHMNCj4gPiA+ID4gPiBvbiB0aGUgUUVNVSBjaGFu
+Z2VzIGFjY2VwdGFuY2UgYW5kIHNob3VsZCBwcm9iYWJseSB3YWl0Lg0KPiA+ID4gPiA+IA0KPiA+
+ID4gPiA+IFBsZWFzZSBsZXQgbWUga25vdyB5b3VyIHRob3VnaHRzIGFzYXAgYW5kIEkgd2lsbCB0
+cnkgdG8gYXQgbGVhc3QNCj4gPiA+ID4gPiBzcXVlZXplIHRoaXMgcGF0Y2ggaW4uDQo+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gTG9yZW56bw0KPiA+ID4gPiANCj4gPiA+ID4gSGkgTG9yZW56bywNCj4g
+PiA+ID4gDQo+ID4gPiA+IFRoaXMgaXMgZmluZS4gUGxlYXNlIHRha2UgUGF0Y2ggMS4NCj4gPiA+
+ID4gUGF0Y2ggMiBpcyBoYXJtbGVzcyB3aXRob3V0IHRoZSBRRU1VIGNoYW5nZXMsIGJ1dCBtYXkg
+YWx3YXlzIG5lZWQgYQ0KPiA+ID4gPiBkaWZmZXJlbnQgYXBwcm9hY2guDQo+ID4gPiANCj4gPiA+
+IFB1bGxlZCBwYXRjaCAxIGludG8gcGNpL3ZtZCwgdGhhbmtzLg0KPiA+ID4gDQo+ID4gPiBMb3Jl
+bnpvDQo+ID4gDQo+ID4gSGkgTG9yZW56bywNCj4gPiANCj4gPiBBbGV4IGhhcyBwci1lZCB0aGUg
+UUVNVSBwYXRjaCBbMV0NCj4gPiBJcyBpdCB0b28gbGF0ZSB0byBwdWxsIHBhdGNoIDIvMiBmb3Ig
+djUuOD8NCj4gDQo+IEkgdGhpbmsgaXQgaXMgLSBJIGRvbid0IGtub3cgaWYgQmpvcm4gcGxhbm5l
+ZCBhIHNlY29uZCBQUiBmb3IgdGhpcw0KPiBtZXJnZSB3aW5kb3csIGlmIG5vdCBpdCBpcyB2NS45
+IG1hdGVyaWFsIEkgYW0gYWZyYWlkLg0KPiANCj4gVGhhbmtzLA0KPiBMb3JlbnpvDQo+IA0KPiA+
+IFsxXSANCj4gPiBodHRwczovL2dpdGh1Yi5jb20vYXdpbGxpYW0vcWVtdS12ZmlvL3JlbGVhc2Vz
+L3RhZy92ZmlvLXVwZGF0ZS0yMDIwMDYxMS4wDQoNCk5vIHByb2JsZW0NCkpvbg0K
