@@ -2,114 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87A1D1F7E37
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 22:48:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 477261F7EA1
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 23:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgFLUsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Jun 2020 16:48:19 -0400
-Received: from mga17.intel.com ([192.55.52.151]:1168 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbgFLUsS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:48:18 -0400
-IronPort-SDR: 9P098SalwTvKwqfOF9//WVn7gWAJTSED4hIMylUglgtv1On6+xyn7Jyegs74dMpa2DhHjU/Rcf
- KVWAEOvexEzQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 13:48:17 -0700
-IronPort-SDR: 3MfeTCozN7FPSQrnsX3nzouD+Rf998ENV6PE36NyhpvxXUaau82Z14vNnqGRZYkZULZiFrq52M
- dLP7f54KZ0jw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,504,1583222400"; 
-   d="scan'208";a="275863120"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 12 Jun 2020 13:48:17 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 516885803C5;
-        Fri, 12 Jun 2020 13:48:17 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
-        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: [PATCH V2 2/2] drivers/nvme: Add support for ACPI StorageD3Enable property
-Date:   Fri, 12 Jun 2020 13:48:20 -0700
-Message-Id: <20200612204820.20111-3-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200428003214.3764-1-david.e.box@linux.intel.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
+        id S1726392AbgFLV70 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Jun 2020 17:59:26 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34029 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgFLV7Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Jun 2020 17:59:25 -0400
+Received: by mail-il1-f196.google.com with SMTP id x18so10190730ilp.1;
+        Fri, 12 Jun 2020 14:59:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2F5uGqx/WgH/DEdF5jL50sJc6KALUC66tcH1BXMzDQg=;
+        b=Bw1pu/bowRtt5reFrrJppCdvsXTKsZ/3XOIEo/I8ncBHvEV2JMvQdgPEnO4CoRU5w4
+         NcWvVMOuK7w60YNunnziQRF6bgAoDp1cMHMoTMD6LoEjN/2lrmc+3fDbUE7UCoe8h1It
+         uODOyhPWrhkpQRB2kAraTEMDPghpA7C6ZNR6pI3mD+Lu+O+SwL4yNd69ybRStg4XTaNl
+         jLvQ43vRf1xvoX39LU4YiI6aeUo47kE8RpY6oU6e0Zb9S0IO2KkDYddwhbZttOTPeOdZ
+         Pks+qqVxV6mI+PBswpjUaQofU1mBqRcZTRkICYReAbhtfwSKTjjTK9hYBmS8VEYqm/MD
+         GxfQ==
+X-Gm-Message-State: AOAM533FsYAsL8YZjMvY6WBRJfnVZwW/UW0iNdORfp8Fs/jpgp2u16Jb
+        ZEJxyt/auqQ8UQxpO8qb51gs+Eg=
+X-Google-Smtp-Source: ABdhPJywVx2eakgVkkGLPkb5txGKoTOWYRUqrcf8/RkjN9bEr/ESVtSbdMes1Woh+ZCHmJELA+GZwQ==
+X-Received: by 2002:a05:6e02:dc5:: with SMTP id l5mr14757952ilj.216.1591999162983;
+        Fri, 12 Jun 2020 14:59:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id y5sm3784445ilp.57.2020.06.12.14.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 14:59:22 -0700 (PDT)
+Received: (nullmailer pid 3887640 invoked by uid 1000);
+        Fri, 12 Jun 2020 21:59:21 -0000
+Date:   Fri, 12 Jun 2020 15:59:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daire.McNamara@microchip.com
+Cc:     amurray@thegoodpenguin.co.uk, linux-pci@vger.kernel.org,
+        robh+dt@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com
+Subject: Re: [PATCH v11 1/2] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+Message-ID: <20200612215921.GB3886706@bogus>
+References: <bb21af9144fe624a42ddc3ea302667fa9a46a4c8.camel@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb21af9144fe624a42ddc3ea302667fa9a46a4c8.camel@microchip.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch implements a solution for a BIOS hack used on some currently
-shipping Intel systems to address issues with power management policy
-decisions concerning PCIe NVMe drives. Some newer Intel platforms, like
-some Comet Lake systems, require that PCIe devices use D3 when doing
-suspend-to-idle in order to allow the platform to realize maximum power
-savings. This is particularly needed to support ATX power supply shutdown
-on desktop systems. In order to ensure this happens for root ports with
-storage devices, Microsoft apparently created this ACPI _DSD property as a
-way to override their driver policy. To my knowledge this property has not
-been discussed with the NVME specification body.
+On Thu, 11 Jun 2020 18:20:11 +0000, Daire.McNamara@microchip.com wrote:
+> 
+> add device tree bindings for the Microchip PCIe PolarFire PCIe controller
+> when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  .../bindings/pci/microchip,pcie-host.yaml     | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> 
 
-Though the solution is not ideal, it addresses a problem that also affects
-Linux since the NVMe driver's default policy of using NVMe APST during
-suspend-to-idle would lead to higher power consumption for these platforms.
 
-The patch uses the previously added pci_acpi_storage_d3 function to check
-for the StorageD3Enable property during probe and enables D3 as a quirk if
-set.  It also provides a 'noacpi' module parameter to allow skipping the
-quirk if needed.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Tested on:
-PM961 NVMe SED Samsung 512GB
-INTEL SSDPEKKF512G8
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dts:24.25-25.55: Warning (reg_format): /example-0/soc/pcie@2030000000:reg: property has invalid length (32 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
 
-Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/nvme/host/pci.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 4e79e412b276..427505c47e79 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -78,6 +78,10 @@ static unsigned int poll_queues;
- module_param(poll_queues, uint, 0644);
- MODULE_PARM_DESC(poll_queues, "Number of queues to use for polled IO.");
- 
-+static bool noacpi;
-+module_param(noacpi, bool, 0444);
-+MODULE_PARM_DESC(noacpi, "disable all acpi bios quirks");
-+
- struct nvme_dev;
- struct nvme_queue;
- 
-@@ -2777,6 +2781,16 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	quirks |= check_vendor_combination_bug(pdev);
- 
-+	if (!noacpi && pci_acpi_storage_d3(pdev)) {
-+		/*
-+		 * Some systems use a bios work around to ask for D3 on
-+		 * platforms that support kernel managed suspend.
-+		 */
-+		dev_info(&pdev->dev,
-+			 "platform quirk: setting simple suspend\n");
-+		quirks |= NVME_QUIRK_SIMPLE_SUSPEND;
-+	}
-+
- 	/*
- 	 * Double check that our mempool alloc size will cover the biggest
- 	 * command we support.
--- 
-2.20.1
+See https://patchwork.ozlabs.org/patch/1307687
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
