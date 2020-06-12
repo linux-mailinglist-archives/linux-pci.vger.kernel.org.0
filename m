@@ -2,109 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 833751F7383
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 07:31:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D5121F7903
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 15:55:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgFLFb2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Jun 2020 01:31:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36726 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgFLFb1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Jun 2020 01:31:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05C5UxHv105841;
-        Fri, 12 Jun 2020 00:30:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591939859;
-        bh=CsA12+jay5u2Gva3INtQk/dUmPirKLYO9bGaNjt4rNo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Cg2p8vydUTWmNQ2lzOSyDSWmdqOebHooI/vMth+bh7pd/51rQC2ntnVLZH4Lvio5P
-         uVhqDC8T3gST0DBveYMwe83KlQWQo63bBpBzPbyvL5i2bI3vuCswq4fpeMW4N5bP7L
-         gl+ViholWzlFmh9GSDIrvxLutyvzt0Fh6zAaUTlE=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05C5UxcF111764;
-        Fri, 12 Jun 2020 00:30:59 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
- Jun 2020 00:30:58 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 12 Jun 2020 00:30:58 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05C5UsBx060089;
-        Fri, 12 Jun 2020 00:30:54 -0500
-Subject: Re: [PATCH v2 01/14] Documentation: PCI: Add specification for the
- *PCI NTB* function device
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-References: <20200611130525.22746-1-kishon@ti.com>
- <20200611130525.22746-2-kishon@ti.com>
- <20200611151301.GB8681@bombadil.infradead.org>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <c8a5d63a-7026-2b40-4b26-5f4e481f7df4@ti.com>
-Date:   Fri, 12 Jun 2020 11:00:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726286AbgFLNzL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Jun 2020 09:55:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:36564 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgFLNy5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:54:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41E5F31B;
+        Fri, 12 Jun 2020 06:54:55 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEF303F6CF;
+        Fri, 12 Jun 2020 06:54:53 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 14:54:43 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "hch@lst.de" <hch@lst.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "andrzej.jakowski@linux.intel.com" <andrzej.jakowski@linux.intel.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+Subject: Re: [PATCH v3 1/2] PCI: vmd: Filter resource type bits from shadow
+ register
+Message-ID: <20200612135443.GA25653@e121166-lin.cambridge.arm.com>
+References: <20200528030240.16024-1-jonathan.derrick@intel.com>
+ <20200528030240.16024-3-jonathan.derrick@intel.com>
+ <20200529103315.GC12270@e121166-lin.cambridge.arm.com>
+ <163e8cb37ece0c8daa6d6e5fd7fcae47ba4fa437.camel@intel.com>
+ <20200529161824.GA17642@e121166-lin.cambridge.arm.com>
+ <f1d36b8fc4ab7aacf6efca19303b04a5b4f8189c.camel@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611151301.GB8681@bombadil.infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1d36b8fc4ab7aacf6efca19303b04a5b4f8189c.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Matthew,
+On Thu, Jun 11, 2020 at 09:16:48PM +0000, Derrick, Jonathan wrote:
 
-On 6/11/2020 8:43 PM, Matthew Wilcox wrote:
-> On Thu, Jun 11, 2020 at 06:35:12PM +0530, Kishon Vijay Abraham I wrote:
->> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
->> @@ -0,0 +1,344 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +=================
->> +PCI NTB Function
->> +=================
->> +
->> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
->> +
->> +PCI NTB Function allows two different systems (or hosts) to communicate
->> +with each other by configurig the endpoint instances in such a way that
->> +transactions from one system is routed to the other system.
-> 
-> At no point in this document do you expand "NTB" into Non-Transparent
-> Bridge.  The above paragraph probably also needs to say something like "By
-> making each host appear as a device to the other host".  Although maybe
-> that's not entirely accurate?  It's been a few years since I last played
-> with NTBs.
-> 
-> So how about the following opening paragraph:
-> 
-> PCI Non Transparent Bridges (NTB) allow two host systems to communicate
-> with each other by exposing each host as a device to the other host.
-> NTBs typically support the ability to generate interrupts on the remote
-> machine, expose memory ranges as BARs and perform DMA.  They also support
-> scratchpads which are areas of memory within the NTB that are accessible
-> from both machines.
-> 
-> ... feel free to fix that up if my memory is out of date or corrupted.
+[...]
 
-I think that's accurate. I'll wait for review comments on the rest of the
-series and I'll fix this one in my next revision.
+> > > > Hi Jon,
+> > > > 
+> > > > it looks like I can take this patch for v5.8 whereas patch 2 depends
+> > > > on the QEMU changes acceptance and should probably wait.
+> > > > 
+> > > > Please let me know your thoughts asap and I will try to at least
+> > > > squeeze this patch in.
+> > > > 
+> > > > Lorenzo
+> > > 
+> > > Hi Lorenzo,
+> > > 
+> > > This is fine. Please take Patch 1.
+> > > Patch 2 is harmless without the QEMU changes, but may always need a
+> > > different approach.
+> > 
+> > Pulled patch 1 into pci/vmd, thanks.
+> > 
+> > Lorenzo
+> 
+> Hi Lorenzo,
+> 
+> Alex has pr-ed the QEMU patch [1]
+> Is it too late to pull patch 2/2 for v5.8?
 
-Thanks
-Kishon
+I think it is - I don't know if Bjorn planned a second PR for this
+merge window, if not it is v5.9 material I am afraid.
+
+Thanks,
+Lorenzo
+
+> [1] 
+> https://github.com/awilliam/qemu-vfio/releases/tag/vfio-update-20200611.0
