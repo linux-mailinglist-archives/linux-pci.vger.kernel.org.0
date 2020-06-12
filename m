@@ -2,88 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB4121F71BE
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 03:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 833751F7383
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 07:31:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgFLBad (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jun 2020 21:30:33 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57042 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgFLBab (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Jun 2020 21:30:31 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL96p2uJeHUxBAA--.1868S2;
-        Fri, 12 Jun 2020 09:30:17 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726332AbgFLFb2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Jun 2020 01:31:28 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36726 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgFLFb1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Jun 2020 01:31:27 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05C5UxHv105841;
+        Fri, 12 Jun 2020 00:30:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591939859;
+        bh=CsA12+jay5u2Gva3INtQk/dUmPirKLYO9bGaNjt4rNo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Cg2p8vydUTWmNQ2lzOSyDSWmdqOebHooI/vMth+bh7pd/51rQC2ntnVLZH4Lvio5P
+         uVhqDC8T3gST0DBveYMwe83KlQWQo63bBpBzPbyvL5i2bI3vuCswq4fpeMW4N5bP7L
+         gl+ViholWzlFmh9GSDIrvxLutyvzt0Fh6zAaUTlE=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05C5UxcF111764;
+        Fri, 12 Jun 2020 00:30:59 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 00:30:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 00:30:58 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05C5UsBx060089;
+        Fri, 12 Jun 2020 00:30:54 -0500
+Subject: Re: [PATCH v2 01/14] Documentation: PCI: Add specification for the
+ *PCI NTB* function device
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
-Date:   Fri, 12 Jun 2020 09:30:17 +0800
-Message-Id: <1591925417-27665-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxL96p2uJeHUxBAA--.1868S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrW3Wr18tFWrWr48ur1DGFg_yoW8GF43pr
-        y5Aa17KF4ftFs8A3WDX3yDGas8ZF93C34kCFW3uwnFgasxXa4UWry2y3ZYvF4UJrWkXayU
-        Za4DCw18Ca1Uur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-        628vn2kIc2xKxwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-        WUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-        6cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-        0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU5qXdUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
+References: <20200611130525.22746-1-kishon@ti.com>
+ <20200611130525.22746-2-kishon@ti.com>
+ <20200611151301.GB8681@bombadil.infradead.org>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c8a5d63a-7026-2b40-4b26-5f4e481f7df4@ti.com>
+Date:   Fri, 12 Jun 2020 11:00:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200611151301.GB8681@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
-for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
-has no effect.
+Hi Matthew,
 
-Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+On 6/11/2020 8:43 PM, Matthew Wilcox wrote:
+> On Thu, Jun 11, 2020 at 06:35:12PM +0530, Kishon Vijay Abraham I wrote:
+>> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
+>> @@ -0,0 +1,344 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +=================
+>> +PCI NTB Function
+>> +=================
+>> +
+>> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+>> +
+>> +PCI NTB Function allows two different systems (or hosts) to communicate
+>> +with each other by configurig the endpoint instances in such a way that
+>> +transactions from one system is routed to the other system.
+> 
+> At no point in this document do you expand "NTB" into Non-Transparent
+> Bridge.  The above paragraph probably also needs to say something like "By
+> making each host appear as a device to the other host".  Although maybe
+> that's not entirely accurate?  It's been a few years since I last played
+> with NTBs.
+> 
+> So how about the following opening paragraph:
+> 
+> PCI Non Transparent Bridges (NTB) allow two host systems to communicate
+> with each other by exposing each host as a device to the other host.
+> NTBs typically support the ability to generate interrupts on the remote
+> machine, expose memory ranges as BARs and perform DMA.  They also support
+> scratchpads which are areas of memory within the NTB that are accessible
+> from both machines.
+> 
+> ... feel free to fix that up if my memory is out of date or corrupted.
 
-v2:
-  - modify the patch subject used with lower case "loongson"
+I think that's accurate. I'll wait for review comments on the rest of the
+series and I'll fix this one in my next revision.
 
-This patch is based on mips-next tree.
-
- drivers/pci/controller/pci-loongson.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 459009c..58b862a 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
- {
- 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
- }
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_0, bridge_class_quirk);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_1, bridge_class_quirk);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_2, bridge_class_quirk);
- 
- static void system_bus_quirk(struct pci_dev *pdev)
--- 
-2.1.0
-
+Thanks
+Kishon
