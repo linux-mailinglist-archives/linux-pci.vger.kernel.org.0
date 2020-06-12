@@ -2,158 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53DF91F7C5A
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 19:16:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48A9A1F7C73
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jun 2020 19:24:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgFLRQH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Jun 2020 13:16:07 -0400
-Received: from mail-bn8nam12on2050.outbound.protection.outlook.com ([40.107.237.50]:6096
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726089AbgFLRQG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:16:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oc1ILkdjoUu0TgmNIJziZjESjTKdEpGJD6TCcVNrhjoCuedCbyP3Fmp00rpxmwkDcNCzkbEtqr0L44cuhz3ccnjdzXOiWOyhwkG7VbdrycquxBJG5DCAU0mBxSTLfK6WXAx628EhPbL5Xkcqgk0HxpF9jBqZHhX9LKACjQ2KXjy71Y9baeFvmOKjq3t13YnnqCV3CFLcbPnzSjFIbJTJl2qmv6xYH3fOj7XP0RSPJfeP2zkx3MJBHcs5/u5jM4r8qVmOt/75tgqIge/j5vDaK2ffowal6RJE3T7ELB5WKKqQ0XMt/4RO3EUnYdfKca3hDSovAa8aluBMl3uo/PQbPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=451irRM1F7rawJfovfQMHCJO7cwvvMZFX9fgpqUBUco=;
- b=fHJXDGCLZsdnSxUXjX9xcRTdId0PctMliuHyoWB/Kje0YcxlWVaktkBiXbP0+5XHmq0Zb5Zc4G18k0Ru30LwF9A4pvAHYxcGpEmMKrgfXQY+Par+IqPfukxY3QUX/Dzs735H0F4+UO4y8WBXNo3YXDZGn7iOnJJEjtfRyYU+/3wuvuFPuEvPe3zfHvqbE02RxBLj3g76mCgebrJ3XmnUXd3HA5bWngqyPySJ+Ju53Ym7HkC7Sq+wGGPzzUKkklrDNIbKIVPwRnxRKUvN+iPx7yY0AEgYiuGYiK331vwelhtiD05BWDlFy7UR6ZY3WPhmI0+54/RUcnrVR5S52vzVYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        id S1726327AbgFLRYY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Jun 2020 13:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgFLRYX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Jun 2020 13:24:23 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5F87C03E96F;
+        Fri, 12 Jun 2020 10:24:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l63so2175034pge.12;
+        Fri, 12 Jun 2020 10:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=451irRM1F7rawJfovfQMHCJO7cwvvMZFX9fgpqUBUco=;
- b=tPfGil6LW4gnCfJLRg6mpg4eBMlfLETg7KYMJil51mpHh5ZukvpjW6Y7yo9zf0KHX+G6Hu9lqTsZt4XYxc1HjGFw/F8fCCLvcky5pgg6slV+GlI69dBYfHi1SsZCpbAuKIjk+d4EiELMB49biJEXUmi9uA48yvD/xZn21NtHn5k=
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com (2603:10b6:a03:a1::18)
- by BYAPR02MB5127.namprd02.prod.outlook.com (2603:10b6:a03:6c::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20; Fri, 12 Jun
- 2020 17:16:02 +0000
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::ad86:19b4:76ec:28b]) by BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::ad86:19b4:76ec:28b%7]) with mapi id 15.20.3088.025; Fri, 12 Jun 2020
- 17:16:02 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>
-Subject: RE: [PATCH v8 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Topic: [PATCH v8 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Index: AQHWPZdq6W68nNHNZEqBlWufdyFfUqjPAbcAgASFrZCAABADgIABo7FA
-Date:   Fri, 12 Jun 2020 17:16:01 +0000
-Message-ID: <BYAPR02MB55594A0981D979CAEEA02CE3A5810@BYAPR02MB5559.namprd02.prod.outlook.com>
-References: <1591622338-22652-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1591622338-22652-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <c2e4b1288ce454c6ae2b2c02946d084f@kernel.org>
- <BYAPR02MB5559D2F57E35F8881F5B608CA5800@BYAPR02MB5559.namprd02.prod.outlook.com>
- <777c4abbbfcc99ddf968d2040bc86835@kernel.org>
-In-Reply-To: <777c4abbbfcc99ddf968d2040bc86835@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9526978c-7c75-4a78-53d5-08d80ef44884
-x-ms-traffictypediagnostic: BYAPR02MB5127:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR02MB512794B9B5FB10744136B10DA5810@BYAPR02MB5127.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0432A04947
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: erwwO3lLr+9I/vSr6joJQJRlSOT1kJktHwOC0tsK3b8nL9gnShhh6/jjwd7KuSR6ql8iP309HllCDqv2etR800e1hZv8wIXtwnRN5zGRYnG8hix/lxmLD1mwyuC8EZF7kSYbjOnFTr26lQn3hdlEk4NwbCVOejzZOArboEYAl5PkdAUrejE2/khLnGKFFOyNlGSZkTBPiiriGgvbwLnHZCpm5WV0V0TXXAG/ku+mHvurATj2ZuaSuZ8Ww4dQWd6K6XZIjC4tRaiAtuDFsUMybt93RHb31BZ2gTY0ZqPu545Jh1SOMjVUZv1azE2fN6hQQm2O/622xLxCnP1zi7i6Hg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5559.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(346002)(396003)(376002)(366004)(64756008)(2906002)(66446008)(316002)(186003)(6916009)(478600001)(33656002)(53546011)(4326008)(6506007)(76116006)(54906003)(71200400001)(7696005)(66476007)(66946007)(86362001)(66556008)(26005)(52536014)(9686003)(8676002)(83380400001)(5660300002)(8936002)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: q68DcR57XxxSCUVbf9nGt2E2iCiwE+n5yRxB6bnOCwi44JXdis+slg5bX/EjQjekJidNF5VJVv7BMvuuGaWuZ7F2ndv+sXxRfjFr8wY0J5hacyNNpnFnZ6zWEsdK79nNvoHVjTZqqknOyzlkMZbCpnCy04QEdwsiq1lEYHXL7MofXh0TUnf7P4Mu6QdVMWbgCTVNpb86IP1aPHHeGBilG/QorQaE6lw5pEt6aTApM4++bdeZappUbH1r/pPxPzLaRRMhB1hL60pz5NTakEehCD5GTopPjBbMY5eAcm+XuVHYf1ty+DBb5mBTt7BEFypJr67C7jqF8ffle8qDXnbxazAKphXDR545VH1BdqQ1EF2ma/K9ihXvJtIoWTgmzo0mpgCpPDgul+2cm8i7HPWlLefcII9pkq74yqIAEx104cA6M8MlFFLi4n86XqdSchsQysN/52mGUzIiW1/Zfb+ORiiNyY/Z7KY6llSff9nMD4xGtPzwa4rPkFy5bWK9vaJ0
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yyx3aGH1IHsk8WwCSPgIF039LEqkrtOiEcxMrYeLSY4=;
+        b=A+ATlkXI9Yn9pkdpGFh7hZhvaRHi4S8bNSQAlaaQ25dacfgjH5T3vn4K3ZTQv2urqZ
+         30YuNP+iY2a8FZ89Z3Rfbsufy3rP9Hf7xO3DKkdSv4E35poG0rdTBUm1LNoUpfERvBmd
+         yXzC2VrZhxFcWaCMCHpWEhUKnUDYl8KwnlSBxWv0gzxYdm7ZfU2fdi3FuwpQGPHLBSvV
+         HvWUYmgpf6oE/Ehnfvzbf/zsCwK44SNy4J+ALNiq9APSP10xOmH2KWjmAW7G3jXPmxCU
+         2WfYxMmx0rSleKywVZCoPOVBvixlE0cf4xDXI10MD9luPNDRH+rBiUvTqKeY0tmJeeYk
+         6kYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yyx3aGH1IHsk8WwCSPgIF039LEqkrtOiEcxMrYeLSY4=;
+        b=aEeyNA88rClrtKaq0y9BK3Dd2u3/9VmMB8scRQEeQzISXw4vtA9NlmYNG12c9Xw04g
+         5CsYkOOX/p8WvBWzmlokTBzU4Hdl+i8UI8lUl9VmV8w1bsIPr/tk1jFZP5imgGHjDBqL
+         YEYBVu4MmeyQAruoqE+Ne/i3nQ/ShfZ/Xp/2K9EdN8jHeQbzSoAUw7ZaWkBDBrOOANIf
+         X8kdb+Akov25yJ1OHuolNJndRuufAd3TUwdVccN3o4fQWjnkjvgOz/lPjYc0kzk0dXKx
+         3y2yY0vfCwMSAMgdGLMwLdB2acqglsmAbzkLZ3NXGhbpq8aAB2mC88/+RVyeykwAyeb8
+         zGgA==
+X-Gm-Message-State: AOAM532m4pMD5PRMWTyD32PCb7sCbbhOEXUphAPLU2VexZG/WR+bnrmn
+        wSR6zpSU86dcwRhMo6QDrGE=
+X-Google-Smtp-Source: ABdhPJzcMXRAo4TANZWsgs8un+/4P47C64drTFdnZEtpz2AR5bK8rHPpQQZyegMFr8iPbXvYl6TNwg==
+X-Received: by 2002:a63:461c:: with SMTP id t28mr12227620pga.316.1591982662374;
+        Fri, 12 Jun 2020 10:24:22 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h7sm5903409pgg.17.2020.06.12.10.24.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 10:24:21 -0700 (PDT)
+Subject: Re: [PATCH v3 5/9] usb: xhci-pci: Add support for reset controllers
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+ <20200612171334.26385-6-nsaenzjulienne@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <4ef2d78f-64ea-b56e-7971-a60190a05a92@gmail.com>
+Date:   Fri, 12 Jun 2020 10:24:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9526978c-7c75-4a78-53d5-08d80ef44884
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 17:16:02.2267
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cNp/oXZWmPCWT9A9UdVmSL6yJLa6Lo69aYZlu3NouBPBD8F7lIhLR/QFVyCfDAiWiwA9xwqcFSrVGxKcKYAVUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5127
+In-Reply-To: <20200612171334.26385-6-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Subject: Re: [PATCH v8 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
-ver
->=20
-> On 2020-06-11 16:51, Bharat Kumar Gogada wrote:
->=20
-> [...]
->=20
-> >> > +/**
-> >> > + * xilinx_cpm_pcie_init_port - Initialize hardware
-> >> > + * @port: PCIe port information
-> >> > + */
-> >> > +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port
-> >> > *port)
-> >> > +{
-> >> > +	if (cpm_pcie_link_up(port))
-> >> > +		dev_info(port->dev, "PCIe Link is UP\n");
-> >> > +	else
-> >> > +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> >> > +
-> >> > +	/* Disable all interrupts */
-> >> > +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> >> > +		   XILINX_CPM_PCIE_REG_IMR);
-> >> > +
-> >> > +	/* Clear pending interrupts */
-> >> > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> >> > +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> >> > +		   XILINX_CPM_PCIE_REG_IDR);
-> >> > +
-> >> > +	/* Enable all interrupts */
-> >> > +	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
-> >> > +		   XILINX_CPM_PCIE_REG_IMR);
-> >> > +	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
-> >> > +		   XILINX_CPM_PCIE_REG_IDRN_MASK);
-> >>
-> >> No. I've explained in the previous review why this was a terrible
-> >> thing to do, and my patch got rid of it for a good reason.
-> >>
-> >> If the mask/unmask calls do not work, please explain what is wrong,
-> >> and let's fix them. But we DO NOT enable interrupts outside of an
-> >> irqchip callback, full stop.
-> > The issue here is, we do not have any other register to enable
-> > interrupts for above events, in order to see an interrupt assert for
-> > these events, the respective mask bits shall be set to 1.
->=20
-> I still disagree, because you're not explaining anything.
->=20
-> We enable the interrupts as they are requested already (that's why we wri=
-te
-> to the these register in the respective mask/unmask callbacks). Why do yo=
-u
-> need to enable them ahead of the request?
-HI Marc,
-Yes agreed, this is not needed.=20
-In xilinx_cpm_unmask_event_irq {
-...
-val |=3D d->hwirq; 	//which needs to be BIT(d->hwirq)
-...
-}=20
-Did not notice this earlier that the required bit is not being set here.
-Will fix it next patch.
 
-Regards,
-Bharat
-=20
+
+On 6/12/2020 10:13 AM, Nicolas Saenz Julienne wrote:
+> Some atypical users of xhci-pci might need to manually reset their xHCI
+> controller before starting the HCD setup. Check if a reset controller
+> device is available to the PCI bus and trigger a reset.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
