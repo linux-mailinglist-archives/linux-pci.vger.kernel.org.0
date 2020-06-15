@@ -2,60 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D6661F9186
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jun 2020 10:32:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E0361F9189
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jun 2020 10:32:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgFOIcd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jun 2020 04:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39176 "EHLO
+        id S1729139AbgFOIcm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jun 2020 04:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729120AbgFOIcc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jun 2020 04:32:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C36A1C061A0E;
-        Mon, 15 Jun 2020 01:32:31 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x13so16134917wrv.4;
-        Mon, 15 Jun 2020 01:32:31 -0700 (PDT)
+        with ESMTP id S1729120AbgFOIcl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jun 2020 04:32:41 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A19CC061A0E;
+        Mon, 15 Jun 2020 01:32:41 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u26so13549304wmn.1;
+        Mon, 15 Jun 2020 01:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=M/dNY835TBbenopXfANftVUfONbLdxGaDwu4O0ya0Io=;
-        b=mZllkfQGCwng8pRlqCnDf1668UeZ3bMTYHMKIP1Ey/wcpSqEZsDsvc7IQuOWTiZx7F
-         6AEeHI7shVdh/ZBeG6h76mJYyVZ7gQofX0LMdP/CHdTAYElLgnEZIzWPXqn6HpvsiHep
-         yKHDK91VHXk/xk0deKCtGYxo1eB+z5rnWqAswblhV6RXclciYmvA7gmjvL+IBaNdWKJD
-         0UyCoDhbM29Vz3Rnu0G4+KppoCb63hhPn4SJe2yTCG7cvX5AMHEJNXZUu8L2LZIdsuK0
-         srsTKxYCBTms6qEOeWBK7ogXPJPekbNkgs+YGmZYJOHYo8daqDqHq1VodYYjvgWmDIeD
-         QpbQ==
+        bh=molslPGG/aVq7Tfl0f7ZnD8L5065Z3YOyyGkcmzBtPg=;
+        b=mcFzzO7Pllm4E56KkbBug35zu55xy4h9QMjx4nGIEedTIsThHAkIZxHdXpzMw25o/x
+         gmU8d7ik0iCbkoGpssPVodzU2ZARBf/zwQANvWVcZAYRaA5FuNqYlqCoLRVsudaSVRP8
+         y9IhiJFF/IeT6/0QgacbophbcKVLQigsSZZWBac/JmDGEhX+367nM36EVtRPwGrc08Qw
+         hf/ya4oLDiXmDv9aNX24WLVi+e1eNkp+jJ/KosE87xKBSIVWF3t8LEDZTJhOwcI0SK5z
+         y2koNtgG18IDcfHGZdsi+UPJT1GCUdq+3eAwkv5FANQRY7UQxx1lJzl5pr0xbYau3Z2f
+         xQNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=M/dNY835TBbenopXfANftVUfONbLdxGaDwu4O0ya0Io=;
-        b=DJl+2BuPqgsOXoPP8XxFPqcOw1voXKP4Uh8FwFojeNZMBCovdjaVgGjupMUDgI0Ei1
-         TLHYpuck7wpWMeGTshyuyeppP1NbkaOOBTPC4ufX26OJpGLsMgBoNVYJPEcNpG5LjnYC
-         XqRW0vpepAbrAaTa1gvrzG0EytE/ci5T84eFmObgcRH+M5sre8v92AeyEJkgY5frElyO
-         Ce6KZ1Cluq9sr/yPzi65tCeGapfqmpDogiV+zhrLHgn5SMrifueCD4O5CDEPNb0Gpgym
-         bi8GsMKgm0/29CDqfzeGFFlUcNAu1lTbJPhHnAQo/qlGrMWGI/OExLoJaVTTm5Y1Alxk
-         FsUQ==
-X-Gm-Message-State: AOAM53122FJ1BK9Brq+hN/6LAk86x9F9xsXPu8RXf7NSKb25twNHtqCZ
-        vgie9mwfj675ILHF2v/9bcA=
-X-Google-Smtp-Source: ABdhPJz4V9C1ENgGVqIPkvgCoJkdJ+A5hU166ZOZGB29u4rYCMNZZqZpD7b2MruwA13RR6eraLoO8Q==
-X-Received: by 2002:a05:6000:90:: with SMTP id m16mr28561490wrx.191.1592209950561;
-        Mon, 15 Jun 2020 01:32:30 -0700 (PDT)
+        bh=molslPGG/aVq7Tfl0f7ZnD8L5065Z3YOyyGkcmzBtPg=;
+        b=GZo1jq8+toD8VHVVx4vyL+JBYYjzhpKXJk1OAaqRFSecg9k+EJL/wnjnzOqqUCSft6
+         b3+xl1v/yCtVsyguK9+QGkKseKfCgDwWwqZ5g60KHsai74rmRy12rRH2CFn+OaKvZB0s
+         Hdzmzp/s/9GGxa3o9Ff3evD4HvJFzmyClRBNVQspPoe0LMTGpXfTzH5XrH2Jk6GLeJ+e
+         oIrg27RMmtpAJyPdGxyFWL9dyj7gQb2d+5QyKK1mUokvaALWonlmt76ozy/bkS9BOk5P
+         UW3JhW7Hta9geHuEy7U1ofsW7oETkboHIKrPkzJoWervZHL64KzXhXwZDQxEoFCLC3lb
+         AUWA==
+X-Gm-Message-State: AOAM533fH3wvx/sO7J8SrFZ4WgwxYopd400qi8wOTTc0vWG3N94o/Rg6
+        nwXPsVKMHD6jTpGDS7nTdFo=
+X-Google-Smtp-Source: ABdhPJxFI+cJIQtaQrIgx1Ql/SDePLvWciNxuTw06tHHD+aaiAagUpk2mRdOa+0wrERqwjqlFRpn8w==
+X-Received: by 2002:a7b:c186:: with SMTP id y6mr12602543wmi.82.1592209960130;
+        Mon, 15 Jun 2020 01:32:40 -0700 (PDT)
 Received: from net.saheed (54006BB0.dsl.pool.telekom.hu. [84.0.107.176])
-        by smtp.gmail.com with ESMTPSA id z206sm21954745wmg.30.2020.06.15.01.32.29
+        by smtp.gmail.com with ESMTPSA id z206sm21954745wmg.30.2020.06.15.01.32.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 01:32:29 -0700 (PDT)
+        Mon, 15 Jun 2020 01:32:39 -0700 (PDT)
 From:   refactormyself@gmail.com
 To:     helgaas@kernel.org
 Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
         bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org,
+        skhan@linuxfoundation.org, Don Brace <don.brace@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/8] PCI: Convert PCIBIOS_* errors to generic -E* errors
-Date:   Mon, 15 Jun 2020 09:32:21 +0200
-Message-Id: <20200615073225.24061-5-refactormyself@gmail.com>
+Subject: [PATCH v2 5/8] scsi: smartpqi: Convert PCIBIOS_* errors to generic -E* errors
+Date:   Mon, 15 Jun 2020 09:32:22 +0200
+Message-Id: <20200615073225.24061-6-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200615073225.24061-1-refactormyself@gmail.com>
 References: <20200615073225.24061-1-refactormyself@gmail.com>
@@ -66,8 +69,8 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-Both pcie_set_readrq() and pcie_set_readrq() return PCIBIOS_ error codes
-which were passed down the call heirarchy from PCIe capability accessors.
+pqi_set_pcie_completion_timeout() return PCIBIOS_ error codes which were
+passed on down the call heirarchy from PCIe capability accessors.
 
 PCIBIOS_ error codes have positive values. Passing on these values is
 inconsistent with functions which return only a negative value on failure.
@@ -79,53 +82,27 @@ negative generic error values.
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 ---
- drivers/pci/pci.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/scsi/smartpqi/smartpqi_init.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 595fcf59843f..fa49e5f9e4d1 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5698,6 +5698,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
- int pcie_set_readrq(struct pci_dev *dev, int rq)
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index cd157f11eb22..bd38c8cea56e 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -7423,8 +7423,12 @@ static int pqi_ctrl_init_resume(struct pqi_ctrl_info *ctrl_info)
+ static inline int pqi_set_pcie_completion_timeout(struct pci_dev *pci_dev,
+ 	u16 timeout)
  {
- 	u16 v;
-+	int ret;
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
- 		return -EINVAL;
-@@ -5716,8 +5717,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = (ffs(rq) - 8) << 12;
- 
--	return pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-+	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_READRQ, v);
+-	return pcie_capability_clear_and_set_word(pci_dev, PCI_EXP_DEVCTL2,
++	int rc;
 +
-+	return pcibios_err_to_errno(ret);
- }
- EXPORT_SYMBOL(pcie_set_readrq);
- 
-@@ -5748,6 +5751,7 @@ EXPORT_SYMBOL(pcie_get_mps);
- int pcie_set_mps(struct pci_dev *dev, int mps)
- {
- 	u16 v;
-+	int ret;
- 
- 	if (mps < 128 || mps > 4096 || !is_power_of_2(mps))
- 		return -EINVAL;
-@@ -5757,8 +5761,10 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
- 		return -EINVAL;
- 	v <<= 5;
- 
--	return pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-+	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_PAYLOAD, v);
++	rc = pcie_capability_clear_and_set_word(pci_dev, PCI_EXP_DEVCTL2,
+ 		PCI_EXP_DEVCTL2_COMP_TIMEOUT, timeout);
 +
-+	return pcibios_err_to_errno(ret);
++	return pcibios_err_to_errno(rc);
  }
- EXPORT_SYMBOL(pcie_set_mps);
  
+ static int pqi_pci_init(struct pqi_ctrl_info *ctrl_info)
 -- 
 2.18.2
 
