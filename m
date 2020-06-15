@@ -2,63 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D7E91F9190
+	by mail.lfdr.de (Postfix) with ESMTP id 8AA711F9191
 	for <lists+linux-pci@lfdr.de>; Mon, 15 Jun 2020 10:33:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbgFOIcu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1729171AbgFOIcu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 15 Jun 2020 04:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39216 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729031AbgFOIcp (ORCPT
+        with ESMTP id S1728773AbgFOIcp (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jun 2020 04:32:45 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35817C061A0E;
-        Mon, 15 Jun 2020 01:32:44 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o8so4266515wmh.4;
-        Mon, 15 Jun 2020 01:32:44 -0700 (PDT)
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E687C05BD43;
+        Mon, 15 Jun 2020 01:32:45 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so4266571wmh.4;
+        Mon, 15 Jun 2020 01:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XDfq5bojR6b05CC1Lwj10IkyAFKBu8BIbutGTPyHRj0=;
-        b=GmX+599KgK3+4CQD4ut6Unl0dQe37gJnaQMa7HXIKFLnkM36mjZce93Qnal55lQXme
-         DPXNferZ2/2tadOcdmNTCDJ2fFb4JhxDbYnUVRlKL8lwVO9L5c+u+5XKNcLMEK6tfIt0
-         QkCoHNi2Owqh2Z1Eob2bkqXIlxe1ufktC98YZwFTXudBA47isWtl0Umv8NBacCLFgSHp
-         h8YK5ujbYfa1WKMnCT6t/nA3KdDJ/IpwmYI7Hh4ey8SWAv890eL1ce7gENW5nY6Ca9Aq
-         bk3N+kQixJyXij2ldZTm51qFtu5ZtspA8ZS3OfDfwFsBNfO4puqm94RtgR+RhP996L+4
-         ehhA==
+        bh=5N7OiTkpW2bbIsUq9FnRk9cirBO+6YwRec/YN067b5E=;
+        b=W/ldJLhCdUJj5d05mtV4pK65pjgE+/YRWMSLx9Ubvv++oDnBBIL5FwSU4I1vbGgwuG
+         S19kPYUbfK+bbLud6LxLvZOc0qwk3cInUEb4d9luu0OT5Yo1sinR3yBNWJ03r3oP/IgL
+         e+KCcuHvL8OqUgoioVPrwkT/CMV3p9DkA+8Nd12c7OI/ntMDv0QsL8hPJnyLTTYfR0Cr
+         ZrTtT/JhkbNzcrB4rt+M5vguZV0YJ6NManuAQmbeZHMQXLPFltrw8ilsv/t46Go6sg+Q
+         3mUSGrAahLu1bsuV4x8nlY8jsYO7zJtvYxSvk7PXWVqVbgKDgpUb74sxtkeaIxDqkQLH
+         pLZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=XDfq5bojR6b05CC1Lwj10IkyAFKBu8BIbutGTPyHRj0=;
-        b=iC+yTTzhATE0b9p7/zNxswf6q6rK0vKY/SRTaLV4u0Ztk3aMXqaCvunp45/BDy4FaY
-         Z+h1w4tPnqKNMLioIjeggylQL8KDm7UmhL/DpTjV+ZedKqCskv2WsaPXSxzBSe4/oAUF
-         nt/1H0I/HioUuUkpcE7Pd1PmxegjhC89sST+Srh0lK5baM9GGnyAy68Gmr5BvcB+nUz9
-         X2c5bndPmp9l0Xncyxfs9wDDmtJS0HGzKU6H6IuidnDxuxkZAsTc8x8j7RXHhmklr3y7
-         ds3+WqBfCi0SYY8L6JAmun6C4LrCKwzr6UuBGMZ+0Jaa7Jo/RoOnw9U9gL8XzQzh3nw3
-         v2Qw==
-X-Gm-Message-State: AOAM533zw9mZD22b2AiwQKzoaCIv1ARQHxfTUFMU/TAnxOZL7um5Xs40
-        Qll3m44HCfoMYkFz9pMoSHU=
-X-Google-Smtp-Source: ABdhPJzbGIfVEFGGh/6f5AcJQG40GJvG1GbBmlTLY3eBcSJ95HGy+b4zQLrPxNrp05rwJL+y2MMAeg==
-X-Received: by 2002:a1c:dc44:: with SMTP id t65mr12783227wmg.128.1592209962974;
-        Mon, 15 Jun 2020 01:32:42 -0700 (PDT)
+        bh=5N7OiTkpW2bbIsUq9FnRk9cirBO+6YwRec/YN067b5E=;
+        b=i6Q5Xqbtw6L+iKokRrNMG+pvCo3/Yzr9pav1twJyWesHD0A3pz+g9ou2m1EeF5hCCV
+         r0mFRg/eg93yi0gEwlN88jObL7b8kBA6XPYkrpjFdudkTvWj6nbT88yJ8rSIvoD80bA+
+         35Vg7H2KVxxFbocUnm5lh7jC9KtaAi4A1La5qSKs4/QfKWO73T73Ly6Bx44O6NfRJORX
+         8tm8TQShYN6yTe8bMm4zX0EybBUeyvztdfwYlylXuXVsorKe3/qt5MNbLz06AdVPreU0
+         Udrh9qcVb8MflrO1xigc8OEFKB8m6G3RRl5zSreCmgeADsyfGFxSjf40LdeGrKyUHjet
+         6fXA==
+X-Gm-Message-State: AOAM531tXF/eLOmLILduEheR2JVYkVN5vMsT0ntKEt5XEMFDtzcs/rwq
+        eC5KotDRylnsbvm6hItiSXg=
+X-Google-Smtp-Source: ABdhPJyDOmxsWcHptOCXrlz2DfdRs3ToWlKFmU7sWKf2RWgc6Jg6hrJsDIU8bNUTt2KgGgbCPx8bcA==
+X-Received: by 2002:a7b:c76a:: with SMTP id x10mr12117201wmk.16.1592209964155;
+        Mon, 15 Jun 2020 01:32:44 -0700 (PDT)
 Received: from net.saheed (54006BB0.dsl.pool.telekom.hu. [84.0.107.176])
-        by smtp.gmail.com with ESMTPSA id z206sm21954745wmg.30.2020.06.15.01.32.41
+        by smtp.gmail.com with ESMTPSA id z206sm21954745wmg.30.2020.06.15.01.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 01:32:42 -0700 (PDT)
+        Mon, 15 Jun 2020 01:32:43 -0700 (PDT)
 From:   refactormyself@gmail.com
 To:     helgaas@kernel.org
 Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
         bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org, Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
+        skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/8] PCI/AER: Convert PCIBIOS_* errors to generic -E* errors
-Date:   Mon, 15 Jun 2020 09:32:24 +0200
-Message-Id: <20200615073225.24061-8-refactormyself@gmail.com>
+Subject: [PATCH v2 8/8] PCI: Align return values of PCIe capability and PCI accessors
+Date:   Mon, 15 Jun 2020 09:32:25 +0200
+Message-Id: <20200615073225.24061-9-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200615073225.24061-1-refactormyself@gmail.com>
 References: <20200615073225.24061-1-refactormyself@gmail.com>
@@ -69,43 +66,61 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-pci_disable_pcie_error_reporting() returns PCIBIOS_ error code which were
-passed down the call heirarchy from PCIe capability accessors.
+The PCIe capability accessors can return 0, -EINVAL, or any PCIBIOS_ error
+code. PCIBIOS_ error codes have positive values. The PCI accessor on the
+other hand can only return 0 or any PCIBIOS_ error code. This
+inconsistency among these accessor makes it harder for callers to check 
+for errors.
 
-PCIBIOS_ error codes have positive values. Passing on these values is
-inconsistent with functions which return only a negative value on failure.
-
-Before passing on the return value of PCIe capability accessors, call
-pcibios_err_to_errno() to convert any positive PCIBIOS_ error codes to
-negative error values.
+Return PCIBIOS_BAD_REGISTER_NUMBER instead of -EINVAL in all PCIe
+capability accessors.
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 ---
- drivers/pci/pcie/aer.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pci/access.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 95d480a52078..53e2ecb64c72 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -365,11 +365,15 @@ EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 79c4a2ef269a..cbb3804903a0 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -409,7 +409,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
  
- int pci_disable_pcie_error_reporting(struct pci_dev *dev)
+ 	*val = 0;
+ 	if (pos & 1)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
+ 
+ 	if (pcie_capability_reg_implemented(dev, pos)) {
+ 		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
+@@ -444,7 +444,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
+ 
+ 	*val = 0;
+ 	if (pos & 3)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
+ 
+ 	if (pcie_capability_reg_implemented(dev, pos)) {
+ 		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+@@ -469,7 +469,7 @@ EXPORT_SYMBOL(pcie_capability_read_dword);
+ int pcie_capability_write_word(struct pci_dev *dev, int pos, u16 val)
  {
-+	int rc;
-+
- 	if (pcie_aer_get_firmware_first(dev))
- 		return -EIO;
+ 	if (pos & 1)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
  
--	return pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
-+	rc = pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
- 					  PCI_EXP_AER_FLAGS);
-+
-+	return pcibios_err_to_errno(rc);
- }
- EXPORT_SYMBOL_GPL(pci_disable_pcie_error_reporting);
+ 	if (!pcie_capability_reg_implemented(dev, pos))
+ 		return 0;
+@@ -481,7 +481,7 @@ EXPORT_SYMBOL(pcie_capability_write_word);
+ int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val)
+ {
+ 	if (pos & 3)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
  
+ 	if (!pcie_capability_reg_implemented(dev, pos))
+ 		return 0;
 -- 
 2.18.2
 
