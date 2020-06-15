@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ED601F9402
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jun 2020 11:55:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3A61F9463
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jun 2020 12:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgFOJzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jun 2020 05:55:36 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2307 "EHLO huawei.com"
+        id S1729040AbgFOKMr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jun 2020 06:12:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2308 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728368AbgFOJza (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:55:30 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 1076B2C26C1113BCF115;
-        Mon, 15 Jun 2020 10:55:29 +0100 (IST)
+        id S1728368AbgFOKMr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:12:47 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D56DDB752A101E85160F;
+        Mon, 15 Jun 2020 11:12:45 +0100 (IST)
 Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.26.179) by
  lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 15 Jun 2020 10:55:28 +0100
+ 15.1.1913.5; Mon, 15 Jun 2020 11:12:45 +0100
 From:   Shiju Jose <shiju.jose@huawei.com>
 To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
@@ -27,13 +27,11 @@ To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
         <jroedel@suse.de>
 CC:     <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>
-Subject: [PATCH v9 1/2] ACPI / APEI: Add support to notify the vendor specific HW errors
-Date:   Mon, 15 Jun 2020 10:53:11 +0100
-Message-ID: <20200615095312.398-2-shiju.jose@huawei.com>
+        <tanxiaofei@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v9 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 15 Jun 2020 11:09:57 +0100
+Message-ID: <20200615100959.499-1-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200615095312.398-1-shiju.jose@huawei.com>
-References: <20200615095312.398-1-shiju.jose@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -46,253 +44,84 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to notify the vendor specific non-fatal HW errors
-to the drivers for the error recovery.
+Presently the vendor drivers are unable to do the recovery for the
+vendor specific recoverable HW errors because APEI driver does not
+support reporting the error to the vendor drivers.
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/acpi/apei/ghes.c | 130 ++++++++++++++++++++++++++++++++++++++-
- include/acpi/ghes.h      |  28 +++++++++
- 2 files changed, 157 insertions(+), 1 deletion(-)
+patch set
+1. add new interface to the APEI driver for reporting the 
+   vendor specific non-fatal HW errors to the drivers.
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 24c9642e8fc7..854d8115cdfc 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -33,6 +33,7 @@
- #include <linux/irq_work.h>
- #include <linux/llist.h>
- #include <linux/genalloc.h>
-+#include <linux/kfifo.h>
- #include <linux/pci.h>
- #include <linux/pfn.h>
- #include <linux/aer.h>
-@@ -63,6 +64,11 @@
- #define GHES_ESTATUS_CACHES_SIZE	4
- 
- #define GHES_ESTATUS_IN_CACHE_MAX_NSEC	10000000000ULL
-+
-+#define GHES_EVENT_RING_SIZE	256
-+#define GHES_GDATA_POOL_MIN_ALLOC_ORDER	3
-+#define GHES_GDATA_POOL_MIN_SIZE	65536
-+
- /* Prevent too many caches are allocated because of RCU */
- #define GHES_ESTATUS_CACHE_ALLOCED_MAX	(GHES_ESTATUS_CACHES_SIZE * 3 / 2)
- 
-@@ -122,6 +128,19 @@ static DEFINE_MUTEX(ghes_list_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
- 
-+struct ghes_event_entry {
-+	struct acpi_hest_generic_data *gdata;
-+	int error_severity;
-+};
-+
-+static DEFINE_KFIFO(ghes_event_ring, struct ghes_event_entry,
-+		    GHES_EVENT_RING_SIZE);
-+
-+static DEFINE_SPINLOCK(ghes_event_ring_lock);
-+
-+static struct gen_pool *ghes_gdata_pool;
-+static unsigned long ghes_gdata_pool_size_request;
-+
- static struct gen_pool *ghes_estatus_pool;
- static unsigned long ghes_estatus_pool_size_request;
- 
-@@ -188,6 +207,40 @@ int ghes_estatus_pool_init(int num_ghes)
- 	return -ENOMEM;
- }
- 
-+static int ghes_gdata_pool_init(void)
-+{
-+	unsigned long addr, len;
-+	int rc;
-+
-+	ghes_gdata_pool = gen_pool_create(GHES_GDATA_POOL_MIN_ALLOC_ORDER, -1);
-+	if (!ghes_gdata_pool)
-+		return -ENOMEM;
-+
-+	if (ghes_gdata_pool_size_request < GHES_GDATA_POOL_MIN_SIZE)
-+		ghes_gdata_pool_size_request = GHES_GDATA_POOL_MIN_SIZE;
-+
-+	len = ghes_gdata_pool_size_request;
-+	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-+	if (!addr)
-+		goto err_pool_alloc;
-+
-+	vmalloc_sync_mappings();
-+
-+	rc = gen_pool_add(ghes_gdata_pool, addr, PAGE_ALIGN(len), -1);
-+	if (rc)
-+		goto err_pool_add;
-+
-+	return 0;
-+
-+err_pool_add:
-+	vfree((void *)addr);
-+
-+err_pool_alloc:
-+	gen_pool_destroy(ghes_gdata_pool);
-+
-+	return -ENOMEM;
-+}
-+
- static int map_gen_v2(struct ghes *ghes)
- {
- 	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
-@@ -247,6 +300,10 @@ static struct ghes *ghes_new(struct acpi_hest_generic *generic)
- 		goto err_unmap_status_addr;
- 	}
- 
-+	ghes_gdata_pool_size_request += generic->records_to_preallocate *
-+					generic->max_sections_per_record *
-+					generic->max_raw_data_length;
-+
- 	return ghes;
- 
- err_unmap_status_addr:
-@@ -490,6 +547,68 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #endif
- }
- 
-+static BLOCKING_NOTIFIER_HEAD(ghes_event_notify_list);
-+
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ *
-+ * return 0 : SUCCESS, non-zero : FAIL
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&ghes_event_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
-+
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb)
-+{
-+	blocking_notifier_chain_unregister(&ghes_event_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
-+
-+static void ghes_event_work_func(struct work_struct *work)
-+{
-+	struct ghes_event_entry entry;
-+	u32 len;
-+
-+	while (kfifo_get(&ghes_event_ring, &entry)) {
-+		blocking_notifier_call_chain(&ghes_event_notify_list,
-+					     entry.error_severity,
-+					     entry.gdata);
-+		len = acpi_hest_get_record_size(entry.gdata);
-+		gen_pool_free(ghes_gdata_pool, (unsigned long)entry.gdata, len);
-+	}
-+}
-+
-+static DECLARE_WORK(ghes_event_work, ghes_event_work_func);
-+
-+static void ghes_handle_non_standard_event(struct acpi_hest_generic_data *gdata,
-+					   int sev)
-+{
-+	u32 len;
-+	struct ghes_event_entry event_entry;
-+
-+	len = acpi_hest_get_record_size(gdata);
-+	event_entry.gdata = (void *)gen_pool_alloc(ghes_gdata_pool, len);
-+	if (event_entry.gdata) {
-+		memcpy(event_entry.gdata, gdata, len);
-+		event_entry.error_severity = sev;
-+
-+		if (kfifo_in_spinlocked(&ghes_event_ring, &event_entry, 1,
-+					&ghes_event_ring_lock))
-+			schedule_work(&ghes_event_work);
-+		else
-+			pr_warn(GHES_PFX "ghes event queue full\n");
-+	}
-+}
-+
- static void ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
-@@ -527,6 +646,7 @@ static void ghes_do_proc(struct ghes *ghes,
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
-+			ghes_handle_non_standard_event(gdata, sev);
- 			log_non_standard_event(sec_type, fru_id, fru_text,
- 					       sec_sev, err,
- 					       gdata->error_data_length);
-@@ -1334,7 +1454,7 @@ static int __init ghes_init(void)
- 
- 	rc = platform_driver_register(&ghes_platform_driver);
- 	if (rc)
--		goto err;
-+		goto exit;
- 
- 	rc = apei_osc_setup();
- 	if (rc == 0 && osc_sb_apei_support_acked)
-@@ -1346,8 +1466,16 @@ static int __init ghes_init(void)
- 	else
- 		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
- 
-+	rc = ghes_gdata_pool_init();
-+	if (rc) {
-+		pr_warn(GHES_PFX "ghes_gdata_pool_init failed\n");
-+		goto err;
-+	}
-+
- 	return 0;
- err:
-+	platform_driver_unregister(&ghes_platform_driver);
-+exit:
- 	return rc;
- }
- device_initcall(ghes_init);
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index e3f1cddb4ac8..a3dd82069069 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -50,6 +50,34 @@ enum {
- 	GHES_SEV_PANIC = 0x3,
- };
- 
-+
-+#ifdef CONFIG_ACPI_APEI_GHES
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ *
-+ * Return : 0 - SUCCESS, non-zero - FAIL.
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb);
-+
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb);
-+#else
-+static inline int ghes_register_event_notifier(struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void ghes_unregister_event_notifier(struct notifier_block *nb)
-+{
-+}
-+#endif
-+
- int ghes_estatus_pool_init(int num_ghes);
- 
- /* From drivers/edac/ghes_edac.c */
+2. add driver to handle HiSilicon hip PCIe controller's errors.
+
+V9:
+1. Fixed 2 improvements suggested by the kbuild test robot. 
+1.1 Change ghes_gdata_pool_init() as static function.
+1.2. Removed using buffer to store the error data for
+     logging in the hisi_pcie_handle_error()
+
+V8:
+1. Removed reporting the standard errors through the interface
+   because of the conflict with the recent patches in the
+   memory error handling path.
+2. Fix comments by Dan Carpenter.
+   
+V7:
+1. Add changes in the APEI driver suggested by Borislav Petkov, for
+   queuing up all the non-fatal HW errors to the work queue and
+   notify the registered kernel drivers from the bottom half using
+   blocking notifier, common interface for both standard and
+   vendor-spcific errors.
+2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+   by Bjorn Helgaas.
+
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
+
+V4:
+1. Fix for the following smatch warning in the PCIe error driver,
+   reported by kbuild test robot<lkp@intel.com>:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI / APEI: Add support to notify the vendor specific HW errors
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 | 130 +++++++++-
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 305 +++++++++++++++++++++++
+ include/acpi/ghes.h                      |  28 +++
+ 5 files changed, 471 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
 -- 
 2.17.1
 
