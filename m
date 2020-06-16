@@ -2,203 +2,346 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2332A1FC167
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 00:07:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A90961FC1EB
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 00:56:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725849AbgFPWFg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jun 2020 18:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
+        id S1725849AbgFPW4i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 18:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgFPWFg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:05:36 -0400
+        id S1726271AbgFPW4i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:56:38 -0400
 Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850BB208B8;
-        Tue, 16 Jun 2020 22:05:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5AD82082F;
+        Tue, 16 Jun 2020 22:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592345134;
-        bh=1BH4MUh9Sx2yPMhHm374mBNSia4OVdEFUDw84/UO4Xo=;
+        s=default; t=1592348197;
+        bh=1Y39lAnqjB4tYzCk7tiF0QydRbO/+ffQDiMnNp6WH2I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ulBr2x6UBFsR0wtrS1Pd+V6+HifSE/s3Spr3ObsoDbipr4vw2/xjvtyU3yer/7TdD
-         YgV1dV305jRRsbe0G9oBp9y9IN8Reg0BAVtMzkg8oZu5FwGM77nHTfi3OjtoyS2iCc
-         0G7ukGQLgH+gIqHVpWhFKb9x7an868a99OnHWiMo=
-Date:   Tue, 16 Jun 2020 17:05:33 -0500
+        b=uqk4XyBojWHCxDkX406EGFyuDQkBYLLg1HgDfsm8qQyPabis7YEuzMYKZxPrTINPm
+         7LlMvpmraRa0iaGUVmzu4k+tdyjTEeU/o2A2Zsiv6jq4A3jV59Xx2pFgW6Gfc+IgIn
+         16D9m1S33jQLsBRSn7bi7ZWB/WHtneQ97nyYY3pU=
+Date:   Tue, 16 Jun 2020 17:56:35 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Set internal memory viewport sizes
-Message-ID: <20200616220533.GA1984551@bjorn-Precision-5520>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
+        james.morse@arm.com, lenb@kernel.org, tony.luck@intel.com,
+        dan.carpenter@oracle.com, zhangliguang@linux.alibaba.com,
+        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
+        jroedel@suse.de, yangyicong@hisilicon.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
+Subject: Re: [PATCH v9 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200616225635.GA1987516@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616205533.3513-10-james.quinlan@broadcom.com>
+In-Reply-To: <20200615095312.398-2-shiju.jose@huawei.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 04:55:16PM -0400, Jim Quinlan wrote:
-> BrcmSTB PCIe controllers are intimately connected to the memory
-> controller(s) on the SOC.  There is a "viewport" for each memory controller
-> that allows inbound accesses to CPU memory.  Each viewport's size must be
-> set to a power of two, and that size must be equal to or larger than the
-> amount of memory each controller supports.
+On Mon, Jun 15, 2020 at 10:53:11AM +0100, Shiju Jose wrote:
+> Add support to notify the vendor specific non-fatal HW errors
+> to the drivers for the error recovery.
 
-This describes some requirements, but doesn't actually say what this
-patch *does*.
+This doesn't actually say anything about what this patch does.  Sure,
+it "adds support," but it doesn't say anything about how that support
+works or how to use it.
 
-I *think* it reads the viewport sizes from the "brcm,scb-sizes" DT
-property instead of computing something from "dma-ranges".  Looks like
-it also adds support for SCB1 and SCB2.
+This should say something about a FIFO and it should mention that an
+event handler registered with ghes_register_event_notifier() will be
+called with each vendor-specific error record.
 
-Those seem interesting, but don't really come through in the subject
-or even the commit log.
-
-If I understand correctly, this is all for DMA ("inbound accesses to
-CPU memory").  I think it would be worth mentioning "DMA", since
-that's the common term for this.
-
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
->  1 file changed, 50 insertions(+), 18 deletions(-)
+>  drivers/acpi/apei/ghes.c | 130 ++++++++++++++++++++++++++++++++++++++-
+>  include/acpi/ghes.h      |  28 +++++++++
+>  2 files changed, 157 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 9189406fd35c..39f77709c6a2 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -57,6 +57,8 @@
->  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
->  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
->  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
-> +#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
-> +#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 24c9642e8fc7..854d8115cdfc 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/irq_work.h>
+>  #include <linux/llist.h>
+>  #include <linux/genalloc.h>
+> +#include <linux/kfifo.h>
+>  #include <linux/pci.h>
+>  #include <linux/pfn.h>
+>  #include <linux/aer.h>
+> @@ -63,6 +64,11 @@
+>  #define GHES_ESTATUS_CACHES_SIZE	4
 >  
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
->  #define PCIE_MEM_WIN0_LO(win)	\
-> @@ -154,6 +156,7 @@
->  #define SSC_STATUS_OFFSET		0x1
->  #define SSC_STATUS_SSC_MASK		0x400
->  #define SSC_STATUS_PLL_LOCK_MASK	0x800
-> +#define PCIE_BRCM_MAX_MEMC		3
+>  #define GHES_ESTATUS_IN_CACHE_MAX_NSEC	10000000000ULL
+> +
+> +#define GHES_EVENT_RING_SIZE	256
+> +#define GHES_GDATA_POOL_MIN_ALLOC_ORDER	3
+> +#define GHES_GDATA_POOL_MIN_SIZE	65536
+
+Don't drop these new #defines right in the middle of the GHES_ESTATUS
+block.  The ESTATUS ones are all related, and these new ones are
+something separate.
+
+These new names should be related somehow.  The names don't make it
+clear that GHES_EVENT and GHES_GDATA are related.  IIUC GHES_GDATA is
+space for storing GHES structures, and GHES_EVENT is a FIFO of struct
+ghes_event_entry, each of which points to one of those GHES
+structures.
+
+>  /* Prevent too many caches are allocated because of RCU */
+>  #define GHES_ESTATUS_CACHE_ALLOCED_MAX	(GHES_ESTATUS_CACHES_SIZE * 3 / 2)
 >  
->  #define IDX_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_INDEX])
->  #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
-> @@ -260,6 +263,8 @@ struct brcm_pcie {
->  	const int		*reg_field_info;
->  	enum pcie_type		type;
->  	struct reset_control	*rescal;
-> +	int			num_memc;
-> +	u64			memc_size[PCIE_BRCM_MAX_MEMC];
+> @@ -122,6 +128,19 @@ static DEFINE_MUTEX(ghes_list_mutex);
+>   */
+>  static DEFINE_SPINLOCK(ghes_notify_lock_irq);
+>  
+> +struct ghes_event_entry {
+> +	struct acpi_hest_generic_data *gdata;
+> +	int error_severity;
+> +};
+> +
+> +static DEFINE_KFIFO(ghes_event_ring, struct ghes_event_entry,
+> +		    GHES_EVENT_RING_SIZE);
+> +
+> +static DEFINE_SPINLOCK(ghes_event_ring_lock);
+> +
+> +static struct gen_pool *ghes_gdata_pool;
+> +static unsigned long ghes_gdata_pool_size_request;
+> +
+>  static struct gen_pool *ghes_estatus_pool;
+>  static unsigned long ghes_estatus_pool_size_request;
+>  
+> @@ -188,6 +207,40 @@ int ghes_estatus_pool_init(int num_ghes)
+>  	return -ENOMEM;
+>  }
+>  
+> +static int ghes_gdata_pool_init(void)
+> +{
+> +	unsigned long addr, len;
+> +	int rc;
+> +
+> +	ghes_gdata_pool = gen_pool_create(GHES_GDATA_POOL_MIN_ALLOC_ORDER, -1);
+> +	if (!ghes_gdata_pool)
+> +		return -ENOMEM;
+> +
+> +	if (ghes_gdata_pool_size_request < GHES_GDATA_POOL_MIN_SIZE)
+> +		ghes_gdata_pool_size_request = GHES_GDATA_POOL_MIN_SIZE;
+> +
+> +	len = ghes_gdata_pool_size_request;
+> +	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
+> +	if (!addr)
+> +		goto err_pool_alloc;
+> +
+> +	vmalloc_sync_mappings();
+> +
+> +	rc = gen_pool_add(ghes_gdata_pool, addr, PAGE_ALIGN(len), -1);
+> +	if (rc)
+> +		goto err_pool_add;
+> +
+> +	return 0;
+> +
+> +err_pool_add:
+> +	vfree((void *)addr);
+> +
+> +err_pool_alloc:
+> +	gen_pool_destroy(ghes_gdata_pool);
+> +
+> +	return -ENOMEM;
+> +}
+> +
+>  static int map_gen_v2(struct ghes *ghes)
+>  {
+>  	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
+> @@ -247,6 +300,10 @@ static struct ghes *ghes_new(struct acpi_hest_generic *generic)
+>  		goto err_unmap_status_addr;
+>  	}
+>  
+> +	ghes_gdata_pool_size_request += generic->records_to_preallocate *
+> +					generic->max_sections_per_record *
+> +					generic->max_raw_data_length;
+> +
+>  	return ghes;
+>  
+>  err_unmap_status_addr:
+> @@ -490,6 +547,68 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+>  #endif
+>  }
+>  
+> +static BLOCKING_NOTIFIER_HEAD(ghes_event_notify_list);
+> +
+> +/**
+> + * ghes_register_event_notifier - register an event notifier
+> + * for the non-fatal HW errors.
+> + * @nb: pointer to the notifier_block structure of the event handler.
+> + *
+> + * return 0 : SUCCESS, non-zero : FAIL
+> + */
+> +int ghes_register_event_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&ghes_event_notify_list, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
+> +
+> +/**
+> + * ghes_unregister_event_notifier - unregister the previously
+> + * registered event notifier.
+> + * @nb: pointer to the notifier_block structure of the event handler.
+> + */
+> +void ghes_unregister_event_notifier(struct notifier_block *nb)
+> +{
+> +	blocking_notifier_chain_unregister(&ghes_event_notify_list, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
+> +
+> +static void ghes_event_work_func(struct work_struct *work)
+> +{
+> +	struct ghes_event_entry entry;
+> +	u32 len;
+> +
+> +	while (kfifo_get(&ghes_event_ring, &entry)) {
+> +		blocking_notifier_call_chain(&ghes_event_notify_list,
+> +					     entry.error_severity,
+> +					     entry.gdata);
+> +		len = acpi_hest_get_record_size(entry.gdata);
+> +		gen_pool_free(ghes_gdata_pool, (unsigned long)entry.gdata, len);
+> +	}
+> +}
+> +
+> +static DECLARE_WORK(ghes_event_work, ghes_event_work_func);
+> +
+> +static void ghes_handle_non_standard_event(struct acpi_hest_generic_data *gdata,
+> +					   int sev)
+> +{
+> +	u32 len;
+> +	struct ghes_event_entry event_entry;
+> +
+> +	len = acpi_hest_get_record_size(gdata);
+> +	event_entry.gdata = (void *)gen_pool_alloc(ghes_gdata_pool, len);
+> +	if (event_entry.gdata) {
+
+Make this:
+
+  if (!event_entry.gdata) {
+    pr_warn(...);
+    return;
+  }
+
+and then you won't have to indent the usual case below.
+
+> +		memcpy(event_entry.gdata, gdata, len);
+> +		event_entry.error_severity = sev;
+> +
+> +		if (kfifo_in_spinlocked(&ghes_event_ring, &event_entry, 1,
+> +					&ghes_event_ring_lock))
+> +			schedule_work(&ghes_event_work);
+> +		else
+> +			pr_warn(GHES_PFX "ghes event queue full\n");
+
+GHES_PFX is already "GHES: ", so no need to repeat "ghes" in your
+message.  You can use that space for something more useful, like the
+source ID, section type, severity, etc.  Dmesg strings that are
+completely constant are not as useful as they could be.
+
+> +	}
+> +}
+> +
+>  static void ghes_do_proc(struct ghes *ghes,
+>  			 const struct acpi_hest_generic_status *estatus)
+>  {
+> @@ -527,6 +646,7 @@ static void ghes_do_proc(struct ghes *ghes,
+>  		} else {
+>  			void *err = acpi_hest_get_payload(gdata);
+>  
+> +			ghes_handle_non_standard_event(gdata, sev);
+>  			log_non_standard_event(sec_type, fru_id, fru_text,
+>  					       sec_sev, err,
+>  					       gdata->error_data_length);
+> @@ -1334,7 +1454,7 @@ static int __init ghes_init(void)
+>  
+>  	rc = platform_driver_register(&ghes_platform_driver);
+>  	if (rc)
+> -		goto err;
+> +		goto exit;
+>  
+>  	rc = apei_osc_setup();
+>  	if (rc == 0 && osc_sb_apei_support_acked)
+> @@ -1346,8 +1466,16 @@ static int __init ghes_init(void)
+>  	else
+>  		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
+>  
+> +	rc = ghes_gdata_pool_init();
+> +	if (rc) {
+> +		pr_warn(GHES_PFX "ghes_gdata_pool_init failed\n");
+
+I don't think this message is really meaningful to a user.  Maybe
+something about non-fatal vendor-specific errors not being logged?
+
+> +		goto err;
+
+I'm not sure this is an error that should cause the whole GHES driver
+to be unregistered.  After all, the driver *used* to work fine even
+without this vendor-specific functionality.  Seems like we ought to be
+able to fall back to the previous behavior even if we can't allocate
+the gdata pool.
+
+> +	}
+> +
+>  	return 0;
+>  err:
+> +	platform_driver_unregister(&ghes_platform_driver);
+> +exit:
+>  	return rc;
+>  }
+>  device_initcall(ghes_init);
+> diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
+> index e3f1cddb4ac8..a3dd82069069 100644
+> --- a/include/acpi/ghes.h
+> +++ b/include/acpi/ghes.h
+> @@ -50,6 +50,34 @@ enum {
+>  	GHES_SEV_PANIC = 0x3,
 >  };
 >  
->  /*
-> @@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
->  							u64 *rc_bar2_offset)
->  {
->  	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> -	struct device *dev = pcie->dev;
->  	struct resource_entry *entry;
-> +	struct device *dev = pcie->dev;
-> +	u64 lowest_pcie_addr = ~(u64)0;
-> +	int ret, i = 0;
-> +	u64 size = 0;
->  
-> -	entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
-> -	if (!entry)
-> -		return -ENODEV;
-> +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-> +		u64 pcie_beg = entry->res->start - entry->offset;
->  
-> +		size += entry->res->end - entry->res->start + 1;
-> +		if (pcie_beg < lowest_pcie_addr)
-> +			lowest_pcie_addr = pcie_beg;
-> +	}
->  
-> -	/*
-> -	 * The controller expects the inbound window offset to be calculated as
-> -	 * the difference between PCIe's address space and CPU's. The offset
-> -	 * provided by the firmware is calculated the opposite way, so we
-> -	 * negate it.
-> -	 */
-> -	*rc_bar2_offset = -entry->offset;
-> -	*rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
-> +	if (lowest_pcie_addr == ~(u64)0) {
-> +		dev_err(dev, "DT node has no dma-ranges\n");
-> +		return -EINVAL;
-> +	}
 > +
-> +	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
-> +						  PCIE_BRCM_MAX_MEMC);
+
+Don't add an extra blank line here.
+
+> +#ifdef CONFIG_ACPI_APEI_GHES
+> +/**
+> + * ghes_register_event_notifier - register an event notifier
+> + * for the non-fatal HW errors.
+> + * @nb: pointer to the notifier_block structure of the event notifier.
+> + *
+> + * Return : 0 - SUCCESS, non-zero - FAIL.
+> + */
+> +int ghes_register_event_notifier(struct notifier_block *nb);
 > +
-> +	if (ret <= 0) {
-> +		/* Make an educated guess */
-> +		pcie->num_memc = 1;
-> +		pcie->memc_size[0] = 1 << fls64(size - 1);
-> +	} else {
-> +		pcie->num_memc = ret;
-> +	}
+> +/**
+> + * ghes_unregister_event_notifier - unregister the previously
+> + * registered event notifier.
+> + * @nb: pointer to the notifier_block structure of the event notifier.
+> + */
+> +void ghes_unregister_event_notifier(struct notifier_block *nb);
+> +#else
+> +static inline int ghes_register_event_notifier(struct notifier_block *nb)
+> +{
+> +	return -ENODEV;
+> +}
 > +
-> +	/* Each memc is viewed through a "port" that is a power of 2 */
-> +	for (i = 0, size = 0; i < pcie->num_memc; i++)
-> +		size += pcie->memc_size[i];
+> +static inline void ghes_unregister_event_notifier(struct notifier_block *nb)
+> +{
+> +}
+> +#endif
 > +
-> +	/* System memory starts at this address in PCIe-space */
-> +	*rc_bar2_offset = lowest_pcie_addr;
-> +	/* The sum of all memc views must also be a power of 2 */
-> +	*rc_bar2_size = 1ULL << fls64(size - 1);
+>  int ghes_estatus_pool_init(int num_ghes);
 >  
->  	/*
->  	 * We validate the inbound memory view even though we should trust
-> @@ -782,12 +809,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	void __iomem *base = pcie->base;
->  	struct device *dev = pcie->dev;
->  	struct resource_entry *entry;
-> -	unsigned int scb_size_val;
->  	bool ssc_good = false;
->  	struct resource *res;
->  	int num_out_wins = 0;
->  	u16 nlw, cls, lnksta;
-> -	int i, ret;
-> +	int i, ret, memc;
->  	u32 tmp, aspm_support;
->  
->  	/* Reset the bridge */
-> @@ -824,11 +850,17 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	writel(upper_32_bits(rc_bar2_offset),
->  	       base + PCIE_MISC_RC_BAR2_CONFIG_HI);
->  
-> -	scb_size_val = rc_bar2_size ?
-> -		       ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
->  	tmp = readl(base + PCIE_MISC_MISC_CTRL);
-> -	u32p_replace_bits(&tmp, scb_size_val,
-> -			  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-> +	for (memc = 0; memc < pcie->num_memc; memc++) {
-> +		u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
-> +
-> +		if (memc == 0)
-> +			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-> +		else if (memc == 1)
-> +			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
-> +		else if (memc == 2)
-> +			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
-> +	}
->  	writel(tmp, base + PCIE_MISC_MISC_CTRL);
->  
->  	/*
+>  /* From drivers/edac/ghes_edac.c */
 > -- 
 > 2.17.1
+> 
 > 
