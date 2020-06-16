@@ -2,104 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C591FC23D
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 01:22:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 170FF1FC25D
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 01:36:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgFPXWV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jun 2020 19:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
+        id S1726482AbgFPXgM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 19:36:12 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:40981 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgFPXWV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:22:21 -0400
-Received: from localhost (lfbn-ncy-1-150-120.w83-194.abo.wanadoo.fr [83.194.232.120])
+        id S1726271AbgFPXgM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:36:12 -0400
+Received: from [192.168.1.3] (212-5-158-38.ip.btc-net.bg [212.5.158.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A257207E8;
-        Tue, 16 Jun 2020 23:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592349740;
-        bh=Q7XqjDbI5KF1xwlA2pFU0ud6lF4J0reUpw77Uk5OM0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZdGbq74tHPXO2Wt0cZq0o8vUmOKQNSUEuni9CHU3QPzO3yTtxrQQYLUdvmof/fKqd
-         8U6SDr9+WOFs8po3lanJsWlgt0Ov5uAC3U86UrsDUx86uzJNhHMkmdJODhfvy+kHkX
-         0TsL4eAqVwaiiyjeoT3SS8/1ysm8ksYEaq4ZCLfw=
-Date:   Wed, 17 Jun 2020 01:22:18 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        mtosatti@redhat.com, juri.lelli@redhat.com, abelits@marvell.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de
-Subject: Re: [Patch v1 2/3] PCI: prevent work_on_cpu's probe to execute on
- isolated CPUs
-Message-ID: <20200616232217.GB4914@lenoir>
-References: <20200610161226.424337-1-nitesh@redhat.com>
- <20200610161226.424337-3-nitesh@redhat.com>
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 1F3F2CFFF;
+        Wed, 17 Jun 2020 02:36:08 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1592350568; bh=aLjBBuVOgl1FEIUDX+t32lCMDeKTv5OVH1NddWDHMpE=;
+        h=Subject:To:Cc:From:Date:From;
+        b=EfroWTqqlD6NHw6xyFCW6GE8yNG9v4tk9irwG84sR4pF6hq/+ltwGqL5xdpb0edjn
+         r5UQ/kKqRFK+U5OXH/gAW4439jtDbk+lvbvmmfw/emfwsyxyJ0vYjnxnQejw9mXyME
+         5VayAl3PcplbJxDYIst2n5x1bGwouyPJSLMWQm4azu5MolegAppuBLr1eN+BZfhu33
+         jmjyzV10E7U3EumlPt1c78s/+hKpUQjGqGZdTTGrfZDVjgecQgv627neoN8vWI+awy
+         4QZ8/0uQj+wehx2TajEMLiZnF9CDqPvWUHpE7VoXioOvs7j4xrbtMRjbxdVxQWg5vv
+         FGk9WG7SqdTfw==
+Subject: Re: [PATCH] PCI: qcom: Disable power management for uPD720201 USB3
+ controller
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     bjorn.andersson@linaro.org, vkoul@kernel.org, sanm@codeaurora.org,
+        mgautam@codeaurora.org, agross@kernel.org, bhelgaas@google.com,
+        robh@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+References: <20200616211711.GA1981914@bjorn-Precision-5520>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <47b52403-360e-08b6-ad0d-0f4a2272a5f7@mm-sol.com>
+Date:   Wed, 17 Jun 2020 02:36:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610161226.424337-3-nitesh@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200616211711.GA1981914@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 12:12:25PM -0400, Nitesh Narayan Lal wrote:
-> From: Alex Belits <abelits@marvell.com>
-> 
-> pci_call_probe() prevents the nesting of work_on_cpu()
-> for a scenario where a VF device is probed from work_on_cpu()
-> of the Physical device.
-> This patch replaces the cpumask used in pci_call_probe()
-> from all online CPUs to only housekeeping CPUs. This is to
-> ensure that there are no additional latency overheads
-> caused due to the pinning of jobs on isolated CPUs.
-> 
-> Signed-off-by: Alex Belits <abelits@marvell.com>
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  drivers/pci/pci-driver.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index da6510af1221..449466f71040 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -12,6 +12,7 @@
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  #include <linux/sched.h>
-> +#include <linux/sched/isolation.h>
->  #include <linux/cpu.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/suspend.h>
-> @@ -333,6 +334,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->  			  const struct pci_device_id *id)
->  {
->  	int error, node, cpu;
-> +	int hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
->  	struct drv_dev_and_id ddi = { drv, dev, id };
->  
->  	/*
-> @@ -353,7 +355,8 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->  	    pci_physfn_is_probed(dev))
->  		cpu = nr_cpu_ids;
->  	else
-> -		cpu = cpumask_any_and(cpumask_of_node(node), cpu_online_mask);
-> +		cpu = cpumask_any_and(cpumask_of_node(node),
-> +				      housekeeping_cpumask(hk_flags));
-
-Looks like cpumask_of_node() is based on online CPUs. So that all
-looks good. Thanks!
-
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
 
->  
->  	if (cpu < nr_cpu_ids)
->  		error = work_on_cpu(cpu, local_pci_probe, &ddi);
-> -- 
-> 2.18.4
+On 6/17/20 12:17 AM, Bjorn Helgaas wrote:
+> [+cc Rafael, linux-pm]
 > 
+> On Mon, Jun 15, 2020 at 09:24:13PM +0300, Georgi Djakov wrote:
+>> The uPD720201 USB3 host controller (connected to PCIe) on the Dragonboard
+>> 845c is often failing during suspend and resume. The following messages
+>> are seen over the console:
+>>
+>>   PM: suspend entry (s2idle)
+>>   Filesystems sync: 0.000 seconds
+>>   Freezing user space processes ... (elapsed 0.001 seconds) done.
+>>   OOM killer disabled.
+>>   Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+>>   printk: Suspending console(s) (use no_console_suspend to debug)
+>>   dwc3-qcom a8f8800.usb: HS-PHY not in L2
+>>   dwc3-qcom a6f8800.usb: HS-PHY not in L2
+>>   xhci_hcd 0000:01:00.0: can't change power state from D3hot to D0 (config
+>>   space inaccessible)
+>>   xhci_hcd 0000:01:00.0: can't change power state from D3hot to D0 (config
+>>   space inaccessible)
+>>   xhci_hcd 0000:01:00.0: Controller not ready at resume -19
+>>   xhci_hcd 0000:01:00.0: PCI post-resume error -19!
+>>   xhci_hcd 0000:01:00.0: HC died; cleaning up
+>>
+>> Then the USB devices are not functional anymore. Let's disable the PM of
+>> the controller for now, as this will at least keep USB devices working
+>> even after suspend and resume.
+> 
+> This seems like we're just covering up a deeper problem here.  I think
+> it would be better to fix the underlying problem.
+> 
+> The quirk you're adding is specific to the Renesas 0x0014 device.  Is
+> there some reason to think the problem is specific to that device, or
+> might other devices have the same problem?
+
+I also think that the USB controller might have some issue with .resume.
+It is obvious that qcom-pcie RC doesn't implement suspend/resume which
+means that its clocks are not disabled at the moment when USB is resuming.
+
+Georgi, can you try to bypass suspend/resume in the USB driver itself?
+
+> 
+> Maybe we're missing something in pcie-qcom.c?  Is there any
+> suspend/resume support required in that driver?  It doesn't look like
+> it has anything except that it calls pm_runtime_enable().
+
+Yes, definitely we did not implemented suspend/resume callbacks, but
+that means that the RC should be functional while the system is in suspend.
+
+> 
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 138e1a2d21cc..c1f502682a19 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -1439,6 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>  {
+>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>  }
+>> +
+>> +static void qcom_fixup_nopm(struct pci_dev *dev)
+>> +{
+>> +	dev->pm_cap = 0;
+>> +	dev_info(&dev->dev, "Disabling PCI power management\n");
+>> +}
+>> +
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+>> @@ -1446,6 +1453,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RENESAS, 0x0014, qcom_fixup_nopm);
+> 
+> The convention is that DECLARE_PCI_FIXUP_*() comes immediately after
+> the quirk function itself, so the whole patch would be a single diff
+> hunk.  See drivers/pci/quirks.c for many examples.
+> 
+>>  static struct platform_driver qcom_pcie_driver = {
+>>  	.probe = qcom_pcie_probe,
+
+-- 
+regards,
+Stan
