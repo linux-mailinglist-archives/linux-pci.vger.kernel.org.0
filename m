@@ -2,50 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3BBC1FA581
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 03:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACD8E1FA58A
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 03:18:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgFPBRs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jun 2020 21:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
+        id S1726872AbgFPBRx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jun 2020 21:17:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgFPBRs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jun 2020 21:17:48 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F5AC08C5C2
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:17:47 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id o84so23297134ybg.0
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:17:47 -0700 (PDT)
+        with ESMTP id S1726855AbgFPBRw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jun 2020 21:17:52 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E74C08C5C2
+        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:17:50 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id p18so14403386qvy.11
+        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:17:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ARkZyYO+o9Di+xsnEpjaN82yE8rF9UgQLsZZ67rguNs=;
-        b=G7acUJ568cBMg8YbpPxn1//6Y1axOcfCkurGlhPRtytoeRGnUnrJnOVKYNQK9wMx/P
-         tweKatsnheJOeE/6qt8OuWzkrkWHAtciku31vTe/RiadXg+t4hXV98zcTFPwDJ9Y0lEs
-         DPDKxBJBG5Kvy9MdD894Cm9Zh1fHfi1xr4Mfi3g/puo6yeU4tFq0K8aMGar2/9ZiwG9N
-         4IDgrrr0jyhiHAgGDSTYrF58oOp1B/v0HrA9U2lv6t4qGKwj1tUB+BF63vePjNp3l87C
-         j5QzLRMuTDUgQ6znL8rrieX9L8BaAHpBXwjZdy3TxiDx6p2H8G1/QW9GUgiyg1mLHbn4
-         XJzQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=w48/vZpRpHgwBvOvRR4dLXxoxTIWLJ/Tbv3NQjwroMA=;
+        b=cY5+g1xIvZJv6zrortzaOeWv8O0xGNvfzNtSs5QO9rdIHlGVT63x/y8HsaA7Ib48Di
+         +zk6NkCUybBACqHinSCBe5fb681ZFWv7+SScnvQki/3J6tzCTkIcqCWzdk8i7ExNyt50
+         EEv3I0+v4Fz9g52dxJaxX8X425L7dd0CZB9zzvO7vdTTmwn3+XLNJskqQDiZWaCsF5xQ
+         59sc88DqoHxtpcAU/f2NRM1qX9hahvquMvjcGOWIR/tg6rVcSUfdF2J7zhQun5kLBJC8
+         qeRgb18EhgUZ4eNJLdyZmo8JGYMxGTgLHsgMdGy1FgS/10j2IUj4BbI9hZMUi1uTGqRP
+         vJQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ARkZyYO+o9Di+xsnEpjaN82yE8rF9UgQLsZZ67rguNs=;
-        b=SItG9bJQwT3KvX9j2K46HzSoZ59UBzyBHSiT4Fto9CyhX5RR3hOs347GhgPY2gn1c5
-         XBCG/nJtSCqpQxy+7HNrbIV1FLNXhkfUKUQDD1krCV91mGx517YO2T5jgYEkkJusNFWf
-         xwT1kw3YTkY8lne4+6c5GxF8YaUqbPQ5tTkGhFS9ps3yFTQh+7lwph51lfQfmCDZfENq
-         E1TyZyzTTHkXp2vhyQYY0gjKc8Tbqy0dCVY8Or9jk6aLKG779lu+RFqxc0qBYQVaBwFk
-         /lQsHdj4dOcECr2UGWhXgh6LID725lFkFNLHaPglKVsJQIvF0bYKz4EzDJEWgu07Cm3j
-         d1/w==
-X-Gm-Message-State: AOAM533jijLSU6oxIc4Jr9dtp9rYgUIWcNNvQxW15nfBq2SS327I4tKV
-        pPHQ9vT05Mm0q2PKu5xa3KBCHTv27V7F
-X-Google-Smtp-Source: ABdhPJybcIF+tiZIKkl4H0LQjdd0GtwdJx/kkGSMA/T7KGNofz3k8iTUUAzgVf+Ss+MziR1K4JlCo0opnS9r
-X-Received: by 2002:a25:cf44:: with SMTP id f65mr500058ybg.368.1592270266200;
- Mon, 15 Jun 2020 18:17:46 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:17:39 -0700
-Message-Id: <20200616011742.138975-1-rajatja@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=w48/vZpRpHgwBvOvRR4dLXxoxTIWLJ/Tbv3NQjwroMA=;
+        b=W+3OUljpqoCXHn0cMYFKzvaE0TJns2ClwsYBEzk3XF1Nx43gKxqZHricrbu8ZG+utL
+         ZPE0YEy9Ct43PANb5l2log5Vsf567YUhgcqb55nc64l5gG/Gr6w2DDDomEZwdEJU7Pbc
+         y23Og8k3mLjtr85Ln8XVtKcf0g+DVrD/MKOpg/7cl0UQIMyyATeaMWxZ9LNEOuBVgYqS
+         CvXJvgbo+om/JWvo3AchpfYN9nphZbjaoda/wScPb0HNPDtAVricE3eepeL+K64vRuFm
+         MDI17dMfLY30lnX6dtljn6mMw1e8mrL+4OTO6gSoh3+v70xzTSVu2F1hZy2JgHh64qEI
+         fI2w==
+X-Gm-Message-State: AOAM530ZsiUwMH/PIidzQMTFeub3wsNhrHEN64sRgAc77ic04iXwkdvu
+        5iE/hnp0PRci09vUKU9KLiCqNDlSYdx8
+X-Google-Smtp-Source: ABdhPJwZZbFOZsLZEoNiGS8uCk3JSEs+IYRXiB58zA0V9PGwAgSl+E0UZUh/CeZFnX4u8WZSP/gPN0YL5jNf
+X-Received: by 2002:a05:6214:b30:: with SMTP id w16mr6887qvj.28.1592270269984;
+ Mon, 15 Jun 2020 18:17:49 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 18:17:40 -0700
+In-Reply-To: <20200616011742.138975-1-rajatja@google.com>
+Message-Id: <20200616011742.138975-2-rajatja@google.com>
 Mime-Version: 1.0
+References: <20200616011742.138975-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH 1/4] pci: Keep the ACS capability offset in device
+Subject: [PATCH 2/4] pci: set "untrusted" flag for truly external devices only
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -81,177 +85,124 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently this is being looked up at a number of places. Read
-and store it once at bootup so that it can be used by all later.
+The "ExternalFacing" devices (root ports) are still internal devices
+that sit on the internal system fabric and thus trusted. Currently they
+were being marked untrusted - likely as an unintended border case.
+
+This patch uses the platform flag to identify the external facing devices
+and then use it to mark any downstream devices as "untrusted". The
+external-facing devices themselves are left as "trusted". This was
+discussed here: https://lkml.org/lkml/2020/6/10/1049
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
- drivers/pci/p2pdma.c |  2 +-
- drivers/pci/pci.c    | 21 +++++++++++++++++----
- drivers/pci/pci.h    |  2 +-
- drivers/pci/probe.c  |  2 +-
- drivers/pci/quirks.c |  8 ++++----
- include/linux/pci.h  |  1 +
- 6 files changed, 25 insertions(+), 11 deletions(-)
+ drivers/iommu/intel/iommu.c |  2 +-
+ drivers/pci/of.c            |  2 +-
+ drivers/pci/pci-acpi.c      | 13 +++++++------
+ drivers/pci/probe.c         |  2 +-
+ include/linux/pci.h         |  8 ++++++++
+ 5 files changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index e8e444eeb1cd2..f29a48f8fa594 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -253,7 +253,7 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
- 	int pos;
- 	u16 ctrl;
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 9129663a7406b..1256ca89fb519 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -4735,7 +4735,7 @@ static inline bool has_untrusted_dev(void)
+ 	struct pci_dev *pdev = NULL;
  
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ACS);
-+	pos = pdev->acs_cap;
- 	if (!pos)
- 		return 0;
+ 	for_each_pci_dev(pdev)
+-		if (pdev->untrusted)
++		if (pdev->untrusted || pdev->external_facing)
+ 			return true;
  
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce096272f52b1..d2ff987585855 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -51,6 +51,7 @@ EXPORT_SYMBOL(pci_pci_problems);
+ 	return false;
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 27839cd2459f6..22727fc9558df 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -42,7 +42,7 @@ void pci_set_bus_of_node(struct pci_bus *bus)
+ 	} else {
+ 		node = of_node_get(bus->self->dev.of_node);
+ 		if (node && of_property_read_bool(node, "external-facing"))
+-			bus->self->untrusted = true;
++			bus->self->external_facing = true;
+ 	}
  
- unsigned int pci_pm_d3_delay;
+ 	bus->dev.of_node = node;
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 7224b1e5f2a83..492c07805caf8 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -1213,22 +1213,23 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+ 	ACPI_FREE(obj);
+ }
  
-+static void pci_enable_acs(struct pci_dev *dev);
- static void pci_pme_list_scan(struct work_struct *work);
- 
- static LIST_HEAD(pci_pme_list);
-@@ -3284,7 +3285,7 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
- 	if (!pci_dev_specific_disable_acs_redir(dev))
- 		return;
- 
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+	pos = dev->acs_cap;
- 	if (!pos) {
- 		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
- 		return;
-@@ -3310,7 +3311,7 @@ static void pci_std_enable_acs(struct pci_dev *dev)
- 	u16 cap;
- 	u16 ctrl;
- 
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+	pos = dev->acs_cap;
- 	if (!pos)
- 		return;
- 
-@@ -3336,7 +3337,7 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-  * pci_enable_acs - enable ACS if hardware support it
-  * @dev: the PCI device
-  */
--void pci_enable_acs(struct pci_dev *dev)
-+static void pci_enable_acs(struct pci_dev *dev)
+-static void pci_acpi_set_untrusted(struct pci_dev *dev)
++static void pci_acpi_set_external_facing(struct pci_dev *dev)
  {
- 	if (!pci_acs_enable)
- 		goto disable_acs_redir;
-@@ -3362,7 +3363,7 @@ static bool pci_acs_flags_enabled(struct pci_dev *pdev, u16 acs_flags)
- 	int pos;
- 	u16 cap, ctrl;
+ 	u8 val;
  
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ACS);
-+	pos = pdev->acs_cap;
- 	if (!pos)
- 		return false;
+-	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
++	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
++	    pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
+ 		return;
+ 	if (device_property_read_u8(&dev->dev, "ExternalFacingPort", &val))
+ 		return;
  
-@@ -3487,6 +3488,18 @@ bool pci_acs_path_enabled(struct pci_dev *start,
- 	return true;
+ 	/*
+-	 * These root ports expose PCIe (including DMA) outside of the
+-	 * system so make sure we treat them and everything behind as
++	 * These root/down ports expose PCIe (including DMA) outside of the
++	 * system so make sure we treat everything behind them as
+ 	 * untrusted.
+ 	 */
+ 	if (val)
+-		dev->untrusted = 1;
++		dev->external_facing = 1;
  }
  
-+/**
-+ * pci_acs_init - Initialize if hardware supports it
-+ * @dev: the PCI device
-+ */
-+void pci_acs_init(struct pci_dev *dev)
-+{
-+	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+
-+	if (dev->acs_cap)
-+		pci_enable_acs(dev);
-+}
-+
- /**
-  * pci_rebar_find_pos - find position of resize ctrl reg for BAR
-  * @pdev: PCI device
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6d3f758671064..12fb79fbe29d3 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -532,7 +532,7 @@ static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
- 	return resource_alignment(res);
- }
+ static void pci_acpi_setup(struct device *dev)
+@@ -1240,7 +1241,7 @@ static void pci_acpi_setup(struct device *dev)
+ 		return;
  
--void pci_enable_acs(struct pci_dev *dev);
-+void pci_acs_init(struct pci_dev *dev);
- #ifdef CONFIG_PCI_QUIRKS
- int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
- int pci_dev_specific_enable_acs(struct pci_dev *dev);
+ 	pci_acpi_optimize_delay(pci_dev, adev->handle);
+-	pci_acpi_set_untrusted(pci_dev);
++	pci_acpi_set_external_facing(pci_dev);
+ 	pci_acpi_add_edr_notifier(pci_dev);
+ 
+ 	pci_acpi_add_pm_notifier(adev, pci_dev);
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2f66988cea257..6d87066a5ecc5 100644
+index 6d87066a5ecc5..8c40c00413e74 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -2390,7 +2390,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_ats_init(dev);		/* Address Translation Services */
- 	pci_pri_init(dev);		/* Page Request Interface */
- 	pci_pasid_init(dev);		/* Process Address Space ID */
--	pci_enable_acs(dev);		/* Enable ACS P2P upstream forwarding */
-+	pci_acs_init(dev);		/* Access Control Services */
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 812bfc32ecb82..b341628e47527 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4653,7 +4653,7 @@ static int pci_quirk_intel_spt_pch_acs(struct pci_dev *dev, u16 acs_flags)
- 	if (!pci_quirk_intel_spt_pch_acs_match(dev))
- 		return -ENOTTY;
+@@ -1552,7 +1552,7 @@ static void set_pcie_untrusted(struct pci_dev *dev)
+ 	 * untrusted as well.
+ 	 */
+ 	parent = pci_upstream_bridge(dev);
+-	if (parent && parent->untrusted)
++	if (parent && (parent->untrusted || parent->external_facing))
+ 		dev->untrusted = true;
+ }
  
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+	pos = dev->acs_cap;
- 	if (!pos)
- 		return -ENOTTY;
- 
-@@ -4961,7 +4961,7 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
- 	if (!pci_quirk_intel_spt_pch_acs_match(dev))
- 		return -ENOTTY;
- 
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+	pos = dev->acs_cap;
- 	if (!pos)
- 		return -ENOTTY;
- 
-@@ -4988,7 +4988,7 @@ static int pci_quirk_disable_intel_spt_pch_acs_redir(struct pci_dev *dev)
- 	if (!pci_quirk_intel_spt_pch_acs_match(dev))
- 		return -ENOTTY;
- 
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+	pos = dev->acs_cap;
- 	if (!pos)
- 		return -ENOTTY;
- 
-@@ -5355,7 +5355,7 @@ int pci_idt_bus_quirk(struct pci_bus *bus, int devfn, u32 *l, int timeout)
- 	bool found;
- 	struct pci_dev *bridge = bus->self;
- 
--	pos = pci_find_ext_capability(bridge, PCI_EXT_CAP_ID_ACS);
-+	pos = bridge->acs_cap;
- 
- 	/* Disable ACS SV before initial config reads */
- 	if (pos) {
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c79d83304e529..a26be5332bba6 100644
+index a26be5332bba6..fe1bc603fda40 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -486,6 +486,7 @@ struct pci_dev {
- #ifdef CONFIG_PCI_P2PDMA
- 	struct pci_p2pdma *p2pdma;
- #endif
-+	u16		acs_cap;	/* ACS Capability offset */
- 	phys_addr_t	rom;		/* Physical address if not from BAR */
- 	size_t		romlen;		/* Length if not from BAR */
- 	char		*driver_override; /* Driver name to force a match */
+@@ -432,6 +432,14 @@ struct pci_dev {
+ 	 * mappings to make sure they cannot access arbitrary memory.
+ 	 */
+ 	unsigned int	untrusted:1;
++	/*
++	 * Devices are marked as external-facing using info from platform
++	 * (ACPI / devicetree). An external-facing device is still an internal
++	 * trusted device, but it faces external untrusted devices. Thus any
++	 * devices enumerated downstream an external-facing device is marked
++	 * as untrusted.
++	 */
++	unsigned int	external_facing:1;
+ 	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
+ 	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
+ 	unsigned int	irq_managed:1;
 -- 
 2.27.0.290.gba653c62da-goog
 
