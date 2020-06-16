@@ -2,155 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 835651FBCD0
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 19:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83CE01FBD47
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 19:47:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgFPR0t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jun 2020 13:26:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37117 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729988AbgFPR0s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jun 2020 13:26:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592328406;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ItaqNxBolZxCTVFgF5uA+jZww2TB8yM7ElgO3DIZmPw=;
-        b=MoXnEGKGXrVRkiTf9gXySOH5FCb6jMmdYzgZ24op4JX5gU0S1FTM/rvqx3aNQr7XUznyNF
-        0kAfLDag2aDwr9WVes2wzdEtFML8qUeDmxNRLsLhkIyluyS0K7kv/O16yQO1pZpGmz2L8a
-        9sYk020YFsoX+vZRta5PHYfpTKDEE7s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-OdzqyHloPhSIzhZW9fIwog-1; Tue, 16 Jun 2020 13:26:38 -0400
-X-MC-Unique: OdzqyHloPhSIzhZW9fIwog-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730196AbgFPRre (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 13:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgFPRrd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:47:33 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDDA18730E3;
-        Tue, 16 Jun 2020 17:26:36 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-9.gru2.redhat.com [10.97.112.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 48D2719C71;
-        Tue, 16 Jun 2020 17:26:28 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 7570841887FC; Tue, 16 Jun 2020 14:26:06 -0300 (-03)
-Date:   Tue, 16 Jun 2020 14:26:06 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, juri.lelli@redhat.com, abelits@marvell.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de
-Subject: Re: [PATCH v1 0/3] Preventing job distribution to isolated CPUs
-Message-ID: <20200616172606.GA326441@fuller.cnet>
-References: <20200610161226.424337-1-nitesh@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E2DC62078D;
+        Tue, 16 Jun 2020 17:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592329653;
+        bh=nAI/EXqUGCFU6KYEC9NHmbC/B5dpZ6ul/4PG6MVXr+A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Erm+poYvqcyDFKX5SnKcWjQucTKB8JxI7kkm62RnbC2A35qML7xh0SzVAf0/6GwE8
+         pRgkAwwhXV+eVzaN+sM5yi6qqJMMri+iHaN6SroYp7ydmKeHqmC3Nb8BWGVxqgmUYB
+         RMhMl8DGZyOmYDZ7qEKwT5oRTsO6t52w7DiOU+C0=
+Date:   Tue, 16 Jun 2020 12:47:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linuxarm@huawei.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH 1/2] PCI/AER: Do not reset the device status if doing
+ firmware first handling.
+Message-ID: <20200616174731.GA1969609@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200610161226.424337-1-nitesh@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200521173134.2456773-2-Jonathan.Cameron@huawei.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Nitesh,
+[+cc Sathy]
 
-On Wed, Jun 10, 2020 at 12:12:23PM -0400, Nitesh Narayan Lal wrote:
-> This patch-set is originated from one of the patches that have been
-> posted earlier as a part of "Task_isolation" mode [1] patch series
-> by Alex Belits <abelits@marvell.com>. There are only a couple of
-> changes that I am proposing in this patch-set compared to what Alex
-> has posted earlier.
-> 
-> 
-> Context
-> =======
-> On a broad level, all three patches that are included in this patch
-> set are meant to improve the driver/library to respect isolated
-> CPUs by not pinning any job on it. Not doing so could impact
-> the latency values in RT use-cases.
-> 
-> 
-> Patches
-> =======
-> * Patch1:
->   The first patch is meant to make cpumask_local_spread()
->   aware of the isolated CPUs. It ensures that the CPUs that
->   are returned by this API only includes housekeeping CPUs.
-> 
-> * Patch2:
->   This patch ensures that a probe function that is called
->   using work_on_cpu() doesn't run any task on an isolated CPU.
-> 
-> * Patch3:
->   This patch makes store_rps_map() aware of the isolated
->   CPUs so that rps don't queue any jobs on an isolated CPU.
-> 
-> 
-> Changes
-> =======
-> To fix the above-mentioned issues Alex has used housekeeping_cpumask().
-> The only changes that I am proposing here are:
-> - Removing the dependency on CONFIG_TASK_ISOLATION that was proposed by Alex.
->   As it should be safe to rely on housekeeping_cpumask()
->   even when we don't have any isolated CPUs and we want
->   to fall back to using all available CPUs in any of the above scenarios.
-> - Using both HK_FLAG_DOMAIN and HK_FLAG_WQ in all three patches, this is
->   because we would want the above fixes not only when we have isolcpus but
->   also with something like systemd's CPU affinity.
-> 
-> 
-> Testing
-> =======
-> * Patch 1:
->   Fix for cpumask_local_spread() is tested by creating VFs, loading
->   iavf module and by adding a tracepoint to confirm that only housekeeping
->   CPUs are picked when an appropriate profile is set up and all remaining CPUs
->   when no CPU isolation is required/configured.
-> 
-> * Patch 2:
->   To test the PCI fix, I hotplugged a virtio-net-pci from qemu console
->   and forced its addition to a specific node to trigger the code path that
->   includes the proposed fix and verified that only housekeeping CPUs
->   are included via tracepoint. I understand that this may not be the
->   best way to test it, hence, I am open to any suggestion to test this
->   fix in a better way if required.
-> 
-> * Patch 3:
->   To test the fix in store_rps_map(), I tried configuring an isolated
->   CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which
->   resulted in 'write error: Invalid argument' error. For the case
->   where a non-isolated CPU is writing in rps_cpus the above operation
->   succeeded without any error.
-> 
-> [1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
-> 
-> Alex Belits (3):
->   lib: restricting cpumask_local_spread to only houskeeping CPUs
->   PCI: prevent work_on_cpu's probe to execute on isolated CPUs
->   net: restrict queuing of receive packets to housekeeping CPUs
-> 
->  drivers/pci/pci-driver.c |  5 ++++-
->  lib/cpumask.c            | 43 +++++++++++++++++++++++-----------------
->  net/core/net-sysfs.c     | 10 +++++++++-
->  3 files changed, 38 insertions(+), 20 deletions(-)
-> 
-> --  
-> 
+On Fri, May 22, 2020 at 01:31:33AM +0800, Jonathan Cameron wrote:
+> pci_aer_clear_device_status() currently resets the device status even when
+> firmware first handling is going on.  In particular it resets it on the
+> root port.
+>
+> This has been discussed previously
+> https://lore.kernel.org/patchwork/patch/427375/.
 
-Looks good to me.
+I don't think this reference is really pertinent, is it?  That patch
+to b2c8881da764 changes pci_cleanup_aer_uncorrect_error_status() so it
+doesn't clear PCI_ERR_UNCOR_STATUS in "firmware-first" mode.
 
-The flags mechanism is not well organized: this is using HK_FLAG_WQ to 
-infer nohz_full is being set (while HK_FLAG_WQ should indicate that
-non-affined workqueue threads should not run on certain CPUs).
+But your patch only affects PCI_EXP_DEVSTA, not PCI_ERR_UNCOR_STATUS.
 
-But this is a problem of the flags (which apparently Frederic wants
-to fix by exposing a limited number of options to users), and not
-of this patch.
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/pci/pcie/aer.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f4274d301235..43e78b97ace6 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -373,6 +373,9 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
+>  {
+>  	u16 sta;
+>  
+> +	if (pcie_aer_get_firmware_first(dev))
+> +		return;
 
+This needs to be adjusted because pcie_aer_get_firmware_first() no
+longer exists after 708b20003624 ("PCI/AER: Remove HEST/FIRMWARE_FIRST
+parsing for AER ownership").
 
+This will use the _OSC AER ownership bit to gate clearing of the
+status bits in the PCIe capability (not the AER capability).
+
+I think that's the right thing to do, but it's certainly not obvious
+from the _OSC description in the PCI Firmware Spec r3.2.  I think we
+need a pointer to the ECN that clarifies this, i.e., sec 4.5.1 of:
+
+  System Firmware Intermediary (SFI) _OSC and DPC Updates ECN, Feb 24,
+  2020, affecting PCI Firmware Specification, Rev. 3.2
+  https://members.pcisig.com/wg/PCI-SIG/document/14076
+
+>  	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
+>  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
+>  }
+> -- 
+> 2.19.1
+> 
