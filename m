@@ -2,41 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61B321FC04C
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 22:55:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 084651FC064
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 22:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgFPUzt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jun 2020 16:55:49 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:33826 "EHLO
+        id S1729861AbgFPUzx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 16:55:53 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:33856 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726630AbgFPUzt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jun 2020 16:55:49 -0400
+        by vger.kernel.org with ESMTP id S1729782AbgFPUzu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jun 2020 16:55:50 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 4D28330D88D;
-        Tue, 16 Jun 2020 13:55:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 4D28330D88D
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id C88EC30C411;
+        Tue, 16 Jun 2020 13:55:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com C88EC30C411
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1592340948;
-        bh=3OXvA8PCBEsIpA3nCB4c0nzrfCkD8JiWghv65L3ox8A=;
+        s=dkimrelay; t=1592340949;
+        bh=E+oR6RUpkd74pPU6ifizwLK9TZk6TKCJeZjFJcFRzhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ViUF8mzWpCVaY9qidj/hQmhK3bwcJK1jWitrwWgTDGlgsXQomrYhnyxsUFODUA5wT
-         unMHuxQEISgpY/v4ZgYkFwkPVNDwWd68GNq/aig5NTmFIdKVjWH3iXspafrgodghNI
-         727FL3C3/pFk9qRScIhfoyOXoeCay0LYYxSI1+U4=
+        b=P50FTVBO/zMIXbpuFhLWBQyyxqB6Ez7qcHg2PyDMIUTBvbicO3MBn8YVoFTTHxhoM
+         RBWPLfTCyCLIvr08m3yurRLhq3MwXv6uaaafhHqvVzoVdCSUIXaStm9O4CRr/eVNaC
+         tmX2OtKj+IWrgddEP+43cogwIodYgi4yaKsKyA1Y=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E3EC114008B;
-        Tue, 16 Jun 2020 13:55:46 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4E0CD14008C;
+        Tue, 16 Jun 2020 13:55:48 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
 Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 01/12] PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
-Date:   Tue, 16 Jun 2020 16:55:08 -0400
-Message-Id: <20200616205533.3513-2-james.quinlan@broadcom.com>
+        Jens Axboe <axboe@kernel.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 02/12] ata: ahci_brcm: Fix use of BCM7216 reset controller
+Date:   Tue, 16 Jun 2020 16:55:09 -0400
+Message-Id: <20200616205533.3513-3-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200616205533.3513-1-james.quinlan@broadcom.com>
 References: <20200616205533.3513-1-james.quinlan@broadcom.com>
@@ -47,32 +49,57 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Jim Quinlan <jquinlan@broadcom.com>
 
-Have PCIE_BRCMSTB depend on ARCH_BRCMSTB.  Also set the default value to
-ARCH_BRCMSTB.
+A reset controller "rescal" is shared between the AHCI driver and the PCIe
+driver for the BrcmSTB 7216 chip.  The code is modified to allow this
+sharing and to deassert() properly.
 
 Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- drivers/pci/controller/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index adddf21fa381..c165328d5fbb 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -262,9 +262,10 @@ config VMD
+Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
+Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller
+name")
+---
+ drivers/ata/ahci_brcm.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+index 6853dbb4131d..d6115bc04b09 100644
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+-	const char *reset_name = NULL;
+ 	struct brcm_ahci_priv *priv;
+ 	struct ahci_host_priv *hpriv;
+ 	struct resource *res;
+@@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
  
- config PCIE_BRCMSTB
- 	tristate "Broadcom Brcmstb PCIe host controller"
--	depends on ARCH_BCM2835 || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
-+	default ARCH_BRCMSTB
- 	help
- 	  Say Y here to enable PCIe host controller support for
- 	  Broadcom STB based SoCs, like the Raspberry Pi 4.
+ 	/* Reset is optional depending on platform and named differently */
+ 	if (priv->version == BRCM_SATA_BCM7216)
+-		reset_name = "rescal";
++		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+ 	else
+-		reset_name = "ahci";
++		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
+ 
+-	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
+ 	if (IS_ERR(priv->rcdev))
+ 		return PTR_ERR(priv->rcdev);
+ 
+@@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 		break;
+ 	}
+ 
+-	if (priv->version == BRCM_SATA_BCM7216)
+-		ret = reset_control_reset(priv->rcdev);
+-	else
+-		ret = reset_control_deassert(priv->rcdev);
++	ret = reset_control_deassert(priv->rcdev);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.17.1
 
