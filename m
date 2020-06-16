@@ -2,104 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 957B61FBC88
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 19:15:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 835651FBCD0
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 19:27:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgFPRNa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jun 2020 13:13:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35347 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729940AbgFPRN3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jun 2020 13:13:29 -0400
-Received: from mail-qt1-f199.google.com ([209.85.160.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <ian.may@canonical.com>)
-        id 1jlF9L-0000DB-RU
-        for linux-pci@vger.kernel.org; Tue, 16 Jun 2020 17:13:27 +0000
-Received: by mail-qt1-f199.google.com with SMTP id l26so17274620qtr.14
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jun 2020 10:13:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ulzfz4eBKOqWRFZsEkPCP353t+waPJ8/kbkJwaQzZ8M=;
-        b=iREMpDeMmSPCxrIaCChajsC0Ht5IrcFbhy8A6xKvgLtXPRA6dmHO1mBMfDbPcZNz2y
-         CRinbUvT+jPnRGYrXccKPh4wHoRgNPnOb2ll600q5Z9CINlU+zJ38HuP/lHVMO3fFFuz
-         TltMcoglNgy5JDCeIdOGMs6vlq1+4WH3IgazkTYYH4TfEKYhFEX9GxPBR0KZH1hoRrAR
-         sjzp3OS9+d5WunZeNla3d67CqRwNFP5CoZZCs6l4r/XO4oHKC50PAcoal5NQV8szAS5n
-         10VNhyPz/O5Vc0KytBP0/IoEv5l9TrMGji0lSkfk6HPz7kAlLqPNyT/PBKcqDEYAXIWn
-         4AnA==
-X-Gm-Message-State: AOAM530XBCirr+y0hBnK//6QikvheCBv2B378EQOTF7aDiPObRlxT2e1
-        +AHuvcS3272tAsXNNhiJ2vqHJusBwpow4GqdR8n3Et3zrv4MeH1YKifFu4Gp5hsbb4neD+LCiws
-        wPR2iRq8eMPCfc8Gw9UTpgLA74OYcH1cIkzIpMQ==
-X-Received: by 2002:ac8:176f:: with SMTP id u44mr23473061qtk.0.1592327606736;
-        Tue, 16 Jun 2020 10:13:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwIrQeBmiY2i2q8vUw8Z7YAxeIGSaGbkPAa/BdO9krD7sebzuV/riUdmbb6KfJ3nvpnjTC7Lg==
-X-Received: by 2002:ac8:176f:: with SMTP id u44mr23473030qtk.0.1592327606284;
-        Tue, 16 Jun 2020 10:13:26 -0700 (PDT)
-Received: from ?IPv6:2001:67c:1562:8007::aac:44bb? ([2001:67c:1562:8007::aac:44bb])
-        by smtp.gmail.com with ESMTPSA id c191sm14409931qke.114.2020.06.16.10.13.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 10:13:25 -0700 (PDT)
-Subject: Re: [PATCH 1/2] PCIe hotplug interrupt and AER deadlock with
- reset_lock and device_lock
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org
-References: <20200615143250.438252-1-ian.may@canonical.com>
- <20200615143250.438252-2-ian.may@canonical.com>
- <20200615185650.mzxndbw7ghvh5qiv@wunner.de>
-From:   Ian May <ian.may@canonical.com>
-Message-ID: <0598848d-47ab-f436-04ea-7ef1f348905b@canonical.com>
-Date:   Tue, 16 Jun 2020 12:13:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727819AbgFPR0t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 13:26:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37117 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729988AbgFPR0s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jun 2020 13:26:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592328406;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ItaqNxBolZxCTVFgF5uA+jZww2TB8yM7ElgO3DIZmPw=;
+        b=MoXnEGKGXrVRkiTf9gXySOH5FCb6jMmdYzgZ24op4JX5gU0S1FTM/rvqx3aNQr7XUznyNF
+        0kAfLDag2aDwr9WVes2wzdEtFML8qUeDmxNRLsLhkIyluyS0K7kv/O16yQO1pZpGmz2L8a
+        9sYk020YFsoX+vZRta5PHYfpTKDEE7s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-OdzqyHloPhSIzhZW9fIwog-1; Tue, 16 Jun 2020 13:26:38 -0400
+X-MC-Unique: OdzqyHloPhSIzhZW9fIwog-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDDA18730E3;
+        Tue, 16 Jun 2020 17:26:36 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-9.gru2.redhat.com [10.97.112.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 48D2719C71;
+        Tue, 16 Jun 2020 17:26:28 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id 7570841887FC; Tue, 16 Jun 2020 14:26:06 -0300 (-03)
+Date:   Tue, 16 Jun 2020 14:26:06 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, juri.lelli@redhat.com, abelits@marvell.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de
+Subject: Re: [PATCH v1 0/3] Preventing job distribution to isolated CPUs
+Message-ID: <20200616172606.GA326441@fuller.cnet>
+References: <20200610161226.424337-1-nitesh@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615185650.mzxndbw7ghvh5qiv@wunner.de>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20200610161226.424337-1-nitesh@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lukas,
+Hi Nitesh,
 
-Thanks for the quick reply!Â  I like your solution and have confirmed it
-solves the first deadlock we see between the Hotplug interrupt and AER
-recovery.
+On Wed, Jun 10, 2020 at 12:12:23PM -0400, Nitesh Narayan Lal wrote:
+> This patch-set is originated from one of the patches that have been
+> posted earlier as a part of "Task_isolation" mode [1] patch series
+> by Alex Belits <abelits@marvell.com>. There are only a couple of
+> changes that I am proposing in this patch-set compared to what Alex
+> has posted earlier.
+> 
+> 
+> Context
+> =======
+> On a broad level, all three patches that are included in this patch
+> set are meant to improve the driver/library to respect isolated
+> CPUs by not pinning any job on it. Not doing so could impact
+> the latency values in RT use-cases.
+> 
+> 
+> Patches
+> =======
+> * Patch1:
+>   The first patch is meant to make cpumask_local_spread()
+>   aware of the isolated CPUs. It ensures that the CPUs that
+>   are returned by this API only includes housekeeping CPUs.
+> 
+> * Patch2:
+>   This patch ensures that a probe function that is called
+>   using work_on_cpu() doesn't run any task on an isolated CPU.
+> 
+> * Patch3:
+>   This patch makes store_rps_map() aware of the isolated
+>   CPUs so that rps don't queue any jobs on an isolated CPU.
+> 
+> 
+> Changes
+> =======
+> To fix the above-mentioned issues Alex has used housekeeping_cpumask().
+> The only changes that I am proposing here are:
+> - Removing the dependency on CONFIG_TASK_ISOLATION that was proposed by Alex.
+>   As it should be safe to rely on housekeeping_cpumask()
+>   even when we don't have any isolated CPUs and we want
+>   to fall back to using all available CPUs in any of the above scenarios.
+> - Using both HK_FLAG_DOMAIN and HK_FLAG_WQ in all three patches, this is
+>   because we would want the above fixes not only when we have isolcpus but
+>   also with something like systemd's CPU affinity.
+> 
+> 
+> Testing
+> =======
+> * Patch 1:
+>   Fix for cpumask_local_spread() is tested by creating VFs, loading
+>   iavf module and by adding a tracepoint to confirm that only housekeeping
+>   CPUs are picked when an appropriate profile is set up and all remaining CPUs
+>   when no CPU isolation is required/configured.
+> 
+> * Patch 2:
+>   To test the PCI fix, I hotplugged a virtio-net-pci from qemu console
+>   and forced its addition to a specific node to trigger the code path that
+>   includes the proposed fix and verified that only housekeeping CPUs
+>   are included via tracepoint. I understand that this may not be the
+>   best way to test it, hence, I am open to any suggestion to test this
+>   fix in a better way if required.
+> 
+> * Patch 3:
+>   To test the fix in store_rps_map(), I tried configuring an isolated
+>   CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which
+>   resulted in 'write error: Invalid argument' error. For the case
+>   where a non-isolated CPU is writing in rps_cpus the above operation
+>   succeeded without any error.
+> 
+> [1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
+> 
+> Alex Belits (3):
+>   lib: restricting cpumask_local_spread to only houskeeping CPUs
+>   PCI: prevent work_on_cpu's probe to execute on isolated CPUs
+>   net: restrict queuing of receive packets to housekeeping CPUs
+> 
+>  drivers/pci/pci-driver.c |  5 ++++-
+>  lib/cpumask.c            | 43 +++++++++++++++++++++++-----------------
+>  net/core/net-sysfs.c     | 10 +++++++++-
+>  3 files changed, 38 insertions(+), 20 deletions(-)
+> 
+> --  
+> 
 
-Thanks,
-Ian
+Looks good to me.
 
-On 6/15/20 1:56 PM, Lukas Wunner wrote:
-> On Mon, Jun 15, 2020 at 09:32:49AM -0500, Ian May wrote:
->> Currently when a hotplug interrupt and AER recovery triggers simultaneously
->> the following deadlock can occur.
->>
->>         Hotplug				       AER
->> ----------------------------       ---------------------------
->> device_lock(&dev->dev)		   down_write(&ctrl->reset_lock)
->> down_read(&ctrl->reset_lock)       device_lock(&dev->dev)
->>
->> This patch adds a reset_lock and reset_unlock hotplug_slot_op.
->> This would allow the controller reset_lock/reset_unlock to be moved
->> from pciehp_reset_slot to pci_slot_reset function allowing the controller
->> reset_lock to be acquired before the device lock allowing for both hotplug
->> and AER to grab the reset_lock and device lock in proper order.
-> I've posted a patch to address such issues on Mar 31, just haven't
-> gotten around to respin it with a proper commit message:
->
-> https://lore.kernel.org/linux-pci/20200331130139.46oxbade6rcbaicb@wunner.de/
->
-> I've solved it by moving the reset lock into struct pci_slot.
-> I think that's simpler than adding two callbacks.
->
-> Do you think the AER deadlock could be fixed based on my approach?
->
-> Thanks,
->
-> Lukas
+The flags mechanism is not well organized: this is using HK_FLAG_WQ to 
+infer nohz_full is being set (while HK_FLAG_WQ should indicate that
+non-affined workqueue threads should not run on certain CPUs).
+
+But this is a problem of the flags (which apparently Frederic wants
+to fix by exposing a limited number of options to users), and not
+of this patch.
+
 
