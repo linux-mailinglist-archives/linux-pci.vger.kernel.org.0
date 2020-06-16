@@ -2,64 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8767C1FA599
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 03:25:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A1411FA86C
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 07:57:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgFPBZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jun 2020 21:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgFPBZK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jun 2020 21:25:10 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DC8C061A0E
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:25:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c17so21476215lji.11
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LP/aQidXnbqXBj86qiTpdN/LTXxXT/wIazu3HgfVB38=;
-        b=eL7N9Dz2T+SYzIevLVi3JbrAtfieo/YR/WWou6r/cNQw3wlPzPML5G2TUt+Or/AhJM
-         svjEFeuxsxGqWAB7UfciiWwSFtMhVOkkkXYZ+gpkNLdFIRe17YJTbN0msiMv0dKn2MzD
-         doLBAfuH313vdkrUY+gIMrGmltxObRSvY4AXjgRI4LkSGpnwnaFbzkzJuHoxzpfWCGa8
-         sr2FyxQ5IsA36pAhi0wsKzE4+zi+gj1C9ueu2Y7RgFyuhR79HTD8w/V15aj0pFje32ey
-         KHcRb8pwlDPhIu+JIpPkaxxPSv95SEyPDvvpNYTfxIp+KQmcwFuIE5F7h8H+iQKPMEEs
-         Vg2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LP/aQidXnbqXBj86qiTpdN/LTXxXT/wIazu3HgfVB38=;
-        b=qhxkXTzhRk07Di3jZBcJDXTLqT6pOmayOXADSTrBCBSBVp9hNOlcZ5RhrFgFXeBW7c
-         AKufgAnLNhENuCTi8/MPBrLx76uumLNt38BQQFJ9nQ6l633qkEPeJWtxFojrW/Z7N9zF
-         u6qUH5fWZZg1CoHVHJ20Ee+V5zPBGy6a7YsiCOUNyWW7WWPcXxra/A6dnlB06YKCacp7
-         CKzaTNapgr+xV9lzfrRazdhAmYbFeNXaO+QMiueyb0oKkZsKdfLNAnX+4d9y7vrP4Pnq
-         vF/FGg7NuSXgFn7hPqW1zuxOaeHcRRUYrQT1YQPYmSp2N71eOsAmGngbLqoihB71R1MF
-         nYzQ==
-X-Gm-Message-State: AOAM533BXGfiV0yqW9D6oA7p2h42s+hohyxFUBbLcY0O4jT3QHO3WIEX
-        lUPRf2ocbP52oT85f2FksGiAL82ft9DD459cs96iOA==
-X-Google-Smtp-Source: ABdhPJxF6oX/Hpl7j2LmDycbZUtjorwvc3ivf0y/ulSvOBeN9FDTVBd8MdJaYdN1qAokmmvmQP90S2+LbmZ2h+nNjl0=
-X-Received: by 2002:a2e:6f19:: with SMTP id k25mr163679ljc.247.1592270707239;
- Mon, 15 Jun 2020 18:25:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
- <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com> <CAA93t1r37y-Shr+-oHoBoLSbE1vAguwdE2ak2F6L4Ecm5+3JKQ@mail.gmail.com>
-In-Reply-To: <CAA93t1r37y-Shr+-oHoBoLSbE1vAguwdE2ak2F6L4Ecm5+3JKQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 15 Jun 2020 18:24:30 -0700
-Message-ID: <CACK8Z6H-DZQYBMqtU5_H5TTwwn35Q7Yysm9a7Wj0twfQP8QBzA@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Rajat Jain <rajatxjain@gmail.com>
-Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        id S1726335AbgFPF5w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 01:57:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgFPF5w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Jun 2020 01:57:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A1D0207E8;
+        Tue, 16 Jun 2020 05:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592287072;
+        bh=UPondy/gLEeob42yBMK75A90hWsNm0WoAX0fhd+BKsM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S36qoPg4Ccn1IlxtXBdfEqDkL77xw4EqbBxGpo52DJANn0SxLDqRTHMbS3hI2z64i
+         gx7ZOTC+hdupxlw6FnQvel2n2QzH+BKpYDlHLVgIOucAL9T4Ubcx8KhDkWOI91R6tN
+         WE6LiBCvTOoxwxm2yf564ty4NrQdJBWrQbwX0YgY=
+Date:   Tue, 16 Jun 2020 07:57:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Jean-Philippe Brucker <jean-philippe@linaro.org>,
         Prashant Malani <pmalani@google.com>,
@@ -67,7 +42,7 @@ Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
         Todd Broch <tbroch@google.com>,
         Alex Levin <levinale@google.com>,
         Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
         Bernie Keany <bernie.keany@intel.com>,
         Aaron Durbin <adurbin@google.com>,
         Diego Rivas <diegorivas@google.com>,
@@ -75,88 +50,53 @@ Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
         Furquan Shaikh <furquan@google.com>,
         Jesse Barnes <jsbarnes@google.com>,
         Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alex Williamson <alex.williamson@redhat.com>, oohall@gmail.com
+Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
+Message-ID: <20200616055747.GA2047@kroah.com>
+References: <20200616011742.138975-1-rajatja@google.com>
+ <20200616011742.138975-4-rajatja@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616011742.138975-4-rajatja@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 12:57 PM Rajat Jain <rajatxjain@gmail.com> wrote:
->
-> On Tue, Jun 9, 2020 at 6:34 PM Oliver O'Halloran <oohall@gmail.com> wrote:
-> >
-> > On Wed, Jun 10, 2020 at 7:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > To sketch this out, my understanding of how this would work is:
-> > >
-> > >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
-> > >     today, but doing so would be trivial.  I think I would prefer a
-> > >     sysfs name like "external" so it's more descriptive and less of a
-> > >     judgment.
-> > >
-> > >     This comes from either the DT "external-facing" property or the
-> > >     ACPI "ExternalFacingPort" property.
-> >
-> > I don't think internal / external is the right distinction to be
-> > making. We have a similar trust issue with the BMC in servers even
-> > though they're internal devices. They're typically network accessible
-> > and infrequently updated so treating them as trustworthy isn't a great
-> > idea. We have been slowly de-privileging the BMC over the last few
-> > years, but the PCIe interface isn't locked down enough for my liking
-> > since the SoCs we use do allow software to set the VDID and perform
-> > arbitrary DMAs (thankfully limited to 32bit). If we're going to add in
-> > infrastructure for handling possibly untrustworthy PCI devices then
-> > I'd like to use that for BMCs too.
-> >
-> > >   - All devices present at boot are enumerated.  Any statically built
-> > >     drivers will bind to them before any userspace code runs.
-> > >
-> > >     If you want to keep statically built drivers from binding, you'd
-> > >     need to invent some mechanism so pci_driver_init() could clear
-> > >     drivers_autoprobe after registering pci_bus_type.
-> > >
-> > >   - Early userspace code prevents modular drivers from automatically
-> > >     binding to PCI devices:
-> > >
-> > >       echo 0 > /sys/bus/pci/drivers_autoprobe
-> > >
-> > >     This prevents modular drivers from binding to all devices, whether
-> > >     present at boot or hot-added.
-> >
-> > I don't see why this is preferable to just disabling autoprobe for
-> > untrusted devices. That would dovetail nicely with Rajat's whitelist
-> > idea if we want to go down that route and I think we might want to.
-> > The BMC usually provides some form of VGA console and we'd like that
-> > to continue working out-of-the-box without too much user (or distro)
-> > intervention.
->
-> I wouldn't mind introducing a kernel parameter to disable auto-probing
-> of untrusted devices if there is a wider agreement here.
-> The only notch is that in my opinion, if present, that parameter
-> should disable auto-probing for "external" devices only (i.e.
-> "external-facing" devices should still be auto-probed).
+On Mon, Jun 15, 2020 at 06:17:42PM -0700, Rajat Jain wrote:
+> This is needed to allow the userspace to determine when an untrusted
+> device has been added, and thus allowing it to bind the driver manually
+> to it, if it so wishes. This is being done as part of the approach
+> discussed at https://lkml.org/lkml/2020/6/9/1331
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 6d78df981d41a..574e9c613ba26 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -50,6 +50,7 @@ pci_config_attr(subsystem_device, "0x%04x\n");
+>  pci_config_attr(revision, "0x%02x\n");
+>  pci_config_attr(class, "0x%06x\n");
+>  pci_config_attr(irq, "%u\n");
+> +pci_config_attr(untrusted, "%u\n");
+>  
+>  static ssize_t broken_parity_status_show(struct device *dev,
+>  					 struct device_attribute *attr,
+> @@ -608,6 +609,7 @@ static struct attribute *pci_dev_attrs[] = {
+>  #endif
+>  	&dev_attr_driver_override.attr,
+>  	&dev_attr_ari_enabled.attr,
+> +	&dev_attr_untrusted.attr,
+>  	NULL,
+>  };
 
-So I looked around at my systems, and I realized that I will have to
-go this way (introduce a parameter to disable auto-probing of
-untrusted devices), because we do have systems on which we might not
-have control over what devices will show up when (external devices'
-PCI link may come up before the userspace gets a chance to run). I
-shall be sending out a patch soon. I've sent out a couple of other
-loosely related patches here:
+You also need a Documentation/ABI/ update for this new file.
 
-https://lkml.org/lkml/2020/6/15/1447
+thanks,
 
-Thanks,
-
-Rajat
-
->
-> Thanks,
->
-> Rajat
->
-> >
-> > Oliver
+greg k-h
