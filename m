@@ -2,166 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4D561FB10F
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 14:46:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AE591FB14F
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 14:57:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgFPMqf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 16 Jun 2020 08:46:35 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2315 "EHLO huawei.com"
+        id S1728673AbgFPM5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 08:57:25 -0400
+Received: from mail-bn8nam11on2078.outbound.protection.outlook.com ([40.107.236.78]:39616
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726526AbgFPMqf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:46:35 -0400
-Received: from lhreml721-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 952434D3FD68B8FF1BE1;
-        Tue, 16 Jun 2020 13:46:33 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml721-chm.china.huawei.com (10.201.108.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 16 Jun 2020 13:46:33 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
- Tue, 16 Jun 2020 13:46:33 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        "jroedel@suse.de" <jroedel@suse.de>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
- controller errors
-Thread-Topic: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
- controller errors
-Thread-Index: AQHWQv5GPLiMMOPNiU6kqnJ8IzwlUKjZgnyAgAFqP0D///4fgIAAHHEAgAAYvgCAABDdQA==
-Date:   Tue, 16 Jun 2020 12:46:32 +0000
-Message-ID: <7a2aa2ac6ee6439096b26cc204194e58@huawei.com>
-References: <20200615101552.802-3-shiju.jose@huawei.com>
- <20200615120053.GZ2428291@smile.fi.intel.com>
- <51550b510d1e40479bf4fce47443747c@huawei.com>
- <20200616093041.GQ2428291@smile.fi.intel.com>
- <997bd6a17f54433dbdd2c43155682bdd@huawei.com>
- <20200616124102.GS2428291@smile.fi.intel.com>
-In-Reply-To: <20200616124102.GS2428291@smile.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.82.233]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1728763AbgFPM5P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Jun 2020 08:57:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G3IK405vB+EDTIXSu7itysh8bY8P/KqBxx+Jidi6qBtG9cPfqiHYaAQESn33Ei+I/8f86/7mGDhNumt7m+K5xrBTPFsuSrQjSi7Zzg06YONcla99Fo5pCvN2XAh9nxvlj1CUqe/INrpYlaGMgPfajalwksajvjJeUGpJuR3NB8ra5WbfcnHj9mXU5eYlu3HT9ELjunBuTThZ2yU6yiNjisJ98iLE9ZDAfXdF5CHQTLKBrXgMF7HGk0ARSCXbZQeoAxJYinQCEL3xdEbn/rjcWgrGneqbVjvoY5Sm7EMtifrgd3wQ/bKjd5H4NDa1xE2QUbUkgBS1QfGOIcQBXPNnUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zZJqt47qMEpHojUviZ7JZIu3ZBMFjF8n6md8YzdOm6M=;
+ b=CySZDGkChvtb1QA7zO97ZFaa1KK1sDBOpzXHP/+DLFV2DNSHOyg8JXRieMt5XCKCCsXbyhWS/5tp4qOFWxX8EsO88jhaX4X5secUIsSyuhQ14ZeojuxpBkUG3eBLfeli8rDOz28JIND50ACu4o5/XU9H5AoTd1+l+FWL5xIJZYOKZkHtGDWYaNyd5dsp/HR0+TVrzawduw1cWxO+KajYv1NGggfOWBo72Q3omA9jfyTTXJokWRviQwD9tMh2XxgM1Uh2ZvaMmftxe0Yb3RcBSj2l94KZT/PYXpIQOYWGqpee/Js4Ty2GzaXb6ZICaMwSx7boKUKeAMIkwOhBDgS8jA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zZJqt47qMEpHojUviZ7JZIu3ZBMFjF8n6md8YzdOm6M=;
+ b=Pb2BAT5A6tG+fuM9eFdMdqA3zOEOhTVeioN3n0N4yUXkOU3czy+EvlzzcgN1MgpfMdhlGyMb60wKM0Ri0sDQ8PxFvwbLXDuJFoGZLlzzpHvrE2dgnd2TqfBWNKJPwv7NppT0wZcLBUiE+GqP0iuoIbXDpV2JSW6XhdKTWTGFiEg=
+Received: from MN2PR05CA0053.namprd05.prod.outlook.com (2603:10b6:208:236::22)
+ by BY5PR02MB6081.namprd02.prod.outlook.com (2603:10b6:a03:1f7::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Tue, 16 Jun
+ 2020 12:57:10 +0000
+Received: from BL2NAM02FT028.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:236:cafe::44) by MN2PR05CA0053.outlook.office365.com
+ (2603:10b6:208:236::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.10 via Frontend
+ Transport; Tue, 16 Jun 2020 12:57:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT028.mail.protection.outlook.com (10.152.77.165) with Microsoft SMTP
+ Server id 15.20.3088.18 via Frontend Transport; Tue, 16 Jun 2020 12:57:10
+ +0000
+Received: from [149.199.38.66] (port=32775 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jlB8I-0000xa-LM; Tue, 16 Jun 2020 05:56:06 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jlB9J-0001rZ-No; Tue, 16 Jun 2020 05:57:09 -0700
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05GCv0vp029825;
+        Tue, 16 Jun 2020 05:57:00 -0700
+Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jlB99-0001oA-OL; Tue, 16 Jun 2020 05:57:00 -0700
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        maz@kernel.org,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v9 0/2]  Adding support for Versal CPM as Root Port driver
+Date:   Tue, 16 Jun 2020 18:26:52 +0530
+Message-Id: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(376002)(396003)(346002)(136003)(39860400002)(46966005)(70206006)(6666004)(82310400002)(70586007)(81166007)(5660300002)(4326008)(426003)(356005)(2616005)(9786002)(336012)(107886003)(36756003)(82740400003)(478600001)(2906002)(47076004)(186003)(26005)(8936002)(316002)(8676002)(83380400001)(7696005);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 1ba286f3-65dd-4550-2dfd-08d811f4c835
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6081:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BY5PR02MB6081806E69AB27EAA5379493A59D0@BY5PR02MB6081.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 04362AC73B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aPVIcVbVW+Oqab/kiMJW5UsmddS/+u48PH5vO8s5Z9WgIVYCxZSUhDzgWuOg4YKWeBWCNX42fJ+/yuIM09B+pfzVkKlqeGXG3NMCca9/GolLluVRYthEpWryWhdtrTSeGiW/fkwkgoimj0bMWfmAklyvaDR8r4fIs+OXjlfjs6wtKdGx2dVOU6MocqL+ToCAvIUWRP4w2Wea/xOb8Ey2N9r62Ztd+eiiAjPzTzxZmh7vewgP9T4HN/49onkVzDsWIHZO30MNCokOyhtXV24zZaK4igdmDBiIQwej+1ZzdeBm4NHGeWV8C0tOKyndLRYSisnjWjXSUaN4cVPG0CH+GZreUiToNybRmuM9FbllqTIm98xxLlEauMzUwzsHWI0LLYGujKMk7Tlx/dGNi47uxQ==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 12:57:10.1466
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ba286f3-65dd-4550-2dfd-08d811f4c835
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6081
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andy,
+- Adding support for Versal CPM as Root port.
+- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+  block for CPM along with the integrated bridge can function
+  as PCIe Root Port.
+- Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
+  vectors and handling MSI/MSI-X interrupts.
+- Bridge error and legacy interrupts in Versal CPM are handled using
+  Versal CPM specific interrupt line.
 
->-----Original Message-----
->From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
->Sent: 16 June 2020 13:41
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
->james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
->dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com; Wangkefeng
->(OS Kernel Lab) <wangkefeng.wang@huawei.com>; jroedel@suse.de;
->yangyicong <yangyicong@huawei.com>; Jonathan Cameron
-><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Linuxarm <linuxarm@huawei.com>
->Subject: Re: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
->controller errors
->
->On Tue, Jun 16, 2020 at 11:55:46AM +0000, Shiju Jose wrote:
->> >From: linux-acpi-owner@vger.kernel.org [mailto:linux-acpi-
->> >owner@vger.kernel.org] On Behalf Of Andy Shevchenko On Tue, Jun 16,
->> >2020 at 09:12:56AM +0000, Shiju Jose wrote:
->> >> >From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
->> >> >On Mon, Jun 15, 2020 at 11:15:52AM +0100, Shiju Jose wrote:
->
->...
->
->> >> >> +#define HISI_PCIE_CORE_PORT_ID(v)        (((v) % 8) << 1)
->> >> >
->> >> >% -> & ?
->> >> (((v) % 8) << 1) is correct. We can make bit operation instead.
->> >
->> >y % x is usually being used when we consume y / x or in cases when y
->> >is advanced and we need to keep it under some threshold.
->> >
->> >Here it's not obvious to me, and usual pattern is to use bitwise
->operations.
->> >
->> >In any case some clarification is needed.
->> We want (v % 8) * 2 here to get the core port id, a numerical value but not
->a bit mask.
->> Maybe you want us to use ((v) & 7) << 1?
->> please point it out if I understand wrong.
->
->I understand the result, I do not understand the properties of v.
->So, looks like
->a) (v & 7) << 1 // take 3 LSBs from v and shift right to get port id pair (looks
->like)
->b) (v % 8) * 2 // get next free port or circle over 0 if no free pair found
->
->Add some comment explaining what's going on.
-Sure.
+Changes for v9:
+- Removed interrupt enablement outside irqchip flow as suggested
+  by Marc.
+- Removed using WARN_ON in if statement.
 
->
->...
->
->> >> >> +	switch (id) {
->> >> >> +	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
->> >> >> +	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
->> >> >> +	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
->> >> >> +	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
->> >> >> +	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
->> >> >> +	}
->> >> >
->> >> >match_string() ?
->> >>
->> >> match_string() does not work here because we need sub module id ->
->> >> string conversion.
->> >
->> >Why? Are you using non-sequential (a.k.a. sparse) values?
->> These are the sequential values.
->> I mean in this case we do not have the third parameter to the
->> match_string(), string to match with the strings in the array, we just
->> have the value for the sub module id.
->> Can you suggest some example of match_string() for the similar case?
->
->Ah, I realize, this is the opposite, but still perhaps better to have like this:
->
->static const char * const foo[] = {
->	"AB",
->	"CD",
->};
->
->const char *bar(int id)
->{
->	if (id >= ARRAY_SIZE(foo))
->		return "unknown"; // whatever
->	return foo[id];
->}
-Sure.
-  
->
->--
->With Best Regards,
->Andy Shevchenko
->
-Thanks,
-Shiju
+Bharat Kumar Gogada (2):
+  PCI: xilinx-cpm: Add YAML schemas for Versal CPM Root Port
+  PCI: xilinx-cpm: Add Versal CPM Root Port driver
+
+ .../devicetree/bindings/pci/xilinx-versal-cpm.yaml |  99 ++++
+ drivers/pci/controller/Kconfig                     |   8 +
+ drivers/pci/controller/Makefile                    |   1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c           | 615 +++++++++++++++++++++
+ 4 files changed, 723 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+ create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+
+-- 
+2.7.4
 
