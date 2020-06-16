@@ -2,151 +2,256 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EACF11FA4CC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 01:52:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3BBC1FA581
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 03:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgFOXwU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jun 2020 19:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgFOXwU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:52:20 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6A7B2068E;
-        Mon, 15 Jun 2020 23:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592265139;
-        bh=LAqX2guWt3SaWaTtIVptXEHktenJg7iaeDhOq75EGOc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=g2QUd2ngXMfEz2LsTipBItohXSvpmTBaOTiRrZKoSwAIbpdN01pkaTau0u7EATsXD
-         1j1XCGLhCbt/rateSDFiTc7BcQViqtV3HMRlLm5J3nOOqe69N1HGAm870H7wKJjki0
-         S+aXFOYX7SF+nnBPJxZUEPmc9FAaD8Y6tEO8/hiU=
-Date:   Mon, 15 Jun 2020 18:52:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
+        id S1726796AbgFPBRs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jun 2020 21:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgFPBRs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jun 2020 21:17:48 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F5AC08C5C2
+        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:17:47 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id o84so23297134ybg.0
+        for <linux-pci@vger.kernel.org>; Mon, 15 Jun 2020 18:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ARkZyYO+o9Di+xsnEpjaN82yE8rF9UgQLsZZ67rguNs=;
+        b=G7acUJ568cBMg8YbpPxn1//6Y1axOcfCkurGlhPRtytoeRGnUnrJnOVKYNQK9wMx/P
+         tweKatsnheJOeE/6qt8OuWzkrkWHAtciku31vTe/RiadXg+t4hXV98zcTFPwDJ9Y0lEs
+         DPDKxBJBG5Kvy9MdD894Cm9Zh1fHfi1xr4Mfi3g/puo6yeU4tFq0K8aMGar2/9ZiwG9N
+         4IDgrrr0jyhiHAgGDSTYrF58oOp1B/v0HrA9U2lv6t4qGKwj1tUB+BF63vePjNp3l87C
+         j5QzLRMuTDUgQ6znL8rrieX9L8BaAHpBXwjZdy3TxiDx6p2H8G1/QW9GUgiyg1mLHbn4
+         XJzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ARkZyYO+o9Di+xsnEpjaN82yE8rF9UgQLsZZ67rguNs=;
+        b=SItG9bJQwT3KvX9j2K46HzSoZ59UBzyBHSiT4Fto9CyhX5RR3hOs347GhgPY2gn1c5
+         XBCG/nJtSCqpQxy+7HNrbIV1FLNXhkfUKUQDD1krCV91mGx517YO2T5jgYEkkJusNFWf
+         xwT1kw3YTkY8lne4+6c5GxF8YaUqbPQ5tTkGhFS9ps3yFTQh+7lwph51lfQfmCDZfENq
+         E1TyZyzTTHkXp2vhyQYY0gjKc8Tbqy0dCVY8Or9jk6aLKG779lu+RFqxc0qBYQVaBwFk
+         /lQsHdj4dOcECr2UGWhXgh6LID725lFkFNLHaPglKVsJQIvF0bYKz4EzDJEWgu07Cm3j
+         d1/w==
+X-Gm-Message-State: AOAM533jijLSU6oxIc4Jr9dtp9rYgUIWcNNvQxW15nfBq2SS327I4tKV
+        pPHQ9vT05Mm0q2PKu5xa3KBCHTv27V7F
+X-Google-Smtp-Source: ABdhPJybcIF+tiZIKkl4H0LQjdd0GtwdJx/kkGSMA/T7KGNofz3k8iTUUAzgVf+Ss+MziR1K4JlCo0opnS9r
+X-Received: by 2002:a25:cf44:: with SMTP id f65mr500058ybg.368.1592270266200;
+ Mon, 15 Jun 2020 18:17:46 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 18:17:39 -0700
+Message-Id: <20200616011742.138975-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+Subject: [PATCH 1/4] pci: Keep the ACS capability offset in device
+From:   Rajat Jain <rajatja@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-Message-ID: <20200615235217.GA1921846@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f9f6a77-4a65-afeb-0af9-e4868b52d7ce@linaro.org>
+        oohall@gmail.com
+Cc:     Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 10:30:56PM +0800, Zhangfei Gao wrote:
-> On 2020/6/11 下午9:44, Bjorn Helgaas wrote:
-> > +++ b/drivers/iommu/iommu.c
-> > > > > > > > > > @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
-> > > > > > > > > > fwnode_handle *iommu_fwnode,
-> > > > > > > > > >             fwspec->iommu_fwnode = iommu_fwnode;
-> > > > > > > > > >             fwspec->ops = ops;
-> > > > > > > > > >             dev_iommu_fwspec_set(dev, fwspec);
-> > > > > > > > > > +
-> > > > > > > > > > +       if (dev_is_pci(dev))
-> > > > > > > > > > +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
-> > > > > > > > > > +
-> > > > > > > > > > 
-> > > > > > > > > > Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
-> > > > > > > > > > Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
-> > > > > > > > > > Will send this when 5.8-rc1 is open.
-> > > > > > > > > Wait, this whole fixup approach seems wrong to me.  No matter how you
-> > > > > > > > > do the fixup, it's still a fixup, which means it requires ongoing
-> > > > > > > > > maintenance.  Surely we don't want to have to add the Vendor/Device ID
-> > > > > > > > > for every new AMBA device that comes along, do we?
-> > > > > > > > > 
-> > > > > > > > Here the fake pci device has standard PCI cfg space, but physical
-> > > > > > > > implementation is base on AMBA
-> > > > > > > > They can provide pasid feature.
-> > > > > > > > However,
-> > > > > > > > 1, does not support tlp since they are not real pci devices.
-> > > > > > > > 2. does not support pri, instead support stall (provided by smmu)
-> > > > > > > > And stall is not a pci feature, so it is not described in struct pci_dev,
-> > > > > > > > but in struct iommu_fwspec.
-> > > > > > > > So we use this fixup to tell pci system that the devices can support stall,
-> > > > > > > > and hereby support pasid.
-> > > > > > > This did not answer my question.  Are you proposing that we update a
-> > > > > > > quirk every time a new AMBA device is released?  I don't think that
-> > > > > > > would be a good model.
-> > > > > > Yes, you are right, but we do not have any better idea yet.
-> > > > > > Currently we have three fake pci devices, which support stall and pasid.
-> > > > > > We have to let pci system know the device can support pasid, because of
-> > > > > > stall feature, though not support pri.
-> > > > > > Do you have any other ideas?
-> > > > > It sounds like the best way would be to allocate a PCI capability for it, so
-> > > > > detection can be done through config space, at least in future devices,
-> > > > > or possibly after a firmware update if the config space in your system
-> > > > > is controlled by firmware somewhere.  Once there is a proper mechanism
-> > > > > to do this, using fixups to detect the early devices that don't use that
-> > > > > should be uncontroversial. I have no idea what the process or timeline
-> > > > > is to add new capabilities into the PCIe specification, or if this one
-> > > > > would be acceptable to the PCI SIG at all.
-> > > > That sounds like a possibility.  The spec already defines a
-> > > > Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
-> > > > be a candidate.
-> > > Will investigate this, thanks Bjorn
-> > FWIW, there's also a Vendor-Specific Capability that can appear in the
-> > first 256 bytes of config space (the Vendor-Specific Extended
-> > Capability must appear in the "Extended Configuration Space" from
-> > 0x100-0xfff).
-> Unfortunately our silicon does not have either Vendor-Specific Capability or
-> Vendor-Specific Extended Capability.
-> 
-> Studied commit 8531e283bee66050734fb0e89d53e85fd5ce24a4
-> Looks this method requires adding member (like can_stall) to struct pci_dev,
-> looks difficult.
+Currently this is being looked up at a number of places. Read
+and store it once at bootup so that it can be used by all later.
 
-The problem is that we don't want to add device IDs every time a new
-chip comes out.  Adding one or two device IDs for silicon that's
-already released is not a problem as long as you have a strategy for
-*future* devices so they don't require a quirk.
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+ drivers/pci/p2pdma.c |  2 +-
+ drivers/pci/pci.c    | 21 +++++++++++++++++----
+ drivers/pci/pci.h    |  2 +-
+ drivers/pci/probe.c  |  2 +-
+ drivers/pci/quirks.c |  8 ++++----
+ include/linux/pci.h  |  1 +
+ 6 files changed, 25 insertions(+), 11 deletions(-)
 
-> > > > > If detection cannot be done through PCI config space, the next best
-> > > > > alternative is to pass auxiliary data through firmware. On DT based
-> > > > > machines, you can list non-hotpluggable PCIe devices and add custom
-> > > > > properties that could be read during device enumeration. I assume
-> > > > > ACPI has something similar, but I have not done that.
-> > > Yes, thanks Arnd
-> > > > ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
-> > > > like this better than a PCI capability because the property you need
-> > > > to expose is not a PCI property.
-> > > _DSM may not workable, since it is working in runtime.
-> > > We need stall information in init stage, neither too early (after allocation
-> > > of iommu_fwspec)
-> > > nor too late (before arm_smmu_add_device ).
-> > I'm not aware of a restriction on when _DSM can be evaluated.  I'm
-> > looking at ACPI v6.3, sec 9.1.1.  Are you seeing something different?
-> DSM method seems requires vendor specific guid, and code would be vendor
-> specific.
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index e8e444eeb1cd2..f29a48f8fa594 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -253,7 +253,7 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
+ 	int pos;
+ 	u16 ctrl;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ACS);
++	pos = pdev->acs_cap;
+ 	if (!pos)
+ 		return 0;
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce096272f52b1..d2ff987585855 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -51,6 +51,7 @@ EXPORT_SYMBOL(pci_pci_problems);
+ 
+ unsigned int pci_pm_d3_delay;
+ 
++static void pci_enable_acs(struct pci_dev *dev);
+ static void pci_pme_list_scan(struct work_struct *work);
+ 
+ static LIST_HEAD(pci_pme_list);
+@@ -3284,7 +3285,7 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
+ 	if (!pci_dev_specific_disable_acs_redir(dev))
+ 		return;
+ 
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++	pos = dev->acs_cap;
+ 	if (!pos) {
+ 		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
+ 		return;
+@@ -3310,7 +3311,7 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+ 	u16 cap;
+ 	u16 ctrl;
+ 
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++	pos = dev->acs_cap;
+ 	if (!pos)
+ 		return;
+ 
+@@ -3336,7 +3337,7 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+  * pci_enable_acs - enable ACS if hardware support it
+  * @dev: the PCI device
+  */
+-void pci_enable_acs(struct pci_dev *dev)
++static void pci_enable_acs(struct pci_dev *dev)
+ {
+ 	if (!pci_acs_enable)
+ 		goto disable_acs_redir;
+@@ -3362,7 +3363,7 @@ static bool pci_acs_flags_enabled(struct pci_dev *pdev, u16 acs_flags)
+ 	int pos;
+ 	u16 cap, ctrl;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ACS);
++	pos = pdev->acs_cap;
+ 	if (!pos)
+ 		return false;
+ 
+@@ -3487,6 +3488,18 @@ bool pci_acs_path_enabled(struct pci_dev *start,
+ 	return true;
+ }
+ 
++/**
++ * pci_acs_init - Initialize if hardware supports it
++ * @dev: the PCI device
++ */
++void pci_acs_init(struct pci_dev *dev)
++{
++	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++
++	if (dev->acs_cap)
++		pci_enable_acs(dev);
++}
++
+ /**
+  * pci_rebar_find_pos - find position of resize ctrl reg for BAR
+  * @pdev: PCI device
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 6d3f758671064..12fb79fbe29d3 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -532,7 +532,7 @@ static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
+ 	return resource_alignment(res);
+ }
+ 
+-void pci_enable_acs(struct pci_dev *dev);
++void pci_acs_init(struct pci_dev *dev);
+ #ifdef CONFIG_PCI_QUIRKS
+ int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
+ int pci_dev_specific_enable_acs(struct pci_dev *dev);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2f66988cea257..6d87066a5ecc5 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2390,7 +2390,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_ats_init(dev);		/* Address Translation Services */
+ 	pci_pri_init(dev);		/* Page Request Interface */
+ 	pci_pasid_init(dev);		/* Process Address Space ID */
+-	pci_enable_acs(dev);		/* Enable ACS P2P upstream forwarding */
++	pci_acs_init(dev);		/* Access Control Services */
+ 	pci_ptm_init(dev);		/* Precision Time Measurement */
+ 	pci_aer_init(dev);		/* Advanced Error Reporting */
+ 	pci_dpc_init(dev);		/* Downstream Port Containment */
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 812bfc32ecb82..b341628e47527 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4653,7 +4653,7 @@ static int pci_quirk_intel_spt_pch_acs(struct pci_dev *dev, u16 acs_flags)
+ 	if (!pci_quirk_intel_spt_pch_acs_match(dev))
+ 		return -ENOTTY;
+ 
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++	pos = dev->acs_cap;
+ 	if (!pos)
+ 		return -ENOTTY;
+ 
+@@ -4961,7 +4961,7 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
+ 	if (!pci_quirk_intel_spt_pch_acs_match(dev))
+ 		return -ENOTTY;
+ 
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++	pos = dev->acs_cap;
+ 	if (!pos)
+ 		return -ENOTTY;
+ 
+@@ -4988,7 +4988,7 @@ static int pci_quirk_disable_intel_spt_pch_acs_redir(struct pci_dev *dev)
+ 	if (!pci_quirk_intel_spt_pch_acs_match(dev))
+ 		return -ENOTTY;
+ 
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++	pos = dev->acs_cap;
+ 	if (!pos)
+ 		return -ENOTTY;
+ 
+@@ -5355,7 +5355,7 @@ int pci_idt_bus_quirk(struct pci_bus *bus, int devfn, u32 *l, int timeout)
+ 	bool found;
+ 	struct pci_dev *bridge = bus->self;
+ 
+-	pos = pci_find_ext_capability(bridge, PCI_EXT_CAP_ID_ACS);
++	pos = bridge->acs_cap;
+ 
+ 	/* Disable ACS SV before initial config reads */
+ 	if (pos) {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c79d83304e529..a26be5332bba6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -486,6 +486,7 @@ struct pci_dev {
+ #ifdef CONFIG_PCI_P2PDMA
+ 	struct pci_p2pdma *p2pdma;
+ #endif
++	u16		acs_cap;	/* ACS Capability offset */
+ 	phys_addr_t	rom;		/* Physical address if not from BAR */
+ 	size_t		romlen;		/* Length if not from BAR */
+ 	char		*driver_override; /* Driver name to force a match */
+-- 
+2.27.0.290.gba653c62da-goog
 
-_DSM indeed requires a vendor-specific UUID, precisely *because*
-vendors are free to define their own functionality without requiring
-changes to the ACPI spec.  From the spec (ACPI v6.3, sec 9.1.1):
-
-  New UUIDs may also be created by OEMs and IHVs for custom devices
-  and other interface or device governing bodies (e.g. the PCI SIG),
-  as long as the UUID is different from other published UUIDs.
