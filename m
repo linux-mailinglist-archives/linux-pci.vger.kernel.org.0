@@ -2,77 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DDFE1FC06E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 22:57:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CEB81FC0DA
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jun 2020 23:17:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbgFPU4Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jun 2020 16:56:24 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34534 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730537AbgFPU4V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jun 2020 16:56:21 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id B884230D89C;
-        Tue, 16 Jun 2020 13:56:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com B884230D89C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1592340980;
-        bh=wfbg3gvJq29zwPDXM/Xv4PCCOzZXFGtxf8w+fJjea3Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEx4eSc/IXtdGuU4w7w3gy5VDvSaIsWM+aTZ7EQ/ukeYRHAjIGHibVCdh9JCCkLow
-         H8sozSthkqY4sLe6n8lLg2Bm+oqhuvxuWlq//InBWhhD0eLSKPdHZhIZUat6+oVHtl
-         g5ASvypGd4H9LLDdRB1nfIv3EanB3F1o4d0bvWjU=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 32C48140069;
-        Tue, 16 Jun 2020 13:56:19 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 12/12] PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
-Date:   Tue, 16 Jun 2020 16:55:19 -0400
-Message-Id: <20200616205533.3513-13-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616205533.3513-1-james.quinlan@broadcom.com>
-References: <20200616205533.3513-1-james.quinlan@broadcom.com>
+        id S1726375AbgFPVRO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jun 2020 17:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725967AbgFPVRO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Jun 2020 17:17:14 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BE502085B;
+        Tue, 16 Jun 2020 21:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592342233;
+        bh=djiXrU2UPs1VBTk8L8oL0srNfH1ZR8zahiqBoVs5Upc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=a+tDMaEm6a4kfqMC1/7x10y7SE1HmbTW08nc4ko60pujKNkpY630kwdrIJAv7+JEu
+         bgl+ed9bLJ4cS7+QiHCabve3wfLL/SzcGetnrF4VniXIUSDUirCRPrLfuHWbogfZLm
+         QAxqzGcW6hprLyp4+g0rBOsntCFdQVJ73ckv50RI=
+Date:   Tue, 16 Jun 2020 16:17:11 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     svarbanov@mm-sol.com, bjorn.andersson@linaro.org, vkoul@kernel.org,
+        sanm@codeaurora.org, mgautam@codeaurora.org, agross@kernel.org,
+        bhelgaas@google.com, robh@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Disable power management for uPD720201 USB3
+ controller
+Message-ID: <20200616211711.GA1981914@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615182413.15649-1-georgi.djakov@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now that the support is in place with previous commits, we add several
-chips that use the BrcmSTB driver.
+[+cc Rafael, linux-pm]
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Mon, Jun 15, 2020 at 09:24:13PM +0300, Georgi Djakov wrote:
+> The uPD720201 USB3 host controller (connected to PCIe) on the Dragonboard
+> 845c is often failing during suspend and resume. The following messages
+> are seen over the console:
+> 
+>   PM: suspend entry (s2idle)
+>   Filesystems sync: 0.000 seconds
+>   Freezing user space processes ... (elapsed 0.001 seconds) done.
+>   OOM killer disabled.
+>   Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+>   printk: Suspending console(s) (use no_console_suspend to debug)
+>   dwc3-qcom a8f8800.usb: HS-PHY not in L2
+>   dwc3-qcom a6f8800.usb: HS-PHY not in L2
+>   xhci_hcd 0000:01:00.0: can't change power state from D3hot to D0 (config
+>   space inaccessible)
+>   xhci_hcd 0000:01:00.0: can't change power state from D3hot to D0 (config
+>   space inaccessible)
+>   xhci_hcd 0000:01:00.0: Controller not ready at resume -19
+>   xhci_hcd 0000:01:00.0: PCI post-resume error -19!
+>   xhci_hcd 0000:01:00.0: HC died; cleaning up
+> 
+> Then the USB devices are not functional anymore. Let's disable the PM of
+> the controller for now, as this will at least keep USB devices working
+> even after suspend and resume.
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 02b769534e53..1437ad1a26c8 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1184,6 +1184,10 @@ static int brcm_pcie_remove(struct platform_device *pdev)
- 
- static const struct of_device_id brcm_pcie_match[] = {
- 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
-+	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
-+	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-+	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-+	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
- 	{},
- };
- 
--- 
-2.17.1
+This seems like we're just covering up a deeper problem here.  I think
+it would be better to fix the underlying problem.
 
+The quirk you're adding is specific to the Renesas 0x0014 device.  Is
+there some reason to think the problem is specific to that device, or
+might other devices have the same problem?
+
+Maybe we're missing something in pcie-qcom.c?  Is there any
+suspend/resume support required in that driver?  It doesn't look like
+it has anything except that it calls pm_runtime_enable().
+
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 138e1a2d21cc..c1f502682a19 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1439,6 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>  {
+>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>  }
+> +
+> +static void qcom_fixup_nopm(struct pci_dev *dev)
+> +{
+> +	dev->pm_cap = 0;
+> +	dev_info(&dev->dev, "Disabling PCI power management\n");
+> +}
+> +
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+> @@ -1446,6 +1453,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RENESAS, 0x0014, qcom_fixup_nopm);
+
+The convention is that DECLARE_PCI_FIXUP_*() comes immediately after
+the quirk function itself, so the whole patch would be a single diff
+hunk.  See drivers/pci/quirks.c for many examples.
+
+>  static struct platform_driver qcom_pcie_driver = {
+>  	.probe = qcom_pcie_probe,
