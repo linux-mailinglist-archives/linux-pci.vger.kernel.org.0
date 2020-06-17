@@ -2,145 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE1FD1FD555
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 21:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7573B1FD597
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 21:53:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgFQTVg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 15:21:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34460 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbgFQTVg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:21:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0E869ADC9;
-        Wed, 17 Jun 2020 19:21:38 +0000 (UTC)
-Message-ID: <9450f86c15ecd8435bcdbc395f8674172a975100.camel@suse.de>
-Subject: Re: [PATCH v3 4/9] ARM: dts: bcm2711: Add reset controller to xHCI
- node
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, andy.shevchenko@gmail.com,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
-        devicetree@vger.kernel.org, wahrenst@gmx.net,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Date:   Wed, 17 Jun 2020 21:21:31 +0200
-In-Reply-To: <20200612171334.26385-5-nsaenzjulienne@suse.de>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
-         <20200612171334.26385-5-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lfIoWXagrdDHMww3Jq4T"
-User-Agent: Evolution 3.36.3 
+        id S1726883AbgFQTxq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 15:53:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgFQTxq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Jun 2020 15:53:46 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC6CC0613ED
+        for <linux-pci@vger.kernel.org>; Wed, 17 Jun 2020 12:53:44 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id d7so2048886lfi.12
+        for <linux-pci@vger.kernel.org>; Wed, 17 Jun 2020 12:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=652Df2r0/DgKireW06s96KgNYOn5wGhQAsXaGuNmXIU=;
+        b=u3Wa8m8AA+KUbrW2ZJpwKkh5OV+uw6/tbYieNTCpV+g/fKZMa/424dnXDq9k1pZPsC
+         R3FzepNEt9eHmKEZLsQB6039RHnI2oLz4CeV+LIiyjsGAuVvKHjPqJBF3Os+Yu3DAD8h
+         eayE3aq6KDW1uRolK2PO0BBU19aNm/+f0ZClqWN+6CBGWa1oZWt3Q1ccsHsxPC9fP8Fo
+         fRbkAnztmRQIhCW37CvRuaE6qD0vU9+o9o/RIpz49UZIQk8W128R+KBu/KuSbu6ST/8e
+         pUQ0WdEBLZ+YsiIPD892IivctXxTZsc2P7241Yy2nkAjGpLCkDQM5X2GbJvBqr2rZVAY
+         UQQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=652Df2r0/DgKireW06s96KgNYOn5wGhQAsXaGuNmXIU=;
+        b=MW0ivZHI7J8xPG7LqL7eylP66mqqHFiI7/EdFgRi7eq5xh0IsjBYGGw6s1VzZtLYw4
+         RGfGaVwG7chhyvVgFSzyzzRWfR7QVsfXGiYuljtOBy79soSGluSs+Vjrmu2R22Es/Nel
+         WegVzRjkT+g7aNaGtrGX4rXJebr86CZmHbZRzW4YgeQF043s5yBFQm/m+hN/sCgVZ/n6
+         foheISKxsDC0UNUENBIYod003bDaAapU8fQhLmuoAJQ8mYPF0mdvwX4MYW7+y2rG7RBg
+         u30506ptzphF0o1s3yJuptZ1RCOTCmbwfCRK4xxlUeIHJmRCJOZ9bvGP9G3rZr406rVC
+         2orw==
+X-Gm-Message-State: AOAM530EUu2jrNRs9/9pI/Wczy1SWhO88nnhNFjOC6DcpCzVgt4+l4gz
+        u5+olv8Z2NSNfdLrVm6BHzWdtSstSsL0ZCtYbveBTA==
+X-Google-Smtp-Source: ABdhPJyNvJoaAN28/Zg/o9OICE/84/JjfeagXh8bzJTkYAwiivCGPGUzVM1fri9Qg8kksG9nggUrDgCqrfFwoV4dkhw=
+X-Received: by 2002:ac2:41d4:: with SMTP id d20mr299095lfi.204.1592423622439;
+ Wed, 17 Jun 2020 12:53:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-4-rajatja@google.com>
+ <20200616073249.GB30385@infradead.org> <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
+ <20200617073100.GA14424@infradead.org>
+In-Reply-To: <20200617073100.GA14424@infradead.org>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Wed, 17 Jun 2020 12:53:03 -0700
+Message-ID: <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Greg, Christoph,
 
---=-lfIoWXagrdDHMww3Jq4T
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi All,
-
-On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
-> The chip is hardwired to the board's PCIe bus and needs to be properly
-> setup trough a firmware routine after a PCI fundamental reset. Pass the
-> reset controller phandle that takes care of triggering the
-> initialization to the relevant PCI device.
+On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> On Tue, Jun 16, 2020 at 12:27:35PM -0700, Rajat Jain wrote:
+> > Need clarification. The flag "untrusted" is currently a part of
+> > pci_dev struct, and is populated within the PCI subsystem.
 >
-> ---
+> Yes, and that is the problem.
 >
-> Changes since v2:
->  - Use dt-bindings to access IDs
+> >
+> > 1) Is your suggestion to move this flag as well as the attribute to
+> > device core (in "struct device")? This would allow other buses to
+> > populate/use this flag if they want. By default it'll be set to 0 for
+> > all devices (PCI subsystem will populate it based on platform info,
+> > like it does today).
+> >
+> > OR
+> >
+> > 2) Are you suggesting to keep the "untrusted" flag within PCI, but
+> > attach the sysfs attribute to the base device? (&pci_dev->dev)?
 >
-> Changes since v1:
->  - Update to match new binding
->
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> index 0cef95058fb0..e20979013414 100644
-> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> @@ -4,6 +4,8 @@
->  #include "bcm2835-rpi.dtsi"
->  #include "bcm283x-rpi-usb-peripheral.dtsi"
->
-> +#include <dt-bindings/reset/raspberrypi,firmware-reset.h>
-> +
->  / {
->  	compatible =3D "raspberrypi,4-model-b", "brcm,bcm2711";
->  	model =3D "Raspberry Pi 4 Model B";
-> @@ -207,6 +209,13 @@ phy1: ethernet-phy@1 {
->  	};
->  };
->
-> +&pcie0 {
-> +	usb@1,0 {
-> +		reg =3D <0 0 0 0 0>;
-> +		resets =3D <&reset RASPBERRYPI_FIRMWARE_RESET_ID_USB>;
-> +	};
-> +};
-> +
+> (1).  As for IOMMUs and userspace policy it really should not matter
+> what bus a device is on if it is external and not trustworthy.
 
-I'm now double-guessing this is correct. With this lspci -tv output:
+Sure. I can move the flag to the "struct device" (and likely call
+it "external" instead of "untrusted" so as to make it suitable for
+more use cases later).  The buses can fill this up if they know which
+devices are external and which ones are not (otherwise it will be 0 by
+default). The PCI can fill this up like it does today, from platform
+info (ACPI / Device tree). Greg, how does this sound?
 
-[0000:00]---00.0-[01]----00.0  VIA Technologies, Inc. VL805 USB 3.0 Host Co=
-ntroller
+Thanks,
 
-The DT patch should be more like this:
-
-+&pcie0 {
-+       pci@0 {
-+               #address-cells =3D <3>;
-+               #size-cells =3D <2>;
-+               ranges;
-+
-+               reg =3D <0 0 0 0 0>;
-+
-+               usb@1,0 {
-+                       reg =3D <0x10000 0 0 0 0>;
-+                       resets =3D <&reset RASPBERRYPI_FIRMWARE_RESET_ID_US=
-B>;
-+               };
-+       };
-+};
-
-Small details aside I'm pretty confident this is the way to go, but would
-appreciate some comments/validation.
-
-Regards,
-Nicolas
-
-
---=-lfIoWXagrdDHMww3Jq4T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7qbTsACgkQlfZmHno8
-x/4CVggAn3Z1hf15FCwZBqJ5vtu95aPDbATL/d0KQ7jGrs66dTwaOP6aBJFw48YF
-0wKRsvMe9LukIRSOBh9HluSEszmQj7/hUGRYcsXaBgmHeOVs9PCXDbJb0/XtgBwF
-3EvokrD1MRS9bcpXwVOCKsMu+wjaGMlCiiJ6wmvD2ffybDPtYA19Xci86XF3Y2WT
-PTeuhEXh+/+wADvH/z0Gi4ivdIAh6FGLbdaSSVgEpf1JChHkSH0anKhw78keHGWK
-WXifnT/7XqG9VtvNNmFvQ1+q7MoyyJlzCn/NXfNuhjmBV+A6gxhefrVRq+P2yeb7
-LzlXGvG8m8RsQQgt1TlpTQwfAjB8KQ==
-=jUpw
------END PGP SIGNATURE-----
-
---=-lfIoWXagrdDHMww3Jq4T--
-
+Rajat
