@@ -2,123 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7573B1FD597
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 21:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B23E41FD68B
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 22:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgFQTxq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 15:53:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQTxq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Jun 2020 15:53:46 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC6CC0613ED
-        for <linux-pci@vger.kernel.org>; Wed, 17 Jun 2020 12:53:44 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id d7so2048886lfi.12
-        for <linux-pci@vger.kernel.org>; Wed, 17 Jun 2020 12:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=652Df2r0/DgKireW06s96KgNYOn5wGhQAsXaGuNmXIU=;
-        b=u3Wa8m8AA+KUbrW2ZJpwKkh5OV+uw6/tbYieNTCpV+g/fKZMa/424dnXDq9k1pZPsC
-         R3FzepNEt9eHmKEZLsQB6039RHnI2oLz4CeV+LIiyjsGAuVvKHjPqJBF3Os+Yu3DAD8h
-         eayE3aq6KDW1uRolK2PO0BBU19aNm/+f0ZClqWN+6CBGWa1oZWt3Q1ccsHsxPC9fP8Fo
-         fRbkAnztmRQIhCW37CvRuaE6qD0vU9+o9o/RIpz49UZIQk8W128R+KBu/KuSbu6ST/8e
-         pUQ0WdEBLZ+YsiIPD892IivctXxTZsc2P7241Yy2nkAjGpLCkDQM5X2GbJvBqr2rZVAY
-         UQQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=652Df2r0/DgKireW06s96KgNYOn5wGhQAsXaGuNmXIU=;
-        b=MW0ivZHI7J8xPG7LqL7eylP66mqqHFiI7/EdFgRi7eq5xh0IsjBYGGw6s1VzZtLYw4
-         RGfGaVwG7chhyvVgFSzyzzRWfR7QVsfXGiYuljtOBy79soSGluSs+Vjrmu2R22Es/Nel
-         WegVzRjkT+g7aNaGtrGX4rXJebr86CZmHbZRzW4YgeQF043s5yBFQm/m+hN/sCgVZ/n6
-         foheISKxsDC0UNUENBIYod003bDaAapU8fQhLmuoAJQ8mYPF0mdvwX4MYW7+y2rG7RBg
-         u30506ptzphF0o1s3yJuptZ1RCOTCmbwfCRK4xxlUeIHJmRCJOZ9bvGP9G3rZr406rVC
-         2orw==
-X-Gm-Message-State: AOAM530EUu2jrNRs9/9pI/Wczy1SWhO88nnhNFjOC6DcpCzVgt4+l4gz
-        u5+olv8Z2NSNfdLrVm6BHzWdtSstSsL0ZCtYbveBTA==
-X-Google-Smtp-Source: ABdhPJyNvJoaAN28/Zg/o9OICE/84/JjfeagXh8bzJTkYAwiivCGPGUzVM1fri9Qg8kksG9nggUrDgCqrfFwoV4dkhw=
-X-Received: by 2002:ac2:41d4:: with SMTP id d20mr299095lfi.204.1592423622439;
- Wed, 17 Jun 2020 12:53:42 -0700 (PDT)
+        id S1727063AbgFQU5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 16:57:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21681 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727039AbgFQU5J (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 16:57:09 -0400
+IronPort-SDR: kIIpwWMx0wSOJBiajSHkOUU3DuqSBPJVo9HzVRNfvu5guIrKXALonUX+7NzhDucAG/bVlxj5N4
+ 7M0TbS0mBhjA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 13:57:08 -0700
+IronPort-SDR: 3LdJdG29Xe/CBVUDrzZ8Nj90xmYIraC750Xiz9tIQx+WyBEymLYnP+PbkGo/g6/nnvFpRjbnL+
+ HPkV2auF8oPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="421269938"
+Received: from dbalber-mobl.amr.corp.intel.com (HELO [10.254.72.151]) ([10.254.72.151])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2020 13:57:08 -0700
+Subject: Re: [PATCH 1/2] PCI/AER: Do not reset the device status if doing
+ firmware first handling.
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linuxarm@huawei.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20200616174731.GA1969609@bjorn-Precision-5520>
+ <110fa7a9-1147-b755-2958-6f40c5d666a2@linux.intel.com>
+ <20200617103120.00006dcd@Huawei.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <56b9434a-2586-2321-49cb-9d205218fbe8@linux.intel.com>
+Date:   Wed, 17 Jun 2020 13:57:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-4-rajatja@google.com>
- <20200616073249.GB30385@infradead.org> <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org>
-In-Reply-To: <20200617073100.GA14424@infradead.org>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Wed, 17 Jun 2020 12:53:03 -0700
-Message-ID: <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200617103120.00006dcd@Huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Greg, Christoph,
+Hi,
 
-On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Tue, Jun 16, 2020 at 12:27:35PM -0700, Rajat Jain wrote:
-> > Need clarification. The flag "untrusted" is currently a part of
-> > pci_dev struct, and is populated within the PCI subsystem.
->
-> Yes, and that is the problem.
->
-> >
-> > 1) Is your suggestion to move this flag as well as the attribute to
-> > device core (in "struct device")? This would allow other buses to
-> > populate/use this flag if they want. By default it'll be set to 0 for
-> > all devices (PCI subsystem will populate it based on platform info,
-> > like it does today).
-> >
-> > OR
-> >
-> > 2) Are you suggesting to keep the "untrusted" flag within PCI, but
-> > attach the sysfs attribute to the base device? (&pci_dev->dev)?
->
-> (1).  As for IOMMUs and userspace policy it really should not matter
-> what bus a device is on if it is external and not trustworthy.
+On 6/17/20 2:31 AM, Jonathan Cameron wrote:
+> On Tue, 16 Jun 2020 11:00:32 -0700
+> "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> 
+>> Hi Jonathan,
+>>
+>> On 6/16/20 10:47 AM, Bjorn Helgaas wrote:
+>>> [+cc Sathy]
+>>>
+>>> On Fri, May 22, 2020 at 01:31:33AM +0800, Jonathan Cameron wrote:
+>>>> pci_aer_clear_device_status() currently resets the device status even when
+>>>> firmware first handling is going on.  In particular it resets it on the
+>>>> root port.
+>>>>
+>>>> This has been discussed previously
+>>>> https://lore.kernel.org/patchwork/patch/427375/.
+>> pci_aer_clear_device_status() is only used by handle_error_source(). And
+>> I don't think handle_error_source() is called in FF mode. Can you
+>> give more details on this issue ?
+> 
+> It's called in pcie_do_recovery
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/pci/pcie/err.c#L200
+> 
+> Which is called from both handle_error_source and aer_recover_work_func.
+> 
+> indirectly called from ghes_handle_aer / ghes_do_proc
+> 
+> This particular flow will only happen (I think) on hardware reduced ACPI systems.
+Ok. Makes sense.
+> 
+> Jonathan
+> 
+>>>
+>>> I don't think this reference is really pertinent, is it?  That patch
+>>> to b2c8881da764 changes pci_cleanup_aer_uncorrect_error_status() so it
+>>> doesn't clear PCI_ERR_UNCOR_STATUS in "firmware-first" mode.
+>>>
+>>> But your patch only affects PCI_EXP_DEVSTA, not PCI_ERR_UNCOR_STATUS.
+>>>    
+>>>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>> ---
+>>>>    drivers/pci/pcie/aer.c | 3 +++
+>>>>    1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>>>> index f4274d301235..43e78b97ace6 100644
+>>>> --- a/drivers/pci/pcie/aer.c
+>>>> +++ b/drivers/pci/pcie/aer.c
+>>>> @@ -373,6 +373,9 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
+>>>>    {
+>>>>    	u16 sta;
+>>>>    
+>>>> +	if (pcie_aer_get_firmware_first(dev))
+use if (!pcie_aer_is_native(dev))
+>>>> +		return;
+>>>
+>>> This needs to be adjusted because pcie_aer_get_firmware_first() no
+>>> longer exists after 708b20003624 ("PCI/AER: Remove HEST/FIRMWARE_FIRST
+>>> parsing for AER ownership").
+>>>
+>>> This will use the _OSC AER ownership bit to gate clearing of the
+>>> status bits in the PCIe capability (not the AER capability).
+>>>
+>>> I think that's the right thing to do, but it's certainly not obvious
+>>> from the _OSC description in the PCI Firmware Spec r3.2.  I think we
+>>> need a pointer to the ECN that clarifies this, i.e., sec 4.5.1 of:
+>>>
+>>>     System Firmware Intermediary (SFI) _OSC and DPC Updates ECN, Feb 24,
+>>>     2020, affecting PCI Firmware Specification, Rev. 3.2
+>>>     https://members.pcisig.com/wg/PCI-SIG/document/14076
+>>>    
+>>>>    	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
+>>>>    	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
+>>>>    }
+>>>> -- 
+>>>> 2.19.1
+>>>>   
+>>
+> 
+> 
 
-Sure. I can move the flag to the "struct device" (and likely call
-it "external" instead of "untrusted" so as to make it suitable for
-more use cases later).  The buses can fill this up if they know which
-devices are external and which ones are not (otherwise it will be 0 by
-default). The PCI can fill this up like it does today, from platform
-info (ACPI / Device tree). Greg, how does this sound?
-
-Thanks,
-
-Rajat
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
