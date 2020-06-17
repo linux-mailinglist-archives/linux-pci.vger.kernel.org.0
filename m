@@ -2,244 +2,321 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE881FD38C
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 19:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 095651FD396
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 19:36:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgFQRdB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 13:33:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgFQRdB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Jun 2020 13:33:01 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CBFC061755
-        for <linux-pci@vger.kernel.org>; Wed, 17 Jun 2020 10:33:00 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id y78so343948wmc.0
-        for <linux-pci@vger.kernel.org>; Wed, 17 Jun 2020 10:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0QNRuJcws82P7uD3W5Xs1rYxppxPq6ASHSPM69pBKQM=;
-        b=Fe61Js+MQ1NB3hDW2FqZX6bK8y0TfX5sBHTNEU2Yk0JzXcTVSvMsGzfAwL++w0EQLB
-         gvg4q3+aUrOL9iaNWSM/h2bqDpSD3Vin8EmXucGR/bq6V6PQc6smK+NR7dHcQXgMaWzD
-         UgjU7cA2bLrL+Byh9BAxtmivf+9accbbBQyCc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0QNRuJcws82P7uD3W5Xs1rYxppxPq6ASHSPM69pBKQM=;
-        b=gpRuc52XdvnQeKYhIMhDMrf5/0Vht2HP5tZE/YPIFQVJRKO8NCTKgX7HU2bkC0mu8h
-         UhFx7gOIfjvTiarGVrmte909zx74PnENevKdFrL+GKk2pvUYU7qiZuJCtU3l+HrPpAU2
-         R6FmdWzdWwbzG+jhiebS6BaChDOAFu7dI/iZk4xAjvn9F9XlQ0826OiM1AGDpZquvJCy
-         aPtRUNH/z/1AuqL/XYDAw24sVGxaa0vW/H+snkJuO18EWTQ/vy6dTuH87eF8USpCm924
-         f+Qs1teRXLYLPW8U7Qw0qrqjnPjjT75a0TrbDklMC1hKyXzZs9gnVq+NuZAqSM4+nMU/
-         eKAw==
-X-Gm-Message-State: AOAM533s7vOqhUerhRXfsVNlaFOf6SsIyNjhxLjg8gPVP3pIqtw+GgRe
-        +DDE1gVu54K5hmVIq+n+al3+JEeQyuhh1pFKylQ98Q==
-X-Google-Smtp-Source: ABdhPJxnOs2MLe3C0AP9rvozUlSx2/nymavZrjsSjsvAn9I5kRCXHvTT2TSpRqQfMipTr/dlVrVwhPVh03aW+M/MoWI=
-X-Received: by 2002:a7b:c0cc:: with SMTP id s12mr9971856wmh.111.1592415179181;
- Wed, 17 Jun 2020 10:32:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200616205533.3513-8-james.quinlan@broadcom.com> <20200616220523.GA1984295@bjorn-Precision-5520>
-In-Reply-To: <20200616220523.GA1984295@bjorn-Precision-5520>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Wed, 17 Jun 2020 13:32:46 -0400
-Message-ID: <CA+-6iNzFVmFp9MkYkRU=nf-sXSFPZY0gqmA0ZT4rfR0q1sueiA@mail.gmail.com>
-Subject: Re: [PATCH v5 07/12] PCI: brcmstb: Add control of rescal reset
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
+        id S1726815AbgFQRgS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 13:36:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:27088 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbgFQRgR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 13:36:17 -0400
+IronPort-SDR: wyiIc6EcPcyPGsl9ZwWMeO/ejgyYdNiSbi0LwhFeugo4DglcBuMcp5aUgMgOYPxjEEGDh12Hni
+ PB/653S04OPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 10:36:02 -0700
+IronPort-SDR: RmHIA1Hz6/FjIzKFUa6JCYw2oa871SVofTDawPI5UZEbs2MeHYenZM+7HliMU4sTmqCLetRl2B
+ fRntj098jJYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="317589044"
+Received: from pvenkat2-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley) ([10.254.38.219])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Jun 2020 10:36:01 -0700
+Message-ID: <b0b952e26386dc4819726f50c61f86aaa00857b8.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] PCI/AER: Add partial initial support for RCiEPs
+ using RCEC or firmware first
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+Reply-To: sean.v.kelley@linux.intel.com
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linuxarm@huawei.com,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Date:   Wed, 17 Jun 2020 10:36:00 -0700
+In-Reply-To: <20200616192441.GA1970947@bjorn-Precision-5520>
+References: <20200616192441.GA1970947@bjorn-Precision-5520>
+Organization: Intel Corporation
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 6:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Jun 16, 2020 at 04:55:14PM -0400, Jim Quinlan wrote:
-> > From: Jim Quinlan <jquinlan@broadcom.com>
-> >
-> > Some STB chips have a special purpose reset controller named RESCAL (reset
-> > calibration).  The PCIe HW can now control RESCAL to start and stop its
-> > operation.
->
-> The HW *can* now control RESCAL, but what does this patch do?
->
-> I guess maybe this patch uses RESCAL to turn on the PHY in probe and
-> resume and turn it off in suspend and remove?
-Yes, I will redo this text with a better description.
+On Tue, 2020-06-16 at 14:24 -0500, Bjorn Helgaas wrote:
+> Bcc: 
+> Subject: Re: [PATCH 2/2] PCI/AER: Add partial initial support for
+> RCiEPs
+>  using RCEC or firmware first
+> Reply-To: 
+> In-Reply-To: <20200521173134.2456773-3-Jonathan.Cameron@huawei.com>
+> 
+> [+cc Sathy, Sean]
+> 
+> On Fri, May 22, 2020 at 01:31:34AM +0800, Jonathan Cameron wrote:
+> > Note this provides complete support for our usecase on an ARM
+> > server using
+> > Hardware Reduced ACPI and adds appropriate place for an RCEC driver
+> > to hook
+> > if someone else cares to write one, either for firmware first
+> > handling on
+> > non Hardware Reduced ACPI or for kernel first AER handling.
+> 
+> This provides complete support?  I'm really confused, since this
+> relies on dev->rcec, which is never set.  And I don't see anything
+> about hooks for RCEC drivers.
+> 
+> > For Root Complex integrated End Points (RCiEPs) there is no root
+> > port to
+> > discover and hence we cannot walk the bus from the root port to do
+> > appropriate resets.
+> > 
+> > The PCI specification provides Root Complex Event Collectors to
+> > deal with
+> > this circumstance.  These are peer RCiEPs that provide (amongst
+> > other
+> > things) collection + interrupt facilities for AER reporting for a
+> > set of
+> > RCiEPs in the same root complex.
+> > 
+> > In the case of a Hardware Reduced ACPI platform, the AER errors are
+> > reported via a GHESv2 path using CPER records as defined in the
+> > UEFI
+> > specification.  These are intended to provide complete information
+> > and
+> > appropriate hand shake in a fashion that does not require a
+> > specific form
+> > of error reporting hardware.  This is contrast to AER handling via
+> > the
+> > various HEST entries for PCI Root Port and PCI Device etc where we
+> > do
+> > require direct access to the RCEC.
+> 
+> Can you include pointers to relevant spec sections for these
+> differences between hardware-reduced and other platforms?
+> 
+> This patch doesn't seem to depend on anything about ACPI, APEI,
+> firmware-first, or hardware-reduced platforms.
+> 
+> > As such my interpretation of the spec is that a Reduced Hardware
+> > ACPI
+> > platform should not access the RCEC from the OS at all during AER
+> > handling,
+> > and in fact is welcome to use non standard hardware interfaces to
+> > provide
+> > the equivalent functionality in any fashion it wishes (as all
+> > hidden beind
+> > the firmware).
+
+
+I'm not sure what you mean by Hardware Reduced ACPI platform, but you
+seem to be implying that in this case your hardware lacks RCECs and so
+are using firmware specific handling.
+
+In 1.3.2.3 (Root Complex Integrated Endpoint rules)
+
+If an RCiEP is associated with an optional Root Complex Event Collector
+it must signal PME and error conditions through a Root Complex Event
+Collector.
+
+If the RCEC is not supported/present then the expectation prior to PCIe
+5 is that the RCiEP will use the same mechanism as PCI
+systems.  However, if the RCiEP asserts say an error signal there is no
+Root Port and the OS has no way of knowing what interrupt the error is
+conntected to.  Linux doesn't have support for that and this was
+discussed prior here:
+
+https://lore.kernel.org/lkml/20190709134538.GA35486@google.com/
+
+In such a case, are you then implying that the _OSC method is not
+granting control of PCIe Native Power Management Events to the OS and
+so are falling back to your defined ACPI mechanism on your platform?
+
+I'm currently working on adding support for RCECs in AER that would
+make use of the extended capabilities for identifying the assocated
+RCeIPs for purposes of the PME and error condition signaling.
 
 Thanks,
-Jim
 
-PS Will attend to your other responses as well in the V6.
->
-> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Sean
+
+
+> 
+> A pointer to the spec you're interpreting would be helpful here, too.
+> 
+> s/Reduced Hardware/Hardware-Reduced/ to match terminology in spec
+> (I'm
+> looking at ACPI v6.3, sec 4.1).  Also below in code comments.
+> 
+> s/beind/behind/
+> 
+> > Hence I am making the provision of an RCEC optional.
+> > 
+> > The aim of the rest of the code was to replicate the actions that
+> > would
+> > have occurred if this had been an EP below a root port. Some of
+> > them make
+> > absolutely no sense, but I hope this RFC can start a discussion on
+> > what
+> > we should be doing under these circumstances.
+> > 
+> > It probably makes sense to pull this new block of code out to a
+> > separate
+> > function but for the RFC I've left it in place to keep it next to
+> > the
+> > existing path.
+> 
+> OK, my comment is: I really hope we don't need a separate path.  If
+> we
+> need a test or two for RCiEPs, that's fine.  But two paths sounds
+> like
+> a nightmare to maintain.
+> 
+> > It appears that the current kernel first code does not support
+> > detecting
+> > the multiple error bits being set in the root port error status
+> > register.
+> > This seems like a limitation both the normal EP / Root Port case
+> > and
+> > for RCiEPs.
+> 
+> Is this paragraph supposed to be a bug report?  It doesn't seem to
+> say
+> anything about what *this* patch does.  Maybe this should be part of
+> the commit log for a separate patch?
+> 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 81 ++++++++++++++++++++++++++-
-> >  1 file changed, 80 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > index d0e256d8578a..9189406fd35c 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -23,6 +23,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/printk.h>
-> > +#include <linux/reset.h>
-> >  #include <linux/sizes.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/string.h>
-> > @@ -158,6 +159,16 @@
-> >  #define DATA_ADDR(pcie)                      (pcie->reg_offsets[EXT_CFG_DATA])
-> >  #define PCIE_RGR1_SW_INIT_1(pcie)    (pcie->reg_offsets[RGR1_SW_INIT_1])
-> >
-> > +/* Rescal registers */
-> > +#define PCIE_DVT_PMU_PCIE_PHY_CTRL                           0xc700
-> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS                       0x3
-> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK              0x4
-> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT     0x2
-> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK          0x2
-> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT         0x1
-> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK          0x1
-> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT         0x0
+> >  drivers/pci/pcie/err.c | 61
+> > ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci.h    |  1 +
+> >  2 files changed, 62 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> > index 14bb8f54723e..d34be4483f73 100644
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -153,6 +153,67 @@ pci_ers_result_t pcie_do_recovery(struct
+> > pci_dev *dev,
+> >  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> >  	struct pci_bus *bus;
+> >  
+> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> > +		struct pci_dev *rcec = dev->rcec;
+> > +		/* Not clear this makes any sense - we can't reset link
+> > anyway...*/
+> > +		if (state == pci_channel_io_frozen) {
+> > +			report_frozen_detected(dev, &status);
+> > +			pci_err(dev, "io is frozen and cannot reset
+> > link\n");
+> > +			goto failed;
+> > +		} else {
+> > +			report_normal_detected(dev, &status);
+> > +		}
+> 
+> I don't understand where you're going with this.  I think you're
+> adding recovery for RCiEPs (PCI_EXP_TYPE_RC_END).  It's true that
+> there's no link leading to them, but we should still be able to reset
+> the RCiEP (not the RCEC) via FLR, if it supports that.
+> 
+> And all the driver callbacks should be for the RCiEP, not the RCEC,
+> shouldn't they?  I really hope we can avoid duplicating this whole
+> path.  It will be hard to keep the two paths in sync.
+> 
+> > +		if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+> > +			status = PCI_ERS_RESULT_RECOVERED;
+> > +			pci_dbg(dev, "broadcast mmio_enabled
+> > message\n");
+> > +			report_mmio_enabled(dev, &status);
+> > +		}
 > > +
-> >  enum {
-> >       RGR1_SW_INIT_1,
-> >       EXT_CFG_INDEX,
-> > @@ -248,6 +259,7 @@ struct brcm_pcie {
-> >       const int               *reg_offsets;
-> >       const int               *reg_field_info;
-> >       enum pcie_type          type;
-> > +     struct reset_control    *rescal;
-> >  };
-> >
-> >  /*
-> > @@ -963,6 +975,47 @@ static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
-> >               dev_err(pcie->dev, "failed to enter low-power link state\n");
-> >  }
-> >
-> > +static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
-> > +{
-> > +     static const u32 shifts[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT,
-> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT,
-> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT,};
-> > +     static const u32 masks[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK,
-> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK,
-> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK,};
-> > +     const int beg = start ? 0 : PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS - 1;
-> > +     const int end = start ? PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS : -1;
-> > +     u32 tmp, combined_mask = 0;
-> > +     u32 val = !!start;
-> > +     void __iomem *base = pcie->base;
-> > +     int i;
+> > +		if (status == PCI_ERS_RESULT_NEED_RESET) {
+> > +			/* No actual slot reset possible */
+> > +			status = PCI_ERS_RESULT_RECOVERED;
+> > +			pci_dbg(dev, "broadcast slot_reset message\n");
+> > +			report_slot_reset(dev, &status);
+> > +		}
 > > +
-> > +     for (i = beg; i != end; start ? i++ : i--) {
-> > +             tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> > +             tmp = (tmp & ~masks[i]) | ((val << shifts[i]) & masks[i]);
-> > +             writel(tmp, base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> > +             usleep_range(50, 200);
-> > +             combined_mask |= masks[i];
-> > +     }
+> > +		if (status != PCI_ERS_RESULT_RECOVERED)
+> > +			goto failed;
 > > +
-> > +     tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> > +     val = start ? combined_mask : 0;
+> > +		report_resume(dev, &status);
 > > +
-> > +     return (tmp & combined_mask) == val ? 0 : -EIO;
-> > +}
+> > +		/*
+> > +		 * These two should be called on the RCEC  - but in
+> > case
+> > +		 * of firmware first they should be no-ops. Given that
+> > +		 * in a reduced hardware ACPI system, it is possible
+> > there
+> > +		 * is no standard compliant RCEC at all.
+> > +		 *
+> > +		 * Add some sort of check on what type of HEST entries
+> > we have?
+> > +		 */
+> > +		if (rcec) {
+> > +			/*
+> > +			 * Unlike the upstream port case for an EP, we
+> > have not
+> > +			 * issued a reset on all device the RCEC
+> > handles, so
+> > +			 * perhaps we should be more careful about
+> > resetting
+> > +			 * the status registers on the RCEC?
+> > +			 *
+> > +			 * In particular we may need provide a means to
+> > handle
+> > +			 * the multiple error bits being set in
+> > PCI_ERR_ROOT_STATUS
+> > +			 */
+> > +			pci_aer_clear_device_status(rcec);
+> > +			pci_aer_clear_nonfatal_status(rcec);
+> > +			/*
+> > +			 * Non RCiEP case uses the downstream port
+> > above the device
+> > +			 * for this message.
+> > +			 */
+> > +			pci_info(rcec, "device recovery successful\n");
+> > +		} else {
+> > +			pci_info(dev, "device recovery successful\n");
+> > +		}
 > > +
-> > +static inline int brcm_phy_start(struct brcm_pcie *pcie)
-> > +{
-> > +     return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-> > +}
+> > +		return status;
+> > +	}
 > > +
-> > +static inline int brcm_phy_stop(struct brcm_pcie *pcie)
-> > +{
-> > +     return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-> > +}
-> > +
-> >  static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-> >  {
-> >       void __iomem *base = pcie->base;
-> > @@ -990,11 +1043,15 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-> >  static int brcm_pcie_suspend(struct device *dev)
-> >  {
-> >       struct brcm_pcie *pcie = dev_get_drvdata(dev);
-> > +     int ret;
-> >
-> >       brcm_pcie_turn_off(pcie);
-> > +     ret = brcm_phy_stop(pcie);
-> > +     if (ret)
-> > +             dev_err(pcie->dev, "failed to stop phy\n");
-> >       clk_disable_unprepare(pcie->clk);
-> >
-> > -     return 0;
-> > +     return ret;
-> >  }
-> >
-> >  static int brcm_pcie_resume(struct device *dev)
-> > @@ -1007,6 +1064,12 @@ static int brcm_pcie_resume(struct device *dev)
-> >       base = pcie->base;
-> >       clk_prepare_enable(pcie->clk);
-> >
-> > +     ret = brcm_phy_start(pcie);
-> > +     if (ret) {
-> > +             dev_err(pcie->dev, "failed to start phy\n");
-> > +             return ret;
-> > +     }
-> > +
-> >       /* Take bridge out of reset so we can access the SERDES reg */
-> >       brcm_pcie_bridge_sw_init_set(pcie, 0);
-> >
-> > @@ -1032,6 +1095,9 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
-> >  {
-> >       brcm_msi_remove(pcie);
-> >       brcm_pcie_turn_off(pcie);
-> > +     if (brcm_phy_stop(pcie))
-> > +             dev_err(pcie->dev, "failed to stop phy\n");
-> > +     reset_control_assert(pcie->rescal);
-> >       clk_disable_unprepare(pcie->clk);
-> >  }
-> >
-> > @@ -1117,6 +1183,19 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-> >               dev_err(&pdev->dev, "could not enable clock\n");
-> >               return ret;
-> >       }
-> > +     pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-> > +     if (IS_ERR(pcie->rescal))
-> > +             return PTR_ERR(pcie->rescal);
-> > +
-> > +     ret = reset_control_deassert(pcie->rescal);
-> > +     if (ret)
-> > +             dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-> > +
-> > +     ret = brcm_phy_start(pcie);
-> > +     if (ret) {
-> > +             dev_err(pcie->dev, "failed to start phy\n");
-> > +             return ret;
-> > +     }
-> >
-> >       ret = brcm_pcie_setup(pcie);
-> >       if (ret)
-> > --
-> > 2.17.1
-> >
+> >  	/*
+> >  	 * Error recovery runs on all subordinates of the first
+> > downstream port.
+> >  	 * If the downstream port detected the error, it is cleared at
+> > the end.
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 83ce1cdf5676..cb21dfe05f8c 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -298,6 +298,7 @@ struct pci_dev {
+> >  	struct list_head bus_list;	/* Node in per-bus list */
+> >  	struct pci_bus	*bus;		/* Bus this device is on */
+> >  	struct pci_bus	*subordinate;	/* Bus this device bridges
+> > to */
+> > +	struct pci_dev	*rcec;		/* Root Complex Event
+> > Collector used */
+> 
+> Nothing ever sets this, so I guess the critical connection between
+> RCiEP and RCEC is missing?  Each patch needs to make sense on its
+> own,
+> so the patch that adds this struct member should also add something
+> that sets it and uses it.
+> 
+> >  	void		*sysdata;	/* Hook for sys-specific
+> > extension */
+> >  	struct proc_dir_entry *procent;	/* Device entry in
+> > /proc/bus/pci */
+> > -- 
+> > 2.19.1
+> > 
+
