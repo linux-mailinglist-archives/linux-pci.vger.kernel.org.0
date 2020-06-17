@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 824681FCACF
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 12:26:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F7491FCAD3
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jun 2020 12:27:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgFQK0F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 06:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49526 "EHLO
+        id S1726642AbgFQK0G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 06:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgFQK0C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Jun 2020 06:26:02 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA1EC06174E;
-        Wed, 17 Jun 2020 03:26:01 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id y20so1415786wmi.2;
-        Wed, 17 Jun 2020 03:26:01 -0700 (PDT)
+        with ESMTP id S1726540AbgFQK0D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Jun 2020 06:26:03 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA98C061755;
+        Wed, 17 Jun 2020 03:26:02 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x13so1745577wrv.4;
+        Wed, 17 Jun 2020 03:26:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tyOYt/hZ78qkqCuLNwBMTOzpPldqERl5tEKy1066cA8=;
-        b=Y8SfbPGb9SoBtaykZrGdMYW9whurnS0uBTfB2Hb1d+WTWnCSBMksE7I/p8a03FCxCO
-         4y+gasOJKxKg59IPtS67pxSb9crip6/cdn3GqcMa+fy8AIMetNndsnD5n7W1mBMQ25OJ
-         bNqd/A3dhUjnSYdCC/e/5vfddaa0bZBYKouhCQAaHfgEOyhJbf8x/yX476r0k3zIywaX
-         /YizuZYuJTLdbdz5en4jnIu4muyswIO9CqkexfnYb39mdNmBMQ8mVkOjjjI41uRmUudI
-         IjwxZ0aX4YbX5ngxKAblwNlIMtpwcwXZLYWXiobuhD5cnYPtzpqXDmx6niTRHn0EWTNM
-         mrXg==
+        bh=Q/9cfu2y0gUm+qAaNBhnFdIEQLZfDLxCjAKkGlm5DYM=;
+        b=tjVwfMzfezRS9AAHD0xn4ivcVdZGg3r8D9CRl1RnfK1KyELblhj6SXxCQ5kk48mYMH
+         xcmrHXWHJCQfLz2hjOLYgsmtIDFIOwolDGx0vscnJiM2AtwdNFs6fIM7tqiudIlrhTqm
+         +zHHnaVd5xscisFBy9wVpM4cox7afR+leCajS/7sj4fIhtS0WPPhlc3J7k83sajh7O9w
+         A4xVgX4OfQMrMjnVKiN3z9tNxeXwMYQ9ljsJrBn7oN4nK76jTzOIuGwT56f7j//a2EWZ
+         bN2Sag1m22Do6GYU3jfzXtMY9YPGpTf290fQh+bIrBOSXt2Buafp7FAocQ3tKFWR428r
+         Jmrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tyOYt/hZ78qkqCuLNwBMTOzpPldqERl5tEKy1066cA8=;
-        b=Cwb1Plj6OXK+Cqueuj3r7fDU7Cds7KrOZoaY+iNlaeZ+z+1Qz7OhSDQoLB0bvjSyp9
-         IFHqfRbRt/M+WON+3iXk3T42wOvalwngxX/edlFT8YONy/2cr7Dod0q1UraPpRxr8Tuw
-         jLhqwDJmpDKgfF2gU5fXNKVt/OSUZCY3eg9pb1bah1HO0E8E3BgYtDOd8tFa65mqnnCf
-         G6jJ3dInlhZDEk4BEpZqzn8h6EbZwMzmrRs4Nda0pKqeskC9wrAZ2ZzJzkNlG3AdBZ9p
-         CISAjKhHgXHaUfaZ0LDYw9Hfb2sUYp9+mlYdsgXu5h13QZI7KWRc8iOOjBxG+l23e25L
-         nAZw==
-X-Gm-Message-State: AOAM5325A2Bn/CdPmk+ksnCz+N8F+VQs4eOKPgsaFRznn4+Jm4NSiyjG
-        G6n36/Lc2dw31/Y2qed5YKk=
-X-Google-Smtp-Source: ABdhPJzGD7+wp1HQGfixVxqrd93CCeIFMGpPQ/lqC8BEzOKqVAkBnBobX5S8UgcfBAtmSle9N2njXw==
-X-Received: by 2002:a05:600c:2147:: with SMTP id v7mr7818570wml.101.1592389559958;
-        Wed, 17 Jun 2020 03:25:59 -0700 (PDT)
+        bh=Q/9cfu2y0gUm+qAaNBhnFdIEQLZfDLxCjAKkGlm5DYM=;
+        b=sWxgP87vppnLYh1VY7DtjwAy+RUCRIvjbC+HLmoWFdFCOzjnIUpRBvoEZgoZoSegtR
+         3UwpN9chbesjsJKr3XVqDsww5R7F90/Le6LiWrJ5doWQkJassKe8TS5PFdlzfFVGwGmP
+         jGjf+2jMlzAA0b17J/V5ok6FNtmDQs7OqIDERL6EQw5aCMCtA6hZ0yiVF74luqN02DKK
+         w2VmdXCjfzO4mUPd4XrHIrQyXvdGOLHw2ZW8H04mxqmI+hfVPasRUA6EVaLc6Euaqm8X
+         aWX6z1kc6hHhEYsf7KJ6zWXPYXPRF+/Dz19rmT3HvP8LoAIw9MykS40JIDXqK0qJWz1b
+         37jA==
+X-Gm-Message-State: AOAM533aL17Xze2Ljwcmq8F/LHimt6mCn92tiFk65eMLd/REGWM2mD+m
+        DOryRTF//5y3tTQenxGO4ho8tRBIv6Vg4Q==
+X-Google-Smtp-Source: ABdhPJy/ZiXL9BtAh/Bj2+9q7KbP8dvVZ/6Ktgmt9Jva703q36iZ6hOovQyjRd+xQXH7qdkRqiCpZg==
+X-Received: by 2002:a5d:408c:: with SMTP id o12mr5274061wrp.412.1592389560920;
+        Wed, 17 Jun 2020 03:26:00 -0700 (PDT)
 Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id z206sm7569847wmg.30.2020.06.17.03.25.59
+        by smtp.gmail.com with ESMTPSA id z206sm7569847wmg.30.2020.06.17.03.26.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 03:25:59 -0700 (PDT)
+        Wed, 17 Jun 2020 03:26:00 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     bhelgaas@google.com, robh+dt@kernel.org, tsbogend@alpha.franken.de,
@@ -59,9 +59,9 @@ To:     bhelgaas@google.com, robh+dt@kernel.org, tsbogend@alpha.franken.de,
         linux-mips@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 1/3] mips: bmips: add PCI support
-Date:   Wed, 17 Jun 2020 12:25:54 +0200
-Message-Id: <20200617102556.3792821-2-noltari@gmail.com>
+Subject: [PATCH 2/3] dt-bindings: Document BCM6328 PCIe Host Controller
+Date:   Wed, 17 Jun 2020 12:25:55 +0200
+Message-Id: <20200617102556.3792821-3-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200617102556.3792821-1-noltari@gmail.com>
 References: <20200617102556.3792821-1-noltari@gmail.com>
@@ -73,65 +73,129 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-BMIPS SoCs with PCI: BCM6358, BCM6368.
-BMIPS SoCs with PCIe (gen1): BCM6328, BCM6362, BCM63268.
-BMIPS SoCs with PCIe (gen2): BCM6318.
+BCM6328 PCIe host controller is found on BCM6328, BCM6362 and BCM63268 SoCs.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- arch/mips/Kconfig           |  1 +
- arch/mips/pci/Makefile      |  1 +
- arch/mips/pci/fixup-bmips.c | 17 +++++++++++++++++
- 3 files changed, 19 insertions(+)
- create mode 100644 arch/mips/pci/fixup-bmips.c
+ .../bindings/pci/brcm,bcm6328-pcie.yaml       | 109 ++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 6fee1a133e9d..357026cb51de 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -230,6 +230,7 @@ config BMIPS_GENERIC
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
- 	select ARCH_HAS_PHYS_TO_DMA
- 	select BOOT_RAW
-+	select HAVE_PCI
- 	select NO_EXCEPT_FILL
- 	select USE_OF
- 	select CEVT_R4K
-diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-index 0f68d6849978..e38285c10d45 100644
---- a/arch/mips/pci/Makefile
-+++ b/arch/mips/pci/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_PCI_XTALK_BRIDGE)	+= pci-xtalk-bridge.o
- # These are still pretty much in the old state, watch, go blind.
- #
- obj-$(CONFIG_ATH79)		+= fixup-ath79.o
-+obj-$(CONFIG_BMIPS_GENERIC)	+= fixup-bmips.o
- obj-$(CONFIG_MIPS_COBALT)	+= fixup-cobalt.o
- obj-$(CONFIG_LEMOTE_FULOONG2E)	+= fixup-fuloong2e.o ops-loongson2.o
- obj-$(CONFIG_LEMOTE_MACH2F)	+= fixup-lemote2f.o ops-loongson2.o
-diff --git a/arch/mips/pci/fixup-bmips.c b/arch/mips/pci/fixup-bmips.c
+diff --git a/Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
 new file mode 100644
-index 000000000000..581cff562ead
+index 000000000000..d2bd4933a5fa
 --- /dev/null
-+++ b/arch/mips/pci/fixup-bmips.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
-+ */
++++ b/Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/brcm,bcm6328-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
++title: BCM6328 PCIe Host Controller Device Tree Bindings
 +
-+int pcibios_plat_dev_init(struct pci_dev *dev)
-+{
-+	return PCIBIOS_SUCCESSFUL;
-+}
++maintainers:
++  - Álvaro Fernández Rojas <noltari@gmail.com>
 +
-+int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-+{
-+	return of_irq_parse_and_map_pci(dev, slot, pin);
-+}
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++properties:
++  compatible:
++    enum:
++     - brcm,bcm6328-pcie
++     - brcm,bcm6362-pcie
++     - brcm,bcm63268-pcie
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: pcie
++
++  "#interrupt-cells":
++    const: 1
++
++  interrupt-map-mask:
++    maxItems: 1
++
++  interrupt-map:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  ranges:
++    maxItems: 1
++
++  reg:
++    maxItems: 1
++
++  resets:
++    maxItems: 4
++
++  reset-names:
++    items:
++      - const: pcie
++      - const: pcie-core
++      - const: pcie-ext
++      - const: pcie-hard
++
++required:
++  - brcm,serdes
++  - clocks
++  - clock-names
++  - "#interrupt-cells"
++  - interrupt-map-mask
++  - interrupt-map
++  - ranges
++  - reg
++  - resets
++  - reset-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    serdes_cntl: syscon@10001800 {
++      compatible = "syscon";
++      reg = <0x10001800 0x4>;
++      native-endian;
++    };
++
++    pcie: pcie@10e40000 {
++      compatible = "brcm,bcm6328-pcie";
++      reg = <0x10e40000 0x10000>;
++      #address-cells = <3>;
++      #size-cells = <2>;
++
++      device_type = "pci";
++      bus-range = <0x00 0x01>;
++      ranges = <0x2000000 0 0x10f00000 0x10f00000 0 0x100000>;
++      linux,pci-probe-only = <1>;
++
++      #interrupt-cells = <1>;
++      interrupt-map-mask = <0 0 0 0>;
++      interrupt-map = <0 0 0 0 &periph_intc BCM6328_IRQ_PCIE_RC 0>;
++
++      clocks = <&periph_clk BCM6328_CLK_PCIE>;
++      clock-names = "pcie";
++
++      resets = <&periph_rst BCM6328_RST_PCIE>,
++               <&periph_rst BCM6328_RST_PCIE_EXT>,
++               <&periph_rst BCM6328_RST_PCIE_CORE>,
++               <&periph_rst BCM6328_RST_PCIE_HARD>;
++      reset-names = "pcie",
++                    "pcie-ext",
++                    "pcie-core",
++                    "pcie-hard";
++
++      power-domains = <&periph_pwr BCM6328_POWER_DOMAIN_PCIE>;
++
++      brcm,serdes = <&serdes_cntl>;
++    };
 -- 
 2.27.0
 
