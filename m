@@ -2,35 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07DC41FE6F1
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 04:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E6631FE6CD
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 04:38:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgFRChl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 22:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
+        id S1729186AbgFRBNn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 21:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729167AbgFRBNh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:37 -0400
+        id S1729174AbgFRBNk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E599D221EA;
-        Thu, 18 Jun 2020 01:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6502F221EB;
+        Thu, 18 Jun 2020 01:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442817;
-        bh=iplyPM27PcNRmVU8iO4tDZsu6oYuCl3PiRkC1vxjPIc=;
+        s=default; t=1592442820;
+        bh=PGIajTLNvn1TlSKGVmd+/Ro+viHxJzQ4+cuGN8MOxDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iRNMlT1fh2ywQ/7mzE9QT2L4vbSA/XMlBigmCmGfm8Dfq/Lifgp+rnEfwWoO8f1xU
-         SI9q6np3FUr9WOi7f839TVRcoM//KG74uYKv11aMXVs2EWVtGstK5FPcdkfMtJ/p7p
-         Dh3bOf8QyuSr8WW33VX/Vu7/Jgc6fTCKGD3t9QpU=
+        b=fgmk6Tp5AmLgFnz+Vty6rmPTMvmLI+g0bKagi+CeTJc21J75LlUSdR6pzYG4GH/f1
+         k3LMYjVgajENzu2r97jv2qFDOpz2pxmlKd5M2ceTKHdhcbiwLFMRKGxniW3DaZCeKM
+         Cb2VYR+qVFZAuXp+Ye7CnwrTg+R05PE8YbguMVWM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 255/388] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
-Date:   Wed, 17 Jun 2020 21:05:52 -0400
-Message-Id: <20200618010805.600873-255-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 257/388] PCI: dwc: pci-dra7xx: Use devm_platform_ioremap_resource_byname()
+Date:   Wed, 17 Jun 2020 21:05:54 -0400
+Message-Id: <20200618010805.600873-257-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -43,75 +44,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
+[ Upstream commit c8a119779f5609de8dcd98630f71cc7f1b2e4e8c ]
 
-Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
-not account for the fact that Switch Downstream Ports are not permitted to
-have a PTM capability; their PTM behavior is controlled by the Upstream
-Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
-capability, we did not mark them as "ptm_enabled", which meant that
-pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
+platform_get_resource() may fail and return NULL, so we had better
+check its return value to avoid a NULL pointer dereference a bit later
+in the code. Fix it to use devm_platform_ioremap_resource_byname()
+instead of calling platform_get_resource_byname() and devm_ioremap().
 
-Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
-enabled.
-
-Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
-Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lore.kernel.org/r/20200429015027.134485-1-weiyongjun1@huawei.com
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/pci/controller/dwc/pci-dra7xx.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 9361f3aa26ab..357a454cafa0 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -39,10 +39,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return;
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 3b0e58f2de58..6184ebc9392d 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -840,7 +840,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	struct phy **phy;
+ 	struct device_link **link;
+ 	void __iomem *base;
+-	struct resource *res;
+ 	struct dw_pcie *pci;
+ 	struct dra7xx_pcie *dra7xx;
+ 	struct device *dev = &pdev->dev;
+@@ -877,10 +876,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 		return irq;
+ 	}
  
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
--	if (!pos)
--		return;
--
- 	/*
- 	 * Enable PTM only on interior devices (root ports, switch ports,
- 	 * etc.) on the assumption that it causes no link traffic until an
-@@ -52,6 +48,23 @@ void pci_ptm_init(struct pci_dev *dev)
- 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
- 		return;
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
+-	base = devm_ioremap(dev, res->start, resource_size(res));
+-	if (!base)
+-		return -ENOMEM;
++	base = devm_platform_ioremap_resource_byname(pdev, "ti_conf");
++	if (IS_ERR(base))
++		return PTR_ERR(base);
  
-+	/*
-+	 * Switch Downstream Ports are not permitted to have a PTM
-+	 * capability; their PTM behavior is controlled by the Upstream
-+	 * Port (PCIe r5.0, sec 7.9.16).
-+	 */
-+	ups = pci_upstream_bridge(dev);
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
-+	    ups && ups->ptm_enabled) {
-+		dev->ptm_granularity = ups->ptm_granularity;
-+		dev->ptm_enabled = 1;
-+		return;
-+	}
-+
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!pos)
-+		return;
-+
- 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
- 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
- 
-@@ -61,7 +74,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
- 	 * furthest upstream Time Source as the PTM Root.
- 	 */
--	ups = pci_upstream_bridge(dev);
- 	if (ups && ups->ptm_enabled) {
- 		ctrl = PCI_PTM_CTRL_ENABLE;
- 		if (ups->ptm_granularity == 0)
+ 	phy_count = of_property_count_strings(np, "phy-names");
+ 	if (phy_count < 0) {
 -- 
 2.25.1
 
