@@ -2,36 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D641FE45D
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 04:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC8D91FE421
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 04:16:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbgFRCRd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 22:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51742 "EHLO mail.kernel.org"
+        id S1729322AbgFRBUW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 21:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730201AbgFRBTv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:51 -0400
+        id S1729532AbgFRBUS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18875221ED;
-        Thu, 18 Jun 2020 01:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B42206F1;
+        Thu, 18 Jun 2020 01:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443185;
-        bh=eDerT6a56T9SvO+lpq5m979RLoTvWTPGo9xTkVnIVjw=;
+        s=default; t=1592443217;
+        bh=iplyPM27PcNRmVU8iO4tDZsu6oYuCl3PiRkC1vxjPIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SG4p7YFD7/2Q7SZRKOSuw1HMmhfhiMnWNCO5x4o/L5uQMSJdlW+AdrMZDqY4sOK/5
-         AY6uyXEpe1lm4tGjJHbBCqDIQwDK74RunCNIYGIHNV4ULun6f4ks1IguCZOTEgCmqj
-         ZYb6SLNdP3Uh5607zKZXOZHcdD1MHrkWgVBVBHAM=
+        b=UIkRj8qPUV0l7ume2DeHkVsweRoIQy1KeEN+f+xRKlfaBgqjaXcX685Da7hvpK4zE
+         GQ1cYgZvQ4LM7bRxCPiNw7vjTQ6T4wZuOCS/MIzLqbhtMuF5pLLvbpN/XkV6/MokBQ
+         AV7O6/nf/lI70MK1IwiGSCaQnDTzUdmy3YEkqS8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 147/266] PCI/PM: Assume ports without DLL Link Active train links in 100 ms
-Date:   Wed, 17 Jun 2020 21:14:32 -0400
-Message-Id: <20200618011631.604574-147-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 173/266] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
+Date:   Wed, 17 Jun 2020 21:14:58 -0400
+Message-Id: <20200618011631.604574-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -44,111 +43,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit ec411e02b7a2e785a4ed9ed283207cd14f48699d ]
+[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
 
-Kai-Heng Feng reported that it takes a long time (> 1 s) to resume
-Thunderbolt-connected devices from both runtime suspend and system sleep
-(s2idle).
+Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
+not account for the fact that Switch Downstream Ports are not permitted to
+have a PTM capability; their PTM behavior is controlled by the Upstream
+Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
+capability, we did not mark them as "ptm_enabled", which meant that
+pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
 
-This was because some Downstream Ports that support > 5 GT/s do not also
-support Data Link Layer Link Active reporting.  Per PCIe r5.0 sec 6.6.1:
+Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
+enabled.
 
-  With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
-  software must wait a minimum of 100 ms after Link training completes
-  before sending a Configuration Request to the device immediately below
-  that Port. Software can determine when Link training completes by polling
-  the Data Link Layer Link Active bit or by setting up an associated
-  interrupt (see Section 6.7.3.3).
-
-Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
-at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
-JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
-
-Previously we tried to wait for Link training to complete, but since there
-was no DLL Link Active reporting, all we could do was wait the worst-case
-1000 ms, then another 100 ms.
-
-Instead of using the supported speeds to determine whether to wait for Link
-training, check whether the port supports DLL Link Active reporting.  The
-Ports in question do not, so we'll wait only the 100 ms required for Ports
-that support Link speeds <= 5 GT/s.
-
-This of course assumes these Ports always train the Link within 100 ms even
-if they are operating at > 5 GT/s, which is not required by the spec.
-
-[bhelgaas: commit log, comment]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
-Link: https://lore.kernel.org/r/20200514133043.27429-1-mika.westerberg@linux.intel.com
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
+Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index c73e8095a849..689f0280c038 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4608,7 +4608,8 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
-  * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-- * @delay: Delay to wait after link has become active (in ms)
-+ * @delay: Delay to wait after link has become active (in ms). Specify %0
-+ *	   for no delay.
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
-@@ -4649,7 +4650,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(10);
- 		timeout -= 10;
- 	}
--	if (active && ret)
-+	if (active && ret && delay)
- 		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
-@@ -4770,17 +4771,28 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	if (!pcie_downstream_port(dev))
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 9361f3aa26ab..357a454cafa0 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -39,10 +39,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	if (!pci_is_pcie(dev))
  		return;
  
--	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
--		msleep(delay);
--	} else {
--		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
--			delay);
--		if (!pcie_wait_for_link_delay(dev, true, delay)) {
-+	/*
-+	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
-+	 * speeds > 5 GT/s, we must wait for link training to complete
-+	 * before the mandatory delay.
-+	 *
-+	 * We can only tell when link training completes via DLL Link
-+	 * Active, which is required for downstream ports that support
-+	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
-+	 * devices do not implement Link Active reporting even when it's
-+	 * required, so we'll check for that directly instead of checking
-+	 * the supported link speed.  We assume devices without Link Active
-+	 * reporting can train in 100 ms regardless of speed.
-+	 */
-+	if (dev->link_active_reporting) {
-+		pci_dbg(dev, "waiting for link to train\n");
-+		if (!pcie_wait_for_link_delay(dev, true, 0)) {
- 			/* Did not train, no need to wait any further */
- 			return;
- 		}
- 	}
-+	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
-+	msleep(delay);
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+-	if (!pos)
+-		return;
+-
+ 	/*
+ 	 * Enable PTM only on interior devices (root ports, switch ports,
+ 	 * etc.) on the assumption that it causes no link traffic until an
+@@ -52,6 +48,23 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
+ 		return;
  
- 	if (!pci_device_is_present(child)) {
- 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
++	/*
++	 * Switch Downstream Ports are not permitted to have a PTM
++	 * capability; their PTM behavior is controlled by the Upstream
++	 * Port (PCIe r5.0, sec 7.9.16).
++	 */
++	ups = pci_upstream_bridge(dev);
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
++	    ups && ups->ptm_enabled) {
++		dev->ptm_granularity = ups->ptm_granularity;
++		dev->ptm_enabled = 1;
++		return;
++	}
++
++	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
++	if (!pos)
++		return;
++
+ 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+ 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+ 
+@@ -61,7 +74,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
+ 	 * furthest upstream Time Source as the PTM Root.
+ 	 */
+-	ups = pci_upstream_bridge(dev);
+ 	if (ups && ups->ptm_enabled) {
+ 		ctrl = PCI_PTM_CTRL_ENABLE;
+ 		if (ups->ptm_granularity == 0)
 -- 
 2.25.1
 
