@@ -2,44 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06C491FE2EA
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 04:05:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53C6C1FE2CD
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 04:04:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbgFRCE6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 22:04:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
+        id S1730928AbgFRBXK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 21:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbgFRBWx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:53 -0400
+        id S1730921AbgFRBXI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B9B20663;
-        Thu, 18 Jun 2020 01:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C32C120CC7;
+        Thu, 18 Jun 2020 01:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443373;
-        bh=ptpv6AaHe3Ar61d8PWH8ycxxaQqCbcDaY5LkOUNJEmI=;
+        s=default; t=1592443387;
+        bh=7wQA2Z5H/KyOKIa4tfUvi/1sX8CoYrwIesTMR+Lk84k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvsEWH/GXosw17DHT7zf6Rt6Gd2qjIh8yvLXdn+HOBiyZylzr8V3e7PmFIeMUk4mb
-         hxQI+4XZ9O/8I3rQaNFhabFk46B0qTwKxVu9JBPq2LkebuUwn1+T6v9+Sa4SPOkW0S
-         ojnejE6wheRLsoRNVqRjeqVA9NoAxNvIzPx+fEfM=
+        b=Xokk5Ytmd73Rj7HZDPmjj6qaf6D6kOqQNYuKpp3Aub1/0XNrBcVizuKW+XUjJRPbR
+         OjTLBaKg/Ux4NtUwVpxGI4V1/d3d7Ok9vyw/17ycF3PwEJC/m8KPCSpjYVfI5BFU/T
+         WNu2HLUn/sd5CZNUrCgEsuCueIW3qp6rB/8bfjKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 026/172] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
-Date:   Wed, 17 Jun 2020 21:19:52 -0400
-Message-Id: <20200618012218.607130-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 037/172] PCI: vmd: Filter resource type bits from shadow register
+Date:   Wed, 17 Jun 2020 21:20:03 -0400
+Message-Id: <20200618012218.607130-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -48,63 +43,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
+[ Upstream commit 3e5095eebe015d5a4d566aa5e03c8621add5f0a7 ]
 
-Trying to change Link Status register does not have any effect as this
-is a read-only register. Trying to overwrite bits for Negotiated Link
-Width does not make sense.
+Versions of VMD with the Host Physical Address shadow register use this
+register to calculate the bus address offset needed to do guest
+passthrough of the domain. This register shadows the Host Physical
+Address registers including the resource type bits. After calculating
+the offset, the extra resource type bits lead to the VMD resources being
+over-provisioned at the front and under-provisioned at the back.
 
-In future proper change of link width can be done via Lane Count Select
-bits in PCIe Control 0 register.
+Example:
+pci 10000:80:02.0: reg 0x10: [mem 0xf801fffc-0xf803fffb 64bit]
 
-Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
-Control register is wrong. There should be at least some detection if
-endpoint supports L0s as isn't mandatory.
+Expected:
+pci 10000:80:02.0: reg 0x10: [mem 0xf8020000-0xf803ffff 64bit]
 
-Moreover ASPM Control bits in Link Control register are controlled by
-pcie/aspm.c code which sets it according to system ASPM settings,
-immediately after aardvark driver probes. So setting these bits by
-aardvark driver has no long running effect.
+If other devices are mapped in the over-provisioned front, it could lead
+to resource conflict issues with VMD or those devices.
 
-Remove code which touches ASPM L0s bits from this driver and let
-kernel's ASPM implementation to set ASPM state properly.
-
-Some users are reporting issues that this code is problematic for some
-Intel wifi cards and removing it fixes them, see e.g.:
-https://bugzilla.kernel.org/show_bug.cgi?id=196339
-
-If problems with Intel wifi cards occur even after this commit, then
-pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
-for affected problematic cards.
-
-Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
+Link: https://lore.kernel.org/r/20200528030240.16024-3-jonathan.derrick@intel.com
+Fixes: a1a30170138c9 ("PCI: vmd: Fix shadow offsets to reflect spec changes")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pci/controller/vmd.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 6b4555ff2548..0235b6e7dcd1 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -321,10 +321,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 
- 	advk_pcie_wait_for_link(pcie);
- 
--	reg = PCIE_CORE_LINK_L0S_ENTRY |
--		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
--
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index ab36e5ca1aca..153abbc9412d 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -617,9 +617,11 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 			if (!membar2)
+ 				return -ENOMEM;
+ 			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
+-					readq(membar2 + MB2_SHADOW_OFFSET);
++					(readq(membar2 + MB2_SHADOW_OFFSET) &
++					 PCI_BASE_ADDRESS_MEM_MASK);
+ 			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
+-					readq(membar2 + MB2_SHADOW_OFFSET + 8);
++					(readq(membar2 + MB2_SHADOW_OFFSET + 8) &
++					 PCI_BASE_ADDRESS_MEM_MASK);
+ 			pci_iounmap(vmd->dev, membar2);
+ 		}
+ 	}
 -- 
 2.25.1
 
