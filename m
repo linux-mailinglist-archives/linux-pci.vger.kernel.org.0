@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B6C01FEDD4
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 10:39:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEEAD1FEDD8
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 10:39:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgFRIib (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Jun 2020 04:38:31 -0400
-Received: from mx.socionext.com ([202.248.49.38]:19342 "EHLO mx.socionext.com"
+        id S1728846AbgFRIic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Jun 2020 04:38:32 -0400
+Received: from mx.socionext.com ([202.248.49.38]:19349 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbgFRIi0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:38:26 -0400
+        id S1728820AbgFRIi1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:38:27 -0400
 Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 18 Jun 2020 17:38:24 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 528D6180B51;
-        Thu, 18 Jun 2020 17:38:24 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 18 Jun 2020 17:38:24 +0900
+  by mx.socionext.com with ESMTP; 18 Jun 2020 17:38:25 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 5BC97180B51;
+        Thu, 18 Jun 2020 17:38:25 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 18 Jun 2020 17:38:25 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id D09501A12AD;
-        Thu, 18 Jun 2020 17:38:23 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id CB0D41A12AD;
+        Thu, 18 Jun 2020 17:38:24 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -33,9 +33,9 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v5 1/6] PCI: dwc: Add msi_host_isr() callback
-Date:   Thu, 18 Jun 2020 17:38:08 +0900
-Message-Id: <1592469493-1549-2-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+Date:   Thu, 18 Jun 2020 17:38:09 +0900
+Message-Id: <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -44,49 +44,132 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This adds msi_host_isr() callback function support to describe
-SoC-dependent service triggered by MSI.
+The misc interrupts consisting of PME, AER, and Link event, is handled
+by INTx handler, however, these interrupts should be also handled by
+MSI handler.
 
-For example, when AER interrupt is triggered by MSI, the callback function
-reads SoC-dependent registers and detects that the interrupt is from AER,
-and invoke AER interrupts related to MSI.
+This adds the function uniphier_pcie_misc_isr() that handles misc
+interrupts, which is called from both INTx and MSI handlers.
+This function detects PME and AER interrupts with the status register,
+and invoke PME and AER drivers related to MSI.
+
+And this sets the mask for misc interrupts from INTx if MSI is enabled
+and sets the mask for misc interrupts from MSI if MSI is disabled.
 
 Cc: Marc Zyngier <maz@kernel.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>
 Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 3 +++
- drivers/pci/controller/dwc/pcie-designware.h      | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+ 1 file changed, 46 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 0a4a5aa..026edb1 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -83,6 +83,9 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
- 	u32 status, num_ctrls;
- 	irqreturn_t ret = IRQ_NONE;
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index a5401a0..5ce2479 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -44,7 +44,9 @@
+ #define PCL_SYS_AUX_PWR_DET		BIT(8)
  
-+	if (pp->ops->msi_host_isr)
-+		pp->ops->msi_host_isr(pp);
+ #define PCL_RCV_INT			0x8108
++#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+ #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
++#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+ #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+ #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+ #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+@@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+ 
+ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+ {
+-	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
++	u32 val;
 +
- 	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
++	val = PCL_RCV_INT_ALL_ENABLE;
++	if (pci_msi_enabled())
++		val |= PCL_RCV_INT_ALL_INT_MASK;
++	else
++		val |= PCL_RCV_INT_ALL_MSI_MASK;
++
++	writel(val, priv->base + PCL_RCV_INT);
+ 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+ }
  
- 	for (i = 0; i < num_ctrls; i++) {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 656e00f..e741967 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -170,6 +170,7 @@ struct dw_pcie_host_ops {
- 	void (*scan_bus)(struct pcie_port *pp);
- 	void (*set_num_vectors)(struct pcie_port *pp);
- 	int (*msi_host_init)(struct pcie_port *pp);
-+	void (*msi_host_isr)(struct pcie_port *pp);
+@@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+ 	.map = uniphier_pcie_intx_map,
  };
  
- struct pcie_port {
+-static void uniphier_pcie_irq_handler(struct irq_desc *desc)
++static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+ {
+-	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
+-	unsigned long reg;
+-	u32 val, bit, virq;
++	u32 val, virq;
+ 
+-	/* INT for debug */
+ 	val = readl(priv->base + PCL_RCV_INT);
+ 
+ 	if (val & PCL_CFG_BW_MGT_STATUS)
+ 		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
++
+ 	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+ 		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+-	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+-		dev_dbg(pci->dev, "Root Error\n");
+-	if (val & PCL_CFG_PME_MSI_STATUS)
+-		dev_dbg(pci->dev, "PME Interrupt\n");
++
++	if (is_msi) {
++		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
++			dev_dbg(pci->dev, "Root Error Status\n");
++
++		if (val & PCL_CFG_PME_MSI_STATUS)
++			dev_dbg(pci->dev, "PME Interrupt\n");
++
++		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
++			   PCL_CFG_PME_MSI_STATUS)) {
++			virq = irq_linear_revmap(pp->irq_domain, 0);
++			generic_handle_irq(virq);
++		}
++	}
+ 
+ 	writel(val, priv->base + PCL_RCV_INT);
++}
++
++static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
++{
++	uniphier_pcie_misc_isr(pp, true);
++}
++
++static void uniphier_pcie_irq_handler(struct irq_desc *desc)
++{
++	struct pcie_port *pp = irq_desc_get_handler_data(desc);
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	unsigned long reg;
++	u32 val, bit, virq;
+ 
+ 	/* INTx */
+ 	chained_irq_enter(chip, desc);
+ 
++	uniphier_pcie_misc_isr(pp, false);
++
+ 	val = readl(priv->base + PCL_RCV_INTX);
+ 	reg = FIELD_GET(PCL_RCV_INTX_ALL_STATUS, val);
+ 
+@@ -330,6 +364,7 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
+ 
+ static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
+ 	.host_init = uniphier_pcie_host_init,
++	.msi_host_isr = uniphier_pcie_msi_host_isr,
+ };
+ 
+ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
 -- 
 2.7.4
 
