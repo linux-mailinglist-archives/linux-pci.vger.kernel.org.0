@@ -2,41 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 755991FDCF3
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 03:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08F2B1FDD1E
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 03:24:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbgFRBWl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 21:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55762 "EHLO mail.kernel.org"
+        id S1731104AbgFRBX4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 21:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbgFRBWj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:39 -0400
+        id S1731094AbgFRBX4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5960520FC3;
-        Thu, 18 Jun 2020 01:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 562A720B1F;
+        Thu, 18 Jun 2020 01:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443359;
-        bh=1KY3sCatdlrZk8pPgJHuVIdcaXAwLRkY5NEVDPA9ANA=;
+        s=default; t=1592443436;
+        bh=wScORoqPjb/mww96WHzaFvxef/YuoV7yz9L9Y915LtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0QcG+tOcUbQ71d03szY0vArVAOZNTc7ZTJD7qFq4jeylDLM59tk7x1WdZ2u1egRdf
-         gd+2g5dF+BUoI0Fp3y0z9MORttFsVoylAfzUlbCT/G9LDr/j8w02BxNd6pSff5m29T
-         7nBEGF2GXRJOl6T765b9AvO/I9q2vcsNwsRtt66c=
+        b=Dl0+iz5sB1IT0E7QOPfmaPOXRgClYTSPBKZbpNd46blenf96IomW3gQ5BclTBwco6
+         v2mCOxDx5+wMaKwbix8hA8Tm24tnwvyzUOUmxe80A0co5yfk3V2mIu5Y75zmITOVhY
+         /cSvIJA9H99B8X8sORINM/pqNzg26mIbBmhNWtQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 016/172] PCI: Allow pci_resize_resource() for devices on root bus
-Date:   Wed, 17 Jun 2020 21:19:42 -0400
-Message-Id: <20200618012218.607130-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 074/172] PCI: v3-semi: Fix a memory leak in v3_pci_probe() error handling paths
+Date:   Wed, 17 Jun 2020 21:20:40 -0400
+Message-Id: <20200618012218.607130-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -45,51 +44,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit d09ddd8190fbdc07696bf34b548ae15aa1816714 ]
+[ Upstream commit bca718988b9008d0d5f504e2d318178fc84958c1 ]
 
-When resizing a BAR, pci_reassign_bridge_resources() is invoked to bring
-the bridge windows of parent bridges in line with the new BAR assignment.
+If we fails somewhere in 'v3_pci_probe()', we need to free 'host'.
 
-This assumes the device whose BAR is being resized lives on a subordinate
-bus, but this is not necessarily the case. A device may live on the root
-bus, in which case dev->bus->self is NULL, and passing a NULL pci_dev
-pointer to pci_reassign_bridge_resources() will cause it to crash.
+Use the managed version of 'pci_alloc_host_bridge()' to do that easily.
+The use of managed resources is already widely used in this driver.
 
-So let's make the call to pci_reassign_bridge_resources() conditional on
-whether dev->bus->self is non-NULL in the first place.
-
-Fixes: 8bb705e3e79d84e7 ("PCI: Add pci_resize_resource() for resizing BARs")
-Link: https://lore.kernel.org/r/20200421162256.26887-1-ardb@kernel.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Link: https://lore.kernel.org/r/20200418081637.1585-1-christophe.jaillet@wanadoo.fr
+Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-res.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pci-v3-semi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index d8ca40a97693..d21fa04fa44d 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -439,10 +439,11 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index d219404bad92..9a86bb7448ac 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -743,7 +743,7 @@ static int v3_pci_probe(struct platform_device *pdev)
+ 	int ret;
+ 	LIST_HEAD(res);
  
- 	/* Check if the new config works by trying to assign everything. */
--	ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
--	if (ret)
--		goto error_resize;
--
-+	if (dev->bus->self) {
-+		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
-+		if (ret)
-+			goto error_resize;
-+	}
- 	return 0;
+-	host = pci_alloc_host_bridge(sizeof(*v3));
++	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
+ 	if (!host)
+ 		return -ENOMEM;
  
- error_resize:
 -- 
 2.25.1
 
