@@ -2,108 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19BCD1FEDBD
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 10:37:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B6E1FEDD2
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 10:39:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgFRIg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Jun 2020 04:36:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
+        id S1728828AbgFRIi2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Jun 2020 04:38:28 -0400
+Received: from mx.socionext.com ([202.248.49.38]:19334 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFRIgy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:36:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE5F214DB;
-        Thu, 18 Jun 2020 08:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592469413;
-        bh=ceL/T8t0nvr/U3tOjodwMKknS/aAxNJ8RojCHrLF1ok=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fhmVqgBm4oYl3kaigyXF+fjYbAtWBnSCDQ01zfS0JLYK3gukCSKFX5/7FuhT1Rddg
-         G+/nRvmR+h/ih67DEse6ah3ZJOIHmQNa/IrfpIzNqOgVLauwcJ4gL8gLuByIeLnTZe
-         XbWo06NX2QYRQYvzI3OU8jnZRnrWl3CjgdK+X07A=
-Date:   Thu, 18 Jun 2020 10:36:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oliver O'Halloran <oohall@gmail.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-Message-ID: <20200618083646.GA1066967@kroah.com>
-References: <20200616011742.138975-1-rajatja@google.com>
- <20200616011742.138975-4-rajatja@google.com>
- <20200616073249.GB30385@infradead.org>
- <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org>
- <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
- <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
+        id S1728731AbgFRIiZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:38:25 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 18 Jun 2020 17:38:23 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 4B19960066;
+        Thu, 18 Jun 2020 17:38:23 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 18 Jun 2020 17:38:23 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id D588B1A12AD;
+        Thu, 18 Jun 2020 17:38:22 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v5 0/6] PCI: uniphier: Add features for UniPhier PCIe host controller
+Date:   Thu, 18 Jun 2020 17:38:07 +0900
+Message-Id: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
-> > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
-> 
-> ...
-> 
-> > (and likely call it "external" instead of "untrusted".
-> 
-> Which is not okay. 'External' to what? 'untrusted' has been carefully
-> chosen by the meaning of it.
-> What external does mean for M.2. WWAN card in my laptop? It's in ACPI
-> tables, but I can replace it.
+This series adds some features for UniPhier PCIe host controller.
 
-Then your ACPI tables should show this, there is an attribute for it,
-right?
+- Add support for PME and AER invoked by MSI interrupt
+- Add iATU register view support for PCIe version >= 4.80
+- Add an error message when failing to get phy driver
 
-> This is only one example. Or if firmware of some device is altered,
-> and it's internal (whatever it means) is it trusted or not?
+This adds a new function called by MSI handler in DesignWare PCIe framework,
+that invokes PME and AER funcions to detect the factor from SoC-dependent
+registers.
 
-That is what people are using policy for today, if you object to this,
-please bring it up to those developers :)
+Changes since v4:
+- Add Acked-by: line to dwc patch
 
-> So, please leave it as is (I mean name).
+Changes since v3:
+- Move msi_host_isr() call into dw_handle_msi_irq()
+- Move uniphier_pcie_misc_isr() call into the guard of chained_irq
+- Use a bool argument is_msi instead of pci_msi_enabled()
+- Consolidate handler calls for the same interrupt
+- Fix typos in commit messages
 
-firmware today exports this attribute, why do you not want userspace to
-also know it?
+Changes since v2:
+- Avoid printing phy error message in case of EPROBE_DEFER
+- Fix iATU register mapping method
+- dt-bindings: Add Acked-by: line
+- Fix typos in commit messages
+- Use devm_platform_ioremap_resource_byname()
 
-Trust is different, yes, don't get the two mixed up please.  That should
-be a different sysfs attribute for obvious reasons.
+Changes since v1:
+- Add check if struct resource is NULL
+- Fix warning in the type of dev_err() argument
 
-thanks,
+Kunihiko Hayashi (6):
+  PCI: dwc: Add msi_host_isr() callback
+  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+  dt-bindings: PCI: uniphier: Add iATU register description
+  PCI: uniphier: Add iATU register support
+  PCI: uniphier: Add error message when failed to get phy
+  PCI: uniphier: Use devm_platform_ioremap_resource_byname()
 
-greg k-h
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  3 +
+ drivers/pci/controller/dwc/pcie-designware.h       |  1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 73 +++++++++++++++++-----
+ 4 files changed, 63 insertions(+), 15 deletions(-)
+
+-- 
+2.7.4
+
