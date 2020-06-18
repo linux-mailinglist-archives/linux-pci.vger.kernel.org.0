@@ -2,40 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 178701FDEC9
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 03:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D91911FE583
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 04:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732620AbgFRBas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 21:30:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41014 "EHLO mail.kernel.org"
+        id S1729702AbgFRBRB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 21:17:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732616AbgFRBar (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:47 -0400
+        id S1729696AbgFRBRA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FF1D2224E;
-        Thu, 18 Jun 2020 01:30:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43ADE221ED;
+        Thu, 18 Jun 2020 01:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443846;
-        bh=pavhGKGyWx6CGwzqnnEJzC1BuJLEq611bP7n5T+QGDI=;
+        s=default; t=1592443020;
+        bh=1KY3sCatdlrZk8pPgJHuVIdcaXAwLRkY5NEVDPA9ANA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHta+rBmeh5YD2/P9OLCkwUvriMd09snb804UVLTg7msI28JNHRaHmOhdQI9uLLZ+
-         Mt/XRfYsjfLIKiaa36Y4Jwm3PHlcNpcFzwM4RrHiBh2vP0p7iqQhfuGrQzkmcFOW8W
-         hSVXs5yGr1iuEIcn/eLHQOi0tgOYNV1tcJ6hHB+U=
+        b=F8HMURgA9Ov6l/ktEy9/hlAf4Vd1UxLn396UaHVNyrm41079AUDbBKT0j1NyTfI/y
+         9+ZRy9VMKHqMZaZlKzW4KFc2T2IiHDPMSX70G796aZXuACpYEMHt49DScOvpkVVsXX
+         x/azJp7reg/0yJm9TgZk9wgw8U5uS9cQ66YRvDU0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 31/60] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Wed, 17 Jun 2020 21:29:35 -0400
-Message-Id: <20200618013004.610532-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 021/266] PCI: Allow pci_resize_resource() for devices on root bus
+Date:   Wed, 17 Jun 2020 21:12:26 -0400
+Message-Id: <20200618011631.604574-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -44,53 +45,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit d09ddd8190fbdc07696bf34b548ae15aa1816714 ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+When resizing a BAR, pci_reassign_bridge_resources() is invoked to bring
+the bridge windows of parent bridges in line with the new BAR assignment.
 
-Remove this exclusion so we can enable ASPM on these links.
+This assumes the device whose BAR is being resized lives on a subordinate
+bus, but this is not necessarily the case. A device may live on the root
+bus, in which case dev->bus->self is NULL, and passing a NULL pci_dev
+pointer to pci_reassign_bridge_resources() will cause it to crash.
 
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
+So let's make the call to pci_reassign_bridge_resources() conditional on
+whether dev->bus->self is non-NULL in the first place.
 
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Fixes: 8bb705e3e79d84e7 ("PCI: Add pci_resize_resource() for resizing BARs")
+Link: https://lore.kernel.org/r/20200421162256.26887-1-ardb@kernel.org
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/pci/setup-res.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index c6a012b5ba39..966b6947e565 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -388,16 +388,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index d8ca40a97693..d21fa04fa44d 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -439,10 +439,11 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+ 	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
  
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
+ 	/* Check if the new config works by trying to assign everything. */
+-	ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
+-	if (ret)
+-		goto error_resize;
+-
++	if (dev->bus->self) {
++		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
++		if (ret)
++			goto error_resize;
++	}
+ 	return 0;
  
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+ error_resize:
 -- 
 2.25.1
 
