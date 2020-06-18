@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 043D81FDFBE
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 03:43:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 178701FDEC9
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 03:39:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732772AbgFRBnF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 21:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38400 "EHLO mail.kernel.org"
+        id S1732620AbgFRBas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 21:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732251AbgFRB3M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:12 -0400
+        id S1732616AbgFRBar (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 961972220B;
-        Thu, 18 Jun 2020 01:29:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF1D2224E;
+        Thu, 18 Jun 2020 01:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443751;
-        bh=hswlBSXRRkFK6MNKT+ngJHtzoxNkwsdmTMiez0a4TFk=;
+        s=default; t=1592443846;
+        bh=pavhGKGyWx6CGwzqnnEJzC1BuJLEq611bP7n5T+QGDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oKG2CJ0+0aVH4J2gb7IB2Lto5hGFv9rBkoBaeLeSP9n/AoVxVfe6t6L4xxk4rV3gN
-         Qlwh+HGM3PSs28h1UrWVNxjzJpjpB40KOM4Xv7w9PwzQppfL2hM65/IAmScRh/Bk6L
-         Xry25ji/0sef7oanN3tkiKmQrtaXLY4KaTxL8WxQ=
+        b=eHta+rBmeh5YD2/P9OLCkwUvriMd09snb804UVLTg7msI28JNHRaHmOhdQI9uLLZ+
+         Mt/XRfYsjfLIKiaa36Y4Jwm3PHlcNpcFzwM4RrHiBh2vP0p7iqQhfuGrQzkmcFOW8W
+         hSVXs5yGr1iuEIcn/eLHQOi0tgOYNV1tcJ6hHB+U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 39/80] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Wed, 17 Jun 2020 21:27:38 -0400
-Message-Id: <20200618012819.609778-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 31/60] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
+Date:   Wed, 17 Jun 2020 21:29:35 -0400
+Message-Id: <20200618013004.610532-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 deletions(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 4a5fde58974a..75551a781e88 100644
+index c6a012b5ba39..966b6947e565 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -410,16 +410,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+@@ -388,16 +388,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
  
  	/* Setup initial capable state. Will be updated later */
  	link->aspm_capable = link->aspm_support;
