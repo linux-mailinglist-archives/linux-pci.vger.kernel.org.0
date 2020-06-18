@@ -2,276 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18AB81FFAF2
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 20:20:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF5FE1FFB47
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 20:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgFRSU2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Jun 2020 14:20:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:57036 "EHLO foss.arm.com"
+        id S1728889AbgFRSqd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Jun 2020 14:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbgFRSU1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:20:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AF5E31B;
-        Thu, 18 Jun 2020 11:20:26 -0700 (PDT)
-Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8434D3F73C;
-        Thu, 18 Jun 2020 11:20:23 -0700 (PDT)
-Subject: Re: [PATCH v9 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
-        lenb@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        zhangliguang@linux.alibaba.com, andriy.shevchenko@linux.intel.com,
-        wangkefeng.wang@huawei.com, jroedel@suse.de,
-        yangyicong@hisilicon.com, jonathan.cameron@huawei.com,
-        tanxiaofei@huawei.com
-References: <20200615095312.398-1-shiju.jose@huawei.com>
- <20200615095312.398-2-shiju.jose@huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <f6d4282e-08a4-7832-9dbc-6a4c0366eefd@arm.com>
-Date:   Thu, 18 Jun 2020 19:20:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727805AbgFRSqa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:46:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B2B2208DB;
+        Thu, 18 Jun 2020 18:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592505989;
+        bh=39kwGWJQnjfPiKs05x4HsotVBIPPsgkmzXLdYD1Ko8E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ji8AXAluHvvoAmMwrjxl6TLNm7J2vVNMEj/eNho7vDCFnChfn98b6KVXCtZxL1CFE
+         rGdaWGvdez9DKhhUd+a6J00iz0MRvJO/NRn8tTpyPk3hgUM520s8gGhy692qvYxDx6
+         1rgnQYgfRwNPX6/IxJPJpm+MD8Z+tVbt6MWvsfsU=
+Date:   Thu, 18 Jun 2020 20:46:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
+Message-ID: <20200618184621.GA446639@kroah.com>
+References: <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
+ <20200617073100.GA14424@infradead.org>
+ <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
+ <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
+ <20200618083646.GA1066967@kroah.com>
+ <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
+ <CACK8Z6F2Ssj=EqhR2DZ114ETgQ-3PhzVi2rm2xxenCNOVH=60g@mail.gmail.com>
+ <20200618160212.GB3076467@kroah.com>
+ <20200618162322.GI34820@otc-nc-03>
+ <CACK8Z6EnqmJtSqPPz2ARk0jwFLR_yCTS0vSLQ0v4C9QF-6BQ1w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615095312.398-2-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6EnqmJtSqPPz2ARk0jwFLR_yCTS0vSLQ0v4C9QF-6BQ1w@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Shiju,
+On Thu, Jun 18, 2020 at 10:23:38AM -0700, Rajat Jain wrote:
+> Thanks Greg and Andy for your continued inputs, and thanks Ashok for chiming in.
+> 
+> On Thu, Jun 18, 2020 at 9:23 AM Raj, Ashok <ashok.raj@intel.com> wrote:
+> >
+> > Hi Greg,
+> >
+> >
+> > On Thu, Jun 18, 2020 at 06:02:12PM +0200, Greg Kroah-Hartman wrote:
+> > > On Thu, Jun 18, 2020 at 08:03:49AM -0700, Rajat Jain wrote:
+> > > > Hello,
+> > > >
+> > > > On Thu, Jun 18, 2020 at 2:14 AM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > > >
+> > > > > On Thu, Jun 18, 2020 at 11:36 AM Greg Kroah-Hartman
+> > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > >
+> > > > > > On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
+> > > > > > > On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
+> > > > > > > > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > > > > > >
+> > > > > > > ...
+> > > > > > >
+> > > > > > > > (and likely call it "external" instead of "untrusted".
+> > > > > > >
+> > > > > > > Which is not okay. 'External' to what? 'untrusted' has been carefully
+> > > > > > > chosen by the meaning of it.
+> > > > > > > What external does mean for M.2. WWAN card in my laptop? It's in ACPI
+> > > > > > > tables, but I can replace it.
+> > > > > >
+> > > > > > Then your ACPI tables should show this, there is an attribute for it,
+> > > > > > right?
+> > > > >
+> > > > > There is a _PLD() method, but it's for the USB devices (or optional
+> > > > > for others, I don't remember by heart). So, most of the ACPI tables,
+> > > > > alas, don't show this.
+> > > > >
+> > > > > > > This is only one example. Or if firmware of some device is altered,
+> > > > > > > and it's internal (whatever it means) is it trusted or not?
+> > > > > >
+> > > > > > That is what people are using policy for today, if you object to this,
+> > > > > > please bring it up to those developers :)
+> > > > >
+> > > > > > > So, please leave it as is (I mean name).
+> > > > > >
+> > > > > > firmware today exports this attribute, why do you not want userspace to
+> > > > > > also know it?
+> > > >
+> > > > To clarify, the attribute exposed by the firmware today is
+> > > > "ExternalFacingPort" and "external-facing" respectively:
+> > > >
+> > > > 617654aae50e ("PCI / ACPI: Identify untrusted PCI devices")
+> > > > 9cb30a71ac45d("PCI: OF: Support "external-facing" property")
+> > > >
+> > > > The kernel flag was named "untrusted" though, hence the assumption
+> > > > that "external=untrusted" is currently baked into the kernel today.
+> > > > IMHO, using "external" would fix that (The assumption can thus be
+> > > > contained in the IOMMU drivers) and at the same time allow more use of
+> > > > this attribute.
+> > > >
+> > > > > >
+> > > > > > Trust is different, yes, don't get the two mixed up please.  That should
+> > > > > > be a different sysfs attribute for obvious reasons.
+> > > > >
+> > > > > Yes, as a bottom line that's what I meant as well.
+> > > >
+> > > > So what is the consensus here? I don't have a strong opinion - but it
+> > > > seemed to me Greg is saying "external" and Andy is saying "untrusted"?
+> > >
+> > > Those two things are totally separate things when it comes to a device.
+> >
+> > Agree that these are two separate attributes, and better not mixed.
+> 
+> +1.
+> 
+> >
+> > >
+> > > One (external) describes the location of the device in the system.
+> > >
+> > > The other (untrusted) describes what you want the kernel to do with this
+> > > device (trust or not trust it).
+> > >
+> > > One you can change (from trust to untrusted or back), the other you can
+> > > not, it is a fixed read-only property that describes the hardware device
+> > > as defined by the firmware.
+> 
+> Correct. I believe what is being described by the firmware is a fixed
+> read-only property describing the location of the device ("external")
+> - not what to do with it ("untrusted").
+> 
+> >
+> > The genesis is due to lack of a mechanism to establish if the device
+> > is trusted or not was the due lack of some specs and implementation around
+> > Component Measurement And Authentication (CMA). Treating external as
+> > untrusted was the best first effort. i.e trust internal
+> > devices and don't trust external devices for enabling ATS.
+> >
+> > But that said external is just describing topology, and if Linux wants to
+> > use that in the policy that's different. Some day external device may also
+> > use CMA to estabilish trust. FWIW even internal devices aren't trust
+> > worthy, except maybe RCIEP's.
+> 
+> Correct. Since the firmware is actually describing the unchangeable
+> topology (and not the policy), the takeaway I am taking from this
+> discussion is that the flag should be called "external".
 
-On 15/06/2020 10:53, Shiju Jose wrote:
-> Add support to notify the vendor specific non-fatal HW errors
-> to the drivers for the error recovery.
+The attribute should be called something like "location" or something
+like that (naming is hard), as you don't always know if something is
+external or not (it could be internal, it could be unknown, it could be
+internal to an external device that you trust (think PCI drawers for
+"super" computers that are hot pluggable but yet really part of the
+internal bus).
 
-This doesn't apply cleanly to v5.8-rc1... thanks for waiting for the merge window to
-finish, but please rebase onto the latest and greatest kernel!
+> Like I said, I don't have any hard opinions on this. So if you feel
+> that my conclusion is wrong and consensus was the other way around
+> ("untrusted"), let me know and I'll be happy to change this.
 
-I'm glad the notifier chains for stuff that should be built-in has gone.
-(In my opinion, the RAS code should be moving in the direction of having less code run
-between being told of an error, and the handler running. Notifier chains for things like
-memory-errors was moving in the wrong direction!)
+"trust" has no direct relation to the location, except in a policy of
+what you wish to do with that device, so as long as you keep them
+separate that way, I am fine with it.
 
+thanks,
 
-The Kfifo and pool are adding complexity I don't think you need.
-Please make it clear from the naming this is for vendor records. (what is an event?)
-
-The memcpy() for the records is annoying, but eliminating it takes some really invasive
-changes. Lets live with it for now.
-
-
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 24c9642e8fc7..854d8115cdfc 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -63,6 +64,11 @@
->  #define GHES_ESTATUS_CACHES_SIZE	4
->  
->  #define GHES_ESTATUS_IN_CACHE_MAX_NSEC	10000000000ULL
-> +
-> +#define GHES_EVENT_RING_SIZE	256
-> +#define GHES_GDATA_POOL_MIN_ALLOC_ORDER	3
-> +#define GHES_GDATA_POOL_MIN_SIZE	65536
-
-Huh. Another pool of memory, and we don't know if this will ever be used.
-Can we allocate from ghes_estatus_pool instead?
-
-ghes_estatus_pool is already scaled with the number of error sources firmware describes in
-ghes_estatus_pool_init(), so it should be big enough.
-
-ghes_estatus_pool already has multiple users, estatus_nodes for work deferred from NMI
-come from here, as do ghes_estatus_caches for the low-pass filter thing.
-
-
-> @@ -122,6 +128,19 @@ static DEFINE_MUTEX(ghes_list_mutex);
->   */
->  static DEFINE_SPINLOCK(ghes_notify_lock_irq);
->  
-> +struct ghes_event_entry {
-
-ghes_vendor_record_entry ?
-
-> +	struct acpi_hest_generic_data *gdata;
-> +	int error_severity;
-> +};
-
-> +static DEFINE_KFIFO(ghes_event_ring, struct ghes_event_entry,
-> +		    GHES_EVENT_RING_SIZE);
-> +
-> +static DEFINE_SPINLOCK(ghes_event_ring_lock);
-
-Do you need the FIFO behaviour?
-If you put a work_struct in the struct and schedule_work() that, these would run in any
-order, and it would be less code.
-
-
-> +static struct gen_pool *ghes_gdata_pool;
-> +static unsigned long ghes_gdata_pool_size_request;
-> +
->  static struct gen_pool *ghes_estatus_pool;
->  static unsigned long ghes_estatus_pool_size_request;
-
-Please use the existing ghes_estatus_pool.
-
-
-> @@ -188,6 +207,40 @@ int ghes_estatus_pool_init(int num_ghes)
-
-[...]
-
-> +static int ghes_gdata_pool_init(void)
-> +{
-> +	unsigned long addr, len;
-> +	int rc;
-> +
-> +	ghes_gdata_pool = gen_pool_create(GHES_GDATA_POOL_MIN_ALLOC_ORDER, -1);
-> +	if (!ghes_gdata_pool)
-> +		return -ENOMEM;
-> +
-> +	if (ghes_gdata_pool_size_request < GHES_GDATA_POOL_MIN_SIZE)
-> +		ghes_gdata_pool_size_request = GHES_GDATA_POOL_MIN_SIZE;
-> +
-> +	len = ghes_gdata_pool_size_request;
-> +	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-> +	if (!addr)
-> +		goto err_pool_alloc;
-
-> +	vmalloc_sync_mappings();
-(This isn't needed anymore. See commit 73f693c3a705 ("mm: remove
-vmalloc_sync_(un)mappings()"))
-
-
-> +	rc = gen_pool_add(ghes_gdata_pool, addr, PAGE_ALIGN(len), -1);
-> +	if (rc)
-> +		goto err_pool_add;
-> +
-> +	return 0;
-> +
-> +err_pool_add:
-> +	vfree((void *)addr);
-> +
-> +err_pool_alloc:
-> +	gen_pool_destroy(ghes_gdata_pool);
-> +
-> +	return -ENOMEM;
-> +}
-
-But: using ghes_estatus_pool would avoid this duplication.
-
-
-> @@ -247,6 +300,10 @@ static struct ghes *ghes_new(struct acpi_hest_generic *generic)
->  		goto err_unmap_status_addr;
->  	}
->  
-> +	ghes_gdata_pool_size_request += generic->records_to_preallocate *
-> +					generic->max_sections_per_record *
-> +					generic->max_raw_data_length;
-> +
-
-Careful, I think ghes_probe() can run in parallel on different CPUs. You can certainly
-unbind/rebind it from user-space.
-
-I recall these max this/that/preallocate stuff are junk values on some platform.
-You'd at least need to cap it to sane maximum value.
-
-But: Using ghes_estatus_pool would use ghes_estatus_pool_init()'s sizes, which allocates
-64K for each error source.
-
-History: https://www.spinics.net/lists/linux-acpi/msg84238.html
-
-
-> @@ -490,6 +547,68 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
-
-[...]
-
-> +static void ghes_event_work_func(struct work_struct *work)
-> +{
-> +	struct ghes_event_entry entry;
-> +	u32 len;
-> +
-> +	while (kfifo_get(&ghes_event_ring, &entry)) {
-> +		blocking_notifier_call_chain(&ghes_event_notify_list,
-> +					     entry.error_severity,
-> +					     entry.gdata);
-> +		len = acpi_hest_get_record_size(entry.gdata);
-> +		gen_pool_free(ghes_gdata_pool, (unsigned long)entry.gdata, len);
-> +	}
-> +}
-> +
-> +static DECLARE_WORK(ghes_event_work, ghes_event_work_func);
-> +
-> +static void ghes_handle_non_standard_event(struct acpi_hest_generic_data *gdata,
-> +					   int sev)
-> +{
-> +	u32 len;
-
-> +	struct ghes_event_entry event_entry;
-
-> +	len = acpi_hest_get_record_size(gdata);
-> +	event_entry.gdata = (void *)gen_pool_alloc(ghes_gdata_pool, len);
-> +	if (event_entry.gdata) {
-> +		memcpy(event_entry.gdata, gdata, len);
-> +		event_entry.error_severity = sev;
-> +
-> +		if (kfifo_in_spinlocked(&ghes_event_ring, &event_entry, 1,
-
-... event_entry is on the stack ...
-
-
-> +					&ghes_event_ring_lock))
-> +			schedule_work(&ghes_event_work);
-> +		else
-> +			pr_warn(GHES_PFX "ghes event queue full\n");
-> +	}
-> +}
-
-
-I think the kfifo is adding un-needed complexity here.
-
-
-> diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-> index e3f1cddb4ac8..a3dd82069069 100644
-> --- a/include/acpi/ghes.h
-> +++ b/include/acpi/ghes.h
-> @@ -50,6 +50,34 @@ enum {
-
-> +#ifdef CONFIG_ACPI_APEI_GHES
-> +/**
-> + * ghes_register_event_notifier - register an event notifier
-> + * for the non-fatal HW errors.
-> + * @nb: pointer to the notifier_block structure of the event notifier.
-> + *
-> + * Return : 0 - SUCCESS, non-zero - FAIL.
-> + */
-> +int ghes_register_event_notifier(struct notifier_block *nb);
-> +
-> +/**
-> + * ghes_unregister_event_notifier - unregister the previously
-> + * registered event notifier.
-> + * @nb: pointer to the notifier_block structure of the event notifier.
-> + */
-> +void ghes_unregister_event_notifier(struct notifier_block *nb);
-> +#else
-
-Please make it clear from the names these are for vendor events, that the kernel would
-otherwise ignore. It looks like these are for everything. Drivers have no business trying
-to handle the errors that are handled by things like memory_failure().
-
-~
-
-I would post a version of this to illustrate, but there are comments on patch 2 too.
-
-Something like:
-http://www.linux-arm.org/git?p=linux-jm.git;a=commitdiff;h=9c6859f3146001cd9f8edfaf965232cb99c7dc42
-
-(caveat emptor: I've only build tested it)
-
-
-Thanks,
-
-James
+greg k-h
