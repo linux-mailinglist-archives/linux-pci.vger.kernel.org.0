@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08F2B1FDD1E
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 03:24:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 393721FDDF2
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jun 2020 03:29:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbgFRBX4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Jun 2020 21:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58040 "EHLO mail.kernel.org"
+        id S1731014AbgFRB3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Jun 2020 21:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgFRBX4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:56 -0400
+        id S1732314AbgFRB3d (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 562A720B1F;
-        Thu, 18 Jun 2020 01:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B076A2222D;
+        Thu, 18 Jun 2020 01:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443436;
-        bh=wScORoqPjb/mww96WHzaFvxef/YuoV7yz9L9Y915LtU=;
+        s=default; t=1592443772;
+        bh=kQxud7MSwkmirSk8sl1Z6U/M4EKYnQvsC+GuLnHvsI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dl0+iz5sB1IT0E7QOPfmaPOXRgClYTSPBKZbpNd46blenf96IomW3gQ5BclTBwco6
-         v2mCOxDx5+wMaKwbix8hA8Tm24tnwvyzUOUmxe80A0co5yfk3V2mIu5Y75zmITOVhY
-         /cSvIJA9H99B8X8sORINM/pqNzg26mIbBmhNWtQE=
+        b=MpWeXuVuME3j52Ebco8AqvAKewtJZCVLdF+H3gds1IgrMQlC7h3vJyKPubm4eVZnw
+         bYodssLzSZT2BHk8zPMMUAWrqvAycsTajeTsB/6mrldBAhIueIY/RRF6WrEoOHEyNG
+         YBZfq8Iq4u3udH5pbKQMR/Mp0wP8H9RruH1w/amQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 074/172] PCI: v3-semi: Fix a memory leak in v3_pci_probe() error handling paths
-Date:   Wed, 17 Jun 2020 21:20:40 -0400
-Message-Id: <20200618012218.607130-74-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 56/80] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
+Date:   Wed, 17 Jun 2020 21:27:55 -0400
+Message-Id: <20200618012819.609778-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
+References: <20200618012819.609778-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,39 +43,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit bca718988b9008d0d5f504e2d318178fc84958c1 ]
+[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
 
-If we fails somewhere in 'v3_pci_probe()', we need to free 'host'.
+Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
+not account for the fact that Switch Downstream Ports are not permitted to
+have a PTM capability; their PTM behavior is controlled by the Upstream
+Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
+capability, we did not mark them as "ptm_enabled", which meant that
+pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
 
-Use the managed version of 'pci_alloc_host_bridge()' to do that easily.
-The use of managed resources is already widely used in this driver.
+Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
+enabled.
 
-Link: https://lore.kernel.org/r/20200418081637.1585-1-christophe.jaillet@wanadoo.fr
-Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
+Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-v3-semi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-index d219404bad92..9a86bb7448ac 100644
---- a/drivers/pci/controller/pci-v3-semi.c
-+++ b/drivers/pci/controller/pci-v3-semi.c
-@@ -743,7 +743,7 @@ static int v3_pci_probe(struct platform_device *pdev)
- 	int ret;
- 	LIST_HEAD(res);
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 3008bba360f3..ec6f6213960b 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -47,10 +47,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	if (!pci_is_pcie(dev))
+ 		return;
  
--	host = pci_alloc_host_bridge(sizeof(*v3));
-+	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
- 	if (!host)
- 		return -ENOMEM;
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+-	if (!pos)
+-		return;
+-
+ 	/*
+ 	 * Enable PTM only on interior devices (root ports, switch ports,
+ 	 * etc.) on the assumption that it causes no link traffic until an
+@@ -60,6 +56,23 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
+ 		return;
  
++	/*
++	 * Switch Downstream Ports are not permitted to have a PTM
++	 * capability; their PTM behavior is controlled by the Upstream
++	 * Port (PCIe r5.0, sec 7.9.16).
++	 */
++	ups = pci_upstream_bridge(dev);
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
++	    ups && ups->ptm_enabled) {
++		dev->ptm_granularity = ups->ptm_granularity;
++		dev->ptm_enabled = 1;
++		return;
++	}
++
++	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
++	if (!pos)
++		return;
++
+ 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+ 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+ 
+@@ -69,7 +82,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
+ 	 * furthest upstream Time Source as the PTM Root.
+ 	 */
+-	ups = pci_upstream_bridge(dev);
+ 	if (ups && ups->ptm_enabled) {
+ 		ctrl = PCI_PTM_CTRL_ENABLE;
+ 		if (ups->ptm_granularity == 0)
 -- 
 2.25.1
 
