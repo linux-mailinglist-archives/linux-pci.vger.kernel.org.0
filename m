@@ -2,141 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC4862014D5
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jun 2020 18:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0674F2013BF
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jun 2020 18:07:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390776AbgFSPCC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jun 2020 11:02:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58488 "EHLO mail.kernel.org"
+        id S2390372AbgFSQDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jun 2020 12:03:23 -0400
+Received: from smtp.asem.it ([151.1.184.197]:51896 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390086AbgFSPCB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:02:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DE0820734;
-        Fri, 19 Jun 2020 15:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578920;
-        bh=M7PwrjrfdXODKnOalC4KUpH+lCIGVEORQmdBrMCqeqI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRlvGArJgNPbN73sxC9ZAXAOscsCptuUkxUDPns+pOrbr/qAn7CnsmFXF5gkbp2Ez
-         LOm22lwu4+Sn+cXc+JlGscff01u6b6Vf7pSBSGmdJqkg1Envu2I7CwAUs9D3vM+t69
-         UITTOPKY6sdSQaOqB3w9sgc6mJA9UAMI3kLul3Dk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Woods <brian.woods@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jia Zhang <qianyue.zj@alibaba-inc.com>,
-        linux-hwmon@vger.kernel.org, linux-pci@vger.kernel.org,
-        Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 207/267] x86/amd_nb: Add PCI device IDs for family 17h, model 30h
-Date:   Fri, 19 Jun 2020 16:33:12 +0200
-Message-Id: <20200619141658.664008157@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2392127AbgFSPLj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:11:39 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000330192.MSG 
+        for <linux-pci@vger.kernel.org>; Fri, 19 Jun 2020 17:11:36 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
+ Jun 2020 17:11:35 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Fri, 19 Jun 2020 17:11:35 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] pci: controller: cadence: fix wrong path in comment
+Date:   Fri, 19 Jun 2020 17:11:34 +0200
+Message-ID: <20200619151134.29893-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090215.5EECD5A8.0047,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Woods, Brian <Brian.Woods@amd.com>
+All native pci drivers are in drivers/pci/controller,
+but this comment still refers to the old pathname,
+when all pci drivers were located directly under the
+drivers/pci directory.
 
-[ Upstream commit be3518a16ef270e3b030a6ae96055f83f51bd3dd ]
-
-Add the PCI device IDs for family 17h model 30h, since they are needed
-for accessing various registers via the data fabric/SMN interface.
-
-Signed-off-by: Brian Woods <brian.woods@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Clemens Ladisch <clemens@ladisch.de>
-CC: Guenter Roeck <linux@roeck-us.net>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Jean Delvare <jdelvare@suse.com>
-CC: Jia Zhang <qianyue.zj@alibaba-inc.com>
-CC: <linux-hwmon@vger.kernel.org>
-CC: <linux-pci@vger.kernel.org>
-CC: Pu Wen <puwen@hygon.cn>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: x86-ml <x86@kernel.org>
-Link: http://lkml.kernel.org/r/20181106200754.60722-4-brian.woods@amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 ---
- arch/x86/kernel/amd_nb.c | 6 ++++++
- include/linux/pci_ids.h  | 1 +
- 2 files changed, 7 insertions(+)
+ drivers/pci/controller/cadence/pcie-cadence-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index bf440af5ff9c..b95db8ce83bf 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -16,8 +16,10 @@
- 
- #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
- #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
-+#define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
- #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
-+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
- 
- /* Protect the PCI config register pairs used for SMN and DF indirect access. */
- static DEFINE_MUTEX(smn_mutex);
-@@ -27,9 +29,11 @@ static u32 *flush_words;
- static const struct pci_device_id amd_root_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_ROOT) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
- 	{}
- };
- 
-+
- #define PCI_DEVICE_ID_AMD_CNB17H_F4     0x1704
- 
- const struct pci_device_id amd_nb_misc_ids[] = {
-@@ -43,6 +47,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_16H_M30H_NB_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
- 	{}
- };
-@@ -56,6 +61,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_16H_M30H_NB_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
- 	{}
- };
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 857cfd6281a0..81c7af243a31 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -547,6 +547,7 @@
- #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F4 0x1584
- #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
-+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
- #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
- #define PCI_DEVICE_ID_AMD_LANCE		0x2000
- #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 1c15c8352125..2a48b34ff249 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -276,7 +276,7 @@ static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 intx)
+ 	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
+ 	/*
+ 	 * The mdelay() value was taken from dra7xx_pcie_raise_legacy_irq()
+-	 * from drivers/pci/dwc/pci-dra7xx.c
++	 * from drivers/pci/controller/dwc/pci-dra7xx.c
+ 	 */
+ 	mdelay(1);
+ 	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
 -- 
-2.25.1
-
-
+2.17.1
 
