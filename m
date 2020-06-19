@@ -2,69 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2703201A2B
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jun 2020 20:18:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFD1A201B4A
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jun 2020 21:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732094AbgFSSSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jun 2020 14:18:53 -0400
-Received: from smtprelay0110.hostedemail.com ([216.40.44.110]:33684 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729580AbgFSSSw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Jun 2020 14:18:52 -0400
-X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Jun 2020 14:18:52 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id 925128112757
-        for <linux-pci@vger.kernel.org>; Fri, 19 Jun 2020 18:09:11 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id DE1461313C2;
-        Fri, 19 Jun 2020 18:09:09 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1381:1437:1515:1516:1518:1534:1538:1568:1593:1594:1711:1714:1730:1747:1777:1792:2393:2559:2562:2828:3138:3139:3140:3141:3142:3622:3876:3877:4321:5007:6114:6642:10004:10400:10848:11232:11658:11914:12048:12296:12297:12740:12760:12895:13069:13311:13357:13439:14659:14721:21080:21627:30046:30054:30075:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: song67_620abc226e1b
-X-Filterd-Recvd-Size: 1591
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 19 Jun 2020 18:09:08 +0000 (UTC)
-Message-ID: <a70251985203280662cd0db2de05a9a0b1c5de7d.camel@perches.com>
-Subject: Re: [PATCH] pci: pcie: AER: Fix logging of Correctable errors
-From:   Joe Perches <joe@perches.com>
-To:     Sinan Kaya <okaya@kernel.org>, Matt Jolly <Kangie@footclan.ninja>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        id S2388885AbgFSTbS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jun 2020 15:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388758AbgFSTbR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:31:17 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACF3321556;
+        Fri, 19 Jun 2020 19:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592595077;
+        bh=2vZl3YpAW0Af4EaK4iaA+JD2OKbiTxKGWLGtbaWrA4s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uZZ18+xU/JUp2i4ewDh19cMwVoZ5ejidjByHfIc5G/DlC/galABDNhx32TWKp0pqb
+         m2o4TgEZGU1LkIGTpbHiWC3FTi80mB/VDVvIf+7Wgi3fJt4LFR4egGPJ+52ZsURJXg
+         TVRXaeIvVEs0PeCIi2kwilYRD6K6Fz2GuINd+ruQ=
+Date:   Fri, 19 Jun 2020 14:31:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Fri, 19 Jun 2020 11:09:07 -0700
-In-Reply-To: <d611dabd-b943-8492-a29e-0b7fb1980de8@kernel.org>
-References: <20200618155511.16009-1-Kangie@footclan.ninja>
-         <d611dabd-b943-8492-a29e-0b7fb1980de8@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+Subject: Re: [PATCH 1/1] pci: controller: cadence: fix wrong path in comment
+Message-ID: <20200619193114.GA2187639@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619151134.29893-1-f.suligoi@asem.it>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 2020-06-19 at 13:17 -0400, Sinan Kaya wrote:
-> On 6/18/2020 11:55 AM, Matt Jolly wrote:
+On Fri, Jun 19, 2020 at 05:11:34PM +0200, Flavio Suligoi wrote:
+> All native pci drivers are in drivers/pci/controller,
+> but this comment still refers to the old pathname,
+> when all pci drivers were located directly under the
+> drivers/pci directory.
 > 
-> > +		pci_warn(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> > +			dev->vendor, dev->device,
-> > +			info->status, info->mask);
-> > +	} else {
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> <snip>
-> 
-> > +		pci_err(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> > +			dev->vendor, dev->device,
-> > +			info->status, info->mask);
-> 
-> Function pointers for pci_warn vs. pci_err ?
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 1c15c8352125..2a48b34ff249 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -276,7 +276,7 @@ static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 intx)
+>  	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
+>  	/*
+>  	 * The mdelay() value was taken from dra7xx_pcie_raise_legacy_irq()
+> -	 * from drivers/pci/dwc/pci-dra7xx.c
+> +	 * from drivers/pci/controller/dwc/pci-dra7xx.c
 
-Not really possible as both are function-like macros.
+I think the function name by itself would be enough, so maybe we
+should remove the filename completely.
 
-
+>  	 */
+>  	mdelay(1);
+>  	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
+> -- 
+> 2.17.1
+> 
