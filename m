@@ -2,111 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A029E2022BE
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Jun 2020 11:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03F702028D5
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Jun 2020 07:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgFTJJi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Jun 2020 05:09:38 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:40465 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgFTJJi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 20 Jun 2020 05:09:38 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 5FCE728032723;
-        Sat, 20 Jun 2020 11:09:36 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 38F0B10CB8; Sat, 20 Jun 2020 11:09:36 +0200 (CEST)
-Date:   Sat, 20 Jun 2020 11:09:36 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     refactormyself@gmail.com
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: pciehp: Fix wrong failure check on
- pcie_capability_read_*()
-Message-ID: <20200620090936.3khh3gj46pnojnrw@wunner.de>
-References: <20200619201219.32126-1-refactormyself@gmail.com>
- <20200619201219.32126-3-refactormyself@gmail.com>
+        id S1725928AbgFUFcS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 21 Jun 2020 01:32:18 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:55571 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbgFUFcS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 21 Jun 2020 01:32:18 -0400
+Received: from T480.tkos.co.il (unknown [109.253.168.228])
+        by mx.tkos.co.il (Postfix) with ESMTPA id 85560440048;
+        Sun, 21 Jun 2020 08:32:12 +0300 (IDT)
+From:   Shmuel Hazan <sh@tkos.co.il>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Chris ackham <chris.packham@alliedtelesis.co.nz>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Shmuel Hazan <sh@tkos.co.il>
+Subject: [PATCH] PCI: mvebu: setup BAR0 to internal-regs
+Date:   Sun, 21 Jun 2020 08:30:33 +0300
+Message-Id: <20200621053032.5262-1-sh@tkos.co.il>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619201219.32126-3-refactormyself@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 10:12:19PM +0200, refactormyself@gmail.com wrote:
-> On failure, pcie_capabiility_read_*() will set the status value,
-> its last parameter to 0 and not ~0.
-> This bug fix checks for the proper value.
+According to the Armada XP datasheet, section 10.2.6: "in order for
+the device to do a write to the MSI doorbell address, it needs to write
+to a register in the internal registers space".
 
-If a config space read times out, the PCIe controller fabricates
-an "all ones" response.  The code is checking for such a timeout,
-not for an error.  Hence the code is fine.
+As a result of the requirement above, without this patch, MSI won't
+function and therefore some devices won't operate properly without
+pci=nomsi.
 
-Thanks,
+Tested on an Armada 385 board with the following PCIe devices:
+	- Wilocity Wil6200 rev 2 (wil6210)
+	- Qualcomm Atheros QCA6174 (ath10k_pci)
 
-Lukas
+Both failed to get a response from the device after loading the
+firmware and seem to operate properly with this patch.
 
-> 
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> ---
->  drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 53433b37e181..c1a67054948a 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
->  
->  	do {
->  		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> -		if (slot_status == (u16) ~0) {
-> +		if (slot_status == (u16)0) {
->  			ctrl_info(ctrl, "%s: no response from device\n",
->  				  __func__);
->  			return 0;
-> @@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
->  	pcie_wait_cmd(ctrl);
->  
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
-> -	if (slot_ctrl == (u16) ~0) {
-> +	if (slot_ctrl == (u16)0) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
->  		goto out;
->  	}
-> @@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
->  	int ret;
->  
->  	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)0)
->  		return -ENODEV;
->  
->  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-> @@ -440,7 +440,7 @@ int pciehp_card_present(struct controller *ctrl)
->  	int ret;
->  
->  	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)0)
->  		return -ENODEV;
->  
->  	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
-> @@ -592,7 +592,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  
->  read_status:
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
-> -	if (status == (u16) ~0) {
-> +	if (status == (u16)0) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
->  		if (parent)
->  			pm_runtime_put(parent);
-> -- 
-> 2.18.2
+Signed-off-by: Shmuel Hazan <sh@tkos.co.il>
+---
+
+Fixed a few commit message related issues mentioned by Bjorn Helgaas
+<helgaas@kernel.org>. 
+ 
+---
+ drivers/pci/controller/pci-mvebu.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index 153a64676bc9..101c06602aa1 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -105,6 +105,7 @@ struct mvebu_pcie_port {
+ 	struct mvebu_pcie_window memwin;
+ 	struct mvebu_pcie_window iowin;
+ 	u32 saved_pcie_stat;
++	struct resource regs;
+ };
+ 
+ static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
+@@ -149,7 +150,9 @@ static void mvebu_pcie_set_local_dev_nr(struct mvebu_pcie_port *port, int nr)
+ 
+ /*
+  * Setup PCIE BARs and Address Decode Wins:
+- * BAR[0,2] -> disabled, BAR[1] -> covers all DRAM banks
++ * BAR[0] -> internal registers (needed for MSI)
++ * BAR[1] -> covers all DRAM banks
++ * BAR[2] -> Disabled
+  * WIN[0-3] -> DRAM bank[0-3]
+  */
+ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+@@ -203,6 +206,12 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+ 	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(1));
+ 	mvebu_writel(port, ((size - 1) & 0xffff0000) | 1,
+ 		     PCIE_BAR_CTRL_OFF(1));
++
++	/*
++	 * Point BAR[0] to the device's internal registers.
++	 */
++	mvebu_writel(port, round_down(port->regs.start, SZ_1M), PCIE_BAR_LO_OFF(0));
++	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(0));
+ }
+ 
+ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+@@ -708,14 +717,13 @@ static void __iomem *mvebu_pcie_map_registers(struct platform_device *pdev,
+ 					      struct device_node *np,
+ 					      struct mvebu_pcie_port *port)
+ {
+-	struct resource regs;
+ 	int ret = 0;
+ 
+-	ret = of_address_to_resource(np, 0, &regs);
++	ret = of_address_to_resource(np, 0, &port->regs);
+ 	if (ret)
+ 		return (void __iomem *)ERR_PTR(ret);
+ 
+-	return devm_ioremap_resource(&pdev->dev, &regs);
++	return devm_ioremap_resource(&pdev->dev, &port->regs);
+ }
+ 
+ #define DT_FLAGS_TO_TYPE(flags)       (((flags) >> 24) & 0x03)
+-- 
+2.27.0
+
