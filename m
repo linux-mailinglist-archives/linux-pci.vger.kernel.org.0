@@ -2,115 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2064E20373E
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 14:49:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23EF42037BB
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 15:18:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgFVMte (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 08:49:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53912 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728263AbgFVMtb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 08:49:31 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MCcaSv012117;
-        Mon, 22 Jun 2020 12:47:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=86Y9KphH0K41n9/RrH5MoRxMmMMB41/XxF9s9qLpmAE=;
- b=zEKi7+e7YVW8K5QSUnie7ncKrgSB8wUbjyIbGGOv6PE/450jxXzMxjTyYdHH/xtW6ABX
- kUnAv5X3Gf4eRTPX2Jyp06dlfxiFz/TyailpiTcJBr24C6sdxpLAp45puWjwzZkiD63t
- ULrZ+PaK7s+Og5Sa2ZTIuizRIXryNbJjOSLxkvRJ0T2wYrF8tCB+LTDLFJHpqyJvKqU9
- WOTMlrLbQV9gYY3hRRWGv+ihQWYXbvCajQJVJ8M7l5UiuuuDlecdrbVKqO9j1OhTMEzM
- CvIvCFVzw5AKYbJMXHKpI5nRTBQB6fZScGKkYf9BmFgH/PzDTvk6IPV3EYY5D9OEZIZY QA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31sebbet5b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 12:47:57 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MCdYCI178668;
-        Mon, 22 Jun 2020 12:45:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 31sv1kpfgs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 12:45:57 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05MCjrFW001796;
-        Mon, 22 Jun 2020 12:45:53 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 22 Jun 2020 12:45:52 +0000
-Date:   Mon, 22 Jun 2020 15:45:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Shiju Jose <shiju.jose@huawei.com>,
-        James Morse <james.morse@arm.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        helgaas@kernel.org, bp@alien8.de, lenb@kernel.org,
-        tony.luck@intel.com, zhangliguang@linux.alibaba.com,
-        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
-        jroedel@suse.de, linuxarm@huawei.com, yangyicong@hisilicon.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
-Subject: Re: [PATCH v11 0/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Message-ID: <20200622124543.GV4282@kadam>
-References: <20200622120527.690-1-shiju.jose@huawei.com>
+        id S1728055AbgFVNSd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 09:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728010AbgFVNSd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:18:33 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5138220716;
+        Mon, 22 Jun 2020 13:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592831912;
+        bh=qikvcMUWkMD2GwDYOTF/kBHN4k72EDaEulNiC5mKkgQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B0qfFfo5Rc83tJz9vaii6woFeYkDGAnD5RFvcn7ik8vmD4BzUTxSqb6lPqZt4Cylp
+         Zw56K7JlDreSzOhQAtWa/DPESAPocYEJxI1kfIgj68Pj9LM93b8bYFp6P3Et09D7EJ
+         EsvGERm6V8ZtKIuCIF3jLm93jj6+JoP39hkqShqM=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jnMLG-005KB3-MS; Mon, 22 Jun 2020 14:18:31 +0100
+Date:   Mon, 22 Jun 2020 14:18:20 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bhelgaas@google.com, kernel-team@android.com
+Subject: Re: [PATCH] PCI/IOV: Plug VF bus creation race
+Message-ID: <20200622141820.7675d07d@why>
+In-Reply-To: <20200607094348.162660-1-maz@kernel.org>
+References: <20200607094348.162660-1-maz@kernel.org>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622120527.690-1-shiju.jose@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006220095
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 cotscore=-2147483648 mlxscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1011
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220095
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 01:05:25PM +0100, Shiju Jose wrote:
-> CPER records describing a firmware-first error are identified by GUID.
-> The ghes driver currently logs, but ignores any unknown CPER records.
-> This prevents describing errors that can't be represented by a standard
-> entry, that would otherwise allow a driver to recover from an error.
-> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
-> version 2.8).
-> 
-> patch set
-> 1. add a notifier chain for these non-standard/vendor-records
->    in the ghes driver.
-> 
-> 2. add a driver to handle HiSilicon hip PCIe controller's errors.
->    
-> Changes:
-> 
-> V11:
-> 1. Following modifications made by James Morse in the APEI patch
->    for the vendor error record.
->    - Removed kfifo and ghes_gdata_pool. Expanded commit message.
->    
->    Note: Kept the Signed-off-by: James Morse as he is given
->    because I am not sure the right format.
+On Sun,  7 Jun 2020 10:43:48 +0100
+Marc Zyngier <maz@kernel.org> wrote:
 
-Wait, what?  He doesn't seem to have given any S-o-b in the public
-thread.
+Hi Bjorn,
 
-Signed-off-by means that you handled a patch.  Presumably you are the
-maintainer and hopefully you looked at the patch before applying it.
-Signed-off-by is like signing a legal document to say that you didn't
-add any Top Secrety SCO UNIXWare source code.  Reviewed-by means you
-reviewed it and approve.  Acked-by means you approve the patch which
-sort of means you are the maintainer or you care about it for some
-reason, for example, maybe there was a debate and you like the chosen
-approach.
+> On a system that creates VFs for multiple PFs in parallel (in
+> this case, network bringup at boot time), and when these VFs
+> end-up on the same bus, bad things sometimes happen:
+> 
+> [   12.755534] sysfs: cannot create duplicate filename '/devices/platform/soc/fc000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:01.0/pci_bus/0000:04'
+> [   12.755700] pci 0000:04:10.1: [8086:10ca] type 00 class 0x020000
+> [   12.763785] CPU: 1 PID: 581 Comm: vfs Tainted: G            E     5.7.0-00033-g002d24ebd695 #1119
+> [   12.770402] igb 0000:03:00.1: 1 VFs allocated
+> [   12.778493] Hardware name: amlogic w400/w400, BIOS 2020.01-rc5 03/12/2020
+> [   12.778496] Call trace:
+> [   12.778506]  dump_backtrace+0x0/0x1d0
+> [   12.778511]  show_stack+0x20/0x30
+> [   12.778516]  dump_stack+0xb8/0x100
+> [   12.778520]  sysfs_warn_dup+0x6c/0x88
+> [   12.778530]  sysfs_create_dir_ns+0xe8/0x100
+> [   12.778535]  kobject_add_internal+0xe0/0x3a0
+> [   12.778541]  kobject_add+0x94/0x100
+> [   12.817654]  device_add+0x104/0x7b8
+> [   12.821100]  device_register+0x28/0x38
+> [   12.824810]  pci_add_new_bus+0x1f8/0x488
+> [   12.828692]  pci_iov_add_virtfn+0x2c8/0x360
+> [   12.832830]  sriov_enable+0x200/0x458
+> [   12.836452]  pci_enable_sriov+0x20/0x38
+> [   12.840282]  igb_enable_sriov+0x148/0x290 [igb]
+> [   12.844745]  igb_pci_sriov_configure+0x40/0x80 [igb]
+> [   12.849650]  sriov_numvfs_store+0xb0/0x1a0
+> [   12.853703]  dev_attr_store+0x20/0x38
+> [   12.857327]  sysfs_kf_write+0x4c/0x60
+> [   12.860947]  kernfs_fop_write+0x104/0x220
+> [   12.864916]  __vfs_write+0x24/0x50
+> [   12.868279]  vfs_write+0xec/0x1d8
+> [   12.871556]  ksys_write+0x74/0x100
+> [   12.874919]  __arm64_sys_write+0x24/0x30
+> [   12.878802]  el0_svc_common.constprop.0+0x7c/0x1f8
+> [   12.883544]  do_el0_svc+0x2c/0x98
+> [   12.886824]  el0_svc+0x18/0x48
+> [   12.889841]  el0_sync_handler+0x120/0x290
+> [   12.893808]  el0_sync+0x158/0x180
+> [   12.897143] kobject_add_internal failed for 0000:04 with -EEXIST, don't try to register things with the same name in the same directory.
+> [   12.897634] igbvf: Intel(R) Gigabit Virtual Function Network Driver - version 2.4.0-k
+> 
+> It turns out that virtfn_add_bus() doesn't hold any lock, which
+> means there is a potential race between checking that the bus
+> exists already, and adding it if it doesn't.
+> 
+> A per-device lock wouldn't help, as this happens when multiple
+> PFs insert their respective VFs concurrently.
+> 
+> Instead, let's introduce new mutex, private to the IOV subsystem,
+> that gets taken when dealing with a virtfn bus (either creation
+> or destruction). This ensures that these operations get serialized.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-regards,
-dan carpenter
+Did you have a chance to look into this? I can reliably trigger it on
+one of my boxes. Happy to help debugging it further if you think this
+hack isn't the right fix.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
