@@ -2,28 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A58DE20309D
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 09:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73AC32030AE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 09:34:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbgFVH1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 03:27:15 -0400
-Received: from mout.gmx.net ([212.227.17.20]:45527 "EHLO mout.gmx.net"
+        id S1731372AbgFVHep (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 03:34:45 -0400
+Received: from mout.gmx.net ([212.227.17.21]:57477 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731324AbgFVH1O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:27:14 -0400
+        id S1731323AbgFVHep (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Jun 2020 03:34:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592810832;
+        s=badeba3b8450; t=1592811282;
         bh=+Ip11REy4BHUqrKIldsyQ0hoMMg0MGPJin6EmDd5heM=;
         h=X-UI-Sender-Class:To:From:Subject:Date;
-        b=X0R9ypLR3N+35vQxdlBQp3Oo/lfH9CkxTWpjX25n1JafWPK1zHf5z1EBVRW65uf5v
-         ADYBNCeNwsw9Q/2KQX8LG7FUWJYYZt8qNly7BqLZmINtgZ5dz58Yz/mY0EGiPAVSP+
-         TZmlQ59HHknMdW8C3s+8c+8bdIqO9HfVL2YGLGsI=
+        b=JmtCdu4472s8M03V2Iaz/SXhoxMNe+4TbnF9GnJSpt9OkgO9bsFx1cMcNc3frosME
+         ydL92yTH7PDmIHNx9/RZXLHKDjXd9dXlfIWy+y7PEmqY54pBwihtfKoVZ6NdSf3jmm
+         V0xBc5SZJ3BA4DHmSm55DcbUyFJ+3buLK6RiKyWs=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.11] ([84.114.190.28]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MbzyJ-1jIKA32I9f-00da2d for
- <linux-pci@vger.kernel.org>; Mon, 22 Jun 2020 09:27:12 +0200
+Received: from [192.168.1.11] ([84.114.190.28]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MysW2-1isg0e12ig-00vtmW for
+ <linux-pci@vger.kernel.org>; Mon, 22 Jun 2020 09:34:42 +0200
 To:     linux-pci@vger.kernel.org
 From:   grinko <grinko@gmx.at>
+Subject: Ice Lake i7-1065G7 and Dell WD19TB TB dock: disconnect failures
 Autocrypt: addr=grinko@gmx.at; prefer-encrypt=mutual; keydata=
  mQINBFJgL1sBEACpnhff/0XO4I88w8BOC8Uh4O+29a5fkl2fNquJjrAON0M278FbkXydkQRj
  3/QQjOricdU1OOCkfB9QFHZbpUouPFpR+q3EnHh/niVTxTOBFNrXpqAqfWg1+IXEWhdyvEhH
@@ -67,37 +68,37 @@ Autocrypt: addr=grinko@gmx.at; prefer-encrypt=mutual; keydata=
  dbmph71tpAUAgLbWcGv2q9pPNw1hFXBPd3xXFNVPlREJOvup+hYUwI5F3HuhS+gqZQaweUm3
  uuN3e3OAUUEqEbURWOKk47wJNKC0V11Rf8Dk9om3A29pvyxC1SkGmsU5kYJB+g6ceYDHJzyN
  6y5c4HIb8j7cBQ+rk0aFDYeYJNzq1BMk0VMkr3SyRoINYJ2MbRNZ6Nl0gw==
-Subject: Intel Ice Lake & Thunderbolt dock: disconnect failure
-Message-ID: <4347ce60-7a4d-125d-6f98-88020002d19b@gmx.at>
-Date:   Mon, 22 Jun 2020 09:27:12 +0200
+Message-ID: <b01210dc-f0b9-d8a6-a01d-a15bd1dfa29e@gmx.at>
+Date:   Mon, 22 Jun 2020 09:34:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:z33YxAdsaCqAEvZxaotiGAPfIcACvVziw0FtfSpVWyMZx+07qdz
- 9MR2QXXKghPGFS2jGMgppocst8CjbnWpO33jxv0+SjVnEZTZnBlZCwNbc7c2Sp3i9e9f4pJ
- aOVppbXs2JCJW24LfUt9gsktINWeUPp8IzoDOs3JVZ8wixsT7GuvITRIIJCY1FWWTHWAtgq
- FTfq7H5h3fV3PROiAci7Q==
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:I3pG+tnaMssK1TIGko4MBnsDvYNR72qD0Mc+e7cmSqrDxn6DGS7
+ ykKR5cOr9LAgYsQomot5afDTChdTmARX4Mq1iCrAiGeOCWOJEl2ozJpfOXN/W29OYVKzXMw
+ m2DiC/3BRxrh//oAM70JZGQjKjK6Xdgbbvo6CDMNwJnoiZXOs8SG1KGtLM7JKB/d4XegTsX
+ usKbmj+S0c2Xf8jwL09nQ==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W/4DFvPBSFE=:0Aq7FcyMnbVonrtQCGLbDa
- V/fZn9TEwJ+DYl1lHeqlHVQVkQeJp+8bV7IXHqUT6Gg8ahqDntyJcvPAG+urVU1pTcMsR3SsS
- FS3DznogXsSsTrv0ChlaCaCXQrP3i2Ros735t0S8F/Yhho8XR/YE9NvM68Ulyg2ODnrej836g
- Byom8QVMz5vfOLUqcGNFCkz+oaAYm7riZCa5xrynOLQs1Rjdy+mTJiyB4/RVnqmESfile7Fb6
- 5+/05YYvURLULQdL1UP/QuHLH0u/j9SYDs5mYbwdJ3mc+5wY9Y3FBG+os8vUD4nsz78oogj8I
- arFmq7m4Sv6Q1d4+LCRjyOy7iWNBmAXRbOS4SsuAQmcywAS4bbhEFRZ5ZLjEc0wHn6eRrIw2f
- 8Rt3zF4a8FdfqsAwQvR5cx66K5n57QXQhvURRFSREboMgDUSvHcTIWJLSlXznZx4RZGg6Q3dB
- 1Vnp1QAlQdrPZL/GE/D9mtcg2SxfRnK2mCw517i3M3/WrVDWcdRmvtwkOIPZ0C4LiqOm2CqO6
- dp9X2SUF2BadVADTF784IgZuCpk7oT3dMka6f/jGH+6+NhPtGkSz1yOoOpHWaHUonA9TcmOIA
- GIs7rBHiq+nK9AKftOHT+wDS3aMihnK5cJhFtAcrd83vPQmAn0RNKpRqlReqfribx0QtGFWVC
- yZrCnVH1xG9wFyzFGwIKa0J0WUCVYVhCU57TpOB8D7pRcTvpZ3blWJf7IZMAV2uLe+emvlRXJ
- w+Q4hMKUDkTdPO9MWuUCZVD0G+BiB6ZEse54xGgskDwZG+gr9uXnpC/qyue5mSFnDXIzV6dmF
- xKz1joIiBO4ZnM5vkxzc1QIsge7nT+opkY8lH/xkcbVpRzK7ADQbExnSTisOqduBMbbzugE3g
- sDujw94MYII+cGWNTc9/jPFS+GnykVsZ33QWVvqn0flP92Fi63ZmMLEuZBpq76ZPCre1EMu9t
- mmiuylS3ITfTaF6n6SVnAUgO2jiFwzQJr9ZKPP5svuvuFep1sSOFAqCZhJwpm65vEqTPfWxTa
- DNyx5Vsw7SFEWp0FfGfco5ZKh0R+eiFrFi+vZb6mBKbtXzZI5gRtVSPrwUDElAeaIHoWJiD+L
- TozI9WnY8B3ORp93yX8EUdT4jpUlucC7tAXQ0ai508PnYuWKZ6zABLon3odkqWhzCjPuiwvNY
- qGRkEqd0DC5vpHW18gilEpor8uLDYCURh4IPPrzg3QexItllcukewepPInV3Mqh7HyrPQ=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0QVEBEJ2DXA=:IXOaCRitk35zpZHnw7Hf0L
+ IjaEey4PTCPAl3gJ6DlS0pX+l9T8j2GWMsEOSFNF0MiVGdFfwmoMyBtSF5jWbxD3G9ReGQzeU
+ r4Bw6z5AmTsTWh6BFo+bruLlPLASq+ROs5X2G6fpQuKkjJScl4V8F4+ByzM8YsiPucGraPnrH
+ r1EuD3AJhlwu8fH+0wH/CRd8ed7+wD7TsKqkTr3SYLTR1WRtJLWkpNSOpN8c4E/b7wtxm8bHr
+ nwUoGZQdH2VCsuylWWP/34LFGbmhJNxAgJRX6t8t/6r9WZMxFds7CYy+wyVMPYc/RleZNGlcB
+ ZdImsDI4rDjfPz04LnIgB1U57+aNc3/TL8mTJ53mPQ4Xpqmm5vrjHK3b7Q6WfROA44P+4FVjl
+ gKikfbTJyBa8LjbwozgNb64BxM0DEk/0xVrv577R/iAnXS1XPMyPf3diNiKUyi55tbpVjvQor
+ Df86Xon4tW+KZfigiTP/cwLGMikenbjnOOiR/+ssG5HTBeu98DKVnCWMb7GfJpRvaopCV/KOD
+ tTUyIanmfO9a+YYp4ggp4zW8fipBf3HXGe+Fd2wD5Z2deixUQ5t6/ooKpkb0I3sFZhEqFnUNr
+ 1iVhDxtx/urmm1Wp4W4CbUlAcJvNFUoXnnoMLnombqkSUDgAJIs/5IpyAM97QNsze99X8O1gp
+ G4KA3qDaajnpxV54dgiiqHGFkVECMqoMttjfW9v72kPMgiGuN+4JDxJaJOnsOy9BG74bXEB+/
+ yohi+c5GnWGVfbgIq4X3J5zXF6eKlSvjUhfxZYeFsvJQGGMUcseiQ5tn5iyA45oIrXyPXY6pD
+ ACKp0VBd+Gj22nqd7PUH+csKRLNt/+/pTagXC7Zdsfvb0EGghCBB557fHieuJpcfadFw4WYiK
+ TuoBJ6fMVVMCKgwmnUR9lsJpHVJAjC19ss8MljnypVVnIgTCtdybmujH5cWgxL6dzgu2ia/Om
+ E6Dsky+MEKZdFqwF9Rtah39GqWlIpl7x+CbmdUkkYmitnF0nQAWBlzsCy8ZVv07g4OIOgCzqQ
+ 0Nmx7m6mnTBwKIRZHysUALl8vXxggMiZuRj9aN0V25JA+CS4fdpliu64b8YvdLFv5cW8W1W66
+ OrdPDV3Irgaa7H6Aod0hX6rWbkPmjHHKcY6G7lGJjqbXSu4wGG/jVh5HoVQzg2Dm/fyiv+57s
+ KrFsx6MEk0gEhKQ4Mb6Z8jiMG3MyIK8e3fLQkmMy43ZjcjOD23WjRwyhlATfIXA2GRWB0=
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
