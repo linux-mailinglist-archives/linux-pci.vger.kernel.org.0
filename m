@@ -2,67 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8E70204480
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 01:34:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FFD42044BB
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 01:47:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbgFVXe1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 19:34:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730499AbgFVXe1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 19:34:27 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8614C061796
-        for <linux-pci@vger.kernel.org>; Mon, 22 Jun 2020 16:34:26 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id m81so21605930ioa.1
-        for <linux-pci@vger.kernel.org>; Mon, 22 Jun 2020 16:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=9KZxEDIlKmY7xP+zYVnD/gSwqClc8XBRQPoFy49KsrQ=;
-        b=GvfOAJ1HY5mApGDR4mEMpsukw4W/vkLPqNdG6V4tp/5MnwuZOtvSE4uSIdvIQ4UkjT
-         wChP8n0VV/p6d8v3NTiCYzKbcrdH7wBk8zI+T+FiPVuHyE35eQVQNAzWZ01/OSAZV1hu
-         HVG7kHNgp69X2zmtQ428K88hmcExu0iSAoB2QDG2gdOZb3uwPpxufjUfWDfXb2+S/F4L
-         uKEbCBKJNUo/05Vmnl0+wmPUf3t0XM/LGMfSa8t7u7FKNmgN/rpLgwrk+x/wr/NMkzxC
-         zv6gplB3tN6I0Lw8/0bDKhHZJdogYeAzK2y5zql1a5PMNgV2PeHhI1SJkiryPY4wtvLu
-         wRDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=9KZxEDIlKmY7xP+zYVnD/gSwqClc8XBRQPoFy49KsrQ=;
-        b=peZ5fp+2N/V7NXNeccJpsD+C0O5yvC+2TGk/E6+Gqlre4tV4oYj0diuyU5mcZfMoL/
-         OtT57GLEyKy4LlrjMiztKLlLizMCN+ZkF8s61GOmm4W+g2RDdxFxjkpTwAiqLj4orN5k
-         QVZER/8qHgKNZ30/lDcK8h1FKQ+qjk8aTRy2lwaT5JOEAh4nQlJAMddyI8TFGxrW2Xlo
-         FUY2r7VM+oXgUCrePaJ68axe6PcE9Oh3naZtVi3aewXmVaPLK/ShuW8H5JGit6ttATUA
-         T6wffCTsrxuhTkI8E5NJmuu4ZtLLxJX+9yKk0MyrIIAqp5FCqDYQSA9iLh6epdSeY6cE
-         DOVA==
-X-Gm-Message-State: AOAM530hduvQkYBX0F/z8JTd2IVSvvdhjS198Pz9AphDonRb0V0pToSc
-        r5ow91i3QwWSzailjm9wfdJ9iL+evcxx7b49m4o=
-X-Google-Smtp-Source: ABdhPJyyAWk1YDbnrvCZ2wOfu+uska6zUi51fC+5Ru7HfTb5PDmWGtFCuW+dfCLJ3NGZk4n+P3sgHl3WHJ1gY5HW7Ic=
-X-Received: by 2002:a6b:b344:: with SMTP id c65mr8376002iof.123.1592868866065;
- Mon, 22 Jun 2020 16:34:26 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a5d:9659:0:0:0:0:0 with HTTP; Mon, 22 Jun 2020 16:34:25
- -0700 (PDT)
-Reply-To: lisatofan110@gmail.com
-From:   Lisa Tofan <hamidoukader1@gmail.com>
-Date:   Tue, 23 Jun 2020 01:34:25 +0200
-Message-ID: <CAH-Qesec9uQ6An2FvKXzwu3u2g7Wvi3e5Msnz4RdUVjCp=BA-g@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1731509AbgFVXrY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 19:47:24 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28126 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730400AbgFVXqH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 19:46:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592869565;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=A3Sr9mNHVM8s9WUTsyWY81eoKGneWkQuZ36cxKIntEs=;
+        b=ha6n7e80e/OQ1ytN6q73MH3JJDWxWmNCmZUS+ayxwlsTVAdvQ0ij2tIkHLlNbWdAhF7vc5
+        HSMuUOlrbFBiU5cr7FVQ2elOaZ2AnXnR19tDN9N6NG7pX91Bzy0gE1usez3OtDJjA1REGI
+        Xg3i9jdWqBAn6IgyocwoyZsdVXmq/3E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-LXVPb2CoMgOtLk5LQrxHpw-1; Mon, 22 Jun 2020 19:45:54 -0400
+X-MC-Unique: LXVPb2CoMgOtLk5LQrxHpw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45101107ACCA;
+        Mon, 22 Jun 2020 23:45:51 +0000 (UTC)
+Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3812D5C583;
+        Mon, 22 Jun 2020 23:45:46 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com
+Subject: [PATCH v2 0/3] Preventing job distribution to isolated CPUs        
+Date:   Mon, 22 Jun 2020 19:45:07 -0400
+Message-Id: <20200622234510.240834-1-nitesh@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Dear,
+                                                                           
+Testing                                                                    
+=======                                                                    
+* Patch 1:                                                                 
+  Fix for cpumask_local_spread() is tested by creating VFs, loading        
+  iavf module and by adding a tracepoint to confirm that only housekeeping 
+  CPUs are picked when an appropriate profile is set up and all remaining  
+  CPUs when no CPU isolation is configured.                                
+                                                                           
+* Patch 2:                                                                 
+  To test the PCI fix, I hotplugged a virtio-net-pci from qemu console     
+  and forced its addition to a specific node to trigger the code path that 
+  includes the proposed fix and verified that only housekeeping CPUs       
+  are included via tracepoint.                                             
+                                                                           
+* Patch 3:                                                                 
+  To test the fix in store_rps_map(), I tried configuring an isolated      
+  CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which           
+  resulted in 'write error: Invalid argument' error. For the case          
+  where a non-isolated CPU is writing in rps_cpus the above operation      
+  succeeded without any error.                                             
+                                                                           
+                                                                           
+Changes from v1:                                                           
+===============                                                            
+- Included the suggestions made by Bjorn Helgaas in the commit messages.    
+- Included the 'Reviewed-by' and 'Acked-by' received for Patch-2.          
+                                                                           
+[1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
+                                                                           
+Alex Belits (3):                                                           
+  lib: Restrict cpumask_local_spread to houskeeping CPUs                   
+  PCI: Restrict probe functions to housekeeping CPUs                       
+  net: Restrict receive packets queuing to housekeeping CPUs               
+                                                                           
+ drivers/pci/pci-driver.c |  5 ++++-                                       
+ lib/cpumask.c            | 43 +++++++++++++++++++++++-----------------    
+ net/core/net-sysfs.c     | 10 +++++++++-                                  
+ 3 files changed, 38 insertions(+), 20 deletions(-)                        
+                                                                           
+--
 
-This is Miss Lisa Tofan, How are you today hope all is well with you,
-please I will need your urgent attention
-
-regarding this important discussion kindly contact me back here my
-Email: lisatofan110@gmail.com: for more details,
-Thanks,
-Miss Lisa Tofan
