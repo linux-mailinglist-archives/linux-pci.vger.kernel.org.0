@@ -2,58 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93CDF203BDE
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 18:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C926203C4C
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 18:12:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgFVQCf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 12:02:35 -0400
-Received: from sonic302-21.consmr.mail.ne1.yahoo.com ([66.163.186.147]:42033
-        "EHLO sonic302-21.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729783AbgFVQCX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 12:02:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592841741; bh=cK2qy9Lv5SAgMg9nAvfVmkJPj46H3ss3vOVyjpHm6Nk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=imnMzKvnrwdEkzevY9v55JCHWrS7mFcRp2xLflBpdsWBX5v32iTt1Jwj292Sqyxc6zTWfVf6UW3RltjDxv8H8ZAxxFg96tpPBoXA2f/GRkfTuiNcUr3yDzOGiHeT9IqR//B+9C8c9YoGDJPnAeuuKcQvLl1HS8J+STK4/r0WZ3jbtWFF0MKDjydg+AbeXShoRDHqwsqAaAi7D9jDq8wNDWBIR81puaAh7APGDPK32RqjpFS85hxXrbmotW59Gm/gC9SoLB52q4udtwMI++FS4HYmIHt+kUh9tNcMAsNUvFYo0HWMN59EiLf7lYGm/4AR40adfmghUfkmt4dYpTZmZQ==
-X-YMail-OSG: AhKkJLAVM1lDQ3XPPTTJWpEw.A_YPk4v7tBrtMEv9XTYrBN0vKxPyUyPokZyCLH
- 0NPJEnbM.Ixt5u0eXkMwZesEBqS.rCtCLJgnod2Yg.I9TXOm0suNzcmJ92mBaA3mHgRFUusjI.6E
- 3Gu4LEq019.le8uhDgpgUZ.YgtmiKAQJK6Bd4WPLqozbdEc8urSPipLpvwJTvKec65xmptWyRiVv
- 5wejfhjut7ltVV2EWvbGnxpPsKrHXW63gZY0z7W.qC8yTTTM6xXIAPM6OYdYDYNn.6t5yJFWlC1P
- OIdbZEYbWLsjaYGAZ3nhw68imywZs7JgVqTzxfR4ZQQxpuo3K8t9CM9O0hpOCt10FP__XXwyrmrD
- TCoCE7B_Edu3G.zjOUn_rksR4jYB.m1Rp.1vZ_bLxnQwCiAul5Wqfj8PNdUGzT.zvxnBCUVqWq9J
- 8hXM6oMyn8gklCF.R8KCTVo6NRJRq4thjGWIexrpJEGu0QolvkJTIALFEd6_slAReLmAOEup3xKy
- .77XY9y0L2WZlQcf1QY4ryEv90HkLK9R59Zd1MxuC8qefRgY6y6xUFmVBWO8SDJCCjnQpB48PRDP
- pRTSfD8hEjxrcMoyLQRR8ik6SRBEuL1N.zoJ2juJT7TtdJItukcqyaFlw7VOC6cm49vWb13NtnZ0
- gQ2bWEWTG5v0uAlc54_ulltpKs.Fgm6hkagBtyzunEJ52PGAuturV.LPWyLoBYPiB1KC1HlV8gI8
- yJqtTplsyPL2eALndgi_xv5WXRslUdVun50zfx9iDK5v_kT1lyZrnl7BpPa5N7roHYs5FCR3fGlt
- 00HJ7sf.lnan3Im8PEbT96k38NwI6o6wqQk3XTx1x0TOib38VwKLgaWNY916uiRI1upzFCMVqmW6
- hKW.i_z2qDWeeQaZVyBhDmfLTpSCKpEZXqJt.HWEa0uB7F6lyRoT1rQEzhMY_zbISz6YbRmtNDlq
- VLlEzjYA6uILpMVD7EkmwXGP0XOJgDIix93HShigByDXDbmOlbnVPelpKvxPRFg3gnhpf.0Rc47i
- 08Ic.liUMCD9zHGFCga9cXgoGaM8kFbRyDB3CB8uLHuuV8rIwOstkm24RLt0t3H1wtfuP85AC7r8
- v042NbRsPX1Mj80LTxFt.KStV8ND4Dc1.IiPBslhVUpEA9f2YrGnkjCHG4.U4j0M0U489djAouYX
- y9F8lECiGIH30pwUi5p9NUzViYBtaTM7ID67rbGjIKdkEdFs14rCm3KSzct0U2izLUB1NerwsRiF
- IQWasnNhp61WOxqpf4zyo6bEJMCV1B8QkTG.8HvHCcJtAwYQhWHkE5SwAzxSGopkwGBC4.Xf9
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Mon, 22 Jun 2020 16:02:21 +0000
-Date:   Mon, 22 Jun 2020 16:02:19 +0000 (UTC)
-From:   Karim Zakari <kariim1960z@gmail.com>
-Reply-To: kzakari04@gmail.com
-Message-ID: <1507214802.1850985.1592841739314@mail.yahoo.com>
-Subject: URGENT REPLY.
+        id S1729497AbgFVQMv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 12:12:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39729 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729275AbgFVQMv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:12:51 -0400
+IronPort-SDR: RPf/WDezMyZPclDOOogKwUXzbjMx8ETkk9rdigbpLp60XFueWoy77pPEwfLqbvjFvHfZg+gqsb
+ UhvwcdeXmX2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="208998216"
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="208998216"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 09:12:51 -0700
+IronPort-SDR: MURvGteXMO4/GePV3Z5yoPHMUS1qzc1JUmAEvd+0whap3kbDVOETMqd9k503ivvW53epS04v0q
+ Cy1uTzqT8dQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="292896534"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 22 Jun 2020 09:12:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id C2F5711C; Mon, 22 Jun 2020 19:12:48 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Make pcie_find_root_port() work for PCIe root ports as well
+Date:   Mon, 22 Jun 2020 19:12:48 +0300
+Message-Id: <20200622161248.51099-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <1507214802.1850985.1592841739314.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 6.1; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Commit 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and
+pci_find_pcie_root_port()") unified the root port finding functionality
+into a single function but missed the fact that the passed in device may
+already be a root port. This causes the kernel to block power management
+of PCIe hierarchies in recent systems because ->bridge_d3 started to
+return false for such ports after the commit in question.
 
+Fixes: 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and pci_find_pcie_root_port()")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+ include/linux/pci.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Good-Day Friend,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c79d83304e52..c17c24f5eeed 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2169,8 +2169,13 @@ static inline int pci_pcie_type(const struct pci_dev *dev)
+  */
+ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
+ {
+-	struct pci_dev *bridge = pci_upstream_bridge(dev);
++	struct pci_dev *bridge;
+ 
++	/* If dev is already root port */
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
++		return dev;
++
++	bridge = pci_upstream_bridge(dev);
+ 	while (bridge) {
+ 		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT)
+ 			return bridge;
+-- 
+2.27.0
 
- Hope you are doing great Today. I have a proposed business deal worthy (US$16.5 Million Dollars) that will benefit both parties. This is legitimate' legal and your personality will not be compromised.
-
-Waiting for your response for more details, As you are willing to execute this business opportunity with me.
-
-Sincerely Yours,
-Mr. Karim Zakari.
