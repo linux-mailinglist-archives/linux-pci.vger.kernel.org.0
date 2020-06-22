@@ -2,78 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0EFE203310
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 11:15:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D66EF2035CD
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 13:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725819AbgFVJPZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 05:15:25 -0400
-Received: from smtp.asem.it ([151.1.184.197]:62611 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgFVJPZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:15:25 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000332222.MSG 
-        for <linux-pci@vger.kernel.org>; Mon, 22 Jun 2020 11:15:23 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 11:15:20 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Mon, 22 Jun 2020 11:15:20 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Tom Joseph <tjoseph@cadence.com>,
+        id S1727812AbgFVLfl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 07:35:41 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2350 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727060AbgFVLfl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Jun 2020 07:35:41 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 107D28207B97897BE5EE;
+        Mon, 22 Jun 2020 12:35:40 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 22 Jun 2020 12:35:39 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-pci@vger.kernel.org>
+CC:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Sean Kelley <sean.v.kelley@linux.intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH v1 1/1] pci: controller: cadence: fix wrong path in comment
-Date:   Mon, 22 Jun 2020 11:15:20 +0200
-Message-ID: <20200622091520.9336-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+        <linuxarm@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2] PCI/AER: Do not reset the port device status if doing firmware first handling.
+Date:   Mon, 22 Jun 2020 19:35:23 +0800
+Message-ID: <20200622113523.891666-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A09020E.5EF076A9.0066,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This comment still refers to the old driver pathname,
-when all PCI drivers were located directly under the
-drivers/pci directory.
+pci_aer_clear_device_status() currently resets the device status
+(PCI_EXP_DEVSTA) on the downstream port above a device, or the port itself
+if the port is the reported AER error source.  This happens even when error
+handling is firmware first.
 
-Anyway the function name itself is enough, so we can
-remove the overabundant path reference.
+Our interpretation is that firmware first handling means that the firmware
+will deal with clearing all relevant error reporting registers
+including this one.
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Bjorn Helgaas reports that this has been clarified in sec 4.5.1 of:
+
+  System Firmware Intermediary (SFI) _OSC and DPC Updates ECN, Feb 24,
+    2020, affecting PCI Firmware Specification, Rev. 3.2
+      https://members.pcisig.com/wg/PCI-SIG/document/14076
+
+The call path that triggers this unwanted clear is:
+
+ghes_do_proc->
+ghes_handle_aer->
+aer_recover_queue->
+aer_recover_work_func->
+pcie_do_recovery->
+pci_aer_clear_device_status
+
+I believe this extra status clear is probably harmless so probably not
+worth backporting.  I'm not aware of any reports of issues caused by
+this and only identified it as incorrect during some emulated reset
+flow testing.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
 
-v1: - after the suggestion of Bjorn, remove the whole comment line related to
-      the wrong path
-    - add: Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Changes since v1:
 
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 1 -
- 1 file changed, 1 deletion(-)
+* As this is independent of the RCiEP APEI error handling patch
+  I have separated them.
+* Rebase on mainline including changing to new handling of firmware
+  first vs native handling.
+* More detail added to patch description including the reference
+  Bjorn suggested.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 1c15c8352125..690eefd328ea 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -276,7 +276,6 @@ static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 intx)
- 	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
- 	/*
- 	 * The mdelay() value was taken from dra7xx_pcie_raise_legacy_irq()
--	 * from drivers/pci/dwc/pci-dra7xx.c
- 	 */
- 	mdelay(1);
- 	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
+ drivers/pci/pcie/aer.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 3acf56683915..c7cdeaff4350 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -245,6 +245,9 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
+ {
+ 	u16 sta;
+ 
++	if (!pcie_aer_is_native(dev))
++		return;
++
+ 	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
+ 	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
+ }
 -- 
-2.17.1
+2.19.1
 
