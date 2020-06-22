@@ -2,173 +2,451 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B083A204433
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 01:02:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14B57204437
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 01:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbgFVXCP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 19:02:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731414AbgFVXCN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 19:02:13 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C5D1C061795
-        for <linux-pci@vger.kernel.org>; Mon, 22 Jun 2020 16:02:13 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id d21so8512082lfb.6
-        for <linux-pci@vger.kernel.org>; Mon, 22 Jun 2020 16:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ecq4FS9wELzuVh2aNsJmKpLPD9PbAHLuJOkUzY8Xxes=;
-        b=CDLwChJW595HajdiJojE/+eW1r1r4swlZKiMJEBB/xgJUPsRe7eatKhRtaAggFj9bD
-         7SzxCuD4enZovjYeo6u5UKDTYtZFs1omXlP2i+IVjYWh2nOQGvAi5LMciy5upiypKr7f
-         6bDx5tB2jaerpTT/GcWq7hUccgf2L0SGDaRwyd7yQUj89bOAQNLhWjsjc5Qjs342fZc/
-         bIgLxa6HcvwPEPhx8OlcMZ5e1H7GcWzrjte7ozSnnSwPsbx68QHWcfWv8QUnQ60N7/iJ
-         8KFigh54NcYqABzqIEhNuYZAOZowoa/IpyLCdxifXX1tDDo3gS8+ZXm5JFFXy74iFeV/
-         v/gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ecq4FS9wELzuVh2aNsJmKpLPD9PbAHLuJOkUzY8Xxes=;
-        b=iqQslK6lgwKLZe0F3Zi2U4XIXBIP41WubOWKJe4Vh1llTxKvkLagpmPq/Z9v+hRHIg
-         my9Y8nOiHDz7zAmAnxME/pa0ck+hh0mrbk55c3kLDQdYSVxXocO506Hgx+KvjZgsXep3
-         h4dl7B85AM6j+02uf5BiSA5JPQXaU7yJSfyWDcDlDc9atFkk9o4PDhH7VE9+L7T6HTYh
-         MbYCwvBgBU51+ajLNyvlZfC9IrfrbQIDT94gLdRwb1t4EztLIuEiD304zD942DdP1HEf
-         u6Tvq9nn5rFPUwg7hrkcv4thp/KZnFLsWThVSpIQoqQpR0jDwKbl/+qR+GUVjPUs6Cvx
-         ONxw==
-X-Gm-Message-State: AOAM532tkK0BPOFojU7IiAHoz+fdA5tgnN3HuSJhQsrNmxrILSFcPNXj
-        xEQwGu8CITYWcFjjqqqiJmGqypna/Opxrgh/lLUPKA==
-X-Google-Smtp-Source: ABdhPJzpXmJeWyudmGnFcSJwgw8D3FpyMLH8rnnQyE9NCv3nyMOzGL3CkYp5ze+ga7o74BuYJeUW/t+chDaZtbSGJBY=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr10346942lfn.122.1592866931554;
- Mon, 22 Jun 2020 16:02:11 -0700 (PDT)
+        id S1731099AbgFVXEE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 19:04:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29070 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730785AbgFVXED (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Jun 2020 19:04:03 -0400
+IronPort-SDR: NeJHZLFAkfHcHZX50+MQ6b/NZ59jNa6sxxumq/SiCEAkIjrRF9gLc45joSxzCfYzijNA03qqT4
+ jf0HCLVkaTNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131307410"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="131307410"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 16:04:02 -0700
+IronPort-SDR: pxcxVwaqebvmDdDWxhp3m4FOCZIF3QB2qG3qVTbAK/Hx7+pcfC7Tm7l16hrInNfAoGQhmKxM8r
+ pKshreqcZh8g==
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="278919572"
+Received: from skotaven-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.255.74.3])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 16:04:01 -0700
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+To:     mj@ucw.cz, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+Subject: [PATCH] pciutils: Add decode support for RCECs
+Date:   Mon, 22 Jun 2020 16:03:30 -0700
+Message-Id: <20200622230330.799259-1-sean.v.kelley@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-3-rajatja@google.com>
- <20200619161009.GH42799@otc-nc-03>
-In-Reply-To: <20200619161009.GH42799@otc-nc-03>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 22 Jun 2020 16:01:34 -0700
-Message-ID: <CACK8Z6FZ560vfMYH8idaea31_9dq4Vvo7LiMASnxZKZJtX89wg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] pci: acs: Enable PCI_ACS_TB for untrusted/external-facing
- devices
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ashok,
+Root Complex Event Collectors provide support for terminating error
+and PME messages from RCiEPs.  This patch provides basic decoding for
+lspci RCEC Endpoint Association Extended Capability. See PCie 5.0-1,
+sec 7.9.10 for further details.
 
-On Fri, Jun 19, 2020 at 9:10 AM Raj, Ashok <ashok.raj@intel.com> wrote:
->
-> Hi Rajat
->
->
-> On Mon, Jun 15, 2020 at 06:17:41PM -0700, Rajat Jain wrote:
-> > When enabling ACS, currently the bit "translation blocking" was
-> > not getting changed at all. Set it to disable translation blocking
->
-> Maybe you meant "enable translation blocking" ?
+Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+---
+ lib/header.h   |   8 +-
+ ls-ecaps.c     |  30 ++++-
+ setpci.c       |   2 +-
+ tests/cap-rcec | 299 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 335 insertions(+), 4 deletions(-)
+ create mode 100644 tests/cap-rcec
 
-Oops, yes.
+diff --git a/lib/header.h b/lib/header.h
+index 472816e..deb5150 100644
+--- a/lib/header.h
++++ b/lib/header.h
+@@ -219,7 +219,7 @@
+ #define PCI_EXT_CAP_ID_PB	0x04	/* Power Budgeting */
+ #define PCI_EXT_CAP_ID_RCLINK	0x05	/* Root Complex Link Declaration */
+ #define PCI_EXT_CAP_ID_RCILINK	0x06	/* Root Complex Internal Link Declaration */
+-#define PCI_EXT_CAP_ID_RCECOLL	0x07	/* Root Complex Event Collector */
++#define PCI_EXT_CAP_ID_RCEC	0x07	/* Root Complex Event Collector */
+ #define PCI_EXT_CAP_ID_MFVC	0x08	/* Multi-Function Virtual Channel */
+ #define PCI_EXT_CAP_ID_VC2	0x09	/* Virtual Channel (2nd ID) */
+ #define PCI_EXT_CAP_ID_RCRB	0x0a	/* Root Complex Register Block */
+@@ -1048,6 +1048,12 @@
+ #define  PCI_RCLINK_LINK_ADDR	8	/* Link Entry: Address (64-bit) */
+ #define  PCI_RCLINK_LINK_SIZE	16	/* Link Entry: sizeof */
+ 
++/* Root Complex Event Collector */
++#define  PCI_RCEC_EP_CAP_VER(reg)	(((reg) >> 16) & 0xf)
++#define  PCI_RCEC_BUSN_REG_VER	0x02	/* as per PCIe sec 7.9.10.1 */
++#define  PCI_RCEC_RCIEP_BMAP	0x0004	/* as per PCIe sec 7.9.10.2 */
++#define  PCI_RCEC_BUSN_REG	0x0008	/* as per PCIe sec 7.9.10.3 */
++
+ /* PCIe Vendor-Specific Capability */
+ #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
+ #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
+diff --git a/ls-ecaps.c b/ls-ecaps.c
+index e71209e..589332d 100644
+--- a/ls-ecaps.c
++++ b/ls-ecaps.c
+@@ -634,6 +634,32 @@ cap_rclink(struct device *d, int where)
+     }
+ }
+ 
++static void
++cap_rcec(struct device *d, int where)
++{
++  printf("Root Complex Event Collector\n");
++  if (verbose < 2)
++    return;
++
++  if (!config_fetch(d, where, 12))
++    return;
++
++  u32 hdr = get_conf_long(d, where);
++  byte cap_ver = PCI_RCEC_EP_CAP_VER(hdr);
++  u32 bmap = get_conf_long(d, where + PCI_RCEC_RCIEP_BMAP);
++  printf("\t\tDesc:\tCapabilityVersion=%02x RCiEPBitmap=%08x\n",
++    cap_ver,
++    bmap);
++
++  if (cap_ver < PCI_RCEC_BUSN_REG_VER)
++    return;
++
++  u32 busn = get_conf_long(d, where + PCI_RCEC_BUSN_REG);
++  printf("\t\t\tRCECLastBus=%02x RCECFirstBus=%02x\n",
++    BITS(busn, 16, 8),
++    BITS(busn, 8, 8));
++}
++
+ static void
+ cap_dvsec_cxl(struct device *d, int where)
+ {
+@@ -991,8 +1017,8 @@ show_ext_caps(struct device *d, int type)
+ 	  case PCI_EXT_CAP_ID_RCILINK:
+ 	    printf("Root Complex Internal Link <?>\n");
+ 	    break;
+-	  case PCI_EXT_CAP_ID_RCECOLL:
+-	    printf("Root Complex Event Collector <?>\n");
++	  case PCI_EXT_CAP_ID_RCEC:
++	    cap_rcec(d, where);
+ 	    break;
+ 	  case PCI_EXT_CAP_ID_MFVC:
+ 	    printf("Multi-Function Virtual Channel <?>\n");
+diff --git a/setpci.c b/setpci.c
+index 90ca726..2cb70fa 100644
+--- a/setpci.c
++++ b/setpci.c
+@@ -350,7 +350,7 @@ static const struct reg_name pci_reg_names[] = {
+   { 0x20004,	0, 0, "ECAP_PB" },
+   { 0x20005,	0, 0, "ECAP_RCLINK" },
+   { 0x20006,	0, 0, "ECAP_RCILINK" },
+-  { 0x20007,	0, 0, "ECAP_RCECOLL" },
++  { 0x20007,	0, 0, "ECAP_RCEC" },
+   { 0x20008,	0, 0, "ECAP_MFVC" },
+   { 0x20009,	0, 0, "ECAP_VC2" },
+   { 0x2000a,	0, 0, "ECAP_RBCB" },
+diff --git a/tests/cap-rcec b/tests/cap-rcec
+new file mode 100644
+index 0000000..09a4030
+--- /dev/null
++++ b/tests/cap-rcec
+@@ -0,0 +1,299 @@
++6a:00.4 Generic system peripheral [0807]: Intel Corporation Device 0b23
++        Subsystem: Intel Corporation Device 0000
++        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
++        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
++        Interrupt: pin A routed to IRQ 255
++        NUMA node: 0
++        Capabilities: [40] Express (v2) Root Complex Event Collector, MSI 00
++                DevCap: MaxPayload 512 bytes, PhantFunc 0
++                        ExtTag- RBE-
++                DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq-
++                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
++                        MaxPayload 128 bytes, MaxReadReq 128 bytes
++                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
++                RootCap: CRSVisible-
++                RootCtl: ErrCorrectable+ ErrNon-Fatal+ ErrFatal+ PMEIntEna- CRSVisible-
++                RootSta: PME ReqID 0000, PMEStatus- PMEPending-
++                DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
++                         10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
++                         EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
++                         FRS-
++                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
++        Capabilities: [80] Power Management version 3
++                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
++                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
++        Capabilities: [90] MSI: Enable- Count=1/1 Maskable+ 64bit-
++                Address: 00000000  Data: 0000
++                Masking: 00000000  Pending: 00000000
++        Capabilities: [100 v1] Advanced Error Reporting
++                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
++                UEMsk:  DLP- SDES+ TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq+ ACSViol-
++                UESvrt: DLP+ SDES- TLP+ FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
++                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
++                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
++                AERCap: First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
++                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
++                HeaderLog: 00000000 00000000 00000000 00000000
++                RootCmd: CERptEn- NFERptEn- FERptEn-
++                RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
++                         FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
++                ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
++        Capabilities: [160 v2] Root Complex Event Collector
++                Desc:   CapabilityVersion=02 RCiEPBitmap=00000000
++                        RCECLastBus=00 RCECFirstBus=ff
++00: 86 80 23 0b 00 01 10 00 00 00 07 08 00 00 00 00
++10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
++30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
++40: 10 80 a2 00 02 00 00 00 07 00 00 00 00 00 00 00
++50: 00 00 00 00 00 00 00 00 00 00 00 00 07 00 00 00
++60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++80: 01 90 03 00 00 00 00 00 00 00 00 00 00 00 00 00
++90: 05 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00
++a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d0: 31 6a 08 00 00 00 00 00 00 00 00 00 00 00 00 00
++e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++100: 01 00 01 16 00 00 00 00 20 00 10 00 10 30 46 00
++110: 00 00 00 00 00 20 00 00 00 00 00 00 00 00 00 00
++120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++130: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++140: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++150: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++160: 07 00 02 00 00 00 00 00 00 ff 00 00 00 00 00 00
++170: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++190: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++1a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++1b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++1c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++1d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++1e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++1f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++210: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++220: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++230: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++240: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++250: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++260: 00 00 00 00 07 00 00 00 00 00 00 00 00 00 00 00
++270: 00 00 00 00 00 00 00 00 07 00 00 00 00 00 00 00
++280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++290: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++2a0: 00 00 00 00 00 00 00 00 20 00 18 00 20 00 18 00
++2b0: 20 00 18 00 00 00 00 00 00 00 00 00 00 00 00 00
++2c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++2d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++2e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++2f0: 00 20 00 00 00 20 00 00 00 20 00 00 00 e0 00 00
++300: 00 e0 00 00 00 e0 00 00 00 e0 00 00 00 e0 00 00
++310: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++320: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++330: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++340: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++350: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++360: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++370: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++390: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++3a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++3b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++3c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++3d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++3e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++3f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++410: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++420: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++430: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++440: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++450: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++460: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++470: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++490: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++4a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++4b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++4c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++4d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++4e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++4f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++510: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++520: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++530: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++540: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++550: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++560: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++570: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++590: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++5a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++5b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++5c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++5d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++5e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++5f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++600: 44 00 00 00 91 00 00 00 00 00 00 00 00 00 00 00
++610: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++620: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++630: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++640: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++650: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++660: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++670: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++680: 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++690: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++6a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++6b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++6c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++6d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++6e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++6f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++710: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++720: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++730: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++740: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++750: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++760: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++770: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++790: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++7a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++7b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++7c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++7d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++7e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++7f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++810: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++820: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++830: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++840: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++850: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++860: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++870: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++890: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++8a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++8b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++8c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++8d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++8e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++8f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++910: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++920: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++930: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++940: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++950: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++960: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++970: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++990: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++9a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++9b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++9c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++9d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++9e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++9f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++a90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++aa0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ab0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ac0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ad0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ae0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++af0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++b90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ba0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++bb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++bc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++bd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++be0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++bf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++c90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ca0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++cb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++cc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++cd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ce0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++cf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++d90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++da0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++db0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++dc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++dd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++de0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++df0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++e90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ea0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++eb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ec0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ed0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ee0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ef0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++f90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++fa0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+-- 
+2.27.0
 
->
-> Keep the commit log simple:
->
-> When enabling ACS, enable translation blocking for external facing ports
-> and untrusted devices.
-
-Ack. Will change in the next iteration (currently waiting to see if
-there are any more comments).
-
-Thanks & Regards,
-
-Rajat
-
->
-> > too for all external facing or untrusted devices. This is OK
-> > because ATS is only allowed on internal devces.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> >  drivers/pci/pci.c    |  4 ++++
-> >  drivers/pci/quirks.c | 11 +++++++++++
-> >  2 files changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index d2ff987585855..79853b52658a2 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-> >       /* Upstream Forwarding */
-> >       ctrl |= (cap & PCI_ACS_UF);
-> >
-> > +     if (dev->external_facing || dev->untrusted)
-> > +             /* Translation Blocking */
-> > +             ctrl |= (cap & PCI_ACS_TB);
-> > +
-> >       pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> >  }
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index b341628e47527..6294adeac4049 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
-> >       }
-> >  }
-> >
-> > +/*
-> > + * Currently this quirk does the equivalent of
-> > + * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
-> > + *
-> > + * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
-> > + * if dev->external_facing || dev->untrusted
-> > + */
-> >  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
-> >  {
-> >       if (!pci_quirk_intel_pch_acs_match(dev))
-> > @@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
-> >       ctrl |= (cap & PCI_ACS_CR);
-> >       ctrl |= (cap & PCI_ACS_UF);
-> >
-> > +     if (dev->external_facing || dev->untrusted)
-> > +             /* Translation Blocking */
-> > +             ctrl |= (cap & PCI_ACS_TB);
-> > +
-> >       pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
-> >
-> >       pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
-> > --
-> > 2.27.0.290.gba653c62da-goog
-> >
