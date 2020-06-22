@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66F402039C5
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 16:42:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1DDF2039CE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 16:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgFVOmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 10:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59036 "EHLO
+        id S1729278AbgFVOoS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 10:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbgFVOmZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 10:42:25 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9DBC061573;
-        Mon, 22 Jun 2020 07:42:25 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so7653946plb.11;
-        Mon, 22 Jun 2020 07:42:25 -0700 (PDT)
+        with ESMTP id S1728293AbgFVOoS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 10:44:18 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB68C061573;
+        Mon, 22 Jun 2020 07:44:18 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k6so7659441pll.9;
+        Mon, 22 Jun 2020 07:44:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9YLaWFLlIzBRLs4RY6djpcyNOYh8PB7BzxpoYxS2lEM=;
-        b=spfR+u2xLXtkMNRBWgq+InK0f0X0wRn2Gqp1Ccoi8UHaSQI1UkQiuHQ5EpWDpSy0zr
-         NrTwLCKwidJW2ES+yzW6UyTOSxxn+Ra5mqQJm40G3tNWE0jrnggX4349AHin0Sg5G8UH
-         BpYoqtScJgu7vBEWkUkDqzOmIZx//ptLQI+2VzEM8/akwN7SFknGAv4mhT2dpd5ZMJdD
-         HXkx031RwB12EzIy6U800fuoQQCaqw4ofyv/jeThviWnYdbWWq10ZZm9iSiWrbN/1Vjp
-         9YjK2RzNoYXAYK2yUgQzA2p/oO+TvVyxUWXjPyev7NGuEiQXPEhZDfx103v89ibeql+9
-         AP4Q==
+        bh=xbPnTXWG3FTmKbDopj7bVz9XNFpW3F1DzJqvbTKH2Zo=;
+        b=pcF1W0cfpODtkp7D7/LY/drAOVyuL7/KWS4xrre+BLffHK5GwrwZ/jtRVNPLawPUHr
+         2w7Zg1KkePSaczW2TgAvo1f10hhwTkc5L6QXRLiYvoAHMwQesbaJZlP5ggnkEPJpauk9
+         jANIZKgBR8/lM4d3ssU6hi3gTyTMXYpx+azF6yAL2U/cxfc/1LTRhwclFfGELpDMOg8s
+         lCyCmTMuc7Ibbt3RxO99mUbcSvQPt8zJehCJRRX1JL/QJC9l7CMppcOFUVk6YlbgUaro
+         7hOyzU9L5qYM17r5TNWnIVSmhMNESGu+U4bDOe50Vhj6LI7fjFmFcArTfotx+vY3SuiN
+         e8qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9YLaWFLlIzBRLs4RY6djpcyNOYh8PB7BzxpoYxS2lEM=;
-        b=N70pNyspdm9/ZSv2+BfxQV3mGxeQNaFfC8bzH9gSx2lj8q8F85x9AIH0il/erflyMn
-         yp4Pewge2sXLtUWjRBrDNflpt+lLaL1GxK6F47EnJgyR0ZY2VZpE9+ab41NP6ST+Zo1W
-         Ot1by/CxrZRi79cFJvvzcEpqUlhHsNvam1pNUcDht2hmCGI0e7XQO4WxrIfx+l/qk1yT
-         Stjd8eRCbkBFYZ3AapXjc9OeatakxWWMFVw07ni3W3qSyZ/sE18waV12EGwwdBkPLB9v
-         Lm6CJ+tuGdsrudeXe3Q9HSNwX5xk0RCWTIS6HpCoh+PLxzcVoyovY+XPCKBa/5QPv6xz
-         bdHQ==
-X-Gm-Message-State: AOAM532V3UfAytbJJW8WGJD7qnObiLoduMsgKVd0rqzWChAq8yfOxhlb
-        H3GVGz0sB56t2pKop2/QJqHtYVbVnmbVb0jzNw4=
-X-Google-Smtp-Source: ABdhPJwnb91qMbXzVIPFIU6C/Ry5merVXS0V0FxZ1cMSh9l3XgYYN3BXfY2F+Z5mKnXzLMpQ9BNbCOqOdqX6V0uaOiw=
-X-Received: by 2002:a17:902:7611:: with SMTP id k17mr19958374pll.255.1592836944732;
- Mon, 22 Jun 2020 07:42:24 -0700 (PDT)
+        bh=xbPnTXWG3FTmKbDopj7bVz9XNFpW3F1DzJqvbTKH2Zo=;
+        b=shFA2oreCk5VNpvJuje3TYL9XQj3s5Hq5s1rxguIe18NavLvvG+/HSJFSmcaGX1MMr
+         +jTV1Cxryp9z8ZtxkuD6GLBVsneOdepXd8L2r5KHZOBKyKL7IR53QIMcaOYoAzXVT8RP
+         pXre7NVDVbz/JaJsVICgx5jzAjQqHjRgyDtEKkSbgAE9rVormssalnkni5NIsalu5u6/
+         6bRPg95Y9sF9rxbfWxx23ySH/HDYc+5MqyERN63S6ARTfkjLEO3SkbWMTVd7G1ATlut0
+         21NjK/cMDjVfL0K3HKqhvVfUy1NmHaME8yUKV8rfU7BXc4m/F2mtGOPLfmo4STUhYe31
+         ZW2A==
+X-Gm-Message-State: AOAM531mqkMmMLMnRoGUo1KYs7b4RD1yxjwJAHsfhCZCAmrTZhx6g7EU
+        99R8gkI7dJD+CkHvthu80aSiid1aIS+apifxG28=
+X-Google-Smtp-Source: ABdhPJxDUtDkhHtkqwhq4HY8M/nWiY/fsbrbIXC4HEmYrBR2T4oIo8B1Gv3zIv6X55ZAHTGyTenpahian5FNO7Ri6AA=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr19166666pjq.228.1592837057666;
+ Mon, 22 Jun 2020 07:44:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622103817.476-1-nsaenzjulienne@suse.de> <20200622103817.476-3-nsaenzjulienne@suse.de>
-In-Reply-To: <20200622103817.476-3-nsaenzjulienne@suse.de>
+References: <20200622103817.476-1-nsaenzjulienne@suse.de> <20200622103817.476-7-nsaenzjulienne@suse.de>
+In-Reply-To: <20200622103817.476-7-nsaenzjulienne@suse.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 17:42:12 +0300
-Message-ID: <CAHp75VcGoK=6FitfuzEhPZXSrtJiO_-XcD6jtg8SckprWhePgA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/9] reset: Add Raspberry Pi 4 firmware reset controller
+Date:   Mon, 22 Jun 2020 17:44:05 +0300
+Message-ID: <CAHp75Vcpo49BUe+cApfbB2BXFLz0SyLjWkO_6Uw=sYEcJEBMPg@mail.gmail.com>
+Subject: Re: [PATCH v4 6/9] Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -74,22 +74,27 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Mon, Jun 22, 2020 at 5:26 PM Nicolas Saenz Julienne
 <nsaenzjulienne@suse.de> wrote:
 >
-> Raspberry Pi 4's co-processor controls some of the board's HW
-> initialization process, but it's up to Linux to trigger it when
-> relevant. Introduce a reset controller capable of interfacing with
-> RPi4's co-processor that models these firmware initialization routines as
-> reset lines.
+> This reverts commit c65822fef4adc0ba40c37a47337376ce75f7a7bc.
+>
+> The initialization of Raspberry Pi 4's USB chip is now handled through a
+> reset controller. No need to directly call the firmware routine trough a
+
+trough -> through.
+
+> pci quirk.
+
+pci -> PCI.
 
 ...
 
-> +       struct device_node *fw_node;
+> -
+> -#include <soc/bcm2835/raspberrypi-firmware.h>
+> -
 
-If you are going to use fwnode (as it should be), make sure the proper
-data type is in use, i.e. struct fwnode_handle.
+Leave one blank line here.
 
-Otherwise, if you want to be OF centric (I discourage this, don't know
-if RPi4 is ever going to run RHEL or other distros that require non-DT
-firmwares), don't name fw_node. It's confusing.
+>  #include "pci-quirks.h"
+>  #include "xhci-ext-caps.h"
 
 -- 
 With Best Regards,
