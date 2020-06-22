@@ -2,55 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1DDF2039CE
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 16:44:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637E7203A4F
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jun 2020 17:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbgFVOoS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jun 2020 10:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgFVOoS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Jun 2020 10:44:18 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB68C061573;
-        Mon, 22 Jun 2020 07:44:18 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k6so7659441pll.9;
-        Mon, 22 Jun 2020 07:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xbPnTXWG3FTmKbDopj7bVz9XNFpW3F1DzJqvbTKH2Zo=;
-        b=pcF1W0cfpODtkp7D7/LY/drAOVyuL7/KWS4xrre+BLffHK5GwrwZ/jtRVNPLawPUHr
-         2w7Zg1KkePSaczW2TgAvo1f10hhwTkc5L6QXRLiYvoAHMwQesbaJZlP5ggnkEPJpauk9
-         jANIZKgBR8/lM4d3ssU6hi3gTyTMXYpx+azF6yAL2U/cxfc/1LTRhwclFfGELpDMOg8s
-         lCyCmTMuc7Ibbt3RxO99mUbcSvQPt8zJehCJRRX1JL/QJC9l7CMppcOFUVk6YlbgUaro
-         7hOyzU9L5qYM17r5TNWnIVSmhMNESGu+U4bDOe50Vhj6LI7fjFmFcArTfotx+vY3SuiN
-         e8qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xbPnTXWG3FTmKbDopj7bVz9XNFpW3F1DzJqvbTKH2Zo=;
-        b=shFA2oreCk5VNpvJuje3TYL9XQj3s5Hq5s1rxguIe18NavLvvG+/HSJFSmcaGX1MMr
-         +jTV1Cxryp9z8ZtxkuD6GLBVsneOdepXd8L2r5KHZOBKyKL7IR53QIMcaOYoAzXVT8RP
-         pXre7NVDVbz/JaJsVICgx5jzAjQqHjRgyDtEKkSbgAE9rVormssalnkni5NIsalu5u6/
-         6bRPg95Y9sF9rxbfWxx23ySH/HDYc+5MqyERN63S6ARTfkjLEO3SkbWMTVd7G1ATlut0
-         21NjK/cMDjVfL0K3HKqhvVfUy1NmHaME8yUKV8rfU7BXc4m/F2mtGOPLfmo4STUhYe31
-         ZW2A==
-X-Gm-Message-State: AOAM531mqkMmMLMnRoGUo1KYs7b4RD1yxjwJAHsfhCZCAmrTZhx6g7EU
-        99R8gkI7dJD+CkHvthu80aSiid1aIS+apifxG28=
-X-Google-Smtp-Source: ABdhPJxDUtDkhHtkqwhq4HY8M/nWiY/fsbrbIXC4HEmYrBR2T4oIo8B1Gv3zIv6X55ZAHTGyTenpahian5FNO7Ri6AA=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr19166666pjq.228.1592837057666;
- Mon, 22 Jun 2020 07:44:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200622103817.476-1-nsaenzjulienne@suse.de> <20200622103817.476-7-nsaenzjulienne@suse.de>
-In-Reply-To: <20200622103817.476-7-nsaenzjulienne@suse.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 17:44:05 +0300
-Message-ID: <CAHp75Vcpo49BUe+cApfbB2BXFLz0SyLjWkO_6Uw=sYEcJEBMPg@mail.gmail.com>
-Subject: Re: [PATCH v4 6/9] Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+        id S1729337AbgFVPIN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jun 2020 11:08:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59656 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728070AbgFVPIM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Jun 2020 11:08:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 146E1C1BE;
+        Mon, 22 Jun 2020 15:08:11 +0000 (UTC)
+Message-ID: <4aaabc8ff39007a97a03f335c6a51313a2c59551.camel@suse.de>
+Subject: Re: [PATCH v4 2/9] reset: Add Raspberry Pi 4 firmware reset
+ controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh@kernel.org>,
@@ -65,37 +34,72 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Mathias Nyman <mathias.nyman@linux.intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Date:   Mon, 22 Jun 2020 17:08:09 +0200
+In-Reply-To: <CAHp75VcGoK=6FitfuzEhPZXSrtJiO_-XcD6jtg8SckprWhePgA@mail.gmail.com>
+References: <20200622103817.476-1-nsaenzjulienne@suse.de>
+         <20200622103817.476-3-nsaenzjulienne@suse.de>
+         <CAHp75VcGoK=6FitfuzEhPZXSrtJiO_-XcD6jtg8SckprWhePgA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-5dZZMAqUDgFzVYMirjlA"
+User-Agent: Evolution 3.36.3 
+MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 5:26 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> This reverts commit c65822fef4adc0ba40c37a47337376ce75f7a7bc.
->
-> The initialization of Raspberry Pi 4's USB chip is now handled through a
-> reset controller. No need to directly call the firmware routine trough a
 
-trough -> through.
+--=-5dZZMAqUDgFzVYMirjlA
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> pci quirk.
+Hi Andy,
 
-pci -> PCI.
+On Mon, 2020-06-22 at 17:42 +0300, Andy Shevchenko wrote:
+> On Mon, Jun 22, 2020 at 5:26 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Raspberry Pi 4's co-processor controls some of the board's HW
+> > initialization process, but it's up to Linux to trigger it when
+> > relevant. Introduce a reset controller capable of interfacing with
+> > RPi4's co-processor that models these firmware initialization routines =
+as
+> > reset lines.
+>=20
+> ...
+>=20
+> > +       struct device_node *fw_node;
+>=20
+> If you are going to use fwnode (as it should be), make sure the proper
+> data type is in use, i.e. struct fwnode_handle.
+>=20
+> Otherwise, if you want to be OF centric (I discourage this, don't know
+> if RPi4 is ever going to run RHEL or other distros that require non-DT
+> firmwares), don't name fw_node. It's confusing.
 
-...
+I agree it is confusing. I'll rename it. On the other hand, this is strictl=
+y DT
+centric.
 
-> -
-> -#include <soc/bcm2835/raspberrypi-firmware.h>
-> -
+Regards,
+Nicolas
 
-Leave one blank line here.
 
->  #include "pci-quirks.h"
->  #include "xhci-ext-caps.h"
+--=-5dZZMAqUDgFzVYMirjlA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
--- 
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7wyVkACgkQlfZmHno8
+x/7LrQgAqK9GE4KkBwZKTkd+hAygOJW7bI8wF1Pfgtu3Ar9DcW+9lpBhWOOp4T26
+iSGn/L+0FM4yGtAaNOncUmNHfPN/wWSom9zNhRuK9hruXGcZcWdToQmzJegvZ2DM
+PctEXsfMjfiwWpHIOuGf9GEEuCUiYIcMM5DPyV1+ZfytHrvYhqjdSIm7VLPocM4h
+D37+XnrQcoF7DxgzFUmsnrP6qz00QlbfHUP5JMPa2DgWu6dLl89wIRUhyLRPGyqE
+yHt8rmlZ8qOXrqAw5DjDoKAoRB2/jJARPdp5KgJMWB1x3C6NRbGiQoeDDTxMabcG
+TXTpud6NEEOFvZeb0+HA0mLJQqNkZw==
+=AKY0
+-----END PGP SIGNATURE-----
+
+--=-5dZZMAqUDgFzVYMirjlA--
+
