@@ -2,78 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBD272048D8
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 06:31:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5C8A20492E
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 07:21:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgFWEbz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jun 2020 00:31:55 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:55821 "EHLO
+        id S1730361AbgFWFVf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jun 2020 01:21:35 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:55830 "EHLO
         mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725986AbgFWEbz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Jun 2020 00:31:55 -0400
-Received: from [10.130.88.39] (unknown [109.253.199.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPSA id 7EFDB4408C8;
-        Tue, 23 Jun 2020 07:31:50 +0300 (IDT)
-Subject: Re: [PATCH] PCI: mvebu: setup BAR0 to internal-regs
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
+        id S1727087AbgFWFVf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:21:35 -0400
+Received: from T480.siklu.local (unknown [212.29.212.82])
+        by mx.tkos.co.il (Postfix) with ESMTPA id 2ABA64408C8;
+        Tue, 23 Jun 2020 08:21:33 +0300 (IDT)
+From:   Shmuel Hazan <sh@tkos.co.il>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
         Baruch Siach <baruch@tkos.co.il>,
         Chris ackham <chris.packham@alliedtelesis.co.nz>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200622224925.GA2332050@bjorn-Precision-5520>
-From:   "Shmuel H." <sh@tkos.co.il>
-Message-ID: <b56f15da-ddb0-c0c9-8027-acdc7f76d151@tkos.co.il>
-Date:   Tue, 23 Jun 2020 07:31:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Shmuel Hazan <sh@tkos.co.il>
+Subject: [PATCH v2] PCI: mvebu: Setup BAR0 in order to fix MSI
+Date:   Tue, 23 Jun 2020 08:13:41 +0300
+Message-Id: <20200623051339.104988-1-sh@tkos.co.il>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200622224925.GA2332050@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas, Bjorn,
+According to the Armada XP datasheet, section 10.2.6: "in order for
+the device to do a write to the MSI doorbell address, it needs to write
+to a register in the internal registers space".
 
-On 6/23/20 1:49 AM, Bjorn Helgaas wrote:
-> On Mon, Jun 22, 2020 at 08:40:33PM +0200, Thomas Petazzoni wrote:
->> On Mon, 22 Jun 2020 12:25:16 -0500
->> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->>>> As a result of the requirement above, without this patch, MSI won't
->>>> function and therefore some devices won't operate properly without
->>>> pci=nomsi.  
->>> Does that mean MSIs never worked at all with mvebu?
->> They definitely worked. I think what happens is that this register was
->> normally setup by the vendor-specific bootloader, and thanks to
->> firmware initialization, Linux had MSIs working properly.
->>
->> With other bootloaders that initialize the PCIe block differently, or
->> even not at all, it became clear this init was missing in Linux.
-> That would be very useful information to include in the commit log.
+As a result of the requirement above, without this patch, MSI won't
+function and therefore some devices won't operate properly without
+pci=nomsi.
 
-Thanks. I will add it to the commit message.
+This requirement was not present at the time of writing this driver
+since the vendor u-boot always initializes all PCIe controllers
+(incl. BAR0 initialization) and for some time, the vendor u-boot was
+the only available bootloader for this driver's SoCs (e.g. A38x,A37x,
+etc).
 
->
-> Are there any other similar bugs lurking?  Other registers where we
-> implicitly rely on the bootloader to do something?
+Tested on an Armada 385 board on mainline u-boot (2020.4), without
+u-boot PCI initialization and the following PCIe devices:
+        - Wilocity Wil6200 rev 2 (wil6210)
+        - Qualcomm Atheros QCA6174 (ath10k_pci)
 
-I don't think that any PCI  driver writer can answer this question for
-sure.
+Both failed to get a response from the device after loading the
+firmware and seem to operate properly with this patch.
+---
 
-I can however confirm that this driver, on the a385, works with no
-u-boot PCIe initialization. As for other subsystems PCI is dependent on
-(e.g. SerDes, etc), I can't say for sure.
+Changes in v2:
+	* Explained more about the reason this bug was not detected
+	  earlier. 
+	* Edited commit subject line.
 
+---
+ drivers/pci/controller/pci-mvebu.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index 153a64676bc9..101c06602aa1 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -105,6 +105,7 @@ struct mvebu_pcie_port {
+ 	struct mvebu_pcie_window memwin;
+ 	struct mvebu_pcie_window iowin;
+ 	u32 saved_pcie_stat;
++	struct resource regs;
+ };
+ 
+ static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
+@@ -149,7 +150,9 @@ static void mvebu_pcie_set_local_dev_nr(struct mvebu_pcie_port *port, int nr)
+ 
+ /*
+  * Setup PCIE BARs and Address Decode Wins:
+- * BAR[0,2] -> disabled, BAR[1] -> covers all DRAM banks
++ * BAR[0] -> internal registers (needed for MSI)
++ * BAR[1] -> covers all DRAM banks
++ * BAR[2] -> Disabled
+  * WIN[0-3] -> DRAM bank[0-3]
+  */
+ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+@@ -203,6 +206,12 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+ 	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(1));
+ 	mvebu_writel(port, ((size - 1) & 0xffff0000) | 1,
+ 		     PCIE_BAR_CTRL_OFF(1));
++
++	/*
++	 * Point BAR[0] to the device's internal registers.
++	 */
++	mvebu_writel(port, round_down(port->regs.start, SZ_1M), PCIE_BAR_LO_OFF(0));
++	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(0));
+ }
+ 
+ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+@@ -708,14 +717,13 @@ static void __iomem *mvebu_pcie_map_registers(struct platform_device *pdev,
+ 					      struct device_node *np,
+ 					      struct mvebu_pcie_port *port)
+ {
+-	struct resource regs;
+ 	int ret = 0;
+ 
+-	ret = of_address_to_resource(np, 0, &regs);
++	ret = of_address_to_resource(np, 0, &port->regs);
+ 	if (ret)
+ 		return (void __iomem *)ERR_PTR(ret);
+ 
+-	return devm_ioremap_resource(&pdev->dev, &regs);
++	return devm_ioremap_resource(&pdev->dev, &port->regs);
+ }
+ 
+ #define DT_FLAGS_TO_TYPE(flags)       (((flags) >> 24) & 0x03)
 -- 
-- Shmuel Hazan
-
-mailto:sh@tkos.co.il | tel:+972-523-746-435 | http://tkos.co.il
+2.27.0
 
