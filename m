@@ -2,112 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC22E205571
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 17:04:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6273C20571E
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 18:22:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732868AbgFWPE3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jun 2020 11:04:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
+        id S1732185AbgFWQWn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jun 2020 12:22:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:42921 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732946AbgFWPE3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:04:29 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EC420723;
-        Tue, 23 Jun 2020 15:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592924669;
-        bh=pYSmEX90OpGgB4bw3JQlLwOPKGPZt8zcCg2Jw+YWJhM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uyCRgzznNIaGzwTA5WSAD0mfkUx7PWjjDA0xuNRfK8wdFyqid6COQmfVRcULXo7eB
-         x6r9H+xRROcynvqijhjGKwufYcigaaHtOMvN1NklZTodXP7DkrU83liurSsGCNLFtO
-         sRrkKEDXRbWwc9kz0no38z13LtKl0kt/Ne0JEuNE=
-Date:   Tue, 23 Jun 2020 10:04:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-Message-ID: <20200623150427.GA2403606@bjorn-Precision-5520>
+        id S1732155AbgFWQWn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:22:43 -0400
+IronPort-SDR: fs+er1UcfAYgXdnuJXpaJ2yk7B0z7aOLGs0X7pRdXKa4RWbuynRkI7TNKRPBamlG8tAhrbpZH5
+ oDkz4gVN4CRw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="162208933"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="162208933"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 09:22:40 -0700
+IronPort-SDR: jWJ1ahjQWjXc8KPcuWYyWsgdwLRC3DsN5MI6MvSt7jg9WL/cqj0AMWE6ogs1f9qFPyXS3pRLUR
+ dU4Rqyx9A02w==
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="452281068"
+Received: from hungjul-mobl1.amr.corp.intel.com (HELO [10.212.71.70]) ([10.212.71.70])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 09:22:39 -0700
+From:   "Sean V Kelley" <sean.v.kelley@linux.intel.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     mj@ucw.cz, bhelgaas@google.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] pciutils: Add decode support for RCECs
+Date:   Tue, 23 Jun 2020 09:22:38 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <5DE19132-95CF-4DE7-8C19-4712E5224DD7@linux.intel.com>
+In-Reply-To: <20200622232617.GA2334699@bjorn-Precision-5520>
+References: <20200622232617.GA2334699@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c5d7b2f1-6b32-d965-3b60-eb70a26e02b4@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 10:26:54AM +0800, Zhangfei Gao wrote:
-> Have studied _DSM method, two issues we met comparing using quirk.
-> 
-> 1. Need change definition of either pci_host_bridge or pci_dev, like adding
-> member can_stall,
-> while pci system does not know stall now.
-> 
-> a, pci devices do not have uuid: uuid need be described in dsdt, while pci
-> devices are not defined in dsdt.
->     so we have to use host bridge.
+Hi Bjorn,
 
-PCI devices *can* be described in the DSDT.  IIUC these particular
-devices are hardwired (not plug-in cards), so platform firmware can
-know about them and could describe them in the DSDT.
+Thanks for your review.  My comments below:
 
-> b,  Parsing dsdt is in in pci subsystem.
-> Like drivers/acpi/pci_root.c:
->        obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid,
-> 1,
->                                 IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
-> 
-> After parsing DSM in pci, we need record this info.
-> Currently, can_stall info is recorded in iommu_fwspec,
-> which is allocated in iommu_fwspec_init and called by iort_iommu_configure
-> for uefi.
+On 22 Jun 2020, at 16:26, Bjorn Helgaas wrote:
 
-You can look for a _DSM wherever it is convenient for you.  It could
-be in an AMBA shim layer.
+> On Mon, Jun 22, 2020 at 04:03:30PM -0700, Sean V Kelley wrote:
+>> Root Complex Event Collectors provide support for terminating error
+>> and PME messages from RCiEPs.  This patch provides basic decoding for
+>> lspci RCEC Endpoint Association Extended Capability. See PCie 5.0-1,
+>> sec 7.9.10 for further details.
+>
+> s/lspci/the/
+> s/PCie/PCIe/
 
-> 2. Guest kernel also need support sva.
-> Using quirk, the guest can boot with sva enabled, since quirk is
-> self-contained by kernel.
-> If using  _DSM, a specific uefi or dtb has to be provided,
-> currently we can useQEMU_EFI.fd from apt install qemu-efi
+Will fix.
 
-I don't quite understand what this means, but as I mentioned before, a
-quirk for a *limited* number of devices is OK, as long as there is a
-plan that removes the need for a quirk for future devices.
+>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+>> ---
+>>  lib/header.h   |   8 +-
+>>  ls-ecaps.c     |  30 ++++-
+>>  setpci.c       |   2 +-
+>>  tests/cap-rcec | 299 
+>> +++++++++++++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 335 insertions(+), 4 deletions(-)
+>>  create mode 100644 tests/cap-rcec
+>>
+>> diff --git a/lib/header.h b/lib/header.h
+>> index 472816e..deb5150 100644
+>> --- a/lib/header.h
+>> +++ b/lib/header.h
+>> @@ -219,7 +219,7 @@
+>>  #define PCI_EXT_CAP_ID_PB	0x04	/* Power Budgeting */
+>>  #define PCI_EXT_CAP_ID_RCLINK	0x05	/* Root Complex Link Declaration 
+>> */
+>>  #define PCI_EXT_CAP_ID_RCILINK	0x06	/* Root Complex Internal Link 
+>> Declaration */
+>> -#define PCI_EXT_CAP_ID_RCECOLL	0x07	/* Root Complex Event Collector 
+>> */
+>> +#define PCI_EXT_CAP_ID_RCEC	0x07	/* Root Complex Event Collector */
+>
+> OK, not super descriptive, but it does match the kernel's definition
+> in pci_regs.h.
 
-E.g., if the next platform version ships with a DTB or firmware with a
-_DSM or other mechanism that enables the kernel to discover this
-information without a kernel change, it's fine to use a quirk to cover
-the early platform.
+Yes, thanks.
 
-The principles are:
+>
+>>  #define PCI_EXT_CAP_ID_MFVC	0x08	/* Multi-Function Virtual Channel 
+>> */
+>>  #define PCI_EXT_CAP_ID_VC2	0x09	/* Virtual Channel (2nd ID) */
+>>  #define PCI_EXT_CAP_ID_RCRB	0x0a	/* Root Complex Register Block */
+>> @@ -1048,6 +1048,12 @@
+>>  #define  PCI_RCLINK_LINK_ADDR	8	/* Link Entry: Address (64-bit) */
+>>  #define  PCI_RCLINK_LINK_SIZE	16	/* Link Entry: sizeof */
+>>
+>> +/* Root Complex Event Collector */
+>
+> This comment could mention "Endpoint Association", though.
 
-  - I don't want to have to update a quirk for every new Device ID
-    that needs this.
+Will do, good point.
 
-  - I don't really want to have to manage non-PCI information in the
-    struct pci_dev.  If this is AMBA- or IOMMU-related, it should be
-    stored in a structure related to AMBA or the IOMMU.
+>
+>> +#define  PCI_RCEC_EP_CAP_VER(reg)	(((reg) >> 16) & 0xf)
+>> +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* as per PCIe sec 7.9.10.1 */
+>> +#define  PCI_RCEC_RCIEP_BMAP	0x0004	/* as per PCIe sec 7.9.10.2 */
+>> +#define  PCI_RCEC_BUSN_REG	0x0008	/* as per PCIe sec 7.9.10.3 */
+>> +
+>>  /* PCIe Vendor-Specific Capability */
+>>  #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
+>>  #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
+>> diff --git a/ls-ecaps.c b/ls-ecaps.c
+>> index e71209e..589332d 100644
+>> --- a/ls-ecaps.c
+>> +++ b/ls-ecaps.c
+>> @@ -634,6 +634,32 @@ cap_rclink(struct device *d, int where)
+>>      }
+>>  }
+>>
+>> +static void
+>> +cap_rcec(struct device *d, int where)
+>> +{
+>> +  printf("Root Complex Event Collector\n");
+>
+> This could mention "Endpoint Association", too.
+
+Will add.
+
+>
+>> +  if (verbose < 2)
+>> +    return;
+>> +
+>> +  if (!config_fetch(d, where, 12))
+>> +    return;
+>> +
+>> +  u32 hdr = get_conf_long(d, where);
+>> +  byte cap_ver = PCI_RCEC_EP_CAP_VER(hdr);
+>> +  u32 bmap = get_conf_long(d, where + PCI_RCEC_RCIEP_BMAP);
+>> +  printf("\t\tDesc:\tCapabilityVersion=%02x RCiEPBitmap=%08x\n",
+>> +    cap_ver,
+>> +    bmap);
+>
+> I don't think "Desc:" is necessary.
+>
+> Isn't "cap_ver" already printed as part of the header?
+>
+>    Capabilities: [160 v2] Root Complex Event Collector
+>                       ^^
+
+Correct, itâ€™s the same.  I can skip that.
+
+>
+> The "bmap" is a bitmap of device numbers of RCiEPs on the same bus as
+> the RCEC that are associated with this RCEC.  Could be decoded as a
+> list, e.g., "0, 1, 2, 8" or "0-3, 8".  Or maybe the hex bitmap is
+> enough.  Not sure how much trouble this would be worth or if there are
+> other examples in lspci to copy.
+
+I think it could be worth it, Iâ€™ll have a look.
+
+Thanks,
+
+Sean
+
+>
+>> +  if (cap_ver < PCI_RCEC_BUSN_REG_VER)
+>> +    return;
+>> +
+>> +  u32 busn = get_conf_long(d, where + PCI_RCEC_BUSN_REG);
+>> +  printf("\t\t\tRCECLastBus=%02x RCECFirstBus=%02x\n",
+>> +    BITS(busn, 16, 8),
+>> +    BITS(busn, 8, 8));
+>> +}
