@@ -2,123 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AA6A205538
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 16:55:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC22E205571
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 17:04:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732874AbgFWOzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jun 2020 10:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732738AbgFWOzj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Jun 2020 10:55:39 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F7EC061573;
-        Tue, 23 Jun 2020 07:55:38 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e15so6199444edr.2;
-        Tue, 23 Jun 2020 07:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rSShYoiZuyH2JUu2VPJiVE0CBFdCwj/MFQetEFw6dJk=;
-        b=jiyFd4W4DRKlvqYwkPpgQ/YkwtO+fIZhekR3JeOrDCN8/Loe2VTtvOpNYa2UZLC4hX
-         2/SQnFNAfcGwU4e/pssylpBEi7SaFVqunARH0O1JodnptajCy0Tb+mTdzDwVg8B1DH5Q
-         fFbxlqjiD+N1WzQPC/lqiX5PeNF2qUpkAyrXhrUz5Dlxn96XT/HSbwpRw5imt8dzEtH2
-         J63Jf+rEEKu3Kf6sW41UyAYF929po29gXgE70JhrZWeDS6zgUUYvNtyKvx3jKBD9VZSE
-         UC8Uc8sBPc/0c8rW3s/MeWVcU2ogUTgyP4QceBMg6bBX61c8f9sflRrvBGlmNn15g5zh
-         cVWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rSShYoiZuyH2JUu2VPJiVE0CBFdCwj/MFQetEFw6dJk=;
-        b=hxaOUQR95l5A6TwpXws6CfRR0bVedOC62IHbe4yQZ1e1+FDowuslSJZNSY3gKxOSxg
-         eolMYBOsvCQdowFaBlzeZtf8J3sc0STwDcVTtV0HShw/s3+Th3vO+xIsrV6MeEqI6tF6
-         /vxfgvUjMiwQFXFMgC8xyCHjQUyqejhIQ6cxkat3f0uko8OeyToo4I/Y4PjP5M4zaoDw
-         w7ytOf7+RwoEbQ2M/bR9WcblxBmE/tfnWFjwP1WD5AQ51VXJtVebwlDowHHxwNa6Y7hy
-         mKMUn1pzbQYzexTaHIrJIHwuRaLp8L8BisJQOcGNmyXAOjmeifTn5TQWuCDNM1odGS2F
-         L9mg==
-X-Gm-Message-State: AOAM530K+YImEr9DnCA82I9aNqzevc8QBoPPSKa9oYdY1F6D0Bu5ygdb
-        MI/egnxo5/EGaMcLR22hrc4/J+E8
-X-Google-Smtp-Source: ABdhPJz+jiX/nfuajM9vf5i0JXam3TM9ozBPu0Fj4NKu9j2mgDF2CaG5HvOzfeu2fJioF+Y3gsCS4A==
-X-Received: by 2002:a05:6402:1481:: with SMTP id e1mr22264556edv.113.1592924137559;
-        Tue, 23 Jun 2020 07:55:37 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id q7sm8693452eja.69.2020.06.23.07.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 07:55:35 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1732868AbgFWPE3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jun 2020 11:04:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732946AbgFWPE3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Jun 2020 11:04:29 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94EC420723;
+        Tue, 23 Jun 2020 15:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592924669;
+        bh=pYSmEX90OpGgB4bw3JQlLwOPKGPZt8zcCg2Jw+YWJhM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uyCRgzznNIaGzwTA5WSAD0mfkUx7PWjjDA0xuNRfK8wdFyqid6COQmfVRcULXo7eB
+         x6r9H+xRROcynvqijhjGKwufYcigaaHtOMvN1NklZTodXP7DkrU83liurSsGCNLFtO
+         sRrkKEDXRbWwc9kz0no38z13LtKl0kt/Ne0JEuNE=
+Date:   Tue, 23 Jun 2020 10:04:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH v2 2/2] PCI: tegra: Remove PLL power supplies
-Date:   Tue, 23 Jun 2020 16:55:28 +0200
-Message-Id: <20200623145528.1658337-2-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623145528.1658337-1-thierry.reding@gmail.com>
-References: <20200623145528.1658337-1-thierry.reding@gmail.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Message-ID: <20200623150427.GA2403606@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c5d7b2f1-6b32-d965-3b60-eb70a26e02b4@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Fri, Jun 19, 2020 at 10:26:54AM +0800, Zhangfei Gao wrote:
+> Have studied _DSM method, two issues we met comparing using quirk.
+> 
+> 1. Need change definition of either pci_host_bridge or pci_dev, like adding
+> member can_stall,
+> while pci system does not know stall now.
+> 
+> a, pci devices do not have uuid: uuid need be described in dsdt, while pci
+> devices are not defined in dsdt.
+>     so we have to use host bridge.
 
-The Tegra PCI controller driver doesn't need to control the PLL power
-supplies directly, but rather uses the pads provided by the XUSB pad
-controller, which in turn is responsible for supplying power to the
-PLLs.
+PCI devices *can* be described in the DSDT.  IIUC these particular
+devices are hardwired (not plug-in cards), so platform firmware can
+know about them and could describe them in the DSDT.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+> b,  Parsing dsdt is in in pci subsystem.
+> Like drivers/acpi/pci_root.c:
+>        obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid,
+> 1,
+>                                 IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
+> 
+> After parsing DSM in pci, we need record this info.
+> Currently, can_stall info is recorded in iommu_fwspec,
+> which is allocated in iommu_fwspec_init and called by iort_iommu_configure
+> for uefi.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 235b456698fc..f87a09d21eb0 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2025,7 +2025,7 @@ static int tegra_pcie_get_regulators(struct tegra_pcie *pcie, u32 lane_mask)
- 		pcie->supplies[i++].supply = "hvdd-pex";
- 		pcie->supplies[i++].supply = "vddio-pexctl-aud";
- 	} else if (of_device_is_compatible(np, "nvidia,tegra210-pcie")) {
--		pcie->num_supplies = 6;
-+		pcie->num_supplies = 3;
- 
- 		pcie->supplies = devm_kcalloc(pcie->dev, pcie->num_supplies,
- 					      sizeof(*pcie->supplies),
-@@ -2033,14 +2033,11 @@ static int tegra_pcie_get_regulators(struct tegra_pcie *pcie, u32 lane_mask)
- 		if (!pcie->supplies)
- 			return -ENOMEM;
- 
--		pcie->supplies[i++].supply = "avdd-pll-uerefe";
- 		pcie->supplies[i++].supply = "hvddio-pex";
- 		pcie->supplies[i++].supply = "dvddio-pex";
--		pcie->supplies[i++].supply = "dvdd-pex-pll";
--		pcie->supplies[i++].supply = "hvdd-pex-pll-e";
- 		pcie->supplies[i++].supply = "vddio-pex-ctl";
- 	} else if (of_device_is_compatible(np, "nvidia,tegra124-pcie")) {
--		pcie->num_supplies = 7;
-+		pcie->num_supplies = 4;
- 
- 		pcie->supplies = devm_kcalloc(dev, pcie->num_supplies,
- 					      sizeof(*pcie->supplies),
-@@ -2050,11 +2047,8 @@ static int tegra_pcie_get_regulators(struct tegra_pcie *pcie, u32 lane_mask)
- 
- 		pcie->supplies[i++].supply = "avddio-pex";
- 		pcie->supplies[i++].supply = "dvddio-pex";
--		pcie->supplies[i++].supply = "avdd-pex-pll";
- 		pcie->supplies[i++].supply = "hvdd-pex";
--		pcie->supplies[i++].supply = "hvdd-pex-pll-e";
- 		pcie->supplies[i++].supply = "vddio-pex-ctl";
--		pcie->supplies[i++].supply = "avdd-pll-erefe";
- 	} else if (of_device_is_compatible(np, "nvidia,tegra30-pcie")) {
- 		bool need_pexa = false, need_pexb = false;
- 
--- 
-2.27.0
+You can look for a _DSM wherever it is convenient for you.  It could
+be in an AMBA shim layer.
 
+> 2. Guest kernel also need support sva.
+> Using quirk, the guest can boot with sva enabled, since quirk is
+> self-contained by kernel.
+> If using  _DSM, a specific uefi or dtb has to be provided,
+> currently we can useQEMU_EFI.fd from apt install qemu-efi
+
+I don't quite understand what this means, but as I mentioned before, a
+quirk for a *limited* number of devices is OK, as long as there is a
+plan that removes the need for a quirk for future devices.
+
+E.g., if the next platform version ships with a DTB or firmware with a
+_DSM or other mechanism that enables the kernel to discover this
+information without a kernel change, it's fine to use a quirk to cover
+the early platform.
+
+The principles are:
+
+  - I don't want to have to update a quirk for every new Device ID
+    that needs this.
+
+  - I don't really want to have to manage non-PCI information in the
+    struct pci_dev.  If this is AMBA- or IOMMU-related, it should be
+    stored in a structure related to AMBA or the IOMMU.
