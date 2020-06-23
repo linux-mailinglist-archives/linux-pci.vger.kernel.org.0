@@ -2,122 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C09D7204B95
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 09:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4364A204B96
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 09:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731617AbgFWHsw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jun 2020 03:48:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731585AbgFWHsv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Jun 2020 03:48:51 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDFFC061797
-        for <linux-pci@vger.kernel.org>; Tue, 23 Jun 2020 00:48:50 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id p11so1015056pff.11
-        for <linux-pci@vger.kernel.org>; Tue, 23 Jun 2020 00:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=iXMHLbguntKcuTgr1nAq0fpxZctLmOVLPocRZ01HV1s=;
-        b=Dvb9jWrWxYf0cUS7+mre8Ce7N6LCPCbgM4TfzIgO9x/j/Sz44QbFtHYcBvV6YcHykC
-         /UOjUDAlRBaipXGhgPtfj5VOhd0MjmoLTxYmHS14ROKFa4k7B6adT6mjHgV2lQZYAb2L
-         9lBtnjHKiulqZ7h6mF5QFFytTHA5SEJIAChcsfvKC0+xwvXLEhh4oJ/sXC4FDnOEad0q
-         wFvAaXsf3se/vnfb3bW1sYXvPN+QVKdtP6yU8qG9ZHjQx6589ayIzIweyVGj7eNLSCdB
-         qISGLxSJaNs+JUUvbM8FXzy2OTirEzU1whLCBwbJsuBLePOiMyrCufoYlY4bb/bJX8TB
-         Kruw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=iXMHLbguntKcuTgr1nAq0fpxZctLmOVLPocRZ01HV1s=;
-        b=PNfVItKLmNgAZg3UFV9KHX0e5gU932mHIu4DnCUPgkuFl8aXNxCofmfktwwTm5bRUR
-         QBaGIE+9o05Qc1Z+ixm/w5BmMN/qJqwqa+W88PMzU3H1jvZpHkhtT9vn22rymTYgmD6A
-         9wnT5tj1OEpbjXSUToEuuY0iXvPTlu4gzQPGWgncSnKMaLGXmPphqOpF2VVEMt2hxr33
-         kid/x8bP+y6cA3h2YEgRf8HVapoL8yJpL9Anzk8iBQRxGn/uFViqHISJ0nXg1fQRq3h+
-         2Imn8o2xnvGUQcNkbd8edohixQ4vJluZhBia6rzJsyFhBJ4BeivHjMUbvcMO7Z/9PWbG
-         w4fw==
-X-Gm-Message-State: AOAM532ad9lB7ckIH4CLulP2DSZyOHJNaO8lmcqRTiTHp+f9i2XQf+EZ
-        3noevITgp132Eq2JZHAQEyKc/aRKsp09AQ==
-X-Google-Smtp-Source: ABdhPJxwJ+AW8uQAXY8Win57SIEKcys5G+XsLikqbv6KNfk0Z4v0oLWW7NunPD5K78dMacn0DXTtuQ==
-X-Received: by 2002:a62:f201:: with SMTP id m1mr25533751pfh.198.1592898529334;
-        Tue, 23 Jun 2020 00:48:49 -0700 (PDT)
-Received: from [10.37.1.30] ([45.135.186.125])
-        by smtp.gmail.com with ESMTPSA id u6sm16409369pfc.83.2020.06.23.00.48.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 00:48:48 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        id S1731619AbgFWHs5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jun 2020 03:48:57 -0400
+Received: from smtp.asem.it ([151.1.184.197]:54869 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731585AbgFWHs5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:48:57 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000334881.MSG 
+        for <linux-pci@vger.kernel.org>; Tue, 23 Jun 2020 09:48:55 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 23
+ Jun 2020 09:48:52 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 23 Jun 2020 09:48:52 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20200601174104.GA734973@bjorn-Precision-5520>
- <779f4044-cf6a-b0d3-916f-0274450c07d3@linaro.org>
- <20200622115536.GH3701@8bytes.org>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <d007cbea-85c0-6c75-fc4a-e2872ff59ea4@linaro.org>
-Date:   Tue, 23 Jun 2020 15:48:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v2 1/1] PCI: cadence-ep: Remove obsolete path from comment
+Date:   Tue, 23 Jun 2020 09:48:51 +0200
+Message-ID: <20200623074851.7832-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200622115536.GH3701@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020E.5EF1B3E5.0037,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Joerg
+This comment still refers to the old driver pathname,
+when all PCI drivers were located directly under the
+drivers/pci directory.
 
-On 2020/6/22 下午7:55, Joerg Roedel wrote:
-> On Thu, Jun 04, 2020 at 09:33:07PM +0800, Zhangfei Gao wrote:
->> +++ b/drivers/iommu/iommu.c
->> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
->> fwnode_handle *iommu_fwnode,
->>          fwspec->iommu_fwnode = iommu_fwnode;
->>          fwspec->ops = ops;
->>          dev_iommu_fwspec_set(dev, fwspec);
->> +
->> +       if (dev_is_pci(dev))
->> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
->> +
-> That's not going to fly, I don't think we should run the fixups twice,
-> and they should not be run from IOMMU code. Is the only reason for this
-> second pass that iommu_fwspec is not yet allocated when it runs the
-> first time? I ask because it might be easier to just allocate the struct
-> earlier then.
-Thanks for looking this.
+Anyway the function name itself is enough, so we can
+remove the overabundant path reference.
 
-Yes, it is the only reason calling fixup secondly after iommu_fwspec is 
-allocated.
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
 
-The first time fixup final is very early in pci_bus_add_device.
-If allocating iommu_fwspec earlier, it maybe in pci_alloc_dev.
-And assigning ops still in iommu_fwspec_init.
-Have tested it works.
-Not sure is it acceptable?
+v1: - after the suggestion of Bjorn, remove the whole comment line related to
+      the wrong path
+    - add: Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+V2: - change the subject line according to the previous commits of the
+      same file
+    - remove wrong "Acked-by ..."
 
-Alternatively, adding can_stall to struct pci_dev is simple but ugly too,
-since pci does not know stall now.
+ drivers/pci/controller/cadence/pcie-cadence-ep.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-Thanks
-
-
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 1c15c8352125..690eefd328ea 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -276,7 +276,6 @@ static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 intx)
+ 	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
+ 	/*
+ 	 * The mdelay() value was taken from dra7xx_pcie_raise_legacy_irq()
+-	 * from drivers/pci/dwc/pci-dra7xx.c
+ 	 */
+ 	mdelay(1);
+ 	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
+-- 
+2.17.1
 
