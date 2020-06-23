@@ -2,81 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE74D204DDE
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 11:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5744E205045
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jun 2020 13:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbgFWJXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jun 2020 05:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35164 "EHLO
+        id S1732457AbgFWLPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jun 2020 07:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731912AbgFWJXx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Jun 2020 05:23:53 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855BEC061573;
-        Tue, 23 Jun 2020 02:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=n42uQFh17CdO0bIElKUPrWq2FZ0jIAeEhIRWnOCALuU=; b=uwd8NM91afP+YPwWO0zwWWECYF
-        te8u/t4tum1nk/XdFbYYU/ZyLOoDRuEj5aRqUrDQO45/erMoawOMwOjZAioaX51dTXjKamd2vtar1
-        BwImxnHqwdzY/Cn3tSKyaPRaLu5qOZaN3raDA/JXMB1lWSvLA0CizlO5iAw2HggPqtixMeGbsWSkX
-        6dVuKdU+5Kd0bD+d11ZrppzcItzKCL1RDNMJfI3WYakzbXsT8gdXTqqrx/oszZNsZ4I38EvycrLEo
-        IPLCOGE+0zxP6ZtLeSfgmZOK34uAzkwKfNT0mm8KxVPXQ03JH0+q0C3Br72eNHgo5bbEyQA9fvogA
-        FakPkASw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnf98-0000ln-Hf; Tue, 23 Jun 2020 09:23:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CDE0F3003E5;
-        Tue, 23 Jun 2020 11:23:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 65933237095E6; Tue, 23 Jun 2020 11:23:12 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 11:23:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
-        sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com
-Subject: Re: [Patch v2 3/3] net: Restrict receive packets queuing to
- housekeeping CPUs
-Message-ID: <20200623092312.GC4781@hirez.programming.kicks-ass.net>
-References: <20200622234510.240834-1-nitesh@redhat.com>
- <20200622234510.240834-4-nitesh@redhat.com>
+        with ESMTP id S1732451AbgFWLPS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Jun 2020 07:15:18 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3ECC061795
+        for <linux-pci@vger.kernel.org>; Tue, 23 Jun 2020 04:15:17 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so2588836wme.5
+        for <linux-pci@vger.kernel.org>; Tue, 23 Jun 2020 04:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
+        b=ZxmeZSlTKrBE7SIwCgUr5+IQXg0VboTRBMAPFefZfO9Y0QFQt27pNiz9D343jyqCUK
+         iaukbTFgnP7KKKusIyTazti58H93KSxj5LxKpIJd73ae/UrIM+D2EydiZsgEHWrBVUHY
+         A49p4eYwxffCDetzsfxQQ5f2VIoHaS415E/jSLFd+D1X1bKNgiZ98vBg9LdIQ7Zjx+BS
+         wClobk34EJhAFFoD4AFbiZv4S8CawNY7AMsJ0JPyNPDbdARs8NuXUDeVFTvfTpqMkwxw
+         u6E/ZhJKOYRnmbknRM2i4voRN+Bd5YK+CQapxhy1jB12K4/pkPKclZ+p4G7ceGTNd0Hh
+         pBMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
+        b=d8sHoJ3W4Qbf4EJMrMHdg6fPW1xRFON2caNkS9/ZtPoDi8iSq4adbANafbJJHbh8xA
+         TCXdHOsGp26oZZOalqpTA9WaY7TwgD/d3+ECJPymhTIuBjLHYBI9lYx/bstUfSYuMgQF
+         R+ANVLLznhCMIlGdvKt2SvENxhOaOz1rtVkA1pDI7b260D6wi5ES4GHaIKPU4I0a8Z4S
+         rbJ/AJMouGemWGUL1SUzG4Ph3E2pe1yTiiI4/XAsiVbrSLDfgboYEEAjdCZHgXADqgUb
+         u0yRgpD6kfTqWq1IZ2Ae0jIACulfjyvcLs0Wo8P7NSz5LbtbIjYWl8wtSP0ozvtwIhVH
+         bjLQ==
+X-Gm-Message-State: AOAM530QJT5eNAwiyCR7IGqPpnSwlgb3tnlJIZNxm4tVM2XNbDnqtbns
+        jR0IlPjxFg6rTzhhe41DaV0kH9ODgnkwM11RHI0=
+X-Google-Smtp-Source: ABdhPJzAyLvva5MDt9FtQlBzIToXQYgdJw2LiJAYqbGSCL3ZKk62C2z69LEYyraGzIlr1C9AOifE6eGCp9CB5XxUKNE=
+X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr2028887wmo.72.1592910915898;
+ Tue, 23 Jun 2020 04:15:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622234510.240834-4-nitesh@redhat.com>
+Received: by 2002:a1c:f002:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 04:15:15
+ -0700 (PDT)
+Reply-To: sarahkoffi389@yahoo.co.jp
+From:   Sarah Koffi <paulwiliam782@gmail.com>
+Date:   Tue, 23 Jun 2020 12:15:15 +0100
+Message-ID: <CAHqcnY1KD3hKmPHEgt8yiB2mN+LLiSnOh+cvFm_AesZ7xtOqUQ@mail.gmail.com>
+Subject: Greetings From Mrs. Sarah Koffi
+To:     sarahkoffi389@yahoo.co.jp
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 07:45:10PM -0400, Nitesh Narayan Lal wrote:
-> @@ -756,6 +757,13 @@ static ssize_t store_rps_map(struct netdev_rx_queue *queue,
->  		return err;
->  	}
->  
-> +	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
-> +	cpumask_and(mask, mask, housekeeping_cpumask(hk_flags));
-> +	if (cpumask_weight(mask) == 0) {
+Greetings From Mrs. Sarah Koffi
 
-We have cpumask_empty() for that, which is a much more efficient way of
-testing the same.
+I'm contacting you based on your good profiles I read and for a good
+reasons, I am in search of a property to buy in your country as I
+intended to come over to your
+country for investment, Though I have not meet with you before but I
+believe that one has to risk confiding in someone to succeed sometimes
+in life.
 
-> +		free_cpumask_var(mask);
-> +		return -EINVAL;
-> +	}
-> +
->  	map = kzalloc(max_t(unsigned int,
->  			    RPS_MAP_SIZE(cpumask_weight(mask)), L1_CACHE_BYTES),
->  		      GFP_KERNEL);
-> -- 
-> 2.18.4
-> 
+My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
+Federal Government of Sudan and he has a personal Oil firm in Bentiu
+Oil zone town and Upper
+Nile city. What I have experience physically, I don't wish to
+experience it again in my life due to the recent civil Ethnic war
+cause by our President Mr. Salva Kiir
+and the rebel leader Mr Riek Machar, I have been Under United Nation
+refuge camp in chad to save my life and that of my little daughter.
+
+Though, I do not know how you will feel to my proposal, but the truth
+is that I sneaked into Chad our neighboring country where I am living
+now as a refugee.
+I escaped with my little daughter when the rebels bust into our house
+and killed my husband as one of the big oil dealers in the country,
+ever since then, I have being on the run.
+
+I left my country and move to Chad our neighboring country with the
+little ceasefire we had, due to the face to face peace meeting accord
+coordinated by the US Secretary of State, Mr John Kerry and United
+Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
+and the rebel leader Mr Riek Machar to stop this war.
+
+I want to solicit for your partnership with trust to invest the $8
+million dollars deposited by my late husband in Bank because my life
+is no longer safe in our country, since the rebels are looking for the
+families of all the oil business men in the country to kill, saying
+that they are they one that is milking the country dry.
+
+I will offer you 20% of the total fund for your help while I will
+partner with you for the investment in your country.
+If I get your reply.
+
+I will wait to hear from you so as to give you details.With love from
+
+ i need you to contact me here sarahkoffi389@yahoo.co.jp
+
+Mrs. Sarah Koffi
