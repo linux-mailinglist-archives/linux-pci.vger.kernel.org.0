@@ -2,118 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58E11207CC0
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 22:15:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 738E1207D30
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 22:35:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406351AbgFXUPT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 16:15:19 -0400
-Received: from mail-eopbgr30068.outbound.protection.outlook.com ([40.107.3.68]:48766
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406318AbgFXUPT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:15:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BHnRdY3XO4XXtvCZ0dlUeQOUeRxcpQ99sExRaH13UlW0tRA5bQOA1COtw1rn2iamBsGGbELKiwD+x6ks+Svaq4rvnzq02bcRHX3hGrWgSVfpmXNWkhPLPUbooVO0uGE0C5RIOSP5RVa1DHWRrRLZZNP1CikeFr+sQsxOIGzkdCqRZCHd82BcOD5m9EJzDdbHqDlVLJkN2p+5CcG1ujh7sET/JNP60sXRlmeyME6pJbQAm+KApdKc8jmnkNJGYLm0gB22r3Y+LjC3f/cCy0kXlQmKOUk6D/jLMSO8x9GhQSU0c68eEOVGyddBVyv7bD+nD9qlvHdJqPsqRAK12Qs/3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ZPO/hOqK55KzBgyth5Ug3xzGpg4lF2hHl9jhRsiIwA=;
- b=gEAKRTCNGYquRxqMxwkb2VSQ3e1M3yYi8M6CFI39VvVy0B+kNJnLS0qenBsp6+VhtwUrOvVHDfAYp4eEfsSCGy2OIFP7f/Lz1/rbmN2d2ExOOy+69fxnsSKD3dO7e6JOqX1FpVlEA7h4QyuQbLEMJ4cvNvC2BJIlzKMF6xYvF0mrxqlM3t+0mApVzkW33CdKiNBTDEQYxdqtb89Vnjoul7xjGQV+PvpGOhjwb6CpNIzx//lDnim1ivdek6N5P1JACrNPtbIgko1BV+38lLV5WbJCG4TiXJ+XTxs4T4ecmn/wN2kt9mKvEaqApMmQ71+BR4/tQpbUVyid+cQ6IMZf6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ZPO/hOqK55KzBgyth5Ug3xzGpg4lF2hHl9jhRsiIwA=;
- b=roeATFXPsIWPxX9GNktJelhu2iZRsfI92myWhx+5Wx1tTCza84Kz7IIn9wHQuC/Agaai1oekT19v+QtDhPBOmzEIB8rJZpQHFoIbBUc2TjuqpLC9C94HS10dqY5yOREuZzUNxjSu5+DhSV7rbg9HviIBgm8tOHYgB4kA6EBPdfA=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB3248.eurprd05.prod.outlook.com (2603:10a6:802:1c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.24; Wed, 24 Jun
- 2020 20:15:14 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::2405:4594:97a:13c]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::2405:4594:97a:13c%2]) with mapi id 15.20.3131.020; Wed, 24 Jun 2020
- 20:15:14 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     Aya Levin <ayal@mellanox.com>, "kuba@kernel.org" <kuba@kernel.org>
-CC:     "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "alexander.h.duyck@linux.intel.com" 
-        <alexander.h.duyck@linux.intel.com>
-Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
-Thread-Topic: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
-Thread-Index: AQHWSZftaIEAvWsK9UqUrJlFGGGeOajmuBIAgACd/gCAAAqXAIAApF4AgAAwHoA=
-Date:   Wed, 24 Jun 2020 20:15:14 +0000
-Message-ID: <19a722952a2b91cc3b26076b8fd74afdfbfaa7a4.camel@mellanox.com>
-References: <20200623195229.26411-1-saeedm@mellanox.com>
-         <20200623195229.26411-11-saeedm@mellanox.com>
-         <20200623143118.51373eb7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <dda5c2b729bbaf025592aa84e2bdb84d0cda7570.camel@mellanox.com>
-         <082c6bfe-5146-c213-9220-65177717c342@mellanox.com>
-         <20200624102258.4410008d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200624102258.4410008d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.3 (3.36.3-1.fc32) 
-authentication-results: mellanox.com; dkim=none (message not signed)
- header.d=none;mellanox.com; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bdf5c12b-ec1e-4f68-0c03-08d8187b4e1c
-x-ms-traffictypediagnostic: VI1PR05MB3248:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB3248167CE8FA0A28B92111EEBE950@VI1PR05MB3248.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0444EB1997
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hdvrSIGy4V3kOR3LLe1MHnicmyjyEL/Wj8/yIHrpELg/pCyN+ZiZ/nPSX6hpVym56BhpH2pycXZLr980rHo5Z4zSzs14dXDFZP7ZyF/PrUabQpOSN8jV86pa/6QzgVsFmrFv7DcxaWMLBs2CgylrOzXtaNYXDZ+WVI2b0njrZ/dUUoASJFYAF1K7PxeoD8rTZrvz3gR4mTgh/mPPatOcFKqs4GsDnW23HNMK2NJcFe3fiJb1SKyxeIq60109Vao8JNKTsfeuz4jcFooIQYETggN+hSy96EOcERkZOleHd1fsu89v8YafXUPJbOzZLbPmI0kRw9DK44k55+R+oJC8mA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(110136005)(2616005)(54906003)(316002)(66556008)(2906002)(36756003)(186003)(71200400001)(478600001)(4326008)(66946007)(66446008)(66476007)(64756008)(6512007)(91956017)(6486002)(76116006)(5660300002)(6506007)(26005)(8936002)(83380400001)(86362001)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: nSg6ftIZ57ILLuc62/38q1QdEeRx4ui0HAhydN+mLFKaTVUdfltqD3Kk1Hu+7hr3OvZVpnlWGHJSaSR2H5qm2F8QKq/PzJYjMwtFk4lBtdL4sjJ36zaFp/6rSREbtpoRjmQqdCBOJSb2DSgKG0B1Uolg60ojN/65JiH8mCG0b67K3aZwr356qA5RTgQMPbddTr+Nl325x0iQxdoBZrdAmc0jT43n7vrl87daef9Lq08QJKkVwhR1fb0fenLJxNUk+R9/NsXqueCUc+q5z/cYVJ7IOHxPDuwd9AVSvqjXRR0ytSVT6v0Cl95a+vtIYC38aVWtNUgma3x42yKvD9eKqKsEsgsbZyMTed0XXxNrgp1F1hfWDKVb+9pkgbpeUKcnMLmC6Kw570FR1qKrqbAQ9ele31JIYUR8uJ4WlWC6OFouNcnDJaDndSEjhOC3gxZeREmjDAXXlH3t03xb6VbgrcT/amDYiWWtxPW72ett3U4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5569BB2C536A3B418806AF13DA89EA11@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdf5c12b-ec1e-4f68-0c03-08d8187b4e1c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 20:15:14.1421
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Pq4voN43I9G+g7FRSVEXHetI3WhzpLUKxjwvWAY9EeL6tMhNExKRmqTIqPqQvGmHuBKvPyp3fXW4L63wPPk8ig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3248
+        id S1727981AbgFXUct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 16:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388332AbgFXUcs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 16:32:48 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF6DC061795
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 13:32:48 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b135so3497242yba.11
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 13:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=geZqQu8Pc2IZyEmyfjSbirVoyCHoNCVPX8WSrD5/a0I=;
+        b=Uawx1HymTuOmFuIsE6m0edc2JOJkrIL4ohCvAqVmbJ8lL51+F8GFU8Edzr7cqZcv2w
+         HodyjPnW3CEUXq8PkZVULO6ZyoUtxp9+p+vdtGUCMz8qqae3fj+ztQ8oZGg5KLQxzxtv
+         WsCNEibFNfuA+bNlcIR8b4sSEDOv2SkH85c5Dy7chvY+wP/aaRR1NsYEhp1bKM54GsoI
+         2QcLu0Jhfop40Tu+FeyQ89Qe5QVYishLUcPnbhRan/pilxFWfHclHWVyGJPxpvvrwTh0
+         JNHLSYYTI2a6tpFbw45+Zc3Ez5EH+jMImL6HifoQ7sZW+Y10m8LKlencaSHV2sNpKm9n
+         vXag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=geZqQu8Pc2IZyEmyfjSbirVoyCHoNCVPX8WSrD5/a0I=;
+        b=JLoUceF3EMlDP278tnGW1Miz8jQfHGPz3iq7WRI9FKVtuGm/bBZ7pZvEcLTRiaRrMa
+         PtE7XQje921xxbEBByUcsO/YfdZ34/02idfOQOlnIIfynMjo0nj6I9AD9hK2BMq71sX/
+         9uVWhA9MbHe8NEi527NGL+yjjwwplKBcPW2nsukgqn61RSMneG/RZZmDy1MknvJ4wnL+
+         F5fVHWk+iwpdDQPtOOfeakpOUQpbw634aAtTOK7Mgwn49r3hyUJ6YpRChr5Qtm1ql6yt
+         5mId7xHuBLmNrXNFaJIO+lnHuwTS0dGAYbyxchR8n051rTdNm5KP7bCx71ElplfW3YeA
+         jJbg==
+X-Gm-Message-State: AOAM530JWzt8s7OLvFS3a20IocaElcyJPWopfsy/Dq7QL8oat8drla3A
+        Ce2N/MA0Xp4ZoW0bvct1paR0R+k+VCm9HZ7eJGQ=
+X-Google-Smtp-Source: ABdhPJxWR9GEuM9Xe3hags9/hH99MHEAXvV4G6BQoWnGF1JJpG+hf2xaFzi6meCZqAzm99eCovUBw+L4m3sg7uT3BU4=
+X-Received: by 2002:a25:3342:: with SMTP id z63mr44129932ybz.200.1593030767109;
+ Wed, 24 Jun 2020 13:32:47 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:31:38 -0700
+Message-Id: <20200624203200.78870-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH 00/22] add support for Clang LTO
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTI0IGF0IDEwOjIyIC0wNzAwLCBKYWt1YiBLaWNpbnNraSB3cm90ZToN
-Cj4gT24gV2VkLCAyNCBKdW4gMjAyMCAxMDozNDo0MCArMDMwMCBBeWEgTGV2aW4gd3JvdGU6DQo+
-ID4gPiA+IEkgdGhpbmsgTWljaGFsIHdpbGwgcmlnaHRseSBjb21wbGFpbiB0aGF0IHRoaXMgZG9l
-cyBub3QgYmVsb25nDQo+ID4gPiA+IGluDQo+ID4gPiA+IHByaXZhdGUgZmxhZ3MgYW55IG1vcmUu
-IEFzICgvaWY/KSBBUk0gZGVwbG95bWVudHMgdGFrZSBhDQo+ID4gPiA+IGZvb3Rob2xkDQo+ID4g
-PiA+IGluIERDIHRoaXMgd2lsbCBiZWNvbWUgYSBjb21tb24gc2V0dGluZyBmb3IgbW9zdCBOSUNz
-LiAgDQo+ID4gPiANCj4gPiA+IEluaXRpYWxseSB3ZSB1c2VkIHBjaWVfcmVsYXhlZF9vcmRlcmlu
-Z19lbmFibGVkKCkgdG8NCj4gPiA+ICAgcHJvZ3JhbW1hdGljYWxseSBlbmFibGUgdGhpcyBvbi9v
-ZmYgb24gYm9vdCBidXQgdGhpcyBzZWVtcyB0bw0KPiA+ID4gaW50cm9kdWNlIHNvbWUgZGVncmFk
-YXRpb24gb24gc29tZSBJbnRlbCBDUFVzIHNpbmNlIHRoZSBJbnRlbA0KPiA+ID4gRmF1bHR5DQo+
-ID4gPiBDUFVzIGxpc3QgaXMgbm90IHVwIHRvIGRhdGUuIEF5YSBpcyBkaXNjdXNzaW5nIHRoaXMg
-d2l0aCBCam9ybi4gIA0KPiA+IEFkZGluZyBCam9ybiBIZWxnYWFzDQo+IA0KPiBJIHNlZS4gU2lt
-cGx5IHVzaW5nIHBjaWVfcmVsYXhlZF9vcmRlcmluZ19lbmFibGVkKCkgYW5kIGJsYWNrbGlzdGlu
-Zw0KPiBiYWQgQ1BVcyBzZWVtcyBmYXIgbmljZXIgZnJvbSBvcGVyYXRpb25hbCBwZXJzcGVjdGl2
-ZS4gUGVyaGFwcyBCam9ybg0KPiB3aWxsIGNoaW1lIGluLiBQdXNoaW5nIHRoZSB2YWxpZGF0aW9u
-IG91dCB0byB0aGUgdXNlciBpcyBub3QgYSBncmVhdA0KPiBzb2x1dGlvbiBJTUhPLg0KPiANCg0K
-Q2FuIHdlIG1vdmUgb24gd2l0aCB0aGlzIHBhdGNoIGZvciBub3cgPyBzaW5jZSB3ZSBhcmUgZ29p
-bmcgdG8ga2VlcCB0aGUNCnVzZXIga25vYiBhbnl3YXksIHdoYXQgaXMgbWlzc2luZyBpcyBzZXR0
-aW5nIHRoZSBkZWZhdWx0IHZhbHVlDQphdXRvbWF0aWNhbGx5IGJ1dCB0aGlzIGNhbid0IGJlIGRv
-bmUgdW50aWwgd2UNCmZpeCBwY2llX3JlbGF4ZWRfb3JkZXJpbmdfZW5hYmxlZCgpDQo=
+This patch series adds support for building x86_64 and arm64 kernels
+with Clang's Link Time Optimization (LTO).
+
+In addition to performance, the primary motivation for LTO is to allow
+Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+Pixel devices have shipped with LTO+CFI kernels since 2018.
+
+Most of the patches are build system changes for handling LLVM bitcode,
+which Clang produces with LTO instead of ELF object files, postponing
+ELF processing until a later stage, and ensuring initcall ordering.
+
+Note that first objtool patch in the series is already in linux-next,
+but as it's needed with LTO, I'm including it also here to make testing
+easier.
+
+Sami Tolvanen (22):
+  objtool: use sh_info to find the base for .rela sections
+  kbuild: add support for Clang LTO
+  kbuild: lto: fix module versioning
+  kbuild: lto: fix recordmcount
+  kbuild: lto: postpone objtool
+  kbuild: lto: limit inlining
+  kbuild: lto: merge module sections
+  kbuild: lto: remove duplicate dependencies from .mod files
+  init: lto: ensure initcall ordering
+  init: lto: fix PREL32 relocations
+  pci: lto: fix PREL32 relocations
+  modpost: lto: strip .lto from module names
+  scripts/mod: disable LTO for empty.c
+  efi/libstub: disable LTO
+  drivers/misc/lkdtm: disable LTO for rodata.o
+  arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
+  arm64: vdso: disable LTO
+  arm64: allow LTO_CLANG and THINLTO to be selected
+  x86, vdso: disable LTO only for vDSO
+  x86, ftrace: disable recordmcount for ftrace_make_nop
+  x86, relocs: Ignore L4_PAGE_OFFSET relocations
+  x86, build: allow LTO_CLANG and THINLTO to be selected
+
+ .gitignore                            |   1 +
+ Makefile                              |  27 ++-
+ arch/Kconfig                          |  65 +++++++
+ arch/arm64/Kconfig                    |   2 +
+ arch/arm64/Makefile                   |   1 +
+ arch/arm64/kernel/vdso/Makefile       |   4 +-
+ arch/x86/Kconfig                      |   2 +
+ arch/x86/Makefile                     |   5 +
+ arch/x86/entry/vdso/Makefile          |   5 +-
+ arch/x86/kernel/ftrace.c              |   1 +
+ arch/x86/tools/relocs.c               |   1 +
+ drivers/firmware/efi/libstub/Makefile |   2 +
+ drivers/misc/lkdtm/Makefile           |   1 +
+ include/asm-generic/vmlinux.lds.h     |  12 +-
+ include/linux/compiler-clang.h        |   4 +
+ include/linux/compiler.h              |   2 +-
+ include/linux/compiler_types.h        |   4 +
+ include/linux/init.h                  |  78 +++++++-
+ include/linux/pci.h                   |  15 +-
+ kernel/trace/ftrace.c                 |   1 +
+ lib/Kconfig.debug                     |   2 +-
+ scripts/Makefile.build                |  55 +++++-
+ scripts/Makefile.lib                  |   6 +-
+ scripts/Makefile.modfinal             |  40 +++-
+ scripts/Makefile.modpost              |  26 ++-
+ scripts/generate_initcall_order.pl    | 270 ++++++++++++++++++++++++++
+ scripts/link-vmlinux.sh               | 100 +++++++++-
+ scripts/mod/Makefile                  |   1 +
+ scripts/mod/modpost.c                 |  16 +-
+ scripts/mod/modpost.h                 |   9 +
+ scripts/mod/sumversion.c              |   6 +-
+ scripts/module-lto.lds                |  26 +++
+ scripts/recordmcount.c                |   3 +-
+ tools/objtool/elf.c                   |   2 +-
+ 34 files changed, 737 insertions(+), 58 deletions(-)
+ create mode 100755 scripts/generate_initcall_order.pl
+ create mode 100644 scripts/module-lto.lds
+
+
+base-commit: 26e122e97a3d0390ebec389347f64f3730fdf48f
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
