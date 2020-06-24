@@ -2,89 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C65207EBD
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 23:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA11207ECE
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 23:45:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404443AbgFXViA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 17:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403996AbgFXVh7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:37:59 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B668D207E8;
-        Wed, 24 Jun 2020 21:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593034679;
-        bh=DwNy4a1dTP0cML/NqcYH/mc0n8ghiF4jwJVglyBIYl0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ba9s7rmGgoLzByJn2FUikabBHUIk7ZVOD7zfHBPMMZBzqYC2iWKiTfku4gKCdXAEk
-         Ep15zWtBl7na1pM4n1ksy6It7Sw2shsTNoYfL+d9riHKVqXlk0wTot4m0V5e/fZV3K
-         FrYi8MBZSK0nSIUKaclGUgr+R5RV4kMYQxfQa9cg=
-Date:   Wed, 24 Jun 2020 16:37:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
-        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-acpi@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
-Message-ID: <20200624213757.GA2591059@bjorn-Precision-5520>
+        id S2404685AbgFXVpj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 17:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404505AbgFXVpi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 17:45:38 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7573C0613ED
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 14:45:37 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id d6so1827841pjs.3
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 14:45:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2I1W9/xF2d1Vj6fXUSW50a6lcRysW14cejGyX/KQrUE=;
+        b=kAzFiuub3JptGeF8CNTcnC+CeP/FsxM38jl9PiZjmZ2NQEKCzf5W55HotGQ3RFsl47
+         OU28gJzz3nFm0K+qZFZj3aI4XkCmA0i32hx7kEqSPXYASiEOFWG196YJXulcZC3Y9dyz
+         7yrrrZ4gUvmMXog64rqdi3irHXMSe28OJl0jht0IedPAX5FdSbei28cHde7gFfC8WQTO
+         Th94MFJ7oKpcHcW0N9ISYWBLrKFqFcAygWKu8Bgdc273Y+lpnMx+5Oa57A1RVV779WXs
+         N9wCMhhfGA+gmYVaSfQFrOgexBHpRg0exI1Q7NtzxhM5Ml3G7MxFC3aUmhMIk7wXvif6
+         SpYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2I1W9/xF2d1Vj6fXUSW50a6lcRysW14cejGyX/KQrUE=;
+        b=smMYdAesdmvL5EcsYnXriOM0vNkz7YSKhJDWpzLsfZdRwqf5vABZ3iEcHqr0/Yi+wc
+         mMTJk+plv7KPZkBw+LiGkuIJYnE7uSwYAE0fjKctkop3tK7YevSO698BXboia8xJDE02
+         c/Of4ZMR/JWiSCAyCCdVX1LiPFKf2hRU4ZKQnWisHHAuk5vUmovv2ax5JwOFbaWdGJK9
+         BpXgUAKDo6ek8RvEoQf4lI0VqQ/XdwkTKsvTksRM3ApVDJ6ilq09kOoTKAwLIrJA1DO4
+         DMfFVTfn+IbFBUYcMgBR5bsGLxk9pyb5EGybEBXwPDMQJMfplWP3MKxENfz75sk30Psf
+         8IMQ==
+X-Gm-Message-State: AOAM532N5DSOpEYJtRCa8+4AnnphIbzYPYDb+bx3rw4McRQC7Vs+zCRg
+        1MBHIRaDtjH+NObSjNb7/VufdA==
+X-Google-Smtp-Source: ABdhPJxJmUZYMRaQyfOp9XANW1+HBk5Vx8x0dWsfSmu7dydDXvUxNLtKKWPkOY7MNgSE/tyVCHzLvA==
+X-Received: by 2002:a17:90b:916:: with SMTP id bo22mr7503001pjb.100.1593035136962;
+        Wed, 24 Jun 2020 14:45:36 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id x1sm20175037pfn.76.2020.06.24.14.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 14:45:36 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 14:45:30 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 04/22] kbuild: lto: fix recordmcount
+Message-ID: <20200624214530.GA120457@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-5-samitolvanen@google.com>
+ <20200624212737.GV4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612204820.20111-2-david.e.box@linux.intel.com>
+In-Reply-To: <20200624212737.GV4817@hirez.programming.kicks-ass.net>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 01:48:19PM -0700, David E. Box wrote:
-> StorageD3Enable is a boolean property that indicates that the platform
-> wants to use D3 for PCIe storage drives during suspend-to-idle. 
-
-Is this something that should apply to plug-in drives, or does this
-only apply to soldered-in things?
-
-> It is a
-> BIOS work around that is currently in use on shipping systems like some
-> Intel Comet Lake platforms. 
-
-What is this BIOS work around?  Is there a defect here that's being
-worked around?  What's the defect?
-
-> It is meant to change default driver policy for
-> suspend that may cause higher power consumption.
-
-I guess this means that by changing the driver policy from the
-default, we can save some power?
-
-> Add the DSD property for recognition by fwnode calls and provide an
-> exported symbol for device drivers to use to read the property as needed.
+On Wed, Jun 24, 2020 at 11:27:37PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 24, 2020 at 01:31:42PM -0700, Sami Tolvanen wrote:
+> > With LTO, LLVM bitcode won't be compiled into native code until
+> > modpost_link. This change postpones calls to recordmcount until after
+> > this step.
+> > 
+> > In order to exclude specific functions from inspection, we add a new
+> > code section .text..nomcount, which we tell recordmcount to ignore, and
+> > a __nomcount attribute for moving functions to this section.
 > 
-> Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
+> I'm confused, you only add this to functions in ftrace itself, which is
+> compiled with:
+> 
+>  KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+> 
+> and so should not have mcount/fentry sites anyway. So what's the point
+> of ignoring them further?
+> 
+> This Changelog does not explain.
 
-There is surprisingly little information in this intro.  The whole
-paragraph under "Modern Standby Power Management" is duplicated
-immediately below in "D3 Support".  Maybe that's a copyediting error
-that displaced useful information.
+Normally, recordmcount ignores each ftrace.o file, but since we are
+running it on vmlinux.o, we need another way to stop it from looking
+at references to mcount/fentry that are not calls. Here's a comment
+from recordmcount.c:
 
-It says "drivers should go to the deepest appropriate state" so
-"function drivers don't have to manage implementation details".  No
-doubt "drivers" and "function drivers" is a meaningful distinction to
-Windows cognoscenti, but it's not to me.
+  /*
+   * The file kernel/trace/ftrace.o references the mcount
+   * function but does not call it. Since ftrace.o should
+   * not be traced anyway, we just skip it.
+   */
 
-It talks about "enabling D3" without specifying D3hot or D3cold.
+But I agree, the commit message could use more defails. Also +Steven
+for thoughts about this approach.
 
-It talks about "D3 support for storage devices."  All PCI devices are
-required to support both D3hot and D3cold, so this must be talking
-about some other sort of support; I suppose maybe it's a hint about
-whether a driver should *use* D3hot (or D3cold, I can't tell).
-
-It says nothing about where to look for the _DSD: on a Root Port or on
-the NVMe endpoint.
-
-Bjorn
+Sami
