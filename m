@@ -2,100 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5772E207E9D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 23:31:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4C65207EBD
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 23:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404024AbgFXVbu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 17:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404073AbgFXVbu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 17:31:50 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF66C061573
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 14:31:48 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so1651255plb.11
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 14:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oeZYP2K14l8wy15C+mHJ7IGJGj+bMsdiaVhcvV254wo=;
-        b=YLhBzo5tLLnGs0t6TdhnFSz7LC+dIOGSdyR2PzbiJ5sbNeH/OqOlpGPE843RDUqPyB
-         xcP72I6Wr3gEeg8vpHpVkU6u63LLrd63P+x1ZZGXfe69+AWJdANZ6EXt2a9Wp3ONoSX+
-         IYQFe9nK3k7itVIzd+Ql+LZ3lDH+ctkvhSsUBvpMOUjNf93JbToJ7w7Jl9+ej3WyaGi0
-         t64ZoJLPWNph8t4rfm6P3KDNWB+A/4Ny+h52bYBhzjkl8jF/deowywj6kuu84Svv0pXL
-         Tt9UDtDNXClNBGQZGornTX62JX0NBkg8bcnSbq3QZ1eCahNDu3bRnftlUijmcZVfck9j
-         lPdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oeZYP2K14l8wy15C+mHJ7IGJGj+bMsdiaVhcvV254wo=;
-        b=Q9i+lqhUltSklf3dvkZrKheNjZLazjQWqQ/nFw1cHDc93bY4NsJVGZcJRQ66M0lRVZ
-         rRbAnWXYe2N1TFK8eWHxGRZh5MQdMvfInxrG/Q7J9gIEIlLP0q3h9hWvC9bjGP4zKLFF
-         cO1V36J76NVvVwIc7OPY6uWPg7pT2T6LOLk0cT3/MRnFJ/FyHubUjjHJkgoiK228AVya
-         kW/HSfJGAWh+2dXfC8APZ4klaAjkFdYpjfn/WVRmWrZmnbiejtxfJiIe9v/FVZabRLar
-         bE1bSR6Ie2B51oUom1GQlJLHG4oz8ooA/UL2/R0zS/sXM/5c8UCh3434GJh+IdP1HB+R
-         Bvrw==
-X-Gm-Message-State: AOAM5332/7XRUcrj49XxNJMiYO5fTnSsa7f8IG198Py6oVOY+VZ7mR9S
-        Uyo4vQjH9V9nfjc4O5i4RvOtVIv/teKn9YCByquzZw==
-X-Google-Smtp-Source: ABdhPJz+HM0notouaxjjmVfRuFFbkI9iWq5lvgoF8vO75RohUtNuXeLwq0dwZGEXHBIiKBXeihMyXNtyRUAlF/ihVkc=
-X-Received: by 2002:a17:90a:1e:: with SMTP id 30mr28248270pja.25.1593034308056;
- Wed, 24 Jun 2020 14:31:48 -0700 (PDT)
+        id S2404443AbgFXViA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 17:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403996AbgFXVh7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Jun 2020 17:37:59 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B668D207E8;
+        Wed, 24 Jun 2020 21:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593034679;
+        bh=DwNy4a1dTP0cML/NqcYH/mc0n8ghiF4jwJVglyBIYl0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ba9s7rmGgoLzByJn2FUikabBHUIk7ZVOD7zfHBPMMZBzqYC2iWKiTfku4gKCdXAEk
+         Ep15zWtBl7na1pM4n1ksy6It7Sw2shsTNoYfL+d9riHKVqXlk0wTot4m0V5e/fZV3K
+         FrYi8MBZSK0nSIUKaclGUgr+R5RV4kMYQxfQa9cg=
+Date:   Wed, 24 Jun 2020 16:37:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
+        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
+        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-acpi@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
+Message-ID: <20200624213757.GA2591059@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com> <20200624211540.GS4817@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200624211540.GS4817@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Jun 2020 14:31:36 -0700
-Message-ID: <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612204820.20111-2-david.e.box@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 2:15 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Jun 24, 2020 at 01:31:38PM -0700, Sami Tolvanen wrote:
-> > This patch series adds support for building x86_64 and arm64 kernels
-> > with Clang's Link Time Optimization (LTO).
-> >
-> > In addition to performance, the primary motivation for LTO is to allow
-> > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
-> > Pixel devices have shipped with LTO+CFI kernels since 2018.
-> >
-> > Most of the patches are build system changes for handling LLVM bitcode,
-> > which Clang produces with LTO instead of ELF object files, postponing
-> > ELF processing until a later stage, and ensuring initcall ordering.
-> >
-> > Note that first objtool patch in the series is already in linux-next,
-> > but as it's needed with LTO, I'm including it also here to make testing
-> > easier.
->
-> I'm very sad that yet again, memory ordering isn't addressed. LTO vastly
-> increases the range of the optimizer to wreck things.
+On Fri, Jun 12, 2020 at 01:48:19PM -0700, David E. Box wrote:
+> StorageD3Enable is a boolean property that indicates that the platform
+> wants to use D3 for PCIe storage drives during suspend-to-idle. 
 
-Hi Peter, could you expand on the issue for the folks on the thread?
-I'm happy to try to hack something up in LLVM if we check that X does
-or does not happen; maybe we can even come up with some concrete test
-cases that can be added to LLVM's codebase?
+Is this something that should apply to plug-in drives, or does this
+only apply to soldered-in things?
 
--- 
-Thanks,
-~Nick Desaulniers
+> It is a
+> BIOS work around that is currently in use on shipping systems like some
+> Intel Comet Lake platforms. 
+
+What is this BIOS work around?  Is there a defect here that's being
+worked around?  What's the defect?
+
+> It is meant to change default driver policy for
+> suspend that may cause higher power consumption.
+
+I guess this means that by changing the driver policy from the
+default, we can save some power?
+
+> Add the DSD property for recognition by fwnode calls and provide an
+> exported symbol for device drivers to use to read the property as needed.
+> 
+> Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
+
+There is surprisingly little information in this intro.  The whole
+paragraph under "Modern Standby Power Management" is duplicated
+immediately below in "D3 Support".  Maybe that's a copyediting error
+that displaced useful information.
+
+It says "drivers should go to the deepest appropriate state" so
+"function drivers don't have to manage implementation details".  No
+doubt "drivers" and "function drivers" is a meaningful distinction to
+Windows cognoscenti, but it's not to me.
+
+It talks about "enabling D3" without specifying D3hot or D3cold.
+
+It talks about "D3 support for storage devices."  All PCI devices are
+required to support both D3hot and D3cold, so this must be talking
+about some other sort of support; I suppose maybe it's a hint about
+whether a driver should *use* D3hot (or D3cold, I can't tell).
+
+It says nothing about where to look for the _DSD: on a Root Port or on
+the NVMe endpoint.
+
+Bjorn
