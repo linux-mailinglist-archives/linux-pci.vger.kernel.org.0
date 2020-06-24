@@ -2,195 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B6B207E46
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 23:15:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B734207E61
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 23:19:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390242AbgFXVPw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 17:15:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389905AbgFXVPw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:15:52 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        id S2390544AbgFXVTg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 17:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389773AbgFXVTf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 17:19:35 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD80C061573;
+        Wed, 24 Jun 2020 14:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hjSR6mlsTCk7g8v7G12vqP6vdQOVg8YnQ0fK9Qe8YIs=; b=UTizqW0atOD47Jl6UUMex02N0S
+        mc85gMkTkCOA9d9n1Mk7rnTM4frQa1iMgHTfA2VfdlpZ8Yx44nPgiXtA/RwZ2QVyVzEdRBB9mgkXe
+        nq/SL1dcQZxaszgTqCwr/DLmQom+lmq1gxRtmOa84xHN64AYxblPDuloQXacicpSjzW4ceWpsFD1/
+        cpMKSkTRHxL1ERgtwdB3+/RFsvdp3+WEuULy5oM/0VZnaMXNROhnOT/trbg7viBg2ffRju9Lab/TO
+        DPac7DU6KB0NcpbJmhEDP16v+CcRwigXYVjOpMNYbmguUsuC/Jb5ut6v/WO8WBWrf7OFbZQZlOG/+
+        MezE87Kw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joCnY-00044a-JS; Wed, 24 Jun 2020 21:19:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0953820768;
-        Wed, 24 Jun 2020 21:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593033351;
-        bh=NCiSl6UjdDz+uEErbk+g5RFhE1kVn04xQudcrBUevWg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jDbFC7LPnPZ/V8LUrPNVYE/lDbbFYbfcUooOECi1zMVznB3/9wllOOEoYZPunS1e1
-         QefKGq75ygQpW4L8ujqjkbbrphA/1dpbl734T72n7UJPOHFH4asxRqhEHD5YN4boFd
-         BIjN/ZHnyI0ATv040gg7+Pc89ser1aeTs4LHbgdE=
-Date:   Wed, 24 Jun 2020 16:15:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
-        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-acpi@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
-Message-ID: <20200624211549.GA2586552@bjorn-Precision-5520>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 16F79304B6D;
+        Wed, 24 Jun 2020 23:19:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0438524C09497; Wed, 24 Jun 2020 23:19:08 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 23:19:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 05/22] kbuild: lto: postpone objtool
+Message-ID: <20200624211908.GT4817@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-6-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612204820.20111-2-david.e.box@linux.intel.com>
+In-Reply-To: <20200624203200.78870-6-samitolvanen@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 01:48:19PM -0700, David E. Box wrote:
-> StorageD3Enable is a boolean property that indicates that the platform
-> wants to use D3 for PCIe storage drives during suspend-to-idle. It is a
-> BIOS work around that is currently in use on shipping systems like some
-> Intel Comet Lake platforms. It is meant to change default driver policy for
-> suspend that may cause higher power consumption.
-> 
-> Add the DSD property for recognition by fwnode calls and provide an
-> exported symbol for device drivers to use to read the property as needed.
-> 
-> Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/acpi/property.c |  3 +++
->  drivers/pci/pci-acpi.c  | 59 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h     |  2 ++
->  3 files changed, 64 insertions(+)
-> 
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index e601c4511a8b..c2e2ae774a19 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
->  	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
->  	GUID_INIT(0x6c501103, 0xc189, 0x4296,
->  		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
-> +	/* Storage device needs D3 GUID: 5025030f-842f-4ab4-a561-99a5189762d0 */
-> +	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
-> +		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
->  };
+On Wed, Jun 24, 2020 at 01:31:43PM -0700, Sami Tolvanen wrote:
+> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> index 30827f82ad62..12b115152532 100644
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -120,7 +120,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+>  /* Annotate a C jump table to allow objtool to follow the code flow */
+>  #define __annotate_jump_table __section(.rodata..c_jump_table)
 >  
->  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index d21969fba6ab..732df524e09c 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -972,6 +972,65 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
->  	return val == 1;
->  }
+> -#ifdef CONFIG_DEBUG_ENTRY
+> +#if defined(CONFIG_DEBUG_ENTRY) || defined(CONFIG_LTO_CLANG)
+>  /* Begin/end of an instrumentation safe region */
+>  #define instrumentation_begin() ({					\
+>  	asm volatile("%c0:\n\t"						\
+
+Why would you be doing noinstr validation for lto builds? That doesn't
+make sense.
+
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 9ad9210d70a1..9fdba71c135a 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -399,7 +399,7 @@ config STACK_VALIDATION
 >  
-> +/**
-> + * pci_acpi_storage_d3 - whether root port requests D3 for idle suspend
-> + * @pdev: PCI device to check
-> + *
-> + * Returns true if the ACPI companion device contains the "StorageD3Enable"
-> + * _DSD property and the value is 1. This indicates that the root port is
-> + * used by a storage device and the platform is requesting D3 for the
-> + * device during suspend to idle in order to support platform pm.
-> + */
-> +bool pci_acpi_storage_d3(struct pci_dev *dev)
-> +{
-> +	const struct fwnode_handle *fwnode;
-> +	struct acpi_device *adev;
-> +	struct pci_dev *root;
-> +	acpi_handle handle;
-> +	acpi_status status;
-> +	bool ret = false;
-> +	u8 val;
-> +
-> +	/*
-> +	 * Look for _DSD property specifying that the storage device on
-> +	 * the port must use D3 to support deep platform power savings during
-> +	 * suspend-to-idle
-> +	 */
-> +	root = pci_find_pcie_root_port(dev);
-
-I think this would need to be updated to apply to v5.8-rc1 after
-6ae72bfa656e ("PCI: Unify pcie_find_root_port() and
-pci_find_pcie_root_port()").
-
-https://git.kernel.org/linus/6ae72bfa656e
-
-> +	if (!root)
-> +		return false;
-> +
-> +	adev = ACPI_COMPANION(&root->dev);
-> +	if (!adev) {
-> +		/*
-> +		 * It is possible that the ACPI companion is not yet bound
-> +		 * for the root port so look it up manually here.
-> +		 */
-> +		if (!adev && !pci_dev_is_added(root))
-> +			adev = acpi_pci_find_companion(&root->dev);
-
-I see that you copied this "ACPI companion not yet bound" thing from
-acpi_pci_bridge_d3().  But it's ugly.
-
-Isn't there a way we can bind the ACPI companion during normal PCI
-enumeration so we don't need this exception case?
-
-I really do not like the idea of putting this code in the PCI core
-because AFAICT the PCI core can do nothing with this information.
-
-If we could make sure during enumeration that the root port always has
-an ACPI companion, this code could go to the nvme driver itself.  And
-we could also clean up the ugliness in acpi_pci_bridge_d3().
-
-Rafael, is that possible?  I don't really know how the companion
-device gets set.  Maybe this is could be done somewhere around
-pci_device_add()?
-
-> +	}
-> +
-> +	if (!adev)
-> +		return false;
-> +
-> +	status = acpi_get_handle(adev->handle, "PXSX", &handle);
-> +	if (ACPI_FAILURE(status))
-> +		return false;
-> +
-> +	adev = acpi_bus_get_acpi_device(handle);
-> +	if (!adev)
-> +		return false;
-> +
-> +	fwnode = acpi_fwnode_handle(adev);
-> +	if (!fwnode_property_read_u8(fwnode, "StorageD3Enable", &val))
-> +		ret = (val == 1);
-> +
-> +	acpi_bus_put_acpi_device(adev);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_acpi_storage_d3);
-> +
->  static bool acpi_pci_power_manageable(struct pci_dev *dev)
->  {
->  	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 83ce1cdf5676..396fcb269a60 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2318,10 +2318,12 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
->  void
->  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
->  bool pci_pr3_present(struct pci_dev *pdev);
-> +bool pci_acpi_storage_d3(struct pci_dev *dev);
->  #else
->  static inline struct irq_domain *
->  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
->  static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
-> +static inline bool pci_acpi_storage_d3(struct pci_dev *dev) { return false; }
->  #endif
+>  config VMLINUX_VALIDATION
+>  	bool
+> -	depends on STACK_VALIDATION && DEBUG_ENTRY && !PARAVIRT
+> +	depends on STACK_VALIDATION && (DEBUG_ENTRY || LTO_CLANG) && !PARAVIRT
+>  	default y
 >  
->  #ifdef CONFIG_EEH
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-nvme mailing list
-> linux-nvme@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-nvme
+
+For that very same reason you shouldn't be excluding paravirt either.
+
+> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+> index d168f0cfe67c..9f1df2f1fab5 100644
+> --- a/scripts/Makefile.modfinal
+> +++ b/scripts/Makefile.modfinal
+> @@ -48,6 +48,21 @@ endif # CC_USING_PATCHABLE_FUNCTION_ENTRY
+>  endif # CC_USING_RECORD_MCOUNT
+>  endif # CONFIG_FTRACE_MCOUNT_RECORD
+>  
+> +ifdef CONFIG_STACK_VALIDATION
+> +ifneq ($(SKIP_STACK_VALIDATION),1)
+> +cmd_ld_ko_o +=								\
+> +	$(objtree)/tools/objtool/objtool				\
+> +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
+> +		--module						\
+> +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
+> +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
+> +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
+> +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
+> +		$(@:.ko=$(prelink-ext).o);
+> +
+> +endif # SKIP_STACK_VALIDATION
+> +endif # CONFIG_STACK_VALIDATION
+
+What about the objtool invocation from link-vmlinux.sh ?
