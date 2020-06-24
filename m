@@ -2,108 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3549A2072FD
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 14:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED2B3207439
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 15:16:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390115AbgFXMN5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 08:13:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389907AbgFXMN4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:13:56 -0400
-Received: from localhost (lfbn-ncy-1-996-218.w90-101.abo.wanadoo.fr [90.101.73.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4C62088E;
-        Wed, 24 Jun 2020 12:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593000836;
-        bh=QzHyuz7ytmBCoTWY1f/kwZ7sJSq4u28blMy4Q4iNhwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k+r1RPo8wq7doLhEr/5UAaZ2yaOtsIN0/OKMIDlyMRBj0DZi6BTccwXAHxBB5NyiY
-         ueFwOdqbtlS2KSn4kzt3GyPFX57Or1hP9ncUqffw0uKjAYTAF2q/rrKXIScA2ndXb1
-         GA0nLcaKL52VBPkG6Mb552Ct+WxPQsOVI2JWK5qo=
-Date:   Wed, 24 Jun 2020 14:13:53 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        mtosatti@redhat.com, juri.lelli@redhat.com, abelits@marvell.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
-        sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com
-Subject: Re: [Patch v3 1/3] lib: Restrict cpumask_local_spread to houskeeping
- CPUs
-Message-ID: <20200624121352.GA28020@lenoir>
-References: <20200623192331.215557-1-nitesh@redhat.com>
- <20200623192331.215557-2-nitesh@redhat.com>
+        id S2387853AbgFXNQA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 09:16:00 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33293 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387687AbgFXNP7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 09:15:59 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i74so1801322oib.0;
+        Wed, 24 Jun 2020 06:15:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zjK0dPHLhm19DBHlVxNA0U4i4q8aYKhrg6kBmBz0N3k=;
+        b=lYlHzqwaUOXJOBLRN4vDWcUZLIrbxIMdlkLFbUjti9MIlO/NGos75ignDTtYvIZyL5
+         OUc9jJM41aJRCWHkjSmz9veHkasmUCqjk2ftstapQxJM8w2sa1Q3E/G+Ax3oOFWmc7z9
+         zZcctIXyiUt0yHGzSuYlY8i1XvFg36GZW+XzFc4SEvydEO6scj5QMKCdGNlCWPxs/r2a
+         tlBLRYnnULaZvQEzD+Nq4Ahfq1IrZy3ugrPBwNeYRj1knK+gHkH+67vAa0dRWeR957IQ
+         7FaWLLxPrqjYi3R5274rj0n6eCwrbFWDNIGM2eeY1PsgqmoHnq45o1A5/4wuXXkF692p
+         Q2Xg==
+X-Gm-Message-State: AOAM531EkCqBEB8ylV0SIJDIR2SaPTz+1qQB0OqKT1fUC2kp9M1ftpzs
+        CeTaSJhPq6prTvHtpZM/Io5vebPe7CZj4hZnIng=
+X-Google-Smtp-Source: ABdhPJzCTqdFOKgNYByBg4NJMvTMxVSB+bJyIxixLFXDTrbG1cz3410wy7PxwoccYbOMi3ceCDTEo/HzjkeeKa4B0+U=
+X-Received: by 2002:a54:4585:: with SMTP id z5mr2238800oib.110.1593004558583;
+ Wed, 24 Jun 2020 06:15:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623192331.215557-2-nitesh@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAJZ5v0gQD_T9WmoF4gv-eDpmKto4_c0pJGiy_7FPiipSGOTrQQ@mail.gmail.com>
+ <d41ead67-f66d-43fd-7a4c-e4d92adb52f2@virtuozzo.com> <7280140.ndZnX9ZZJL@kreacher>
+ <5c06169c-295d-040b-07e1-823880584bb9@virtuozzo.com>
+In-Reply-To: <5c06169c-295d-040b-07e1-823880584bb9@virtuozzo.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 24 Jun 2020 15:15:47 +0200
+Message-ID: <CAJZ5v0jWDLbv_oyzOY5p-5bPLxD5aommXLDjE1eUkACOWwYpSw@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI / hotplug / PCI: lost acpiphp_put_context in acpiphp_grab_context()
+To:     Vasily Averin <vvs@virtuozzo.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 03:23:29PM -0400, Nitesh Narayan Lal wrote:
-> From: Alex Belits <abelits@marvell.com>
-> 
-> The current implementation of cpumask_local_spread() does not respect the
-> isolated CPUs, i.e., even if a CPU has been isolated for Real-Time task,
-> it will return it to the caller for pinning of its IRQ threads. Having
-> these unwanted IRQ threads on an isolated CPU adds up to a latency
-> overhead.
-> 
-> Restrict the CPUs that are returned for spreading IRQs only to the
-> available housekeeping CPUs.
-> 
-> Signed-off-by: Alex Belits <abelits@marvell.com>
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  lib/cpumask.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/lib/cpumask.c b/lib/cpumask.c
-> index fb22fb266f93..d73104995981 100644
-> --- a/lib/cpumask.c
-> +++ b/lib/cpumask.c
-> @@ -6,6 +6,7 @@
->  #include <linux/export.h>
->  #include <linux/memblock.h>
->  #include <linux/numa.h>
-> +#include <linux/sched/isolation.h>
->  
->  /**
->   * cpumask_next - get the next cpu in a cpumask
-> @@ -205,22 +206,27 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->   */
->  unsigned int cpumask_local_spread(unsigned int i, int node)
+On Tue, Jun 23, 2020 at 9:01 PM Vasily Averin <vvs@virtuozzo.com> wrote:
+>
+> On 6/23/20 7:29 PM, Rafael J. Wysocki wrote:
+> > On Tuesday, June 23, 2020 1:17:43 AM CEST Vasily Averin wrote:
+> >> v2: followed to rafael@'s proposal
+> >> Fixes: edf5bf34d408 ("ACPI / dock: Use callback pointers from devices' ACPI hotplug contexts")
+> >> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> > Thanks for following my suggestion, but it occurred to me that it could still be
+> > done in a better way.
+> >
+> > So instead of the above I'd prefer to apply the following change (added PCI and Bjorn
+> > for visibility):
+>
+> Thank you,
+> however could you please tell me what do you think about following variant?
+>
+>  drivers/pci/hotplug/acpiphp_glue.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index b4c92cee13f8..5875c3654b52 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -119,16 +119,17 @@ static inline void put_bridge(struct acpiphp_bridge *bridge)
+>
+>  static struct acpiphp_context *acpiphp_grab_context(struct acpi_device *adev)
 >  {
-> -	int cpu;
-> +	int cpu, hk_flags;
-> +	const struct cpumask *mask;
->  
-> +	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
+> -       struct acpiphp_context *context;
+> +       struct acpiphp_context *c, *context = NULL;
+>
+>         acpi_lock_hp_context();
+> -       context = acpiphp_get_context(adev);
+> -       if (!context || context->func.parent->is_going_away) {
+> -               acpi_unlock_hp_context();
+> -               return NULL;
+> +       c = acpiphp_get_context(adev);
+> +       if (c) {
+> +               if (c->func.parent->is_going_away == false) {
+> +                       get_bridge(c->func.parent);
+> +                       context = c;
+> +               }
+> +               acpiphp_put_context(c);
+>         }
+> -       get_bridge(context->func.parent);
+> -       acpiphp_put_context(context);
+>         acpi_unlock_hp_context();
+>         return context;
+>  }
 
-This should be HK_FLAG_MANAGED_IRQ instead of HK_FLAG_WQ since this
-function seem to be used mostly to select CPUs to affine managed IRQs.
-In the end the cpumask you pass to IRQ core will be filtered throughout
-HK_FLAG_MANAGED_IRQ anyway so better select an appropriate one in the
-first place to avoid an empty cpumask intersection.
+There are reasons to do it the way I want:
+- The indentation level is minimum.
+- The real purpose of this function is to get a parent bridge
+reference, so that needs to be the central piece of it rather than the
+checks for exceptional cases.
+- The second local var is not necessary.
 
-Now even if cpumask_local_spread() is currently mostly used to select
-managed irq targets, the name and role of the function don't refer to that.
-Probably cpumask_local_spread() should take HK_ flag in parameter so that
-it can correctly handle future users?
-
-That being said, I plan to merge HK_FLAG_RCU, HK_FLAG_MISC, HK_FLAG_SCHED,
-HK_FLAG_WQ and HK_FLAG_TIMER into HK_FLAG_UNBOUND since it doesn't make sense
-to divide them all. And the actual flag used inside cpumask_local_spread()
-could end up being HK_FLAG_DOMAIN | HK_FLAG_UNBOUND. So probably you don't
-need to worry about that and just change the HK_FLAG_WQ in your patch
-with HK_FLAG_MANAGED_IRQ.
-
-Thanks.
+Thanks!
