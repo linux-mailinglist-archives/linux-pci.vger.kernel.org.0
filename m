@@ -2,509 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28959209685
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 00:44:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA842096E1
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 01:06:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388739AbgFXWor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 18:44:47 -0400
-Received: from mga11.intel.com ([192.55.52.93]:29770 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732832AbgFXWoq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Jun 2020 18:44:46 -0400
-IronPort-SDR: RaRPYBsvr9ALeTIoTG9p9O2D2DadTlF6cq+jqVTQ35TxumowOvff0jRj6Jel4fZI4oTi5TIktB
- OXhu5hy52+gg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="142883970"
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="142883970"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 15:39:44 -0700
-IronPort-SDR: cNps1jy7qZoYsPpoYPWBRq3Nl4rMJIpfBIk2GRYOJR8bXB6LNn2w7D6xjak6KlLwbrGRBHwZiU
- W6RsexAkXZeg==
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="479435927"
-Received: from arpeshla-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.43.136])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 15:39:42 -0700
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     mj@ucw.cz, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>
-Subject: [PATCH v3] pciutils: Add decode support for RCECs
-Date:   Wed, 24 Jun 2020 15:39:40 -0700
-Message-Id: <20200624223940.240463-1-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
+        id S2388735AbgFXXGC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 19:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388094AbgFXXGB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 19:06:01 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA0A9C061795
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 16:06:01 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x11so1807539plo.7
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jun 2020 16:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=shst53ZJE1d+vIhz2clceIGi2VB/auhmYdgL62EAsJA=;
+        b=v4eMG/3rTtJikwtUeVEWC+d0Ch65aCTzn2lI4XytauNvCzrEjxfgA6aO+yV6VxXBx3
+         mb6CDo0wNoFZ1v4nkYj+/6EWy37Ni5nLIOMzCNLEZ2dadozowAf9iZnCoXAn7+HLcyE9
+         RoOT6e38CrOgiSMwqrLKdO8N7M+/LB2H0MPGEArcqToIp05l+M0z0UH0D4sz1uNsTgmt
+         9mmpfTiacr3PdC/F4zU2Yb9SYNEeuuG0ifqnJKaNC2BdOBDaQw26XwaMnJ0wHebahY7x
+         fvvlvTbNep+cdAWoA5BqhP7JrVtoCYLEUqHK25wchmImEauPU24++/TQpkcZFXvICfaj
+         +O3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=shst53ZJE1d+vIhz2clceIGi2VB/auhmYdgL62EAsJA=;
+        b=rDmY1BmXLB14ecNRf0HFb5q8c6fwoSt6iNNFyjat5nGushX/CFokBs4GBh9d8r5fiv
+         FjNB8e1QFJDOToFl86Jcb5lShPjCHaK3fZ/gPjGAbFYaV7RQLptk/lNhAAr9J/7Nxfv6
+         VtIZqNabqaxCXEVadgaf7ksChi0wbIYbtsq24oaOM+nIP216O7/gyfo9PdwEGZ7G/AXf
+         YUiDfEiKdonFTU5qn4WI9WRlh/m/Z4U4M35M1SIqEsXx/3dum1qBti9GUP/hPHbpeZv5
+         BjH8B1DpSeZQak8C4n+kM2zTWpaOXz3JiQU03xyh0jnOJCdSSCXOReAxCsVYlk/GBNIk
+         13yQ==
+X-Gm-Message-State: AOAM530NC63sFFGT8MAQhLal690yMx+0YdWqgq79wMfBKeJz4DPv+iY/
+        YLI5F4ZpusMB7j/8pABg3KncUo4e3eKl9t6Z+OQLpQ==
+X-Google-Smtp-Source: ABdhPJxZs7Ep0+V5E2sSAX0aVY+ZMKk8PTjnuF9HO3m5vxhQOU6AbFmmPJG+dflauBb0xhpYFgB/b9UTwA/KqW822v8=
+X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr30115455plm.179.1593039960944;
+ Wed, 24 Jun 2020 16:06:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-18-samitolvanen@google.com> <CAKwvOdnEbCfYZ9o=OF51oswyqDvN4iP-9syWUDhxfueq4q0xcw@mail.gmail.com>
+ <20200624215231.GC120457@google.com>
+In-Reply-To: <20200624215231.GC120457@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 24 Jun 2020 16:05:48 -0700
+Message-ID: <CAKwvOdnWfhU7n0VfoydC7epJPrj+ASZzyNRpBCNuvT_5E+=FcQ@mail.gmail.com>
+Subject: Re: [PATCH 17/22] arm64: vdso: disable LTO
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Root Complex Event Collectors provide support for terminating error
-and PME messages from RCiEPs.  This patch provides basic decoding for
-the lspci RCEC Endpoint Association Extended Capability. See PCIe 5.0-1,
-sec 7.9.10 for further details.
+On Wed, Jun 24, 2020 at 2:52 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> On Wed, Jun 24, 2020 at 01:58:57PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> > On Wed, Jun 24, 2020 at 1:33 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+> > >
+> > > Filter out CC_FLAGS_LTO for the vDSO.
+> >
+> > Just curious about this patch (and the following one for x86's vdso),
+> > do you happen to recall specifically what the issues with the vdso's
+> > are?
+>
+> I recall the compiler optimizing away functions at some point, but as
+> LTO is not really needed in the vDSO, it's just easiest to disable it
+> there.
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
----
-Changes since v2 [1]:
-
-- Incorporated suggested improvement to RCiEP bitmap generation.
-- Extended to support hyphenating adjacent devices in bitmap.
-- Added verbose granularity on "none" cases for bitmap and BUSN reporting.
-- Corrected use of "first" with "next" as found in the Spec.
-- Reported "AssociatedBusNumbers" as a single hyphenated field.
-- Regenerated test output with new formatting.
-i.e.,
-
-"-vvv" case
-Capabilities: [160 v2] Root Complex Event Collector Endpoint Association
-        RCiEPBitmap: 00000000 [none]
-        AssociatedBusNumbers: ff-00 [none]
-
-"-vv" case
-Capabilities: [160 v2] Root Complex Event Collector Endpoint Association
-        RCiEPBitmap: [none]
-        AssociatedBusNumbers: [none]
-
-(Bjorn Helgaas)
-
-[1] https://lore.kernel.org/linux-pci/20200624040024.895996-1-sean.v.kelley@linux.intel.com/
-
+Sounds fishy; with extern linkage then I would think it's not safe to
+eliminate functions.  Probably unnecessary for the initial
+implementation, and something we can follow up on, but always good to
+have an answer to the inevitable question "why?" in the commit
+message.
+-- 
 Thanks,
-
-Sean
----
- lib/header.h   |   8 +-
- ls-ecaps.c     |  59 +++++++++-
- setpci.c       |   2 +-
- tests/cap-rcec | 299 +++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 364 insertions(+), 4 deletions(-)
- create mode 100644 tests/cap-rcec
-
-diff --git a/lib/header.h b/lib/header.h
-index 472816e..57a9343 100644
---- a/lib/header.h
-+++ b/lib/header.h
-@@ -219,7 +219,7 @@
- #define PCI_EXT_CAP_ID_PB	0x04	/* Power Budgeting */
- #define PCI_EXT_CAP_ID_RCLINK	0x05	/* Root Complex Link Declaration */
- #define PCI_EXT_CAP_ID_RCILINK	0x06	/* Root Complex Internal Link Declaration */
--#define PCI_EXT_CAP_ID_RCECOLL	0x07	/* Root Complex Event Collector */
-+#define PCI_EXT_CAP_ID_RCEC	0x07	/* Root Complex Event Collector */
- #define PCI_EXT_CAP_ID_MFVC	0x08	/* Multi-Function Virtual Channel */
- #define PCI_EXT_CAP_ID_VC2	0x09	/* Virtual Channel (2nd ID) */
- #define PCI_EXT_CAP_ID_RCRB	0x0a	/* Root Complex Register Block */
-@@ -1048,6 +1048,12 @@
- #define  PCI_RCLINK_LINK_ADDR	8	/* Link Entry: Address (64-bit) */
- #define  PCI_RCLINK_LINK_SIZE	16	/* Link Entry: sizeof */
-
-+/* Root Complex Event Collector Endpoint Association */
-+#define  PCI_RCEC_EP_CAP_VER(reg)	(((reg) >> 16) & 0xf)
-+#define  PCI_RCEC_BUSN_REG_VER	0x02	/* as per PCIe sec 7.9.10.1 */
-+#define  PCI_RCEC_RCIEP_BMAP	0x0004	/* as per PCIe sec 7.9.10.2 */
-+#define  PCI_RCEC_BUSN_REG	0x0008	/* as per PCIe sec 7.9.10.3 */
-+
- /* PCIe Vendor-Specific Capability */
- #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
- #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
-diff --git a/ls-ecaps.c b/ls-ecaps.c
-index e71209e..99c55ff 100644
---- a/ls-ecaps.c
-+++ b/ls-ecaps.c
-@@ -634,6 +634,61 @@ cap_rclink(struct device *d, int where)
-     }
- }
-
-+static void
-+cap_rcec(struct device *d, int where)
-+{
-+  printf("Root Complex Event Collector Endpoint Association\n");
-+  if (verbose < 2)
-+    return;
-+
-+  if (!config_fetch(d, where, 12))
-+    return;
-+
-+  u32 hdr = get_conf_long(d, where);
-+  byte cap_ver = PCI_RCEC_EP_CAP_VER(hdr);
-+  u32 bmap = get_conf_long(d, where + PCI_RCEC_RCIEP_BMAP);
-+  printf("\t\tRCiEPBitmap: ");
-+  if (bmap)
-+    {
-+      int prevmatched=0;
-+      int adjcount=0;
-+      int prevdev=0;
-+      printf("RCiEP at Device(s):");
-+      for (int dev=0; dev < 32; dev++)
-+        {
-+	  if (BITS(bmap, dev, 1))
-+	    {
-+	      if (!adjcount)
-+	        printf("%s %u", (prevmatched) ? "," : "", dev);
-+	      adjcount++;
-+	      prevdev=dev;
-+	      prevmatched=1;
-+            }
-+	  else
-+	    {
-+	      if (adjcount > 1)
-+	        printf("-%u", prevdev);
-+	      adjcount=0;
-+            }
-+        }
-+   }
-+  else
-+    printf("%s", (verbose > 2) ? "00000000 [none]" : "[none]");
-+  printf("\n");
-+
-+  if (cap_ver < PCI_RCEC_BUSN_REG_VER)
-+    return;
-+
-+  u32 busn = get_conf_long(d, where + PCI_RCEC_BUSN_REG);
-+  u8 lastbusn = BITS(busn, 16, 8);
-+  u8 nextbusn = BITS(busn, 8, 8);
-+
-+  if ((lastbusn == 0x00) && (nextbusn == 0xff))
-+    printf("\t\tAssociatedBusNumbers: %s\n", (verbose > 2) ? "ff-00 [none]" : "[none]");
-+  else
-+    printf("\t\tAssociatedBusNumbers: %02x-%02x\n", nextbusn, lastbusn );
-+}
-+
- static void
- cap_dvsec_cxl(struct device *d, int where)
- {
-@@ -991,8 +1046,8 @@ show_ext_caps(struct device *d, int type)
- 	  case PCI_EXT_CAP_ID_RCILINK:
- 	    printf("Root Complex Internal Link <?>\n");
- 	    break;
--	  case PCI_EXT_CAP_ID_RCECOLL:
--	    printf("Root Complex Event Collector <?>\n");
-+	  case PCI_EXT_CAP_ID_RCEC:
-+	    cap_rcec(d, where);
- 	    break;
- 	  case PCI_EXT_CAP_ID_MFVC:
- 	    printf("Multi-Function Virtual Channel <?>\n");
-diff --git a/setpci.c b/setpci.c
-index 90ca726..2cb70fa 100644
---- a/setpci.c
-+++ b/setpci.c
-@@ -350,7 +350,7 @@ static const struct reg_name pci_reg_names[] = {
-   { 0x20004,	0, 0, "ECAP_PB" },
-   { 0x20005,	0, 0, "ECAP_RCLINK" },
-   { 0x20006,	0, 0, "ECAP_RCILINK" },
--  { 0x20007,	0, 0, "ECAP_RCECOLL" },
-+  { 0x20007,	0, 0, "ECAP_RCEC" },
-   { 0x20008,	0, 0, "ECAP_MFVC" },
-   { 0x20009,	0, 0, "ECAP_VC2" },
-   { 0x2000a,	0, 0, "ECAP_RBCB" },
-diff --git a/tests/cap-rcec b/tests/cap-rcec
-new file mode 100644
-index 0000000..836d9a1
---- /dev/null
-+++ b/tests/cap-rcec
-@@ -0,0 +1,299 @@
-+6a:00.4 Generic system peripheral [0807]: Intel Corporation Device 0b23
-+        Subsystem: Intel Corporation Device 0000
-+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-+        Interrupt: pin A routed to IRQ 255
-+        NUMA node: 0
-+        Capabilities: [40] Express (v2) Root Complex Event Collector, MSI 00
-+                DevCap: MaxPayload 512 bytes, PhantFunc 0
-+                        ExtTag- RBE-
-+                DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq-
-+                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
-+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-+                RootCap: CRSVisible-
-+                RootCtl: ErrCorrectable+ ErrNon-Fatal+ ErrFatal+ PMEIntEna- CRSVisible-
-+                RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-+                DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-+                         10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-+                         EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-+                         FRS-
-+                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-+        Capabilities: [80] Power Management version 3
-+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-+        Capabilities: [90] MSI: Enable- Count=1/1 Maskable+ 64bit-
-+                Address: 00000000  Data: 0000
-+                Masking: 00000000  Pending: 00000000
-+        Capabilities: [100 v1] Advanced Error Reporting
-+                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-+                UEMsk:  DLP- SDES+ TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq+ ACSViol-
-+                UESvrt: DLP+ SDES- TLP+ FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-+                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-+                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-+                AERCap: First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-+                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-+                HeaderLog: 00000000 00000000 00000000 00000000
-+                RootCmd: CERptEn- NFERptEn- FERptEn-
-+                RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-+                         FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-+                ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-+        Capabilities: [160 v2] Root Complex Event Collector Endpoint Association
-+                RCiEPBitmap: RCiEP at Device(s): 1, 6, 8-10, 12, 15
-+                AssociatedBusNumbers: 02-08
-+00: 86 80 23 0b 00 01 10 00 00 00 07 08 00 00 00 00
-+10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
-+30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
-+40: 10 80 a2 00 02 00 00 00 07 00 00 00 00 00 00 00
-+50: 00 00 00 00 00 00 00 00 00 00 00 00 07 00 00 00
-+60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+80: 01 90 03 00 00 00 00 00 00 00 00 00 00 00 00 00
-+90: 05 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00
-+a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d0: 31 6a 08 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+100: 01 00 01 16 00 00 00 00 20 00 10 00 10 30 46 00
-+110: 00 00 00 00 00 20 00 00 00 00 00 00 00 00 00 00
-+120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+130: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+140: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+150: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+160: 07 00 02 00 00 00 00 00 00 ff 00 00 00 00 00 00
-+170: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+190: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+210: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+220: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+230: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+240: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+250: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+260: 00 00 00 00 07 00 00 00 00 00 00 00 00 00 00 00
-+270: 00 00 00 00 00 00 00 00 07 00 00 00 00 00 00 00
-+280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+290: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2a0: 00 00 00 00 00 00 00 00 20 00 18 00 20 00 18 00
-+2b0: 20 00 18 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2f0: 00 20 00 00 00 20 00 00 00 20 00 00 00 e0 00 00
-+300: 00 e0 00 00 00 e0 00 00 00 e0 00 00 00 e0 00 00
-+310: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+320: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+330: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+340: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+350: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+360: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+370: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+390: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+410: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+420: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+430: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+440: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+450: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+460: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+470: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+490: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+510: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+520: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+530: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+540: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+550: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+560: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+570: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+590: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+600: 44 00 00 00 91 00 00 00 00 00 00 00 00 00 00 00
-+610: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+620: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+630: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+640: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+650: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+660: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+670: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+680: 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+690: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+710: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+720: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+730: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+740: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+750: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+760: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+770: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+790: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+810: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+820: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+830: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+840: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+850: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+860: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+870: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+890: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+910: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+920: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+930: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+940: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+950: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+960: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+970: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+990: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+aa0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ab0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ac0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ad0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ae0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+af0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ba0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+be0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ca0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ce0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+da0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+db0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+dc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+dd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+de0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+df0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ea0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+eb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ec0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ed0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ee0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ef0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fa0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
---
-2.27.0
-
+~Nick Desaulniers
