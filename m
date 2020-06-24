@@ -2,48 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ED0D207D93
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 22:38:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4752A207D97
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 22:39:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390587AbgFXUiX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 16:38:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39599 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729833AbgFXUiU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 16:38:20 -0400
+        id S2391499AbgFXUi6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 16:38:58 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40354 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391449AbgFXUi6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 16:38:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593031098;
+        s=mimecast20190719; t=1593031135;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=AJacYQYN9KrR0hhUi0MsZK3xsIa8c3Bs9l77KzZyfmE=;
-        b=dwWfhmeLHXsxC3ANzRzx4XQPBb+7yAzn+e/0r3n26OBpVjvkPAAUAOhdBt8a83PF6ZNmzz
-        AMAVhrKim0Zqql728At7KpO3afqBWqYP4ATKD0h1fZq2jvilN/xqfw4dNOqinInQbJpDQ8
-        FFT9/LRCf7l/mMDCRe5v51dnLnc/3ro=
+        bh=vUi/+DScXWXvcmI6mZvIMIGP00wUsF08zYoV1rgtSTs=;
+        b=RtvOzEiP2c6UecNF5oX+KbAzDICim5+1DckT3C10Rs+WY9fO37EDxONI8IQyKo7UHi5Hkb
+        pWtcelvSVCQPyy6T4/nq3D7eK5ivzXlkiw6/ErFHbYyChYeN4cLImOn5oTp5kh7SJd5HQ7
+        +1KODRPzw57K1XkO/buGEqu/X/QbcBU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-442-X4OcAEx1MzaPbnuH4X_Zrw-1; Wed, 24 Jun 2020 16:38:14 -0400
-X-MC-Unique: X4OcAEx1MzaPbnuH4X_Zrw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-144-nHyUdhzXM_qhevbm4Aoczw-1; Wed, 24 Jun 2020 16:38:51 -0400
+X-MC-Unique: nHyUdhzXM_qhevbm4Aoczw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78BE518A822D;
-        Wed, 24 Jun 2020 20:37:56 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9768805EE2;
+        Wed, 24 Jun 2020 20:38:48 +0000 (UTC)
 Received: from [10.10.115.152] (ovpn-115-152.rdu2.redhat.com [10.10.115.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3594A7FE8B;
-        Wed, 24 Jun 2020 20:37:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A6561002393;
+        Wed, 24 Jun 2020 20:38:40 +0000 (UTC)
 Subject: Re: [Patch v3 1/3] lib: Restrict cpumask_local_spread to houskeeping
  CPUs
-To:     Frederic Weisbecker <frederic@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        mtosatti@redhat.com, juri.lelli@redhat.com, abelits@marvell.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
         sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com
+        rppt@linux.vnet.ibm.com, yuqi jin <jinyuqi@huawei.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>
 References: <20200623192331.215557-1-nitesh@redhat.com>
- <20200623192331.215557-2-nitesh@redhat.com> <20200624121352.GA28020@lenoir>
+ <20200623192331.215557-2-nitesh@redhat.com>
+ <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
 From:   Nitesh Narayan Lal <nitesh@redhat.com>
 Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
@@ -89,35 +91,37 @@ Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
  VujM7c/b4pps
 Organization: Red Hat Inc,
-Message-ID: <5f7e7591-35d1-e96f-0520-da9f2d185e74@redhat.com>
-Date:   Wed, 24 Jun 2020 16:37:48 -0400
+Message-ID: <3207c75f-39e4-fc8c-6a40-6bd797dd98ce@redhat.com>
+Date:   Wed, 24 Jun 2020 16:38:39 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200624121352.GA28020@lenoir>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="USJzxp3ZPIBAIVX19xVkwyhh3LQfRVg9B"
+ boundary="oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---USJzxp3ZPIBAIVX19xVkwyhh3LQfRVg9B
-Content-Type: multipart/mixed; boundary="XYGh4mOHZTffgEUfgohr23czxkZDawAP6"
+--oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO
+Content-Type: multipart/mixed; boundary="mO6dZvU5p3VwI6OBaMAWK5DEZKjmFJpF9"
 
---XYGh4mOHZTffgEUfgohr23czxkZDawAP6
+--mO6dZvU5p3VwI6OBaMAWK5DEZKjmFJpF9
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 
 
-On 6/24/20 8:13 AM, Frederic Weisbecker wrote:
-> On Tue, Jun 23, 2020 at 03:23:29PM -0400, Nitesh Narayan Lal wrote:
+On 6/24/20 3:26 PM, Andrew Morton wrote:
+> On Tue, 23 Jun 2020 15:23:29 -0400 Nitesh Narayan Lal <nitesh@redhat.com>=
+ wrote:
+>
 >> From: Alex Belits <abelits@marvell.com>
 >>
 >> The current implementation of cpumask_local_spread() does not respect th=
@@ -130,14 +134,8 @@ e
 >> Restrict the CPUs that are returned for spreading IRQs only to the
 >> available housekeeping CPUs.
 >>
->> Signed-off-by: Alex Belits <abelits@marvell.com>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  lib/cpumask.c | 16 +++++++++++-----
->>  1 file changed, 11 insertions(+), 5 deletions(-)
+>> ...
 >>
->> diff --git a/lib/cpumask.c b/lib/cpumask.c
->> index fb22fb266f93..d73104995981 100644
 >> --- a/lib/cpumask.c
 >> +++ b/lib/cpumask.c
 >> @@ -6,6 +6,7 @@
@@ -158,68 +156,68 @@ e
 >> +=09const struct cpumask *mask;
 >> =20
 >> +=09hk_flags =3D HK_FLAG_DOMAIN | HK_FLAG_WQ;
-> This should be HK_FLAG_MANAGED_IRQ instead of HK_FLAG_WQ since this
-> function seem to be used mostly to select CPUs to affine managed IRQs.
-
-IIRC then there are drivers such as ixgbe that use cpumask_local_spread whi=
-le
-affining NORMAL IRQs as well.
-But I can recheck that.
-
-> In the end the cpumask you pass to IRQ core will be filtered throughout
-> HK_FLAG_MANAGED_IRQ anyway so better select an appropriate one in the
-> first place to avoid an empty cpumask intersection.
+>> +=09mask =3D housekeeping_cpumask(hk_flags);
+>>  =09/* Wrap: we always want a cpu. */
+>> -=09i %=3D num_online_cpus();
+>> +=09i %=3D cpumask_weight(mask);
+>> =20
+>>  =09if (node =3D=3D NUMA_NO_NODE) {
+>> -=09=09for_each_cpu(cpu, cpu_online_mask)
+>> +=09=09for_each_cpu(cpu, mask) {
+>>  =09=09=09if (i-- =3D=3D 0)
+>>  =09=09=09=09return cpu;
+>> +=09=09}
+>>  =09} else {
+>>  =09=09/* NUMA first. */
+>> -=09=09for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
+>> +=09=09for_each_cpu_and(cpu, cpumask_of_node(node), mask) {
+>>  =09=09=09if (i-- =3D=3D 0)
+>>  =09=09=09=09return cpu;
+>> +=09=09}
+>> =20
+>> -=09=09for_each_cpu(cpu, cpu_online_mask) {
+>> +=09=09for_each_cpu(cpu, mask) {
+>>  =09=09=09/* Skip NUMA nodes, done above. */
+>>  =09=09=09if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
+>>  =09=09=09=09continue;
+> Are you aware of these changes to cpu_local_spread()?
+> https://lore.kernel.org/lkml/1582768688-2314-1-git-send-email-zhangshaoku=
+n@hisilicon.com/
 >
-> Now even if cpumask_local_spread() is currently mostly used to select
-> managed irq targets, the name and role of the function don't refer to tha=
-t.
-> Probably cpumask_local_spread() should take HK_ flag in parameter so that
-> it can correctly handle future users?
->
-> That being said, I plan to merge HK_FLAG_RCU, HK_FLAG_MISC, HK_FLAG_SCHED=
-,
-> HK_FLAG_WQ and HK_FLAG_TIMER into HK_FLAG_UNBOUND since it doesn't make s=
-ense
-> to divide them all.
+> I don't see a lot of overlap but it would be nice for you folks to
+> check each other's homework ;)
 
-That would be nice.
+Sure, I will take a look.
+Thanks
 
->  And the actual flag used inside cpumask_local_spread()
-> could end up being HK_FLAG_DOMAIN | HK_FLAG_UNBOUND. So probably you don'=
-t
-> need to worry about that and just change the HK_FLAG_WQ in your patch
-> with HK_FLAG_MANAGED_IRQ.
->
-> Thanks.
 >
 --=20
-Thanks
 Nitesh
 
 
---XYGh4mOHZTffgEUfgohr23czxkZDawAP6--
+--mO6dZvU5p3VwI6OBaMAWK5DEZKjmFJpF9--
 
---USJzxp3ZPIBAIVX19xVkwyhh3LQfRVg9B
+--oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl7zuZwACgkQo4ZA3AYy
-ozngnhAAr4RcCTsJBmGYA/OWf3RTsbgG5p9a/Zax1nwcZFgp4/CtO+cKuKADFsR+
-4sAKmm8RZqR1AgtDYmjjHW0Q3Wnaw2MEqT++6dA78rLWBLRbCPRSbWuvMSDWhI3t
-hvAycnhORD7ir/8hWCmjbZdQEP3bAAZH+k3hVrliwpumH4cghv1DLUyq5Jqq1RHo
-JV8UYjvIuJTb2On1TTxiNuNRGOyJAqwtwCmYlprtGmhSsqD/NnKaMUiP7QfizKnu
-DpFVmb5l+A0fKjKqwtlFqbRWDkPxoYNikvmR1PPnPLYLZhbsKV/9m+INfXIROGX5
-HTxIiRS4dxWgh1YpBQbRAPjRD1lGtdGEhuMBk5C2MjKR1i+dVDJL3LTiOWeweegA
-i02uAuerc4t+HawKP4owXbslPJnR+oRGOJvrNunc1YjxFW6fwoI7hrlpDYM2W3rz
-sLbUZgs6ALqFAzW/Z2GPupeyLjqEIn6HjfMIDZFKD80MXhugqa6FykTkh69KMh0/
-fH6Tcom4akdM9uOy3w86gNwCrzwkNUfd8L84KfBGyk42+SJuc0iygoy5ZcIqifAx
-rYJRmAuWo4J2BP0OX1Fwk6vLZA031YIAOm2z+OauoQw3JMh8db8NEQVBavAQnqP2
-nbHl3A1Qxnm2LK3uUtKXcOC3we/Pr8o5mHGUQjy35DTo7MqoYG8=
-=h0MQ
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl7zuc8ACgkQo4ZA3AYy
+ozkNURAAz7cs8+fTdmMQKxVrRFFxpOzfHgJSdfVunT4T/jHSr8CMLQvT1qmV3tvo
+EwSuBaurwWOcdSIDFn6VPfZOOtr3OGSpZ4S8wkWlWrHfkAy1f3NDffQPQ/6+dE+H
+9U3zZJpnuI8DK6zTlypuBGfBm2WHUUGnm97trdNzWFKASiTdhQPhncCZJxQ7PftJ
+R/vWSadHhNzFBiZ1w2k84izP0shVXfG5dQVqMq9rtBrK8qRZIhqCAHnfmMum0XS9
+mDW7sE1ErXN77wsP2M+xXkRy+t8m+Y2ziYGrFjpqJpIxxnLQdWAra6L6+Ikw8eej
+r57d9KghKFxd3FnvSHq1yekOPUvCUjqGVIUIV3WZxA3gvy5aQmxpO/nEkRakt1k7
+xn4FfcUNFINB0S+lXcSk8AJXgw01gmUEpKdVaIsUpJojCPXW88MAArOmA2Q5Cpuz
+lgfcYQV09eRNVzVv2xpMbIlELY0IWeLRQxxtuRPqOlWrTxhGI+GyaBuJ5Pag5oHv
+4dMlzGiBvJcUf8+dRj9PbiZENAcY2xicCK8+E5XIT2w5t7PkU91vFLpqVBFKkEWN
+18TzY6VQXojBj964/woJTtbo6oSATsg9otFubsO8IKt8X3r9nZUkhBCR92ay/clW
+Wd0NXK5mF3X/iyfq2Iprdqe/UU8bHPZaDE4Ngz7h5xr+1ifeIPA=
+=fACU
 -----END PGP SIGNATURE-----
 
---USJzxp3ZPIBAIVX19xVkwyhh3LQfRVg9B--
+--oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO--
 
