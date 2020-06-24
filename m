@@ -2,486 +2,857 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DFD4206AD9
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 06:01:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C437206D3C
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jun 2020 09:02:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbgFXEBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Jun 2020 00:01:07 -0400
-Received: from mga11.intel.com ([192.55.52.93]:53992 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725831AbgFXEBF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Jun 2020 00:01:05 -0400
-IronPort-SDR: geLGydkCwBEf4z5rUsx36b3fHTVfwSfXBv2kWdMiYKy1um7cHrVjEDpzJ3MPvBJF1TLv+z3qap
- 1XqAvsxxJrfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="142545256"
-X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
-   d="scan'208";a="142545256"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 21:00:33 -0700
-IronPort-SDR: HCyo5Z1w4BIpJg2+diYdHSFDE2+IXKT0RNkn8GQh6A5/ZD/5qBDEFMWypmKLFTiGRScQfwCyWP
- V9iu+whnoITg==
-X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
-   d="scan'208";a="275567379"
-Received: from sshah1-mobl7.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.251.157.124])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 21:00:32 -0700
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     mj@ucw.cz, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>
-Subject: [PATCH v2] pciutils: Add decode support for RCECs
-Date:   Tue, 23 Jun 2020 21:00:24 -0700
-Message-Id: <20200624040024.895996-1-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S2388178AbgFXHCi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Jun 2020 03:02:38 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:47352 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387918AbgFXHCh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Jun 2020 03:02:37 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 24 Jun 2020 00:02:36 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 24 Jun 2020 00:02:32 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 8E72D217C4; Wed, 24 Jun 2020 12:32:30 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pci: convert QCOM pci bindings to YAML
+Date:   Wed, 24 Jun 2020 12:32:04 +0530
+Message-Id: <1592982124-27160-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Root Complex Event Collectors provide support for terminating error
-and PME messages from RCiEPs.  This patch provides basic decoding for
-the lspci RCEC Endpoint Association Extended Capability. See PCIe 5.0-1,
-sec 7.9.10 for further details.
+Convert QCOM pci bindings to YAML schema
 
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
-Changes since v1 [1]:
+ .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+ .../devicetree/bindings/pci/qcom,pcie.yaml         | 470 +++++++++++++++++++++
+ 2 files changed, 470 insertions(+), 330 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
-- Corrections to commit log wording/abbreviation.
-- Added mention of Endpoint Association for clarity.
-- Removed "Desc:" from output as not necessary.
-- Removed "cap_ver" from output as redundant.
-- Broke out RCiEP device numbers as a comma separated list.
-(Bjorn Helgaas)
-
-[1] https://lore.kernel.org/linux-pci/20200622230330.799259-1-sean.v.kelley@linux.intel.com/
-
-Thanks,
-
-Sean
----
- lib/header.h   |   8 +-
- ls-ecaps.c     |  50 ++++++++-
- setpci.c       |   2 +-
- tests/cap-rcec | 299 +++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 355 insertions(+), 4 deletions(-)
- create mode 100644 tests/cap-rcec
-
-diff --git a/lib/header.h b/lib/header.h
-index 472816e..57a9343 100644
---- a/lib/header.h
-+++ b/lib/header.h
-@@ -219,7 +219,7 @@
- #define PCI_EXT_CAP_ID_PB	0x04	/* Power Budgeting */
- #define PCI_EXT_CAP_ID_RCLINK	0x05	/* Root Complex Link Declaration */
- #define PCI_EXT_CAP_ID_RCILINK	0x06	/* Root Complex Internal Link Declaration */
--#define PCI_EXT_CAP_ID_RCECOLL	0x07	/* Root Complex Event Collector */
-+#define PCI_EXT_CAP_ID_RCEC	0x07	/* Root Complex Event Collector */
- #define PCI_EXT_CAP_ID_MFVC	0x08	/* Multi-Function Virtual Channel */
- #define PCI_EXT_CAP_ID_VC2	0x09	/* Virtual Channel (2nd ID) */
- #define PCI_EXT_CAP_ID_RCRB	0x0a	/* Root Complex Register Block */
-@@ -1048,6 +1048,12 @@
- #define  PCI_RCLINK_LINK_ADDR	8	/* Link Entry: Address (64-bit) */
- #define  PCI_RCLINK_LINK_SIZE	16	/* Link Entry: sizeof */
-
-+/* Root Complex Event Collector Endpoint Association */
-+#define  PCI_RCEC_EP_CAP_VER(reg)	(((reg) >> 16) & 0xf)
-+#define  PCI_RCEC_BUSN_REG_VER	0x02	/* as per PCIe sec 7.9.10.1 */
-+#define  PCI_RCEC_RCIEP_BMAP	0x0004	/* as per PCIe sec 7.9.10.2 */
-+#define  PCI_RCEC_BUSN_REG	0x0008	/* as per PCIe sec 7.9.10.3 */
-+
- /* PCIe Vendor-Specific Capability */
- #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
- #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
-diff --git a/ls-ecaps.c b/ls-ecaps.c
-index e71209e..ae26393 100644
---- a/ls-ecaps.c
-+++ b/ls-ecaps.c
-@@ -634,6 +634,52 @@ cap_rclink(struct device *d, int where)
-     }
- }
-
-+static void
-+cap_rcec(struct device *d, int where)
-+{
-+  printf("Root Complex Event Collector Endpoint Association\n");
-+  if (verbose < 2)
-+    return;
-+
-+  if (!config_fetch(d, where, 12))
-+    return;
-+
-+  u32 hdr = get_conf_long(d, where);
-+  byte cap_ver = PCI_RCEC_EP_CAP_VER(hdr);
-+  u32 bmap = get_conf_long(d, where + PCI_RCEC_RCIEP_BMAP);
-+  printf("\t\tRCiEPBitmap: ");
-+  if (bmap)
-+    {
-+      int dev=0;
-+      int prevmatched=0;
-+      printf("RCiEP at Device(s):");
-+      while (bmap)
-+        {
-+	  if (BITS(bmap, 0, 1))
-+	      if (!prevmatched)
-+	        {
-+		  prevmatched=1;
-+		  printf(" %u", dev);
-+	        }
-+	      else
-+	          printf("%s %u", (prevmatched) ? "," : "", dev);
-+	  bmap >>= 1;
-+	  dev += 1;
-+        }
-+    }
-+  else
-+    printf("00000000");
-+  printf("\n");
-+
-+  if (cap_ver < PCI_RCEC_BUSN_REG_VER)
-+    return;
-+
-+  u32 busn = get_conf_long(d, where + PCI_RCEC_BUSN_REG);
-+  printf("\t\tRCECLastBus=%02x RCECFirstBus=%02x\n",
-+    BITS(busn, 16, 8),
-+    BITS(busn, 8, 8));
-+}
-+
- static void
- cap_dvsec_cxl(struct device *d, int where)
- {
-@@ -991,8 +1037,8 @@ show_ext_caps(struct device *d, int type)
- 	  case PCI_EXT_CAP_ID_RCILINK:
- 	    printf("Root Complex Internal Link <?>\n");
- 	    break;
--	  case PCI_EXT_CAP_ID_RCECOLL:
--	    printf("Root Complex Event Collector <?>\n");
-+	  case PCI_EXT_CAP_ID_RCEC:
-+	    cap_rcec(d, where);
- 	    break;
- 	  case PCI_EXT_CAP_ID_MFVC:
- 	    printf("Multi-Function Virtual Channel <?>\n");
-diff --git a/setpci.c b/setpci.c
-index 90ca726..2cb70fa 100644
---- a/setpci.c
-+++ b/setpci.c
-@@ -350,7 +350,7 @@ static const struct reg_name pci_reg_names[] = {
-   { 0x20004,	0, 0, "ECAP_PB" },
-   { 0x20005,	0, 0, "ECAP_RCLINK" },
-   { 0x20006,	0, 0, "ECAP_RCILINK" },
--  { 0x20007,	0, 0, "ECAP_RCECOLL" },
-+  { 0x20007,	0, 0, "ECAP_RCEC" },
-   { 0x20008,	0, 0, "ECAP_MFVC" },
-   { 0x20009,	0, 0, "ECAP_VC2" },
-   { 0x2000a,	0, 0, "ECAP_RBCB" },
-diff --git a/tests/cap-rcec b/tests/cap-rcec
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+deleted file mode 100644
+index 981b4de12807..000000000000
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ /dev/null
+@@ -1,330 +0,0 @@
+-* Qualcomm PCI express root complex
+-
+-- compatible:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Value should contain
+-			- "qcom,pcie-ipq8064" for ipq8064
+-			- "qcom,pcie-apq8064" for apq8064
+-			- "qcom,pcie-apq8084" for apq8084
+-			- "qcom,pcie-msm8996" for msm8996 or apq8096
+-			- "qcom,pcie-ipq4019" for ipq4019
+-			- "qcom,pcie-ipq8074" for ipq8074
+-			- "qcom,pcie-qcs404" for qcs404
+-			- "qcom,pcie-sdm845" for sdm845
+-
+-- reg:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: Register ranges as listed in the reg-names property
+-
+-- reg-names:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Must include the following entries
+-			- "parf"   Qualcomm specific registers
+-			- "dbi"	   DesignWare PCIe registers
+-			- "elbi"   External local bus interface registers
+-			- "config" PCIe configuration space
+-
+-- device_type:
+-	Usage: required
+-	Value type: <string>
+-	Definition: Should be "pci". As specified in designware-pcie.txt
+-
+-- #address-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: Should be 3. As specified in designware-pcie.txt
+-
+-- #size-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: Should be 2. As specified in designware-pcie.txt
+-
+-- ranges:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: As specified in designware-pcie.txt
+-
+-- interrupts:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: MSI interrupt
+-
+-- interrupt-names:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Should contain "msi"
+-
+-- #interrupt-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: Should be 1. As specified in designware-pcie.txt
+-
+-- interrupt-map-mask:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: As specified in designware-pcie.txt
+-
+-- interrupt-map:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: As specified in designware-pcie.txt
+-
+-- clocks:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: List of phandle and clock specifier pairs as listed
+-		    in clock-names property
+-
+-- clock-names:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "iface"	Configuration AHB clock
+-
+-- clock-names:
+-	Usage: required for ipq/apq8064
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "core"	Clocks the pcie hw block
+-			- "phy"		Clocks the pcie PHY block
+-- clock-names:
+-	Usage: required for apq8084/ipq4019
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "aux"		Auxiliary (AUX) clock
+-			- "bus_master"	Master AXI clock
+-			- "bus_slave"	Slave AXI clock
+-
+-- clock-names:
+-	Usage: required for msm8996/apq8096
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "pipe"	Pipe Clock driving internal logic
+-			- "aux"		Auxiliary (AUX) clock
+-			- "cfg"		Configuration clock
+-			- "bus_master"	Master AXI clock
+-			- "bus_slave"	Slave AXI clock
+-
+-- clock-names:
+-	Usage: required for ipq8074
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "iface"	PCIe to SysNOC BIU clock
+-			- "axi_m"	AXI Master clock
+-			- "axi_s"	AXI Slave clock
+-			- "ahb"		AHB clock
+-			- "aux"		Auxiliary clock
+-
+-- clock-names:
+-	Usage: required for qcs404
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "iface"	AHB clock
+-			- "aux"		Auxiliary clock
+-			- "master_bus"	AXI Master clock
+-			- "slave_bus"	AXI Slave clock
+-
+--clock-names:
+-	Usage: required for sdm845
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "aux"		Auxiliary clock
+-			- "cfg"		Configuration clock
+-			- "bus_master"	Master AXI clock
+-			- "bus_slave"	Slave AXI clock
+-			- "slave_q2a"	Slave Q2A clock
+-			- "tbu"		PCIe TBU clock
+-			- "pipe"	PIPE clock
+-
+-- resets:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: List of phandle and reset specifier pairs as listed
+-		    in reset-names property
+-
+-- reset-names:
+-	Usage: required for ipq/apq8064
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "axi"  AXI reset
+-			- "ahb"  AHB reset
+-			- "por"  POR reset
+-			- "pci"  PCI reset
+-			- "phy"  PHY reset
+-
+-- reset-names:
+-	Usage: required for apq8084
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "core" Core reset
+-
+-- reset-names:
+-	Usage: required for ipq/apq8064
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "axi_m"		AXI master reset
+-			- "axi_s"		AXI slave reset
+-			- "pipe"		PIPE reset
+-			- "axi_m_vmid"		VMID reset
+-			- "axi_s_xpu"		XPU reset
+-			- "parf"		PARF reset
+-			- "phy"			PHY reset
+-			- "axi_m_sticky"	AXI sticky reset
+-			- "pipe_sticky"		PIPE sticky reset
+-			- "pwr"			PWR reset
+-			- "ahb"			AHB reset
+-			- "phy_ahb"		PHY AHB reset
+-
+-- reset-names:
+-	Usage: required for ipq8074
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "pipe"		PIPE reset
+-			- "sleep"		Sleep reset
+-			- "sticky"		Core Sticky reset
+-			- "axi_m"		AXI Master reset
+-			- "axi_s"		AXI Slave reset
+-			- "ahb"			AHB Reset
+-			- "axi_m_sticky"	AXI Master Sticky reset
+-
+-- reset-names:
+-	Usage: required for qcs404
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "axi_m"		AXI Master reset
+-			- "axi_s"		AXI Slave reset
+-			- "axi_m_sticky"	AXI Master Sticky reset
+-			- "pipe_sticky"		PIPE sticky reset
+-			- "pwr"			PWR reset
+-			- "ahb"			AHB reset
+-
+-- reset-names:
+-	Usage: required for sdm845
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "pci"			PCIe core reset
+-
+-- power-domains:
+-	Usage: required for apq8084 and msm8996/apq8096
+-	Value type: <prop-encoded-array>
+-	Definition: A phandle and power domain specifier pair to the
+-		    power domain which is responsible for collapsing
+-		    and restoring power to the peripheral
+-
+-- vdda-supply:
+-	Usage: required
+-	Value type: <phandle>
+-	Definition: A phandle to the core analog power supply
+-
+-- vdda_phy-supply:
+-	Usage: required for ipq/apq8064
+-	Value type: <phandle>
+-	Definition: A phandle to the analog power supply for PHY
+-
+-- vdda_refclk-supply:
+-	Usage: required for ipq/apq8064
+-	Value type: <phandle>
+-	Definition: A phandle to the analog power supply for IC which generates
+-		    reference clock
+-- vddpe-3v3-supply:
+-	Usage: optional
+-	Value type: <phandle>
+-	Definition: A phandle to the PCIe endpoint power supply
+-
+-- phys:
+-	Usage: required for apq8084 and qcs404
+-	Value type: <phandle>
+-	Definition: List of phandle(s) as listed in phy-names property
+-
+-- phy-names:
+-	Usage: required for apq8084 and qcs404
+-	Value type: <stringlist>
+-	Definition: Should contain "pciephy"
+-
+-- <name>-gpios:
+-	Usage: optional
+-	Value type: <prop-encoded-array>
+-	Definition: List of phandle and GPIO specifier pairs. Should contain
+-			- "perst-gpios"	PCIe endpoint reset signal line
+-			- "wake-gpios"	PCIe endpoint wake signal line
+-
+-* Example for ipq/apq8064
+-	pcie@1b500000 {
+-		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
+-		reg = <0x1b500000 0x1000
+-		       0x1b502000 0x80
+-		       0x1b600000 0x100
+-		       0x0ff00000 0x100000>;
+-		reg-names = "dbi", "elbi", "parf", "config";
+-		device_type = "pci";
+-		linux,pci-domain = <0>;
+-		bus-range = <0x00 0xff>;
+-		num-lanes = <1>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		ranges = <0x81000000 0 0 0x0fe00000 0 0x00100000   /* I/O */
+-			  0x82000000 0 0 0x08000000 0 0x07e00000>; /* memory */
+-		interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
+-		interrupt-names = "msi";
+-		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc 0 36 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-				<0 0 0 2 &intc 0 37 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-				<0 0 0 3 &intc 0 38 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+-		clocks = <&gcc PCIE_A_CLK>,
+-			 <&gcc PCIE_H_CLK>,
+-			 <&gcc PCIE_PHY_CLK>;
+-		clock-names = "core", "iface", "phy";
+-		resets = <&gcc PCIE_ACLK_RESET>,
+-			 <&gcc PCIE_HCLK_RESET>,
+-			 <&gcc PCIE_POR_RESET>,
+-			 <&gcc PCIE_PCI_RESET>,
+-			 <&gcc PCIE_PHY_RESET>;
+-		reset-names = "axi", "ahb", "por", "pci", "phy";
+-		pinctrl-0 = <&pcie_pins_default>;
+-		pinctrl-names = "default";
+-	};
+-
+-* Example for apq8084
+-	pcie0@fc520000 {
+-		compatible = "qcom,pcie-apq8084", "snps,dw-pcie";
+-		reg = <0xfc520000 0x2000>,
+-		      <0xff000000 0x1000>,
+-		      <0xff001000 0x1000>,
+-		      <0xff002000 0x2000>;
+-		reg-names = "parf", "dbi", "elbi", "config";
+-		device_type = "pci";
+-		linux,pci-domain = <0>;
+-		bus-range = <0x00 0xff>;
+-		num-lanes = <1>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		ranges = <0x81000000 0 0          0xff200000 0 0x00100000   /* I/O */
+-			  0x82000000 0 0x00300000 0xff300000 0 0x00d00000>; /* memory */
+-		interrupts = <GIC_SPI 243 IRQ_TYPE_NONE>;
+-		interrupt-names = "msi";
+-		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc 0 244 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-				<0 0 0 2 &intc 0 245 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-				<0 0 0 3 &intc 0 247 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-				<0 0 0 4 &intc 0 248 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+-		clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+-			 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+-			 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+-			 <&gcc GCC_PCIE_0_AUX_CLK>;
+-		clock-names = "iface", "master_bus", "slave_bus", "aux";
+-		resets = <&gcc GCC_PCIE_0_BCR>;
+-		reset-names = "core";
+-		power-domains = <&gcc PCIE0_GDSC>;
+-		vdda-supply = <&pma8084_l3>;
+-		phys = <&pciephy0>;
+-		phy-names = "pciephy";
+-		perst-gpio = <&tlmm 70 GPIO_ACTIVE_LOW>;
+-		pinctrl-0 = <&pcie0_pins_default>;
+-		pinctrl-names = "default";
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 new file mode 100644
-index 0000000..4196228
+index 000000000000..b119ce4711b4
 --- /dev/null
-+++ b/tests/cap-rcec
-@@ -0,0 +1,299 @@
-+6a:00.4 Generic system peripheral [0807]: Intel Corporation Device 0b23
-+        Subsystem: Intel Corporation Device 0000
-+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-+        Interrupt: pin A routed to IRQ 255
-+        NUMA node: 0
-+        Capabilities: [40] Express (v2) Root Complex Event Collector, MSI 00
-+                DevCap: MaxPayload 512 bytes, PhantFunc 0
-+                        ExtTag- RBE-
-+                DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq-
-+                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
-+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-+                RootCap: CRSVisible-
-+                RootCtl: ErrCorrectable+ ErrNon-Fatal+ ErrFatal+ PMEIntEna- CRSVisible-
-+                RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-+                DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-+                         10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-+                         EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-+                         FRS-
-+                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-+        Capabilities: [80] Power Management version 3
-+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-+        Capabilities: [90] MSI: Enable- Count=1/1 Maskable+ 64bit-
-+                Address: 00000000  Data: 0000
-+                Masking: 00000000  Pending: 00000000
-+        Capabilities: [100 v1] Advanced Error Reporting
-+                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-+                UEMsk:  DLP- SDES+ TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq+ ACSViol-
-+                UESvrt: DLP+ SDES- TLP+ FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-+                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-+                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-+                AERCap: First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-+                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-+                HeaderLog: 00000000 00000000 00000000 00000000
-+                RootCmd: CERptEn- NFERptEn- FERptEn-
-+                RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-+                         FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-+                ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-+        Capabilities: [160 v2] Root Complex Event Collector Endpoint Association
-+                RCiEPBitmap: RCiEP at Device(s): 0, 1, 4, 7, 8, 9, 10, 12, 13
-+                RCECLastBus=00 RCECFirstBus=ff
-+00: 86 80 23 0b 00 01 10 00 00 00 07 08 00 00 00 00
-+10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
-+30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
-+40: 10 80 a2 00 02 00 00 00 07 00 00 00 00 00 00 00
-+50: 00 00 00 00 00 00 00 00 00 00 00 00 07 00 00 00
-+60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+80: 01 90 03 00 00 00 00 00 00 00 00 00 00 00 00 00
-+90: 05 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00
-+a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d0: 31 6a 08 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+100: 01 00 01 16 00 00 00 00 20 00 10 00 10 30 46 00
-+110: 00 00 00 00 00 20 00 00 00 00 00 00 00 00 00 00
-+120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+130: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+140: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+150: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+160: 07 00 02 00 00 00 00 00 00 ff 00 00 00 00 00 00
-+170: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+190: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+1f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+210: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+220: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+230: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+240: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+250: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+260: 00 00 00 00 07 00 00 00 00 00 00 00 00 00 00 00
-+270: 00 00 00 00 00 00 00 00 07 00 00 00 00 00 00 00
-+280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+290: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2a0: 00 00 00 00 00 00 00 00 20 00 18 00 20 00 18 00
-+2b0: 20 00 18 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+2f0: 00 20 00 00 00 20 00 00 00 20 00 00 00 e0 00 00
-+300: 00 e0 00 00 00 e0 00 00 00 e0 00 00 00 e0 00 00
-+310: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+320: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+330: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+340: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+350: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+360: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+370: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+390: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+3f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+410: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+420: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+430: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+440: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+450: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+460: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+470: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+490: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+4f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+510: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+520: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+530: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+540: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+550: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+560: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+570: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+590: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+5f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+600: 44 00 00 00 91 00 00 00 00 00 00 00 00 00 00 00
-+610: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+620: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+630: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+640: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+650: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+660: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+670: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+680: 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+690: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+6f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+710: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+720: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+730: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+740: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+750: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+760: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+770: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+790: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+7f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+810: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+820: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+830: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+840: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+850: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+860: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+870: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+890: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+8f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+910: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+920: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+930: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+940: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+950: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+960: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+970: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+990: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+9f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+a90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+aa0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ab0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ac0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ad0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ae0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+af0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+b90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ba0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+be0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+bf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+c90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ca0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ce0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+cf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+d90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+da0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+db0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+dc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+dd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+de0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+df0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ea0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+eb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ec0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ed0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ee0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ef0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+f90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fa0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
---
-2.27.0
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -0,0 +1,470 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm PCI express root complex
++
++maintainers:
++  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
++
++description:
++  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
++  wrappers.
++
++properties:
++  compatible:
++    enum:
++      - qcom,pcie-apq8064
++      - qcom,pcie-apq8084
++      - qcom,pcie-ipq4019
++      - qcom,pcie-ipq8064
++      - qcom,pcie-ipq8074
++      - qcom,pcie-msm8996
++      - qcom,pcie-qcs404
++      - qcom,pcie-sdm845
++
++  reg:
++    description: Register ranges as listed in the reg-names property
++    maxItems: 4
++
++  reg-names:
++    items:
++      - const: dbi
++      - const: elbi
++      - const: parf
++      - const: config
++
++  "#size-cells":
++    const: 2
++
++  device_type:
++    items:
++      - const: pci
++
++  "#address-cells":
++    const: 3
++
++  ranges:
++    maxItems: 2
++
++  interrupts:
++    items:
++      - description: MSI interrupts
++
++  interrupt-names:
++    const: msi
++
++  "#interrupt-cells":
++    const: 1
++
++  interrupt-map-mask:
++    items:
++      - description: standard PCI properties to define mapping of PCIe
++                     interface to interrupt numbers.
++
++  interrupt-map:
++    maxItems: 4
++
++  clocks:
++    minItems: 1
++    maxItems: 7
++
++  clock-names:
++    minItems: 1
++    maxItems: 7
++
++  resets:
++    minItems: 1
++    maxItems: 12
++
++  reset-names:
++    minItems: 1
++    maxItems: 12
++
++  power-domains:
++    items:
++      - description: phandle to the power domain responsible for collapsing
++                     and restoring power to peripherals
++
++  vdda-supply:
++    items:
++      - description: phandle to power supply
++
++  vdda_phy-supply:
++    items:
++      - description: phandle to the power supply to PHY
++
++  vdda_refclk-supply:
++    items:
++      - description: phandle to power supply for ref clock generator
++
++  vddpe-3v3-supply:
++    items:
++      - description: PCIe endpoint power supply
++
++  phys:
++    items:
++      - description: phandle to the PHY block
++
++  phy-names:
++    const: pciephy
++
++  perst-gpios:
++    description: Endpoint reset signal line
++
++  bus-range:
++    description: Range of bus numbers associated with this controller
++
++  num-lanes:
++    const: 1
++
++  linux,pci-domain:
++    description: pci host bridge domain number
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - device_type
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
++  - interrupts
++  - interrupt-names
++  - "#interrupt-cells"
++  - interrupt-map-mask
++  - interrupt-map
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - phys
++  - phy-names
++
++additionalProperties: false
++
++allOf:
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-apq8064
++   then:
++     properties:
++       clocks:
++         items:
++           - description: clock for pcie hw block
++           - description: clock for pcie phy block
++       clock-names:
++         items:
++           - const: core
++           - const: phy
++       resets:
++         items:
++           - description: AXI reset
++           - description: AHB reset
++           - description: POR reset
++           - description: PCI reset
++           - description: PHY reset
++       reset-names:
++         items:
++           - const: axi
++           - const: ahb
++           - const: por
++           - const: pci
++           - const: phy
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-apq8084
++   then:
++     properties:
++       clocks:
++         items:
++           - description: AUX clock
++           - description: Master AXI clock
++           - description: Slave AXI clock
++       clock-names:
++         items:
++           - const: aux
++           - const: bus_master
++           - const: bus_slave
++       resets:
++         items:
++           - description: core reset
++       reset-names:
++         items:
++           - const: core
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-ipq4019
++   then:
++     properties:
++       clocks:
++         items:
++           - description: AUX clock
++           - description: Master AXI clock
++           - description: Slave AXI clock
++       clock-names:
++         items:
++           - const: aux
++           - const: master_bus
++           - const: master_slave
++       resets:
++         items:
++           - description: AXI master reset
++           - description: AXI slave reset
++           - description: PCIE pipe reset
++           - description: AXI vmid reset
++           - description: AXI XPU reset
++           - description: parf reset
++           - description: PHY reset
++           - description: AXI master sticky reset
++           - description: PCIE pipe sticky reset
++           - description: pwr reset
++           - description: AHB reset
++           - description: PHY AHB reset
++       reset-names:
++         items:
++           - const: axi_m
++           - const: axi_s
++           - const: pipe
++           - const: axi_m_vmid
++           - const: axi_s_xpu
++           - const: parf
++           - const: phy
++           - const: axi_m_sticky
++           - const: pipe_sticky
++           - const: pwr
++           - const: ahb
++           - const: phy_ahb
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-ipq8064
++   then:
++     properties:
++       clocks:
++         items:
++           - description: core clock
++           - description: interface clock
++           - description: phy clock
++           - description: Auxilary clock
++           - description: reference clock
++       clock-names:
++         items:
++           - const: core
++           - const: iface
++           - const: phy
++           - const: aux
++           - const: ref
++       resets:
++         items:
++           - description: AXI reset
++           - description: AHB reset
++           - description: POR reset
++           - description: PCI reset
++           - description: PHY reset
++           - description: External reset
++       reset-names:
++         items:
++           - const: axi
++           - const: ahb
++           - const: por
++           - const: pci
++           - const: phy
++           - const: ext
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-ipq8074
++   then:
++     properties:
++       clocks:
++         items:
++           - description: sys noc interface clock
++           - description: AXI master clock
++           - description: AXI slave clock
++           - description: AHB clock
++           - description: Auxilary clock
++       clock-names:
++         items:
++           - const: iface
++           - const: axi_m
++           - const: axi_s
++           - const: ahb
++           - const: aux
++       resets:
++         items:
++           - description: PIPE reset
++           - description: PCIe sleep reset
++           - description: PCIe sticky reset
++           - description: AXI master reset
++           - description: AXI slave reset
++           - description: AHB reset
++           - description: AXI master sticky reset
++       reset-names:
++         items:
++           - const: pipe
++           - const: sleep
++           - const: sticky
++           - const: axi_m
++           - const: axi_s
++           - const: ahb
++           - const: axi_m_sticky
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-msm8996
++   then:
++     properties:
++       clocks:
++         items:
++           - description: PCIe pipe clock
++           - description: Auxilary clock
++           - description: AHB config clock
++           - description: AXI master clock
++           - description: AXI slave clock
++       clock-names:
++         items:
++           - const: pipe
++           - const: aux
++           - const: cfg
++           - const: bus_master
++           - const: bus_slave
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-qcs404
++   then:
++     properties:
++       clocks:
++         items:
++           - description: interface clock
++           - description: Auxilary clock
++           - description: AXI master clock
++           - description: AXI slave clock
++       clock-names:
++         items:
++           - const: iface
++           - const: aux
++           - const: master_bus
++           - const: slave_bus
++       resets:
++         items:
++           - description: AXI master reset
++           - description: AXI slave reset
++           - description: AXI master sticky reset
++           - description: PCIe pipe sticky reset
++           - description: power reset
++           - description: AHB reset
++       reset-names:
++         items:
++           - const: axi_m
++           - const: axi_s
++           - const: axi_m_sticky
++           - const: pipe_sticky
++           - const: pwr
++           - const: ahb
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-sdm845
++   then:
++     properties:
++       clocks:
++         items:
++           - description: PCIE pipe clock
++           - description: Auxilary clock
++           - description: AHB config clock
++           - description: AXI Master clock
++           - description: AXI Slave clock
++           - description: AXI Slave Q2A clock
++           - description: NOC TBU clock
++       clock-names:
++         items:
++           - const: pipe
++           - const: aux
++           - const: cfg
++           - const: bus_master
++           - const: bus_slave
++           - const: slave_q2a
++           - const: tbu
++       resets:
++         items:
++           - description: PCI reset
++       reset-names:
++         items:
++           - const: pci
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    pcie: pci@10000000 {
++        compatible = "qcom,pcie-qcs404";
++        reg =  <0x10000000 0xf1d>,
++               <0x10000f20 0xa8>,
++               <0x07780000 0x2000>,
++               <0x10001000 0x2000>;
++        reg-names = "dbi", "elbi", "parf", "config";
++        device_type = "pci";
++        linux,pci-domain = <0>;
++        bus-range = <0x00 0xff>;
++        num-lanes = <1>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++
++        ranges = <0x01000000 0 0          0x10003000 0 0x00010000>, /* I/O */
++                 <0x02000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
++
++        interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "msi";
++        #interrupt-cells = <1>;
++        interrupt-map-mask = <0 0 0 0x7>;
++        interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++                        <0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++                        <0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++                        <0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++        clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++                 <&gcc GCC_PCIE_0_AUX_CLK>,
++                 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
++                 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
++        clock-names = "iface", "aux", "master_bus", "slave_bus";
++
++        resets = <&gcc 18>,
++                 <&gcc 17>,
++                 <&gcc 15>,
++                 <&gcc 19>,
++                 <&gcc GCC_PCIE_0_BCR>,
++                 <&gcc 16>;
++        reset-names = "axi_m",
++                      "axi_s",
++                      "axi_m_sticky",
++                      "pipe_sticky",
++                      "pwr",
++                      "ahb";
++
++        phys = <&pcie_phy>;
++        phy-names = "pciephy";
++
++    };
+-- 
+2.7.4
 
