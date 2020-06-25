@@ -2,123 +2,240 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B272209B9B
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 10:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B10C8209CC1
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 12:23:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390795AbgFYI6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jun 2020 04:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390330AbgFYI6T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 04:58:19 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76FAC061573;
-        Thu, 25 Jun 2020 01:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oaHjYuJa/3zuClzIH+/g+fhPoe4mw4jvJXlUfLpBRwo=; b=dhVJmH7iCebSecH6ztLVh/a9AX
-        q/FRl+8k3rSxsroM7W9JVbb4ruGWGY7b3ylToiN3VKMgxN8q00TRkiBpCp8haU8MShPGRK/s8jkgg
-        w3YBszL7uKIGNLBTLhESs/x80y6d0palNb62gZGEGSMiegKRbb9GXJ9f1wHqqmzeO1jX7JiN9/HsX
-        aTa1JqeZNh93t14b58sd/SSqgpOlSZ8pEHH5Qo6ELxJU7Vf2AGwoPRrjAW1izwzD6GTzOsKkAJ0LL
-        Ve/bAcUlLidRSKJGMMkj+0+VwBHrbE7cgi6LsUKtOByycYPJrSQmUl57IXr4MTgW/JLH3ka/h2HLc
-        xcYWPkgA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joNhc-0003bQ-FK; Thu, 25 Jun 2020 08:57:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE9DA3003E5;
-        Thu, 25 Jun 2020 10:57:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AA33E2010773D; Thu, 25 Jun 2020 10:57:45 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 10:57:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200625085745.GD117543@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624211540.GS4817@hirez.programming.kicks-ass.net>
- <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
- <20200625080313.GY4817@hirez.programming.kicks-ass.net>
- <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+        id S2403913AbgFYKXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jun 2020 06:23:09 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46403 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403971AbgFYKW4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 06:22:56 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i3so4127209qtq.13
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 03:22:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7mTsNIMUz6kiMscm53vTmuVhJGpxoQB9Dw0h3Ryr69I=;
+        b=UYX/i/YwY4zfQAV6kYvBlFhpLR4TjHTFnnf13s5pmqP1FS1wWDAVv8uujDL1t/rabt
+         tcRiVtbW7yl/Y59aIq08fogkBILiSks23HERWD4R5FR/TXal+1oBx6UnqkHr812Znsmt
+         hYqVdQhxEHzmrwoD42r3haF9iYSKfSELrAQ0RapKQ817UwQUUiAfUwZDkGXBpkY8iQNP
+         noPxbwXPVaLW0ut6zxQT8fLCxSXkpAAvc7nEMVQYB3lLqcTdN52yBIl7IY+xXFYS/gZI
+         bMLnbKj7/GI5BQ/qKsOgCufg2mBTu4BMtHhYXt1c+D9pjxW8dsQIzxXMx7xPAWlGJt74
+         hpQw==
+X-Gm-Message-State: AOAM532nmhLB2/YY6PsQeH8dnz5RlQj6jbwnuRug6svMAG55v9g2zLXy
+        uV802UiwfbDXOy/G5DjxnQqf4Ie529Y=
+X-Google-Smtp-Source: ABdhPJwyN+CCEPU10W35u8wMvr43d5OIGrp1FM612NpKLRVPpnLvJ7Jtby676OuyikUa0/tumI+ArQ==
+X-Received: by 2002:ac8:4b63:: with SMTP id g3mr11441238qts.229.1593080570698;
+        Thu, 25 Jun 2020 03:22:50 -0700 (PDT)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
+        by smtp.gmail.com with ESMTPSA id l2sm6293972qtc.80.2020.06.25.03.22.50
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 03:22:50 -0700 (PDT)
+Received: by mail-qt1-f174.google.com with SMTP id z2so4170118qts.5
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 03:22:50 -0700 (PDT)
+X-Received: by 2002:aed:21c5:: with SMTP id m5mr1641785qtc.23.1593080569779;
+ Thu, 25 Jun 2020 03:22:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+References: <20200524003529.598434ff@f31-4.lan> <20200527213136.GA265655@bjorn-Precision-5520>
+ <MN2PR12MB448819B8491290B54E7FABC9F7B10@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <CAAri2Dqruwmu19o1V1b_=0-0RR+J_dgmxFi=izLej_m=XQ1VGw@mail.gmail.com>
+ <CAAri2Dqm6vGySEFjUYKcED5fJcN2Gr38Cj-02ab5ONuz6r88jw@mail.gmail.com> <28a6da20-c143-eaf9-d03d-dd00cb76bb56@amd.com>
+In-Reply-To: <28a6da20-c143-eaf9-d03d-dd00cb76bb56@amd.com>
+From:   Marcos Scriven <marcos@scriven.org>
+Date:   Thu, 25 Jun 2020 11:22:38 +0100
+X-Gmail-Original-Message-ID: <CAAri2DraPdqQwmWri2JZYFLrSbkuGTBFUPiqLid8oDP1LXG3ZA@mail.gmail.com>
+Message-ID: <CAAri2DraPdqQwmWri2JZYFLrSbkuGTBFUPiqLid8oDP1LXG3ZA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Avoid FLR for AMD Starship USB 3.0
+To:     "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Kevin Buettner <kevinb@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:24:33AM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 25, 2020 at 10:03:13AM +0200, Peter Zijlstra wrote:
+On Tue, 9 Jun 2020 at 12:47, Shah, Nehal-bakulchandra
+<nehal-bakulchandra.shah@amd.com> wrote:
+>
+> Hi
+>
+> On 6/8/2020 11:17 PM, Marcos Scriven wrote:
+> > On Thu, 28 May 2020 at 09:12, Marcos Scriven <marcos@scriven.org> wrote:
+> >> On Wed, 27 May 2020 at 22:42, Deucher, Alexander
+> >> <Alexander.Deucher@amd.com> wrote:
+> >>> [AMD Official Use Only - Internal Distribution Only]
+> >>>
+> >>>> -----Original Message-----
+> >>>> From: Bjorn Helgaas <helgaas@kernel.org>
+> >>>> Sent: Wednesday, May 27, 2020 5:32 PM
+> >>>> To: Kevin Buettner <kevinb@redhat.com>
+> >>>> Cc: linux-pci@vger.kernel.org; Bjorn Helgaas <bhelgaas@google.com>; Alex
+> >>>> Williamson <alex.williamson@redhat.com>; Deucher, Alexander
+> >>>> <Alexander.Deucher@amd.com>; Koenig, Christian
+> >>>> <Christian.Koenig@amd.com>
+> >>>> Subject: Re: [PATCH] PCI: Avoid FLR for AMD Starship USB 3.0
+> >>>>
+> >>>> [+cc Alex D, Christian -- do you guys have any contacts or insight into why we
+> >>>> suddenly have three new AMD devices that advertise FLR support but it
+> >>>> doesn't work?  Are we doing something wrong in Linux, or are these devices
+> >>>> defective?
+> >>> +Nehal who handles our USB drivers.
+> >>>
+> >>> Nehal any ideas about FLR or whether it should be advertised?
+> >>>
+> >>> Alex
+> >>>
+> Sorry for the delay. We are looking into this with BIOS team. I shall revert soon on this.
+>
+>
 
-> > I'm sure Will will respond, but the basic issue is the trainwreck C11
-> > made of dependent loads.
-> > 
-> > Anyway, here's a link to the last time this came up:
-> > 
-> >   https://lore.kernel.org/linux-arm-kernel/20171116174830.GX3624@linux.vnet.ibm.com/
-> 
-> Another good read:
-> 
->   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
-> 
-> and having (partially) re-read that, I now worry intensily about things
-> like latch_tree_find(), cyc2ns_read_begin, __ktime_get_fast_ns().
-> 
-> It looks like kernel/time/sched_clock.c uses raw_read_seqcount() which
-> deviates from the above patterns by, for some reason, using a primitive
-> that includes an extra smp_rmb().
-> 
-> And this is just the few things I could remember off the top of my head,
-> who knows what else is out there.
+Hi Nehal
 
-As an example, let us consider __ktime_get_fast_ns(), the critical bit
-is:
+Sorry to keep pestering about this, but wondering if there's any
+movement on this?
 
-		seq = raw_read_seqcount_latch(&tkf->seq);
-		tkr = tkf->base + (seq & 0x01);
-		now = tkr->base;
+Is it something that's likely to be fixed and actually rolled out by
+motherboard manufacturers?
 
-And we hard rely on that being a dependent load, so:
+There's been some grumblings in the community about adding workarounds
+rather than fixing, so it would be good to pass on expectations here.
 
-  LOAD	seq, (tkf->seq)
-  LOAD  tkr, tkf->base
-  AND   seq, 1
-  MUL   seq, sizeof(tk_read_base)
-  ADD	tkr, seq
-  LOAD  now, (tkr->base)
+Marcos
 
-Such that we obtain 'now' as a direct dependency on 'seq'. This ensures
-the loads are ordered.
-
-A compiler can wreck this by translating it into something like:
-
-  LOAD	seq, (tkf->seq)
-  LOAD  tkr, tkf->base
-  AND   seq, 1
-  CMP	seq, 0
-  JE	1f
-  ADD	tkr, sizeof(tk_read_base)
-1:
-  LOAD  now, (tkr->base)
-
-Because now the machine can speculate and load now before seq, breaking
-the ordering.
+> >> I had read somewhere that the IO die in the Ryzen/Threadripper
+> >> packages are identical to the ones used in the motherboard chipsets.
+> >>
+> >> Since the latter do reset ok, it would seem a BIOS update of the AGESA
+> >> may potentially fix the issue.
+> >>
+> >> Unfortunately, it's not something motherboard manufacturer's customer
+> >> support people know how to deal with or pass back up the chain to AMD
+> >> engineers. Actual use of this feature seems to be fairly niche.
+> >>
+> >> After I added the workaround for the USB and audio controllers on the
+> >> 3rd-gen Ryzen, I tried contacting Kim Phillips (who I found as a
+> >> kernel committer to x86/cpu/amd), but haven't heard back.
+> >>
+> >> It would be wonderful to know if this can potentially be fixed in CPU
+> >> firmware, and whether there's any likelihood of it actually being
+> >> distributed by motherboard manufacturers.
+> >>
+> >> Marcos
+> >>
+> >>
+> >>
+> > Dear Alex/Nehal
+> >
+> > I wonder if you're able to comment please on whether FLR should be advertised?
+> >
+> > Is there any chance this could be fixed at the bios/AGESA level, and
+> > effectively rolled out?
+> >
+> > Thanks
+> >
+> > Marcos
+> >
+> >>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.
+> >>>> kernel.org%2Fr%2F20200524003529.598434ff%40f31-
+> >>>> 4.lan&amp;data=02%7C01%7Calexander.deucher%40amd.com%7Ccb77b56b
+> >>>> 62ae47f60f8808d802855759%7C3dd8961fe4884e608e11a82d994e183d%7C0%
+> >>>> 7C0%7C637262119015438912&amp;sdata=3z%2Btn%2Bv2pvUl3X0Tzk%2BLoi
+> >>>> Mk06dLZCmgUOrsGf3kLpY%3D&amp;reserved=0
+> >>>>   AMD Starship USB 3.0 host controller
+> >>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.
+> >>>> kernel.org%2Fr%2FCAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4z
+> >>>> mt1RA%40mail.gmail.com&amp;data=02%7C01%7Calexander.deucher%40a
+> >>>> md.com%7Ccb77b56b62ae47f60f8808d802855759%7C3dd8961fe4884e608e11
+> >>>> a82d994e183d%7C0%7C0%7C637262119015438912&amp;sdata=69GsHB0HCp
+> >>>> 6x0xW0tA%2FrAln0Vy0Yc9I8QSHowebdIxI%3D&amp;reserved=0
+> >>>>   AMD Matisse HD Audio & USB 3.0 host controller ]
+> >>>>
+> >>>> On Sun, May 24, 2020 at 12:35:29AM -0700, Kevin Buettner wrote:
+> >>>>> This commit adds an entry to the quirk_no_flr table for the AMD
+> >>>>> Starship USB 3.0 host controller.
+> >>>>>
+> >>>>> Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
+> >>>>> motherboard with an AMD Ryzen Threadripper 3970X.
+> >>>>>
+> >>>>> Without this patch, when attempting to assign (pass through) an AMD
+> >>>>> Starship USB 3.0 host controller to a guest OS, the system becomes
+> >>>>> increasingly unresponsive over the course of several minutes,
+> >>>>> eventually requiring a hard reset.
+> >>>>>
+> >>>>> Shortly after attempting to start the guest, I see these messages:
+> >>>>>
+> >>>>> May 23 22:59:46 mesquite kernel: vfio-pci 0000:05:00.3: not ready
+> >>>>> 1023ms after FLR; waiting May 23 22:59:48 mesquite kernel: vfio-pci
+> >>>>> 0000:05:00.3: not ready 2047ms after FLR; waiting May 23 22:59:51
+> >>>>> mesquite kernel: vfio-pci 0000:05:00.3: not ready 4095ms after FLR;
+> >>>>> waiting May 23 22:59:56 mesquite kernel: vfio-pci 0000:05:00.3: not
+> >>>>> ready 8191ms after FLR; waiting
+> >>>>>
+> >>>>> And then eventually:
+> >>>>>
+> >>>>> May 23 23:01:00 mesquite kernel: vfio-pci 0000:05:00.3: not ready
+> >>>>> 65535ms after FLR; giving up May 23 23:01:05 mesquite kernel: INFO:
+> >>>>> NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
+> >>>>> May 23 23:01:06 mesquite kernel: perf: interrupt took too long (642744
+> >>>>>> 2500), lowering kernel.perf_event_max_sample_rate to 1000 May 23
+> >>>>> 23:01:07 mesquite kernel: INFO: NMI handler (perf_event_nmi_handler)
+> >>>>> took too long to run: 82.270 msecs May 23 23:01:08 mesquite kernel: INFO:
+> >>>> NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
+> >>>> May 23 23:01:08 mesquite kernel: INFO: NMI handler
+> >>>> (perf_event_nmi_handler) took too long to run: 100.952 msecs ...
+> >>>>>  kernel:watchdog: BUG: soft lockup - CPU#3 stuck for 22s!
+> >>>>> [qemu-system-x86:7487] May 23 23:01:25 mesquite kernel: watchdog:
+> >>>> BUG:
+> >>>>> soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
+> >>>>>
+> >>>>> The above log snippets were obtained using the aforementioned hardware
+> >>>>> running Fedora 32 w/ kernel package kernel-5.6.13-300.fc32.x86_64.  My
+> >>>>> fix was applied to a local copy of the F32 kernel package, then
+> >>>>> rebuilt, etc.
+> >>>>>
+> >>>>> With this patch in place, the host kernel doesn't exhibit these
+> >>>>> problems.  The guest OS (also Fedora 32) starts up and works as
+> >>>>> expected with the passed-through USB host controller.
+> >>>>>
+> >>>>> Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+> >>>> Applied to pci/virtualization for v5.8, thanks!
+> >>>>
+> >>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index
+> >>>>> 43a0c2ce635e..b1db58d00d2b 100644
+> >>>>> --- a/drivers/pci/quirks.c
+> >>>>> +++ b/drivers/pci/quirks.c
+> >>>>> @@ -5133,6 +5133,7 @@
+> >>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,
+> >>>> quirk_intel_qat_vf_cap);
+> >>>>>   * FLR may cause the following to devices to hang:
+> >>>>>   *
+> >>>>>   * AMD Starship/Matisse HD Audio Controller 0x1487
+> >>>>> + * AMD Starship USB 3.0 Host Controller 0x148c
+> >>>>>   * AMD Matisse USB 3.0 Host Controller 0x149c
+> >>>>>   * Intel 82579LM Gigabit Ethernet Controller 0x1502
+> >>>>>   * Intel 82579V Gigabit Ethernet Controller 0x1503 @@ -5143,6 +5144,7
+> >>>>> @@ static void quirk_no_flr(struct pci_dev *dev)
+> >>>>>     dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;  }
+> >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
+> >>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c,
+> >>>> quirk_no_flr);
+> >>>>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c,
+> >>>> quirk_no_flr);
+> >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502,
+> >>>> quirk_no_flr);
+> >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503,
+> >>>> quirk_no_flr);
+>
+> Regard
+>
+> Nehal Shah
+>
