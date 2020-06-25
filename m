@@ -2,342 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67F1F20A71F
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 22:55:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A57420A84F
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 00:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405334AbgFYUzC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jun 2020 16:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405331AbgFYUzB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 16:55:01 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449CAC08C5DD
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 13:55:01 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ev7so3147243pjb.2
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 13:55:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HCV92AuRvbw80BHFaZCrTSuoE9qKbEHrDwHHj8qVbjk=;
-        b=EpzjcATfHOlWNN51fD+FPClL2ILnY2pWsOQiUtQwDXRODiQO0Dq/mLVCvOgtrJ42q9
-         2zQ6QUkTaH77E2qPvQB+xzZsPHPinRv/TxQUSNTG6K2c7dh6u+XwedZ54suSXb/yiRgy
-         8GUfMY3QvmTTBslHF06lGkqrndG4+LG07pjeN22MkzJzr4174+dntReA8MtaQbJyUG5y
-         KvipZ1kqZcfU2pySr/OkzXbyVKIc3YhuU2txgZvjvz9LAX/KLYJ5TaF+lgWvGM0HMjz7
-         zmvgESfRN67Jq1zG7m28dza2375HdzOcMPAPsZ8Epp3iNNTSlm+LXYKmCoJLRD7ezQc1
-         Zzlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HCV92AuRvbw80BHFaZCrTSuoE9qKbEHrDwHHj8qVbjk=;
-        b=GWRJMN2Pz2k1IuZefV6I0TdFgeBd1I8GPrSwST3QLdthPDFBnyEjBYmP1qs7MGr69H
-         qaL+T19lH0kjulu/cIGyivkD0X5/6bHzUZEteB4Ndxxizd1E81Ui9tCFtqIRJHdULAEP
-         3ISMKjTKplSJFEgTH3xT0NQFEyxqxU6e+I5h32WzpwV2oBvUm8iIPkYZMhzZWm0vI1j6
-         kTBMfnutuBjRyM5T2tezfOvHlJn5xiLymIlRGvXLJsVWKvD7OAJBG23+2b4N3bgHtDza
-         aOsdi2W5aUfqeEIvrE61NynDiE8ctPxWDG/bki5xBG6E0P7sfurYXr6KbnbLLpdWndAE
-         CfnA==
-X-Gm-Message-State: AOAM533gYMVOK+vUySD7g+gPpJh0K+qmkwnZ1cpMWZbbX++MkycxNbIX
-        pYGwWQAedZqX4OdODiy1QuW0UimMboYx+f/NigkIDA==
-X-Google-Smtp-Source: ABdhPJxZdFSmcPt6RuW6kGEUHo6tjLBTLQpNLW8FddduxVa7bC2Gh1K7Wa/SnHFGGRqAoDDIi/lPW+sLteXbXx8SWSU=
-X-Received: by 2002:a17:902:ab8d:: with SMTP id f13mr23724588plr.119.1593118500279;
- Thu, 25 Jun 2020 13:55:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com> <20200624212737.GV4817@hirez.programming.kicks-ass.net>
- <20200624214530.GA120457@google.com> <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com> <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 25 Jun 2020 13:54:48 -0700
-Message-ID: <CAKwvOdmToWTaiaw0iX56FLeezW30k3S=pZLf97N2Ta7zJkSL0w@mail.gmail.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, mhelsley@vmware.com
-Content-Type: text/plain; charset="UTF-8"
+        id S2407538AbgFYWjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jun 2020 18:39:46 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33593 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406817AbgFYWjq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 18:39:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593124784;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=l2eZLw468VrPBQvMvs1l+0bhdKyGLRYbkNFt0SVZO7A=;
+        b=TH93+1YmRH4+vg6sJFdFoYo68nrOitDb25kq2SacYRzM19fdlfjYGiWtXkH+DIAwCF/GLk
+        wIz64VtvykfcfyEmHZcf6k9BME78EiD5ySMQR61+xEkCbDQqD5Ue4Ry4/UB1ffSuTFIdbM
+        AcFO0hHR7ObvCydTswc7k1A+BfwK628=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-460-C87WdbeiOm-jJ0rHIyCFWA-1; Thu, 25 Jun 2020 18:39:24 -0400
+X-MC-Unique: C87WdbeiOm-jJ0rHIyCFWA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B774D804002;
+        Thu, 25 Jun 2020 22:39:21 +0000 (UTC)
+Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B3B6780880;
+        Thu, 25 Jun 2020 22:39:16 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
+Subject: [PATCH v4 0/3] Preventing job distribution to isolated CPUs
+Date:   Thu, 25 Jun 2020 18:34:40 -0400
+Message-Id: <20200625223443.2684-1-nitesh@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 1:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jun 25, 2020 at 09:15:03AM -0700, Sami Tolvanen wrote:
-> > On Thu, Jun 25, 2020 at 09:45:30AM +0200, Peter Zijlstra wrote:
->
-> > > At least for x86_64 I can do a really quick take for a recordmcount pass
-> > > in objtool, but I suppose you also need this for ARM64 ?
-> >
-> > Sure, sounds good. arm64 uses -fpatchable-function-entry with clang, so we
-> > don't need recordmcount there.
->
-> This is on top of my local pile:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git master
->
-> which notably includes the static_call series.
->
-> Not boot tested, but it generates the required sections and they look
-> more or less as expected, ymmv.
->
-> ---
->  arch/x86/Kconfig              |  1 -
->  scripts/Makefile.build        |  3 ++
->  scripts/link-vmlinux.sh       |  2 +-
->  tools/objtool/builtin-check.c |  9 ++---
->  tools/objtool/builtin.h       |  2 +-
->  tools/objtool/check.c         | 81 +++++++++++++++++++++++++++++++++++++++++++
->  tools/objtool/check.h         |  1 +
->  tools/objtool/objtool.h       |  1 +
->  8 files changed, 91 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index a291823f3f26..189575c12434 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -174,7 +174,6 @@ config X86
->         select HAVE_EXIT_THREAD
->         select HAVE_FAST_GUP
->         select HAVE_FENTRY                      if X86_64 || DYNAMIC_FTRACE
-> -       select HAVE_FTRACE_MCOUNT_RECORD
->         select HAVE_FUNCTION_GRAPH_TRACER
->         select HAVE_FUNCTION_TRACER
->         select HAVE_GCC_PLUGINS
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 2e8810b7e5ed..c774befc57da 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -227,6 +227,9 @@ endif
->  ifdef CONFIG_X86_SMAP
->    objtool_args += --uaccess
->  endif
-> +ifdef CONFIG_DYNAMIC_FTRACE
-> +  objtool_args += --mcount
-> +endif
->
->  # 'OBJECT_FILES_NON_STANDARD := y': skip objtool checking for a directory
->  # 'OBJECT_FILES_NON_STANDARD_foo.o := 'y': skip objtool checking for a file
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index 92dd745906f4..00c6e4f28a1a 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -60,7 +60,7 @@ objtool_link()
->         local objtoolopt;
->
->         if [ -n "${CONFIG_VMLINUX_VALIDATION}" ]; then
-> -               objtoolopt="check"
-> +               objtoolopt="check --vmlinux"
->                 if [ -z "${CONFIG_FRAME_POINTER}" ]; then
->                         objtoolopt="${objtoolopt} --no-fp"
->                 fi
-> diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-> index 4896c5a89702..a6c3a3fba67d 100644
-> --- a/tools/objtool/builtin-check.c
-> +++ b/tools/objtool/builtin-check.c
-> @@ -18,7 +18,7 @@
->  #include "builtin.h"
->  #include "objtool.h"
->
-> -bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu;
-> +bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu, mcount;
->
->  static const char * const check_usage[] = {
->         "objtool check [<options>] file.o",
-> @@ -36,12 +36,13 @@ const struct option check_options[] = {
->         OPT_BOOLEAN('d', "duplicate", &validate_dup, "duplicate validation for vmlinux.o"),
->         OPT_BOOLEAN('l', "vmlinux", &vmlinux, "vmlinux.o validation"),
->         OPT_BOOLEAN('F', "fpu", &fpu, "validate FPU context"),
-> +       OPT_BOOLEAN('M', "mcount", &mcount, "generate __mcount_loc"),
->         OPT_END(),
->  };
->
->  int cmd_check(int argc, const char **argv)
->  {
-> -       const char *objname, *s;
-> +       const char *objname;
->
->         argc = parse_options(argc, argv, check_options, check_usage, 0);
->
-> @@ -50,9 +51,5 @@ int cmd_check(int argc, const char **argv)
->
->         objname = argv[0];
->
-> -       s = strstr(objname, "vmlinux.o");
-> -       if (s && !s[9])
-> -               vmlinux = true;
-> -
->         return check(objname, false);
->  }
-> diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
-> index 7158e09d4cc9..b51d883ec245 100644
-> --- a/tools/objtool/builtin.h
-> +++ b/tools/objtool/builtin.h
-> @@ -8,7 +8,7 @@
->  #include <subcmd/parse-options.h>
->
->  extern const struct option check_options[];
-> -extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu;
-> +extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu, mcount;
->
->  extern int cmd_check(int argc, const char **argv);
->  extern int cmd_orc(int argc, const char **argv);
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 6647a8d1545b..ee99566bdae9 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -533,6 +533,65 @@ static int create_static_call_sections(struct objtool_file *file)
->         return 0;
->  }
->
-> +static int create_mcount_loc_sections(struct objtool_file *file)
-> +{
-> +       struct section *sec, *reloc_sec;
-> +       struct reloc *reloc;
-> +       unsigned long *loc;
-> +       struct instruction *insn;
-> +       int idx;
-> +
-> +       sec = find_section_by_name(file->elf, "__mcount_loc");
-> +       if (sec) {
-> +               INIT_LIST_HEAD(&file->mcount_loc_list);
-> +               WARN("file already has __mcount_loc section, skipping");
-> +               return 0;
-> +       }
-> +
-> +       if (list_empty(&file->mcount_loc_list))
-> +               return 0;
-> +
-> +       idx = 0;
-> +       list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node)
-> +               idx++;
-> +
-> +       sec = elf_create_section(file->elf, "__mcount_loc", 0, sizeof(unsigned long), idx);
-> +       if (!sec)
-> +               return -1;
-> +
-> +       reloc_sec = elf_create_reloc_section(file->elf, sec, SHT_RELA);
-> +       if (!reloc_sec)
-> +               return -1;
-> +
-> +       idx = 0;
-> +       list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node) {
-> +
-> +               loc = (unsigned long *)sec->data->d_buf + idx;
-> +               memset(loc, 0, sizeof(unsigned long));
-> +
-> +               reloc = malloc(sizeof(*reloc));
-> +               if (!reloc) {
-> +                       perror("malloc");
-> +                       return -1;
-> +               }
-> +               memset(reloc, 0, sizeof(*reloc));
+This patch-set is originated from one of the patches that have been
+posted earlier as a part of "Task_isolation" mode [1] patch series
+by Alex Belits <abelits@marvell.com>. There are only a couple of
+changes that I am proposing in this patch-set compared to what Alex
+has posted earlier.
+ 
+ 
+Context
+=======
+On a broad level, all three patches that are included in this patch
+set are meant to improve the driver/library to respect isolated
+CPUs by not pinning any job on it. Not doing so could impact
+the latency values in RT use-cases.
 
-calloc(1, sizeof(*reloc))?
 
-> +
-> +               reloc->sym = insn->sec->sym;
-> +               reloc->addend = insn->offset;
-> +               reloc->type = R_X86_64_64;
-> +               reloc->offset = idx * sizeof(unsigned long);
-> +               reloc->sec = reloc_sec;
-> +               elf_add_reloc(file->elf, reloc);
-> +
-> +               idx++;
-> +       }
-> +
-> +       if (elf_rebuild_reloc_section(file->elf, reloc_sec))
-> +               return -1;
-> +
-> +       return 0;
-> +}
-> +
->  /*
->   * Warnings shouldn't be reported for ignored functions.
->   */
-> @@ -892,6 +951,22 @@ static int add_call_destinations(struct objtool_file *file)
->                         insn->type = INSN_NOP;
->                 }
->
-> +               if (mcount && !strcmp(insn->call_dest->name, "__fentry__")) {
-> +                       if (reloc) {
-> +                               reloc->type = R_NONE;
-> +                               elf_write_reloc(file->elf, reloc);
-> +                       }
-> +
-> +                       elf_write_insn(file->elf, insn->sec,
-> +                                      insn->offset, insn->len,
-> +                                      arch_nop_insn(insn->len));
-> +
-> +                       insn->type = INSN_NOP;
-> +
-> +                       list_add_tail(&insn->mcount_loc_node,
-> +                                     &file->mcount_loc_list);
-> +               }
-> +
->                 /*
->                  * Whatever stack impact regular CALLs have, should be undone
->                  * by the RETURN of the called function.
-> @@ -3004,6 +3079,7 @@ int check(const char *_objname, bool orc)
->         INIT_LIST_HEAD(&file.insn_list);
->         hash_init(file.insn_hash);
->         INIT_LIST_HEAD(&file.static_call_list);
-> +       INIT_LIST_HEAD(&file.mcount_loc_list);
->         file.c_file = !vmlinux && find_section_by_name(file.elf, ".comment");
->         file.ignore_unreachables = no_unreachable;
->         file.hints = false;
-> @@ -3056,6 +3132,11 @@ int check(const char *_objname, bool orc)
->                 goto out;
->         warnings += ret;
->
-> +       ret = create_mcount_loc_sections(&file);
-> +       if (ret < 0)
-> +               goto out;
-> +       warnings += ret;
-> +
->         if (orc) {
->                 ret = create_orc(&file);
->                 if (ret < 0)
-> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-> index cd95fca0d237..01f11b5da5dd 100644
-> --- a/tools/objtool/check.h
-> +++ b/tools/objtool/check.h
-> @@ -24,6 +24,7 @@ struct instruction {
->         struct list_head list;
->         struct hlist_node hash;
->         struct list_head static_call_node;
-> +       struct list_head mcount_loc_node;
->         struct section *sec;
->         unsigned long offset;
->         unsigned int len;
-> diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
-> index 9a7cd0b88bd8..f604b22d22cc 100644
-> --- a/tools/objtool/objtool.h
-> +++ b/tools/objtool/objtool.h
-> @@ -17,6 +17,7 @@ struct objtool_file {
->         struct list_head insn_list;
->         DECLARE_HASHTABLE(insn_hash, 20);
->         struct list_head static_call_list;
-> +       struct list_head mcount_loc_list;
->         bool ignore_unreachables, c_file, hints, rodata;
->  };
->
+Patches
+=======
+* Patch1:
+  The first patch is meant to make cpumask_local_spread()
+  aware of the isolated CPUs. It ensures that the CPUs that
+  are returned by this API only includes housekeeping CPUs.
 
+* Patch2:
+  This patch ensures that a probe function that is called
+  using work_on_cpu() doesn't run any task on an isolated CPU.
+
+* Patch3:
+  This patch makes store_rps_map() aware of the isolated
+  CPUs so that rps don't queue any jobs on an isolated CPU. 
+
+
+Proposed Changes
+================
+To fix the above-mentioned issues Alex has used housekeeping_cpumask().
+The only changes that I am proposing here are:
+- Removing the dependency on CONFIG_TASK_ISOLATION that was proposed by
+  Alex. As it should be safe to rely on housekeeping_cpumask()
+  even when we don't have any isolated CPUs and we want
+  to fall back to using all available CPUs in any of the above scenarios.
+- Using both HK_FLAG_DOMAIN and HK_FLAG_WQ in Patch2 & 3, this is
+  because we would want the above fixes not only when we have isolcpus but
+  also with something like systemd's CPU affinity.
+
+
+Testing
+=======
+* Patch 1:
+  Fix for cpumask_local_spread() is tested by creating VFs, loading
+  iavf module and by adding a tracepoint to confirm that only housekeeping
+  CPUs are picked when an appropriate profile is set up and all remaining
+  CPUs when no CPU isolation is configured.
+
+* Patch 2:
+  To test the PCI fix, I hotplugged a virtio-net-pci from qemu console
+  and forced its addition to a specific node to trigger the code path that
+  includes the proposed fix and verified that only housekeeping CPUs
+  are included via tracepoint.
+
+* Patch 3:
+  To test the fix in store_rps_map(), I tried configuring an isolated
+  CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which
+  resulted in 'write error: Invalid argument' error. For the case
+  where a non-isolated CPU is writing in rps_cpus the above operation
+  succeeded without any error.
+
+
+Changes from v3[2]:
+==================
+- In patch 1, replaced HK_FLAG_WQ with HK_FLAG_MANAGED_IRQ based on the
+  suggestion from Frederic Weisbecker.
+
+Changes from v2[3]:
+==================
+Both the following suggestions are from Peter Zijlstra.
+- Patch1: Removed the extra while loop from cpumask_local_spread and fixed
+  the code styling issues.
+- Patch3: Change to use cpumask_empty() for verifying that the requested
+  CPUs are available in the the housekeeping CPUs.
+
+Changes from v1[4]:
+==================
+- Included the suggestions made by Bjorn Helgaas in the commit message.
+- Included the 'Reviewed-by' and 'Acked-by' received for Patch-2.
+
+
+[1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
+[2] https://patchwork.ozlabs.org/project/linux-pci/cover/20200623192331.215557-1-nitesh@redhat.com/
+[3] https://patchwork.ozlabs.org/project/linux-pci/cover/20200622234510.240834-1-nitesh@redhat.com/
+[4] https://patchwork.ozlabs.org/project/linux-pci/cover/20200610161226.424337-1-nitesh@redhat.com/
+
+
+Alex Belits (3):
+  lib: Restrict cpumask_local_spread to houskeeping CPUs
+  PCI: Restrict probe functions to housekeeping CPUs
+  net: Restrict receive packets queuing to housekeeping CPUs
+
+ drivers/pci/pci-driver.c |  5 ++++-
+ lib/cpumask.c            | 16 +++++++++++-----
+ net/core/net-sysfs.c     | 10 +++++++++-
+ 3 files changed, 24 insertions(+), 7 deletions(-)
 
 -- 
-Thanks,
-~Nick Desaulniers
+
