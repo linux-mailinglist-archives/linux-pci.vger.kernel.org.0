@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CBF420A335
+	by mail.lfdr.de (Postfix) with ESMTP id B879420A336
 	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 18:42:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404480AbgFYQmG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jun 2020 12:42:06 -0400
+        id S2406452AbgFYQmI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jun 2020 12:42:08 -0400
 Received: from mga14.intel.com ([192.55.52.115]:9144 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404106AbgFYQmG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:42:06 -0400
-IronPort-SDR: AgAidPGZj0ehRrBjTqnOsYIgtQYj3Qv8JoxkjOi2WIC7PuNdN/8sezv3yiyeQgEgBQFYzP5Bje
- Zjt8kc489k/Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="144046368"
+        id S2404503AbgFYQmH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Jun 2020 12:42:07 -0400
+IronPort-SDR: iOaqx0U6iyHqI3TMISY3cTQjovuJaJOTu8KapMfg94Kz7b+S1WI4n+G5c3mBzMhA5uc0k6eLJf
+ MVhU5n4XkmUg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="144046370"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="144046368"
+   d="scan'208";a="144046370"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 09:42:05 -0700
-IronPort-SDR: BHpScd520FocsEirVnLMO7bCQGym+15l4kVWpE2KC4qkLsU3YIa8tB5I6Hg5w4ReGmUoXRCKR+
- i0SeDt0M9LPQ==
+IronPort-SDR: IGax545fxMeWUXBV7voPqM0Xnazxm9bKW4bJfko8khMbF+Jl1UpLVkYgu4zxnLGQM0gzTo2LD3
+ jiA658P9CVgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="479702145"
+   d="scan'208";a="479702150"
 Received: from unknown (HELO localhost.lm.intel.com) ([10.232.116.74])
   by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 09:42:05 -0700
 From:   Jon Derrick <jonathan.derrick@intel.com>
@@ -34,9 +34,11 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jon Derrick <jonathan.derrick@intel.com>
 Subject: [PATCH] PCI: vmd: Keep fwnode allocated through VMD irqdomain life
-Date:   Thu, 25 Jun 2020 12:24:49 -0400
-Message-Id: <20200625162450.5419-1-jonathan.derrick@intel.com>
+Date:   Thu, 25 Jun 2020 12:24:50 -0400
+Message-Id: <20200625162450.5419-2-jonathan.derrick@intel.com>
 X-Mailer: git-send-email 2.18.1
+In-Reply-To: <20200625162450.5419-1-jonathan.derrick@intel.com>
+References: <20200625162450.5419-1-jonathan.derrick@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
