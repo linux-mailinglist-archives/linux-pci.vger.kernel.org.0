@@ -2,106 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EC7420A84B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 00:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C9B320A858
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 00:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407534AbgFYWjg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jun 2020 18:39:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36709 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2406647AbgFYWjf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 18:39:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593124774;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:in-reply-to:in-reply-to:references:references;
-        bh=tVsDsAmElVtmSpleihdn/aqK002mWcZ5/rdoWS26sdI=;
-        b=InCWQSC+s23rYUv1Z0te+1+V7xgVKqFoWX6wXLTBMtGoa1htHHMY9U1o8lp5KOljAJzT9s
-        koC8iATs6/Kl0u/hPKavhxt+oCYRpBrUS1X94AlvaYC1nFlvQQo+7wDzWUXZGN82kRXzQp
-        +Cp7gGDhcpsDupm/aeQZidjpXxi0ZjM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-TVC9-u2dNW-QApCcICj-kw-1; Thu, 25 Jun 2020 18:39:29 -0400
-X-MC-Unique: TVC9-u2dNW-QApCcICj-kw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30743804001;
-        Thu, 25 Jun 2020 22:39:27 +0000 (UTC)
-Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 870E67FEA6;
-        Thu, 25 Jun 2020 22:39:25 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
-Subject: [Patch v4 3/3] net: Restrict receive packets queuing to housekeeping CPUs
-Date:   Thu, 25 Jun 2020 18:34:43 -0400
-Message-Id: <20200625223443.2684-4-nitesh@redhat.com>
-In-Reply-To: <20200625223443.2684-1-nitesh@redhat.com>
-References: <20200625223443.2684-1-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        id S2407574AbgFYWkw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jun 2020 18:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407567AbgFYWkv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 18:40:51 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297B4C08C5DD
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 15:40:51 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id u8so3796565pje.4
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 15:40:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jrKbnig9QFRhNV6K+9Xoewg6ga8WAeyx+cHHuuAPHlw=;
+        b=vjDkS1ct1augvE723FB1+5WPfwzfajqrtAMZRYo0dTgN5aCXnRVc3P9qUPioCfxE8z
+         zC7awdkoztnyQMH6KrmbAZB+gM3wWozXAHd+5NlrM3zI27aeWEvQfCn5USOdaH1puVqn
+         n+mQi5qyO3ediG9Fy54lBVH83MmSL8Q2+fhkZaaYmruol7QRBk3j2qUtL3wKRM4CV0O8
+         azUuw9K3+1ptvV6oCv9rk3Jq7Xiiwx3xcCAujAANMFcNjec9DVvR2cW5QPifyHeO10Cg
+         wZRh3A465gRs3JRICOc49N6SHyq0l8hzKjlz8ZyjwxNNSR3yFRHh1hd8rpoRIRuIIfw5
+         Pg0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jrKbnig9QFRhNV6K+9Xoewg6ga8WAeyx+cHHuuAPHlw=;
+        b=Yvj2ETaoNG+1qtjZj54wuH0yYrkqcWrz1yz9fwkh4BQ/Grh6LBJU63T6+zFkHOW5QT
+         ZvcIlrbDxi7lJSuoS4m2hEQEDGzGHEgUNt3YTU83MYCpYNn0IfqJHgJQ7AMtnsX7DgIY
+         UPY1zB0g/5biyQoA9NgpzBjJVJB2Dvx1C5PU9EmQqnc8k5velZkgzMT9LASKRf5oRTPE
+         YVSwtLDiTp1a0ElcJBTVPbnh9ymUR5Fh9l8TAsxdjMYcd7YBiHV6wjGqqAAyVEc9ZDAl
+         G93UBvWpWuTJYY28PUlCbsXh6bM1nkowZDTrzciA8NkimhwAIyeqDIzxN3reik95tqvx
+         LcHA==
+X-Gm-Message-State: AOAM532DlC5SuLmWcRQEvuwNL5mtb0Zzz+ATl/TpMxEpXUuNAfJxtCk/
+        ottoGhLjzQeX184tiCE8RoVPHA==
+X-Google-Smtp-Source: ABdhPJx7TfSqe9+zt9NPoQSooOWfE2e9/T8a5met4FrI5ZnaAeXh7ahhb/KuD0I40m4aCdLgLVgkpw==
+X-Received: by 2002:a17:90a:7c4e:: with SMTP id e14mr256081pjl.52.1593124850158;
+        Thu, 25 Jun 2020 15:40:50 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id k92sm9112547pje.30.2020.06.25.15.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 15:40:49 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 15:40:42 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        mhelsley@vmware.com
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+Message-ID: <20200625224042.GA169781@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-5-samitolvanen@google.com>
+ <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+ <20200624214530.GA120457@google.com>
+ <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+ <20200625161503.GB173089@google.com>
+ <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alex Belits <abelits@marvell.com>
+On Thu, Jun 25, 2020 at 10:02:35PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 25, 2020 at 09:15:03AM -0700, Sami Tolvanen wrote:
+> > On Thu, Jun 25, 2020 at 09:45:30AM +0200, Peter Zijlstra wrote:
+> 
+> > > At least for x86_64 I can do a really quick take for a recordmcount pass
+> > > in objtool, but I suppose you also need this for ARM64 ?
+> > 
+> > Sure, sounds good. arm64 uses -fpatchable-function-entry with clang, so we
+> > don't need recordmcount there.
+> 
+> This is on top of my local pile:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git master
+> 
+> which notably includes the static_call series.
+> 
+> Not boot tested, but it generates the required sections and they look
+> more or less as expected, ymmv.
+> 
+> ---
+>  arch/x86/Kconfig              |  1 -
+>  scripts/Makefile.build        |  3 ++
+>  scripts/link-vmlinux.sh       |  2 +-
+>  tools/objtool/builtin-check.c |  9 ++---
+>  tools/objtool/builtin.h       |  2 +-
+>  tools/objtool/check.c         | 81 +++++++++++++++++++++++++++++++++++++++++++
+>  tools/objtool/check.h         |  1 +
+>  tools/objtool/objtool.h       |  1 +
+>  8 files changed, 91 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index a291823f3f26..189575c12434 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -174,7 +174,6 @@ config X86
+>  	select HAVE_EXIT_THREAD
+>  	select HAVE_FAST_GUP
+>  	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
+> -	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_TRACER
+>  	select HAVE_GCC_PLUGINS
 
-With the existing implementation of store_rps_map(), packets are queued
-in the receive path on the backlog queues of other CPUs irrespective of
-whether they are isolated or not. This could add a latency overhead to
-any RT workload that is running on the same CPU.
+This breaks DYNAMIC_FTRACE according to kernel/trace/ftrace.c:
 
-Ensure that store_rps_map() only uses available housekeeping CPUs for
-storing the rps_map.
+  #ifndef CONFIG_FTRACE_MCOUNT_RECORD
+  # error Dynamic ftrace depends on MCOUNT_RECORD
+  #endif
 
-Signed-off-by: Alex Belits <abelits@marvell.com>
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- net/core/net-sysfs.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+And the build errors after that seem to confirm this. It looks like we might
+need another flag to skip recordmcount.
 
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index e353b822bb15..677868fea316 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -11,6 +11,7 @@
- #include <linux/if_arp.h>
- #include <linux/slab.h>
- #include <linux/sched/signal.h>
-+#include <linux/sched/isolation.h>
- #include <linux/nsproxy.h>
- #include <net/sock.h>
- #include <net/net_namespace.h>
-@@ -741,7 +742,7 @@ static ssize_t store_rps_map(struct netdev_rx_queue *queue,
- {
- 	struct rps_map *old_map, *map;
- 	cpumask_var_t mask;
--	int err, cpu, i;
-+	int err, cpu, i, hk_flags;
- 	static DEFINE_MUTEX(rps_map_mutex);
- 
- 	if (!capable(CAP_NET_ADMIN))
-@@ -756,6 +757,13 @@ static ssize_t store_rps_map(struct netdev_rx_queue *queue,
- 		return err;
- 	}
- 
-+	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
-+	cpumask_and(mask, mask, housekeeping_cpumask(hk_flags));
-+	if (cpumask_empty(mask)) {
-+		free_cpumask_var(mask);
-+		return -EINVAL;
-+	}
-+
- 	map = kzalloc(max_t(unsigned int,
- 			    RPS_MAP_SIZE(cpumask_weight(mask)), L1_CACHE_BYTES),
- 		      GFP_KERNEL);
--- 
-2.18.4
+Anyway, since objtool is run before recordmcount, I just left this unchanged
+for testing and ignored the recordmcount warnings about __mcount_loc already
+existing. Something is a bit off still though, I see this at boot:
 
+  ------------[ ftrace bug ]------------
+  ftrace failed to modify
+  [<ffffffff81000660>] __tracepoint_iter_initcall_level+0x0/0x40
+   actual:   0f:1f:44:00:00
+  Initializing ftrace call sites
+  ftrace record flags: 0
+   (0)
+   expected tramp: ffffffff81056500
+  ------------[ cut here ]------------
+
+Otherwise, this looks pretty good.
+
+Sami
