@@ -2,132 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7750320A5DE
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 21:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21F0220A63F
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 21:58:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406418AbgFYTc0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jun 2020 15:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406329AbgFYTcZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 15:32:25 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DCA4C08C5DD
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 12:32:25 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so3787777pjc.4
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 12:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aiCyaSfPElHdBJ1rU4jQnvBfG3hDID3mTTJS9XuQz+Q=;
-        b=mDZm0gGa4yZbKDGF9rgasIeYxWV9KiHwNiMw4ndiNsCn3uE7R//SGEQLJE3mdDSI9/
-         HpYkrdPyVuwor8peEnUfcbBGXiofFnd9veTD7NWibiAP8Ve8E8gCOzG31rjOvREFV1Bf
-         JgsOujSu3baR0YmlQhh5NEYw2pxgOkuVQSleeQxner2eUY5rh1bZK2fJ9oTRt0snh+M+
-         w5fHbf1pXC29S4Vdgqgal1yygHmQF+xISjlsoEB9iBq9A7j/gBZC02UXmgSOGcV/V0l2
-         EEwNoJRyrtCrwRdjdM5UwbSh/doG0vV/wAS2jKyrjWA8airu6HPV73/rpljmn2VIho8e
-         Lz0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aiCyaSfPElHdBJ1rU4jQnvBfG3hDID3mTTJS9XuQz+Q=;
-        b=Eus1e6E6ToKfinJmHZpdpT3NZZanfSCzdjp9ykDGkDYKVhqUk9z09eHOUOv5mVw6RO
-         La8+h1lUUiI1ZITb4ib1svAn0JZaRIyIpcOSmKNGgUn3MrMoff4Luo0GU7yVgI0MUfae
-         sdwmnmIvnqg2USAO25LG50KEEF7JhgGSE2XErcDLmLVyWHsAztQqKlhveXKsOj+Cs7BK
-         x6o4XNrbREeELxHqGyWOjDkCqRqxyI6wq5WbUe2OCLEr2aM3XNUNo/zhAE92CABTHxDd
-         tVTEJDaaPOejAI38TxIdJ6y+fswB2OqUkJdsHJwzb43e8q5xo+AT52JStqfHuscv1mFX
-         sMeA==
-X-Gm-Message-State: AOAM5307keh+wHRixe3r7p0uwDsRta11UhPoxbFl1YO0Xe5wphrQ9CpI
-        ZS8AzMnH0f3MlRvpCDDfMPRQ2A==
-X-Google-Smtp-Source: ABdhPJzHjBuSoIFTZJ1sk5l9LqVn8mN4nFIUCyUrTGu3HSZs8Ut1ULHUwpBV+FgkM8L4HnNscu3bNQ==
-X-Received: by 2002:a17:90b:88b:: with SMTP id bj11mr5103958pjb.51.1593113544026;
-        Thu, 25 Jun 2020 12:32:24 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id c141sm9061908pfc.167.2020.06.25.12.32.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 12:32:23 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 12:32:17 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 05/22] kbuild: lto: postpone objtool
-Message-ID: <20200625193217.GA59566@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-6-samitolvanen@google.com>
- <20200624211908.GT4817@hirez.programming.kicks-ass.net>
- <20200624214925.GB120457@google.com>
- <20200625074716.GX4817@hirez.programming.kicks-ass.net>
- <20200625162226.GC173089@google.com>
- <20200625183351.GH4800@hirez.programming.kicks-ass.net>
+        id S2406936AbgFYT6X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jun 2020 15:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406569AbgFYT6X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Jun 2020 15:58:23 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FDD7206A5;
+        Thu, 25 Jun 2020 19:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593115102;
+        bh=dyLST9MuMknNIoJ/bqqmhoGtr5xNyhepxCilwqcM8SA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ci/khozqAkODT0b/ot6jPxeLDGfu4ewXRK7AQ5RfkDCNt9yCc1pYARcThxjciXm0c
+         FwmoZc6DO1oSrMA/grTLbu24uAZGIkrxgw56+OKb2cBKbKc2t9TpVzpGfwGrwUtfLV
+         ZR12ilC829DG03iSM7DJRQyMI8tYh/asmFzCNx2c=
+Date:   Thu, 25 Jun 2020 14:58:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] PCI: vmd: Keep fwnode allocated through VMD irqdomain
+ life
+Message-ID: <20200625195820.GA2701690@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625183351.GH4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200625162450.5419-1-jonathan.derrick@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:33:51PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 25, 2020 at 09:22:26AM -0700, Sami Tolvanen wrote:
-> > On Thu, Jun 25, 2020 at 09:47:16AM +0200, Peter Zijlstra wrote:
+[+cc Thomas]
+
+On Thu, Jun 25, 2020 at 12:24:49PM -0400, Jon Derrick wrote:
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> > > Right, then we need to make --no-vmlinux work properly when
-> > > !DEBUG_ENTRY, which I think might be buggered due to us overriding the
-> > > argument when the objname ends with "vmlinux.o".
-> > 
-> > Right. Can we just remove that and  pass --vmlinux to objtool in
-> > link-vmlinux.sh, or is the override necessary somewhere else?
+> The VMD domain does not subscribe to ACPI, and so does not operate on
+> it's irqdomain fwnode. It was freeing the handle after allocation of the
+> domain. As of 181e9d4efaf6a (irqdomain: Make __irq_domain_add() less
+> OF-dependent), the fwnode is put during irq_domain_remove causing a page
+> fault. This patch keeps VMD's fwnode allocated through the lifetime of
+> the VMD irqdomain.
 > 
-> Think we can remove it; it was just convenient when running manually.
-
-Great, I'll change this in v2.
-
-> > > > > > +ifdef CONFIG_STACK_VALIDATION
-> > > > > > +ifneq ($(SKIP_STACK_VALIDATION),1)
-> > > > > > +cmd_ld_ko_o +=								\
-> > > > > > +	$(objtree)/tools/objtool/objtool				\
-> > > > > > +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
-> > > > > > +		--module						\
-> > > > > > +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
-> > > > > > +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
-> > > > > > +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
-> > > > > > +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
-> > > > > > +		$(@:.ko=$(prelink-ext).o);
-> > > > > > +
-> > > > > > +endif # SKIP_STACK_VALIDATION
-> > > > > > +endif # CONFIG_STACK_VALIDATION
-> > > > > 
-> > > > > What about the objtool invocation from link-vmlinux.sh ?
-> > > > 
-> > > > What about it? The existing objtool_link invocation in link-vmlinux.sh
-> > > > works fine for our purposes as well.
-> > > 
-> > > Well, I was wondering why you're adding yet another objtool invocation
-> > > while we already have one.
-> > 
-> > Because we can't run objtool until we have compiled bitcode to native
-> > code, so for modules, we're need another invocation after everything has
-> > been compiled.
+> Fixes: ae904cafd59d ("PCI/vmd: Create named irq domain")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> ---
+> Hi Lorenzo, Bjorn,
 > 
-> Well, that I understand, my question was why we need one in
-> scripts/link-vmlinux.sh and an additional one. I think we're just
-> talking past one another and agree we only need one.
+> Please take this patch for v5.8 fixes. It fixes an issue during VMD
+> unload.
 
-We need just one for vmlinux.o, but this rule adds an objtool invocation
-for kernel modules, which we also couldn't check earlier. We link all
-the bitcode for modules into <module>.lto.o and run modpost and objtool
-on that before building the final .ko.
+I tentatively applied this to for-linus for v5.8.
 
-Sami
+But I would like to clarify the commit log.  It says this fixes
+Thomas' ae904cafd59d ("PCI/vmd: Create named irq domain").  That
+appeared in v4.13, which suggests that this patch should be backported
+to v4.13 and later.
+
+But it's not clear to me that ae904cafd59d is actually broken, since
+the log also says the problem appeared after 181e9d4efaf6 ("irqdomain:
+Make __irq_domain_add() less OF-dependent"), which we just merged for
+v5.8-rc1.
+
+And obviously, freeing the fwnode doesn't *cause* a page fault.  A
+use-after-free might cause a fault, but it's not clear where that
+happens.  I guess fwnode is used in the interval between:
+
+  vmd_enable_domain
+    pci_msi_create_irq_domain
+
+  ...        <-- fwnode used here somewhere
+
+  vmd_remove
+    vmd_cleanup_srcu
+      irq_domain_free_fwnode
+
+But I can't tell how 181e9d4efaf6a and/or ae904cafd59d are related to
+that.
+
+>  drivers/pci/controller/vmd.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index e386d4eac407..ebec0a6e77ed 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -546,9 +546,10 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  
+>  	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
+>  						    x86_vector_domain);
+> -	irq_domain_free_fwnode(fn);
+> -	if (!vmd->irq_domain)
+> +	if (!vmd->irq_domain) {
+> +		irq_domain_free_fwnode(fn);
+>  		return -ENODEV;
+> +	}
+>  
+>  	pci_add_resource(&resources, &vmd->resources[0]);
+>  	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+> @@ -559,6 +560,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	if (!vmd->bus) {
+>  		pci_free_resource_list(&resources);
+>  		irq_domain_remove(vmd->irq_domain);
+> +		irq_domain_free_fwnode(fn);
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -672,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
+>  static void vmd_remove(struct pci_dev *dev)
+>  {
+>  	struct vmd_dev *vmd = pci_get_drvdata(dev);
+> +	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
+>  
+>  	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>  	pci_stop_root_bus(vmd->bus);
+> @@ -679,6 +682,7 @@ static void vmd_remove(struct pci_dev *dev)
+>  	vmd_cleanup_srcu(vmd);
+>  	vmd_detach_resources(vmd);
+>  	irq_domain_remove(vmd->irq_domain);
+> +	irq_domain_free_fwnode(fn);
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> -- 
+> 2.18.1
+> 
