@@ -2,137 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D1F20A2C6
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 18:22:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CBF420A335
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jun 2020 18:42:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403780AbgFYQWf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jun 2020 12:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390708AbgFYQWe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 12:22:34 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A967DC08C5DB
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 09:22:34 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t6so3525958pgq.1
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 09:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cYEaM8fKpZG71PCkfHkApRmPtCwvXrrY+JocHC3nIv8=;
-        b=XvqTcKvUnBqjH+Xq2/BDnD76lMTzDE39N73VPsal3e7jDR5L9CqPzEwi/HtJXxg5pZ
-         sSViKozmxlxfRjR5junnpvtTtyW6G2rRQEW8ZFvCQk6aCeqvQ+zuO9yimSN9sFS7QooW
-         PvXgArAb+SfCZcIY+Pqu9KdLFcAqo8UvqBCXGiy9t48Z69ZF5FReGe2odlppsG/6UARl
-         Mdd0bQaWJWxZe0j9OL67jRPrRKjRhuCt16S32a8eOmCrvrHTXERopZ1dh0M2Ua2NwCSI
-         Ek6M040jALm4P02V4qkx9xuhsfQb+UTvzenYTCIy4JIByKPSb7KkGeYN6II1dO0BKO5s
-         5Xmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cYEaM8fKpZG71PCkfHkApRmPtCwvXrrY+JocHC3nIv8=;
-        b=kjK9WPQk8EG2JQBdI6q3rv8YimTCm0P8TXv6LMncTyHYqzFHhC7Ag0E4GUReuJXTBB
-         KRMZfrFz8lCcW7xE0nyNm3sqdU3JGdOJWQbwvVube1eU+rHJChUM2qY1HaXFoQAKb4Wr
-         WVsxRVtZ8zKZ99mdBBJDllAUxXXqVL1FwdpOAhZ1l7I7+LF5i8l++3VfWgMgu7VtZkS7
-         6d7X6FZ7HrQSki/jGqU6aBUbPxHJzcauUwf67tis5/NpF4nbtAzK2aMvXwspkbuYdWEy
-         cphpxzn3qdQCsxTxDaUizrWQQepmmQRa0XqqCS/LQBS0OxEOUyoeBbYgtX6x2ecgI74Y
-         pNWw==
-X-Gm-Message-State: AOAM5309RDMPSkwY5ArZLKZZ6Cb3MCi40BIkQJcIlBi2sImUIUmyiZin
-        xQu66xbZfq5SDrMlYETKse+gtQ==
-X-Google-Smtp-Source: ABdhPJyBu5UBNmD93hBhA1nGG7iT9G95iHuvLnDzS07QCS69km8HMKCSBSO/u5bBKV8BF6Gd+7YLGw==
-X-Received: by 2002:a63:7313:: with SMTP id o19mr27664372pgc.307.1593102153849;
-        Thu, 25 Jun 2020 09:22:33 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id 7sm10151225pgh.80.2020.06.25.09.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 09:22:32 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 09:22:26 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 05/22] kbuild: lto: postpone objtool
-Message-ID: <20200625162226.GC173089@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-6-samitolvanen@google.com>
- <20200624211908.GT4817@hirez.programming.kicks-ass.net>
- <20200624214925.GB120457@google.com>
- <20200625074716.GX4817@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625074716.GX4817@hirez.programming.kicks-ass.net>
+        id S2404480AbgFYQmG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jun 2020 12:42:06 -0400
+Received: from mga14.intel.com ([192.55.52.115]:9144 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404106AbgFYQmG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Jun 2020 12:42:06 -0400
+IronPort-SDR: AgAidPGZj0ehRrBjTqnOsYIgtQYj3Qv8JoxkjOi2WIC7PuNdN/8sezv3yiyeQgEgBQFYzP5Bje
+ Zjt8kc489k/Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="144046368"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="144046368"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 09:42:05 -0700
+IronPort-SDR: BHpScd520FocsEirVnLMO7bCQGym+15l4kVWpE2KC4qkLsU3YIa8tB5I6Hg5w4ReGmUoXRCKR+
+ i0SeDt0M9LPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="479702145"
+Received: from unknown (HELO localhost.lm.intel.com) ([10.232.116.74])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 09:42:05 -0700
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH] PCI: vmd: Keep fwnode allocated through VMD irqdomain life
+Date:   Thu, 25 Jun 2020 12:24:49 -0400
+Message-Id: <20200625162450.5419-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 09:47:16AM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 24, 2020 at 02:49:25PM -0700, Sami Tolvanen wrote:
-> > On Wed, Jun 24, 2020 at 11:19:08PM +0200, Peter Zijlstra wrote:
-> > > On Wed, Jun 24, 2020 at 01:31:43PM -0700, Sami Tolvanen wrote:
-> > > > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> > > > index 30827f82ad62..12b115152532 100644
-> > > > --- a/include/linux/compiler.h
-> > > > +++ b/include/linux/compiler.h
-> > > > @@ -120,7 +120,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-> > > >  /* Annotate a C jump table to allow objtool to follow the code flow */
-> > > >  #define __annotate_jump_table __section(.rodata..c_jump_table)
-> > > >  
-> > > > -#ifdef CONFIG_DEBUG_ENTRY
-> > > > +#if defined(CONFIG_DEBUG_ENTRY) || defined(CONFIG_LTO_CLANG)
-> > > >  /* Begin/end of an instrumentation safe region */
-> > > >  #define instrumentation_begin() ({					\
-> > > >  	asm volatile("%c0:\n\t"						\
-> > > 
-> > > Why would you be doing noinstr validation for lto builds? That doesn't
-> > > make sense.
-> > 
-> > This is just to avoid a ton of noinstr warnings when we run objtool on
-> > vmlinux.o, but I'm also fine with skipping noinstr validation with LTO.
-> 
-> Right, then we need to make --no-vmlinux work properly when
-> !DEBUG_ENTRY, which I think might be buggered due to us overriding the
-> argument when the objname ends with "vmlinux.o".
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Right. Can we just remove that and  pass --vmlinux to objtool in
-link-vmlinux.sh, or is the override necessary somewhere else?
+The VMD domain does not subscribe to ACPI, and so does not operate on
+it's irqdomain fwnode. It was freeing the handle after allocation of the
+domain. As of 181e9d4efaf6a (irqdomain: Make __irq_domain_add() less
+OF-dependent), the fwnode is put during irq_domain_remove causing a page
+fault. This patch keeps VMD's fwnode allocated through the lifetime of
+the VMD irqdomain.
 
-> > > > +ifdef CONFIG_STACK_VALIDATION
-> > > > +ifneq ($(SKIP_STACK_VALIDATION),1)
-> > > > +cmd_ld_ko_o +=								\
-> > > > +	$(objtree)/tools/objtool/objtool				\
-> > > > +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
-> > > > +		--module						\
-> > > > +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
-> > > > +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
-> > > > +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
-> > > > +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
-> > > > +		$(@:.ko=$(prelink-ext).o);
-> > > > +
-> > > > +endif # SKIP_STACK_VALIDATION
-> > > > +endif # CONFIG_STACK_VALIDATION
-> > > 
-> > > What about the objtool invocation from link-vmlinux.sh ?
-> > 
-> > What about it? The existing objtool_link invocation in link-vmlinux.sh
-> > works fine for our purposes as well.
-> 
-> Well, I was wondering why you're adding yet another objtool invocation
-> while we already have one.
+Fixes: ae904cafd59d ("PCI/vmd: Create named irq domain")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+---
+Hi Lorenzo, Bjorn,
 
-Because we can't run objtool until we have compiled bitcode to native
-code, so for modules, we're need another invocation after everything has
-been compiled.
+Please take this patch for v5.8 fixes. It fixes an issue during VMD
+unload.
 
-Sami
+Thanks
+Jon
+
+ drivers/pci/controller/vmd.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index e386d4eac407..ebec0a6e77ed 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -546,9 +546,10 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 
+ 	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
+ 						    x86_vector_domain);
+-	irq_domain_free_fwnode(fn);
+-	if (!vmd->irq_domain)
++	if (!vmd->irq_domain) {
++		irq_domain_free_fwnode(fn);
+ 		return -ENODEV;
++	}
+ 
+ 	pci_add_resource(&resources, &vmd->resources[0]);
+ 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+@@ -559,6 +560,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	if (!vmd->bus) {
+ 		pci_free_resource_list(&resources);
+ 		irq_domain_remove(vmd->irq_domain);
++		irq_domain_free_fwnode(fn);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -672,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
+ static void vmd_remove(struct pci_dev *dev)
+ {
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
++	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
+ 
+ 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
+@@ -679,6 +682,7 @@ static void vmd_remove(struct pci_dev *dev)
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_detach_resources(vmd);
+ 	irq_domain_remove(vmd->irq_domain);
++	irq_domain_free_fwnode(fn);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-- 
+2.18.1
+
