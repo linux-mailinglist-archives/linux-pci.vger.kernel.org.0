@@ -2,94 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60AF220AFF4
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 12:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0D120B047
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 13:15:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgFZKnV convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 26 Jun 2020 06:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36710 "EHLO
+        id S1728350AbgFZLPN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Jun 2020 07:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbgFZKnV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Jun 2020 06:43:21 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93D3C08C5C1
-        for <linux-pci@vger.kernel.org>; Fri, 26 Jun 2020 03:43:20 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jolp7-0005bM-Ek; Fri, 26 Jun 2020 12:43:09 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jolp5-0000zL-9u; Fri, 26 Jun 2020 12:43:07 +0200
-Message-ID: <6ddaf69d4f5ad188864f62dcdbfbbe32acef9820.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/9] reset: Add Raspberry Pi 4 firmware reset
- controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        linux-kernel@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com
-Date:   Fri, 26 Jun 2020 12:43:07 +0200
-In-Reply-To: <b324122e8bd93302215a77d0dcf6d8b2897d3597.camel@suse.de>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
-         <20200612171334.26385-3-nsaenzjulienne@suse.de>
-         <c1ccb77ef0bc56b96a8ad991f8345d0ffbd76fc2.camel@pengutronix.de>
-         <b324122e8bd93302215a77d0dcf6d8b2897d3597.camel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        with ESMTP id S1728263AbgFZLPM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Jun 2020 07:15:12 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67792C08C5C1;
+        Fri, 26 Jun 2020 04:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OPLtbx4nSF+ZifTe6YUf/6ZKs4PvGHfV1P1Ne1BmY9I=; b=TMYZ5TM8uqJMUmW9EMBU5X0XlE
+        sUmdCj+Le5O1RirUulvCJzrbBODVkrm5WB3Fi6gddS74hf5+7pDgxsKNeXGmDGnEu8Uf8Ot6TLeci
+        akXaxHdpV7kgkX9h7CtRRKqp/P5O0h52RTuZxSwPT7v3EGZwKop0NY5fv7tde7yLI/49+/1euM6v7
+        5NpixGyi9vvjrq07AnGsrKu8CUaX++A4o/8WlEbsQtr7TrhMyjyfGDFoMPm8cOFokts0iU9Poaauk
+        txHL3rMCuuB1pfOKI5qzsaxY2UJUFHZ+Ia0iCTOuH/wv4YseBtGfGa4Vhi6we2tYnvd4fAASDKWKI
+        8x7yR3mA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jomJ1-0006Uh-4s; Fri, 26 Jun 2020 11:14:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 07704301DFC;
+        Fri, 26 Jun 2020 13:14:01 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7F78329C9595E; Fri, 26 Jun 2020 13:14:01 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 13:14:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
+        sfr@canb.auug.org.au, stephen@networkplumber.org,
+        rppt@linux.vnet.ibm.com, jinyuqi@huawei.com,
+        zhangshaokun@hisilicon.com
+Subject: Re: [Patch v4 3/3] net: Restrict receive packets queuing to
+ housekeeping CPUs
+Message-ID: <20200626111401.GE4817@hirez.programming.kicks-ass.net>
+References: <20200625223443.2684-1-nitesh@redhat.com>
+ <20200625223443.2684-4-nitesh@redhat.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625223443.2684-4-nitesh@redhat.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2020-06-17 at 12:44 +0200, Nicolas Saenz Julienne wrote:
-> On Wed, 2020-06-17 at 12:02 +0200, Philipp Zabel wrote:
-> > Hi Nicolas,
-> > 
-> > On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
-> > > Raspberry Pi 4's co-processor controls some of the board's HW
-> > > initialization process, but it's up to Linux to trigger it when
-> > > relevant. Introduce a reset controller capable of interfacing with
-> > > RPi4's co-processor that models these firmware initialization routines as
-> > > reset lines.
-> > > 
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > 
-> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+On Thu, Jun 25, 2020 at 06:34:43PM -0400, Nitesh Narayan Lal wrote:
+> From: Alex Belits <abelits@marvell.com>
 > 
-> Thanks!
+> With the existing implementation of store_rps_map(), packets are queued
+> in the receive path on the backlog queues of other CPUs irrespective of
+> whether they are isolated or not. This could add a latency overhead to
+> any RT workload that is running on the same CPU.
 > 
-> > If there is a good reason for the single DT specified reset id, I can
-> > pick up patches 1 and 2.
+> Ensure that store_rps_map() only uses available housekeeping CPUs for
+> storing the rps_map.
 > 
-> The idea here is to make sure we're reasonably covered against further changes
-> in firmware. If we define constraints too narrow it can be a pain to support
-> new features without breaking backwards compatibility in dt.
+> Signed-off-by: Alex Belits <abelits@marvell.com>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 
-Ok.
-
-> > If you change the dts patch 4 to use a number instead of the reset id
-> > define for now, there wouldn't even be a dependency between these reset
-> > and dts patches.
-> 
-> I was under the impression that having an explicit definition was nice to have.
-> What's troubling about creating the dependency?
-
-Just that the last patch has to wait for the reset patches to be merged
-before it can be applied.
-
-regards
-Philipp
+Dave, ACK if I route this?
