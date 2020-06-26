@@ -2,280 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9180D20B8A7
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 20:52:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E8C420B8B8
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 20:54:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725792AbgFZSwG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Jun 2020 14:52:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgFZSwF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:52:05 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDAD02075A;
-        Fri, 26 Jun 2020 18:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593197524;
-        bh=E5ZeGIaQ4TvxmK01qXTN6ia+aVwiHoFFaYZso3L47YA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n790PbLzROZKWoZhFf+3iV0hWLyb/W4bEQ791+kAAwLaVp5omcjYgtmZzdRV/vQeO
-         QC8lhrpHholCaSmgheL1iCtiGerP/zLk6/3Qqyo8gLLZtwT+jHx0pydM3LZfATP8MY
-         GQG89aRpEKi6nyQJjU12vDJcIx8SPa8rhTc3PTCw=
-Date:   Fri, 26 Jun 2020 13:52:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     refactormyself@gmail.com
-Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8 v2] PCI: Align return values of PCIe capability and
- PCI accessors
-Message-ID: <20200626185202.GA2923565@bjorn-Precision-5520>
+        id S1725936AbgFZSyO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Jun 2020 14:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgFZSyO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Jun 2020 14:54:14 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8797C03E979
+        for <linux-pci@vger.kernel.org>; Fri, 26 Jun 2020 11:54:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b25so7804443ljp.6
+        for <linux-pci@vger.kernel.org>; Fri, 26 Jun 2020 11:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TyklzFj5dCuXNYg3v7eYVOhPNqVFIXACBXr++QvGvZI=;
+        b=Q3jSm/c7nM2RMkN/kkJWHeLwAsdboqUxRzth/uSa6NXSM8oXMtiMhj9f8WBol97E5l
+         ky6f/QaC4KZ4YCnTQZ3BF5dIXjlSPV4QoV2wqdt2Mxc0dLVha+jmh1N//dKeYUM0kj/p
+         Cdd4nWsofe4nR1h6Arv8qYj2pSAqwLLlXKo4g4QCtxbm6LC94tNL9HBuchzz8CHS2BAX
+         yl2h1pg/AJIJGgSiC33mfu7Wo9ZAOmNg5sJcT1GNiIaf52Hd/o1vV9XDmSUrR47ulwLj
+         ref9AD+MOaS2oD3rCYWv+1d1sjD/0C8RZj9PYTuYlbI4YRzLWzNCmbCgcQYmWu2Ufvyd
+         PAzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TyklzFj5dCuXNYg3v7eYVOhPNqVFIXACBXr++QvGvZI=;
+        b=ANEfl7ozmJlcTsbYsVpk4oQ69uUNToJQdFHruguF6qdiaYQ+F4Wg65BFMzPCRWBPjs
+         tbzPCcpOa+vo7uEVOVsB81/71vwc3+Qel+8GLA0Y6yq1p+OtHW5JfOT0AxEP82h3tgLU
+         EPU3lmLLzvCf3LAXosFXIDkEwDypa151jFnhe9zTlK1T2qT3CwueC+2fT+XIcI2uYnfI
+         qBxzdrf1+ACNtFsK4o8q7HnkVR76ymXxoHhGpGw2ajdiULkCSm1PYeMukLRm6LOi8OGq
+         w4PCUBKumy91E9VU97SV1S7UMd4BOfWcxMiOb/HJ+k/cmRjz5b0ozC3xLLyvR+9zHmk/
+         2Rtg==
+X-Gm-Message-State: AOAM533gjGOQCZvrnUW5rJF16N/StMAAXLAXPRxsQRSQ29fGhXKl8GGa
+        tdxyv/kKg98gKawwO6JWoqF9v2LQ0eGGG7800ZbKRg==
+X-Google-Smtp-Source: ABdhPJwEBU78ak0v0VpTknwA5BsMJ5bdkxuMQYVuGSToCCXcbvo/1MlMlImhsgRKT5ooJzz29cDDIywFsWJMzVIeB2E=
+X-Received: by 2002:a2e:858e:: with SMTP id b14mr2218327lji.301.1593197651010;
+ Fri, 26 Jun 2020 11:54:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615073225.24061-1-refactormyself@gmail.com>
+References: <20200626002710.110200-1-rajatja@google.com> <20200626002710.110200-2-rajatja@google.com>
+ <20200626141754.GB4141629@kroah.com>
+In-Reply-To: <20200626141754.GB4141629@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Fri, 26 Jun 2020 11:53:34 -0700
+Message-ID: <CACK8Z6GSN5iOaCh-ZMaJSY4SgEhw=bCRDzaiPEBJbNNFhZZX6Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pci: Add parameter to disable attaching untrusted devices
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 09:32:17AM +0200, refactormyself@gmail.com wrote:
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> 
-> 
-> PATCH 1/8 to 7/8:
-> PCIBIOS_ error codes have positive values and they are passed down the
-> call heirarchy from accessors. For functions which are meant to return
-> only a negative value on failure, passing on this value is a bug.
-> To mitigate this, call pcibios_err_to_errno() before passing on return
-> value from PCIe capability accessors call heirarchy. This function
-> converts any positive PCIBIOS_ error codes to negative generic error
-> values.
-> 
-> PATCH 8/8:
-> The PCIe capability accessors can return 0, -EINVAL, or any PCIBIOS_ error
-> code. The pci accessor on the other hand can only return 0 or any PCIBIOS_
-> error code.This inconsistency among these accessor makes it harder for
-> callers to check for errors.
-> Return PCIBIOS_BAD_REGISTER_NUMBER instead of -EINVAL in all PCIe
-> capability accessors.
-> 
-> MERGING:
-> These may all be merged via the PCI tree, since it is a collection of
-> similar fixes. This way they all get merged at once.
-> 
-> Version 2:
-> * cc to maintainers and mailing lists
-> * Edit the Subject to conform with previous style
-> * reorder "Signed by" and "Suggested by"
-> * made spelling corrections
-> * fixed redundant initialisation in PATCH 3/8
-> * include missing call to pcibios_err_to_errno() in PATCH 6/8 and 7/8
-> 
-> 
-> Bolarinwa Olayemi Saheed (8):
->   dmaengine: ioatdma: Convert PCIBIOS_* errors to generic -E* errors
->   IB/hfi1: Convert PCIBIOS_* errors to generic -E* errors
->   IB/hfi1: Convert PCIBIOS_* errors to generic -E* errors
->   PCI: Convert PCIBIOS_* errors to generic -E* errors
->   scsi: smartpqi: Convert PCIBIOS_* errors to generic -E* errors
->   PCI/AER: Convert PCIBIOS_* errors to generic -E* errors
->   PCI/AER: Convert PCIBIOS_* errors to generic -E* errors
->   PCI: Align return values of PCIe capability and PCI accessorss
-> 
->  drivers/dma/ioat/init.c               |  4 ++--
->  drivers/infiniband/hw/hfi1/pcie.c     | 18 +++++++++++++-----
->  drivers/pci/access.c                  |  8 ++++----
->  drivers/pci/pci.c                     | 10 ++++++++--
->  drivers/pci/pcie/aer.c                | 12 ++++++++++--
->  drivers/scsi/smartpqi/smartpqi_init.c |  6 +++++-
->  6 files changed, 42 insertions(+), 16 deletions(-)
+Hello,
 
-Since these are really fixing a single PCI API problem, not individual
-driver-related problems, I squashed the pcibios_err_to_errno() patches
-together (except IB/hfi1, since Jason will take those separately) and
-applied them to pci/misc, thanks!
+Thanks for taking a look.
 
-The squashed patch as applied is:
+On Fri, Jun 26, 2020 at 7:18 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 25, 2020 at 05:27:10PM -0700, Rajat Jain wrote:
+> > Introduce a PCI parameter that disables the automatic attachment of
+> > untrusted devices to their drivers.
+> >
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > ---
+> > Context:
+> >
+> >   I set out to implement the approach outlined in
+> >     https://lkml.org/lkml/2020/6/9/1331
+> >     https://lkml.org/lkml/2020/6/15/1453
+> >
+> >   But to my surprise, I found that the new hotplugged PCI devices
+> >   were getting automatically attached to drivers even though
+> >   /sys/bus/pci/drivers_autoprobe was set to 0.
+> >
+> >   I realized that the device core's "drivers_autoprobe":
+> >
+> >   * only disables the *initial* probe of the device (i.e. from
+> >     device_add()). If a subsystem calls device_attach() explicitly
+> >     for its devices like PCI subsystem does, the drivers_autoprobe
+> >     setting does not matter. The core will attach device to the driver.
+> >     This looks like correct semantic behavior to me because PCI is
+> >     explicitly calling device_attach(), which is a way to explicitly
+> >     ask the core to find and attach a driver for a device.
+> >
+> >   * "drivers_autoprobe" cannot be controlled at boot time (to restrict
+> >     any drivers before userspace comes up).
+> >
+> >   The options I considered were:
+> >
+> >   1) Change device_attach() so that it takes into consideration the
+> >      drivers_autoprobe property. Not sure if this is semantically correct
+> >      thing to do though. If I do this, then the only way a driver can
+> >      be attached to the drivers would be via userspace
+> >      (/sys/bus/pci/drivers/bind) (Good for our use case though!).
+>
+> This is the correct thing to do here, haven't I been asking you do move
+> this logic into the driver core so that all busses can use it?
 
-commit d20df83b66cc ("PCI: Convert PCIe capability PCIBIOS errors to errno")
-Author: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-Date:   Mon Jun 15 09:32:18 2020 +0200
+(please see below)
 
-    PCI: Convert PCIe capability PCIBIOS errors to errno
-    
-    The PCI config accessors (pci_read_config_word(), et al) return
-    PCIBIOS_SUCCESSFUL (zero) or positive error values like
-    PCIBIOS_FUNC_NOT_SUPPORTED.
-    
-    The PCIe capability accessors (pcie_capability_read_word(), et al)
-    similarly return PCIBIOS errors, but some callers assume they return
-    generic errno values like -EINVAL.
-    
-    For example, the Myri-10G probe function returns a positive PCIBIOS error
-    if the pcie_capability_clear_and_set_word() in pcie_set_readrq() fails:
-    
-      myri10ge_probe
-        status = pcie_set_readrq
-          return pcie_capability_clear_and_set_word
-        if (status)
-          return status
-    
-    A positive return from a PCI driver probe function would cause a "Driver
-    probe function unexpectedly returned" warning from local_pci_probe()
-    instead of the desired probe failure.
-    
-    Convert PCIBIOS errors to generic errno for all callers of:
-    
-      pcie_capability_read_word
-      pcie_capability_read_dword
-      pcie_capability_write_word
-      pcie_capability_write_dword
-      pcie_capability_set_word
-      pcie_capability_set_dword
-      pcie_capability_clear_word
-      pcie_capability_clear_dword
-      pcie_capability_clear_and_set_word
-      pcie_capability_clear_and_set_dword
-    
-    that check the return code for anything other than zero.
-    
-    [bhelgaas: commit log, squash together]
-    Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-    Link: https://lore.kernel.org/r/20200615073225.24061-1-refactormyself@gmail.com
-    Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>
+> >   2) Make the drivers_autoprobe property available to PCI to use
+> >      (currently it is private to device core). The PCI could use this
+> >      to determine whether or not to call device_attach(). This still
+> >      leaves the other problem (of not being able to set
+> >      drivers_autoprobe via command line open).
+>
+> Ick, command lines are horrible, don't do that if at all possible.  On
+> some systems they are not able to be changed which can be good or bad...
 
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 58d13564f88b..9a6a9ec3cf48 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -1195,13 +1195,13 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
- 	/* disable relaxed ordering */
- 	err = pcie_capability_read_word(pdev, IOAT_DEVCTRL_OFFSET, &val16);
- 	if (err)
--		return err;
-+		return pcibios_err_to_errno(err);
- 
- 	/* clear relaxed ordering enable */
- 	val16 &= ~IOAT_DEVCTRL_ROE;
- 	err = pcie_capability_write_word(pdev, IOAT_DEVCTRL_OFFSET, val16);
- 	if (err)
--		return err;
-+		return pcibios_err_to_errno(err);
- 
- 	if (ioat_dma->cap & IOAT_CAP_DPS)
- 		writeb(ioat_pending_level + 1,
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce096272f52b..45c51aff9c03 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5688,6 +5688,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
- int pcie_set_readrq(struct pci_dev *dev, int rq)
- {
- 	u16 v;
-+	int ret;
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
- 		return -EINVAL;
-@@ -5706,8 +5707,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = (ffs(rq) - 8) << 12;
- 
--	return pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-+	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_READRQ, v);
-+
-+	return pcibios_err_to_errno(ret);
- }
- EXPORT_SYMBOL(pcie_set_readrq);
- 
-@@ -5738,6 +5741,7 @@ EXPORT_SYMBOL(pcie_get_mps);
- int pcie_set_mps(struct pci_dev *dev, int mps)
- {
- 	u16 v;
-+	int ret;
- 
- 	if (mps < 128 || mps > 4096 || !is_power_of_2(mps))
- 		return -EINVAL;
-@@ -5747,8 +5751,10 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
- 		return -EINVAL;
- 	v <<= 5;
- 
--	return pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-+	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_PAYLOAD, v);
-+
-+	return pcibios_err_to_errno(ret);
- }
- EXPORT_SYMBOL(pcie_set_mps);
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 3acf56683915..2dbc1fd2910b 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -224,20 +224,25 @@ int pcie_aer_is_native(struct pci_dev *dev)
- 
- int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- {
-+	int rc;
-+
- 	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
--	return pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-+	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-+	return pcibios_err_to_errno(rc);
- }
- EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
- 
- int pci_disable_pcie_error_reporting(struct pci_dev *dev)
- {
-+	int rc;
-+
- 	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
--	return pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
--					  PCI_EXP_AER_FLAGS);
-+	rc = pcie_capability_clear_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-+	return pcibios_err_to_errno(rc);
- }
- EXPORT_SYMBOL_GPL(pci_disable_pcie_error_reporting);
- 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index cd157f11eb22..bd38c8cea56e 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -7423,8 +7423,12 @@ static int pqi_ctrl_init_resume(struct pqi_ctrl_info *ctrl_info)
- static inline int pqi_set_pcie_completion_timeout(struct pci_dev *pci_dev,
- 	u16 timeout)
- {
--	return pcie_capability_clear_and_set_word(pci_dev, PCI_EXP_DEVCTL2,
-+	int rc;
-+
-+	rc = pcie_capability_clear_and_set_word(pci_dev, PCI_EXP_DEVCTL2,
- 		PCI_EXP_DEVCTL2_COMP_TIMEOUT, timeout);
-+
-+	return pcibios_err_to_errno(rc);
- }
- 
- static int pqi_pci_init(struct pqi_ctrl_info *ctrl_info)
+(please see below)
+
+>
+> >   3) I found the pci_dev->match_driver, which seemed similar to what I
+> >      am trying to do, but can't be controlled from userspace. I considered
+> >      populating that field based on drivers_autoprobe (still need (2)).
+> >      But the problem is that there is the AMD IOMMU driver which is setting
+> >      this independently, so setting the match_driver based on
+> >      drivers_autoprobe may not be a good idea. May be we can populate it
+> >      for untrusted devicesi, based on the parameter that I'm introducing?
+> >
+> >   4) This patch was my option 4 that helps fix both the problems for me.
+>
+> I suggest putting some of the above text in the changelog, as it has a
+> lot of good context, while your existing changelog is pretty sparse and
+> does not explain anything...
+
+Will do.
+
+>
+>
+> >
+> >  drivers/pci/bus.c | 11 ++++++++---
+> >  drivers/pci/pci.c |  9 +++++++++
+> >  drivers/pci/pci.h |  1 +
+> >  3 files changed, 18 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > index 3cef835b375fd..336aeeb4c4ebf 100644
+> > --- a/drivers/pci/bus.c
+> > +++ b/drivers/pci/bus.c
+> > @@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
+> >       pci_bridge_d3_update(dev);
+> >
+> >       dev->match_driver = true;
+> > -     retval = device_attach(&dev->dev);
+> > -     if (retval < 0 && retval != -EPROBE_DEFER)
+> > -             pci_warn(dev, "device attach failed (%d)\n", retval);
+> > +
+> > +     if (dev->untrusted && pci_dont_attach_untrusted_devs) {
+> > +             pci_info(dev, "not attaching untrusted device\n");
+> > +     } else {
+> > +             retval = device_attach(&dev->dev);
+> > +             if (retval < 0 && retval != -EPROBE_DEFER)
+> > +                     pci_warn(dev, "device attach failed (%d)\n", retval);
+> > +     }
+> >
+> >       pci_dev_assign_added(dev, true);
+> >  }
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index ce096272f52b1..dec1f9ef27d71 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -127,6 +127,13 @@ static bool pcie_ats_disabled;
+> >  /* If set, the PCI config space of each device is printed during boot. */
+> >  bool pci_early_dump;
+> >
+> > +/*
+> > + * If set, the devices with "untrusted" flag shall not be attached automatically
+> > + * Userspace will need to attach them manually:
+> > + * echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
+> > + */
+> > +bool pci_dont_attach_untrusted_devs;
+> > +
+> >  bool pci_ats_disabled(void)
+> >  {
+> >       return pcie_ats_disabled;
+> > @@ -6522,6 +6529,8 @@ static int __init pci_setup(char *str)
+> >                               pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+> >                       } else if (!strncmp(str, "disable_acs_redir=", 18)) {
+> >                               disable_acs_redir_param = str + 18;
+> > +                     } else if (!strcmp(str, "dont_attach_untrusted_devs")) {
+> > +                             pci_dont_attach_untrusted_devs = true;
+> >                       } else {
+> >                               pr_err("PCI: Unknown option `%s'\n", str);
+> >                       }
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 6d3f758671064..30ffad047d926 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -13,6 +13,7 @@
+> >
+> >  extern const unsigned char pcie_link_speed[];
+> >  extern bool pci_early_dump;
+> > +extern bool pci_dont_attach_untrusted_devs;
+> >
+> >  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+> >  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> > --
+> > 2.27.0.212.ge8ba1cc988-goog
+> >
+>
+> What happened to the split of "trust" and "internal/external" logic that
+> we discussed before?
+
+a) I think what was decided was introducing a device core "location"
+property that can be exposed to userspace to help it to decide whether
+or not to attach a driver to a device. Yes, that is still the plan.
+(Mild sidenote: userspace may not need to distinguish between internal
+and external devices if it can assume that no internal PCI devices
+will show up after "echo 0 > /sys/bus/pci/drivers_autoprobe". But
+nevertheless...)
+
+b) Note that even with (a) in place, we still need a parameter that
+can ensure that drivers are not bound to external devices at boot,
+*before* userspace gets a chance to disable "drivers_autoprobe".
+https://lkml.org/lkml/2020/6/15/1453
+Is it OK to add such a parameter in device core?
+
+Thanks,
+
+Rajat
 
 
+
+
+
+> This seems to ignore all of that and go straight
+> to some form of "we know what we trust, so all is fine!".
+>
+> It's not obvious what this is really doing here at all, sorry...
+>
+> greg k-h
