@@ -2,143 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4B020B8EF
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 21:02:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D131020B923
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 21:14:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbgFZTCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Jun 2020 15:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFZTCP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Jun 2020 15:02:15 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDBDC03E979
-        for <linux-pci@vger.kernel.org>; Fri, 26 Jun 2020 12:02:14 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id 9so11434171ljv.5
-        for <linux-pci@vger.kernel.org>; Fri, 26 Jun 2020 12:02:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CupTv356WOheWFFcn47AA78Bc8xE85sorZq/DL/d5ow=;
-        b=PljCG4p1Fw8CHLh+rUo2wSWaKZbvtTK+SH69StUSy72aY4d1OYyiZUq/AaW6a5d1MI
-         mq7+P723mcxuKFZJ5YT7j2sJC2nDwAp1KAMuq5VMYdluPT75VMQ3W97a14UhUtX4a1Q2
-         Y7Br1N0WDugVyuoC8lYZ/SyVf6EN373Kqez82pnoO4DMI2ZgGgU2GH+Ppuhy6J6g/YUt
-         1XpiIuatKtMKTEm14jT7CRjJOtuvbAALQKYB80RhD2Byety+zKHXncWQo4dJsh1SQeMA
-         nSqGNi15sCpqApCXfW8JO5PL/hkt8la90/o6M5m9jJhBWq0yG5p6KMs8op0c3aNYsphn
-         8wzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CupTv356WOheWFFcn47AA78Bc8xE85sorZq/DL/d5ow=;
-        b=E/uyPEyxfOpi3+nSgSm/kZuk3muB5GRDX1x9mHPSkzzIRBJaCADne2/+x0as5gnrKB
-         uM9O01wXqWktiPJTKJ07kPvQ1CAvkm5D62sZsO9iz1Fwl70lWnFLjqb7firoAYive2q6
-         TwsCsf7m3xyo6K0E+1/+kzQwcQCCsZsMLt8nRqwL2Xt55BpeBjeZGgHF+eakWWDWSD1v
-         1P0bETyDrwuMOobtazw9cLd+/oLCcSjxF3EKw6Ddf3tX1yfoXqibuFBB2kbX41lo8wDy
-         miKzDNGMISA/z/T/crxug1LNbT/1JPD9gYnJ4TAfDbn1IOd/M0IM1AVhztjYl6VTvPjt
-         yARw==
-X-Gm-Message-State: AOAM533KonAKwCrXU63C058LStJULhWFy6IahIdkBTkppjREFP4Y1s4E
-        64SIj1MWgrnrwo1C9qKuVXJKp9GZQd2mSwDM53gynQ==
-X-Google-Smtp-Source: ABdhPJwXqAgY35bZFXo6/B0G8JpMwZbJM19I1mNnWaLF8LNBfGwBsVegK/WyraehTX79S8Hc7skGI2IKEUUkez0pahs=
-X-Received: by 2002:a2e:92cf:: with SMTP id k15mr2200496ljh.333.1593198132811;
- Fri, 26 Jun 2020 12:02:12 -0700 (PDT)
+        id S1725781AbgFZTOY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Jun 2020 15:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFZTOY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Jun 2020 15:14:24 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 311D3206A1;
+        Fri, 26 Jun 2020 19:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593198863;
+        bh=z2oF+alcajhjxoNUuykiKixvNasruwuFGTQMBcBskD0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cvleF0UdnEtliTWMUd/EQkLaX5l7SVtigqGUCDB5YsAXJBr/9xo9IBRtfT1DSQuvA
+         Bu56ZM0JGSAEM9Qw9Pxql4eRma9YpwgfVZexqcN72JvG/RS3HBuqIgMDI2eLlXqiIh
+         /W0oL64GDhIozpKiRgk2+Z8MEBHmyucoUdZcf//M=
+Date:   Fri, 26 Jun 2020 14:14:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     refactormyself@gmail.com, linux-pci@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: pciehp: Fix wrong failure check on
+ pcie_capability_read_*()
+Message-ID: <20200626191421.GA2924609@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200626002710.110200-1-rajatja@google.com> <20200626153906.GA2897118@bjorn-Precision-5520>
-In-Reply-To: <20200626153906.GA2897118@bjorn-Precision-5520>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 26 Jun 2020 12:01:36 -0700
-Message-ID: <CACK8Z6G7Pau3LTt2LYx=pezLcwxO5kKaM18_yis0w-UGYd675w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pci: Add pci device even if the driver failed to attach
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620090936.3khh3gj46pnojnrw@wunner.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 8:39 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> Nit: when you update these patches, can you run "git log --oneline
-> drivers/pci/bus.c" and make your subject lines match the convention?
+On Sat, Jun 20, 2020 at 11:09:36AM +0200, Lukas Wunner wrote:
+> On Fri, Jun 19, 2020 at 10:12:19PM +0200, refactormyself@gmail.com wrote:
+> > On failure, pcie_capabiility_read_*() will set the status value,
+> > its last parameter to 0 and not ~0.
+> > This bug fix checks for the proper value.
+> 
+> If a config space read times out, the PCIe controller fabricates
+> an "all ones" response.  The code is checking for such a timeout,
+> not for an error.  Hence the code is fine.
 
-Sorry, will do.
+In the typical case, the pci_read_config_word() done by
+pcie_capability_read_word() will not return an error, so if the read
+times out, we should see slot_status == ~0.
 
-> E.g.,
->
->   PCI: Add device even if driver attach failed
->
-> On Thu, Jun 25, 2020 at 05:27:09PM -0700, Rajat Jain wrote:
-> > device_attach() returning failure indicates a driver error
-> > while trying to probe the device. In such a scenario, the PCI
-> > device should still be added in the system and be visible to
-> > the user.
->
-> Nit: please wrap logs to fill 75 characters.  "git log" adds 4 spaces
-> at the beginning, so 75+4 still fits nicely in 80 columns without
-> wrapping.
+But if it's possible to set dev->error_state ==
+pci_channel_io_perm_failure, pci_read_config_word() will return an
+error because pci_dev_is_disconnected(), so slot_status would be 0.
 
-Sorry, will do.
+There are a dozen or so places that set dev->error_state.  It doesn't
+look *likely* that any of them would cause this, but it doesn't
+instill confidence.
 
->
-> > This patch partially reverts:
-> > commit ab1a187bba5c ("PCI: Check device_attach() return value always")
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
+It would be a lot nicer if we didn't have to worry about both the 0
+and ~0 cases.  I keep coming back to the idea of removing the "*val
+= 0" code from pcie_capability_read_word() so we wouldn't have that
+special case.
+
+In any case, this particular patch doesn't seem like quite the right
+fix, so I'll drop it.
+
+> > Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 > > ---
-> >  drivers/pci/bus.c | 6 +-----
-> >  1 file changed, 1 insertion(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> > index 8e40b3e6da77d..3cef835b375fd 100644
-> > --- a/drivers/pci/bus.c
-> > +++ b/drivers/pci/bus.c
-> > @@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >
-> >       dev->match_driver = true;
-> >       retval = device_attach(&dev->dev);
-> > -     if (retval < 0 && retval != -EPROBE_DEFER) {
-> > +     if (retval < 0 && retval != -EPROBE_DEFER)
-> >               pci_warn(dev, "device attach failed (%d)\n", retval);
-> > -             pci_proc_detach_device(dev);
-> > -             pci_remove_sysfs_dev_files(dev);
->
-> Thanks for catching my bug!
->
-> > -             return;
-> > -     }
-> >
-> >       pci_dev_assign_added(dev, true);
-> >  }
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
+> >  drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> > index 53433b37e181..c1a67054948a 100644
+> > --- a/drivers/pci/hotplug/pciehp_hpc.c
+> > +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> > @@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+> >  
+> >  	do {
+> >  		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> > -		if (slot_status == (u16) ~0) {
+> > +		if (slot_status == (u16)0) {
+> >  			ctrl_info(ctrl, "%s: no response from device\n",
+> >  				  __func__);
+> >  			return 0;
+> > @@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+> >  	pcie_wait_cmd(ctrl);
+> >  
+> >  	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+> > -	if (slot_ctrl == (u16) ~0) {
+> > +	if (slot_ctrl == (u16)0) {
+> >  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> >  		goto out;
+> >  	}
+> > @@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
+> >  	int ret;
+> >  
+> >  	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> > -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
+> > +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)0)
+> >  		return -ENODEV;
+> >  
+> >  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> > @@ -440,7 +440,7 @@ int pciehp_card_present(struct controller *ctrl)
+> >  	int ret;
+> >  
+> >  	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> > -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
+> > +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)0)
+> >  		return -ENODEV;
+> >  
+> >  	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
+> > @@ -592,7 +592,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+> >  
+> >  read_status:
+> >  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+> > -	if (status == (u16) ~0) {
+> > +	if (status == (u16)0) {
+> >  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> >  		if (parent)
+> >  			pm_runtime_put(parent);
+> > -- 
+> > 2.18.2
