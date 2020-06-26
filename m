@@ -2,123 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D740920A93D
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 01:37:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87A9220A9D5
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jun 2020 02:27:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgFYXhS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jun 2020 19:37:18 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:48715 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgFYXhS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:37:18 -0400
-Received: from [192.168.1.4] (212-5-158-60.ip.btc-net.bg [212.5.158.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 1957DD003;
-        Fri, 26 Jun 2020 02:37:15 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1593128235; bh=2o4ThUiC17gIWs0ufb7+F/ueW41D7qZqy5puUdqvWU4=;
-        h=From:Subject:To:Cc:Date:From;
-        b=JMDF18ckJMrpFD/qEgYoia47BeQf+czsLXWH61YW/9ZMLflz9MvtqP9LC4K3ID60E
-         A7lYDCSLOscR3e0KyZmgjU4TfRA0XUxH1eQvID65yNOCqxCAGrfObO1Ayfke702/mV
-         p6JaLwnUZgbSWbyfVB1U4caMdIkwo5GNiKYgyF64rQ4KetrdKx/gaHdv5nYtAjQ4bd
-         c5tYHOWB4W93OsSXbcZblT8+GROx0+swJf2goMclZ6GdmfnKJ17B3jW6uM/S8+P2ux
-         p+6THoER8dUfr2A9bTxj5Komen/b6DzV3ahyjT4KjoU1hjNOjKbnMZ5Z9yRDvlfPbu
-         p2HLLXkkT0knA==
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v7 00/12] Multiple fixes in PCIe qcom driver
-To:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        id S1725876AbgFZA1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jun 2020 20:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgFZA1Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jun 2020 20:27:16 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDFBC08C5DB
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 17:27:16 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id p22so7826350ybg.21
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jun 2020 17:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=iv7sfYwPBb+T3sh9Tm/gYiOZsGJSNCHeo7sHuB/mAjU=;
+        b=gsWwDuEWxxXpafc13YiTJ2OicmolQf5h7KB/1owTbiu6Ee1j93pn2eUyAh2einvluw
+         E8nZ02G/7r07CFhIK5dPv0ZlK2iUzky20NJwNJzL3BmkInHkfTJUi0whj4v7SeoBFp3g
+         L/3uvCEgLYksFm2o4W1T7X4v2l1c/6dVt1wvCZUbCr3HPRrMHD/Wx73XJpbZlJYqrhpV
+         KaBzdZ96OBEfsKzgIwFT42MUz/2ka3sVvK4ATXx/XlaVPmoIodvUZOQza8cC5ubLjNIz
+         E74HpampI/OVzg9d/tQFsKbYUOV6dBx9FZXpN2zmmaEvoJ5q72zzytovyjewoIGXtbDl
+         naBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=iv7sfYwPBb+T3sh9Tm/gYiOZsGJSNCHeo7sHuB/mAjU=;
+        b=B6Qhckv5mf8z/qXAAmqjviG+OVOYu5e1TbbIjZHzXyv+Ok44S+SBm99J588PKNYpUo
+         9ld88IRFVS3IFe/r8XTgZTnUoYQdvM9DPVxn+f/l/TeUp7GoYamz8CLD537knFUIOhWv
+         ANSIRwd92J/IVHw/fL+AX3TM7wL4jBLSnVxFHsC0kBaNwATaCDz9MqfVjHF+3wOcYHHc
+         YOe6N//L2umeEqrSJvAKMl8fZw1ZTAarDAmsaKrg1O/USeOCnjwoKW5PyyErj7+JX3gg
+         gaTiz0E78J2klyFsG1hVs88Myyylg5PamBADuX6FUL/kNm+ra8ixp97ma78lOreIgsuF
+         0ijw==
+X-Gm-Message-State: AOAM532dFCdxPSZ17QUdD9DjZqlytgyRvMa+zfXnBbUMp/i5wDo4awCr
+        Qh5CwP8xMbUzGbNggMhuFQQYv7r7yVTR
+X-Google-Smtp-Source: ABdhPJyJZ32y84BWOCzPlXnj6DBPie+kwwNvt36mcjomQYjcSGXpCQX3nGJKpsx74v22jf/R8UEafr0WqCf3
+X-Received: by 2002:a25:aaa9:: with SMTP id t38mr763977ybi.312.1593131235516;
+ Thu, 25 Jun 2020 17:27:15 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 17:27:09 -0700
+Message-Id: <20200626002710.110200-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH 1/2] pci: Add pci device even if the driver failed to attach
+From:   Rajat Jain <rajatja@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200615210608.21469-1-ansuelsmth@gmail.com>
-Message-ID: <1dcf28c4-eb89-a5eb-52d8-b4356c3d0aaf@mm-sol.com>
-Date:   Fri, 26 Jun 2020 02:37:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com
+Cc:     Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ansuel,
+device_attach() returning failure indicates a driver error
+while trying to probe the device. In such a scenario, the PCI
+device should still be added in the system and be visible to
+the user.
 
-Thank you for the patience.
+This patch partially reverts:
+commit ab1a187bba5c ("PCI: Check device_attach() return value always")
 
-On 6/16/20 12:05 AM, Ansuel Smith wrote:
-> This contains multiple fix for PCIe qcom driver.
-> Some optional reset and clocks were missing.
-> Fix a problem with no PARF programming that cause kernel lock on load.
-> Add support to force gen 1 speed if needed. (due to hardware limitation)
-> Add ipq8064 rev 2 support that use a different tx termination offset.
-> 
-> v7:
-> * Rework GEN1 patch
-> 
-> v6:
-> * Replace custom define
-> * Move define not used in 07 to 08
-> 
-> v5:
-> * Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
-> 
-> v4:
-> * Fix grammar error across all patch subject
-> * Use bulk api for clks
-> * Program PARF only in ipq8064 SoC
-> * Program tx term only in ipq8064 SoC
-> * Drop configurable tx-dempth rx-eq
-> * Make added clk optional
-> 
-> v3:
-> * Fix check reported by checkpatch --strict
-> * Rename force_gen1 to gen
-> 
-> v2:
-> * Drop iATU programming (already done in pcie init)
-> * Use max-link-speed instead of force-gen1 custom definition
-> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
-> * Introduce a new variant for different revision of ipq8064
-> 
-> Abhishek Sahu (1):
->   PCI: qcom: Change duplicate PCI reset to phy reset
-> 
-> Ansuel Smith (10):
->   PCI: qcom: Add missing ipq806x clocks in PCIe driver
->   dt-bindings: PCI: qcom: Add missing clks
->   PCI: qcom: Add missing reset for ipq806x
->   dt-bindings: PCI: qcom: Add ext reset
->   PCI: qcom: Use bulk clk api and assert on error
->   PCI: qcom: Define some PARF params needed for ipq8064 SoC
->   PCI: qcom: Add support for tx term offset for rev 2.1.0
->   PCI: qcom: Add ipq8064 rev2 variant
->   dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
->   PCI: qcom: Replace define with standard value
-> 
-> Sham Muthayyan (1):
->   PCI: qcom: Support pci speed set for ipq806x
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
->  drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
->  2 files changed, 128 insertions(+), 73 deletions(-)
-> 
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+ drivers/pci/bus.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-For the whole set:
-
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index 8e40b3e6da77d..3cef835b375fd 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
+ 
+ 	dev->match_driver = true;
+ 	retval = device_attach(&dev->dev);
+-	if (retval < 0 && retval != -EPROBE_DEFER) {
++	if (retval < 0 && retval != -EPROBE_DEFER)
+ 		pci_warn(dev, "device attach failed (%d)\n", retval);
+-		pci_proc_detach_device(dev);
+-		pci_remove_sysfs_dev_files(dev);
+-		return;
+-	}
+ 
+ 	pci_dev_assign_added(dev, true);
+ }
 -- 
-regards,
-Stan
+2.27.0.212.ge8ba1cc988-goog
+
