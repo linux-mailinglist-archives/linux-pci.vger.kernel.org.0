@@ -2,165 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB71A20BF50
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Jun 2020 09:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B63DF20C084
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Jun 2020 11:48:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgF0HSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Jun 2020 03:18:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23962 "EHLO mga11.intel.com"
+        id S1726378AbgF0Jsa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Jun 2020 05:48:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgF0HSx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 27 Jun 2020 03:18:53 -0400
-IronPort-SDR: 5FYp4zqQspG3yvMjK5irlXVt/H0EmJn6A8SyvMk30LlX7GjgDo8O95PMrkKlL8NoygUXy2fcgO
- Zu1kuym/s/dw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143832467"
-X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
-   d="scan'208";a="143832467"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2020 00:18:53 -0700
-IronPort-SDR: LpL7AhnSP8WNwZODWIgM4EmYqJ4+G1uFMYknXvTag9IzBn3s1zJkHbIGArnYSe1cAQacA0t76c
- vqQLaqppqB9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
-   d="scan'208";a="302544330"
-Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jun 2020 00:18:51 -0700
-Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jp56x-0002ho-6Y; Sat, 27 Jun 2020 07:18:51 +0000
-Date:   Sat, 27 Jun 2020 15:18:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- b91535812d663acc47952d05386c8a126eae8080
-Message-ID: <5ef6f2cd.kYVX+3npPWZT/QOa%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        id S1726175AbgF0Jsa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 27 Jun 2020 05:48:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F0C4208B6;
+        Sat, 27 Jun 2020 09:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593251309;
+        bh=IxnkrHLXk/gcwa3WhvrkauHPx68lmhRoHCUjT2rX01A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yhIM2WgfX21AVxbsstEDDdV+xyzyzQQ1uA94R7Z9HqiL/Mq+cqs3pG8l5PyjLgw0e
+         s3Eicip9RTI66nQwr0Cv17QDEBxrTfiK22DtEbnswv0mxa6AEudlrWnvGe5ij3Mlb1
+         I0mZxXLRSo8jeSeChtbkoNx4ZDHxDUIw3S5Gxetk=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jp7Rj-006rKU-PG; Sat, 27 Jun 2020 10:48:27 +0100
+Date:   Sat, 27 Jun 2020 10:48:26 +0100
+Message-ID: <87v9jcet5h.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+In-Reply-To: <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+        <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
-branch HEAD: b91535812d663acc47952d05386c8a126eae8080  PCI: Align PCIe capability and PCI accessor return values
+On Thu, 18 Jun 2020 09:38:09 +0100,
+Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+> 
+> The misc interrupts consisting of PME, AER, and Link event, is handled
+> by INTx handler, however, these interrupts should be also handled by
+> MSI handler.
+> 
+> This adds the function uniphier_pcie_misc_isr() that handles misc
+> interrupts, which is called from both INTx and MSI handlers.
+> This function detects PME and AER interrupts with the status register,
+> and invoke PME and AER drivers related to MSI.
+> 
+> And this sets the mask for misc interrupts from INTx if MSI is enabled
+> and sets the mask for misc interrupts from MSI if MSI is disabled.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>  1 file changed, 46 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index a5401a0..5ce2479 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -44,7 +44,9 @@
+>  #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>  
+>  #define PCL_RCV_INT			0x8108
+> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>  
+>  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>  {
+> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+> +	u32 val;
+> +
+> +	val = PCL_RCV_INT_ALL_ENABLE;
+> +	if (pci_msi_enabled())
+> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+> +	else
+> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
 
-elapsed time: 722m
+Does this affect endpoints? Or just the RC itself?
 
-configs tested: 103
-configs skipped: 6
+> +
+> +	writel(val, priv->base + PCL_RCV_INT);
+>  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>  }
+>  
+> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>  	.map = uniphier_pcie_intx_map,
+>  };
+>  
+> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>  {
+> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	unsigned long reg;
+> -	u32 val, bit, virq;
+> +	u32 val, virq;
+>  
+> -	/* INT for debug */
+>  	val = readl(priv->base + PCL_RCV_INT);
+>  
+>  	if (val & PCL_CFG_BW_MGT_STATUS)
+>  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+> +
+>  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> -		dev_dbg(pci->dev, "Root Error\n");
+> -	if (val & PCL_CFG_PME_MSI_STATUS)
+> -		dev_dbg(pci->dev, "PME Interrupt\n");
+> +
+> +	if (is_msi) {
+> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> +			dev_dbg(pci->dev, "Root Error Status\n");
+> +
+> +		if (val & PCL_CFG_PME_MSI_STATUS)
+> +			dev_dbg(pci->dev, "PME Interrupt\n");
+> +
+> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+> +			   PCL_CFG_PME_MSI_STATUS)) {
+> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+> +			generic_handle_irq(virq);
+> +		}
+> +	}
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Please have two handlers: one for interrupts that are from the RC,
+another for interrupts coming from the endpoints.
 
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arc                     haps_hs_smp_defconfig
-powerpc                          g5_defconfig
-mips                        jmr3927_defconfig
-sh                           se7751_defconfig
-arm                       imx_v6_v7_defconfig
-arm                            xcep_defconfig
-arm                      pxa255-idp_defconfig
-arm                          tango4_defconfig
-nios2                               defconfig
-m68k                       m5475evb_defconfig
-arc                         haps_hs_defconfig
-h8300                               defconfig
-h8300                            allyesconfig
-arc                                 defconfig
-m68k                          atari_defconfig
-arm                        mini2440_defconfig
-arm                          pxa168_defconfig
-arm                            lart_defconfig
-arm                             pxa_defconfig
-arm                         lpc18xx_defconfig
-mips                           ip27_defconfig
-arm                     eseries_pxa_defconfig
-mips                      loongson3_defconfig
-parisc                            allnoconfig
-arm                         bcm2835_defconfig
-powerpc                       ppc64_defconfig
-sh                  sh7785lcr_32bit_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                          rhel-kconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allmodconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+	M.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Without deviation from the norm, progress is not possible.
