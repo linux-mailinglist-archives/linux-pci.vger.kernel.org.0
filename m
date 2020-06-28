@@ -2,89 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8997E20C479
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jun 2020 00:00:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0C2120C5AE
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jun 2020 06:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgF0WAt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Jun 2020 18:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgF0WAs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Jun 2020 18:00:48 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3A8C061794
-        for <linux-pci@vger.kernel.org>; Sat, 27 Jun 2020 15:00:48 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id m2so11983443otr.12
-        for <linux-pci@vger.kernel.org>; Sat, 27 Jun 2020 15:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=hDm0J70xfMLbVvceQHwxPddZCp69UMTk2d0jtKg2a8s=;
-        b=uvaWEz0dd8Ac3CT35qBSqfznpY4sgxsz7Od3pFBzZIuQcY/8TViLhlHXQU9leeTEpY
-         AGovLfmyzd6U3Cq2lgZLwHP1J5YFMSD+Pyz17XxyLzQnjVOPPz8Ik+J+fYFM18bC4Fqc
-         JhO+jF294xtXRRnL3TKWvGE6eKydOzo9lI+qnLW3YVbUSLfu7Gq0pi7M8z5WpDddMN8M
-         WWaoRGs8g5M97omhRASDLgcJhl5wyTXcCK3cENHMncLoSakV7dWBQ+2v4jCXqV+88itT
-         y9KXfYDXgC/gw5+BqchOAKmUvgcqp5Y71+LwruoBL/ShzO8C2ON+xs5RLFzJg/awZL11
-         9lUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=hDm0J70xfMLbVvceQHwxPddZCp69UMTk2d0jtKg2a8s=;
-        b=ZQY/WxS7soMXzo4j1mON/afDQasFR5zI85kn2W4Ab03YVMFcbEF/8tqxNzmj6XeZsk
-         zgubNWraqK0uA/vvEZTy2mURrsRqbALYigQdu/m+gRW9KHisc+WczHnMX/L/sXSqYN1C
-         dBoJ2GJWqT6+6TB4Ny+pfqpZ421MNHr/8ufm6V7oQk8pgqPJ8SFnjmZpY8aqxiyFaVku
-         UTU8Zy7OBjklQHMatzhQE5LQ6BqjSxqj5jY/44T9wOPrW+TTul5/oUF4cnGWYRunmlTG
-         MRQfprPqpU9GFUW4lWjzG1ikrxnb9nE1XsLhOxYg6dzrxlFNbTD83BpY2EIWGpKMmT/n
-         QU6Q==
-X-Gm-Message-State: AOAM533avEOONBao9MyUkvOnwPVggGKTaCZy7lkCc1seSE9Z0bvWja4z
-        zxd03EZQ4ZGs8MxzrCeZY7lDHUr+ndS15ivImWRmEkpeikY=
-X-Google-Smtp-Source: ABdhPJynf4CV3u/z+wvqAxCFESu7ee7lLWI0u2+Rd2bRIf462RpI7Q5/OgPmYRkZuywkeS9iG1gTukKnSolbNLelkro=
-X-Received: by 2002:a05:6830:1dba:: with SMTP id z26mr8074641oti.180.1593294943879;
- Sat, 27 Jun 2020 14:55:43 -0700 (PDT)
+        id S1725908AbgF1ERQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Jun 2020 00:17:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6323 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725844AbgF1ERQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 28 Jun 2020 00:17:16 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 04CB66A1A87053D56211;
+        Sun, 28 Jun 2020 12:17:10 +0800 (CST)
+Received: from [127.0.0.1] (10.174.187.83) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Sun, 28 Jun 2020
+ 12:17:03 +0800
+Subject: Re: [PATCH v3] PCI: Lock the pci_cfg_wait queue for the consistency
+ of data
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bhelgaas@google.com>, <willy@infradead.org>,
+        <wangxiongfeng2@huawei.com>, <wanghaibin.wang@huawei.com>,
+        <guoheyi@huawei.com>, <yebiaoxiang@huawei.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <tglx@linutronix.de>, <guohanjun@huawei.com>,
+        <yangyingliang@huawei.com>
+References: <20200624232309.GA2601999@bjorn-Precision-5520>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <cf73da1d-aa6d-e2e0-36eb-ce30b83288a6@huawei.com>
+Date:   Sun, 28 Jun 2020 12:17:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Received: by 2002:a9d:12d3:0:0:0:0:0 with HTTP; Sat, 27 Jun 2020 14:55:43
- -0700 (PDT)
-Reply-To: un.org@i.ua
-From:   helen <taxofficebenin@gmail.com>
-Date:   Sat, 27 Jun 2020 22:55:43 +0100
-Message-ID: <CAK9MGy3D5UBf06OY16UW=c+Cybm67x+0kH_OWJkX7ywdQD9CNA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200624232309.GA2601999@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.187.83]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-MONEY-GRAM TRANSFERRED PAYMENT INFO:
+Hi Bjorn,
 
-Below is the sender=E2=80=99s information
+Sorry for the late reply, I had Dragon Boat Festival these days.
+
+On 2020/6/25 7:23, Bjorn Helgaas wrote:
+> On Tue, Dec 10, 2019 at 11:15:27AM +0800, Xiang Zheng wrote:
+>> 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
+>> device") suggests that the "pci_lock" is sufficient, and all the
+>> callers of pci_wait_cfg() are wrapped with the "pci_lock".
+>>
+>> However, since the commit cdcb33f98244 ("PCI: Avoid possible deadlock on
+>> pci_lock and p->pi_lock") merged, the accesses to the pci_cfg_wait queue
+>> are not safe anymore. This would cause kernel panic in a very low chance
+>> (See more detailed information from the below link). A "pci_lock" is
+>> insufficient and we need to hold an additional queue lock while read/write
+>> the wait queue.
+>>
+>> So let's use the add_wait_queue()/remove_wait_queue() instead of
+>> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
+>> functionality around the "schedule()" function to avoid reintroducing
+>> the deadlock addressed by "cdcb33f98244".
+> 
+> I see that add_wait_queue() acquires the wq_head->lock, while
+> __add_wait_queue() does not.
+> 
+> But I don't understand why the existing pci_lock is insufficient.  
+> pci_cfg_wait is only used in pci_wait_cfg() and
+> pci_cfg_access_unlock().
+> 
+> In pci_wait_cfg(), both __add_wait_queue() and __remove_wait_queue()
+> are called while holding pci_lock, so that doesn't seem like the
+> problem.
+> 
+> In pci_cfg_access_unlock(), we have:
+> 
+>   pci_cfg_access_unlock
+>     wake_up_all(&pci_cfg_wait)
+>       __wake_up(&pci_cfg_wait, ...)
+>         __wake_up_common_lock(&pci_cfg_wait, ...)
+> 	  spin_lock(&pci_cfg_wait->lock)
+> 	  __wake_up_common(&pci_cfg_wait, ...)
+> 	    list_for_each_entry_safe_from(...)
+> 	      list_add_tail(...)                <-- problem?
+> 	  spin_unlock(&pci_cfg_wait->lock)
+> 
+> Is the problem that the wake_up_all() modifies the pci_cfg_wait list
+> without holding pci_lock?
+> 
+> If so, I don't quite see how the patch below fixes it.  Oh, wait,
+> maybe I do ... by using add_wait_queue(), we protect the list using
+> the *same* lock used by __wake_up_common_lock.  Is that it?
+> 
+
+Yes, my patch just protects the wait queue list by using add_wait_queue().
+Simply using the add_wait_queue() instead of __add_wait_queue() will reintroduce
+the deadlock addressed by "cdcb33f98244". So I move add_wait_queue() and
+remote_wait_queue() around schedule() since they don't need to hold pci_lock.
 
 
+>> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+>> Cc: Heyi Guo <guoheyi@huawei.com>
+>> Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+>> Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/
+>> ---
+>>
+>> v3:
+>>   Improve the commit subject and message.
+>>
+>> v2:
+>>   Move the wait queue functionality around the "schedule()".
+>>
+>> ---
+>>  drivers/pci/access.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>> index 2fccb5762c76..09342a74e5ea 100644
+>> --- a/drivers/pci/access.c
+>> +++ b/drivers/pci/access.c
+>> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+>>  {
+>>  	DECLARE_WAITQUEUE(wait, current);
+>>  
+>> -	__add_wait_queue(&pci_cfg_wait, &wait);
+>>  	do {
+>>  		set_current_state(TASK_UNINTERRUPTIBLE);
+>>  		raw_spin_unlock_irq(&pci_lock);
+>> +		add_wait_queue(&pci_cfg_wait, &wait);
+>>  		schedule();
+>> +		remove_wait_queue(&pci_cfg_wait, &wait);
+>>  		raw_spin_lock_irq(&pci_lock);
+>>  	} while (dev->block_cfg_access);
+>> -	__remove_wait_queue(&pci_cfg_wait, &wait);
+>>  }
+>>  
+>>  /* Returns 0 on success, negative values indicate error. */
+>> -- 
+>> 2.19.1
+>>
+>>
+> 
+> .
+> 
 
-1. MG. REFERENCE NO#: 36360857
+-- 
+Thanks,
+Xiang
 
-2. SENDER'S NAME: Johnson Williams
-
-3. AMOUNT TO PICKUP: US$10,000
-
-
-
-Go to any Money Gram office near you and pick up the payment Track the
-
-Reference Number by visiting and click the link below
-
-(https://secure.moneygram.com/embed/track) and enter the Reference
-
-Number: 36360857 and the Last Name: Williams, you will find the payment
-
-available for pickup instantly.
-
-Yours Sincerely,
-
-Mrs. Helen Marvis
-United Nations Liaison Office
-Directorate for International Payments
