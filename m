@@ -2,172 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B899320D4D6
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jun 2020 21:15:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DF1020D2C9
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jun 2020 21:11:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbgF2TLW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Jun 2020 15:11:22 -0400
-Received: from mx.socionext.com ([202.248.49.38]:30877 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730760AbgF2TLT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:11:19 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 29 Jun 2020 18:49:31 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 83E1060060;
-        Mon, 29 Jun 2020 18:49:31 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 29 Jun 2020 18:49:31 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 1653D4031A;
-        Mon, 29 Jun 2020 18:49:31 +0900 (JST)
-Received: from [10.213.29.155] (unknown [10.213.29.155])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 7654F120455;
-        Mon, 29 Jun 2020 18:49:30 +0900 (JST)
-Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
- <87v9jcet5h.wl-maz@kernel.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
-Date:   Mon, 29 Jun 2020 18:49:30 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1728456AbgF2Sv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Jun 2020 14:51:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18046 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729702AbgF2Svx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Jun 2020 14:51:53 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef9ed360000>; Mon, 29 Jun 2020 06:31:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 29 Jun 2020 06:31:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 29 Jun 2020 06:31:47 -0700
+Received: from [10.26.75.188] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jun
+ 2020 13:31:40 +0000
+Subject: Re: [PATCH V3 1/2] arm64: tegra: Re-order PCIe aperture mappings to
+ support ACPI boot
+To:     Vidya Sagar <vidyas@nvidia.com>, <bhelgaas@google.com>,
+        <lorenzo.pieralisi@arm.com>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <andrew.murray@arm.com>, <treding@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200106082709.14370-1-vidyas@nvidia.com>
+ <20200110191500.9538-1-vidyas@nvidia.com>
+ <20200110191500.9538-2-vidyas@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d52db35b-dbf8-a706-9611-95448cf6a69e@nvidia.com>
+Date:   Mon, 29 Jun 2020 14:31:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <87v9jcet5h.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200110191500.9538-2-vidyas@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593437494; bh=Y32CfHcMUWKKF9wD0CLFw8La6QEVGFVAMOsFhmKdfEU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=SHCJ5JM/tbcA1imuBapYWSJr6z+o4OojHikk4j61y7FE/MkNF54FhwyT08IMnjadW
+         lHTOBpjK6/7Fj289JNT9INlUuWwXTI4Y+81NRoDs7DLuDK5EPg/dW/qU4MZ9DmvAVM
+         gfivYDmVRoUITMwz4H+8CmISt8nEBI9bJSy48Vxzfqo6sixPDGCsAOi0qEeAM2wAAc
+         PkYY7LbPQa7d8ZiPLf6HDYMfg4wYlUEIkOribMuqvsIMFnRfI2n1mCzvkn1F1e8VIj
+         lMpP0hNtbkeybDwNSPr8ubqADxgY+pBCDAy5o4lvgK4vnUiAVenSFo2B9sXKEgYsJ3
+         Z2KSQjp2XTjsg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Marc,
+Hi Sagar,
 
-On 2020/06/27 18:48, Marc Zyngier wrote:
-> On Thu, 18 Jun 2020 09:38:09 +0100,
-> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
->>
->> The misc interrupts consisting of PME, AER, and Link event, is handled
->> by INTx handler, however, these interrupts should be also handled by
->> MSI handler.
->>
->> This adds the function uniphier_pcie_misc_isr() that handles misc
->> interrupts, which is called from both INTx and MSI handlers.
->> This function detects PME and AER interrupts with the status register,
->> and invoke PME and AER drivers related to MSI.
->>
->> And this sets the mask for misc interrupts from INTx if MSI is enabled
->> and sets the mask for misc interrupts from MSI if MSI is disabled.
->>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Jingoo Han <jingoohan1@gmail.com>
->> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
->>   1 file changed, 46 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
->> index a5401a0..5ce2479 100644
->> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
->> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
->> @@ -44,7 +44,9 @@
->>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
->>   
->>   #define PCL_RCV_INT			0x8108
->> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
->>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
->> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
->>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
->>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
->>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
->> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
->>   
->>   static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->>   {
->> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
->> +	u32 val;
->> +
->> +	val = PCL_RCV_INT_ALL_ENABLE;
->> +	if (pci_msi_enabled())
->> +		val |= PCL_RCV_INT_ALL_INT_MASK;
->> +	else
->> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+On 10/01/2020 19:14, Vidya Sagar wrote:
+> Re-order Tegra194's PCIe aperture mappings to have IO window moved to
+> 64-bit aperture and have the entire 32-bit aperture used for accessing
+> the configuration space. This makes it to use the entire 32MB of the 32-bit
+> aperture for ECAM purpose while booting through ACPI.
 > 
-> Does this affect endpoints? Or just the RC itself?
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-These interrupts are asserted by RC itself, so this part affects only RC.
+Any reason why we should not merge this change, even if patch 2/2 is not
+accepted? If there is no harm in us merging this, this would be one less
+change for us to carry out-of-tree. If so, can you update and re-post
+for 5.9?
 
->> +
->> +	writel(val, priv->base + PCL_RCV_INT);
->>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->>   }
->>   
->> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
->>   	.map = uniphier_pcie_intx_map,
->>   };
->>   
->> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
->>   {
->> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
->>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->> -	struct irq_chip *chip = irq_desc_get_chip(desc);
->> -	unsigned long reg;
->> -	u32 val, bit, virq;
->> +	u32 val, virq;
->>   
->> -	/* INT for debug */
->>   	val = readl(priv->base + PCL_RCV_INT);
->>   
->>   	if (val & PCL_CFG_BW_MGT_STATUS)
->>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
->> +
->>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
->> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->> -		dev_dbg(pci->dev, "Root Error\n");
->> -	if (val & PCL_CFG_PME_MSI_STATUS)
->> -		dev_dbg(pci->dev, "PME Interrupt\n");
->> +
->> +	if (is_msi) {
->> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->> +			dev_dbg(pci->dev, "Root Error Status\n");
->> +
->> +		if (val & PCL_CFG_PME_MSI_STATUS)
->> +			dev_dbg(pci->dev, "PME Interrupt\n");
->> +
->> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
->> +			   PCL_CFG_PME_MSI_STATUS)) {
->> +			virq = irq_linear_revmap(pp->irq_domain, 0);
->> +			generic_handle_irq(virq);
->> +		}
->> +	}
-> 
-> Please have two handlers: one for interrupts that are from the RC,
-> another for interrupts coming from the endpoints.
-I assume that this handler treats interrupts from the RC only and
-this is set on the member ".msi_host_isr" added in the patch 1/6.
-I think that the handler for interrupts coming from endpoints should be
-treated as a normal case (after calling .msi_host_isr in
-dw_handle_msi_irq()).
+Cheers
+Jon
 
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+-- 
+nvpublic
