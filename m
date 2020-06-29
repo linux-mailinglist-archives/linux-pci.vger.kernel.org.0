@@ -2,364 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A283B20DB62
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jun 2020 22:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 547CF20D7AF
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jun 2020 22:08:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388822AbgF2UGM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Jun 2020 16:06:12 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2409 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388665AbgF2UGL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:06:11 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id F22B1EF57ABCCF115C57;
-        Mon, 29 Jun 2020 17:17:48 +0100 (IST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 29 Jun 2020 17:17:48 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <martin@geanix.com>, Ingo Molnar <mingo@redhat.com>,
-        <linux-ia64@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [RFC PATCH] ACPI: Only create numa nodes from entries in SRAT or SRAT emulation.
-Date:   Tue, 30 Jun 2020 00:16:59 +0800
-Message-ID: <20200629161659.3006329-1-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        id S1732346AbgF2Tb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Jun 2020 15:31:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36738 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733166AbgF2Tb2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:31:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 30642ACDB;
+        Mon, 29 Jun 2020 16:18:55 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
+        wahrenst@gmx.net, p.zabel@pengutronix.de, andy.shevchenko@gmail.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
+Date:   Mon, 29 Jun 2020 18:18:36 +0200
+Message-Id: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Here, I will use the term Proximity Domains for the ACPI description and
-Numa Nodes for the in kernel representation.
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+co-processor, VideoCore. This series reworks how we handle this.
 
-Until ACPI 6.3 it was arguably possible to interpret the specification as
-allowing _PXM in DSDT and similar to define additional Proximity Domains.
+The previous solution makes use of PCI quirks and exporting platform
+specific functions. Albeit functional it feels pretty shoehorned. This
+proposes an alternative way of handling the triggering of the xHCI chip
+initialization trough means of a reset controller.
 
-The reality was that was never the intent, and a 'clarification' was added
-in ACPI 6.3 [1].  In practice I think the kernel has never allowed any other
-interpretaion, except possibly on adhoc base within some out of tree driver
-(using it very very carefully given potential to crash when using various
-standard calls such as devm_kzalloc).
+The benefits are pretty evident: less platform churn in core xHCI code,
+and no explicit device dependency management in pcie-brcmstb.
 
-Proximity Domains are always defined in SRAT.  In ACPI, there are methods
-defined in ACPI to allow their characteristics to be tweaked later but
-Proximity Domains have to be referenced in this table at boot, thus
-allowing Linux to instantiate relevant Numa Node data structures.
+Note that patch #1 depends on another series[1], that was just applied
+into the clk maintainer's tree.
 
-We ran into a problem when enabling _PXM handling for PCI devices and found
-there were boards out there advertising devices in proximity domains that
-didn't exist [2].
+The series is based on v5.8-rc3
 
-The fix suggested here is to modfiy the function acpi_map_pxm_to_node.
-This function is both used to create and lookup proximity domains.
-A parameter is added to specify whether it should create a new
-proximity domain when it encounters a Proximity Domain ID that it
-hasn't seen before.
+v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
+v2: https://lkml.org/lkml/2020/6/9/875
+v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
 
-Naturally there is a quirk.  For SRAT ITS entries on ARM64 the handling is
-done with an additional pass of SRAT, potentially later in the boot. We
-could modify that behaviour so we could identify the existence of Proximity
-Domains unique to the ITS structures, and handle them as a special case
-of a Genric Initiator (once support for those merges) however...
+[1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
 
-Currently (5.8-rc2) setting the Proximity Domain of an ITS to one that hasn't
-been instantiated by being specified in another type of SRAT resource entry
-results in:
-
-ITS [mem 0x202100000-0x20211ffff]
-ITS@0x0000000202100000: Using ITS number 0
-Unable to handle kernel paging request at virtual address 0000000000001a08
-Mem abort info:
-ESR = 0x96000004
-EC = 0x25: DABT (current EL), IL = 32 bits
-SET = 0, FnV = 0
-EA = 0, S1PTW = 0
-Data abort info:
-ISV = 0, ISS = 0x00000004
-CM = 0, WnR = 0
-[0000000000001a08] user address but active_mm is swapper
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper/0 Tainted: G       A          5.8.0-rc2 #483
-pstate: 80000089 (Nzcv daIf -PAN -UAO BTYPE=--)
-pc : __alloc_pages_nodemask+0xe8/0x338
-lr : __alloc_pages_nodemask+0xc0/0x338
-sp : ffffa81540c139b0
-x29: ffffa81540c139b0 x28: 0000000000000001
-x27: 0000000000000100 x26: ffffa81540c1ad38
-x25: 0000000000000000 x24: 0000000000000000
-x23: ffffa81540c23c00 x22: 0000000000000004
-x21: 0000000000000002 x20: 0000000000001a00
-x19: 0000000000000100 x18: 0000000000000010
-x17: 000000000001f000 x16: 000000000000007f
-x15: ffffa81540c24070 x14: ffffffffffffffff
-x13: ffffa815c0c137d7 x12: ffffa81540c137e4
-x11: ffffa81540c3e000 x10: ffffa81540ecee68
-x9 : ffffa8153f0f61d8 x8 : ffffa81540ecf000
-x7 : 0000000000000141 x6 : ffffa81540ecf401
-x5 : 0000000000000000 x4 : 0000000000000000
-x3 : 0000000000000000 x2 : 0000000000000000
-x1 : 0000000000000081 x0 : 0000000000001a00
-Call trace:
- __alloc_pages_nodemask+0xe8/0x338
- alloc_pages_node.constprop.0+0x34/0x40
- its_probe_one+0x2f8/0xb18
- gic_acpi_parse_madt_its+0x108/0x150
- acpi_table_parse_entries_array+0x17c/0x264
- acpi_table_parse_entries+0x48/0x6c
- acpi_table_parse_madt+0x30/0x3c
- its_init+0x1c4/0x644
- gic_init_bases+0x4b8/0x4ec
- gic_acpi_init+0x134/0x264
- acpi_match_madt+0x4c/0x84
- acpi_table_parse_entries_array+0x17c/0x264
- acpi_table_parse_entries+0x48/0x6c
- acpi_table_parse_madt+0x30/0x3c
- __acpi_probe_device_table+0x8c/0xe8
- irqchip_init+0x3c/0x48
- init_IRQ+0xcc/0x100
- start_kernel+0x33c/0x548
-
-As we die in this case in existing kernels, we can be fairly sure that no one
-actually has such a firmware in production.  As such this patch avoids the
-complexity that would be needed to handle this corner case, and simply does
-not allow the ITS entry parsing code to instantiate new Numa Nodes.  If one
-is encountered that does not already exist, then NO_NUMA_NODE is assigned
-and a warning printed just as if the value had been greater than allowed
-Numa Nodes.
-
-"SRAT: Invalid NUMA node -1 in ITS affinity"
-
-I have only tested this for now on our ARM64 Kunpeng920 servers.
-
-Open questions:
-* should we warn about a broken firmware or insufficent value of
-  NUMA_NODES_SHIFT if we find a firmware trying to assign any device
-  to a non existent Proximity Domain.
-* previously an smmuv3 in IORT with a Proximity Domain set to a non existent
-  value would have resulted in a failure to add the device. After this change
-  it will be added to the default node.  Is that a problem?
-
-[1] Note in ACPI Specification 6.3 5.2.16 System Resource Affinity Table (SRAT)
-[2] https://patchwork.kernel.org/patch/10597777/
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- arch/arm64/kernel/acpi_numa.c    | 2 +-
- arch/ia64/kernel/acpi.c          | 2 +-
- arch/x86/mm/srat.c               | 4 ++--
- drivers/acpi/arm64/iort.c        | 2 +-
- drivers/acpi/nfit/core.c         | 2 +-
- drivers/acpi/numa/hmat.c         | 2 +-
- drivers/acpi/numa/srat.c         | 8 ++++----
- drivers/irqchip/irq-gic-v3-its.c | 6 +++++-
- include/acpi/acpi_numa.h         | 2 +-
- include/linux/acpi.h             | 6 +++---
- 10 files changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
-index 7ff800045434..6ed47b058d76 100644
---- a/arch/arm64/kernel/acpi_numa.c
-+++ b/arch/arm64/kernel/acpi_numa.c
-@@ -107,7 +107,7 @@ void __init acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa)
- 		return;
- 
- 	pxm = pa->proximity_domain;
--	node = acpi_map_pxm_to_node(pxm);
-+	node = acpi_map_pxm_to_node(pxm, true);
- 
- 	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
- 		pr_err("SRAT: Too many proximity domains %d\n", pxm);
-diff --git a/arch/ia64/kernel/acpi.c b/arch/ia64/kernel/acpi.c
-index a5636524af76..760a468864b7 100644
---- a/arch/ia64/kernel/acpi.c
-+++ b/arch/ia64/kernel/acpi.c
-@@ -456,7 +456,7 @@ void __init acpi_numa_fixup(void)
- 	nodes_clear(node_online_map);
- 	for (i = 0; i < MAX_PXM_DOMAINS; i++) {
- 		if (pxm_bit_test(i)) {
--			int nid = acpi_map_pxm_to_node(i);
-+			int nid = acpi_map_pxm_to_node(i, true);
- 			node_set_online(nid);
- 		}
- 	}
-diff --git a/arch/x86/mm/srat.c b/arch/x86/mm/srat.c
-index dac07e4f5834..6497d7c241ec 100644
---- a/arch/x86/mm/srat.c
-+++ b/arch/x86/mm/srat.c
-@@ -45,7 +45,7 @@ acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa)
- 			 pxm, apic_id);
- 		return;
- 	}
--	node = acpi_map_pxm_to_node(pxm);
-+	node = acpi_map_pxm_to_node(pxm, true);
- 	if (node < 0) {
- 		printk(KERN_ERR "SRAT: Too many proximity domains %x\n", pxm);
- 		bad_srat();
-@@ -80,7 +80,7 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
- 	pxm = pa->proximity_domain_lo;
- 	if (acpi_srat_revision >= 2)
- 		pxm |= *((unsigned int*)pa->proximity_domain_hi) << 8;
--	node = acpi_map_pxm_to_node(pxm);
-+	node = acpi_map_pxm_to_node(pxm, true);
- 	if (node < 0) {
- 		printk(KERN_ERR "SRAT: Too many proximity domains %x\n", pxm);
- 		bad_srat();
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 28a6b387e80e..8133e7e6f9e3 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1293,7 +1293,7 @@ static int  __init arm_smmu_v3_set_proximity(struct device *dev,
- 
- 	smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
- 	if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
--		int dev_node = acpi_map_pxm_to_node(smmu->pxm);
-+		int dev_node = acpi_map_pxm_to_node(smmu->pxm, false);
- 
- 		if (dev_node != NUMA_NO_NODE && !node_online(dev_node))
- 			return -EINVAL;
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 7c138a4edc03..6cb44bbaa71f 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -2948,7 +2948,7 @@ static int acpi_nfit_register_region(struct acpi_nfit_desc *acpi_desc,
- 		ndr_desc->numa_node = acpi_map_pxm_to_online_node(
- 						spa->proximity_domain);
- 		ndr_desc->target_node = acpi_map_pxm_to_node(
--				spa->proximity_domain);
-+				spa->proximity_domain, false);
- 	} else {
- 		ndr_desc->numa_node = NUMA_NO_NODE;
- 		ndr_desc->target_node = NUMA_NO_NODE;
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 2c32cfb72370..3c0414816772 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -666,7 +666,7 @@ static void hmat_register_target_device(struct memory_target *target,
- 
- 	pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->memory_pxm);
- 	info = (struct memregion_info) {
--		.target_node = acpi_map_pxm_to_node(target->memory_pxm),
-+		.target_node = acpi_map_pxm_to_node(target->memory_pxm, false),
- 	};
- 	rc = platform_device_add_data(pdev, &info, sizeof(info));
- 	if (rc < 0) {
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 5be5a977da1b..ed7d31795f4d 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -52,7 +52,7 @@ static void __acpi_map_pxm_to_node(int pxm, int node)
- 		node_to_pxm_map[node] = pxm;
- }
- 
--int acpi_map_pxm_to_node(int pxm)
-+int acpi_map_pxm_to_node(int pxm, bool create)
- {
- 	int node;
- 
-@@ -62,7 +62,7 @@ int acpi_map_pxm_to_node(int pxm)
- 	node = pxm_to_node_map[pxm];
- 
- 	if (node == NUMA_NO_NODE) {
--		if (nodes_weight(nodes_found_map) >= MAX_NUMNODES)
-+		if (nodes_weight(nodes_found_map) >= MAX_NUMNODES || !create)
- 			return NUMA_NO_NODE;
- 		node = first_unset_node(nodes_found_map);
- 		__acpi_map_pxm_to_node(pxm, node);
-@@ -229,7 +229,7 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
- 	if (acpi_srat_revision <= 1)
- 		pxm &= 0xff;
- 
--	node = acpi_map_pxm_to_node(pxm);
-+	node = acpi_map_pxm_to_node(pxm, true);
- 	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
- 		pr_err("SRAT: Too many proximity domains.\n");
- 		goto out_err_bad_srat;
-@@ -444,6 +444,6 @@ int acpi_get_node(acpi_handle handle)
- 
- 	pxm = acpi_get_pxm(handle);
- 
--	return acpi_map_pxm_to_node(pxm);
-+	return acpi_map_pxm_to_node(pxm, false);
- }
- EXPORT_SYMBOL(acpi_get_node);
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index cd685f521c77..0b11876d0799 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -5248,7 +5248,11 @@ static int __init gic_acpi_parse_srat_its(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	}
- 
--	node = acpi_map_pxm_to_node(its_affinity->proximity_domain);
-+	/*
-+	 * Note that in theory a new proximity node could be created by this
-+	 * entry as it is an SRAT resource allocation structure
-+	 */
-+	node = acpi_map_pxm_to_node(its_affinity->proximity_domain, false);
- 
- 	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
- 		pr_err("SRAT: Invalid NUMA node %d in ITS affinity\n", node);
-diff --git a/include/acpi/acpi_numa.h b/include/acpi/acpi_numa.h
-index fdebcfc6c8df..6935c7516262 100644
---- a/include/acpi/acpi_numa.h
-+++ b/include/acpi/acpi_numa.h
-@@ -15,7 +15,7 @@
- 
- extern int pxm_to_node(int);
- extern int node_to_pxm(int);
--extern int acpi_map_pxm_to_node(int);
-+extern int acpi_map_pxm_to_node(int, bool);
- extern unsigned char acpi_srat_revision;
- extern int acpi_numa __initdata;
- 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d661cd0ee64d..1414b7e0a486 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -416,7 +416,7 @@ extern void acpi_osi_setup(char *str);
- extern bool acpi_osi_is_win8(void);
- 
- #ifdef CONFIG_ACPI_NUMA
--int acpi_map_pxm_to_node(int pxm);
-+int acpi_map_pxm_to_node(int pxm, bool create);
- int acpi_get_node(acpi_handle handle);
- 
- /**
-@@ -436,7 +436,7 @@ int acpi_get_node(acpi_handle handle);
-  */
- static inline int acpi_map_pxm_to_online_node(int pxm)
- {
--	int node = acpi_map_pxm_to_node(pxm);
-+	int node = acpi_map_pxm_to_node(pxm, false);
- 
- 	return numa_map_to_online_node(node);
- }
-@@ -445,7 +445,7 @@ static inline int acpi_map_pxm_to_online_node(int pxm)
- {
- 	return 0;
- }
--static inline int acpi_map_pxm_to_node(int pxm)
-+static inline int acpi_map_pxm_to_node(int pxm, bool create)
- {
- 	return 0;
- }
+Changes since v4:
+ - Adress Andy's comments
+
+Changes since v3:
+ - Rework dt patch to include root bridge as a separate node
+ - Update xhci-pci patch now that the xhci dev has a dt node (it was
+   getting it in the past from its bus)
+
+Changes since v2:
+ - Add reset to resume routine in xhci-pci
+ - Correct of refcount in pci-quirks
+ - Correct typos
+ - Use include file to define firmware reset IDs
+
+Changes since v1:
+ - Rework reset controller so it's less USB centric
+ - Use correct reset controller API in xhci-pci
+ - Correct typos
+
+Nicolas Saenz Julienne (9):
+  dt-bindings: reset: Add a binding for the RPi Firmware reset
+    controller
+  reset: Add Raspberry Pi 4 firmware reset controller
+  ARM: dts: bcm2711: Add firmware usb reset node
+  ARM: dts: bcm2711: Add reset controller to xHCI node
+  usb: xhci-pci: Add support for reset controllers
+  Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
+  usb: host: pci-quirks: Bypass xHCI quirks for Raspberry Pi 4
+  Revert "firmware: raspberrypi: Introduce vl805 init routine"
+  Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
+
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  21 +++
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  22 ++++
+ drivers/firmware/Kconfig                      |   3 +-
+ drivers/firmware/raspberrypi.c                |  61 ---------
+ drivers/pci/controller/pcie-brcmstb.c         |  17 ---
+ drivers/reset/Kconfig                         |  11 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-raspberrypi.c             | 122 ++++++++++++++++++
+ drivers/usb/host/pci-quirks.c                 |  22 ++--
+ drivers/usb/host/xhci-pci.c                   |  10 ++
+ drivers/usb/host/xhci.h                       |   2 +
+ .../reset/raspberrypi,firmware-reset.h        |  13 ++
+ include/soc/bcm2835/raspberrypi-firmware.h    |   7 -
+ 13 files changed, 215 insertions(+), 97 deletions(-)
+ create mode 100644 drivers/reset/reset-raspberrypi.c
+ create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+
 -- 
-2.19.1
+2.27.0
 
