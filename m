@@ -2,94 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1107C20D7B9
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jun 2020 22:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D34E920D7DF
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jun 2020 22:08:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732711AbgF2TcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Jun 2020 15:32:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36740 "EHLO mx2.suse.de"
+        id S1730409AbgF2Tdh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Jun 2020 15:33:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730958AbgF2Tb1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:31:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0060BAE7F;
-        Mon, 29 Jun 2020 16:19:01 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de, andy.shevchenko@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v5 9/9] Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
-Date:   Mon, 29 Jun 2020 18:18:45 +0200
-Message-Id: <20200629161845.6021-10-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629161845.6021-1-nsaenzjulienne@suse.de>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+        id S1730482AbgF2TdT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:33:19 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA31A206E2;
+        Mon, 29 Jun 2020 19:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593459199;
+        bh=S0YdjtPRSSlnoNdihph14QS32xSkaKxF4OYCSio0GLE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=opm5/3ZKjNT8OrAL+IyGlJIOqrB869sIflfMIebZ+o5mNYTqOegs/4sBzCzNYVZxI
+         Jm+XxAYDkrNFpAmyh04dupvYYCtLyFxJUJqAWShS8dXKFcBeH9nBs+z+ruWIQA5Yo6
+         EgXpkLslb1j2PttdG0sCiQRzqTqZ5B3NV2QBzujM=
+Date:   Mon, 29 Jun 2020 14:33:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Aya Levin <ayal@mellanox.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "mkubecek@suse.cz" <mkubecek@suse.cz>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>, linux-pci@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ding Tianhong <dingtianhong@huawei.com>,
+        Casey Leedom <leedom@chelsio.com>
+Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
+Message-ID: <20200629193316.GA3283437@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca121a18-8c11-5830-9840-51f353c3ddd2@mellanox.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This reverts commit 44331189f9082c7e659697bbac1747db3def73e7.
+[+cc Ashok, Ding, Casey]
 
-Now that the VL805 init routine is run through a reset controller driver
-the device dependencies are being taken care of by the device core. No
-need to do it manually here.
+On Mon, Jun 29, 2020 at 12:32:44PM +0300, Aya Levin wrote:
+> I wanted to turn on RO on the ETH driver based on
+> pcie_relaxed_ordering_enabled().
+> From my experiments I see that pcie_relaxed_ordering_enabled() return true
+> on Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz. This CPU is from Haswell
+> series which is known to have bug in RO implementation. In this case, I
+> expected pcie_relaxed_ordering_enabled() to return false, shouldn't it?
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+Is there an erratum for this?  How do we know this device has a bug
+in relaxed ordering?
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 7730ea845ff2..752f5b331579 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -28,8 +28,6 @@
- #include <linux/string.h>
- #include <linux/types.h>
- 
--#include <soc/bcm2835/raspberrypi-firmware.h>
--
- #include "../pci.h"
- 
- /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-@@ -931,26 +929,11 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
--	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
- 	struct resource *res;
- 	int ret;
- 
--	/*
--	 * We have to wait for Raspberry Pi's firmware interface to be up as a
--	 * PCI fixup, rpi_firmware_init_vl805(), depends on it. This driver's
--	 * probe can race with the firmware interface's (see
--	 * drivers/firmware/raspberrypi.c) and potentially break the PCI fixup.
--	 */
--	fw_np = of_find_compatible_node(NULL, NULL,
--					"raspberrypi,bcm2835-firmware");
--	if (fw_np && !rpi_firmware_get(fw_np)) {
--		of_node_put(fw_np);
--		return -EPROBE_DEFER;
--	}
--	of_node_put(fw_np);
--
- 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENOMEM;
--- 
-2.27.0
+> In addition, we are worried about future bugs in new CPUs which may result
+> in performance degradation while using RO, as long as the function
+> pcie_relaxed_ordering_enabled() will return true for these CPUs. 
 
+I'm worried about this too.  I do not want to add a Device ID to the
+quirk_relaxedordering_disable() list for every new Intel CPU.  That's
+a huge hassle and creates a real problem for old kernels running on
+those new CPUs, because things might work "most of the time" but not
+always.
+
+Maybe we need to prevent the use of relaxed ordering for *all* Intel
+CPUs.
+
+> That's why
+> we thought of adding the feature on our card with default off and enable the
+> user to set it.
+
+Bjorn
