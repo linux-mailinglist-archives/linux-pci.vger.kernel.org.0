@@ -2,90 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D263320E400
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 00:04:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 538D920E4D8
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 00:06:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390575AbgF2VT6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Jun 2020 17:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729783AbgF2Swt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Jun 2020 14:52:49 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB89DC030F1A;
-        Mon, 29 Jun 2020 09:26:51 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id q17so8109837pfu.8;
-        Mon, 29 Jun 2020 09:26:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5bN7dM1qqkzB4oSQWgEANKrL9UtxJ99LWuqLjb9OuoE=;
-        b=AM+F86QnW2dzuXU3xN50x8mxtIxp8MAvaG51U14uBQZANwaywi9RJ+1kPmsxLWdNbz
-         Oz7D2XrVbGZrOdBM2XafDcXT59lRxbe8HjEfXzKVursxu53R/YHUzapucN4LV1Qs8SVg
-         NBA+NyngwrwXir8jymJ5SeVr+ouHcmKkUN6XXSycq6lv0ztqhczxlAVdx0VdkAS2jFZx
-         VuEEBOgm/nbU5D265WSsxOqWXDf055+iwB18+b2msEXjUg6bYm2pmmqmDxhpLic0Ps8l
-         J7mtYxOuuuoBh+arYPJQFMpAQZvaK7W/dna+6ELTY6ZPrCyhMN10f12akiv5TmLtpV2d
-         tmwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5bN7dM1qqkzB4oSQWgEANKrL9UtxJ99LWuqLjb9OuoE=;
-        b=NTl1bzPRy8bc0uRflZvf/THBAfNUkLqnWOU/hysci2psG8lNMX/iB0kMHRFnk32uVU
-         RlKsUP16oB0CenGD+sR8GdDnnTTeM+UzYqckthzr9wKPVr4SQMfmCvG2BHpl4XbUa2DU
-         EzRlP0t6yeFEP3exj2IJHUkl40De4gicv65i2dPLhheBW7VYVbwZ4o5dPoFwrZ658N2b
-         ACfVI/mmwW7is3tEpd+OB4+8oXrzl2uEEKExfLDTIRkOzFad6TSUYjxzksvDTAHjtAJ/
-         UOUnMkRj4lZwVrw/pSV66lAf9OJtlkgyYWSEWgwEbyKWTyoSVBpCDbAfqJeNH6C8CBuB
-         K0Jw==
-X-Gm-Message-State: AOAM53338/04zULAqCAqLOvqENYlj2KjlHYnbyyXDCUT2TN6kVUZrkEF
-        xHk/AMDX7vFL8RG+wQ62470=
-X-Google-Smtp-Source: ABdhPJxOQPZ5VFmxPB46o4lC3E9R6j/viT+gImLcBv1uOLQosHYqe3ny9PZ5EcX+8+KFNhUqQYtyFA==
-X-Received: by 2002:a63:ab0d:: with SMTP id p13mr10958709pgf.327.1593448011387;
-        Mon, 29 Jun 2020 09:26:51 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z11sm196296pfg.169.2020.06.29.09.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 09:26:50 -0700 (PDT)
-Subject: Re: [PATCH v5 5/9] usb: xhci-pci: Add support for reset controllers
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de, andy.shevchenko@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
- <20200629161845.6021-6-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <e9a52cf1-4786-d1c7-4d1e-1e619dfb37a8@gmail.com>
-Date:   Mon, 29 Jun 2020 09:26:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        id S1732955AbgF2V3g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Jun 2020 17:29:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391228AbgF2V3f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:29:35 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17289208DB;
+        Mon, 29 Jun 2020 21:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593466174;
+        bh=BkG+yGTjXZVHnFw4CzZ0K2Sg1A7LotTp1tk1WvurSIk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Z49jyX8fGPzDFYBcQFcoyu+W8uRwpEm0+aaCH1NA5W2mwQMhM0qX7H5IHUPUUHi7j
+         QsS/qbS0VhMLwWo/rELHE5LIejYWA3iOO/Cz0/RcGGsvivvMmnq2klCZssKF5kghoG
+         IONltDBXInGlrUUEVKFJHB7VW4jAw5JtphSkiol8=
+Date:   Mon, 29 Jun 2020 16:29:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci: consolidate typing of
+ pci_error_handlers::error_detected()
+Message-ID: <20200629212928.GA3296753@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200629161845.6021-6-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200628161233.73079-1-luc.vanoostenryck@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 6/29/2020 9:18 AM, Nicolas Saenz Julienne wrote:
-> Some atypical users of xhci-pci might need to manually reset their xHCI
-> controller before starting the HCD setup. Check if a reset controller
-> device is available to the PCI bus and trigger a reset.
+On Sun, Jun 28, 2020 at 06:12:33PM +0200, Luc Van Oostenryck wrote:
+> The method struct pci_error_handlers::error_detected() is defined and
+> documented as taking an 'enum pci_channel_state' for the second
+> argument but most drivers use 'pci_channel_state_t' instead.
+> This 'pci_channel_state_t' is not a typedef for the enum but a typedef
+> for a bitwise type in order to have better/stricter typechecking.
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> So, consolidate everything by using the restricted type in the
+> method's definition, in the documentation and in the drivers not
+> using 'pci_channel_state_t'.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+  $ git grep "\<pci_channel_state\>"
+  Documentation/PCI/pci-error-recovery.rst:	enum pci_channel_state {
+  Documentation/PCI/pci-error-recovery.rst:pci_channel_state value of pci_channel_io_perm_failure.
+  arch/powerpc/kernel/eeh_driver.c:static void eeh_set_channel_state(struct eeh_pe *root, enum pci_channel_state s)
+  drivers/net/ethernet/intel/ice/ice_main.c:ice_pci_err_detected(struct pci_dev *pdev, enum pci_channel_state err)
+  drivers/pci/pci.h:			enum pci_channel_state state,
+  drivers/pci/pcie/err.c:				 enum pci_channel_state state,
+  drivers/pci/pcie/err.c:			enum pci_channel_state state,
+
+Should these be changed as well?  If not, why not?  Some of them look
+analogous to the ones changed below.
+
+> Note: Currently, from a typechecking point of view this patch change
+>       nothing because only the constants defined by the enum
+>       are bitwise, not the enum itself (sparse doesn't have
+>       the notion of 'bitwise enum'). This may change in some
+>       not too far future, hence the patch.
+> 
+> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> ---
+>  Documentation/PCI/pci-error-recovery.rst    | 2 +-
+>  drivers/block/rsxx/core.c                   | 2 +-
+>  drivers/dma/ioat/init.c                     | 2 +-
+>  drivers/media/pci/ngene/ngene-cards.c       | 2 +-
+>  drivers/misc/genwqe/card_base.c             | 2 +-
+>  drivers/net/ethernet/intel/i40e/i40e_main.c | 2 +-
+>  drivers/net/ethernet/intel/ixgb/ixgb_main.c | 4 ++--
+>  drivers/net/ethernet/sfc/efx.c              | 2 +-
+>  drivers/net/ethernet/sfc/falcon/efx.c       | 2 +-
+>  drivers/pci/pcie/portdrv_pci.c              | 2 +-
+>  drivers/scsi/aacraid/linit.c                | 2 +-
+>  drivers/scsi/sym53c8xx_2/sym_glue.c         | 2 +-
+>  drivers/staging/qlge/qlge_main.c            | 2 +-
+>  include/linux/pci.h                         | 2 +-
+>  14 files changed, 15 insertions(+), 15 deletions(-)
