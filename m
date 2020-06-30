@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C19920ECDD
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 06:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97CA520ECDC
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 06:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgF3EuD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 00:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48870 "EHLO
+        id S1729498AbgF3EuC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 00:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729478AbgF3Et6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 00:49:58 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE5FC061755
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:49:58 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id z26so13682208qto.15
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:49:58 -0700 (PDT)
+        with ESMTP id S1729494AbgF3EuA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 00:50:00 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F573C03E97E
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:50:00 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id cv20so2266828qvb.12
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=LmsPf5jTSure7oX6gJRaMQO8tovJK9Co8tSqz8HCgCs=;
-        b=pUFDPhuB/v2g/yvpNhhyyJ30IsV514WJIVZPfX5DchICNB/3GB3lrCK6wRqtA9Kdv1
-         KirdW6N6jhQU3OKtY9lACnobzV8sB8+2CkYIz1YnW+Loh1i2w3neTw5UWwOXfihNQ1ff
-         nA+KP13GeFBnWQp2ys6B8/qyELYdICgAPBmgVsWtLeEcU29Kws4iqqXBD7tOtSkYZdyu
-         urkBWk/wQDdyOy2xwdLQOSVBFa0eV3POZYDjntsphRtU0JA474jLJpe4ICxh6YiBV06Q
-         SQKxby71IyV7+sKNgl0upW0Pkq2p65CVWwppw1WE7mzrU9PiekhEdfP7SJASalXvti76
-         5afw==
+        bh=hBtBLiuYQovdw2Rd8BSYQSNQYTDXp+WTcpVtHvbxicA=;
+        b=Fol1HvbQl98QxE4Uz8ftjRVLMaJY+OftVa1vPS+FAfOc5MOSE+8tW26BoGDyKXDin8
+         KQ5gB+SgH4AiAbtI9MRBXaFA2Vop/Yurs0AkVC04HIKAkyiQrp99NNlwv2wPdflik8WC
+         +cI70T4nQo9tbc8G8kOk3DzfB1IBiBNJP7daJlmQeAjcviOd6mych8Sh64dXfX7GddPJ
+         /dkE9PFXpGNBH9NWNOGb2ocoOGc9z5+HzxpPioenbNHI03kKQxybFS5ftD1cBZLmWpWp
+         2i8DOULp9/FmZqHRn+8vxPwlX6TVkjBYYLf7BhunHn/ZOgmDD8FoY6+dVAcPzeJyNKR+
+         s+Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=LmsPf5jTSure7oX6gJRaMQO8tovJK9Co8tSqz8HCgCs=;
-        b=tULniEN8B2o7TBRQpvpZz5QwhJrBFMUksi4uvobZBxdlIH4B2u93C2XFaX+d/D5WB/
-         mLYZ703W2XqadLC8qEMDJrFGcfndBP7cTAuzCf2YR6lNhlGxBm9f7qDc45d6NqSl6KRM
-         wyXEqhEv5EacQykivqgdlKOpu6n7N7seFbnXcxjtvMUD3D0diK2sjKMu5JlYAFQGUibJ
-         Zwzpw9AIvXj+5C0iVMwjPneaztpoovBhfLnBPV0vZ4wur0FmKQ9maq6yoGSQrTUFAMXf
-         HHcqpb2l7tKgfmy111/H4zklafjsXnYztd5wpDItmUULnJAhMMbodIKXks4EpJPmYIC4
-         ykNA==
-X-Gm-Message-State: AOAM531gjLEy4p5vok+Y37Jq41Wp+wD8Q7ab4o4w7o4OlYFfifOJCwFD
-        ZTAJcF5L0HMLKDHBKH89eqBCyqWNEeAq
-X-Google-Smtp-Source: ABdhPJy6mFvmXqDrITIrdGqh6QYCNW4V7diNoS4nldl3h9MgHWUBDraMbYOO32BHpWqaZ1XfnXNP7f0yffta
-X-Received: by 2002:a0c:83c4:: with SMTP id k62mr4468584qva.19.1593492597294;
- Mon, 29 Jun 2020 21:49:57 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:49:41 -0700
+        bh=hBtBLiuYQovdw2Rd8BSYQSNQYTDXp+WTcpVtHvbxicA=;
+        b=CKKrZz7LhmBPqaJnPAel88IPpopF1sKRhZekqmb+kFBoRdAhjz0VgJwgBEyb7jufPW
+         /cG3lmPVOAyVnjz/PDX5H4P8KOXj0qeSmvpW78YhWB8GqrsBno+3gP2ig1fIjW3BQeF9
+         fuuUzUoQkol5g2sdotixlilnAt33Ll4zfamUx9I5ufltVtALdkcXAy02AZgovnU8kWeb
+         sJ+dkTAQeSusQ19R7OtF6CBhEWxUrvFx2rpY9Cd6nNNiO986/AgenpriBd6OVslxEb4L
+         Qig/+qQPxw6w9G8Fw/vPgcZB3yfSfd5IhHIzBc0YAtcLjuBTD8+EWXjicKr/vrgPPZ1a
+         moGQ==
+X-Gm-Message-State: AOAM533R8P3RJn3mdzn/oLqd22UTNOh+6P1K8ZXPFt/B7AndcX8MA4HG
+        SL6Tg2orFQDyd8O1fmSlJrwfEWkw5YLb
+X-Google-Smtp-Source: ABdhPJyjVX27ds35IkYeoQIJsCb9P/mxeuyhXqgxOUKC5sFj+QfIr6P8ounIRWCJje4e6H6YgC+lpugLhJJ3
+X-Received: by 2002:a05:6214:1927:: with SMTP id es7mr10601213qvb.166.1593492599301;
+ Mon, 29 Jun 2020 21:49:59 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 21:49:42 -0700
 In-Reply-To: <20200630044943.3425049-1-rajatja@google.com>
-Message-Id: <20200630044943.3425049-6-rajatja@google.com>
+Message-Id: <20200630044943.3425049-7-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200630044943.3425049-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 5/7] driver core: Add device location to "struct device"
- and expose it in sysfs
+Subject: [PATCH v2 6/7] PCI: Move pci_dev->untrusted logic to use device
+ location instead
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -89,194 +89,238 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a new (optional) field to denote the physical location of a device
-in the system, and expose it in sysfs. This was discussed here:
-https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+The firmware was provinding "ExternalFacing" attribute on PCI root ports,
+to allow the kernel to mark devices behind it as external. Note that the
+firmware provides an immutable, read-only property, i.e. the location of
+the device.
 
-(The primary choice for attribute name i.e. "location" is already
-exposed as an ABI elsewhere, so settled for "site"). Individual buses
-that want to support this new attribute can opt-in by setting a flag in
-bus_type, and then populating the location of device while enumerating
-it.
+The use of (external) device location as hint for (dis)trust, is a
+decision that IOMMU drivers have taken, so we should call it out
+explicitly.
+
+This patch removes the pci_dev->untrusted and changes the users of it to
+use device core provided device location instead. This location is
+populated by PCI using the same "ExternalFacing" firmware info. Any
+device not behind the "ExternalFacing" bridges are marked internal and
+the ones behind such bridges are markes external.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
 v2: (Initial version)
 
- drivers/base/core.c        | 35 +++++++++++++++++++++++++++++++
- include/linux/device.h     | 42 ++++++++++++++++++++++++++++++++++++++
- include/linux/device/bus.h |  8 ++++++++
- 3 files changed, 85 insertions(+)
+ drivers/iommu/intel/iommu.c | 31 +++++++++++++++++++++----------
+ drivers/pci/ats.c           |  2 +-
+ drivers/pci/pci-driver.c    |  1 +
+ drivers/pci/pci.c           |  2 +-
+ drivers/pci/probe.c         | 18 ++++++++++++------
+ drivers/pci/quirks.c        |  2 +-
+ include/linux/pci.h         | 10 +---------
+ 7 files changed, 38 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 67d39a90b45c7..14c815526b7fa 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1778,6 +1778,32 @@ static ssize_t online_store(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(online);
- 
-+static ssize_t site_show(struct device *dev, struct device_attribute *attr,
-+			 char *buf)
-+{
-+	const char *site;
-+
-+	device_lock(dev);
-+	switch (dev->site) {
-+	case SITE_INTERNAL:
-+		site = "INTERNAL";
-+		break;
-+	case SITE_EXTENDED:
-+		site = "EXTENDED";
-+		break;
-+	case SITE_EXTERNAL:
-+		site = "EXTERNAL";
-+		break;
-+	case SITE_UNKNOWN:
-+	default:
-+		site = "UNKNOWN";
-+		break;
-+	}
-+	device_unlock(dev);
-+	return sprintf(buf, "%s\n", site);
-+}
-+static DEVICE_ATTR_RO(site);
-+
- int device_add_groups(struct device *dev, const struct attribute_group **groups)
- {
- 	return sysfs_create_groups(&dev->kobj, groups);
-@@ -1949,8 +1975,16 @@ static int device_add_attrs(struct device *dev)
- 			goto err_remove_dev_groups;
- 	}
- 
-+	if (bus_supports_site(dev->bus)) {
-+		error = device_create_file(dev, &dev_attr_site);
-+		if (error)
-+			goto err_remove_dev_attr_online;
-+	}
-+
- 	return 0;
- 
-+ err_remove_dev_attr_online:
-+	device_remove_file(dev, &dev_attr_online);
-  err_remove_dev_groups:
- 	device_remove_groups(dev, dev->groups);
-  err_remove_type_groups:
-@@ -1968,6 +2002,7 @@ static void device_remove_attrs(struct device *dev)
- 	struct class *class = dev->class;
- 	const struct device_type *type = dev->type;
- 
-+	device_remove_file(dev, &dev_attr_site);
- 	device_remove_file(dev, &dev_attr_online);
- 	device_remove_groups(dev, dev->groups);
- 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 15460a5ac024a..a4143735ae712 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -428,6 +428,31 @@ enum dl_dev_state {
- 	DL_DEV_UNBINDING,
- };
- 
-+/**
-+ * enum device_site - Physical location of the device in the system.
-+ * The semantics of values depend on subsystem / bus:
-+ *
-+ * @SITE_UNKNOWN:  Location is Unknown (default)
-+ *
-+ * @SITE_INTERNAL: Device is internal to the system, and cannot be (easily)
-+ *                 removed. E.g. SoC internal devices, onboard soldered
-+ *                 devices, internal M.2 cards (that cannot be removed
-+ *                 without opening the chassis).
-+ * @SITE_EXTENDED: Device sits an extension of the system. E.g. devices
-+ *                 on external PCIe trays, docking stations etc. These
-+ *                 devices may be removable, but are generally housed
-+ *                 internally on an extension board, so they are removed
-+ *                 only when that whole extension board is removed.
-+ * @SITE_EXTERNAL: Devices truly external to the system (i.e. plugged on
-+ *                 an external port) that may be removed or added frequently.
-+ */
-+enum device_site {
-+	SITE_UNKNOWN = 0,
-+	SITE_INTERNAL,
-+	SITE_EXTENDED,
-+	SITE_EXTERNAL,
-+};
-+
- /**
-  * struct dev_links_info - Device data related to device links.
-  * @suppliers: List of links to supplier devices.
-@@ -513,6 +538,7 @@ struct dev_links_info {
-  * 		device (i.e. the bus driver that discovered the device).
-  * @iommu_group: IOMMU group the device belongs to.
-  * @iommu:	Per device generic IOMMU runtime data
-+ * @site:	Physical location of the device w.r.t. the system
-  *
-  * @offline_disabled: If set, the device is permanently online.
-  * @offline:	Set after successful invocation of bus type's .offline().
-@@ -613,6 +639,8 @@ struct device {
- 	struct iommu_group	*iommu_group;
- 	struct dev_iommu	*iommu;
- 
-+	enum device_site	site;	/* Device physical location */
-+
- 	bool			offline_disabled:1;
- 	bool			offline:1;
- 	bool			of_node_reused:1;
-@@ -806,6 +834,20 @@ static inline bool dev_has_sync_state(struct device *dev)
- 	return false;
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 1ccb224f82496..ca66a196f5e97 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -168,6 +168,22 @@ static inline unsigned long virt_to_dma_pfn(void *p)
+ 	return page_to_dma_pfn(virt_to_page(p));
  }
  
-+static inline int dev_set_site(struct device *dev, enum device_site site)
++static inline bool untrusted_dev(struct device *dev)
 +{
-+	if (site < SITE_UNKNOWN || site > SITE_EXTERNAL)
-+		return -EINVAL;
++	/*
++	 * Treat all external PCI devices as untrusted devices. These are the
++	 * devices behing marked behind external-facing bridges as marked by
++	 * the firmware. The untrusted devices are the ones that can potentially
++	 * execute DMA attacks and similar. They are typically connected through
++	 * external thunderbolt ports. When an IOMMU is enabled they should be
++	 * getting full mappings to ensure they cannot access arbitrary memory.
++	 */
++	if (dev_is_pci(dev) && dev_is_external(dev))
++		return true;
 +
-+	dev->site = site;
-+	return 0;
++	return false;
 +}
 +
-+static inline bool dev_is_external(struct device *dev)
-+{
-+	return dev->site == SITE_EXTERNAL;
-+}
-+
+ /* global iommu list, set NULL for ignored DMAR units */
+ static struct intel_iommu **g_iommus;
+ 
+@@ -383,8 +399,7 @@ struct device_domain_info *get_domain_info(struct device *dev)
+ DEFINE_SPINLOCK(device_domain_lock);
+ static LIST_HEAD(device_domain_list);
+ 
+-#define device_needs_bounce(d) (!intel_no_bounce && dev_is_pci(d) &&	\
+-				to_pci_dev(d)->untrusted)
++#define device_needs_bounce(d) (!intel_no_bounce && untrusted_dev(d))
+ 
  /*
-  * High level routines for use by the bus drivers
+  * Iterate over elements in device_domain_list and call the specified
+@@ -2830,7 +2845,7 @@ static int device_def_domain_type(struct device *dev)
+ 		 * Prevent any device marked as untrusted from getting
+ 		 * placed into the statically identity mapping domain.
+ 		 */
+-		if (pdev->untrusted)
++		if (untrusted_dev(dev))
+ 			return IOMMU_DOMAIN_DMA;
+ 
+ 		if ((iommu_identity_mapping & IDENTMAP_AZALIA) && IS_AZALIA(pdev))
+@@ -3464,7 +3479,6 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
+ 	unsigned long iova_pfn;
+ 	struct intel_iommu *iommu;
+ 	struct page *freelist;
+-	struct pci_dev *pdev = NULL;
+ 
+ 	domain = find_domain(dev);
+ 	BUG_ON(!domain);
+@@ -3477,11 +3491,8 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
+ 	start_pfn = mm_to_dma_pfn(iova_pfn);
+ 	last_pfn = start_pfn + nrpages - 1;
+ 
+-	if (dev_is_pci(dev))
+-		pdev = to_pci_dev(dev);
+-
+ 	freelist = domain_unmap(domain, start_pfn, last_pfn);
+-	if (intel_iommu_strict || (pdev && pdev->untrusted) ||
++	if (intel_iommu_strict || untrusted_dev(dev) ||
+ 			!has_iova_flush_queue(&domain->iovad)) {
+ 		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
+ 				      nrpages, !freelist, 0);
+@@ -4743,7 +4754,7 @@ static inline bool has_untrusted_dev(void)
+ 	struct pci_dev *pdev = NULL;
+ 
+ 	for_each_pci_dev(pdev)
+-		if (pdev->untrusted || pdev->external_facing)
++		if (pdev->external_facing || untrusted_dev(&pdev->dev))
+ 			return true;
+ 
+ 	return false;
+@@ -6036,7 +6047,7 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
   */
-diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-index 1ea5e1d1545bd..e1079772e45af 100644
---- a/include/linux/device/bus.h
-+++ b/include/linux/device/bus.h
-@@ -69,6 +69,8 @@ struct fwnode_handle;
-  * @lock_key:	Lock class key for use by the lock validator
-  * @need_parent_lock:	When probing or removing a device on this bus, the
-  *			device core should lock the device's parent.
-+ * @supports_site:	Bus can differentiate between internal/external devices
-+ *			and thus supports the device "site" attribute.
-  *
-  * A bus is a channel between the processor and one or more devices. For the
-  * purposes of the device model, all devices are connected via a bus, even if
-@@ -112,6 +114,7 @@ struct bus_type {
- 	struct lock_class_key lock_key;
+ static bool risky_device(struct pci_dev *pdev)
+ {
+-	if (pdev->untrusted) {
++	if (untrusted_dev(&pdev->dev)) {
+ 		pci_info(pdev,
+ 			 "Skipping IOMMU quirk for dev [%04X:%04X] on untrusted PCI link\n",
+ 			 pdev->vendor, pdev->device);
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index b761c1f72f672..ebd370f4d5b06 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -42,7 +42,7 @@ bool pci_ats_supported(struct pci_dev *dev)
+ 	if (!dev->ats_cap)
+ 		return false;
  
- 	bool need_parent_lock;
-+	bool supports_site;
- };
- 
- extern int __must_check bus_register(struct bus_type *bus);
-@@ -246,6 +249,11 @@ bus_find_device_by_acpi_dev(struct bus_type *bus, const void *adev)
+-	return (dev->untrusted == 0);
++	return (!dev_is_external(&dev->dev));
  }
- #endif
+ EXPORT_SYMBOL_GPL(pci_ats_supported);
  
-+static inline bool bus_supports_site(struct bus_type *bus)
-+{
-+	return bus && bus->supports_site;
-+}
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index da6510af12214..9608053a8a62c 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1630,6 +1630,7 @@ struct bus_type pci_bus_type = {
+ 	.pm		= PCI_PM_OPS_PTR,
+ 	.num_vf		= pci_bus_num_vf,
+ 	.dma_configure	= pci_dma_configure,
++	.supports_site	= true,
+ };
+ EXPORT_SYMBOL(pci_bus_type);
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 79853b52658a2..35f25ac39167b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3330,7 +3330,7 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+ 	/* Upstream Forwarding */
+ 	ctrl |= (cap & PCI_ACS_UF);
+ 
+-	if (dev->external_facing || dev->untrusted)
++	if (dev->external_facing || dev_is_external(&dev->dev))
+ 		/* Translation Blocking */
+ 		ctrl |= (cap & PCI_ACS_TB);
+ 
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8c40c00413e74..1609329cc5b4e 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1543,17 +1543,23 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+ 	}
+ }
+ 
+-static void set_pcie_untrusted(struct pci_dev *dev)
++static void set_pcie_dev_site(struct pci_dev *dev)
+ {
+ 	struct pci_dev *parent;
+ 
+ 	/*
+-	 * If the upstream bridge is untrusted we treat this device
+-	 * untrusted as well.
++	 * All devices are considered internal by default, unless behind an
++	 * external-facing bridge, as marked by the firmware.
++	 */
++	dev_set_site(&dev->dev, SITE_INTERNAL);
 +
- struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
- 					struct device *hint);
- int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
++	/*
++	 * If the upstream bridge is external or external-facing, this device
++	 * is also external.
+ 	 */
+ 	parent = pci_upstream_bridge(dev);
+-	if (parent && (parent->untrusted || parent->external_facing))
+-		dev->untrusted = true;
++	if (parent && (parent->external_facing || dev_is_external(&parent->dev)))
++		dev_set_site(&dev->dev, SITE_EXTERNAL);
+ }
+ 
+ /**
+@@ -1814,7 +1820,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Need to have dev->cfg_size ready */
+ 	set_pcie_thunderbolt(dev);
+ 
+-	set_pcie_untrusted(dev);
++	set_pcie_dev_site(dev);
+ 
+ 	/* "Unknown power state" */
+ 	dev->current_state = PCI_UNKNOWN;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 6294adeac4049..65d0b8745c915 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4980,7 +4980,7 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
+ 	ctrl |= (cap & PCI_ACS_CR);
+ 	ctrl |= (cap & PCI_ACS_UF);
+ 
+-	if (dev->external_facing || dev->untrusted)
++	if (dev->external_facing || dev_is_external(&dev->dev))
+ 		/* Translation Blocking */
+ 		ctrl |= (cap & PCI_ACS_TB);
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index fe1bc603fda40..8bb5065e5aed2 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -424,20 +424,12 @@ struct pci_dev {
+ 	unsigned int	is_hotplug_bridge:1;
+ 	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
+ 	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+-	/*
+-	 * Devices marked being untrusted are the ones that can potentially
+-	 * execute DMA attacks and similar. They are typically connected
+-	 * through external ports such as Thunderbolt but not limited to
+-	 * that. When an IOMMU is enabled they should be getting full
+-	 * mappings to make sure they cannot access arbitrary memory.
+-	 */
+-	unsigned int	untrusted:1;
+ 	/*
+ 	 * Devices are marked as external-facing using info from platform
+ 	 * (ACPI / devicetree). An external-facing device is still an internal
+ 	 * trusted device, but it faces external untrusted devices. Thus any
+ 	 * devices enumerated downstream an external-facing device is marked
+-	 * as untrusted.
++	 * as external device.
+ 	 */
+ 	unsigned int	external_facing:1;
+ 	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
