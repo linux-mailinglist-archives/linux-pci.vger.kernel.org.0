@@ -2,55 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B72DB20ECD4
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 06:49:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53D0420ECD8
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 06:49:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725805AbgF3Et4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 00:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
+        id S1729474AbgF3Et5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 00:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729429AbgF3Etz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 00:49:55 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E97C08C5DB
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:49:54 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 186so20978794yby.19
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:49:54 -0700 (PDT)
+        with ESMTP id S1729473AbgF3Et4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 00:49:56 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735ADC03E979
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:49:56 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id t32so13712511qth.2
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:49:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=1GSrptB51Ebugg9FWmWRPrlpTSANe16GXZRwAajHZjI=;
-        b=Fzmn3zBwkz61BImTOmDr+UTqOyqjePTXGkh2hh+S9U5oUAWTEewVvXE0uQnsPICARw
-         I99XjUw5d2rDoIZdnlsNGHrUCAmkOxGbNHRwaHrLSQ93afd5NQ2O9b8bt/QFN+kmOqz8
-         6b/2D1Px6vY61wmL7bbf75lz0DLo7RzK8C2ue6JEr9B6rGRMQj4D5lsoIRC4digE15t2
-         Jq+U37h/FBmiVefuqrmdLQ6Ozp1XMDCz2/MkwVnK2u1QRTAvChjhJ0ETbjj6l2hlq6bC
-         OCCFlluLgpNQH2STAKDJat5EyiTzGw1QCtWN/NrA7MNM/GfXkk71b9IypHvuQw2C32pP
-         Gf/w==
+        bh=1pgr6KaNRkuRhLLKbqD3ulE84r9BXBrKXG+wTgasJBs=;
+        b=EmhVGqKj1hxcynFazVyM9BBAatcEV5Glfv6IolcJAU+WZt80BhCC7S95uetkKS69rG
+         moLJ6mFVxETH0uu9E5a71IdGi1EO4Jhlu5hsB7433iTczY02C02gemnhGbY2HbNsmeK9
+         p89uUnKxxwP9D13BCKNLWLjQu3I1+cvnyQpwfOIonoAfzeqNwq8mWanYN1hfu7UVEnqu
+         7AVkwFxIC+IhNltLvEX3U89fGJ3pMmvPsScLgILybybvho+KO8QYE5NqN/pAWR+OXe8w
+         GvuFxrbWomAp5dLYDnySp6VAEjs1FyccCG1hfRZ3TOXSnaYyLVsaVOXiMQes4cgLhzF1
+         WihQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=1GSrptB51Ebugg9FWmWRPrlpTSANe16GXZRwAajHZjI=;
-        b=iuhDyT2FJayGfer3iJpMc+NIxw8WmTcnga6oj65DI9Ddkk3PwUHeHZ6vsAeRBLAe+C
-         ibjRTv0cZLqbNSkEIZs6R086BeTDLG7VrsfytWzPa8Ij7OAG1fbkRUdYh5pKYfnHCkH7
-         oFEbpngyM6iCzjL54M59MZhD5pygWiF4JMWtoArYO1xkesGA2DCzLHu3TaLwsZ5sPXhs
-         hOPQ826TTMrviCB/t2Lm1ppLM5FK+r9BWDRHcRkXsm5KLgb6N2d9Z14UfEH0NG9JasyH
-         4YwYESM+LhPBqKSFTCso27IEMpfYCMTW1Cl6DcVLIlkJG16vgsYH7CqL/VkFYHncsYPt
-         HkWQ==
-X-Gm-Message-State: AOAM533vFjX1RanZjogi2mtxp4NbFjLFg3eN3IZ8zZV7fkd7wV+FfqrB
-        3HIE3byzIAFn4/kNe1Cs2rO/OiyhGNN4
-X-Google-Smtp-Source: ABdhPJyKXLRBH4F1knixflHShhi5F9yyQyirad1BSVGvjyy37E1ndR68pL34aiL8DZ68wClo3Fdo0aLLE7OB
-X-Received: by 2002:a25:c442:: with SMTP id u63mr8382527ybf.92.1593492593590;
- Mon, 29 Jun 2020 21:49:53 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:49:39 -0700
+        bh=1pgr6KaNRkuRhLLKbqD3ulE84r9BXBrKXG+wTgasJBs=;
+        b=ZoD+RhYEvQmYrpNT3zWvaiiWLrsHsQpfh4KzL7drdeyHO2kj9JbGK6YCt/40/QIXFs
+         rzXgpF8kh8OBWnn/MXr+G2L7vjf2jG9NhEY/K5a4GValgffeMgMhecvhe6GbkqkjONcj
+         +qHDebfd9MwSkb7VgzyLtAa0H4dQQIb9pu7Q3Zh6VavFZOFPatL6apiKi+a3G2CTsORt
+         FqE71Bl+OauoV7F2nEmiizlKjNuARjFjG7EwN4svYRPkP7tiaA+H5+kP8gaULdry/fMC
+         WGMui3PHUKAXmE1cgaDbp760lzxwdC+W0ERDrTth3EIyIVUdtebKMjzIze8jQUjYses3
+         NBZQ==
+X-Gm-Message-State: AOAM532d2yWw9PTY9bU40Y/NNMxApJGmh+v95rkNmUGHLT3wCmRq21HR
+        seRTB1BnQoerOfd6zWwV454o8B7WdxtA
+X-Google-Smtp-Source: ABdhPJxPqRsEUkTJy7xBvIqn4j64tLwwndWDL29Mu8/+Z31HqzfgXJZ/paNZUVBIuCrmANpGN0BjB5/3u/Zp
+X-Received: by 2002:a05:6214:18f2:: with SMTP id ep18mr7665592qvb.96.1593492595480;
+ Mon, 29 Jun 2020 21:49:55 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 21:49:40 -0700
 In-Reply-To: <20200630044943.3425049-1-rajatja@google.com>
-Message-Id: <20200630044943.3425049-4-rajatja@google.com>
+Message-Id: <20200630044943.3425049-5-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200630044943.3425049-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 3/7] PCI/ACS: Enable PCI_ACS_TB for untrusted/external-facing
- devices
+Subject: [PATCH v2 4/7] PCI: Add device even if driver attach failed
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -89,61 +88,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When enabling ACS, enable translation blocking for external facing ports
-and untrusted devices.
+device_attach() returning failure indicates a driver error while trying to
+probe the device. In such a scenario, the PCI device should still be added
+in the system and be visible to the user.
+
+This patch partially reverts:
+commit ab1a187bba5c ("PCI: Check device_attach() return value always")
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-v2: Commit log change 
+v2: Cosmetic change in commit log.
+    Add Greg's "reviewed-by"
 
- drivers/pci/pci.c    |  4 ++++
- drivers/pci/quirks.c | 11 +++++++++++
- 2 files changed, 15 insertions(+)
+ drivers/pci/bus.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d2ff987585855..79853b52658a2 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
- 	/* Upstream Forwarding */
- 	ctrl |= (cap & PCI_ACS_UF);
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index 8e40b3e6da77d..3cef835b375fd 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
  
-+	if (dev->external_facing || dev->untrusted)
-+		/* Translation Blocking */
-+		ctrl |= (cap & PCI_ACS_TB);
-+
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+ 	dev->match_driver = true;
+ 	retval = device_attach(&dev->dev);
+-	if (retval < 0 && retval != -EPROBE_DEFER) {
++	if (retval < 0 && retval != -EPROBE_DEFER)
+ 		pci_warn(dev, "device attach failed (%d)\n", retval);
+-		pci_proc_detach_device(dev);
+-		pci_remove_sysfs_dev_files(dev);
+-		return;
+-	}
+ 
+ 	pci_dev_assign_added(dev, true);
  }
- 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b341628e47527..6294adeac4049 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
- 	}
- }
- 
-+/*
-+ * Currently this quirk does the equivalent of
-+ * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
-+ *
-+ * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
-+ * if dev->external_facing || dev->untrusted
-+ */
- static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
- {
- 	if (!pci_quirk_intel_pch_acs_match(dev))
-@@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
- 	ctrl |= (cap & PCI_ACS_CR);
- 	ctrl |= (cap & PCI_ACS_UF);
- 
-+	if (dev->external_facing || dev->untrusted)
-+		/* Translation Blocking */
-+		ctrl |= (cap & PCI_ACS_TB);
-+
- 	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
- 
- 	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
