@@ -2,40 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC9C20FA07
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 19:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2603320FAF0
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 19:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389893AbgF3RAZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 13:00:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbgF3RAY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:00:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86D562074D;
-        Tue, 30 Jun 2020 17:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593536424;
-        bh=OyZ+omFW90H968tlnQPxTsEGQ+ZnRPIJilI6YZvFABE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K45nhmz01hL7sCVhpvbNV5JtcuCc6hXl+kjXibX1Ykjsq5r+dfPQfJXmtFL/Tjt8A
-         RKKacGE9MPcunFcTLy3SLGAGLhJuVahoFkd1l3GxQ3hpNOWP2HuvMz2vEdGCLLVEE6
-         vOKLRHIFxKeBGjKGSyYZwNfEMXAKP1uS4UeHxB2c=
-Date:   Tue, 30 Jun 2020 19:00:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
+        id S1731696AbgF3RoQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 13:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730799AbgF3RoO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 13:44:14 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48927C03E979
+        for <linux-pci@vger.kernel.org>; Tue, 30 Jun 2020 10:44:14 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id m2so19089102otr.12
+        for <linux-pci@vger.kernel.org>; Tue, 30 Jun 2020 10:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pvrPSyad64a06y3emmBaHBraeMnCfgt6QtYJn+H41Ho=;
+        b=AIvFwiVmHfWa0dr/Zj/nl3/Gf+Dd7lJR5y4sPWVHQ6irUWAzRxeWoOb/p2Glgrk5x7
+         TDEjkGmBqHJFS3FeMsKSUuM+D3gUcPWXfX8izqzDYuu0i5RlpD4ZYEGNnt5HD5TFGK/4
+         +VZg7MDSEIbgEZSrQtROVsWPTIRaGegwbqGtn6aYm7ZDVsTuiNa6Vz1uvzRXOMzrKN6M
+         vrZA71ayaPMxJ7T9dyamhd8XLmDYQA3mCTowCoZLR+iNzAZTh88X+FxrewQAkskd6ncd
+         EOt1xr66NGeLzGOPzxdLzf+Wr/iHl7eww9QdEkZ4ZlS5fCywYXwwCJ9aTWMyMziBOyS6
+         r9rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pvrPSyad64a06y3emmBaHBraeMnCfgt6QtYJn+H41Ho=;
+        b=IznmDaXgKxf1ziX/38yNk9WsBntPAlQgiCWP4dBqG2N25WCwmvHSUYJhukxbh7w4gX
+         O8ipXsmkqDoXpBQHffMO5g6roajYA8IHwOd9yRIBM0v4+Kar0Ge9TOYwhrnFhmiBuABm
+         6GKVkaoTWkHQQPXG3vfaG2XwbGb0vKVVcmCHKCug09beH8KSLZevbGygrNzXV92hw41Q
+         ZZnWGrpioFNa7cueLsvzN8qUTaUWlgGk44xvzlEz377IDS7MMtrEKT2nnCq+BstNzgOJ
+         wrUfi74DftjBhrYqpmUMpa2Qdx5rh2KpwhAryTn5P7K45BzlyncTFJM0GEU7euW4UmCt
+         pdfw==
+X-Gm-Message-State: AOAM532kybJ8nwXQDzW1thpO3Ly0cPJRBB7yLc5fzUovglibWDumDlFA
+        yN0XeIIphTD7nyfL6by/r0K4994saldHouUqcD9lNA==
+X-Google-Smtp-Source: ABdhPJxvmOdBgLv+Am0qzfX+NxBE+/4lC8/0GP2QXouYO+Xni8icBayVXFLmI+l2lGzBS6ZBGHtQIVdLNxB8n7tHCR8=
+X-Received: by 2002:a9d:8ea:: with SMTP id 97mr11889961otf.231.1593539053111;
+ Tue, 30 Jun 2020 10:44:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
+In-Reply-To: <20200630044943.3425049-6-rajatja@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 30 Jun 2020 10:43:37 -0700
+Message-ID: <CAGETcx9hgV70DVdbOvCF+tO4b-6+1JzN1_OmPmnWjj9qJhB_dw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Raj Ashok <ashok.raj@intel.com>,
@@ -56,114 +79,124 @@ Cc:     Rajat Jain <rajatja@google.com>,
         Jesse Barnes <jsbarnes@google.com>,
         Christian Kellner <christian@kellner.me>,
         Alex Williamson <alex.williamson@redhat.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-Message-ID: <20200630170012.GB1894898@kroah.com>
-References: <20200630044943.3425049-1-rajatja@google.com>
- <20200630044943.3425049-6-rajatja@google.com>
- <20200630104948.GC856968@kuha.fi.intel.com>
- <20200630125216.GA1109228@kroah.com>
- <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
- <20200630153816.GD1785141@kroah.com>
- <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:08:31PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Jun 30, 2020 at 5:38 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jun 30, 2020 at 03:00:34PM +0200, Rafael J. Wysocki wrote:
-> > > On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
-> > > > > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
-> > > > > > Add a new (optional) field to denote the physical location of a device
-> > > > > > in the system, and expose it in sysfs. This was discussed here:
-> > > > > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
-> > > > > >
-> > > > > > (The primary choice for attribute name i.e. "location" is already
-> > > > > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
-> > > > > > that want to support this new attribute can opt-in by setting a flag in
-> > > > > > bus_type, and then populating the location of device while enumerating
-> > > > > > it.
-> > > > >
-> > > > > So why not just call it "physical_location"?
-> > > >
-> > > > That's better, and will allow us to put "3rd blue plug from the left,
-> > > > 4th row down" in there someday :)
-> > > >
-> > > > All of this is "relative" to the CPU, right?  But what CPU?  Again, how
-> > > > are the systems with drawers of PCI and CPUs and memory that can be
-> > > > added/removed at any point in time being handled here?  What is
-> > > > "internal" and "external" for them?
-> > > >
-> > > > What exactly is the physical boundry here that is attempting to be
-> > > > described?
-> > >
-> > > Also, where is the "physical location" information going to come from?
-> >
-> > Who knows?  :)
-> >
-> > Some BIOS seem to provide this, but do you trust that?
-> >
-> > > If that is the platform firmware (which I suspect is the anticipated
-> > > case), there may be problems with reliability related to that.
-> >
-> > s/may/will/
-> >
-> > which means making the kernel inact a policy like this patch series
-> > tries to add, will result in a lot of broken systems, which is why I
-> > keep saying that it needs to be done in userspace.
-> >
-> > It's as if some of us haven't been down this road before and just keep
-> > being ignored...
-> >
-> > {sigh}
-> 
-> Well, to be honest, if you are a "vertical" vendor and you control the
-> entire stack, *including* the platform firmware, it would be kind of
-> OK for you to do that in a product kernel.
-> 
-> However, this is not a practical thing to do in the mainline kernel
-> which must work for everybody, including people who happen to use
-> systems with broken or even actively unfriendly firmware on them.
-> 
-> So I'm inclined to say that IMO this series "as is" would not be an
-> improvement from the mainline perspective.
+On Mon, Jun 29, 2020 at 9:49 PM Rajat Jain <rajatja@google.com> wrote:
+>
+> Add a new (optional) field to denote the physical location of a device
+> in the system, and expose it in sysfs. This was discussed here:
+> https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+>
+> (The primary choice for attribute name i.e. "location" is already
+> exposed as an ABI elsewhere, so settled for "site"). Individual buses
+> that want to support this new attribute can opt-in by setting a flag in
+> bus_type, and then populating the location of device while enumerating
+> it.
+>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v2: (Initial version)
+>
+>  drivers/base/core.c        | 35 +++++++++++++++++++++++++++++++
+>  include/linux/device.h     | 42 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/device/bus.h |  8 ++++++++
+>  3 files changed, 85 insertions(+)
+>
 
-It can be, we have been using this for USB devices for many many years
-now, quite successfully.  The key is not to trust that the platform
-firmware got it right :)
+<snip> I'm not CC'ed in 4/7, so just replying
 
-> I guess it would make sense to have an attribute for user space to
-> write to in order to make the kernel reject device plug-in events
-> coming from a given port or connector, but the kernel has no reliable
-> means to determine *which* ports or connectors are "safe", and even if
-> there was a way for it to do that, it still may not agree with user
-> space on which ports or connectors should be regarded as "safe".
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 15460a5ac024a..a4143735ae712 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -428,6 +428,31 @@ enum dl_dev_state {
+>         DL_DEV_UNBINDING,
+>  };
+>
+> +/**
+> + * enum device_site - Physical location of the device in the system.
+> + * The semantics of values depend on subsystem / bus:
+> + *
+> + * @SITE_UNKNOWN:  Location is Unknown (default)
+> + *
+> + * @SITE_INTERNAL: Device is internal to the system, and cannot be (easily)
+> + *                 removed. E.g. SoC internal devices, onboard soldered
+> + *                 devices, internal M.2 cards (that cannot be removed
+> + *                 without opening the chassis).
+> + * @SITE_EXTENDED: Device sits an extension of the system. E.g. devices
+> + *                 on external PCIe trays, docking stations etc. These
+> + *                 devices may be removable, but are generally housed
+> + *                 internally on an extension board, so they are removed
+> + *                 only when that whole extension board is removed.
+> + * @SITE_EXTERNAL: Devices truly external to the system (i.e. plugged on
+> + *                 an external port) that may be removed or added frequently.
+> + */
+> +enum device_site {
+> +       SITE_UNKNOWN = 0,
+> +       SITE_INTERNAL,
+> +       SITE_EXTENDED,
+> +       SITE_EXTERNAL,
+> +};
+> +
+>  /**
+>   * struct dev_links_info - Device data related to device links.
+>   * @suppliers: List of links to supplier devices.
+> @@ -513,6 +538,7 @@ struct dev_links_info {
+>   *             device (i.e. the bus driver that discovered the device).
+>   * @iommu_group: IOMMU group the device belongs to.
+>   * @iommu:     Per device generic IOMMU runtime data
+> + * @site:      Physical location of the device w.r.t. the system
+>   *
+>   * @offline_disabled: If set, the device is permanently online.
+>   * @offline:   Set after successful invocation of bus type's .offline().
+> @@ -613,6 +639,8 @@ struct device {
+>         struct iommu_group      *iommu_group;
+>         struct dev_iommu        *iommu;
+>
+> +       enum device_site        site;   /* Device physical location */
+> +
+>         bool                    offline_disabled:1;
+>         bool                    offline:1;
+>         bool                    of_node_reused:1;
+> @@ -806,6 +834,20 @@ static inline bool dev_has_sync_state(struct device *dev)
+>         return false;
+>  }
+>
+> +static inline int dev_set_site(struct device *dev, enum device_site site)
+> +{
+> +       if (site < SITE_UNKNOWN || site > SITE_EXTERNAL)
+> +               return -EINVAL;
+> +
+> +       dev->site = site;
+> +       return 0;
+> +}
+> +
+> +static inline bool dev_is_external(struct device *dev)
+> +{
+> +       return dev->site == SITE_EXTERNAL;
+> +}
 
-Again, we have been doing this for USB devices for a very long time, PCI
-shouldn't be any different.  Why people keep ignoring working solutions
-is beyond me, there's nothing "special" about PCI devices here for this
-type of "worry" or reasoning to try to create new solutions.
+I'm not CC'ed in the rest of the patches in this series, so just
+responding here. I see you use this function in patch 6/7 to decide if
+the PCI device is trusted. Anything other than EXTERNAL is being
+treated as trusted. I'd argue that anything that's not internal should
+be distrusted. For example, I can have a hacked up laptop dock that I
+can share with you when you visit my home/office and now you are
+trusting it when you shouldn't be.
 
-So, again, I ask, go do what USB does, and to do that, take the logic
-out of the USB core, make it bus-agnositic, and _THEN_ add it to the PCI
-code.  Why the original submitter keeps ignoring my request to do this
-is beyond me, I guess they like making patches that will get rejected :(
+Also, "UNKNOWN" is treated as trusted in patch 6/7. I'm guessing this
+is because some of the devices might not have the info in their
+firmware? At which point, this feature isn't even protecting all the
+PCI ports properly? This adds to Greg point that this should be a
+userspace policy so that it can override whatever is wrong/missing in
+the firmware.
 
-thanks,
-
-greg k-h
+-Saravana
