@@ -2,109 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3DD020FF68
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 23:46:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A48520FF77
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 23:50:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgF3VqN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 17:46:13 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53630 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbgF3VqN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 17:46:13 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 548E51C0C0F; Tue, 30 Jun 2020 23:46:10 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 23:46:09 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200630214609.GB7113@duo.ucw.cz>
-References: <20200603121613.GA1488883@kroah.com>
- <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com>
- <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com>
- <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
- <20200608175015.GA457685@kroah.com>
- <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
- <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
- <20200609095444.GA533843@kroah.com>
+        id S1729911AbgF3VuT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 17:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729815AbgF3VuT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 17:50:19 -0400
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9986D2077D;
+        Tue, 30 Jun 2020 21:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593553818;
+        bh=ps1O6n5AnikolRhBCTihXbQMNSMQfOZXAH36HgCoRS4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WL8mIUlvP8ZdPw97GTFDhLE9owK5PSRrzSYFoyrfrPy7s6zYlX4vGfNy0fqqs/2oh
+         el9Aov4LRM2pzOeyBjVVPOwgDWzB2EipRzYWknIge+BAXW4Ump22ZlnusvWs75GUYZ
+         7+yeYxD7tbCNEwxePoIMEH2LsV9pocliXL/hIIcE=
+Received: by mail-oi1-f177.google.com with SMTP id k4so18769655oik.2;
+        Tue, 30 Jun 2020 14:50:18 -0700 (PDT)
+X-Gm-Message-State: AOAM533mM9hB1pBsguGfBe1VXNmnuG/xlwveJ4YKEL+IhFcbccax7JzJ
+        XOaAHM4BNbd95vfRMWhYAQsemGaFJdiGULxAFQ==
+X-Google-Smtp-Source: ABdhPJzCDnjeyS6viPAYkeruMzz+Xbix7X+IUVSkcFqPPKsJXUmSUC2CQjq4+pFIKX1D4r7LaJBSvTlLXTtZij02xWI=
+X-Received: by 2002:aca:6004:: with SMTP id u4mr18457843oib.106.1593553817987;
+ Tue, 30 Jun 2020 14:50:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
-Content-Disposition: inline
-In-Reply-To: <20200609095444.GA533843@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com> <20200619082013.13661-8-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20200619082013.13661-8-lorenzo.pieralisi@arm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 30 Jun 2020 15:50:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK45W7i0jWum4_FL9+ZRzF8W-m2zzDTmJpRKwmyGDzAjw@mail.gmail.com>
+Message-ID: <CAL_JsqK45W7i0jWum4_FL9+ZRzF8W-m2zzDTmJpRKwmyGDzAjw@mail.gmail.com>
+Subject: Re: [PATCH v2 07/12] of/device: Add input id to of_dma_configure()
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        PCI <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Jun 19, 2020 at 2:20 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> Devices sitting on proprietary busses have a device ID space that
+> is owned by the respective bus and related firmware bindings. In order
+> to let the generic OF layer handle the input translations to
+> an IOMMU id, for such busses the current of_dma_configure() interface
+> should be extended in order to allow the bus layer to provide the
+> device input id parameter - that is retrieved/assigned in bus
+> specific code and firmware.
+>
+> Augment of_dma_configure() to add an optional input_id parameter,
+> leaving current functionality unchanged.
+>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-bus.c |  4 +-
+>  drivers/iommu/of_iommu.c        | 81 ++++++++++++++++++---------------
+>  drivers/of/device.c             |  8 ++--
+>  include/linux/of_device.h       | 16 ++++++-
+>  include/linux/of_iommu.h        |  6 ++-
+>  5 files changed, 70 insertions(+), 45 deletions(-)
 
---i0/AhcQY5QxfSsSZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > > I think that's inherently platform specific to some extent.  We can do
-> > > it with our coreboot based firmware, but there's no guarantee other
-> > > vendors will adopt the same approach.  But I think at least for the
-> > > ChromeOS ecosystem we can come up with something that'll work, and
-> > > allow us to dtrt in userspace wrt driver binding.
-> >=20
-> > Agree, we can work with our firmware teams to get that right, and then
-> > expose it from kernel to userspace to help it implement the policy we
-> > want.
->=20
-> This is already in the spec for USB, I suggest working to get this added
-> to the other bus type specs that you care about as well (UEFI, PCI,
-> etc.)
-
-Note that "you can only use authorized SSD and authorized WIFI card in
-this notebook" was done before, but is considered antisocial.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---i0/AhcQY5QxfSsSZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXvuyoQAKCRAw5/Bqldv6
-8j0rAKC4LyPWWRgo5jJUMBzipeCr9oLP5ACgryNN8BQa2ntWgS4kMWPf54Ue+Os=
-=cD1f
------END PGP SIGNATURE-----
-
---i0/AhcQY5QxfSsSZ--
+Reviewed-by: Rob Herring <robh@kernel.org>
