@@ -2,154 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9343820F4A0
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 14:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D5720F522
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 14:52:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387681AbgF3Mbs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 08:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
+        id S2387998AbgF3Mw3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 08:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730095AbgF3Mbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:31:47 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S2387933AbgF3Mw3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:52:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08BC20780;
-        Tue, 30 Jun 2020 12:31:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEE7F2068F;
+        Tue, 30 Jun 2020 12:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593520306;
-        bh=PhXZOiHYFfQIlVAYlW6qFnQSXZojRskUV7lRHqn16QI=;
+        s=default; t=1593521548;
+        bh=amRiArINE+WmUf9ax03q1U0lMCq5RfbQ8ZbzfLKtgBg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cqHNnvn1lWCLKzNx58COqIF64R7i6pFEt/4LFtvh1Ej/N2dgN/Q+MWsoWC3ZNu5Fr
-         fJcY48jSvAkZZNEUk3EkwlqRFhITTJKiKqMCke3rrxcBk83U0HF0I1+QBipkFT1oEp
-         Q/L7EyKjSyu+aoYwUk/9qDLLHmTudgKe/qVS3pFo=
-Received: by pali.im (Postfix)
-        id 944ED81A; Tue, 30 Jun 2020 14:31:44 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 14:31:44 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        b=Cco5bmoE3CYrLezNHfqq54eRM1tMJ5en4y7SfP5cJBqVoWy+6hyFiZoMrl5If688Q
+         iHXnPPiWjE71DMWEPgc/X55d6wcP3bFRxgl/rA8Bgdd6OcGvEgtjZrriH+yojQTv2N
+         lIpeYVA0bUibyUSq9F9UorQk1+FI/P3N3dvYQ+DU=
+Date:   Tue, 30 Jun 2020 14:52:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Rajat Jain <rajatja@google.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200630123144.vllnun266i6n5q4d@pali>
-References: <20200528163809.54f5ldvphrjg3zg3@pali>
- <20200528164938.GA325239@bjorn-Precision-5520>
- <20200529083013.5cg7tvfemomnmvjd@pali>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>, oohall@gmail.com,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+Message-ID: <20200630125216.GA1109228@kroah.com>
+References: <20200630044943.3425049-1-rajatja@google.com>
+ <20200630044943.3425049-6-rajatja@google.com>
+ <20200630104948.GC856968@kuha.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200529083013.5cg7tvfemomnmvjd@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200630104948.GC856968@kuha.fi.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
-
-On Friday 29 May 2020 10:30:13 Pali Rohár wrote:
-> On Thursday 28 May 2020 11:49:38 Bjorn Helgaas wrote:
-> > On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
-> > > On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
-> > > > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
-> > > > > When there is no PCIe card connected and advk_pcie_rd_conf() or
-> > > > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> > > > > root bridge, the aardvark driver throws the following error message:
-> > > > > 
-> > > > >   advk-pcie d0070000.pcie: config read/write timed out
-> > > > > 
-> > > > > Obviously accessing PCIe registers of disconnected card is not possible.
-> > > > > 
-> > > > > Extend check in advk_pcie_valid_device() function for validating
-> > > > > availability of PCIe bus. If PCIe link is down, then the device is marked
-> > > > > as Not Found and the driver does not try to access these registers.
-> > > > > 
-> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > > ---
-> > > > >  drivers/pci/controller/pci-aardvark.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > index 90ff291c24f0..53a4cfd7d377 100644
-> > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-> > > > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-> > > > >  		return false;
-> > > > >  
-> > > > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> > > > > +		return false;
-> > > > 
-> > > > I don't think this is the right fix.  This makes it racy because the
-> > > > link may go down after we call advk_pcie_valid_device() but before we
-> > > > perform the config read.
-> > > 
-> > > Yes, it is racy, but I do not think it cause problems. Trying to read
-> > > PCIe registers when device is not connected cause just those timeouts,
-> > > printing error message and increased delay in advk_pcie_wait_pio() due
-> > > to polling loop. This patch reduce unnecessary access to PCIe registers
-> > > when advk_pcie_wait_pio() polling just fail.
-> > > 
-> > > I think it is a good idea to not call blocking advk_pcie_wait_pio() when
-> > > it is not needed. We could have faster enumeration of PCIe buses when
-> > > card is not connected.
+On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
+> On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
+> > Add a new (optional) field to denote the physical location of a device
+> > in the system, and expose it in sysfs. This was discussed here:
+> > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
 > > 
-> > Maybe advk_pcie_check_pio_status() and advk_pcie_wait_pio() could be
-> > combined so we could get the correct error status as soon as it's
-> > available, without waiting for a timeout?
+> > (The primary choice for attribute name i.e. "location" is already
+> > exposed as an ABI elsewhere, so settled for "site"). Individual buses
+> > that want to support this new attribute can opt-in by setting a flag in
+> > bus_type, and then populating the location of device while enumerating
+> > it.
 > 
-> Any idea how to achieve it?
-> 
-> First call is polling function advk_pcie_wait_pio() and second call is
-> advk_pcie_check_pio_status() which just reads status register and prints
-> error message to dmesg.
-> 
-> So for me it looks like that combining these two functions into one does
-> not change anything. We always need to call polling code prior to
-> checking status register. And therefore need to wait for timeout. Unless
-> something like in this proposed patch is not used (to skip whole
-> register access if it would fail).
+> So why not just call it "physical_location"?
 
-So to answer your question, correct status is possible to retrieve only
-after waiting for timeout. As status would be available only after
-timeout expires.
+That's better, and will allow us to put "3rd blue plug from the left,
+4th row down" in there someday :)
 
-Therefore my proposed patch in this (or some other) form is needed if we
-want to prevent trying to read from registers and waiting for answer
-when card is disconnected.
+All of this is "relative" to the CPU, right?  But what CPU?  Again, how
+are the systems with drawers of PCI and CPUs and memory that can be
+added/removed at any point in time being handled here?  What is
+"internal" and "external" for them?
 
-I would really like to see this issue fixed, so booting linux kernel on
-board without connected PCIe card would not be delayed.
+What exactly is the physical boundry here that is attempting to be
+described?
 
-Thomas, Lorenzo, Bjorn: do you have any idea how to fix it differently?
-Or if not, could be my proposed patch accepted in some form?
+thanks,
 
-> > In any event, the "return PCIBIOS_SET_FAILED" needs to be fixed.  Most
-> > callers of config read do not check for failure, but most of the ones
-> > that do, check for "val == ~0".  Only a few check for a status of
-> > other than PCIBIOS_SUCCESSFUL.
-> > 
-> > > > I have no objection to removing the "config read/write timed out"
-> > > > message.  The "return PCIBIOS_SET_FAILED" in the read case probably
-> > > > should be augmented by setting "*val = 0xffffffff".
-> 
-> Now I see, "*val = 0xffffffff" should be really set when function
-> advk_pcie_rd_conf() fails.
-
-I have already sent separate patch which fixes this issue.
-
-> > > > >  	return true;
-> > > > >  }
-> > > > >  
-> > > > > -- 
-> > > > > 2.20.1
-> > > > > 
+greg "not all the world is your laptop" k-h
