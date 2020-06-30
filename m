@@ -2,113 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0024220EF5A
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 09:32:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD91F20EFAB
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 09:38:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbgF3HcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 03:32:19 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53666 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730089AbgF3HcT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:32:19 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D375CF28A4BA8919D1DB;
-        Tue, 30 Jun 2020 15:32:16 +0800 (CST)
-Received: from [127.0.0.1] (10.174.178.46) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 30 Jun 2020
- 15:32:13 +0800
-Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
-To:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     Aya Levin <ayal@mellanox.com>, Jakub Kicinski <kuba@kernel.org>,
-        "Saeed Mahameed" <saeedm@mellanox.com>,
-        "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        <linux-pci@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Casey Leedom <leedom@chelsio.com>
-References: <ca121a18-8c11-5830-9840-51f353c3ddd2@mellanox.com>
- <20200629193316.GA3283437@bjorn-Precision-5520>
- <20200629195759.GA255688@otc-nc-03>
-From:   Ding Tianhong <dingtianhong@huawei.com>
-Message-ID: <edad6af6-c7b9-c6ae-9002-71a92bcd81ee@huawei.com>
-Date:   Tue, 30 Jun 2020 15:32:12 +0800
+        id S1731019AbgF3Hig (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 03:38:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:17194 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731076AbgF3Hig (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 03:38:36 -0400
+IronPort-SDR: enRu76Hxh25iw2o1Q91dyrEFSWvF+j1kRBV62xXvele7M3W61auaFMX3YngGbyy74AojjrqYe5
+ BD+66PgfV/+g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="207680650"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="207680650"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:38:35 -0700
+IronPort-SDR: 5Rzu2gh6P8gXyz5LRBr0iXOPG7YJJHK7jjxO44B5I8lrvuOGm6ESOwTF9wOo72MgNhMGd8l1AX
+ iEjjH3hNJxNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="266410137"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.173.186]) ([10.249.173.186])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Jun 2020 00:38:28 -0700
+Cc:     baolu.lu@linux.intel.com
+Subject: Re: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external
+ devices only
+To:     Rajat Jain <rajatja@google.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <20200630044943.3425049-1-rajatja@google.com>
+ <20200630044943.3425049-3-rajatja@google.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <606281b8-f71b-edb2-8e06-9f91a0cacf62@linux.intel.com>
+Date:   Tue, 30 Jun 2020 15:38:27 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200629195759.GA255688@otc-nc-03>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.46]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200630044943.3425049-3-rajatja@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 2020/6/30 12:49, Rajat Jain wrote:
+> The "ExternalFacing" devices (root ports) are still internal devices that
+> sit on the internal system fabric and thus trusted. Currently they were
+> being marked untrusted.
+> 
+> This patch uses the platform flag to identify the external facing devices
+> and then use it to mark any downstream devices as "untrusted". The
+> external-facing devices themselves are left as "trusted". This was
+> discussed here: https://lkml.org/lkml/2020/6/10/1049
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 
+For changes in Intel VT-d driver,
 
-ÔÚ 2020/6/30 3:57, Raj, Ashok Ð´µÀ:
-> Hi Bjorn
-> 
-> 
-> On Mon, Jun 29, 2020 at 02:33:16PM -0500, Bjorn Helgaas wrote:
->> [+cc Ashok, Ding, Casey]
->>
->> On Mon, Jun 29, 2020 at 12:32:44PM +0300, Aya Levin wrote:
->>> I wanted to turn on RO on the ETH driver based on
->>> pcie_relaxed_ordering_enabled().
->>> From my experiments I see that pcie_relaxed_ordering_enabled() return true
->>> on Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz. This CPU is from Haswell
->>> series which is known to have bug in RO implementation. In this case, I
->>> expected pcie_relaxed_ordering_enabled() to return false, shouldn't it?
->>
->> Is there an erratum for this?  How do we know this device has a bug
->> in relaxed ordering?
-> 
-> https://software.intel.com/content/www/us/en/develop/download/intel-64-and-ia-32-architectures-optimization-reference-manual.html
-> 
-> For some reason they weren't documented in the errata, but under
-> Optimization manual :-)
-> 
-> Table 3-7. Intel Processor CPU RP Device IDs for Processors Optimizing PCIe
-> Performance
-> Processor CPU RP Device IDs
-> Intel Xeon processors based on Broadwell microarchitecture 6F01H-6F0EH
-> Intel Xeon processors based on Haswell microarchitecture 2F01H-2F0EH
-> 
-> These are the two that were listed in the manual. drivers/pci/quirks.c also
-> has an eloborate list of root ports where relaxed_ordering is disabled. Did
-> you check if its not already covered here?
-> 
-> Send lspci if its not already covered by this table.
-> 
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Looks like the chip series is not in the errta list, but it is really difficult to distinguish and test.
+Best regards,
+baolu
 
+> ---
+> v2: cosmetic changes in commit log
 > 
->>
->>> In addition, we are worried about future bugs in new CPUs which may result
->>> in performance degradation while using RO, as long as the function
->>> pcie_relaxed_ordering_enabled() will return true for these CPUs. 
->>
->> I'm worried about this too.  I do not want to add a Device ID to the
->> quirk_relaxedordering_disable() list for every new Intel CPU.  That's
->> a huge hassle and creates a real problem for old kernels running on
->> those new CPUs, because things might work "most of the time" but not
->> always.
+>   drivers/iommu/intel/iommu.c |  2 +-
+>   drivers/pci/of.c            |  2 +-
+>   drivers/pci/pci-acpi.c      | 13 +++++++------
+>   drivers/pci/probe.c         |  2 +-
+>   include/linux/pci.h         |  8 ++++++++
+>   5 files changed, 18 insertions(+), 9 deletions(-)
 > 
-> I'll check when this is fixed, i was told newer ones should work properly.
-> But I'll confirm.
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index d759e7234e982..1ccb224f82496 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -4743,7 +4743,7 @@ static inline bool has_untrusted_dev(void)
+>   	struct pci_dev *pdev = NULL;
+>   
+>   	for_each_pci_dev(pdev)
+> -		if (pdev->untrusted)
+> +		if (pdev->untrusted || pdev->external_facing)
+>   			return true;
+>   
+>   	return false;
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 27839cd2459f6..22727fc9558df 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -42,7 +42,7 @@ void pci_set_bus_of_node(struct pci_bus *bus)
+>   	} else {
+>   		node = of_node_get(bus->self->dev.of_node);
+>   		if (node && of_property_read_bool(node, "external-facing"))
+> -			bus->self->untrusted = true;
+> +			bus->self->external_facing = true;
+>   	}
+>   
+>   	bus->dev.of_node = node;
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 7224b1e5f2a83..492c07805caf8 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1213,22 +1213,23 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+>   	ACPI_FREE(obj);
+>   }
+>   
+> -static void pci_acpi_set_untrusted(struct pci_dev *dev)
+> +static void pci_acpi_set_external_facing(struct pci_dev *dev)
+>   {
+>   	u8 val;
+>   
+> -	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
+> +	    pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
+>   		return;
+>   	if (device_property_read_u8(&dev->dev, "ExternalFacingPort", &val))
+>   		return;
+>   
+>   	/*
+> -	 * These root ports expose PCIe (including DMA) outside of the
+> -	 * system so make sure we treat them and everything behind as
+> +	 * These root/down ports expose PCIe (including DMA) outside of the
+> +	 * system so make sure we treat everything behind them as
+>   	 * untrusted.
+>   	 */
+>   	if (val)
+> -		dev->untrusted = 1;
+> +		dev->external_facing = 1;
+>   }
+>   
+>   static void pci_acpi_setup(struct device *dev)
+> @@ -1240,7 +1241,7 @@ static void pci_acpi_setup(struct device *dev)
+>   		return;
+>   
+>   	pci_acpi_optimize_delay(pci_dev, adev->handle);
+> -	pci_acpi_set_untrusted(pci_dev);
+> +	pci_acpi_set_external_facing(pci_dev);
+>   	pci_acpi_add_edr_notifier(pci_dev);
+>   
+>   	pci_acpi_add_pm_notifier(adev, pci_dev);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 6d87066a5ecc5..8c40c00413e74 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1552,7 +1552,7 @@ static void set_pcie_untrusted(struct pci_dev *dev)
+>   	 * untrusted as well.
+>   	 */
+>   	parent = pci_upstream_bridge(dev);
+> -	if (parent && parent->untrusted)
+> +	if (parent && (parent->untrusted || parent->external_facing))
+>   		dev->untrusted = true;
+>   }
+>   
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index a26be5332bba6..fe1bc603fda40 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -432,6 +432,14 @@ struct pci_dev {
+>   	 * mappings to make sure they cannot access arbitrary memory.
+>   	 */
+>   	unsigned int	untrusted:1;
+> +	/*
+> +	 * Devices are marked as external-facing using info from platform
+> +	 * (ACPI / devicetree). An external-facing device is still an internal
+> +	 * trusted device, but it faces external untrusted devices. Thus any
+> +	 * devices enumerated downstream an external-facing device is marked
+> +	 * as untrusted.
+> +	 */
+> +	unsigned int	external_facing:1;
+>   	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
+>   	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
+>   	unsigned int	irq_managed:1;
 > 
-
-Maybe prevent the Relax Ordering for all Intel CPUs is a better soluton, looks like
-it will not break anything.
-
-Ding
-> 
-> .
-> 
-
