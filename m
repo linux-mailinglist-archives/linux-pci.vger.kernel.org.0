@@ -2,93 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8292A20F316
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 12:50:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EECE20F31C
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 12:52:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbgF3Kt7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 06:49:59 -0400
-Received: from mga03.intel.com ([134.134.136.65]:7174 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732632AbgF3Kt6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:49:58 -0400
-IronPort-SDR: pHUPZmOhELyoV/gKz5hpx6x4EHIcxd36ZecM/uOsSqwLEcQjLAOP1yWgO3t6H+a9EGBQkW5cDv
- yYc2uBsPcDnA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="146185002"
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="146185002"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 03:49:58 -0700
-IronPort-SDR: AHCabFJYknbIO+16YmrYmksrEmbBeWSI8iMfurM3s88EU4yDaqt+uf+KCqFHe7Ejg8AvfzLXib
- 7p2mDBLjdUnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="386664591"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 30 Jun 2020 03:49:49 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 30 Jun 2020 13:49:48 +0300
-Date:   Tue, 30 Jun 2020 13:49:48 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-Message-ID: <20200630104948.GC856968@kuha.fi.intel.com>
-References: <20200630044943.3425049-1-rajatja@google.com>
- <20200630044943.3425049-6-rajatja@google.com>
+        id S1732557AbgF3KwO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 06:52:14 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2555 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbgF3KwO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 06:52:14 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb18fb0000>; Tue, 30 Jun 2020 03:50:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 03:52:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 30 Jun 2020 03:52:13 -0700
+Received: from [10.25.72.87] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 10:52:06 +0000
+Subject: Re: [PATCH V3 1/2] arm64: tegra: Re-order PCIe aperture mappings to
+ support ACPI boot
+To:     Jon Hunter <jonathanh@nvidia.com>, <bhelgaas@google.com>,
+        <lorenzo.pieralisi@arm.com>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <andrew.murray@arm.com>, <treding@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200106082709.14370-1-vidyas@nvidia.com>
+ <20200110191500.9538-1-vidyas@nvidia.com>
+ <20200110191500.9538-2-vidyas@nvidia.com>
+ <d52db35b-dbf8-a706-9611-95448cf6a69e@nvidia.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <7c946e2a-6fd4-f4c8-8afe-f9d0125fdaa0@nvidia.com>
+Date:   Tue, 30 Jun 2020 16:22:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630044943.3425049-6-rajatja@google.com>
+In-Reply-To: <d52db35b-dbf8-a706-9611-95448cf6a69e@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593514235; bh=woO8ZH9Y+1NElM5TcwDg3TM1c41wMq5lOJNOoty2UYA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FQFTlaYRfwmaNdU+kPVebmW6vJX/LwHRxdHi//1NHs6JLKIgYR0P5NRG9C4y2VyYR
+         +cy+d800P/KZ+JwvEuh2rHPZCbrPi3PXHVIiZfKlIsLdLpQIubRjl/Nh1oN3RLZQhL
+         zCLeEJLfj/hhNbZi1UTXdpS2Bk+7k8nLXi5RqyfdvZqfvw052ELfBeU9GsQjO4hTUK
+         dhBGCa2evDTKsMlaUHC0gHZrTC4BNCoYVg1PxQGFqYosd0Y2ZKbjgRoaSbCye5gfDS
+         V4PkMFxxzhAE0+zOkkvMHIUzbgDrMsRIkM4dxCxNOTM5eheUVphvm5Xiga0wbGseC8
+         nsEwpvOvh1vkg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
-> Add a new (optional) field to denote the physical location of a device
-> in the system, and expose it in sysfs. This was discussed here:
-> https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+
+
+On 29-Jun-20 7:01 PM, Jon Hunter wrote:
+> Hi Sagar,
 > 
-> (The primary choice for attribute name i.e. "location" is already
-> exposed as an ABI elsewhere, so settled for "site"). Individual buses
-> that want to support this new attribute can opt-in by setting a flag in
-> bus_type, and then populating the location of device while enumerating
-> it.
+> On 10/01/2020 19:14, Vidya Sagar wrote:
+>> Re-order Tegra194's PCIe aperture mappings to have IO window moved to
+>> 64-bit aperture and have the entire 32-bit aperture used for accessing
+>> the configuration space. This makes it to use the entire 32MB of the 32-bit
+>> aperture for ECAM purpose while booting through ACPI.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> 
+> Any reason why we should not merge this change, even if patch 2/2 is not
+> accepted? If there is no harm in us merging this, this would be one less
+> change for us to carry out-of-tree. If so, can you update and re-post
+> for 5.9?
+There is no issue in merging this change alone. I'll send a patch for 
+review for 5.9 soon.
 
-So why not just call it "physical_location"?
+Thanks,
+Vidya Sagar
 
-
-thanks,
-
--- 
-heikki
+> 
+> Cheers
+> Jon
+> 
