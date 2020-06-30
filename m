@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 547D020FF66
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 23:46:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3DD020FF68
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 23:46:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgF3VqD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 17:46:03 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53576 "EHLO
+        id S1729042AbgF3VqN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 17:46:13 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53630 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbgF3VqD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 17:46:03 -0400
+        with ESMTP id S1728109AbgF3VqN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 17:46:13 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 797B31C0C0A; Tue, 30 Jun 2020 23:45:59 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 23:45:59 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jesse Barnes <jsbarnes@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
+        id 548E51C0C0F; Tue, 30 Jun 2020 23:46:10 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 23:46:09 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
         Rajat Jain <rajatxjain@gmail.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         "Raj, Ashok" <ashok.raj@intel.com>,
@@ -43,22 +43,22 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
  "whitelisted" drivers
-Message-ID: <20200630214559.GA7113@duo.ucw.cz>
-References: <20200602050626.GA2174820@kroah.com>
- <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
- <20200603060751.GA465970@kroah.com>
- <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com>
+Message-ID: <20200630214609.GB7113@duo.ucw.cz>
+References: <20200603121613.GA1488883@kroah.com>
  <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
  <20200605080229.GC2209311@kroah.com>
  <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
  <20200607113632.GA49147@kroah.com>
  <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+ <20200608175015.GA457685@kroah.com>
+ <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
+ <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
+ <20200609095444.GA533843@kroah.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
 Content-Disposition: inline
-In-Reply-To: <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+In-Reply-To: <20200609095444.GA533843@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -66,41 +66,29 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---NzB8fVQJ5HfG6fxh
+--i0/AhcQY5QxfSsSZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi!
 
-> Yes such drivers should be fixed, no doubt.  But without lots of
-> fuzzing (we're working on this) and testing we'd like to avoid
-> exposing that attack surface at all.
+> > > I think that's inherently platform specific to some extent.  We can do
+> > > it with our coreboot based firmware, but there's no guarantee other
+> > > vendors will adopt the same approach.  But I think at least for the
+> > > ChromeOS ecosystem we can come up with something that'll work, and
+> > > allow us to dtrt in userspace wrt driver binding.
+> >=20
+> > Agree, we can work with our firmware teams to get that right, and then
+> > expose it from kernel to userspace to help it implement the policy we
+> > want.
 >=20
-> I think your suggestion to disable driver binding once the initial
-> bus/slot devices have been bound will probably work for this
-> situation.  I just wanted to be clear that without some auditing,
-> fuzzing, and additional testing, we simply have to assume that drivers
-> are *not* secure and avoid using them on untrusted devices until we're
-> fairly confident they can handle them (whether just misbehaving or
-> malicious), in combination with other approaches like IOMMUs of
-> course.  And this isn't because we don't trust driver authors or
-> kernel developers to dtrt, it's just that for many devices (maybe USB
-> is an exception) I think driver authors haven't had to consider this
-> case much, and so I think it's prudent to expect bugs in this area
-> that we need to find & fix.
+> This is already in the spec for USB, I suggest working to get this added
+> to the other bus type specs that you care about as well (UEFI, PCI,
+> etc.)
 
-We normally trust the hardware NOT to be malicious. (Because if hacker
-has physical access to hardware and lot of resources, you lost).
-
-This is still true today, but maybe trusting USB devices is bad idea,
-so drivers are being cleaned up. PCI drivers will be WORSE in this
-regard. And you can't really protect against malicious CPU, and it is
-very very hard to protect against malicous RAM (probably not practical
-without explicit CPU support).
-
-Linux was designed with "don't let hackers near your hardware" threat
-model in mind.
+Note that "you can only use authorized SSD and authorized WIFI card in
+this notebook" was done before, but is considered antisocial.
 
 Best regards,
 									Pavel
@@ -109,14 +97,14 @@ Best regards,
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---NzB8fVQJ5HfG6fxh
+--i0/AhcQY5QxfSsSZ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXvuylwAKCRAw5/Bqldv6
-8vGdAJ0QKiY2OtzgdgyV2OtyuW+u9KMnagCcD9BR/9VGydJ0oNx7BA9liQVujEY=
-=2jEj
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXvuyoQAKCRAw5/Bqldv6
+8j0rAKC4LyPWWRgo5jJUMBzipeCr9oLP5ACgryNN8BQa2ntWgS4kMWPf54Ue+Os=
+=cD1f
 -----END PGP SIGNATURE-----
 
---NzB8fVQJ5HfG6fxh--
+--i0/AhcQY5QxfSsSZ--
