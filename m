@@ -2,68 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E581520F37E
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 13:20:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9343820F4A0
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 14:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgF3LUZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 07:20:25 -0400
-Received: from smtp3.sd73.bc.ca ([142.24.50.246]:33794 "EHLO smtp3.sd73.bc.ca"
+        id S2387681AbgF3Mbs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 08:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726931AbgF3LUZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:20:25 -0400
-X-Greylist: delayed 10265 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jun 2020 07:20:25 EDT
-Received: from smtp.sd73.bc.ca (smtp.sd73.bc.ca [10.10.10.14])
-        by smtp3.sd73.bc.ca (Postfix) with ESMTP id 05DF965B90;
-        Tue, 30 Jun 2020 01:00:38 -0700 (PDT)
-Received: from zimbra2.sd73.bc.ca (zimbra.sd73.bc.ca [10.10.10.7])
-        by smtp.sd73.bc.ca (Postfix) with ESMTP id 2ADC7E0364;
-        Tue, 30 Jun 2020 01:00:46 -0700 (PDT)
-Received: from zimbra2.sd73.bc.ca (localhost [127.0.0.1])
-        by zimbra2.sd73.bc.ca (Postfix) with ESMTPS id CF7935C0D3D019;
-        Tue, 30 Jun 2020 00:52:59 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.sd73.bc.ca (Postfix) with ESMTP id 6E0AB5C0D3D011;
-        Tue, 30 Jun 2020 00:52:59 -0700 (PDT)
-Received: from zimbra2.sd73.bc.ca ([127.0.0.1])
-        by localhost (zimbra2.sd73.bc.ca [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ceo2fX8q2GHa; Tue, 30 Jun 2020 00:52:59 -0700 (PDT)
-Received: from zimbra2.sd73.bc.ca (zimbra3.sd73.bc.ca [10.10.10.7])
-        by zimbra2.sd73.bc.ca (Postfix) with ESMTP id 0E4775C0D46833;
-        Tue, 30 Jun 2020 00:52:58 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 00:52:57 -0700 (PDT)
-From:   charles jackson <lisa.petel@sd73.bc.ca>
-Reply-To: charles jackson <charlesjacksonjr001@gmail.com>
-Message-ID: <123832794.67036344.1593503577904.JavaMail.zimbra@zimbra.sd73.bc.ca>
-Subject: =?UTF-8?Q?=5BPossible_Spam=5D_Covid?= =?UTF-8?Q?_19_Wohlt=C3=A4tigkeitsfon?= =?UTF-8?Q?ds?=
+        id S1730095AbgF3Mbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:31:47 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B08BC20780;
+        Tue, 30 Jun 2020 12:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593520306;
+        bh=PhXZOiHYFfQIlVAYlW6qFnQSXZojRskUV7lRHqn16QI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cqHNnvn1lWCLKzNx58COqIF64R7i6pFEt/4LFtvh1Ej/N2dgN/Q+MWsoWC3ZNu5Fr
+         fJcY48jSvAkZZNEUk3EkwlqRFhITTJKiKqMCke3rrxcBk83U0HF0I1+QBipkFT1oEp
+         Q/L7EyKjSyu+aoYwUk/9qDLLHmTudgKe/qVS3pFo=
+Received: by pali.im (Postfix)
+        id 944ED81A; Tue, 30 Jun 2020 14:31:44 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 14:31:44 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200630123144.vllnun266i6n5q4d@pali>
+References: <20200528163809.54f5ldvphrjg3zg3@pali>
+ <20200528164938.GA325239@bjorn-Precision-5520>
+ <20200529083013.5cg7tvfemomnmvjd@pali>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.10.90]
-X-Mailer: Zimbra 8.6.0_GA_1242 (zclient/8.6.0_GA_1242)
-Thread-Topic: Covid 19 =?utf-8?Q?Wohlt=C3=A4tigkeitsfonds?=
-Thread-Index: aoAjdb49mTyd3F4aTLWaClPM1ULilQ==
-To:     unlisted-recipients:; (no To-header on input)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200529083013.5cg7tvfemomnmvjd@pali>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello!
 
+On Friday 29 May 2020 10:30:13 Pali Rohár wrote:
+> On Thursday 28 May 2020 11:49:38 Bjorn Helgaas wrote:
+> > On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
+> > > On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
+> > > > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
+> > > > > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > > > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > > > > root bridge, the aardvark driver throws the following error message:
+> > > > > 
+> > > > >   advk-pcie d0070000.pcie: config read/write timed out
+> > > > > 
+> > > > > Obviously accessing PCIe registers of disconnected card is not possible.
+> > > > > 
+> > > > > Extend check in advk_pcie_valid_device() function for validating
+> > > > > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > > > > as Not Found and the driver does not try to access these registers.
+> > > > > 
+> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > > ---
+> > > > >  drivers/pci/controller/pci-aardvark.c | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > > > index 90ff291c24f0..53a4cfd7d377 100644
+> > > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> > > > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> > > > >  		return false;
+> > > > >  
+> > > > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > > > > +		return false;
+> > > > 
+> > > > I don't think this is the right fix.  This makes it racy because the
+> > > > link may go down after we call advk_pcie_valid_device() but before we
+> > > > perform the config read.
+> > > 
+> > > Yes, it is racy, but I do not think it cause problems. Trying to read
+> > > PCIe registers when device is not connected cause just those timeouts,
+> > > printing error message and increased delay in advk_pcie_wait_pio() due
+> > > to polling loop. This patch reduce unnecessary access to PCIe registers
+> > > when advk_pcie_wait_pio() polling just fail.
+> > > 
+> > > I think it is a good idea to not call blocking advk_pcie_wait_pio() when
+> > > it is not needed. We could have faster enumeration of PCIe buses when
+> > > card is not connected.
+> > 
+> > Maybe advk_pcie_check_pio_status() and advk_pcie_wait_pio() could be
+> > combined so we could get the correct error status as soon as it's
+> > available, without waiting for a timeout?
+> 
+> Any idea how to achieve it?
+> 
+> First call is polling function advk_pcie_wait_pio() and second call is
+> advk_pcie_check_pio_status() which just reads status register and prints
+> error message to dmesg.
+> 
+> So for me it looks like that combining these two functions into one does
+> not change anything. We always need to call polling code prior to
+> checking status register. And therefore need to wait for timeout. Unless
+> something like in this proposed patch is not used (to skip whole
+> register access if it would fail).
 
--- 
-Hallo
- 
- Ich bin Charles W. Jackson aus North Carolina, Vereinigte Staaten von Amerika, und ich bin der Gewinner des Mega-Millionen-Jackpots von 344 Millionen US-Dollar. Ich spende die Summe von 2.000.000 Millionen Euro als Teil der Hilfsgelder f&uuml;r das Corona-Virus.
- 
- Dies ist Ihr Spendencode: [CJ530342019]
- 
- www.youtube.com/watch?v=BSr8myiLPMQ
- 
- Bitte antworten Sie auf diese E-Mail mit dem SPENDERCODE:
- 
- charlesjacksonjr001@gmail.com
- 
- Ich hoffe, dass Sie und Ihre Familie dies durchkommen
- 
- 
- Herr Charles Jackson
+So to answer your question, correct status is possible to retrieve only
+after waiting for timeout. As status would be available only after
+timeout expires.
+
+Therefore my proposed patch in this (or some other) form is needed if we
+want to prevent trying to read from registers and waiting for answer
+when card is disconnected.
+
+I would really like to see this issue fixed, so booting linux kernel on
+board without connected PCIe card would not be delayed.
+
+Thomas, Lorenzo, Bjorn: do you have any idea how to fix it differently?
+Or if not, could be my proposed patch accepted in some form?
+
+> > In any event, the "return PCIBIOS_SET_FAILED" needs to be fixed.  Most
+> > callers of config read do not check for failure, but most of the ones
+> > that do, check for "val == ~0".  Only a few check for a status of
+> > other than PCIBIOS_SUCCESSFUL.
+> > 
+> > > > I have no objection to removing the "config read/write timed out"
+> > > > message.  The "return PCIBIOS_SET_FAILED" in the read case probably
+> > > > should be augmented by setting "*val = 0xffffffff".
+> 
+> Now I see, "*val = 0xffffffff" should be really set when function
+> advk_pcie_rd_conf() fails.
+
+I have already sent separate patch which fixes this issue.
+
+> > > > >  	return true;
+> > > > >  }
+> > > > >  
+> > > > > -- 
+> > > > > 2.20.1
+> > > > > 
