@@ -2,112 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96F6B20F552
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 15:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7ABB20F560
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 15:04:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387993AbgF3NAs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 09:00:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35058 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387860AbgF3NAr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 09:00:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d4so18322175otk.2;
-        Tue, 30 Jun 2020 06:00:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WqwbwU46JyOBSJ4M/llFeE1rugAXIYDl6Af9czQJBYA=;
-        b=jDFgAAuJGqYlbU3fXLv/gMLOuQAgYysSgZSbE6LepFkZOT3HfO8Qp2g512nitXF8WU
-         tNL8LbHaLiHWlMgAIIEiCFaAfI6TO/0L9EiHmYLaWoh6gUj1VLFDDvC/aVPiU86eNlzD
-         NWuurDaD4xa5PQzaFP/bfg4nNL2GJTW09ssxbhRplYCxZikO+6H75j0Q9MwIUq3s7Htc
-         4poFgdVtWsWy2dxLNFi6TDz4/vaAgL/rDpMso6eUUDfCVbFWLEmmN4fwK2mXrNcX1GAz
-         TmOlI6aWtq66iOgYRYYrpAN6RfUx0CbUwNnQzncJs2/WFMTdR7vaJX1ol8Fe6gG6vJfL
-         Xl/Q==
-X-Gm-Message-State: AOAM530oW9yWTHcFvY2+YKQ5T4QFA6QisDf0aqqI//cEwLhdIuchj9vF
-        uMDPD/AqqOnGSb60rDvQSvEjZVIcv4Khfs7w0b45kg==
-X-Google-Smtp-Source: ABdhPJxcZHXFcqosLW4f6iGFDsj3uWlS9K4nihvXh0uIED4aD7noF+010OtlL0o8ZeIfLr5tSucG2WE3CDKvAel9ATU=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr17985171otb.262.1593522045805;
- Tue, 30 Jun 2020 06:00:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
- <20200630104948.GC856968@kuha.fi.intel.com> <20200630125216.GA1109228@kroah.com>
-In-Reply-To: <20200630125216.GA1109228@kroah.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 30 Jun 2020 15:00:34 +0200
-Message-ID: <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
+        id S2387933AbgF3NE1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 09:04:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6787 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387492AbgF3NE1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 09:04:27 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 27BDADEC1BEF76A390DF;
+        Tue, 30 Jun 2020 21:04:24 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.33) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 30 Jun 2020
+ 21:04:21 +0800
+Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
+ the ACPI namespace for NC
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        <iommu@lists.linux-foundation.org>, <linux-acpi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
+ <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
+ <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
+ <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
+ <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
+Date:   Tue, 30 Jun 2020 21:04:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.33]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
-> > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
-> > > Add a new (optional) field to denote the physical location of a device
-> > > in the system, and expose it in sysfs. This was discussed here:
-> > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
-> > >
-> > > (The primary choice for attribute name i.e. "location" is already
-> > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
-> > > that want to support this new attribute can opt-in by setting a flag in
-> > > bus_type, and then populating the location of device while enumerating
-> > > it.
-> >
-> > So why not just call it "physical_location"?
->
-> That's better, and will allow us to put "3rd blue plug from the left,
-> 4th row down" in there someday :)
->
-> All of this is "relative" to the CPU, right?  But what CPU?  Again, how
-> are the systems with drawers of PCI and CPUs and memory that can be
-> added/removed at any point in time being handled here?  What is
-> "internal" and "external" for them?
->
-> What exactly is the physical boundry here that is attempting to be
-> described?
+On 2020/6/30 18:24, Lorenzo Pieralisi wrote:
+> On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
+> 
+> [...]
+> 
+>>> For devices that aren't described in the DSDT - IORT translations
+>>> are determined by their ACPI parent device. Do you see/Have you
+>>> found any issue with this approach ?
+>>
+>> The spec says "Describes the IO relationships between devices
+>> represented in the ACPI namespace.", and in section 3.1.1.3 Named
+>> component node, it says:
+> 
+> PCI devices aren't necessarily described in the ACPI namespace and we
+> still use IORT to describe them - through the RC node.
+> 
+>> "Named component nodes are used to describe devices that are also
+>> included in the Differentiated System Description Table (DSDT). See
+>> [ACPI]."
+>>
+>> So from my understanding, the IORT spec for now, can only do ID
+>> translations for devices in the DSDT.
+> 
+> I think you can read this multiple ways but this patch does not
+> change this concept. What changes, is applying parent's node IORT
+> mapping to child nodes with no associated DSDT nodes, it is the
+> same thing we do with PCI and the _DMA method - we could update
+> the wording in the specs if that clarifies but I don't think this
+> deliberately disregards the specifications.
 
-Also, where is the "physical location" information going to come from?
+I agree, but it's better to update the wording of the spec.
 
-If that is the platform firmware (which I suspect is the anticipated
-case), there may be problems with reliability related to that.
+> 
+>>>> For a platform device, if I use its parent's full path name for
+>>>> its named component entry, then it will match, but this will violate
+>>>> the IORT spec.
+>>>
+>>> Can you elaborate on this please I don't get the point you
+>>> are making.
+>>
+>> For example, device A is not described in DSDT so can't represent
+>> as a NC node in IORT. Device B can be described in DSDT and it
+>> is the parent of device A, so device B can be represented in IORT
+>> with memory access properties and node flags with Substream width
+>> and Stall supported info.
+>>
+>> When we trying to translate device A's ID, we reuse all the memory
+>> access properties and node flags from its parent (device B), but
+>> will it the same?
+> 
+> I assume so why wouldn't it be ? Why would be describe them in
+> a parent-child relationship if that's not how the system looks like
+> in HW ?
+
+The point I'm making is that I'm not sure all the memory access and
+stall properties are the same for the parent and the device itself.
+
+> 
+> Do you have a specific example in mind that we should be aware of ?
+> 
+>> So the IORT spec don't support this, at least it's pretty vague
+>> I think.
+> 
+> I think that's a matter of wording, it can be updated if it needs be,
+> reach out if you see any issue with the current approach please.
+
+If the all the properties for parent and device itself are the same,
+I have no strong opinion for this patch, but it's better to update
+the wording of the spec as well.
+
+Thanks
+Hanjun
+
