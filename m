@@ -2,133 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7ABB20F560
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 15:04:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1852120F587
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 15:23:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387933AbgF3NE1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 09:04:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6787 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387492AbgF3NE1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:04:27 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 27BDADEC1BEF76A390DF;
-        Tue, 30 Jun 2020 21:04:24 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.33) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 30 Jun 2020
- 21:04:21 +0800
-Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
- the ACPI namespace for NC
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        <iommu@lists.linux-foundation.org>, <linux-acpi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
- <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
- <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
- <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
- <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
-Date:   Tue, 30 Jun 2020 21:04:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1730050AbgF3NX2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 09:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgF3NX1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 09:23:27 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2412F206B6;
+        Tue, 30 Jun 2020 13:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593523406;
+        bh=PGAHFgMhDN1u7gECd63b+0VCpc0amUzqW8afA0B0F9Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OGuiOySPfq8PdDcsdgvXPH95bjBEFWPR0zMTVi0apeFlDNXxN67PFjbLyeVh0s+ok
+         S58Z+qphFJu4G0BXm0awrY4dDQd6tRfXD4tjHmXVAxtC9EVxi1/RpLnT2I1HSCKmNN
+         mUAN6PoLJU0I6z4m4wl67FJ858Rvudd1BzWXOPAE=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jqGEO-007k6P-Cp; Tue, 30 Jun 2020 14:23:24 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.33]
-X-CFilter-Loop: Reflected
+Date:   Tue, 30 Jun 2020 14:23:24 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+In-Reply-To: <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87v9jcet5h.wl-maz@kernel.org>
+ <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/6/30 18:24, Lorenzo Pieralisi wrote:
-> On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
+On 2020-06-29 10:49, Kunihiko Hayashi wrote:
+> Hi Marc,
 > 
-> [...]
+> On 2020/06/27 18:48, Marc Zyngier wrote:
+>> On Thu, 18 Jun 2020 09:38:09 +0100,
+>> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+>>> 
+>>> The misc interrupts consisting of PME, AER, and Link event, is 
+>>> handled
+>>> by INTx handler, however, these interrupts should be also handled by
+>>> MSI handler.
+>>> 
+>>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>>> interrupts, which is called from both INTx and MSI handlers.
+>>> This function detects PME and AER interrupts with the status 
+>>> register,
+>>> and invoke PME and AER drivers related to MSI.
+>>> 
+>>> And this sets the mask for misc interrupts from INTx if MSI is 
+>>> enabled
+>>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>> 
+>>> Cc: Marc Zyngier <maz@kernel.org>
+>>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>> ---
+>>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 
+>>> ++++++++++++++++++++++++------
+>>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>> 
+>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c 
+>>> b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>> index a5401a0..5ce2479 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>> @@ -44,7 +44,9 @@
+>>>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>>>     #define PCL_RCV_INT			0x8108
+>>> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>>>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+>>> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>>>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>>>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+>>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct 
+>>> dw_pcie *pci)
+>>>     static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv 
+>>> *priv)
+>>>   {
+>>> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>>> +	u32 val;
+>>> +
+>>> +	val = PCL_RCV_INT_ALL_ENABLE;
+>>> +	if (pci_msi_enabled())
+>>> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+>>> +	else
+>>> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+>> 
+>> Does this affect endpoints? Or just the RC itself?
 > 
->>> For devices that aren't described in the DSDT - IORT translations
->>> are determined by their ACPI parent device. Do you see/Have you
->>> found any issue with this approach ?
->>
->> The spec says "Describes the IO relationships between devices
->> represented in the ACPI namespace.", and in section 3.1.1.3 Named
->> component node, it says:
+> These interrupts are asserted by RC itself, so this part affects only 
+> RC.
 > 
-> PCI devices aren't necessarily described in the ACPI namespace and we
-> still use IORT to describe them - through the RC node.
-> 
->> "Named component nodes are used to describe devices that are also
->> included in the Differentiated System Description Table (DSDT). See
->> [ACPI]."
->>
->> So from my understanding, the IORT spec for now, can only do ID
->> translations for devices in the DSDT.
-> 
-> I think you can read this multiple ways but this patch does not
-> change this concept. What changes, is applying parent's node IORT
-> mapping to child nodes with no associated DSDT nodes, it is the
-> same thing we do with PCI and the _DMA method - we could update
-> the wording in the specs if that clarifies but I don't think this
-> deliberately disregards the specifications.
+>>> +
+>>> +	writel(val, priv->base + PCL_RCV_INT);
+>>>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>>   }
+>>>   @@ -231,32 +241,56 @@ static const struct irq_domain_ops 
+>>> uniphier_intx_domain_ops = {
+>>>   	.map = uniphier_pcie_intx_map,
+>>>   };
+>>>   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool 
+>>> is_msi)
+>>>   {
+>>> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>>> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+>>> -	unsigned long reg;
+>>> -	u32 val, bit, virq;
+>>> +	u32 val, virq;
+>>>   -	/* INT for debug */
+>>>   	val = readl(priv->base + PCL_RCV_INT);
+>>>     	if (val & PCL_CFG_BW_MGT_STATUS)
+>>>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>>> +
+>>>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>>> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>> -		dev_dbg(pci->dev, "Root Error\n");
+>>> -	if (val & PCL_CFG_PME_MSI_STATUS)
+>>> -		dev_dbg(pci->dev, "PME Interrupt\n");
+>>> +
+>>> +	if (is_msi) {
+>>> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>> +			dev_dbg(pci->dev, "Root Error Status\n");
+>>> +
+>>> +		if (val & PCL_CFG_PME_MSI_STATUS)
+>>> +			dev_dbg(pci->dev, "PME Interrupt\n");
+>>> +
+>>> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>>> +			   PCL_CFG_PME_MSI_STATUS)) {
+>>> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+>>> +			generic_handle_irq(virq);
+>>> +		}
+>>> +	}
+>> 
+>> Please have two handlers: one for interrupts that are from the RC,
+>> another for interrupts coming from the endpoints.
+> I assume that this handler treats interrupts from the RC only and
+> this is set on the member ".msi_host_isr" added in the patch 1/6.
+> I think that the handler for interrupts coming from endpoints should be
+> treated as a normal case (after calling .msi_host_isr in
+> dw_handle_msi_irq()).
 
-I agree, but it's better to update the wording of the spec.
+It looks pretty odd that you end-up dealing with both from the
+same "parent" interrupt. I guess this is in keeping with the
+rest of the DW PCIe hacks... :-/
 
-> 
->>>> For a platform device, if I use its parent's full path name for
->>>> its named component entry, then it will match, but this will violate
->>>> the IORT spec.
->>>
->>> Can you elaborate on this please I don't get the point you
->>> are making.
->>
->> For example, device A is not described in DSDT so can't represent
->> as a NC node in IORT. Device B can be described in DSDT and it
->> is the parent of device A, so device B can be represented in IORT
->> with memory access properties and node flags with Substream width
->> and Stall supported info.
->>
->> When we trying to translate device A's ID, we reuse all the memory
->> access properties and node flags from its parent (device B), but
->> will it the same?
-> 
-> I assume so why wouldn't it be ? Why would be describe them in
-> a parent-child relationship if that's not how the system looks like
-> in HW ?
+It is for Lorenzo to make up his mind about this anyway.
 
-The point I'm making is that I'm not sure all the memory access and
-stall properties are the same for the parent and the device itself.
+Thanks,
 
-> 
-> Do you have a specific example in mind that we should be aware of ?
-> 
->> So the IORT spec don't support this, at least it's pretty vague
->> I think.
-> 
-> I think that's a matter of wording, it can be updated if it needs be,
-> reach out if you see any issue with the current approach please.
-
-If the all the properties for parent and device itself are the same,
-I have no strong opinion for this patch, but it's better to update
-the wording of the spec as well.
-
-Thanks
-Hanjun
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
