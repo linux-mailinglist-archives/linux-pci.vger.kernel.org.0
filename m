@@ -2,179 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEB7F20ECE3
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 06:50:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0024220EF5A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jun 2020 09:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbgF3EuM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 00:50:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729448AbgF3EuC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Jun 2020 00:50:02 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32297C03E979
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:50:02 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id fr7so9308233pjb.4
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jun 2020 21:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=4vDncP2teZqEXBfb800/aEh0NO8oHsdmcXXXRRGWulY=;
-        b=qKfJwCm7AT0BlfktAUmwXkHFpGx7Oh79bjH+pxC9SFGuzzGtOsIQxWs5Yj5phY/cqR
-         45gYinm4T35G4tjqFwkV9aSr7wWQxsY1P4wUDPVSLq7L144QzVPw9Je6ohlEDpSLC9nm
-         Uqd6Gb5/YhRsTodxBhPYntMsn2Gfo/0bCSgfjk2MiN5Cc3Bivrb2skYwEKddwTq9qSSj
-         31cbZbHQz15k9yatl1muDzJiSkFI+87X7Xa5iBSnZami9myyuYwEW/ifoFJAh5sMur4H
-         zysOT+Xrvm66HaayFqV0f6nbFP2WrzQBAb4HBOufuAhGFqxcrqI+6IeKEiNqG8A/jaLj
-         KggQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=4vDncP2teZqEXBfb800/aEh0NO8oHsdmcXXXRRGWulY=;
-        b=bw6dpf79gnaNS471SXDImpw8HqQKx/pvUPIWV+BtQ2Ee3iUVuE2H/SfXbl9DHYTeOR
-         V5TBveyPWh1tERGcIuRCHkeaF0+0i26ysg/oaqDtUonx4uHLWQ/r/ADU4YzD4sJSQ1Gk
-         SyHKyXoshDOFhY7li+a2RM6fWg7cu6pI90JeC62ytdA5vurgXy0s+V3f1EQWW+xWv5R+
-         r0i8rQYm9jDIrQdVrQk3BxsqtuU+ZDuxnhnk6FoLblfZyIN17/toASmUFveryOHXYB4Y
-         6n/FNWYzNrfpXCmPXv+V00Qej726lmH/6TG2QqzSUwcvYE0HelF8u9Y0rG65+fMEoPhJ
-         +ndQ==
-X-Gm-Message-State: AOAM532odouNX0RWJfVKCjhU9/Mf2SdFsmr7NWdxIDdLPprONTq8S4da
-        U3aZxaqQFTw/jkP4eNOr7wpz5+FmNWm8
-X-Google-Smtp-Source: ABdhPJy7/9qcpqbednFkmBX9y9QX6DThdAm5Y+t91G8xTDRUtBBKWkL0VbqPTiirQl0bhQoYHnqP79Ft+Iel
-X-Received: by 2002:a17:90a:304:: with SMTP id 4mr20033768pje.219.1593492601508;
- Mon, 29 Jun 2020 21:50:01 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:49:43 -0700
-In-Reply-To: <20200630044943.3425049-1-rajatja@google.com>
-Message-Id: <20200630044943.3425049-8-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200630044943.3425049-1-rajatja@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 7/7] PCI: Add parameter to disable attaching external devices
-From:   Rajat Jain <rajatja@google.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1731016AbgF3HcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 03:32:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53666 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730089AbgF3HcT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 03:32:19 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D375CF28A4BA8919D1DB;
+        Tue, 30 Jun 2020 15:32:16 +0800 (CST)
+Received: from [127.0.0.1] (10.174.178.46) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 30 Jun 2020
+ 15:32:13 +0800
+Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
+To:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     Aya Levin <ayal@mellanox.com>, Jakub Kicinski <kuba@kernel.org>,
+        "Saeed Mahameed" <saeedm@mellanox.com>,
+        "mkubecek@suse.cz" <mkubecek@suse.cz>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        <linux-pci@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Casey Leedom <leedom@chelsio.com>
+References: <ca121a18-8c11-5830-9840-51f353c3ddd2@mellanox.com>
+ <20200629193316.GA3283437@bjorn-Precision-5520>
+ <20200629195759.GA255688@otc-nc-03>
+From:   Ding Tianhong <dingtianhong@huawei.com>
+Message-ID: <edad6af6-c7b9-c6ae-9002-71a92bcd81ee@huawei.com>
+Date:   Tue, 30 Jun 2020 15:32:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200629195759.GA255688@otc-nc-03>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.178.46]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introduce a PCI parameter that disables the automatic attachment of
-external devices to their drivers.
 
-This is needed to allow an admin to control which drivers he wants to
-allow on external ports. For more context, see threads at:
-https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
-https://lore.kernel.org/linux-pci/CACK8Z6H-DZQYBMqtU5_H5TTwwn35Q7Yysm9a7Wj0twfQP8QBzA@mail.gmail.com/
 
-drivers_autoprobe can only be disabled after userspace comes up. So
-any external devices that were plugged in before boot may still bind
-to drivers before userspace gets a chance to clear drivers_autoprobe.
-Another problem is that even with drivers_autoprobe=0, the hot-added
-PCI devices are bound to drivers because PCI explicitly calls
-device_attach() asking driver core to find and attach a driver. This
-patch helps with both of these problems.
+ÔÚ 2020/6/30 3:57, Raj, Ashok Ð´µÀ:
+> Hi Bjorn
+> 
+> 
+> On Mon, Jun 29, 2020 at 02:33:16PM -0500, Bjorn Helgaas wrote:
+>> [+cc Ashok, Ding, Casey]
+>>
+>> On Mon, Jun 29, 2020 at 12:32:44PM +0300, Aya Levin wrote:
+>>> I wanted to turn on RO on the ETH driver based on
+>>> pcie_relaxed_ordering_enabled().
+>>> From my experiments I see that pcie_relaxed_ordering_enabled() return true
+>>> on Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz. This CPU is from Haswell
+>>> series which is known to have bug in RO implementation. In this case, I
+>>> expected pcie_relaxed_ordering_enabled() to return false, shouldn't it?
+>>
+>> Is there an erratum for this?  How do we know this device has a bug
+>> in relaxed ordering?
+> 
+> https://software.intel.com/content/www/us/en/develop/download/intel-64-and-ia-32-architectures-optimization-reference-manual.html
+> 
+> For some reason they weren't documented in the errata, but under
+> Optimization manual :-)
+> 
+> Table 3-7. Intel Processor CPU RP Device IDs for Processors Optimizing PCIe
+> Performance
+> Processor CPU RP Device IDs
+> Intel Xeon processors based on Broadwell microarchitecture 6F01H-6F0EH
+> Intel Xeon processors based on Haswell microarchitecture 2F01H-2F0EH
+> 
+> These are the two that were listed in the manual. drivers/pci/quirks.c also
+> has an eloborate list of root ports where relaxed_ordering is disabled. Did
+> you check if its not already covered here?
+> 
+> Send lspci if its not already covered by this table.
+> 
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v2: Use the newly introduced dev_is_external() from device core
-    commit log elaborated
+Looks like the chip series is not in the errta list, but it is really difficult to distinguish and test.
 
- drivers/pci/bus.c | 11 ++++++++---
- drivers/pci/pci.c |  9 +++++++++
- drivers/pci/pci.h |  1 +
- 3 files changed, 18 insertions(+), 3 deletions(-)
+> 
+>>
+>>> In addition, we are worried about future bugs in new CPUs which may result
+>>> in performance degradation while using RO, as long as the function
+>>> pcie_relaxed_ordering_enabled() will return true for these CPUs. 
+>>
+>> I'm worried about this too.  I do not want to add a Device ID to the
+>> quirk_relaxedordering_disable() list for every new Intel CPU.  That's
+>> a huge hassle and creates a real problem for old kernels running on
+>> those new CPUs, because things might work "most of the time" but not
+>> always.
+> 
+> I'll check when this is fixed, i was told newer ones should work properly.
+> But I'll confirm.
+> 
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 3cef835b375fd..c11725bccffb0 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
- 	pci_bridge_d3_update(dev);
- 
- 	dev->match_driver = true;
--	retval = device_attach(&dev->dev);
--	if (retval < 0 && retval != -EPROBE_DEFER)
--		pci_warn(dev, "device attach failed (%d)\n", retval);
-+
-+	if (pci_dont_attach_external_devs && dev_is_external(&dev->dev)) {
-+		pci_info(dev, "not attaching external device\n");
-+	} else {
-+		retval = device_attach(&dev->dev);
-+		if (retval < 0 && retval != -EPROBE_DEFER)
-+			pci_warn(dev, "device attach failed (%d)\n", retval);
-+	}
- 
- 	pci_dev_assign_added(dev, true);
- }
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 35f25ac39167b..3ebcfa8b33178 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -128,6 +128,13 @@ static bool pcie_ats_disabled;
- /* If set, the PCI config space of each device is printed during boot. */
- bool pci_early_dump;
- 
-+/*
-+ * If set, the devices behind external-facing bridges (as marked by firmware)
-+ * shall not be attached automatically. Userspace will need to attach them
-+ * manually: echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
-+ */
-+bool pci_dont_attach_external_devs;
-+
- bool pci_ats_disabled(void)
- {
- 	return pcie_ats_disabled;
-@@ -6539,6 +6546,8 @@ static int __init pci_setup(char *str)
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
- 				disable_acs_redir_param = str + 18;
-+			} else if (!strcmp(str, "dont_attach_external_devs")) {
-+				pci_dont_attach_external_devs = true;
- 			} else {
- 				pr_err("PCI: Unknown option `%s'\n", str);
- 			}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12fb79fbe29d3..875fecb9b2612 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -13,6 +13,7 @@
- 
- extern const unsigned char pcie_link_speed[];
- extern bool pci_early_dump;
-+extern bool pci_dont_attach_external_devs;
- 
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
- bool pcie_cap_has_rtctl(const struct pci_dev *dev);
--- 
-2.27.0.212.ge8ba1cc988-goog
+Maybe prevent the Relax Ordering for all Intel CPUs is a better soluton, looks like
+it will not break anything.
+
+Ding
+> 
+> .
+> 
 
