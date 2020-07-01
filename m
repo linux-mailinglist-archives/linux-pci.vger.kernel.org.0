@@ -2,43 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E93A2114E7
+	by mail.lfdr.de (Postfix) with ESMTP id 7B3ED2114E8
 	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 23:22:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgGAVWN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jul 2020 17:22:13 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43222 "EHLO
+        id S1727828AbgGAVWO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jul 2020 17:22:14 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43312 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727124AbgGAVWM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 17:22:12 -0400
+        by vger.kernel.org with ESMTP id S1726942AbgGAVWN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 17:22:13 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 9813B30C0C1;
-        Wed,  1 Jul 2020 14:22:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 9813B30C0C1
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 66F4630C05C;
+        Wed,  1 Jul 2020 14:22:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 66F4630C05C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1593638530;
-        bh=wMcRiDP4Wvw9D413aeqotR4mafwEoV1r2WAiCdjiDuM=;
+        s=dkimrelay; t=1593638532;
+        bh=GSqFzmHeOiSek+62bFpDJcfrtOQWQUrThlJG71lclKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtYg1I3HXbWRf1pKA483kdaLgh+ENkGe2dAend1U2Rn3CNBYYmRlcKAwRrqHinqeh
-         +OytabA/cOt6C4RwlcP6pCJ43Gugjoboh3WJquCcj0/1KV4qF45jGsWTwnnF7q4Cuj
-         0CYIPxBoUvI09X6qyRhLu1whX3vqtUdkMJ8PglWM=
+        b=tEB1dOdB4mCMT/CINRpEULUdgrBzSMGdrPnFaguWD+zq2PGPPc2KRaPMxUJnM5BIE
+         8WfvQseprpaf1c62YJzJf5yn1keBiaxCazW3+mhdI5vNurr5GqXxSX7kk1ZOvvm/ga
+         HzWCJ5Vg3HtPXYEO1RGkVI4+1ceqFocOrzOv53dI=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id CCE2F140069;
-        Wed,  1 Jul 2020 14:22:08 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id A198514008B;
+        Wed,  1 Jul 2020 14:22:10 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
 Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 02/12] ata: ahci_brcm: Fix use of BCM7216 reset controller
-Date:   Wed,  1 Jul 2020 17:21:32 -0400
-Message-Id: <20200701212155.37830-3-james.quinlan@broadcom.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v6 03/12] dt-bindings: PCI: Add bindings for more Brcmstb chips
+Date:   Wed,  1 Jul 2020 17:21:33 -0400
+Message-Id: <20200701212155.37830-4-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200701212155.37830-1-james.quinlan@broadcom.com>
 References: <20200701212155.37830-1-james.quinlan@broadcom.com>
@@ -49,56 +52,121 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Jim Quinlan <jquinlan@broadcom.com>
 
-A reset controller "rescal" is shared between the AHCI driver and the PCIe
-driver for the BrcmSTB 7216 chip.  Use
-devm_reset_control_get_optional_shared control() to handle this sharing.
+- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+  7211 (STB version of RPi4).
+- Add new property 'brcm,scb-sizes'.
+- Add new property 'resets'.
+- Add new property 'reset-names' for 7216 only.
+- Allow 'ranges' and 'dma-ranges' to have more than one item and update
+  the example to show this.
 
 Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-
-Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/ata/ahci_brcm.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ .../bindings/pci/brcm,stb-pcie.yaml           | 56 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 6853dbb4131d..d6115bc04b09 100644
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *of_id;
- 	struct device *dev = &pdev->dev;
--	const char *reset_name = NULL;
- 	struct brcm_ahci_priv *priv;
- 	struct ahci_host_priv *hpriv;
- 	struct resource *res;
-@@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 8680a0f86c5a..807694b4f41f 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+ maintainers:
+   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
  
- 	/* Reset is optional depending on platform and named differently */
- 	if (priv->version == BRCM_SATA_BCM7216)
--		reset_name = "rescal";
-+		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
- 	else
--		reset_name = "ahci";
-+		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
+-allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
+-
+ properties:
+   compatible:
+-    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++    items:
++      - enum:
++          - brcm,bcm2711-pcie # The Raspberry Pi 4
++          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
++          - brcm,bcm7278-pcie # Broadcom 7278 Arm
++          - brcm,bcm7216-pcie # Broadcom 7216 Arm
++          - brcm,bcm7445-pcie # Broadcom 7445 Arm
  
--	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
- 	if (IS_ERR(priv->rcdev))
- 		return PTR_ERR(priv->rcdev);
+   reg:
+     maxItems: 1
+@@ -34,10 +37,12 @@ properties:
+       - const: msi
  
-@@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 		break;
- 	}
+   ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
  
--	if (priv->version == BRCM_SATA_BCM7216)
--		ret = reset_control_reset(priv->rcdev);
--	else
--		ret = reset_control_deassert(priv->rcdev);
-+	ret = reset_control_deassert(priv->rcdev);
- 	if (ret)
- 		return ret;
+   dma-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 6
  
+   clocks:
+     maxItems: 1
+@@ -58,8 +63,31 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  resets:
++    description: for "brcm,bcm7216-pcie", must be a valid reset
++      phandle pointing to the RESCAL reset controller provider node.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  reset-names:
++    items:
++      - const: rescal
++
++  brcm,scb-sizes:
++    description: u64 giving the 64bit PCIe memory
++      viewport size of a memory controller.  There may be up to
++      three controllers, and each size must be a power of two
++      with a size greater or equal to the amount of memory the
++      controller supports.  Note that each memory controller
++      may have two component regions -- base and extended -- so
++      this information cannot be deduced from the dma-ranges.
++    $ref: /schemas/types.yaml#/definitions/uint64-array
++    items:
++      minItems: 1
++      maxItems: 3
++
+ required:
+   - reg
++  - ranges
+   - dma-ranges
+   - "#interrupt-cells"
+   - interrupts
+@@ -68,6 +96,18 @@ required:
+   - interrupt-map
+   - msi-controller
+ 
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm7216-pcie
++    then:
++      required:
++        - resets
++        - reset-names
++
+ unevaluatedProperties: false
+ 
+ examples:
+@@ -93,7 +133,9 @@ examples:
+                     msi-parent = <&pcie0>;
+                     msi-controller;
+                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
++                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+             };
+     };
 -- 
 2.17.1
 
