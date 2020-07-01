@@ -2,180 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 809AC2109F6
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 13:04:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BE3F210A1A
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 13:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgGALDt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jul 2020 07:03:49 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29889 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730224AbgGALDs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:03:48 -0400
-IronPort-SDR: asJaAkLjyOSEEz6u1GWVTssiUyFivVVLoggQjXUXv4YlkhURPTnOXMIyF0G7ZfxGMFYWoWgjSn
- Io7voRAnFVhw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="126632458"
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="126632458"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 04:03:47 -0700
-IronPort-SDR: ClRWOQP56fgcGEJMfeS8FwppZy345xzH8yP7pfKIZcTyVoj4r65AK8jgMzCDYMWzbCICK3uesi
- 1w4gROiAKq6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="425557294"
-Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
-  by orsmga004.jf.intel.com with ESMTP; 01 Jul 2020 04:03:44 -0700
-From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
-Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Subject: [PATCH 5/5] crypto: qat - use PCI_VDEVICE
-Date:   Wed,  1 Jul 2020 12:03:02 +0100
-Message-Id: <20200701110302.75199-6-giovanni.cabiddu@intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200701110302.75199-1-giovanni.cabiddu@intel.com>
-References: <20200701110302.75199-1-giovanni.cabiddu@intel.com>
+        id S1730318AbgGALIP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jul 2020 07:08:15 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46708 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730159AbgGALIP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 07:08:15 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 949071C0C0A; Wed,  1 Jul 2020 13:08:13 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 13:08:13 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, Jesse Barnes <jsbarnes@google.com>,
+        Rajat Jain <rajatja@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200701110813.GA11023@amd>
+References: <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+ <20200605080229.GC2209311@kroah.com>
+ <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
+ <20200607113632.GA49147@kroah.com>
+ <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+ <20200630214559.GA7113@duo.ucw.cz>
+ <20200701065426.GC2044019@kroah.com>
+ <20200701084750.GA7144@amd>
+ <20200701105714.GA2098169@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+In-Reply-To: <20200701105714.GA2098169@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Build pci_device_id structure using the PCI_VDEVICE macro.
-This removes any references to the ADF_SYSTEM_DEVICE macro.
 
-Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
----
- drivers/crypto/qat/qat_c3xxx/adf_drv.c      | 7 ++-----
- drivers/crypto/qat/qat_c3xxxvf/adf_drv.c    | 7 ++-----
- drivers/crypto/qat/qat_c62x/adf_drv.c       | 7 ++-----
- drivers/crypto/qat/qat_c62xvf/adf_drv.c     | 7 ++-----
- drivers/crypto/qat/qat_dh895xcc/adf_drv.c   | 7 ++-----
- drivers/crypto/qat/qat_dh895xccvf/adf_drv.c | 7 ++-----
- 6 files changed, 12 insertions(+), 30 deletions(-)
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/crypto/qat/qat_c3xxx/adf_drv.c b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-index bba0f142f7f6..43929d70c41d 100644
---- a/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c3xxx_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C3XXX), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-index b77a58886599..dca52de22e8d 100644
---- a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c3xxxvf_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_c62x/adf_drv.c b/drivers/crypto/qat/qat_c62x/adf_drv.c
-index 722838ff03be..f104c9d1195d 100644
---- a/drivers/crypto/qat/qat_c62x/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c62x/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c62x_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C62X), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_c62xvf/adf_drv.c b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-index a766cc18aae9..e0b909e70712 100644
---- a/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c62xvf_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X_VF),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C62X_VF), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-index 4c3aea07f444..857aa4c8595f 100644
---- a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-+++ b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_dh895xcc_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_DH895XCC), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-index 673348ca5dea..2987855a70dc 100644
---- a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_dh895xccvf_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
--- 
-2.26.2
+Hi!
 
+> > > Yes, it originally was designed that way, but again, the world has
+> > > changed so we have to change with it.  That is why USB has for a long
+> > > time now, allowed you to not bind drivers to devices that you do not
+> > > "trust", and that trust can be determined by userspace.  That all came
+> > > about thanks to the work done by the wireless USB spec people and ker=
+nel
+> > > authors, which showed that maybe you just don't want to trust any dev=
+ice
+> > > that comes within range of your system :)
+> >=20
+> > Again, not disagreeing; but note the scale here.
+> >=20
+> > It is mandatory to defend against malicious wireless USB devices.
+>=20
+> Turns out there are no more wireless USB devices in the world, and the
+> code for that is gone from Linux :)
+>=20
+> > We probably should work on robustness against malicious USB devices.
+>=20
+> We are, and do have, that support today.
+>=20
+> > Malicious PCI-express devices are lot less of concern.
+>=20
+> Not really, they are a lot of concern to some people.  Valid attacks are
+> out there today, see the thunderbolt attacks that numerous people have
+> done and published recently and for many years.
+
+In this case PCI-express meant internal cards in PCs. Yes, thunderbolt
+would be higher concern than internal card.
+
+> > Defending against malicious CPU/RAM does not make much sense.
+>=20
+> That's what the spectre and rowhammer fixes have been for :)
+
+Yeah, and that's why we have whitelist of working CPUs and only work
+on those, riiight? :-). [There's difference between "malicious" and
+"buggy".]
+
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl78bp0ACgkQMOfwapXb+vIMwQCgxMUU2uCXMx6F3qqoXwrtOcsB
+PR4AoIv02DSIJXj0/Qp/43XbkGAtf5kj
+=O1gR
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
