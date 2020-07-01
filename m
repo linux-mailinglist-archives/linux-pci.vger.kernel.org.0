@@ -2,135 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33EC52106AC
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 10:48:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62F222107C1
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 11:12:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgGAIry (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jul 2020 04:47:54 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56330 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgGAIrx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 04:47:53 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CD6F41C0C0F; Wed,  1 Jul 2020 10:47:50 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 10:47:50 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jesse Barnes <jsbarnes@google.com>,
-        Rajat Jain <rajatja@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200701084750.GA7144@amd>
-References: <20200603060751.GA465970@kroah.com>
- <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com>
- <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com>
- <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com>
- <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
- <20200630214559.GA7113@duo.ucw.cz>
- <20200701065426.GC2044019@kroah.com>
+        id S1729572AbgGAJLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jul 2020 05:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729571AbgGAJLG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 05:11:06 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8856C061755;
+        Wed,  1 Jul 2020 02:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6wLa3Z5Tnqc6pIqvd9Kuq9IIUcvVwIhLZPWeRnHbIeA=; b=EBZVsbt8QnQM1/nIz26KitisJv
+        1/eDkGMq6rQ6dFjtEOLryOxl9/2R75doGqasl9ZzuMjNGgYkxJYYMHUMNG4E6n09Gm//aQPvahyhB
+        p+3C2xeyUEBqpAC1GAkbGnjo0IAVtK9oQpwC/WxxI98dOzpe9P7CUV+ThLIauqvkrm1FWM7+2x2jJ
+        c9++4TT1vBaEWdzmoSBQ8OF24E3tQQ2du5JTeEtX0OsuBDeQLQKiztWWKJ979nB8hOz9pI+bYZH6S
+        yALNVqqvO3OdagdOb2OGHjX96PwUbqjI5NeBGkEmxGN8jLNiuZipV96hvXOkCQKlrSu67dIaS6kh2
+        mX80E9Ew==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqYle-0002ST-A3; Wed, 01 Jul 2020 09:10:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33CD9305B23;
+        Wed,  1 Jul 2020 11:10:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 170A4201CB82C; Wed,  1 Jul 2020 11:10:54 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 11:10:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200701091054.GW4781@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
+ <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+ <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+ <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+ <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701065426.GC2044019@kroah.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200630203016.GI9247@paulmck-ThinkPad-P72>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jun 30, 2020 at 01:30:16PM -0700, Paul E. McKenney wrote:
+> On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > I'm not convinced C11 memory_order_consume would actually work for us,
+> > even if it would work. That is, given:
+> > 
+> >   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
+> > 
+> > only pointers can have consume, but like I pointed out, we have code
+> > that relies on dependent loads from integers.
+> 
+> I agree that C11 memory_order_consume is not normally what we want,
+> given that it is universally promoted to memory_order_acquire.
+> 
+> However, dependent loads from integers are, if anything, more difficult
+> to defend from the compiler than are control dependencies.  This applies
+> doubly to integers that are used to index two-element arrays, in which
+> case you are just asking the compiler to destroy your dependent loads
+> by converting them into control dependencies.
 
-Hi!
+Yes, I'm aware. However, as you might know, I'm firmly in the 'C is a
+glorified assembler' camp (as I expect most actual OS people are, out of
+necessity if nothing else) and if I wanted a control dependency I
+would've bloody well written one.
 
-> > We normally trust the hardware NOT to be malicious. (Because if hacker
-> > has physical access to hardware and lot of resources, you lost).
->=20
-> That is what we originally thought, however the world has changed and we
-> need to be better about this, now that it is trivial to create a "bad"
-> device.
+I think an optimizing compiler is awesome, but only in so far as that
+optimization is actually helpful -- and yes, I just stepped into a giant
+twilight zone there. That is, any optimization that has _any_
+controversy should be controllable (like -fno-strict-overflow
+-fno-strict-aliasing) and I'd very much like the same here.
 
-I'm not disagreeing.
+In a larger context, I still think that eliminating speculative stores
+is both necessary and sufficient to avoid out-of-thin-air. So I'd also
+love to get some control on that.
 
-> > This is still true today, but maybe trusting USB devices is bad idea,
-> > so drivers are being cleaned up. PCI drivers will be WORSE in this
-> > regard. And you can't really protect against malicious CPU, and it is
-> > very very hard to protect against malicous RAM (probably not practical
-> > without explicit CPU support).
-> >=20
-> > Linux was designed with "don't let hackers near your hardware" threat
-> > model in mind.
->=20
-> Yes, it originally was designed that way, but again, the world has
-> changed so we have to change with it.  That is why USB has for a long
-> time now, allowed you to not bind drivers to devices that you do not
-> "trust", and that trust can be determined by userspace.  That all came
-> about thanks to the work done by the wireless USB spec people and kernel
-> authors, which showed that maybe you just don't want to trust any device
-> that comes within range of your system :)
-
-Again, not disagreeing; but note the scale here.
-
-It is mandatory to defend against malicious wireless USB devices.
-
-We probably should work on robustness against malicious USB devices.
-
-Malicious PCI-express devices are lot less of concern.
-
-Defending against malicious CPU/RAM does not make much sense.
-
-Notice that it is quite easy to generate -100V on the USB and kill
-your motherboard. Also notice that malicious parts of the hardware
-don't need to be electrically connected to the rest of system, and
-that they don't even have to contain any electronics. You just have to
-be careful. https://en.wikipedia.org/wiki/The_Thing_(listening_device)
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl78TbYACgkQMOfwapXb+vIPVQCfaLKmBpCjrjpOL7yk4eKC2WOg
-zAIAoLekMQziYoPoMQ53aRvdTzLzgVqb
-=qNCF
------END PGP SIGNATURE-----
-
---KsGdsel6WgEHnImy--
