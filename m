@@ -2,255 +2,286 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CD0521115C
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 18:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84E4721125B
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 20:07:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgGAQzi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jul 2020 12:55:38 -0400
-Received: from mail-db8eur05on2061.outbound.protection.outlook.com ([40.107.20.61]:6048
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730955AbgGAQzh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:55:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l7FCy7fxV7UBDaNEyDX9zxQCchxTNulSc3MZvEx+uhMfVu0c+SSz/oj1CnUKUAeG165fleXK1hYXVzZ3bNtkwMT+oBvoN7ZTW6C82wUfOKTBHn+Tv2sMyFa59UpI+CM0OT8JQQ4MNKCfaFEQuOZEmBATOKH9gU/5h1Jc+VosixT9CS9zwN1ssd1sZI7Ifl4lMQmBb8LNVt9G6SnVBFk6CwkDq1TthnBRzivDWXfIHq18S9VJzxe1qAMB0lqM6PH6bSIcDSBZswMPURf8pby2M0e048UXE6KIQuRumx8qqP7IUUrc0S2t8OkQ/Q3e12GHFEl8pWxIj2I+t48TF8Ffdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=snd5uQfa7o2zadXKR1T01ka6EzpdF/YzLN/8hBi6LcY=;
- b=GSuo8R0rEFpZo4OI437eoYfSR/gQ3nBDuYVPdX/+NvzrYrF2Vxl/3hXOw0cM80iOYi6Tk5CC7u3DnwdnmlHR60vmLbfGoF2Q83Bji7lnz/hBwxWT3BtB8R2d7zOAm5y3AFmsiFmgQTq3Ha1fMh3qY3QMbtSpgi5ARIGSxD5n9WcPEoMJUSWUOoI5fa8pHnvOry0o7M0f4onvBV/5g6qZHL/lotn4YsNE64DSN7RkDiMZBYY6LLopG0+ESGAXdY6z1Y23R402BOtYa2jVQvZVr+kg9dUEeJYKlaSNXgqejQwZCwCSEGkfpka3cqf0lJBAYXbZohoLPZTy+UeuZDZxoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=snd5uQfa7o2zadXKR1T01ka6EzpdF/YzLN/8hBi6LcY=;
- b=aA7ym/SRmDtodcPUiBD52qe6OORUJOfh5GX9DN8sE09UJXXyv6Fk9bGNTk6ZrGIL9ikxvKmbX3bjTQ8WkbWETewe0K5zo5C9s6OlX3HmbcAtKUFup9Qqr3sixgh1B20ntiWJGUeqSzZPJXfaRlvYxAgDdWamSsuvACPoIj9ove8=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR0402MB3405.eurprd04.prod.outlook.com (2603:10a6:803:3::26)
- by VI1PR0402MB3421.eurprd04.prod.outlook.com (2603:10a6:803:5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Wed, 1 Jul
- 2020 16:55:32 +0000
-Received: from VI1PR0402MB3405.eurprd04.prod.outlook.com
- ([fe80::b97a:64f0:3ab5:d7fa]) by VI1PR0402MB3405.eurprd04.prod.outlook.com
- ([fe80::b97a:64f0:3ab5:d7fa%5]) with mapi id 15.20.3131.029; Wed, 1 Jul 2020
- 16:55:32 +0000
-Subject: Re: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for fsl-mc
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Message-ID: <a7845603-9bc9-9099-dfc4-19b7bc4f4e44@nxp.com>
-Date:   Wed, 1 Jul 2020 19:55:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM3PR05CA0130.eurprd05.prod.outlook.com
- (2603:10a6:207:2::32) To VI1PR0402MB3405.eurprd04.prod.outlook.com
- (2603:10a6:803:3::26)
+        id S1732849AbgGASHY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jul 2020 14:07:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732848AbgGASHX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 14:07:23 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C2FC08C5DB
+        for <linux-pci@vger.kernel.org>; Wed,  1 Jul 2020 11:07:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q7so15063875ljm.1
+        for <linux-pci@vger.kernel.org>; Wed, 01 Jul 2020 11:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GPchDjqYkLt5LIbAVBTKAkoGd+R4o2ZdbYc6covxDDQ=;
+        b=BsTGPXYCVpVlqYTgEWspxnsolANEIVOz/7dLLUO7vQR+2YRsZH1dYqAY7a9jjyk+ye
+         h+/+hovMD55Db+/6KXS2T2vM/It5sYnq0hOMDZ19nCKCxlXJOufqu8Qt0LDGM7cd8Pb1
+         LKeLBupoZJrJpuNVbRF9Aip1T2pZTKw2qWly1NDPQcvHskkCnL3zaapLf1s4GP222gUI
+         6HqjLvF5gwpcZE1D8h9AgakZFIp+b8wX5u1aF819W7kdKkggCJER8c/I8C52EGeabGNa
+         xE79UWetUqTFSxFMGrdglLqjEmyYgIJYMM/OOg2uxXYMddi2z+bBGWTSMM5wbV7Rc5zG
+         whPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GPchDjqYkLt5LIbAVBTKAkoGd+R4o2ZdbYc6covxDDQ=;
+        b=QsNRzmghTk4FwCHiKH326mYhCvbySyxpV7xQGorADVSNeytKfaL93CLVEE1BIQhcyu
+         eGy4SqT9g67jqkNGP3daMdCNUtnxoTckglfllHmzdxx8kErvJYuAHydK/Ug91X5CYh92
+         6y5Qk4qpzJzyWcGpNxUOf2auSUKlRXqisClf1+zehGi5HFri8zNLK9RpHP5tZWQ0PG5z
+         MYbbdzI7I7H2FXXDm1ive/JE5IK9jpO4O/ECVFihNeBcF/H9ZOLx6Ne5AXVNAc0lpme9
+         7G5ktTPIlgnTxt/PlSZBFYUdd8JGChCG+uXey+ahB+FYkotpknAMWwyljk7Kt5ukgzKs
+         Eh/g==
+X-Gm-Message-State: AOAM532vW2FcfUaoTn6W8lp09wiKzo+l2e5UFmTPLLn4KIalLVdMPjkV
+        xTMw3R4GBha55y9fUONpd+kgRU5DX2bSeKFkb9cmQA==
+X-Google-Smtp-Source: ABdhPJyL3NPG9USNMnYd3yLWIqT+Oua7tSa5MNUojDCvTt+lpV65yUAnQ072eSVg/tCyEjA3gs/6Bzinn189gX4/V3E=
+X-Received: by 2002:a05:651c:550:: with SMTP id q16mr13910527ljp.188.1593626839643;
+ Wed, 01 Jul 2020 11:07:19 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.107] (86.120.184.194) by AM3PR05CA0130.eurprd05.prod.outlook.com (2603:10a6:207:2::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend Transport; Wed, 1 Jul 2020 16:55:30 +0000
-X-Originating-IP: [86.120.184.194]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6eff0799-edba-4680-d132-08d81ddf9121
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3421:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB3421AD3EF1D816EA8DA1A2B3EC6C0@VI1PR0402MB3421.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-Forefront-PRVS: 04519BA941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KcEe1HcFIdTkKCkzJFOo0IHJ0lbqbrUY+xtrAel8ntX43WAsYLz1QhDyqCZCoDkQfyww26Yuks95qY9jUT2AH8Shqr430p8EFmtVwLnYo3Rgr3geCgjoNQroZZIcqPr7T8/ICKr7cn7c7avlNRB5l2+Zy6ietm40EMZBJ16A+bTe+zFy+FsXu3KanDMb0xToe2rClyiKUai6vko18uWRUNCsnKoqBpaFN+Pml7UGO1qfWVMlnEreQkC9stdKm6DGU6En3OUK73Su62SZrR839MEbKD099W4RYBSVZFmGfwgZ5fVH4GEekHz9phdv1fvxKVLvKaDjTg0t/NPvZP98q1dCzIhfl02+oimyBdUUflOmfUqHr5E5/mVh6DZquFfE
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3405.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(2906002)(44832011)(2616005)(16526019)(186003)(6486002)(8936002)(26005)(478600001)(66946007)(31686004)(66556008)(7416002)(66476007)(8676002)(83380400001)(54906003)(5660300002)(86362001)(52116002)(31696002)(16576012)(956004)(316002)(4326008)(36756003)(53546011)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1ChIOIj7TuKXM2sJKP6OeZkQCNiPoispQnk7waHPyhejj2E2eDyWL9bZkdrTvaCy6sR4NVa+cega5oxbWj4ppTYkE2GND8+XeILuVKkgCHaxGKPvbZ60fP3NIQ8YRD35q5K92HNY6ZzI64qjU5U8URdE0yArcxcdNvNNmcZ3ymBdnmlazYLMLsvyd0v+FexTcKiUnj3Y3Imszv3YsbYpLQJ+d9m1VgaSd/fMhRznFZoV7ZynSlbyj3R7t3eA0G/RFqgnU36egV+/6AN7beVGOtWYazc4dXzNatiA54Rv45LpZCeC0yT7gDb0tDdPQJOIGSQNJ6gixu6k3KEVkQBPnUhXBvPT4u/4SUctx+QosuKybE2jgPWkWPSrekJiKu2++FPDwcuoQRVfkQP2Dukdn5Jztvfyf9J+Wgc3LhgjWgLVzIJQKOP7fNjHUYH0z0jwV/rXAPqHJnd7TuY9hr18Gd5l/cfJJgAHl9lXbPRzrbknptzmNUpi76QWmi6AFANx
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6eff0799-edba-4680-d132-08d81ddf9121
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3405.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 16:55:32.5774
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wyS3rYEksGEho9duiAyUvMNZiFkU93c/A1EJCMxcINX2QKzzuuHwD1aldHwY7nDNyaiRmL4EUDtTQzTn00m/BA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3421
+References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
+ <20200630104948.GC856968@kuha.fi.intel.com> <20200630125216.GA1109228@kroah.com>
+ <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
+ <20200630153816.GD1785141@kroah.com> <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+ <20200630170012.GB1894898@kroah.com>
+In-Reply-To: <20200630170012.GB1894898@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Wed, 1 Jul 2020 11:06:43 -0700
+Message-ID: <CACK8Z6Fcrb8PtmbUJLn8RgiGnC8eqTC9GjsgjPmQgU212WPU0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello,
+
+On Tue, Jun 30, 2020 at 10:00 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jun 30, 2020 at 06:08:31PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Jun 30, 2020 at 5:38 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Jun 30, 2020 at 03:00:34PM +0200, Rafael J. Wysocki wrote:
+> > > > On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
+> > > > > > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
+> > > > > > > Add a new (optional) field to denote the physical location of a device
+> > > > > > > in the system, and expose it in sysfs. This was discussed here:
+> > > > > > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+> > > > > > >
+> > > > > > > (The primary choice for attribute name i.e. "location" is already
+> > > > > > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
+> > > > > > > that want to support this new attribute can opt-in by setting a flag in
+> > > > > > > bus_type, and then populating the location of device while enumerating
+> > > > > > > it.
+> > > > > >
+> > > > > > So why not just call it "physical_location"?
+> > > > >
+> > > > > That's better, and will allow us to put "3rd blue plug from the left,
+> > > > > 4th row down" in there someday :)
+> > > > >
+> > > > > All of this is "relative" to the CPU, right?  But what CPU?  Again, how
+> > > > > are the systems with drawers of PCI and CPUs and memory that can be
+> > > > > added/removed at any point in time being handled here?  What is
+> > > > > "internal" and "external" for them?
+> > > > >
+> > > > > What exactly is the physical boundry here that is attempting to be
+> > > > > described?
+> > > >
+> > > > Also, where is the "physical location" information going to come from?
+> > >
+> > > Who knows?  :)
+> > >
+> > > Some BIOS seem to provide this, but do you trust that?
+> > >
+> > > > If that is the platform firmware (which I suspect is the anticipated
+> > > > case), there may be problems with reliability related to that.
+> > >
+> > > s/may/will/
+> > >
+> > > which means making the kernel inact a policy like this patch series
+> > > tries to add, will result in a lot of broken systems, which is why I
+> > > keep saying that it needs to be done in userspace.
+> > >
+> > > It's as if some of us haven't been down this road before and just keep
+> > > being ignored...
+> > >
+> > > {sigh}
+> >
+> > Well, to be honest, if you are a "vertical" vendor and you control the
+> > entire stack, *including* the platform firmware, it would be kind of
+> > OK for you to do that in a product kernel.
+> >
+> > However, this is not a practical thing to do in the mainline kernel
+> > which must work for everybody, including people who happen to use
+> > systems with broken or even actively unfriendly firmware on them.
+> >
+> > So I'm inclined to say that IMO this series "as is" would not be an
+> > improvement from the mainline perspective.
+>
+> It can be, we have been using this for USB devices for many many years
+> now, quite successfully.  The key is not to trust that the platform
+> firmware got it right :)
+>
+> > I guess it would make sense to have an attribute for user space to
+> > write to in order to make the kernel reject device plug-in events
+> > coming from a given port or connector, but the kernel has no reliable
+> > means to determine *which* ports or connectors are "safe", and even if
+> > there was a way for it to do that, it still may not agree with user
+> > space on which ports or connectors should be regarded as "safe".
+>
+> Again, we have been doing this for USB devices for a very long time, PCI
+> shouldn't be any different.  Why people keep ignoring working solutions
+> is beyond me, there's nothing "special" about PCI devices here for this
+> type of "worry" or reasoning to try to create new solutions.
+>
+> So, again, I ask, go do what USB does, and to do that, take the logic
+> out of the USB core, make it bus-agnositic, and _THEN_ add it to the PCI
+> code. Why the original submitter keeps ignoring my request to do this
+> is beyond me, I guess they like making patches that will get rejected :(
+
+IMHO I'm actually trying to precisely do what I think was the
+conclusion of our discussion, and then some changes because of the
+further feedback I received on those patches. Let's take a step back
+and please allow me to explain how I got here (my apologies but this
+spans a couple of threads, and I"m trying to tie them all together
+here):
+
+GOAL: To allow user space to control what (PCI) drivers he wants to
+allow on external (thunderbolt) ports. There was a lot of debate about
+the need for such a policy at
+https://lore.kernel.org/linux-pci/CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com/
+with the final conclusion that it should be OK to implement such a
+policy in userspace, as long as the policy is not implemented in the
+kernel. The kernel only needs to expose bits & info that is needed by
+the userspace to implement such a policy, and it can be used in
+conjunction with "drivers_autoprobe" to implement this policy:
+--------------------------------------------------------------------
+....
+That's an odd thing, but sure, if you want to write up such a policy for
+your systems, great.  But that policy does not belong in the kernel, it
+belongs in userspace.
+....
+--------------------------------------------------------------------
+
+1) The post https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
+lists out the approach that was agreed on. Replicating it here:
+-----------------------------------------------------------------------
+  - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+    today, but doing so would be trivial.  I think I would prefer a
+    sysfs name like "external" so it's more descriptive and less of a
+    judgment.
+
+    This comes from either the DT "external-facing" property or the
+    ACPI "ExternalFacingPort" property.
+
+  - All devices present at boot are enumerated.  Any statically built
+    drivers will bind to them before any userspace code runs.
+
+    If you want to keep statically built drivers from binding, you'd
+    need to invent some mechanism so pci_driver_init() could clear
+    drivers_autoprobe after registering pci_bus_type.
+
+  - Early userspace code prevents modular drivers from automatically
+    binding to PCI devices:
+
+      echo 0 > /sys/bus/pci/drivers_autoprobe
+
+    This prevents modular drivers from binding to all devices, whether
+    present at boot or hot-added.
+
+  - Userspace code uses the sysfs "bind" file to control which drivers
+    are loaded and can bind to each device, e.g.,
+
+      echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
+-----------------------------------------------------------------------
+
+2) As part of implementing the above agreed approach, when I exposed
+PCI "untrusted" attribute to userspace, it ran into discussion that
+concluded that instead of this, the device core should be enhanced
+with a location attribute.
+https://lore.kernel.org/linux-pci/20200618184621.GA446639@kroah.com/
+-----------------------------------------------------------------------
+...
+The attribute should be called something like "location" or something
+like that (naming is hard), as you don't always know if something is
+external or not (it could be internal, it could be unknown, it could be
+internal to an external device that you trust (think PCI drawers for
+"super" computers that are hot pluggable but yet really part of the
+internal bus).
+....
+"trust" has no direct relation to the location, except in a policy of
+what you wish to do with that device, so as long as you keep them
+separate that way, I am fine with it.
+...
+-----------------------------------------------------------------------
+
+And hence this patch. I don't see an attribute in USB comparable to
+this new attribute, except for the boolean "removable" may be. Are you
+suggesting to pull that into the device core instead of adding this
+"physical_location" attribute?
+
+3) The one deviation from the agreed approach in (1) is
+https://patchwork.kernel.org/patch/11633095/ . The reason is I
+realized that contrary to what I earlier believed, we might not be
+able to disable the PCI link to all external PCI devices at boot. So
+external PCI devices may actually bind to drivers before userspace
+comes up and does "echo 0 > /sys/bus/pci/drivers_autoprobe").
+
+I'm really happy to do what you think is the right way as long as it
+helps achieve my goal above. Really looking for clear directions here.
+
+Thanks & Best Regards,
+
+Rajat
 
 
-On 6/19/2020 11:20 AM, Lorenzo Pieralisi wrote:
-> From: Makarand Pawagi <makarand.pawagi@nxp.com>
-> 
-> Add ACPI support in the fsl-mc driver. Driver parses MC DSDT table to
-> extract memory and other resources.
-> 
-> Interrupt (GIC ITS) information is extracted from the MADT table
-> by drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
-> 
-> IORT table is parsed to configure DMA.
-> 
-> Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> ---
->  drivers/bus/fsl-mc/fsl-mc-bus.c             | 73 ++++++++++++----
->  drivers/bus/fsl-mc/fsl-mc-msi.c             | 37 +++++----
->  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 92 ++++++++++++++++-----
->  3 files changed, 150 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> index 824ff77bbe86..324d49d6df89 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> @@ -18,6 +18,8 @@
->  #include <linux/bitops.h>
->  #include <linux/msi.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/acpi.h>
-> +#include <linux/iommu.h>
->  
->  #include "fsl-mc-private.h"
->  
-> @@ -38,6 +40,7 @@ struct fsl_mc {
->  	struct fsl_mc_device *root_mc_bus_dev;
->  	u8 num_translation_ranges;
->  	struct fsl_mc_addr_translation_range *translation_ranges;
-> +	void *fsl_mc_regs;
->  };
->  
->  /**
-> @@ -56,6 +59,10 @@ struct fsl_mc_addr_translation_range {
->  	phys_addr_t start_phys_addr;
->  };
->  
-> +#define FSL_MC_FAPR	0x28
-> +#define MC_FAPR_PL	BIT(18)
-> +#define MC_FAPR_BMT	BIT(17)
-> +
->  /**
->   * fsl_mc_bus_match - device to driver matching callback
->   * @dev: the fsl-mc device to match against
-> @@ -124,7 +131,10 @@ static int fsl_mc_dma_configure(struct device *dev)
->  	while (dev_is_fsl_mc(dma_dev))
->  		dma_dev = dma_dev->parent;
->  
-> -	return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
-> +	if (dev_of_node(dma_dev))
-> +		return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
-> +
-> +	return acpi_dma_configure_id(dev, DEV_DMA_COHERENT, &input_id);
->  }
->  
->  static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
-> @@ -865,8 +875,11 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
->  	struct fsl_mc_io *mc_io = NULL;
->  	int container_id;
->  	phys_addr_t mc_portal_phys_addr;
-> -	u32 mc_portal_size;
-> -	struct resource res;
-> +	u32 mc_portal_size, mc_stream_id;
-> +	struct resource *plat_res;
-> +
-> +	if (!iommu_present(&fsl_mc_bus_type))
-> +		return -EPROBE_DEFER;
->  
->  	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
->  	if (!mc)
-> @@ -874,19 +887,33 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, mc);
->  
-> +	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	mc->fsl_mc_regs = devm_ioremap_resource(&pdev->dev, plat_res);
-> +	if (IS_ERR(mc->fsl_mc_regs))
-> +		return PTR_ERR(mc->fsl_mc_regs);
-> +
-> +	if (IS_ENABLED(CONFIG_ACPI) && !dev_of_node(&pdev->dev)) {
-> +		mc_stream_id = readl(mc->fsl_mc_regs + FSL_MC_FAPR);
-> +		/*
-> +		 * HW ORs the PL and BMT bit, places the result in bit 15 of
-> +		 * the StreamID and ORs in the ICID. Calculate it accordingly.
-> +		 */
-> +		mc_stream_id = (mc_stream_id & 0xffff) |
-> +				((mc_stream_id & (MC_FAPR_PL | MC_FAPR_BMT)) ?
-> +					0x4000 : 0);
-> +		error = acpi_dma_configure_id(&pdev->dev, DEV_DMA_COHERENT,
-> +					      &mc_stream_id);
-> +		if (error)
-> +			dev_warn(&pdev->dev, "failed to configure dma: %d.\n",
-> +				 error);
-> +	}
-> +
->  	/*
->  	 * Get physical address of MC portal for the root DPRC:
->  	 */
-> -	error = of_address_to_resource(pdev->dev.of_node, 0, &res);
-> -	if (error < 0) {
-> -		dev_err(&pdev->dev,
-> -			"of_address_to_resource() failed for %pOF\n",
-> -			pdev->dev.of_node);
-> -		return error;
-> -	}
-> -
-> -	mc_portal_phys_addr = res.start;
-> -	mc_portal_size = resource_size(&res);
-> +	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	mc_portal_phys_addr = plat_res->start;
-> +	mc_portal_size = resource_size(plat_res);
->  	error = fsl_create_mc_io(&pdev->dev, mc_portal_phys_addr,
->  				 mc_portal_size, NULL,
->  				 FSL_MC_IO_ATOMIC_CONTEXT_PORTAL, &mc_io);
-> @@ -903,11 +930,13 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
->  	dev_info(&pdev->dev, "MC firmware version: %u.%u.%u\n",
->  		 mc_version.major, mc_version.minor, mc_version.revision);
->  
-> -	error = get_mc_addr_translation_ranges(&pdev->dev,
-> -					       &mc->translation_ranges,
-> -					       &mc->num_translation_ranges);
-> -	if (error < 0)
-> -		goto error_cleanup_mc_io;
-> +	if (dev_of_node(&pdev->dev)) {
-> +		error = get_mc_addr_translation_ranges(&pdev->dev,
-> +						&mc->translation_ranges,
-> +						&mc->num_translation_ranges);
-> +		if (error < 0)
-> +			goto error_cleanup_mc_io;
-> +	}
->  
->  	error = dprc_get_container_id(mc_io, 0, &container_id);
->  	if (error < 0) {
-> @@ -934,6 +963,7 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
->  		goto error_cleanup_mc_io;
->  
->  	mc->root_mc_bus_dev = mc_bus_dev;
-> +	mc_bus_dev->dev.fwnode = pdev->dev.fwnode;
-
-Makarand, this looks a bit weird. Is there really a reason for it?
-
----
-Best Regards, Laurentiu
+> thanks,
+>
+> greg k-h
