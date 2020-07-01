@@ -2,95 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D175210609
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 10:20:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33EC52106AC
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 10:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgGAIU6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jul 2020 04:20:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgGAIU6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:20:58 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8370120722;
-        Wed,  1 Jul 2020 08:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593591657;
-        bh=mvYYmiZD0lRjkcahXyyE68VrSfxPw8nxlENouGT4zFU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+kvMzaED0bKnFHQXu5Z+wC4wUKy/MUOj/uldXaRx3i0CNI7f7jy4bfVAgAZ5gk/0
-         GTOBdWnhcO35n66pQL3FL1SnBRHNwv0zobP6wsJlT16PsQNvFNV6xWHS0aQkoPRxUm
-         H8cKiVbzSmPeIY+RND3X6F5hpIkCr4VCjyJVtLEA=
-Received: by pali.im (Postfix)
-        id 8FA80102D; Wed,  1 Jul 2020 10:20:55 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        id S1728845AbgGAIry (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jul 2020 04:47:54 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56330 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgGAIrx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 04:47:53 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id CD6F41C0C0F; Wed,  1 Jul 2020 10:47:50 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 10:47:50 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Rajat Jain <rajatja@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: aardvark: Don't touch PCIe registers if no card connected
-Date:   Wed,  1 Jul 2020 10:20:44 +0200
-Message-Id: <20200701082044.4494-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200528143141.29956-1-pali@kernel.org>
-References: <20200528143141.29956-1-pali@kernel.org>
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200701084750.GA7144@amd>
+References: <20200603060751.GA465970@kroah.com>
+ <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+ <20200605080229.GC2209311@kroah.com>
+ <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
+ <20200607113632.GA49147@kroah.com>
+ <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+ <20200630214559.GA7113@duo.ucw.cz>
+ <20200701065426.GC2044019@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Disposition: inline
+In-Reply-To: <20200701065426.GC2044019@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When there is no PCIe card connected and advk_pcie_rd_conf() or
-advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-root bridge, the aardvark driver throws the following error message:
 
-  advk-pcie d0070000.pcie: config read/write timed out
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Obviously accessing PCIe registers of disconnected card is not possible.
+Hi!
 
-Extend check in advk_pcie_valid_device() function for validating
-availability of PCIe bus. If PCIe link is down, then the device is marked
-as Not Found and the driver does not try to access these registers.
+> > We normally trust the hardware NOT to be malicious. (Because if hacker
+> > has physical access to hardware and lot of resources, you lost).
+>=20
+> That is what we originally thought, however the world has changed and we
+> need to be better about this, now that it is trivial to create a "bad"
+> device.
 
-This is just an optimization to prevent accessing PCIe registers when card
-is disconnected. Trying to access PCIe registers of disconnected card does
-not cause any crash, kernel just needs to wait for a timeout. So if card
-disappear immediately after checking for PCIe link (before accessing PCIe
-registers), it does not cause any problems.
+I'm not disagreeing.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
+> > This is still true today, but maybe trusting USB devices is bad idea,
+> > so drivers are being cleaned up. PCI drivers will be WORSE in this
+> > regard. And you can't really protect against malicious CPU, and it is
+> > very very hard to protect against malicous RAM (probably not practical
+> > without explicit CPU support).
+> >=20
+> > Linux was designed with "don't let hackers near your hardware" threat
+> > model in mind.
+>=20
+> Yes, it originally was designed that way, but again, the world has
+> changed so we have to change with it.  That is why USB has for a long
+> time now, allowed you to not bind drivers to devices that you do not
+> "trust", and that trust can be determined by userspace.  That all came
+> about thanks to the work done by the wireless USB spec people and kernel
+> authors, which showed that maybe you just don't want to trust any device
+> that comes within range of your system :)
 
----
-Changes in V2:
-* Update commit message, mention that this is optimization
----
- drivers/pci/controller/pci-aardvark.c | 3 +++
- 1 file changed, 3 insertions(+)
+Again, not disagreeing; but note the scale here.
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 90ff291c24f0..53a4cfd7d377 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
- 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
- 		return false;
- 
-+	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-+		return false;
-+
- 	return true;
- }
- 
--- 
-2.20.1
+It is mandatory to defend against malicious wireless USB devices.
 
+We probably should work on robustness against malicious USB devices.
+
+Malicious PCI-express devices are lot less of concern.
+
+Defending against malicious CPU/RAM does not make much sense.
+
+Notice that it is quite easy to generate -100V on the USB and kill
+your motherboard. Also notice that malicious parts of the hardware
+don't need to be electrically connected to the rest of system, and
+that they don't even have to contain any electronics. You just have to
+be careful. https://en.wikipedia.org/wiki/The_Thing_(listening_device)
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl78TbYACgkQMOfwapXb+vIPVQCfaLKmBpCjrjpOL7yk4eKC2WOg
+zAIAoLekMQziYoPoMQ53aRvdTzLzgVqb
+=qNCF
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
