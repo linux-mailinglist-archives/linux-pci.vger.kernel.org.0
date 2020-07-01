@@ -2,107 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62F222107C1
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 11:12:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C292521086D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 11:41:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgGAJLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jul 2020 05:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729571AbgGAJLG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jul 2020 05:11:06 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8856C061755;
-        Wed,  1 Jul 2020 02:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6wLa3Z5Tnqc6pIqvd9Kuq9IIUcvVwIhLZPWeRnHbIeA=; b=EBZVsbt8QnQM1/nIz26KitisJv
-        1/eDkGMq6rQ6dFjtEOLryOxl9/2R75doGqasl9ZzuMjNGgYkxJYYMHUMNG4E6n09Gm//aQPvahyhB
-        p+3C2xeyUEBqpAC1GAkbGnjo0IAVtK9oQpwC/WxxI98dOzpe9P7CUV+ThLIauqvkrm1FWM7+2x2jJ
-        c9++4TT1vBaEWdzmoSBQ8OF24E3tQQ2du5JTeEtX0OsuBDeQLQKiztWWKJ979nB8hOz9pI+bYZH6S
-        yALNVqqvO3OdagdOb2OGHjX96PwUbqjI5NeBGkEmxGN8jLNiuZipV96hvXOkCQKlrSu67dIaS6kh2
-        mX80E9Ew==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqYle-0002ST-A3; Wed, 01 Jul 2020 09:10:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33CD9305B23;
-        Wed,  1 Jul 2020 11:10:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 170A4201CB82C; Wed,  1 Jul 2020 11:10:54 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 11:10:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200701091054.GW4781@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624211540.GS4817@hirez.programming.kicks-ass.net>
- <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
- <20200625080313.GY4817@hirez.programming.kicks-ass.net>
- <20200625082433.GC117543@hirez.programming.kicks-ass.net>
- <20200625085745.GD117543@hirez.programming.kicks-ass.net>
- <20200630191931.GA884155@elver.google.com>
- <20200630201243.GD4817@hirez.programming.kicks-ass.net>
- <20200630203016.GI9247@paulmck-ThinkPad-P72>
+        id S1729415AbgGAJlf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jul 2020 05:41:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23811 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729502AbgGAJld (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:41:33 -0400
+IronPort-SDR: zHlxN39uxzhotCMcyKkYXfEgORuv1ZWCetM8QmMv8AM5krk+h/UF2z2FRQxpXU5uizKC2K3GS7
+ Jp/rrTDBJkXg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144694298"
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="144694298"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:41:33 -0700
+IronPort-SDR: iTVAvUQHf7E2JKzXCLZw7x5i5vqIACxaVk1TE68EVv1x9EhUdmfOX5qXGq+xpdl+ShBO3x7rYN
+ TGH81JzgtmKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="313708354"
+Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2020 02:41:32 -0700
+Received: from kbuild by 28879958b202 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jqZFD-0002tT-Hn; Wed, 01 Jul 2020 09:41:31 +0000
+Date:   Wed, 01 Jul 2020 17:40:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/misc] BUILD SUCCESS
+ 16bbbc874f7f98e6598784896ed4719f0f1ed844
+Message-ID: <5efc59f9.pAFdcQ628s0VrwNS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630203016.GI9247@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:30:16PM -0700, Paul E. McKenney wrote:
-> On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
+branch HEAD: 16bbbc874f7f98e6598784896ed4719f0f1ed844  PCI: Replace lkml.org, spinics, gmane with lore.kernel.org
 
-> > I'm not convinced C11 memory_order_consume would actually work for us,
-> > even if it would work. That is, given:
-> > 
-> >   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
-> > 
-> > only pointers can have consume, but like I pointed out, we have code
-> > that relies on dependent loads from integers.
-> 
-> I agree that C11 memory_order_consume is not normally what we want,
-> given that it is universally promoted to memory_order_acquire.
-> 
-> However, dependent loads from integers are, if anything, more difficult
-> to defend from the compiler than are control dependencies.  This applies
-> doubly to integers that are used to index two-element arrays, in which
-> case you are just asking the compiler to destroy your dependent loads
-> by converting them into control dependencies.
+elapsed time: 724m
 
-Yes, I'm aware. However, as you might know, I'm firmly in the 'C is a
-glorified assembler' camp (as I expect most actual OS people are, out of
-necessity if nothing else) and if I wanted a control dependency I
-would've bloody well written one.
+configs tested: 106
+configs skipped: 2
 
-I think an optimizing compiler is awesome, but only in so far as that
-optimization is actually helpful -- and yes, I just stepped into a giant
-twilight zone there. That is, any optimization that has _any_
-controversy should be controllable (like -fno-strict-overflow
--fno-strict-aliasing) and I'd very much like the same here.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-In a larger context, I still think that eliminating speculative stores
-is both necessary and sufficient to avoid out-of-thin-air. So I'd also
-love to get some control on that.
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+riscv                    nommu_k210_defconfig
+i386                             alldefconfig
+mips                        vocore2_defconfig
+alpha                            alldefconfig
+arc                         haps_hs_defconfig
+powerpc                    gamecube_defconfig
+arm                           tegra_defconfig
+arm                         orion5x_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200701
+i386                 randconfig-a001-20200701
+i386                 randconfig-a006-20200701
+i386                 randconfig-a005-20200701
+i386                 randconfig-a004-20200701
+i386                 randconfig-a003-20200701
+x86_64               randconfig-a012-20200701
+x86_64               randconfig-a016-20200701
+x86_64               randconfig-a014-20200701
+x86_64               randconfig-a011-20200701
+x86_64               randconfig-a015-20200701
+x86_64               randconfig-a013-20200701
+i386                 randconfig-a011-20200701
+i386                 randconfig-a015-20200701
+i386                 randconfig-a016-20200701
+i386                 randconfig-a012-20200701
+i386                 randconfig-a013-20200701
+i386                 randconfig-a014-20200701
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
