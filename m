@@ -2,102 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AD7721151D
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 23:28:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E20021152D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 23:34:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgGAV2Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jul 2020 17:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
+        id S1726255AbgGAVeo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jul 2020 17:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgGAV2P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:28:15 -0400
+        id S1726144AbgGAVeo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Jul 2020 17:34:44 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5104206B7;
-        Wed,  1 Jul 2020 21:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B578620772;
+        Wed,  1 Jul 2020 21:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593638895;
-        bh=Us/5Jy9tEk6lKrONtGQfRf0LzdvM7mLYjwXq0weXD2o=;
+        s=default; t=1593639284;
+        bh=1IXZOrZkYM9neavpCctk0wMLNeZPLPq2m53FYeI7R3Y=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LkEgNJHnln0VSwyeu9MKg2oQSVELTF7r1btaK4RxPrGOUquprOxOqADHd3+0e6Rsd
-         yLrLwI2iCv968/h4T0d0jyDfrAq0V/1F8SN5Gk3q/fy3rwL6/0Me0nOLAbj4NtASkQ
-         8T5+TwNcXpLurasyEoJ8ru+lUDn+3LDyM2hSJcUM=
-Date:   Wed, 1 Jul 2020 16:28:12 -0500
+        b=rF3Ewa/DKeKRd7U/VwQDI9QcjPY5MWYOBR0LJpIBp1SLRkn2QT4i7qTZTG07NxK1m
+         M8q+xoldII2dJ92U815VFStWbt9B4ALxER1mY7dMl9lJsDDNOWiGAido654S2MhuPr
+         dz5UVbYgCqY+bpKJZjkWsv7Vtv7Pagr86fKv0BjQ=
+Date:   Wed, 1 Jul 2020 16:34:42 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
-        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
-Message-ID: <20200701212812.GA3661715@bjorn-Precision-5520>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200701213442.GA3662456@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701110302.75199-4-giovanni.cabiddu@intel.com>
+In-Reply-To: <20200701082044.4494-1-pali@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:
-> The current generation of Intel® QuickAssist Technology devices
-> are not designed to run in an untrusted environment because of the
-> following issues reported in the release notes in
-> https://01.org/intel-quickassist-technology:
-
-It would be nice if this link were directly clickable, e.g., if there
-were no trailing ":" or something.
-
-And it would be even better if it went to a specific doc that
-described these issues.  I assume these are errata, and it's not easy
-to figure out which doc mentions them.
-
-> QATE-39220 - GEN - Intel® QAT API submissions with bad addresses that
->              trigger DMA to invalid or unmapped addresses can cause a
->              platform hang
-> QATE-7495  - GEN - An incorrectly formatted request to Intel® QAT can
->              hang the entire Intel® QAT Endpoint
+On Wed, Jul 01, 2020 at 10:20:44AM +0200, Pali Rohár wrote:
+> When there is no PCIe card connected and advk_pcie_rd_conf() or
+> advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> root bridge, the aardvark driver throws the following error message:
 > 
-> This patch adds the following QAT devices to the blocklist: DH895XCC,
-> C3XXX and C62X.
+>   advk-pcie d0070000.pcie: config read/write timed out
 > 
-> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> Obviously accessing PCIe registers of disconnected card is not possible.
+> 
+> Extend check in advk_pcie_valid_device() function for validating
+> availability of PCIe bus. If PCIe link is down, then the device is marked
+> as Not Found and the driver does not try to access these registers.
+> 
+> This is just an optimization to prevent accessing PCIe registers when card
+> is disconnected. Trying to access PCIe registers of disconnected card does
+> not cause any crash, kernel just needs to wait for a timeout. So if card
+> disappear immediately after checking for PCIe link (before accessing PCIe
+> registers), it does not cause any problems.
+
+Thanks, this is good.  I'd really like a short comment in the code as
+well, because this sort of link-up check tends to get copied to new
+drivers where it shouldn't be used, e.g., something like this:
+
+  /*
+   * If the link goes down after we check for link-up, nothing bad
+   * happens but the config access times out.
+   */
+
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> 
 > ---
->  drivers/vfio/pci/vfio_pci.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> Changes in V2:
+> * Update commit message, mention that this is optimization
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index ea5904ca6cbf..dcac5408c764 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -75,6 +75,21 @@ static inline bool vfio_vga_disabled(void)
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 90ff291c24f0..53a4cfd7d377 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+>  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+>  		return false;
 >  
->  static bool vfio_pci_dev_in_blocklist(struct pci_dev *pdev)
->  {
-> +	switch (pdev->vendor) {
-> +	case PCI_VENDOR_ID_INTEL:
-> +		switch (pdev->device) {
-> +		case PCI_DEVICE_ID_INTEL_QAT_C3XXX:
-> +		case PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF:
-> +		case PCI_DEVICE_ID_INTEL_QAT_C62X:
-> +		case PCI_DEVICE_ID_INTEL_QAT_C62X_VF:
-> +		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC:
-> +		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF:
-> +			return true;
-> +		default:
-> +			return false;
-> +		}
-> +	}
+> +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> +		return false;
 > +
->  	return false;
+>  	return true;
 >  }
 >  
 > -- 
-> 2.26.2
+> 2.20.1
 > 
