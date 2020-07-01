@@ -2,143 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AB572101A8
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 03:53:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B4B92101E8
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jul 2020 04:18:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgGABxh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jun 2020 21:53:37 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6790 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbgGABxg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:53:36 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 09CE3BAF1119D29E0A4F;
-        Wed,  1 Jul 2020 09:53:34 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Wed, 1 Jul 2020
- 09:53:32 +0800
-Subject: Re: [PATCH] PCI: Make pcie_find_root_port() work for PCIe root ports
- as well
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <20200630220107.GA3489322@bjorn-Precision-5520>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>, <linux-pci@vger.kernel.org>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <c4282c55-8312-53a0-d9e6-4818b9206c1f@hisilicon.com>
-Date:   Wed, 1 Jul 2020 09:53:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726110AbgGACSc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jun 2020 22:18:32 -0400
+Received: from mx.socionext.com ([202.248.49.38]:48253 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbgGACSc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:18:32 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 01 Jul 2020 11:18:30 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 5330B180B81;
+        Wed,  1 Jul 2020 11:18:30 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 1 Jul 2020 11:18:30 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id DA0EF1A0507;
+        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
+Received: from [10.213.31.247] (unknown [10.213.31.247])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 4D2D4120BB6;
+        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87v9jcet5h.wl-maz@kernel.org>
+ <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+ <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
+Date:   Wed, 1 Jul 2020 11:18:29 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200630220107.GA3489322@bjorn-Precision-5520>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+In-Reply-To: <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Hi Marc,
 
-
-On 2020/7/1 6:01, Bjorn Helgaas wrote:
-> On Mon, Jun 22, 2020 at 07:12:48PM +0300, Mika Westerberg wrote:
->> Commit 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and
->> pci_find_pcie_root_port()") unified the root port finding functionality
->> into a single function but missed the fact that the passed in device may
->> already be a root port. This causes the kernel to block power management
->> of PCIe hierarchies in recent systems because ->bridge_d3 started to
->> return false for such ports after the commit in question.
+On 2020/06/30 22:23, Marc Zyngier wrote:
+> On 2020-06-29 10:49, Kunihiko Hayashi wrote:
+>> Hi Marc,
 >>
->> Fixes: 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and pci_find_pcie_root_port()")
->> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Cc: stable@vger.kernel.org
->> ---
->>  include/linux/pci.h | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
+>> On 2020/06/27 18:48, Marc Zyngier wrote:
+>>> On Thu, 18 Jun 2020 09:38:09 +0100,
+>>> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+>>>>
+>>>> The misc interrupts consisting of PME, AER, and Link event, is handled
+>>>> by INTx handler, however, these interrupts should be also handled by
+>>>> MSI handler.
+>>>>
+>>>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>>>> interrupts, which is called from both INTx and MSI handlers.
+>>>> This function detects PME and AER interrupts with the status register,
+>>>> and invoke PME and AER drivers related to MSI.
+>>>>
+>>>> And this sets the mask for misc interrupts from INTx if MSI is enabled
+>>>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>>>
+>>>> Cc: Marc Zyngier <maz@kernel.org>
+>>>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>>>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>>> ---
+>>>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>>>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> index a5401a0..5ce2479 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> @@ -44,7 +44,9 @@
+>>>>   #define PCL_SYS_AUX_PWR_DET        BIT(8)
+>>>>     #define PCL_RCV_INT            0x8108
+>>>> +#define PCL_RCV_INT_ALL_INT_MASK    GENMASK(28, 25)
+>>>>   #define PCL_RCV_INT_ALL_ENABLE        GENMASK(20, 17)
+>>>> +#define PCL_RCV_INT_ALL_MSI_MASK    GENMASK(12, 9)
+>>>>   #define PCL_CFG_BW_MGT_STATUS        BIT(4)
+>>>>   #define PCL_CFG_LINK_AUTO_BW_STATUS    BIT(3)
+>>>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS    BIT(2)
+>>>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>>>>     static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>>>>   {
+>>>> -    writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>>>> +    u32 val;
+>>>> +
+>>>> +    val = PCL_RCV_INT_ALL_ENABLE;
+>>>> +    if (pci_msi_enabled())
+>>>> +        val |= PCL_RCV_INT_ALL_INT_MASK;
+>>>> +    else
+>>>> +        val |= PCL_RCV_INT_ALL_MSI_MASK;
+>>>
+>>> Does this affect endpoints? Or just the RC itself?
 >>
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index c79d83304e52..c17c24f5eeed 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -2169,8 +2169,13 @@ static inline int pci_pcie_type(const struct pci_dev *dev)
->>   */
->>  static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
->>  {
->> -	struct pci_dev *bridge = pci_upstream_bridge(dev);
->> +	struct pci_dev *bridge;
->>  
->> +	/* If dev is already root port */
->> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
->> +		return dev;
->> +
->> +	bridge = pci_upstream_bridge(dev);
->>  	while (bridge) {
->>  		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT)
->>  			return bridge;
-> I applied the patch below, which is slightly simplified but I think
-> still equivalent, to for-linus for v5.8.  Let me know if it's not.
->
-> I dropped the stable tag because 6ae72bfa656e was merged for v5.8-rc1,
-> and I assume v5.7 works correctly so it doesn't need any change.
->
->
-> commit 5396956cc7c6 ("PCI: Make pcie_find_root_port() work for Root Ports")
-> Author: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Date:   Mon Jun 22 19:12:48 2020 +0300
->
->     PCI: Make pcie_find_root_port() work for Root Ports
->     
->     Commit 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and
->     pci_find_pcie_root_port()") broke acpi_pci_bridge_d3() because calling
->     pcie_find_root_port() on a Root Port returned NULL when it should return
->     the Root Port, which in turn broke power management of PCIe hierarchies.
->     
->     Rework pcie_find_root_port() so it returns its argument when it is already
->     a Root Port.
->     
->     [bhelgaas: test device only once, test for PCIe]
->     Fixes: 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and pci_find_pcie_root_port()")
->     Link: https://lore.kernel.org/r/20200622161248.51099-1-mika.westerberg@linux.intel.com
->     Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c79d83304e52..34c1c4f45288 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2169,12 +2169,11 @@ static inline int pci_pcie_type(const struct pci_dev *dev)
->   */
->  static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
->  {
-> -	struct pci_dev *bridge = pci_upstream_bridge(dev);
-> -
-> -	while (bridge) {
-> -		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT)
-> -			return bridge;
-> -		bridge = pci_upstream_bridge(bridge);
-> +	while (dev) {
-> +		if (pci_is_pcie(dev) &&
-> +		    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> +			return dev;
-> +		dev = pci_upstream_bridge(dev);
->  	}
->  
+>> These interrupts are asserted by RC itself, so this part affects only RC.
+>>
+>>>> +
+>>>> +    writel(val, priv->base + PCL_RCV_INT);
+>>>>       writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>>>   }
+>>>>   @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>>>>       .map = uniphier_pcie_intx_map,
+>>>>   };
+>>>>   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>>>>   {
+>>>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>>>       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>>       struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>>>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
+>>>> -    unsigned long reg;
+>>>> -    u32 val, bit, virq;
+>>>> +    u32 val, virq;
+>>>>   -    /* INT for debug */
+>>>>       val = readl(priv->base + PCL_RCV_INT);
+>>>>         if (val & PCL_CFG_BW_MGT_STATUS)
+>>>>           dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>>>> +
+>>>>       if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>>>           dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>>>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>>> -        dev_dbg(pci->dev, "Root Error\n");
+>>>> -    if (val & PCL_CFG_PME_MSI_STATUS)
+>>>> -        dev_dbg(pci->dev, "PME Interrupt\n");
+>>>> +
+>>>> +    if (is_msi) {
+>>>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>>> +            dev_dbg(pci->dev, "Root Error Status\n");
+>>>> +
+>>>> +        if (val & PCL_CFG_PME_MSI_STATUS)
+>>>> +            dev_dbg(pci->dev, "PME Interrupt\n");
+>>>> +
+>>>> +        if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>>>> +               PCL_CFG_PME_MSI_STATUS)) {
+>>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
+>>>> +            generic_handle_irq(virq);
+>>>> +        }
+>>>> +    }
+>>>
+>>> Please have two handlers: one for interrupts that are from the RC,
+>>> another for interrupts coming from the endpoints.
+>> I assume that this handler treats interrupts from the RC only and
+>> this is set on the member ".msi_host_isr" added in the patch 1/6.
+>> I think that the handler for interrupts coming from endpoints should be
+>> treated as a normal case (after calling .msi_host_isr in
+>> dw_handle_msi_irq()).
+> 
+> It looks pretty odd that you end-up dealing with both from the
+> same "parent" interrupt. I guess this is in keeping with the
+> rest of the DW PCIe hacks... :-/
 
-We may have some problems here, as after pcie_find_root_port() called, *dev will
-be either root port or NULL but users may want it unchanged. One such usage is
-in acpi_pci_bridge_d3(), drivers/pci/pci-acpi.c, *dev is used as origin
-after called this.
+It might be odd, however, in case of UniPhier SoC,
+both MSI interrupts from endpoints and PME/AER interrupts from RC are
+asserted by same "parent" interrupt. In other words, PME/AER interrupts
+are notified using the parent interrupt for MSI.
 
-So we should use a temporary point to *dev rather than directly modify it.
+MSI interrupts are treated as child interrupts with reference to
+the status register in DW core. This is handled in a for-loop in
+dw_handle_msi_irq().
 
-Thanks,
-Yicong
+PME/AER interrupts are treated with reference to the status register
+in UniPhier glue layer, however, this couldn't be handled in the same way
+directly.
 
+So I'm trying to add .msi_host_isr function to handle this
+with reference to the SoC-specific registers.
 
->  	return NULL;
-> .
->
+This exported function asserts MSI-0 as a shared child interrupt.
+As a result, PME/AER are registered like the followings in dmesg:
 
+    pcieport 0000:00:00.0: PME: Signaling with IRQ 25
+    pcieport 0000:00:00.0: AER: enabled with IRQ 25
+
+And these interrupts are shared as MSI-0:
+
+    # cat /proc/interrupts | grep 25:
+     25:          0          0          0          0   PCI-MSI   0 Edge      PCIe PME, aerdrv
+
+This might be a special case, though, I think that this is needed to handle
+interrupts from RC sharing MSI parent.
+  
+> It is for Lorenzo to make up his mind about this anyway.
+
+I'd like to Lorenzo's opinion, too.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
