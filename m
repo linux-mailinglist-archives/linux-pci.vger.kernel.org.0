@@ -2,153 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C87C4211E7E
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 10:24:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C79B4211E6C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 10:24:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgGBIYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jul 2020 04:24:52 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7346 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727043AbgGBIYu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:24:50 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 277E4617FD2BE7EE03F4;
-        Thu,  2 Jul 2020 16:22:03 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.33) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Jul 2020
- 16:22:01 +0800
-Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
- the ACPI namespace for NC
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        <iommu@lists.linux-foundation.org>, <linux-acpi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
+        id S1728765AbgGBIYF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jul 2020 04:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728746AbgGBIYD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:24:03 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 635FF20720;
+        Thu,  2 Jul 2020 08:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593678242;
+        bh=A4x8rASu1MxlGaK4Uw98Lg3c9yofoP0D7gnk1mnvwQM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x7OVPlAjY6MGQp6wnGj9/IFkiOBoc/jegOMFsboi3w/M/7o0WD9ubPagnMIcFwMyJ
+         6ruT2TpqQtkJGu5k2iETtFULovOrL+bhlfJqgN/oX3AczHJOtX8v2Cf5YpBhZsQ3U7
+         vnxCNNP9F5uS2V+vYf57H/iyktY5nVDHGvMzGNts=
+Received: by pali.im (Postfix)
+        id D496DE92; Thu,  2 Jul 2020 10:23:59 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 10:23:59 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
- <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
- <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
- <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
- <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
- <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
- <952a6720-f401-1441-5548-5b40cfc76d3a@arm.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <0cbd1da8-e283-7e13-d2b3-4d14775fd870@huawei.com>
-Date:   Thu, 2 Jul 2020 16:22:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200702082359.h6f6r3hsr57fnquh@pali>
+References: <20200701082044.4494-1-pali@kernel.org>
+ <20200701213442.GA3662456@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <952a6720-f401-1441-5548-5b40cfc76d3a@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.33]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701213442.GA3662456@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Robin,
-
-On 2020/7/2 0:12, Robin Murphy wrote:
-> On 2020-06-30 14:04, Hanjun Guo wrote:
->> On 2020/6/30 18:24, Lorenzo Pieralisi wrote:
->>> On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
->>>
->>> [...]
->>>
->>>>> For devices that aren't described in the DSDT - IORT translations
->>>>> are determined by their ACPI parent device. Do you see/Have you
->>>>> found any issue with this approach ?
->>>>
->>>> The spec says "Describes the IO relationships between devices
->>>> represented in the ACPI namespace.", and in section 3.1.1.3 Named
->>>> component node, it says:
->>>
->>> PCI devices aren't necessarily described in the ACPI namespace and we
->>> still use IORT to describe them - through the RC node.
->>>
->>>> "Named component nodes are used to describe devices that are also
->>>> included in the Differentiated System Description Table (DSDT). See
->>>> [ACPI]."
->>>>
->>>> So from my understanding, the IORT spec for now, can only do ID
->>>> translations for devices in the DSDT.
->>>
->>> I think you can read this multiple ways but this patch does not
->>> change this concept. What changes, is applying parent's node IORT
->>> mapping to child nodes with no associated DSDT nodes, it is the
->>> same thing we do with PCI and the _DMA method - we could update
->>> the wording in the specs if that clarifies but I don't think this
->>> deliberately disregards the specifications.
->>
->> I agree, but it's better to update the wording of the spec.
->>
->>>
->>>>>> For a platform device, if I use its parent's full path name for
->>>>>> its named component entry, then it will match, but this will violate
->>>>>> the IORT spec.
->>>>>
->>>>> Can you elaborate on this please I don't get the point you
->>>>> are making.
->>>>
->>>> For example, device A is not described in DSDT so can't represent
->>>> as a NC node in IORT. Device B can be described in DSDT and it
->>>> is the parent of device A, so device B can be represented in IORT
->>>> with memory access properties and node flags with Substream width
->>>> and Stall supported info.
->>>>
->>>> When we trying to translate device A's ID, we reuse all the memory
->>>> access properties and node flags from its parent (device B), but
->>>> will it the same?
->>>
->>> I assume so why wouldn't it be ? Why would be describe them in
->>> a parent-child relationship if that's not how the system looks like
->>> in HW ?
->>
->> The point I'm making is that I'm not sure all the memory access and
->> stall properties are the same for the parent and the device itself.
+On Wednesday 01 July 2020 16:34:42 Bjorn Helgaas wrote:
+> On Wed, Jul 01, 2020 at 10:20:44AM +0200, Pali Rohár wrote:
+> > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > root bridge, the aardvark driver throws the following error message:
+> > 
+> >   advk-pcie d0070000.pcie: config read/write timed out
+> > 
+> > Obviously accessing PCIe registers of disconnected card is not possible.
+> > 
+> > Extend check in advk_pcie_valid_device() function for validating
+> > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > as Not Found and the driver does not try to access these registers.
+> > 
+> > This is just an optimization to prevent accessing PCIe registers when card
+> > is disconnected. Trying to access PCIe registers of disconnected card does
+> > not cause any crash, kernel just needs to wait for a timeout. So if card
+> > disappear immediately after checking for PCIe link (before accessing PCIe
+> > registers), it does not cause any problems.
 > 
-> Is that even a valid case though? The principal thing we want to 
-> accommodate here is when device B *is* the one accessing memory, either 
-> because it is a bridge with device A sat behind it, or because device A 
-> is actually just some logical function or subset of physical device B.
-
-Thanks for the clarify, for CCA attributes, child device should be the
-same as its parent and that was written in the ACPI spec, so it's better
-to make it clear for other properties in the spec as well.
-
+> Thanks, this is good.  I'd really like a short comment in the code as
+> well, because this sort of link-up check tends to get copied to new
+> drivers where it shouldn't be used, e.g., something like this:
 > 
-> If the topology is such that device A is a completely independent device 
-> with its own path to memory such that it could have different 
-> properties, I would expect that it *should* be described in DSDT, and I 
-> can't easily think of a good reason why it wouldn't be. I'm also 
-> struggling to imagine how it might even have an ID that had to be 
-> interpreted in the context of device B if it wasn't one of the cases 
-> above :/
-> 
-> I don't doubt that people could - or maybe even have - come up with crap 
-> DSDT bindings that don't represent the hardware sufficiently accurately, 
-> but I'm not sure that should be IORT's problem...
+>   /*
+>    * If the link goes down after we check for link-up, nothing bad
+>    * happens but the config access times out.
+>    */
 
-As I said in previous email, I'm not against this patch, and seems
-have no regressions for platforms that using named component node
-such as D05/D06 (I will test it shortly to make sure), but it's better
-to update the wording of the spec (even after this patch set is merged).
+Ok, it makes sense! I will send a new patch version.
 
-Thanks
-Hanjun
-
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > 
+> > ---
+> > Changes in V2:
+> > * Update commit message, mention that this is optimization
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 90ff291c24f0..53a4cfd7d377 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> >  		return false;
+> >  
+> > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > +		return false;
+> > +
+> >  	return true;
+> >  }
+> >  
+> > -- 
+> > 2.20.1
+> > 
