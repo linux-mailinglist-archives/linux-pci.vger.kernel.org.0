@@ -2,246 +2,255 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B556621202E
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 11:41:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64C6E212059
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 11:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgGBJl4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jul 2020 05:41:56 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7347 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725287AbgGBJly (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:41:54 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2E54ED967EB76536ABC1;
-        Thu,  2 Jul 2020 17:41:51 +0800 (CST)
-Received: from [127.0.0.1] (10.174.187.83) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Jul 2020
- 17:41:42 +0800
-Subject: Re: [PATCH v3] PCI: Lock the pci_cfg_wait queue for the consistency
- of data
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bhelgaas@google.com>, <willy@infradead.org>,
-        <wangxiongfeng2@huawei.com>, <wanghaibin.wang@huawei.com>,
-        <guoheyi@huawei.com>, <yebiaoxiang@huawei.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>,
-        James Puthukattukaran <james.puthukattukaran@oracle.com>
-References: <20200628161449.GA3122309@bjorn-Precision-5520>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <39bab369-79aa-24b2-720b-4dba752b99f9@huawei.com>
-Date:   Thu, 2 Jul 2020 17:41:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1726475AbgGBJvn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jul 2020 05:51:43 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49200 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727819AbgGBJvm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jul 2020 05:51:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593683499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bHogEYB9LdYLmlRRtpVvkwg/X8GA9U3ZCoLaT+Iq1ZM=;
+        b=dqLCsX2XQmNKa3UouoQDbSc/8q/P3+86X4r7CHKwlklHA8Vju+gc4hjhYRDrpPWqZdQ2LH
+        C9yAzTKYDvrLvFW+wgCfRKJhR6/F9WZManhhJSmahtItzwf+C6vkxIDw6DCtB5pREKZC/p
+        DoTuIi8yRBmVugLuZiVyG5eXjDjQzEg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-504-Yi818pg8PDKiTrenn2B5aA-1; Thu, 02 Jul 2020 05:51:36 -0400
+X-MC-Unique: Yi818pg8PDKiTrenn2B5aA-1
+Received: by mail-wm1-f71.google.com with SMTP id e15so27663617wme.8
+        for <linux-pci@vger.kernel.org>; Thu, 02 Jul 2020 02:51:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bHogEYB9LdYLmlRRtpVvkwg/X8GA9U3ZCoLaT+Iq1ZM=;
+        b=kIXf93YVhg3dIz8vECwSj0MEJy1CHSNcuhHj5w7QbF3Qdc+doWbgcNZVOj/72lU7d9
+         Iw/GPOaYHJNhwuFJvMhsbfi5QzE28aSsrqZolI1aHKMyMdjLq4vxO3Pbqg/sr/52v3Og
+         6YsU0GuvUaN6NiY9A47UO54hX/pYR0IRPpgKyYRKypNPRIMpaCYJ96wbj2jnQ8wE9hTD
+         3dvmwMowPtB3QenJH88/mUHqJPzs9c6nzDY8Aa8rIU1IqmLh6a3T7WyBBqAOcVIn1RuO
+         /mF2jeJZh6yqatF/Bbk4g9YDV5XEhgo6btoyAptB5sAgUJZOQN1DZQ37Bu0cFgR0XUBb
+         OgQg==
+X-Gm-Message-State: AOAM533VKUOT/1ZLCgJ/1u0YbTfc5ohyFeMSfBGy1JiibALSoEBQyRa1
+        yrsEwxZB2fkCXpKCs6AFy22p8nyIyDF0HcxNaXRm0UKMYltOTDXTU5vADpPqBdXG6AlRcady56d
+        TBaVpEHYU9FOoZ1ZPVebP
+X-Received: by 2002:a5d:6a01:: with SMTP id m1mr32647454wru.115.1593683494975;
+        Thu, 02 Jul 2020 02:51:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyXVWeInx8Is6mzpEdmO8KzqqisDChfcd/0ZxL7aKAX8BZJxTsoFC5nkJpDq8uHhK7haSamAg==
+X-Received: by 2002:a5d:6a01:: with SMTP id m1mr32647426wru.115.1593683494694;
+        Thu, 02 Jul 2020 02:51:34 -0700 (PDT)
+Received: from redhat.com ([93.157.82.4])
+        by smtp.gmail.com with ESMTPSA id 138sm4695866wmb.1.2020.07.02.02.51.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 02:51:33 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 05:51:29 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
+ communication
+Message-ID: <20200702055026-mutt-send-email-mst@kernel.org>
+References: <20200702082143.25259-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200628161449.GA3122309@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.187.83]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2020/6/29 0:14, Bjorn Helgaas wrote:
-> On Sun, Jun 28, 2020 at 12:18:10PM +0800, Xiang Zheng wrote:
->> On 2020/6/26 7:24, Bjorn Helgaas wrote:
->>> On Wed, Jun 24, 2020 at 06:23:09PM -0500, Bjorn Helgaas wrote:
->>>> On Tue, Dec 10, 2019 at 11:15:27AM +0800, Xiang Zheng wrote:
->>>>> 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
->>>>> device") suggests that the "pci_lock" is sufficient, and all the
->>>>> callers of pci_wait_cfg() are wrapped with the "pci_lock".
->>>>>
->>>>> However, since the commit cdcb33f98244 ("PCI: Avoid possible deadlock on
->>>>> pci_lock and p->pi_lock") merged, the accesses to the pci_cfg_wait queue
->>>>> are not safe anymore. This would cause kernel panic in a very low chance
->>>>> (See more detailed information from the below link). A "pci_lock" is
->>>>> insufficient and we need to hold an additional queue lock while read/write
->>>>> the wait queue.
->>>>>
->>>>> So let's use the add_wait_queue()/remove_wait_queue() instead of
->>>>> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
->>>>> functionality around the "schedule()" function to avoid reintroducing
->>>>> the deadlock addressed by "cdcb33f98244".
->>>>
->>>> I see that add_wait_queue() acquires the wq_head->lock, while
->>>> __add_wait_queue() does not.
->>>>
->>>> But I don't understand why the existing pci_lock is insufficient.  
->>>> pci_cfg_wait is only used in pci_wait_cfg() and
->>>> pci_cfg_access_unlock().
->>>>
->>>> In pci_wait_cfg(), both __add_wait_queue() and __remove_wait_queue()
->>>> are called while holding pci_lock, so that doesn't seem like the
->>>> problem.
->>>>
->>>> In pci_cfg_access_unlock(), we have:
->>>>
->>>>   pci_cfg_access_unlock
->>>>     wake_up_all(&pci_cfg_wait)
->>>>       __wake_up(&pci_cfg_wait, ...)
->>>>         __wake_up_common_lock(&pci_cfg_wait, ...)
->>>> 	  spin_lock(&pci_cfg_wait->lock)
->>>> 	  __wake_up_common(&pci_cfg_wait, ...)
->>>> 	    list_for_each_entry_safe_from(...)
->>>> 	      list_add_tail(...)                <-- problem?
->>>> 	  spin_unlock(&pci_cfg_wait->lock)
->>>>
->>>> Is the problem that the wake_up_all() modifies the pci_cfg_wait list
->>>> without holding pci_lock?
->>>>
->>>> If so, I don't quite see how the patch below fixes it.  Oh, wait,
->>>> maybe I do ... by using add_wait_queue(), we protect the list using
->>>> the *same* lock used by __wake_up_common_lock.  Is that it?
->>>
->>> Any reaction to the following?  Certainly not as optimized, but also a
->>> little less magic and more in the mainstream of wait_event/wake_up
->>> usage.
->>>
->>> I don't claim any real wait queue knowledge and haven't tested it.
->>> There are only a handful of __add_wait_queue() users compared with
->>> over 1600 users of wait_event() and variants, and I don't like being
->>> such a special case.
->>
->> I think the following patch is OK, even though I prefer mine. :)
+On Thu, Jul 02, 2020 at 01:51:21PM +0530, Kishon Vijay Abraham I wrote:
+> This series enhances Linux Vhost support to enable SoC-to-SoC
+> communication over MMIO. This series enables rpmsg communication between
+> two SoCs using both PCIe RC<->EP and HOST1-NTB-HOST2
 > 
-> Possibility A:
+> 1) Modify vhost to use standard Linux driver model
+> 2) Add support in vring to access virtqueue over MMIO
+> 3) Add vhost client driver for rpmsg
+> 4) Add PCIe RC driver (uses virtio) and PCIe EP driver (uses vhost) for
+>    rpmsg communication between two SoCs connected to each other
+> 5) Add NTB Virtio driver and NTB Vhost driver for rpmsg communication
+>    between two SoCs connected via NTB
+> 6) Add configfs to configure the components
 > 
->         do {
->                 set_current_state(TASK_UNINTERRUPTIBLE);
->                 raw_spin_unlock_irq(&pci_lock);
->                 add_wait_queue(&pci_cfg_wait, &wait);
->                 schedule();
->                 remove_wait_queue(&pci_cfg_wait, &wait);
->                 raw_spin_lock_irq(&pci_lock);
->         } while (dev->block_cfg_access);
+> UseCase1 :
 > 
-> Possibility B:
+>  VHOST RPMSG                     VIRTIO RPMSG
+>       +                               +
+>       |                               |
+>       |                               |
+>       |                               |
+>       |                               |
+> +-----v------+                 +------v-------+
+> |   Linux    |                 |     Linux    |
+> |  Endpoint  |                 | Root Complex |
+> |            <----------------->              |
+> |            |                 |              |
+> |    SOC1    |                 |     SOC2     |
+> +------------+                 +--------------+
 > 
->         do {
->                 raw_spin_unlock_irq(&pci_lock);
->                 wait_event(pci_cfg_wait, !dev->block_cfg_access);
->                 raw_spin_lock_irq(&pci_lock);
->         } while (dev->block_cfg_access);
+> UseCase 2:
 > 
-> I think both ways probably work.  
+>      VHOST RPMSG                                      VIRTIO RPMSG
+>           +                                                 +
+>           |                                                 |
+>           |                                                 |
+>           |                                                 |
+>           |                                                 |
+>    +------v------+                                   +------v------+
+>    |             |                                   |             |
+>    |    HOST1    |                                   |    HOST2    |
+>    |             |                                   |             |
+>    +------^------+                                   +------^------+
+>           |                                                 |
+>           |                                                 |
+> +---------------------------------------------------------------------+
+> |  +------v------+                                   +------v------+  |
+> |  |             |                                   |             |  |
+> |  |     EP      |                                   |     EP      |  |
+> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
+> |  |             <----------------------------------->             |  |
+> |  |             |                                   |             |  |
+> |  |             |                                   |             |  |
+> |  |             |  SoC With Multiple EP Instances   |             |  |
+> |  |             |  (Configured using NTB Function)  |             |  |
+> |  +-------------+                                   +-------------+  |
+> +---------------------------------------------------------------------+
 > 
-> I prefer B because there's less chance for error -- it requires less
-> knowledge of the internals of wait/wake_up and we don't have to worry
-> about the ordering of set_current_state(), raw_spin_unlock_irq(),
-> add_wait_queue(), schedule(), and remove_wait_queue().
+> Software Layering:
 > 
-> I really don't know much about wait queues, so I'm interested in why
-> you prefer A.
+> The high-level SW layering should look something like below. This series
+> adds support only for RPMSG VHOST, however something similar should be
+> done for net and scsi. With that any vhost device (PCI, NTB, Platform
+> device, user) can use any of the vhost client driver.
 > 
-
-Hmm...I also think B is much better than A as you describe above.
-I'am not sure that whether "dev->block_cfg_access" is safe, at least
-the "do{...}while" cannot be removed.
-
->> I can test your patch on my testcase(with hacked 300ms delay before
->> "curr->func" in __wake_up_common()). And if James has more efficient
->> testcase or measure for this problem, then go with James.
 > 
-> That would be great, thank you!  Let me know how it goes.
-
-I need to make some hacking codes to test your patch, some like:
-
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -206,19 +206,12 @@ static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
-
- static noinline void pci_wait_cfg(struct pci_dev *dev)
- {
--       DECLARE_WAITQUEUE(wait, current);
--       wait.flags = WQ_FLAG_PCI;
--
--       __add_wait_queue(&pci_cfg_wait, &wait);
-        do {
-                set_current_state(TASK_UNINTERRUPTIBLE);
-                raw_spin_unlock_irq(&pci_lock);
--               schedule();
-+               wait_event_flags(pci_cfg_wait, !dev->block_cfg_access, WQ_FLAG_PCI);
-                raw_spin_lock_irq(&pci_lock);
-        } while (dev->block_cfg_access);
--       __remove_wait_queue(&pci_cfg_wait, &wait);
- }
---- a/kernel/sched/wait.c
-+++ b/kernel/sched/wait.c
-@@ -4,8 +4,12 @@
-  *
-  * (C) 2004 Nadia Yvette Chambers, Oracle
-  */
-+#include <linux/delay.h>
-+
- #include "sched.h"
-
-+unsigned long wake_up_delay_ms;
-+
- void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *name, struct lock_class_key *k
-ey)
- {
-        spin_lock_init(&wq_head->lock);
-@@ -90,6 +94,10 @@ static int __wake_up_common(struct wait_queue_head *wq_head, unsigned int mode,
-                if (flags & WQ_FLAG_BOOKMARK)
-                        continue;
-
-+               if (flags & WQ_FLAG_PCI && wake_up_delay_ms) {
-+                       mdelay(wake_up_delay_ms);
-+               }
-+
-                ret = curr->func(curr, mode, wake_flags, key);
-                if (ret < 0)
-                        break;
+>     +----------------+  +-----------+  +------------+  +----------+
+>     |  RPMSG VHOST   |  | NET VHOST |  | SCSI VHOST |  |    X     |
+>     +-------^--------+  +-----^-----+  +-----^------+  +----^-----+
+>             |                 |              |              |
+>             |                 |              |              |
+>             |                 |              |              |
+> +-----------v-----------------v--------------v--------------v----------+
+> |                            VHOST CORE                                |
+> +--------^---------------^--------------------^------------------^-----+
+>          |               |                    |                  |
+>          |               |                    |                  |
+>          |               |                    |                  |
+> +--------v-------+  +----v------+  +----------v----------+  +----v-----+
+> |  PCI EPF VHOST |  | NTB VHOST |  |PLATFORM DEVICE VHOST|  |    X     |
+> +----------------+  +-----------+  +---------------------+  +----------+
+> 
+> This was initially proposed here [1]
+> 
+> [1] -> https://lore.kernel.org/r/2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com
 
 
-I tested it both on 4.19+ and mainline(5.8.0-rc3+). It's much difficult
-to reproduce the kernel panic on mainline(I don't know why).
-
-Anyway, all is well with your patch.
-
-Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
+I find this very interesting. A huge patchset so will take a bit
+to review, but I certainly plan to do that. Thanks!
 
 > 
->>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->>> index 79c4a2ef269a..7c2222bddbff 100644
->>> --- a/drivers/pci/access.c
->>> +++ b/drivers/pci/access.c
->>> @@ -205,16 +205,11 @@ static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
->>>  
->>>  static noinline void pci_wait_cfg(struct pci_dev *dev)
->>>  {
->>> -	DECLARE_WAITQUEUE(wait, current);
->>> -
->>> -	__add_wait_queue(&pci_cfg_wait, &wait);
->>>  	do {
->>> -		set_current_state(TASK_UNINTERRUPTIBLE);
->>>  		raw_spin_unlock_irq(&pci_lock);
->>> -		schedule();
->>> +		wait_event(pci_cfg_wait, !dev->block_cfg_access);
->>>  		raw_spin_lock_irq(&pci_lock);
->>>  	} while (dev->block_cfg_access);
->>> -	__remove_wait_queue(&pci_cfg_wait, &wait);
->>>  }
->>>  
->>>  /* Returns 0 on success, negative values indicate error. */
->>>
->>> .
->>>
->>
->> -- 
->> Thanks,
->> Xiang
->>
+> Kishon Vijay Abraham I (22):
+>   vhost: Make _feature_ bits a property of vhost device
+>   vhost: Introduce standard Linux driver model in VHOST
+>   vhost: Add ops for the VHOST driver to configure VHOST device
+>   vringh: Add helpers to access vring in MMIO
+>   vhost: Add MMIO helpers for operations on vhost virtqueue
+>   vhost: Introduce configfs entry for configuring VHOST
+>   virtio_pci: Use request_threaded_irq() instead of request_irq()
+>   rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when
+>     reading messages
+>   rpmsg: Introduce configfs entry for configuring rpmsg
+>   rpmsg: virtio_rpmsg_bus: Add Address Service Notification support
+>   rpmsg: virtio_rpmsg_bus: Move generic rpmsg structure to
+>     rpmsg_internal.h
+>   virtio: Add ops to allocate and free buffer
+>   rpmsg: virtio_rpmsg_bus: Use virtio_alloc_buffer() and
+>     virtio_free_buffer()
+>   rpmsg: Add VHOST based remote processor messaging bus
+>   samples/rpmsg: Setup delayed work to send message
+>   samples/rpmsg: Wait for address to be bound to rpdev for sending
+>     message
+>   rpmsg.txt: Add Documentation to configure rpmsg using configfs
+>   virtio_pci: Add VIRTIO driver for VHOST on Configurable PCIe Endpoint
+>     device
+>   PCI: endpoint: Add EP function driver to provide VHOST interface
+>   NTB: Add a new NTB client driver to implement VIRTIO functionality
+>   NTB: Add a new NTB client driver to implement VHOST functionality
+>   NTB: Describe the ntb_virtio and ntb_vhost client in the documentation
 > 
-> .
+>  Documentation/driver-api/ntb.rst              |   11 +
+>  Documentation/rpmsg.txt                       |   56 +
+>  drivers/ntb/Kconfig                           |   18 +
+>  drivers/ntb/Makefile                          |    2 +
+>  drivers/ntb/ntb_vhost.c                       |  776 +++++++++++
+>  drivers/ntb/ntb_virtio.c                      |  853 ++++++++++++
+>  drivers/ntb/ntb_virtio.h                      |   56 +
+>  drivers/pci/endpoint/functions/Kconfig        |   11 +
+>  drivers/pci/endpoint/functions/Makefile       |    1 +
+>  .../pci/endpoint/functions/pci-epf-vhost.c    | 1144 ++++++++++++++++
+>  drivers/rpmsg/Kconfig                         |   10 +
+>  drivers/rpmsg/Makefile                        |    3 +-
+>  drivers/rpmsg/rpmsg_cfs.c                     |  394 ++++++
+>  drivers/rpmsg/rpmsg_core.c                    |    7 +
+>  drivers/rpmsg/rpmsg_internal.h                |  136 ++
+>  drivers/rpmsg/vhost_rpmsg_bus.c               | 1151 +++++++++++++++++
+>  drivers/rpmsg/virtio_rpmsg_bus.c              |  184 ++-
+>  drivers/vhost/Kconfig                         |    1 +
+>  drivers/vhost/Makefile                        |    2 +-
+>  drivers/vhost/net.c                           |   10 +-
+>  drivers/vhost/scsi.c                          |   24 +-
+>  drivers/vhost/test.c                          |   17 +-
+>  drivers/vhost/vdpa.c                          |    2 +-
+>  drivers/vhost/vhost.c                         |  730 ++++++++++-
+>  drivers/vhost/vhost_cfs.c                     |  341 +++++
+>  drivers/vhost/vringh.c                        |  332 +++++
+>  drivers/vhost/vsock.c                         |   20 +-
+>  drivers/virtio/Kconfig                        |    9 +
+>  drivers/virtio/Makefile                       |    1 +
+>  drivers/virtio/virtio_pci_common.c            |   25 +-
+>  drivers/virtio/virtio_pci_epf.c               |  670 ++++++++++
+>  include/linux/mod_devicetable.h               |    6 +
+>  include/linux/rpmsg.h                         |    6 +
+>  {drivers/vhost => include/linux}/vhost.h      |  132 +-
+>  include/linux/virtio.h                        |    3 +
+>  include/linux/virtio_config.h                 |   42 +
+>  include/linux/vringh.h                        |   46 +
+>  samples/rpmsg/rpmsg_client_sample.c           |   32 +-
+>  tools/virtio/virtio_test.c                    |    2 +-
+>  39 files changed, 7083 insertions(+), 183 deletions(-)
+>  create mode 100644 drivers/ntb/ntb_vhost.c
+>  create mode 100644 drivers/ntb/ntb_virtio.c
+>  create mode 100644 drivers/ntb/ntb_virtio.h
+>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vhost.c
+>  create mode 100644 drivers/rpmsg/rpmsg_cfs.c
+>  create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
+>  create mode 100644 drivers/vhost/vhost_cfs.c
+>  create mode 100644 drivers/virtio/virtio_pci_epf.c
+>  rename {drivers/vhost => include/linux}/vhost.h (66%)
 > 
-
--- 
-Thanks,
-Xiang
+> -- 
+> 2.17.1
+> 
 
