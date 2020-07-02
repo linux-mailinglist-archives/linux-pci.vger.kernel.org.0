@@ -2,421 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 573E7212BEC
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 20:08:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58A83212DC5
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 22:19:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgGBSIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jul 2020 14:08:31 -0400
-Received: from mga01.intel.com ([192.55.52.88]:7696 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbgGBSIb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:08:31 -0400
-IronPort-SDR: Och5iCHSCzuiq+Rjdox9ywv3yASnFQ3YcFaWB2sKrcPPHjxeus02LQXv9R8VRvd/ylYVCQX71E
- yBmPx+SAJMTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165036627"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="165036627"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:06:28 -0700
-IronPort-SDR: uvZKW+2s2hF4n07FBHuuFQomjKd0omNW1dbB/sKt0f3E7T5JA4qbngip2XGk+Zg6N3q4U7P3IG
- J6W29QR/BuOw==
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="321591993"
-Received: from rlal-mobl1.amr.corp.intel.com (HELO [10.213.171.168]) ([10.213.171.168])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:06:27 -0700
-From:   "Sean V Kelley" <sean.v.kelley@linux.intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
-Cc:     linux-pci@vger.kernel.org,
-        "Kuppuswamy Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        linuxarm@huawei.com, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/AER: Add support for reset of RCiEPs for
- APEI/Firmware first reporting only
-Date:   Thu, 02 Jul 2020 11:06:26 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <6CAFE871-36CC-44DD-B4E0-D0BB5ABF3947@linux.intel.com>
-In-Reply-To: <20200626194126.00007190@Huawei.com>
-References: <20200622114402.892798-1-Jonathan.Cameron@huawei.com>
- <02999929-39F5-4A11-AACA-84490F12E12B@linux.intel.com>
- <20200626194126.00007190@Huawei.com>
+        id S1726183AbgGBUTV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jul 2020 16:19:21 -0400
+Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:47470 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725937AbgGBUTU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jul 2020 16:19:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E89C7100E7B40;
+        Thu,  2 Jul 2020 20:19:18 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:967:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1542:1593:1594:1711:1730:1747:1777:1792:2197:2199:2393:2525:2553:2561:2564:2682:2685:2828:2829:2859:2902:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3354:3622:3653:3865:3866:3867:3868:3870:3872:3873:3874:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:5007:6117:6742:6743:7903:7914:9010:9025:9040:10004:10400:10848:10967:11026:11232:11658:11914:12043:12297:12438:12679:12740:12760:12895:13095:13439:14181:14659:14721:21080:21221:21433:21451:21627:21740:21819:21881:21939:30022:30054:30062:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
+X-HE-Tag: feast33_4f102f026e8c
+X-Filterd-Recvd-Size: 3791
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  2 Jul 2020 20:19:14 +0000 (UTC)
+Message-ID: <66df632598aeafc48ecb15434e3d997438414e7f.camel@perches.com>
+Subject: Re: PCI: Replace lkml.org, spinics, gmane with lore.kernel.org
+From:   Joe Perches <joe@perches.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        bhelgaas@google.com, robh+dt@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, m-karicheri2@ti.com, songxiaowei@hisilicon.com,
+        wangbinghui@hisilicon.com, amurray@thegoodpenguin.co.uk,
+        sathyanarayanan.kuppuswamy@linux.intel.com, hkallweit1@gmail.com,
+        rafael.j.wysocki@intel.com, rdunlap@infradead.org,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 02 Jul 2020 13:19:12 -0700
+In-Reply-To: <707b05c95ae3292a6b9eb04e146b1f1f6d52c125.camel@perches.com>
+References: <20200627103050.71712-1-grandmaster@al2klimov.de>
+         <20200630180917.GA3455699@bjorn-Precision-5520>
+         <20200630140417.3a2dba67@lwn.net>
+         <707b05c95ae3292a6b9eb04e146b1f1f6d52c125.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 26 Jun 2020, at 11:41, Jonathan Cameron wrote:
+On Tue, 2020-06-30 at 22:35 -0700, Joe Perches wrote:
+> On Tue, 2020-06-30 at 14:04 -0600, Jonathan Corbet wrote:
+> > On Tue, 30 Jun 2020 13:09:17 -0500
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > > PCI: Replace lkml.org, spinics, gmane with lore.kernel.org
+> > > 
+> > > The lkml.org, spinics.net, and gmane.org archives are not very reliable
+> > > and, in some cases, not even easily accessible.  Replace links to them with
+> > > links to lore.kernel.org, the archives hosted by kernel.org.
+> > > 
+> > > I found the gmane items via the Wayback Machine archive at
+> > > https://web.archive.org/.
+> > 
+> > Heh...now *that* sounds like a project that could generate a lot of churn,
+> > and perhaps even be worth it.  Settling on a consistent (and working!)
+> > email archive would improve the docs quite a bit.  I'll add that to the
+> > list...
+> 
+> At least for the lkml.org/lkml links
+> here's the current -next diff done by a
+> script that looks at the message-id of
+> each lkml.org link.
 
-> On Fri, 26 Jun 2020 09:29:34 -0700
-> Sean V Kelley <sean.v.kelley@linux.intel.com> wrote:
->
->> Hi,
-> Hi,
->
-> Thanks for taking a look.
->
->>
->>
->> On 22 Jun 2020, at 4:44, Jonathan Cameron wrote:
->>
->>> Was previously: PCI/AER: Add partial initial supprot for RCiEPs 
->>> using
->>> RCEC or
->>> firmware first.
->>>
->>> Currently the kernel does not handle AER errors for Root Complex
->>> integrated
->>> End Points (RCiEPs)[0].  These devices sit on a root bus within the
->>> Root Complex
->>> (RC).  AER handling is performed by a Root Complex Event Collector
->>> (RCEC) [1]
->>> which is a effectively a type of RCiEP on the same root bus.
->>>
->>> This code will only perform the correct reset flow for the case 
->>> where
->>> there
->>> is no need to take any actions on the RCEC because the firmware is
->>> responsible for them.   This is true where APEI [2] is used to 
->>> report
->>> the AER
->>> errors via a GHES[v2] HEST entry [3] and relevant AER CPER record 
->>> [4]
->>> and Firmware
->>> First handling is in use.
->>
->> Right, in the case of the RCEC one identifies the RCiEPs by the RCiEP
->> bitmap as a part of the RCEC Associated Endpoint Extended 
->> Capabilities.
->> This ‘search’ so to speak would make use also of the RCEC 
->> Associated
->> Bus Numbers Register to associate the devices with an RCEC when not 
->> on
->> the same bus.
->
-> Ah. I'm afraid my access to recent specs is a bit limited at the 
-> moment.
-> I do have a draft 5.0 spec which has that in though so I now see what 
-> you mean.
->
-> Was introduced in Root Complex Event Collector Endpoint Association 
-> Extended
-> Capability version 2 in PCIe 5.0 I think.
->
+btw: if you want to run the script for specific
+paths, here's the script.
 
-Correct.
+You could run it using:
 
->>
->>>
->>> As there is no current RCEC driver support, it should not be 
->>> possible
->>> to get
->>> to this code via any routes other than the one above. Hence
->>> appropriate RCEC
->>> handling can be added when the RCEC driver support is ready.
->>
->>
->>>
->>> The error handling is different from a normal PCIe End Point 
->>> because:
->>>
->>> 1) There is no downstream port above an RCiEP as these devices sit 
->>> on
->>> a root
->>>    bus.
->>>
->>> 2) In general, it makes little sense to reset other devices on on 
->>> the
->>> same
->>>    root bus.  For error handling outside the of the root complex 
->>> (RC)
->>> an AER
->>>    error will indicate that all the topology below the physical 
->>> link,
->>> which
->>>    the error is related to, will need to be reset as they share a
->>> common
->>>    path to the host.  For an RCiEP there is no such defined shared
->>> path
->>>    relationship with other elements on the root bus.
->>>
->>> A new walk function, similar to pci_bus_walk is provided that takes 
->>> a
->>> pci_dev
->>> instead of a bus.  If that dev corresponds to a downstream port it
->>> will walk
->>> the subordinate bus of that downstream port.  If the dev does not 
->>> then
->>> it
->>> will call the function on that device alone.   This function allows 
->>> us
->>> to
->>> avoid adding special cases to the majority of the error handling.
->>
->> Then in that case the callback could add the additional checks 
->> specific
->> to identifying the associated RCiEPs.
->
-> I am afraid I don't follow what you mean here.  Could you give more 
-> info?
+bash convert_lkml_to_lore.sh <path>
 
-Sure, a given RCEC can be associated with multiple RCiEPs.  As a part of 
-the Extended Association Cap it is possible to obtain a bitmap of the 
-RCiEP device ids on the same bus number as the RCEC device itself. 
-(5.0-1.0 sec 7.9.10.2).  With a Cap version of 2h or higher, it is also 
-possible to get an additional range of bus numbers containing RCiEPs 
-also associated with this RCEC.
+---
+$ cat convert_lkml_to_lore.sh
+#!/bin/bash
 
-So I’m wondering if this function could be used in which passing a 
-dev, in this case the RCEC, triggers the call back which makes use of 
-the RCiEP bitmap and associated bus ranges to return all identified 
-devices in use cases such as in AER for finding sources, etc.
+cvt_lkml_to_lore ()
+{
+    tmpfile=$(mktemp ./.cvt_links.XXXXXXX)
 
-The alternative is to have a separate walk for RCECs that loops through 
-the bitmap / ranges (if supported) triggering the callback for each 
-device found.
+    header=$(echo $1 | sed 's@/lkml/@/lkml/headers/@')
 
-Thanks,
+    wget -qO - $header > $tmpfile
+    if [[ $? == 0 ]] ; then 
+	link=$(grep -i '^Message-Id:' $tmpfile | head -1 | \
+		   sed -r -e 's/^\s*Message-Id:\s*<\s*//' -e  's/\s*>\s*$//' -e 's@^@https://lore.kernel.org/r/@')
+	#    echo "testlink: $link"
+	if [ -n "$link" ] ; then
+	    wget -qO - $link > /dev/null
+	    if [[ $? == 0 ]] ; then
+		echo $link
+	    fi
+	fi
+    fi
 
-Sean
+    rm -f $tmpfile
+}
 
->>
->>>
->>> Open questions:
->>>
->>> 1. Are we better protecting against link reset for an RCiEP in here 
->>> or
->>>    should we put the check in the link reset functions?
->>>
->>> 2. If we were to get a stupid firmware record with the relevant 
->>> reset
->>> flag
->>>    set to trigger a link reset, what is the correct response?  For 
->>> now
->>> I
->>>    try to report that we haven't done anything and print a warning.
->>>
->>> 3. Naming of pci_walk_below_dev is rather unsatisfying. Any better
->>> ideas?
->>>
->>> 4. pci_walk_below_dev is perhaps not of general utility. Shall I 
->>> make
->>> it local
->>>    in err.c?  If not would a precursor patch for that be 
->>> preferred?’
->>
->> It depends.  Is it intended as a drop in replacement where needed for
->> pci_walk_bus()? So in that case you are now passing the dev structure
->> and do the check for subordinate or is it intended as being specific 
->> to
->> say RCEC? With AER, one could either first check for RC_EC type 
->> before
->> using this one.  Or one could just drop in replace (passing the dev
->> structure instead) and the call back performs the RCEC specific 
->> checks
->> when a device is encountered.
->
-> If it is useful in aer.c that's great.   Just seemed such a weird 
-> beast
-> I wasn't sure it would be of use anywhere else.
->
->>
->>>
->>> Testing has been performed via error injection on a QEMU platform as
->>> that lets
->>> me create a wide range of topologies and report errors at any chosen
->>> location.
->>> Currently I have no plans to upstream this injection support, but am
->>> happy to
->>> share if useful to others.
->>
->> I’m experimenting with it in my RCEC code in AER and will give you
->> additional feedback.
->
-> Great, thanks
->
-> Jonathan
->
->>
->> Thanks,
->>
->> Sean
->>
->>
->>>
->>> [0] ACPI PCI Express Base Specification 4.0 1.3.2.3 Root Complex
->>> Integrated
->>>     Endpoint Rules.
->>> [1] ACPI PCI Express Base Specification 4.0 6.2 Error Signalling and
->>> Logging
->>> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface
->>> (APEI)
->>> [3] ACPI Sepcification 6.3 18.2.3.7 Generic Hardware Error Source
->>> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
->>>
->>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> ---
->>> Changes since v1:
->>> * Separated from the largely unrelated fix so the two can move
->>> forwards separately.
->>> * Instead of separate path for RCiEP handling use the method 
->>> suggested
->>> by Bjorn
->>>   and Sathyanarayanan with an adjusted pci_bus_walk.
->>>
->>> Thanks all for reviews of V1.
->>>
->>>  drivers/pci/bus.c      | 28 ++++++++++++++++++++++++++++
->>>  drivers/pci/pcie/err.c | 29 +++++++++++++++++++----------
->>>  include/linux/pci.h    |  2 ++
->>>  3 files changed, 49 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
->>> index 8e40b3e6da77..7cbe1ed2db3d 100644
->>> --- a/drivers/pci/bus.c
->>> +++ b/drivers/pci/bus.c
->>> @@ -411,6 +411,34 @@ void pci_walk_bus(struct pci_bus *top, int
->>> (*cb)(struct pci_dev *, void *),
->>>  }
->>>  EXPORT_SYMBOL_GPL(pci_walk_bus);
->>>
->>> +/** pci_walk_below_dev - walk devices below (or on) another device
->>> + *  @dev      device for which we should walk below, include device
->>> when not a port.
->>> + *  @cb       callback to be called for each device found
->>> + *  @userdata arbitrary pointer to be passed to callback.
->>> + *
->>> + *  If the device provided is a port,
->>> + *  walk the subordinate bus, including any bridged devices
->>> + *  on buses under this bus.  Call the provided callback
->>> + *  on each device found.
->>> + *
->>> + *  If the device provided hs no subordinate bus, call the provided
->>> + *  callback on the device itself.
->>> + *
->>> + */
->>> +void pci_walk_below_dev(struct pci_dev *dev, int (*cb)(struct 
->>> pci_dev
->>> *, void *),
->>> +			void *userdata)
->>> +{
->>> +	struct pci_bus *bus;
->>> +
->>> +	if (dev->subordinate) {
->>> +		bus = dev->subordinate;
->>> +		pci_walk_bus(bus, cb, userdata);
->>> +	} else {
->>> +		cb(dev, userdata);
->>> +	}
->>> +}
->>> +EXPORT_SYMBOL_GPL(pci_walk_below_dev);
->>> +
->>>  struct pci_bus *pci_bus_get(struct pci_bus *bus)
->>>  {
->>>  	if (bus)
->>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>> index 14bb8f54723e..fa08b1cc3d96 100644
->>> --- a/drivers/pci/pcie/err.c
->>> +++ b/drivers/pci/pcie/err.c
->>> @@ -151,33 +151,39 @@ pci_ers_result_t pcie_do_recovery(struct 
->>> pci_dev
->>> *dev,
->>>  			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
->>>  {
->>>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>> -	struct pci_bus *bus;
->>>
->>>  	/*
->>>  	 * Error recovery runs on all subordinates of the first downstream
->>> port.
->>>  	 * If the downstream port detected the error, it is cleared at the
->>> end.
->>> +	 * For RCiEPs we should reset just the RCiEP itself.
->>>  	 */
->>>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->>> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
->>> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
->>> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
->>>  		dev = dev->bus->self;
->>> -	bus = dev->subordinate;
->>>
->>>  	pci_dbg(dev, "broadcast error_detected message\n");
->>>  	if (state == pci_channel_io_frozen) {
->>> -		pci_walk_bus(bus, report_frozen_detected, &status);
->>> +		pci_walk_below_dev(dev, report_frozen_detected, &status);
->>> +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->>> +			pci_warn(dev, "link reset not possible for RCiEP\n");
->>> +			status = PCI_ERS_RESULT_NONE;
->>> +			goto failed;
->>> +		}
->>> +
->>>  		status = reset_link(dev);
->>>  		if (status != PCI_ERS_RESULT_RECOVERED) {
->>>  			pci_warn(dev, "link reset failed\n");
->>>  			goto failed;
->>>  		}
->>>  	} else {
->>> -		pci_walk_bus(bus, report_normal_detected, &status);
->>> +		pci_walk_below_dev(dev, report_normal_detected, &status);
->>>  	}
->>>
->>>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>  		status = PCI_ERS_RESULT_RECOVERED;
->>>  		pci_dbg(dev, "broadcast mmio_enabled message\n");
->>> -		pci_walk_bus(bus, report_mmio_enabled, &status);
->>> +		pci_walk_below_dev(dev, report_mmio_enabled, &status);
->>>  	}
->>>
->>>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
->>> @@ -188,17 +194,20 @@ pci_ers_result_t pcie_do_recovery(struct 
->>> pci_dev
->>> *dev,
->>>  		 */
->>>  		status = PCI_ERS_RESULT_RECOVERED;
->>>  		pci_dbg(dev, "broadcast slot_reset message\n");
->>> -		pci_walk_bus(bus, report_slot_reset, &status);
->>> +		pci_walk_below_dev(dev, report_slot_reset, &status);
->>>  	}
->>>
->>>  	if (status != PCI_ERS_RESULT_RECOVERED)
->>>  		goto failed;
->>>
->>>  	pci_dbg(dev, "broadcast resume message\n");
->>> -	pci_walk_bus(bus, report_resume, &status);
->>> +	pci_walk_below_dev(dev, report_resume, &status);
->>>
->>> -	pci_aer_clear_device_status(dev);
->>> -	pci_aer_clear_nonfatal_status(dev);
->>> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->>> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)) {
->>> +		pci_aer_clear_device_status(dev);
->>> +		pci_aer_clear_nonfatal_status(dev);
->>> +	}
->>>  	pci_info(dev, "device recovery successful\n");
->>>  	return status;
->>>
->>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>> index c79d83304e52..538bf0a76d33 100644
->>> --- a/include/linux/pci.h
->>> +++ b/include/linux/pci.h
->>> @@ -1411,6 +1411,8 @@ int pci_scan_bridge(struct pci_bus *bus, 
->>> struct
->>> pci_dev *dev, int max,
->>>
->>>  void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *,
->>> void *),
->>>  		  void *userdata);
->>> +void pci_walk_below_dev(struct pci_dev *dev, int (*cb)(struct 
->>> pci_dev
->>> *, void *),
->>> +			void *userdata);
->>>  int pci_cfg_space_size(struct pci_dev *dev);
->>>  unsigned char pci_bus_max_busnr(struct pci_bus *bus);
->>>  void pci_setup_bridge(struct pci_bus *bus);
->>> -- 
->>> 2.19.1
+git grep -P -o "\bhttps?://(?:www.)?lkml.org/lkml[\/\w]+" $@ |
+    while read line ; do
+	echo $line
+	file=$(echo $line | cut -f1 -d':')
+	link=$(echo $line | cut -f2- -d':')
+	newlink=$(cvt_lkml_to_lore $link)
+	if [[ -n "$newlink" ]] ; then
+	    sed -i -e "s#\b$link\b#$newlink#" $file
+	fi
+    done
+
+
