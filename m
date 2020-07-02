@@ -2,289 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 540282124D3
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 15:36:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13FFB2127E6
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jul 2020 17:29:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgGBNfz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jul 2020 09:35:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36802 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729115AbgGBNfy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jul 2020 09:35:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 062DZhuX124114;
-        Thu, 2 Jul 2020 08:35:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593696943;
-        bh=m+Xs68YouGDJtQh76LBIoH7uox+kqAc2jMgEWsnhBl8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ARevGRYHXDY6YyKXqDc4N0a5KA8MVUDpPkaQN/NNgEc8p8F7MRAfB7e5IC8TMuFv0
-         /txGqFnpmsdQkiSXB4V9URM8B73zjs5vrcvWs95QaAPWXed+/NhzxPtqwCLfTlus84
-         PLCEVsm4u5x1fRa2MIJjeuf82Bvs7JikdAkPT52M=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 062DZhkD013265
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Jul 2020 08:35:43 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
- 2020 08:35:42 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 2 Jul 2020 08:35:42 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 062DZa4B082183;
-        Thu, 2 Jul 2020 08:35:36 -0500
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Jason Wang <jasowang@redhat.com>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
-Date:   Thu, 2 Jul 2020 19:05:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1730228AbgGBP3M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jul 2020 11:29:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:35502 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730306AbgGBP3M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:29:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A45931B;
+        Thu,  2 Jul 2020 08:29:10 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F7003F68F;
+        Thu,  2 Jul 2020 08:29:09 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 16:29:04 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     m.karthikeyan@mobiveil.co.in, linux-pci@vger.kernel.org,
+        mingkai.hu@nxp.com, mark.rutland@arm.com, minghuan.lian@nxp.com,
+        zhiqiang.hou@nxp.com, l.subrahmanya@mobiveil.co.in
+Subject: Re: [PATCH] PCI: mobiveil: Modified the Device tree bindings
+ interrupt-map example
+Message-ID: <20200702152904.GA25591@e121166-lin.cambridge.arm.com>
+References: <20191029155342.29342-1-m.karthikeyan@mobiveil.co.in>
+ <20191029224055.GA117186@google.com>
 MIME-Version: 1.0
-In-Reply-To: <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029224055.GA117186@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jason,
+On Tue, Oct 29, 2019 at 05:40:55PM -0500, Bjorn Helgaas wrote:
+> On Tue, Oct 29, 2019 at 09:23:42PM +0530, m.karthikeyan@mobiveil.co.in wrote:
+> > From: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+> 
+> *All* patches modify something, so the subject line isn't very
+> informative.  I think you're actually fixing a bug:
+> 
+> > -		interrupt-map = <0 0 0 0 &pci_express 0>,
+> > +		interrupt-map = <0 0 0 1 &pci_express 0>,
+> 
+> and *that* should be clear in the subject.  Maybe something like:
+> 
+>   dt-bindings: PCI: mobiveil: Correct INTx mapping
+> 
+> I don't know the implications of this for backwards compatibility.
 
-On 7/2/2020 3:40 PM, Jason Wang wrote:
-> 
-> On 2020/7/2 下午5:51, Michael S. Tsirkin wrote:
->> On Thu, Jul 02, 2020 at 01:51:21PM +0530, Kishon Vijay Abraham I wrote:
->>> This series enhances Linux Vhost support to enable SoC-to-SoC
->>> communication over MMIO. This series enables rpmsg communication between
->>> two SoCs using both PCIe RC<->EP and HOST1-NTB-HOST2
->>>
->>> 1) Modify vhost to use standard Linux driver model
->>> 2) Add support in vring to access virtqueue over MMIO
->>> 3) Add vhost client driver for rpmsg
->>> 4) Add PCIe RC driver (uses virtio) and PCIe EP driver (uses vhost) for
->>>     rpmsg communication between two SoCs connected to each other
->>> 5) Add NTB Virtio driver and NTB Vhost driver for rpmsg communication
->>>     between two SoCs connected via NTB
->>> 6) Add configfs to configure the components
->>>
->>> UseCase1 :
->>>
->>>   VHOST RPMSG                     VIRTIO RPMSG
->>>        +                               +
->>>        |                               |
->>>        |                               |
->>>        |                               |
->>>        |                               |
->>> +-----v------+                 +------v-------+
->>> |   Linux    |                 |     Linux    |
->>> |  Endpoint  |                 | Root Complex |
->>> |            <----------------->              |
->>> |            |                 |              |
->>> |    SOC1    |                 |     SOC2     |
->>> +------------+                 +--------------+
->>>
->>> UseCase 2:
->>>
->>>       VHOST RPMSG                                      VIRTIO RPMSG
->>>            +                                                 +
->>>            |                                                 |
->>>            |                                                 |
->>>            |                                                 |
->>>            |                                                 |
->>>     +------v------+                                   +------v------+
->>>     |             |                                   |             |
->>>     |    HOST1    |                                   |    HOST2    |
->>>     |             |                                   |             |
->>>     +------^------+                                   +------^------+
->>>            |                                                 |
->>>            |                                                 |
->>> +---------------------------------------------------------------------+
->>> |  +------v------+                                   +------v------+  |
->>> |  |             |                                   |             |  |
->>> |  |     EP      |                                   |     EP      |  |
->>> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
->>> |  |             <----------------------------------->             |  |
->>> |  |             |                                   |             |  |
->>> |  |             |                                   |             |  |
->>> |  |             |  SoC With Multiple EP Instances   |             |  |
->>> |  |             |  (Configured using NTB Function)  |             |  |
->>> |  +-------------+                                   +-------------+  |
->>> +---------------------------------------------------------------------+
->>>
->>> Software Layering:
->>>
->>> The high-level SW layering should look something like below. This series
->>> adds support only for RPMSG VHOST, however something similar should be
->>> done for net and scsi. With that any vhost device (PCI, NTB, Platform
->>> device, user) can use any of the vhost client driver.
->>>
->>>
->>>      +----------------+  +-----------+  +------------+  +----------+
->>>      |  RPMSG VHOST   |  | NET VHOST |  | SCSI VHOST |  |    X     |
->>>      +-------^--------+  +-----^-----+  +-----^------+  +----^-----+
->>>              |                 |              |              |
->>>              |                 |              |              |
->>>              |                 |              |              |
->>> +-----------v-----------------v--------------v--------------v----------+
->>> |                            VHOST CORE                                |
->>> +--------^---------------^--------------------^------------------^-----+
->>>           |               |                    |                  |
->>>           |               |                    |                  |
->>>           |               |                    |                  |
->>> +--------v-------+  +----v------+  +----------v----------+  +----v-----+
->>> |  PCI EPF VHOST |  | NTB VHOST |  |PLATFORM DEVICE VHOST|  |    X     |
->>> +----------------+  +-----------+  +---------------------+  +----------+
->>>
->>> This was initially proposed here [1]
->>>
->>> [1] -> https://lore.kernel.org/r/2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com
->>
->> I find this very interesting. A huge patchset so will take a bit
->> to review, but I certainly plan to do that. Thanks!
-> 
-> 
-> Yes, it would be better if there's a git branch for us to have a look.
+Yes that has to be tested but nonetheless this binding is still
+broken (and probably the driver was made to work with it so I
+need to check it).
 
-I've pushed the branch
-https://github.com/kishon/linux-wip.git vhost_rpmsg_pci_ntb_rfc
-> 
-> Btw, I'm not sure I get the big picture, but I vaguely feel some of the work is
-> duplicated with vDPA (e.g the epf transport or vhost bus).
+It is certain that the current binding can't work with a PCI device
+requiring an INTD.
 
-This is about connecting two different HW systems both running Linux and
-doesn't necessarily involve virtualization. So there is no guest or host as in
-virtualization but two entirely different systems connected via PCIe cable, one
-acting as guest and one as host. So one system will provide virtio
-functionality reserving memory for virtqueues and the other provides vhost
-functionality providing a way to access the virtqueues in virtio memory. One is
-source and the other is sink and there is no intermediate entity. (vhost was
-probably intermediate entity in virtualization?)
+Lorenzo
 
 > 
-> Have you considered to implement these through vDPA?
-
-IIUC vDPA only provides an interface to userspace and an in-kernel rpmsg driver
-or vhost net driver is not provided.
-
-The HW connection looks something like https://pasteboard.co/JfMVVHC.jpg
-(usecase2 above), all the boards run Linux. The middle board provides NTB
-functionality and board on either side provides virtio/vhost functionality and
-transfer data using rpmsg.
-
-Thanks
-Kishon
-
+> > Legacy IRQs Interrupt pins map 01h, 02h, 03h, and 04h while value of 00h
+> > indicates Function uses no legacy interrupt Message
+> > 
+> > Signed-off-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+> > ---
+> >  .../devicetree/bindings/pci/mobiveil-pcie.txt | 19 ++++++++++++-------
+> >  1 file changed, 12 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+> > index 64156993e05..b9dcb0ddc19 100644
+> > --- a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+> > @@ -31,9 +31,14 @@ Required properties:
+> >  - interrupts: The interrupt line of the PCIe controller
+> >  		last cell of this field is set to 4 to
+> >  		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
+> > -- interrupt-map-mask,
+> > -	interrupt-map: standard PCI properties to define the mapping of the
+> > -	PCI interface to interrupt numbers.
+> > +- interrupt-map-mask:
+> > +		Its a 4-tuple like structure denoting phys.hi, phys.mid,
+> > +		phys.low and interrupt-cell
+> > +- interrupt-map: standard PCI properties to define the mapping of the
+> > +		PCI interface to interrupt numbers. Here the first 4-tuple
+> > +		are represented similar to interrupt-map-mask representation
+> > +		while the next fields represents Interrupt controller phandle
+> > +		and its #interrupt-cells fields
 > 
-> Thanks
+> The original text was basically the same as all the other bindings, so
+> I don't really see the point of changing this to be different from all
+> the rest.
 > 
+> A few (mediatek, nvidia) refer to the "standard PCI bus binding
+> document" for more details.
 > 
->>
->>> Kishon Vijay Abraham I (22):
->>>    vhost: Make _feature_ bits a property of vhost device
->>>    vhost: Introduce standard Linux driver model in VHOST
->>>    vhost: Add ops for the VHOST driver to configure VHOST device
->>>    vringh: Add helpers to access vring in MMIO
->>>    vhost: Add MMIO helpers for operations on vhost virtqueue
->>>    vhost: Introduce configfs entry for configuring VHOST
->>>    virtio_pci: Use request_threaded_irq() instead of request_irq()
->>>    rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when
->>>      reading messages
->>>    rpmsg: Introduce configfs entry for configuring rpmsg
->>>    rpmsg: virtio_rpmsg_bus: Add Address Service Notification support
->>>    rpmsg: virtio_rpmsg_bus: Move generic rpmsg structure to
->>>      rpmsg_internal.h
->>>    virtio: Add ops to allocate and free buffer
->>>    rpmsg: virtio_rpmsg_bus: Use virtio_alloc_buffer() and
->>>      virtio_free_buffer()
->>>    rpmsg: Add VHOST based remote processor messaging bus
->>>    samples/rpmsg: Setup delayed work to send message
->>>    samples/rpmsg: Wait for address to be bound to rpdev for sending
->>>      message
->>>    rpmsg.txt: Add Documentation to configure rpmsg using configfs
->>>    virtio_pci: Add VIRTIO driver for VHOST on Configurable PCIe Endpoint
->>>      device
->>>    PCI: endpoint: Add EP function driver to provide VHOST interface
->>>    NTB: Add a new NTB client driver to implement VIRTIO functionality
->>>    NTB: Add a new NTB client driver to implement VHOST functionality
->>>    NTB: Describe the ntb_virtio and ntb_vhost client in the documentation
->>>
->>>   Documentation/driver-api/ntb.rst              |   11 +
->>>   Documentation/rpmsg.txt                       |   56 +
->>>   drivers/ntb/Kconfig                           |   18 +
->>>   drivers/ntb/Makefile                          |    2 +
->>>   drivers/ntb/ntb_vhost.c                       |  776 +++++++++++
->>>   drivers/ntb/ntb_virtio.c                      |  853 ++++++++++++
->>>   drivers/ntb/ntb_virtio.h                      |   56 +
->>>   drivers/pci/endpoint/functions/Kconfig        |   11 +
->>>   drivers/pci/endpoint/functions/Makefile       |    1 +
->>>   .../pci/endpoint/functions/pci-epf-vhost.c    | 1144 ++++++++++++++++
->>>   drivers/rpmsg/Kconfig                         |   10 +
->>>   drivers/rpmsg/Makefile                        |    3 +-
->>>   drivers/rpmsg/rpmsg_cfs.c                     |  394 ++++++
->>>   drivers/rpmsg/rpmsg_core.c                    |    7 +
->>>   drivers/rpmsg/rpmsg_internal.h                |  136 ++
->>>   drivers/rpmsg/vhost_rpmsg_bus.c               | 1151 +++++++++++++++++
->>>   drivers/rpmsg/virtio_rpmsg_bus.c              |  184 ++-
->>>   drivers/vhost/Kconfig                         |    1 +
->>>   drivers/vhost/Makefile                        |    2 +-
->>>   drivers/vhost/net.c                           |   10 +-
->>>   drivers/vhost/scsi.c                          |   24 +-
->>>   drivers/vhost/test.c                          |   17 +-
->>>   drivers/vhost/vdpa.c                          |    2 +-
->>>   drivers/vhost/vhost.c                         |  730 ++++++++++-
->>>   drivers/vhost/vhost_cfs.c                     |  341 +++++
->>>   drivers/vhost/vringh.c                        |  332 +++++
->>>   drivers/vhost/vsock.c                         |   20 +-
->>>   drivers/virtio/Kconfig                        |    9 +
->>>   drivers/virtio/Makefile                       |    1 +
->>>   drivers/virtio/virtio_pci_common.c            |   25 +-
->>>   drivers/virtio/virtio_pci_epf.c               |  670 ++++++++++
->>>   include/linux/mod_devicetable.h               |    6 +
->>>   include/linux/rpmsg.h                         |    6 +
->>>   {drivers/vhost => include/linux}/vhost.h      |  132 +-
->>>   include/linux/virtio.h                        |    3 +
->>>   include/linux/virtio_config.h                 |   42 +
->>>   include/linux/vringh.h                        |   46 +
->>>   samples/rpmsg/rpmsg_client_sample.c           |   32 +-
->>>   tools/virtio/virtio_test.c                    |    2 +-
->>>   39 files changed, 7083 insertions(+), 183 deletions(-)
->>>   create mode 100644 drivers/ntb/ntb_vhost.c
->>>   create mode 100644 drivers/ntb/ntb_virtio.c
->>>   create mode 100644 drivers/ntb/ntb_virtio.h
->>>   create mode 100644 drivers/pci/endpoint/functions/pci-epf-vhost.c
->>>   create mode 100644 drivers/rpmsg/rpmsg_cfs.c
->>>   create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
->>>   create mode 100644 drivers/vhost/vhost_cfs.c
->>>   create mode 100644 drivers/virtio/virtio_pci_epf.c
->>>   rename {drivers/vhost => include/linux}/vhost.h (66%)
->>>
->>> -- 
->>> 2.17.1
->>>
+> Maybe there should be a common place in the Linux source for
+> describing these "standard properties" so it's not repeated
+> everywhere?
 > 
+> >  - ranges: ranges for the PCI memory regions (I/O space region is not
+> >  	supported by hardware)
+> >  	Please refer to the standard PCI bus binding document for a more
+> > @@ -63,10 +68,10 @@ Example:
+> >  		#interrupt-cells = <1>;
+> >  		interrupts = < 0 89 4 >;
+> >  		interrupt-map-mask = <0 0 0 7>;
+> > -		interrupt-map = <0 0 0 0 &pci_express 0>,
+> > -				<0 0 0 1 &pci_express 1>,
+> > -				<0 0 0 2 &pci_express 2>,
+> > -				<0 0 0 3 &pci_express 3>;
+> > +		interrupt-map = <0 0 0 1 &pci_express 0>,
+> > +				<0 0 0 2 &pci_express 1>,
+> > +				<0 0 0 3 &pci_express 2>,
+> > +				<0 0 0 4 &pci_express 3>;
+> 
+> Above you say the first 4-tuple in interrupt-map is similar to
+> interrupt-map-mask, but these all look the same and they don't look
+> like interrupt-map-mask.
+> 
+> Oh, I guess you mean the "0 0 0 1" is a 4-tuple and the
+> "&pci_express 0" part is the "next fields".  I would have called that
+> a 6-tuple.  But I'm not a DT person, so maybe I just don't know the
+> terminology.
+> 
+> >  		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
+> >  
+> >  	};
+> > -- 
+> > 2.17.1
+> > 
+> > 
+> > -- 
+> > Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
+> > attachments, is for the sole use of the intended recipient(s) and may 
+> > contain proprietary confidential or privileged information or otherwise be 
+> > protected by law. Any unauthorized review, use, disclosure or distribution 
+> > is prohibited. If you are not the intended recipient, please notify the 
+> > sender and destroy all copies and the original message.
+> 
+> You should try to avoid confidentiality notices like this in email to
+> the public mailing lists.  I don't know whether we could apply a patch
+> with this notice on it or not.
