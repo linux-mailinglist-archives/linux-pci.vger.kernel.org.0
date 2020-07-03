@@ -2,102 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7C53213C1A
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jul 2020 16:52:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 390B4213D34
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jul 2020 18:04:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgGCOvw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jul 2020 10:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55518 "EHLO mail.kernel.org"
+        id S1726111AbgGCQE6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Jul 2020 12:04:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbgGCOvw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:51:52 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726035AbgGCQE5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 3 Jul 2020 12:04:57 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D192088E;
-        Fri,  3 Jul 2020 14:51:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09D562070B;
+        Fri,  3 Jul 2020 16:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593787911;
-        bh=OfQ9QrrhTEkwVc9D/6kQ4OLMbBVifUwGjpIqyu/to+g=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=P08qXOSK/SsmY8VAxSWxJZlh9y2mElMtAZzYp/JpETdbeuKyxfeNiEOPVeAjMtgmm
-         cVQ6zWd/th8wPaVLaFElx/6ZkEKB/7VSwS0fonaGWl2nOftDG+g5Bf9ZqxlWOJSJrJ
-         eDszUhoHxsOqHSNzzZyn6clVtx/aI8MGpxWzyq84=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4C40135206C0; Fri,  3 Jul 2020 07:51:51 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 07:51:51 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200703145151.GG9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200630203016.GI9247@paulmck-ThinkPad-P72>
- <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
- <20200701114027.GO4800@hirez.programming.kicks-ass.net>
- <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
- <20200703132523.GM117543@hirez.programming.kicks-ass.net>
+        s=default; t=1593792297;
+        bh=c67lgcr6W0rJufCTOEq2LHdlNbpMkL0Nj0X3N2/dCSQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=zNPd6yOaND5Pk31qJuH+TacHc1JzakAEje7UybMhj8v6woYdb90194BQWanQ4nZBO
+         q46SVN/DNbrP/N9UUkJSxJfXWz40oSR86cDui6xVwYnAcYQETrQdNMug9d12t5hbmZ
+         5+4u0iuKIqH+orCqVMfX0GUCyRjatXADO7vXFh4A=
+Date:   Fri, 3 Jul 2020 11:04:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Subject: [GIT PULL] PCI fixes for v5.8
+Message-ID: <20200703160455.GA3899841@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703132523.GM117543@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 03:25:23PM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 03, 2020 at 03:13:30PM +0200, Peter Zijlstra wrote:
-> > > The prototype for GCC is here: https://github.com/AKG001/gcc/
-> > 
-> > Thanks! Those test cases are somewhat over qualified though:
-> > 
-> >        static volatile _Atomic (TYPE) * _Dependent_ptr a;     		\
-> 
-> One question though; since its a qualifier, and we've recently spend a
-> whole lot of effort to strip qualifiers in say READ_ONCE(), how does,
-> and how do we want, this qualifier to behave.
+PCI fixes:
 
-Dereferencing a _Dependent_ptr pointer gives you something that is not
-_Dependent_ptr, unless the declaration was like this:
+  - Fix a pcie_find_root_port() simplification that broke power management
+    because it didn't handle the edge case of finding the Root Port of a
+    Root Port itself (Mika Westerberg)
 
-	_Dependent_ptr _Atomic (TYPE) * _Dependent_ptr a;
 
-And if I recall correctly, the current state is that assigning a
-_Dependent_ptr variable to a non-_Dependent_ptr variable strips this
-marking (though the thought was to be able to ask for a warning).
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-So, yes, it would be nice to be able to explicitly strip the
-_Dependent_ptr, perhaps the kill_dependency() macro, which is already
-in the C standard.
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-> C++ has very convenient means of manipulating qualifiers, so it's not
-> much of a problem there, but for C it is, as we've found, really quite
-> cumbersome. Even with _Generic() we can't manipulate individual
-> qualifiers afaict.
+are available in the Git repository at:
 
-Fair point, and in C++ this is a templated class, at least in the same
-sense that std::atomic<> is a templated class.
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci-v5.8-fixes-1
 
-But in this case, would kill_dependency do what you want?
+for you to fetch changes up to 5396956cc7c6874180c9bfc1ceceb02b739a6a87:
 
-							Thanx, Paul
+  PCI: Make pcie_find_root_port() work for Root Ports (2020-06-30 16:58:27 -0500)
+
+----------------------------------------------------------------
+pci-v5.8-fixes-1
+
+----------------------------------------------------------------
+Mika Westerberg (1):
+      PCI: Make pcie_find_root_port() work for Root Ports
+
+ include/linux/pci.h | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
