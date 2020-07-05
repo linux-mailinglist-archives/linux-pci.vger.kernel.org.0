@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C689C214B47
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jul 2020 11:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1B65214B70
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jul 2020 11:19:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgGEJSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Jul 2020 05:18:17 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46989 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726434AbgGEJSR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jul 2020 05:18:17 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:16 -0700
+        id S1726857AbgGEJSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Jul 2020 05:18:53 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22188 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726629AbgGEJST (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jul 2020 05:18:19 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Jul 2020 02:18:18 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+  by ironmsg04-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 40AE721355; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+        id 5BA1721185; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -27,54 +27,93 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH 0/9] Add PCIe support for IPQ8074
-Date:   Sun,  5 Jul 2020 14:47:51 +0530
-Message-Id: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: [PATCH 1/9] dt-bindings: pci: Add ipq8074 gen3 pci compatible
+Date:   Sun,  5 Jul 2020 14:47:52 +0530
+Message-Id: <1593940680-2363-2-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-IPQ8074 has two PCIe ports both are based on synopsis designware PCIe
-controller. while it was assumed that PCIe support for IPQ8074 was already
-available. PCIe was not functional until now.
+ipq8074 has two PCIe ports while the support for gen2 pcie port is
+already available add the support for gen3 binding.
 
-This patch series adds support for PCIe ports on IPQ8074.
+Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ .../devicetree/bindings/pci/qcom,pcie.yaml         | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-First PCIe port is of gen2 synposis version is 2_3_2 which has already been
-enabled. But it had some problems on phy init and needed dt updates.
-
-Second PCIe port is gen3 synopsis version is 2_9_0. This series adds
-support for this PCIe port while fixing dt nodes.
-
-Patch 1 on this series depends on qcom pcie bindings patch
-https://lkml.org/lkml/2020/6/24/162
-
-Sivaprakash Murugesan (9):
-  dt-bindings: pci: Add ipq8074 gen3 pci compatible
-  dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
-  clk: qcom: ipq8074: Add missing bindings for pcie
-  clk: qcom: ipq8074: Add missing clocks for pcie
-  phy: qcom-qmp: use correct values for ipq8074 gen2 pcie phy init
-  phy: qcom-qmp: Add compatible for ipq8074 pcie gen3 qmp phy
-  pci: dwc: qcom: do phy power on before pcie init
-  pci: qcom: Add support for ipq8074 pci controller
-  arm64: dts: ipq8074: Fixup pcie dts nodes
-
- .../devicetree/bindings/pci/qcom,pcie.yaml         |  47 ++++++
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   1 +
- arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   8 +-
- arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 109 ++++++++----
- drivers/clk/qcom/gcc-ipq8074.c                     |  60 +++++++
- drivers/pci/controller/dwc/pcie-qcom.c             | 187 +++++++++++++++++++-
- drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h          | 132 +++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.c                | 188 ++++++++++++++++++++-
- drivers/phy/qualcomm/phy-qcom-qmp.h                |   2 +
- include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   4 +
- 10 files changed, 683 insertions(+), 55 deletions(-)
- create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index b119ce4711b4..b5ec45df735e 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -22,6 +22,7 @@ properties:
+       - qcom,pcie-ipq4019
+       - qcom,pcie-ipq8064
+       - qcom,pcie-ipq8074
++      - qcom,pcie-ipq8074-gen3
+       - qcom,pcie-msm8996
+       - qcom,pcie-qcs404
+       - qcom,pcie-sdm845
+@@ -330,6 +331,52 @@ allOf:
+        compatible:
+          contains:
+            enum:
++             - qcom,pcie-ipq8074-gen3
++   then:
++     properties:
++       clocks:
++         items:
++           - description: sys noc interface clock
++           - description: AXI master clock
++           - description: AXI slave clock
++           - description: AHB clock
++           - description: Auxilary clock
++           - description: AXI slave bridge clock
++           - description: PCIe rchng clock
++       clock-names:
++         items:
++           - const: iface
++           - const: axi_m
++           - const: axi_s
++           - const: ahb
++           - const: aux
++           - const: axi_bridge
++           - const: rchng
++       resets:
++         items:
++           - description: PIPE reset
++           - description: PCIe sleep reset
++           - description: PCIe sticky reset
++           - description: AXI master reset
++           - description: AXI slave reset
++           - description: AHB reset
++           - description: AXI master sticky reset
++           - description: AXI Slave sticky reset
++       reset-names:
++         items:
++           - const: pipe
++           - const: sleep
++           - const: sticky
++           - const: axi_m
++           - const: axi_s
++           - const: ahb
++           - const: axi_m_sticky
++           - const: axi_s_sticky
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
+              - qcom,pcie-msm8996
+    then:
+      properties:
 -- 
 2.7.4
 
