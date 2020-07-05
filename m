@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6CFD214B58
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jul 2020 11:19:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCACD214B61
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jul 2020 11:19:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgGEJST (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Jul 2020 05:18:19 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46998 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726496AbgGEJSS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jul 2020 05:18:18 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
+        id S1726830AbgGEJSc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Jul 2020 05:18:32 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22208 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726809AbgGEJS2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jul 2020 05:18:28 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Jul 2020 02:18:26 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+  by ironmsg04-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id A85DB213B5; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+        id B9B15213BD; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -27,10 +27,11 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH 4/9] clk: qcom: ipq8074: Add missing clocks for pcie
-Date:   Sun,  5 Jul 2020 14:47:55 +0530
-Message-Id: <1593940680-2363-5-git-send-email-sivaprak@codeaurora.org>
+Cc:     stable@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: [PATCH 5/9] phy: qcom-qmp: use correct values for ipq8074 gen2 pcie phy init
+Date:   Sun,  5 Jul 2020 14:47:56 +0530
+Message-Id: <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
@@ -39,100 +40,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing clocks and resets for pcie port0 of ipq8074 devices.
+There were some problem in ipq8074 gen2 pcie phy init sequence, fix
+these to make gen2 pcie port on ipq8074 to work.
 
+Fixes: eef243d04b2b6 ("phy: qcom-qmp: Add support for IPQ8074")
+
+Cc: stable@vger.kernel.org
 Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- drivers/clk/qcom/gcc-ipq8074.c | 60 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 16 +++++++++-------
+ drivers/phy/qualcomm/phy-qcom-qmp.h |  2 ++
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq8074.c
-index e01f5f591d1e..443e28cda8ed 100644
---- a/drivers/clk/qcom/gcc-ipq8074.c
-+++ b/drivers/clk/qcom/gcc-ipq8074.c
-@@ -4316,6 +4316,62 @@ static struct clk_branch gcc_gp3_clk = {
- 	},
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index e91040af3394..ba277136f52b 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -504,8 +504,8 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0xf),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_EN, 0x1),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x0),
+-	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0x1f),
+-	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0xff),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x1f),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x6),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0xf),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x0),
+@@ -531,7 +531,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN1_MODE0, 0x0),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CTRL_BY_PSM, 0x1),
+-	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_CTRL, 0xa),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x1),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x1),
+@@ -540,7 +539,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0x2f),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x19),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_EP_DIV, 0x19),
+-	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x7),
  };
  
-+struct freq_tbl ftbl_pcie_rchng_clk_src[] = {
-+	F(19200000, P_XO, 1, 0, 0),
-+	F(100000000, P_GPLL0, 8, 0, 0),
-+	{ }
-+};
-+
-+struct clk_rcg2 pcie0_rchng_clk_src = {
-+	.cmd_rcgr = 0x75070,
-+	.freq_tbl = ftbl_pcie_rchng_clk_src,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_gpll0_map,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "pcie0_rchng_clk_src",
-+		.parent_hws = (const struct clk_hw *[]) {
-+				&gpll0.clkr.hw },
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie0_rchng_clk = {
-+	.halt_reg = 0x75070,
-+	.halt_bit = 31,
-+	.clkr = {
-+		.enable_reg = 0x75070,
-+		.enable_mask = BIT(1),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie0_rchng_clk",
-+			.parent_hws = (const struct clk_hw *[]){
-+				&pcie0_rchng_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie0_axi_s_bridge_clk = {
-+	.halt_reg = 0x75048,
-+	.halt_bit = 31,
-+	.clkr = {
-+		.enable_reg = 0x75048,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie0_axi_s_bridge_clk",
-+			.parent_hws = (const struct clk_hw *[]){
-+				&pcie0_axi_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_hw *gcc_ipq8074_hws[] = {
- 	&gpll0_out_main_div2.hw,
- 	&gpll6_out_main_div2.hw,
-@@ -4551,6 +4607,9 @@ static struct clk_regmap *gcc_ipq8074_clks[] = {
- 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
- 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
- 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
-+	[GCC_PCIE0_RCHNG_CLK_SRC] = &pcie0_rchng_clk_src.clkr,
-+	[GCC_PCIE0_RCHNG_CLK] = &gcc_pcie0_rchng_clk.clkr,
-+	[GCC_PCIE0_AXI_S_BRIDGE_CLK] = &gcc_pcie0_axi_s_bridge_clk.clkr,
+ static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
+@@ -548,6 +546,8 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_TX_LANE_MODE, 0x6),
+ 	QMP_PHY_INIT_CFG(QSERDES_TX_RES_CODE_LANE_OFFSET, 0x2),
+ 	QMP_PHY_INIT_CFG(QSERDES_TX_RCV_DETECT_LVL_2, 0x12),
++	QMP_PHY_INIT_CFG(QSERDES_TX_EMP_POST1_LVL, 0x36),
++	QMP_PHY_INIT_CFG(QSERDES_TX_SLEW_CNTL, 0x0a),
  };
  
- static const struct qcom_reset_map gcc_ipq8074_resets[] = {
-@@ -4678,6 +4737,7 @@ static const struct qcom_reset_map gcc_ipq8074_resets[] = {
- 	[GCC_PCIE0_AXI_SLAVE_ARES] = { 0x75040, 4 },
- 	[GCC_PCIE0_AHB_ARES] = { 0x75040, 5 },
- 	[GCC_PCIE0_AXI_MASTER_STICKY_ARES] = { 0x75040, 6 },
-+	[GCC_PCIE0_AXI_SLAVE_STICKY_ARES] = { 0x75040, 7 },
- 	[GCC_PCIE1_PIPE_ARES] = { 0x76040, 0 },
- 	[GCC_PCIE1_SLEEP_ARES] = { 0x76040, 1 },
- 	[GCC_PCIE1_CORE_STICKY_ARES] = { 0x76040, 2 },
+ static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
+@@ -558,7 +558,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xdb),
+ 	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
+ 	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x4),
+-	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN_HALF, 0x4),
+ };
+ 
+ static const struct qmp_phy_init_tbl ipq8074_pcie_pcs_tbl[] = {
+@@ -1673,6 +1672,9 @@ static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
+ 	.pwrdn_ctrl		= SW_PWRDN,
+ };
+ 
++static const char * const ipq8074_pciephy_clk_l[] = {
++	"aux", "cfg_ahb",
++};
+ /* list of resets */
+ static const char * const ipq8074_pciephy_reset_l[] = {
+ 	"phy", "common",
+@@ -1690,8 +1692,8 @@ static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
+ 	.rx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
+ 	.pcs_tbl		= ipq8074_pcie_pcs_tbl,
+ 	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
+-	.clk_list		= NULL,
+-	.num_clks		= 0,
++	.clk_list		= ipq8074_pciephy_clk_l,
++	.num_clks		= ARRAY_SIZE(ipq8074_pciephy_clk_l),
+ 	.reset_list		= ipq8074_pciephy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(ipq8074_pciephy_reset_l),
+ 	.vreg_list		= NULL,
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+index 6d017a0c0c8d..832b3d098403 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+@@ -77,6 +77,8 @@
+ #define QSERDES_COM_CORECLK_DIV_MODE1			0x1bc
+ 
+ /* Only for QMP V2 PHY - TX registers */
++#define QSERDES_TX_EMP_POST1_LVL			0x018
++#define QSERDES_TX_SLEW_CNTL				0x040
+ #define QSERDES_TX_RES_CODE_LANE_OFFSET			0x054
+ #define QSERDES_TX_DEBUG_BUS_SEL			0x064
+ #define QSERDES_TX_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN	0x068
 -- 
 2.7.4
 
