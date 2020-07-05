@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04A60214B54
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jul 2020 11:19:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71D56214B76
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jul 2020 11:19:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgGEJSS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Jul 2020 05:18:18 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46989 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726494AbgGEJSR (ORCPT
+        id S1726941AbgGEJTD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Jul 2020 05:19:03 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22188 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726491AbgGEJSR (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jul 2020 05:18:17 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:16 -0700
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 6C0F6213B2; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+        id 90DE9213B6; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -28,9 +28,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
 Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH 2/9] dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
-Date:   Sun,  5 Jul 2020 14:47:53 +0530
-Message-Id: <1593940680-2363-3-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH 3/9] clk: qcom: ipq8074: Add missing bindings for pcie
+Date:   Sun,  5 Jul 2020 14:47:54 +0530
+Message-Id: <1593940680-2363-4-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
@@ -39,29 +39,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-ipq8074 has two different phy blocks for two pcie ports, with pcie gen2
-compatible already available, specify the pcie phy compatible
-for gen3 pcie port.
+Add missing clock bindings for pcie port0 of ipq8074.
 
 Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-index f80f8896d527..3e8681679f53 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-@@ -18,6 +18,7 @@ properties:
-   compatible:
-     enum:
-       - qcom,ipq8074-qmp-pcie-phy
-+      - qcom,ipq8074-qmp-pcie-gen3-phy
-       - qcom,msm8996-qmp-pcie-phy
-       - qcom,msm8996-qmp-ufs-phy
-       - qcom,msm8996-qmp-usb3-phy
+diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+index 4de4811a3540..e3e018565add 100644
+--- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
++++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+@@ -362,5 +362,9 @@
+ #define GCC_PCIE1_AXI_SLAVE_ARES		128
+ #define GCC_PCIE1_AHB_ARES			129
+ #define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
++#define GCC_PCIE0_AXI_SLAVE_STICKY_ARES		131
++#define GCC_PCIE0_AXI_S_BRIDGE_CLK		132
++#define GCC_PCIE0_RCHNG_CLK_SRC			133
++#define GCC_PCIE0_RCHNG_CLK			134
+ 
+ #endif
 -- 
 2.7.4
 
