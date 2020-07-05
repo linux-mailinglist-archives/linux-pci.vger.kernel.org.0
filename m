@@ -2,84 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E38F6214843
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jul 2020 20:59:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C689C214B47
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jul 2020 11:18:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgGDS7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 4 Jul 2020 14:59:41 -0400
-Received: from sonic301-22.consmr.mail.ir2.yahoo.com ([77.238.176.99]:38976
-        "EHLO sonic301-22.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726909AbgGDS7g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Jul 2020 14:59:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1593889173; bh=ZWeDLwf4cGlLDzTwCuOen1zTINlp5j+f2ywobrqBR9o=; h=Date:From:Reply-To:Subject:References:From:Subject; b=ntJ3spp+PoyEufaAOy2iW+jZu8FjLflwsAbkW49Qn/h6B+G4jpxCm2Q7yTkHlwmj1+djSm4jourWfpaVKO+z3eKjTAeRgqAX+3ePyVMePYODmzex4gAxs2vkpeyX9Q9o6PenuPgxZvo/JDGqw6S/H3ggH6feTVsrrEksa5WHxo9nDzK9m/UsRx3Ecwwl+MwCKjtrrlYHVmM71soyds9gHUzg3lfxWRQ5TwGQOohgGKQAEYs37LFlzt0GoW2QVI677ic17Q8DbUXUV+PdmjiuBBivQrVYzDtGFfrDge39KeuqNXDi30fHLO1Xj9VPPnpxoXsR3xZ81RPmDZJcYj1lNg==
-X-YMail-OSG: IEXMUeAVM1m1gPtltFK.fyn.DxvmXyKwB4p72nQRIEpIBUINTRsbraNT_NxPQj0
- 5DRBSoij_Pj6y6dGMJPIMCI.RKchAVBEhdeA.3Xhkllqho0W6t5WEubdtOtqxn6lcwOZMTSHAB54
- aPqsiAG9YwGDHoigR7gj1PrRVsR7ImQIcuPOyHn81qTVWFm4DXqi4Tm8mXYqdLN.DITlW1wmexaL
- PZp6vj9YP2p_SlToPg.0D5GCUOX008lrZis7ubQqtPz9VO.1EwFDpRm2Gv6N.nvmUl5wJHOreagz
- vMoAfblCzDzUej4rQhLxJbBv_7haeT7BpOFMvtcyX43OCbZHTFETn5ojAjQShP7fwFik4S_6Cyft
- ASvjVes9FBdPLMpvQs1NSk8TlTUMsshDAPkGEui1A.XlzsVJrURRdMBm0Fmnr2xQlrSQqd5oAsp3
- .Nm.IGHrSMzWNuh.3Re39dAh41jJYhQKHqqA8Ftx925Z3IDrT8ZurUzLKZsr2GL.2aivMGFvg32p
- eS8Uw43r4Ip3GT3xJSmKkEAq8rqJ_up.gvl7qvofFGw0CFyKf8uVCjqiUV1j1hlwPBiTwYSXMrwJ
- 53oYa3ZsoxTjD2Cilkcujz4pfzcuh80MBQYUFPt3AITD.xhLov_1_QJL3pIsseJCTcW9XqJA.42p
- nquUKQUQ.8OvlZCOZfygX.Ociwo5YoEq1hpMri.O7TpxI2jvcKp0wnZAm8XWIhQyjnWAUb2Ooy_i
- bFlrRPIOrB9kJnB1dFcHyJhGDEP2syFAO8Usi5NJvKnF16QSGWzuN_kJyasDnHEyDXTiHqkhaC1P
- 5qVJ3L..jirVyLSb5fVnCNqyY3eGep8yfLhjAgmAlZ6UM2QJ3Nv8RO2n5CpmMf7Dsx6TtzjxvK.z
- uI3X7EIIU.9ENINcSsPLpvfUMCarvbjYQHuKWHP.WUFwU_9wwZU8iwqrzishROiPWT4h1tBBQw.V
- _y2Fnm1VmvYqOsO_j1ZvMgA5bJ8IbMuY8H0ub64ZaMXOR6gY7vYuW74whzROrbhPQnNRifncTqiy
- TuLgBAY68zL3J90BvLcNbmE7UxH4rtvm9uqy.9fpxKmu0C.edDz1aQs3GLsM8f2Ss0FBb9xHKvD1
- B293W_SxVy9OyyQ9OSDZrgcq.JGQp0qfxNP5wAg4iBmLQgBSzW4jX6atrYU.V_QSRsniM7QAY5Jj
- MBJJp9vIlpU3BJXuREpbeYP7D6giGBqoTTaStb7fj6EPSlGdOs1nEl22CdoSkXV7xkecmNPiKy1R
- YGZAvAquBLm3PUPfOK7y2JuBI4dSQsGp2txWkRmoFFLbGN6DUVGFDBbiZoZ91Tl.LDRI9sYituqW
- w
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ir2.yahoo.com with HTTP; Sat, 4 Jul 2020 18:59:33 +0000
-Date:   Sat, 4 Jul 2020 18:59:30 +0000 (UTC)
-From:   Theresa Han <serena@lantermo.it>
-Reply-To: theresahan21@hotmail.com
-Message-ID: <1469227910.4479605.1593889170815@mail.yahoo.com>
-Subject: =?UTF-8?Q?Ich_gr=C3=BC=C3=9Fe_dich_im_Namen_des_Herrn?=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <1469227910.4479605.1593889170815.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16197 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726558AbgGEJSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Jul 2020 05:18:17 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46989 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726434AbgGEJSR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jul 2020 05:18:17 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:16 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 40AE721355; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, svarbanov@mm-sol.com,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        sivaprak@codeaurora.org, mgautam@codeaurora.org,
+        smuthayy@codeaurora.org, varada@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH 0/9] Add PCIe support for IPQ8074
+Date:   Sun,  5 Jul 2020 14:47:51 +0530
+Message-Id: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ich gr=C3=BC=C3=9Fe dich im Namen des Herrn
+IPQ8074 has two PCIe ports both are based on synopsis designware PCIe
+controller. while it was assumed that PCIe support for IPQ8074 was already
+available. PCIe was not functional until now.
 
-Ich kann mir nicht vorstellen wie du dich f=C3=BChlen wirst Sie einen pl=C3=
-=B6tzlichen Brief aus einem abgelegenen Land in der fernen Elfenbeink=C3=BC=
-ste erhalten werden und wahrscheinlich von jemandem, mit dem Sie nicht gut =
-verwandt sind. Ich appelliere an Sie, etwas Geduld zu =C3=BCben und meinen =
-Brief zu lesen Umgang mit Ihnen in dieser wichtigen Transaktion
-=20
-Ich bin Frau Theresa Han, 65 Jahre alt, in der Elfenbeink=C3=BCste, an Kreb=
-sleiden leidend. Ich war mit Herrn Johnson Han verheiratet, der bei der Reg=
-ierung von Elfenbeink=C3=BCste als Auftragnehmer t=C3=A4tig war, bevor er n=
-ach einigen Tagen im Krankenhaus starb
-=20
-Mein verstorbener Ehemann hat die Summe von US$2,5 Millionen (zwei Millione=
-n f=C3=BCnfhunderttausend USD) bei einer Bank in der Elfenbeink=C3=BCste hi=
-nterlegt. Ich habe an Krebs gelitten. K=C3=BCrzlich sagte mir mein Arzt, da=
-ss ich aufgrund der Krebserkrankungen, an denen ich leide, nur noch begrenz=
-te Lebenstage habe. Ich m=C3=B6chte wissen, ob ich Ihnen vertrauen kann, di=
-ese Mittel f=C3=BCr Wohlt=C3=A4tigkeit / Waisenhaus zu verwenden, und 20 Pr=
-ozent werden f=C3=BCr Sie als Entsch=C3=A4digung sein
-=20
-Ich habe diese Entscheidung getroffen, weil ich kein Kind habe, das dieses =
-Geld erben w=C3=BCrde, und mein Ehemann Verwandte sind b=C3=BCrgerliche und=
- sehr wohlhabende Personen und ich m=C3=B6chte nicht, dass mein Ehemann har=
-t verdientes Geld missbraucht wird
-=20
-Bitte nehmen Sie Kontakt mit mir auf, damit ich Ihnen weitere Einzelheiten =
-mitteilen kann und jede Verz=C3=B6gerung Ihrer Antwort mir Raum geben wird,=
- eine weitere gute Person f=C3=BCr diesen Zweck zu gewinnen
-=20
-Warten auf Ihre dringende Antwort Mit Gott sind alle Dinge m=C3=B6glich
-=20
-Deine Schwester in Christus
-=20
-Frau Theresa Han
+This patch series adds support for PCIe ports on IPQ8074.
+
+First PCIe port is of gen2 synposis version is 2_3_2 which has already been
+enabled. But it had some problems on phy init and needed dt updates.
+
+Second PCIe port is gen3 synopsis version is 2_9_0. This series adds
+support for this PCIe port while fixing dt nodes.
+
+Patch 1 on this series depends on qcom pcie bindings patch
+https://lkml.org/lkml/2020/6/24/162
+
+Sivaprakash Murugesan (9):
+  dt-bindings: pci: Add ipq8074 gen3 pci compatible
+  dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
+  clk: qcom: ipq8074: Add missing bindings for pcie
+  clk: qcom: ipq8074: Add missing clocks for pcie
+  phy: qcom-qmp: use correct values for ipq8074 gen2 pcie phy init
+  phy: qcom-qmp: Add compatible for ipq8074 pcie gen3 qmp phy
+  pci: dwc: qcom: do phy power on before pcie init
+  pci: qcom: Add support for ipq8074 pci controller
+  arm64: dts: ipq8074: Fixup pcie dts nodes
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  47 ++++++
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   1 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   8 +-
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 109 ++++++++----
+ drivers/clk/qcom/gcc-ipq8074.c                     |  60 +++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             | 187 +++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h          | 132 +++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 188 ++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |   2 +
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   4 +
+ 10 files changed, 683 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+
+-- 
+2.7.4
+
