@@ -2,115 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F841215B57
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 17:58:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4FB0215BBD
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 18:26:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgGFP6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jul 2020 11:58:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:51924 "EHLO foss.arm.com"
+        id S1729384AbgGFQ0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jul 2020 12:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbgGFP6y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:58:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E78281FB;
-        Mon,  6 Jul 2020 08:58:53 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B293C3F68F;
-        Mon,  6 Jul 2020 08:58:52 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 16:58:47 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "zhengdejin5@gmail.com" <zhengdejin5@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tjoseph@cadence.com" <tjoseph@cadence.com>
-Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
-Message-ID: <20200706155847.GA32050@e121166-lin.cambridge.arm.com>
-References: <20200526150954.4729-1-zhengdejin5@gmail.com>
- <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
- <20200527132005.GA7143@nuc8i5>
- <1b54c08f759c101a8db162f4f62c6b6a8a455d3f.camel@amazon.com>
- <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
+        id S1729358AbgGFQ0e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:26:34 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C63D220702;
+        Mon,  6 Jul 2020 16:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594052793;
+        bh=ELC0Qf8GBOcW7d74k7xE/syM0cqkEfG1ZwnEhNH0Xwc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=NWnqF8yNh1kmeojBtU/hvJnKQi+pZfEw8tRN6xyWsQTMlbnwqrlnw5lTOXvjlFbT7
+         B5rw2d8haDBAV5oFbA0B0HdNl5tN/Er570PuYfYx1NWaxj3XhsCuq3jsWx3nC14oRK
+         3IoGxJUeXAP3v3i6Usrl18oSx/B8BE0q7l0vU15Q=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B23463521502; Mon,  6 Jul 2020 09:26:33 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 09:26:33 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200706162633.GA13288@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+ <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+ <20200701140654.GL9247@paulmck-ThinkPad-P72>
+ <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+ <20200701160338.GN9247@paulmck-ThinkPad-P72>
+ <20200702082040.GB4781@hirez.programming.kicks-ass.net>
+ <20200702175948.GV9247@paulmck-ThinkPad-P72>
+ <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+ <20200703144228.GF9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
+In-Reply-To: <20200703144228.GF9247@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 09:01:13AM -0600, Rob Herring wrote:
+On Fri, Jul 03, 2020 at 07:42:28AM -0700, Paul E. McKenney wrote:
+> On Fri, Jul 03, 2020 at 03:13:30PM +0200, Peter Zijlstra wrote:
+> > On Thu, Jul 02, 2020 at 10:59:48AM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jul 02, 2020 at 10:20:40AM +0200, Peter Zijlstra wrote:
+> > > > On Wed, Jul 01, 2020 at 09:03:38AM -0700, Paul E. McKenney wrote:
 
-[...]
+[ . . . ]
 
-> > > In fact, I think its error handling is clear enough, It just goes
-> > > wrong
-> > > in three places, as follows:
-> > >
-> > > void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
-> > >                                           struct resource *res)
-> > > {
-> > >         resource_size_t size;
-> > >         const char *name;
-> > >         void __iomem *dest_ptr;
-> > >
-> > >         BUG_ON(!dev);
-> > >
-> > >         if (!res || resource_type(res) != IORESOURCE_MEM) {
-> > >                 dev_err(dev, "invalid resource\n");
-> > >                 return IOMEM_ERR_PTR(-EINVAL);
-> > >         }
-> > >
-> > In the above error case there is no indication of which resource failed
-> > (mainly relevant if the resource name is missing in the devicetree,
-> > since in the drivers you are changing platform_get_resource_byname() is
-> > mostly used). In the existing drivers' code, on return from this
-> > function in this case, the name would be printed by the caller.
+> > Also, if C goes and specifies load dependencies, in any form, is then
+> > not the corrolary that they need to specify control dependencies? How
+> > else can they exclude the transformation.
 > 
-> A driver should only have one call to devm_pci_remap_cfg_resource() as
-> there's only 1 config space. However, it looks like this function is
-> frequently used on what is not config space which is a bigger issue.
-
-That certainly is and should be fixed.
-
-> If this error happens, it's almost always going to be a NULL ptr as
-> platform_get_resource_byname() would have set IORESOURCE_MEM. Perhaps
-> a WARN here so you get a backtrace to the caller location.
-
-+1
-
-> > >         size = resource_size(res);
-> > >         name = res->name ?: dev_name(dev);
-> > >
-> > >         if (!devm_request_mem_region(dev, res->start, size, name)) {
-> > >                 dev_err(dev, "can't request region for resource
-> > > %pR\n", res);
-> > >                 return IOMEM_ERR_PTR(-EBUSY);
-> > >         }
-> > >
-> > >         dest_ptr = devm_pci_remap_cfgspace(dev, res->start, size);
-> > >         if (!dest_ptr) {
-> > >                 dev_err(dev, "ioremap failed for resource %pR\n",
-> > > res);
-> > >                 devm_release_mem_region(dev, res->start, size);
-> > >                 dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
-> > >         }
-> > >
-> > The other 2 error cases as well don't print the resource name as far as
-> > I recall (they will at least print the resource start/end).
+> By requiring that any temporaries generated from variables that are
+> marked _Dependent_ptr also be marked _Dependent_ptr.  This is of course
+> one divergence of _Dependent_ptr from the volatile keyword.
 > 
-> Start/end are what are important for why either of these functions
-> failed.
+> > And of course, once we're there, can we get explicit support for control
+> > dependencies too? :-) :-)
 > 
-> But sure, we could add 'name' here. That's a separate patch IMO.
+> Keep talking like this and I am going to make sure that you attend a
+> standards committee meeting.  If need be, by arranging for you to be
+> physically dragged there.  ;-)
+> 
+> More seriously, for control dependencies, the variable that would need
+> to be marked would be the program counter, which might require some
+> additional syntax.
 
-I agree. In sum, I think it is OK to proceed with this patch, provided
-we send follow-ups as discussed here, are we in agreement ?
+And perhaps more constructively, we do need to prioritize address and data
+dependencies over control dependencies.  For one thing, there are a lot
+more address/data dependencies in existing code than there are control
+dependencies, and (sadly, perhaps more importantly) there are a lot more
+people who are convinced that address/data dependencies are important.
 
-Lorenzo
+For another (admittedly more theoretical) thing, the OOTA scenarios
+stemming from control dependencies are a lot less annoying than those
+from address/data dependencies.
+
+And address/data dependencies are as far as I know vulnerable to things
+like conditional-move instructions that can cause problems for control
+dependencies.
+
+Nevertheless, yes, control dependencies also need attention.
+
+							Thanx, Paul
