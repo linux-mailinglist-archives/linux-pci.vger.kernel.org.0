@@ -2,134 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 031AA215C24
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 18:45:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00C95215C3E
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 18:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgGFQpR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jul 2020 12:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
+        id S1729521AbgGFQwU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jul 2020 12:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbgGFQpQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:45:16 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1729494AbgGFQwU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:52:20 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AC32206CD;
-        Mon,  6 Jul 2020 16:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22F4A206E9;
+        Mon,  6 Jul 2020 16:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594053915;
-        bh=6e7i6fPg3xNw9i2TFYGWKkuRV4+OY0qFf0hJHUNZFAk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EhB2ATgroVPgNiiTvitOSzxGM8K1faRPJTHq+pWF9OWRXMbByn3s7Po687Z06TgqX
-         VRr6vipnlOr72zbR5kU6z77tc6gv0H6MISA7cfsxuie6Xcsxdp0PmqZB60L2npF6bE
-         EwgK1dlIzDci0mNcLWOVvgFQIU8qG/+6YxMdV6LM=
-Date:   Mon, 6 Jul 2020 11:45:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 3/7] PCI/ACS: Enable PCI_ACS_TB for
- untrusted/external-facing devices
-Message-ID: <20200706164514.GA124720@bjorn-Precision-5520>
+        s=default; t=1594054339;
+        bh=xdaRqZT1+9b9Hwv4ZCb6X1XEW+VVf2e1R5XMLeCYHiw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xOjcD1SejuWSE4eNJvXzUeCNnbtqHOGD4kUIoU0M1BUZOTxBjxwAFne8AaG44kl5g
+         z0hBHoiLqKo/C3OuXbW6B7meN857YSHalmfIGklYmCxqEdvTzZ+p/2xvyVUSelY7mV
+         0gM6So1bajV5AfyK7ik06/QL0+Tc8o6RSWBPiMtI=
+Date:   Mon, 6 Jul 2020 09:52:17 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Aya Levin <ayal@mellanox.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "mkubecek@suse.cz" <mkubecek@suse.cz>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "alexander.h.duyck@linux.intel.com\"" 
+        <alexander.h.duyck@linux.intel.com>
+Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed
+ ordering
+Message-ID: <20200706095217.55c34281@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <7b79eead-ceab-5d95-fd91-cabeeef82d6a@mellanox.com>
+References: <20200623195229.26411-1-saeedm@mellanox.com>
+        <20200623195229.26411-11-saeedm@mellanox.com>
+        <20200623143118.51373eb7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <dda5c2b729bbaf025592aa84e2bdb84d0cda7570.camel@mellanox.com>
+        <082c6bfe-5146-c213-9220-65177717c342@mellanox.com>
+        <20200624102258.4410008d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <19a722952a2b91cc3b26076b8fd74afdfbfaa7a4.camel@mellanox.com>
+        <20200624133018.5a4d238b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <7b79eead-ceab-5d95-fd91-cabeeef82d6a@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630044943.3425049-4-rajatja@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:49:39PM -0700, Rajat Jain wrote:
-> When enabling ACS, enable translation blocking for external facing ports
-> and untrusted devices.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v2: Commit log change 
-> 
->  drivers/pci/pci.c    |  4 ++++
->  drivers/pci/quirks.c | 11 +++++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d2ff987585855..79853b52658a2 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->  	/* Upstream Forwarding */
->  	ctrl |= (cap & PCI_ACS_UF);
->  
-> +	if (dev->external_facing || dev->untrusted)
-> +		/* Translation Blocking */
-> +		ctrl |= (cap & PCI_ACS_TB);
-> +
->  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
->  }
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b341628e47527..6294adeac4049 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
->  	}
->  }
->  
-> +/*
-> + * Currently this quirk does the equivalent of
-> + * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
-> + *
-> + * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
-> + * if dev->external_facing || dev->untrusted
+On Mon, 6 Jul 2020 16:00:59 +0300 Aya Levin wrote:
+> Assuming the discussions with Bjorn will conclude in a well-trusted API 
+> that ensures relaxed ordering in enabled, I'd still like a method to 
+> turn off relaxed ordering for performance debugging sake.
+> Bjorn highlighted the fact that the PCIe sub system can only offer a 
+> query method. Even if theoretically a set API will be provided, this 
+> will not fit a netdev debugging - I wonder if CPU vendors even support 
+> relaxed ordering set/unset...
+> On the driver's side relaxed ordering is an attribute of the mkey and 
+> should be available for configuration (similar to number of CPU vs. 
+> number of channels).
+> Based on the above, and binding the driver's default relaxed ordering to 
+> the return value from pcie_relaxed_ordering_enabled(), may I continue 
+> with previous direction of a private-flag to control the client side (my 
+> driver) ?
 
-I don't understand this comment.  Is this a "TODO"?  Is there
-something more that needs to be done here?
-
-After a patch is applied, a comment should describe the code as it is.
-
-> + */
->  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
->  {
->  	if (!pci_quirk_intel_pch_acs_match(dev))
-> @@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
->  	ctrl |= (cap & PCI_ACS_CR);
->  	ctrl |= (cap & PCI_ACS_UF);
->  
-> +	if (dev->external_facing || dev->untrusted)
-> +		/* Translation Blocking */
-> +		ctrl |= (cap & PCI_ACS_TB);
-> +
->  	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
->  
->  	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
+That's fine with me, chicken bit seems reasonable as long as the
+default is dictated by the PCI subsystem. I have no particularly 
+strong feeling on the API used for the chicken bit, but others may.
