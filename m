@@ -2,116 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13FA8215EFF
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 20:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F21AA215F84
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 21:40:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbgGFSs4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jul 2020 14:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729569AbgGFSs4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:48:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B6A20773;
-        Mon,  6 Jul 2020 18:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594061336;
-        bh=TmzFSzpXz/IVyxhzyFOMQr63SdCmzzt9hF2zFcEfusA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T+FtnLgdUY+221uDBs5Ha8exDMqail3b7n8Jia7lbUoHBH/GyyUX5isSnxbdpDMfl
-         mVA69kh3JU6+46LL4UY7kQ3nrwbAPSFmEZtZE9KDoUTV9TdouG4oB4qeEehE9HG4mH
-         LXwLsGTCgO/ih+UHSnsrlItO5tNGvguXMDwGK2tk=
-Date:   Mon, 6 Jul 2020 20:48:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>, oohall@gmail.com,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external
- devices only
-Message-ID: <20200706184855.GA2335741@kroah.com>
-References: <20200630075554.GA619174@kroah.com>
- <20200706164126.GA124329@bjorn-Precision-5520>
+        id S1726540AbgGFTkZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jul 2020 15:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGFTkZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jul 2020 15:40:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E687C061755;
+        Mon,  6 Jul 2020 12:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Fga2epNTXBelXbYkbTxROQdchUloEASZKoCcJ/iKrWw=; b=BeTQRyoGVX7klkBfy71IhIii42
+        JLJVPvYdGVws5AyPO2wATPQh812LcOHjFg8RqbL8QgCaxHK+B103YXboryKFzbnforwfw09tNatE9
+        Ijvwo8PiAqBc+pqw5sDe87w5LOI2SYN6KwrLb1mF4UNVYiAxzyYRJj/nUVEy5N9Th6O/tYCF8VpZV
+        yC2XlC+u2k195dE9l9ZVM2DO+equSQoon5zhP1iEjupkjTXqD4be/tJ9YsR2I1ClBCDJd+yYpIZXF
+        Q6+cIuj+PAzHD6t30ZZbYPyuTxPG3nfJprRPcGf3KxUTK93dlpHy3vdg6mTpTVbfsaduXM8c65F50
+        6jIUEBlQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsWyN-0001u4-QE; Mon, 06 Jul 2020 19:40:16 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D9A28980DD2; Mon,  6 Jul 2020 21:40:12 +0200 (CEST)
+Date:   Mon, 6 Jul 2020 21:40:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200706194012.GA5523@worktop.programming.kicks-ass.net>
+References: <20200701140654.GL9247@paulmck-ThinkPad-P72>
+ <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+ <20200701160338.GN9247@paulmck-ThinkPad-P72>
+ <20200702082040.GB4781@hirez.programming.kicks-ass.net>
+ <20200702175948.GV9247@paulmck-ThinkPad-P72>
+ <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+ <20200703144228.GF9247@paulmck-ThinkPad-P72>
+ <20200706162633.GA13288@paulmck-ThinkPad-P72>
+ <20200706182926.GH4800@hirez.programming.kicks-ass.net>
+ <20200706183933.GE9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706164126.GA124329@bjorn-Precision-5520>
+In-Reply-To: <20200706183933.GE9247@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 11:41:26AM -0500, Bjorn Helgaas wrote:
-> On Tue, Jun 30, 2020 at 09:55:54AM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Jun 29, 2020 at 09:49:38PM -0700, Rajat Jain wrote:
-> > > The "ExternalFacing" devices (root ports) are still internal devices that
-> > > sit on the internal system fabric and thus trusted. Currently they were
-> > > being marked untrusted.
-> > > 
-> > > This patch uses the platform flag to identify the external facing devices
-> > > and then use it to mark any downstream devices as "untrusted". The
-> > > external-facing devices themselves are left as "trusted". This was
-> > > discussed here: https://lkml.org/lkml/2020/6/10/1049
-> > 
-> > {sigh}
-> > 
-> > First off, please use lore.kernel.org links, we don't control lkml.org
-> > and it often times has been down.
-> > 
-> > Also, you need to put all of the information in the changelog, referring
-> > to another place isn't always the best thing, considering you will be
-> > looking this up in 20+ years to try to figure out why people came up
-> > with such a crazy design.
-> > 
-> > But, the main point is, no, we did not decide on this.  "trust" is a
-> > policy decision to make by userspace, it is independant of "location",
-> > while you are tieing it directly here, which is what I explicitly said
-> > NOT to do.
-> > 
-> > So again, no, I will NAK this patch as-is, sorry, you are mixing things
-> > together in a way that it should not do at this point in time.
+On Mon, Jul 06, 2020 at 11:39:33AM -0700, Paul E. McKenney wrote:
+> On Mon, Jul 06, 2020 at 08:29:26PM +0200, Peter Zijlstra wrote:
+> > On Mon, Jul 06, 2020 at 09:26:33AM -0700, Paul E. McKenney wrote:
+
+> > If they do not consider their Linux OS running correctly :-)
 > 
-> What do you see being mixed together here?  I acknowledge that the
-> name of "pdev->untrusted" is probably a mistake.  But this patch
-> doesn't change anything there.  It only changes the treatment of the
-> edge case of the "ExternalFacing" ports.  Previously we treated them
-> as being external themselves, which does seem wrong.
+> Many of them really do not care at all.  In fact, some would consider
+> Linux failing to run as an added bonus.
 
-I don't see the patch here, and it's been a while but I think there is a
-mixture of "location" and "trust" happening here with a single value
-when they should be separate.
+This I think is why we have compiler people in the thread that care a
+lot more.
 
-Hopefully the next round of this patch series will be better.
+> > > Nevertheless, yes, control dependencies also need attention.
+> > 
+> > Today I added one more \o/
+> 
+> Just make sure you continually check to make sure that compilers
+> don't break it, along with the others you have added.  ;-)
 
-thanks,
+There's:
 
-greg k-h
+kernel/locking/mcs_spinlock.h:  smp_cond_load_acquire(l, VAL);                          \
+kernel/sched/core.c:                    smp_cond_load_acquire(&p->on_cpu, !VAL);
+kernel/smp.c:   smp_cond_load_acquire(&csd->node.u_flags, !(VAL & CSD_FLAG_LOCK));
+
+arch/x86/kernel/alternative.c:          atomic_cond_read_acquire(&desc.refs, !VAL);
+kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
+kernel/locking/qrwlock.c:       atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
+kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, VAL == _QW_WAITING);
+kernel/locking/qspinlock.c:             atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_MASK));
+kernel/locking/qspinlock.c:     val = atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_PENDING_MASK));
+
+include/linux/refcount.h:               smp_acquire__after_ctrl_dep();
+ipc/mqueue.c:                   smp_acquire__after_ctrl_dep();
+ipc/msg.c:                      smp_acquire__after_ctrl_dep();
+ipc/sem.c:                      smp_acquire__after_ctrl_dep();
+kernel/locking/rwsem.c:                 smp_acquire__after_ctrl_dep();
+kernel/sched/core.c:    smp_acquire__after_ctrl_dep();
+
+kernel/events/ring_buffer.c:__perf_output_begin()
+
+And I'm fairly sure I'm forgetting some... One could argue there's too
+many of them to check already.
+
+Both GCC and CLANG had better think about it.
