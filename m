@@ -2,177 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 212A4216268
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 01:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE93B21626F
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 01:41:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGFXlT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jul 2020 19:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgGFXlT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jul 2020 19:41:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFFDC08C5DF
-        for <linux-pci@vger.kernel.org>; Mon,  6 Jul 2020 16:41:18 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e8so13450168ljb.0
-        for <linux-pci@vger.kernel.org>; Mon, 06 Jul 2020 16:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qj0obXfHw+PyCzXxfPBrAWthmmsaPQNxN4o0aIsqBxY=;
-        b=e4ZoJPfJCzUv6JiW/ZtKDNwoYQa+BkxY90CNz+S6LE9+7RRt6w4/OAJaTtKXSYhbbF
-         oYS0eHWn6OMcxWzbDErcbfbew+X7a6zOBBM6D7f3BIbOaa3bo7kz7TEWGRTKU+1SMROJ
-         Uwh+5IvhJYVUsrx3MhOx+3bLdeW7f6pDZsALQBMQiwWMlGokj2qDJ33L/f/aRPXd/Yec
-         r7GUTyQDIUkMC7W5jzQUw97nbmg4R/8kNhWAmD/VgGQab7U+hMRgK/zmuD6xQSw28Ovt
-         /77UzmwH9JzQPTeu0U2tUJjGo+FYeTGxCf8Ec8gnCy1loG1SpwudA757MIn0qLMe6X2I
-         O63w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qj0obXfHw+PyCzXxfPBrAWthmmsaPQNxN4o0aIsqBxY=;
-        b=YDXjW7orCzvTyTV0st+J58ifMf+DScmqW2C5Cj3HgDIjVAuulWeB+Z54MNP4/4OM3E
-         rxwecLjT59dvmE4fsP/Eg0GI3XQg/f2b30N4babCiYka/Oh+w4dlBY9lstTlLvJ0fDbP
-         RmKQbq3cauy4P5D86sJEBePWVRt3M9icmd99ET4b0uUaOmhpr/a2lWJ2c6jbbkCsYG+0
-         KEuqM1Bpoo+4Paz0HlmQa2N2EGtO/ZqAu5w1HMmF547J/9k5UGwu7laH/eil8wgKP2zV
-         GlGyPeWnoAjLPsDZRioqxAEl8v/sfowFr0WhQMpwuMr1HcHQhf360XZdNPLOCi0JaRAA
-         ATTw==
-X-Gm-Message-State: AOAM5327O4W3rRY7Mrg9bayFaM267ZyiiU1CPMmCDNKK/bn6k0LVBx8T
-        fbU8ispFcNkaMQbd4A3qodRF5Wnd+0nwl7rtWO4zsA==
-X-Google-Smtp-Source: ABdhPJyJE3f+I6Cf0x7ChQa/hx1i7/Jjwak0JpIGwoSbWZNYPbEKzMKAPHJY1Bta2Hsh06yLSlYqq3OVhVwzS1hDg9w=
-X-Received: by 2002:a2e:858e:: with SMTP id b14mr30029014lji.301.1594078876784;
- Mon, 06 Jul 2020 16:41:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <CACK8Z6FhWyZOJvkrPcHacyvJucGMupOpL=Jm8BpyO7wPrZ_DQA@mail.gmail.com>
- <20200706233040.GA169334@bjorn-Precision-5520>
-In-Reply-To: <20200706233040.GA169334@bjorn-Precision-5520>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 6 Jul 2020 16:40:40 -0700
-Message-ID: <CACK8Z6F9zGrOAQ9QQ0Wjt9zbPk3cPnjSTvoZsS_i_Rd0H6Uiiw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external
- devices only
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        id S1727831AbgGFXlh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jul 2020 19:41:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726280AbgGFXlh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:41:37 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A9A620720;
+        Mon,  6 Jul 2020 23:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594078897;
+        bh=yuEVLSFWzFuIU16JSRCjoy4DCC3vZQD9mtnpRVx+k3Q=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=kH6JpuxO4VcDqDcyojdQfYGTHKg4PNOiHrbQiENKeoPSy0ZVSRSUp36IctVlrxCfg
+         Py5tnQ3aqNWzAsUWq7cSTJZ9xs4GrC7bOF7ScnS6uyF1RxsPRZrbPsF6yIEB4yWmBX
+         Q00WDW1a9kdhgxJoHkm8GLzgTCfs57TBHtdBC46w=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id F16FE3522637; Mon,  6 Jul 2020 16:41:36 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 16:41:36 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200706234136.GS9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+ <20200701160338.GN9247@paulmck-ThinkPad-P72>
+ <20200702082040.GB4781@hirez.programming.kicks-ass.net>
+ <20200702175948.GV9247@paulmck-ThinkPad-P72>
+ <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+ <20200703144228.GF9247@paulmck-ThinkPad-P72>
+ <20200706162633.GA13288@paulmck-ThinkPad-P72>
+ <20200706182926.GH4800@hirez.programming.kicks-ass.net>
+ <20200706183933.GE9247@paulmck-ThinkPad-P72>
+ <20200706194012.GA5523@worktop.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706194012.GA5523@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn,
+On Mon, Jul 06, 2020 at 09:40:12PM +0200, Peter Zijlstra wrote:
+> On Mon, Jul 06, 2020 at 11:39:33AM -0700, Paul E. McKenney wrote:
+> > On Mon, Jul 06, 2020 at 08:29:26PM +0200, Peter Zijlstra wrote:
+> > > On Mon, Jul 06, 2020 at 09:26:33AM -0700, Paul E. McKenney wrote:
+> 
+> > > If they do not consider their Linux OS running correctly :-)
+> > 
+> > Many of them really do not care at all.  In fact, some would consider
+> > Linux failing to run as an added bonus.
+> 
+> This I think is why we have compiler people in the thread that care a
+> lot more.
 
-On Mon, Jul 6, 2020 at 4:30 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Jul 06, 2020 at 03:31:47PM -0700, Rajat Jain wrote:
-> > On Mon, Jul 6, 2020 at 9:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Mon, Jun 29, 2020 at 09:49:38PM -0700, Rajat Jain wrote:
->
-> > > > -static void pci_acpi_set_untrusted(struct pci_dev *dev)
-> > > > +static void pci_acpi_set_external_facing(struct pci_dev *dev)
-> > > >  {
-> > > >       u8 val;
-> > > >
-> > > > -     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> > > > +     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
-> > > > +         pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
-> > >
-> > > This looks like a change worthy of its own patch.  We used to look for
-> > > "ExternalFacingPort" only on Root Ports; now we'll also do it for
-> > > Switch Downstream Ports.
-> >
-> > Can do. (please see below)
-> >
-> > > Can you include DT and ACPI spec references if they exist?  I found
-> > > this mention:
-> > > https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
-> > > which actually says it should only be implemented for Root Ports.
-> >
-> > I actually have no references. It seems to me that the microsoft spec
-> > assumes that all external ports must be implemented on root ports, but
-> > I think it would be equally fair for systems with PCIe switches to
-> > implement one on one of their switch downstream ports. I don't have an
-> > immediate use of this anyway, so if you think this should rather wait
-> > unless someone really has this case, this can wait. Let me know.
->
-> I agree that it "makes sense" to pay attention to this property no
-> matter where it appears, but since that Microsoft doc went to the
-> trouble to restrict it to Root Ports, I think we should leave this
-> as-is and only look for it in the Root Port.  Otherwise Linux will
-> accept something Windows will reject, and that seems like a needless
-> difference.
->
-> We can at least include the above link to the Microsoft doc in the
-> commit log.
+Here is hoping! ;-)
 
-Will do.
+> > > > Nevertheless, yes, control dependencies also need attention.
+> > > 
+> > > Today I added one more \o/
+> > 
+> > Just make sure you continually check to make sure that compilers
+> > don't break it, along with the others you have added.  ;-)
+> 
+> There's:
+> 
+> kernel/locking/mcs_spinlock.h:  smp_cond_load_acquire(l, VAL);                          \
+> kernel/sched/core.c:                    smp_cond_load_acquire(&p->on_cpu, !VAL);
+> kernel/smp.c:   smp_cond_load_acquire(&csd->node.u_flags, !(VAL & CSD_FLAG_LOCK));
+> 
+> arch/x86/kernel/alternative.c:          atomic_cond_read_acquire(&desc.refs, !VAL);
+> kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
+> kernel/locking/qrwlock.c:       atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
+> kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, VAL == _QW_WAITING);
+> kernel/locking/qspinlock.c:             atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_MASK));
+> kernel/locking/qspinlock.c:     val = atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_PENDING_MASK));
+> 
+> include/linux/refcount.h:               smp_acquire__after_ctrl_dep();
+> ipc/mqueue.c:                   smp_acquire__after_ctrl_dep();
+> ipc/msg.c:                      smp_acquire__after_ctrl_dep();
+> ipc/sem.c:                      smp_acquire__after_ctrl_dep();
+> kernel/locking/rwsem.c:                 smp_acquire__after_ctrl_dep();
+> kernel/sched/core.c:    smp_acquire__after_ctrl_dep();
+> 
+> kernel/events/ring_buffer.c:__perf_output_begin()
+> 
+> And I'm fairly sure I'm forgetting some... One could argue there's too
+> many of them to check already.
+> 
+> Both GCC and CLANG had better think about it.
 
->
-> > > It also mentions a "DmaProperty" that looks related.  Maybe Linux
-> > > should also pay attention to this?
-> >
-> > Interesting. Since this is not in use currently by the kernel as well
-> > as not exposed by (our) BIOS, I don't have an immediate use case for
-> > this. I'd like to defer this for later (as-the-need-arises).
->
-> I agree, you can defer this until you see a need for it.  I just
-> pointed it out in case it would be useful to you.
->
-> > > > +     /*
-> > > > +      * Devices are marked as external-facing using info from platform
-> > > > +      * (ACPI / devicetree). An external-facing device is still an internal
-> > > > +      * trusted device, but it faces external untrusted devices. Thus any
-> > > > +      * devices enumerated downstream an external-facing device is marked
-> > > > +      * as untrusted.
-> > >
-> > > This comment has a subject/verb agreement problem.
-> >
-> > I assume you meant s/is/are/ in last sentence. Will do.
->
-> Right.  There's also something wrong with "enumerated downstream an".
+That would be good!
 
-I'm apparently really bad at English :-). This is what I have in my
-latest patch I am about to send out:
+I won't list the number of address/data dependencies given that there
+are well over a thousand of them.
 
-"Thus any device enumerated downstream an external-facing device, is
-marked as untrusted."
-
-Are you suggesting s/an/a/ ? Please let me know what you would like to
-see and I'd copy it as-is :-)
-
-Thanks!
-
-Rajat
+							Thanx, Paul
