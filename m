@@ -2,56 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E33216204
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 01:20:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B713216250
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 01:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgGFXUJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jul 2020 19:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGFXUJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jul 2020 19:20:09 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABE8C061794
-        for <linux-pci@vger.kernel.org>; Mon,  6 Jul 2020 16:20:08 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id m26so23661645lfo.13
-        for <linux-pci@vger.kernel.org>; Mon, 06 Jul 2020 16:20:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S3X9p3/Tcr/ntGdk7/sKAQe/cqkFM9AS9Ft6l97WEKQ=;
-        b=uQJyuwzhr1LE9Kuu0uj364VAAz32Bh7MBlXiEDIQ/nUXcVpCy46dFU+hOB7IQ1k/ZN
-         bJgvUcwxMNHu4LDAb+vAaKgiG7GYiIy67zI1i2MUI3EvXO84kY8FEEPUVp/hvHeiNL6c
-         ZygjdlEC+YziNf4Q/RlhItGSwpgUrrWRKO5Co76LjKMxg7su1J6iFs06TCzAmeHEY/Jk
-         ceUn6JagX5snL/WJLnKUWPPc4WHeRKiN6R6mT6oQ1sbMsRTT6O2cGqrkOashlprvdlRo
-         eyPIPw8Vy/Ewj162V27wNRLki/xnrojkju/PLxmHEJ6Ji+8AscOEXddWLC6XeyOL1qct
-         3PQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S3X9p3/Tcr/ntGdk7/sKAQe/cqkFM9AS9Ft6l97WEKQ=;
-        b=XQTNDhrQkv21I2QqPu4QjXCdJU4qiAgqbmvO9ETF9Jj1xmo+BHJokDeFzp9UuyU5wC
-         4m1GAhwOVXSOnvN4JXKUqr+HJj39sILnbm/iC70dSxkE+B9d3Sizr9JNEm3a/v2MiaxL
-         N/8fZAP2WDqeKmMF6OkX7McdxI/aDSw79d2Lk/dO5YZrog9gE72fcmp5wpCDpE6cDPuG
-         3fVUSO+m6zhy50WQyxmwp0juvq9ssUilOI0vyR1zhwosc7fpbqKdjvn2jupvlQUfKOOP
-         Z/xmJIew/Utxq1/zI5FtPvRmZyT9juTorQ3YL5e8BF/+WiALXlnD/EehUMr4H3iZhVmO
-         7CMw==
-X-Gm-Message-State: AOAM530913f2fp8q3e2B347uID2Grm8c0PoJQkCoBFTuFOt8kQ+D0g32
-        Z1xjrmqagIJ2ZeCdEHYYfa6WUeuQj6/GYEvia/9Blw==
-X-Google-Smtp-Source: ABdhPJxhlrks5dTrFpXpr6UWodktRTBMegtu4j0YZwtWWhGamKlzpsn99s1KAheWtq3vN90rWaEkmGqPB/S4gzc6C0Y=
-X-Received: by 2002:a19:ca11:: with SMTP id a17mr31096448lfg.120.1594077606885;
- Mon, 06 Jul 2020 16:20:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200630044943.3425049-4-rajatja@google.com> <20200706170736.GA125844@bjorn-Precision-5520>
-In-Reply-To: <20200706170736.GA125844@bjorn-Precision-5520>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 6 Jul 2020 16:19:30 -0700
-Message-ID: <CACK8Z6H-8SAmGPFAwQjiJFQyH0S6h5EGyzSNpnrdhsu2UhpFjg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] PCI/ACS: Enable PCI_ACS_TB for untrusted/external-facing
- devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        id S1727120AbgGFXas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jul 2020 19:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726883AbgGFXas (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:30:48 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A937206DF;
+        Mon,  6 Jul 2020 23:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594078247;
+        bh=f2hh0GUopLuKkcXDVWTmfciWI/Nf4mF/htzG+HH8RNU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=f4JVsr+FBnvTXG/UGYU+BhWL5/GxgtIyQWiYhUmKhQntGNfdpLXH2OTsU18T84J6J
+         rozvcMTQ33o4xawcau+dKYIVeXMZClT4LHt5FI2a32iIOtwL6UZQqex47R6nyu3Xiu
+         74ZKhPMc9knrbc6jjicKTbDTibtxKc9O39VOPWKg=
+Date:   Mon, 6 Jul 2020 18:30:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
 Cc:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -81,104 +55,83 @@ Cc:     David Woodhouse <dwmw2@infradead.org>,
         Christian Kellner <christian@kellner.me>,
         Alex Williamson <alex.williamson@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
         Saravana Kannan <saravanak@google.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external
+ devices only
+Message-ID: <20200706233040.GA169334@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6FhWyZOJvkrPcHacyvJucGMupOpL=Jm8BpyO7wPrZ_DQA@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 10:07 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Jun 29, 2020 at 09:49:39PM -0700, Rajat Jain wrote:
-> > When enabling ACS, enable translation blocking for external facing ports
-> > and untrusted devices.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v2: Commit log change
-> >
-> >  drivers/pci/pci.c    |  4 ++++
-> >  drivers/pci/quirks.c | 11 +++++++++++
-> >  2 files changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index d2ff987585855..79853b52658a2 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-> >       /* Upstream Forwarding */
-> >       ctrl |= (cap & PCI_ACS_UF);
-> >
-> > +     if (dev->external_facing || dev->untrusted)
-> > +             /* Translation Blocking */
-> > +             ctrl |= (cap & PCI_ACS_TB);
-> > +
-> >       pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> >  }
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index b341628e47527..6294adeac4049 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
-> >       }
-> >  }
-> >
-> > +/*
-> > + * Currently this quirk does the equivalent of
-> > + * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
->
-> Nit: Reorder these as in c8de8ed2dcaa ("PCI: Make ACS quirk
-> implementations more uniform") so they match other similar lists in
-> the code.
+On Mon, Jul 06, 2020 at 03:31:47PM -0700, Rajat Jain wrote:
+> On Mon, Jul 6, 2020 at 9:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Jun 29, 2020 at 09:49:38PM -0700, Rajat Jain wrote:
 
-Will do.
-
->
-> But more to the point: we have a bunch of other quirks for devices
-> that do not have an ACS capability but *do* provide some ACS-like
-> features.  Most of them support
->
->   PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
->
-> because that's what we usually want.  But I bet some of them also
-> actually provide the equivalent of PCI_ACS_TB.
->
-> REQ_ACS_FLAGS doesn't include PCI_ACS_TB.  Is there anything we need
-> to do on the pci_acs_enabled() side to check for PCI_ACS_TB, and
-> consequently, to update any of the quirks for devices that provide it?
-
-I'm actually not sure.
-+Alex Williamson , do you have any comments here?
-
-Thanks,
-
-Rajat
-
->
-> > + *
-> > + * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
-> > + * if dev->external_facing || dev->untrusted
-> > + */
-> >  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
-> >  {
-> >       if (!pci_quirk_intel_pch_acs_match(dev))
-> > @@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
-> >       ctrl |= (cap & PCI_ACS_CR);
-> >       ctrl |= (cap & PCI_ACS_UF);
+> > > -static void pci_acpi_set_untrusted(struct pci_dev *dev)
+> > > +static void pci_acpi_set_external_facing(struct pci_dev *dev)
+> > >  {
+> > >       u8 val;
+> > >
+> > > -     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > > +     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
+> > > +         pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
 > >
-> > +     if (dev->external_facing || dev->untrusted)
-> > +             /* Translation Blocking */
-> > +             ctrl |= (cap & PCI_ACS_TB);
-> > +
-> >       pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
+> > This looks like a change worthy of its own patch.  We used to look for
+> > "ExternalFacingPort" only on Root Ports; now we'll also do it for
+> > Switch Downstream Ports.
+> 
+> Can do. (please see below)
+> 
+> > Can you include DT and ACPI spec references if they exist?  I found
+> > this mention:
+> > https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
+> > which actually says it should only be implemented for Root Ports.
+> 
+> I actually have no references. It seems to me that the microsoft spec
+> assumes that all external ports must be implemented on root ports, but
+> I think it would be equally fair for systems with PCIe switches to
+> implement one on one of their switch downstream ports. I don't have an
+> immediate use of this anyway, so if you think this should rather wait
+> unless someone really has this case, this can wait. Let me know.
+
+I agree that it "makes sense" to pay attention to this property no
+matter where it appears, but since that Microsoft doc went to the
+trouble to restrict it to Root Ports, I think we should leave this
+as-is and only look for it in the Root Port.  Otherwise Linux will
+accept something Windows will reject, and that seems like a needless
+difference.
+
+We can at least include the above link to the Microsoft doc in the
+commit log.
+
+> > It also mentions a "DmaProperty" that looks related.  Maybe Linux
+> > should also pay attention to this?
+> 
+> Interesting. Since this is not in use currently by the kernel as well
+> as not exposed by (our) BIOS, I don't have an immediate use case for
+> this. I'd like to defer this for later (as-the-need-arises).
+
+I agree, you can defer this until you see a need for it.  I just
+pointed it out in case it would be useful to you.
+
+> > > +     /*
+> > > +      * Devices are marked as external-facing using info from platform
+> > > +      * (ACPI / devicetree). An external-facing device is still an internal
+> > > +      * trusted device, but it faces external untrusted devices. Thus any
+> > > +      * devices enumerated downstream an external-facing device is marked
+> > > +      * as untrusted.
 > >
-> >       pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
+> > This comment has a subject/verb agreement problem.
+> 
+> I assume you meant s/is/are/ in last sentence. Will do.
+
+Right.  There's also something wrong with "enumerated downstream an".
