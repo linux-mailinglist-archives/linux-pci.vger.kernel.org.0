@@ -2,185 +2,280 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE9F5215827
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 15:17:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45D0D215858
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 15:30:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgGFNRi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jul 2020 09:17:38 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:12246 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbgGFNRh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jul 2020 09:17:37 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200706131735epoutp0426b4b9f7fb8912a92a5fc27a2193b785~fLEIxF4d53155631556epoutp04J
-        for <linux-pci@vger.kernel.org>; Mon,  6 Jul 2020 13:17:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200706131735epoutp0426b4b9f7fb8912a92a5fc27a2193b785~fLEIxF4d53155631556epoutp04J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594041455;
-        bh=KjGMvpbBplrRVXqi2JfJREM/WgEwIEVIJcyF61obP1Y=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=QgG4AqQwQvi8a+oN9OF0A/nuqNY7yEQRwbPFj4XSl+tyIJkR/8tvkcaXkNm5LN0gk
-         tfC7cZybhg8eqKKubEZtPdiqv9i8RcznQSOm/aoCIR/SFWqcYj5yWKAHGnadzNQpmZ
-         3sZqjhhLArHtHbdRQPtaq9PZQDVDbG422ngpaq6s=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200706131735epcas5p2c3fa8058bd38441969711444c0d3a646~fLEIV0Mq50184801848epcas5p21;
-        Mon,  6 Jul 2020 13:17:35 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A4.C2.09475.F64230F5; Mon,  6 Jul 2020 22:17:35 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200706131734epcas5p344bc0069bdf4f82603bcea0412c52b79~fLEHd3mBl0599605996epcas5p3-;
-        Mon,  6 Jul 2020 13:17:34 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200706131734epsmtrp115d12d0616111d95bce7ed0ccc340f27~fLEHdKWBY0199601996epsmtrp1e;
-        Mon,  6 Jul 2020 13:17:34 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-27-5f03246fe947
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        98.BA.08303.E64230F5; Mon,  6 Jul 2020 22:17:34 +0900 (KST)
-Received: from sriramdash03 (unknown [107.108.234.13]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200706131732epsmtip2364b290c8fa6c83414a9953a81cd06bd~fLEFeK6U90960509605epsmtip2T;
-        Mon,  6 Jul 2020 13:17:32 +0000 (GMT)
-From:   "Sriram Dash" <sriram.dash@samsung.com>
-To:     "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>
-Cc:     "'Kishon Vijay Abraham I'" <kishon@ti.com>,
-        "'Shradha Todi'" <shradha.t@samsung.com>, <bhelgaas@google.com>,
-        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200706111708.GF26377@e121166-lin.cambridge.arm.com>
-Subject: RE: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
- ->get_features()
-Date:   Mon, 6 Jul 2020 18:47:30 +0530
-Message-ID: <027101d65397$cf7ef760$6e7ce620$@samsung.com>
+        id S1729140AbgGFNa1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jul 2020 09:30:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53934 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgGFNa0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jul 2020 09:30:26 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594042223;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WE8w5/nIv+qDsmsKPcMCBT6e5oQiydbBe5pHGcuoo2g=;
+        b=TBpKUjQ4DaDP+iFhERJSPbePb3UKeGCshvOY1VmAP3qg5gp6eP7MlOHynXOfave+q2Flh8
+        DzLbEcR2m+rJnuqEW+eWV3viAUXKn7lXG/cS7xQrW3m9/Ad9mtBxJ0sC3HD6VEktkul+dq
+        w9/+g/Svrey9U71Gtw91bnffR3Tj/9cAGRLAhc2dGI9nijdZUjVctQzbObFlMWUZcU5zHG
+        K+Vdm7A7IBUqE7MVjDOco0pCqgP8GjtTpotJ+SYnJM39fG35TA01SYSjx8vvcjstB7det6
+        SR6rZyUhs5UExSCrswuiDnQGW9uW+XhTGjPi9/xJ2PV1gPvNdik62q5QfJRVHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594042223;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WE8w5/nIv+qDsmsKPcMCBT6e5oQiydbBe5pHGcuoo2g=;
+        b=vE7YoLoUgtExrpd33rIKzWTP59AywTCmsySgLxzBdkewadscp3/gPUvynK3L5ZSa+vAV70
+        BfVWakoDpeR7DOBg==
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH] PCI: vmd: Keep fwnode allocated through VMD irqdomain life
+In-Reply-To: <20200706111858.GT3703480@smile.fi.intel.com>
+References: <20200630163332.GA3437879@bjorn-Precision-5520> <873664syw0.fsf@nanos.tec.linutronix.de> <20200706111858.GT3703480@smile.fi.intel.com>
+Date:   Mon, 06 Jul 2020 15:30:23 +0200
+Message-ID: <87wo3grcsw.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQIRa+BXjMtyeVOz/ELce4dgT57WJwIqUA0mAt3aYLECuy3/8gLh+aTgAbYxJMuoIXtK8A==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7bCmhm6+CnO8wd59EhZLmjIsLjztYbO4
-        vGsOm8XZecfZLN78fsFusWjrF3aL3sO1Duwea+atYfRYsKnUo2/LKkaP4ze2M3l83iQXwBrF
-        ZZOSmpNZllqkb5fAlTHtxE7mgmeiFWuPfWBpYJwv2MXIwSEhYCLxqNO1i5GLQ0hgN6PE4VcP
-        WSCcT4wS266uZIdwPjNK/HjSwdTFyAnWMe/mdqjELkaJPw0f2UASQgKvGSWm/S0CsdkEdCXO
-        3mgCi4sImEocefURrIFZ4AyjxLxbj5hBdnMKOEts3soJUiMsEC6xYv5NRhCbRUBF4unzq2A2
-        r4ClxP1Z75ghbEGJkzOfsIDYzALyEtvfzmGGOEhB4ufTZawQcXGJoz97wMaLCIRJ/PxfD7JW
-        QmAmh8TxK7dZIOpdJGbtP8YIYQtLvDq+hR3ClpJ42d8GZWdLXO57DjW/RGLGq4VQvfYSB67M
-        YQGZzyygKbF+lz7EWj6J3t9PmCAhyivR0SYEUa0q8er2ZqiJ0hIH1p6GBqGHxNcJF5gmMCrO
-        QvLYLCSPzULyzCyEZQsYWVYxSqYWFOempxabFhjnpZbrFSfmFpfmpesl5+duYgQnHy3vHYyP
-        HnzQO8TIxMF4iFGCg1lJhLdXmzFeiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/SjzNxQgLpiSWp
-        2ampBalFMFkmDk6pBib7ln9q586bJ69XKOZf8+lKmek6BcXnprMTDn57fUEracYRrpuegQ8K
-        Zh+wlDHq/32oIyh+Qav0htoNF++/CLDczqa0iiUh6VZVy7NQLdMzZk6FFxz9xf0Yr7OmWJ94
-        ZfRGT2PnKt21Kz9ZrSmUPbniytTPWbl2zhVv6t+aPV9yM+he8NXwiLJHZQXldxTOZ/ivSJsw
-        eY5AZ9eJ7ztzD6bJ8iS5HzPqy7j9/oxejMdV6U+Cxg6beH9ZflEyF7e5tdL9qJ+axNLdp8RF
-        3i96Mf9PcdAH1nkpIX8Wrb/RV8d57X/QqgenTgted208otVwidf2yrWn/4rbu97l/7KdcKVk
-        ftxR7vYNC/ne7mGbr+KpxFKckWioxVxUnAgAoj8l2q0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLLMWRmVeSWpSXmKPExsWy7bCSvG6eCnO8QeMNKYslTRkWF572sFlc
-        3jWHzeLsvONsFm9+v2C3WLT1C7tF7+FaB3aPNfPWMHos2FTq0bdlFaPH8RvbmTw+b5ILYI3i
-        sklJzcksSy3St0vgyph2YidzwTPRirXHPrA0MM4X7GLk5JAQMJGYd3M7excjF4eQwA5GiW8t
-        xxm7GDmAEtISP+/qQtQIS6z89xyq5iWjxPU551lBEmwCuhJnbzSxgdgiAqYSR159BCtiFrjE
-        KLFpaw8TRMcZJom3E7+zgUzlFHCW2LyVE6RBWCBU4mPbVLBBLAIqEk+fX2UEsXkFLCXuz3rH
-        DGELSpyc+YQFpJVZQE+ibSNYCbOAvMT2t3OYIY5TkPj5dBkrRFxc4ujPHmaQchGBMImf/+sn
-        MArPQjJoFsKgWUgGzULSvICRZRWjZGpBcW56brFhgVFearlecWJucWleul5yfu4mRnAMaWnt
-        YNyz6oPeIUYmDsZDjBIczEoivL3ajPFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeb/OWhgnJJCe
-        WJKanZpakFoEk2Xi4JRqYFr+TYyR54200B2F3q/it/yY9+ddeSHybeOVJMtPzpOmNlSEMqS8
-        bjhslNuq8u6n31XXlXd9ZgpwSKraHAoQ3xzu0HyVI5d/74TktrxMi2ubXu7aP6O6U+3pln9z
-        vtXdl7rof2LNB1XpCWXXHz724lWOOta591tJydQv69s4jHQDL97jyWze+XdK9YNdq24t/1O+
-        3W374qxvGUrKMnNNzb5fZnh7l+n77aDPuS7fW7bc/sN1au7WuYvX2x4tPitcz/57j/u11+at
-        x/LZ2/mdeuNvXtpcF/H259THYvwn2IObpjluqf61bcXthW8mLlivcLRh9f1qximdzt0SMxtN
-        Zj2xabx9+u0jBc7vTzbdav49UYmlOCPRUIu5qDgRAELBkFkQAwAA
-X-CMS-MailID: 20200706131734epcas5p344bc0069bdf4f82603bcea0412c52b79
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
-References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
-        <20200311102852.5207-1-shradha.t@samsung.com>
-        <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
-        <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
-        <000001d608fb$7ab39010$701ab030$@samsung.com>
-        <20200706111708.GF26377@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: 06 July 2020 16:47
-> Subject: Re: [PATCH] PCI: endpoint: Fix NULL pointer dereference for -
-> >get_features()
-> 
-> On Thu, Apr 02, 2020 at 08:01:59PM +0530, Sriram Dash wrote:
-> 
-> [...]
-> 
-> > > So the patch itself is correct though the commit log has to be
-> > > fixed. You should also check if all the endpoint controller drivers
-> > > existing currently provides epc_features.
-> >
-> > At the moment, there is no issue for existing controller drivers as I
-> > can see almost all drivers are providing epc_features. But, this is
-> > not a mandatory feature and some controller drivers may not have
-> > epc_features implemented, may be in the near future.  But because we
-> > are dealing with the configfs, the application need not bother about
-> > the driver details underneath.
-> >
-> > IMO, the code should be fixed regardless and should not cause panic in
-> > any case.
-> 
-> What's this patch status please ?
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+> On Mon, Jul 06, 2020 at 12:47:59PM +0200, Thomas Gleixner wrote:
+>> Bjorn Helgaas <helgaas@kernel.org> writes:
+>> > On Tue, Jun 30, 2020 at 12:39:08PM +0300, Andy Shevchenko wrote:
+>> >> The problem here is in the original patch which relies on the
+>> >> knowledge that fwnode is (was) not used anyhow specifically for ACPI
+>> >> case. That said, it makes fwnode a dangling pointer which I
+>> >> personally consider as a mine left for others. That's why the Fixes
+>> >> refers to the initial commit. The latter just has been blasted on
+>> >> that mine.
+>> 
+>> No. The original patch did not create a dangling pointer because fwnode
+>> was not stored for IRQCHIP_FWNODE_NAMED and IRQCHIP_FWNODE_NAMED_ID type
+>> nodes.
+>> 
+>> The fail was introduced in:
+>> 
+>> 711419e504eb ("irqdomain: Add the missing assignment of domain->fwnode for named fwnode")
 >
+> Ah, sorry for missing that and thank you for pointing out.
 
-Its not in the mainline tree as of now. However, we feel its important for
-the drivers not using epc_features.
+So something like the below wants to be applied and marked for stable
+
+Thanks,
+
+        tglx
+---
+diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
+index 3b2552fb7735..5958217861b8 100644
+--- a/arch/mips/pci/pci-xtalk-bridge.c
++++ b/arch/mips/pci/pci-xtalk-bridge.c
+@@ -627,9 +627,10 @@ static int bridge_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	domain = irq_domain_create_hierarchy(parent, 0, 8, fn,
+ 					     &bridge_domain_ops, NULL);
+-	irq_domain_free_fwnode(fn);
+-	if (!domain)
++	if (!domain) {
++		irq_domain_free_fwnode(fn);
+ 		return -ENOMEM;
++	}
  
-> Thanks,
-> Lorenzo
-> 
-> > > Thanks
-> > > Kishon
-> > > >
-> > > >
-> > > >>  drivers/pci/endpoint/functions/pci-epf-test.c | 15
-> > > >> +++++++++------
-> > > >>  1 file changed, 9 insertions(+), 6 deletions(-)
-> > > >>
-> > > >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> index c9121b1b9fa9..af4537a487bf 100644
-> > > >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> @@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf
-*epf)
-> > > >>  		return -EINVAL;
-> > > >>
-> > > >>  	epc_features = pci_epc_get_features(epc, epf->func_no);
-> > > >> -	if (epc_features) {
-> > > >> -		linkup_notifier = epc_features->linkup_notifier;
-> > > >> -		msix_capable = epc_features->msix_capable;
-> > > >> -		msi_capable = epc_features->msi_capable;
-> > > >> -		test_reg_bar =
-pci_epc_get_first_free_bar(epc_features);
-> > > >> -		pci_epf_configure_bar(epf, epc_features);
-> > > >> +	if (!epc_features) {
-> > > >> +		dev_err(dev, "epc_features not implemented\n");
-> > > >> +		return -ENOTSUPP;
-> > > >>  	}
-> > > >>
-> > > >> +	linkup_notifier = epc_features->linkup_notifier;
-> > > >> +	msix_capable = epc_features->msix_capable;
-> > > >> +	msi_capable = epc_features->msi_capable;
-> > > >> +	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
-> > > >> +	pci_epf_configure_bar(epf, epc_features);
-> > > >> +
-> > > >>  	epf_test->test_reg_bar = test_reg_bar;
-> > > >>  	epf_test->epc_features = epc_features;
-> > > >>
-> > > >> --
-> > > >> 2.17.1
-> > > >
-> > > >
-> >
-
+ 	pci_set_flags(PCI_PROBE_ONLY);
+ 
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index ce61e3e7d399..81ffcfbfaef2 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2316,12 +2316,12 @@ static int mp_irqdomain_create(int ioapic)
+ 	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
+ 						 (void *)(long)ioapic);
+ 
+-	/* Release fw handle if it was allocated above */
+-	if (!cfg->dev)
+-		irq_domain_free_fwnode(fn);
+-
+-	if (!ip->irqdomain)
++	if (!ip->irqdomain) {
++		/* Release fw handle if it was allocated above */
++		if (!cfg->dev)
++			irq_domain_free_fwnode(fn);
+ 		return -ENOMEM;
++	}
+ 
+ 	ip->irqdomain->parent = parent;
+ 
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 5cbaca58af95..c2b2911feeef 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -263,12 +263,13 @@ void __init arch_init_msi_domain(struct irq_domain *parent)
+ 		msi_default_domain =
+ 			pci_msi_create_irq_domain(fn, &pci_msi_domain_info,
+ 						  parent);
+-		irq_domain_free_fwnode(fn);
+ 	}
+-	if (!msi_default_domain)
++	if (!msi_default_domain) {
++		irq_domain_free_fwnode(fn);
+ 		pr_warn("failed to initialize irqdomain for MSI/MSI-x.\n");
+-	else
++	} else {
+ 		msi_default_domain->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
++	}
+ }
+ 
+ #ifdef CONFIG_IRQ_REMAP
+@@ -301,7 +302,8 @@ struct irq_domain *arch_create_remap_msi_irq_domain(struct irq_domain *parent,
+ 	if (!fn)
+ 		return NULL;
+ 	d = pci_msi_create_irq_domain(fn, &pci_msi_ir_domain_info, parent);
+-	irq_domain_free_fwnode(fn);
++	if (!d)
++		irq_domain_free_fwnode(fn);
+ 	return d;
+ }
+ #endif
+@@ -364,7 +366,8 @@ static struct irq_domain *dmar_get_irq_domain(void)
+ 	if (fn) {
+ 		dmar_domain = msi_create_irq_domain(fn, &dmar_msi_domain_info,
+ 						    x86_vector_domain);
+-		irq_domain_free_fwnode(fn);
++		if (!dmar_domain)
++			irq_domain_free_fwnode(fn);
+ 	}
+ out:
+ 	mutex_unlock(&dmar_lock);
+@@ -489,7 +492,10 @@ struct irq_domain *hpet_create_irq_domain(int hpet_id)
+ 	}
+ 
+ 	d = msi_create_irq_domain(fn, domain_info, parent);
+-	irq_domain_free_fwnode(fn);
++	if (!d) {
++		irq_domain_free_fwnode(fn);
++		kfree(domain_info);
++	}
+ 	return d;
+ }
+ 
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index c48be6e1f676..cc8b16f89dd4 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -709,7 +709,6 @@ int __init arch_early_irq_init(void)
+ 	x86_vector_domain = irq_domain_create_tree(fn, &x86_vector_domain_ops,
+ 						   NULL);
+ 	BUG_ON(x86_vector_domain == NULL);
+-	irq_domain_free_fwnode(fn);
+ 	irq_set_default_host(x86_vector_domain);
+ 
+ 	arch_init_msi_domain(x86_vector_domain);
+diff --git a/arch/x86/platform/uv/uv_irq.c b/arch/x86/platform/uv/uv_irq.c
+index fc13cbbb2dce..abb6075397f0 100644
+--- a/arch/x86/platform/uv/uv_irq.c
++++ b/arch/x86/platform/uv/uv_irq.c
+@@ -167,9 +167,10 @@ static struct irq_domain *uv_get_irq_domain(void)
+ 		goto out;
+ 
+ 	uv_domain = irq_domain_create_tree(fn, &uv_domain_ops, NULL);
+-	irq_domain_free_fwnode(fn);
+ 	if (uv_domain)
+ 		uv_domain->parent = x86_vector_domain;
++	else
++		irq_domain_free_fwnode(fn);
+ out:
+ 	mutex_unlock(&uv_lock);
+ 
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index 74cca1757172..2f22326ee4df 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3985,9 +3985,10 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
+ 	if (!fn)
+ 		return -ENOMEM;
+ 	iommu->ir_domain = irq_domain_create_tree(fn, &amd_ir_domain_ops, iommu);
+-	irq_domain_free_fwnode(fn);
+-	if (!iommu->ir_domain)
++	if (!iommu->ir_domain) {
++		irq_domain_free_fwnode(fn);
+ 		return -ENOMEM;
++	}
+ 
+ 	iommu->ir_domain->parent = arch_get_ir_parent_domain();
+ 	iommu->msi_domain = arch_create_remap_msi_irq_domain(iommu->ir_domain,
+diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+index 3c0c67a99c7b..8919c1c70b68 100644
+--- a/drivers/iommu/hyperv-iommu.c
++++ b/drivers/iommu/hyperv-iommu.c
+@@ -155,7 +155,10 @@ static int __init hyperv_prepare_irq_remapping(void)
+ 				0, IOAPIC_REMAPPING_ENTRY, fn,
+ 				&hyperv_ir_domain_ops, NULL);
+ 
+-	irq_domain_free_fwnode(fn);
++	if (!ioapic_ir_domain) {
++		irq_domain_free_fwnode(fn);
++		return -ENOMEM;
++	}
+ 
+ 	/*
+ 	 * Hyper-V doesn't provide irq remapping function for
+diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
+index 7f8769800815..9564d23d094f 100644
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -563,8 +563,8 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
+ 					    0, INTR_REMAP_TABLE_ENTRIES,
+ 					    fn, &intel_ir_domain_ops,
+ 					    iommu);
+-	irq_domain_free_fwnode(fn);
+ 	if (!iommu->ir_domain) {
++		irq_domain_free_fwnode(fn);
+ 		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
+ 		goto out_free_bitmap;
+ 	}
+diff --git a/drivers/mfd/ioc3.c b/drivers/mfd/ioc3.c
+index 02998d4eb74b..74cee7cb0afc 100644
+--- a/drivers/mfd/ioc3.c
++++ b/drivers/mfd/ioc3.c
+@@ -142,10 +142,11 @@ static int ioc3_irq_domain_setup(struct ioc3_priv_data *ipd, int irq)
+ 		goto err;
+ 
+ 	domain = irq_domain_create_linear(fn, 24, &ioc3_irq_domain_ops, ipd);
+-	if (!domain)
++	if (!domain) {
++		irq_domain_free_fwnode(fn);
+ 		goto err;
++	}
+ 
+-	irq_domain_free_fwnode(fn);
+ 	ipd->domain = domain;
+ 
+ 	irq_set_chained_handler_and_data(irq, ioc3_irq_handler, domain);
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index e386d4eac407..9a64cf90c291 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -546,9 +546,10 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 
+ 	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
+ 						    x86_vector_domain);
+-	irq_domain_free_fwnode(fn);
+-	if (!vmd->irq_domain)
++	if (!vmd->irq_domain) {
++		irq_domain_free_fwnode(fn);
+ 		return -ENODEV;
++	}
+ 
+ 	pci_add_resource(&resources, &vmd->resources[0]);
+ 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
