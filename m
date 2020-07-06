@@ -2,114 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F21AA215F84
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 21:40:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43291215FA4
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jul 2020 21:49:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgGFTkZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jul 2020 15:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        id S1726702AbgGFTtt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jul 2020 15:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGFTkZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jul 2020 15:40:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E687C061755;
-        Mon,  6 Jul 2020 12:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Fga2epNTXBelXbYkbTxROQdchUloEASZKoCcJ/iKrWw=; b=BeTQRyoGVX7klkBfy71IhIii42
-        JLJVPvYdGVws5AyPO2wATPQh812LcOHjFg8RqbL8QgCaxHK+B103YXboryKFzbnforwfw09tNatE9
-        Ijvwo8PiAqBc+pqw5sDe87w5LOI2SYN6KwrLb1mF4UNVYiAxzyYRJj/nUVEy5N9Th6O/tYCF8VpZV
-        yC2XlC+u2k195dE9l9ZVM2DO+equSQoon5zhP1iEjupkjTXqD4be/tJ9YsR2I1ClBCDJd+yYpIZXF
-        Q6+cIuj+PAzHD6t30ZZbYPyuTxPG3nfJprRPcGf3KxUTK93dlpHy3vdg6mTpTVbfsaduXM8c65F50
-        6jIUEBlQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsWyN-0001u4-QE; Mon, 06 Jul 2020 19:40:16 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D9A28980DD2; Mon,  6 Jul 2020 21:40:12 +0200 (CEST)
-Date:   Mon, 6 Jul 2020 21:40:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200706194012.GA5523@worktop.programming.kicks-ass.net>
-References: <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
- <20200703144228.GF9247@paulmck-ThinkPad-P72>
- <20200706162633.GA13288@paulmck-ThinkPad-P72>
- <20200706182926.GH4800@hirez.programming.kicks-ass.net>
- <20200706183933.GE9247@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706183933.GE9247@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        with ESMTP id S1725860AbgGFTtt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jul 2020 15:49:49 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39BBBC061755;
+        Mon,  6 Jul 2020 12:49:49 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8FFC5127F6640;
+        Mon,  6 Jul 2020 12:49:48 -0700 (PDT)
+Date:   Mon, 06 Jul 2020 12:49:47 -0700 (PDT)
+Message-Id: <20200706.124947.1335511480336755384.davem@davemloft.net>
+To:     ayal@mellanox.com
+Cc:     kuba@kernel.org, saeedm@mellanox.com, mkubecek@suse.cz,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        netdev@vger.kernel.org, tariqt@mellanox.com,
+        alexander.h.duyck@linux.intel.com
+Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed
+ ordering
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <7b79eead-ceab-5d95-fd91-cabeeef82d6a@mellanox.com>
+References: <19a722952a2b91cc3b26076b8fd74afdfbfaa7a4.camel@mellanox.com>
+        <20200624133018.5a4d238b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <7b79eead-ceab-5d95-fd91-cabeeef82d6a@mellanox.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Jul 2020 12:49:48 -0700 (PDT)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 11:39:33AM -0700, Paul E. McKenney wrote:
-> On Mon, Jul 06, 2020 at 08:29:26PM +0200, Peter Zijlstra wrote:
-> > On Mon, Jul 06, 2020 at 09:26:33AM -0700, Paul E. McKenney wrote:
+From: Aya Levin <ayal@mellanox.com>
+Date: Mon, 6 Jul 2020 16:00:59 +0300
 
-> > If they do not consider their Linux OS running correctly :-)
-> 
-> Many of them really do not care at all.  In fact, some would consider
-> Linux failing to run as an added bonus.
+> Assuming the discussions with Bjorn will conclude in a well-trusted
+> API that ensures relaxed ordering in enabled, I'd still like a method
+> to turn off relaxed ordering for performance debugging sake.
+> Bjorn highlighted the fact that the PCIe sub system can only offer a
+> query method. Even if theoretically a set API will be provided, this
+> will not fit a netdev debugging - I wonder if CPU vendors even support
+> relaxed ordering set/unset...
+> On the driver's side relaxed ordering is an attribute of the mkey and
+> should be available for configuration (similar to number of CPU
+> vs. number of channels).
+> Based on the above, and binding the driver's default relaxed ordering
+> to the return value from pcie_relaxed_ordering_enabled(), may I
+> continue with previous direction of a private-flag to control the
+> client side (my driver) ?
 
-This I think is why we have compiler people in the thread that care a
-lot more.
+I don't like this situation at all.
 
-> > > Nevertheless, yes, control dependencies also need attention.
-> > 
-> > Today I added one more \o/
-> 
-> Just make sure you continually check to make sure that compilers
-> don't break it, along with the others you have added.  ;-)
+If RO is so dodgy that it potentially needs to be disabled, that is
+going to be an issue not just with networking devices but also with
+storage and other device types as well.
 
-There's:
+Will every device type have a custom way to disable RO, thus
+inconsistently, in order to accomodate this?
 
-kernel/locking/mcs_spinlock.h:  smp_cond_load_acquire(l, VAL);                          \
-kernel/sched/core.c:                    smp_cond_load_acquire(&p->on_cpu, !VAL);
-kernel/smp.c:   smp_cond_load_acquire(&csd->node.u_flags, !(VAL & CSD_FLAG_LOCK));
+That makes no sense and is a terrible user experience.
 
-arch/x86/kernel/alternative.c:          atomic_cond_read_acquire(&desc.refs, !VAL);
-kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
-kernel/locking/qrwlock.c:       atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
-kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, VAL == _QW_WAITING);
-kernel/locking/qspinlock.c:             atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_MASK));
-kernel/locking/qspinlock.c:     val = atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_PENDING_MASK));
-
-include/linux/refcount.h:               smp_acquire__after_ctrl_dep();
-ipc/mqueue.c:                   smp_acquire__after_ctrl_dep();
-ipc/msg.c:                      smp_acquire__after_ctrl_dep();
-ipc/sem.c:                      smp_acquire__after_ctrl_dep();
-kernel/locking/rwsem.c:                 smp_acquire__after_ctrl_dep();
-kernel/sched/core.c:    smp_acquire__after_ctrl_dep();
-
-kernel/events/ring_buffer.c:__perf_output_begin()
-
-And I'm fairly sure I'm forgetting some... One could argue there's too
-many of them to check already.
-
-Both GCC and CLANG had better think about it.
+That's why the knob belongs generically in PCI or similar.
