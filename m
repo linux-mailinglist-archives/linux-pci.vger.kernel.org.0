@@ -2,106 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54186217AEA
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 00:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36208217AF7
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 00:26:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgGGWRK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jul 2020 18:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45546 "EHLO mail.kernel.org"
+        id S1729267AbgGGW0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jul 2020 18:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgGGWRK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:17:10 -0400
+        id S1726946AbgGGW0H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Jul 2020 18:26:07 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E84920720;
-        Tue,  7 Jul 2020 22:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEC72075B;
+        Tue,  7 Jul 2020 22:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594160230;
-        bh=igRw/elAJpmXW1QKqDLoTjdA6cufEesoAiQ9X3RKU98=;
+        s=default; t=1594160767;
+        bh=T0DwWvl2eKQOwlym/Ko2pveZIneqmF3MFNc5/b/pqUc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BoMX280eZ6j8c0uOMxf7N8F68APr7FNfRfBWmRG8kE/UF2+Ea/a2QAPbPTrtXkOVA
-         xH2jXglyK3hKURat5vSMKtHPYw0UE/TZ6xIKvmWcBlulRQygeyGsY4NbH+k9CQcv/r
-         QQzd+jaGi93ARw7lHyK+DiNmw5aMyiFQXU94vrIs=
-Date:   Tue, 7 Jul 2020 17:17:08 -0500
+        b=iFSFhwxsVgud7cEq81TXjXMt+pj4sGtRZLl5pqFopex1zqIZhnmgiRmIj9Q4Tzpia
+         TQsRN7Tckb+OJLbjWiU0jTkVg3AMnBq9nrhE0wYd9XJZlSn6AvifOkwmKZ4e+m3WGB
+         hRemOCesXYEBoZT9KaRl8R6fCQczl3Oc5XOZ+keE=
+Date:   Tue, 7 Jul 2020 17:26:00 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] pci: enforce usage of 'pci_channel_state_t'
-Message-ID: <20200707221708.GA390968@bjorn-Precision-5520>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: Re: [PATCH] PCI: Replace kmalloc with kzalloc in the comment/message
+Message-ID: <20200707222600.GA391475@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702162651.49526-1-luc.vanoostenryck@gmail.com>
+In-Reply-To: <1590714119-15744-1-git-send-email-wang.yi59@zte.com.cn>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:26:48PM +0200, Luc Van Oostenryck wrote:
-> The definition of pci_channel_io_normal and friends is relatively
-> complicated and ugly:
-> 	typedef unsigned int __bitwise pci_channel_state_t;
-> 	enum pci_channel_state {
-> 		pci_channel_io_normal = (__force pci_channel_state_t) 1,
-> 		...
-> 	};
+On Fri, May 29, 2020 at 09:01:59AM +0800, Yi Wang wrote:
+> From: Liao Pingfang <liao.pingfang@zte.com.cn>
 > 
-> This is clearly motivated by a desire to have some strong typing
-> for this constants but:
-> * in C enums are weakly typed (they're essentially the same as 'int')
-> * sparse only allow to define bitwise ints, not bitwise enums.
+> Use kzalloc instead of kmalloc in the comment/message according to
+> the previous kzalloc() call.
 > 
-> This series is a preparation step to introduce bitwise enums.
-> This would allow to define these constant without having to use
-> the force cast:
-> 	enum __bitwise pci_channel_state {
-> 		pci_channel_io_normal = 1,
-> 		...
-> 	};
-> or, equivalently:
-> 	typedef enum __bitwise {
-> 		pci_channel_io_normal = 1,
-> 		...
-> 	} pci_channel_state_t;
-> 
-> 
-> Note: the first patch is, I think, uncontroversial, the other ones
->       less so but can be safely dropped.
-> 
-> 
-> Changes since v1:
-> * add missing conversion
-> * try to avoid using 'enum pci_channel_state' in include/linux/pci.h
-> * try to avoid using 'enum pci_channel_state' in the documentation
-> 
-> 
-> Luc Van Oostenryck (3):
->   pci: use 'pci_channel_state_t' instead of 'enum pci_channel_state'
->   pci: use anonymous 'enum' instead of 'enum pci_channel_state'
->   pci: update to doc to use 'pci_channel_state_t'
-> 
->  Documentation/PCI/pci-error-recovery.rst    | 8 ++++----
->  arch/powerpc/kernel/eeh_driver.c            | 2 +-
->  drivers/block/rsxx/core.c                   | 2 +-
->  drivers/dma/ioat/init.c                     | 2 +-
->  drivers/media/pci/ngene/ngene-cards.c       | 2 +-
->  drivers/misc/genwqe/card_base.c             | 2 +-
->  drivers/net/ethernet/intel/i40e/i40e_main.c | 2 +-
->  drivers/net/ethernet/intel/ice/ice_main.c   | 2 +-
->  drivers/net/ethernet/intel/ixgb/ixgb_main.c | 4 ++--
->  drivers/net/ethernet/sfc/efx.c              | 2 +-
->  drivers/net/ethernet/sfc/falcon/efx.c       | 2 +-
->  drivers/pci/pci.h                           | 2 +-
->  drivers/pci/pcie/err.c                      | 4 ++--
->  drivers/pci/pcie/portdrv_pci.c              | 2 +-
->  drivers/scsi/aacraid/linit.c                | 2 +-
->  drivers/scsi/sym53c8xx_2/sym_glue.c         | 2 +-
->  drivers/staging/qlge/qlge_main.c            | 2 +-
->  include/linux/pci.h                         | 4 ++--
->  18 files changed, 24 insertions(+), 24 deletions(-)
+> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
 
-Since it's all basically "use pci_channel_state_t instead of enum
-pci_channel_state", I squashed these all together and applied the
-result to pci/error for v5.8, thanks!
+I would be happy to apply this, but this needs to show a connection
+between Liao Pingfang and Yi Wang.
+
+Ideally this patch would be sent directly by Liao Pingfang.  The
+sender should at least appear in the Signed-off-by chain.  See
+Documentation/process/submitting-patches.rst
+
+> ---
+>  drivers/pci/hotplug/ibmphp_pci.c | 2 +-
+>  drivers/pci/setup-bus.c          | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/ibmphp_pci.c b/drivers/pci/hotplug/ibmphp_pci.c
+> index e22d023..2d36992 100644
+> --- a/drivers/pci/hotplug/ibmphp_pci.c
+> +++ b/drivers/pci/hotplug/ibmphp_pci.c
+> @@ -205,7 +205,7 @@ int ibmphp_configure_card(struct pci_func *func, u8 slotno)
+>  								cur_func->next = newfunc;
+>  
+>  							rc = ibmphp_configure_card(newfunc, slotno);
+> -							/* This could only happen if kmalloc failed */
+> +							/* This could only happen if kzalloc failed */
+>  							if (rc) {
+>  								/* We need to do this in case bridge itself got configured properly, but devices behind it failed */
+>  								func->bus = 1; /* To indicate to the unconfigure function that this is a PPB */
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index bbcef1a..13c5a44 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -151,7 +151,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+>  
+>  		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
+>  		if (!tmp)
+> -			panic("pdev_sort_resources(): kmalloc() failed!\n");
+> +			panic("%s: kzalloc() failed!\n", __func__);
+>  		tmp->res = r;
+>  		tmp->dev = dev;
+>  
+> -- 
+> 2.9.5
+> 
