@@ -2,129 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93E432177F9
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 21:30:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A8EF21783B
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 21:48:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgGGTaR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jul 2020 15:30:17 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37392 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726763AbgGGTaR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jul 2020 15:30:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594150215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=01varJ2me0tZRb1RA3CrsAfeu4lanBS1IdqwDINnieI=;
-        b=iRdnvEllSDOlGg7JLLU2+UNKbi3bRSxpw7s8awKxefSSv8NxoKwZfOETpN6uLYL59bjUw7
-        3ZtDEl1ptJd3lBH/YqVGQURg++t8zLTAgvkLDDjC0xlZordvUZD7FM7PuKAnveYRmqXSla
-        GDfJLvQ4gCaN7lLJNOM/8tv0yFs1MNs=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-JV7DPAt1OSe2mFgvDhQTVw-1; Tue, 07 Jul 2020 15:30:12 -0400
-X-MC-Unique: JV7DPAt1OSe2mFgvDhQTVw-1
-Received: by mail-qk1-f199.google.com with SMTP id g12so29304699qko.19
-        for <linux-pci@vger.kernel.org>; Tue, 07 Jul 2020 12:30:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=01varJ2me0tZRb1RA3CrsAfeu4lanBS1IdqwDINnieI=;
-        b=uGC35rLq0XWzhOZ8QmEXlA8lsYVhJwXqvzXT6z/p8QCY/hXXRYoKy6BFj7wAGmXqz+
-         tyuyoMK3/rxwcTakzLkq8SKLT+ygri0w2N6phR7XGBY7qupP9RTJ1inHrPgnXEYd3NwL
-         57vdi/v9h7bJCilbjPSS7zpzcf2fUuNrJRjVXP9tNiVo/uXL3f2/RYDYMNufCMv6mXNJ
-         Lf8fDerGOmgO7J9M5NMQvswpCOeGu6WkZuR+zn+8zUpGJYM7ltqxSgBOchFKtfrkdosE
-         OdRE66zuKDMD6tEGzaOT6j5bbRSd25yYeQ+9KT5ykLRchWehYTQ0xcS3ETfNSgHg26R7
-         ou1g==
-X-Gm-Message-State: AOAM532+wdb29LXv1uVTF1O9kNoOxVMnf9s9ZYZDaST+G75V4ezLh2jA
-        pc6S5kI303AHNYraIrgf6Dy8fQk8SxvU5yxpT28IiTWD8wc1qOxMwlL5Xh3mVYcGzjImyVmu2/j
-        YsWef3/ieD9tibmg7ldxx46YFJfaGTJItvF2f
-X-Received: by 2002:a37:bc07:: with SMTP id m7mr42065259qkf.381.1594150211992;
-        Tue, 07 Jul 2020 12:30:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwhr/AYWU9/v6yT0D8nQ5071qK657Spoxv8rwcHHbjJzBu3qFSGO3VZL3ae2nm+OKmNcElROG8wmv/HMPp6//c=
-X-Received: by 2002:a37:bc07:: with SMTP id m7mr42065242qkf.381.1594150211723;
- Tue, 07 Jul 2020 12:30:11 -0700 (PDT)
+        id S1727908AbgGGTsc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jul 2020 15:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgGGTsc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:48:32 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B2A3206E9;
+        Tue,  7 Jul 2020 19:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594151312;
+        bh=P5O2RFLu94XJ2KvgAcsE/rb3opbTIi3P8AsDfD3kfr8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kJG6TbQBla3EU75pfHW7PNF5CNdHJOwnKVsOfw/Ou4hjqACK5vmngo3kQHGaL3N04
+         7BoUbaRSQokS3VB4Qb+p8Hlg4iTcm7b4x6cIBGED39F+QY0G4w/oBcIMu0IXa33mD0
+         x1X49fV48pLboorLO16u1x+WH2DAdt+sug6nAbeo=
+Date:   Tue, 7 Jul 2020 14:48:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     kan.liang@linux.intel.com
+Cc:     peterz@infradead.org, bhelgaas@google.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        jeffrey.t.kirsher@intel.com, olof@lixom.net,
+        dan.j.williams@intel.com, ak@linux.intel.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/7] PCI/portdrv: Create a platform device for the perf
+ uncore driver
+Message-ID: <20200707194830.GA372615@bjorn-Precision-5520>
 MIME-Version: 1.0
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 7 Jul 2020 21:30:00 +0200
-Message-ID: <CACO55tsAEa5GXw5oeJPG=mcn+qxNvspXreJYWDJGZBy5v82JDA@mail.gmail.com>
-Subject: nouveau regression with 5.7 caused by "PCI/PM: Assume ports without
- DLL Link Active train links in 100 ms"
-To:     Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593709517-108857-2-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi everybody,
+[+cc Stephane in case he has thoughts on the perf driver claim issue]
 
-with the mentioned commit Nouveau isn't able to load firmware onto the
-GPU on one of my systems here. Even though the issue doesn't always
-happen I am quite confident this is the commit breaking it.
+On Thu, Jul 02, 2020 at 10:05:11AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> On Snow Ridge server, several performance monitoring counters are added
+> in the Root Port Configuration Space of CPU Complex PCIe Root Ports A,
+> which can be used to collect the performance data between the PCIe
+> devices and the components (in M2IOSF) which are responsible for
+> translating and managing the requests to/from the device. The
+> performance data is very useful for analyzing the performance of the
+> PCIe devices.
+> 
+> However, the perf uncore driver cannot be loaded to register a
+> performance monitoring unit (PMU) for the counters, because the PCIe
+> Root Ports device already has a bonded driver portdrv_pci.
+> 
+> To enable the uncore PMU support for these counters on the uncore
+> driver, a new solution should be introduced, which has to meet the
+> requirements as below:
+> - must have a reliable way to find the PCIe Root Port device from the
+>   uncore driver;
+> - must be able to access the uncore counters of the PCIe Root Port
+>   device from the uncore driver;
+> - must support hotplug. When the PCIe Root Port device is removed, the
+>   uncore driver has to be notified and unregisters the uncore PMU.
+> 
+> A new platform device 'perf_uncore_pcieport' is introduced as part of
+> the new solution, which can facilitate the enabling of the uncore PMU in
+> the uncore driver. The new platform device
+> - is a child device of the PCIe Root Port device. It's allocated when
+>   the PCIe Root Ports A device is probed. (For SNR, the PMU counters are
+>   only located in the configuration space of the PCIe Root Ports A.)
+> - stores its pdev as the private driver data pointer of the PCIe Root
+>   Ports A. The pdev can be easily retrieved to check the existence of
+>   the platform device when removing the PCIe Root Ports A.
+> - is unregistered when the PCIe Root Port A is removed. The remove()
+>   method which is provided in the uncore driver will be invoked. The
+>   uncore PMU will be unregistered as well.
+> - doesn't share any memory and IRQ resources. The uncore driver will
+>   only touch the PMU counters in the configuration space of the PCIe
+>   Root Port A.
 
-I am still digging into the issue and trying to figure out what
-exactly breaks, but it shows up in different ways. Either we are not
-able to boot the engines on the GPU or the GPU becomes unresponsive.
-Btw, this is also a system where our runtime power management issue
-shows up, so maybe there is indeed something funky with the bridge
-controller.
+I have to admit this is clever.  I don't really *like* it, but we
+don't have any very good alternatives at the moment.
 
-Just pinging you in case you have an idea on how this could break Nouveau
+I don't like the idea of a list of PCI IDs
+(perf_uncore_pcieport_ids[]) below that must be updated for every
+device that needs something like this.  That PCI ID information is
+normally in the drivers themselves, not in bus-level code like this.
 
-most of the times it shows up like this:
-nouveau 0000:01:00.0: acr: AHESASC binary failed
+And I don't like the way this subverts the device ownership model.
+Now we have several drivers (pciehp, aer, dpc, etc, plus this new perf
+driver) that share the same PCI device.  And we rely on the assumption
+that none of these drivers interferes with the others.
 
-Sometimes it works at boot and fails at runtime resuming with random
-faults. So I will be investigating a bit more, but yeah... I am super
-sure the commit triggered this issue, no idea if it actually causes
-it.
+I think the best way to deal with this would be to incorporate the
+existing portdrv users (pciehp, aer, dpc, etc) directly into the PCI
+core so portdrv would not use pci_register_driver(), leaving the Root
+Port device available for the perf driver to claim it the normal way.
+But realistically I don't know when or even whether this will be done.
 
-git bisect log (had to do a second bisect, that's why the first bad
-and good commits appear a bit random):
+I think Stephane has worked around this problem in a different way,
+IIRC by using pci_get_device() in a perf driver to find Ports of
+interest.  That also subverts the device ownership model, and it
+doesn't work naturally with hotplug, but at least it gets the device
+IDs out of the PCI core and into the driver where they belong.  And
+there's value in solving the same problem in the same way.
 
-git bisect start
-# bad: [a92b984a110863b42a3abf32e3f049b02b19e350] clk: samsung:
-exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
-git bisect bad a92b984a110863b42a3abf32e3f049b02b19e350
-# good: [4da858c086433cd012c0bb16b5921f6fafe3f803] Merge branch
-'linux-5.7' of git://github.com/skeggsb/linux into drm-fixes
-git bisect good 4da858c086433cd012c0bb16b5921f6fafe3f803
-# good: [d5dfe4f1b44ed532653c2335267ad9599c8a698e] Merge tag
-'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
-git bisect good d5dfe4f1b44ed532653c2335267ad9599c8a698e
-# good: [b24e451cfb8c33ef5b8b4a80e232706b089914fb] ipv6: fix
-IPV6_ADDRFORM operation logic
-git bisect good b24e451cfb8c33ef5b8b4a80e232706b089914fb
-# good: [d843ffbce812742986293f974d55ba404e91872f] nvmet: fix memory
-leak when removing namespaces and controllers concurrently
-git bisect good d843ffbce812742986293f974d55ba404e91872f
-# good: [be66f10a60e3ec0b589898f78a428bcb34095730] staging: wfx: fix
-output of rx_stats on big endian hosts
-git bisect good be66f10a60e3ec0b589898f78a428bcb34095730
-# good: [a4482984c41f5cc1d217aa189fe51bbbc0500f98] s390/qdio:
-consistently restore the IRQ handler
-git bisect good a4482984c41f5cc1d217aa189fe51bbbc0500f98
-# good: [bec32a54a4de62b46466f4da1beb9ddd42db81b8] f2fs: fix potential
-use-after-free issue
-git bisect good bec32a54a4de62b46466f4da1beb9ddd42db81b8
-# bad: [044aaaa8b1b15adb397ce423a6d97920a46b3893] habanalabs: increase
-timeout during reset
-git bisect bad 044aaaa8b1b15adb397ce423a6d97920a46b3893
-# good: [6fe8ed270763a6a2e350bf37eee0f3857482ed48] arm64: dts: qcom:
-db820c: Fix invalid pm8994 supplies
-git bisect good 6fe8ed270763a6a2e350bf37eee0f3857482ed48
-# good: [363e8bfc96b4e9d9e0a885408cecaf23df468523] tty: n_gsm: Fix
-waking up upper tty layer when room available
-git bisect good 363e8bfc96b4e9d9e0a885408cecaf23df468523
-# bad: [afaff825e3a436f9d1e3986530133b1c91b54cd1] PCI/PM: Assume ports
-without DLL Link Active train links in 100 ms
-git bisect bad afaff825e3a436f9d1e3986530133b1c91b54cd1
-# good: [be0ed15d88c65de0e28ff37a3b242e65a782fd98] HID: Add quirks for
-Trust Panora Graphic Tablet
-git bisect good be0ed15d88c65de0e28ff37a3b242e65a782fd98
-# first bad commit: [afaff825e3a436f9d1e3986530133b1c91b54cd1] PCI/PM:
-Assume ports without DLL Link Active train links in 100 ms
+Wait a minute!  You've already used the pci_get_device() strategy
+several times:
 
+  2b3b76b5ec67 ("perf/x86/intel/uncore: Add Ice Lake server uncore support")
+  fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
+  ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
+
+So what's really different about *this* situation?  Why would you not
+just continue using the same strategy?
+
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  drivers/pci/pcie/portdrv_pci.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index 3acf151..47e33b2 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/init.h>
+>  #include <linux/aer.h>
+>  #include <linux/dmi.h>
+> +#include <linux/platform_device.h>
+>  
+>  #include "../pci.h"
+>  #include "portdrv.h"
+> @@ -90,6 +91,40 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+>  #define PCIE_PORTDRV_PM_OPS	NULL
+>  #endif /* !PM */
+>  
+> +static const struct pci_device_id perf_uncore_pcieport_ids[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a) },
+> +	{ },
+> +};
+> +
+> +static void perf_platform_device_register(struct pci_dev *dev)
+> +{
+> +	struct platform_device *pdev;
+> +
+> +	if (!pci_match_id(perf_uncore_pcieport_ids, dev))
+> +		return;
+> +
+> +	pdev = platform_device_alloc("perf_uncore_pcieport", PLATFORM_DEVID_AUTO);
+> +	if (!pdev)
+> +		return;
+> +
+> +	pdev->dev.parent = &dev->dev;
+> +
+> +	if (platform_device_add(pdev)) {
+> +		platform_device_put(pdev);
+> +		return;
+> +	}
+> +
+> +	pci_set_drvdata(dev, pdev);
+> +}
+> +
+> +static void perf_platform_device_unregister(struct pci_dev *dev)
+> +{
+> +	struct platform_device *pdev = pci_get_drvdata(dev);
+> +
+> +	if (pdev)
+> +		platform_device_unregister(pdev);
+> +}
+> +
+>  /*
+>   * pcie_portdrv_probe - Probe PCI-Express port devices
+>   * @dev: PCI-Express port device being probed
+> @@ -113,6 +148,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	if (status)
+>  		return status;
+>  
+> +	perf_platform_device_register(dev);
+> +
+>  	pci_save_state(dev);
+>  
+>  	dev_pm_set_driver_flags(&dev->dev, DPM_FLAG_NO_DIRECT_COMPLETE |
+> @@ -142,6 +179,7 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>  		pm_runtime_dont_use_autosuspend(&dev->dev);
+>  	}
+>  
+> +	perf_platform_device_unregister(dev);
+>  	pcie_port_device_remove(dev);
+>  }
+>  
+> -- 
+> 2.7.4
+> 
