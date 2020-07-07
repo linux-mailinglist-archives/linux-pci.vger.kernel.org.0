@@ -2,160 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B320217B38
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 00:46:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48608217B7B
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 01:05:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgGGWqV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jul 2020 18:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45134 "EHLO
+        id S1728740AbgGGXDm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jul 2020 19:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729455AbgGGWqN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jul 2020 18:46:13 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6B1C08C5DC
-        for <linux-pci@vger.kernel.org>; Tue,  7 Jul 2020 15:46:13 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id r17so48933221ybj.22
-        for <linux-pci@vger.kernel.org>; Tue, 07 Jul 2020 15:46:13 -0700 (PDT)
+        with ESMTP id S1728001AbgGGXDm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jul 2020 19:03:42 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D26C061755;
+        Tue,  7 Jul 2020 16:03:41 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id dm19so33817171edb.13;
+        Tue, 07 Jul 2020 16:03:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=n09L38FqLziZB80XiEEa4U3Rbl7E07buKJV52yFHq04=;
-        b=Gc/SRTnIxUHoSJi+odkT9ED/cAZBziEF60Mve91fM9ATmPS3FGriWKvJORZEl5Z0i6
-         Rt1q9Vj5DMEAtIDwvsa0svlN3MYRac1QJf+VBjUzkBJ22HvTQa8Now99YUMjCbAmUArG
-         5X+9HsquJ7uXVe4Pxn4vmk60HOhkEddPfyOyNrHxPW1zHyAcQIwk3gp0EqwnVfa3GZY4
-         q4JcOTH38ilJwF+ZrP6i0omqbEBDlm/Qojb6gfUCxgu5Ue6rglL1jV4JOPjCNpS+ODQj
-         hyRyy82rMnXmypFgaIK9L3UolmGvLn5iAPdb1li5GfA7hM9hQC5Y3D/8RLFnLgvk5HSZ
-         pO1w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kTq/VH/p4TyQ5wPRzJwyOD8JsPzalLXL/D+9ThOBTJk=;
+        b=E+virPP7R0DNmaCjVGtSUu/QcvSxTf4R7sOk6VcFsmCvGe0J84CcBd5HeNBiHdEGFF
+         JmZI2QMdJ3elJ5MqdzZR/53PLHZyXBiuCFyv35oO8MHG9CZxR2Iq5EhY68cQJh6tS3FM
+         8criJyFHjuNIStjyC28tRfZTtvROoXe7nu6rzuI3busfBGfKDruR6mMoncEkVbIcPRMU
+         3N/NxjKHK7cc70B3dsJJ2bJ/tFj3dVtUDJmcxY3vtXJ/MTH3h7iZdQ/G7oUXSqNkMlnJ
+         ECGvJ/Ssb2a2O9P/PsgcX12j0Sc5qUzPp+C5ZZ0LsYvGa3vZu43Jj4nfAT10J0pBwVjO
+         sZhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=n09L38FqLziZB80XiEEa4U3Rbl7E07buKJV52yFHq04=;
-        b=BTDvIgou4erDBx03KPYMH8OEl12VKJ2o4KIcK67ZCVgHdRKNFU/SAsFV1YVQMc2Hx9
-         nuYyTyxXjvk9tCcV5qHUvNi1hXqFn5fBVCdGKGXtvWznV/6Mii1tPkXnkDWpoyCEifLv
-         JtGLWQ8rWVqkmbGiM9M8gKzTl/nBGCXMbaDFgM4R9uo8oyhAkLb0r8W2vWzmj2EKlXwU
-         HIm2SpbcqVAX3M2OgC4FyZ1geV6aCTGrykEWoMFjboU/ajULn7xEhQG6e8u6r/1ntETE
-         snKucGg+uK667hut0itAr3n20CrJqL72jCKvKPwBWTtwh2cZkNZkh6y6z0SuAj/1csbj
-         8g7A==
-X-Gm-Message-State: AOAM530OCxT6uJcjA2MYkUUXMPOSrSjpuLfts2fCi/zAaTJIwJISi8G1
-        MILsIytz5aaUngQ20VT2AV/HS3wt9yLq
-X-Google-Smtp-Source: ABdhPJyqUZg0SfkVxfU/L4DX91czSrlqUnkerJoAkpXyDw0tpSP0A/Ld1JaoBY9wWt59l+/b2cp9XcCWy7MR
-X-Received: by 2002:a25:8007:: with SMTP id m7mr31698114ybk.60.1594161972909;
- Tue, 07 Jul 2020 15:46:12 -0700 (PDT)
-Date:   Tue,  7 Jul 2020 15:46:04 -0700
-In-Reply-To: <20200707224604.3737893-1-rajatja@google.com>
-Message-Id: <20200707224604.3737893-4-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200707224604.3737893-1-rajatja@google.com>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH v4 4/4] PCI/ACS: Enable PCI_ACS_TB for untrusted/external-facing
- devices
-From:   Rajat Jain <rajatja@google.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kTq/VH/p4TyQ5wPRzJwyOD8JsPzalLXL/D+9ThOBTJk=;
+        b=qPcEAtJ7p9UsL7lAOBpl+0zewZCrDH8dqEtaTjiXsyae++iZae88IfBCz+6TBKPvYT
+         KGXBTrNLPARMtt7GpDdJsVkpzv6OIVZlkvzPZ3rk5huwbEKzneHwy61IT3TmkY9Z/XTD
+         Rtfbon1E6TX8wHm24CBuDYOYsdVMGWCEpFZ4hV5voARPGI6Ab4mlATOIK3zYXMHxQNah
+         /ymv5Tu6UGJwr4qqA+ZZfvYjIjapZiF3iqIy4eY6zjgxOT7FQf7MiV/9vK1elfKY401B
+         Zj6IJFRI+Lh+WZGu8FqfsTte3oweqfGxWm2SM/ynf1TtR3Q7lgyfv4+lyNEF/fKo4Vp5
+         ne1w==
+X-Gm-Message-State: AOAM5317PrAOBbBOleAhSzdZsff0hux/xPg3vuu0J+jVR2Ftxjc+0TOM
+        sbYEn+MTGuKivZ+VZ0fUbF4=
+X-Google-Smtp-Source: ABdhPJyCkNHIU7Mg/3LR3/ROH8pv8slqj90hjhE3e1+AdXgWeG9fxZ5hQsBoE731r/kg9QH8KEcJqA==
+X-Received: by 2002:aa7:d989:: with SMTP id u9mr46087113eds.85.1594163020678;
+        Tue, 07 Jul 2020 16:03:40 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id f10sm27096310edx.5.2020.07.07.16.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 16:03:39 -0700 (PDT)
+From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        linux-acpi@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Stanislaw Gruszka <stf_xl@wp.pl>
+Subject: [PATCH 0/13] PCI: Remove '*val = 0' from pcie_capability_read_*()
+Date:   Wed,  8 Jul 2020 00:03:11 +0200
+Message-Id: <20200707220324.8425-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When enabling ACS, enable translation blocking for external facing ports
-and untrusted devices.
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v4: Add braces to avoid warning from kernel robot
-    print warning for only external-facing devices.
-v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
-    Minor code comments fixes.
-v2: Commit log change
+MERGING:
+Only Patch 13/13 depend on all preceeding patchs. All other patches are
+independent of one another. Hence, please merge PATCH 13/13 only after
+other patches in this series have been merged.
 
- drivers/pci/pci.c    |  8 ++++++++
- drivers/pci/quirks.c | 15 +++++++++++++++
- 2 files changed, 23 insertions(+)
+PATCH 6/13:
+Make the function set status to "Power On" by default and only set to
+Set "Power Off" only if pcie_capability_read_word() is successful and
+(slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF. 
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 73a8627822140..a5a6bea7af7ce 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -876,6 +876,14 @@ static void pci_std_enable_acs(struct pci_dev *dev)
- 	/* Upstream Forwarding */
- 	ctrl |= (cap & PCI_ACS_UF);
- 
-+	/* Enable Translation Blocking for external devices */
-+	if (dev->external_facing || dev->untrusted) {
-+		if (cap & PCI_ACS_TB)
-+			ctrl |= PCI_ACS_TB;
-+		else if (dev->external_facing)
-+			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
-+	}
-+
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
- }
- 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b341628e47527..bb22b46c1d719 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
- 	}
- }
- 
-+/*
-+ * Currently this quirk does the equivalent of
-+ * PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
-+ *
-+ * TODO: This quirk also needs to do equivalent of PCI_ACS_TB,
-+ * if dev->external_facing || dev->untrusted
-+ */
- static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
- {
- 	if (!pci_quirk_intel_pch_acs_match(dev))
-@@ -4973,6 +4980,14 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
- 	ctrl |= (cap & PCI_ACS_CR);
- 	ctrl |= (cap & PCI_ACS_UF);
- 
-+	/* Enable Translation Blocking for external devices */
-+	if (dev->external_facing || dev->untrusted) {
-+		if (cap & PCI_ACS_TB)
-+			ctrl |= PCI_ACS_TB;
-+		else if (dev->external_facing)
-+			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
-+	}
-+
- 	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
- 
- 	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
+PATCH 1/13 to 12/13:
+Check the return value of pcie_capability_read_*() to ensure success or
+confirm failure. While maintaining these functions, this ensures that the
+changes in PATCH 13/13 does not introduce any bug. 
+
+PATCH 13/13:
+There are several reasons why a PCI capability read may fail whether the
+device is present or not. If this happens, pcie_capability_read_*() will
+return -EINVAL/PCIBIOS_BAD_REGISTER_NUMBER or PCIBIOS_DEVICE_NOT_FOUND
+and *val is set to 0.
+
+This behaviour if further ensured by this code inside
+pcie_capability_read_*()
+
+ ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+ /*
+  * Reset *val to 0 if pci_read_config_dword() fails, it may
+  * have been written as 0xFFFFFFFF if hardware error happens
+  * during pci_read_config_dword().
+  */
+ if (ret)
+	 *val = 0;
+ return ret;
+
+a) Since all pci_generic_config_read() does is read a register value,
+it may return success after reading a ~0 which *may* have been fabricated
+by the PCI host bridge due to a read timeout. Hence pci_read_config_*() 
+will return success with a fabricated ~0 in *val, indicating a problem.
+In this case, the assumed behaviour of  pcie_capability_read_*() will be
+wrong. To avoid error slipping through, more checks are necessary.
+
+b) pci_read_config_*() will return PCIBIOS_DEVICE_NOT_FOUND only if 
+dev->error_state = pci_channel_io_perm_failure (i.e. 
+pci_dev_is_disconnected()) or if pci_generic_config_read() can't find the
+device. In both cases *val is initially set to ~0 but as shown in the code
+above pcie_capability_read_*() resets it back to 0. Even with this effort,
+drivers still have to perform validation checks more so if 0 is a valid
+value.
+
+Most drivers only consider the case (b) and in some cases, there is the 
+expectation that on timeout *val has a fabricated value of ~0, which *may*
+not always be true as explained in (a).
+
+In any case, checks need to be done to validate the value read and maybe
+confirm which error has occurred. It is better left to the drivers to do.
+
+Check the return value of pcie_capability_read_dword() to ensure success
+and avoid bug as a result of Patch 13/13.
+Remove the reset of *val to 0 when pci_read_config_*() fails.
+
+
+Bolarinwa Olayemi Saheed (13):
+  IB/hfi1: Check the return value of pcie_capability_read_*()
+  misc: rtsx: Check the return value of pcie_capability_read_*()
+  ath9k: Check the return value of pcie_capability_read_*()
+  iwlegacy: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Make "Power On" the default 
+  PCI/ACPI: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: Check the return value of pcie_capability_read_*()
+  PCI/PM: Check return value of pcie_capability_read_*()
+  PCI/AER: Check the return value of pcie_capability_read_*()
+  PCI/ASPM: Check the return value of pcie_capability_read_*()
+  PCI: Remove '*val = 0' from pcie_capability_read_*()
+
+ drivers/net/wireless/ath/ath9k/pci.c         | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ drivers/infiniband/hw/hfi1/aspm.c | 7 ++++---
+ drivers/misc/cardreader/rts5227.c | 5 +++--
+ drivers/misc/cardreader/rts5249.c | 5 +++--
+ drivers/misc/cardreader/rts5260.c | 5 +++--
+ drivers/misc/cardreader/rts5261.c | 5 +++--
+ drivers/pci/pcie/aer.c  |  5 +++--
+ drivers/pci/pcie/aspm.c | 33 +++++++++++++++++----------------
+ drivers/pci/hotplug/pciehp_hpc.c | 47 ++++++++++++++++----------------
+ drivers/pci/pci-acpi.c           | 10 ++++---
+ drivers/pci/probe.c              | 29 ++++++++++++--------
+ drivers/pci/access.c | 14 --------------
+ 13 files changed, 87 insertions(+), 87 deletions(-)
+
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.18.2
 
