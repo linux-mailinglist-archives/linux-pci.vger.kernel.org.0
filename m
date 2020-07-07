@@ -2,104 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA778216E50
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 16:02:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD486216E5B
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 16:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgGGOCr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jul 2020 10:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41682 "EHLO mail.kernel.org"
+        id S1727981AbgGGOFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jul 2020 10:05:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:51942 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgGGOCr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:02:47 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB9ED20738;
-        Tue,  7 Jul 2020 14:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594130566;
-        bh=edIgc1HsmNAf0Fn0SMHWtli5jUaKGL0947RRvOW2G+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yXHwPMNojeUXhMOEmzHyHl8EmzY47rKX1qvX5FKtkoDiZpK5tGx06I9dluEM8fJhG
-         XCCUlR4qSly/5HxmgHBQ7kXUsBS2Y87+39MBCMt+KqI2CxuDJ7zeGq7wExXuQgnbNK
-         cB6vrrfdgounGRCkKNx89GXdGFkMpmrVYJhtGaGk=
-Received: by pali.im (Postfix)
-        id A62ABBF7; Tue,  7 Jul 2020 16:02:44 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 16:02:44 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
+        id S1726805AbgGGOFV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:05:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4BDAC0A;
+        Tue,  7 Jul 2020 07:05:20 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 294EF3F68F;
+        Tue,  7 Jul 2020 07:05:19 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 15:05:16 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Indicate error in 'val' when config read
- fails
-Message-ID: <20200707140244.uhmyoqd5mblz5ids@pali>
-References: <20200601130315.18895-1-pali@kernel.org>
- <20200619105618.aksoivu4gb5ex3s3@pali>
- <20200707135311.GB17163@e121166-lin.cambridge.arm.com>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/12] Multiple fixes in PCIe qcom driver
+Message-ID: <20200707140516.GC17163@e121166-lin.cambridge.arm.com>
+References: <20200615210608.21469-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200707135311.GB17163@e121166-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 07 July 2020 14:53:11 Lorenzo Pieralisi wrote:
-> On Fri, Jun 19, 2020 at 12:56:18PM +0200, Pali Rohár wrote:
-> > Hello Lorenzo! Could you please review this patch?
-> > 
-> > On Monday 01 June 2020 15:03:15 Pali Rohár wrote:
-> > > Most callers of config read do not check for return value. But most of the
-> > > ones that do, checks for error indication in 'val' variable.
-> > > 
-> > > This patch updates error handling in advk_pcie_rd_conf() function. If PIO
-> > > transfer fails then 'val' variable is set to 0xffffffff which indicates
-> > > failture.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > 
-> > I should add credit for Bjorn as he found this issue
+On Mon, Jun 15, 2020 at 11:05:56PM +0200, Ansuel Smith wrote:
+> This contains multiple fix for PCIe qcom driver.
+> Some optional reset and clocks were missing.
+> Fix a problem with no PARF programming that cause kernel lock on load.
+> Add support to force gen 1 speed if needed. (due to hardware limitation)
+> Add ipq8064 rev 2 support that use a different tx termination offset.
 > 
-> Could you provide a lore archive link to the relevant
-> discussion please ? I will apply it then.
-
-Hello Lorenzo! Here is link to the Bjorn's email:
-https://lore.kernel.org/linux-pci/20200528162604.GA323482@bjorn-Precision-5520/
-
-> Lorenzo
+> v7:
+> * Rework GEN1 patch
 > 
-> > Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> > 
-> > > ---
-> > >  drivers/pci/controller/pci-aardvark.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > index 53a4cfd7d377..783a7f1f2c44 100644
-> > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > @@ -691,8 +691,10 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
-> > >  	advk_writel(pcie, 1, PIO_START);
-> > >  
-> > >  	ret = advk_pcie_wait_pio(pcie);
-> > > -	if (ret < 0)
-> > > +	if (ret < 0) {
-> > > +		*val = 0xffffffff;
-> > >  		return PCIBIOS_SET_FAILED;
-> > > +	}
-> > >  
-> > >  	advk_pcie_check_pio_status(pcie);
-> > >  
-> > > -- 
-> > > 2.20.1
-> > > 
+> v6:
+> * Replace custom define
+> * Move define not used in 07 to 08
+> 
+> v5:
+> * Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
+> 
+> v4:
+> * Fix grammar error across all patch subject
+> * Use bulk api for clks
+> * Program PARF only in ipq8064 SoC
+> * Program tx term only in ipq8064 SoC
+> * Drop configurable tx-dempth rx-eq
+> * Make added clk optional
+> 
+> v3:
+> * Fix check reported by checkpatch --strict
+> * Rename force_gen1 to gen
+> 
+> v2:
+> * Drop iATU programming (already done in pcie init)
+> * Use max-link-speed instead of force-gen1 custom definition
+> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+> * Introduce a new variant for different revision of ipq8064
+> 
+> Abhishek Sahu (1):
+>   PCI: qcom: Change duplicate PCI reset to phy reset
+> 
+> Ansuel Smith (10):
+>   PCI: qcom: Add missing ipq806x clocks in PCIe driver
+>   dt-bindings: PCI: qcom: Add missing clks
+>   PCI: qcom: Add missing reset for ipq806x
+>   dt-bindings: PCI: qcom: Add ext reset
+>   PCI: qcom: Use bulk clk api and assert on error
+>   PCI: qcom: Define some PARF params needed for ipq8064 SoC
+>   PCI: qcom: Add support for tx term offset for rev 2.1.0
+>   PCI: qcom: Add ipq8064 rev2 variant
+>   dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
+>   PCI: qcom: Replace define with standard value
+> 
+> Sham Muthayyan (1):
+>   PCI: qcom: Support pci speed set for ipq806x
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
+>  2 files changed, 128 insertions(+), 73 deletions(-)
+
+ACK missing on patches 8,9,12 please let me know how to proceed,
+thanks.
+
+Lorenzo
