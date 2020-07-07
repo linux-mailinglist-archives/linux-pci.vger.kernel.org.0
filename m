@@ -2,78 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48608217B7B
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 01:05:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 010FF217B81
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 01:05:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgGGXDm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jul 2020 19:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
+        id S1728955AbgGGXDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jul 2020 19:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgGGXDm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jul 2020 19:03:42 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D26C061755;
-        Tue,  7 Jul 2020 16:03:41 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id dm19so33817171edb.13;
-        Tue, 07 Jul 2020 16:03:41 -0700 (PDT)
+        with ESMTP id S1728001AbgGGXDu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jul 2020 19:03:50 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63A3C061755;
+        Tue,  7 Jul 2020 16:03:49 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so44013275eje.7;
+        Tue, 07 Jul 2020 16:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kTq/VH/p4TyQ5wPRzJwyOD8JsPzalLXL/D+9ThOBTJk=;
-        b=E+virPP7R0DNmaCjVGtSUu/QcvSxTf4R7sOk6VcFsmCvGe0J84CcBd5HeNBiHdEGFF
-         JmZI2QMdJ3elJ5MqdzZR/53PLHZyXBiuCFyv35oO8MHG9CZxR2Iq5EhY68cQJh6tS3FM
-         8criJyFHjuNIStjyC28tRfZTtvROoXe7nu6rzuI3busfBGfKDruR6mMoncEkVbIcPRMU
-         3N/NxjKHK7cc70B3dsJJ2bJ/tFj3dVtUDJmcxY3vtXJ/MTH3h7iZdQ/G7oUXSqNkMlnJ
-         ECGvJ/Ssb2a2O9P/PsgcX12j0Sc5qUzPp+C5ZZ0LsYvGa3vZu43Jj4nfAT10J0pBwVjO
-         sZhw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=x34hXCcOq59WMJYswPIxPqVvlEOUWxWGz29l8+4Mdjw=;
+        b=d1wMkPbjCRoYy7TJn/HYtJHqbPRdbaCl9YnetgtC3UW52u/JOaVgwix9/i2yGw77LC
+         r50eNX0fUNjMOiVj+XEKZMjAaQp+qT93i5Db/X5tSN7V1YnKbTgnV2wn2afqodBgRClN
+         CBbGjwiNWrGSsfBhxIWybQZvDfdzbRisgvH4XWGSI5qPpF2UU9iH20AzzjEWhFColZEO
+         87QIjpQz2rzfXjNXlX1ZIL6fqUReVqNcuJtUFIwXMRceNd509uB0tszSaSNrgDwHOYa5
+         BIi4wMmyG0MAMbl1p5Ue8tXRTmMN4Lgik+gsr0QN1FIBXhMjv+h/pZR7CnXO00h1GbG0
+         KV7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kTq/VH/p4TyQ5wPRzJwyOD8JsPzalLXL/D+9ThOBTJk=;
-        b=qPcEAtJ7p9UsL7lAOBpl+0zewZCrDH8dqEtaTjiXsyae++iZae88IfBCz+6TBKPvYT
-         KGXBTrNLPARMtt7GpDdJsVkpzv6OIVZlkvzPZ3rk5huwbEKzneHwy61IT3TmkY9Z/XTD
-         Rtfbon1E6TX8wHm24CBuDYOYsdVMGWCEpFZ4hV5voARPGI6Ab4mlATOIK3zYXMHxQNah
-         /ymv5Tu6UGJwr4qqA+ZZfvYjIjapZiF3iqIy4eY6zjgxOT7FQf7MiV/9vK1elfKY401B
-         Zj6IJFRI+Lh+WZGu8FqfsTte3oweqfGxWm2SM/ynf1TtR3Q7lgyfv4+lyNEF/fKo4Vp5
-         ne1w==
-X-Gm-Message-State: AOAM5317PrAOBbBOleAhSzdZsff0hux/xPg3vuu0J+jVR2Ftxjc+0TOM
-        sbYEn+MTGuKivZ+VZ0fUbF4=
-X-Google-Smtp-Source: ABdhPJyCkNHIU7Mg/3LR3/ROH8pv8slqj90hjhE3e1+AdXgWeG9fxZ5hQsBoE731r/kg9QH8KEcJqA==
-X-Received: by 2002:aa7:d989:: with SMTP id u9mr46087113eds.85.1594163020678;
-        Tue, 07 Jul 2020 16:03:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=x34hXCcOq59WMJYswPIxPqVvlEOUWxWGz29l8+4Mdjw=;
+        b=S9ON8//aXuRJ8kO6ZkOtsUx1Y4mE16L1mau/gJn+vlcZkEy12sJtMv7M+6/GcaGLmK
+         OkdfCvC2WyIqs5Lt31/ne70nL0GVNsLgxc+9VbBdKJ+6gyf8WqVehhcrcNOai4AxmZyC
+         P7nuegzWljYLPXERtAbcaV0qN+FAV2wp2kvlAyW4kv7NXLB7Jyeo84yr9hkWOewKXEE+
+         Dij/6QcWNwTm1GwziXEaxQbUtKY8f6gMEzzx501vTQRZjKf2NcopzNI2nVCtm4xz8ClY
+         V2aMSfZ1RWnq/oCgLuzv6NZlA1wF5LYqMiJr5Pf4EnkCDAE9lZYMszee1iF47xC8BHbH
+         gHWw==
+X-Gm-Message-State: AOAM5305KnkNL6dNo8mAeYAfmMH1iJL5g5JGSN7lkNYhUbo1Fx4olRxW
+        4JRQl1ClLAF6MlemRaIT+AA=
+X-Google-Smtp-Source: ABdhPJwMi5t8+SwOH4qQAhVQzCugy87cSLNBZoVzPV8TP8kjpAMnP7DLxA+3/V4kzTpmayrI9WZM0w==
+X-Received: by 2002:a17:906:95d9:: with SMTP id n25mr50823340ejy.437.1594163028584;
+        Tue, 07 Jul 2020 16:03:48 -0700 (PDT)
 Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id f10sm27096310edx.5.2020.07.07.16.03.36
+        by smtp.gmail.com with ESMTPSA id f10sm27096310edx.5.2020.07.07.16.03.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 16:03:39 -0700 (PDT)
+        Tue, 07 Jul 2020 16:03:48 -0700 (PDT)
 From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
+        bjorn@helgaas.com, Lukas Wunner <lukas@wunner.de>,
+        skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        linux-acpi@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Stanislaw Gruszka <stf_xl@wp.pl>
-Subject: [PATCH 0/13] PCI: Remove '*val = 0' from pcie_capability_read_*()
-Date:   Wed,  8 Jul 2020 00:03:11 +0200
-Message-Id: <20200707220324.8425-1-refactormyself@gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 5/13] PCI: pciehp: Check the return value of pcie_capability_read_*()
+Date:   Wed,  8 Jul 2020 00:03:16 +0200
+Message-Id: <20200707220324.8425-6-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20200707220324.8425-1-refactormyself@gmail.com>
+References: <20200707220324.8425-1-refactormyself@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -81,97 +66,77 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-MERGING:
-Only Patch 13/13 depend on all preceeding patchs. All other patches are
-independent of one another. Hence, please merge PATCH 13/13 only after
-other patches in this series have been merged.
+On any failure pcie_capability_read_word() sets it's last parameter, *val
+to 0. If pci_config_read_word() fails the *val is reset to 0. Any function
+which check only for a frabricated ~0 which fail in this case.
 
-PATCH 6/13:
-Make the function set status to "Power On" by default and only set to
-Set "Power Off" only if pcie_capability_read_word() is successful and
-(slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF. 
+Include a check on the return value of pcie_capability_read_word() to
+confirm success or failure.
 
-PATCH 1/13 to 12/13:
-Check the return value of pcie_capability_read_*() to ensure success or
-confirm failure. While maintaining these functions, this ensures that the
-changes in PATCH 13/13 does not introduce any bug. 
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-PATCH 13/13:
-There are several reasons why a PCI capability read may fail whether the
-device is present or not. If this happens, pcie_capability_read_*() will
-return -EINVAL/PCIBIOS_BAD_REGISTER_NUMBER or PCIBIOS_DEVICE_NOT_FOUND
-and *val is set to 0.
+---
+ drivers/pci/hotplug/pciehp_hpc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-This behaviour if further ensured by this code inside
-pcie_capability_read_*()
-
- ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
- /*
-  * Reset *val to 0 if pci_read_config_dword() fails, it may
-  * have been written as 0xFFFFFFFF if hardware error happens
-  * during pci_read_config_dword().
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 53433b37e181..5af281d97d4f 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -86,10 +86,11 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+ {
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	u16 slot_status;
++	int ret;
+ 
+ 	do {
+-		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+-		if (slot_status == (u16) ~0) {
++		ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
++		if (ret || (slot_status == (u16) ~0)) {
+ 			ctrl_info(ctrl, "%s: no response from device\n",
+ 				  __func__);
+ 			return 0;
+@@ -156,6 +157,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+ {
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	u16 slot_ctrl_orig, slot_ctrl;
++	int ret;
+ 
+ 	mutex_lock(&ctrl->ctrl_lock);
+ 
+@@ -164,8 +166,8 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+ 	 */
+ 	pcie_wait_cmd(ctrl);
+ 
+-	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+-	if (slot_ctrl == (u16) ~0) {
++	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
++	if (ret || (slot_ctrl == (u16) ~0)) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+ 		goto out;
+ 	}
+@@ -430,7 +432,7 @@ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
+  * removed immediately after the check so the caller may need to take
+  * this into account.
+  *
+- * It the hotplug controller itself is not available anymore returns
++ * If the hotplug controller itself is not available anymore returns
+  * %-ENODEV.
   */
- if (ret)
-	 *val = 0;
- return ret;
-
-a) Since all pci_generic_config_read() does is read a register value,
-it may return success after reading a ~0 which *may* have been fabricated
-by the PCI host bridge due to a read timeout. Hence pci_read_config_*() 
-will return success with a fabricated ~0 in *val, indicating a problem.
-In this case, the assumed behaviour of  pcie_capability_read_*() will be
-wrong. To avoid error slipping through, more checks are necessary.
-
-b) pci_read_config_*() will return PCIBIOS_DEVICE_NOT_FOUND only if 
-dev->error_state = pci_channel_io_perm_failure (i.e. 
-pci_dev_is_disconnected()) or if pci_generic_config_read() can't find the
-device. In both cases *val is initially set to ~0 but as shown in the code
-above pcie_capability_read_*() resets it back to 0. Even with this effort,
-drivers still have to perform validation checks more so if 0 is a valid
-value.
-
-Most drivers only consider the case (b) and in some cases, there is the 
-expectation that on timeout *val has a fabricated value of ~0, which *may*
-not always be true as explained in (a).
-
-In any case, checks need to be done to validate the value read and maybe
-confirm which error has occurred. It is better left to the drivers to do.
-
-Check the return value of pcie_capability_read_dword() to ensure success
-and avoid bug as a result of Patch 13/13.
-Remove the reset of *val to 0 when pci_read_config_*() fails.
-
-
-Bolarinwa Olayemi Saheed (13):
-  IB/hfi1: Check the return value of pcie_capability_read_*()
-  misc: rtsx: Check the return value of pcie_capability_read_*()
-  ath9k: Check the return value of pcie_capability_read_*()
-  iwlegacy: Check the return value of pcie_capability_read_*()
-  PCI: pciehp: Check the return value of pcie_capability_read_*()
-  PCI: pciehp: Make "Power On" the default 
-  PCI/ACPI: Check the return value of pcie_capability_read_*()
-  PCI: pciehp: Check the return value of pcie_capability_read_*()
-  PCI: Check the return value of pcie_capability_read_*()
-  PCI/PM: Check return value of pcie_capability_read_*()
-  PCI/AER: Check the return value of pcie_capability_read_*()
-  PCI/ASPM: Check the return value of pcie_capability_read_*()
-  PCI: Remove '*val = 0' from pcie_capability_read_*()
-
- drivers/net/wireless/ath/ath9k/pci.c         | 5 +++--
- drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
- drivers/infiniband/hw/hfi1/aspm.c | 7 ++++---
- drivers/misc/cardreader/rts5227.c | 5 +++--
- drivers/misc/cardreader/rts5249.c | 5 +++--
- drivers/misc/cardreader/rts5260.c | 5 +++--
- drivers/misc/cardreader/rts5261.c | 5 +++--
- drivers/pci/pcie/aer.c  |  5 +++--
- drivers/pci/pcie/aspm.c | 33 +++++++++++++++++----------------
- drivers/pci/hotplug/pciehp_hpc.c | 47 ++++++++++++++++----------------
- drivers/pci/pci-acpi.c           | 10 ++++---
- drivers/pci/probe.c              | 29 ++++++++++++--------
- drivers/pci/access.c | 14 --------------
- 13 files changed, 87 insertions(+), 87 deletions(-)
-
+ int pciehp_card_present(struct controller *ctrl)
+@@ -591,8 +593,8 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 	}
+ 
+ read_status:
+-	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+-	if (status == (u16) ~0) {
++	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
++	if (ret || (status == (u16) ~0)) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+ 		if (parent)
+ 			pm_runtime_put(parent);
 -- 
 2.18.2
 
