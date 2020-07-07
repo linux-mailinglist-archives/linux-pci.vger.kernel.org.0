@@ -2,156 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19DE721659D
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 06:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE6E9216602
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 07:50:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgGGEyb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jul 2020 00:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728096AbgGGEya (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jul 2020 00:54:30 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22973C08C5DF
-        for <linux-pci@vger.kernel.org>; Mon,  6 Jul 2020 21:54:30 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id q192so17590425qka.13
-        for <linux-pci@vger.kernel.org>; Mon, 06 Jul 2020 21:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Qk/CudVh/aYmFA4VGFCO8mdbAWkl57VHCd1ZIJWN+1w=;
-        b=Xre+DO5bBquqMu+hdF9c3GWOfwJPU0JSYZ82fhlA0HFoIo0LganFlMRGd90xICWjvh
-         x6VqENjaJX+E6NmE7NvnAmKue5CkshpdqCfHOJDdbjwtbGNakh6+Y2o2MCQzOFHd8mWB
-         Tx6gwJgY9b5m33RdN7MXjvEI7lNExtH3p/MO6RXgh/of/7qxV2dhNwE5Ya8bmsH5mhBC
-         KVvnUlfyjdwVqd5LHb1/V/h1A+eW5DYc5Y2+BZt27U5BtA20FnqlrWGeEQKgYsXSbbew
-         xusxlAqAeT++ykRLTsGvPyIrcRpvzT4IW00uhXW1Wj6u8ayVQwdQHaPEUuR7QMoK/PRD
-         25lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Qk/CudVh/aYmFA4VGFCO8mdbAWkl57VHCd1ZIJWN+1w=;
-        b=kKm+TkKYkyGCCBHTSDVaaPQz5rGrcvSsYdLt2X7dvrLA5U8cNqIhz2potYkw+axMbt
-         TsSChmcBnabCjIjZDBHBkudYSpR/jqmfBgrJs1SbAHp8jxPrDEs3XqMY77r6Nz3srV67
-         kF5B6j/lZQBvWZnL7JbRwwpS/suvdodnuMHK6TZeafwg/vaHs+jqRcL0cz7XKZUn5PPN
-         YBMBmpLE2BMAJwKoQqyH8KeLZPf72izGbKvoSZM7nzE5kHp0RY294/+LRx6OtwK0g8F7
-         +QPVOY7C2sO2mEr+Qp2FXsFIloYLo6X6s9aA+akQwBo6AbXdOwntoY/IBIgdtIoF1KBt
-         S/kg==
-X-Gm-Message-State: AOAM530ofHscmKVT4WnPvLCaJpSO1ToFfAf68OqB/85PoAPj6BuBUMHo
-        MRUWXyf7bv4nqmw4hJWrldHdSXbpJg1C
-X-Google-Smtp-Source: ABdhPJxwPXvnk3sNJWoQC6YwOTWi9tymhjLuGByDfNWQcfhaj8ZWG0wbKLQWCrNYPqv0Xn0Z4pBVaY07uBDo
-X-Received: by 2002:a0c:aed6:: with SMTP id n22mr50763155qvd.70.1594097669245;
- Mon, 06 Jul 2020 21:54:29 -0700 (PDT)
-Date:   Mon,  6 Jul 2020 21:54:18 -0700
-In-Reply-To: <20200707045418.3517076-1-rajatja@google.com>
-Message-Id: <20200707045418.3517076-4-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200707045418.3517076-1-rajatja@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v3 4/4] PCI/ACS: Enable PCI_ACS_TB for untrusted/external-facing
- devices
-From:   Rajat Jain <rajatja@google.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
+        id S1728047AbgGGFuY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jul 2020 01:50:24 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:14118 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727789AbgGGFuY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Jul 2020 01:50:24 -0400
+Received: from localhost.localdomain (unknown [210.32.144.65])
+        by mail-app4 (Coremail) with SMTP id cS_KCgB3GeQJDQRfcPgrAw--.5099S4;
+        Tue, 07 Jul 2020 13:50:05 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] PCI: qcom: Fix runtime PM imbalance on error
+Date:   Tue,  7 Jul 2020 13:50:00 +0800
+Message-Id: <20200707055000.9453-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgB3GeQJDQRfcPgrAw--.5099S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfKFgE9r
+        Z8ZFsrCrs0grZavr9Fy3W3ZrySvasrX3W0ganYyF43ZFZa9rn8JrykZFZ8Aws8WF45Zr1k
+        t3yqvF1fCFWUCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
+        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
+        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18
+        McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+        1lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAF
+        wVW8WwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4I
+        kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+        WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+        0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWr
+        Zr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+        1UYxBIdaVFxhVjvjDU0xZFpf9x0JUP5rcUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgwNBlZdtO+R4gACsk
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When enabling ACS, enable translation blocking for external facing ports
-and untrusted devices.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
-v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
-    Minor code comments fixes.
-v2: Commit log change
 
- drivers/pci/pci.c    |  7 +++++++
- drivers/pci/quirks.c | 14 ++++++++++++++
- 2 files changed, 21 insertions(+)
+Changelog:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 73a8627822140..497ac05bf36e8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -876,6 +876,13 @@ static void pci_std_enable_acs(struct pci_dev *dev)
- 	/* Upstream Forwarding */
- 	ctrl |= (cap & PCI_ACS_UF);
+v2: - Remove redundant brackets.
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 138e1a2d21cc..12abdfbff5ca 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1339,10 +1339,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
  
-+	/* Enable Translation Blocking for external devices */
-+	if (dev->external_facing || dev->untrusted)
-+		if (cap & PCI_ACS_TB)
-+			ctrl |= PCI_ACS_TB;
-+		else
-+			pci_warn(dev, "ACS: No Trans Blocking on ext dev\n");
-+
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
- }
+ 	pm_runtime_enable(dev);
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0) {
+-		pm_runtime_disable(dev);
+-		return ret;
+-	}
++	if (ret < 0)
++		goto err_pm_runtime_put;
  
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b341628e47527..9cc8c1dc215ee 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
- 	}
- }
- 
-+/*
-+ * Currently this quirk does the equivalent of
-+ * PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
-+ *
-+ * TODO: This quirk also needs to do equivalent of PCI_ACS_TB,
-+ * if dev->external_facing || dev->untrusted
-+ */
- static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
- {
- 	if (!pci_quirk_intel_pch_acs_match(dev))
-@@ -4973,6 +4980,13 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
- 	ctrl |= (cap & PCI_ACS_CR);
- 	ctrl |= (cap & PCI_ACS_UF);
- 
-+	/* Enable Translation Blocking for external devices */
-+	if (dev->external_facing || dev->untrusted)
-+		if (cap & PCI_ACS_TB)
-+			ctrl |= PCI_ACS_TB;
-+		else
-+			pci_warn(dev, "ACS: No Trans Blocking on ext dev\n");
-+
- 	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
- 
- 	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.17.1
 
