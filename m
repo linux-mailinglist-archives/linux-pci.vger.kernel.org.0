@@ -2,104 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 580F6217031
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 17:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D6682172FE
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jul 2020 17:56:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgGGPPi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jul 2020 11:15:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:56318 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728519AbgGGPPh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:15:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E3F8C0A;
-        Tue,  7 Jul 2020 08:15:36 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 638773F68F;
-        Tue,  7 Jul 2020 08:15:34 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 16:15:28 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/12] Multiple fixes in PCIe qcom driver
-Message-ID: <20200707151528.GA18240@e121166-lin.cambridge.arm.com>
-References: <20200615210608.21469-1-ansuelsmth@gmail.com>
+        id S1728589AbgGGPvQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jul 2020 11:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728266AbgGGPvQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jul 2020 11:51:16 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC076C08C5E1
+        for <linux-pci@vger.kernel.org>; Tue,  7 Jul 2020 08:51:15 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q17so2484079pls.9
+        for <linux-pci@vger.kernel.org>; Tue, 07 Jul 2020 08:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6nbLKEvdqqtu0DOxk+RX2NCeuVjz/d5/WDsGYxOKe+A=;
+        b=qbZF9hTub3E6dJOMlijRiMiRkHYkFQubSYFp6P+VnStOU35ksLbT5c2olfLiJpXsF3
+         p3AHOCADz7BlPRcb5xlVfsDuFkpaWzroZytIxmWQMa1Tq9gUpWVZPukI1yqE2KFTHiA3
+         9YlWvV6iIbDdJ+BZAyuKLx1RPuPn/LEcUmBvsAMcz6jJ5yyWtgLEw10Q8wnhLwp1ZVgF
+         o4GGnZfpFXNrCeoFTPW5BteobP+ETyf4GPs6Ui4f/hVYa1npYd2Jb7cBEU2OssXqWPH4
+         auU0losOJLOMYxa1RdqPXWKkY62FkFHARI3LfbFiT0CpoTlE2LZsZ8/SQVRU7EUqTPAC
+         0DtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6nbLKEvdqqtu0DOxk+RX2NCeuVjz/d5/WDsGYxOKe+A=;
+        b=dsgyj6HUWhTQ+Q/+SZLrrJHsRKUMskXFYkAQeUO1K+IvUlcN29ATJ3RijM389/B+Ou
+         gQgey9EGUanuUTS/kNWHbDD72EqraFCqHzcW7LluAtcfwrSszaLDh19szwO5VZtP2z5P
+         eQIy1dCuq3IZGX67D6nyf57MCyOpHbRlrTZnl1LYlebRMah3NQZJMKOIVv0x0ouFqzvi
+         islZE+O4ofuyvU91y9Yb6Z8FozQf3oxGuVB6S5wDVr1ZlJDHoAJbbIfvUnf0C8K0CDVE
+         by2heCbotsv8IynfNGG0+rhyuLG9CS9KLpMbbGvBgkB1vWdM0aManVjPD5tbbTgv0LdP
+         FaqQ==
+X-Gm-Message-State: AOAM53396Oys6Ig3L+n+zCndUBlAMMvuwZNYlCDc1zg6cQB/uJAbnhiz
+        hTvQ+sFQP4Vuym/HIkoB+H8uFg==
+X-Google-Smtp-Source: ABdhPJzoBjROrVaJtp6nujXRaXTatw7gwLtR2zb8jqFckSgpuUCpME8ySKJl8GGYK6iDFTRo3tsWzA==
+X-Received: by 2002:a17:90a:a106:: with SMTP id s6mr5003560pjp.53.1594137075030;
+        Tue, 07 Jul 2020 08:51:15 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id b10sm22289026pft.59.2020.07.07.08.51.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 08:51:14 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 08:51:07 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200707155107.GA3357035@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
+ <20200629232059.GA3787278@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200629232059.GA3787278@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:05:56PM +0200, Ansuel Smith wrote:
-> This contains multiple fix for PCIe qcom driver.
-> Some optional reset and clocks were missing.
-> Fix a problem with no PARF programming that cause kernel lock on load.
-> Add support to force gen 1 speed if needed. (due to hardware limitation)
-> Add ipq8064 rev 2 support that use a different tx termination offset.
+On Mon, Jun 29, 2020 at 04:20:59PM -0700, Sami Tolvanen wrote:
+> Hi Masahiro,
 > 
-> v7:
-> * Rework GEN1 patch
+> On Mon, Jun 29, 2020 at 01:56:19AM +0900, Masahiro Yamada wrote:
+> > I also got an error for
+> > ARCH=arm64 allyesconfig + CONFIG_LTO_CLANG=y
+> > 
+> > 
+> > 
+> > $ make ARCH=arm64 LLVM=1 LLVM_IAS=1
+> > CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+> > -j24
+> > 
+> >   ...
+> > 
+> >   GEN     .version
+> >   CHK     include/generated/compile.h
+> >   UPD     include/generated/compile.h
+> >   CC      init/version.o
+> >   AR      init/built-in.a
+> >   GEN     .tmp_initcalls.lds
+> >   GEN     .tmp_symversions.lds
+> >   LTO     vmlinux.o
+> >   MODPOST vmlinux.symvers
+> >   MODINFO modules.builtin.modinfo
+> >   GEN     modules.builtin
+> >   LD      .tmp_vmlinux.kallsyms1
+> > ld.lld: error: undefined symbol: __compiletime_assert_905
+> > >>> referenced by irqbypass.c
+> > >>>               vmlinux.o:(jeq_imm)
+> > make: *** [Makefile:1161: vmlinux] Error 1
 > 
-> v6:
-> * Replace custom define
-> * Move define not used in 07 to 08
+> I can reproduce this with ToT LLVM and it's BUILD_BUG_ON_MSG(..., "value
+> too large for the field") in drivers/net/ethernet/netronome/nfp/bpf/jit.c.
+> Specifically, the FIELD_FIT / __BF_FIELD_CHECK macro in ur_load_imm_any.
 > 
-> v5:
-> * Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
-> 
-> v4:
-> * Fix grammar error across all patch subject
-> * Use bulk api for clks
-> * Program PARF only in ipq8064 SoC
-> * Program tx term only in ipq8064 SoC
-> * Drop configurable tx-dempth rx-eq
-> * Make added clk optional
-> 
-> v3:
-> * Fix check reported by checkpatch --strict
-> * Rename force_gen1 to gen
-> 
-> v2:
-> * Drop iATU programming (already done in pcie init)
-> * Use max-link-speed instead of force-gen1 custom definition
-> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
-> * Introduce a new variant for different revision of ipq8064
-> 
-> Abhishek Sahu (1):
->   PCI: qcom: Change duplicate PCI reset to phy reset
-> 
-> Ansuel Smith (10):
->   PCI: qcom: Add missing ipq806x clocks in PCIe driver
->   dt-bindings: PCI: qcom: Add missing clks
->   PCI: qcom: Add missing reset for ipq806x
->   dt-bindings: PCI: qcom: Add ext reset
->   PCI: qcom: Use bulk clk api and assert on error
->   PCI: qcom: Define some PARF params needed for ipq8064 SoC
->   PCI: qcom: Add support for tx term offset for rev 2.1.0
->   PCI: qcom: Add ipq8064 rev2 variant
->   dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
->   PCI: qcom: Replace define with standard value
-> 
-> Sham Muthayyan (1):
->   PCI: qcom: Support pci speed set for ipq806x
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
->  drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
->  2 files changed, 128 insertions(+), 73 deletions(-)
+> This compiles just fine with an earlier LLVM revision, so it could be a
+> relatively recent regression. I'll take a look. Thanks for catching this!
 
-Applied to pci/dwc for v5.9, thanks.
+After spending some time debugging this with Nick, it looks like the
+error is caused by a recent optimization change in LLVM, which together
+with the inlining of ur_load_imm_any into jeq_imm, changes a runtime
+check in FIELD_FIT that would always fail, to a compile-time check that
+breaks the build. In jeq_imm, we have:
 
-Lorenzo
+    /* struct bpf_insn: _s32 imm */
+    u64 imm = insn->imm; /* sign extend */
+    ...
+    if (imm >> 32) { /* non-zero only if insn->imm is negative */
+    	/* inlined from ur_load_imm_any */
+	u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+
+        /*
+	 * __imm has a value known at compile-time, which means
+	 * __builtin_constant_p(__imm) is true and we end up with
+	 * essentially this in __BF_FIELD_CHECK:
+	 */
+	if (__builtin_constant_p(__imm) && __imm <= 255)
+	      __compiletime_assert_N();
+
+The compile-time check comes from the following BUILD_BUG_ON_MSG:
+
+    #define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)		\
+    ...
+	BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?		\
+			 ~((_mask) >> __bf_shf(_mask)) & (_val) : 0, \
+			 _pfx "value too large for the field"); \
+
+While we could stop the compiler from performing this optimization by
+telling it to never inline ur_load_imm_any, we feel like a better fix
+might be to replace FIELD_FIT(UR_REG_IMM_MAX, imm) with a simple imm
+<= UR_REG_IMM_MAX check that won't trip a compile-time assertion even
+when the condition is known to fail.
+
+Jiong, Jakub, do you see any issues here?
+
+Sami
