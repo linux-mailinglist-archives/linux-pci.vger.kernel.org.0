@@ -2,152 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4D5B219430
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 01:16:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88467219441
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 01:26:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgGHXQd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jul 2020 19:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgGHXQd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:16:33 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4214020708;
-        Wed,  8 Jul 2020 23:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594250192;
-        bh=XjaHKQeeyk3n1aGs3ThXONBU6dyJY4endnX1mwzVig4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=koQIcnjQD0TVT6sjk6JyjjArQsTycvEvRdOx/OrZ3hx/Z/xv35z4VT/CXebMuBimt
-         ykxfhNK+y2whWdUSB3dJNXBwZBOWlJ39p7INL5AXbnx+mOeKSooMWS0bi7Xf3OVZqs
-         Doj1GqrRymrMOtfUref1fhsIAMBzlpN79PtYeC28=
-Date:   Wed, 8 Jul 2020 18:16:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Aya Levin <ayal@mellanox.com>
-Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
-        saeedm@mellanox.com, mkubecek@suse.cz, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, tariqt@mellanox.com,
-        alexander.h.duyck@linux.intel.com, Jason Gunthorpe <jgg@nvidia.com>
+        id S1726245AbgGHX0Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jul 2020 19:26:16 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13363 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgGHX0Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jul 2020 19:26:16 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0655ac0000>; Wed, 08 Jul 2020 16:24:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Jul 2020 16:26:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Jul 2020 16:26:15 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
+ 2020 23:26:05 +0000
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
+ by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 8 Jul 2020 23:26:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RzTi0I5pmlMPuDqxhTpLAVbmgiBFlMapgPY7MuijmYwQbshcKa7B2JQHABNnuLAwsRYJ9kNNd0BMIhUN3LuEeuS8dLRUpvMBQkPUIY4K9Q0dq9MqSqmD6BtFU9xC6rQ3vsK3fG0ndcuMXHXbkKw+8KoliJQNffUN+re75NXfYCMisI1fDNNSxnhyGSKZg/tSFwO3uvn1wlNJM8Kzj/3iM4XSS7kGvCGvw4rxHXDDqrc1ShZDqyDfEz8AwsMX8OGWYSAZF+BnzghAQ5QsrdqTcipMp+0ebFZgOJcmJnu56/8CMahUVejOCjPCEYUiwDpyE4PrhWBMHr7uhuckAHZ3Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wk4JZYMtC4cLUrF2la0XEwWSP85bdzx445RLu0DN4Vs=;
+ b=YAMTNaQhINAJ4Mj84oTHyfk3GgW3uDcYmpEDB9SfrHdgz+8nou+X2S0e4pKVqeO4tE4fvQ5lwhDUv/8erpRBcUv0KHkXgYCxBIN3NxXbD8+sHD86bzgZ4zbxAItx5gpbxuzJwlP67RpSVlx7B/1JX8XCxuIYPvPKzRi9gHtK55vjK1haighzIEJ84uJ545g8Pv3kDCBxVBe0X1WFr7w5jriB6OF1dlAcuHOwMDu9xrY6bEzFzv6+j2ym/tbP16wcelYWERMBLwfifktaXe77BuTbBvbXfcqtPyVUv9w2pxr1ky+eivEq/lwTSqMmpiwJb09CJgWEfXBGnsugthv3CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB2486.namprd12.prod.outlook.com (2603:10b6:4:b2::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Wed, 8 Jul
+ 2020 23:26:04 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3153.030; Wed, 8 Jul 2020
+ 23:26:04 +0000
+Date:   Wed, 8 Jul 2020 20:26:02 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Aya Levin <ayal@mellanox.com>, David Miller <davem@davemloft.net>,
+        <kuba@kernel.org>, <saeedm@mellanox.com>, <mkubecek@suse.cz>,
+        <linux-pci@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <tariqt@mellanox.com>, <alexander.h.duyck@linux.intel.com>
 Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
-Message-ID: <20200708231630.GA472767@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Message-ID: <20200708232602.GO23676@nvidia.com>
+References: <0506f0aa-f35e-09c7-5ba0-b74cd9eb1384@mellanox.com>
+ <20200708231630.GA472767@bjorn-Precision-5520>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <0506f0aa-f35e-09c7-5ba0-b74cd9eb1384@mellanox.com>
+In-Reply-To: <20200708231630.GA472767@bjorn-Precision-5520>
+X-ClientProxiedBy: YTOPR0101CA0006.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::19) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YTOPR0101CA0006.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Wed, 8 Jul 2020 23:26:03 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jtJRy-007MPa-E5; Wed, 08 Jul 2020 20:26:02 -0300
+X-Originating-IP: [206.223.160.26]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7b53b2ce-9af7-4fe5-0fd1-08d823964843
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2486:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB2486E1D2EF2C6DE8897508E9C2670@DM5PR12MB2486.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mU9N1xBCbVh2V1tv1P/2RYtomtwVAlqymE2fOJajNocsWicGjvqgb293x6iinCOGLk64mreJh9jdKS2924wTSQWLdBZWOEQHdrJXvitSsh0iBiwhpcpclvhW+p38g/gLGFsj8cLFefk6mhsdmpqvq2znv8KFrVe8yKi+TQA5fRq+DoM81NXw4W+Tk3XhC4i5Wx9LzoMlcnFARpXvnL22cqrc9jPgFeLJIkFH+WN9aq4OkrignxeI8qqW0tHxUaqoOCSuit3mimnenFiuIqzxTw3eJNXO3eKuHzW2ZhsgqndQuBb5whCQ12U50c6SxOVNcZM9xbKjkwD+nms3RZMzag==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(2616005)(8936002)(316002)(1076003)(33656002)(66556008)(66476007)(9786002)(9746002)(66946007)(4326008)(186003)(36756003)(2906002)(26005)(478600001)(54906003)(7416002)(86362001)(6916009)(83380400001)(5660300002)(426003)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 5UMwuWUZs83T6DDjPJl02827K2KNjE/PvWe/AO790OGKOMK/knzTayZ3yWJl/ZqfbtnHrbQHCuIj5GJn86v8vhJIN4eQEfHGLD83n5fC1OmOT+KLQ2z5m1JbcO62btmslUvq+iBOj1PxmuqRVUH7SIPo8vei1cjRPyucb4iu9vM26nJXr0Xzq29NJKrjpIeoyGHGLBdz1URjiggQYf321qB5TTiuEa0E09CiN9M2Inj7XMK5EG5tD+ZyhsC5jALM6jPwbxuAV155OWdFdIKjZYqKa+iVYMmSBa9p0iHyoN18yv6tKTFH5ixjs+Lq606vpvR1Xs9zH4ydJwSIgdFViMgjdzWfK/TfpbMUtGbmbT+hX7puJOnBlDsUmx3Yx6dFGqHsAE4inZeD8McAXApij8iBvAJwqV4ddgOj5w+mqw0NUWswL0ScEDQraFyWOXi3m9vohjNTa+2oUq9/mhpGwDRa2TsMS+0Fua3IIJtNP/h8I/e2ECOTZESPwp9E/h9Y
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b53b2ce-9af7-4fe5-0fd1-08d823964843
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2020 23:26:03.8975
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: reR0tNbvvchH1ScM0gh3w7A4Pw6wmFZf+S9zmjyOsMoUGxnlWH/V4rJrJ1rKm2cX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2486
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594250668; bh=Wk4JZYMtC4cLUrF2la0XEwWSP85bdzx445RLu0DN4Vs=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=BHgPPiglu2uZ5WS2zGqro6ZpszuEA51NUJJm+fhp/3oSGjKmSad1npb08bnrPquef
+         T6GFg1w8yjD/JqjtQBGEaauV9oYlrjZ54xNyQFPxB6d1WXYFBCBYqmp5SuTHpl2YIa
+         lAmrYcclwATumfKHcIWLPCSCleQKgKrpKFhyzrECppbMDuz4V9+Khb+AzhPX3OdMko
+         0ScXCbylN6j83DyqtDh/kp5vZB0pbmfuxbj226ms/7i/dr+PPAzxxi6vMABvbjx22s
+         yR/o6gFsyiLGIQYCFyGCuOsLoZZ1nnICHVIyCcT9W9vkXioWgUCLtNij+QuNeiwUzI
+         GqIgx+m5jwPfw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 08, 2040 at 11:22:12AM +0300, Aya Levin wrote:
-> On 7/6/2020 10:49 PM, David Miller wrote:
-> > From: Aya Levin <ayal@mellanox.com>
-> > Date: Mon, 6 Jul 2020 16:00:59 +0300
-> > 
-> > > Assuming the discussions with Bjorn will conclude in a well-trusted
-> > > API that ensures relaxed ordering in enabled, I'd still like a method
-> > > to turn off relaxed ordering for performance debugging sake.
-> > > Bjorn highlighted the fact that the PCIe sub system can only offer a
-> > > query method. Even if theoretically a set API will be provided, this
-> > > will not fit a netdev debugging - I wonder if CPU vendors even support
-> > > relaxed ordering set/unset...
-> > > On the driver's side relaxed ordering is an attribute of the mkey and
-> > > should be available for configuration (similar to number of CPU
-> > > vs. number of channels).
-> > > Based on the above, and binding the driver's default relaxed ordering
-> > > to the return value from pcie_relaxed_ordering_enabled(), may I
-> > > continue with previous direction of a private-flag to control the
-> > > client side (my driver) ?
-> > 
-> > I don't like this situation at all.
-> > 
-> > If RO is so dodgy that it potentially needs to be disabled, that is
-> > going to be an issue not just with networking devices but also with
-> > storage and other device types as well.
-> > 
-> > Will every device type have a custom way to disable RO, thus
-> > inconsistently, in order to accomodate this?
-> > 
-> > That makes no sense and is a terrible user experience.
-> > 
-> > That's why the knob belongs generically in PCI or similar.
-> > 
-> Hi Bjorn,
-> 
-> Mellanox NIC supports relaxed ordering operation over DMA buffers.
-> However for debug prepossess we must have a chicken bit to disable
-> relaxed ordering on a specific system without effecting others in
-> run-time. In order to meet this requirement, I added a netdev
-> private-flag to ethtool for set RO API.
-> 
-> Dave raised a concern regarding embedding relaxed ordering set API
-> per system (networking, storage and others). We need the ability to
-> manage relaxed ordering in a unify manner. Could you please define a
-> PCI sub-system solution to meet this requirement?
+On Wed, Jul 08, 2020 at 06:16:30PM -0500, Bjorn Helgaas wrote:
+>     I suspect there may be device-specific controls, too, because [1]
+>     claims to enable/disable Relaxed Ordering but doesn't touch the
+>     PCIe Device Control register.  Device-specific controls are
+>     certainly allowed, but of course it would be up to the driver, and
+>     the device cannot generate TLPs with Relaxed Ordering unless the
+>     architected PCIe Enable Relaxed Ordering bit is *also* set.
 
-I agree, this is definitely a mess.  Let me just outline what I think
-we have today and what we're missing.
+Yes, at least on RDMA relaxed ordering can be set on a per transaction
+basis and is something userspace can choose to use or not at a fine
+granularity. This is because we have to support historical
+applications that make assumptions that data arrives in certain
+orders.
 
-  - On the hardware side, device use of Relaxed Ordering is controlled
-    by the Enable Relaxed Ordering bit in the PCIe Device Control
-    register (or the PCI-X Command register).  If set, the device is
-    allowed but not required to set the Relaxed Ordering bit in
-    transactions it initiates (PCIe r5.0, sec 7.5.3.4; PCI-X 2.0, sec
-    7.2.3).
+I've been thinking of doing the same as this patch but for RDMA kernel
+ULPs and just globally turn it on if the PCI CAP is enabled as none of
+our in-kernel uses have the legacy data ordering problem.
 
-    I suspect there may be device-specific controls, too, because [1]
-    claims to enable/disable Relaxed Ordering but doesn't touch the
-    PCIe Device Control register.  Device-specific controls are
-    certainly allowed, but of course it would be up to the driver, and
-    the device cannot generate TLPs with Relaxed Ordering unless the
-    architected PCIe Enable Relaxed Ordering bit is *also* set.
+There are reports that using relaxed ordering is a *huge* speed up in
+certain platforms/configurations/etc.
 
-  - Platform firmware can enable Relaxed Ordering for a device either
-    before handoff to the OS or via the _HPX ACPI method.
+>     issues, it might be enough to disable Relaxed Ordering using
+>     setpci, e.g., "setpci -s02:00.0 CAP_EXP+8.w=0"
 
-  - The PCI core never enables Relaxed Ordering itself except when
-    applying _HPX.
+For the purposes of occasional performance testing I think this should
+be good enough?
 
-  - At enumeration-time, the PCI core disables Relaxed Ordering in
-    pci_configure_relaxed_ordering() if the device is below a Root
-    Port that has a quirk indicating an erratum.  This quirk currently
-    includes many Intel Root Ports, but not all, and is an ongoing
-    maintenance problem.
+Aya?
 
-  - The PCI core provides pcie_relaxed_ordering_enabled() which tells
-    you whether Relaxed Ordering is enabled.  Only used by cxgb4 and
-    csio, which use that information to fill in Ingress Queue
-    Commands.
-
-  - The PCI core does not provide a driver interface to enable or
-    disable Relaxed Ordering.
-
-  - Some drivers disable Relaxed Ordering themselves: mtip32xx,
-    netup_unidvb, tg3, myri10ge (oddly, only if CONFIG_MYRI10GE_DCA),
-    tsi721, kp2000_pcie.
-
-  - Some drivers enable Relaxed Ordering themselves: niu, tegra.
-
-What are we missing and what should the PCI core do?
-
-  - Currently the Enable Relaxed Ordering bit depends on what firmware
-    did.  Maybe the PCI core should always clear it during
-    enumeration?
-
-  - The PCI core should probably have a driver interface like
-    pci_set_relaxed_ordering(dev, enable) that can set or clear the
-    architected PCI-X or PCIe Enable Relaxed Ordering bit.
-
-  - Maybe there should be a kernel command-line parameter like
-    "pci=norelax" that disables Relaxed Ordering for every device and
-    prevents pci_set_relaxed_ordering() from enabling it.
-
-    I'm mixed on this because these tend to become folklore about how
-    to "fix" problems and we end up with systems that don't work
-    unless you happen to find the option on the web.  For debugging
-    issues, it might be enough to disable Relaxed Ordering using
-    setpci, e.g., "setpci -s02:00.0 CAP_EXP+8.w=0"
-
-[1] https://lore.kernel.org/netdev/20200623195229.26411-11-saeedm@mellanox.com/
+Jason
