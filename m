@@ -2,47 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25C35218735
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 14:26:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 174D0218783
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 14:33:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgGHM0E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jul 2020 08:26:04 -0400
-Received: from verein.lst.de ([213.95.11.211]:35063 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728681AbgGHM0E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:26:04 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7232068AFE; Wed,  8 Jul 2020 14:26:01 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 14:26:01 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     joro@8bytes.org, hch@lst.de, iommu@lists.linux-foundation.org,
-        jonathan.lemon@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, baolu.lu@linux.intel.com,
-        dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] iommu/intel: Avoid SAC address trick for PCIe
- devices
-Message-ID: <20200708122601.GB19619@lst.de>
-References: <e583fc6dd1fb4ffc90310ff4372ee776f9cc7a3c.1594207679.git.robin.murphy@arm.com>
+        id S1729127AbgGHMdl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jul 2020 08:33:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729231AbgGHMdb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jul 2020 08:33:31 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B883C08EAF0
+        for <linux-pci@vger.kernel.org>; Wed,  8 Jul 2020 05:33:30 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id a12so46790929ion.13
+        for <linux-pci@vger.kernel.org>; Wed, 08 Jul 2020 05:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=CtDA46Te1kJYGFqAkgr9Vub/YrG6WB2S+VlEURQEEM4x6m9sjli+Jz/yotFRmV/AMR
+         T/h2d+e8At09eChsFX2C+mUFLH+FsdwAy78KAtzHqTPpG69rhvmbmMUpZSALFUdgKxT3
+         rKV4TF8A0J+Za5tWsTPtObTKnCJJSeTUvLM0KCUCLapZUiUA/CE0qJguNsnmAcBYT7Bw
+         PUSSiRKtit7eL05YbTu8d4vZk3Rk52mtpEQs926eluhEg6IUrqIesfOKILheZFFzZp0P
+         0kRnPxRkSyAb2gIupk6cQmoDhkGW5ga2ONIfRh7Ui0T+vXHI9OfE4hLpnUDNkQjQgdsE
+         pxTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=H5Vqgzb7QlgbTcrESJ8AqUFglVw0Au5orgLOqg7SalayXY2ZToVc7pdLg8GbabaZrN
+         pc8AAeQFckhGqCQ6WxgLoTCS3k6OTD4bCBC5Tm5fiONW8Adez97h3GFIgRHwQRSnb51A
+         SdmE5PSKdcW2EWtfWJZ94fK3Bre90rikNwxA/Tdm6+gf9zfvKoq4/EUUmklQYtF1EXlD
+         qtEblXVzQ0cvQklBOjbMP+jhbArjYqHk/9jjnejUx2i0YQ1ZmnaisUgJR4VH9AGFEwX9
+         CnSksnhwfgS0i/2zxa5t5A6uOI4EVEsKFstBh3AX969eXL/MBlWQk4KXeWxRJaK8FKrq
+         fG7g==
+X-Gm-Message-State: AOAM531VVduR+1wI8rYDqHciioAZE/oHbPgtuntEksOhHfoF+cuXsspI
+        bxDumm4I+8Oxj7Sda3QP2SlDLIoomz0y0g5UxYUk4Aum4oY=
+X-Google-Smtp-Source: ABdhPJy69qBRFRW2d2u+0xyGHVfmVbQRW6SQ4gKLQIvGwSNWfhZDhNcIlxNh+7AirNZFy3An0aJSkt25Q8y7juQZu8o=
+X-Received: by 2002:a05:6638:12c7:: with SMTP id v7mr64754290jas.56.1594211609022;
+ Wed, 08 Jul 2020 05:33:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e583fc6dd1fb4ffc90310ff4372ee776f9cc7a3c.1594207679.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Received: by 2002:a05:6602:1582:0:0:0:0 with HTTP; Wed, 8 Jul 2020 05:33:28
+ -0700 (PDT)
+Reply-To: mmsafiatou057@gmail.com
+From:   "Mrs. Safitaou Zoungrana" <richardlaurentdr@gmail.com>
+Date:   Wed, 8 Jul 2020 12:33:28 +0000
+Message-ID: <CALJAiTVXhrKZYOHVoupnx6hmXXD0i2k4MOSO6HW+mj1BAydXhA@mail.gmail.com>
+Subject: My Dear Beloved One,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Looks pretty sensible.
+My Dear Beloved One,
 
-> -	if (!dmar_forcedac && dma_mask > DMA_BIT_MASK(32)) {
-> +	if (!dmar_forcedac && dma_mask > DMA_BIT_MASK(32) &&
-> +	    dev_is_pci(dev) && !pci_is_pcie(to_pci_dev(dev))) {
+I greet you in the name of God almighty the givers of all good things
+in life. Please kindly pardon me for any inconvenience this letter may
+cost you because I know it may come to you as a surprise as we have no
+previous correspondence.  I sent this mail praying for it to reach you
+in good health, since I myself are in a very critical health condition
+in which I sleep every night without knowing if I may be alive to see
+the next day.
 
-The only thing I wonder is if it is worth to add a little helper
-for this check, but with everything moving to dma-iommu that might
-not be needed.
+I am Mrs. Safiatou Zoungrana,  the wife of late Engineer Ralph
+Alphonso Zoungrana from Paris France but based here in Burkina Faso
+West Africa since eight years ago as a business woman dealing with
+gold exportation and Sales. We have been married for years before his
+sudden death although we were childless. I have been diagnosed with
+ovarian cancer and I have been battling with the sickness when my late
+lovely husband of a blessed memory was alive. May his soul rest in
+peace, Amen.
 
-Btw, does anyone know what the status of the intel-iommu conversion
-to dma-iommu is?
+My late Husband left the sum of =E2=82=AC7.900.000.00 Seven Million Nine
+Hundred Thousand Euros in a fix/suspense account in one of the prime
+bank here in Burkina Faso. Recently, my Doctor told me that I have few
+days to live due to the cancer problem. The one that disturbs me most
+is my blood pressure sickness.
+
+Having known my health condition I decided to seek for your kind
+assistance to transfer this fund into your account and you will use it
+to establish an orphanage home in my name. I will give you more
+details about the project as soon as I receive your reply in my
+private email (mmsafiatou057@gmail.com) to handle this project because
+I do not want to state all here until I see your reply, desire and
+commitment to handle this project.
+
+My Regards to your family.
+Mrs. Safiatou Zoungrana.
