@@ -2,766 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38240218C7C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 18:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85159218C7F
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 18:04:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgGHQCh convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 8 Jul 2020 12:02:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:32955 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730179AbgGHQCg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:02:36 -0400
-IronPort-SDR: EHwyYGpzQGdmZPJS3FI2u8aoN4Aa2d74Sk5k+GQ9g4rM0e/BfwAX5QJ6IZSqeBaPpj2vg0vdRI
- ncaFVNchPsGA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="135296550"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="135296550"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:02:06 -0700
-IronPort-SDR: rNBwu6E7xyMHHL4dRetycTmQP6NGH9AB7oYlXu8UFvRank9KmXA3NlT/umZgTqMLu5GxetCxA4
- DrDx70vT7Q9Q==
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="279995962"
-Received: from bflorenc-mobl1.amr.corp.intel.com (HELO [10.212.168.248]) ([10.212.168.248])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:02:05 -0700
-From:   "Sean V Kelley" <sean.v.kelley@linux.intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
-Cc:     linux-pci@vger.kernel.org,
-        "Kuppuswamy Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        linuxarm@huawei.com, linux-acpi@vger.kernel.org,
-        "James Morse" <james.morse@arm.com>
-Subject: Re: [PATCH v2] PCI/AER: Add support for reset of RCiEPs for
- APEI/Firmware first reporting only
-Date:   Wed, 08 Jul 2020 09:01:13 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <EC08D16A-5434-4021-A28B-D7121DDF98B7@linux.intel.com>
-In-Reply-To: <20200708163924.00007006@Huawei.com>
-References: <20200622114402.892798-1-Jonathan.Cameron@huawei.com>
- <02999929-39F5-4A11-AACA-84490F12E12B@linux.intel.com>
- <20200626194126.00007190@Huawei.com>
- <6CAFE871-36CC-44DD-B4E0-D0BB5ABF3947@linux.intel.com>
- <20200703092351.00004981@Huawei.com>
- <431b4d136e5e2ba158640c0ef6eb7dc09351a992.camel@linux.intel.com>
- <20200708163924.00007006@Huawei.com>
+        id S1730165AbgGHQED (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jul 2020 12:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730067AbgGHQED (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jul 2020 12:04:03 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE42C061A0B;
+        Wed,  8 Jul 2020 09:04:02 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d4so21879431pgk.4;
+        Wed, 08 Jul 2020 09:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i4e593cpPp1JbK9mhrl0XOUScgdAL0u9hY9gCGAke4c=;
+        b=VhfdobkYEy+3v5oUfDeNrYdjOFBIdoil78/kedVVOkv4y7daPXhnrT2deNHm1JeGZD
+         6naq9YiGSPidHEMAj8MCzz13l3GfFI9uGsy4viYNB8NTcJUFymon9xlaAH+2EozXqM2q
+         YzMzY2Ud56eJ51bBtEk98xE16g5a9ad3/kt8YbHYvZAFtbPO2fHIF6Q811Ikd2s3v6B2
+         khPa5L7gTE7M/f9+X0zw/efTkelwcZvNX6y3WkiWWTZp9CGg2Hygb/lVEEk5uX4AADu/
+         oFGAKebCaX43DRD+PMJiDfHCDlxjeEi8esB5bnQTV3AK6Uimxg2jsHwegjdX3lAY/qhG
+         GVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i4e593cpPp1JbK9mhrl0XOUScgdAL0u9hY9gCGAke4c=;
+        b=AlKe8qt4BVhYwspdvCKZXMiZkRkXO0wwCaTnkNWZXb0BmoPJ8BLHJdz5mQSeiEGXdY
+         RTZoJcn+3dTK9ywYk7Wb131WztPlsfplhqY9GVT8gIcoG4U7va0C20KZ040lKMiq46Pd
+         IjgIeSSC3o//vowsyCY+AafmlB1G8Rv/pRX0P3R9qWryHBXRp8ja+V2vKVWUNKL0Vcqe
+         tsdINewx1vCcaCvikQTg42inXerT1jtSltG2kcipS0yD09fwTc3MqghyYEQkgmZv3vjP
+         31tkWW7qwApm6nO9Q5a4MovvodkIZkSi+ProDYhDwVIeHyXAUHWbQnvxiRXVE3Nt/Y0V
+         5i4Q==
+X-Gm-Message-State: AOAM531tLbFgdn7lJ5F6JwF/a5omQ/cFx5YxdFOSm4Obx79Vo3niKP5K
+        eHe/LnO5f24s/QTY1j+vaKg=
+X-Google-Smtp-Source: ABdhPJwVSzJ0zp2pG2hU4YHZRfO5rMlGpBwp58/lM/qJVQQDmkFsMTArBdNzW4V/l95GZ+dSn4QxQQ==
+X-Received: by 2002:a62:fcca:: with SMTP id e193mr45366563pfh.307.1594224242432;
+        Wed, 08 Jul 2020 09:04:02 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id y20sm261065pfo.170.2020.07.08.09.04.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jul 2020 09:04:01 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 00:03:55 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     jingoohan1@gmail.com, robh@kernel.org, bhelgaas@google.com,
+        kgene@kernel.org, thomas.petazzoni@bootlin.com,
+        nsaenzjulienne@suse.de, f.fainelli@gmail.com,
+        jquinlan@broadcom.com, krzk@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: controller: convert to
+ devm_platform_ioremap_resource()
+Message-ID: <20200708160355.GA382@nuc8i5>
+References: <20200526160110.31898-1-zhengdejin5@gmail.com>
+ <20200707133707.GA17163@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707133707.GA17163@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8 Jul 2020, at 8:39, Jonathan Cameron wrote:
+On Tue, Jul 07, 2020 at 02:37:07PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, May 27, 2020 at 12:01:10AM +0800, Dejin Zheng wrote:
+> > use devm_platform_ioremap_resource() to simplify code, it
+> > contains platform_get_resource() and devm_ioremap_resource().
+> > 
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pci-exynos.c | 4 +---
+> >  drivers/pci/controller/pci-aardvark.c   | 5 ++---
+> >  drivers/pci/controller/pci-ftpci100.c   | 4 +---
+> >  drivers/pci/controller/pci-versatile.c  | 6 ++----
+> >  drivers/pci/controller/pcie-brcmstb.c   | 4 +---
+> >  5 files changed, 7 insertions(+), 16 deletions(-)
+> 
+> Can you rebase it please against:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/misc
+> 
+> I will apply it then (please carry over the review tags).
+>
+Hi Lorenzo:
 
-> On Tue, 7 Jul 2020 09:56:26 -0700
-> Sean V Kelley <sean.v.kelley@linux.intel.com> wrote:
->
->> On 3 Jul 2020, at 1:23, Jonathan Cameron wrote:
->>
->>> On Thu, 2 Jul 2020 11:06:26 -0700
->>> Sean V Kelley <sean.v.kelley@linux.intel.com> wrote:
->>>
->>>> On 26 Jun 2020, at 11:41, Jonathan Cameron wrote:
->>>>
->>>>> On Fri, 26 Jun 2020 09:29:34 -0700
->>>>> Sean V Kelley <sean.v.kelley@linux.intel.com> wrote:
->>>>>
->>>>>> Hi,
->>>>> Hi,
->>>>>
->>>>> Thanks for taking a look.
->>>>>
->>>>>>
->>>>>> On 22 Jun 2020, at 4:44, Jonathan Cameron wrote:
->>>>>>
->>>>>>> Was previously: PCI/AER: Add partial initial supprot for
->>>>>>> RCiEPs
->>>>>>> using
->>>>>>> RCEC or
->>>>>>> firmware first.
->>>>>>>
->>>>>>> Currently the kernel does not handle AER errors for Root
->>>>>>> Complex
->>>>>>> integrated
->>>>>>> End Points (RCiEPs)[0].  These devices sit on a root bus
->>>>>>> within
->>>>>>> the
->>>>>>> Root Complex
->>>>>>> (RC).  AER handling is performed by a Root Complex Event
->>>>>>> Collector
->>>>>>> (RCEC) [1]
->>>>>>> which is a effectively a type of RCiEP on the same root bus.
->>>>>>>
->>>>>>> This code will only perform the correct reset flow for the
->>>>>>> case
->>>>>>> where
->>>>>>> there
->>>>>>> is no need to take any actions on the RCEC because the
->>>>>>> firmware is
->>>>>>> responsible for them.   This is true where APEI [2] is used
->>>>>>> to
->>>>>>> report
->>>>>>> the AER
->>>>>>> errors via a GHES[v2] HEST entry [3] and relevant AER CPER
->>>>>>> record
->>>>>>> [4]
->>>>>>> and Firmware
->>>>>>> First handling is in use.
->>>>>>
->>>>>> Right, in the case of the RCEC one identifies the RCiEPs by
->>>>>> the
->>>>>> RCiEP
->>>>>> bitmap as a part of the RCEC Associated Endpoint Extended
->>>>>> Capabilities.
->>>>>> This ‘search’ so to speak would make use also of the RCEC
->>>>>> Associated
->>>>>> Bus Numbers Register to associate the devices with an RCEC when
->>>>>> not
->>>>>> on
->>>>>> the same bus.
->>>>>
->>>>> Ah. I'm afraid my access to recent specs is a bit limited at the
->>>>> moment.
->>>>> I do have a draft 5.0 spec which has that in though so I now see
->>>>> what
->>>>> you mean.
->>>>>
->>>>> Was introduced in Root Complex Event Collector Endpoint
->>>>> Association
->>>>> Extended
->>>>> Capability version 2 in PCIe 5.0 I think.
->>>>>
->>>>
->>>> Correct.
->>>>
->>>>>>> As there is no current RCEC driver support, it should not be
->>>>>>> possible
->>>>>>> to get
->>>>>>> to this code via any routes other than the one above. Hence
->>>>>>> appropriate RCEC
->>>>>>> handling can be added when the RCEC driver support is ready.
->>>>>>> The error handling is different from a normal PCIe End Point
->>>>>>> because:
->>>>>>>
->>>>>>> 1) There is no downstream port above an RCiEP as these
->>>>>>> devices sit
->>>>>>> on
->>>>>>> a root
->>>>>>>    bus.
->>>>>>>
->>>>>>> 2) In general, it makes little sense to reset other devices
->>>>>>> on on
->>>>>>> the
->>>>>>> same
->>>>>>>    root bus.  For error handling outside the of the root
->>>>>>> complex
->>>>>>> (RC)
->>>>>>> an AER
->>>>>>>    error will indicate that all the topology below the
->>>>>>> physical
->>>>>>> link,
->>>>>>> which
->>>>>>>    the error is related to, will need to be reset as they
->>>>>>> share a
->>>>>>> common
->>>>>>>    path to the host.  For an RCiEP there is no such defined
->>>>>>> shared
->>>>>>> path
->>>>>>>    relationship with other elements on the root bus.
->>>>>>>
->>>>>>> A new walk function, similar to pci_bus_walk is provided
->>>>>>> that
->>>>>>> takes
->>>>>>> a
->>>>>>> pci_dev
->>>>>>> instead of a bus.  If that dev corresponds to a downstream
->>>>>>> port it
->>>>>>> will walk
->>>>>>> the subordinate bus of that downstream port.  If the dev does
->>>>>>> not
->>>>>>> then
->>>>>>> it
->>>>>>> will call the function on that device alone.   This function
->>>>>>> allows
->>>>>>> us
->>>>>>> to
->>>>>>> avoid adding special cases to the majority of the error
->>>>>>> handling.
->>>>>>
->>>>>> Then in that case the callback could add the additional checks
->>>>>> specific
->>>>>> to identifying the associated RCiEPs.
->>>>>
->>>>> I am afraid I don't follow what you mean here.  Could you give
->>>>> more
->>>>> info?
->>>>
->>>> Sure, a given RCEC can be associated with multiple RCiEPs.  As a
->>>> part
->>>> of
->>>> the Extended Association Cap it is possible to obtain a bitmap of
->>>> the
->>>> RCiEP device ids on the same bus number as the RCEC device itself.
->>>> (5.0-1.0 sec 7.9.10.2).  With a Cap version of 2h or higher, it is
->>>> also
->>>> possible to get an additional range of bus numbers containing
->>>> RCiEPs
->>>> also associated with this RCEC.
->>>>
->>>> So I’m wondering if this function could be used in which passing 
->>>> a
->>>> dev, in this case the RCEC, triggers the call back which makes use
->>>> of
->>>> the RCiEP bitmap and associated bus ranges to return all identified
->>>> devices in use cases such as in AER for finding sources, etc.
->>>
->>> Ah understood.
->>>
->>> If we do this we effectively end up with 3 different types of walk
->>> and
->>> the meaning of the walk function gets more complex again.
->>>
->>> 1) Normal bus walk - we pass the downstream port above a bus to 
->>> which
->>> the device is attached and it walks everthing below that point.
->>>
->>> 2) Case I care about RCiEP with no visible association with an RCEC
->>> as
->>> I don't need to walk devices.  In that case just calls the callbacks
->>> for
->>> the actual device.
->>>
->>> 3) Pass in RCiEP with RCEC asociated with it (or do a dance at the
->>> caller
->>> to pass in the RCEC itself). Need to walk the devices that the RCEC
->>> is
->>> handling errors for.  For handling, I'm not all the calls will be
->>> generally
->>> applicable to other devices associated with the RCEC as some only
->>> make
->>> sense if there is an actual PCIe bus involved and hence we need to
->>> reset
->>> other devices on that bus.  For RCEC I don't think there is an
->>> particular
->>> reason to assume an AER error reported at one RCiEP will have any
->>> impact
->>> on other devices associated with the particular RCEC.
->>> I've not found anything in the spec addressing this question but
->>> perhaps
->>> I've missed something?
->>
->> Correct.  There should be no impact to the RCEC or its associated
->> RCiEPs which may not happen to reside on the same bus as the 
->> collector at all.
->>
->>> However, if the RCEC doesn't support multiple error records, you may
->>> need
->>> to walk the bus to identify multiple simultaneous issues, very
->>> carefully
->>> avoiding (or least minimizing) race conditions.
->>>
->>>> The alternative is to have a separate walk for RCECs that loops
->>>> through
->>>> the bitmap / ranges (if supported) triggering the callback for each
->>>> device found.
->>
->> I’ve been testing the Associated Endpoint Bitmap and Bus Range
->> handling and using my pciutils patches to help to confirm some of the
->> association. This overlaps with my CXL work and CXL 1.1 based RCiEPs
->> are good test cards:
->>
->> (Decode via:
->> https://lore.kernel.org/linux-pci/20200624223940.240463-1-sean.v.kelley@linux.intel.com/
->>  )
->>
->> Test card at 6b:00.0
->>
->> Capabilities: [e00 v1] Designated Vendor-Specific: Vendor=1e98 
->> ID=0000
->> Rev=0 Len=56: CXL
->> CXLCap: Cache- IO+ Mem+ Mem HW Init+ HDMCount 1 Viral-
->> CXLCtl: Cache- IO+ Mem- Cache SF Cov 0 Cache SF Gran 0 Cache Clean-
->> Viral-
->> CXLSta: Viral-
->> Capabilities: [e38 v1] Device Serial Number 30-91-11-78-10-00-00-00
->>
->> RCEC assocated to RCiEP at 6b while residing at 6a:
->>
->> Capabilities: [160 v2] Root Complex Event Collector Endpoint
->> Association
->> RCiEPBitmap: 00000000 [none]
->> AssociatedBusNumbers: 6b-6b
->> Kernel driver in use: pcieport
->>
->> with dmesg:
->>
->> [ 10.502543] pcieport 0000:6a:00.4: AER: enabled with IRQ 34
->>
->> The trick is the walk, which is not compact.  Currently working on
->> error injection to test:
->>
->> void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *,
->> void *),
->> +                   void *userdata)
->> +{
->> +       u32 pos, bitmap, hdr, busn;
->> +       u8 ver, nextbusn, lastbusn;
->> +       unsigned int dev, fn, bnr;
->> +       struct pci_bus *pbus=NULL;
->> +       struct pci_dev *pdev;
->> +       int retval;
->> +
->> +       pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
->> +       if (!pos)
->> +               return;
->> +
->> +       pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP,
->> &bitmap);
->> +
->> +       for (dev = 0; dev < 32; dev++) {
->
-> for_each_bit_set perhaps?
->
->> +               if (!(bitmap & (1 << dev)))
->> +                       continue;
->> +
->> +               for (fn = 0; fn < 8; fn++) {
->> +                       pdev =
->> pci_get_domain_bus_and_slot(pci_domain_nr(rcec->bus),
->> +                                                          rcec->bus-
->>> number,
->> +                                                          
->> PCI_DEVFN(de
->> v, fn));
->> +                       if (!pdev)
->> +                               continue;
->> +
->> +                       retval = cb(pdev, userdata);
->> +                       if (retval)
->> +                               return;
->> +               }
->> +       }
->>
->> Then continuing in the same function above, I need to also consider 
->> the
->> case for the Bus ranges (still wip, not tested):
->>
->> +       pci_read_config_dword(rcec, pos, &hdr);
->> +       ver = PCI_RCEC_EP_CAP_VER(hdr);
->> +       if (ver < PCI_RCEC_BUSN_REG_VER)
->> +               return;
->> +
->> +       pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
->> +       nextbusn = PCI_RCEC_BUSN_NEXT(busn);
->> +       lastbusn = PCI_RCEC_BUSN_LAST(busn);
->> +
->> +       if ((nextbusn == 0xff) && (lastbusn == 0x00))
->> +               return;
->> +
->> +       for (bnr = nextbusn; bnr < (lastbusn + 1); bnr++) {
->> +               pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
->> +               if (pbus) {
->> +                       /* find RCiEP devices on the given bus */
->> +                       for (dev = 0; dev < 32; dev++) {
->> + etc...
->> +                       }
->> +               }
->> +       }
->> +}
->
-> Makes sense.
->
->>
->> Currently this lives in aer.c and it's large enough that I wonder if
->> due to the specifity of the assoicated spec requirments if that 
->> should
->> be fine?
->
-> Seems fine to me.
->
->>
->>> Agreed. We would end up with the same splitting of handling paths
->>> that
->>> wasn't liked in my v1 patch.   Perhaps we need  single
->>> pci_walk_aer_affected
->>> function with a pile of documentation for what it is actually doing?
->>
->> Perhaps this would be a good start?  I tend to agree.  I can also
->> submit more of the patches as RFC for further comment.
->
-> When you are ready that would be great.
+I have sent the patch v2 for rebase it, Thank you very much!
+The link is here: https://patchwork.ozlabs.org/project/linux-pci/patch/20200708155614.308-1-zhengdejin5@gmail.com/
 
-Sounds good.
-
->
->>
->>>
->>> Even then we may need to have a parameter to indicate a particular
->>> callback
->>> should be restricted to devices that share a 'real bus' or not.
->>
->> In my case 'walk' through the spec options of either just bitmap or 
->> if
->> of sufficient version (2h), I walk through the bus ranges, calling 
->> the
->> callback at each encounter.
->
-> That wasn't what I meant.  When doing some of the actual handling once
-> we have a walk function it will get a bit fiddly.
-> I 'think' we need to first identify which devices associated with the 
-> RCEC
-> have reported an AER error and then we need to only call the callback 
-> for
-> those.
-
-Right, I was going to do that decision making in the call back rather 
-than include those details in the walk. That way the call back simply 
-reports what associated devices it finds and makes no assumptions on 
-which device needs to be acted upon.  I’ll experiment with 
-alternatives to placement of identification code.
-
->
-> In a case with a real bus and EP, the assumption is that the whole bus
-> is going down so you have to issue it to everyone.
-
-Correct.
-
->
->>
->>>
->>> I guess the proof will as ever be in what the code looks like.
->>
->> Agreed.
->>
->>>
->>> Hmm. It increasingly feels like we may need to have a go at drawing
->>> together
->>> some coherent documentation for the different ways of handling
->>> AER errors and specifications / assumptions for each.  Would be
->>> 'interesting'
->>> to do given I'm fairly sure very few people actually understands all
->>> the options and
->>> nasty corner cases!
->>>
->>> +CC Lorenzo and James who may also be interested in this topic in
->>> general.
->>
->> Let's do.
->
-> Great.  Whilst we only care about this particular corner for now it 
-> may
-> be worth working out some more comprehensive docs covering standard 
-> topology
-> as well. CXL may bring its own additions, but I'm not sure we actually
-> have a clear description of what 'should' happen on normal PCIe.
-
-Agree, the focus is on base or normal PCIe behavior. CXL is one use case 
-with its own exceptions.
-
-Sean
-
->
-> Jonathan
->
->>
->> Best regards,
->>
->> Sean
->>
->>>
->>> Thanks,
->>>
->>> Jonathan
->>>
->>>
->>>> Thanks,
->>>>
->>>> Sean
->>>>
->>>>>>> Open questions:
->>>>>>>
->>>>>>> 1. Are we better protecting against link reset for an RCiEP
->>>>>>> in
->>>>>>> here
->>>>>>> or
->>>>>>>    should we put the check in the link reset functions?
->>>>>>>
->>>>>>> 2. If we were to get a stupid firmware record with the
->>>>>>> relevant
->>>>>>> reset
->>>>>>> flag
->>>>>>>    set to trigger a link reset, what is the correct
->>>>>>> response?  For
->>>>>>> now
->>>>>>> I
->>>>>>>    try to report that we haven't done anything and print a
->>>>>>> warning.
->>>>>>>
->>>>>>> 3. Naming of pci_walk_below_dev is rather unsatisfying. Any
->>>>>>> better
->>>>>>> ideas?
->>>>>>>
->>>>>>> 4. pci_walk_below_dev is perhaps not of general utility.
->>>>>>> Shall I
->>>>>>> make
->>>>>>> it local
->>>>>>>    in err.c?  If not would a precursor patch for that be
->>>>>>> preferred?’
->>>>>>
->>>>>> It depends.  Is it intended as a drop in replacement where
->>>>>> needed
->>>>>> for
->>>>>> pci_walk_bus()? So in that case you are now passing the dev
->>>>>> structure
->>>>>> and do the check for subordinate or is it intended as being
->>>>>> specific
->>>>>> to
->>>>>> say RCEC? With AER, one could either first check for RC_EC type
->>>>>> before
->>>>>> using this one.  Or one could just drop in replace (passing the
->>>>>> dev
->>>>>> structure instead) and the call back performs the RCEC specific
->>>>>> checks
->>>>>> when a device is encountered.
->>>>>
->>>>> If it is useful in aer.c that's great.   Just seemed such a weird
->>>>> beast
->>>>> I wasn't sure it would be of use anywhere else.
->>>>>
->>>>>>> Testing has been performed via error injection on a QEMU
->>>>>>> platform
->>>>>>> as
->>>>>>> that lets
->>>>>>> me create a wide range of topologies and report errors at
->>>>>>> any
->>>>>>> chosen
->>>>>>> location.
->>>>>>> Currently I have no plans to upstream this injection support,
->>>>>>> but
->>>>>>> am
->>>>>>> happy to
->>>>>>> share if useful to others.
->>>>>>
->>>>>> I’m experimenting with it in my RCEC code in AER and will give
->>>>>> you
->>>>>> additional feedback.
->>>>>
->>>>> Great, thanks
->>>>>
->>>>> Jonathan
->>>>>
->>>>>> Thanks,
->>>>>>
->>>>>> Sean
->>>>>>
->>>>>>
->>>>>>> [0] ACPI PCI Express Base Specification 4.0 1.3.2.3 Root
->>>>>>> Complex
->>>>>>> Integrated
->>>>>>>     Endpoint Rules.
->>>>>>> [1] ACPI PCI Express Base Specification 4.0 6.2 Error
->>>>>>> Signalling
->>>>>>> and
->>>>>>> Logging
->>>>>>> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error
->>>>>>> Interface
->>>>>>> (APEI)
->>>>>>> [3] ACPI Sepcification 6.3 18.2.3.7 Generic Hardware Error
->>>>>>> Source
->>>>>>> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
->>>>>>>
->>>>>>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>>>> ---
->>>>>>> Changes since v1:
->>>>>>> * Separated from the largely unrelated fix so the two can
->>>>>>> move
->>>>>>> forwards separately.
->>>>>>> * Instead of separate path for RCiEP handling use the method
->>>>>>> suggested
->>>>>>> by Bjorn
->>>>>>>   and Sathyanarayanan with an adjusted pci_bus_walk.
->>>>>>>
->>>>>>> Thanks all for reviews of V1.
->>>>>>>
->>>>>>>  drivers/pci/bus.c      | 28 ++++++++++++++++++++++++++++
->>>>>>>  drivers/pci/pcie/err.c | 29 +++++++++++++++++++----------
->>>>>>>  include/linux/pci.h    |  2 ++
->>>>>>>  3 files changed, 49 insertions(+), 10 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
->>>>>>> index 8e40b3e6da77..7cbe1ed2db3d 100644
->>>>>>> --- a/drivers/pci/bus.c
->>>>>>> +++ b/drivers/pci/bus.c
->>>>>>> @@ -411,6 +411,34 @@ void pci_walk_bus(struct pci_bus *top,
->>>>>>> int
->>>>>>> (*cb)(struct pci_dev *, void *),
->>>>>>>  }
->>>>>>>  EXPORT_SYMBOL_GPL(pci_walk_bus);
->>>>>>>
->>>>>>> +/** pci_walk_below_dev - walk devices below (or on) another
->>>>>>> device
->>>>>>> + *  @dev      device for which we should walk below,
->>>>>>> include
->>>>>>> device
->>>>>>> when not a port.
->>>>>>> + *  @cb       callback to be called for each device found
->>>>>>> + *  @userdata arbitrary pointer to be passed to callback.
->>>>>>> + *
->>>>>>> + *  If the device provided is a port,
->>>>>>> + *  walk the subordinate bus, including any bridged devices
->>>>>>> + *  on buses under this bus.  Call the provided callback
->>>>>>> + *  on each device found.
->>>>>>> + *
->>>>>>> + *  If the device provided hs no subordinate bus, call the
->>>>>>> provided
->>>>>>> + *  callback on the device itself.
->>>>>>> + *
->>>>>>> + */
->>>>>>> +void pci_walk_below_dev(struct pci_dev *dev, int
->>>>>>> (*cb)(struct
->>>>>>> pci_dev
->>>>>>> *, void *),
->>>>>>> +			void *userdata)
->>>>>>> +{
->>>>>>> +	struct pci_bus *bus;
->>>>>>> +
->>>>>>> +	if (dev->subordinate) {
->>>>>>> +		bus = dev->subordinate;
->>>>>>> +		pci_walk_bus(bus, cb, userdata);
->>>>>>> +	} else {
->>>>>>> +		cb(dev, userdata);
->>>>>>> +	}
->>>>>>> +}
->>>>>>> +EXPORT_SYMBOL_GPL(pci_walk_below_dev);
->>>>>>> +
->>>>>>>  struct pci_bus *pci_bus_get(struct pci_bus *bus)
->>>>>>>  {
->>>>>>>  	if (bus)
->>>>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>>>>> index 14bb8f54723e..fa08b1cc3d96 100644
->>>>>>> --- a/drivers/pci/pcie/err.c
->>>>>>> +++ b/drivers/pci/pcie/err.c
->>>>>>> @@ -151,33 +151,39 @@ pci_ers_result_t
->>>>>>> pcie_do_recovery(struct
->>>>>>> pci_dev
->>>>>>> *dev,
->>>>>>>  			pci_ers_result_t (*reset_link)(struct
->>>>>>> pci_dev *pdev))
->>>>>>>  {
->>>>>>>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>>>>>> -	struct pci_bus *bus;
->>>>>>>
->>>>>>>  	/*
->>>>>>>  	 * Error recovery runs on all subordinates of the
->>>>>>> first
->>>>>>> downstream
->>>>>>> port.
->>>>>>>  	 * If the downstream port detected the error, it is
->>>>>>> cleared at
->>>>>>> the
->>>>>>> end.
->>>>>>> +	 * For RCiEPs we should reset just the RCiEP itself.
->>>>>>>  	 */
->>>>>>>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->>>>>>> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
->>>>>>> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
->>>>>>> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
->>>>>>>  		dev = dev->bus->self;
->>>>>>> -	bus = dev->subordinate;
->>>>>>>
->>>>>>>  	pci_dbg(dev, "broadcast error_detected message\n");
->>>>>>>  	if (state == pci_channel_io_frozen) {
->>>>>>> -		pci_walk_bus(bus, report_frozen_detected,
->>>>>>> &status);
->>>>>>> +		pci_walk_below_dev(dev, report_frozen_detected,
->>>>>>> &status);
->>>>>>> +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END)
->>>>>>> {
->>>>>>> +			pci_warn(dev, "link reset not possible
->>>>>>> for RCiEP\n");
->>>>>>> +			status = PCI_ERS_RESULT_NONE;
->>>>>>> +			goto failed;
->>>>>>> +		}
->>>>>>> +
->>>>>>>  		status = reset_link(dev);
->>>>>>>  		if (status != PCI_ERS_RESULT_RECOVERED) {
->>>>>>>  			pci_warn(dev, "link reset failed\n");
->>>>>>>  			goto failed;
->>>>>>>  		}
->>>>>>>  	} else {
->>>>>>> -		pci_walk_bus(bus, report_normal_detected,
->>>>>>> &status);
->>>>>>> +		pci_walk_below_dev(dev, report_normal_detected,
->>>>>>> &status);
->>>>>>>  	}
->>>>>>>
->>>>>>>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>>>>>  		status = PCI_ERS_RESULT_RECOVERED;
->>>>>>>  		pci_dbg(dev, "broadcast mmio_enabled
->>>>>>> message\n");
->>>>>>> -		pci_walk_bus(bus, report_mmio_enabled,
->>>>>>> &status);
->>>>>>> +		pci_walk_below_dev(dev, report_mmio_enabled,
->>>>>>> &status);
->>>>>>>  	}
->>>>>>>
->>>>>>>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>>>>> @@ -188,17 +194,20 @@ pci_ers_result_t
->>>>>>> pcie_do_recovery(struct
->>>>>>> pci_dev
->>>>>>> *dev,
->>>>>>>  		 */
->>>>>>>  		status = PCI_ERS_RESULT_RECOVERED;
->>>>>>>  		pci_dbg(dev, "broadcast slot_reset message\n");
->>>>>>> -		pci_walk_bus(bus, report_slot_reset, &status);
->>>>>>> +		pci_walk_below_dev(dev, report_slot_reset,
->>>>>>> &status);
->>>>>>>  	}
->>>>>>>
->>>>>>>  	if (status != PCI_ERS_RESULT_RECOVERED)
->>>>>>>  		goto failed;
->>>>>>>
->>>>>>>  	pci_dbg(dev, "broadcast resume message\n");
->>>>>>> -	pci_walk_bus(bus, report_resume, &status);
->>>>>>> +	pci_walk_below_dev(dev, report_resume, &status);
->>>>>>>
->>>>>>> -	pci_aer_clear_device_status(dev);
->>>>>>> -	pci_aer_clear_nonfatal_status(dev);
->>>>>>> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->>>>>>> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)) {
->>>>>>> +		pci_aer_clear_device_status(dev);
->>>>>>> +		pci_aer_clear_nonfatal_status(dev);
->>>>>>> +	}
->>>>>>>  	pci_info(dev, "device recovery successful\n");
->>>>>>>  	return status;
->>>>>>>
->>>>>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>>>>>> index c79d83304e52..538bf0a76d33 100644
->>>>>>> --- a/include/linux/pci.h
->>>>>>> +++ b/include/linux/pci.h
->>>>>>> @@ -1411,6 +1411,8 @@ int pci_scan_bridge(struct pci_bus
->>>>>>> *bus,
->>>>>>> struct
->>>>>>> pci_dev *dev, int max,
->>>>>>>
->>>>>>>  void pci_walk_bus(struct pci_bus *top, int (*cb)(struct
->>>>>>> pci_dev
->>>>>>> *,
->>>>>>> void *),
->>>>>>>  		  void *userdata);
->>>>>>> +void pci_walk_below_dev(struct pci_dev *dev, int
->>>>>>> (*cb)(struct
->>>>>>> pci_dev
->>>>>>> *, void *),
->>>>>>> +			void *userdata);
->>>>>>>  int pci_cfg_space_size(struct pci_dev *dev);
->>>>>>>  unsigned char pci_bus_max_busnr(struct pci_bus *bus);
->>>>>>>  void pci_setup_bridge(struct pci_bus *bus);
->>>>>>> -- 
->>>>>>> 2.19.1
->>
+BR,
+Dejin
+> Lorenzo
+> 
+> > diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> > index c5043d951e80..5791039d6a54 100644
+> > --- a/drivers/pci/controller/dwc/pci-exynos.c
+> > +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> > @@ -84,14 +84,12 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
+> >  {
+> >  	struct dw_pcie *pci = ep->pci;
+> >  	struct device *dev = pci->dev;
+> > -	struct resource *res;
+> >  
+> >  	ep->mem_res = devm_kzalloc(dev, sizeof(*ep->mem_res), GFP_KERNEL);
+> >  	if (!ep->mem_res)
+> >  		return -ENOMEM;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
+> > +	ep->mem_res->elbi_base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(ep->mem_res->elbi_base))
+> >  		return PTR_ERR(ep->mem_res->elbi_base);
+> >  
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 90ff291c24f0..0d98f9b04daa 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -1105,7 +1105,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> >  	struct advk_pcie *pcie;
+> > -	struct resource *res, *bus;
+> > +	struct resource *bus;
+> >  	struct pci_host_bridge *bridge;
+> >  	int ret, irq;
+> >  
+> > @@ -1116,8 +1116,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+> >  	pcie = pci_host_bridge_priv(bridge);
+> >  	pcie->pdev = pdev;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	pcie->base = devm_ioremap_resource(dev, res);
+> > +	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(pcie->base))
+> >  		return PTR_ERR(pcie->base);
+> >  
+> > diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+> > index 1b67564de7af..221dfc9dc81b 100644
+> > --- a/drivers/pci/controller/pci-ftpci100.c
+> > +++ b/drivers/pci/controller/pci-ftpci100.c
+> > @@ -422,7 +422,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
+> >  	struct device *dev = &pdev->dev;
+> >  	const struct faraday_pci_variant *variant =
+> >  		of_device_get_match_data(dev);
+> > -	struct resource *regs;
+> >  	struct resource_entry *win;
+> >  	struct faraday_pci *p;
+> >  	struct resource *io;
+> > @@ -465,8 +464,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
+> >  		return ret;
+> >  	}
+> >  
+> > -	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	p->base = devm_ioremap_resource(dev, regs);
+> > +	p->base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(p->base))
+> >  		return PTR_ERR(p->base);
+> >  
+> > diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
+> > index b911359b6d81..b34bbfe611e7 100644
+> > --- a/drivers/pci/controller/pci-versatile.c
+> > +++ b/drivers/pci/controller/pci-versatile.c
+> > @@ -77,13 +77,11 @@ static int versatile_pci_probe(struct platform_device *pdev)
+> >  	if (!bridge)
+> >  		return -ENOMEM;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	versatile_pci_base = devm_ioremap_resource(dev, res);
+> > +	versatile_pci_base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(versatile_pci_base))
+> >  		return PTR_ERR(versatile_pci_base);
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > -	versatile_cfg_base[0] = devm_ioremap_resource(dev, res);
+> > +	versatile_cfg_base[0] = devm_platform_ioremap_resource(pdev, 1);
+> >  	if (IS_ERR(versatile_cfg_base[0]))
+> >  		return PTR_ERR(versatile_cfg_base[0]);
+> >  
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index 7730ea845ff2..04bbf9b40193 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -934,7 +934,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >  	struct device_node *fw_np;
+> >  	struct brcm_pcie *pcie;
+> >  	struct pci_bus *child;
+> > -	struct resource *res;
+> >  	int ret;
+> >  
+> >  	/*
+> > @@ -959,8 +958,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >  	pcie->dev = &pdev->dev;
+> >  	pcie->np = np;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	pcie->base = devm_ioremap_resource(&pdev->dev, res);
+> > +	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(pcie->base))
+> >  		return PTR_ERR(pcie->base);
+> >  
+> > -- 
+> > 2.25.0
+> > 
