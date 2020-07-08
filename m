@@ -2,263 +2,263 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A80A6218FB4
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 20:30:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FB9D21909E
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 21:33:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgGHSai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jul 2020 14:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbgGHSah (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:30:37 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3FEB20658;
-        Wed,  8 Jul 2020 18:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594233036;
-        bh=UAwB7GrSKjgYmVRiXd5CfGCEvzV+PksfDAIUtBo9MZg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b2ra70/xw186R99h3HI13KQj8GwkGU9Los/HrQrRCX+xKxJDcNl7tsAKYbB25DHgi
-         FMN1wdV5kcAWAJOkG5Rnl/PG0E0+eh3dpY93Cxegd5j0WEItelEWVq9c6eJROx9N4k
-         Jh8C0GPNwd/4Pb7EZ300ojr2jD1M8lMGCAYCwucU=
-Date:   Wed, 8 Jul 2020 13:30:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     peterz@infradead.org, bhelgaas@google.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        jeffrey.t.kirsher@intel.com, olof@lixom.net,
-        dan.j.williams@intel.com, ak@linux.intel.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/7] PCI/portdrv: Create a platform device for the perf
- uncore driver
-Message-ID: <20200708183034.GA466341@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59a4eb9f-3956-1788-33ed-5cc9911b5b1e@linux.intel.com>
+        id S1726506AbgGHTcz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jul 2020 15:32:55 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:60736 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725903AbgGHTc1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jul 2020 15:32:27 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 8117D30C0C0;
+        Wed,  8 Jul 2020 12:32:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 8117D30C0C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1594236745;
+        bh=EwUpHpRkQBD8sV+nVCn/MQ7dk/rrClGaFM9+jr1cZU8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=drvkI27/fHhYXEkdId7+vJ5i7ud2y2ikwR+y7AE/J9w55EFR8sPGecnB7IsWGC5uz
+         QYnOtjYQKHGABcozhyAcYfAE4G1Ji4EbwN/BE2eVF+TGJcKtGInC4j8GhvM9G92paa
+         KZakrRTm8TE2epxp2zFEUFWeyuw6NGfh/Z+0hNrk=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 039BE140069;
+        Wed,  8 Jul 2020 12:32:21 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
+        A10), Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS),
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <jroedel@suse.de>,
+        Julien Grall <julien.grall@arm.com>,
+        linux-acpi@vger.kernel.org (open list:ACPI FOR ARM64 (ACPI/arm64)),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
+        linux-media@vger.kernel.org (open list:ALLWINNER A10 CSI DRIVER),
+        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
+        (REMOTEPROC) SUBSYSTEM),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-sh@vger.kernel.org (open list:SUPERH),
+        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v7 00/12] PCI: brcmstb: enable PCIe for STB chips
+Date:   Wed,  8 Jul 2020 15:31:53 -0400
+Message-Id: <20200708193219.47134-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 11:01:38PM -0400, Liang, Kan wrote:
-> On 7/7/2020 3:48 PM, Bjorn Helgaas wrote:
-> > [+cc Stephane in case he has thoughts on the perf driver claim issue]
-> > 
-> > On Thu, Jul 02, 2020 at 10:05:11AM -0700, kan.liang@linux.intel.com wrote:
-> > > From: Kan Liang <kan.liang@linux.intel.com>
-> > > 
-> > > On Snow Ridge server, several performance monitoring counters are added
-> > > in the Root Port Configuration Space of CPU Complex PCIe Root Ports A,
-> > > which can be used to collect the performance data between the PCIe
-> > > devices and the components (in M2IOSF) which are responsible for
-> > > translating and managing the requests to/from the device. The
-> > > performance data is very useful for analyzing the performance of the
-> > > PCIe devices.
-> > > 
-> > > However, the perf uncore driver cannot be loaded to register a
-> > > performance monitoring unit (PMU) for the counters, because the PCIe
-> > > Root Ports device already has a bonded driver portdrv_pci.
-> > > 
-> > > To enable the uncore PMU support for these counters on the uncore
-> > > driver, a new solution should be introduced, which has to meet the
-> > > requirements as below:
-> > > - must have a reliable way to find the PCIe Root Port device from the
-> > >    uncore driver;
-> > > - must be able to access the uncore counters of the PCIe Root Port
-> > >    device from the uncore driver;
-> > > - must support hotplug. When the PCIe Root Port device is removed, the
-> > >    uncore driver has to be notified and unregisters the uncore PMU.
-> > > 
-> > > A new platform device 'perf_uncore_pcieport' is introduced as part of
-> > > the new solution, which can facilitate the enabling of the uncore PMU in
-> > > the uncore driver. The new platform device
-> > > - is a child device of the PCIe Root Port device. It's allocated when
-> > >    the PCIe Root Ports A device is probed. (For SNR, the PMU counters are
-> > >    only located in the configuration space of the PCIe Root Ports A.)
-> > > - stores its pdev as the private driver data pointer of the PCIe Root
-> > >    Ports A. The pdev can be easily retrieved to check the existence of
-> > >    the platform device when removing the PCIe Root Ports A.
-> > > - is unregistered when the PCIe Root Port A is removed. The remove()
-> > >    method which is provided in the uncore driver will be invoked. The
-> > >    uncore PMU will be unregistered as well.
-> > > - doesn't share any memory and IRQ resources. The uncore driver will
-> > >    only touch the PMU counters in the configuration space of the PCIe
-> > >    Root Port A.
-> > 
-> > I have to admit this is clever.  I don't really *like* it, but we
-> > don't have any very good alternatives at the moment.
-> > 
-> > I don't like the idea of a list of PCI IDs
-> > (perf_uncore_pcieport_ids[]) below that must be updated for every
-> > device that needs something like this.  That PCI ID information is
-> > normally in the drivers themselves, not in bus-level code like this.
-> 
-> I don't want to create a platform device for every single device. So I added
-> a check here. Yes, it doesn't look pretty, but I don't have a better
-> solution for now.
 
-I do not want to merge a stream of device IDs in portdrv_pci.c.  As
-far as I'm concerned, that's a non-starter.  New devices should not
-require changes in the PCI core.
+Patchset Summary:
+  Enhance a PCIe host controller driver.  Because of its unusual design
+  we are foced to change dev->dma_pfn_offset into a more general role
+  allowing multiple offsets.  See the 'v1' notes below for more info.
 
-> > And I don't like the way this subverts the device ownership model.
-> > Now we have several drivers (pciehp, aer, dpc, etc, plus this new perf
-> > driver) that share the same PCI device.  And we rely on the assumption
-> > that none of these drivers interferes with the others.
-> > 
-> > I think the best way to deal with this would be to incorporate the
-> > existing portdrv users (pciehp, aer, dpc, etc) directly into the PCI
-> > core so portdrv would not use pci_register_driver(), leaving the Root
-> > Port device available for the perf driver to claim it the normal way.
-> > But realistically I don't know when or even whether this will be done.
-> > 
-> > I think Stephane has worked around this problem in a different way,
-> > IIRC by using pci_get_device() in a perf driver to find Ports of
-> > interest.  That also subverts the device ownership model, and it
-> > doesn't work naturally with hotplug, but at least it gets the device
-> > IDs out of the PCI core and into the driver where they belong.  And
-> > there's value in solving the same problem in the same way.
-> > 
-> > Wait a minute!  You've already used the pci_get_device() strategy
-> > several times:
-> > 
-> >    2b3b76b5ec67 ("perf/x86/intel/uncore: Add Ice Lake server uncore support")
-> >    fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
-> >    ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
-> > 
-> > So what's really different about *this* situation?  Why would you not
-> > just continue using the same strategy?
-> 
-> There are three different methods (MSR, PCICFG, and MMIO) to access the
-> uncore counter, while each counter can only accessed using one of the
-> method. Many devices have uncore counters. All counters on the same device
-> must be accessed using the same method.
-> 
-> The perf uncore driver abstracts three code paths for the above three
-> different methods. Each code path is shared among the devices which have the
-> corresponding access method.
-> 
-> The pci_get_device() strategy is used by the device in which counters can be
-> accessed by MMIO. Currently, the only such device is the IMC (Integrated
-> Memory Controller) device. The problem is that the BAR address of the IMC
-> counters is located in the PCI Configuration Space of the Configuration
-> Agent (Ubox) device. The perf driver is not supposed to bind the Ubox device
-> while accessing the counters in another device, the IMC device. So the
-> pci_get_device() is used to retrieve the pci_dev of the Ubox. The perf
-> driver reads the BAR address from the Ubox and maps it to access the IMC
-> counters.
-> 
-> The counters in the Root Port device are in the PCI configuration space of
-> the device. For a device whose counters are in the PCI configuration space
-> of itself, the perf driver should probe and bind the device. However, the
-> Root Port device is already bound by the portdrv driver.
+v7:
+  Commit: "device core: Introduce DMA range map, supplanting ..."
+  -- remove second kcalloc/copy in device.c (AndyS)
+  -- use PTR_ERR_OR_ZERO() and PHYS_PFN() (AndyS)
+  -- indentation, sizeof(struct ...) => sizeof(*r) (AndyS)
+  -- add pfn.h definitions: PFN_DMA_ADDR(), DMA_ADDR_PFN() (AndyS)
+  -- Fixed compile error in "sun6i_csi.c" (kernel test robot)
+  Commit "ata: ahci_brcm: Fix use of BCM7216 reset controller"
+  -- correct name of function in the commit msg (SergeiS)
+  
+v6:
+  Commit "device core: Introduce DMA range map":
+  -- of_dma_get_range() now takes a single argument and returns either
+     NULL, a valid map, or an ERR_PTR. (Robin)
+  -- offsets are no longer a PFN value but an actual address. (Robin)
+  -- the bus_dma_region struct stores the range size instead of
+     the cpu_end and pci_end values. (Robin)
+  -- devices that were setting a single offset with no boundaries
+     have been modified to have boundaries; in a few places
+     where this informatino was unavilable a /* FIXME: ... */
+     comment was added. (Robin)
+  -- dma_attach_offset_range() can be called when an offset
+     map already exists; if it's range is already present
+     nothing is done and success is returned. (Robin)
+  All commits:
+  -- Man name/style/corrections/etc changed (Bjorn)
+  -- rebase to Torvalds master
 
-Understood.  That's why I said above that the current portdrv design
-is a problem.
+v5:
+  Commit "device core: Introduce multiple dma pfn offsets"
+  -- in of/address.c: "map_size = 0" => "*map_size = 0"
+  -- use kcalloc instead of kzalloc (AndyS)
+  -- use PHYS_ADDR_MAX instead of "~(phys_addr_t)0"
+  Commit "PCI: brcmstb: Set internal memory viewport sizes"
+  -- now gives error on missing dma-ranges property.
+  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
+  -- removed "Allof:" from brcm,scb-sizes definition (RobH)
+  All Commits:
+  -- indentation style, use max chars 100 (AndyS)
+  -- rebased to torvalds master
 
-> To maximize the code reuse in the perf driver, a platform device is
-> introduced as a child of the Root Port device. So the perf driver can probe
-> and bind the platform device in a similar method.
+v4:
+  Commit "device core: Introduce multiple dma pfn offsets"
+  -- of_dma_get_range() does not take a dev param but instead
+     takes two "out" params: map and map_size.  We do this so
+     that the code that parses dma-ranges is separate from
+     the code that modifies 'dev'.   (Nicolas)
+  -- the separate case of having a single pfn offset has
+     been removed and is now processed by going through the
+     map array. (Nicolas)
+  -- move attach_uniform_dma_pfn_offset() from of/address.c to
+     dma/mapping.c so that it does not depend on CONFIG_OF. (Nicolas)
+  -- devm_kcalloc => devm_kzalloc (DanC)
+  -- add/fix assignment to dev->dma_pfn_offset_map for func
+     attach_uniform_dma_pfn_offset() (DanC, Nicolas)
+  -- s/struct dma_pfn_offset_region/struct bus_dma_region/ (Nicolas)
+  -- s/attach_uniform_dma_pfn_offset/dma_attach_uniform_pfn_offset/
+  -- s/attach_dma_pfn_offset_map/dma_attach_pfn_offset_map/
+  -- More use of PFN_{PHYS,DOWN,UP}. (AndyS)
+  Commit "of: Include a dev param in of_dma_get_range()"
+  -- this commit was sqaushed with "device core: Introduce ..."
 
-The current portdrv design has two struct devices for each port: the
-usual one in struct pci_dev and a second in struct pcie_device.
-That's already one too many, and this platform device plan would
-add a third one.
+v3:
+  Commit "device core: Introduce multiple dma pfn offsets"
+  Commit "arm: dma-mapping: Invoke dma offset func if needed"
+  -- The above two commits have been squashed.  More importantly,
+     the code has been modified so that the functionality for
+     multiple pfn offsets subsumes the use of dev->dma_pfn_offset.
+     In fact, dma_pfn_offset is removed and supplanted by
+     dma_pfn_offset_map, which is a pointer to an array.  The
+     more common case of a uniform offset is now handled as
+     a map with a single entry, while cases requiring multiple
+     pfn offsets use a map with multiple entries.  Code paths
+     that used to do this:
 
-It also would add an arbitrary new way to bind a driver to a PCI
-device, so we end up with *two* drivers bound to the same device.  I
-don't think that's a good design.
+         dev->dma_pfn_offset = mydrivers_pfn_offset;
 
-> The pci_get_device() strategy may work for the case, but from the
-> perspective of the perf driver, I don't think it's a good solution. We have
-> to specially handle the pci_get_device() strategy in the code path of the
-> PCICFG access method. Also, it's not a complete solution, e.g. as you said
-> it doesn't work naturally with hotplug.
+     have been changed to do this:
 
-I think pci_get_device() is also a pretty poor solution, but I think
-it's the best of the current poor options because it's already pretty
-widely used by EDAC drivers and others, and at least it doesn't give
-the illusion that we're using a safe driver binding model.
+         attach_uniform_dma_pfn_offset(dev, pfn_offset);
 
-I think the hotplug issue could be handled with bus-level
-notifications (also ugly, but at least workable).  xen_pci_notifier()
-is a possible example.
+  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
+  -- Add if/then clause for required props: resets, reset-names (RobH)
+  -- Change compatible list from const to enum (RobH)
+  -- Change list of u32-tuples to u64 (RobH)
 
-I would welcome any help in reworking portdrv so we could do this more
-cleanly.
+  Commit "of: Include a dev param in of_dma_get_range()"
+  -- modify of/unittests.c to add NULL param in of_dma_get_range() call.
 
-> > > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> > > ---
-> > >   drivers/pci/pcie/portdrv_pci.c | 38 ++++++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 38 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> > > index 3acf151..47e33b2 100644
-> > > --- a/drivers/pci/pcie/portdrv_pci.c
-> > > +++ b/drivers/pci/pcie/portdrv_pci.c
-> > > @@ -15,6 +15,7 @@
-> > >   #include <linux/init.h>
-> > >   #include <linux/aer.h>
-> > >   #include <linux/dmi.h>
-> > > +#include <linux/platform_device.h>
-> > >   #include "../pci.h"
-> > >   #include "portdrv.h"
-> > > @@ -90,6 +91,40 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
-> > >   #define PCIE_PORTDRV_PM_OPS	NULL
-> > >   #endif /* !PM */
-> > > +static const struct pci_device_id perf_uncore_pcieport_ids[] = {
-> > > +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a) },
-> > > +	{ },
-> > > +};
-> > > +
-> > > +static void perf_platform_device_register(struct pci_dev *dev)
-> > > +{
-> > > +	struct platform_device *pdev;
-> > > +
-> > > +	if (!pci_match_id(perf_uncore_pcieport_ids, dev))
-> > > +		return;
-> > > +
-> > > +	pdev = platform_device_alloc("perf_uncore_pcieport", PLATFORM_DEVID_AUTO);
-> > > +	if (!pdev)
-> > > +		return;
-> > > +
-> > > +	pdev->dev.parent = &dev->dev;
-> > > +
-> > > +	if (platform_device_add(pdev)) {
-> > > +		platform_device_put(pdev);
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	pci_set_drvdata(dev, pdev);
-> > > +}
-> > > +
-> > > +static void perf_platform_device_unregister(struct pci_dev *dev)
-> > > +{
-> > > +	struct platform_device *pdev = pci_get_drvdata(dev);
-> > > +
-> > > +	if (pdev)
-> > > +		platform_device_unregister(pdev);
-> > > +}
-> > > +
-> > >   /*
-> > >    * pcie_portdrv_probe - Probe PCI-Express port devices
-> > >    * @dev: PCI-Express port device being probed
-> > > @@ -113,6 +148,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
-> > >   	if (status)
-> > >   		return status;
-> > > +	perf_platform_device_register(dev);
-> > > +
-> > >   	pci_save_state(dev);
-> > >   	dev_pm_set_driver_flags(&dev->dev, DPM_FLAG_NO_DIRECT_COMPLETE |
-> > > @@ -142,6 +179,7 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
-> > >   		pm_runtime_dont_use_autosuspend(&dev->dev);
-> > >   	}
-> > > +	perf_platform_device_unregister(dev);
-> > >   	pcie_port_device_remove(dev);
-> > >   }
-> > > -- 
-> > > 2.7.4
-> > > 
+  Commit "device core: Add ability to handle multiple dma offsets"
+  -- align comment in device.h (AndyS).
+  -- s/cpu_beg/cpu_start/ and s/dma_beg/dma_start/ in struct
+     dma_pfn_offset_region (AndyS).
+
+v2:
+Commit: "device core: Add ability to handle multiple dma offsets"
+  o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
+  o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
+  o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
+  o dev->dma_pfn_map => dev->dma_pfn_offset_map
+  o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
+  o In device.h: s/const void */const struct dma_pfn_offset_region */
+  o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
+    guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
+  o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
+    dev->dma_pfn_offset_map is copied as well.
+  o Merged two of the DMA commits into one (Christoph).
+
+Commit "arm: dma-mapping: Invoke dma offset func if needed":
+  o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
+
+Other commits' changes:
+  o Removed need for carrying of_id var in priv (Nicolas)
+  o Commit message rewordings (Bjorn)
+  o Commit log messages filled to 75 chars (Bjorn)
+  o devm_reset_control_get_shared())
+    => devm_reset_control_get_optional_shared (Philipp)
+  o Add call to reset_control_assert() in PCIe remove routines (Philipp)
+
+v1:
+This patchset expands the usefulness of the Broadcom Settop Box PCIe
+controller by building upon the PCIe driver used currently by the
+Raspbery Pi.  Other forms of this patchset were submitted by me years
+ago and not accepted; the major sticking point was the code required
+for the DMA remapping needed for the PCIe driver to work [1].
+
+There have been many changes to the DMA and OF subsystems since that
+time, making a cleaner and less intrusive patchset possible.  This
+patchset implements a generalization of "dev->dma_pfn_offset", except
+that instead of a single scalar offset it provides for multiple
+offsets via a function which depends upon the "dma-ranges" property of
+the PCIe host controller.  This is required for proper functionality
+of the BrcmSTB PCIe controller and possibly some other devices.
+
+[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
+
+Jim Quinlan (12):
+  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+  ata: ahci_brcm: Fix use of BCM7216 reset controller
+  dt-bindings: PCI: Add bindings for more Brcmstb chips
+  PCI: brcmstb: Add bcm7278 register info
+  PCI: brcmstb: Add suspend and resume pm_ops
+  PCI: brcmstb: Add bcm7278 PERST# support
+  PCI: brcmstb: Add control of rescal reset
+  device core: Introduce DMA range map, supplanting dma_pfn_offset
+  PCI: brcmstb: Set additional internal memory DMA viewport sizes
+  PCI: brcmstb: Accommodate MSI for older chips
+  PCI: brcmstb: Set bus max burst size by chip type
+  PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |  56 ++-
+ arch/arm/include/asm/dma-mapping.h            |   9 +-
+ arch/arm/mach-keystone/keystone.c             |  17 +-
+ arch/sh/drivers/pci/pcie-sh7786.c             |   9 +-
+ arch/sh/kernel/dma-coherent.c                 |  16 +-
+ arch/x86/pci/sta2x11-fixup.c                  |   7 +-
+ drivers/acpi/arm64/iort.c                     |   5 +-
+ drivers/ata/ahci_brcm.c                       |  11 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.c         |   7 +-
+ drivers/iommu/io-pgtable-arm.c                |   2 +-
+ .../platform/sunxi/sun4i-csi/sun4i_csi.c      |   6 +-
+ .../platform/sunxi/sun6i-csi/sun6i_csi.c      |   5 +-
+ drivers/of/address.c                          |  95 ++--
+ drivers/of/device.c                           |  47 +-
+ drivers/of/of_private.h                       |   9 +-
+ drivers/of/unittest.c                         |  35 +-
+ drivers/pci/controller/Kconfig                |   3 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 408 +++++++++++++++---
+ drivers/remoteproc/remoteproc_core.c          |   2 +-
+ .../staging/media/sunxi/cedrus/cedrus_hw.c    |   8 +-
+ drivers/usb/core/message.c                    |   4 +-
+ drivers/usb/core/usb.c                        |   2 +-
+ include/linux/device.h                        |   4 +-
+ include/linux/dma-direct.h                    |  10 +-
+ include/linux/dma-mapping.h                   |  37 ++
+ include/linux/pfn.h                           |   2 +
+ kernel/dma/coherent.c                         |  10 +-
+ kernel/dma/mapping.c                          |  53 +++
+ 28 files changed, 682 insertions(+), 197 deletions(-)
+
+-- 
+2.17.1
+
