@@ -2,139 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89AD9218ADE
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 17:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF833218B24
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 17:24:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgGHPMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jul 2020 11:12:06 -0400
-Received: from sonic306-2.consmr.mail.bf2.yahoo.com ([74.6.132.41]:34751 "EHLO
-        sonic306-2.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729500AbgGHPMG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jul 2020 11:12:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1594221125; bh=Uv9Il0GvVfNf8ySja/n2kkVJo04KZ3nX+ejOBNQOQ/8=; h=Date:From:Reply-To:Subject:References:From:Subject; b=uOG11/yy/huLJscmf7MOOhElAeJKPOShBJjwL/TF7uXnNFuEiiSO1/4RR/pgCIxVUJUgbZlUmD6c7rfEKSY4mGDahTGImsXRWqcVybkKfFWIRfbFTk5OemPalZU05pqnXxSgZVRzk6Wf6A4LgYQuct/918emnicwRoI/96jpqyGKywwQ2GlZEvVm5VylecNUV/wYBv96KtT8AjVkhqrsnYslytq+3dbOYi+gnAGaVc7j8P9EHCZK3ILx/lmiNrL1GEF8BACxXIfExN90s9al16gEgelXbMDI7SokEeuSlxZEr2dZfsNP2Dj7ho8q6jHKtG3QsYahlneJNW/2ej9rQA==
-X-YMail-OSG: ezjof1wVM1kfcruk6hQj4mlKi_8i4JeGC6Sb3IlD0qNmqEZpivqc4qFV_6XQIbm
- t2jeqztdKhW1Zf1x.S6yyEOGnu8ToAnyAC9AshkgG2WXeuepjx1ctyTZeOdj3fWhaZgF3vtzc.mn
- yG0HxaFVsF_ADXj2v5UxTnBaJZQxWiFkMzFVz6QR0U9iCQEFesdSrOp6tMC.lEgBQfS6ECReCw1h
- aFWg5N4j5Id0kAl5WlUnI8MIt6_nUBSKsTxxJ6wqPKOSjvP8RGNc6DE52CzHj649zgOTFtXxtXcU
- B2qdKLqCkCtteVqmmavM5pR4b9im99d38HA3Vic1UYkIO1OFefqi09abizoABgAzPIVTajL8K1xG
- 4.pIdvuiTApq4C6QCKC9Hsxc3s1zgG_gFutx8pqYaIk.WDWrwwm0NPD7ZbQ9JzCngunm2V6vEJpu
- hJkbEMHfLEZxDpAmTyp1vW5hgpgSXj0XCQafEpDLxoTfzZdkDozgoBlCsRbxMeMP2CDgyuo49yft
- .07RgTP8TEgl.6Do3EHhVeQSZREn0cHdOmaPcIp8463pxlgYlpWFzUk4M0zKJmYNIOmAHEdo0qfW
- ymPaqKYO_EPMKJe9LCC1oTVmMRm3FbpDPtUkbsCPpbV6xIaOSjrSFAeRlJKIppTSuASPeG3Q7I2q
- cvjtSZGMzxM19xUeP9yB8JegrzOLjFW55sRflTKLAQWy9dXn214YSE0odH9ENgBz4rUaswr7P3gW
- o2umE4kQL2NkEww2khSHv7N266unRfaxkKKlMTqwMnX1pYsvMZT2LHOUSe8OE3pKURv.pUa0EN4Z
- IfHtQ4QtCdx6tddOIUgZQzMxJc7oDk6umEGJEIy.l8W3ggc0M9vD3b0PuQLtXIyRdg2zE2EL8_ZX
- YnyzsNbFJUqh6gNv08rEZ1l.3dNJB5nSXPs.uyfCh0scPuuOy1qMhN7Cf9jDdCefQERwuMVC31yS
- 2WwnyMTxIgivjBXUhJ2CtR9YMBaSpr6JA.uD2GQm5KBJSYINIk2Ec1D2OoFXXv9Krxoc_nuiUVHA
- Dle2_FVFz6YzdWvspft.QCyZj15ZhJ9qmNhuVB2Gdfx9N5Qb64v504KhFe_mLloik0aBo4Od7O.K
- 5kasmzp9RaiAACtt6HoDYMoVWpqwTPyjiZro6VdNwzaYgpNeRlRRrfRSLp5_n3wgT8MRBGJ8.iA7
- W5T552p30rYpSoVm66DngVhBS59FglYAi3LUVHF7Dzp6M17hGNh6gdKBfDRcAYhcuuPVU6zlGyju
- agZcxL9swFdIfKEn_QhLjO991aMKvdcc3o_OJNRoqf5h8cxU1SB7Nn9onmP2Oqy2fapI5phLQug5
- 5Ylwc5A--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.bf2.yahoo.com with HTTP; Wed, 8 Jul 2020 15:12:05 +0000
-Date:   Wed, 8 Jul 2020 15:12:00 +0000 (UTC)
-From:   barkummar faso <barkummarfaso@gmail.com>
-Reply-To: wu.paymentofic@fastservice.com
-Message-ID: <69818794.2153454.1594221120675@mail.yahoo.com>
-Subject: YOUR GIFT WESTERN UNION PAYMENT
+        id S1729988AbgGHPYl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jul 2020 11:24:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:46630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729022AbgGHPYk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:24:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 257D01FB;
+        Wed,  8 Jul 2020 08:24:40 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9361C3F237;
+        Wed,  8 Jul 2020 08:24:38 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 16:24:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     wu000273@umn.edu
+Cc:     svarbanov@mm-sol.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org, helgaas@google.com,
+        p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus.Elfring@web.de, kjlu@umn.edu
+Subject: Re: [PATCH V2] PCI: qcom: Improve exception handling in
+ qcom_pcie_probe().
+Message-ID: <20200708152436.GB4238@e121166-lin.cambridge.arm.com>
+References: <20200527025531.32357-1-wu000273@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <69818794.2153454.1594221120675.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16197 YMailNodin Mozilla/5.0 (Windows NT 6.1; rv:78.0) Gecko/20100101 Firefox/78.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527025531.32357-1-wu000273@umn.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, May 26, 2020 at 09:55:31PM -0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
+> 
+> This function contained improvable implementation details according to
+> exception handling.
+> 1. pm_runtime_put() should be called after pm_runtime_get_sync() failed,
+> because the reference count will be increased despite of the failure.
+> Thus add the missed function call.
+> 2. pm_runtime_disable() are called twice, after the call of phy_init() and
+> dw_pcie_host_init() failed. Thus remove redundant function calls.
 
+Can you send a patch fixing (2) based on my pci/runtime-pm branch:
 
-ATTN;BENEFICIARY:
+git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
 
+pci/runtime-pm
 
+Note that (1) is fixed by
 
+https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/commit/?h=pci/runtime-pm&id=cb52a40202420d3886b84ea13dba699c9da13eb0
 
-
-You are welcome to Western UNION office Burkina Faso.
-
-
-
-Am Barr Kummar Faso by name, The new director of Western Union Foreign Oper=
-ation.
-
-
-I resumed work today and your daily transfer file was submitted as pending =
-payment in our Western union Bank and after my verification, I called the f=
-ormal Accountant Officer in-charge of your payment to find out the reason w=
-hy they are delaying your daily transfer and he explained that you was unab=
-le to activate your daily installment account fully.
-
-
-However, I don't know your financial capability at this moment and it was t=
-he reason why I decided to help in this matter just to make it easy for you=
- to start receiving your daily transfer because I know that when you receiv=
-e the total sum $900.000.00 usd that you will definitely compensate me.
-
-
-
-I don't want you to lose this fund at this stage after all your efforts. Mo=
-st wise people prefer to use this medium western union money transfer now a=
-s the best and reliable means of transfer,Kindly take control of yourself a=
-nd leave everything to God because I know that from now on, you will be the=
- one to say that our lord is good, so I will advice you to send me your dir=
-ect phone number your address,country,Pass port because I will text you the=
- MTCN through SMS and attach other information and send to you through your=
- email box, Sender name Sender=E2=80=99s address with including all documen=
-ts involve in the transaction.
-
-
-For this moment I will be very glad for your quick response by sending sum =
-of $25.00 so that I will quickly do the needful and finalize everything wit=
-hin 1:43pm our local time here, I am giving you every assurance that as soo=
-n as I receive the $25.00 that I will activate your daily installment accou=
-nt and proceed with your first transfer of $7,000.00 before 1:43pm our loca=
-l time because I will close once its 6:30pm.
-
-
-Contact person Barr Faso Kummar
-contact Email: wu.paymentofic@fastservice.com
-
-
-
-Be aware that all verification's and arrangement involve in this transfer h=
-as being made in your favour. So I need your maximum co-operation to ensure=
- that strictest confidence is maintained to avoid any further delay.
-
-
-Send the $25.00 through Western Union Money Transfer to below following inf=
-ormation and get back to me with copy of the Western Union slip OK?
-
-
-Receiver's Name...
-Country.... Burkina Faso
-Text Question..........Good
-Answer.............News
-Amount .......$25 USD
-MTCN............
-
-
-I felt pains after going through your payment file and found the reason why=
- you have not start receiving your fund from this department and ready to d=
-o my utmost to make sure you receive it all OK?
-
-
-Be rest assured that I will activate your daily installment account and pos=
-t your first $7,000 USD for you to pick-up today as soon as we receive the =
-fee from you.
-
-
-Please do not hesitate to contact us again should you require additional in=
-formation or call +226 74 43 41 61 for further urgent attention, as we are =
-here to serve you the best.
-
-
-Regard's
-Barrister Kummar Faso
-New Director Western Union Foreign Operation
-Our:Code of conduct:1000%
+> 
+> Fixes: 6e5da6f7d824 ("PCI: qcom: Fix error handling in runtime PM support")
+> Co-developed-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
+>  V2: words adjustments and fix some typos 
+>  drivers/pci/controller/dwc/pcie-qcom.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 138e1a2d21cc..10393ab607bf 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1340,8 +1340,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	pm_runtime_enable(dev);
+>  	ret = pm_runtime_get_sync(dev);
+>  	if (ret < 0) {
+> -		pm_runtime_disable(dev);
+> -		return ret;
+> +		goto err_pm_runtime_put;
+>  	}
+>  
+>  	pci->dev = dev;
+> @@ -1401,7 +1400,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  
+>  	ret = phy_init(pcie->phy);
+>  	if (ret) {
+> -		pm_runtime_disable(&pdev->dev);
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> @@ -1410,7 +1408,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	ret = dw_pcie_host_init(pp);
+>  	if (ret) {
+>  		dev_err(dev, "cannot initialize host\n");
+> -		pm_runtime_disable(&pdev->dev);
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
