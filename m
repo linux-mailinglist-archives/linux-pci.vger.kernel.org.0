@@ -2,115 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5210218AA8
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 17:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89AD9218ADE
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jul 2020 17:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgGHPBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jul 2020 11:01:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:45422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbgGHPBo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:01:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C33951FB;
-        Wed,  8 Jul 2020 08:01:42 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDC1C3F237;
-        Wed,  8 Jul 2020 08:01:41 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 16:01:35 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/2] PCI: rockchip: =?utf-8?Q?E?=
- =?utf-8?B?bmFibGUgSU8gYmFzZSBhbmQgbGltaXQgcmVnaXN0ZXJz44CQ6K+35rOo5oSP?=
- =?utf-8?B?77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNlcytzaGF3bi5saW49?=
- =?utf-8?B?cm9jay1jaGlwcy5jb21AbGlzdHMuaW5mcmFkZWFkLm9yZ+S7o+WPkeOAkQ==?=
-Message-ID: <20200708150135.GA4238@e121166-lin.cambridge.arm.com>
-References: <1590023130-137406-1-git-send-email-shawn.lin@rock-chips.com>
- <CANAwSgRXuMQaytB4BXL89JQAmU=XutBXj6iMhfKdZp3JwM9a4g@mail.gmail.com>
- <eb0acd3d-92d0-db00-78e4-8a17033f7f0a@rock-chips.com>
- <CANAwSgSzoc5TaO6ks9kdN7W+xDo1STbtsA0dUpsk8hqP6swkYg@mail.gmail.com>
+        id S1729915AbgGHPMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jul 2020 11:12:06 -0400
+Received: from sonic306-2.consmr.mail.bf2.yahoo.com ([74.6.132.41]:34751 "EHLO
+        sonic306-2.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729500AbgGHPMG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jul 2020 11:12:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1594221125; bh=Uv9Il0GvVfNf8ySja/n2kkVJo04KZ3nX+ejOBNQOQ/8=; h=Date:From:Reply-To:Subject:References:From:Subject; b=uOG11/yy/huLJscmf7MOOhElAeJKPOShBJjwL/TF7uXnNFuEiiSO1/4RR/pgCIxVUJUgbZlUmD6c7rfEKSY4mGDahTGImsXRWqcVybkKfFWIRfbFTk5OemPalZU05pqnXxSgZVRzk6Wf6A4LgYQuct/918emnicwRoI/96jpqyGKywwQ2GlZEvVm5VylecNUV/wYBv96KtT8AjVkhqrsnYslytq+3dbOYi+gnAGaVc7j8P9EHCZK3ILx/lmiNrL1GEF8BACxXIfExN90s9al16gEgelXbMDI7SokEeuSlxZEr2dZfsNP2Dj7ho8q6jHKtG3QsYahlneJNW/2ej9rQA==
+X-YMail-OSG: ezjof1wVM1kfcruk6hQj4mlKi_8i4JeGC6Sb3IlD0qNmqEZpivqc4qFV_6XQIbm
+ t2jeqztdKhW1Zf1x.S6yyEOGnu8ToAnyAC9AshkgG2WXeuepjx1ctyTZeOdj3fWhaZgF3vtzc.mn
+ yG0HxaFVsF_ADXj2v5UxTnBaJZQxWiFkMzFVz6QR0U9iCQEFesdSrOp6tMC.lEgBQfS6ECReCw1h
+ aFWg5N4j5Id0kAl5WlUnI8MIt6_nUBSKsTxxJ6wqPKOSjvP8RGNc6DE52CzHj649zgOTFtXxtXcU
+ B2qdKLqCkCtteVqmmavM5pR4b9im99d38HA3Vic1UYkIO1OFefqi09abizoABgAzPIVTajL8K1xG
+ 4.pIdvuiTApq4C6QCKC9Hsxc3s1zgG_gFutx8pqYaIk.WDWrwwm0NPD7ZbQ9JzCngunm2V6vEJpu
+ hJkbEMHfLEZxDpAmTyp1vW5hgpgSXj0XCQafEpDLxoTfzZdkDozgoBlCsRbxMeMP2CDgyuo49yft
+ .07RgTP8TEgl.6Do3EHhVeQSZREn0cHdOmaPcIp8463pxlgYlpWFzUk4M0zKJmYNIOmAHEdo0qfW
+ ymPaqKYO_EPMKJe9LCC1oTVmMRm3FbpDPtUkbsCPpbV6xIaOSjrSFAeRlJKIppTSuASPeG3Q7I2q
+ cvjtSZGMzxM19xUeP9yB8JegrzOLjFW55sRflTKLAQWy9dXn214YSE0odH9ENgBz4rUaswr7P3gW
+ o2umE4kQL2NkEww2khSHv7N266unRfaxkKKlMTqwMnX1pYsvMZT2LHOUSe8OE3pKURv.pUa0EN4Z
+ IfHtQ4QtCdx6tddOIUgZQzMxJc7oDk6umEGJEIy.l8W3ggc0M9vD3b0PuQLtXIyRdg2zE2EL8_ZX
+ YnyzsNbFJUqh6gNv08rEZ1l.3dNJB5nSXPs.uyfCh0scPuuOy1qMhN7Cf9jDdCefQERwuMVC31yS
+ 2WwnyMTxIgivjBXUhJ2CtR9YMBaSpr6JA.uD2GQm5KBJSYINIk2Ec1D2OoFXXv9Krxoc_nuiUVHA
+ Dle2_FVFz6YzdWvspft.QCyZj15ZhJ9qmNhuVB2Gdfx9N5Qb64v504KhFe_mLloik0aBo4Od7O.K
+ 5kasmzp9RaiAACtt6HoDYMoVWpqwTPyjiZro6VdNwzaYgpNeRlRRrfRSLp5_n3wgT8MRBGJ8.iA7
+ W5T552p30rYpSoVm66DngVhBS59FglYAi3LUVHF7Dzp6M17hGNh6gdKBfDRcAYhcuuPVU6zlGyju
+ agZcxL9swFdIfKEn_QhLjO991aMKvdcc3o_OJNRoqf5h8cxU1SB7Nn9onmP2Oqy2fapI5phLQug5
+ 5Ylwc5A--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.bf2.yahoo.com with HTTP; Wed, 8 Jul 2020 15:12:05 +0000
+Date:   Wed, 8 Jul 2020 15:12:00 +0000 (UTC)
+From:   barkummar faso <barkummarfaso@gmail.com>
+Reply-To: wu.paymentofic@fastservice.com
+Message-ID: <69818794.2153454.1594221120675@mail.yahoo.com>
+Subject: YOUR GIFT WESTERN UNION PAYMENT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgSzoc5TaO6ks9kdN7W+xDo1STbtsA0dUpsk8hqP6swkYg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <69818794.2153454.1594221120675.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16197 YMailNodin Mozilla/5.0 (Windows NT 6.1; rv:78.0) Gecko/20100101 Firefox/78.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 22, 2020 at 05:59:14PM +0530, Anand Moon wrote:
-> Hi Shawn
-> 
-> On Fri, 22 May 2020 at 08:30, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> >
-> >
-> > 在 2020/5/21 18:51, Anand Moon 写道:
-> > > Hi Shawn,
-> > >
-> > > On Thu, 21 May 2020 at 06:35, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> > >>
-> > >> According to RK3399 user manual, bit 9 in PCIE_RC_BAR_CONF should
-> > >> be set, otherwise accessing to IO base and limit registers would
-> > >> fail.
-> > >>
-> > >> [    0.411318] pci_bus 0000:00: root bus resource [bus 00-1f]
-> > >> [    0.411822] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff]
-> > >> [    0.412440] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus address [0xfbe00000-0xfbefffff])
-> > >> [    0.413665] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
-> > >> [    0.414698] pci 0000:01:00.0: reg 0x10: initial BAR value 0x00000000 invalid
-> > >> [    0.415412] pci 0000:01:00.0: reg 0x18: initial BAR value 0x00000000 invalid
-> > >> [    0.418456] pci 0000:00:00.0: BAR 8: assigned [mem 0xfa000000-0xfa0fffff]
-> > >> [    0.419065] pci 0000:01:00.0: BAR 1: assigned [mem 0xfa000000-0xfa007fff pref]
-> > >> [    0.419728] pci 0000:01:00.0: BAR 6: assigned [mem 0xfa008000-0xfa00ffff pref]
-> > >> [    0.420377] pci 0000:01:00.0: BAR 0: no space for [io  size 0x0100]
-> > >> [    0.420935] pci 0000:01:00.0: BAR 0: failed to assign [io  size 0x0100]
-> > >> [    0.421526] pci 0000:01:00.0: BAR 2: no space for [io  size 0x0004]
-> > >> [    0.422084] pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0004]
-> > >> [    0.422687] pci 0000:00:00.0: PCI bridge to [bus 01]
-> > >> [    0.423135] pci 0000:00:00.0:   bridge window [mem 0xfa000000-0xfa0fffff]
-> > >> [    0.423794] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
-> > >> [    0.424566] pcieport 0000:00:00.0: Signaling PME through PCIe PME interrupt
-> > >> [    0.425182] pci 0000:01:00.0: Signaling PME through PCIe PME interrupt
-> > >>
-> > >> 01:00.0 Class 0700: Device 1c00:3853 (rev 10) (prog-if 05)
-> > >>          Subsystem: Device 1c00:3853
-> > >>          Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-> > >>          Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > >>          Interrupt: pin A routed to IRQ 230
-> > >>          Region 0: I/O ports at <unassigned> [disabled]
-> > >>          Region 1: Memory at fa000000 (32-bit, prefetchable) [disabled] [size=32K]
-> > >>          Region 2: I/O ports at <unassigned> [disabled]
-> > >>          [virtual] Expansion ROM at fa008000 [disabled] [size=32K]
-> > >>
-> > >> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> > >> ---
-> > >
-> > > I have old development board Odroid N1 (RK3399),  It has onboard PCIe
-> > > 2 dual sata bridge.
-> > > I have tested this patch, but I am still getting following log on
-> > > Odroid N1 board.
-> > > Is their any more configuration needed for sata ports ?
-> >
-> > Thanks for testing. I made a mistake that it should be bit 19, so
-> > can you try using BIT(19)?
-> >
-> 
-> Nop enable this bit dose not solve the issue see at my end.
-> 
-> But as per RK3399 TMR  17.6.7.1.45 Root Complex BAR Configuration Register
-> their are many bits that are not tuned correctly.
-> I tried to set some bit to BAR Configuration register. but it dose not
-> work at my end.
-> I feel some more core configuration is missing.
-> If I have some update I will share it with you.
 
-What's the status of this discussion and therefore this series ?
 
-Thanks,
-Lorenzo
+ATTN;BENEFICIARY:
+
+
+
+
+
+You are welcome to Western UNION office Burkina Faso.
+
+
+
+Am Barr Kummar Faso by name, The new director of Western Union Foreign Oper=
+ation.
+
+
+I resumed work today and your daily transfer file was submitted as pending =
+payment in our Western union Bank and after my verification, I called the f=
+ormal Accountant Officer in-charge of your payment to find out the reason w=
+hy they are delaying your daily transfer and he explained that you was unab=
+le to activate your daily installment account fully.
+
+
+However, I don't know your financial capability at this moment and it was t=
+he reason why I decided to help in this matter just to make it easy for you=
+ to start receiving your daily transfer because I know that when you receiv=
+e the total sum $900.000.00 usd that you will definitely compensate me.
+
+
+
+I don't want you to lose this fund at this stage after all your efforts. Mo=
+st wise people prefer to use this medium western union money transfer now a=
+s the best and reliable means of transfer,Kindly take control of yourself a=
+nd leave everything to God because I know that from now on, you will be the=
+ one to say that our lord is good, so I will advice you to send me your dir=
+ect phone number your address,country,Pass port because I will text you the=
+ MTCN through SMS and attach other information and send to you through your=
+ email box, Sender name Sender=E2=80=99s address with including all documen=
+ts involve in the transaction.
+
+
+For this moment I will be very glad for your quick response by sending sum =
+of $25.00 so that I will quickly do the needful and finalize everything wit=
+hin 1:43pm our local time here, I am giving you every assurance that as soo=
+n as I receive the $25.00 that I will activate your daily installment accou=
+nt and proceed with your first transfer of $7,000.00 before 1:43pm our loca=
+l time because I will close once its 6:30pm.
+
+
+Contact person Barr Faso Kummar
+contact Email: wu.paymentofic@fastservice.com
+
+
+
+Be aware that all verification's and arrangement involve in this transfer h=
+as being made in your favour. So I need your maximum co-operation to ensure=
+ that strictest confidence is maintained to avoid any further delay.
+
+
+Send the $25.00 through Western Union Money Transfer to below following inf=
+ormation and get back to me with copy of the Western Union slip OK?
+
+
+Receiver's Name...
+Country.... Burkina Faso
+Text Question..........Good
+Answer.............News
+Amount .......$25 USD
+MTCN............
+
+
+I felt pains after going through your payment file and found the reason why=
+ you have not start receiving your fund from this department and ready to d=
+o my utmost to make sure you receive it all OK?
+
+
+Be rest assured that I will activate your daily installment account and pos=
+t your first $7,000 USD for you to pick-up today as soon as we receive the =
+fee from you.
+
+
+Please do not hesitate to contact us again should you require additional in=
+formation or call +226 74 43 41 61 for further urgent attention, as we are =
+here to serve you the best.
+
+
+Regard's
+Barrister Kummar Faso
+New Director Western Union Foreign Operation
+Our:Code of conduct:1000%
