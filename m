@@ -2,90 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04ABC21A55C
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 19:00:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F0F021A5A6
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 19:18:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgGIRAl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 13:00:41 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38565 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgGIRAl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 13:00:41 -0400
-Received: by mail-io1-f66.google.com with SMTP id l1so3084655ioh.5;
-        Thu, 09 Jul 2020 10:00:40 -0700 (PDT)
+        id S1727091AbgGIRSF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 13:18:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgGIRSF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 13:18:05 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B135C08C5CE
+        for <linux-pci@vger.kernel.org>; Thu,  9 Jul 2020 10:18:05 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z24so3264739ljn.8
+        for <linux-pci@vger.kernel.org>; Thu, 09 Jul 2020 10:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AMelQbu4GNOUTiQUXyQhTQeNmU8YQghg+buL41uO1A0=;
+        b=zJCx96qlIkvDubrEZxfXGqWuevrvHwUjdZMs6qlAA9VKg47tSMcZVF1STIFqSLKFYC
+         V3SuWoU2GS8m0jSjEDdHBjqQh2XrNelXA0gdTGcs/BlEl4ctO8zz+FTFW2BChI11Dpin
+         SO9Xb3/Nfcgz3YCV/wbV/R2OdjlkioABvEKdvhu6F9j2loo1UcHJsJILy6cNPhfu+vWz
+         NI0QrroNviR7NLP0kGXD5Qgu2kk1OLpVo4F1WuPfy5wii2kc0/1LTftx0D6SDIbvJtgZ
+         JQlGkWOjAGsMMEX4sYiCIFsh+9i9KotYZ+gX006iIMklSVQ4d9vdSF74i/xBROTcX7L/
+         rCLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J57B4SYSeZSds0MiAw/eWQKxFfmLvKjSluZG4Rx7dM0=;
-        b=m4YRvSMUURKSZ5R7Js7iwtbdrlp9PDTmPRbU/+sRmokivsT+Rd7i9aUKXS6iyHb5nf
-         BilinT6rXc6++EgqnZRyaTMbehJB0tCngqzQr9Ut3MUqCfrOn9E1KFrIwaLY3fcoLIR+
-         Ef1inw062uVbLNMdTuDacU3p5qAW1L/4HIbyzS6Vz6ThR8Bm3GF032q0OGl/PybAcydt
-         rfPbUUk3ImtGujVLLsX9s8cX4ltWxM5qM+qTwQfelt+gJB2cKPQ7gqn4fXyZmr8zvXF1
-         X/CTXSS2nSDFOzFsHOKLJgODU1cqY6kPgeEDvQDFA7wtfZKfyetlaDgWErixwq4NPPB7
-         WIkw==
-X-Gm-Message-State: AOAM532kQx2wp3eDbY3yLCO8vOfGs6ZxlA+M7RMFNsXQICgdl9chkkd5
-        MvyYYhuYtJMREWLpgQHplL6xHdJJjg==
-X-Google-Smtp-Source: ABdhPJym5BpBPRGl0IaG+oewAoSKHMUJvqWWhGsC8UTGI1GS5iPctaV9bpzLjDfYKxDsWZrvRq4bOQ==
-X-Received: by 2002:a05:6638:2649:: with SMTP id n9mr37825758jat.126.1594314040162;
-        Thu, 09 Jul 2020 10:00:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id c25sm2438583ioi.13.2020.07.09.10.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:00:39 -0700 (PDT)
-Received: (nullmailer pid 518350 invoked by uid 1000);
-        Thu, 09 Jul 2020 17:00:35 -0000
-Date:   Thu, 9 Jul 2020 11:00:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 11/14] dt-bindings: PCI: Add EP mode dt-bindings for
- TI's J721E SoC
-Message-ID: <20200709170035.GA518075@bogus>
-References: <20200708093018.28474-1-kishon@ti.com>
- <20200708093018.28474-12-kishon@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AMelQbu4GNOUTiQUXyQhTQeNmU8YQghg+buL41uO1A0=;
+        b=CBB8LHQa+QGVMbc67eHYAhusq8dNhoxJu4w3Ra+e64wOTujhz38MdCaY9G646eh2BZ
+         Rwp+XFXpp1Nma806sdB7V4zZ0Gh9DolejBaBB9irZ0NaTwTPoFptvBYB9jUKEFGbRIj2
+         KT01ezaxv43q4hBxjofT+59GTqZdOVvKGzwfPIXuK/6xb4xGNGFE8UAtV4mx9i0gBha5
+         yXGt89ZpK0tvpNiJXsXvwBXY8xXFNlS/vzeL2sj3fGR3rutgmC63k0Gbf4T5tRTyGGJG
+         3GVVsvd3X9SV2+mAG33YdsEekK63i3ZHRJcqjgUMzHQ+vUV7ELAmWq0wndsZHKf2i1kW
+         Vczw==
+X-Gm-Message-State: AOAM533NYBVAJ6/eIWQMQYPZDTmEyvBBiSPw9WTc0HQBgn5bJYsgEj89
+        Pl0Fr/NOEL7UmYNCswDWTk0k2895Pz2pydTTnDHSdA==
+X-Google-Smtp-Source: ABdhPJy59F6ZCQSaD8uKjrbhhjFhb3xdx9OFqKmFc+CpDGYLj4EoIzWcXj907rbez1Xl3IWHWX3VNntw2kaVSl5E2p8=
+X-Received: by 2002:a2e:8e8d:: with SMTP id z13mr35603314ljk.215.1594315083579;
+ Thu, 09 Jul 2020 10:18:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708093018.28474-12-kishon@ti.com>
+References: <20200709161002.439699-1-robh@kernel.org>
+In-Reply-To: <20200709161002.439699-1-robh@kernel.org>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Thu, 9 Jul 2020 19:17:52 +0200
+Message-ID: <CADYN=9JhwHYPOVanqwOER71G__M1UPVDbE_32eChOKWVYb+fZQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: host-common: Fix driver remove NULL bridge->bus dereference
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 08 Jul 2020 15:00:15 +0530, Kishon Vijay Abraham I wrote:
-> Add PCIe EP mode dt-bindings for TI's J721E SoC.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Thu, 9 Jul 2020 at 18:10, Rob Herring <robh@kernel.org> wrote:
+>
+> Commit 2d716c37b5ce ("PCI: host-common: Use struct
+> pci_host_bridge.windows list directly") moved platform_set_drvdata()
+> before pci_host_probe() which results in the bridge->bus pointer being
+> NULL. Let's change the drvdata to the bridge struct instead to fix this.
+>
+> Fixes: 2d716c37b5ce ("PCI: host-common: Use struct pci_host_bridge.windows list directly")
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Thank you for the quick fix.
+
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+
+Cheers,
+Anders
+
 > ---
->  .../bindings/pci/ti,j721e-pci-ep.yaml         | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> 
-
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:0: [0, 42991616, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:1: [0, 43020288, 0, 1024] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:2: [0, 218103808, 0, 8388608] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:3: [0, 268435456, 0, 134217728] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1325133
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+>  drivers/pci/controller/pci-host-common.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index f8f71d99e427..b76e55f495e4 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
+> @@ -83,7 +83,7 @@ int pci_host_common_probe(struct platform_device *pdev)
+>         bridge->map_irq = of_irq_parse_and_map_pci;
+>         bridge->swizzle_irq = pci_common_swizzle;
+>
+> -       platform_set_drvdata(pdev, bridge->bus);
+> +       platform_set_drvdata(pdev, bridge);
+>
+>         return pci_host_probe(bridge);
+>  }
+> @@ -91,11 +91,11 @@ EXPORT_SYMBOL_GPL(pci_host_common_probe);
+>
+>  int pci_host_common_remove(struct platform_device *pdev)
+>  {
+> -       struct pci_bus *bus = platform_get_drvdata(pdev);
+> +       struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
+>
+>         pci_lock_rescan_remove();
+> -       pci_stop_root_bus(bus);
+> -       pci_remove_root_bus(bus);
+> +       pci_stop_root_bus(bridge->bus);
+> +       pci_remove_root_bus(bridge->bus);
+>         pci_unlock_rescan_remove();
+>
+>         return 0;
+> --
+> 2.25.1
+>
