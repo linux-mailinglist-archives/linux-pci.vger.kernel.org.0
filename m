@@ -2,108 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1887021AA37
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 00:03:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FBE921AA3F
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 00:06:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgGIWD1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 18:03:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47220 "EHLO mail.kernel.org"
+        id S1726228AbgGIWGG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 18:06:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgGIWD1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:03:27 -0400
+        id S1726213AbgGIWGF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 18:06:05 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6606620672;
-        Thu,  9 Jul 2020 22:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7E91206A1;
+        Thu,  9 Jul 2020 22:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594332206;
-        bh=qy6RYLxqUEQ6tzvfiO87oBuVPOTZPSC78p+1YdZ+m8Y=;
+        s=default; t=1594332364;
+        bh=1E3KNYJwxzhk32vkxEFceHo/gsiJzSp6Aq70IvYmWQI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Tcyqn0001/W4HSpVVMSttjxDGnbeW2AW4UFrt2dv9KeR8l3GI1CNv3E1OHZyRDYww
-         nPF5FmDipFiLiTXZi3tdzLy8HqYsW6W+H/KHb1GKEEFLNVGHMx/UecWCJx4qqylvOc
-         MjUPRFX1u7sNHGVNdbKqkncEBB+t2PT8KTLpkfkw=
-Date:   Thu, 9 Jul 2020 17:03:24 -0500
+        b=hOh4lvO6KVrS6aI6+Ob+ftOEskN/RvK0Afz3UgwW9FW6/2X96hxs19EqA5He/U1bA
+         +xP3oo0uep2m07nZQ4vYHju3ZIIj7vIK3v1ta6WdtVWZhpBWYnFslhv0cuX8rFBdem
+         rfOv/uGGLlBSdNUzbFcGYr7H8NrfRXMLQFKOoWok=
+Date:   Thu, 9 Jul 2020 17:06:02 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhc@lemote.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] PCI: Move PCI_VENDOR_ID_REDHAT definition to pci_ids.h
-Message-ID: <20200709220324.GA21641@bjorn-Precision-5520>
+To:     Matt Jolly <Kangie@footclan.ninja>
+Cc:     Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] PCI/AER: Log correctable errors as warning, not error
+Message-ID: <20200709220602.GA21872@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594195170-11119-1-git-send-email-chenhc@lemote.com>
+In-Reply-To: <20200708001401.405749-2-helgaas@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Kirti, Alex, kvm]
-
-On Wed, Jul 08, 2020 at 03:59:30PM +0800, Huacai Chen wrote:
-> Instead of duplicating the PCI_VENDOR_ID_REDHAT definition everywhere,
-> move it to include/linux/pci_ids.h is better.
+On Tue, Jul 07, 2020 at 07:14:01PM -0500, Bjorn Helgaas wrote:
+> From: Matt Jolly <Kangie@footclan.ninja>
 > 
-> Signed-off-by: Huacai Chen <chenhc@lemote.com>
+> PCIe correctable errors are recovered by hardware with no need for software
+> intervention (PCIe r5.0, sec 6.2.2.1).
+> 
+> Reduce the log level of correctable errors from KERN_ERR to KERN_WARNING.
+> 
+> The bug reports below are for correctable error logging.  This doesn't fix
+> the cause of those reports, but it may make the messages less alarming.
+> 
+> [bhelgaas: commit log, use pci_printk() to avoid code duplication]
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=201517
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=196183
+> Link: https://lore.kernel.org/r/20200618155511.16009-1-Kangie@footclan.ninja
+> Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Applied with Gerd's ack to pci/misc for v5.9, thanks!
-
-I also updated this in samples/vfio-mdev/mdpy-defs.h:
-
-  -#define MDPY_PCI_VENDOR_ID     0x1b36 /* redhat */
-  +#define MDPY_PCI_VENDOR_ID     PCI_VENDOR_ID_REDHAT
+I applied both of these to pci/error for v5.9.
 
 > ---
->  drivers/gpu/drm/qxl/qxl_dev.h           | 2 --
->  drivers/net/ethernet/rocker/rocker_hw.h | 1 -
->  include/linux/pci_ids.h                 | 2 ++
->  3 files changed, 2 insertions(+), 3 deletions(-)
+>  drivers/pci/pcie/aer.c | 25 +++++++++++++++----------
+>  1 file changed, 15 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/qxl/qxl_dev.h b/drivers/gpu/drm/qxl/qxl_dev.h
-> index a0ee416..a7bc31f 100644
-> --- a/drivers/gpu/drm/qxl/qxl_dev.h
-> +++ b/drivers/gpu/drm/qxl/qxl_dev.h
-> @@ -131,8 +131,6 @@ enum SpiceCursorType {
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 9176c8a968b9..ca886bf91fd9 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -673,20 +673,23 @@ static void __aer_print_error(struct pci_dev *dev,
+>  {
+>  	const char **strings;
+>  	unsigned long status = info->status & ~info->mask;
+> -	const char *errmsg;
+> +	const char *level, *errmsg;
+>  	int i;
 >  
->  #pragma pack(push, 1)
+> -	if (info->severity == AER_CORRECTABLE)
+> +	if (info->severity == AER_CORRECTABLE) {
+>  		strings = aer_correctable_error_string;
+> -	else
+> +		level = KERN_WARNING;
+> +	} else {
+>  		strings = aer_uncorrectable_error_string;
+> +		level = KERN_ERR;
+> +	}
 >  
-> -#define REDHAT_PCI_VENDOR_ID 0x1b36
-> -
->  /* 0x100-0x11f reserved for spice, 0x1ff used for unstable work */
->  #define QXL_DEVICE_ID_STABLE 0x0100
+>  	for_each_set_bit(i, &status, 32) {
+>  		errmsg = strings[i];
+>  		if (!errmsg)
+>  			errmsg = "Unknown Error Bit";
 >  
-> diff --git a/drivers/net/ethernet/rocker/rocker_hw.h b/drivers/net/ethernet/rocker/rocker_hw.h
-> index 59f1f8b..62fd84c 100644
-> --- a/drivers/net/ethernet/rocker/rocker_hw.h
-> +++ b/drivers/net/ethernet/rocker/rocker_hw.h
-> @@ -25,7 +25,6 @@ enum {
+> -		pci_err(dev, "   [%2d] %-22s%s\n", i, errmsg,
+> +		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
+>  				info->first_error == i ? " (First)" : "");
+>  	}
+>  	pci_dev_aer_stats_incr(dev, info);
+> @@ -696,6 +699,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	int layer, agent;
+>  	int id = ((dev->bus->number << 8) | dev->devfn);
+> +	const char *level;
 >  
->  #define ROCKER_FP_PORTS_MAX 62
+>  	if (!info->status) {
+>  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> @@ -706,13 +710,14 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
+>  	agent = AER_GET_AGENT(info->severity, info->status);
 >  
-> -#define PCI_VENDOR_ID_REDHAT		0x1b36
->  #define PCI_DEVICE_ID_REDHAT_ROCKER	0x0006
->  
->  #define ROCKER_PCI_BAR0_SIZE		0x2000
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 0ad5769..5c709a1 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2585,6 +2585,8 @@
->  
->  #define PCI_VENDOR_ID_ASMEDIA		0x1b21
->  
-> +#define PCI_VENDOR_ID_REDHAT		0x1b36
+> -	pci_err(dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+> -		aer_error_severity_string[info->severity],
+> -		aer_error_layer[layer], aer_agent_string[agent]);
+> +	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
 > +
->  #define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
+> +	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+> +		   aer_error_severity_string[info->severity],
+> +		   aer_error_layer[layer], aer_agent_string[agent]);
 >  
->  #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
+> -	pci_err(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> -		dev->vendor, dev->device,
+> -		info->status, info->mask);
+> +	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> +		   dev->vendor, dev->device, info->status, info->mask);
+>  
+>  	__aer_print_error(dev, info);
+>  
 > -- 
-> 2.7.0
+> 2.25.1
 > 
