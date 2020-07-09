@@ -2,264 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68899219C9B
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 11:53:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 849AF219CF3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 12:05:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgGIJxK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 05:53:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35574 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgGIJxK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 05:53:10 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594288387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wXQWUt/vJLbaOSEl0emlS9+y9HWwosshJi8IFtkfu2g=;
-        b=Q+C3poBYxLRrnuc3oxxE56QFKZXK4oyYtUZ7C0/dl9Snn2u9g+X9pv3xCeCLJvUH0fG7ky
-        CZyhqcp5W7hXxFNyz/GtZX+VO30RRi40dDhx8RZ0pvlOHRarlUSjkf7PRvIKHgE0ageTQz
-        JxE9PJzYozawpgpG8nREYLaaLHtpKzsZ1JBYbqYoYEsexmTHBoA6IICzOHOFhBbJh0Yftp
-        YajQDDsX1/OBZq6ohDQdwB1zan7kdgvYgsF+xMyqTWRx7qvMoH3d4J/zj16/OwpqjwIsw9
-        EbQEDT2wWGYBjLo8p3LumwhzZa3G/j1+/MzBTZeHfd83R1gRgZ8iMCzIIg7Wzg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594288387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wXQWUt/vJLbaOSEl0emlS9+y9HWwosshJi8IFtkfu2g=;
-        b=NCJzBcBd1ZHKjOeGbKxxR0NbAHCFvP+GJYtgjNfSolyTog2mh89WFBBaXbg9i/qqahdvkm
-        UOXZEzWWL15expCA==
-To:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org,
-        Sushma Kalakota <sushmax.kalakota@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] irqdomain/treewide: Keep firmware node unconditionally allocated
-In-Reply-To: <20200706154410.GA117493@bjorn-Precision-5520>
-References: <20200706154410.GA117493@bjorn-Precision-5520>
-Date:   Thu, 09 Jul 2020 11:53:06 +0200
-Message-ID: <873661qakd.fsf@nanos.tec.linutronix.de>
+        id S1726313AbgGIKFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 06:05:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34278 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbgGIKFv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:05:51 -0400
+IronPort-SDR: DpFSgz/e66dYN/RAMWgs2p2Eio5UMDlRg7Kj3w6iCbQx26fp3xaoL5u/BmWTSQPl/II71FQpOQ
+ Pp33yvGydTPQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="212885361"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="212885361"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 03:05:49 -0700
+IronPort-SDR: /ZNaEXlyJLIWk9neeeUjmZzhI9JwZFMYTpAUu6THQcrU7JDp86lTWUZ8d/n+W36kxeM1Qx2iEi
+ YJn2NJLpGKwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="284100470"
+Received: from lkp-server01.sh.intel.com (HELO 6136dd46483e) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 09 Jul 2020 03:05:48 -0700
+Received: from kbuild by 6136dd46483e with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jtTR5-0000YH-Rv; Thu, 09 Jul 2020 10:05:47 +0000
+Date:   Thu, 09 Jul 2020 18:05:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 8a445afd710b1e707934568b9ead421d7bf0d9d2
+Message-ID: <5f06ebde.m1+g6VcJrdB/owvw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Quite some non OF/ACPI users of irqdomains allocate firmware nodes of type
-IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right after
-creating the irqdomain. The only purpose of these FW nodes is to convey
-name information. When this was introduced the core code did not store the
-pointer to the node in the irqdomain. A recent change stored the firmware
-node pointer in irqdomain for other reasons and missed to notice that the
-usage sites which do the alloc_fwnode/create_domain/free_fwnode sequence
-are broken by this. Storing a dangling pointer is dangerous itself, but in
-case that the domain is destroyed later on this leads to a double free.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 8a445afd710b1e707934568b9ead421d7bf0d9d2  Merge branch 'remotes/lorenzo/pci/vmd'
 
-Remove the freeing of the firmware node after creating the irqdomain from
-all affected call sites to cure this.
+elapsed time: 724m
 
-Fixes: 711419e504eb ("irqdomain: Add the missing assignment of domain->fwnode for named fwnode")
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
+configs tested: 96
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                           efm32_defconfig
+arc                                 defconfig
+mips                      pistachio_defconfig
+arm                          simpad_defconfig
+xtensa                         virt_defconfig
+parisc                            allnoconfig
+mips                      pic32mzda_defconfig
+arm                       netwinder_defconfig
+openrisc                 simple_smp_defconfig
+arm                             pxa_defconfig
+ia64                        generic_defconfig
+mips                 decstation_r4k_defconfig
+powerpc                      pasemi_defconfig
+arm                        cerfcube_defconfig
+xtensa                          iss_defconfig
+sh                           se7343_defconfig
+arm                          ixp4xx_defconfig
+sh                           se7780_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
 ---
- arch/mips/pci/pci-xtalk-bridge.c    |    5 +++--
- arch/x86/kernel/apic/io_apic.c      |   10 +++++-----
- arch/x86/kernel/apic/msi.c          |   18 ++++++++++++------
- arch/x86/kernel/apic/vector.c       |    1 -
- arch/x86/platform/uv/uv_irq.c       |    3 ++-
- drivers/iommu/amd/iommu.c           |    5 +++--
- drivers/iommu/hyperv-iommu.c        |    5 ++++-
- drivers/iommu/intel/irq_remapping.c |    2 +-
- drivers/mfd/ioc3.c                  |    5 +++--
- drivers/pci/controller/vmd.c        |    5 +++--
- 10 files changed, 36 insertions(+), 23 deletions(-)
-
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -627,9 +627,10 @@ static int bridge_probe(struct platform_
- 		return -ENOMEM;
- 	domain = irq_domain_create_hierarchy(parent, 0, 8, fn,
- 					     &bridge_domain_ops, NULL);
--	irq_domain_free_fwnode(fn);
--	if (!domain)
-+	if (!domain) {
-+		irq_domain_free_fwnode(fn);
- 		return -ENOMEM;
-+	}
- 
- 	pci_set_flags(PCI_PROBE_ONLY);
- 
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2316,12 +2316,12 @@ static int mp_irqdomain_create(int ioapi
- 	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
- 						 (void *)(long)ioapic);
- 
--	/* Release fw handle if it was allocated above */
--	if (!cfg->dev)
--		irq_domain_free_fwnode(fn);
--
--	if (!ip->irqdomain)
-+	if (!ip->irqdomain) {
-+		/* Release fw handle if it was allocated above */
-+		if (!cfg->dev)
-+			irq_domain_free_fwnode(fn);
- 		return -ENOMEM;
-+	}
- 
- 	ip->irqdomain->parent = parent;
- 
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -263,12 +263,13 @@ void __init arch_init_msi_domain(struct
- 		msi_default_domain =
- 			pci_msi_create_irq_domain(fn, &pci_msi_domain_info,
- 						  parent);
--		irq_domain_free_fwnode(fn);
- 	}
--	if (!msi_default_domain)
-+	if (!msi_default_domain) {
-+		irq_domain_free_fwnode(fn);
- 		pr_warn("failed to initialize irqdomain for MSI/MSI-x.\n");
--	else
-+	} else {
- 		msi_default_domain->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
-+	}
- }
- 
- #ifdef CONFIG_IRQ_REMAP
-@@ -301,7 +302,8 @@ struct irq_domain *arch_create_remap_msi
- 	if (!fn)
- 		return NULL;
- 	d = pci_msi_create_irq_domain(fn, &pci_msi_ir_domain_info, parent);
--	irq_domain_free_fwnode(fn);
-+	if (!d)
-+		irq_domain_free_fwnode(fn);
- 	return d;
- }
- #endif
-@@ -364,7 +366,8 @@ static struct irq_domain *dmar_get_irq_d
- 	if (fn) {
- 		dmar_domain = msi_create_irq_domain(fn, &dmar_msi_domain_info,
- 						    x86_vector_domain);
--		irq_domain_free_fwnode(fn);
-+		if (!dmar_domain)
-+			irq_domain_free_fwnode(fn);
- 	}
- out:
- 	mutex_unlock(&dmar_lock);
-@@ -489,7 +492,10 @@ struct irq_domain *hpet_create_irq_domai
- 	}
- 
- 	d = msi_create_irq_domain(fn, domain_info, parent);
--	irq_domain_free_fwnode(fn);
-+	if (!d) {
-+		irq_domain_free_fwnode(fn);
-+		kfree(domain_info);
-+	}
- 	return d;
- }
- 
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -709,7 +709,6 @@ int __init arch_early_irq_init(void)
- 	x86_vector_domain = irq_domain_create_tree(fn, &x86_vector_domain_ops,
- 						   NULL);
- 	BUG_ON(x86_vector_domain == NULL);
--	irq_domain_free_fwnode(fn);
- 	irq_set_default_host(x86_vector_domain);
- 
- 	arch_init_msi_domain(x86_vector_domain);
---- a/arch/x86/platform/uv/uv_irq.c
-+++ b/arch/x86/platform/uv/uv_irq.c
-@@ -167,9 +167,10 @@ static struct irq_domain *uv_get_irq_dom
- 		goto out;
- 
- 	uv_domain = irq_domain_create_tree(fn, &uv_domain_ops, NULL);
--	irq_domain_free_fwnode(fn);
- 	if (uv_domain)
- 		uv_domain->parent = x86_vector_domain;
-+	else
-+		irq_domain_free_fwnode(fn);
- out:
- 	mutex_unlock(&uv_lock);
- 
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -3985,9 +3985,10 @@ int amd_iommu_create_irq_domain(struct a
- 	if (!fn)
- 		return -ENOMEM;
- 	iommu->ir_domain = irq_domain_create_tree(fn, &amd_ir_domain_ops, iommu);
--	irq_domain_free_fwnode(fn);
--	if (!iommu->ir_domain)
-+	if (!iommu->ir_domain) {
-+		irq_domain_free_fwnode(fn);
- 		return -ENOMEM;
-+	}
- 
- 	iommu->ir_domain->parent = arch_get_ir_parent_domain();
- 	iommu->msi_domain = arch_create_remap_msi_irq_domain(iommu->ir_domain,
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv-iommu.c
-@@ -155,7 +155,10 @@ static int __init hyperv_prepare_irq_rem
- 				0, IOAPIC_REMAPPING_ENTRY, fn,
- 				&hyperv_ir_domain_ops, NULL);
- 
--	irq_domain_free_fwnode(fn);
-+	if (!ioapic_ir_domain) {
-+		irq_domain_free_fwnode(fn);
-+		return -ENOMEM;
-+	}
- 
- 	/*
- 	 * Hyper-V doesn't provide irq remapping function for
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -563,8 +563,8 @@ static int intel_setup_irq_remapping(str
- 					    0, INTR_REMAP_TABLE_ENTRIES,
- 					    fn, &intel_ir_domain_ops,
- 					    iommu);
--	irq_domain_free_fwnode(fn);
- 	if (!iommu->ir_domain) {
-+		irq_domain_free_fwnode(fn);
- 		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
- 		goto out_free_bitmap;
- 	}
---- a/drivers/mfd/ioc3.c
-+++ b/drivers/mfd/ioc3.c
-@@ -142,10 +142,11 @@ static int ioc3_irq_domain_setup(struct
- 		goto err;
- 
- 	domain = irq_domain_create_linear(fn, 24, &ioc3_irq_domain_ops, ipd);
--	if (!domain)
-+	if (!domain) {
-+		irq_domain_free_fwnode(fn);
- 		goto err;
-+	}
- 
--	irq_domain_free_fwnode(fn);
- 	ipd->domain = domain;
- 
- 	irq_set_chained_handler_and_data(irq, ioc3_irq_handler, domain);
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -546,9 +546,10 @@ static int vmd_enable_domain(struct vmd_
- 
- 	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
- 						    x86_vector_domain);
--	irq_domain_free_fwnode(fn);
--	if (!vmd->irq_domain)
-+	if (!vmd->irq_domain) {
-+		irq_domain_free_fwnode(fn);
- 		return -ENODEV;
-+	}
- 
- 	pci_add_resource(&resources, &vmd->resources[0]);
- 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
