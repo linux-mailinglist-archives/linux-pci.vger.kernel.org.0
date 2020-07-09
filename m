@@ -2,100 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 908AD2198CA
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 08:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBB9F21998F
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 09:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgGIGo3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 02:44:29 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:63878 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbgGIGo2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jul 2020 02:44:28 -0400
-Received: from localhost.localdomain (unknown [210.32.144.65])
-        by mail-app2 (Coremail) with SMTP id by_KCgDn7+esvAZfYMwOAA--.34107S4;
-        Thu, 09 Jul 2020 14:44:00 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Hien Dang <hien.dang.eb@renesas.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] PCI: rcar: Fix runtime PM imbalance on error
-Date:   Thu,  9 Jul 2020 14:43:56 +0800
-Message-Id: <20200709064356.8800-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgDn7+esvAZfYMwOAA--.34107S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFyDGryUXF4UurW3ArWUJwb_yoW8GrWxpr
-        W2qFWayF4kW3yYqa17JF1kuFya93ZIy3srGws7Kw17Z3ZxAFyjqryrCFyrtF12grW8Z3WY
-        y3WYqryxCFZ5ZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9m1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r47MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUkhLnUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgwNBlZdtO+R4gAIsu
+        id S1726298AbgGIHOh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 03:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgGIHOh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 03:14:37 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E05C061A0B
+        for <linux-pci@vger.kernel.org>; Thu,  9 Jul 2020 00:14:37 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id y13so566744ybj.10
+        for <linux-pci@vger.kernel.org>; Thu, 09 Jul 2020 00:14:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Fj/v4PW8m3FjORJS3am9NTBVhZTiI8fDbQ10eq/dOCI=;
+        b=Djp5fBG7FPfnd9RMcc2ix+MlPlb+F+E1o5z2JkAs68kvUaHk67XEtx0zZ4fKiSS5F8
+         5PbD/z/LiYECDjYV59Lm/j5qWAA0lv16hqJ4/07nKVglz2MrOPYzAGCof71uwohz2HF4
+         KIt4ritoIR/kv96qQu+uWtz1VZq8W92WVUYsSkT8lRVNocGhnCCo61sR7fZ3gv6bKIDc
+         dTe0Y7g9fbLYKg5bjQ+EZDBBinkjnVHDPAet1sp+MVbb/9y81Dqsi5nnBH2rsiqB/CxO
+         r+UWdiUmMrDJnB9E0NjGHPgFHSvF9cvr8NSodnQhb0VgRqk/hCKuk6w/QsQakt2QtfgY
+         Rs0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Fj/v4PW8m3FjORJS3am9NTBVhZTiI8fDbQ10eq/dOCI=;
+        b=l65mXZQ27o35Mp1WLyfrB2YvVWSAndhHTFaiD/J+zMoAfUpWvq/mF3evSSiqmBNFHf
+         o7pEFsHLNghfX1bdkR5wo6unoFR2kJqca2sbZX1AH8M0FXsFAJoMVS8lKm+tEAmfYXy/
+         MhHVHAm+MSP7wHPVBmaNpmuY7bH/teLEC1myYfNzqT93Y5l9UFQAwokMkGg+3qv9N1nC
+         mUCXWgMM6VsZPOf5K3+fe/fBsf8j0X9/ByvU0Aaxhjo0Ra3Caq4Cxnpek3uq1gEr9vHn
+         Cd8K15j0od7kl/inOfjO8Z45KGiu11HfTnWlkWyVQhufyNWSwPYMdMDddWoG7FYgvHJh
+         fHSA==
+X-Gm-Message-State: AOAM533KDGAPbgLJpodJm5M6mtRfMf+FnGCNVFn/Wx0j4sb6U//UXmL4
+        3KCh2eE5O43HPQePKZaYALRYcMBYeZ9nRw6yTf7neJMrzYY=
+X-Google-Smtp-Source: ABdhPJz4bY4rEcCeR6wLtiystvhbj3eRiR0MipMW++aAAqKg9qBPy9Oyu2Rd8WrqXJwdvwbyKpT+3tQHjByEujr6iMQ=
+X-Received: by 2002:a25:4c81:: with SMTP id z123mr9401448yba.433.1594278875512;
+ Thu, 09 Jul 2020 00:14:35 -0700 (PDT)
+MIME-Version: 1.0
+From:   Manish Raturi <raturi.manish@gmail.com>
+Date:   Thu, 9 Jul 2020 12:44:24 +0530
+Message-ID: <CAHn-FMy0i=c6jj_yvtQXrKMU5T8F+2AUd79qUw7U98vs9U35hA@mail.gmail.com>
+Subject: Dump of registers during endpoint link down
+To:     linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a corresponding decrement is
-needed on the error handling path to keep the counter balanced.
+Hi Team,
 
-Fixes: 0df6150e7ceb ("PCI: rcar: Use runtime PM to control controller
-clock")
+I have a generic query , if an hotplug pcie endpoint connected to the
+CPU root port shows link down, then from the debugging perspective
+w.r.t PCIE what all register can be dump during the failure condition,
+what I can think of is these registers from the root port side
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+1) Link status /control/capability
+2) Slot status /control/capability
+3) Lane error status registers.
 
-Changelog:
+Anything else we can dump which gives us more insight into the issue.
+Also is there anything by which we can check from PCIE clock
+perspective.
 
-v2: - Remove unnecessary 'err_pm_put' label.
-      Refine commit message.
-
-v3: - Add Fixes tag.
-      Rebase the patch on top of the latest kernel.
----
- drivers/pci/controller/pcie-rcar-host.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index d210a36561be..060c24f5221e 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -986,7 +986,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err < 0) {
- 		dev_err(pcie->dev, "pm_runtime_get_sync failed\n");
--		goto err_pm_disable;
-+		goto err_pm_put;
- 	}
- 
- 	err = rcar_pcie_get_resources(host);
-@@ -1057,8 +1057,6 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 
- err_pm_put:
- 	pm_runtime_put(dev);
--
--err_pm_disable:
- 	pm_runtime_disable(dev);
- 	pci_free_resource_list(&host->resources);
- 
--- 
-2.17.1
-
+Thanks & Regards
+Manish Raturi
