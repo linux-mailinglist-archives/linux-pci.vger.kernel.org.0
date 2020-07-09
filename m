@@ -2,71 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBB9F21998F
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 09:14:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC302199AA
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 09:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgGIHOh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 03:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGIHOh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 03:14:37 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E05C061A0B
-        for <linux-pci@vger.kernel.org>; Thu,  9 Jul 2020 00:14:37 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id y13so566744ybj.10
-        for <linux-pci@vger.kernel.org>; Thu, 09 Jul 2020 00:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Fj/v4PW8m3FjORJS3am9NTBVhZTiI8fDbQ10eq/dOCI=;
-        b=Djp5fBG7FPfnd9RMcc2ix+MlPlb+F+E1o5z2JkAs68kvUaHk67XEtx0zZ4fKiSS5F8
-         5PbD/z/LiYECDjYV59Lm/j5qWAA0lv16hqJ4/07nKVglz2MrOPYzAGCof71uwohz2HF4
-         KIt4ritoIR/kv96qQu+uWtz1VZq8W92WVUYsSkT8lRVNocGhnCCo61sR7fZ3gv6bKIDc
-         dTe0Y7g9fbLYKg5bjQ+EZDBBinkjnVHDPAet1sp+MVbb/9y81Dqsi5nnBH2rsiqB/CxO
-         r+UWdiUmMrDJnB9E0NjGHPgFHSvF9cvr8NSodnQhb0VgRqk/hCKuk6w/QsQakt2QtfgY
-         Rs0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Fj/v4PW8m3FjORJS3am9NTBVhZTiI8fDbQ10eq/dOCI=;
-        b=l65mXZQ27o35Mp1WLyfrB2YvVWSAndhHTFaiD/J+zMoAfUpWvq/mF3evSSiqmBNFHf
-         o7pEFsHLNghfX1bdkR5wo6unoFR2kJqca2sbZX1AH8M0FXsFAJoMVS8lKm+tEAmfYXy/
-         MhHVHAm+MSP7wHPVBmaNpmuY7bH/teLEC1myYfNzqT93Y5l9UFQAwokMkGg+3qv9N1nC
-         mUCXWgMM6VsZPOf5K3+fe/fBsf8j0X9/ByvU0Aaxhjo0Ra3Caq4Cxnpek3uq1gEr9vHn
-         Cd8K15j0od7kl/inOfjO8Z45KGiu11HfTnWlkWyVQhufyNWSwPYMdMDddWoG7FYgvHJh
-         fHSA==
-X-Gm-Message-State: AOAM533KDGAPbgLJpodJm5M6mtRfMf+FnGCNVFn/Wx0j4sb6U//UXmL4
-        3KCh2eE5O43HPQePKZaYALRYcMBYeZ9nRw6yTf7neJMrzYY=
-X-Google-Smtp-Source: ABdhPJz4bY4rEcCeR6wLtiystvhbj3eRiR0MipMW++aAAqKg9qBPy9Oyu2Rd8WrqXJwdvwbyKpT+3tQHjByEujr6iMQ=
-X-Received: by 2002:a25:4c81:: with SMTP id z123mr9401448yba.433.1594278875512;
- Thu, 09 Jul 2020 00:14:35 -0700 (PDT)
-MIME-Version: 1.0
-From:   Manish Raturi <raturi.manish@gmail.com>
-Date:   Thu, 9 Jul 2020 12:44:24 +0530
-Message-ID: <CAHn-FMy0i=c6jj_yvtQXrKMU5T8F+2AUd79qUw7U98vs9U35hA@mail.gmail.com>
-Subject: Dump of registers during endpoint link down
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        id S1726187AbgGIHZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 03:25:13 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:62488 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbgGIHZN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:25:13 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id BD6D76DA4D9DBAC9C570;
+        Thu,  9 Jul 2020 15:25:08 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id 0697P7W6095764;
+        Thu, 9 Jul 2020 15:25:07 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2020070915253562-4229803 ;
+          Thu, 9 Jul 2020 15:25:35 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: [PATCH] PCI: Replace kmalloc with kzalloc in the comment/message
+Date:   Thu, 9 Jul 2020 15:28:28 +0800
+Message-Id: <1594279708-34369-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2020-07-09 15:25:35,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2020-07-09 15:25:11,
+        Serialize complete at 2020-07-09 15:25:11
+X-MAIL: mse-fl2.zte.com.cn 0697P7W6095764
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Team,
+From: Liao Pingfang <liao.pingfang@zte.com.cn>
 
-I have a generic query , if an hotplug pcie endpoint connected to the
-CPU root port shows link down, then from the debugging perspective
-w.r.t PCIE what all register can be dump during the failure condition,
-what I can think of is these registers from the root port side
+Use kzalloc instead of kmalloc in the comment/message according to
+the previous kzalloc() call.
 
-1) Link status /control/capability
-2) Slot status /control/capability
-3) Lane error status registers.
+Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ drivers/pci/hotplug/ibmphp_pci.c | 2 +-
+ drivers/pci/setup-bus.c          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Anything else we can dump which gives us more insight into the issue.
-Also is there anything by which we can check from PCIE clock
-perspective.
+diff --git a/drivers/pci/hotplug/ibmphp_pci.c b/drivers/pci/hotplug/ibmphp_pci.c
+index e22d023..2d36992 100644
+--- a/drivers/pci/hotplug/ibmphp_pci.c
++++ b/drivers/pci/hotplug/ibmphp_pci.c
+@@ -205,7 +205,7 @@ int ibmphp_configure_card(struct pci_func *func, u8 slotno)
+ 								cur_func->next = newfunc;
+ 
+ 							rc = ibmphp_configure_card(newfunc, slotno);
+-							/* This could only happen if kmalloc failed */
++							/* This could only happen if kzalloc failed */
+ 							if (rc) {
+ 								/* We need to do this in case bridge itself got configured properly, but devices behind it failed */
+ 								func->bus = 1; /* To indicate to the unconfigure function that this is a PPB */
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index bbcef1a..13c5a44 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -151,7 +151,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 
+ 		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
+ 		if (!tmp)
+-			panic("pdev_sort_resources(): kmalloc() failed!\n");
++			panic("%s: kzalloc() failed!\n", __func__);
+ 		tmp->res = r;
+ 		tmp->dev = dev;
+ 
+-- 
+2.9.5
 
-Thanks & Regards
-Manish Raturi
