@@ -2,214 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC3E219FB5
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 14:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A29C219FE8
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 14:22:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgGIMKz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 08:10:55 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43453 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgGIMKz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 08:10:55 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 95so1497874otw.10;
-        Thu, 09 Jul 2020 05:10:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YOjL0UML2dSKlLSP/sqPvKmua2zfxEU3z20Tax7E+dU=;
-        b=Ycmt5KN1TlQ92MyNOHAfWi9PllW2dIhKvgxhzggdU4bznyc5v+Z3rY0RcnxCC4gS/p
-         X2MTr/juJKDsz9P3DNEaZhNfsxazLxGSadLX1NlnyuP4yjYG3fTm9MoxYxFrV9yVy8hK
-         x3g7pEAPMHoQc/tK+AAWPBpKOIAzJZ1AIDAmXvCBmb4g243I3FJJBTEriZreS/NFHqdS
-         jryxS07CEXF9hFr8oWBLAefKwXPAZy+SrvVTa4kP38p8T9ujNzH/yyHl9HzOhMJp7Xlp
-         WTAkJ5TTeqeT8VPqiBf+P5lu9c3JRxBrNBniFxsGNDZ0+uxllQtlFE23JVWwYaQrWo9t
-         zffw==
-X-Gm-Message-State: AOAM5329nuxqcoMscbRHC8oC2v4QQ/jeSOAA/3ixqjiMIL4uQnG7tjOh
-        42MfTpxeBtF8PAfuGIXBzPDB3XU4w/Qc4wUWkD8=
-X-Google-Smtp-Source: ABdhPJzrdCIXJtWpQ57B//JafGA2Ik24qTnJZ4xpWpyPvoIKWIHmwlPcOqcrf6uegkz7DGv/y4jHGoguZ6n44qDt5Cw=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr17147901oth.262.1594296653915;
- Thu, 09 Jul 2020 05:10:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200707200937.GA5056@embeddedor>
-In-Reply-To: <20200707200937.GA5056@embeddedor>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 Jul 2020 14:10:41 +0200
-Message-ID: <CAJZ5v0jv-or+gTy2u4hS3Zv6T6XwEqXuifygy5ZoXe8mMEZzbw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
+        id S1726582AbgGIMWM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 08:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbgGIMWL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:22:11 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF662206DF;
+        Thu,  9 Jul 2020 12:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594297331;
+        bh=qOFNT6tblN8CGBYOHgoyMwlCS9ntBDtTAmhooTF7pYU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KtxyWHHx+5ZItqJHRCkusAhW3YrwOy/2Y2xyNkI/pV3lEuRrgm+jS66grgjwvUf3l
+         9zwjAReLz1PRnsqUI7uu/bdBdiBVOERfDDyfKHwQNj28ljL4aqeNYexV+tZ35fJf8W
+         4UUg6xfkT59gMsoFAHOFOtpQuRcYBTDQeC40WSdg=
+Received: by pali.im (Postfix)
+        id A25CE15A1; Thu,  9 Jul 2020 14:22:08 +0200 (CEST)
+Date:   Thu, 9 Jul 2020 14:22:08 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200709122208.rmfeuu6zgbwh3fr5@pali>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 10:04 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> fall-through markings when it is the case.
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Thursday 09 July 2020 12:35:09 Lorenzo Pieralisi wrote:
+> On Thu, Jul 02, 2020 at 10:30:36AM +0200, Pali Rohár wrote:
+> > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > root bridge, the aardvark driver throws the following error message:
+> > 
+> >   advk-pcie d0070000.pcie: config read/write timed out
+> > 
+> > Obviously accessing PCIe registers of disconnected card is not possible.
+> > 
+> > Extend check in advk_pcie_valid_device() function for validating
+> > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > as Not Found and the driver does not try to access these registers.
+> > 
+> > This is just an optimization to prevent accessing PCIe registers when card
+> > is disconnected. Trying to access PCIe registers of disconnected card does
+> > not cause any crash, kernel just needs to wait for a timeout. So if card
+> > disappear immediately after checking for PCIe link (before accessing PCIe
+> > registers), it does not cause any problems.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > 
+> > ---
+> > Changes in V3:
+> > * Add comment to the code
+> > Changes in V2:
+> > * Update commit message, mention that this is optimization
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 90ff291c24f0..d18f389b36a1 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> >  		return false;
+> >  
+> > +	/*
+> > +	 * If the link goes down after we check for link-up, nothing bad
+> > +	 * happens but the config access times out.
+> > +	 */
+> > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > +		return false;
+> > +
+> >  	return true;
+> >  }
+> 
+> Question: this basically means that you can only effectively enumerate
+> bus number == root_bus_nr and AFAICS if at probe the link did not
+> come up it will never do, will it ?
+> 
+> Isn't this equivalent to limiting the bus numbers the bridge is capable
+> of handling ?
+> 
+> Reworded: if in advk_pcie_setup_hw() the link does not come up, what's
+> the point of trying to enumerate the bus hierarchy below the root bus ?
 
-Applied as 5.9 material, thanks!
+Hello Lorenzo!
 
-> ---
->  drivers/acpi/ac.c             |    2 +-
->  drivers/acpi/acpi_processor.c |    2 +-
->  drivers/acpi/button.c         |    2 +-
->  drivers/acpi/dock.c           |    2 +-
->  drivers/acpi/evged.c          |    2 +-
->  drivers/acpi/processor_idle.c |    3 +--
->  drivers/acpi/resource.c       |    2 +-
->  drivers/acpi/spcr.c           |    4 ++--
->  drivers/pci/pci-acpi.c        |    6 +++---
->  9 files changed, 12 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
-> index 69d2db13886b..2dfa08f939c6 100644
-> --- a/drivers/acpi/ac.c
-> +++ b/drivers/acpi/ac.c
-> @@ -236,7 +236,7 @@ static void acpi_ac_notify(struct acpi_device *device, u32 event)
->         default:
->                 ACPI_DEBUG_PRINT((ACPI_DB_INFO,
->                                   "Unsupported event [0x%x]\n", event));
-> -       /* fall through */
-> +               fallthrough;
->         case ACPI_AC_NOTIFY_STATUS:
->         case ACPI_NOTIFY_BUS_CHECK:
->         case ACPI_NOTIFY_DEVICE_CHECK:
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> index 5379bc3f275d..b51ddf3bb616 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -79,7 +79,7 @@ static int acpi_processor_errata_piix4(struct pci_dev *dev)
->                  * PIIX4 models.
->                  */
->                 errata.piix4.throttle = 1;
-> -               /* fall through*/
-> +               fallthrough;
->
->         case 2:         /* PIIX4E */
->         case 3:         /* PIIX4M */
-> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-> index 3c35e57dd854..a4eda7fe50d3 100644
-> --- a/drivers/acpi/button.c
-> +++ b/drivers/acpi/button.c
-> @@ -405,7 +405,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
->         switch (event) {
->         case ACPI_FIXED_HARDWARE_EVENT:
->                 event = ACPI_BUTTON_NOTIFY_STATUS;
-> -               /* fall through */
-> +               fallthrough;
->         case ACPI_BUTTON_NOTIFY_STATUS:
->                 input = button->input;
->                 if (button->type == ACPI_BUTTON_TYPE_LID) {
-> diff --git a/drivers/acpi/dock.c b/drivers/acpi/dock.c
-> index e3414131bfca..9bd72c26ef46 100644
-> --- a/drivers/acpi/dock.c
-> +++ b/drivers/acpi/dock.c
-> @@ -469,7 +469,7 @@ int dock_notify(struct acpi_device *adev, u32 event)
->                 surprise_removal = 1;
->                 event = ACPI_NOTIFY_EJECT_REQUEST;
->                 /* Fall back */
-> -               /* fall through */
-> +               fallthrough;
->         case ACPI_NOTIFY_EJECT_REQUEST:
->                 begin_undock(ds);
->                 if ((immediate_undock && !(ds->flags & DOCK_IS_ATA))
-> diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
-> index ccd900690b6f..b1a7f8d6965e 100644
-> --- a/drivers/acpi/evged.c
-> +++ b/drivers/acpi/evged.c
-> @@ -106,7 +106,7 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
->
->                 if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
->                         break;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
->                         break;
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> index 75534c5b5433..9325feaac5f8 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -203,8 +203,7 @@ static void tsc_check_state(int state)
->                  */
->                 if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
->                         return;
-> -
-> -               /*FALL THROUGH*/
-> +               fallthrough;
->         default:
->                 /* TSC could halt in idle, so notify users */
->                 if (state > ACPI_STATE_C1)
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index 3b4448972374..ad04824ca3ba 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -373,7 +373,7 @@ unsigned int acpi_dev_get_irq_type(int triggering, int polarity)
->         case ACPI_ACTIVE_BOTH:
->                 if (triggering == ACPI_EDGE_SENSITIVE)
->                         return IRQ_TYPE_EDGE_BOTH;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 return IRQ_TYPE_NONE;
->         }
-> diff --git a/drivers/acpi/spcr.c b/drivers/acpi/spcr.c
-> index d73b4535e79d..88460bacd5ae 100644
-> --- a/drivers/acpi/spcr.c
-> +++ b/drivers/acpi/spcr.c
-> @@ -111,7 +111,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
->                         table->serial_port.access_width))) {
->                 default:
->                         pr_err("Unexpected SPCR Access Width.  Defaulting to byte size\n");
-> -                       /* fall through */
-> +                       fallthrough;
->                 case 8:
->                         iotype = "mmio";
->                         break;
-> @@ -128,7 +128,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
->         switch (table->interface_type) {
->         case ACPI_DBG2_ARM_SBSA_32BIT:
->                 iotype = "mmio32";
-> -               /* fall through */
-> +               fallthrough;
->         case ACPI_DBG2_ARM_PL011:
->         case ACPI_DBG2_ARM_SBSA_GENERIC:
->         case ACPI_DBG2_BCM2835:
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 7224b1e5f2a8..0d85025c55fd 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -527,8 +527,8 @@ static void program_hpx_type3_register(struct pci_dev *dev,
->                         return;
->
->                 break;
-> -       case HPX_CFG_VEND_CAP:  /* Fall through */
-> -       case HPX_CFG_DVSEC:     /* Fall through */
-> +       case HPX_CFG_VEND_CAP:
-> +       case HPX_CFG_DVSEC:
->         default:
->                 pci_warn(dev, "Encountered _HPX type 3 with unsupported config space location");
->                 return;
-> @@ -1001,7 +1001,7 @@ static int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
->                         error = -EBUSY;
->                         break;
->                 }
-> -               /* Fall through */
-> +               fallthrough;
->         case PCI_D0:
->         case PCI_D1:
->         case PCI_D2:
->
+PCIe link can theoretically come up even after boot, but aardvark driver
+currently does not support link detection at runtime. So it checks and
+enumerate device only at probe time.
+
+I do not know if hardware has some mechanism to inform kernel that PCIe
+link come up (or down) and re-enumeration is required. Or the only
+option is polling via advk_pcie_link_up().
+
+So if device is not visible at the probe time then it would not appear
+in system and cannot be used. This is current state.
+
+Just to note that our hardware does not support physical hotplug of
+mPCIe cards. You need to connect card when board is powered off.
+
+So if at the aardvark probe time PCIe link is not up then trying to
+enumerate devices under (software) root bridge is not needed. But it is
+needed to register/enumerate software root bridge device and currently
+both is done by one (recursive) call pci_host_probe().
