@@ -2,66 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F41121A9E3
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 23:47:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1887021AA37
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 00:03:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgGIVr4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 17:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
+        id S1726213AbgGIWD1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 18:03:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbgGIVrz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:47:55 -0400
+        id S1726268AbgGIWD1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 18:03:27 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28DD120774;
-        Thu,  9 Jul 2020 21:47:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6606620672;
+        Thu,  9 Jul 2020 22:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594331275;
-        bh=X/RbrgmMEAFhpcmxsuI6o1tnFCIhreoKEGLJxGBir+Q=;
+        s=default; t=1594332206;
+        bh=qy6RYLxqUEQ6tzvfiO87oBuVPOTZPSC78p+1YdZ+m8Y=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CC1DYYJ0Qp8fQyyYG0iTL+iHk9v+HDV/NOxDKOponp+fivZeaH5qbba0fotKAbVg9
-         IjU/ByjOBcdBt4EjnEeMXDcrlVQTYFMpaWbOUUaIv1sbvODUtwfpy76kxk/280Me/O
-         m6v0yEl0tMRMbtum6CorvGRvwpzt6BteA+AFq3WQ=
-Date:   Thu, 9 Jul 2020 16:47:53 -0500
+        b=Tcyqn0001/W4HSpVVMSttjxDGnbeW2AW4UFrt2dv9KeR8l3GI1CNv3E1OHZyRDYww
+         nPF5FmDipFiLiTXZi3tdzLy8HqYsW6W+H/KHb1GKEEFLNVGHMx/UecWCJx4qqylvOc
+         MjUPRFX1u7sNHGVNdbKqkncEBB+t2PT8KTLpkfkw=
+Date:   Thu, 9 Jul 2020 17:03:24 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org,
-        Sushma Kalakota <sushmax.kalakota@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] irqdomain/treewide: Keep firmware node unconditionally
- allocated
-Message-ID: <20200709214753.GA20422@bjorn-Precision-5520>
+To:     Huacai Chen <chenhc@lemote.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Move PCI_VENDOR_ID_REDHAT definition to pci_ids.h
+Message-ID: <20200709220324.GA21641@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <873661qakd.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <1594195170-11119-1-git-send-email-chenhc@lemote.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 11:53:06AM +0200, Thomas Gleixner wrote:
-> Quite some non OF/ACPI users of irqdomains allocate firmware nodes of type
-> IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right after
-> creating the irqdomain. The only purpose of these FW nodes is to convey
-> name information. When this was introduced the core code did not store the
-> pointer to the node in the irqdomain. A recent change stored the firmware
-> node pointer in irqdomain for other reasons and missed to notice that the
-> usage sites which do the alloc_fwnode/create_domain/free_fwnode sequence
-> are broken by this. Storing a dangling pointer is dangerous itself, but in
-> case that the domain is destroyed later on this leads to a double free.
-> 
-> Remove the freeing of the firmware node after creating the irqdomain from
-> all affected call sites to cure this.
-> 
-> Fixes: 711419e504eb ("irqdomain: Add the missing assignment of domain->fwnode for named fwnode")
-> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: stable@vger.kernel.org
+[+cc Kirti, Alex, kvm]
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci/
+On Wed, Jul 08, 2020 at 03:59:30PM +0800, Huacai Chen wrote:
+> Instead of duplicating the PCI_VENDOR_ID_REDHAT definition everywhere,
+> move it to include/linux/pci_ids.h is better.
+> 
+> Signed-off-by: Huacai Chen <chenhc@lemote.com>
+
+Applied with Gerd's ack to pci/misc for v5.9, thanks!
+
+I also updated this in samples/vfio-mdev/mdpy-defs.h:
+
+  -#define MDPY_PCI_VENDOR_ID     0x1b36 /* redhat */
+  +#define MDPY_PCI_VENDOR_ID     PCI_VENDOR_ID_REDHAT
+
+> ---
+>  drivers/gpu/drm/qxl/qxl_dev.h           | 2 --
+>  drivers/net/ethernet/rocker/rocker_hw.h | 1 -
+>  include/linux/pci_ids.h                 | 2 ++
+>  3 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/qxl/qxl_dev.h b/drivers/gpu/drm/qxl/qxl_dev.h
+> index a0ee416..a7bc31f 100644
+> --- a/drivers/gpu/drm/qxl/qxl_dev.h
+> +++ b/drivers/gpu/drm/qxl/qxl_dev.h
+> @@ -131,8 +131,6 @@ enum SpiceCursorType {
+>  
+>  #pragma pack(push, 1)
+>  
+> -#define REDHAT_PCI_VENDOR_ID 0x1b36
+> -
+>  /* 0x100-0x11f reserved for spice, 0x1ff used for unstable work */
+>  #define QXL_DEVICE_ID_STABLE 0x0100
+>  
+> diff --git a/drivers/net/ethernet/rocker/rocker_hw.h b/drivers/net/ethernet/rocker/rocker_hw.h
+> index 59f1f8b..62fd84c 100644
+> --- a/drivers/net/ethernet/rocker/rocker_hw.h
+> +++ b/drivers/net/ethernet/rocker/rocker_hw.h
+> @@ -25,7 +25,6 @@ enum {
+>  
+>  #define ROCKER_FP_PORTS_MAX 62
+>  
+> -#define PCI_VENDOR_ID_REDHAT		0x1b36
+>  #define PCI_DEVICE_ID_REDHAT_ROCKER	0x0006
+>  
+>  #define ROCKER_PCI_BAR0_SIZE		0x2000
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0ad5769..5c709a1 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2585,6 +2585,8 @@
+>  
+>  #define PCI_VENDOR_ID_ASMEDIA		0x1b21
+>  
+> +#define PCI_VENDOR_ID_REDHAT		0x1b36
+> +
+>  #define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
+>  
+>  #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
+> -- 
+> 2.7.0
+> 
