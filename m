@@ -2,306 +2,319 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D8A4219E59
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 12:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10939219E65
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 12:54:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgGIKw7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 06:52:59 -0400
-Received: from mail-db8eur05on2056.outbound.protection.outlook.com ([40.107.20.56]:24475
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726829AbgGIKw7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:52:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fdWMXcLNLJkIzfw7jnQyCQ353vVIhPMYnZKW60x7Y6Lt4nWTAT2pyJpcjhJ6FgCkI/DTQKnEdtrPHgQyZTSGE+jh6f/Opli2XjQQHPOTgnanC/FjqIiX3T4Vrgqio0TcPnkspDCkWBuYRlZXYo9aW3Ag/DSoXqHrRplTeDuit2/3Uh+ip6ydTunmpmZPPHoF5daNx11n36V7gw8pfexu8FBaXMYSm14cshF6IpgSmBJg6y6mv9s8lzDBcRJPSokvQ0n1D9niPrFXV/Mf9xMGm43LB+bF0A8Wy/eTlxNP1cvXH91WFNXSNw7b2HElcPBCvIpLGRl4EqNtjyuMbZGmXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NIgy7086ox+6s26JWyNE+f2XnVwYty1frlH/0fXM6TE=;
- b=mQb7q5VRwpEkGv9aBI4zuPzRHMqmNOk9+Ti/6HP+d+vvd6Ux3n7XgKQURvGvP3rp/b6vdX8QgCifz+mIIIZdDGJ1upbOTHWRQaLuc8q3O6kmhaIA3WRgMQGio0nV6Qf7cpfHjq+VfDQjK4f3iRKheHvRDF/lFZK6vz9dI0xcxZDPcjO1wXWEMebqeSJZ9aN7UwTpgXq81XIFFZNcxsv65L4K8TUun7zSwt/Jz1HweOHAxpxhQWVcplyVpmNUEmMrEMe5tmW94bRi2J5J0nne4IigIBLanZuxK108E3pGJ05fRfw208sux0GqKzHbvutQclgw17INZLePTFFVeliq9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NIgy7086ox+6s26JWyNE+f2XnVwYty1frlH/0fXM6TE=;
- b=oGwvAIX9D1SUVsY0mZ6cE/0MDqFOuPi/A8xo/GPA6TU5v+Jgh2it6+MVD9S1Dx01ftSvI7rdHlb4QCtoZn6Azc9Gatp3V3Pyz6at288Dydd7fbMpXI0N3as2YbXPLlGkmmx5kRkrYDWs6qNLQTXJOao2JkRN1XsJlaCL6Fdm8p4=
-Received: from DB7PR04MB4986.eurprd04.prod.outlook.com (2603:10a6:10:13::25)
- by DB6PR0402MB2790.eurprd04.prod.outlook.com (2603:10a6:4:97::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Thu, 9 Jul
- 2020 10:52:52 +0000
-Received: from DB7PR04MB4986.eurprd04.prod.outlook.com
- ([fe80::d133:55be:7303:108e]) by DB7PR04MB4986.eurprd04.prod.outlook.com
- ([fe80::d133:55be:7303:108e%6]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
- 10:52:52 +0000
-From:   Makarand Pawagi <makarand.pawagi@nxp.com>
-To:     "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-Subject: RE: [EXT] Re: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for
- fsl-mc
-Thread-Topic: [EXT] Re: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for
- fsl-mc
-Thread-Index: AQHWT8hvhkZ6PFIXKUip8fS0U4S+lKj/BKAAgAABSiCAAA4OgIAAA0vwgAAFwICAAAET0A==
-Date:   Thu, 9 Jul 2020 10:52:52 +0000
-Message-ID: <DB7PR04MB4986A56021750A3D104CA244EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
- <a7845603-9bc9-9099-dfc4-19b7bc4f4e44@nxp.com>
- <20200709091950.GA18149@e121166-lin.cambridge.arm.com>
- <DB7PR04MB4986D1A0BB7B685911DF4831EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
- <203372be-144c-54ba-d011-30d0746dd615@nxp.com>
- <DB7PR04MB4986C63772CB47A2A827D028EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
- <d41589da-c2f9-a750-f57a-25dccf51e69f@oss.nxp.com>
-In-Reply-To: <d41589da-c2f9-a750-f57a-25dccf51e69f@oss.nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oss.nxp.com; dkim=none (message not signed)
- header.d=none;oss.nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [122.169.149.202]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5039c4d7-5ecf-427e-9083-08d823f63a83
-x-ms-traffictypediagnostic: DB6PR0402MB2790:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB2790B33AFCCE64178020958CEB640@DB6PR0402MB2790.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 04599F3534
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IyHXArdvrR1GsXoc4MIub3olZwof6NvQdxmHhYpwhWg/EDmEr4FU4P1AehOX4oknn2CXPczR4FxiAT+nxzXcvozQ/Of5b6sNuKOSSQXhXik4y5OHHy1zllaNcvZUw8UkJe9XBm6vcGS1Or7xnv520E8wNR1eb2Smp5fTtEJr53aHUQkCSqa4NK34tt5uKAUpgsMVt71RC6W/XyEsOIw0MurvlBxgecuD7aGoEbHsrWaWRZinqKhnkwVDA87kuU9lAQ+YVx/PB9D3+v1/MiY8o2tQz6Inis/OaB/NA6UIzMXrHib3NhTKxkjiWnSX/8AWSzo7+CJtOe7BrKyl07uSvQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4986.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(376002)(396003)(366004)(8936002)(66476007)(66446008)(64756008)(316002)(110136005)(55016002)(71200400001)(9686003)(54906003)(76116006)(4326008)(5660300002)(8676002)(66556008)(66946007)(52536014)(44832011)(478600001)(83380400001)(7416002)(33656002)(26005)(86362001)(2906002)(186003)(53546011)(6506007)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 17ZOLKepBkcKckfSfVdP3HuVHovHR4uGcX2oBxrvXl214W7jUgNYTCbj3Y7hzTnC3Of3IQ1v09q6MUPG44eMZWfD5+p6EkSwV4u5MKckKYkKo+3ABbzUpYiNfuFPsa5uvwPPoBHfe7cCLvVclhXOwQVvPyzQ1lBiptah6wd9HO0l9IHeSMA7IzUvR2R3zHtMZ+vmwdq6FPLeRfTA6i6ViF+kMhNQhWrV10f+/4UpPP0OzwkPTkpvXFunLZALpXQhZDq7cNJh4H7cpQAqAwyD40M/X0GBvlHeaWKzoI6ic9zGYpuzdFNuab3hAjDAJ9HtYIz20q5O148FdXMeQ9Og9ktPFt6MrJVXjB+BYoa2+bmA0ok4enr20r+2dgdUnUfr0pK2tpiDoWscbYuktE9s6bgNjJFvv2O85ez2K7yT1fuQaHFYUkA3oX2dn0eVRojiS2fj+W07zcINuTLi6Ri97ZJAl6o2rLD2FhJszp6fU81ur7+alE4Dx/70a58M3bWb
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726339AbgGIKy2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 06:54:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:50478 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgGIKy2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:54:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 732B51FB;
+        Thu,  9 Jul 2020 03:54:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA5ED3F887;
+        Thu,  9 Jul 2020 03:54:24 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 11:54:18 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     kishon@ti.com, robh@kernel.org, bhelgaas@google.com,
+        m-karicheri2@ti.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, shawn.guo@linaro.org,
+        songxiaowei@hisilicon.com, svarbanov@mm-sol.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: convert to
+ devm_platform_ioremap_resource_byname()
+Message-ID: <20200709105418.GA19638@e121166-lin.cambridge.arm.com>
+References: <20200528161510.31935-1-zhengdejin5@gmail.com>
+ <20200708164013.5076-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4986.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5039c4d7-5ecf-427e-9083-08d823f63a83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 10:52:52.2903
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Yx1ksOYHMY5QnM7m+RhrYKrJ/jmkhFu+l2owNyteth0I7vSbosGPBs1GMLZe+BBD+X+UVX3JvCIgCqvBpviYPQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2790
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708164013.5076-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGlhbmEgTWFkYWxpbmEg
-Q3JhY2l1biAoT1NTKSA8ZGlhbmEuY3JhY2l1bkBvc3MubnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
-YXksIEp1bHkgOSwgMjAyMCA0OjE3IFBNDQo+IFRvOiBNYWthcmFuZCBQYXdhZ2kgPG1ha2FyYW5k
-LnBhd2FnaUBueHAuY29tPjsgTGF1cmVudGl1IFR1ZG9yDQo+IDxsYXVyZW50aXUudHVkb3JAbnhw
-LmNvbT47IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPg0KPiBD
-YzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBpb21tdUBsaXN0cy5saW51
-eC1mb3VuZGF0aW9uLm9yZzsNCj4gbGludXgtYWNwaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gcGNpQHZnZXIua2VybmVsLm9yZzsgUm9iIEhl
-cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFJhZmFlbCBKLiBXeXNvY2tpDQo+IDxyandAcmp3
-eXNvY2tpLm5ldD47IEpvZXJnIFJvZWRlbCA8am9yb0A4Ynl0ZXMub3JnPjsgSGFuanVuIEd1bw0K
-PiA8Z3VvaGFuanVuQGh1YXdlaS5jb20+OyBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29nbGUu
-Y29tPjsgU3VkZWVwDQo+IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT47IFJvYmluIE11cnBo
-eSA8cm9iaW4ubXVycGh5QGFybS5jb20+Ow0KPiBDYXRhbGluIE1hcmluYXMgPGNhdGFsaW4ubWFy
-aW5hc0Bhcm0uY29tPjsgV2lsbCBEZWFjb24gPHdpbGxAa2VybmVsLm9yZz47DQo+IE1hcmMgWnlu
-Z2llciA8bWF6QGtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW1BBVENIIHYy
-IDEyLzEyXSBidXM6IGZzbC1tYzogQWRkIEFDUEkgc3VwcG9ydCBmb3IgZnNsLW1jDQo+IA0KPiBP
-biA3LzkvMjAyMCAxOjM3IFBNLCBNYWthcmFuZCBQYXdhZ2kgd3JvdGU6DQo+ID4NCj4gPj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogTGF1cmVudGl1IFR1ZG9yIDxsYXVy
-ZW50aXUudHVkb3JAbnhwLmNvbT4NCj4gPj4gU2VudDogVGh1cnNkYXksIEp1bHkgOSwgMjAyMCAz
-OjQ1IFBNDQo+ID4+IFRvOiBNYWthcmFuZCBQYXdhZ2kgPG1ha2FyYW5kLnBhd2FnaUBueHAuY29t
-PjsgTG9yZW56byBQaWVyYWxpc2kNCj4gPj4gPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+
-ID4+IENjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IERpYW5hIE1hZGFs
-aW5hIENyYWNpdW4NCj4gPj4gKE9TUykgPGRpYW5hLmNyYWNpdW5Ab3NzLm54cC5jb20+OyBpb21t
-dUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZzsNCj4gPj4gbGludXgtIGFjcGlAdmdlci5rZXJu
-ZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPj4gbGludXgtcGNpQHZnZXIu
-a2VybmVsLm9yZzsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFJhZmFlbA0KPiA+
-PiBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD47IEpvZXJnIFJvZWRlbCA8am9yb0A4Ynl0
-ZXMub3JnPjsNCj4gPj4gSGFuanVuIEd1byA8Z3VvaGFuanVuQGh1YXdlaS5jb20+OyBCam9ybiBI
-ZWxnYWFzDQo+ID4+IDxiaGVsZ2Fhc0Bnb29nbGUuY29tPjsgU3VkZWVwIEhvbGxhIDxzdWRlZXAu
-aG9sbGFAYXJtLmNvbT47IFJvYmluDQo+ID4+IE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+
-OyBDYXRhbGluIE1hcmluYXMNCj4gPj4gPGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tPjsgV2lsbCBE
-ZWFjb24gPHdpbGxAa2VybmVsLm9yZz47IE1hcmMNCj4gPj4gWnluZ2llciA8bWF6QGtlcm5lbC5v
-cmc+DQo+ID4+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW1BBVENIIHYyIDEyLzEyXSBidXM6IGZz
-bC1tYzogQWRkIEFDUEkgc3VwcG9ydA0KPiA+PiBmb3IgZnNsLW1jDQo+ID4+DQo+ID4+DQo+ID4+
-DQo+ID4+IE9uIDcvOS8yMDIwIDEyOjI2IFBNLCBNYWthcmFuZCBQYXdhZ2kgd3JvdGU6DQo+ID4+
-Pg0KPiA+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4gRnJvbTogTG9yZW56
-byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+ID4+Pj4gU2VudDogVGh1
-cnNkYXksIEp1bHkgOSwgMjAyMCAyOjUwIFBNDQo+ID4+Pj4gVG86IExhdXJlbnRpdSBUdWRvciA8
-bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+ID4+Pj4gQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsgTWFrYXJhbmQgUGF3YWdpDQo+ID4+Pj4gPG1ha2FyYW5kLnBhd2Fn
-aUBueHAuY29tPjsgRGlhbmEgTWFkYWxpbmEgQ3JhY2l1biAoT1NTKQ0KPiA+Pj4+IDxkaWFuYS5j
-cmFjaXVuQG9zcy5ueHAuY29tPjsgaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmc7DQo+
-ID4+Pj4gbGludXgtIGFjcGlAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsNCj4gPj4+PiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZyA8cm9i
-aCtkdEBrZXJuZWwub3JnPjsgUmFmYWVsDQo+ID4+Pj4gSi4gV3lzb2NraSA8cmp3QHJqd3lzb2Nr
-aS5uZXQ+OyBKb2VyZyBSb2VkZWwgPGpvcm9AOGJ5dGVzLm9yZz47DQo+ID4+Pj4gSGFuanVuIEd1
-byA8Z3VvaGFuanVuQGh1YXdlaS5jb20+OyBCam9ybiBIZWxnYWFzDQo+ID4+Pj4gPGJoZWxnYWFz
-QGdvb2dsZS5jb20+OyBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBhcm0uY29tPjsgUm9iaW4N
-Cj4gPj4+PiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPjsgQ2F0YWxpbiBNYXJpbmFzDQo+
-ID4+Pj4gPGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tPjsgV2lsbCBEZWFjb24gPHdpbGxAa2VybmVs
-Lm9yZz47IE1hcmMNCj4gPj4+PiBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCj4gPj4+PiBTdWJq
-ZWN0OiBbRVhUXSBSZTogW1BBVENIIHYyIDEyLzEyXSBidXM6IGZzbC1tYzogQWRkIEFDUEkgc3Vw
-cG9ydA0KPiA+Pj4+IGZvciBmc2wtbWMNCj4gPj4+Pg0KPiA+Pj4+IENhdXRpb246IEVYVCBFbWFp
-bA0KPiA+Pj4+DQo+ID4+Pj4gT24gV2VkLCBKdWwgMDEsIDIwMjAgYXQgMDc6NTU6MjhQTSArMDMw
-MCwgTGF1cmVudGl1IFR1ZG9yIHdyb3RlOg0KPiA+Pj4+Pg0KPiA+Pj4+PiBPbiA2LzE5LzIwMjAg
-MTE6MjAgQU0sIExvcmVuem8gUGllcmFsaXNpIHdyb3RlOg0KPiA+Pj4+Pj4gRnJvbTogTWFrYXJh
-bmQgUGF3YWdpIDxtYWthcmFuZC5wYXdhZ2lAbnhwLmNvbT4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBB
-ZGQgQUNQSSBzdXBwb3J0IGluIHRoZSBmc2wtbWMgZHJpdmVyLiBEcml2ZXIgcGFyc2VzIE1DIERT
-RFQNCj4gPj4+Pj4+IHRhYmxlIHRvIGV4dHJhY3QgbWVtb3J5IGFuZCBvdGhlciByZXNvdXJjZXMu
-DQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gSW50ZXJydXB0IChHSUMgSVRTKSBpbmZvcm1hdGlvbiBpcyBl
-eHRyYWN0ZWQgZnJvbSB0aGUgTUFEVCB0YWJsZQ0KPiA+Pj4+Pj4gYnkgZHJpdmVycy9pcnFjaGlw
-L2lycS1naWMtdjMtaXRzLWZzbC1tYy1tc2kuYy4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBJT1JUIHRh
-YmxlIGlzIHBhcnNlZCB0byBjb25maWd1cmUgRE1BLg0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IFNpZ25l
-ZC1vZmYtYnk6IE1ha2FyYW5kIFBhd2FnaSA8bWFrYXJhbmQucGF3YWdpQG54cC5jb20+DQo+ID4+
-Pj4+PiBTaWduZWQtb2ZmLWJ5OiBEaWFuYSBDcmFjaXVuIDxkaWFuYS5jcmFjaXVuQG9zcy5ueHAu
-Y29tPg0KPiA+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUu
-dHVkb3JAbnhwLmNvbT4NCj4gPj4+Pj4+IC0tLQ0KPiA+Pj4+Pj4gICBkcml2ZXJzL2J1cy9mc2wt
-bWMvZnNsLW1jLWJ1cy5jICAgICAgICAgICAgIHwgNzMgKysrKysrKysrKysrLS0tLQ0KPiA+Pj4+
-Pj4gICBkcml2ZXJzL2J1cy9mc2wtbWMvZnNsLW1jLW1zaS5jICAgICAgICAgICAgIHwgMzcgKysr
-KystLS0tDQo+ID4+Pj4+PiAgIGRyaXZlcnMvaXJxY2hpcC9pcnEtZ2ljLXYzLWl0cy1mc2wtbWMt
-bXNpLmMgfCA5Mg0KPiA+Pj4+Pj4gKysrKysrKysrKysrKysrKy0tLS0tDQo+ID4+Pj4+PiAgIDMg
-ZmlsZXMgY2hhbmdlZCwgMTUwIGluc2VydGlvbnMoKyksIDUyIGRlbGV0aW9ucygtKQ0KPiA+Pj4+
-Pj4NCj4gPj4+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2J1cy9mc2wtbWMvZnNsLW1jLWJ1cy5j
-DQo+ID4+Pj4+PiBiL2RyaXZlcnMvYnVzL2ZzbC1tYy9mc2wtbWMtYnVzLmMgaW5kZXgNCj4gPj4+
-Pj4+IDgyNGZmNzdiYmU4Ni4uMzI0ZDQ5ZDZkZjg5DQo+ID4+Pj4+PiAxMDA2NDQNCj4gPj4+Pj4+
-IC0tLSBhL2RyaXZlcnMvYnVzL2ZzbC1tYy9mc2wtbWMtYnVzLmMNCj4gPj4+Pj4+ICsrKyBiL2Ry
-aXZlcnMvYnVzL2ZzbC1tYy9mc2wtbWMtYnVzLmMNCj4gPj4+Pj4+IEBAIC0xOCw2ICsxOCw4IEBA
-DQo+ID4+Pj4+PiAgICNpbmNsdWRlIDxsaW51eC9iaXRvcHMuaD4NCj4gPj4+Pj4+ICAgI2luY2x1
-ZGUgPGxpbnV4L21zaS5oPg0KPiA+Pj4+Pj4gICAjaW5jbHVkZSA8bGludXgvZG1hLW1hcHBpbmcu
-aD4NCj4gPj4+Pj4+ICsjaW5jbHVkZSA8bGludXgvYWNwaS5oPg0KPiA+Pj4+Pj4gKyNpbmNsdWRl
-IDxsaW51eC9pb21tdS5oPg0KPiA+Pj4+Pj4NCj4gPj4+Pj4+ICAgI2luY2x1ZGUgImZzbC1tYy1w
-cml2YXRlLmgiDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gQEAgLTM4LDYgKzQwLDcgQEAgc3RydWN0IGZz
-bF9tYyB7DQo+ID4+Pj4+PiAgICAgIHN0cnVjdCBmc2xfbWNfZGV2aWNlICpyb290X21jX2J1c19k
-ZXY7DQo+ID4+Pj4+PiAgICAgIHU4IG51bV90cmFuc2xhdGlvbl9yYW5nZXM7DQo+ID4+Pj4+PiAg
-ICAgIHN0cnVjdCBmc2xfbWNfYWRkcl90cmFuc2xhdGlvbl9yYW5nZSAqdHJhbnNsYXRpb25fcmFu
-Z2VzOw0KPiA+Pj4+Pj4gKyAgIHZvaWQgKmZzbF9tY19yZWdzOw0KPiA+Pj4+Pj4gICB9Ow0KPiA+
-Pj4+Pj4NCj4gPj4+Pj4+ICAgLyoqDQo+ID4+Pj4+PiBAQCAtNTYsNiArNTksMTAgQEAgc3RydWN0
-IGZzbF9tY19hZGRyX3RyYW5zbGF0aW9uX3JhbmdlIHsNCj4gPj4+Pj4+ICAgICAgcGh5c19hZGRy
-X3Qgc3RhcnRfcGh5c19hZGRyOw0KPiA+Pj4+Pj4gICB9Ow0KPiA+Pj4+Pj4NCj4gPj4+Pj4+ICsj
-ZGVmaW5lIEZTTF9NQ19GQVBSICAgICAgICAweDI4DQo+ID4+Pj4+PiArI2RlZmluZSBNQ19GQVBS
-X1BMIEJJVCgxOCkNCj4gPj4+Pj4+ICsjZGVmaW5lIE1DX0ZBUFJfQk1UICAgICAgICBCSVQoMTcp
-DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiAgIC8qKg0KPiA+Pj4+Pj4gICAgKiBmc2xfbWNfYnVzX21h
-dGNoIC0gZGV2aWNlIHRvIGRyaXZlciBtYXRjaGluZyBjYWxsYmFjaw0KPiA+Pj4+Pj4gICAgKiBA
-ZGV2OiB0aGUgZnNsLW1jIGRldmljZSB0byBtYXRjaCBhZ2FpbnN0IEBAIC0xMjQsNyArMTMxLDEw
-DQo+ID4+Pj4+PiBAQCBzdGF0aWMgaW50IGZzbF9tY19kbWFfY29uZmlndXJlKHN0cnVjdCBkZXZp
-Y2UgKmRldikNCj4gPj4+Pj4+ICAgICAgd2hpbGUgKGRldl9pc19mc2xfbWMoZG1hX2RldikpDQo+
-ID4+Pj4+PiAgICAgICAgICAgICAgZG1hX2RldiA9IGRtYV9kZXYtPnBhcmVudDsNCj4gPj4+Pj4+
-DQo+ID4+Pj4+PiAtICAgcmV0dXJuIG9mX2RtYV9jb25maWd1cmVfaWQoZGV2LCBkbWFfZGV2LT5v
-Zl9ub2RlLCAwLCAmaW5wdXRfaWQpOw0KPiA+Pj4+Pj4gKyAgIGlmIChkZXZfb2Zfbm9kZShkbWFf
-ZGV2KSkNCj4gPj4+Pj4+ICsgICAgICAgICAgIHJldHVybiBvZl9kbWFfY29uZmlndXJlX2lkKGRl
-diwgZG1hX2Rldi0+b2Zfbm9kZSwgMCwNCj4gPj4+Pj4+ICsgJmlucHV0X2lkKTsNCj4gPj4+Pj4+
-ICsNCj4gPj4+Pj4+ICsgICByZXR1cm4gYWNwaV9kbWFfY29uZmlndXJlX2lkKGRldiwgREVWX0RN
-QV9DT0hFUkVOVCwNCj4gPj4+Pj4+ICsgJmlucHV0X2lkKTsNCj4gPj4+Pj4+ICAgfQ0KPiA+Pj4+
-Pj4NCj4gPj4+Pj4+ICAgc3RhdGljIHNzaXplX3QgbW9kYWxpYXNfc2hvdyhzdHJ1Y3QgZGV2aWNl
-ICpkZXYsIHN0cnVjdA0KPiA+Pj4+Pj4gZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwgQEAgLTg2NSw4
-ICs4NzUsMTEgQEAgc3RhdGljIGludA0KPiA+Pj4+IGZzbF9tY19idXNfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikNCj4gPj4+Pj4+ICAgICAgc3RydWN0IGZzbF9tY19pbyAqbWNf
-aW8gPSBOVUxMOw0KPiA+Pj4+Pj4gICAgICBpbnQgY29udGFpbmVyX2lkOw0KPiA+Pj4+Pj4gICAg
-ICBwaHlzX2FkZHJfdCBtY19wb3J0YWxfcGh5c19hZGRyOw0KPiA+Pj4+Pj4gLSAgIHUzMiBtY19w
-b3J0YWxfc2l6ZTsNCj4gPj4+Pj4+IC0gICBzdHJ1Y3QgcmVzb3VyY2UgcmVzOw0KPiA+Pj4+Pj4g
-KyAgIHUzMiBtY19wb3J0YWxfc2l6ZSwgbWNfc3RyZWFtX2lkOw0KPiA+Pj4+Pj4gKyAgIHN0cnVj
-dCByZXNvdXJjZSAqcGxhdF9yZXM7DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiArICAgaWYgKCFpb21t
-dV9wcmVzZW50KCZmc2xfbWNfYnVzX3R5cGUpKQ0KPiA+Pj4+Pj4gKyAgICAgICAgICAgcmV0dXJu
-IC1FUFJPQkVfREVGRVI7DQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gICAgICBtYyA9IGRldm1fa3phbGxv
-YygmcGRldi0+ZGV2LCBzaXplb2YoKm1jKSwgR0ZQX0tFUk5FTCk7DQo+ID4+Pj4+PiAgICAgIGlm
-ICghbWMpDQo+ID4+Pj4+PiBAQCAtODc0LDE5ICs4ODcsMzMgQEAgc3RhdGljIGludCBmc2xfbWNf
-YnVzX3Byb2JlKHN0cnVjdA0KPiA+Pj4+Pj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+Pj4+
-Pj4NCj4gPj4+Pj4+ICAgICAgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWMpOw0KPiA+Pj4+
-Pj4NCj4gPj4+Pj4+ICsgICBwbGF0X3JlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJ
-T1JFU09VUkNFX01FTSwgMSk7DQo+ID4+Pj4+PiArICAgbWMtPmZzbF9tY19yZWdzID0gZGV2bV9p
-b3JlbWFwX3Jlc291cmNlKCZwZGV2LT5kZXYsIHBsYXRfcmVzKTsNCj4gPj4+Pj4+ICsgICBpZiAo
-SVNfRVJSKG1jLT5mc2xfbWNfcmVncykpDQo+ID4+Pj4+PiArICAgICAgICAgICByZXR1cm4gUFRS
-X0VSUihtYy0+ZnNsX21jX3JlZ3MpOw0KPiA+Pj4+Pj4gKw0KPiA+Pj4+Pj4gKyAgIGlmIChJU19F
-TkFCTEVEKENPTkZJR19BQ1BJKSAmJiAhZGV2X29mX25vZGUoJnBkZXYtPmRldikpIHsNCj4gPj4+
-Pj4+ICsgICAgICAgICAgIG1jX3N0cmVhbV9pZCA9IHJlYWRsKG1jLT5mc2xfbWNfcmVncyArIEZT
-TF9NQ19GQVBSKTsNCj4gPj4+Pj4+ICsgICAgICAgICAgIC8qDQo+ID4+Pj4+PiArICAgICAgICAg
-ICAgKiBIVyBPUnMgdGhlIFBMIGFuZCBCTVQgYml0LCBwbGFjZXMgdGhlIHJlc3VsdCBpbiBiaXQg
-MTUgb2YNCj4gPj4+Pj4+ICsgICAgICAgICAgICAqIHRoZSBTdHJlYW1JRCBhbmQgT1JzIGluIHRo
-ZSBJQ0lELiBDYWxjdWxhdGUgaXQgYWNjb3JkaW5nbHkuDQo+ID4+Pj4+PiArICAgICAgICAgICAg
-Ki8NCj4gPj4+Pj4+ICsgICAgICAgICAgIG1jX3N0cmVhbV9pZCA9IChtY19zdHJlYW1faWQgJiAw
-eGZmZmYpIHwNCj4gPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAoKG1jX3N0cmVh
-bV9pZCAmIChNQ19GQVBSX1BMIHwgTUNfRkFQUl9CTVQpKSA/DQo+ID4+Pj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAweDQwMDAgOiAwKTsNCj4gPj4+Pj4+ICsgICAgICAg
-ICAgIGVycm9yID0gYWNwaV9kbWFfY29uZmlndXJlX2lkKCZwZGV2LT5kZXYsDQo+IERFVl9ETUFf
-Q09IRVJFTlQsDQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAmbWNfc3RyZWFtX2lkKTsNCj4gPj4+Pj4+ICsgICAgICAgICAgIGlmIChlcnJvcikNCj4g
-Pj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgZGV2X3dhcm4oJnBkZXYtPmRldiwgImZhaWxlZCB0
-byBjb25maWd1cmUgZG1hOiAlZC5cbiIsDQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGVycm9yKTsNCj4gPj4+Pj4+ICsgICB9DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiAgICAg
-IC8qDQo+ID4+Pj4+PiAgICAgICAqIEdldCBwaHlzaWNhbCBhZGRyZXNzIG9mIE1DIHBvcnRhbCBm
-b3IgdGhlIHJvb3QgRFBSQzoNCj4gPj4+Pj4+ICAgICAgICovDQo+ID4+Pj4+PiAtICAgZXJyb3Ig
-PSBvZl9hZGRyZXNzX3RvX3Jlc291cmNlKHBkZXYtPmRldi5vZl9ub2RlLCAwLCAmcmVzKTsNCj4g
-Pj4+Pj4+IC0gICBpZiAoZXJyb3IgPCAwKSB7DQo+ID4+Pj4+PiAtICAgICAgICAgICBkZXZfZXJy
-KCZwZGV2LT5kZXYsDQo+ID4+Pj4+PiAtICAgICAgICAgICAgICAgICAgICJvZl9hZGRyZXNzX3Rv
-X3Jlc291cmNlKCkgZmFpbGVkIGZvciAlcE9GXG4iLA0KPiA+Pj4+Pj4gLSAgICAgICAgICAgICAg
-ICAgICBwZGV2LT5kZXYub2Zfbm9kZSk7DQo+ID4+Pj4+PiAtICAgICAgICAgICByZXR1cm4gZXJy
-b3I7DQo+ID4+Pj4+PiAtICAgfQ0KPiA+Pj4+Pj4gLQ0KPiA+Pj4+Pj4gLSAgIG1jX3BvcnRhbF9w
-aHlzX2FkZHIgPSByZXMuc3RhcnQ7DQo+ID4+Pj4+PiAtICAgbWNfcG9ydGFsX3NpemUgPSByZXNv
-dXJjZV9zaXplKCZyZXMpOw0KPiA+Pj4+Pj4gKyAgIHBsYXRfcmVzID0gcGxhdGZvcm1fZ2V0X3Jl
-c291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4gPj4+Pj4+ICsgICBtY19wb3J0YWxf
-cGh5c19hZGRyID0gcGxhdF9yZXMtPnN0YXJ0Ow0KPiA+Pj4+Pj4gKyAgIG1jX3BvcnRhbF9zaXpl
-ID0gcmVzb3VyY2Vfc2l6ZShwbGF0X3Jlcyk7DQo+ID4+Pj4+PiAgICAgIGVycm9yID0gZnNsX2Ny
-ZWF0ZV9tY19pbygmcGRldi0+ZGV2LCBtY19wb3J0YWxfcGh5c19hZGRyLA0KPiA+Pj4+Pj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgbWNfcG9ydGFsX3NpemUsIE5VTEwsDQo+ID4+Pj4+
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBGU0xfTUNfSU9fQVRPTUlDX0NPTlRFWFRf
-UE9SVEFMLA0KPiA+Pj4+Pj4gJm1jX2lvKTsgQEAgLTkwMywxMSArOTMwLDEzIEBAIHN0YXRpYyBp
-bnQgZnNsX21jX2J1c19wcm9iZShzdHJ1Y3QNCj4gPj4+PiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-DQo+ID4+Pj4+PiAgICAgIGRldl9pbmZvKCZwZGV2LT5kZXYsICJNQyBmaXJtd2FyZSB2ZXJzaW9u
-OiAldS4ldS4ldVxuIiwNCj4gPj4+Pj4+ICAgICAgICAgICAgICAgbWNfdmVyc2lvbi5tYWpvciwg
-bWNfdmVyc2lvbi5taW5vciwNCj4gPj4+Pj4+IG1jX3ZlcnNpb24ucmV2aXNpb24pOw0KPiA+Pj4+
-Pj4NCj4gPj4+Pj4+IC0gICBlcnJvciA9IGdldF9tY19hZGRyX3RyYW5zbGF0aW9uX3Jhbmdlcygm
-cGRldi0+ZGV2LA0KPiA+Pj4+Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICZtYy0+dHJhbnNsYXRpb25fcmFuZ2VzLA0KPiA+Pj4+Pj4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICZtYy0+bnVtX3RyYW5zbGF0aW9uX3Jhbmdlcyk7
-DQo+ID4+Pj4+PiAtICAgaWYgKGVycm9yIDwgMCkNCj4gPj4+Pj4+IC0gICAgICAgICAgIGdvdG8g
-ZXJyb3JfY2xlYW51cF9tY19pbzsNCj4gPj4+Pj4+ICsgICBpZiAoZGV2X29mX25vZGUoJnBkZXYt
-PmRldikpIHsNCj4gPj4+Pj4+ICsgICAgICAgICAgIGVycm9yID0gZ2V0X21jX2FkZHJfdHJhbnNs
-YXRpb25fcmFuZ2VzKCZwZGV2LT5kZXYsDQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICZtYy0+dHJhbnNsYXRpb25fcmFuZ2VzLA0KPiA+Pj4+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmbWMtPm51bV90cmFu
-c2xhdGlvbl9yYW5nZXMpOw0KPiA+Pj4+Pj4gKyAgICAgICAgICAgaWYgKGVycm9yIDwgMCkNCj4g
-Pj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgZ290byBlcnJvcl9jbGVhbnVwX21jX2lvOw0KPiA+
-Pj4+Pj4gKyAgIH0NCj4gPj4+Pj4+DQo+ID4+Pj4+PiAgICAgIGVycm9yID0gZHByY19nZXRfY29u
-dGFpbmVyX2lkKG1jX2lvLCAwLCAmY29udGFpbmVyX2lkKTsNCj4gPj4+Pj4+ICAgICAgaWYgKGVy
-cm9yIDwgMCkgew0KPiA+Pj4+Pj4gQEAgLTkzNCw2ICs5NjMsNyBAQCBzdGF0aWMgaW50IGZzbF9t
-Y19idXNfcHJvYmUoc3RydWN0DQo+ID4+Pj4+PiBwbGF0Zm9ybV9kZXZpY2UNCj4gPj4+PiAqcGRl
-dikNCj4gPj4+Pj4+ICAgICAgICAgICAgICBnb3RvIGVycm9yX2NsZWFudXBfbWNfaW87DQo+ID4+
-Pj4+Pg0KPiA+Pj4+Pj4gICAgICBtYy0+cm9vdF9tY19idXNfZGV2ID0gbWNfYnVzX2RldjsNCj4g
-Pj4+Pj4+ICsgICBtY19idXNfZGV2LT5kZXYuZndub2RlID0gcGRldi0+ZGV2LmZ3bm9kZTsNCj4g
-Pj4+Pj4gTWFrYXJhbmQsIHRoaXMgbG9va3MgYSBiaXQgd2VpcmQuIElzIHRoZXJlIHJlYWxseSBh
-IHJlYXNvbiBmb3IgaXQ/DQo+ID4+Pj4gQ2FuIHlvdSBjbGFyaWZ5IHBsZWFzZSBzbyB0aGF0IHdl
-IGNhbiByZWFjaCBhIGNvbmNsdXNpb24gb24gdGhpcyBtYXR0ZXIgPw0KPiA+Pj4+DQo+ID4+PiBM
-YXVyZW50aXUsIGNhbiB5b3UgY2xhcmlmeSB3aGF0IGV4YWN0bHkgaXMgdGhlIGRvdWJ0IGhlcmU/
-IEFyZSB5b3UNCj4gPj4+IGFza2luZyBhYm91dA0KPiA+PiBmd25vZGUgYXNzaWdubWVudCBmcm9t
-IHBkZXYgdG8gbWNfYnVzX2Rldj8NCj4gPj4gWWVzLiBJIHJlbWVtYmVyIHRoYXQgYSB3aGlsZSBh
-Z28gSSB0ZXN0ZWQgd2l0aG91dCB0aGlzIGZ3bm9kZQ0KPiA+PiBhc3NpZ25tZW50IGFuZCBkaWRu
-J3QgZW5jb3VudGVyIGFueSBpc3N1ZXMuIE1heWJlIHdlIGNhbiBqdXN0IGRyb3AgaXQ/DQo+ID4g
-RGlkIHlvdSB0ZXN0ZWQgd2l0aCBQSFkgY2hhbmdlcz8gQmVjYXVzZSB0aGlzIGlzIG5lZWRlZCBm
-b3IgTUFDIGRyaXZlciwNCj4gd2hlcmUgaXQgbmVlZHMgdGhlIG1jIGJ1cyBub2RlLg0KPiANCj4g
-TWF5YmUgaXQgd29ydGggYSBjb21tZW50IG9yIG1heWJlIGhhdmUgaXQgaW4gYSBkaWZmZXJlbnQg
-cGF0Y2g/DQo+IA0KU2luY2UgdGhpcyBjaGFuZ2UgaXMgbmVlZGVkIGZvciBBQ1BJIGNhc2UgYW5k
-IHRoaXMgaXMgQUNQSSBzdXBwb3J0IGNhc2UsDQpJIGZlZWwgd2Ugc2hvdWxkIGhhdmUgdGhpcyBj
-aGFuZ2UgaW4gdGhpcyBwYXRjaCBvbmx5IGluc3RlYWQgb2Ygc2VwYXJhdGUgcGF0Y2guIA0KDQo+
-IFRoYW5rcywNCj4gRGlhbmENCj4gDQo+ID4NCj4gPj4gLS0tDQo+ID4+IEJlc3QgUmVnYXJkcywg
-TGF1cmVudGl1DQoNCg==
+On Thu, Jul 09, 2020 at 12:40:13AM +0800, Dejin Zheng wrote:
+> Use devm_platform_ioremap_resource_byname() to simplify codes.
+> it contains platform_get_resource_byname() and devm_ioremap_resource().
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v1 -> v2:
+> 	- rebase to pci/dwc branch
+> 	- add Gustavo and Rob's Reviewed tag
+> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c         | 11 ++++-------
+>  drivers/pci/controller/dwc/pci-keystone.c       |  7 +++----
+>  drivers/pci/controller/dwc/pcie-artpec6.c       | 12 ++++--------
+>  .../pci/controller/dwc/pcie-designware-plat.c   |  3 +--
+>  drivers/pci/controller/dwc/pcie-histb.c         |  7 ++-----
+>  drivers/pci/controller/dwc/pcie-intel-gw.c      |  7 ++-----
+>  drivers/pci/controller/dwc/pcie-kirin.c         | 17 ++++++-----------
+>  drivers/pci/controller/dwc/pcie-qcom.c          |  6 ++----
+>  drivers/pci/controller/dwc/pcie-uniphier.c      |  3 +--
+>  9 files changed, 25 insertions(+), 48 deletions(-)
+
+Applied to pci/dwc, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 6184ebc9392d..e5d0c7ac09b9 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -593,13 +593,12 @@ static int __init dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
+>  	ep = &pci->ep;
+>  	ep->ops = &pcie_ep_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "ep_dbics");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics2");
+> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 =
+> +		devm_platform_ioremap_resource_byname(pdev, "ep_dbics2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+>  
+> @@ -626,7 +625,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  	struct dw_pcie *pci = dra7xx->pci;
+>  	struct pcie_port *pp = &pci->pp;
+>  	struct device *dev = pci->dev;
+> -	struct resource *res;
+>  
+>  	pp->irq = platform_get_irq(pdev, 1);
+>  	if (pp->irq < 0) {
+> @@ -638,8 +636,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbics");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "rc_dbics");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 790679fdfa48..5ffc3b40c4f6 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>  	if (!pci)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+> -	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
+> +	ks_pcie->va_app_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "app");
+>  	if (IS_ERR(ks_pcie->va_app_base))
+>  		return PTR_ERR(ks_pcie->va_app_base);
+>  
+> @@ -1323,8 +1323,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	if (pci->version >= 0x480A) {
+> -		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
+> -		atu_base = devm_ioremap_resource(dev, res);
+> +		atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
+>  		if (IS_ERR(atu_base)) {
+>  			ret = PTR_ERR(atu_base);
+>  			goto err_get_sync;
+> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+> index 28d5a1095200..7d2cfa288b01 100644
+> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
+> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+> @@ -455,8 +455,7 @@ static int artpec6_add_pcie_ep(struct artpec6_pcie *artpec6_pcie,
+>  	ep = &pci->ep;
+>  	ep->ops = &pcie_ep_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 = devm_platform_ioremap_resource_byname(pdev, "dbi2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+>  
+> @@ -481,8 +480,6 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct artpec6_pcie *artpec6_pcie;
+> -	struct resource *dbi_base;
+> -	struct resource *phy_base;
+>  	int ret;
+>  	const struct of_device_id *match;
+>  	const struct artpec_pcie_of_data *data;
+> @@ -512,13 +509,12 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
+>  	artpec6_pcie->variant = variant;
+>  	artpec6_pcie->mode = mode;
+>  
+> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	pci->dbi_base = devm_ioremap_resource(dev, dbi_base);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> -	phy_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> -	artpec6_pcie->phy_base = devm_ioremap_resource(dev, phy_base);
+> +	artpec6_pcie->phy_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "phy");
+>  	if (IS_ERR(artpec6_pcie->phy_base))
+>  		return PTR_ERR(artpec6_pcie->phy_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> index 73646b677aff..712456f6ce36 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> @@ -153,8 +153,7 @@ static int dw_plat_add_pcie_ep(struct dw_plat_pcie *dw_plat_pcie,
+>  	ep = &pci->ep;
+>  	ep->ops = &pcie_ep_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 = devm_platform_ioremap_resource_byname(pdev, "dbi2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+> index 811b5c6d62ea..6d3524c39a9b 100644
+> --- a/drivers/pci/controller/dwc/pcie-histb.c
+> +++ b/drivers/pci/controller/dwc/pcie-histb.c
+> @@ -304,7 +304,6 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  	struct histb_pcie *hipcie;
+>  	struct dw_pcie *pci;
+>  	struct pcie_port *pp;
+> -	struct resource *res;
+>  	struct device_node *np = pdev->dev.of_node;
+>  	struct device *dev = &pdev->dev;
+>  	enum of_gpio_flags of_flags;
+> @@ -324,15 +323,13 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  	pci->dev = dev;
+>  	pci->ops = &dw_pcie_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
+> -	hipcie->ctrl = devm_ioremap_resource(dev, res);
+> +	hipcie->ctrl = devm_platform_ioremap_resource_byname(pdev, "control");
+>  	if (IS_ERR(hipcie->ctrl)) {
+>  		dev_err(dev, "cannot get control reg base\n");
+>  		return PTR_ERR(hipcie->ctrl);
+>  	}
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc-dbi");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "rc-dbi");
+>  	if (IS_ERR(pci->dbi_base)) {
+>  		dev_err(dev, "cannot get rc-dbi base\n");
+>  		return PTR_ERR(pci->dbi_base);
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index 2d8dbb318087..c3b3a1d162b5 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -253,11 +253,9 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
+>  	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
+>  	struct dw_pcie *pci = &lpp->pci;
+>  	struct device *dev = pci->dev;
+> -	struct resource *res;
+>  	int ret;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> @@ -291,8 +289,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
+>  	ret = of_pci_get_max_link_speed(dev->of_node);
+>  	lpp->link_gen = ret < 0 ? 0 : ret;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+> -	lpp->app_base = devm_ioremap_resource(dev, res);
+> +	lpp->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
+>  	if (IS_ERR(lpp->app_base))
+>  		return PTR_ERR(lpp->app_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index c19617a912bd..e5e765038686 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -147,23 +147,18 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+>  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+>  				    struct platform_device *pdev)
+>  {
+> -	struct device *dev = &pdev->dev;
+> -	struct resource *apb;
+> -	struct resource *phy;
+> -	struct resource *dbi;
+> -
+> -	apb = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
+> -	kirin_pcie->apb_base = devm_ioremap_resource(dev, apb);
+> +	kirin_pcie->apb_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "apb");
+>  	if (IS_ERR(kirin_pcie->apb_base))
+>  		return PTR_ERR(kirin_pcie->apb_base);
+>  
+> -	phy = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> -	kirin_pcie->phy_base = devm_ioremap_resource(dev, phy);
+> +	kirin_pcie->phy_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "phy");
+>  	if (IS_ERR(kirin_pcie->phy_base))
+>  		return PTR_ERR(kirin_pcie->phy_base);
+>  
+> -	dbi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	kirin_pcie->pci->dbi_base = devm_ioremap_resource(dev, dbi);
+> +	kirin_pcie->pci->dbi_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(kirin_pcie->pci->dbi_base))
+>  		return PTR_ERR(kirin_pcie->pci->dbi_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 73d4eed26f65..b79f7878c993 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1405,8 +1405,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	if (pcie->gen < 0)
+>  		pcie->gen = 2;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
+> -	pcie->parf = devm_ioremap_resource(dev, res);
+> +	pcie->parf = devm_platform_ioremap_resource_byname(pdev, "parf");
+>  	if (IS_ERR(pcie->parf)) {
+>  		ret = PTR_ERR(pcie->parf);
+>  		goto err_pm_runtime_put;
+> @@ -1419,8 +1418,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> -	pcie->elbi = devm_ioremap_resource(dev, res);
+> +	pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
+>  	if (IS_ERR(pcie->elbi)) {
+>  		ret = PTR_ERR(pcie->elbi);
+>  		goto err_pm_runtime_put;
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index a5401a0b1e58..3a7f403b57b8 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -416,8 +416,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->pci.dbi_base))
+>  		return PTR_ERR(priv->pci.dbi_base);
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> -	priv->base = devm_ioremap_resource(dev, res);
+> +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
+>  	if (IS_ERR(priv->base))
+>  		return PTR_ERR(priv->base);
+>  
+> -- 
+> 2.25.0
+> 
