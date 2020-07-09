@@ -2,98 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0F7D21A46A
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 18:10:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F78C21A4CC
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 18:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgGIQKF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 12:10:05 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40263 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgGIQKF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 12:10:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id q8so2891053iow.7
-        for <linux-pci@vger.kernel.org>; Thu, 09 Jul 2020 09:10:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0jV5Q2BcP9CMI/8a5AeORE3bGcjhTMGqCxpwCuMOewE=;
-        b=nUrGk3aEJrqykrwilpxItOXbgYjChlZToRRDM8z5JK8c3suF7H3WKyueLd0cE+WOAy
-         55KWEjfyWeJOWYJFVomfGoK1r0hdZo4CbFDxmCJoAlY2uG6SZs13nHjNrmDaVU63qcn1
-         IRPHpzcVx9cPJda8tAqM4ll00wth8ublyQ+/WHRkD0rgBkZdZeNGXwdvkt6EKn4hhjuz
-         4wIBaLgZnHUVdMk3lRF34iq76PZj/iG0auX5Wsr1T2XHlpBcY9tJbyIS/w1DPrNewcX8
-         wFm1sjZW54yHAlFmeFB92ZROMD9gdvKkHeFrkjJPb3HVFKswrJgzSGP7Z1QamjTujjiA
-         VycQ==
-X-Gm-Message-State: AOAM532DYXQt83UZ918WvxgGIKJJhZoWecUgM1XLi7mfuFwWFXNcJVuo
-        dZnWT50mJVjWIKz1HXTN8BBlb7e7/Q==
-X-Google-Smtp-Source: ABdhPJxOxcxWHIXwKodn/2E2bz39ppKYVPjV0S5kIpCKTdM6mYDLe1vnSajLjkbX188DWocHGh/Qyw==
-X-Received: by 2002:a05:6602:15ca:: with SMTP id f10mr43795236iow.52.1594311003988;
-        Thu, 09 Jul 2020 09:10:03 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.254])
-        by smtp.googlemail.com with ESMTPSA id t74sm2238925ild.6.2020.07.09.09.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 09:10:03 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: host-common: Fix driver remove NULL bridge->bus dereference
-Date:   Thu,  9 Jul 2020 10:10:02 -0600
-Message-Id: <20200709161002.439699-1-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S1727825AbgGIQ3I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 12:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726408AbgGIQ3I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:29:08 -0400
+Received: from embeddedor (unknown [201.162.245.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C92CF207DD;
+        Thu,  9 Jul 2020 16:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594312147;
+        bh=XsNuitHhYM6kMfGhX8xkC5TqV/m57YXn+6jH4L6J7Wg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VSfq34mXjHIJ5J+MRKVlVMD/rNadsDoRRVEfmuarRfT/77teZlxjfpDZ5iDaiF1LG
+         JOv8e19APo9W1WHPM9GsQLZyDSC8L7EzLnZ4s+A68fraxhB6NNrEbktv+eglRnp8Xl
+         TblsrchtjiecSYFMp6gubyCEqWif+SGUWooRV6K0=
+Date:   Thu, 9 Jul 2020 11:34:38 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] ACPI: Use fallthrough pseudo-keyword
+Message-ID: <20200709163438.GD15020@embeddedor>
+References: <20200707200937.GA5056@embeddedor>
+ <CAJZ5v0jv-or+gTy2u4hS3Zv6T6XwEqXuifygy5ZoXe8mMEZzbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jv-or+gTy2u4hS3Zv6T6XwEqXuifygy5ZoXe8mMEZzbw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit 2d716c37b5ce ("PCI: host-common: Use struct
-pci_host_bridge.windows list directly") moved platform_set_drvdata()
-before pci_host_probe() which results in the bridge->bus pointer being
-NULL. Let's change the drvdata to the bridge struct instead to fix this.
+On Thu, Jul 09, 2020 at 02:10:41PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Jul 7, 2020 at 10:04 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+> >
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > fall-through markings when it is the case.
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> >
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Applied as 5.9 material, thanks!
+> 
 
-Fixes: 2d716c37b5ce ("PCI: host-common: Use struct pci_host_bridge.windows list directly")
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/pci/controller/pci-host-common.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks, Rafael.
 
-diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-index f8f71d99e427..b76e55f495e4 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -83,7 +83,7 @@ int pci_host_common_probe(struct platform_device *pdev)
- 	bridge->map_irq = of_irq_parse_and_map_pci;
- 	bridge->swizzle_irq = pci_common_swizzle;
- 
--	platform_set_drvdata(pdev, bridge->bus);
-+	platform_set_drvdata(pdev, bridge);
- 
- 	return pci_host_probe(bridge);
- }
-@@ -91,11 +91,11 @@ EXPORT_SYMBOL_GPL(pci_host_common_probe);
- 
- int pci_host_common_remove(struct platform_device *pdev)
- {
--	struct pci_bus *bus = platform_get_drvdata(pdev);
-+	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
- 
- 	pci_lock_rescan_remove();
--	pci_stop_root_bus(bus);
--	pci_remove_root_bus(bus);
-+	pci_stop_root_bus(bridge->bus);
-+	pci_remove_root_bus(bridge->bus);
- 	pci_unlock_rescan_remove();
- 
- 	return 0;
--- 
-2.25.1
+--
+Gustavo
 
