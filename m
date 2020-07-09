@@ -2,105 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B18219F82
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 14:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DC3E219FB5
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 14:10:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgGIMBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 08:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgGIMBC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:01:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B28E206C3;
-        Thu,  9 Jul 2020 12:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594296061;
-        bh=G9bmSFELKRxQPZ+NTn/InZnU9Px+G3f6WIIbF0sa7VQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=W3B8WlB78HBGwrFnK785PkNtYGqHBvxgmEZjQ6cwZYSKsdt/WKie6QVgUhSwSY17R
-         umEt+YyxTxQ/57mWnWm1QNwPOYsuNrwoXnueLtkQFIorEJNiR/AZATrJb8RRL5Gqgx
-         t/yEKgISVcv5GEhh8CZqzE+IqhpZY3M3CSeJw9JQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jtVEZ-00ANHv-S1; Thu, 09 Jul 2020 13:00:59 +0100
+        id S1726881AbgGIMKz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 08:10:55 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43453 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbgGIMKz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 08:10:55 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 95so1497874otw.10;
+        Thu, 09 Jul 2020 05:10:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YOjL0UML2dSKlLSP/sqPvKmua2zfxEU3z20Tax7E+dU=;
+        b=Ycmt5KN1TlQ92MyNOHAfWi9PllW2dIhKvgxhzggdU4bznyc5v+Z3rY0RcnxCC4gS/p
+         X2MTr/juJKDsz9P3DNEaZhNfsxazLxGSadLX1NlnyuP4yjYG3fTm9MoxYxFrV9yVy8hK
+         x3g7pEAPMHoQc/tK+AAWPBpKOIAzJZ1AIDAmXvCBmb4g243I3FJJBTEriZreS/NFHqdS
+         jryxS07CEXF9hFr8oWBLAefKwXPAZy+SrvVTa4kP38p8T9ujNzH/yyHl9HzOhMJp7Xlp
+         WTAkJ5TTeqeT8VPqiBf+P5lu9c3JRxBrNBniFxsGNDZ0+uxllQtlFE23JVWwYaQrWo9t
+         zffw==
+X-Gm-Message-State: AOAM5329nuxqcoMscbRHC8oC2v4QQ/jeSOAA/3ixqjiMIL4uQnG7tjOh
+        42MfTpxeBtF8PAfuGIXBzPDB3XU4w/Qc4wUWkD8=
+X-Google-Smtp-Source: ABdhPJzrdCIXJtWpQ57B//JafGA2Ik24qTnJZ4xpWpyPvoIKWIHmwlPcOqcrf6uegkz7DGv/y4jHGoguZ6n44qDt5Cw=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr17147901oth.262.1594296653915;
+ Thu, 09 Jul 2020 05:10:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 09 Jul 2020 13:00:59 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org,
-        Sushma Kalakota <sushmax.kalakota@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] irqdomain/treewide: Keep firmware node unconditionally
- allocated
-In-Reply-To: <873661qakd.fsf@nanos.tec.linutronix.de>
-References: <20200706154410.GA117493@bjorn-Precision-5520>
- <873661qakd.fsf@nanos.tec.linutronix.de>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <b90acf9f348f2eb7b7244913c130cbff@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, helgaas@kernel.org, andriy.shevchenko@linux.intel.com, jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, sushmax.kalakota@intel.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200707200937.GA5056@embeddedor>
+In-Reply-To: <20200707200937.GA5056@embeddedor>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 Jul 2020 14:10:41 +0200
+Message-ID: <CAJZ5v0jv-or+gTy2u4hS3Zv6T6XwEqXuifygy5ZoXe8mMEZzbw@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: Use fallthrough pseudo-keyword
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+On Tue, Jul 7, 2020 at 10:04 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Catching up on email...
+Applied as 5.9 material, thanks!
 
-On 2020-07-09 10:53, Thomas Gleixner wrote:
-> Quite some non OF/ACPI users of irqdomains allocate firmware nodes of 
-> type
-> IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right 
-> after
-> creating the irqdomain. The only purpose of these FW nodes is to convey
-> name information. When this was introduced the core code did not store 
-> the
-> pointer to the node in the irqdomain. A recent change stored the 
-> firmware
-> node pointer in irqdomain for other reasons and missed to notice that 
-> the
-> usage sites which do the alloc_fwnode/create_domain/free_fwnode 
-> sequence
-> are broken by this. Storing a dangling pointer is dangerous itself, but 
-> in
-> case that the domain is destroyed later on this leads to a double free.
-> 
-> Remove the freeing of the firmware node after creating the irqdomain 
-> from
-> all affected call sites to cure this.
-> 
-> Fixes: 711419e504eb ("irqdomain: Add the missing assignment of
-> domain->fwnode for named fwnode")
-> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: stable@vger.kernel.org
-
-Urgh, that's pretty disastrous. My bad. Thanks a lot for having
-put this patch together.
-
-Acked-by: Marc Zyngier <maz@kernel.org>
-
-If you can take it directly into Linus' tree, that'd be greatly
-appreciated.
-
-Thanks again,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> ---
+>  drivers/acpi/ac.c             |    2 +-
+>  drivers/acpi/acpi_processor.c |    2 +-
+>  drivers/acpi/button.c         |    2 +-
+>  drivers/acpi/dock.c           |    2 +-
+>  drivers/acpi/evged.c          |    2 +-
+>  drivers/acpi/processor_idle.c |    3 +--
+>  drivers/acpi/resource.c       |    2 +-
+>  drivers/acpi/spcr.c           |    4 ++--
+>  drivers/pci/pci-acpi.c        |    6 +++---
+>  9 files changed, 12 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
+> index 69d2db13886b..2dfa08f939c6 100644
+> --- a/drivers/acpi/ac.c
+> +++ b/drivers/acpi/ac.c
+> @@ -236,7 +236,7 @@ static void acpi_ac_notify(struct acpi_device *device, u32 event)
+>         default:
+>                 ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+>                                   "Unsupported event [0x%x]\n", event));
+> -       /* fall through */
+> +               fallthrough;
+>         case ACPI_AC_NOTIFY_STATUS:
+>         case ACPI_NOTIFY_BUS_CHECK:
+>         case ACPI_NOTIFY_DEVICE_CHECK:
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+> index 5379bc3f275d..b51ddf3bb616 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -79,7 +79,7 @@ static int acpi_processor_errata_piix4(struct pci_dev *dev)
+>                  * PIIX4 models.
+>                  */
+>                 errata.piix4.throttle = 1;
+> -               /* fall through*/
+> +               fallthrough;
+>
+>         case 2:         /* PIIX4E */
+>         case 3:         /* PIIX4M */
+> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+> index 3c35e57dd854..a4eda7fe50d3 100644
+> --- a/drivers/acpi/button.c
+> +++ b/drivers/acpi/button.c
+> @@ -405,7 +405,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
+>         switch (event) {
+>         case ACPI_FIXED_HARDWARE_EVENT:
+>                 event = ACPI_BUTTON_NOTIFY_STATUS;
+> -               /* fall through */
+> +               fallthrough;
+>         case ACPI_BUTTON_NOTIFY_STATUS:
+>                 input = button->input;
+>                 if (button->type == ACPI_BUTTON_TYPE_LID) {
+> diff --git a/drivers/acpi/dock.c b/drivers/acpi/dock.c
+> index e3414131bfca..9bd72c26ef46 100644
+> --- a/drivers/acpi/dock.c
+> +++ b/drivers/acpi/dock.c
+> @@ -469,7 +469,7 @@ int dock_notify(struct acpi_device *adev, u32 event)
+>                 surprise_removal = 1;
+>                 event = ACPI_NOTIFY_EJECT_REQUEST;
+>                 /* Fall back */
+> -               /* fall through */
+> +               fallthrough;
+>         case ACPI_NOTIFY_EJECT_REQUEST:
+>                 begin_undock(ds);
+>                 if ((immediate_undock && !(ds->flags & DOCK_IS_ATA))
+> diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
+> index ccd900690b6f..b1a7f8d6965e 100644
+> --- a/drivers/acpi/evged.c
+> +++ b/drivers/acpi/evged.c
+> @@ -106,7 +106,7 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
+>
+>                 if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
+>                         break;
+> -               /* fall through */
+> +               fallthrough;
+>         default:
+>                 if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
+>                         break;
+> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+> index 75534c5b5433..9325feaac5f8 100644
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -203,8 +203,7 @@ static void tsc_check_state(int state)
+>                  */
+>                 if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
+>                         return;
+> -
+> -               /*FALL THROUGH*/
+> +               fallthrough;
+>         default:
+>                 /* TSC could halt in idle, so notify users */
+>                 if (state > ACPI_STATE_C1)
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index 3b4448972374..ad04824ca3ba 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -373,7 +373,7 @@ unsigned int acpi_dev_get_irq_type(int triggering, int polarity)
+>         case ACPI_ACTIVE_BOTH:
+>                 if (triggering == ACPI_EDGE_SENSITIVE)
+>                         return IRQ_TYPE_EDGE_BOTH;
+> -               /* fall through */
+> +               fallthrough;
+>         default:
+>                 return IRQ_TYPE_NONE;
+>         }
+> diff --git a/drivers/acpi/spcr.c b/drivers/acpi/spcr.c
+> index d73b4535e79d..88460bacd5ae 100644
+> --- a/drivers/acpi/spcr.c
+> +++ b/drivers/acpi/spcr.c
+> @@ -111,7 +111,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
+>                         table->serial_port.access_width))) {
+>                 default:
+>                         pr_err("Unexpected SPCR Access Width.  Defaulting to byte size\n");
+> -                       /* fall through */
+> +                       fallthrough;
+>                 case 8:
+>                         iotype = "mmio";
+>                         break;
+> @@ -128,7 +128,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
+>         switch (table->interface_type) {
+>         case ACPI_DBG2_ARM_SBSA_32BIT:
+>                 iotype = "mmio32";
+> -               /* fall through */
+> +               fallthrough;
+>         case ACPI_DBG2_ARM_PL011:
+>         case ACPI_DBG2_ARM_SBSA_GENERIC:
+>         case ACPI_DBG2_BCM2835:
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 7224b1e5f2a8..0d85025c55fd 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -527,8 +527,8 @@ static void program_hpx_type3_register(struct pci_dev *dev,
+>                         return;
+>
+>                 break;
+> -       case HPX_CFG_VEND_CAP:  /* Fall through */
+> -       case HPX_CFG_DVSEC:     /* Fall through */
+> +       case HPX_CFG_VEND_CAP:
+> +       case HPX_CFG_DVSEC:
+>         default:
+>                 pci_warn(dev, "Encountered _HPX type 3 with unsupported config space location");
+>                 return;
+> @@ -1001,7 +1001,7 @@ static int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+>                         error = -EBUSY;
+>                         break;
+>                 }
+> -               /* Fall through */
+> +               fallthrough;
+>         case PCI_D0:
+>         case PCI_D1:
+>         case PCI_D2:
+>
