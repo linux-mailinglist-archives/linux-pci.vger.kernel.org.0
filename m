@@ -2,105 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E63B219F21
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 13:35:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56B18219F82
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 14:01:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgGILfN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 07:35:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:52594 "EHLO foss.arm.com"
+        id S1726599AbgGIMBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 08:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbgGILfN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:35:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C18D21FB;
-        Thu,  9 Jul 2020 04:35:12 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53A4F3F7D7;
-        Thu,  9 Jul 2020 04:35:11 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 12:35:09 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
+        id S1726327AbgGIMBC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:01:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B28E206C3;
+        Thu,  9 Jul 2020 12:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594296061;
+        bh=G9bmSFELKRxQPZ+NTn/InZnU9Px+G3f6WIIbF0sa7VQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W3B8WlB78HBGwrFnK785PkNtYGqHBvxgmEZjQ6cwZYSKsdt/WKie6QVgUhSwSY17R
+         umEt+YyxTxQ/57mWnWm1QNwPOYsuNrwoXnueLtkQFIorEJNiR/AZATrJb8RRL5Gqgx
+         t/yEKgISVcv5GEhh8CZqzE+IqhpZY3M3CSeJw9JQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jtVEZ-00ANHv-S1; Thu, 09 Jul 2020 13:00:59 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200702083036.12230-1-pali@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 09 Jul 2020 13:00:59 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] irqdomain/treewide: Keep firmware node unconditionally
+ allocated
+In-Reply-To: <873661qakd.fsf@nanos.tec.linutronix.de>
+References: <20200706154410.GA117493@bjorn-Precision-5520>
+ <873661qakd.fsf@nanos.tec.linutronix.de>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <b90acf9f348f2eb7b7244913c130cbff@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, helgaas@kernel.org, andriy.shevchenko@linux.intel.com, jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, sushmax.kalakota@intel.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:30:36AM +0200, Pali Rohár wrote:
-> When there is no PCIe card connected and advk_pcie_rd_conf() or
-> advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> root bridge, the aardvark driver throws the following error message:
-> 
->   advk-pcie d0070000.pcie: config read/write timed out
-> 
-> Obviously accessing PCIe registers of disconnected card is not possible.
-> 
-> Extend check in advk_pcie_valid_device() function for validating
-> availability of PCIe bus. If PCIe link is down, then the device is marked
-> as Not Found and the driver does not try to access these registers.
-> 
-> This is just an optimization to prevent accessing PCIe registers when card
-> is disconnected. Trying to access PCIe registers of disconnected card does
-> not cause any crash, kernel just needs to wait for a timeout. So if card
-> disappear immediately after checking for PCIe link (before accessing PCIe
-> registers), it does not cause any problems.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> 
-> ---
-> Changes in V3:
-> * Add comment to the code
-> Changes in V2:
-> * Update commit message, mention that this is optimization
-> ---
->  drivers/pci/controller/pci-aardvark.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 90ff291c24f0..d18f389b36a1 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
->  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
->  		return false;
->  
-> +	/*
-> +	 * If the link goes down after we check for link-up, nothing bad
-> +	 * happens but the config access times out.
-> +	 */
-> +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> +		return false;
-> +
->  	return true;
->  }
+Hi Thomas,
 
-Question: this basically means that you can only effectively enumerate
-bus number == root_bus_nr and AFAICS if at probe the link did not
-come up it will never do, will it ?
+Catching up on email...
 
-Isn't this equivalent to limiting the bus numbers the bridge is capable
-of handling ?
+On 2020-07-09 10:53, Thomas Gleixner wrote:
+> Quite some non OF/ACPI users of irqdomains allocate firmware nodes of 
+> type
+> IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right 
+> after
+> creating the irqdomain. The only purpose of these FW nodes is to convey
+> name information. When this was introduced the core code did not store 
+> the
+> pointer to the node in the irqdomain. A recent change stored the 
+> firmware
+> node pointer in irqdomain for other reasons and missed to notice that 
+> the
+> usage sites which do the alloc_fwnode/create_domain/free_fwnode 
+> sequence
+> are broken by this. Storing a dangling pointer is dangerous itself, but 
+> in
+> case that the domain is destroyed later on this leads to a double free.
+> 
+> Remove the freeing of the firmware node after creating the irqdomain 
+> from
+> all affected call sites to cure this.
+> 
+> Fixes: 711419e504eb ("irqdomain: Add the missing assignment of
+> domain->fwnode for named fwnode")
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: stable@vger.kernel.org
 
-Reworded: if in advk_pcie_setup_hw() the link does not come up, what's
-the point of trying to enumerate the bus hierarchy below the root bus ?
+Urgh, that's pretty disastrous. My bad. Thanks a lot for having
+put this patch together.
 
-Thanks,
-Lorenzo
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+If you can take it directly into Linus' tree, that'd be greatly
+appreciated.
+
+Thanks again,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
