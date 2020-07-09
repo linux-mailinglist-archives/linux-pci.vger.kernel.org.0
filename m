@@ -2,91 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3885821A981
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 23:05:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1788D21A9DF
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jul 2020 23:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgGIVFa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jul 2020 17:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgGIVFa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:05:30 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE2C20672;
-        Thu,  9 Jul 2020 21:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594328729;
-        bh=yMAOXr1oRk4UKwWtkpx3u9hzj0GthE8WiORwgpF6Z0Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nZ+gfclGCmdQDdH60kGOcV2gsQrlKEEopaZ3LEvaFtEiuOJUlyKwXUgVUfGs1OrR8
-         b6jL6r+P6hiCRcVwrD3MtnPn+V6zUbZHx9sttXGXjv4NtLbOX5p4O/zKCv3fnzKyp1
-         w3fcn0UqBf8+rPNFrfKW/l0he8MwAkHH/3Vau/5M=
-Date:   Thu, 9 Jul 2020 16:05:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: Re: [PATCH] PCI: Replace kmalloc with kzalloc in the comment/message
-Message-ID: <20200709210527.GA17678@bjorn-Precision-5520>
+        id S1726196AbgGIVp6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jul 2020 17:45:58 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40872 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgGIVp6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jul 2020 17:45:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id q8so3934712iow.7;
+        Thu, 09 Jul 2020 14:45:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cm4M9dwes8x03niEEdU7bFOP7a6MNWa2UIuDCHSOETA=;
+        b=fg4qaRmWeRM8GTogI0OfWx9OnPQHO+x6FhWY5D7zDPJP8l9WXBOGXVcI60VfszqSxo
+         I8Aj1TWav1yXZXQ4FiXDVJEIJlrO2OSLs+DWCTQluLKgUFAofynl8zPeamULGUmw405q
+         dFq/NrmFYeVFWYkC7ww63DQgg0YO4FeQ31gcLKiQ1dOFc3rYWqL8nHv/Qj4vQ//3FrUR
+         AatVarlX1hcBGQuYku1hHfyFmOXvCLLslwK+wvj31uxB4x4VBu4VVoVniHm6m2lIaHLj
+         03d9dVPmVmYbVkcxiSu+xmWP2k/0q52kB7U+wDqj4DTmBbHjMb00vmrs+s+ydRUIWGaf
+         4WPA==
+X-Gm-Message-State: AOAM532Rfw7Dz8QO/UuXI1geGG7c9hApSTyBUM6WmQGzNctvd18rdYVu
+        FAb5zjVjaxWE5wmxmLG+ew==
+X-Google-Smtp-Source: ABdhPJxMyLOsUDzCdfKL53+BYbKXk7Kr9ScXgbUfbqOa4CSYjACMyINv95ZFOb6Qxjd9sFBEAddj1Q==
+X-Received: by 2002:a05:6638:25cf:: with SMTP id u15mr65297352jat.19.1594331156767;
+        Thu, 09 Jul 2020 14:45:56 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id t6sm2725359ioi.20.2020.07.09.14.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 14:45:56 -0700 (PDT)
+Received: (nullmailer pid 942496 invoked by uid 1000);
+        Thu, 09 Jul 2020 21:45:55 -0000
+Date:   Thu, 9 Jul 2020 15:45:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 08/14] PCI: cadence: Fix updating Vendor ID and
+ Subsystem Vendor ID register
+Message-ID: <20200709214555.GA939109@bogus>
+References: <20200708093018.28474-1-kishon@ti.com>
+ <20200708093018.28474-9-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594279708-34369-1-git-send-email-wang.yi59@zte.com.cn>
+In-Reply-To: <20200708093018.28474-9-kishon@ti.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 03:28:28PM +0800, Yi Wang wrote:
-> From: Liao Pingfang <liao.pingfang@zte.com.cn>
+On Wed, Jul 08, 2020 at 03:00:12PM +0530, Kishon Vijay Abraham I wrote:
+> Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
+> controller") in order to update Vendor ID, directly wrote to
+> PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
+> space is read-only register and writing to it will have no effect.
+> Use local management register to configure Vendor ID and Subsystem Vendor
+> ID.
 > 
-> Use kzalloc instead of kmalloc in the comment/message according to
-> the previous kzalloc() call.
-> 
-> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-
-I applied the setup-bus.c change to pci/misc for v5.9, thanks!
-
-I dropped the ibmphp_pci.c comment change because (a) it's not clear
-the comment is correct even after the change, and (b) that file is so
-out-of-date and hard to read that I don't want to touch it unless
-we're really fixing something significant.
-
+> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/pci/hotplug/ibmphp_pci.c | 2 +-
->  drivers/pci/setup-bus.c          | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/hotplug/ibmphp_pci.c b/drivers/pci/hotplug/ibmphp_pci.c
-> index e22d023..2d36992 100644
-> --- a/drivers/pci/hotplug/ibmphp_pci.c
-> +++ b/drivers/pci/hotplug/ibmphp_pci.c
-> @@ -205,7 +205,7 @@ int ibmphp_configure_card(struct pci_func *func, u8 slotno)
->  								cur_func->next = newfunc;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 10127ea71b83..8935f7a37e5a 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -82,6 +82,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+>  	u32 value, ctrl;
+> +	u32 id;
 >  
->  							rc = ibmphp_configure_card(newfunc, slotno);
-> -							/* This could only happen if kmalloc failed */
-> +							/* This could only happen if kzalloc failed */
->  							if (rc) {
->  								/* We need to do this in case bridge itself got configured properly, but devices behind it failed */
->  								func->bus = 1; /* To indicate to the unconfigure function that this is a PPB */
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index bbcef1a..13c5a44 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -151,7 +151,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+>  	/*
+>  	 * Set the root complex BAR configuration register:
+> @@ -101,8 +102,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
 >  
->  		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
->  		if (!tmp)
-> -			panic("pdev_sort_resources(): kmalloc() failed!\n");
-> +			panic("%s: kzalloc() failed!\n", __func__);
->  		tmp->res = r;
->  		tmp->dev = dev;
+>  	/* Set root port configuration space */
+> -	if (rc->vendor_id != 0xffff)
+> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
+
+If this is read-only, then...
+
+> +	if (rc->vendor_id != 0xffff) {
+> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
+> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+> +	}
+> +
+>  	if (rc->device_id != 0xffff)
+>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+
+...isn't this read-only too?
+
 >  
 > -- 
-> 2.9.5
+> 2.17.1
 > 
