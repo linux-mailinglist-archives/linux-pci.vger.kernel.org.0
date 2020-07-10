@@ -2,94 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2EAB21BE50
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 22:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CD5221BE6B
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 22:29:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGJUIG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 16:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
+        id S1727038AbgGJU3Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 16:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727976AbgGJUIG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:08:06 -0400
+        id S1726832AbgGJU3Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jul 2020 16:29:24 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BA8F2076A;
-        Fri, 10 Jul 2020 20:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01EEA20748;
+        Fri, 10 Jul 2020 20:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594411685;
-        bh=qAHikyX4usyEt9YaUhLVPyfSr7erjUkLzDKfxsW/idw=;
+        s=default; t=1594412964;
+        bh=DiQoR/qIH6L3RLjeyhUKDGJQxa1UAOogxnzXV3WwyYM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=F8UkNMPQ+9Y3843RBYkKHxced1/m2Ia4VnGs/51Qytls9UeYESnXzd8CoE8FrMxCQ
-         VqRlwy7unDqDctZU/HTaPqQLerVDBq+PJA7hyP8KyMtR6zUSnAYQTYL6/X36V1Iygu
-         bhxnKMeKNvSwi9Z/NXYMfnRcyLTBMW/3ybjH4L68=
-Date:   Fri, 10 Jul 2020 15:08:03 -0500
+        b=Mg98WBUBOpphkDnIHW8UWq9hjz21UEVfEZUm2hCYj4fI3Z3Pd0mvcodlBgh3hPfQR
+         8i6qn/ymwX6+Hwn75+YwG8EoV/evuOSi7qZEpRc4q3e858ej7z4C76bhgqNhGmxHlC
+         v0NqnH5iKyuPe4eCHax/Um6J0l3evRwJGkibQ3jg=
+Date:   Fri, 10 Jul 2020 15:29:22 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200710200803.GA75998@bjorn-Precision-5520>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 4/4] PCI/ACS: Enable PCI_ACS_TB for
+ untrusted/external-facing devices
+Message-ID: <20200710202922.GA77140@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710193003.2lt3i5ocy5kk3b3p@pali>
+In-Reply-To: <20200707224604.3737893-4-rajatja@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 09:30:03PM +0200, Pali Rohár wrote:
-> On Friday 10 July 2020 11:08:28 Bjorn Helgaas wrote:
-> > On Fri, Jul 10, 2020 at 05:44:58PM +0200, Pali Rohár wrote:
-> > > I can reproduce following issue: Connect Compex WLE900VX card, configure
-> > > aardvark to gen2 mode. And then card is detected only after the first
-> > > link training. If kernel tries to retrain link again (e.g. via ASPM
-> > > code) then card is not detected anymore. 
-> > 
-> > Somebody should go over the ASPM retrain link code and the PCIe spec
-> > with a fine-toothed comb.  Maybe we're doing something wrong there.
+On Tue, Jul 07, 2020 at 03:46:04PM -0700, Rajat Jain wrote:
+> When enabling ACS, enable translation blocking for external facing ports
+> and untrusted devices.
 > 
-> I think this is not ASPM related as card simply disappear just after
-> flipping PCI_EXP_LNKCTL_RL bit second time without changing ASPM bits.
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v4: Add braces to avoid warning from kernel robot
+>     print warning for only external-facing devices.
+> v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
+>     Minor code comments fixes.
+> v2: Commit log change
+> 
+>  drivers/pci/pci.c    |  8 ++++++++
+>  drivers/pci/quirks.c | 15 +++++++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 73a8627822140..a5a6bea7af7ce 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -876,6 +876,14 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+>  	/* Upstream Forwarding */
+>  	ctrl |= (cap & PCI_ACS_UF);
+>  
+> +	/* Enable Translation Blocking for external devices */
+> +	if (dev->external_facing || dev->untrusted) {
+> +		if (cap & PCI_ACS_TB)
+> +			ctrl |= PCI_ACS_TB;
+> +		else if (dev->external_facing)
+> +			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
+> +	}
 
-Right.  The retrain code in aspm.c doesn't really have anything in
-particular to do with ASPM and it should probably be moved elsewhere.
-So I think the problem may be related to retrain and the delays after
-it in general, not to ASPM.
+IIUC, this means that external devices can *never* use ATS and can
+never cache translations.  And (I guess, I'm not an expert) it can
+also never use the Page Request Services?
 
-> There is absolutely nothing regarding to timings in documentation which
-> I saw. In documentation are just instructions/steps how to init PCI
-> subsystem and it is basically advk_pcie_setup_hw() function.
-> 
-> > > I read in kernel bugzilla that WLE600VX and WLE900VX cards are buggy and
-> > > more people have problems with them. But issues described in kernel
-> > > bugzilla (like card is reporting incorrect PCI device id) I'm not
-> > > observing.
-> 
-> Hm... I cannot find right now pointer to bugzilla, but I have pointer to
-> ath9k-devel mailing list with that incorrect device id:
-> 
-> https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
-> 
-> > Is the incorrect device ID 0xffff?
-> 
-> No, incorrect device ID in that case is 0xabcd and vendor ID is correct
-> (Qualcomm).
+Is this what we want?  Do we have any idea how many external devices
+this will affect or how much of a performance impact they will see?
 
-From a quick look at that thread, it sounds like the device isn't
-quite ready yet.  In that case, it's supposed to respond with Config
-Request Retry Status, and Linux is supposed to wait longer and retry.
-But I don't think Linux does that quite correctly, so it could be
-either a hardware problem or Linux being broken.  But I guess that's
-not the current problem so I don't want to go down that rathole right
-now.
+Do we need some kind of override or mechanism to authenticate certain
+devices so they can use ATS and PRI?
+
+If we do decide this is the right thing to do, I think we need to
+expand the commit log a bit, because this is potentially a significant
+user-visible change.
+
+>  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+>  }
+>  
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index b341628e47527..bb22b46c1d719 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
+>  	}
+>  }
+>  
+> +/*
+> + * Currently this quirk does the equivalent of
+> + * PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
+> + *
+> + * TODO: This quirk also needs to do equivalent of PCI_ACS_TB,
+> + * if dev->external_facing || dev->untrusted
+> + */
+>  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
+>  {
+>  	if (!pci_quirk_intel_pch_acs_match(dev))
+> @@ -4973,6 +4980,14 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
+>  	ctrl |= (cap & PCI_ACS_CR);
+>  	ctrl |= (cap & PCI_ACS_UF);
+>  
+> +	/* Enable Translation Blocking for external devices */
+> +	if (dev->external_facing || dev->untrusted) {
+> +		if (cap & PCI_ACS_TB)
+> +			ctrl |= PCI_ACS_TB;
+> +		else if (dev->external_facing)
+> +			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
+> +	}
+> +
+>  	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
+>  
+>  	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
+> 
