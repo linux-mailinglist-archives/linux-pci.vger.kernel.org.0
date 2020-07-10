@@ -2,150 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6ED21BA8B
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 18:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD22D21BAC3
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 18:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgGJQOa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 12:14:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:54820 "EHLO foss.arm.com"
+        id S1727995AbgGJQWz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 12:22:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45306 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgGJQO3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:14:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E06931B;
-        Fri, 10 Jul 2020 09:14:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C05113F8F8;
-        Fri, 10 Jul 2020 09:14:25 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 17:14:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-Message-ID: <20200710161420.GA9019@e121166-lin.cambridge.arm.com>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
- <87v9jcet5h.wl-maz@kernel.org>
- <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
- <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
- <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
+        id S1726896AbgGJQWz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:22:55 -0400
+IronPort-SDR: 630kz3R7Mdu711O0mZEXxHcdkOg95KiLNB/2EBCD2fNCNE4zcHJWVYKm8SzZKqNNtjbsO6ZlV8
+ mJq7eGSfuMxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149713789"
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="149713789"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 09:22:54 -0700
+IronPort-SDR: Itm8YZK2yEyphbxvHGwAapnbac7UFxrcKPcFy1HhAKV8QpYyd06n/caWRVn4ZG/I2DgJyUBizZ
+ Hy5YSxFuvCvA==
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="458327266"
+Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314) ([10.237.222.51])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 09:22:51 -0700
+Date:   Fri, 10 Jul 2020 17:22:44 +0100
+From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
+Message-ID: <20200710162244.GA411420@silpixa00400314>
+References: <20200710153742.GA61966@bjorn-Precision-5520>
+ <20200710154433.GA62583@bjorn-Precision-5520>
+ <20200710101034.5a8c1be5@x1.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200710101034.5a8c1be5@x1.home>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 11:18:29AM +0900, Kunihiko Hayashi wrote:
-
-[...]
-
-> > > > >   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-> > > > > +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
-> > > > >   {
-> > > > > -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
-> > > > >       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > >       struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> > > > > -    struct irq_chip *chip = irq_desc_get_chip(desc);
-> > > > > -    unsigned long reg;
-> > > > > -    u32 val, bit, virq;
-> > > > > +    u32 val, virq;
-> > > > >   -    /* INT for debug */
-> > > > >       val = readl(priv->base + PCL_RCV_INT);
-> > > > >         if (val & PCL_CFG_BW_MGT_STATUS)
-> > > > >           dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
-> > > > > +
-> > > > >       if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
-> > > > >           dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
-> > > > > -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> > > > > -        dev_dbg(pci->dev, "Root Error\n");
-> > > > > -    if (val & PCL_CFG_PME_MSI_STATUS)
-> > > > > -        dev_dbg(pci->dev, "PME Interrupt\n");
-> > > > > +
-> > > > > +    if (is_msi) {
-> > > > > +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> > > > > +            dev_dbg(pci->dev, "Root Error Status\n");
-> > > > > +
-> > > > > +        if (val & PCL_CFG_PME_MSI_STATUS)
-> > > > > +            dev_dbg(pci->dev, "PME Interrupt\n");
-> > > > > +
-> > > > > +        if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
-> > > > > +               PCL_CFG_PME_MSI_STATUS)) {
-> > > > > +            virq = irq_linear_revmap(pp->irq_domain, 0);
-> > > > > +            generic_handle_irq(virq);
-> > > > > +        }
-> > > > > +    }
-> > > > 
-> > > > Please have two handlers: one for interrupts that are from the RC,
-> > > > another for interrupts coming from the endpoints.
-> > > I assume that this handler treats interrupts from the RC only and
-> > > this is set on the member ".msi_host_isr" added in the patch 1/6.
-> > > I think that the handler for interrupts coming from endpoints should be
-> > > treated as a normal case (after calling .msi_host_isr in
-> > > dw_handle_msi_irq()).
+On Fri, Jul 10, 2020 at 10:10:34AM -0600, Alex Williamson wrote:
+> On Fri, 10 Jul 2020 10:44:33 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > On Fri, Jul 10, 2020 at 10:37:45AM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Jul 10, 2020 at 04:08:19PM +0100, Giovanni Cabiddu wrote:  
+> > > > On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote:  
+> > > > > On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:  
+> > > > > > The current generation of IntelÂ® QuickAssist Technology devices
+> > > > > > are not designed to run in an untrusted environment because of the
+> > > > > > following issues reported in the release notes in
+> > > > > > https://01.org/intel-quickassist-technology:  
+> > > > > 
+> > > > > It would be nice if this link were directly clickable, e.g., if there
+> > > > > were no trailing ":" or something.
+> > > > > 
+> > > > > And it would be even better if it went to a specific doc that
+> > > > > described these issues.  I assume these are errata, and it's not easy
+> > > > > to figure out which doc mentions them.  
+> > > > Sure. I will fix the commit message in the next revision and point to the
+> > > > actual document:
+> > > > https://01.org/sites/default/files/downloads/336211-015-qatsoftwareforlinux-rn-hwv1.7-final.pdf  
+> > > 
+> > > Since URLs tend to go stale, please also include the Intel document
+> > > number and title.  
 > > 
-> > It looks pretty odd that you end-up dealing with both from the
-> > same "parent" interrupt. I guess this is in keeping with the
-> > rest of the DW PCIe hacks... :-/
-> 
-> It might be odd, however, in case of UniPhier SoC,
-> both MSI interrupts from endpoints and PME/AER interrupts from RC are
-> asserted by same "parent" interrupt. In other words, PME/AER interrupts
-> are notified using the parent interrupt for MSI.
-> 
-> MSI interrupts are treated as child interrupts with reference to
-> the status register in DW core. This is handled in a for-loop in
-> dw_handle_msi_irq().
-> 
-> PME/AER interrupts are treated with reference to the status register
-> in UniPhier glue layer, however, this couldn't be handled in the same way
-> directly.
-> 
-> So I'm trying to add .msi_host_isr function to handle this
-> with reference to the SoC-specific registers.
-> 
-> This exported function asserts MSI-0 as a shared child interrupt.
-> As a result, PME/AER are registered like the followings in dmesg:
-> 
->    pcieport 0000:00:00.0: PME: Signaling with IRQ 25
->    pcieport 0000:00:00.0: AER: enabled with IRQ 25
-> 
-> And these interrupts are shared as MSI-0:
-> 
->    # cat /proc/interrupts | grep 25:
->     25:          0          0          0          0   PCI-MSI   0 Edge      PCIe PME, aerdrv
-> 
-> This might be a special case, though, I think that this is needed to handle
-> interrupts from RC sharing MSI parent.
+> > Oh, and is "01.org" really the right place for that?  It looks like an
+> > Intel document, so I'd expect it to be somewhere on intel.com.
+> > 
+> > I'm still a little confused.  That doc seems to be about *software*
+> > and Linux software in particular.  But when you said these "devices
+> > are not designed to run in an untrusted environment", I thought you
+> > meant there was some *hardware* design issue that caused a problem.
+Yes, the problem is in hardware.
 
-Can you please send me (with this series *applied* of course and if
-possible with an endpoint MSI/MSI-X capable enabled):
-
-- full dmesg log
-- lspci -vv output
-- cat /proc/interrupts
-
-I need to understand how this system HW works before commenting any
-further.
-
-> > It is for Lorenzo to make up his mind about this anyway.
+> There seems to be a fair bit of hardware errata in the doc too, see:
 > 
-> I'd like to Lorenzo's opinion, too.
+> 3.1.2 QATE-7495 - GEN - An incorrectly formatted request to IntelÂ® QAT can
+> hang the entire IntelÂ® QAT Endpoint
+> 
+> 3.1.9 QATE-39220 - GEN - QAT API submissions with bad addresses that
+> trigger DMA to invalid or unmapped addresses can cause a platform
+> hang
+> 
+> 3.1.17 QATE-52389 - SR-IOV -Huge pages may not be compatible with QAT
+> VF usage
+> 
+> 3.1.19 QATE-60953 - GEN â€“ IntelÂ® QAT API submissions with bad addresses
+> that trigger DMA to invalid or unmapped addresses can impact QAT
+> service availability
+Correct, that document contains errata for both the QAT HW and the
+current software.
 
-I am trying to understand how the HW is wired up (and that's what Marc
-asked as well) so first things first, please send the logs.
+Regards,
 
-Lorenzo
+-- 
+Giovanni
