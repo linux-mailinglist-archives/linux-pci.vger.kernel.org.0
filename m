@@ -2,58 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77D2E21AFA8
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 08:45:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1752A21B217
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 11:18:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgGJGpk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 02:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgGJGpi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 02:45:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD44C08C5CE
-        for <linux-pci@vger.kernel.org>; Thu,  9 Jul 2020 23:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+SmqHy8CMc3iuhAwtq/TSsrsRiGcdEkFZjK7CnvrgAE=; b=eEdo/Wlzp9/NMwwjgF/2faPJo5
-        +sTG0Jui3RcDB0iFzSeku+tWGzALbabBaOyANtd2TBjQnOAeTFWk0UZdy21fI739vrhFN2LatLUc9
-        iVxohDeteTya4EBA3M+zfpIflZmfzVltT2dJSKf7ugDRNzyW7Yyt7jo4J4YDvCmr/J/0V8BgXcowY
-        6UIwBmgCAw5nA5Rx9Reyj3LweQ+DxTOGgS87jYPgr+eVpgjYbNHIL1WHgDN6DcAnVposdGRSfIwR7
-        3xe85NVuDG31m8WRklA1n0KCEH5jxZ7eXIXUEOiMFmkgiCilC/3CZXQx52Ytp3Z4I2AYpHEs/SUky
-        W/KInjjA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtmmt-0002Sr-KP; Fri, 10 Jul 2020 06:45:35 +0000
-Date:   Fri, 10 Jul 2020 07:45:35 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Subject: Re: PowerNV PCI & SR-IOV cleanups
-Message-ID: <20200710064535.GA8354@infradead.org>
-References: <20200710052340.737567-1-oohall@gmail.com>
+        id S1727003AbgGJJSI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 05:18:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:33802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726288AbgGJJSI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jul 2020 05:18:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8DDC31B;
+        Fri, 10 Jul 2020 02:18:07 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E09B3F68F;
+        Fri, 10 Jul 2020 02:18:06 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 10:18:00 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+ <20200709122208.rmfeuu6zgbwh3fr5@pali>
+ <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
+ <20200709150959.wq6zfkcy4m6hvvpl@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200710052340.737567-1-oohall@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709150959.wq6zfkcy4m6hvvpl@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 03:23:25PM +1000, Oliver O'Halloran wrote:
-> This is largely prep work for supporting VFs in the 32bit MMIO window.
-> This is an unfortunate necessity due to how the Linux BAR allocator
-> handles BARs marked as non-prefetchable. The distinction
-> between prefetch and non-prefetchable BARs was made largely irrelevant
-> with the introduction of PCIe, but the BAR allocator is overly
-> conservative. It will always place non-pref bars in the prefetchable
-> window, which is 32bit only. This results in us being unable to use VFs
-> from NVMe drives and a few different RAID cards.
+On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
 
-How about fixing that in the core PCI code?
+[...]
 
-(nothing against this series through, as it seems like a massive
-cleanup)
+> > I understand that but the bridge bus resource can be trimmed to just
+> > contain the root bus because that's the only one where there is a
+> > chance you can enumerate a device.
+> 
+> It is possible to register only root bridge without endpoint?
+
+It is possible to register the root bridge with a trimmed IORESOURCE_BUS
+so that you don't enumerate anything other than the root port.
+
+> > I would like to get Bjorn's opinion on this, I don't like these "link is
+> > up" checks in config accessors (they are racy and honestly it is a
+> > run-time check that does not make much sense, either it is always
+> > true/false or it is inevitably racy)
+> 
+> It is runtime check, but does not have to be always true/false. I have
+> tested more Compex wifi cards and under certain conditions they
+> "disappear" from the bus during usage.
+
+I would be very grateful if you could describe what happens in HW
+when these conditions trigger - I would like to understand if this
+issue is aardvark specific or it isn't.
+
+> So I think it still make sense to do this "fast" check as it is only
+> optimization.
+
+I will merge this patch but I'd also like to understand the underlying
+issue better.
+
+Thanks,
+Lorenzo
