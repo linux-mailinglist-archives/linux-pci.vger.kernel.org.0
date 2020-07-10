@@ -2,154 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBD5021B4E8
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 14:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7ABF21B557
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 14:45:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGJMVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 08:21:31 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7289 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGJMVa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 08:21:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f085cdc0001>; Fri, 10 Jul 2020 05:19:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 10 Jul 2020 05:21:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 10 Jul 2020 05:21:29 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
- 2020 12:21:15 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.177)
- by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 10 Jul 2020 12:21:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mBqxmvzylqH9UkcNGdN+Tp0pM39lWNc1da8TBGU/vZ73AdmUAUK/yelKBU+B8lCDvqncvjfTQCgkSC5fqX+XCIi+99YIpd/nriYCJakC9BDPXO/MekLPrlNCh8gtjQhMRhl/7/iukvzE5FWUGi99mPL5dz7fvkv55z2aj8z5mJqOm/kMTKVa2cF5Nr/rlh/SBXPGGrUC4rsRruYdtNOcuKlrSnb+lmfFnevJAMsSclHIx+NVqQvUAPToy0EtVyzadXTOVdPESfC9xWIU3osJCZM3fVXFEbT6KRDKTswSGhA9FZ79p+btUNBqCrsZxXZvjV3A0fDo6oOjy6Y41YIFoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4BHAuOghb0UIp9ylK1/S8zk3DWmS9Q9TdBlQ9zeMkog=;
- b=Fsd0iPZrrJSQHge5ohxxa2yZHyNrTm6L+tPYjJQkw4OIFjejpUEWUnG7aYWcgQtNKEexBPanE/v/a2BHOIW3TG5I1k4sMs9d2i9LkkDPHvbdI3BrhRP/R9wKqpIOeRJquXh1kzdxWSSDgeTqCWrt+/66qzCR5mbwvT9pC6T0M+kZZRXEO85uQf2mljKHTl73TwdTrv6aaLBSdkr/ZpujwqCE8+x/LGpHIzPGI1JZ7JWWl5nUPlgWQ/Sgti9/6XAsGD3m5nMv8ygHXmbH3PWKHwzI+WAsXgL1jVvJG6cediKJbm5ZB0AH3IagIL3373cuPsyfBpdtjsnfjtRusXwSfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: mellanox.com; dkim=none (message not signed)
- header.d=none;mellanox.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3116.namprd12.prod.outlook.com (2603:10b6:5:38::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Fri, 10 Jul
- 2020 12:21:14 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
- 12:21:14 +0000
-Date:   Fri, 10 Jul 2020 09:21:13 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>
-CC:     "kuba@kernel.org" <kuba@kernel.org>,
-        "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        Aya Levin <ayal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "alexander.h.duyck@linux.intel.com" 
-        <alexander.h.duyck@linux.intel.com>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
-Message-ID: <20200710122113.GR23676@nvidia.com>
-References: <0506f0aa-f35e-09c7-5ba0-b74cd9eb1384@mellanox.com>
- <20200708231630.GA472767@bjorn-Precision-5520>
- <20200708232602.GO23676@nvidia.com>
- <20200709173550.skza6igm72xrkw4w@bsd-mbp.dhcp.thefacebook.com>
- <20200709182011.GQ23676@nvidia.com>
- <20200709124726.24315b6e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <64f58446adb2536f87ea13cc5f0a88cd77d5cd5b.camel@mellanox.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <64f58446adb2536f87ea13cc5f0a88cd77d5cd5b.camel@mellanox.com>
-X-ClientProxiedBy: BL0PR05CA0026.namprd05.prod.outlook.com
- (2603:10b6:208:91::36) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1727003AbgGJMpb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 08:45:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGJMpa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 08:45:30 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF25C08C5CE
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jul 2020 05:45:30 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id v8so5874417iox.2
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jul 2020 05:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sZcRO1f+b9jNVOk+x2TB9QgvGJvzpJtVdNfPnEf5s1o=;
+        b=GUYwLpsj8qQAESV2nZd93IXVIRWuIKi4fAaq36fiyQN+QxUJg0T4bppoDK9gQHLScZ
+         YAAXDocKH5MOsyJXBEgwuG72PzgdztqVAgEH4w+z75r9Uj2DQZ8xay6QAmq1lI0ADqOq
+         CtyWQlCoXV8NWFM0QNSlwS9UqM8BYnPXvWN2T3I0bW21ku15Gvf7ARrmVbumtEKDOPhB
+         1BMsvfn3g37abilL4UdaVOXZMEceW+cW9EGAL5AL3rGnNz5dJcUQ5hKdmbJ43gVqvwD8
+         /+3fUkS8N9dAZC1TAkv/rgcl7t4zGd5ehkS1Sof82TnBIFP9SNnF5wHaUe1tjJrTjFRT
+         77YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sZcRO1f+b9jNVOk+x2TB9QgvGJvzpJtVdNfPnEf5s1o=;
+        b=UkEzFwH2dnEtB1+E19yKsxxPX2lJd7vv+Y710PxyPjfW28Urs3T2vtMdejfow5IkoX
+         lh2dwK5nhl0Nw4xnD9E9VeP7RVvHq7mg7J0grrTImJns8Wgns9x2kiiLx0TGN9nFDh4T
+         4G5NX5iqz873eHMxJraWCd9aAwWJYPyvHvf/7yAAFyUDVZkN2G8vFIsi58n+41Zgf/qT
+         By47dDJblM06HvW77Nk1BOEPwoFZS85jAWrT7tcJk9eZhfkm51NCZSe9wMSuG6jIW4gB
+         wJvhE1UyZvCBoR57EbE1gYVlPwD70FXD6AyPdljQ/pNwsk1ZCuUrYPAVWngAHlks/xOP
+         R8UA==
+X-Gm-Message-State: AOAM533pkiQu3wfajeUimFGljgyqL0UZtxVKKK0w3fai3NM/W7Giof07
+        H62v1ZaLgOMGu4hQWfTnT7i6ZvT1WdKZaxrO7dpnZbHxrWo=
+X-Google-Smtp-Source: ABdhPJxddDuO4dGAjJ2ezUEpnPpnjF6sV6CTpQ/0brpm0QJ+Wj5WblRjFKwmGirGRFIaag3TnGFsZuG4284+KODqSb8=
+X-Received: by 2002:a02:b714:: with SMTP id g20mr69585673jam.117.1594385129117;
+ Fri, 10 Jul 2020 05:45:29 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR05CA0026.namprd05.prod.outlook.com (2603:10b6:208:91::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.10 via Frontend Transport; Fri, 10 Jul 2020 12:21:14 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jts1h-0087DV-6r; Fri, 10 Jul 2020 09:21:13 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2ab9761d-1b96-4744-eaf1-08d824cbbd1b
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3116:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB31162DB1E149543DBB5022DBC2650@DM6PR12MB3116.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DcehuROUybr3uUOkl1eF5c7k1FnYmqOGGQJTAsgUgC5JSh6IHr7PKC6rNWpQJ6FJPW7ZNFF1+zPl3EOcs0BuGLUtjkDP48REgLp0oMZy1OMJyLBMxru9cw4SDeoK/hizmicyylvDxRFW1/1nf3Wp3/H4Brs4Fuu6vywTQt6XBZg1CD4C3+fYzjTz3WJWRcC2AEpZFxAtqEuWYFrUlKUF7Y5vSBTQA6RvE0PKEaUAQvNiQi/KazbRECZPkMy8CYX4cwd9QtEvdqX0kpVxXiiMPlTK8t5wwh/GxYcD2NDW9VdfiwvD4kw6/dJup3f9yaQ8zCejUYRFMPmf7TxOmJZjtg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(136003)(396003)(366004)(2906002)(6916009)(5660300002)(4744005)(186003)(36756003)(316002)(86362001)(54906003)(26005)(83380400001)(66946007)(1076003)(66556008)(33656002)(9786002)(9746002)(66476007)(8936002)(478600001)(2616005)(7416002)(4326008)(426003)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1YUr+qD1YEmwH5JCQFVSTJ46Y4pr5TF33hDMoc/22c6nZux25RNjtHHvhzCPltQJA+lR842ij1xlohm3Sw8CvHEeq/CPkJBQGIOI0yoWgjtMrQ8/BRKwP/08WxEKNyUiIweaU51TVbg7vX/6atYTp19sOiV7HV7wmALcMyxDnY/oNpY0QlgbwPBq8t5P/+sqXOvcvvDu1VJ8W2rRI3CoJmaEkPcKvfGGIEavpJqT7rWKltqWTEtf8xl9Po1lufdsUWR5x/35/9f4oxr3WN49iTDi+rwWub+nPhNEFw2OQJQkhWRbOAIqTjl+IuQlOrpVmUpylkGqOem5kTCPSOkZz47HnlcnsyqV/kUh49CmoL5O1CQ/W0iBcsnc9W+Db0e0n8fkdvtTufW0LqivRsl0vknfGDP27ZjWY1y1yTTlwOWvZ8vBLzzMDN74agC7hKxYRiQMV94b8ZeF46ppfOyUze893EqCQZrkQKPGh/nC3Vg=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ab9761d-1b96-4744-eaf1-08d824cbbd1b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 12:21:14.4518
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y+7WjChz/oK/1e69i2z8X2n1qoXmYL7Qr7GQa3x6Bq5KPBah37GCkJOiZ9UBLzVm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3116
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594383580; bh=4BHAuOghb0UIp9ylK1/S8zk3DWmS9Q9TdBlQ9zeMkog=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=GazCMw5dR933eG1fpzTerD7sgW0dAUhyG6bL48rDCvDMGonfCNjGFJIizjuYrhHrv
-         4nUmgab9rpB8D1s5rymiJbh+XlC4KwZTxc4YuX94tAmnBIFIaGjQBN5cqpJxe0W+0k
-         kcgs1+gZUlWcg4CIsdYfyTFASXx6g0B8A9rx3X8j2qQG7LSMhp9Anjkk3QGxF01s47
-         j+MII93NmQjgKK8D897ywi24SThULvhQpK/CbE5JcyP7YBdhCQjSyShMugdpfHK5+o
-         IF8ND6qOqHZrJAEGV27KAyQbBnDX38TjT9Nz1dWHKalFGgRFRls+1xO9cP3kz5lmT9
-         LW02aW54jofsA==
+References: <20200710052340.737567-1-oohall@gmail.com> <20200710064535.GA8354@infradead.org>
+In-Reply-To: <20200710064535.GA8354@infradead.org>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Fri, 10 Jul 2020 22:45:17 +1000
+Message-ID: <CAOSf1CFj3x+V=0UwDpCOJ8v+sgSihUCaTbwwT1ziddPeYmD=Uw@mail.gmail.com>
+Subject: Re: PowerNV PCI & SR-IOV cleanups
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 02:18:02AM +0000, Saeed Mahameed wrote:
+On Fri, Jul 10, 2020 at 4:45 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Jul 10, 2020 at 03:23:25PM +1000, Oliver O'Halloran wrote:
+> > This is largely prep work for supporting VFs in the 32bit MMIO window.
+> > This is an unfortunate necessity due to how the Linux BAR allocator
+> > handles BARs marked as non-prefetchable. The distinction
+> > between prefetch and non-prefetchable BARs was made largely irrelevant
+> > with the introduction of PCIe, but the BAR allocator is overly
+> > conservative. It will always place non-pref bars in the prefetchable
+> > window, which is 32bit only. This results in us being unable to use VFs
+> > from NVMe drives and a few different RAID cards.
+>
+> How about fixing that in the core PCI code?
 
-> Be careful though to load driver with RO on and then setpci RO off.. 
-> not sure what the side effects are, unstable driver maybe ?
+I've been kicking around the idea but I've never managed to convince
+myself that ignoring the non-prefetchable bit is a safe thing to do in
+generic code. Since Gen3 at least the PCIe Base spec has provided some
+guidance about when you can put non-prefetchable BARs in the
+prefetchable window and as of the Gen5 spec it lists these conditions:
 
-According to the PCI spec HW should stop doing RO immediately once the
-config space bit is cleared.
+> 1) The entire path from the host to the adapter is over PCI Express.
+> 2) No conventional PCI or PCI-X devices do peer-to-peer reads to the range mapped by the BAR.
+> 3) The PCI Express Host Bridge does no byte merging. (This is believed to be true on most platforms.)
+> 4) Any locations with read side-effects are never the target of Memory Reads with the TH bit Set.
+> 5) The range mapped by the BAR is never the target of a speculative Memory Read, either Host initiated or peer-to-peer.
 
-In any event continuing to issue RO won't harm anything.
+1) Is easy enough to verify.
+2) Is probably true, but who knows.
+3) I know this is true for the platforms I'm looking at since the HW
+designers assure me there is no merging happening at the host-bridge
+level. Merging of MMIO ops does seem like an insane thing to do so
+it's probably true in general too, but there's no real way to tell.
+4) Is also *probably* true since the TH bit is only set when it's
+explicitly enabled via the TLP Processing Hints extended capability in
+config space. I guess it's possible firmware might enable that without
+Linux realising, but in that case Linux is probably not doing BAR
+allocation.
+5) I have no idea about, but it seems difficult to make any kind of
+general statement about.
 
-> And not sure what should be the procedure then ? reload driver ? FW
-> will get a notification from PCI ? 
+I might just be being paranoid.
 
-At worst you'd have to reload the driver - continuing to use RO if the
-driver starts with RO off is seriously broken and probably won't work
-with the quirks to disable RO on buggy platforms.
-
-But as above, the RO config space bit should have immedaite effect on
-the device and it should stop using RO. The device HW itself has to
-enforce this to be spec compliant.
-
-Jason
+Oliver
