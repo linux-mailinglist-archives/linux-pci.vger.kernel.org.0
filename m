@@ -2,183 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81E6321BF34
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 23:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED25B21BFD6
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jul 2020 00:32:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGJV2z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 17:28:55 -0400
-Received: from mga17.intel.com ([192.55.52.151]:38481 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgGJV2z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:28:55 -0400
-IronPort-SDR: /cGw18/t93ETKUtLBi3nHl2ejpSgkeBjcuEf8wibmWlGyW7l+PZ8iVIDPEmCEjx2nOVJIVUcf7
- m/eCkgHegSyw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="128358809"
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="128358809"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 14:28:54 -0700
-IronPort-SDR: QtJ0Svtzt5o6heD9E9eaHtgim1i9h9gjLpXXGOf4JZ7gPfDKJXpNrqYhYQmshlI4nLU8n/Z1Rf
- QFQDNbv/W8kQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="306677452"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Jul 2020 14:28:53 -0700
-Date:   Fri, 10 Jul 2020 14:28:53 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
+        id S1726684AbgGJWc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 18:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgGJWc3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 18:32:29 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCBCC08C5DC
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jul 2020 15:32:28 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id j18so7620074wmi.3
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jul 2020 15:32:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=R3cCcxq/7DvlgBIfxzEZbh6H9mtns++bzLZKGAVA6YQ=;
+        b=jMGNI+SV8weDHo8n7D8fmEf01/dCJmKOx46Y4kEtrjCiY+TohaYSGfY78ddC2QfIxn
+         u9zX62mZfz7+bWrdZj16ZeYl+vQymmHUC7YeP5WL+EA6E+n+M85W/uS22mcepgIYYwYB
+         DpJajpQ1YZ0Z9L0mNpNxIGaf21lGg3HwgM/Qm8fb5dqau+373n6USEl4iD74L6DXffQz
+         YOurLsDIlnPmFi6X8nfk1DB2wMl+u83QzhWLNjQRMVcjtbVxW+BN6hVkszbjQmJ78ZON
+         hbZzJnC3Lg4fAOmBl4a220cVMwF1xsUQo0wITN0qzRwOzr6phxClu7FntAPgtMrSPW/e
+         9omg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=R3cCcxq/7DvlgBIfxzEZbh6H9mtns++bzLZKGAVA6YQ=;
+        b=ZwcKk2u3LB0raBGyQFWgGbduVP6AUsaTNEpB65GOej1ejvr6TomZM82pkOsQlRS8Hn
+         KkAbjI9Oh753Qqsr0kC2fA+AC1rqT6eRIF0Ph6Va6W7ZYOuE8JiWeEpaVJnLrOwVuHwI
+         GsEOqc8a2PNCC4lF1wrL2kR1JxHtpkq2Flg8Sifm/JE2pWA9Lqovab5rjSplx74TeB5B
+         AmnUBo2KhpQXvsz/2iwfPAB8ThQ5yAl5ruwdAG1e1Jwn3ewEJg6sQwr8DQtVFo4Vw8mZ
+         Nn78LaJyBKDNryWtDVN0fg8OY8RRGxvJr2FQrmrMjZTKxRtutM9jI/VFFO1Xwk0b7QDj
+         88uQ==
+X-Gm-Message-State: AOAM533V8YSX8TJ32C87Yi8FVQdXsWLDtkywZuXfS4/+84SqlWTj8u1y
+        CkhnMWiLz9XHs6dBnXkY2V3RQ0pyJYcWUA==
+X-Google-Smtp-Source: ABdhPJyTJZqhx7K6hmF8XNxXeypULS7lmdi2YPvp2ghFLs68PvF2ARGJ1ljtp7nbkidJ2mYeMQvIjg==
+X-Received: by 2002:a1c:9911:: with SMTP id b17mr6875678wme.135.1594420347433;
+        Fri, 10 Jul 2020 15:32:27 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id u16sm10814561wmn.11.2020.07.10.15.32.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 15:32:26 -0700 (PDT)
+Subject: Re: [PATCH 0/11 RFC] PCI: Remove "*val = 0" from
+ pcie_capability_read_*()
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 4/4] PCI/ACS: Enable PCI_ACS_TB for
- untrusted/external-facing devices
-Message-ID: <20200710212853.GA328472@otc-nc-03>
-References: <20200707224604.3737893-4-rajatja@google.com>
- <20200710202922.GA77140@bjorn-Precision-5520>
+Cc:     linux-pci@vger.kernel.org
+References: <20200710001102.GA29833@bjorn-Precision-5520>
+From:   Saheed Bolarinwa <refactormyself@gmail.com>
+Message-ID: <a12a5519-2878-91e1-ea91-90970c1b4434@gmail.com>
+Date:   Fri, 10 Jul 2020 23:32:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710202922.GA77140@bjorn-Precision-5520>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200710001102.GA29833@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn
+On 7/10/20 2:11 AM, Bjorn Helgaas wrote:
+> The cc list is really screwed up.  Here's what I got:
+>
+>    Cc: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+> 	  bjorn@helgaas.com,
+> 	  skhan@linuxfoundation.org,
+> 	  linux-pci@vger.kernel.org,
+> 	  linux-kernel-mentees@lists.linuxfoundation.org,
+> 	  linux-kernel@vger.kernel.org,
+> 	  Russell Currey <ruscur@russell.cc>,
+> 	  Sam Bobroff <sbobroff@linux.ibm.com>,
+> 	  "Oliver O'Halloran" <oohall@gmail.com>,
+> 	  linuxppc-dev@lists.ozlabs.org,
+> 	  "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+> 	  Len Brown Lukas Wunner <lenb@kernel.orglukas@wunner.de>,
+> 	  linux-acpi@vger.kernel.org,
+> 	  Mike Marciniszyn <mike.marciniszyn@intel.com>,
+> 	  Dennis Dalessandro <dennis.dalessandro@intel.com>,
+> 	  Doug Ledford <dledford@redhat.com>,
+> 	  Jason Gunthorpe <jgg@ziepe.ca>,
+> 	  linux-rdma@vger.kernel.org,
+> 	  Arnd Bergmann <arnd@arndb.de>,
+> 	  "Greg Kroah-Hartman linux-rdma @ vger . kernel . org" <gregkh@linuxfoundation.org>
+>
+> The addresses for Len Brown and Lukas Wunner are corrupted, as is Greg
+> KH's.  And my reply-all didn't work -- it *should* have copied this to
+> everybody in the list, but Mutt apparently couldn't interpret the cc
+> list at all, so it left the cc list of my reply empty.
+>
+> I added linux-pci by hand just so this will show up on the list.
 
+Thank you. I have fixed this and some other issues, I just sent version 3.
 
-On Fri, Jul 10, 2020 at 03:29:22PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 07, 2020 at 03:46:04PM -0700, Rajat Jain wrote:
-> > When enabling ACS, enable translation blocking for external facing ports
-> > and untrusted devices.
-> > 
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v4: Add braces to avoid warning from kernel robot
-> >     print warning for only external-facing devices.
-> > v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
-> >     Minor code comments fixes.
-> > v2: Commit log change
-> > 
-> >  drivers/pci/pci.c    |  8 ++++++++
-> >  drivers/pci/quirks.c | 15 +++++++++++++++
-> >  2 files changed, 23 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 73a8627822140..a5a6bea7af7ce 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -876,6 +876,14 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-> >  	/* Upstream Forwarding */
-> >  	ctrl |= (cap & PCI_ACS_UF);
-> >  
-> > +	/* Enable Translation Blocking for external devices */
-> > +	if (dev->external_facing || dev->untrusted) {
-> > +		if (cap & PCI_ACS_TB)
-> > +			ctrl |= PCI_ACS_TB;
-> > +		else if (dev->external_facing)
-> > +			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
-> > +	}
-> 
-> IIUC, this means that external devices can *never* use ATS and can
-> never cache translations.  And (I guess, I'm not an expert) it can
-> also never use the Page Request Services?
+- Saheed
 
-Yep, sounds like it.
-
-> 
-> Is this what we want?  Do we have any idea how many external devices
-> this will affect or how much of a performance impact they will see?
-> 
-> Do we need some kind of override or mechanism to authenticate certain
-> devices so they can use ATS and PRI?
-
-Sounds like we would need some form of an allow-list to start with so we
-can have something in the interim. 
-
-I suppose a future platform might have a facilty to ensure ATS is secure and
-authenticated we could enable for all of devices in the system, in addition
-to PCI CMA/IDE. 
-
-I think having a global override to enable all devices so platform can
-switch to current behavior, or maybe via a cmdline switch.. as much as we
-have a billion of those, it still gives an option in case someone needs it.
-
-
-
-> 
-> If we do decide this is the right thing to do, I think we need to
-> expand the commit log a bit, because this is potentially a significant
-> user-visible change.
-> 
-> >  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> >  }
-> >  
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index b341628e47527..bb22b46c1d719 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
-> >  	}
-> >  }
-> >  
-> > +/*
-> > + * Currently this quirk does the equivalent of
-> > + * PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
-> > + *
-> > + * TODO: This quirk also needs to do equivalent of PCI_ACS_TB,
-> > + * if dev->external_facing || dev->untrusted
-> > + */
-> >  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
-> >  {
-> >  	if (!pci_quirk_intel_pch_acs_match(dev))
-> > @@ -4973,6 +4980,14 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
-> >  	ctrl |= (cap & PCI_ACS_CR);
-> >  	ctrl |= (cap & PCI_ACS_UF);
-> >  
-> > +	/* Enable Translation Blocking for external devices */
-> > +	if (dev->external_facing || dev->untrusted) {
-> > +		if (cap & PCI_ACS_TB)
-> > +			ctrl |= PCI_ACS_TB;
-> > +		else if (dev->external_facing)
-> > +			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
-> > +	}
-> > +
-> >  	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
-> >  
-> >  	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
-> > -- 
-> > 2.27.0.212.ge8ba1cc988-goog
-> > 
