@@ -2,97 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A9F21BA57
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 18:08:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D071B21BA6D
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 18:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgGJQIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 12:08:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727098AbgGJQIb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:08:31 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728084AbgGJQLW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 12:11:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34397 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727844AbgGJQLG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 12:11:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594397465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4WRdRX06OBfTzPGHNG+U6NKjLgvHWpzwYgjehUMy8e0=;
+        b=fvBt1up6aFw9yOb6hqqIuxAsGE9528rCbVav5di46CbV7zTCEFYBLZXEwG3uBBaDoZQ6kV
+        UG0LCecsCZA829H42KQfY0fkQNuE+uyHWPKgFWxpoSSQNgR0A1L8h0TCeK+jUXFmEkybbl
+        QF05zssMGvZzz4Y3OmSwj/XP3zzb9ZY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-hD_JHk6iMOeXnTRYh98IeQ-1; Fri, 10 Jul 2020 12:10:40 -0400
+X-MC-Unique: hD_JHk6iMOeXnTRYh98IeQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E2482078D;
-        Fri, 10 Jul 2020 16:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594397310;
-        bh=vC1vGxiGyID9V8iW+BxRHqjSMbf0Sz/SFWTTjr0xW9U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=O7T5JxThg2lij9AUFeH0M/ZWnvO3yBMFs5WxD4DWKoI9kx0z5XJcjj6Qfmd9G8txW
-         XtNnbdLbjp/tNA5CnlRAPyoRB+eaD92YxtkJRTt50rajYNfoI6SI/vJrAVBXA2ICmH
-         FKk5HwYebDBnR9I8ixaOPxym7PrdG3mIGJZtcgU8=
-Date:   Fri, 10 Jul 2020 11:08:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200710160828.GA63389@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DB9919057A7;
+        Fri, 10 Jul 2020 16:10:39 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFC1171676;
+        Fri, 10 Jul 2020 16:10:34 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 10:10:34 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        herbert@gondor.apana.org.au, cohuck@redhat.com, nhorman@redhat.com,
+        vdronov@redhat.com, bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
+Message-ID: <20200710101034.5a8c1be5@x1.home>
+In-Reply-To: <20200710154433.GA62583@bjorn-Precision-5520>
+References: <20200710153742.GA61966@bjorn-Precision-5520>
+        <20200710154433.GA62583@bjorn-Precision-5520>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710154458.bntk7cgewvxmubf4@pali>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 05:44:58PM +0200, Pali Rohár wrote:
-> I can reproduce following issue: Connect Compex WLE900VX card, configure
-> aardvark to gen2 mode. And then card is detected only after the first
-> link training. If kernel tries to retrain link again (e.g. via ASPM
-> code) then card is not detected anymore. 
+On Fri, 10 Jul 2020 10:44:33 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Somebody should go over the ASPM retrain link code and the PCIe spec
-with a fine-toothed comb.  Maybe we're doing something wrong there.
-Or maybe aardvark has some hardware issue and we need some sort of
-quirk to work around it.
+> On Fri, Jul 10, 2020 at 10:37:45AM -0500, Bjorn Helgaas wrote:
+> > On Fri, Jul 10, 2020 at 04:08:19PM +0100, Giovanni Cabiddu wrote: =20
+> > > On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote: =20
+> > > > On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote: =
+=20
+> > > > > The current generation of Intel=C2=AE QuickAssist Technology devi=
+ces
+> > > > > are not designed to run in an untrusted environment because of the
+> > > > > following issues reported in the release notes in
+> > > > > https://01.org/intel-quickassist-technology: =20
+> > > >=20
+> > > > It would be nice if this link were directly clickable, e.g., if the=
+re
+> > > > were no trailing ":" or something.
+> > > >=20
+> > > > And it would be even better if it went to a specific doc that
+> > > > described these issues.  I assume these are errata, and it's not ea=
+sy
+> > > > to figure out which doc mentions them. =20
+> > > Sure. I will fix the commit message in the next revision and point to=
+ the
+> > > actual document:
+> > > https://01.org/sites/default/files/downloads/336211-015-qatsoftwarefo=
+rlinux-rn-hwv1.7-final.pdf =20
+> >=20
+> > Since URLs tend to go stale, please also include the Intel document
+> > number and title. =20
+>=20
+> Oh, and is "01.org" really the right place for that?  It looks like an
+> Intel document, so I'd expect it to be somewhere on intel.com.
+>=20
+> I'm still a little confused.  That doc seems to be about *software*
+> and Linux software in particular.  But when you said these "devices
+> are not designed to run in an untrusted environment", I thought you
+> meant there was some *hardware* design issue that caused a problem.
 
-> Another issue which happens for WLE900VX, WLE600VX and WLE1216VS-20 (but
-> not for WLE200VX): Linux kernel can detect these cards only if it issues
-> card reset via PERST# signal and start link training (via standard pcie
-> endpoint register PCI_EXP_LNKCTL/PCI_EXP_LNKCTL_RL)
+There seems to be a fair bit of hardware errata in the doc too, see:
 
-I think you mean "downstream port" (not "endpoint") register?
-PCI_EXP_LNKCTL_RL is only applicable to *downstream ports* (root ports
-or switch downstream ports) and is reserved for endpoints.
+3.1.2 QATE-7495 - GEN - An incorrectly formatted request to Intel=C2=AE QAT=
+ can
+hang the entire Intel=C2=AE QAT Endpoint
 
-> immediately after
-> enable link training in aardvark (via aardvark specific LINK_TRAINING_EN
-> bit). If there is e.g. 100ms delay between enabling link training and
-> setting PCI_EXP_LNKCTL_RL bit then these cards are not detected.
+3.1.9 QATE-39220 - GEN - QAT API submissions with bad addresses that
+trigger DMA to invalid or unmapped addresses can cause a platform
+hang
 
-This sounds problematic.  Hardware should not be dependent on the
-software being "fast enough".  In general we should be able to insert
-arbitrary delays at any point without breaking anything.
+3.1.17 QATE-52389 - SR-IOV -Huge pages may not be compatible with QAT
+VF usage
 
-But I have the impression that aardvark requires more software
-hand-holding that most hardware does.  If it imposes timing
-requirements on the software, that *should* be documented in the
-aardvark spec.
+3.1.19 QATE-60953 - GEN =E2=80=93 Intel=C2=AE QAT API submissions with bad =
+addresses
+that trigger DMA to invalid or unmapped addresses can impact QAT
+service availability
 
-> I read in kernel bugzilla that WLE600VX and WLE900VX cards are buggy and
-> more people have problems with them. But issues described in kernel
-> bugzilla (like card is reporting incorrect PCI device id) I'm not
-> observing.
+Thanks,
+Alex
 
-Pointer?  Is the incorrect device ID 0xffff?  That could be a symptom
-of a PCIe error.  If we read a device ID that's something other than
-0, 0xffff, or the correct ID, that would be really weird.  Even 0
-would be really strange.
-
-I suspect these wifi cards are a little special because they probably
-play unusual games with power for airplane mode and the like.
-
-Bjorn
