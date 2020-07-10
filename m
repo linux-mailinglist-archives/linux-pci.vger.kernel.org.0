@@ -2,65 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEEAF21B84A
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 16:20:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C63A21B8A8
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 16:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgGJOUk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 10:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgGJOUk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 10:20:40 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E951CC08C5CE;
-        Fri, 10 Jul 2020 07:20:39 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 990CB20C; Fri, 10 Jul 2020 16:20:38 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 16:20:37 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     hch@lst.de, iommu@lists.linux-foundation.org,
-        jonathan.lemon@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, baolu.lu@linux.intel.com,
-        dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] iommu/intel: Avoid SAC address trick for PCIe devices
-Message-ID: <20200710142037.GM27672@8bytes.org>
-References: <e583fc6dd1fb4ffc90310ff4372ee776f9cc7a3c.1594207679.git.robin.murphy@arm.com>
+        id S1726832AbgGJO3o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 10:29:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57370 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727899AbgGJO3o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 10:29:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594391382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tX5iNdDkKREb5eC682c495Xdf8tAVwyuaAtEmkGgwUw=;
+        b=JeJkMxgh6QHlBgN8574izwd2ilKlieEcp9efRVn+B/951sKvPu8i1gKrVeT5wj7URMmnSy
+        onQCAl+XLxsxzGLH7BS1CMcuRiUslDSBbJmNVGjLzEVZUcVrz9VPEaZxz1Jcg/JN9Zomeb
+        Zk+24UKmQ7kw1aGVK3egX42wfu6ks/U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-R9jDj9pwMjaAZtxLZtrCeA-1; Fri, 10 Jul 2020 10:29:38 -0400
+X-MC-Unique: R9jDj9pwMjaAZtxLZtrCeA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 501501082;
+        Fri, 10 Jul 2020 14:29:37 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 611CF10016DA;
+        Fri, 10 Jul 2020 14:29:33 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 08:29:32 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH] PCI: Move PCI_VENDOR_ID_REDHAT definition to pci_ids.h
+Message-ID: <20200710082932.65984c88@x1.home>
+In-Reply-To: <20200709220324.GA21641@bjorn-Precision-5520>
+References: <1594195170-11119-1-git-send-email-chenhc@lemote.com>
+        <20200709220324.GA21641@bjorn-Precision-5520>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e583fc6dd1fb4ffc90310ff4372ee776f9cc7a3c.1594207679.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 12:32:41PM +0100, Robin Murphy wrote:
-> For devices stuck behind a conventional PCI bus, saving extra cycles at
-> 33MHz is probably fairly significant. However since native PCI Express
-> is now the norm for high-performance devices, the optimisation to always
-> prefer 32-bit addresses for the sake of avoiding DAC is starting to look
-> rather anachronistic. Technically 32-bit addresses do have shorter TLPs
-> on PCIe, but unless the device is saturating its link bandwidth with
-> small transfers it seems unlikely that the difference is appreciable.
-> 
-> What definitely is appreciable, however, is that the IOVA allocator
-> doesn't behave all that well once the 32-bit space starts getting full.
-> As DMA working sets get bigger, this optimisation increasingly backfires
-> and adds considerable overhead to the dma_map path for use-cases like
-> high-bandwidth networking.
-> 
-> As such, let's simply take it out of consideration for PCIe devices.
-> Technically this might work out suboptimal for a PCIe device stuck
-> behind a conventional PCI bridge, or for PCI-X devices that also have
-> native 64-bit addressing, but neither of those are likely to be found
-> in performance-critical parts of modern systems.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->  drivers/iommu/intel/iommu.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, 9 Jul 2020 17:03:24 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Applied both, thanks.
+> [+cc Kirti, Alex, kvm]
+> 
+> On Wed, Jul 08, 2020 at 03:59:30PM +0800, Huacai Chen wrote:
+> > Instead of duplicating the PCI_VENDOR_ID_REDHAT definition everywhere,
+> > move it to include/linux/pci_ids.h is better.
+> > 
+> > Signed-off-by: Huacai Chen <chenhc@lemote.com>  
+> 
+> Applied with Gerd's ack to pci/misc for v5.9, thanks!
+> 
+> I also updated this in samples/vfio-mdev/mdpy-defs.h:
+> 
+>   -#define MDPY_PCI_VENDOR_ID     0x1b36 /* redhat */
+>   +#define MDPY_PCI_VENDOR_ID     PCI_VENDOR_ID_REDHAT
+
+Thanks, Bjorn!
+
+Alex
+
+> > ---
+> >  drivers/gpu/drm/qxl/qxl_dev.h           | 2 --
+> >  drivers/net/ethernet/rocker/rocker_hw.h | 1 -
+> >  include/linux/pci_ids.h                 | 2 ++
+> >  3 files changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/qxl/qxl_dev.h b/drivers/gpu/drm/qxl/qxl_dev.h
+> > index a0ee416..a7bc31f 100644
+> > --- a/drivers/gpu/drm/qxl/qxl_dev.h
+> > +++ b/drivers/gpu/drm/qxl/qxl_dev.h
+> > @@ -131,8 +131,6 @@ enum SpiceCursorType {
+> >  
+> >  #pragma pack(push, 1)
+> >  
+> > -#define REDHAT_PCI_VENDOR_ID 0x1b36
+> > -
+> >  /* 0x100-0x11f reserved for spice, 0x1ff used for unstable work */
+> >  #define QXL_DEVICE_ID_STABLE 0x0100
+> >  
+> > diff --git a/drivers/net/ethernet/rocker/rocker_hw.h b/drivers/net/ethernet/rocker/rocker_hw.h
+> > index 59f1f8b..62fd84c 100644
+> > --- a/drivers/net/ethernet/rocker/rocker_hw.h
+> > +++ b/drivers/net/ethernet/rocker/rocker_hw.h
+> > @@ -25,7 +25,6 @@ enum {
+> >  
+> >  #define ROCKER_FP_PORTS_MAX 62
+> >  
+> > -#define PCI_VENDOR_ID_REDHAT		0x1b36
+> >  #define PCI_DEVICE_ID_REDHAT_ROCKER	0x0006
+> >  
+> >  #define ROCKER_PCI_BAR0_SIZE		0x2000
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 0ad5769..5c709a1 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2585,6 +2585,8 @@
+> >  
+> >  #define PCI_VENDOR_ID_ASMEDIA		0x1b21
+> >  
+> > +#define PCI_VENDOR_ID_REDHAT		0x1b36
+> > +
+> >  #define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
+> >  
+> >  #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
+> > -- 
+> > 2.7.0
+> >   
+> 
 
