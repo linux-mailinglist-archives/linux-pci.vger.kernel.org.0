@@ -2,66 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D65E721B914
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 17:04:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32A4421B91B
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 17:08:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgGJPEv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 11:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
+        id S1726950AbgGJPIc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 11:08:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:55695 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbgGJPEv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:04:51 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 038CF2078B;
-        Fri, 10 Jul 2020 15:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594393491;
-        bh=58u/MQOEZ8t3fLlHJ0ehwOfXZ4J6VQJesNCyTCYYygk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gG+06TDP6sioAAgGCCo/QoUsFEvjgA4VoabdVNK9xI6giTCK+2MZhb+gIFUz6OWSf
-         HrgX8AodXtnoo9Rq3aZiWhot65GjOJ1gH7fSxLowH8M3Tsax5q/scBjzsUfr8Nibuc
-         yHfLWOVGIhum4hQBkfAhhrC9ObQ/lCkAw6MrlK70=
-Received: by mail-ot1-f42.google.com with SMTP id e90so4433593ote.1;
-        Fri, 10 Jul 2020 08:04:50 -0700 (PDT)
-X-Gm-Message-State: AOAM532nv71aS/P8yjSNQ2L0OMZyHEzBopCQGgQRCOphnqrRXs9TuShL
-        oNZxhYr1vSs/s53xqkjQItDd2tvN5EWGYFSW4w==
-X-Google-Smtp-Source: ABdhPJwtbdfHYP8GDJhqDLCxjuhRZF3Hh2SoimVunvrX90Iahe1fSDv5RMN4eF18NfuhBmRyYXBxJDuRW3vWiK/sTDw=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr59417384ots.192.1594393490396;
- Fri, 10 Jul 2020 08:04:50 -0700 (PDT)
+        id S1726820AbgGJPIb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:08:31 -0400
+IronPort-SDR: ksmHbg8/zo1NVsusScuhPmNzpPnTNLgfLqHyHyuykhQ7UDZBExU3oO39skk+R2Gp99ssDlP5EZ
+ H0LVO3AU0DsQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="135681424"
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="135681424"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:08:30 -0700
+IronPort-SDR: xkMc2PrqbaCHlbLNF6MsrwSJ4wwVWBDytoob7EgX7TXV+TedX7dsq5a4HkWDLYmDR+m8zyj+DG
+ lh9MO8d05ALQ==
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="458308290"
+Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314) ([10.237.222.51])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:08:27 -0700
+Date:   Fri, 10 Jul 2020 16:08:19 +0100
+From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
+Message-ID: <20200710150819.GA410874@silpixa00400314>
+References: <20200701110302.75199-4-giovanni.cabiddu@intel.com>
+ <20200701212812.GA3661715@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com> <1592312214-9347-2-git-send-email-bharat.kumar.gogada@xilinx.com>
-In-Reply-To: <1592312214-9347-2-git-send-email-bharat.kumar.gogada@xilinx.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 10 Jul 2020 09:04:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLbFyVHKU0yf1C9y0DRt6Qz34bvwh9dyiOFX-_wF_XiSw@mail.gmail.com>
-Message-ID: <CAL_JsqLbFyVHKU0yf1C9y0DRt6Qz34bvwh9dyiOFX-_wF_XiSw@mail.gmail.com>
-Subject: Re: [PATCH v9 1/2] PCI: xilinx-cpm: Add YAML schemas for Versal CPM
- Root Port
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701212812.GA3661715@bjorn-Precision-5520>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 6:57 AM Bharat Kumar Gogada
-<bharat.kumar.gogada@xilinx.com> wrote:
->
-> Add YAML schemas documentation for Versal CPM Root Port driver.
->
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml | 99 ++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote:
+> On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:
+> > The current generation of Intel® QuickAssist Technology devices
+> > are not designed to run in an untrusted environment because of the
+> > following issues reported in the release notes in
+> > https://01.org/intel-quickassist-technology:
+> 
+> It would be nice if this link were directly clickable, e.g., if there
+> were no trailing ":" or something.
+> 
+> And it would be even better if it went to a specific doc that
+> described these issues.  I assume these are errata, and it's not easy
+> to figure out which doc mentions them.
+Sure. I will fix the commit message in the next revision and point to the
+actual document:
+https://01.org/sites/default/files/downloads/336211-015-qatsoftwareforlinux-rn-hwv1.7-final.pdf
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Regards,
 
-Though it was not sent to the DT list, so no automatic checking happened.
+-- 
+Giovanni
