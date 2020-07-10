@@ -2,131 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C63A21B8A8
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 16:29:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D65E721B914
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 17:04:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgGJO3o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 10:29:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57370 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727899AbgGJO3o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 10:29:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594391382;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tX5iNdDkKREb5eC682c495Xdf8tAVwyuaAtEmkGgwUw=;
-        b=JeJkMxgh6QHlBgN8574izwd2ilKlieEcp9efRVn+B/951sKvPu8i1gKrVeT5wj7URMmnSy
-        onQCAl+XLxsxzGLH7BS1CMcuRiUslDSBbJmNVGjLzEVZUcVrz9VPEaZxz1Jcg/JN9Zomeb
-        Zk+24UKmQ7kw1aGVK3egX42wfu6ks/U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-R9jDj9pwMjaAZtxLZtrCeA-1; Fri, 10 Jul 2020 10:29:38 -0400
-X-MC-Unique: R9jDj9pwMjaAZtxLZtrCeA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726925AbgGJPEv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 11:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbgGJPEv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:04:51 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 501501082;
-        Fri, 10 Jul 2020 14:29:37 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 611CF10016DA;
-        Fri, 10 Jul 2020 14:29:33 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 08:29:32 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH] PCI: Move PCI_VENDOR_ID_REDHAT definition to pci_ids.h
-Message-ID: <20200710082932.65984c88@x1.home>
-In-Reply-To: <20200709220324.GA21641@bjorn-Precision-5520>
-References: <1594195170-11119-1-git-send-email-chenhc@lemote.com>
-        <20200709220324.GA21641@bjorn-Precision-5520>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 038CF2078B;
+        Fri, 10 Jul 2020 15:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594393491;
+        bh=58u/MQOEZ8t3fLlHJ0ehwOfXZ4J6VQJesNCyTCYYygk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gG+06TDP6sioAAgGCCo/QoUsFEvjgA4VoabdVNK9xI6giTCK+2MZhb+gIFUz6OWSf
+         HrgX8AodXtnoo9Rq3aZiWhot65GjOJ1gH7fSxLowH8M3Tsax5q/scBjzsUfr8Nibuc
+         yHfLWOVGIhum4hQBkfAhhrC9ObQ/lCkAw6MrlK70=
+Received: by mail-ot1-f42.google.com with SMTP id e90so4433593ote.1;
+        Fri, 10 Jul 2020 08:04:50 -0700 (PDT)
+X-Gm-Message-State: AOAM532nv71aS/P8yjSNQ2L0OMZyHEzBopCQGgQRCOphnqrRXs9TuShL
+        oNZxhYr1vSs/s53xqkjQItDd2tvN5EWGYFSW4w==
+X-Google-Smtp-Source: ABdhPJwtbdfHYP8GDJhqDLCxjuhRZF3Hh2SoimVunvrX90Iahe1fSDv5RMN4eF18NfuhBmRyYXBxJDuRW3vWiK/sTDw=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr59417384ots.192.1594393490396;
+ Fri, 10 Jul 2020 08:04:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com> <1592312214-9347-2-git-send-email-bharat.kumar.gogada@xilinx.com>
+In-Reply-To: <1592312214-9347-2-git-send-email-bharat.kumar.gogada@xilinx.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 10 Jul 2020 09:04:39 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLbFyVHKU0yf1C9y0DRt6Qz34bvwh9dyiOFX-_wF_XiSw@mail.gmail.com>
+Message-ID: <CAL_JsqLbFyVHKU0yf1C9y0DRt6Qz34bvwh9dyiOFX-_wF_XiSw@mail.gmail.com>
+Subject: Re: [PATCH v9 1/2] PCI: xilinx-cpm: Add YAML schemas for Versal CPM
+ Root Port
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 9 Jul 2020 17:03:24 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Jun 16, 2020 at 6:57 AM Bharat Kumar Gogada
+<bharat.kumar.gogada@xilinx.com> wrote:
+>
+> Add YAML schemas documentation for Versal CPM Root Port driver.
+>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml | 99 ++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
 
-> [+cc Kirti, Alex, kvm]
-> 
-> On Wed, Jul 08, 2020 at 03:59:30PM +0800, Huacai Chen wrote:
-> > Instead of duplicating the PCI_VENDOR_ID_REDHAT definition everywhere,
-> > move it to include/linux/pci_ids.h is better.
-> > 
-> > Signed-off-by: Huacai Chen <chenhc@lemote.com>  
-> 
-> Applied with Gerd's ack to pci/misc for v5.9, thanks!
-> 
-> I also updated this in samples/vfio-mdev/mdpy-defs.h:
-> 
->   -#define MDPY_PCI_VENDOR_ID     0x1b36 /* redhat */
->   +#define MDPY_PCI_VENDOR_ID     PCI_VENDOR_ID_REDHAT
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks, Bjorn!
-
-Alex
-
-> > ---
-> >  drivers/gpu/drm/qxl/qxl_dev.h           | 2 --
-> >  drivers/net/ethernet/rocker/rocker_hw.h | 1 -
-> >  include/linux/pci_ids.h                 | 2 ++
-> >  3 files changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/qxl/qxl_dev.h b/drivers/gpu/drm/qxl/qxl_dev.h
-> > index a0ee416..a7bc31f 100644
-> > --- a/drivers/gpu/drm/qxl/qxl_dev.h
-> > +++ b/drivers/gpu/drm/qxl/qxl_dev.h
-> > @@ -131,8 +131,6 @@ enum SpiceCursorType {
-> >  
-> >  #pragma pack(push, 1)
-> >  
-> > -#define REDHAT_PCI_VENDOR_ID 0x1b36
-> > -
-> >  /* 0x100-0x11f reserved for spice, 0x1ff used for unstable work */
-> >  #define QXL_DEVICE_ID_STABLE 0x0100
-> >  
-> > diff --git a/drivers/net/ethernet/rocker/rocker_hw.h b/drivers/net/ethernet/rocker/rocker_hw.h
-> > index 59f1f8b..62fd84c 100644
-> > --- a/drivers/net/ethernet/rocker/rocker_hw.h
-> > +++ b/drivers/net/ethernet/rocker/rocker_hw.h
-> > @@ -25,7 +25,6 @@ enum {
-> >  
-> >  #define ROCKER_FP_PORTS_MAX 62
-> >  
-> > -#define PCI_VENDOR_ID_REDHAT		0x1b36
-> >  #define PCI_DEVICE_ID_REDHAT_ROCKER	0x0006
-> >  
-> >  #define ROCKER_PCI_BAR0_SIZE		0x2000
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index 0ad5769..5c709a1 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -2585,6 +2585,8 @@
-> >  
-> >  #define PCI_VENDOR_ID_ASMEDIA		0x1b21
-> >  
-> > +#define PCI_VENDOR_ID_REDHAT		0x1b36
-> > +
-> >  #define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
-> >  
-> >  #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
-> > -- 
-> > 2.7.0
-> >   
-> 
-
+Though it was not sent to the DT list, so no automatic checking happened.
