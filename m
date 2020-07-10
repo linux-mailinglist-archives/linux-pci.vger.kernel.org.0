@@ -2,104 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED25B21BFD6
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Jul 2020 00:32:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CE0A21BF4C
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jul 2020 23:38:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgGJWc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 18:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgGJWc3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 18:32:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCBCC08C5DC
-        for <linux-pci@vger.kernel.org>; Fri, 10 Jul 2020 15:32:28 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so7620074wmi.3
-        for <linux-pci@vger.kernel.org>; Fri, 10 Jul 2020 15:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=R3cCcxq/7DvlgBIfxzEZbh6H9mtns++bzLZKGAVA6YQ=;
-        b=jMGNI+SV8weDHo8n7D8fmEf01/dCJmKOx46Y4kEtrjCiY+TohaYSGfY78ddC2QfIxn
-         u9zX62mZfz7+bWrdZj16ZeYl+vQymmHUC7YeP5WL+EA6E+n+M85W/uS22mcepgIYYwYB
-         DpJajpQ1YZ0Z9L0mNpNxIGaf21lGg3HwgM/Qm8fb5dqau+373n6USEl4iD74L6DXffQz
-         YOurLsDIlnPmFi6X8nfk1DB2wMl+u83QzhWLNjQRMVcjtbVxW+BN6hVkszbjQmJ78ZON
-         hbZzJnC3Lg4fAOmBl4a220cVMwF1xsUQo0wITN0qzRwOzr6phxClu7FntAPgtMrSPW/e
-         9omg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=R3cCcxq/7DvlgBIfxzEZbh6H9mtns++bzLZKGAVA6YQ=;
-        b=ZwcKk2u3LB0raBGyQFWgGbduVP6AUsaTNEpB65GOej1ejvr6TomZM82pkOsQlRS8Hn
-         KkAbjI9Oh753Qqsr0kC2fA+AC1rqT6eRIF0Ph6Va6W7ZYOuE8JiWeEpaVJnLrOwVuHwI
-         GsEOqc8a2PNCC4lF1wrL2kR1JxHtpkq2Flg8Sifm/JE2pWA9Lqovab5rjSplx74TeB5B
-         AmnUBo2KhpQXvsz/2iwfPAB8ThQ5yAl5ruwdAG1e1Jwn3ewEJg6sQwr8DQtVFo4Vw8mZ
-         Nn78LaJyBKDNryWtDVN0fg8OY8RRGxvJr2FQrmrMjZTKxRtutM9jI/VFFO1Xwk0b7QDj
-         88uQ==
-X-Gm-Message-State: AOAM533V8YSX8TJ32C87Yi8FVQdXsWLDtkywZuXfS4/+84SqlWTj8u1y
-        CkhnMWiLz9XHs6dBnXkY2V3RQ0pyJYcWUA==
-X-Google-Smtp-Source: ABdhPJyTJZqhx7K6hmF8XNxXeypULS7lmdi2YPvp2ghFLs68PvF2ARGJ1ljtp7nbkidJ2mYeMQvIjg==
-X-Received: by 2002:a1c:9911:: with SMTP id b17mr6875678wme.135.1594420347433;
-        Fri, 10 Jul 2020 15:32:27 -0700 (PDT)
-Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id u16sm10814561wmn.11.2020.07.10.15.32.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 15:32:26 -0700 (PDT)
-Subject: Re: [PATCH 0/11 RFC] PCI: Remove "*val = 0" from
- pcie_capability_read_*()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-References: <20200710001102.GA29833@bjorn-Precision-5520>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <a12a5519-2878-91e1-ea91-90970c1b4434@gmail.com>
-Date:   Fri, 10 Jul 2020 23:32:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726260AbgGJViB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jul 2020 17:38:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbgGJViB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jul 2020 17:38:01 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFF71206C3;
+        Fri, 10 Jul 2020 21:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594417081;
+        bh=QoCZFKF2UTzyJ9vgHFjXLtf6wU4eMddh+PZbc+OUfyA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oYMFYtSZF9JDrt+eB3t5VsnMWTsg7BPD7EH4m91z0JM6MH08/11kJavgsAlIbhzJZ
+         paBMMfRvn/42ZM01UvoniCHNE393zn6QIEmudN7MBNV4ziOnNUmTSWnNPRKfPXeNur
+         7FpIzX3YVIzRdwW6ueECMsSgTsXxVK2WSJWynC3k=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Sean V Kelley <sean.v.kelley@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/2] PCI/ACPI: Unexport pci_root.c functions
+Date:   Fri, 10 Jul 2020 16:37:51 -0500
+Message-Id: <20200710213753.83420-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200710001102.GA29833@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/10/20 2:11 AM, Bjorn Helgaas wrote:
-> The cc list is really screwed up.  Here's what I got:
->
->    Cc: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-> 	  bjorn@helgaas.com,
-> 	  skhan@linuxfoundation.org,
-> 	  linux-pci@vger.kernel.org,
-> 	  linux-kernel-mentees@lists.linuxfoundation.org,
-> 	  linux-kernel@vger.kernel.org,
-> 	  Russell Currey <ruscur@russell.cc>,
-> 	  Sam Bobroff <sbobroff@linux.ibm.com>,
-> 	  "Oliver O'Halloran" <oohall@gmail.com>,
-> 	  linuxppc-dev@lists.ozlabs.org,
-> 	  "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-> 	  Len Brown Lukas Wunner <lenb@kernel.orglukas@wunner.de>,
-> 	  linux-acpi@vger.kernel.org,
-> 	  Mike Marciniszyn <mike.marciniszyn@intel.com>,
-> 	  Dennis Dalessandro <dennis.dalessandro@intel.com>,
-> 	  Doug Ledford <dledford@redhat.com>,
-> 	  Jason Gunthorpe <jgg@ziepe.ca>,
-> 	  linux-rdma@vger.kernel.org,
-> 	  Arnd Bergmann <arnd@arndb.de>,
-> 	  "Greg Kroah-Hartman linux-rdma @ vger . kernel . org" <gregkh@linuxfoundation.org>
->
-> The addresses for Len Brown and Lukas Wunner are corrupted, as is Greg
-> KH's.  And my reply-all didn't work -- it *should* have copied this to
-> everybody in the list, but Mutt apparently couldn't interpret the cc
-> list at all, so it left the cc list of my reply empty.
->
-> I added linux-pci by hand just so this will show up on the list.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Thank you. I have fixed this and some other issues, I just sent version 3.
+Unexport a couple functions that are no longer needed by modules.
 
-- Saheed
+Bjorn Helgaas (2):
+  PCI/ACPI: Unexport acpi_pci_osc_control_set()
+  PCI/ACPI: Unexport acpi_pci_find_root()
+
+ drivers/acpi/pci_root.c | 5 ++---
+ include/linux/acpi.h    | 3 ---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+
+
+base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
+-- 
+2.25.1
 
