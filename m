@@ -2,72 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7483321C126
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Jul 2020 02:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4B8A21C306
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jul 2020 09:19:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgGKA2s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jul 2020 20:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52016 "EHLO
+        id S1727888AbgGKHTf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Jul 2020 03:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgGKA2s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jul 2020 20:28:48 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F00C08C5DC;
-        Fri, 10 Jul 2020 17:28:47 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id a32so5906416qtb.5;
-        Fri, 10 Jul 2020 17:28:47 -0700 (PDT)
+        with ESMTP id S1726900AbgGKHTe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Jul 2020 03:19:34 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40FBC08C5DD;
+        Sat, 11 Jul 2020 00:19:34 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id z5so3530687pgb.6;
+        Sat, 11 Jul 2020 00:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=xIJisSbZBmOeLheN8iotDynmIqVO/bf7e13TAsaCiaQ=;
-        b=rn6fA+Z76JczMvWzzPokCnq0gjehoFVn3RERXre3NEVcgsf2bU0pLizKx4HTIocwoc
-         jrMEYYssZmDzRR9B+B6BqNjTnd0vG5Teq7qYNIZO5XBLdmqQu6lM9B5fS2zQOJTbtziF
-         7ojEOzkUO31uSsvIo6njztrdXImBC3iJjZEOPjp1kOfxn9/BHgTUf17RITcd0XR+y2W+
-         rLFg/ONZ7tSxlfUzqTdivA7qJTYKs6I0SI5OVybqCNYIypZAXpIrQj9fDLmQ/TKpykn3
-         RWMSKns8NSvSzS2DvGAqAKSt2GlsgMbGU4p1Wjvo1yvGylP85Vf1+M6XDq8KnPJrTvc/
-         LLHw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2sbW3VeapkXBFXBROMSYLe02+5wxSAmivcwGBlvvNys=;
+        b=QNzDaR01054tkyz/YJVqi/q9TFcxmfse+9weq2nlchNL13op2HWRPqDMSWwCkroAn3
+         FD/DwkkfQAHAeqJIqKDP6/UnAjF7WpgYxNtjTPlMG38vmcMYd969ySf4saUQjpLc0hO+
+         sp0BrkYLT7k6zkgb2dRqS4tYp9sbXBYN9E+6kdfhVG2IGDlS43BQqtrQks/pkMEv6zxc
+         jMPP/hyIpjezO3GEWX9EHBq8T/8Z9xxz1QAkVz61sEvYNZA+5hWjSFPV3BnYr+EJZ1Mg
+         7j7PPt1b1kPmPSzehKA54O3dv6hfd+RzHUqwa6rURaVkIpqitHJdxkTvbEadkrgKoIrs
+         dwyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=xIJisSbZBmOeLheN8iotDynmIqVO/bf7e13TAsaCiaQ=;
-        b=NK44TZDsDSjjkV7IdCiuFcecpu9jaqbJfRamrIdengXU0wypXKHkY0JOe/viV5i6lF
-         bc/YKbtc8jYpmgVtipkXPr/XXRUD4/AS3TsX44cDi6DBvsVPFIkEXbcRS8YesESPbyw/
-         S8UHUz9sungAOu0j8ESDU/wUe1enpHKw4R6piqb36lbhHADMEnXCQO9uV8ch0azdL6sc
-         E7CB7Bry27wAGEMVU+nFWt/jw8Krb1MN8cf/05F4WZ5VRQ8Y2ziGpdqphQq6GwfpHCoi
-         qp0tkDOO9plB07rpUn8BDun5GFkgphIhOX9Y9FLEK5hr++bXKobpTr1hrUvW1pcIelQf
-         W81w==
-X-Gm-Message-State: AOAM530mWeD5S9FFVlIoI9/Dk+B679U38p6BlmTpAB4xPpKTTQ4JSTnl
-        TseDme2hAqnYzWaU80FnWegWva0Jh4QZRHtZJ5LFxo+P
-X-Google-Smtp-Source: ABdhPJwaOO9NmbRGInX/e3hfEprHwJg1B5thMk4kRS4jV3qGDBdgDie4uW0FHvg7ClNjPR9fCse+tWrF79BlNpIu/O4=
-X-Received: by 2002:ac8:7b57:: with SMTP id m23mr52986303qtu.379.1594427326881;
- Fri, 10 Jul 2020 17:28:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <CADLC3L20DuXw8WbS=SApmu2m49mkxxWKZrMJS_GBHDX7Vh0TvQ@mail.gmail.com>
-In-Reply-To: <CADLC3L20DuXw8WbS=SApmu2m49mkxxWKZrMJS_GBHDX7Vh0TvQ@mail.gmail.com>
-From:   Robert Hancock <hancockrwd@gmail.com>
-Date:   Fri, 10 Jul 2020 18:28:35 -0600
-Message-ID: <CADLC3L2ZnGTQJ+fwCy42dpxhHLpAFzFkjMRG3ZS=z7R4WK08og@mail.gmail.com>
-Subject: Re: 5.7 regression: Lots of PCIe AER errors and suspend failure
- without pcie=noaer
-To:     linux-kernel <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2sbW3VeapkXBFXBROMSYLe02+5wxSAmivcwGBlvvNys=;
+        b=RVEnxRX1B9wPoGAH/7pmC9LYRgtpVxAqDZ2ZzEMZ9HW+Zfs+hUUpsh07IxcvOZV8r3
+         MsDJuzjjJFqkTrjlSrC+s66iQPjI6tfIWntQx8jymUjM8zrLwxpNWNh5jYZKAirzb/nW
+         0SiBPrZ03bPNb0wRtvo1NfArxLUzwR7+a/BkC/htnKWQMsJBg4j7slVlPCy/Z1PxZeRO
+         ZDQ4zCDgWPqviYpa0bC4/AsGUzycyg7fbzAMe4AdV4fAWJ0O3CR9VENWaSiGbZNwJtIb
+         MjSkYmrRy8hh/IcI7M/xgmAFimWFDwsf5fsnah1P9DA+iC3WE8lAqGjkUttZGcif9d+L
+         ioiw==
+X-Gm-Message-State: AOAM533Qb28BmKet3BTTc7yS4zTIje/aMVj1d45gW6UjssFC1N774EXl
+        pHWVpHkkxhZN07hoIvUEfGY=
+X-Google-Smtp-Source: ABdhPJyDPTLNEOM725IEvMGEGBOmqxXLlfjyzgmcNoEX0bcdL5ygp6VGfBDSyX0L4n5Q6P2EajYGqw==
+X-Received: by 2002:aa7:8513:: with SMTP id v19mr57199394pfn.74.1594451974086;
+        Sat, 11 Jul 2020 00:19:34 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id f3sm7574725pju.54.2020.07.11.00.19.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 11 Jul 2020 00:19:33 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
         linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1] PCI: Add more information when devm_request_mem_region() goes wrong
+Date:   Sat, 11 Jul 2020 15:19:27 +0800
+Message-Id: <20200711071927.3064-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 6:23 PM Robert Hancock <hancockrwd@gmail.com> wrote:
->
-> Noticed a problem on my desktop with an Asus PRIME H270-PRO
-> motherboard after Fedora 32 upgraded to the 5.7 kernel (now on 5.7.8):
-> periodically there are PCIe AER errors getting spewed in dmesg that
-> weren't happening before, and this also seems to causes suspend to
-> fail - the system just wakes back up again right away, I am assuming
-> due to some AER errors interrupting the process. 5.6 kernels didn't
-> have this problem. Setting "pcie=noaer" on the kernel command line
-> works around the issue, but I'm not sure what would have changed to
-> trigger this to occur?
+Add more information, the name of the resource will be printed when the
+request memory region or remapping of configuration space fails in the
+devm_request_mem_region() function.
 
-Correction: the workaround option is "pci=noaer".
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/pci/pci.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce096272f52b..81c1045a3fa8 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4153,13 +4153,15 @@ void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
+ 	name = res->name ?: dev_name(dev);
+ 
+ 	if (!devm_request_mem_region(dev, res->start, size, name)) {
+-		dev_err(dev, "can't request region for resource %pR\n", res);
++		dev_err(dev, "can't request region for %s's resource %pR\n",
++			name, res);
+ 		return IOMEM_ERR_PTR(-EBUSY);
+ 	}
+ 
+ 	dest_ptr = devm_pci_remap_cfgspace(dev, res->start, size);
+ 	if (!dest_ptr) {
+-		dev_err(dev, "ioremap failed for resource %pR\n", res);
++		dev_err(dev, "ioremap failed for %s's resource %pR\n",
++			name, res);
+ 		devm_release_mem_region(dev, res->start, size);
+ 		dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
+ 	}
+-- 
+2.25.0
+
