@@ -2,85 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F23B421E3CD
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 01:44:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F8EA21E40D
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 01:57:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgGMXoj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 19:44:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgGMXoj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:44:39 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4A662137B;
-        Mon, 13 Jul 2020 23:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594683879;
-        bh=Txg1jiinDj8sU47yedDutEmMwD7qpMFKiakR+mJ7T+c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=d5cX86aZwhy96couY3o9iPcQL1Pz7H2l3RXmscydSzD8IIukIcpDJNz3tuupH0cBs
-         IjGX2pPfi0Evbcxyo8HkQacBEz2RN0EB8utUBK5T52l3eMwGxm7XlP+e6XsICLOixv
-         ageW1rZnQEifuLm3uu+gP5bVX0A3JDBK8nPry0Y8=
-Date:   Mon, 13 Jul 2020 18:44:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Manish Raturi <raturi.manish@gmail.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: Dump of registers during endpoint link down
-Message-ID: <20200713234437.GA291585@bjorn-Precision-5520>
+        id S1726374AbgGMX5z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 19:57:55 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38744 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGMX5y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 19:57:54 -0400
+Received: by mail-io1-f67.google.com with SMTP id l1so15454848ioh.5;
+        Mon, 13 Jul 2020 16:57:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7c5zEhAAZe4ARtWE37/DC1WUrD4G1u+Olxon0OQTcTY=;
+        b=FrkBCxvdggVsVNG6H4Jnm6V7x9uOSI5XlXEDbTbC3jEVi2Y6noEdWM302mvv6m5aHr
+         xxEbMG4DffO0LSQ2vPfUHYOagQa+z3/KmsKJgsAyh08kMGPZKvZWNz9XkUxwe0VtcWyh
+         lcKa+2AunMWwZnXde0IjsXvuyaJVXvbJP6q03k5XTlSgIDimvkWIiBkA2MiFDD3HpIG0
+         Di4hwK4cQ6qrALCH16plN0c79fTM9mz+3sQUlPvQEUUI5PC0L4ohSCByqSej3XypERsc
+         kdRxl8qK1AlQ2fpEyv1I7M/d5jM2lbN/2A21Y2JAsqoMckfuWCj+O8lQP2Cp4UL38We3
+         BvgA==
+X-Gm-Message-State: AOAM532WMpNhQsb9fCOqxC/26kpPJ9QaBD6cjY0z+jvjXRTs3+sfNWUG
+        Q9aMb9xuEiNnnfd1qlplMw==
+X-Google-Smtp-Source: ABdhPJzk0xad7Wqvui02rA9XsQsYeJbjiQrhI195AJtDwQfLcpp3zuMxhjsKkSZEBtUKqrliJBcwUQ==
+X-Received: by 2002:a6b:8d4d:: with SMTP id p74mr2302931iod.173.1594684674059;
+        Mon, 13 Jul 2020 16:57:54 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k1sm9003186ilr.35.2020.07.13.16.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 16:57:53 -0700 (PDT)
+Received: (nullmailer pid 959222 invoked by uid 1000);
+        Mon, 13 Jul 2020 23:57:51 -0000
+Date:   Mon, 13 Jul 2020 17:57:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-acpi@vger.kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>
+Subject: Re: [PATCH v2 06/12] of/iommu: Make of_map_rid() PCI agnostic
+Message-ID: <20200713235751.GA959175@bogus>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-7-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHn-FMxBZdHPYQkorePnyK+aY_3S29xVnkjj2u3pWDHjTyyGmA@mail.gmail.com>
+In-Reply-To: <20200619082013.13661-7-lorenzo.pieralisi@arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Reply-all and don't top-post.  See
-https://people.kernel.org/tglx/notes-about-netiquette
-
-On Mon, Jul 13, 2020 at 03:31:02PM +0530, Manish Raturi wrote:
-> Thanks, Bjorn, I am doing that (lspci -vvvxxxx) to dump all the
-> register, but in case of Link down, are there any specific registers
-> which we should look in, mostly I look below register:
+On Fri, 19 Jun 2020 09:20:07 +0100, Lorenzo Pieralisi wrote:
+> There is nothing PCI specific (other than the RID - requester ID)
+> in the of_map_rid() implementation, so the same function can be
+> reused for input/output IDs mapping for other busses just as well.
 > 
-> 1) Link status /control/capability
-> 2) Slot status /control/capability
-> 3) Lane error status registers.
+> Rename the RID instances/names to a generic "id" tag.
 > 
-> Any other register we can specifically look for.
+> No functionality change intended.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/iommu/of_iommu.c |  4 ++--
+>  drivers/of/base.c        | 42 ++++++++++++++++++++--------------------
+>  drivers/of/irq.c         |  2 +-
+>  include/linux/of.h       |  4 ++--
+>  4 files changed, 26 insertions(+), 26 deletions(-)
+> 
 
-I have no idea what the problem is, so can't really help you, sorry.
-All you've said is that the link to an endpoint is down.  I don't know
-whether the the slot is even powered up.  You could try a different
-card to see whether that works.  You could try the same card in a
-different machine to see if that works.  If you think the link
-*should* be up, you could always debug it from a hardware point of
-view with a PCIe analyzer.
-
-> On Fri, Jul 10, 2020 at 12:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Jul 09, 2020 at 12:44:24PM +0530, Manish Raturi wrote:
-> > > Hi Team,
-> > >
-> > > I have a generic query , if an hotplug pcie endpoint connected to the
-> > > CPU root port shows link down, then from the debugging perspective
-> > > w.r.t PCIE what all register can be dump during the failure condition,
-> > > what I can think of is these registers from the root port side
-> > >
-> > > 1) Link status /control/capability
-> > > 2) Slot status /control/capability
-> > > 3) Lane error status registers.
-> > >
-> > > Anything else we can dump which gives us more insight into the issue.
-> > > Also is there anything by which we can check from PCIE clock
-> > > perspective.
-> >
-> > If you have this:
-> >
-> >   Root Port ----- Endpoint
-> >
-> > and the Link is down, you won't be able to read any registers from the
-> > Endpoint.  You can dump all the Root Port registers, of course, e.g.,
-> > with "lspci -vvvxxxx".
+Reviewed-by: Rob Herring <robh@kernel.org>
