@@ -2,64 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C113921E1D3
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 23:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E91921E2DF
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 00:15:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgGMVCm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 17:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
+        id S1726345AbgGMWO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 18:14:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgGMVCm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:02:42 -0400
+        id S1726149AbgGMWOx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jul 2020 18:14:53 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9FE92083B;
-        Mon, 13 Jul 2020 21:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3D392089D;
+        Mon, 13 Jul 2020 22:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594674162;
-        bh=8x0Tpf6iI5PqmLcY/XaeypajZdv42jkioD+NSonLSLg=;
+        s=default; t=1594678492;
+        bh=P0Nh+xFRQ9a2MrN5LEFWmA1XUcPw3diBTYezfnAiJCU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aGPRHRGgLCy1uyNADvnJHEfPevONoGJiicslm5eeFK3uB2Fp4O/Uvb4GHReKkXti6
-         RAId2vUFIK76/O91AoTFZ+to7uffY1O7BRcX6l3iIKiJeT1VCSSS07+oUUYXEMpuyV
-         zqYqUlMD5t4Hl8LKiUtaujxOLA5mlBY/+IwoOuBQ=
-Date:   Mon, 13 Jul 2020 16:02:40 -0500
+        b=rDrnvcJIkFUMC9A7DI39Pwr7PxFVWNWWQqubAPuy55RfkwSnFRJiHYdN8HaPbpIX0
+         T24ZCfSRmOYpI2DCyxJXPsGBsyPRJchuRH1EQE3I58jgMIoBK9NSlK+YAsGraygo1O
+         NXYOscQBNZBtCaERYxiKPmbDAWprr8nQw8Ro1PdM=
+Date:   Mon, 13 Jul 2020 17:14:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] x86/PCI: Describe @reg for type1_access_ok()
-Message-ID: <20200713210240.GA273404@bjorn-Precision-5520>
+To:     Marcos Scriven <marcos@scriven.org>
+Cc:     "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Kevin Buettner <kevinb@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH] PCI: Avoid FLR for AMD Starship USB 3.0
+Message-ID: <20200713221451.GA285058@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713200338.GF3703480@smile.fi.intel.com>
+In-Reply-To: <CAAri2DpQnrGH5bnjC==W+HmnD4XMh8gcp9u-_LQ=K-jtrdHwAg@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:03:38PM +0300, Andy Shevchenko wrote:
-> On Mon, Jul 13, 2020 at 02:59:07PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jul 13, 2020 at 10:44:37PM +0300, Andy Shevchenko wrote:
-> > > Describe missed parameter in documentation of type1_access_ok().
-> > > Otherwise we get the following warning:
-> > 
-> > Would you mind including the "make" invocation that runs this
-> > checking?  I assume it's something like "make C=2
-> > arch/x86/pci/intel_mid_pci.o"?
+On Mon, Jul 13, 2020 at 01:44:44PM +0100, Marcos Scriven wrote:
+> On Thu, 25 Jun 2020 at 11:22, Marcos Scriven <marcos@scriven.org> wrote:
+> > On Tue, 9 Jun 2020 at 12:47, Shah, Nehal-bakulchandra
+> > <nehal-bakulchandra.shah@amd.com> wrote:
+> > > On 6/8/2020 11:17 PM, Marcos Scriven wrote:
+> > > > On Thu, 28 May 2020 at 09:12, Marcos Scriven <marcos@scriven.org>
+> > wrote:
+> > > >> On Wed, 27 May 2020 at 22:42, Deucher, Alexander
+> > > >> <Alexander.Deucher@amd.com> wrote:
+> > > >>>> -----Original Message-----
+> > > >>>> From: Bjorn Helgaas <helgaas@kernel.org>
+> > > >>>>
+> > > >>>> [+cc Alex D, Christian -- do you guys have any contacts or insight
+> > into why we
+> > > >>>> suddenly have three new AMD devices that advertise FLR support but
+> > it
+> > > >>>> doesn't work?  Are we doing something wrong in Linux, or are these
+> > devices
+> > > >>>> defective?
+> > > >>> +Nehal who handles our USB drivers.
+> > > >>>
+> > > >>> Nehal any ideas about FLR or whether it should be advertised?
+> > > >>>
+> > > Sorry for the delay. We are looking into this with BIOS team. I shall
+> > revert soon on this.
+> >
+> > Sorry to keep pestering about this, but wondering if there's any
+> > movement on this?
+> >
+> > Is it something that's likely to be fixed and actually rolled out by
+> > motherboard manufacturers?
+> >
+> > There's been some grumblings in the community about adding workarounds
+> > rather than fixing, so it would be good to pass on expectations here.
 > 
-> No, it is not sparse, it's a kernel doc validation.
-> I guess `make W=1` does it, but I can repeat my command line publicly again :-)
-> 	make W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+> Any word on this please? Would be keen to know if the BIOS can be fixed,
+> and this workaround can eventually be dropped.
 
-Thanks.  "make W=1 arch/x86/pci/" is enough.  I would just put this in
-the commit log, e.g.,
+Just to clarify what the possible outcomes are:
 
-  Otherwise "make W=1 arch/x86/pci/" produces the following warning:
+  1) If these AMD devices are defective, but future ones are fixed, we
+  keep the quirk.
 
-    CHECK   arch/x86/pci/intel_mid_pci.c
-    CC      arch/x86/pci/intel_mid_pci.o
-    arch/x86/pci/intel_mid_pci.c:152: warning: Function parameter or member 'reg' not described in 'type1_access_ok'
+  2) If these AMD devices are defective *and* future ones are also
+  defective, we keep the quirk and keep adding device IDs to it.
+
+  3) If the BIOS is defective, we keep the quirk.  If anybody cares
+  about FLR enough, they can make the quirk smart enough to identify
+  fixed BIOS versions and enable FLR.  
+
+  4) If Linux is defective, we can fix Linux and drop the quirk.
+
+The ideal outcome would be 4), but we don't have any indication that
+Linux is doing something wrong.
+
+What we're really trying to avoid is 2) because that means new devices
+will break Linux until somebody figures out the problem again, updates
+the quirk, and gets the update into distro kernels.
+
+In case 3), we don't drop the quirk because that forces people to
+upgrade their BIOS, and most people will not.  We can't drop the
+quirk, reintroduce the problem on old BIOSes, and hide behind the
+excuse of "you need to upgrade the BIOS."  That wastes the user's time
+and our time.
+
+> > > >>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index
+> > > >>>>> 43a0c2ce635e..b1db58d00d2b 100644
+> > > >>>>> --- a/drivers/pci/quirks.c
+> > > >>>>> +++ b/drivers/pci/quirks.c
+> > > >>>>> @@ -5133,6 +5133,7 @@
+> > > >>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,
+> > > >>>> quirk_intel_qat_vf_cap);
+> > > >>>>>   * FLR may cause the following to devices to hang:
+> > > >>>>>   *
+> > > >>>>>   * AMD Starship/Matisse HD Audio Controller 0x1487
+> > > >>>>> + * AMD Starship USB 3.0 Host Controller 0x148c
+> > > >>>>>   * AMD Matisse USB 3.0 Host Controller 0x149c
+> > > >>>>>   * Intel 82579LM Gigabit Ethernet Controller 0x1502
+> > > >>>>>   * Intel 82579V Gigabit Ethernet Controller 0x1503 @@ -5143,6
+> > +5144,7
+> > > >>>>> @@ static void quirk_no_flr(struct pci_dev *dev)
+> > > >>>>>     dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;  }
+> > > >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
+> > > >>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c,
+> > > >>>> quirk_no_flr);
+> > > >>>>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c,
+> > > >>>> quirk_no_flr);
+> > > >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502,
+> > > >>>> quirk_no_flr);
+> > > >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503,
+> > > >>>> quirk_no_flr);
+> > >
+> > > Regard
+> > >
+> > > Nehal Shah
+> > >
+> >
