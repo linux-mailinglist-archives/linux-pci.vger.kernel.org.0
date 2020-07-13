@@ -2,139 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 961CD21D4DD
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 13:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0A4F21D6A9
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 15:22:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgGML0S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 07:26:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:56394 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgGML0R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:26:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1C3D1FB;
-        Mon, 13 Jul 2020 04:26:16 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18A4A3F7D8;
-        Mon, 13 Jul 2020 04:26:15 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 12:26:13 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200713112613.GB25865@e121166-lin.cambridge.arm.com>
-References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1729722AbgGMNWj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 09:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729873AbgGMNWj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 09:22:39 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C43B5C061755;
+        Mon, 13 Jul 2020 06:22:38 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p20so17105650ejd.13;
+        Mon, 13 Jul 2020 06:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=z4DbCQASJpB18XYS7ktJTNc93Wbe31Dke4XqE2e1oq0=;
+        b=DOSHDGVmk30fZFiz3WKd7zMCSK69f3jEL1u8AsUJjxB2mBuvUr1qBHCx969bF8n9Q2
+         KtbdMAJyAt3EFUnpKPSIMJbXHWkN6pnl/9Tnrb3Gl0n+kYXCTO2h5BNyruT2BHFjgl+g
+         wH9iQCx1EI7m7ZrVqhRyZdNkYPv0uZXHNRXI4H3ZgM4nssEF6Z4+vhCyAINKoOna9COA
+         2vQ/UXMl3YhqVXxT1k4grDXlx/GMqUZZFWedx8icvuVMGE/cnpL+73qZzJoFpLnQEXqM
+         kKNEdCxwfmXyA7RuYT4PGHN4OQXUHW+RCFO60LXxoSfPzZmiOAwLoId6GJoDAnwMnMXf
+         6VkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=z4DbCQASJpB18XYS7ktJTNc93Wbe31Dke4XqE2e1oq0=;
+        b=VGODV6+w8pm3BED+mlkJTkLoiPiT2PQOix909FzobWVuQPJ/ckL+JClUhHHZrN/4Ng
+         JKXWFn8iUjL812r/K8SreK1/U8CtRqXLEpQpT9ZEg5CVKuHg4wVRpfoxaxe7ArX/rqtd
+         NbAD+iJr8dxnIgRDHrCieUZ0/Xjqabn4AU1NIqdP2bRFwSJeqDiO+9b16kth8JTImsiz
+         sxIe9cqF92le73rQT0XeUO72vXpnG2UGw/OiSGJB/yY5gsJSRo7YXox+2JYuYhjlS8tu
+         gc9lmSVwCd7kx22nfYBU2MRaA7q+EtNc1ORf5NJS5GxD0ERF1jclBxRgKXHAbypC5VbU
+         e17w==
+X-Gm-Message-State: AOAM530vhEVApyA+HZEwVHGAue2wJSX3nrd/BFWsX7WoIEx2nZWQHA67
+        ITTBn0MuGPSTVEkaNbhCt3U=
+X-Google-Smtp-Source: ABdhPJyNJ+2A+7vhlimkJ5sh3qnTf4AmYHcIfFpOxzTngMqwIMgJRuRgZYpxdl6ypR4zISe0e31EHw==
+X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr77154689ejw.170.1594646557469;
+        Mon, 13 Jul 2020 06:22:37 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 06:22:37 -0700 (PDT)
+From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+To:     helgaas@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Subject: [RFC PATCH 01/35] xen-pciback: Change PCIBIOS_SUCCESSFUL to 0
+Date:   Mon, 13 Jul 2020 14:22:13 +0200
+Message-Id: <20200713122247.10985-2-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20200713122247.10985-1-refactormyself@gmail.com>
+References: <20200713122247.10985-1-refactormyself@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 09:16:57AM -0600, Rob Herring wrote:
-> On Tue, Jun 16, 2020 at 6:57 AM Bharat Kumar Gogada
-> <bharat.kumar.gogada@xilinx.com> wrote:
-> >
-> > - Add support for Versal CPM as Root Port.
-> > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
-> >   block for CPM along with the integrated bridge can function
-> >   as PCIe Root Port.
-> > - Bridge error and legacy interrupts in Versal CPM are handled using
-> >   Versal CPM specific interrupt line.
-> >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > ---
-> >  drivers/pci/controller/Kconfig           |   8 +
-> >  drivers/pci/controller/Makefile          |   1 +
-> >  drivers/pci/controller/pcie-xilinx-cpm.c | 617 +++++++++++++++++++++++++++++++
-> >  3 files changed, 626 insertions(+)
-> >  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
-> 
-> [...]
-> 
-> > +static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +       struct xilinx_cpm_pcie_port *port;
-> > +       struct device *dev = &pdev->dev;
-> > +       struct pci_host_bridge *bridge;
-> > +       struct resource *bus_range;
-> > +       int err;
-> > +
-> > +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
-> > +       if (!bridge)
-> > +               return -ENODEV;
-> > +
-> > +       port = pci_host_bridge_priv(bridge);
-> > +
-> > +       port->dev = dev;
-> > +
-> > +       err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-> > +                                             &bridge->dma_ranges, &bus_range);
-> > +       if (err) {
-> > +               dev_err(dev, "Getting bridge resources failed\n");
-> > +               return err;
-> > +       }
-> > +
-> > +       err = xilinx_cpm_pcie_init_irq_domain(port);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       err = xilinx_cpm_pcie_parse_dt(port, bus_range);
-> > +       if (err) {
-> > +               dev_err(dev, "Parsing DT failed\n");
-> > +               goto err_parse_dt;
-> > +       }
-> > +
-> > +       xilinx_cpm_pcie_init_port(port);
-> > +
-> > +       err = xilinx_cpm_setup_irq(port);
-> > +       if (err) {
-> > +               dev_err(dev, "Failed to set up interrupts\n");
-> > +               goto err_setup_irq;
-> > +       }
-> 
-> All the h/w init here can be moved to an .init() function in ecam ops
-> and then use pci_host_common_probe. Given this is v9, that can be a
-> follow-up I guess.
+In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+Their scope should be limited within arch/x86.
 
-I think there is time to get it done, Bharat please let me know if
-you can repost it shortly with Rob's requested change implemented.
+Change all PCIBIOS_SUCCESSFUL to 0
 
-Thanks,
-Lorenzo
+Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+---
+ drivers/xen/xen-pciback/conf_space.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Otherwise,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> > +
-> > +       bridge->dev.parent = dev;
-> > +       bridge->sysdata = port->cfg;
-> > +       bridge->busnr = port->cfg->busr.start;
-> > +       bridge->ops = &pci_generic_ecam_ops.pci_ops;
-> > +       bridge->map_irq = of_irq_parse_and_map_pci;
-> > +       bridge->swizzle_irq = pci_common_swizzle;
-> > +
-> > +       err = pci_host_probe(bridge);
-> > +       if (err < 0)
-> > +               goto err_host_bridge;
-> > +
-> > +       return 0;
-> > +
-> > +err_host_bridge:
-> > +       xilinx_cpm_free_interrupts(port);
-> > +err_setup_irq:
-> > +       pci_ecam_free(port->cfg);
-> > +err_parse_dt:
-> > +       xilinx_cpm_free_irq_domains(port);
-> > +       return err;
-> > +}
+diff --git a/drivers/xen/xen-pciback/conf_space.c b/drivers/xen/xen-pciback/conf_space.c
+index 059de92aea7d..0e7577f16f78 100644
+--- a/drivers/xen/xen-pciback/conf_space.c
++++ b/drivers/xen/xen-pciback/conf_space.c
+@@ -130,7 +130,7 @@ static inline u32 merge_value(u32 val, u32 new_val, u32 new_val_mask,
+ static int xen_pcibios_err_to_errno(int err)
+ {
+ 	switch (err) {
+-	case PCIBIOS_SUCCESSFUL:
++	case 0:
+ 		return XEN_PCI_ERR_success;
+ 	case PCIBIOS_DEVICE_NOT_FOUND:
+ 		return XEN_PCI_ERR_dev_not_found;
+-- 
+2.18.2
+
