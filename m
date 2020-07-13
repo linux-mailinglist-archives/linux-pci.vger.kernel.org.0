@@ -2,68 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64B0221DDA8
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 18:41:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CB1F21DDBC
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 18:42:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbgGMQls (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 12:41:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:46378 "EHLO foss.arm.com"
+        id S1729687AbgGMQmy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 12:42:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34296 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729751AbgGMQlr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:41:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BA601FB;
-        Mon, 13 Jul 2020 09:41:47 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E50D23F7D8;
-        Mon, 13 Jul 2020 09:41:45 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 17:41:40 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200713164140.GA29307@e121166-lin.cambridge.arm.com>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
- <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
- <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
- <20200709150959.wq6zfkcy4m6hvvpl@pali>
- <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
- <20200713082747.e3q3ml3wpbszn4j7@pali>
- <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
- <20200713145003.foarsdixquicvivy@pali>
+        id S1729027AbgGMQmx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:42:53 -0400
+IronPort-SDR: DjaGoNfh/oEYmOpW5z49J9nMo0Zrp5jqJ4TSHlwR/npKUs9xLPEtwPUspAoSLsqMQgdPfapGL+
+ P39NRixrti8w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146141285"
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="146141285"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 09:42:53 -0700
+IronPort-SDR: dQgS6KRxXnZehQ6xSY5bScIB1NbPYyLT4+zopdkg5S3fiuf5XsC0QhqYiX7EJ72qjhdGaDOB1f
+ Vf9essvY4UOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="485064335"
+Received: from rrajashe-mobl1.amr.corp.intel.com (HELO [10.212.135.176]) ([10.212.135.176])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jul 2020 09:42:52 -0700
+Subject: Re: [RFC PATCH 09/35] nvme-pci: Change PCIBIOS_SUCCESSFUL to 0
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        helgaas@kernel.org, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Cc:     skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        bjorn@helgaas.com, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-10-refactormyself@gmail.com>
+From:   "Rajashekar, Revanth" <revanth.rajashekar@intel.com>
+Message-ID: <0762f646-90a1-217c-4e4b-6168d85bb08a@intel.com>
+Date:   Mon, 13 Jul 2020 10:42:51 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713145003.foarsdixquicvivy@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200713122247.10985-10-refactormyself@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 04:50:03PM +0200, Pali Rohár wrote:
-> On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
-> > I will go over the thread again but I suspect I can merge the patch even
-> > though I still believe there is work to be done to understand the issue
-> > we are facing.
-> 
-> Just to note that pci-mvebu.c also checks if pcie link is up before
-> trying to access the real PCIe interface registers, similarly as in my
-> patch.
+Hi,
 
-I understand - that does not change my opinion though, the link check
-is just a workaround, it'd be best if we pinpoint the real issue which
-is likely to a HW one.
-
-Lorenzo
+On 7/13/2020 6:22 AM, Saheed O. Bolarinwa wrote:
+> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+> Their scope should be limited within arch/x86.
+>
+> Change all PCIBIOS_SUCCESSFUL to 0
+>
+> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+> ---
+>  drivers/nvme/host/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index b1d18f0633c7..d426efb53f44 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -1185,7 +1185,7 @@ static void nvme_warn_reset(struct nvme_dev *dev, u32 csts)
+>  
+>  	result = pci_read_config_word(to_pci_dev(dev->dev), PCI_STATUS,
+>  				      &pci_status);
+> -	if (result == PCIBIOS_SUCCESSFUL)
+> +	if (result == 0)
+How about simplifying the check to if (!result)?
+>  		dev_warn(dev->ctrl.device,
+>  			 "controller is down; will reset: CSTS=0x%x, PCI_STATUS=0x%hx\n",
+>  			 csts, pci_status);
+Thanks!
+Revanth
