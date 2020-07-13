@@ -2,108 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CAA321DE9F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 19:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 424C621DF89
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 20:24:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgGMRYI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 13:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMRYI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 13:24:08 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF3BC061755;
-        Mon, 13 Jul 2020 10:24:07 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g20so14406759edm.4;
-        Mon, 13 Jul 2020 10:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=e0LSuR+yshIoYGz+eEEY3hbB8A+14sBty8Ug4yMkgfM=;
-        b=nTmeCPcn+ozK+Ag5RxEELeJLLx9ti8jrlnkSeGn+v7o9o0VF9oqTW9mzAjEAFJQnWc
-         qy5WrcnWfHjIf32n1rZMIh7sjY+87PmkNyonBFjkMmm/slYoFKySiIDO6+eFTW7DyjhV
-         dcAIkLxDSgKq8n2k3M6w/g/AfcEEasZ0+ubo5y3FP86jcAmIC3Bp4bSbEpCr+H2fGieA
-         cWR5TAwnj5PuzxwIQ+aw+2sXxWXcbl3OLOr7p1EQo/nTFJ+CtkPPFFCWRh9nn7Mgar9C
-         QL2BtaG9MVgA1PHr+APD1CbIGDru+t9rECcfdiYNqx3sePEn6oCyMM3NaVw/Kh7k8nKA
-         G6Sw==
+        id S1726305AbgGMSYA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 14:24:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37333 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgGMSX7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 14:23:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so14554187iob.4;
+        Mon, 13 Jul 2020 11:23:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=e0LSuR+yshIoYGz+eEEY3hbB8A+14sBty8Ug4yMkgfM=;
-        b=RD2tz/ij/m0v8W+5GpwBC+wuXC/3ro4urGU59N40sxUdFCsbt6eAGXoTlooaKBpcJu
-         70BTLDy2TO5AWlS26+3Qdj2Rw9tr3s+/IuBFamDiWVZjK0JFT18My2qQSWPbfaXtq5+8
-         HLF4++GPubqA5KkZ33fguDrwl1ajn2ujIoiCmhv11NMYOiadH8bIZrIDUFvt+oFtHVNQ
-         1Tl6GOgntlRfK4+myjWNJSJDR4eDOGndipwnvglNZDKGvpqCf4zWPE0Y0klrzVcBw+8q
-         +tHTTD14W8LmTDiDaeryCwwptydBfSsBIfN7+HM1nlTzKc4RwwlR9TNURvx/XPliopFl
-         G+Rg==
-X-Gm-Message-State: AOAM530kRQWg1l9k6BNW897Lq6gl/L/lLlkAkxjRdmS80HoY7cQwrNfq
-        Pn0jWlVPoxtqnKjferCskeo=
-X-Google-Smtp-Source: ABdhPJwU6CC1g8gnvm6vkaI0vzF7ML92p+FtcVVEx2//52B6Q3pLKNShFOHB6NyG1tBi9qTBjIHGwg==
-X-Received: by 2002:a05:6402:c82:: with SMTP id cm2mr441209edb.293.1594661046520;
-        Mon, 13 Jul 2020 10:24:06 -0700 (PDT)
-Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id t25sm10192694ejc.34.2020.07.13.10.24.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 10:24:05 -0700 (PDT)
-Subject: Re: [RFC PATCH 09/35] nvme-pci: Change PCIBIOS_SUCCESSFUL to 0
-To:     "Rajashekar, Revanth" <revanth.rajashekar@intel.com>,
-        helgaas@kernel.org, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Cc:     skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        bjorn@helgaas.com, linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-10-refactormyself@gmail.com>
- <0762f646-90a1-217c-4e4b-6168d85bb08a@intel.com>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <f48dece5-7483-73ac-38bb-0dce323f404c@gmail.com>
-Date:   Mon, 13 Jul 2020 20:24:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ifx3aALNuF7rKl8vX3SdTnNE70Q3qXp0lBlunsaf+O4=;
+        b=VPOOTJhoLj5Cb150y6p1TwenBQzNfDKOJ5wyIUWq4XesRghFuTupXuNDC6XNt5OrZa
+         Y2mvcXADpPiRngSgJJMkFr1gD3AYhLU7GsEGv8Yk1NjjGhs0PShMjaoA0yiZ9Vj3bHHI
+         f0tHrDuUtWjy0YmU2DPTP72NHuzF2htDmG+Xv3vspo1FQn28gbZBbCsFlWFJA5UbdEE2
+         tKMAaZp1qC+gDMfv2kJqggJI5H/WvroU6A/Pv1xt2X1IRwbyMxsjC6GDQho6qnrG8rCG
+         jv+p0WXJsc5kYMuXSj/fBo3dLxk3e4kUc/sSHhG2fi9RMkU9le6t9UnLvXXhu1dm1mg7
+         DJWA==
+X-Gm-Message-State: AOAM531xcWgCijWFCMHSfaq2+gqfDJ4IR4U1yAwOsPTsPXK2TLW17jM4
+        aFtGB5nmVKZljP8THAO4sQ==
+X-Google-Smtp-Source: ABdhPJya3sqMPQiW2H/b993RNfsrgt3J2EBCVEUsT+0P5mubEbH1CLbcW6JdVEJ2qL9zNx+NokQEPw==
+X-Received: by 2002:a5e:dd4c:: with SMTP id u12mr1090199iop.14.1594664638827;
+        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t1sm8159994iob.16.2020.07.13.11.23.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
+Received: (nullmailer pid 493759 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:23:56 -0000
+Date:   Mon, 13 Jul 2020 12:23:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+Message-ID: <20200713182356.GA413630@bogus>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+ <20200612171334.26385-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <0762f646-90a1-217c-4e4b-6168d85bb08a@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612171334.26385-2-nsaenzjulienne@suse.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+> The firmware running on the RPi VideoCore can be used to reset and
+> initialize HW controlled by the firmware.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> ---
+> Changes since v2:
+>  - Add include file for reset IDs
+> 
+> Changes since v1:
+>  - Correct cells binding as per Florian's comment
+>  - Change compatible string to be more generic
+> 
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> index b48ed875eb8e..23a885af3a28 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> @@ -39,6 +39,22 @@ properties:
+>        - compatible
+>        - "#clock-cells"
+>  
+> +  reset:
 
-On 7/13/20 6:42 PM, Rajashekar, Revanth wrote:
-> Hi,
->
-> On 7/13/2020 6:22 AM, Saheed O. Bolarinwa wrote:
->> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
->> Their scope should be limited within arch/x86.
->>
->> Change all PCIBIOS_SUCCESSFUL to 0
->>
->> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
->> ---
->>   drivers/nvme/host/pci.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
->> index b1d18f0633c7..d426efb53f44 100644
->> --- a/drivers/nvme/host/pci.c
->> +++ b/drivers/nvme/host/pci.c
->> @@ -1185,7 +1185,7 @@ static void nvme_warn_reset(struct nvme_dev *dev, u32 csts)
->>   
->>   	result = pci_read_config_word(to_pci_dev(dev->dev), PCI_STATUS,
->>   				      &pci_status);
->> -	if (result == PCIBIOS_SUCCESSFUL)
->> +	if (result == 0)
-> How about simplifying the check to if (!result)?
+I'm not really thrilled how this is evolving with a node per provider. 
+There's no reason you can't just add #clock-cells and #reset-cells to 
+the parent firmware node.
 
-Thank you for the review.  I did in PATCH 10/35. I will merge both.
+I probably should have complained with the clocks node, but that's only 
+pending for 5.9.
 
-I wanted to separate the goal from the fix but I see it's confusing.
+The bigger issue is this stuff is just trickling in one bit at a time 
+which gives no context for review. What's next? Is it really a mystery 
+as to what functions the firmware provides? You don't have to have a 
+driver in place for every function.
 
-- Saheed
-
+Rob
