@@ -2,60 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D52FC21D6C5
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 15:23:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAFFB21D6C1
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 15:23:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgGMNXi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 09:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47634 "EHLO
+        id S1730040AbgGMNXY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 09:23:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730033AbgGMNXW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 09:23:22 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 296C4C08C5DE;
-        Mon, 13 Jul 2020 06:23:22 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n26so17186390ejx.0;
-        Mon, 13 Jul 2020 06:23:22 -0700 (PDT)
+        with ESMTP id S1729821AbgGMNXX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 09:23:23 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C43EC061755;
+        Mon, 13 Jul 2020 06:23:23 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g20so13696619edm.4;
+        Mon, 13 Jul 2020 06:23:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Q0DdfK+UqqJL8YcIl12EqmY6PSz1+/PN6RVfEMMF3Q4=;
-        b=NJ0hp1NNApuQU8bw6tjVSWHitDg1vIDtFUaeiDmwx+ow60WBbHEGBeAnEHj2j8qP02
-         osWR34BF9/0x8PP9hyxdf/f30PfvtWe+O+aml4jtazke07Tlc8rIfTA/0UyD53kV/T0S
-         rWlpmKn5qM3eaFqMksBujvyYkHysClu8JPEN4xHZOp3xZ5xRgzdKkinh7WhCxvY5JY3Y
-         fi7mzT8DuGLOGVZz2ptsFk4NskphYU8XMgi3rCJu7VPwP/nDmOJP6fv3IlmWScA3Jgip
-         NZMp29fPPm1OhZBhqAwiUhNo+exFWu5DYVBfDT19KBqUrNYPzkbNZqWnzLY0/B5iuezX
-         3aBQ==
+        bh=ewjye1h5mtnawh2b0AOy7diBdGFlRi1J1uZVkQ1ixro=;
+        b=Mx+B1kxcYcsPVJySOuS4d7N3uwuf5I6uMC0zHSUAL7ZWfvZUlQF5NQZ0aFLz5I0Bhq
+         gxmCdhWwq5HmX9AmIw06Rna+b//mOgyX6KAyM+CYVT+0xSFmrIZwDYuOXugeDIDM0gDP
+         aInN5wj1Va1MCb1iogxcIzNjP4mJd7znHUSr2BajRZOc1bindC8LNZx+mmuBiurjvRol
+         gA42M50Ze7Dg6mZxyeigQumPZ/jsYiOWKy77ccH4igWM/s758GiuqLXvuv0YS+MTDEPj
+         CamZBn3Pcwwwk6lk6uk/ukorqPz9GVntJaklhFdFhwtlp8vbfEOmsBu6nf3NY6CSMVa2
+         6oHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Q0DdfK+UqqJL8YcIl12EqmY6PSz1+/PN6RVfEMMF3Q4=;
-        b=mTFbGknyNZ9ExnaULfz7Ix6NSGub33vS45L3Pnmw/b2uNeEdjAyWD/UfAI+LYBHxEv
-         LwRVoHx/3U7lBkLcyL1AlIgj5ZkNao0lIZqn3bsBOErxcpDXZllqwCCrGAeXguCvOz/G
-         5kD7oz5AGOutffnrRkYC8yDvfknRC9TH1umc6vYulAZlx8FlBTu8L7h+2eHklZ6yF9Wm
-         5F73dagXNKjDuQt7ZCGRvStFcD0YlrFx1nBPRK5iOaeX4iDEBn78K+eGv3qwAwTGS1lp
-         kSb4KwbfR+nHh5IIxN8jXs0jWW6WqX34G+ExC1E4YqwrNwu67b9RKvJWM4hjVzv9RRUT
-         ZuDQ==
-X-Gm-Message-State: AOAM532YPIyu38NF5RYEyJN3K9/IF4RAQD9BE2cLY6AkTFb8GvtnhRFM
-        hNBOBZfxq6GC09BK5UaaO1gtB825jeqzCA==
-X-Google-Smtp-Source: ABdhPJwnEBexXFGQz22NWjdykgIfoLXjIHNBfzIIKQCDH2Im79N2tI7W18NL0nmBRmj7cAZNYPAT3w==
-X-Received: by 2002:a17:906:9387:: with SMTP id l7mr70963250ejx.274.1594646600908;
-        Mon, 13 Jul 2020 06:23:20 -0700 (PDT)
+        bh=ewjye1h5mtnawh2b0AOy7diBdGFlRi1J1uZVkQ1ixro=;
+        b=NwERSWjThK+kAyN29Hx44dZrtiYL4PMQrU4rF45czMjTC2arNP40WAoNrrzKoaTX7q
+         uEMzPzNDLIyLgcmEMK6++X21DjCzIJLQsG9y/znUjyuAW3OUf8SH2WqY1mt65VTy79Lw
+         KsKNADpQPXeulA2TShibC1eL8PgGP1gX+vDoMCEcu6KrJU+7V+VcTQzEEOtmhlC+jf2y
+         TWcc785AcEv9YE2u3CddOS5RBRhehkRgR047vmMPjxF7V1AuEmREVWXybHdyrXtOPe4h
+         9pclzggdfP1KdNOr/rcgclQOOXDovf/jtAMgHGmGA2hySmgEZAoNfgvkslGFUNlHFQuN
+         FMIw==
+X-Gm-Message-State: AOAM530HCpwFe+1qOAX9GZkRLVV+berke78CGX2HVqZvbFOOEd4N2Spg
+        wi7nq0tj5tcb5LRsALRrAEk=
+X-Google-Smtp-Source: ABdhPJwjdCWmc5evl0WZ4tmvx/vOYmbbbwhXM2CIMv4V3vgcByzOPoi35qyT2hVPjVo+uxs6LAX+3Q==
+X-Received: by 2002:a05:6402:359:: with SMTP id r25mr66129414edw.177.1594646602240;
+        Mon, 13 Jul 2020 06:23:22 -0700 (PDT)
 Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.23.19
+        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.23.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:23:20 -0700 (PDT)
+        Mon, 13 Jul 2020 06:23:21 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Russell King <linux@armlinux.org.uk>
+To:     helgaas@kernel.org, Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 33/35] arm/PCI: Tidy Success/Failure checks
-Date:   Mon, 13 Jul 2020 14:22:45 +0200
-Message-Id: <20200713122247.10985-34-refactormyself@gmail.com>
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 34/35] PCI: Change PCIBIOS_SUCCESSFUL to 0
+Date:   Mon, 13 Jul 2020 14:22:46 +0200
+Message-Id: <20200713122247.10985-35-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200713122247.10985-1-refactormyself@gmail.com>
 References: <20200713122247.10985-1-refactormyself@gmail.com>
@@ -64,28 +66,282 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove unnecessary check for 0.
+In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+Their scope should be limited within arch/x86.
+
+Change all PCIBIOS_SUCCESSFUL to 0
 
 Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 ---
-This patch depends on PATCH 32/35
+ arch/alpha/kernel/core_apecs.c    | 4 ++--
+ arch/alpha/kernel/core_cia.c      | 4 ++--
+ arch/alpha/kernel/core_irongate.c | 4 ++--
+ arch/alpha/kernel/core_lca.c      | 4 ++--
+ arch/alpha/kernel/core_marvel.c   | 4 ++--
+ arch/alpha/kernel/core_mcpcia.c   | 4 ++--
+ arch/alpha/kernel/core_polaris.c  | 4 ++--
+ arch/alpha/kernel/core_t2.c       | 4 ++--
+ arch/alpha/kernel/core_titan.c    | 4 ++--
+ arch/alpha/kernel/core_tsunami.c  | 4 ++--
+ arch/alpha/kernel/core_wildfire.c | 4 ++--
+ arch/alpha/kernel/sys_miata.c     | 2 +-
+ 12 files changed, 23 insertions(+), 23 deletions(-)
 
- arch/arm/mach-cns3xxx/pcie.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-cns3xxx/pcie.c b/arch/arm/mach-cns3xxx/pcie.c
-index 7020071a2dc5..c249d4cbf4f0 100644
---- a/arch/arm/mach-cns3xxx/pcie.c
-+++ b/arch/arm/mach-cns3xxx/pcie.c
-@@ -92,7 +92,7 @@ static int cns3xxx_pci_read_config(struct pci_bus *bus, unsigned int devfn,
+diff --git a/arch/alpha/kernel/core_apecs.c b/arch/alpha/kernel/core_apecs.c
+index 6df765ff2b10..d74d78d92434 100644
+--- a/arch/alpha/kernel/core_apecs.c
++++ b/arch/alpha/kernel/core_apecs.c
+@@ -287,7 +287,7 @@ apecs_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 	shift = (where & 3) * 8;
+ 	addr = (pci_addr << 5) + mask + APECS_CONF;
+ 	*value = conf_read(addr, type1) >> (shift);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
  
- 	ret = pci_generic_config_read(bus, devfn, where, size, val);
+ static int
+@@ -304,7 +304,7 @@ apecs_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 	mask = (size - 1) * 8;
+ 	addr = (pci_addr << 5) + mask + APECS_CONF;
+ 	conf_write(addr, value << ((where & 3) * 8), type1);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
  
--	if (ret == 0 && !bus->number && !devfn &&
-+	if (!ret && !bus->number && !devfn &&
- 	    (where & 0xffc) == PCI_CLASS_REVISION)
- 		/*
- 		 * RC's class is 0xb, but Linux PCI driver needs 0x604
+ struct pci_ops apecs_pci_ops = 
+diff --git a/arch/alpha/kernel/core_cia.c b/arch/alpha/kernel/core_cia.c
+index f489170201c3..25300bc19c48 100644
+--- a/arch/alpha/kernel/core_cia.c
++++ b/arch/alpha/kernel/core_cia.c
+@@ -221,7 +221,7 @@ cia_read_config(struct pci_bus *bus, unsigned int devfn, int where, int size,
+ 	shift = (where & 3) * 8;
+ 	addr = (pci_addr << 5) + mask + CIA_CONF;
+ 	*value = conf_read(addr, type1) >> (shift);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int 
+@@ -238,7 +238,7 @@ cia_write_config(struct pci_bus *bus, unsigned int devfn, int where, int size,
+ 	mask = (size - 1) * 8;
+ 	addr = (pci_addr << 5) + mask + CIA_CONF;
+ 	conf_write(addr, value << ((where & 3) * 8), type1);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops cia_pci_ops = 
+diff --git a/arch/alpha/kernel/core_irongate.c b/arch/alpha/kernel/core_irongate.c
+index a9fd133a7fb2..858a2293c786 100644
+--- a/arch/alpha/kernel/core_irongate.c
++++ b/arch/alpha/kernel/core_irongate.c
+@@ -121,7 +121,7 @@ irongate_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int
+@@ -152,7 +152,7 @@ irongate_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops irongate_pci_ops =
+diff --git a/arch/alpha/kernel/core_lca.c b/arch/alpha/kernel/core_lca.c
+index 57e0750419f2..a7a00d73e2c5 100644
+--- a/arch/alpha/kernel/core_lca.c
++++ b/arch/alpha/kernel/core_lca.c
+@@ -213,7 +213,7 @@ lca_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 	mask = (size - 1) * 8;
+ 	addr = (pci_addr << 5) + mask + LCA_CONF;
+ 	*value = conf_read(addr) >> (shift);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int 
+@@ -229,7 +229,7 @@ lca_write_config(struct pci_bus *bus, unsigned int devfn, int where, int size,
+ 	mask = (size - 1) * 8;
+ 	addr = (pci_addr << 5) + mask + LCA_CONF;
+ 	conf_write(addr, value << ((where & 3) * 8));
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops lca_pci_ops = 
+diff --git a/arch/alpha/kernel/core_marvel.c b/arch/alpha/kernel/core_marvel.c
+index 1db9d0eb2922..c076b97a9961 100644
+--- a/arch/alpha/kernel/core_marvel.c
++++ b/arch/alpha/kernel/core_marvel.c
+@@ -561,7 +561,7 @@ marvel_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		return PCIBIOS_FUNC_NOT_SUPPORTED;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int
+@@ -593,7 +593,7 @@ marvel_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		return PCIBIOS_FUNC_NOT_SUPPORTED;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops marvel_pci_ops =
+diff --git a/arch/alpha/kernel/core_mcpcia.c b/arch/alpha/kernel/core_mcpcia.c
+index 74b1d018124c..fdb6d055bcc0 100644
+--- a/arch/alpha/kernel/core_mcpcia.c
++++ b/arch/alpha/kernel/core_mcpcia.c
+@@ -216,7 +216,7 @@ mcpcia_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		*value = w;
+ 		break;
+ 	}
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int
+@@ -233,7 +233,7 @@ mcpcia_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 	addr |= (size - 1) * 8;
+ 	value = __kernel_insql(value, where & 3);
+ 	conf_write(addr, value, type1, hose);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops mcpcia_pci_ops = 
+diff --git a/arch/alpha/kernel/core_polaris.c b/arch/alpha/kernel/core_polaris.c
+index 75d622d96ff2..345b9d5a116f 100644
+--- a/arch/alpha/kernel/core_polaris.c
++++ b/arch/alpha/kernel/core_polaris.c
+@@ -102,7 +102,7 @@ polaris_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ 
+@@ -134,7 +134,7 @@ polaris_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops polaris_pci_ops = 
+diff --git a/arch/alpha/kernel/core_t2.c b/arch/alpha/kernel/core_t2.c
+index 98d5b6ff8a76..0bbf9b028c11 100644
+--- a/arch/alpha/kernel/core_t2.c
++++ b/arch/alpha/kernel/core_t2.c
+@@ -296,7 +296,7 @@ t2_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 	shift = (where & 3) * 8;
+ 	addr = (pci_addr << 5) + mask + T2_CONF;
+ 	*value = conf_read(addr, type1) >> (shift);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int 
+@@ -313,7 +313,7 @@ t2_write_config(struct pci_bus *bus, unsigned int devfn, int where, int size,
+ 	mask = (size - 1) * 8;
+ 	addr = (pci_addr << 5) + mask + T2_CONF;
+ 	conf_write(addr, value << ((where & 3) * 8), type1);
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops t2_pci_ops = 
+diff --git a/arch/alpha/kernel/core_titan.c b/arch/alpha/kernel/core_titan.c
+index 2a2820fb1be6..aac94708a226 100644
+--- a/arch/alpha/kernel/core_titan.c
++++ b/arch/alpha/kernel/core_titan.c
+@@ -158,7 +158,7 @@ titan_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int 
+@@ -189,7 +189,7 @@ titan_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops titan_pci_ops = 
+diff --git a/arch/alpha/kernel/core_tsunami.c b/arch/alpha/kernel/core_tsunami.c
+index fc1ab73f23de..88fe80a8b41a 100644
+--- a/arch/alpha/kernel/core_tsunami.c
++++ b/arch/alpha/kernel/core_tsunami.c
+@@ -134,7 +134,7 @@ tsunami_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int 
+@@ -165,7 +165,7 @@ tsunami_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops tsunami_pci_ops = 
+diff --git a/arch/alpha/kernel/core_wildfire.c b/arch/alpha/kernel/core_wildfire.c
+index e8d3b033018d..012ec2f5b675 100644
+--- a/arch/alpha/kernel/core_wildfire.c
++++ b/arch/alpha/kernel/core_wildfire.c
+@@ -400,7 +400,7 @@ wildfire_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ static int 
+@@ -431,7 +431,7 @@ wildfire_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		break;
+ 	}
+ 
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
+ 
+ struct pci_ops wildfire_pci_ops = 
+diff --git a/arch/alpha/kernel/sys_miata.c b/arch/alpha/kernel/sys_miata.c
+index e1bee8f84c58..1b4c03ac34d8 100644
+--- a/arch/alpha/kernel/sys_miata.c
++++ b/arch/alpha/kernel/sys_miata.c
+@@ -185,7 +185,7 @@ miata_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+ 	if((slot == 7) && (PCI_FUNC(dev->devfn) == 3)) {
+ 		u8 irq=0;
+ 		struct pci_dev *pdev = pci_get_slot(dev->bus, dev->devfn & ~7);
+-		if(pdev == NULL || pci_read_config_byte(pdev, 0x40,&irq) != PCIBIOS_SUCCESSFUL) {
++		if (pdev == NULL || pci_read_config_byte(pdev, 0x40, &irq) != 0) {
+ 			pci_dev_put(pdev);
+ 			return -1;
+ 		}
 -- 
 2.18.2
 
