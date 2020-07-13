@@ -2,82 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12CA721D4AB
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 13:17:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F44C21D4C8
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jul 2020 13:23:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgGMLRt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 07:17:49 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37691 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbgGMLRt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 07:17:49 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 12so10656097oir.4;
-        Mon, 13 Jul 2020 04:17:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BxHZ+WJ7gl/kfFuw5mZWEwR5qtLWbkNAErzAGlqlI+M=;
-        b=XXIg+d9Nu26xRIcZvGf/WkvVP9EmZ/uo6l2+DkL9UPyAiacOuX35vvjV1TXPYr/LtQ
-         iAchSaUvETOZVE/1ZRtpiGsH0/mw9vaNv7tCmFRnmeRK9Zdm9ZPGL/A2Eyudw7aOJfBC
-         P4t1e/KS9qhYE/aaFHONal2rdKe4JwtlmGd8ME6hZ1hcoeHPWRwgZJPOkV9uGFrwf2cR
-         x+Mn6TAcIP+lznSx8X8vGHrUklA+ZIviwco5vzuRZ265WsYUdwh2MrsKrZRXRKMx/OBC
-         rE2qKvqEgCLDoIEgYM9a6WdlMkwabl1mcs+lQoGb85jD8QFl+ZqiAK92/SF9p5CUSnS4
-         Z3lQ==
-X-Gm-Message-State: AOAM532dU4700m4FhqJ2Mv71oH1qJ3n0UMrSQ5uZr6CGcC7Qz2OxHSxm
-        eDyuR2Ufpe8OU8PX8QX1DBVXGFS6Fy1FdtEEVhw=
-X-Google-Smtp-Source: ABdhPJyoLEUbgUanvggbAuiWxx6tG0pbvTKcqE019Cf4J51+OoImh2nW2kLi3Y6TzKoBvHUOr7Wm7P7xrszUfxIFw6w=
-X-Received: by 2002:a54:4e87:: with SMTP id c7mr13870224oiy.110.1594639068426;
- Mon, 13 Jul 2020 04:17:48 -0700 (PDT)
+        id S1729252AbgGMLXe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 07:23:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:56216 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728714AbgGMLXe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:23:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EC2831B;
+        Mon, 13 Jul 2020 04:23:33 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9709E3F7D8;
+        Mon, 13 Jul 2020 04:23:31 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 12:23:25 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+ <20200709122208.rmfeuu6zgbwh3fr5@pali>
+ <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
+ <20200709150959.wq6zfkcy4m6hvvpl@pali>
+ <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
+ <20200713082747.e3q3ml3wpbszn4j7@pali>
 MIME-Version: 1.0
-References: <20200622120527.690-1-shiju.jose@huawei.com> <20200622120527.690-2-shiju.jose@huawei.com>
- <05c8916f4f85421f871e9cbff112512b@huawei.com>
-In-Reply-To: <05c8916f4f85421f871e9cbff112512b@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 13 Jul 2020 13:17:31 +0200
-Message-ID: <CAJZ5v0gfpsejvNAOso2ODqLdSBCZFe=mV32BtTr6aZ2-C=X-BA@mail.gmail.com>
-Subject: Re: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
- (vendor) CPER records
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        "jroedel@suse.de" <jroedel@suse.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713082747.e3q3ml3wpbszn4j7@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 10:35 AM Shiju Jose <shiju.jose@huawei.com> wrote:
->
-> Hi Rafael, Hi James,
->
-> Can you help to merge this patch because I added and tested all the suggestions from James.
+On Mon, Jul 13, 2020 at 10:27:47AM +0200, Pali Rohár wrote:
+> On Friday 10 July 2020 10:18:00 Lorenzo Pieralisi wrote:
+> > On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
+> > > > I understand that but the bridge bus resource can be trimmed to just
+> > > > contain the root bus because that's the only one where there is a
+> > > > chance you can enumerate a device.
+> > > 
+> > > It is possible to register only root bridge without endpoint?
+> > 
+> > It is possible to register the root bridge with a trimmed IORESOURCE_BUS
+> > so that you don't enumerate anything other than the root port.
+> 
+> Hello Lorenzo! I really do not know how to achieve it. From code it
+> looks like that pci/probe.c scans child buses unconditionally.
+> 
+> pci-aardvark.c calls pci_host_probe() which calls functions
+> pci_scan_root_bus_bridge() which calls pci_scan_child_bus() which calls
+> pci_scan_child_bus_extend() which calls pci_scan_bridge_extend() (bridge
+> needs to be reconfigured) which then try to probe child bus via
+> pci_scan_child_bus_extend() because bridge is not card bus.
+> 
+> In function pci_scan_bridge_extend() I do not see a way how to skip
+> probing for child buses which would avoid enumerating aardvark root
+> bridge when PCIe device is not connected.
+> 
+> dmesg output contains:
+> 
+>   advk-pcie d0070000.pcie: link never came up
+>   advk-pcie d0070000.pcie: PCI host bridge to bus 0000:00
+>   pci_bus 0000:00: root bus resource [bus 00-ff]
 
-I could apply the [1/2] in principle, but I need an ACK for the [2/2]
-from the PCI side.
+This resource can be limited to the root bus number only before calling
+pci_host_probe() (ie see pci_parse_request_of_pci_ranges() and code in
+pci_scan_bridge_extend() that programs primary/secondary/subordinate
+busses) but I think that only papers over the issue, it does not fix it.
 
-That said, it looks like the [1/2] is a James' patch that you are
-sending with some changes made by you.
+I will go over the thread again but I suspect I can merge the patch even
+though I still believe there is work to be done to understand the issue
+we are facing.
 
-In that case the ordering of the S-o-b tags under it should be
-different (the S-o-b from James, the what-you-have-change line and the
-S-o-b from you) and also the From: tag should point to James.
+Lorenzo
 
-Thanks!
+>   pci_bus 0000:00: root bus resource [mem 0xe8000000-0xe8ffffff]
+>   pci_bus 0000:00: root bus resource [io  0x0000-0xffff] (bus address [0xe9000000-0xe900ffff])
+>   pci_bus 0000:00: scanning bus
+>   pci 0000:00:00.0: [1b4b:0100] type 01 class 0x060400
+>   pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x000007ff pref]
+>   pci_bus 0000:00: fixups for bus
+>   pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 0
+>   pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>   pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 1
+>   pci_bus 0000:01: scanning bus
+>   advk-pcie d0070000.pcie: advk_pcie_valid_device
