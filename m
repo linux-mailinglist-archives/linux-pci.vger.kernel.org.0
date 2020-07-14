@@ -2,202 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28CBF21EDBA
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 12:16:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2727E21ED96
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 12:04:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgGNKQL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 06:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42940 "EHLO
+        id S1726761AbgGNKEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 06:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgGNKQK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 06:16:10 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F438C061755
-        for <linux-pci@vger.kernel.org>; Tue, 14 Jul 2020 03:16:10 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f5so21743915ljj.10
-        for <linux-pci@vger.kernel.org>; Tue, 14 Jul 2020 03:16:10 -0700 (PDT)
+        with ESMTP id S1725906AbgGNKEd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 06:04:33 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EBAEC061755;
+        Tue, 14 Jul 2020 03:04:33 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b15so16402548edy.7;
+        Tue, 14 Jul 2020 03:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=FPHneS2Wgi7Yu+9Efua6HrCu2110FaGhfqlfbGbLXBE=;
-        b=UrGcdK3GamcoHcLzv9WMqXxfKBMIvM4kbuDtiqyWKNJgcnfEJWNoB5sftrqkyTaOMC
-         pr9q2AgvFZdnkl6M0H8xdtw8N52MrtX9KoGF1VYg6+VX8n7g+th2MEWwA827O+Z4Xpi5
-         G05CZHfbh11MlPhD5DfTIwgvVKPbJYYe5sf669PJcp5UQdalf+P2HX2oPN5gHAaoxOMM
-         ShOgYpxoEV5HrnIhXJwiZB6HsobnF1ig1d/B0zKyL8+HYulPSR+rG9xhaJqfWU9RTngT
-         3j7XZLKWkiiYUI0UrvdxBVbnhLBC2+RLLPZJLrzPNWKvzGwoLlboDAJG4kSIiYDCJv7F
-         AN+g==
+        h=from:to:cc:subject:date:message-id;
+        bh=Z9A/niHETTJ6sG1YCidrVIts+5Cm3jRqOKxgMwZf804=;
+        b=bJw/CWfEaGdgNEsvB+E0Pil+beiADxQRlYxFucL33vnzGqhY657FC8SLKndNCYmWBW
+         RG5pWkJLTJi7uV42p3TsQHKr/zZfidLqtMJ6mhYMNC7lnI8wL9ob0ZHPC/oUfDh7idx9
+         YzZ5BPoKFaD4VIy/72jiqKG0NxCQQ/8/m0foHD5mlcSJx45cFGCE0ILJ//80+HYv7hgW
+         vQPwbztXczFxvfH8naRy5OzPhS16kn4sp5IQ1SShba7JIk1FYKiSmcPbBnzuxhJPin52
+         zs+2qK4Yl/c3Za2m01tJx2/dAlc7v3zAHdgKWQuYZnn8eWzCtCNQsxS2ZxmznDCviBeh
+         Aeng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=FPHneS2Wgi7Yu+9Efua6HrCu2110FaGhfqlfbGbLXBE=;
-        b=any5MmiBh9SaLWsDVdbRdzXRrSB2yn8fHatHrfdNrj2prlqr9aez3E+Kyh+dKfM+mG
-         e/uqWJodkrYtYXSZQR8DrDXLuqIdLs9oLWW/jUJjha14joic+6bX/3WlNB56CB6SD+hf
-         txxbjgXuejEc0pm2FlUG0vnYCbuVAd2bpCSrUHitlf5Zc1zVaG+wLoH13m3tGKRevX0I
-         XZ972ms7DVRsiTm3lNhDQwdHKwGfH1ImswE7WkiLnG45+KolK11Pu6RsxKJeUMrIyXX2
-         ZYhl2sHm4s8jVwg5Z8K04PAXfjbQlvU+9prcPY+hMIHCQE2xODVrEcxnDKNZRmcmxYQx
-         eOPQ==
-X-Gm-Message-State: AOAM532vFflGgJkaoI8lX3pvuv9kGWtz8iHzdJYf8j29RWb4/ngE3kRo
-        i7poglh2GWvUbbC9RuVh/CW1V8UFr1Q=
-X-Google-Smtp-Source: ABdhPJw6sadvpJDeTuOjLrc2k2/J8BV1a8bY1VEnv+ZS853T2R1sCVCy218AtQ6Po1PHgcP15OWbAg==
-X-Received: by 2002:a2e:571c:: with SMTP id l28mr1897531ljb.432.1594721767911;
-        Tue, 14 Jul 2020 03:16:07 -0700 (PDT)
-Received: from [192.168.0.110] ([178.71.129.223])
-        by smtp.gmail.com with ESMTPSA id r25sm6194105ljg.9.2020.07.14.03.16.06
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 03:16:07 -0700 (PDT)
-To:     linux-pci@vger.kernel.org
-From:   =?UTF-8?B?0KDRg9GB0LvQsNC9INCY0YHQsNC10LI=?= <ubijca16@gmail.com>
-Subject: [PATCH] pci: ibmphp: Remove unused functions get_max_adapter_speed(),
- and get_bus_name() in ibmphp_core.c
-Message-ID: <4b9310fa-f030-b82c-1440-fe2a3a39e21d@gmail.com>
-Date:   Tue, 14 Jul 2020 13:16:04 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Z9A/niHETTJ6sG1YCidrVIts+5Cm3jRqOKxgMwZf804=;
+        b=XuRXw8XqR/Djz3HSx4juHq98axkx/Mwh8ty51ATn0Hx9h0CiYZEEuCBXWRLz8CnIRO
+         gWXw5vBAxy4dQRtIe5ELCc9dThMX8CyRN7PZz10mHi8AeJz6Ux4euMYm/kA3d2uPahXq
+         whcro/SOCP5B0VTVu4nIAEm/ZFOvOX9QDrw65bDj+BXBAB6fLxke/OAe3wJa8EYADMdP
+         47SUbaUOn/34Yyuge6MugsBEa6APZtw2KvNZoxsd+Z+SeyoTbukMntROW44ASow9uE7U
+         ZExIy53JkLZyCjOS/mWWBZ82382TK0xaShgKTnz5BLfUDtNcPTmi0FzctoGaZXPIR5bX
+         BZvQ==
+X-Gm-Message-State: AOAM5333Epmbh62lMNj8C+1zspjPT0EaGyk63vZMZ6DObgjHNjY3+cz7
+        VBQRilY7I3NxL6BU6EYA0Q8=
+X-Google-Smtp-Source: ABdhPJz5BLx6UNGp+PcUoVcl9C9PveBd35/nU0renWNn761chkn0KvLT9qpMImrdubKCO2n43ShSeQ==
+X-Received: by 2002:a05:6402:176e:: with SMTP id da14mr3798086edb.262.1594721071939;
+        Tue, 14 Jul 2020 03:04:31 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id bs18sm14137672edb.38.2020.07.14.03.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 03:04:31 -0700 (PDT)
+From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: [PATCH 0/14 v4] PCI: Remove '*val = 0' from pcie_capability_read_*()
+Date:   Tue, 14 Jul 2020 13:04:42 +0200
+Message-Id: <20200714110445.32605-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-These functions are commented out and because of that, are unused.
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-Signed-off-by: Ruslan Isaev <ubijca16@gmail.com>
----
-  drivers/pci/hotplug/TODO          |  5 ---
-  drivers/pci/hotplug/ibmphp_core.c | 74 -------------------------------
-  2 files changed, 79 deletions(-)
+v4 CHANGES:
+- Remove unnecessary boolean conversion
+- fix bugs introduced by previous version in PATCH 11/14
 
-diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
-index a32070be5adf..856535858ddf 100644
---- a/drivers/pci/hotplug/TODO
-+++ b/drivers/pci/hotplug/TODO
-@@ -30,11 +30,6 @@ ibmphp:
-    or ibmphp should store a pointer to its bus in struct slot. Probably the
-    former.
+v3 CHANGES:
+- Split previous PATCH 6/13 into two : PATCH 6/14 and PATCH 7/14
+- Fix commit message of PATCH 5/14
+- Update Patch numbering and Commit messages
+- Add 'Acked by Greg KH' to PATCH 2/14
+- Add PATCH version
 
--* The functions get_max_adapter_speed() and get_bus_name() are 
-commented out.
--  Can they be deleted?  There are also forward declarations at the top of
--  ibmphp_core.c as well as pointers in ibmphp_hotplug_slot_ops, likewise
--  commented out.
--
-  * ibmphp_init_devno() takes a struct slot **, it could instead take a
-    struct slot *.
+v2 CHANGES:
+- Fix missing comma, causing the email cc error
+- Fix typos and numbering errors in commit messages
+- Add commit message to 13/13
+- Add two more patches: PATCH 3/13 and PATCH 4/13
 
-diff --git a/drivers/pci/hotplug/ibmphp_core.c 
-b/drivers/pci/hotplug/ibmphp_core.c
-index 17124254d897..197997e264a2 100644
---- a/drivers/pci/hotplug/ibmphp_core.c
-+++ b/drivers/pci/hotplug/ibmphp_core.c
-@@ -50,14 +50,6 @@ static int irqs[16];    /* PIC mode IRQs we're using 
-so far (in case MPS
+MERGING:
+Patch 7/14 depends on Patch 6/14. However Patch 6/14 has no dependency.
+Please, merge PATCH 7/14 only after Patch 6/14.
+Patch 14/14 depend on all preceeding patchs. Except for Patch 6/14 and
+Patch 7/14, all other patches are independent of one another. Hence,
+please merge Patch 14/14 only after other patches in this series have
+been merged.
 
-  static int init_flag;
 
--/*
--static int get_max_adapter_speed_1 (struct hotplug_slot *, u8 *, u8);
--
--static inline int get_max_adapter_speed (struct hotplug_slot *hs, u8 
-*value)
--{
--    return get_max_adapter_speed_1 (hs, value, 1);
--}
--*/
-  static inline int get_cur_bus_info(struct slot **sl)
-  {
-      int rc = 1;
-@@ -401,69 +393,6 @@ static int get_max_bus_speed(struct slot *slot)
-      return rc;
-  }
+PATCH 6/14:
+Make the function set status to "Power On" by default and only set to
+Set "Power Off" only if pcie_capability_read_word() is successful and
+(slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF. 
 
--/*
--static int get_max_adapter_speed_1(struct hotplug_slot *hotplug_slot, 
-u8 *value, u8 flag)
--{
--    int rc = -ENODEV;
--    struct slot *pslot;
--    struct slot myslot;
--
--    debug("get_max_adapter_speed_1 - Entry hotplug_slot[%lx] 
-pvalue[%lx]\n",
--                        (ulong)hotplug_slot, (ulong) value);
--
--    if (flag)
--        ibmphp_lock_operations();
--
--    if (hotplug_slot && value) {
--        pslot = hotplug_slot->private;
--        if (pslot) {
--            memcpy(&myslot, pslot, sizeof(struct slot));
--            rc = ibmphp_hpc_readslot(pslot, READ_SLOTSTATUS,
--                        &(myslot.status));
--
--            if (!(SLOT_LATCH (myslot.status)) &&
--                    (SLOT_PRESENT (myslot.status))) {
--                rc = ibmphp_hpc_readslot(pslot,
--                        READ_EXTSLOTSTATUS,
--                        &(myslot.ext_status));
--                if (!rc)
--                    *value = SLOT_SPEED(myslot.ext_status);
--            } else
--                *value = MAX_ADAPTER_NONE;
--        }
--    }
--
--    if (flag)
--        ibmphp_unlock_operations();
--
--    debug("get_max_adapter_speed_1 - Exit rc[%d] value[%x]\n", rc, *value);
--    return rc;
--}
--
--static int get_bus_name(struct hotplug_slot *hotplug_slot, char *value)
--{
--    int rc = -ENODEV;
--    struct slot *pslot = NULL;
--
--    debug("get_bus_name - Entry hotplug_slot[%lx]\n", (ulong)hotplug_slot);
--
--    ibmphp_lock_operations();
--
--    if (hotplug_slot) {
--        pslot = hotplug_slot->private;
--        if (pslot) {
--            rc = 0;
--            snprintf(value, 100, "Bus %x", pslot->bus);
--        }
--    } else
--        rc = -ENODEV;
--
--    ibmphp_unlock_operations();
--    debug("get_bus_name - Exit rc[%d] value[%x]\n", rc, *value);
--    return rc;
--}
--*/
--
-  /****************************************************************************
-   * This routine will initialize the ops data structure used in the 
-validate
-   * function. It will also power off empty slots that are powered on 
-since BIOS
-@@ -1231,9 +1160,6 @@ const struct hotplug_slot_ops 
-ibmphp_hotplug_slot_ops = {
-      .get_attention_status =        get_attention_status,
-      .get_latch_status =        get_latch_status,
-      .get_adapter_status =        get_adapter_present,
--/*    .get_max_adapter_speed =    get_max_adapter_speed,
--    .get_bus_name_status =        get_bus_name,
--*/
-  };
+PATCH 1/14 to 13/14:
+Check the return value of pcie_capability_read_*() to ensure success or
+confirm failure. While maintaining these functions, this ensures that the
+changes in PATCH 14/14 does not introduce any bug. 
 
-  static void ibmphp_unload(void)
+PATCH 14/14:
+There are several reasons why a PCI capability read may fail whether the
+device is present or not. If this happens, pcie_capability_read_*() will
+return -EINVAL/PCIBIOS_BAD_REGISTER_NUMBER or PCIBIOS_DEVICE_NOT_FOUND
+and *val is set to 0.
+
+This behaviour if further ensured by this code inside
+pcie_capability_read_*()
+
+ ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+ /*
+  * Reset *val to 0 if pci_read_config_dword() fails, it may
+  * have been written as 0xFFFFFFFF if hardware error happens
+  * during pci_read_config_dword().
+  */
+ if (ret)
+	 *val = 0;
+ return ret;
+
+a) Since all pci_generic_config_read() does is read a register value,
+it may return success after reading a ~0 which *may* have been fabricated
+by the PCI host bridge due to a read timeout. Hence pci_read_config_*() 
+will return success with a fabricated ~0 in *val, indicating a problem.
+In this case, the assumed behaviour of  pcie_capability_read_*() will be
+wrong. To avoid error slipping through, more checks are necessary.
+
+b) pci_read_config_*() will return PCIBIOS_DEVICE_NOT_FOUND only if 
+dev->error_state = pci_channel_io_perm_failure (i.e. 
+pci_dev_is_disconnected()) or if pci_generic_config_read() can't find the
+device. In both cases *val is initially set to ~0 but as shown in the code
+above pcie_capability_read_*() resets it back to 0. Even with this effort,
+drivers still have to perform validation checks more so if 0 is a valid
+value.
+
+Most drivers only consider the case (b) and in some cases, there is the 
+expectation that on timeout *val has a fabricated value of ~0, which *may*
+not always be true as explained in (a).
+
+In any case, checks need to be done to validate the value read and maybe
+confirm which error has occurred. It is better left to the drivers to do.
+
+Check the return value of pcie_capability_read_dword() to ensure success
+and avoid bug as a result of Patch 14/14.
+Remove the reset of *val to 0 when pci_read_config_*() fails.
+
+
+Bolarinwa Olayemi Saheed (14):
+  IB/hfi1: Check the return value of pcie_capability_read_*()
+  misc: rtsx: Check the return value of pcie_capability_read_*()
+  ath9k: Check the return value of pcie_capability_read_*()
+  iwlegacy: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Make "Power On" the default 
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI/ACPI: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: Check the return value of pcie_capability_read_*()
+  PCI/PM: Check return value of pcie_capability_read_*()
+  PCI/AER: Check the return value of pcie_capability_read_*()
+  PCI/ASPM: Check the return value of pcie_capability_read_*()
+  PCI: Remove '*val = 0' from pcie_capability_read_*()
+
+ drivers/net/wireless/ath/ath9k/pci.c         | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ drivers/infiniband/hw/hfi1/aspm.c | 7 ++++---
+ drivers/misc/cardreader/rts5227.c | 5 +++--
+ drivers/misc/cardreader/rts5249.c | 5 +++--
+ drivers/misc/cardreader/rts5260.c | 5 +++--
+ drivers/misc/cardreader/rts5261.c | 5 +++--
+ drivers/pci/pcie/aer.c  |  5 +++--
+ drivers/pci/pcie/aspm.c | 33 +++++++++++++++++----------------
+ drivers/pci/hotplug/pciehp_hpc.c | 47 ++++++++++++++++----------------
+ drivers/pci/pci-acpi.c           | 10 ++++---
+ drivers/pci/probe.c              | 29 ++++++++++++--------
+ drivers/pci/access.c | 14 --------------
+ 13 files changed, 87 insertions(+), 87 deletions(-)
+
 -- 
-2.27.0.windows.1
-
+2.18.2
 
