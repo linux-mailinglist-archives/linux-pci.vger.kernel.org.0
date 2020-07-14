@@ -2,86 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A3621EF93
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 13:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF2B221EFE5
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 13:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgGNLmj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 07:42:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:43930 "EHLO foss.arm.com"
+        id S1726729AbgGNL7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 07:59:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50290 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgGNLmi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:42:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C87D630E;
-        Tue, 14 Jul 2020 04:42:37 -0700 (PDT)
-Received: from [10.57.32.45] (unknown [10.57.32.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79D163F7BB;
-        Tue, 14 Jul 2020 04:42:36 -0700 (PDT)
-Subject: Re: [PATCH 2/2] iommu/dma: Avoid SAC address trick for PCIe devices
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     hch@lst.de, iommu@lists.linux-foundation.org,
-        jonathan.lemon@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, baolu.lu@linux.intel.com,
-        dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
-References: <e583fc6dd1fb4ffc90310ff4372ee776f9cc7a3c.1594207679.git.robin.murphy@arm.com>
- <d412c292d222eb36469effd338e985f9d9e24cd6.1594207679.git.robin.murphy@arm.com>
- <20200713131426.GQ27672@8bytes.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ad3f66c8-7772-731d-cd0a-c5d6d46297cb@arm.com>
-Date:   Tue, 14 Jul 2020 12:42:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726041AbgGNL7Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:59:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 710A2B013;
+        Tue, 14 Jul 2020 11:59:25 +0000 (UTC)
+Message-ID: <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
+Date:   Tue, 14 Jul 2020 13:59:21 +0200
+In-Reply-To: <20200713182356.GA413630@bogus>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+         <20200612171334.26385-2-nsaenzjulienne@suse.de>
+         <20200713182356.GA413630@bogus>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-cyjjn9iMFbQ+NRASHXx8"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-In-Reply-To: <20200713131426.GQ27672@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-07-13 14:14, Joerg Roedel wrote:
-> On Wed, Jul 08, 2020 at 12:32:42PM +0100, Robin Murphy wrote:
->> As for the intel-iommu implementation, relegate the opportunistic
->> attempt to allocate a SAC address to the domain of conventional PCI
->> devices only, to avoid it increasingly causing far more performance
->> issues than possible benefits on modern PCI Express systems.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   drivers/iommu/dma-iommu.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
->> index 4959f5df21bd..0ff124f16ad4 100644
->> --- a/drivers/iommu/dma-iommu.c
->> +++ b/drivers/iommu/dma-iommu.c
->> @@ -426,7 +426,8 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
->>   		dma_limit = min(dma_limit, (u64)domain->geometry.aperture_end);
->>   
->>   	/* Try to get PCI devices a SAC address */
->> -	if (dma_limit > DMA_BIT_MASK(32) && dev_is_pci(dev))
->> +	if (dma_limit > DMA_BIT_MASK(32) &&
->> +	    dev_is_pci(dev) && !pci_is_pcie(to_pci_dev(dev)))
->>   		iova = alloc_iova_fast(iovad, iova_len,
->>   				       DMA_BIT_MASK(32) >> shift, false);
->>   
-> 
-> Unfortunatly this patch causes XHCI initialization failures on my AMD
-> Ryzen system. I will remove both from the IOMMU tree for now.
-> 
-> I guess the XHCI chip in my system does not support full 64bit dma
-> addresses and needs a quirk or something like that. But until this is
-> resolved its better to not change the IOVA allocation behavior.
 
-Oh bother - yes, this could have been masking all manner of bugs. That 
-system will presumably also break if you managed to exhaust the 32-bit 
-IOVA space such that the allocator moved up to the higher range anyway, 
-or if you passed the XHCI through to a VM with a sufficiently wacky GPA 
-layout, but I guess those are cases that simply nobody's run into yet.
+--=-cyjjn9iMFbQ+NRASHXx8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Does the firmware actually report any upper address constraint such that 
-Sebastian's IVRS aperture patches might help?
+On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
+> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+> > The firmware running on the RPi VideoCore can be used to reset and
+> > initialize HW controlled by the firmware.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> >=20
+> > ---
+> > Changes since v2:
+> >  - Add include file for reset IDs
+> >=20
+> > Changes since v1:
+> >  - Correct cells binding as per Florian's comment
+> >  - Change compatible string to be more generic
+> >=20
+> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+> >  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-rese=
+t.h
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
+835-
+> > firmware.yaml
+> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > index b48ed875eb8e..23a885af3a28 100644
+> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > @@ -39,6 +39,22 @@ properties:
+> >        - compatible
+> >        - "#clock-cells"
+> > =20
+> > +  reset:
+>=20
+> I'm not really thrilled how this is evolving with a node per provider.=
+=20
+> There's no reason you can't just add #clock-cells and #reset-cells to=20
+> the parent firmware node.
 
-Robin.
+What are the downsides? The way I see it there is not much difference. And =
+this
+way of handling things is feels more intuitive and flexible (overlays can
+control what to enable easily, we can take advantage of the platform device
+core).
+
+> I probably should have complained with the clocks node, but that's only=
+=20
+> pending for 5.9.
+
+Note that there are more users for this pattern: "raspberrypi,firmware-ts" =
+and
+"raspberrypi,firmware-gpio". Actually you were the one to originally propos=
+e
+this it[1]. :P
+
+There already is a fair amount of churn in these drivers because of all the=
+ DT
+changes we did in the past, and if we need to change how we integrate these
+again, I'd really like it to be for good.
+
+> The bigger issue is this stuff is just trickling in one bit at a time=20
+> which gives no context for review. What's next? Is it really a mystery=
+=20
+> as to what functions the firmware provides?
+
+We have no control over it, RPi engineers integrate new designs and new
+firmware interfaces show up. This is a good example of it.
+
+I proposed them to use SCMI as it covers most of what they are already
+providing here. But no luck so far.
+
+> You don't have to have a driver in place for every function.
+
+I see your point, it could be more monolithic, that said, having a driver i=
+s
+essential. See the reverts I managed to pull off at the end of the series.
+
+[1] https://patchwork.kernel.org/patch/10166783/#21421571
+
+
+--=-cyjjn9iMFbQ+NRASHXx8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8NnhkACgkQlfZmHno8
+x/7gMAf/WpgWrzZn8OWvm5HWyZhbLlpudApJFqIMveDTldhi/2C/3fqEMLewG6PW
+XjENuKydy6YXzpsn4CMxU8M2ELLf8hBU6rN0om2oW9IcQuxbNCT/DLQjjXxkzLkk
+HBZnE4AomVfl9BgNPVHtwodK1tmCuNLSxLggfnCmkgAB5/6mV3/1VhKUEe4AmTba
+/r7ZMNhJJHDdOc5BqCtPLj2MxwNzaFLhEgxR9TmYQuzX66BFJwggq/If8088Ektx
+pk1jTsE+mkRsOUq2Pdu2kl6WQM0mxOyPefDgJDQwry/YePCuVj1JOVeCnKvKgbF5
+JGPa7jelAE3azkvNQOBKXW1HiBYgsQ==
+=tEOc
+-----END PGP SIGNATURE-----
+
+--=-cyjjn9iMFbQ+NRASHXx8--
+
