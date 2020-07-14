@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D27C221E743
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 07:02:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 001B621E747
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 07:04:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725355AbgGNFCl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 01:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51184 "EHLO
+        id S1726061AbgGNFEH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 01:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgGNFCk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 01:02:40 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8394AC061755;
-        Mon, 13 Jul 2020 22:02:40 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id t15so957585pjq.5;
-        Mon, 13 Jul 2020 22:02:40 -0700 (PDT)
+        with ESMTP id S1725283AbgGNFEE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 01:04:04 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEABEC061755;
+        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id 72so6531341ple.0;
+        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6U5ECdlEMT+3YNu4JM+KLe6agpfn5zwHG7YI4uB3D5g=;
-        b=NUyAggr4fxk4YfmxxiYD/uOodyYddO9YVWg742Ry7xjiRK6UCn7vzoV0g4D56l4Yug
-         Bi+fDaPxNlQufMx6uIKQlXGVRkFJQT45eocNjz1GKM0T5a4BNgEPkFIU0bQfhjF45Stv
-         p7EkfQyfpEjq6QlquX1kIoFwe6xGBXt2BzWPYK36eEC+jQOkvxU2MMTtGICSAOO9KYin
-         krzEC376qMPrSkg9L2GTsn8UVkhf+5hcbc3zIVRjANeUOx/kVI6UATvXse08Qs0ff5QJ
-         zfuxV5YcQbR8vFze06MPx+NOqU81mUhPev8V3lZvJLJ14b6E+zAKnSOeCnuVJa5NUZWp
-         X5Vw==
+        bh=J6fZwVk24XGfgBxPoL5crYI+N5PiWwTfHFA65MPMVZk=;
+        b=oEKPAwx4GyHC6xmDBAEPl6V7mNhsZsNcvI9zHN/ZTgEo/LqxmLpwrn73AKk2A1y76c
+         /dm58xfAMsBh4IBI0KKN0Hsbz3t3etJSzmk2nmG515ZKQmCoc+dUDK9CSooz6oyZzIKx
+         SXzbCSAagmBmPbfsCh1Kb7bMbpZ6/KcFKiupzPkacvdsS5DBMCg+ybo08ZLetp8vFidL
+         h7YBjdths6Os4zgbxQv18jWVNzOnbxr9Dq5QP5jFMS2HOO5DPdn7tu+AVQil6ySZFxHu
+         YoFLxFl2oO8iABtiukBcY8N7l4HKhBB3wILLJ74Si8sARPDPVs/XJuOKgqXzRbvQ4tws
+         Qemg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=6U5ECdlEMT+3YNu4JM+KLe6agpfn5zwHG7YI4uB3D5g=;
-        b=loi7FQ0TbpQ3yz853R7g2HX2NACS9Y6+hXIR9bOWqZ5VXaq11wd4l+mx7IMAJOU0HE
-         6cfYxo+d4WRKY2T0f/EoqNUIPVRXUATCqysPNEWpMKTEfvqQx6xkqyju3yRxyQQOY69k
-         Kilg9x05TR4+iS5ElosC7bE/FIZOKnaPTBTL3r+BPqC8hsWCZP1ozmB1/ZdyZEC04tuu
-         i+RFVvSfFUI7R/iOCaKYGUIb2vtKaREU5s0EUsZGapOvrx+Q6NZ5ZDmoaa964D9s3uoJ
-         kbJX5yGtDehcOU93yF/K2xaBPr53CU2PPxk0roeOIcUeWIBty4GQyyNNeT4GQepRvuxb
-         Mthg==
-X-Gm-Message-State: AOAM531GfNy8EGqlsNTmEj3AOauCz+sHvBq6EqR+4CV581IE+AsBSYls
-        hM7r9jcSg6ijkzswYniCgrpkpbfiP2A=
-X-Google-Smtp-Source: ABdhPJz5Bg08XtxVBzJm11uat1hJW0lI8aX+3h/6q8mbtOuVFNv3ucAOKx/8TvXy3l/IuBJt2bUu8Q==
-X-Received: by 2002:a17:90a:c094:: with SMTP id o20mr2686802pjs.12.1594702959806;
-        Mon, 13 Jul 2020 22:02:39 -0700 (PDT)
+        bh=J6fZwVk24XGfgBxPoL5crYI+N5PiWwTfHFA65MPMVZk=;
+        b=qoDK4XwTQKoQrYYo8Fs9bsmJC5KEfyxsVepvv+hRQ/zrTulB6tm/0k7UksQVYnrXbk
+         iNS/M9vV9wtCW59HIz+Z6WBrjWiYLkJcYKdiQjz1Eu4ZUf2ySqfOK+t5+5PW26Tlkstx
+         koWloNASXaMlSRHao+Vgw7DI7IFdahg2yURaQ8WMRryGsGrWK+soxh1M20iKvRPEC1j2
+         WGiV3j12Afby0FHzuFpop0LwZJyr5OnjgfqyczjXk3upKDKjwxjBJZHlgieCaxLtQ9w+
+         d/4fvmFYgPhcpAgXSk1YrQ7uyRXr6vmm+Mt2EtjAo9dwsQ41x2eK3rXaLuCH8XEXLAeu
+         fbyg==
+X-Gm-Message-State: AOAM532zCGzV7rL3T+tljlxSkPYb3fWhBITbSGHxtqWmbryfrKJRCPN7
+        7/IGnVq9nqzCTMPOSvtuCPvbQl81KEA=
+X-Google-Smtp-Source: ABdhPJzY/MjIIbiXdL5kEjKrtA00P/bfZOiwaxsQkBIHvxJ7WssS5XHHgxxZ9rY5a3OSey7GPywAHw==
+X-Received: by 2002:a17:90a:158f:: with SMTP id m15mr2719045pja.93.1594703044144;
+        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b191sm14709621pga.13.2020.07.13.22.02.38
+        by smtp.gmail.com with ESMTPSA id z11sm4887461pfr.71.2020.07.13.22.04.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 22:02:39 -0700 (PDT)
-Subject: Re: [RFC PATCH 16/35] hwmon: (sis5595) Change PCIBIOS_SUCCESSFUL to 0
+        Mon, 13 Jul 2020 22:04:03 -0700 (PDT)
+Subject: Re: [RFC PATCH 17/35] hwmon: (sis5595) Tidy Success/Failure checks
 To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>
 Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
@@ -57,7 +57,7 @@ Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-17-refactormyself@gmail.com>
+ <20200713122247.10985-18-refactormyself@gmail.com>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -102,12 +102,12 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <cbbdf8c5-347b-0638-bc5f-c6c8469b8aa4@roeck-us.net>
-Date:   Mon, 13 Jul 2020 22:02:38 -0700
+Message-ID: <33cc25df-b34f-6bd1-5fc4-872b42369672@roeck-us.net>
+Date:   Mon, 13 Jul 2020 22:04:01 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200713122247.10985-17-refactormyself@gmail.com>
+In-Reply-To: <20200713122247.10985-18-refactormyself@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -117,32 +117,30 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 7/13/20 5:22 AM, Saheed O. Bolarinwa wrote:
-> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
-> Their scope should be limited within arch/x86.
-> 
-> Change all PCIBIOS_SUCCESSFUL to 0
+> Remove unnecessary check for 0.
 > 
 > Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 > ---
->  drivers/hwmon/sis5595.c | 8 ++++----
->  drivers/hwmon/via686a.c | 8 ++++----
->  drivers/hwmon/vt8231.c  | 8 ++++----
->  3 files changed, 12 insertions(+), 12 deletions(-)
+> This patch depends on PATCH 16/35
+> 
+>  drivers/hwmon/sis5595.c | 13 ++++---------
+>  drivers/hwmon/via686a.c | 13 ++++---------
+>  drivers/hwmon/vt8231.c  | 13 ++++---------
+>  3 files changed, 12 insertions(+), 27 deletions(-)
 > 
 > diff --git a/drivers/hwmon/sis5595.c b/drivers/hwmon/sis5595.c
-> index 0c6741f949f5..0ea174fb3048 100644
+> index 0ea174fb3048..91fdddaa4136 100644
 > --- a/drivers/hwmon/sis5595.c
 > +++ b/drivers/hwmon/sis5595.c
-> @@ -825,7 +825,7 @@ static int sis5595_pci_probe(struct pci_dev *dev,
+> @@ -825,8 +825,7 @@ static int sis5595_pci_probe(struct pci_dev *dev,
 >  		pci_write_config_word(dev, SIS5595_BASE_REG, force_addr);
 >  	}
 >  
-> -	if (PCIBIOS_SUCCESSFUL !=
-> +	if (0 !=
->  	    pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
+> -	if (0 !=
+> -	    pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
+> +	if (pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
 
-Yoda programming already terrible is, but "0 !=" is even worse than that
-(and completely unnecessary). If you want to clean this up, do it right
-and drop those unnecessary comparisons.
+Ah, there is is, and I see that others commented on it.
+Single patch, please.
 
 Guenter
