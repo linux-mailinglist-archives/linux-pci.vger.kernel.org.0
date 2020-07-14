@@ -2,102 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AA6B21EA37
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 09:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9D2221EA3A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 09:38:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725801AbgGNHiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 03:38:11 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:46872 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgGNHiL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:38:11 -0400
-Received: from [10.130.0.75] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxwNbPYA1f8EsEAA--.5225S3;
-        Tue, 14 Jul 2020 15:37:52 +0800 (CST)
-Subject: Re: [PATCH v2] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
- bridge_class_quirk()
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        id S1725906AbgGNHiy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 03:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgGNHix (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:38:53 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06F482084C;
+        Tue, 14 Jul 2020 07:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594712333;
+        bh=D9X12rzUdjdFj13IA0SQy7lT+r0nIG2ebG23ZycYooo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AjbVNXfqwfJCMrv83a4TBW2KQlgSPYZoRCZ2dyPGQ1L0rB7E0Ao5fqRdVamRJCVaQ
+         XW+aGrhAPXs0BGRK58cXBAhBQvMQs8dcotHaCXyDWKOoN7mgnc1S/yVL8puPbnyTe0
+         lg6Q2vZI1zLrG9u+Oyyj9aRQpRso4NfJVV1eFU80=
+Received: by pali.im (Postfix)
+        id 340C8842; Tue, 14 Jul 2020 09:38:50 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 09:38:50 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1591925417-27665-1-git-send-email-yangtiezhu@loongson.cn>
-Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
-Date:   Tue, 14 Jul 2020 15:37:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200714073850.rvuknigpj3jt7kp4@pali>
+References: <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+ <20200709122208.rmfeuu6zgbwh3fr5@pali>
+ <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
+ <20200709150959.wq6zfkcy4m6hvvpl@pali>
+ <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
+ <20200713082747.e3q3ml3wpbszn4j7@pali>
+ <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
+ <20200713145003.foarsdixquicvivy@pali>
+ <20200713164140.GA29307@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1591925417-27665-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9CxwNbPYA1f8EsEAA--.5225S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw13ArW8JFy3trWDAFy7Jrb_yoW8XFWfpr
-        15Aa17KF4FqFs8C3ZrX3yqgasxuF93C34kCFW5u3ZFkasxX3WUWrnFk3ZYvr4UJrWkXay7
-        ZaykC345Aa15ur7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwI
-        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-        6cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-        CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUheOJUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713164140.GA29307@e121166-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06/12/2020 09:30 AM, Tiezhu Yang wrote:
-> Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
-> for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
-> has no effect.
->
-> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->
-> v2:
->    - modify the patch subject used with lower case "loongson"
->
-> This patch is based on mips-next tree.
->
->   drivers/pci/controller/pci-loongson.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 459009c..58b862a 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
->   {
->   	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->   }
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->   			DEV_PCIE_PORT_0, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->   			DEV_PCIE_PORT_1, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->   			DEV_PCIE_PORT_2, bridge_class_quirk);
->   
->   static void system_bus_quirk(struct pci_dev *pdev)
+On Monday 13 July 2020 17:41:40 Lorenzo Pieralisi wrote:
+> On Mon, Jul 13, 2020 at 04:50:03PM +0200, Pali Rohár wrote:
+> > On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
+> > > I will go over the thread again but I suspect I can merge the patch even
+> > > though I still believe there is work to be done to understand the issue
+> > > we are facing.
+> > 
+> > Just to note that pci-mvebu.c also checks if pcie link is up before
+> > trying to access the real PCIe interface registers, similarly as in my
+> > patch.
+> 
+> I understand - that does not change my opinion though, the link check
+> is just a workaround, it'd be best if we pinpoint the real issue which
+> is likely to a HW one.
 
-Hi,
+Lorenzo, if you have an idea how to debug this issue or if you would
+like to see some test results, let me know. I can do some tests, but I
+currently really do not know more then what I wrote in previous emails.
 
-Any comments?
-Could you please apply this patch?
-
-Thanks,
-Tiezhu
-
+In my opinion, problem is in HW which Marvell has not documented nor
+proved that it exists. Other option is that problem is in Compex card
+which can be triggered only by Marvell aardvark HW.
