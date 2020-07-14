@@ -2,98 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B15B21F5D4
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 17:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17AD021F629
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 17:29:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgGNPI1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 11:08:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:38354 "EHLO foss.arm.com"
+        id S1725955AbgGNP2V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 11:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgGNPI0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:08:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFDDC30E;
-        Tue, 14 Jul 2020 08:08:25 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FD5B3F792;
-        Tue, 14 Jul 2020 08:08:24 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 16:08:22 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>, Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v2] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
- bridge_class_quirk()
-Message-ID: <20200714150822.GB14416@e121166-lin.cambridge.arm.com>
-References: <1591925417-27665-1-git-send-email-yangtiezhu@loongson.cn>
- <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
+        id S1725280AbgGNP2V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:28:21 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C4F221EF;
+        Tue, 14 Jul 2020 15:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594740500;
+        bh=0qquT16fbcjpcUrLJKMrlKrFGQbbIFMbuB4UG5jOkoQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=s1oowI9A4zRjsuRhByPYU2IrrGnkDzB0e+M9tL3W4uY4Rz+xdKSfXXT4Ue6GjN2qv
+         k3EdVfrMqa/6dnaH9VVyFBbnQlhp00QqYfN6yPhYsbyjQnA/oiP9zs3o9bygbRQqsm
+         +6CcnZaGf485FQr8AgvdkPuTOpEYayWlrnj6c85k=
+Date:   Tue, 14 Jul 2020 10:28:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] PCI: Add Intel QuickAssist device IDs
+Message-ID: <20200714152818.GA395763@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200714063610.849858-2-giovanni.cabiddu@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 03:37:51PM +0800, Tiezhu Yang wrote:
-> On 06/12/2020 09:30 AM, Tiezhu Yang wrote:
-> > Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
-> > for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
-> > has no effect.
-> > 
-> > Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> > 
-> > v2:
-> >    - modify the patch subject used with lower case "loongson"
-> > 
-> > This patch is based on mips-next tree.
-> > 
-> >   drivers/pci/controller/pci-loongson.c | 6 +++---
-> >   1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> > index 459009c..58b862a 100644
-> > --- a/drivers/pci/controller/pci-loongson.c
-> > +++ b/drivers/pci/controller/pci-loongson.c
-> > @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
-> >   {
-> >   	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> >   }
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >   			DEV_PCIE_PORT_0, bridge_class_quirk);
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >   			DEV_PCIE_PORT_1, bridge_class_quirk);
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >   			DEV_PCIE_PORT_2, bridge_class_quirk);
-> >   static void system_bus_quirk(struct pci_dev *pdev)
+On Tue, Jul 14, 2020 at 07:36:06AM +0100, Giovanni Cabiddu wrote:
+> Add device IDs for the following Intel QuickAssist devices: DH895XCC,
+> C3XXX and C62X.
 > 
-> Hi,
+> The defines in this patch are going to be referenced in two independent
+> drivers, qat and vfio-pci.
 > 
-> Any comments?
+> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 
-(1) how was this driver tested if this patch is required ? Is it because
-    you are testing on a different platform ?
-(2) Please explain why it is needed (I mean describe what happens
-    in current code and how this fixes it) in the commit log, it is
-    useful for people who may need to tweak this code further
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-I will apply it then, thanks.
-
-Lorenzo
-
-> Could you please apply this patch?
+> ---
+>  include/linux/pci_ids.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> Thanks,
-> Tiezhu
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0ad57693f392..f3166b1425ca 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2659,6 +2659,8 @@
+>  #define PCI_DEVICE_ID_INTEL_80332_1	0x0332
+>  #define PCI_DEVICE_ID_INTEL_80333_0	0x0370
+>  #define PCI_DEVICE_ID_INTEL_80333_1	0x0372
+> +#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC	0x0435
+> +#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF	0x0443
+>  #define PCI_DEVICE_ID_INTEL_82375	0x0482
+>  #define PCI_DEVICE_ID_INTEL_82424	0x0483
+>  #define PCI_DEVICE_ID_INTEL_82378	0x0484
+> @@ -2708,6 +2710,8 @@
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI     0x1577
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE  0x1578
+>  #define PCI_DEVICE_ID_INTEL_80960_RP	0x1960
+> +#define PCI_DEVICE_ID_INTEL_QAT_C3XXX	0x19e2
+> +#define PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF	0x19e3
+>  #define PCI_DEVICE_ID_INTEL_82840_HB	0x1a21
+>  #define PCI_DEVICE_ID_INTEL_82845_HB	0x1a30
+>  #define PCI_DEVICE_ID_INTEL_IOAT	0x1a38
+> @@ -2924,6 +2928,8 @@
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF7	0x3717
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF8	0x3718
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF9	0x3719
+> +#define PCI_DEVICE_ID_INTEL_QAT_C62X	0x37c8
+> +#define PCI_DEVICE_ID_INTEL_QAT_C62X_VF	0x37c9
+>  #define PCI_DEVICE_ID_INTEL_ICH10_0	0x3a14
+>  #define PCI_DEVICE_ID_INTEL_ICH10_1	0x3a16
+>  #define PCI_DEVICE_ID_INTEL_ICH10_2	0x3a18
+> -- 
+> 2.26.2
 > 
