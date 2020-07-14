@@ -2,112 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C58D21F27B
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 15:29:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8798C21F3B9
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 16:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgGNN1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 09:27:52 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42115 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgGNN1v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 09:27:51 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t4so13892886oij.9;
-        Tue, 14 Jul 2020 06:27:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Co+8zho8E5dTiD8cmg9/ZPavIQVoRg7kJl84C1fgX4o=;
-        b=Ak9rNiX58SVp3TwDXHkgLVMlvgVRokwbqMW6fzzw5RNsaFtIHKYJCHapp+PhKvXx5q
-         c+tyQf6H3zW3IU7YIGzxoSspg1ZMNrvhPr8VvlcJrmPyfV/w3w1KXHD9ebDk/sTIij/X
-         /foWTxlOrHmpPODKPrjxMTzRsXYttF2kvT80OV4cyjzyn2H9a/OHC6bKrmyjffJ8bXRU
-         XMBYJpa1FubjV3wB5RsI2MRHh15bpznOoeLuPB5BwrNXHYnRkBMjx6ZiRuKGawmANhiQ
-         oXYGnGr72PODH5NtfHBVvy7xExgD1+Q8e3CVWkJOIq1JK36G6X2GfxT1KRJFeutH8Zw4
-         J5pg==
-X-Gm-Message-State: AOAM533sZufFYQ/PG1NgUlIttecXG7r6ttGXBXgWEsA4WC2G/XzxBjeM
-        7qXENwWJSmZJCvlgDAQk3e6z2ZKMulTqvubMOa0=
-X-Google-Smtp-Source: ABdhPJzZCW5CAcdX22oZWNLapJZK91sy3IBs2TtUsKH0mXhc58jY+otLhQKYqyJqpqYGmfziPk7jXv4Of2khk72Y9k0=
-X-Received: by 2002:aca:4a89:: with SMTP id x131mr3775944oia.103.1594733270598;
- Tue, 14 Jul 2020 06:27:50 -0700 (PDT)
+        id S1725890AbgGNORg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 10:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNORg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:17:36 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CC9F2250F;
+        Tue, 14 Jul 2020 14:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594736255;
+        bh=I3SPnbWvrlqPWcUw8Ly0jOC7pjCtY/t7mW2VHJnhfYs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tEXKXZHYMSeUr2w1D0flXG1iPI7kKgnsLloe6dJl3ETNeb8ac8ovqDagLCMUZwgda
+         GI1HZ8mR0RevDrYoveCU6YF31GxJAllUFFOMpqAFztvrHG3ZWhqBw+DqBo+g0qy97l
+         gG2919JA2DgwTnrxd45dLaORxGEcOGz2OttVGa8k=
+Received: by mail-ot1-f45.google.com with SMTP id 72so13142479otc.3;
+        Tue, 14 Jul 2020 07:17:35 -0700 (PDT)
+X-Gm-Message-State: AOAM531DHlZSZRw/1P9vovI/hit/afpa0KSDX4OvXlIDiFI96Va2LYlX
+        8B4uD6xFzPHChE3P24p2DzprC8BAgizK0z6g7g==
+X-Google-Smtp-Source: ABdhPJzBKeOhicp1T+MBRIS83XFs/aDGNXS9WOX4DHUx73RyY29KXAjt0Io1QW7gAa9o0+GCeSAanUnQHyEdkpT4Kns=
+X-Received: by 2002:a9d:4002:: with SMTP id m2mr4313931ote.129.1594736254805;
+ Tue, 14 Jul 2020 07:17:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200713175529.29715-1-refactormyself@gmail.com> <20200713175529.29715-4-refactormyself@gmail.com>
-In-Reply-To: <20200713175529.29715-4-refactormyself@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 Jul 2020 15:27:38 +0200
-Message-ID: <CAJZ5v0gDwtZ+oYSrj_Ta56QPSeW3OSq4XHkiubOHr4xki7muPw@mail.gmail.com>
-Subject: Re: [PATCH 8/14 v3] PCI/ACPI: Check the return value of pcie_capability_read_*()
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
+ <20200713112613.GB25865@e121166-lin.cambridge.arm.com> <BYAPR02MB5559FBB8597F3B0CD5EF0F22A5600@BYAPR02MB5559.namprd02.prod.outlook.com>
+In-Reply-To: <BYAPR02MB5559FBB8597F3B0CD5EF0F22A5600@BYAPR02MB5559.namprd02.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jul 2020 08:17:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLqJXPi-V37QgOVBCHkBZoHFfc5U+9C1kbgyN2oG03hMA@mail.gmail.com>
+Message-ID: <CAL_JsqLqJXPi-V37QgOVBCHkBZoHFfc5U+9C1kbgyN2oG03hMA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+To:     Bharat Kumar Gogada <bharatku@xilinx.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 6:55 PM Saheed O. Bolarinwa
-<refactormyself@gmail.com> wrote:
+On Mon, Jul 13, 2020 at 6:24 AM Bharat Kumar Gogada <bharatku@xilinx.com> wrote:
 >
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
->
-> On failure pcie_capability_read_dword() sets it's last parameter,
-> val to 0.
-> However, with Patch 14/14, it is possible that val is set to ~0 on
-> failure. This would introduce a bug because (x & x) == (~0 & x).
->
-> This bug can be avoided if the return value of pcie_capability_read_word
-> is checked to confirm success.
->
-> Check the return value of pcie_capability_read_word() to ensure success.
->
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> > Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+> >
+> > On Fri, Jul 10, 2020 at 09:16:57AM -0600, Rob Herring wrote:
+> > > On Tue, Jun 16, 2020 at 6:57 AM Bharat Kumar Gogada
+> > > <bharat.kumar.gogada@xilinx.com> wrote:
+> > > >
+> > > > - Add support for Versal CPM as Root Port.
+> > > > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The
+> > integrated
+> > > >   block for CPM along with the integrated bridge can function
+> > > >   as PCIe Root Port.
+> > > > - Bridge error and legacy interrupts in Versal CPM are handled using
+> > > >   Versal CPM specific interrupt line.
+> > > >
+> > > > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > > > ---
+> > > >  drivers/pci/controller/Kconfig           |   8 +
+> > > >  drivers/pci/controller/Makefile          |   1 +
+> > > >  drivers/pci/controller/pcie-xilinx-cpm.c | 617
+> > > > +++++++++++++++++++++++++++++++
+> > > >  3 files changed, 626 insertions(+)
+> > > >  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+> > >
+> > > [...]
+> > >
+> > > > +static int xilinx_cpm_pcie_probe(struct platform_device *pdev) {
+> > > > +       struct xilinx_cpm_pcie_port *port;
+> > > > +       struct device *dev = &pdev->dev;
+> > > > +       struct pci_host_bridge *bridge;
+> > > > +       struct resource *bus_range;
+> > > > +       int err;
+> > > > +
+> > > > +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+> > > > +       if (!bridge)
+> > > > +               return -ENODEV;
+> > > > +
+> > > > +       port = pci_host_bridge_priv(bridge);
+> > > > +
+> > > > +       port->dev = dev;
+> > > > +
+> > > > +       err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
+> > > > +                                             &bridge->dma_ranges, &bus_range);
+> > > > +       if (err) {
+> > > > +               dev_err(dev, "Getting bridge resources failed\n");
+> > > > +               return err;
+> > > > +       }
+> > > > +
+> > > > +       err = xilinx_cpm_pcie_init_irq_domain(port);
+> > > > +       if (err)
+> > > > +               return err;
+> > > > +
+> > > > +       err = xilinx_cpm_pcie_parse_dt(port, bus_range);
+> > > > +       if (err) {
+> > > > +               dev_err(dev, "Parsing DT failed\n");
+> > > > +               goto err_parse_dt;
+> > > > +       }
+> > > > +
+> > > > +       xilinx_cpm_pcie_init_port(port);
+> > > > +
+> > > > +       err = xilinx_cpm_setup_irq(port);
+> > > > +       if (err) {
+> > > > +               dev_err(dev, "Failed to set up interrupts\n");
+> > > > +               goto err_setup_irq;
+> > > > +       }
+> > >
+> > > All the h/w init here can be moved to an .init() function in ecam ops
+> > > and then use pci_host_common_probe. Given this is v9, that can be a
+> > > follow-up I guess.
+> >
+> > I think there is time to get it done, Bharat please let me know if you can
+> > repost it shortly with Rob's requested change implemented.
+> >
+> Thanks Rob for your time.
+> Thanks Lorenzo, the reason I cannot use pci_host_common_probe is,
+> I need pci_config_window locally as the we use same ecam space for local bridge register access.
+> In xilinx_cpm_pcie_parse_dt funciton
+> port->reg_base = port->cfg->win;
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The .init() function is passed cfg, so what's the issue? You'll need
+to alloc struct xilinx_cpm_pcie_port and then set it to cfg->priv. I'd
+expect some fields to also be removed as there's no reason to store
+things twice.
 
-> ---
->  drivers/pci/pci-acpi.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 7224b1e5f2a8..39eb816bc3b8 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -248,12 +248,13 @@ static bool pcie_root_rcb_set(struct pci_dev *dev)
->  {
->         struct pci_dev *rp = pcie_find_root_port(dev);
->         u16 lnkctl;
-> +       int ret;
->
->         if (!rp)
->                 return false;
->
-> -       pcie_capability_read_word(rp, PCI_EXP_LNKCTL, &lnkctl);
-> -       if (lnkctl & PCI_EXP_LNKCTL_RCB)
-> +       ret = pcie_capability_read_word(rp, PCI_EXP_LNKCTL, &lnkctl);
-> +       if (!ret && (lnkctl & PCI_EXP_LNKCTL_RCB))
->                 return true;
->
->         return false;
-> @@ -792,12 +793,13 @@ bool pciehp_is_native(struct pci_dev *bridge)
->  {
->         const struct pci_host_bridge *host;
->         u32 slot_cap;
-> +       int ret;
->
->         if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
->                 return false;
->
-> -       pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
-> -       if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
-> +       ret = pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
-> +       if (ret || !(slot_cap & PCI_EXP_SLTCAP_HPC))
->                 return false;
->
->         if (pcie_ports_native)
-> --
-> 2.18.2
->
+Rob
