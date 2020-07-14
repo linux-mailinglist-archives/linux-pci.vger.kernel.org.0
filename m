@@ -2,142 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4936221FB95
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 21:03:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AC2F21FD15
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 21:17:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbgGNTCp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 15:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
+        id S1729255AbgGNTRW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 15:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbgGNTCo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:02:44 -0400
+        id S1728370AbgGNTRW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:17:22 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB6A207F5;
-        Tue, 14 Jul 2020 19:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2B72242C;
+        Tue, 14 Jul 2020 19:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753363;
-        bh=1zE7IbOBwcqh4svaHsYnN4HZmHGYulpj9QshjtrfmTM=;
+        s=default; t=1594754241;
+        bh=E0hKewDf88ReD7MuKJ71LDnFAb0M+7fkM+P2qpud1Pw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=h/W7FnQ25ep6sZ4rfaO391pDHfGcJKZe1XsaVkAnl0427u5RN5lGaekPdMgWyA2+4
-         08Due3hFQMLV2EjcxvUmHpF1SLWTBCkWMxwkQvlD2xa8MtybWF1rzN0WsEOCwZUHGs
-         HeRhRinKrgPI7elL/oBgkBYwR2BZZNx//upHKip0=
-Date:   Tue, 14 Jul 2020 14:02:41 -0500
+        b=JAXrGtakLz8B0J+mxhFRzEsLpmQBrm6CJkeqeifD3TZHm4gOstQ10WWdvhEdNyvzJ
+         6JZfCVQ+lP3FwW2aFYTV04gdNH76gPSu9JtqSvOP7lk+nFx+SOQl3AyGWbrJD1hx/S
+         4I0cQ/WEs3gu+W0yVm5rVaAltoQEN5i1VNG7oRx4=
+Date:   Tue, 14 Jul 2020 14:17:20 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] x86/PCI: Get rid of custom x86 model comparison
-Message-ID: <20200714190241.GA409572@bjorn-Precision-5520>
+To:     =?utf-8?B?0KDRg9GB0LvQsNC9INCY0YHQsNC10LI=?= <ubijca16@gmail.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: [PATCH] pci: ibmphp: Remove unused functions
+ get_max_adapter_speed(), and get_bus_name() in ibmphp_core.c
+Message-ID: <20200714191720.GA410320@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200714093801.GI3703480@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4b9310fa-f030-b82c-1440-fe2a3a39e21d@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:38:01PM +0300, Andy Shevchenko wrote:
-> On Mon, Jul 13, 2020 at 04:02:01PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jul 13, 2020 at 10:44:36PM +0300, Andy Shevchenko wrote:
-> > > Switch the platform code to use x86_id_table and accompanying API
-> > > instead of custom comparison against x86 CPU model.
-> > > 
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > ---
-> > >  arch/x86/pci/intel_mid_pci.c | 17 +++++++++++++++--
-> > >  1 file changed, 15 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-> > > index 00c62115f39c..d8af4787e616 100644
-> > > --- a/arch/x86/pci/intel_mid_pci.c
-> > > +++ b/arch/x86/pci/intel_mid_pci.c
-> > > @@ -28,10 +28,12 @@
-> > >  #include <linux/io.h>
-> > >  #include <linux/smp.h>
-> > >  
-> > > +#include <asm/cpu_device_id.h>
-> > >  #include <asm/segment.h>
-> > >  #include <asm/pci_x86.h>
-> > >  #include <asm/hw_irq.h>
-> > >  #include <asm/io_apic.h>
-> > > +#include <asm/intel-family.h>
-> > >  #include <asm/intel-mid.h>
-> > >  
-> > >  #define PCIE_CAP_OFFSET	0x100
-> > > @@ -211,9 +213,16 @@ static int pci_write(struct pci_bus *bus, unsigned int devfn, int where,
-> > >  			       where, size, value);
-> > >  }
-> > >  
-> > > +static const struct x86_cpu_id intel_mid_cpu_ids[] = {
-> > > +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID, NULL),
-> > > +	{}
-> > > +};
-> > > +
-> > >  static int intel_mid_pci_irq_enable(struct pci_dev *dev)
-> > >  {
-> > > +	const struct x86_cpu_id *id;
-> > >  	struct irq_alloc_info info;
-> > > +	u16 model = 0;
-> > >  	int polarity;
-> > >  	int ret;
-> > >  	u8 gsi;
-> > > @@ -227,8 +236,12 @@ static int intel_mid_pci_irq_enable(struct pci_dev *dev)
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > -	switch (intel_mid_identify_cpu()) {
-> > > -	case INTEL_MID_CPU_CHIP_TANGIER:
-> > > +	id = x86_match_cpu(intel_mid_cpu_ids);
-> > > +	if (id)
-> > > +		model = id->model;
-> > > +
-> > > +	switch (model) {
-> > > +	case INTEL_FAM6_ATOM_SILVERMONT_MID:
-> > 
-> > Is there a magic decoder ring somewhere that connects
-> > INTEL_MID_CPU_CHIP_TANGIER and INTEL_FAM6_ATOM_SILVERMONT_MID?
-> 
-> Yes. And the idea is to get rid of it.
+On Tue, Jul 14, 2020 at 01:16:04PM +0300, Руслан Исаев wrote:
+> These functions are commented out and because of that, are unused.
 
-OK.  You don't want to even include a mention of it in the commit log
-to help people connect the dots and verify that this change is
-correct?
+Thanks for the patch.  That driver is pretty much dead, but I'll
+certainly take patches that remove dead code.  But it has a few
+problems to fix first.
 
-> > I don't know how to verify that the new code is equivalent to the old.
-> > 
-> > Or maybe the new code is *better* than the old, in which case the
-> > subject/commit log should mention that it's fixing or improving
-> > something.
-> > 
-> > Also, there are a number of other places that check for
-> > "intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_TANGIER":
-> > 
-> >   mrfld_pinctrl_init
-> >   register_mrfld_power_btn
-> >   mrfld_legacy_rtc_init
-> >   mrfld_sd_init
-> >   spidev_platform_data
-> >   register_mid_wdt
-> >   sfi_parse_devs
-> 
-> >   atomisp_css_input_set_mode
-> 
-> This has been pending in Mauro's tree.
-> 
-> > Maybe they should all be changed together?  Or maybe this needs an
-> > explanation about why some places need intel_mid_identify_cpu() and
-> > others need x86_match_cpu()?
-> 
-> No. The rest is subject to huge clean up (complete removal) in the future.
-> I don't want to waste time on something which I will remove for sure.
+Run "git log --oneline drivers/pci/hotplug/ibmphp_core.c" and make
+your subject line match.
 
-OK, I'll leave this to the x86 guys.  If I were merging it I would
-want a little more explanation, but this isn't PCI-related at all and
-I'm sure they understand this better than I do.
+See other patch hints here: https://lore.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com
 
-Bjorn
+Doesn't apply cleanly, looks like it's whitespace-damaged.  Send the
+patch to yourself and make sure it applies cleanly.  Here's what
+happened when I tried:
+
+  02:05:27 ~/linux (pci/hotplug)$ b4 am -om/ https://lore.kernel.org/r/4b9310fa-f030-b82c-1440-fe2a3a39e21d@gmail.com
+  Looking up https://lore.kernel.org/r/4b9310fa-f030-b82c-1440-fe2a3a39e21d%40gmail.com
+  Grabbing thread from lore.kernel.org/linux-pci
+  Analyzing 1 messages in the thread
+  ---
+  Writing m/20200714_ubijca16_pci_ibmphp_remove_unused_functions_get_max_adapter_speed_and_get_bus_name_in_ibmphp_core_c.mbx
+    [PATCH] pci: ibmphp: Remove unused functions get_max_adapter_speed(), and get_bus_name() in ibmphp_core.c
+  ---
+  Total patches: 1
+  ---
+   Link: https://lore.kernel.org/r/4b9310fa-f030-b82c-1440-fe2a3a39e21d@gmail.com
+   Base: not found (applies clean to current tree)
+	 git am m/20200714_ubijca16_pci_ibmphp_remove_unused_functions_get_max_adapter_speed_and_get_bus_name_in_ibmphp_core_c.mbx
+  02:05:50 ~/linux (pci/hotplug)$ git am m/20200714_ubijca16_pci_ibmphp_remove_unused_functions_get_max_adapter_speed_and_get_bus_name_in_ibmphp_core_c.mbx
+  Applying: pci: ibmphp: Remove unused functions get_max_adapter_speed(), and get_bus_name() in ibmphp_core.c
+  error: corrupt patch at line 15
+  Patch failed at 0001 pci: ibmphp: Remove unused functions get_max_adapter_speed(), and get_bus_name() in ibmphp_core.c
+  hint: Use 'git am --show-current-patch' to see the failed patch
+  When you have resolved this problem, run "git am --continue".
+  If you prefer to skip this patch, run "git am --skip" instead.
+  To restore the original branch and stop patching, run "git am --abort".
+
+> Signed-off-by: Ruslan Isaev <ubijca16@gmail.com>
+> ---
+>  drivers/pci/hotplug/TODO          |  5 ---
+>  drivers/pci/hotplug/ibmphp_core.c | 74 -------------------------------
+>  2 files changed, 79 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
+> index a32070be5adf..856535858ddf 100644
+> --- a/drivers/pci/hotplug/TODO
+> +++ b/drivers/pci/hotplug/TODO
+> @@ -30,11 +30,6 @@ ibmphp:
+>    or ibmphp should store a pointer to its bus in struct slot. Probably the
+>    former.
+> 
+> -* The functions get_max_adapter_speed() and get_bus_name() are commented
+> out.
+> -  Can they be deleted?  There are also forward declarations at the top of
+> -  ibmphp_core.c as well as pointers in ibmphp_hotplug_slot_ops, likewise
+> -  commented out.
+> -
+>  * ibmphp_init_devno() takes a struct slot **, it could instead take a
+>    struct slot *.
+> 
+> diff --git a/drivers/pci/hotplug/ibmphp_core.c
+> b/drivers/pci/hotplug/ibmphp_core.c
+> index 17124254d897..197997e264a2 100644
+> --- a/drivers/pci/hotplug/ibmphp_core.c
+> +++ b/drivers/pci/hotplug/ibmphp_core.c
+> @@ -50,14 +50,6 @@ static int irqs[16];    /* PIC mode IRQs we're using so
+> far (in case MPS
+> 
+>  static int init_flag;
+> 
+> -/*
+> -static int get_max_adapter_speed_1 (struct hotplug_slot *, u8 *, u8);
+> -
+> -static inline int get_max_adapter_speed (struct hotplug_slot *hs, u8
+> *value)
+> -{
+> -    return get_max_adapter_speed_1 (hs, value, 1);
+> -}
+> -*/
+>  static inline int get_cur_bus_info(struct slot **sl)
+>  {
+>      int rc = 1;
+> @@ -401,69 +393,6 @@ static int get_max_bus_speed(struct slot *slot)
+>      return rc;
+>  }
+> 
+> -/*
+> -static int get_max_adapter_speed_1(struct hotplug_slot *hotplug_slot, u8
+> *value, u8 flag)
+> -{
+> -    int rc = -ENODEV;
+> -    struct slot *pslot;
+> -    struct slot myslot;
+> -
+> -    debug("get_max_adapter_speed_1 - Entry hotplug_slot[%lx]
+> pvalue[%lx]\n",
+> -                        (ulong)hotplug_slot, (ulong) value);
+> -
+> -    if (flag)
+> -        ibmphp_lock_operations();
+> -
+> -    if (hotplug_slot && value) {
+> -        pslot = hotplug_slot->private;
+> -        if (pslot) {
+> -            memcpy(&myslot, pslot, sizeof(struct slot));
+> -            rc = ibmphp_hpc_readslot(pslot, READ_SLOTSTATUS,
+> -                        &(myslot.status));
+> -
+> -            if (!(SLOT_LATCH (myslot.status)) &&
+> -                    (SLOT_PRESENT (myslot.status))) {
+> -                rc = ibmphp_hpc_readslot(pslot,
+> -                        READ_EXTSLOTSTATUS,
+> -                        &(myslot.ext_status));
+> -                if (!rc)
+> -                    *value = SLOT_SPEED(myslot.ext_status);
+> -            } else
+> -                *value = MAX_ADAPTER_NONE;
+> -        }
+> -    }
+> -
+> -    if (flag)
+> -        ibmphp_unlock_operations();
+> -
+> -    debug("get_max_adapter_speed_1 - Exit rc[%d] value[%x]\n", rc, *value);
+> -    return rc;
+> -}
+> -
+> -static int get_bus_name(struct hotplug_slot *hotplug_slot, char *value)
+> -{
+> -    int rc = -ENODEV;
+> -    struct slot *pslot = NULL;
+> -
+> -    debug("get_bus_name - Entry hotplug_slot[%lx]\n", (ulong)hotplug_slot);
+> -
+> -    ibmphp_lock_operations();
+> -
+> -    if (hotplug_slot) {
+> -        pslot = hotplug_slot->private;
+> -        if (pslot) {
+> -            rc = 0;
+> -            snprintf(value, 100, "Bus %x", pslot->bus);
+> -        }
+> -    } else
+> -        rc = -ENODEV;
+> -
+> -    ibmphp_unlock_operations();
+> -    debug("get_bus_name - Exit rc[%d] value[%x]\n", rc, *value);
+> -    return rc;
+> -}
+> -*/
+> -
+>  /****************************************************************************
+>   * This routine will initialize the ops data structure used in the validate
+>   * function. It will also power off empty slots that are powered on since
+> BIOS
+> @@ -1231,9 +1160,6 @@ const struct hotplug_slot_ops ibmphp_hotplug_slot_ops
+> = {
+>      .get_attention_status =        get_attention_status,
+>      .get_latch_status =        get_latch_status,
+>      .get_adapter_status =        get_adapter_present,
+> -/*    .get_max_adapter_speed =    get_max_adapter_speed,
+> -    .get_bus_name_status =        get_bus_name,
+> -*/
+>  };
+> 
+>  static void ibmphp_unload(void)
+> -- 
+> 2.27.0.windows.1
+> 
+> 
