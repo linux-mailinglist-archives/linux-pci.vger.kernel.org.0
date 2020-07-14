@@ -2,180 +2,245 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E655E21FFDC
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 23:18:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA3E622005E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 00:02:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgGNVSI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 17:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGNVSH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 17:18:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DC6C061755;
-        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o11so200870wrv.9;
-        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
-        b=F3NZpnIvV6tqV2q8ALdGW4uRyADrH4iYT2AdqPJNK9HsU8K0tyI4WQv1+Uig6/NNmk
-         qKScQHCi/YEBEAb/zqm1Lu7ne97Bgc9rhgPgJUmbijzfEv888yDzLkyDzccIHEO8KbGR
-         qxFzYZ8t7qwkeZu4D2e4oLdrfdSIZl6H8V74LCrBSVqIQdydQYRdR9gRZ9jRjiwKZRBq
-         ArvQ633flh6Kur0V6qlhpeIbnSw/tHpSwuybMcWheu5IJTq39FxowWwCkF6Oh9Iclg/h
-         NrUdkvAukBfkC1z1NkI6kmqWQ06qAOW1Q6yYiWlTvrUXwlz9h6KBhjnCQlFXJyfuFlLl
-         Hz7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
-        b=QMldNHnDkztlAySfHygh4xhX1mQWZ2EpJVXtf3V4jrpjBa4XJAYVIwnvEvyqXBoaXl
-         DoTZZ9JVS+9/RfGK0ncZn/y9iVdrseWVd90e6Bt0V4w/WYgu9fKjDmJ16FUBENumc/v0
-         Z0xrFFiwCZ/p4+jmo95tZRCJmFwGhBLFWIBqN9WJXlyOcZNdn4lSBU3t0aZ3UxtlFGuY
-         y1FBQnr61aPwgp7rRh0oKyU3nbXcHQd7SuVteW7mGahU161Ww8tEuyU8t9N+/awgyJIl
-         5rLTLeVeEhkIiuoPrsL2Qu5zdIB3xAMcjxnuuotw4db/WfGEksEwkDhj4a8vOxXg8R9d
-         na9A==
-X-Gm-Message-State: AOAM531Q67fqjbOpHozuDoCjuCreJ3FIqnnq3sdjtL8YzArt0sylUtGT
-        +lPIb17dmH9fEYJdDFpS1ETw87BN
-X-Google-Smtp-Source: ABdhPJzDcFTmUmW90ndfjqy6LWZjEbFnjFisW6pTMPwBDeX+av28s7sc1wH8uk2lKXjz1BYHgeNsEw==
-X-Received: by 2002:adf:e908:: with SMTP id f8mr7787367wrm.3.1594761485670;
-        Tue, 14 Jul 2020 14:18:05 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id f14sm34071251wro.90.2020.07.14.14.18.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 14:18:04 -0700 (PDT)
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-To:     Rob Herring <robh@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        id S1726759AbgGNWCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 18:02:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:36431 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726361AbgGNWCR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 18:02:17 -0400
+Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MkYkI-1kZiA41Kl4-00m0VJ; Wed, 15 Jul 2020 00:02:14 +0200
+Received: by mail-qv1-f50.google.com with SMTP id h18so23076qvl.3;
+        Tue, 14 Jul 2020 15:02:13 -0700 (PDT)
+X-Gm-Message-State: AOAM531ILk7S+60OO27o1mOL4kMgX72CRnxAc3k0w3hSiCJvbA2N0Bni
+        wu5G60RbnBrHP2QKq0vBsBZfyucnJ4BdR2theDw=
+X-Google-Smtp-Source: ABdhPJznSzLhDwcnDZmpeVRogK9o+2OI/Kw97MVSd98PzQaS/otI9FtvjiXpPZMRdXNdxDurpAOdHjSmk9v+bKI3/P4=
+X-Received: by 2002:a0c:f802:: with SMTP id r2mr6638892qvn.197.1594764132842;
+ Tue, 14 Jul 2020 15:02:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
+ <20200714184550.GA397277@bjorn-Precision-5520>
+In-Reply-To: <20200714184550.GA397277@bjorn-Precision-5520>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Jul 2020 00:01:56 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
+Message-ID: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
         Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
- <20200612171334.26385-2-nsaenzjulienne@suse.de>
- <20200713182356.GA413630@bogus>
- <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
- <20200714210708.GA2897216@bogus>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
-Date:   Tue, 14 Jul 2020 14:17:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200714210708.GA2897216@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:htIIEHJ+2VRo89KGgM54VbdWzY1F+p4UyOUPMeF4OPh5z8bpbUB
+ sVv1cpiVoPWwICHEllgO0HS0l52ZbIaCDTXB27qFm+eZ9Yomzn6dGglu0GEDntD91Ws8O9f
+ gnoT+46mW7EFaZL1TnYcDKSuTb3IwxhZODjYXY4LFMYZYL+IvYR1F6Pssxt1jeklbUQFJwr
+ xQlo/x9romh/cGtYDM4DA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gdfHMQ5pVVk=:AnH71DF6zO5WmImmh4KV8/
+ fgL/3Mb8jPf4tlByzGC7eAwL7drU7S9U7uVTqh0Wg85PEMDe60IDJnD9qpGbe6x3u5iz76CvH
+ e9TJQ3YDjnigJj/tZEV2/hsDxwsjS6lbXqrDLQkFi89rJuMlIlljApWmZSwtANDZrxqY5UfjH
+ TWYLBZfksBEq9UxTrW6r1Rch21YGvqGjJiP5JAtW3NeGiUA/B0516sSFM08wsRiHhQr3X+0it
+ kjVFNgiZVvXwb9xyA8lJjBJ9Fy2B85UPYLUUMbhRunzn7A6e8grmwCyLtmA/0gsf+azsZEhJv
+ pg8qaTAfJc9KLRyRZN0HAB1PGFdhmXGLYNn5qiswG8DwG+GxPiim1ZlsFvEjKuOLQqGvi/WSa
+ EzHPgN9UzeaKmiNRVXIJfcjRQWlrDn/Vm0uvVFcx1/aStiUC1q1WmTNwhVJrINFTHeQgMh2oz
+ B480IYi5J63gkhm279kA3Ep4bx7ED4/YoY7GnZYxxzsFxuXD9D4ur02Nv555BdKc/7n3nRwCI
+ GtUajzqELc8S3cGPknxX0/w+zumNQJrek67uwoiR6QIlnUU48sqxhk23VNPia+pi8OmBWwTaI
+ OAPiFAleHr42OFbv1dAK3lT4XpWHlIcqq7TPy3CO/bGYOIGGqJtAWdF9eawyAgL8qOim+xuAy
+ MPCAXLtwFEErucsFzeIei3ZWAWwt217rNsoOW4CEEWBc/OX3i4abwVXrdstYeE1zuMFC20MkU
+ UtUf1j63XE7KCkAAqM5cFzfnv4gAc57xtp2J94/WuDXY7hGz8BLNimh1+znE8YefWF3+2Sfie
+ EhWHGBzZ5sCGCrHM+feK60kGX76xSuvhng5wws072WTqrjSngTRa52U3X9bq+hlszxsEAO9CB
+ sgBBcYPGFn4L6CRaS/RnAIGZYPjebFrNCh+AXGsDYzemxapy9BlCsqhVer85s7kNrfhl2GALp
+ BkdE/jOBbwR28ylZCpVvBLZLGebmHI+dsb1cA5O1dtzTJCjALqM0G
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jul 14, 2020 at 8:45 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Mon, Jul 13, 2020 at 05:08:10PM +0200, Arnd Bergmann wrote:
+> > On Mon, Jul 13, 2020 at 3:22 PM Saheed O. Bolarinwa
+> > Starting with a), my first question is whether any high-level
+> > drivers even need to care about errors from these functions. I see
+> > 4913 callers that ignore the return code, and 576 that actually
+> > check it, and almost none care about the specific error (as you
+> > found as well). Unless we conclude that most PCI drivers are wrong,
+> > could we just change the return type to 'void' and assume they never
+> > fail for valid arguments on a valid pci_device* ?
+>
+> I really like this idea.
+>
+> pci_write_config_*() has one return value, and only 100ish of 2500
+> callers check for errors.  It's sometimes possible for config
+> accessors to detect PCI errors and return failure, e.g., device was
+> removed or didn't respond, but most of them don't, and detecting these
+> errors is not really that valuable.
+>
+> pci_read_config_*() is much more interesting because it returns two
+> things, the function return value and the value read from the PCI
+> device, and it's complicated to check both.
+>
+> Again it's sometimes possible for config read accessors to detect PCI
+> errors, but in most cases a PCI error means the accessor returns
+> success and the value from PCI is ~0.
+>
+> Checking the function return value catches programming errors (bad
+> alignment, etc) but misses most of the interesting errors (device was
+> unplugged or reported a PCI error).
 
+My thinking was more that most of the time the error checking may
+be completely bogus to start with, and I would just not check for
+errors at all.
 
-On 7/14/2020 2:07 PM, Rob Herring wrote:
-> On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
->> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
->>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
->>>> The firmware running on the RPi VideoCore can be used to reset and
->>>> initialize HW controlled by the firmware.
->>>>
->>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->>>>
->>>> ---
->>>> Changes since v2:
->>>>  - Add include file for reset IDs
->>>>
->>>> Changes since v1:
->>>>  - Correct cells binding as per Florian's comment
->>>>  - Change compatible string to be more generic
->>>>
->>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
->>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
->>>>  2 files changed, 34 insertions(+)
->>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> index b48ed875eb8e..23a885af3a28 100644
->>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> @@ -39,6 +39,22 @@ properties:
->>>>        - compatible
->>>>        - "#clock-cells"
->>>>  
->>>> +  reset:
->>>
->>> I'm not really thrilled how this is evolving with a node per provider. 
->>> There's no reason you can't just add #clock-cells and #reset-cells to 
->>> the parent firmware node.
->>
->> What are the downsides? The way I see it there is not much difference. And this
->> way of handling things is feels more intuitive and flexible (overlays can
->> control what to enable easily, we can take advantage of the platform device
->> core).
-> 
-> What the OS wants can evolve, so designing around the current needs of 
-> the OS is not how bindings should be done.
-> 
-> Using overlays to add clocks or resets wouldn't really work given they 
-> are spread out over the tree. And with clocks in particular, you'd have 
-> to replace dummy fixed clocks with actual firmware clocks. Sounds 
-> fragile and messy...
-> 
->>> I probably should have complained with the clocks node, but that's only 
->>> pending for 5.9.
->>
->> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
->> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
->> this it[1]. :P
-> 
-> Sigh, this is why I dislike incomplete examples...
-> 
-> Based on that,
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> And please get gpio and ts converted to schema and referenced here 
-> before the next time I look at this.
-> 
->> There already is a fair amount of churn in these drivers because of all the DT
->> changes we did in the past, and if we need to change how we integrate these
->> again, I'd really like it to be for good.
->>
->>> The bigger issue is this stuff is just trickling in one bit at a time 
->>> which gives no context for review. What's next? Is it really a mystery 
->>> as to what functions the firmware provides?
->>
->> We have no control over it, RPi engineers integrate new designs and new
->> firmware interfaces show up. This is a good example of it.
->>
->> I proposed them to use SCMI as it covers most of what they are already
->> providing here. But no luck so far.
-> 
-> Once we get tired of supporting all the different firmware interfaces 
-> and the mess they become, we'll just have to start refusing custom ones. 
-> Worked for PSCI.
+> Checking the value returned from PCI is tricky because ~0 is a valid
+> value for some config registers, and only the driver knows for sure.
+> If the driver knows that ~0 is a possible value, it would have to do
+> something else, e.g., another config read of a register that *cannot*
+> be ~0, to see whether it's really an error.
+>
+> I suspect that if we had a single value to look at it would be easier
+> to get right.  Error checking with current interface would look like
+> this:
+>
+>   err = pci_read_config_word(dev, addr, &val);
+>   if (err)
+>     return -EINVAL;
+>
+>   if (PCI_POSSIBLE_ERROR(val)) {
+>     /* if driver knows ~0 is invalid */
+>     return -EINVAL;
+>
+>     /* if ~0 is potentially a valid value */
+>     err = pci_read_config_word(dev, PCI_VENDOR_ID, &val2);
+>     if (err)
+>       return -EINVAL;
+>
+>     if (PCI_POSSIBLE_ERROR(val2))
+>       return -EINVAL;
+>   }
+>
+> Error checking with a possible interface that returned only a single
+> value could look like this:
+>
+>   val = pci_config_read_word(dev, addr);
+>   if (PCI_POSSIBLE_ERROR(val)) {
+>     /* if driver knows ~0 is invalid */
+>     return -EINVAL;
+>
+>     /* if ~0 is potentially a valid value */
+>     val2 = pci_config_read_word(dev, PCI_VENDOR_ID);
+>     if (PCI_POSSIBLE_ERROR(val2))
+>       return -EINVAL;
+>   }
+>
+> Am I understanding you correctly?
 
-In this particular case, the Raspberry Pi Foundation VPU firmware should
-just implement SCMI and that would avoid having to write new client
-drivers for Linux, it is not clear to me why this has not been done yet.
--- 
-Florian
+That would require changing all callers of the function, which
+I think would involve changing some 700 files. What I was
+suggesting was to only change the return type to void and
+categorize all drivers that today check it as either
+
+a) checking the return code is not helpful, or possibly even
+    wrong, so we just stop doing it. I expect those to be the
+    vast majority of callers, but that could be wrong.
+
+b) Code that legitimately check the error code and need to
+   take an appropriate action. These could be changed to
+   calling a different interface such as 'pci_bus_read_config_word'
+   or a new 'pci_device_last_error()' function.
+
+The reasons I suspect that most callers don't actually need
+to check for errors are:
+
+- Most error checking is static: PCIBIOS_BAD_REGISTER_NUMBER
+  only happens if you pass an invalid register number, but most
+  callers pass a compile-time constant register number that is
+  known to be correct, or the driver would never work. Similarly,
+  PCIBIOS_DEVICE_NOT_FOUND wouldn't normally happen
+  since you pass a valid pci_device pointer that was already
+  probed.
+
+- config space accesses are very rare compared to memory
+  space access and on the hardware side the error handling
+  would be similar, but readl/writel don't return errors, they just
+  access wrong registers or return 0xffffffff.
+  arch/powerpc/kernel/eeh.c has a ton extra code written to
+  deal with it, but no other architectures do.
+
+- If we add code to detect errors in pci_read_config_*
+  and do some of the stuff from powerpc's
+  eeh_dev_check_failure(), we are more likely to catch
+  intermittent failures when drivers don't check, or bugs
+  with invalid arguments in device drivers than relying on
+  drivers to get their error handling right when those code
+  paths don't ever get covered in normal testing.
+
+Looking at a couple of random drivers that do check the
+return codes, I find:
+
+drivers/edac/amd8131_edac.c: prints the register number,
+then keeps going. This is not useful
+
+drivers/net/ethernet/mellanox/mlx4/reset.c: error handling
+in mlx4_reset() seems reasonable, but it gets called
+from mlx4_pci_resume(), which has a 'void' return code and
+cannot propagate the error further. My guess is that it
+would try to keep going after a failed resume and run into
+random other problems then.
+
+drivers/ata/pata_cs5536.c: error code gets passed to
+caller and then always ignored. Can clearly be changed
+
+drivers/net/wireless/intersil/prism54/islpci_hotplug.c:
+Out of two calls, only one is checked, which seems bogus
+
+drivers/usb/host/pci-quirks.c: only one of many instances
+has a check, again this seems bogus.
+
+drivers/leds/leds-ss4200.c: called from probe(), which
+seems to correctly deal with errors by failing the probe.
+Not sure this can ever fail though, since the driver only does
+it after pci_enable_device() succeeds first. Note that
+pci_enable_device() ignores pci_read_config_byte()
+errors but sanity-checks the register contents/
+
+        Arnd
