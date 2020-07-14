@@ -2,147 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D511921ED0B
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 11:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A41D021ED1E
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 11:44:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgGNJiE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 05:38:04 -0400
-Received: from mga12.intel.com ([192.55.52.136]:49242 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgGNJiD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:38:03 -0400
-IronPort-SDR: 1WKREpBCE6jHMPLVVfqE/PTlZI99Y/bU3zHTMoOodBHwT2Ldn4M8d8sAeKYnzm5Qus7ggSNUeR
- r8PdGQTkDKPA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128415135"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="128415135"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:38:03 -0700
-IronPort-SDR: rPc3ddxpIP2vZOiJj8CvrtWE/cGTTFuHIvexdjo+ykQGR91El6PpdcKOPXJY6xT4YcQRzIJX4j
- d2Z0dfcTtg0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="299476886"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jul 2020 02:38:00 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jvHNx-001kdY-6c; Tue, 14 Jul 2020 12:38:01 +0300
-Date:   Tue, 14 Jul 2020 12:38:01 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] x86/PCI: Get rid of custom x86 model comparison
-Message-ID: <20200714093801.GI3703480@smile.fi.intel.com>
-References: <20200713194437.11325-1-andriy.shevchenko@linux.intel.com>
- <20200713210201.GA277654@bjorn-Precision-5520>
+        id S1726834AbgGNJoY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 05:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgGNJoW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 05:44:22 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E32BC061755;
+        Tue, 14 Jul 2020 02:44:22 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t18so13704797ilh.2;
+        Tue, 14 Jul 2020 02:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=Tgm0OYoDMREUwKgBzALPWRuGGwcOUHZ7yNd5VzH1jD8=;
+        b=jM+qX4Ti315cOlTJ+VUcYkhq8TZ1sJD7ftmO0JD5IpsN8kCQahF698aWFTAOXFdT0Q
+         HcDziCsqjsfy5XRD7ebTVvXA0N4xNmaGvq6fOOT6qMPZuI73C8jaNL3mnrBCo8bsbQN9
+         HCbT6Xj3sLKNEa/9227nfI3t6zFXABnX5mVasdpVha9E7WNX6tAQZtRxmEi2BGCPKpNx
+         oJegoUqWcsUe9furKYA2lgMTtioEX3+qFXCIAf+97ygpi9aM5MLPr/JnMwXeBTizXXtU
+         waO68KXJ9Wgaxb4YyPuCWZUOe+nXpxyILWdmdz9StZGYXG14HxqClZ9yJXs6EAp9KNMK
+         YRJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=Tgm0OYoDMREUwKgBzALPWRuGGwcOUHZ7yNd5VzH1jD8=;
+        b=YzelWiUbzRv3bK4uEDSkP8Om1KGXG6c0cPzxRe62M9vE9S2cSdDN71KprFJtUadlNP
+         msdlpNIHJ8nehFaLsCLMK2kzQvSkk3puKeafGIeKOlDSHHnNUsvvE4/ZYuoXFdOevbC2
+         5Cfhwq4xW0SpzAfVb24QvQJVuvVHplQ/Gd3huSFZSOCnPR7MbO3xR7kXDQSoeaYl787r
+         MbzlPT64c6BvVXcENq6wvllhebgOqvlDucy3AhBEgIknTWJ3Byh9ENDl7Wlxpjfl2Fka
+         B27lioTqg7MuJXndAv7c7SFNHmdDsdeG3Evvj7jIWcldZSweIsg75t1Av9a9GelaPeNZ
+         oDdA==
+X-Gm-Message-State: AOAM530ZrGExbNgcQ8CmW9f2KTNVU0TYYoT00o09TPj+GbW5t7Xi8Vn/
+        E4DcWPSek/Yj2zew1pmL5WQRsSsqUam/wO8Nm6ymd+A7snE=
+X-Google-Smtp-Source: ABdhPJz+ivIV1Co3GNe6TDuCaK8ew/gDSSyhbGfaADNu+YjF9UfRP+y0tlFcRKz3l9JpO1zT8YmnCV67sZd69ABTNZc=
+X-Received: by 2002:a92:290a:: with SMTP id l10mr4174366ilg.204.1594719861754;
+ Tue, 14 Jul 2020 02:44:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713210201.GA277654@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de> <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
+ <20200712184041.GA1838@Ryzen-9-3900X.localdomain>
+In-Reply-To: <20200712184041.GA1838@Ryzen-9-3900X.localdomain>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 14 Jul 2020 11:44:10 +0200
+Message-ID: <CA+icZUWyqb8jdzTAophvBKuX3e2NvG7vQPnMW+SRW5v0PmU7TA@mail.gmail.com>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 04:02:01PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jul 13, 2020 at 10:44:36PM +0300, Andy Shevchenko wrote:
-> > Switch the platform code to use x86_id_table and accompanying API
-> > instead of custom comparison against x86 CPU model.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  arch/x86/pci/intel_mid_pci.c | 17 +++++++++++++++--
-> >  1 file changed, 15 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-> > index 00c62115f39c..d8af4787e616 100644
-> > --- a/arch/x86/pci/intel_mid_pci.c
-> > +++ b/arch/x86/pci/intel_mid_pci.c
-> > @@ -28,10 +28,12 @@
-> >  #include <linux/io.h>
-> >  #include <linux/smp.h>
-> >  
-> > +#include <asm/cpu_device_id.h>
-> >  #include <asm/segment.h>
-> >  #include <asm/pci_x86.h>
-> >  #include <asm/hw_irq.h>
-> >  #include <asm/io_apic.h>
-> > +#include <asm/intel-family.h>
-> >  #include <asm/intel-mid.h>
-> >  
-> >  #define PCIE_CAP_OFFSET	0x100
-> > @@ -211,9 +213,16 @@ static int pci_write(struct pci_bus *bus, unsigned int devfn, int where,
-> >  			       where, size, value);
-> >  }
-> >  
-> > +static const struct x86_cpu_id intel_mid_cpu_ids[] = {
-> > +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID, NULL),
-> > +	{}
-> > +};
-> > +
-> >  static int intel_mid_pci_irq_enable(struct pci_dev *dev)
-> >  {
-> > +	const struct x86_cpu_id *id;
-> >  	struct irq_alloc_info info;
-> > +	u16 model = 0;
-> >  	int polarity;
-> >  	int ret;
-> >  	u8 gsi;
-> > @@ -227,8 +236,12 @@ static int intel_mid_pci_irq_enable(struct pci_dev *dev)
-> >  		return ret;
-> >  	}
-> >  
-> > -	switch (intel_mid_identify_cpu()) {
-> > -	case INTEL_MID_CPU_CHIP_TANGIER:
-> > +	id = x86_match_cpu(intel_mid_cpu_ids);
-> > +	if (id)
-> > +		model = id->model;
-> > +
-> > +	switch (model) {
-> > +	case INTEL_FAM6_ATOM_SILVERMONT_MID:
-> 
-> Is there a magic decoder ring somewhere that connects
-> INTEL_MID_CPU_CHIP_TANGIER and INTEL_FAM6_ATOM_SILVERMONT_MID?
+On Sun, Jul 12, 2020 at 8:40 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Sun, Jul 12, 2020 at 10:59:17AM +0200, Sedat Dilek wrote:
+> > On Sat, Jul 11, 2020 at 6:32 PM Paul Menzel <pmenzel@molgen.mpg.de> wro=
+te:
+> > >
+> > > Dear Sami,
+> > >
+> > >
+> > > Am 24.06.20 um 22:31 schrieb Sami Tolvanen:
+> > > > This patch series adds support for building x86_64 and arm64 kernel=
+s
+> > > > with Clang's Link Time Optimization (LTO).
+> > > >
+> > > > In addition to performance, the primary motivation for LTO is to al=
+low
+> > > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Goog=
+le's
+> > > > Pixel devices have shipped with LTO+CFI kernels since 2018.
+> > > >
+> > > > Most of the patches are build system changes for handling LLVM bitc=
+ode,
+> > > > which Clang produces with LTO instead of ELF object files, postponi=
+ng
+> > > > ELF processing until a later stage, and ensuring initcall ordering.
+> > > >
+> > > > Note that first objtool patch in the series is already in linux-nex=
+t,
+> > > > but as it's needed with LTO, I'm including it also here to make tes=
+ting
+> > > > easier.
+> > >
+> > > [=E2=80=A6]
+> > >
+> > > Thank you very much for sending these changes.
+> > >
+> > > Do you have a branch, where your current work can be pulled from? You=
+r
+> > > branch on GitHub [1] seems 15 months old.
+> > >
+> >
+> > Agreed it's easier to git-pull.
+> > I have seen [1] - not sure if this is the latest version.
+> > Alternatively, you can check patchwork LKML by searching for $submitter=
+.
+> > ( You can open patch 01/22 and download the whole patch-series by
+> > following the link "series", see [3]. )
+> >
+> > - Sedat -
+> >
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbu=
+ild.git/log/?h=3Dlto
+> > [2] https://lore.kernel.org/patchwork/project/lkml/list/?series=3D&subm=
+itter=3D19676
+> > [3] https://lore.kernel.org/patchwork/series/450026/mbox/
+> >
+>
+> Sami tagged this series on his GitHub:
+>
+> https://github.com/samitolvanen/linux/releases/tag/lto-v1
+>
+> git pull https://github.com/samitolvanen/linux lto-v1
+>
+> Otherwise, he is updating the clang-cfi branch that includes both the
+> LTO and CFI patchsets. You can pull that and just turn on
+> CONFIG_LTO_CLANG.
+>
+> Lastly, for the future, I would recommend grabbing b4 to easily apply
+> patches (specifically full series) from lore.kernel.org.
+>
+> https://git.kernel.org/pub/scm/utils/b4/b4.git/
+> https://git.kernel.org/pub/scm/utils/b4/b4.git/tree/README.rst
+>
+> You could grab this series and apply it easily by either downloading the
+> mbox file and following the instructions it gives for applying the mbox
+> file:
+>
+> $ b4 am 20200624203200.78870-1-samitolvanen@google.com
+>
+> or I prefer piping so that I don't have to clean up later:
+>
+> $ b4 am -o - 20200624203200.78870-1-samitolvanen@google.com | git am
+>
 
-Yes. And the idea is to get rid of it.
+It is always a pleasure to read your replies and enrich my know-how
+beyond Linux-kernel hacking :-).
 
-> I don't know how to verify that the new code is equivalent to the old.
-> 
-> Or maybe the new code is *better* than the old, in which case the
-> subject/commit log should mention that it's fixing or improving
-> something.
-> 
-> Also, there are a number of other places that check for
-> "intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_TANGIER":
-> 
->   mrfld_pinctrl_init
->   register_mrfld_power_btn
->   mrfld_legacy_rtc_init
->   mrfld_sd_init
->   spidev_platform_data
->   register_mid_wdt
->   sfi_parse_devs
+Thanks for the tip with "b4" tool.
+Might add this to our ClangBuiltLinux wiki "Command line tips and tricks"?
 
->   atomisp_css_input_set_mode
+- Sedat -
 
-This has been pending in Mauro's tree.
-
-> Maybe they should all be changed together?  Or maybe this needs an
-> explanation about why some places need intel_mid_identify_cpu() and
-> others need x86_match_cpu()?
-
-No. The rest is subject to huge clean up (complete removal) in the future.
-I don't want to waste time on something which I will remove for sure.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+[1] https://github.com/ClangBuiltLinux/linux/wiki/Command-line-tips-and-tri=
+cks
