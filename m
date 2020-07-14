@@ -2,203 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6CE021FD06
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 21:13:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4936221FB95
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 21:03:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgGNSpx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 14:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40288 "EHLO mail.kernel.org"
+        id S1730365AbgGNTCp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 15:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbgGNSpw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:45:52 -0400
+        id S1730317AbgGNTCo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:02:44 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839FA222B9;
-        Tue, 14 Jul 2020 18:45:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB6A207F5;
+        Tue, 14 Jul 2020 19:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752352;
-        bh=3OfvyawWxOWWLmXQVPZtn6FECuVWd3F0Ue8HezI5sRQ=;
+        s=default; t=1594753363;
+        bh=1zE7IbOBwcqh4svaHsYnN4HZmHGYulpj9QshjtrfmTM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=M9TjDOCdh9hdhfOxp+E/b+GQRQRJigrTzFdSr08bZTbYfgplA8ZfIK7sw2uU4D17i
-         JnwGLNAMtpemAssFF0Jl2PbTYsF6P1lbaXH8vsBMr+WVIisiILxg/v2D+n7zNSVt6u
-         tBiC82XAr1HVg4w3jwKWvTKOh5aFHvV/m2Ll8Hf4=
-Date:   Tue, 14 Jul 2020 13:45:50 -0500
+        b=h/W7FnQ25ep6sZ4rfaO391pDHfGcJKZe1XsaVkAnl0427u5RN5lGaekPdMgWyA2+4
+         08Due3hFQMLV2EjcxvUmHpF1SLWTBCkWMxwkQvlD2xa8MtybWF1rzN0WsEOCwZUHGs
+         HeRhRinKrgPI7elL/oBgkBYwR2BZZNx//upHKip0=
+Date:   Tue, 14 Jul 2020 14:02:41 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-Message-ID: <20200714184550.GA397277@bjorn-Precision-5520>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] x86/PCI: Get rid of custom x86 model comparison
+Message-ID: <20200714190241.GA409572@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
+In-Reply-To: <20200714093801.GI3703480@smile.fi.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[trimmed the cc list; it's still too large but maybe arch folks care]
-
-On Mon, Jul 13, 2020 at 05:08:10PM +0200, Arnd Bergmann wrote:
-> On Mon, Jul 13, 2020 at 3:22 PM Saheed O. Bolarinwa
-> <refactormyself@gmail.com> wrote:
-> > This goal of these series is to move the definition of *all*
-> > PCIBIOS* from include/linux/pci.h to arch/x86 and limit their use
-> > within there.  All other tree specific definition will be left for
-> > intact. Maybe they can be renamed.
-> >
-> > PCIBIOS* is an x86 concept as defined by the PCI spec. The
-> > returned error codes of PCIBIOS* are positive values and this
-> > introduces some complexities which other archs need not incur.
+On Tue, Jul 14, 2020 at 12:38:01PM +0300, Andy Shevchenko wrote:
+> On Mon, Jul 13, 2020 at 04:02:01PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jul 13, 2020 at 10:44:36PM +0300, Andy Shevchenko wrote:
+> > > Switch the platform code to use x86_id_table and accompanying API
+> > > instead of custom comparison against x86 CPU model.
+> > > 
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > >  arch/x86/pci/intel_mid_pci.c | 17 +++++++++++++++--
+> > >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
+> > > index 00c62115f39c..d8af4787e616 100644
+> > > --- a/arch/x86/pci/intel_mid_pci.c
+> > > +++ b/arch/x86/pci/intel_mid_pci.c
+> > > @@ -28,10 +28,12 @@
+> > >  #include <linux/io.h>
+> > >  #include <linux/smp.h>
+> > >  
+> > > +#include <asm/cpu_device_id.h>
+> > >  #include <asm/segment.h>
+> > >  #include <asm/pci_x86.h>
+> > >  #include <asm/hw_irq.h>
+> > >  #include <asm/io_apic.h>
+> > > +#include <asm/intel-family.h>
+> > >  #include <asm/intel-mid.h>
+> > >  
+> > >  #define PCIE_CAP_OFFSET	0x100
+> > > @@ -211,9 +213,16 @@ static int pci_write(struct pci_bus *bus, unsigned int devfn, int where,
+> > >  			       where, size, value);
+> > >  }
+> > >  
+> > > +static const struct x86_cpu_id intel_mid_cpu_ids[] = {
+> > > +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID, NULL),
+> > > +	{}
+> > > +};
+> > > +
+> > >  static int intel_mid_pci_irq_enable(struct pci_dev *dev)
+> > >  {
+> > > +	const struct x86_cpu_id *id;
+> > >  	struct irq_alloc_info info;
+> > > +	u16 model = 0;
+> > >  	int polarity;
+> > >  	int ret;
+> > >  	u8 gsi;
+> > > @@ -227,8 +236,12 @@ static int intel_mid_pci_irq_enable(struct pci_dev *dev)
+> > >  		return ret;
+> > >  	}
+> > >  
+> > > -	switch (intel_mid_identify_cpu()) {
+> > > -	case INTEL_MID_CPU_CHIP_TANGIER:
+> > > +	id = x86_match_cpu(intel_mid_cpu_ids);
+> > > +	if (id)
+> > > +		model = id->model;
+> > > +
+> > > +	switch (model) {
+> > > +	case INTEL_FAM6_ATOM_SILVERMONT_MID:
+> > 
+> > Is there a magic decoder ring somewhere that connects
+> > INTEL_MID_CPU_CHIP_TANGIER and INTEL_FAM6_ATOM_SILVERMONT_MID?
 > 
-> I think the intention is good, but I find the series in its current
-> form very hard to review, in particular the way you touch some
-> functions three times with trivial changes. Instead of
+> Yes. And the idea is to get rid of it.
+
+OK.  You don't want to even include a mention of it in the commit log
+to help people connect the dots and verify that this change is
+correct?
+
+> > I don't know how to verify that the new code is equivalent to the old.
+> > 
+> > Or maybe the new code is *better* than the old, in which case the
+> > subject/commit log should mention that it's fixing or improving
+> > something.
+> > 
+> > Also, there are a number of other places that check for
+> > "intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_TANGIER":
+> > 
+> >   mrfld_pinctrl_init
+> >   register_mrfld_power_btn
+> >   mrfld_legacy_rtc_init
+> >   mrfld_sd_init
+> >   spidev_platform_data
+> >   register_mid_wdt
+> >   sfi_parse_devs
 > 
-> 1) replace PCIBIOS_SUCCESSFUL with 0
-> 2) drop pointless 0-comparison
-> 3) reformat whitespace
+> >   atomisp_css_input_set_mode
 > 
-> I would suggest to combine the first two steps into one patch per
-> subsystem and drop the third step.
-
-I agree.  BUT please don't just run out and post new patches to do
-this.  Let's talk about Arnd's further ideas below first.
-
-> ...
-> Maybe the work can be split up differently, with a similar end
-> result but fewer and easier reviewed patches. The way I'd look at
-> the problem, there are three main areas that can be dealt with one
-> at a time:
+> This has been pending in Mauro's tree.
 > 
-> a) callers of the high-level config space accessors
->    pci_{write,read}_config_{byte,word,dword}, mostly in device
->    drivers.
-> b) low-level implementation of the config space accessors
->     through struct pci_ops
-> c) all other occurrences of these constants
+> > Maybe they should all be changed together?  Or maybe this needs an
+> > explanation about why some places need intel_mid_identify_cpu() and
+> > others need x86_match_cpu()?
 > 
-> Starting with a), my first question is whether any high-level
-> drivers even need to care about errors from these functions. I see
-> 4913 callers that ignore the return code, and 576 that actually
-> check it, and almost none care about the specific error (as you
-> found as well). Unless we conclude that most PCI drivers are wrong,
-> could we just change the return type to 'void' and assume they never
-> fail for valid arguments on a valid pci_device* ?
+> No. The rest is subject to huge clean up (complete removal) in the future.
+> I don't want to waste time on something which I will remove for sure.
 
-I really like this idea.
-
-pci_write_config_*() has one return value, and only 100ish of 2500
-callers check for errors.  It's sometimes possible for config
-accessors to detect PCI errors and return failure, e.g., device was
-removed or didn't respond, but most of them don't, and detecting these
-errors is not really that valuable.
-
-pci_read_config_*() is much more interesting because it returns two
-things, the function return value and the value read from the PCI
-device, and it's complicated to check both. 
-
-Again it's sometimes possible for config read accessors to detect PCI
-errors, but in most cases a PCI error means the accessor returns
-success and the value from PCI is ~0.
-
-Checking the function return value catches programming errors (bad
-alignment, etc) but misses most of the interesting errors (device was
-unplugged or reported a PCI error).
-
-Checking the value returned from PCI is tricky because ~0 is a valid
-value for some config registers, and only the driver knows for sure.
-If the driver knows that ~0 is a possible value, it would have to do
-something else, e.g., another config read of a register that *cannot*
-be ~0, to see whether it's really an error.
-
-I suspect that if we had a single value to look at it would be easier
-to get right.  Error checking with current interface would look like
-this:
-
-  err = pci_read_config_word(dev, addr, &val);
-  if (err)
-    return -EINVAL;
-
-  if (PCI_POSSIBLE_ERROR(val)) {
-    /* if driver knows ~0 is invalid */
-    return -EINVAL;
-
-    /* if ~0 is potentially a valid value */
-    err = pci_read_config_word(dev, PCI_VENDOR_ID, &val2);
-    if (err)
-      return -EINVAL;
-
-    if (PCI_POSSIBLE_ERROR(val2))
-      return -EINVAL;
-  }
-
-Error checking with a possible interface that returned only a single
-value could look like this:
-
-  val = pci_config_read_word(dev, addr);
-  if (PCI_POSSIBLE_ERROR(val)) {
-    /* if driver knows ~0 is invalid */
-    return -EINVAL;
-
-    /* if ~0 is potentially a valid value */
-    val2 = pci_config_read_word(dev, PCI_VENDOR_ID);
-    if (PCI_POSSIBLE_ERROR(val2))
-      return -EINVAL;
-  }
-
-Am I understanding you correctly?
-
-> For b), it might be nice to also change other aspects of the
-> interface, e.g. passing a pci_host_bridge pointer plus bus number
-> instead of a pci_bus pointer, or having the callback in the
-> pci_host_bridge structure.
-
-I like this idea a lot, too.  I think the fact that
-pci_bus_read_config_word() requires a pci_bus * complicates things in
-a few places.
-
-I think it's completely separate, as you say, and we should defer it
-for now because even part a) is a lot of work.  I added it to my list
-of possible future projects.
+OK, I'll leave this to the x86 guys.  If I were merging it I would
+want a little more explanation, but this isn't PCI-related at all and
+I'm sure they understand this better than I do.
 
 Bjorn
