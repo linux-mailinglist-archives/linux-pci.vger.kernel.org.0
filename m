@@ -2,112 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D97621EB06
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 10:10:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52BDB21EB90
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 10:40:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725793AbgGNIKG convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 14 Jul 2020 04:10:06 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:51957 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbgGNIKF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 04:10:05 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-47-quVXGfyEOkSmpSddwNFlhw-1; Tue, 14 Jul 2020 09:10:01 +0100
-X-MC-Unique: quVXGfyEOkSmpSddwNFlhw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 14 Jul 2020 09:10:01 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 14 Jul 2020 09:10:01 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Saheed Olayemi Bolarinwa' <refactormyself@gmail.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "bjorn@helgaas.com" <bjorn@helgaas.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 11/14 v3] PCI/PM: Check return value of
- pcie_capability_read_*()
-Thread-Topic: [PATCH 11/14 v3] PCI/PM: Check return value of
- pcie_capability_read_*()
-Thread-Index: AQHWVwhf1JBBv8jM7kKvf2XRj4wYvqkGvVFg
-Date:   Tue, 14 Jul 2020 08:10:00 +0000
-Message-ID: <80c7a253134b43289ba28a320ba99f9c@AcuMS.aculab.com>
-References: <20200710212026.27136-1-refactormyself@gmail.com>
- <20200710212026.27136-12-refactormyself@gmail.com>
-In-Reply-To: <20200710212026.27136-12-refactormyself@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S1726398AbgGNIkg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 04:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgGNIkf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 04:40:35 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C543C061755;
+        Tue, 14 Jul 2020 01:40:35 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id md7so1196827pjb.1;
+        Tue, 14 Jul 2020 01:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nYA5e7ARxM6LIN4taGv+yFcdrKzm+MTO5NvTdpW41Ro=;
+        b=T2lOnTLdKYH6OO1hKVWnOfUuo1+qOtx6+BTH4Z1JtU+qqoH+iYiR71ofLyjdn1Hq2d
+         +mgYi4dVqEidffxZhXdFLx824uYHihWjHM7oqNoRfisNq3ZQt4zPA6ZUf9T4yN2dzeXN
+         W4HZLj/2n/czW7sVpgBSyMWqlKX2zXbmgYF0GxYvoG2BPPtu5yf4FqbP0asJUSwnvahc
+         0E0x+XLsSKsfvoj5PA8+NGNMIXtPmQvVZ9oBU+nym+MJ/5wz1ETBDXlVe6+2dCeFG9nW
+         y/jnhzfD8//SByShVty8xDksD8PKBqj9WS5guPELcOy6ivddE7+lokHZUXcGvVFcbFyq
+         Ycsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nYA5e7ARxM6LIN4taGv+yFcdrKzm+MTO5NvTdpW41Ro=;
+        b=f3vbucVaeO60cAcCZiHM7T/D/ME64Wzu5GenEyDUwaTMYyzGjfDLsySzXAptOTkdbv
+         QP/5/XscI87T/b8b7LnIksXvBBm1o0/47v1RPSOZp9QR8XALrK5BJF6c2JfqGIt8Vuhc
+         2P14WIX269MoTq/fmHtHleswgs6ejbNIjzQD9RrjtddyPG8Zksj+981xOuyDRw6G43j6
+         EYknnVoiyIGAaFbQdBiJz4DlE3QdDiqB5t8RaTbCrqTLQ5q6ezB1vB6O9SobSqsRLV/K
+         b+RZ1X90YfgUK6Qmtuz0ZRcfOz47Yq24c2x+EEbHkg2anf/l/DesF8653XnGllQrQ7wl
+         f8Yw==
+X-Gm-Message-State: AOAM5308aNHcJ6lLBT9R5BiuI1iU1pFY6G4PP+D8jAeUwJzms8DPw8OV
+        7vJ7iztxCD5Zb+ku2rEEFr0xYrszWZpRI6smIeg=
+X-Google-Smtp-Source: ABdhPJwyHSC2MglEc3MU1qW3Ba6mSuojPSrl7xxdg6zyyzvWhZHwZROYnhBDgZqucI3YJBIFjtYrDUxvZ8yZANTLbkE=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr3597107pjp.228.1594716035169;
+ Tue, 14 Jul 2020 01:40:35 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200508021844.6911-1-david.e.box@linux.intel.com> <20200714062323.19990-2-david.e.box@linux.intel.com>
+In-Reply-To: <20200714062323.19990-2-david.e.box@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 14 Jul 2020 11:40:18 +0300
+Message-ID: <CAHp75VezDB5HqNn+rw72z2yt0buGh+szi4ytOMPejtQWMwr0+w@mail.gmail.com>
+Subject: Re: [PATCH V3 1/3] PCI: Add defines for Designated Vendor-Specific Capability
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Saheed Olayemi Bolarinwa
-> Sent: 10 July 2020 22:20
-> To: helgaas@kernel.org
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> 
-> On failure pcie_capability_read_dword() sets it's last parameter,
-> val to 0.
-> However, with Patch 14/14, it is possible that val is set to ~0 on
-> failure. This would introduce a bug because (x & x) == (~0 & x).
-> 
-> This bug can be avoided if the return value of pcie_capability_read_dword
-> is checked to confirm success.
-> 
-> Check the return value of pcie_capability_read_dword() to ensure success.
-> 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On Tue, Jul 14, 2020 at 9:22 AM David E. Box
+<david.e.box@linux.intel.com> wrote:
+>
+> Add PCIe DVSEC extended capability ID and defines for the header offsets.
+> Defined in PCIe r5.0, sec 7.9.6.
+>
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  drivers/pci/pci.c | 52 ++++++++++++++++++++++++++++++-----------------
->  1 file changed, 33 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index ce096272f52b..9f18ffbf7bd4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3207,6 +3207,7 @@ void pci_configure_ari(struct pci_dev *dev)
->  {
->  	u32 cap;
->  	struct pci_dev *bridge;
-> +	int ret;
-> 
->  	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
->  		return;
-> @@ -3215,8 +3216,8 @@ void pci_configure_ari(struct pci_dev *dev)
->  	if (!bridge)
->  		return;
-> 
-> -	pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
-> -	if (!(cap & PCI_EXP_DEVCAP2_ARI))
-> +	ret = pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
-> +	if (ret || !(cap & PCI_EXP_DEVCAP2_ARI))
->  		return;
+>  include/uapi/linux/pci_regs.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..09daa9f07b6b 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -720,6 +720,7 @@
+>  #define PCI_EXT_CAP_ID_DPC     0x1D    /* Downstream Port Containment */
+>  #define PCI_EXT_CAP_ID_L1SS    0x1E    /* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM     0x1F    /* Precision Time Measurement */
+> +#define PCI_EXT_CAP_ID_DVSEC   0x23    /* Designated Vendor-Specific */
+>  #define PCI_EXT_CAP_ID_DLF     0x25    /* Data Link Feature */
+>  #define PCI_EXT_CAP_ID_PL_16GT 0x26    /* Physical Layer 16.0 GT/s */
+>  #define PCI_EXT_CAP_ID_MAX     PCI_EXT_CAP_ID_PL_16GT
+> @@ -1062,6 +1063,10 @@
+>  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE        0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>  #define PCI_L1SS_CTL2          0x0c    /* Control 2 Register */
+>
+> +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> +#define PCI_DVSEC_HEADER1              0x4 /* Vendor-Specific Header1 */
+> +#define PCI_DVSEC_HEADER2              0x8 /* Vendor-Specific Header2 */
+> +
+>  /* Data Link Feature */
+>  #define PCI_DLF_CAP            0x04    /* Capabilities Register */
+>  #define  PCI_DLF_EXCHANGE_ENABLE       0x80000000  /* Data Link Feature Exchange Enable */
+> --
+> 2.20.1
+>
 
-Why not make the function result 64bit?
-Then you can return ~0ull on failure and the capability value on success.
-Gets rid of the horrid error + return value pair.
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+With Best Regards,
+Andy Shevchenko
