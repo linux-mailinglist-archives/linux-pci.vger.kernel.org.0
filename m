@@ -2,85 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7325921FD55
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 21:29:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34BC421FE5E
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 22:16:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGNT3g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 15:29:36 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53508 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgGNT3g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:29:36 -0400
-IronPort-SDR: 2Gd3eE3K7BHsDck+hbMsB8Eifj7PxHjRiquK/Z1eTg0/6fMO8anWajc5iuwHgTp2u567Vl1peb
- 2CO7VZOWT0bg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="167131969"
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="167131969"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 12:29:36 -0700
-IronPort-SDR: 9RFhiIF72ZPXvI1ewAbdtZoPSZq+agRbKVq87YF1+T9Q01kj6kZ6WCbgPC3jLLP7b7qIX97WtJ
- YeFK+z9PKzZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="325935306"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 14 Jul 2020 12:29:33 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jvQcQ-001pkp-23; Tue, 14 Jul 2020 22:29:34 +0300
-Date:   Tue, 14 Jul 2020 22:29:34 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] x86/PCI: Get rid of custom x86 model comparison
-Message-ID: <20200714192934.GQ3703480@smile.fi.intel.com>
-References: <20200714093801.GI3703480@smile.fi.intel.com>
- <20200714190241.GA409572@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714190241.GA409572@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1730342AbgGNUPq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 16:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgGNUPp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 16:15:45 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A45C061755
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jul 2020 13:15:45 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id z26so13395542qto.15
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jul 2020 13:15:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=k8sSMgjK9I2PUQMRw/GWlcNooM3tXXrf+Vhg/OAtdZg=;
+        b=S2GVzOkC2LGtGQ21lvarvs9uv1aEUX8YsRU1aoZZE1+59iLM2WChsBBWqbtUFhGnJe
+         skhA4nhLC0cZjFmHedgRpWJ8wAylwTiRzy+nHZhHXZ/peY/4t9Xl3GBqVAP+GSCQzQy7
+         t4SArJ5g3XVdGGf+YJRvi+guvQvZ8t/kdE51J8xOXGnfDo1T39uO7pZ61cNd3lKHoaMS
+         Qv21vzUYEzSrpAqdw9M8gY2KT081z/v6EXry5P+MISlDEa/l2DkucnwJbMHP/PEX/Dmi
+         ivGV0gqVCM763+8JJTAx738FPM++fQKoL94CzaZ8bYMCm4OpFCkiVFkJ5XiQ9yFOv5+v
+         2Yyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=k8sSMgjK9I2PUQMRw/GWlcNooM3tXXrf+Vhg/OAtdZg=;
+        b=A7dBou4WI5/jQst6kl9QIxOiNwAmNn6DcBa4IuMr8uag9mZxaOlqLEb1FNhzSttHZd
+         IhPcqox4iCzCE57oh3r3h+bPogjT5/+znkwE0IMJl3dzWyWT+lK20Rch/jWcCAyip+i5
+         /hW8QTpQT53774AeIDNwemLjsvh1TbRZd5i9tUqU7qbs2lgxq7WwhXpzYFmx23vm7GC0
+         vVfiaWrXt+svRXJveIwfkwjEeJDOn1lllOePRrGopnNUzPAxu+4buFKCEJbOJmdA1bAj
+         5XYYD/hznt4eCcLGOaWJirc6P80nzHqcpd5HF6fjA21dgRAYGG7KIoHPK9ux61rKBZYo
+         Z8TQ==
+X-Gm-Message-State: AOAM532wfKAygZDdgKwPO+86h3u6JT/9w6rxpbMEaSsIV66n2Y87V6ei
+        WinpIM5A34Gofggg93RnX/R6DeEOxonV
+X-Google-Smtp-Source: ABdhPJwHlifHg+spec7YOdMDJm+3uxVhSlu5bZvFHXamqwQeKt8gqiqlfnbxbsk5PbdhuRmTp8ZcTz1dt5uu
+X-Received: by 2002:a0c:b2d1:: with SMTP id d17mr6537991qvf.100.1594757743926;
+ Tue, 14 Jul 2020 13:15:43 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 13:15:40 -0700
+Message-Id: <20200714201540.3139140-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+Subject: [PATCH v5] PCI/ACS: Enable PCI_ACS_TB and disable only when needed
+ for ATS
+From:   Rajat Jain <rajatja@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:02:41PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 14, 2020 at 12:38:01PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jul 13, 2020 at 04:02:01PM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Jul 13, 2020 at 10:44:36PM +0300, Andy Shevchenko wrote:
-> > > > Switch the platform code to use x86_id_table and accompanying API
-> > > > instead of custom comparison against x86 CPU model.
+The ACS "Translation Blocking" bit blocks the translated addresses from
+the devices. We don't expect such traffic from devices unless ATS is
+enabled on them. A device sending such traffic without ATS enabled,
+indicates malicious intent, and thus should be blocked.
 
-...
+Enable PCI_ACS_TB by default for all devices, and it stays enabled until
+atleast one of the devices downstream wants to enable ATS. It gets
+disabled to enable ATS on a device downstream it, and then gets enabled
+back on once all the downstream devices don't need ATS.
 
-> > > > -	case INTEL_MID_CPU_CHIP_TANGIER:
-> > > > +	id = x86_match_cpu(intel_mid_cpu_ids);
-> > > > +	if (id)
-> > > > +		model = id->model;
-> > > > +
-> > > > +	switch (model) {
-> > > > +	case INTEL_FAM6_ATOM_SILVERMONT_MID:
-> > > 
-> > > Is there a magic decoder ring somewhere that connects
-> > > INTEL_MID_CPU_CHIP_TANGIER and INTEL_FAM6_ATOM_SILVERMONT_MID?
-> > 
-> > Yes. And the idea is to get rid of it.
-> 
-> OK.  You don't want to even include a mention of it in the commit log
-> to help people connect the dots and verify that this change is
-> correct?
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+Note that I'm ignoring the devices that require quirks to enable or
+disable ACS, instead of using the standard way for ACS configuration.
+The reason is that it would require adding yet another quirk table or
+quirk function pointer, that I don't know how to implement for those
+devices, and will neither have the devices to test that code.
 
-I think I missed it. I will update changelog for v2.
+v5: Enable TB and disable ATS for all devices on boot. Disable TB later
+    only if needed to enable ATS on downstream devices.
+v4: Add braces to avoid warning from kernel robot
+    print warning for only external-facing devices.
+v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
+    Minor code comments fixes.
+v2: Commit log change
 
+ drivers/pci/ats.c   |  5 ++++
+ drivers/pci/pci.c   | 57 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h   |  2 ++
+ drivers/pci/probe.c |  2 +-
+ include/linux/pci.h |  2 ++
+ 5 files changed, 67 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index b761c1f72f67..e2ea9083f30f 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -28,6 +28,9 @@ void pci_ats_init(struct pci_dev *dev)
+ 		return;
+ 
+ 	dev->ats_cap = pos;
++
++	dev->ats_enabled = 1; /* To avoid WARN_ON from pci_disable_ats() */
++	pci_disable_ats(dev);
+ }
+ 
+ /**
+@@ -82,6 +85,7 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
+ 	}
+ 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
+ 
++	pci_disable_acs_trans_blocking(dev);
+ 	dev->ats_enabled = 1;
+ 	return 0;
+ }
+@@ -102,6 +106,7 @@ void pci_disable_ats(struct pci_dev *dev)
+ 	ctrl &= ~PCI_ATS_CTRL_ENABLE;
+ 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
+ 
++	pci_enable_acs_trans_blocking(dev);
+ 	dev->ats_enabled = 0;
+ }
+ EXPORT_SYMBOL_GPL(pci_disable_ats);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 73a862782214..614e3c1e8c56 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -876,6 +876,9 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+ 	/* Upstream Forwarding */
+ 	ctrl |= (cap & PCI_ACS_UF);
+ 
++	/* Translation Blocking */
++	ctrl |= (cap & PCI_ACS_TB);
++
+ 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+ }
+ 
+@@ -904,6 +907,60 @@ static void pci_enable_acs(struct pci_dev *dev)
+ 	pci_disable_acs_redir(dev);
+ }
+ 
++void pci_disable_acs_trans_blocking(struct pci_dev *pdev)
++{
++	u16 cap, ctrl, pos;
++	struct pci_dev *dev;
++
++	if (!pci_acs_enable)
++		return;
++
++	for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
++
++		pos = dev->acs_cap;
++		if (!pos)
++			continue;
++
++		/*
++		 * Disable translation blocking when first downstream
++		 * device that needs it (for ATS) wants to enable ATS
++		 */
++		if (++dev->ats_dependencies == 1) {
++			pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
++			pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
++			ctrl &= ~(cap & PCI_ACS_TB);
++			pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
++		}
++	}
++}
++
++void pci_enable_acs_trans_blocking(struct pci_dev *pdev)
++{
++	u16 cap, ctrl, pos;
++	struct pci_dev *dev;
++
++	if (!pci_acs_enable)
++		return;
++
++	for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
++
++		pos = dev->acs_cap;
++		if (!pos)
++			continue;
++
++		/*
++		 * Enable translation blocking when last downstream device
++		 * that depends on it (for ATS), doesn't need ATS anymore
++		 */
++		if (--dev->ats_dependencies == 0) {
++			pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
++			pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
++			ctrl |= (cap & PCI_ACS_TB);
++			pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
++		}
++	}
++}
++
+ /**
+  * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
+  * @dev: PCI device to have its BARs restored
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 12fb79fbe29d..f5d8ecb6ba96 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -552,6 +552,8 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+ 	return -ENOTTY;
+ }
+ #endif
++void pci_disable_acs_trans_blocking(struct pci_dev *dev);
++void pci_enable_acs_trans_blocking(struct pci_dev *dev);
+ 
+ /* PCI error reporting and recovery */
+ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8c40c00413e7..e2ff3a94e621 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2387,10 +2387,10 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_vpd_init(dev);		/* Vital Product Data */
+ 	pci_configure_ari(dev);		/* Alternative Routing-ID Forwarding */
+ 	pci_iov_init(dev);		/* Single Root I/O Virtualization */
++	pci_acs_init(dev);		/* Access Control Services */
+ 	pci_ats_init(dev);		/* Address Translation Services */
+ 	pci_pri_init(dev);		/* Page Request Interface */
+ 	pci_pasid_init(dev);		/* Process Address Space ID */
+-	pci_acs_init(dev);		/* Access Control Services */
+ 	pci_ptm_init(dev);		/* Precision Time Measurement */
+ 	pci_aer_init(dev);		/* Advanced Error Reporting */
+ 	pci_dpc_init(dev);		/* Downstream Port Containment */
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 7a40cd5caed0..31da4355f0fd 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -480,6 +480,8 @@ struct pci_dev {
+ 	u16		ats_cap;	/* ATS Capability offset */
+ 	u8		ats_stu;	/* ATS Smallest Translation Unit */
+ #endif
++	/* Total number of downstream devices below a bridge that need ATS */
++	u8		ats_dependencies;
+ #ifdef CONFIG_PCI_PRI
+ 	u16		pri_cap;	/* PRI Capability offset */
+ 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.27.0.389.gc38d7665816-goog
 
