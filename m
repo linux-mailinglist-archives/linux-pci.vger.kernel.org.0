@@ -2,170 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A41D021ED1E
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 11:44:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28CBF21EDBA
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 12:16:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgGNJoY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 05:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37936 "EHLO
+        id S1726375AbgGNKQL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 06:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgGNJoW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 05:44:22 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E32BC061755;
-        Tue, 14 Jul 2020 02:44:22 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t18so13704797ilh.2;
-        Tue, 14 Jul 2020 02:44:22 -0700 (PDT)
+        with ESMTP id S1725906AbgGNKQK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 06:16:10 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F438C061755
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jul 2020 03:16:10 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so21743915ljj.10
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jul 2020 03:16:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=Tgm0OYoDMREUwKgBzALPWRuGGwcOUHZ7yNd5VzH1jD8=;
-        b=jM+qX4Ti315cOlTJ+VUcYkhq8TZ1sJD7ftmO0JD5IpsN8kCQahF698aWFTAOXFdT0Q
-         HcDziCsqjsfy5XRD7ebTVvXA0N4xNmaGvq6fOOT6qMPZuI73C8jaNL3mnrBCo8bsbQN9
-         HCbT6Xj3sLKNEa/9227nfI3t6zFXABnX5mVasdpVha9E7WNX6tAQZtRxmEi2BGCPKpNx
-         oJegoUqWcsUe9furKYA2lgMTtioEX3+qFXCIAf+97ygpi9aM5MLPr/JnMwXeBTizXXtU
-         waO68KXJ9Wgaxb4YyPuCWZUOe+nXpxyILWdmdz9StZGYXG14HxqClZ9yJXs6EAp9KNMK
-         YRJQ==
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=FPHneS2Wgi7Yu+9Efua6HrCu2110FaGhfqlfbGbLXBE=;
+        b=UrGcdK3GamcoHcLzv9WMqXxfKBMIvM4kbuDtiqyWKNJgcnfEJWNoB5sftrqkyTaOMC
+         pr9q2AgvFZdnkl6M0H8xdtw8N52MrtX9KoGF1VYg6+VX8n7g+th2MEWwA827O+Z4Xpi5
+         G05CZHfbh11MlPhD5DfTIwgvVKPbJYYe5sf669PJcp5UQdalf+P2HX2oPN5gHAaoxOMM
+         ShOgYpxoEV5HrnIhXJwiZB6HsobnF1ig1d/B0zKyL8+HYulPSR+rG9xhaJqfWU9RTngT
+         3j7XZLKWkiiYUI0UrvdxBVbnhLBC2+RLLPZJLrzPNWKvzGwoLlboDAJG4kSIiYDCJv7F
+         AN+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=Tgm0OYoDMREUwKgBzALPWRuGGwcOUHZ7yNd5VzH1jD8=;
-        b=YzelWiUbzRv3bK4uEDSkP8Om1KGXG6c0cPzxRe62M9vE9S2cSdDN71KprFJtUadlNP
-         msdlpNIHJ8nehFaLsCLMK2kzQvSkk3puKeafGIeKOlDSHHnNUsvvE4/ZYuoXFdOevbC2
-         5Cfhwq4xW0SpzAfVb24QvQJVuvVHplQ/Gd3huSFZSOCnPR7MbO3xR7kXDQSoeaYl787r
-         MbzlPT64c6BvVXcENq6wvllhebgOqvlDucy3AhBEgIknTWJ3Byh9ENDl7Wlxpjfl2Fka
-         B27lioTqg7MuJXndAv7c7SFNHmdDsdeG3Evvj7jIWcldZSweIsg75t1Av9a9GelaPeNZ
-         oDdA==
-X-Gm-Message-State: AOAM530ZrGExbNgcQ8CmW9f2KTNVU0TYYoT00o09TPj+GbW5t7Xi8Vn/
-        E4DcWPSek/Yj2zew1pmL5WQRsSsqUam/wO8Nm6ymd+A7snE=
-X-Google-Smtp-Source: ABdhPJz+ivIV1Co3GNe6TDuCaK8ew/gDSSyhbGfaADNu+YjF9UfRP+y0tlFcRKz3l9JpO1zT8YmnCV67sZd69ABTNZc=
-X-Received: by 2002:a92:290a:: with SMTP id l10mr4174366ilg.204.1594719861754;
- Tue, 14 Jul 2020 02:44:21 -0700 (PDT)
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=FPHneS2Wgi7Yu+9Efua6HrCu2110FaGhfqlfbGbLXBE=;
+        b=any5MmiBh9SaLWsDVdbRdzXRrSB2yn8fHatHrfdNrj2prlqr9aez3E+Kyh+dKfM+mG
+         e/uqWJodkrYtYXSZQR8DrDXLuqIdLs9oLWW/jUJjha14joic+6bX/3WlNB56CB6SD+hf
+         txxbjgXuejEc0pm2FlUG0vnYCbuVAd2bpCSrUHitlf5Zc1zVaG+wLoH13m3tGKRevX0I
+         XZ972ms7DVRsiTm3lNhDQwdHKwGfH1ImswE7WkiLnG45+KolK11Pu6RsxKJeUMrIyXX2
+         ZYhl2sHm4s8jVwg5Z8K04PAXfjbQlvU+9prcPY+hMIHCQE2xODVrEcxnDKNZRmcmxYQx
+         eOPQ==
+X-Gm-Message-State: AOAM532vFflGgJkaoI8lX3pvuv9kGWtz8iHzdJYf8j29RWb4/ngE3kRo
+        i7poglh2GWvUbbC9RuVh/CW1V8UFr1Q=
+X-Google-Smtp-Source: ABdhPJw6sadvpJDeTuOjLrc2k2/J8BV1a8bY1VEnv+ZS853T2R1sCVCy218AtQ6Po1PHgcP15OWbAg==
+X-Received: by 2002:a2e:571c:: with SMTP id l28mr1897531ljb.432.1594721767911;
+        Tue, 14 Jul 2020 03:16:07 -0700 (PDT)
+Received: from [192.168.0.110] ([178.71.129.223])
+        by smtp.gmail.com with ESMTPSA id r25sm6194105ljg.9.2020.07.14.03.16.06
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 03:16:07 -0700 (PDT)
+To:     linux-pci@vger.kernel.org
+From:   =?UTF-8?B?0KDRg9GB0LvQsNC9INCY0YHQsNC10LI=?= <ubijca16@gmail.com>
+Subject: [PATCH] pci: ibmphp: Remove unused functions get_max_adapter_speed(),
+ and get_bus_name() in ibmphp_core.c
+Message-ID: <4b9310fa-f030-b82c-1440-fe2a3a39e21d@gmail.com>
+Date:   Tue, 14 Jul 2020 13:16:04 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de> <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
- <20200712184041.GA1838@Ryzen-9-3900X.localdomain>
-In-Reply-To: <20200712184041.GA1838@Ryzen-9-3900X.localdomain>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 14 Jul 2020 11:44:10 +0200
-Message-ID: <CA+icZUWyqb8jdzTAophvBKuX3e2NvG7vQPnMW+SRW5v0PmU7TA@mail.gmail.com>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 8:40 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Sun, Jul 12, 2020 at 10:59:17AM +0200, Sedat Dilek wrote:
-> > On Sat, Jul 11, 2020 at 6:32 PM Paul Menzel <pmenzel@molgen.mpg.de> wro=
-te:
-> > >
-> > > Dear Sami,
-> > >
-> > >
-> > > Am 24.06.20 um 22:31 schrieb Sami Tolvanen:
-> > > > This patch series adds support for building x86_64 and arm64 kernel=
-s
-> > > > with Clang's Link Time Optimization (LTO).
-> > > >
-> > > > In addition to performance, the primary motivation for LTO is to al=
-low
-> > > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Goog=
-le's
-> > > > Pixel devices have shipped with LTO+CFI kernels since 2018.
-> > > >
-> > > > Most of the patches are build system changes for handling LLVM bitc=
-ode,
-> > > > which Clang produces with LTO instead of ELF object files, postponi=
-ng
-> > > > ELF processing until a later stage, and ensuring initcall ordering.
-> > > >
-> > > > Note that first objtool patch in the series is already in linux-nex=
-t,
-> > > > but as it's needed with LTO, I'm including it also here to make tes=
-ting
-> > > > easier.
-> > >
-> > > [=E2=80=A6]
-> > >
-> > > Thank you very much for sending these changes.
-> > >
-> > > Do you have a branch, where your current work can be pulled from? You=
-r
-> > > branch on GitHub [1] seems 15 months old.
-> > >
-> >
-> > Agreed it's easier to git-pull.
-> > I have seen [1] - not sure if this is the latest version.
-> > Alternatively, you can check patchwork LKML by searching for $submitter=
-.
-> > ( You can open patch 01/22 and download the whole patch-series by
-> > following the link "series", see [3]. )
-> >
-> > - Sedat -
-> >
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbu=
-ild.git/log/?h=3Dlto
-> > [2] https://lore.kernel.org/patchwork/project/lkml/list/?series=3D&subm=
-itter=3D19676
-> > [3] https://lore.kernel.org/patchwork/series/450026/mbox/
-> >
->
-> Sami tagged this series on his GitHub:
->
-> https://github.com/samitolvanen/linux/releases/tag/lto-v1
->
-> git pull https://github.com/samitolvanen/linux lto-v1
->
-> Otherwise, he is updating the clang-cfi branch that includes both the
-> LTO and CFI patchsets. You can pull that and just turn on
-> CONFIG_LTO_CLANG.
->
-> Lastly, for the future, I would recommend grabbing b4 to easily apply
-> patches (specifically full series) from lore.kernel.org.
->
-> https://git.kernel.org/pub/scm/utils/b4/b4.git/
-> https://git.kernel.org/pub/scm/utils/b4/b4.git/tree/README.rst
->
-> You could grab this series and apply it easily by either downloading the
-> mbox file and following the instructions it gives for applying the mbox
-> file:
->
-> $ b4 am 20200624203200.78870-1-samitolvanen@google.com
->
-> or I prefer piping so that I don't have to clean up later:
->
-> $ b4 am -o - 20200624203200.78870-1-samitolvanen@google.com | git am
->
+These functions are commented out and because of that, are unused.
 
-It is always a pleasure to read your replies and enrich my know-how
-beyond Linux-kernel hacking :-).
+Signed-off-by: Ruslan Isaev <ubijca16@gmail.com>
+---
+  drivers/pci/hotplug/TODO          |  5 ---
+  drivers/pci/hotplug/ibmphp_core.c | 74 -------------------------------
+  2 files changed, 79 deletions(-)
 
-Thanks for the tip with "b4" tool.
-Might add this to our ClangBuiltLinux wiki "Command line tips and tricks"?
+diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
+index a32070be5adf..856535858ddf 100644
+--- a/drivers/pci/hotplug/TODO
++++ b/drivers/pci/hotplug/TODO
+@@ -30,11 +30,6 @@ ibmphp:
+    or ibmphp should store a pointer to its bus in struct slot. Probably the
+    former.
 
-- Sedat -
+-* The functions get_max_adapter_speed() and get_bus_name() are 
+commented out.
+-  Can they be deleted?  There are also forward declarations at the top of
+-  ibmphp_core.c as well as pointers in ibmphp_hotplug_slot_ops, likewise
+-  commented out.
+-
+  * ibmphp_init_devno() takes a struct slot **, it could instead take a
+    struct slot *.
 
-[1] https://github.com/ClangBuiltLinux/linux/wiki/Command-line-tips-and-tri=
-cks
+diff --git a/drivers/pci/hotplug/ibmphp_core.c 
+b/drivers/pci/hotplug/ibmphp_core.c
+index 17124254d897..197997e264a2 100644
+--- a/drivers/pci/hotplug/ibmphp_core.c
++++ b/drivers/pci/hotplug/ibmphp_core.c
+@@ -50,14 +50,6 @@ static int irqs[16];    /* PIC mode IRQs we're using 
+so far (in case MPS
+
+  static int init_flag;
+
+-/*
+-static int get_max_adapter_speed_1 (struct hotplug_slot *, u8 *, u8);
+-
+-static inline int get_max_adapter_speed (struct hotplug_slot *hs, u8 
+*value)
+-{
+-    return get_max_adapter_speed_1 (hs, value, 1);
+-}
+-*/
+  static inline int get_cur_bus_info(struct slot **sl)
+  {
+      int rc = 1;
+@@ -401,69 +393,6 @@ static int get_max_bus_speed(struct slot *slot)
+      return rc;
+  }
+
+-/*
+-static int get_max_adapter_speed_1(struct hotplug_slot *hotplug_slot, 
+u8 *value, u8 flag)
+-{
+-    int rc = -ENODEV;
+-    struct slot *pslot;
+-    struct slot myslot;
+-
+-    debug("get_max_adapter_speed_1 - Entry hotplug_slot[%lx] 
+pvalue[%lx]\n",
+-                        (ulong)hotplug_slot, (ulong) value);
+-
+-    if (flag)
+-        ibmphp_lock_operations();
+-
+-    if (hotplug_slot && value) {
+-        pslot = hotplug_slot->private;
+-        if (pslot) {
+-            memcpy(&myslot, pslot, sizeof(struct slot));
+-            rc = ibmphp_hpc_readslot(pslot, READ_SLOTSTATUS,
+-                        &(myslot.status));
+-
+-            if (!(SLOT_LATCH (myslot.status)) &&
+-                    (SLOT_PRESENT (myslot.status))) {
+-                rc = ibmphp_hpc_readslot(pslot,
+-                        READ_EXTSLOTSTATUS,
+-                        &(myslot.ext_status));
+-                if (!rc)
+-                    *value = SLOT_SPEED(myslot.ext_status);
+-            } else
+-                *value = MAX_ADAPTER_NONE;
+-        }
+-    }
+-
+-    if (flag)
+-        ibmphp_unlock_operations();
+-
+-    debug("get_max_adapter_speed_1 - Exit rc[%d] value[%x]\n", rc, *value);
+-    return rc;
+-}
+-
+-static int get_bus_name(struct hotplug_slot *hotplug_slot, char *value)
+-{
+-    int rc = -ENODEV;
+-    struct slot *pslot = NULL;
+-
+-    debug("get_bus_name - Entry hotplug_slot[%lx]\n", (ulong)hotplug_slot);
+-
+-    ibmphp_lock_operations();
+-
+-    if (hotplug_slot) {
+-        pslot = hotplug_slot->private;
+-        if (pslot) {
+-            rc = 0;
+-            snprintf(value, 100, "Bus %x", pslot->bus);
+-        }
+-    } else
+-        rc = -ENODEV;
+-
+-    ibmphp_unlock_operations();
+-    debug("get_bus_name - Exit rc[%d] value[%x]\n", rc, *value);
+-    return rc;
+-}
+-*/
+-
+  /****************************************************************************
+   * This routine will initialize the ops data structure used in the 
+validate
+   * function. It will also power off empty slots that are powered on 
+since BIOS
+@@ -1231,9 +1160,6 @@ const struct hotplug_slot_ops 
+ibmphp_hotplug_slot_ops = {
+      .get_attention_status =        get_attention_status,
+      .get_latch_status =        get_latch_status,
+      .get_adapter_status =        get_adapter_present,
+-/*    .get_max_adapter_speed =    get_max_adapter_speed,
+-    .get_bus_name_status =        get_bus_name,
+-*/
+  };
+
+  static void ibmphp_unload(void)
+-- 
+2.27.0.windows.1
+
+
