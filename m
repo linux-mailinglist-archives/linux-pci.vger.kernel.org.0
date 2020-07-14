@@ -2,236 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC0072200ED
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 01:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 431BD2200F9
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 01:18:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgGNXO1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 19:14:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48676 "EHLO mail.kernel.org"
+        id S1726479AbgGNXS3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 19:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbgGNXO0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:14:26 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        id S1726187AbgGNXS2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 19:18:28 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74362075F;
-        Tue, 14 Jul 2020 23:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8583D2074B;
+        Tue, 14 Jul 2020 23:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594768465;
-        bh=r7uog4cESi48Yw4dYY/DbLx7RZlV6wCw1CEWWq+6XlA=;
+        s=default; t=1594768707;
+        bh=WbHcOuCS+rj4obHCGdLyDlzJy258Ll6RBipsjc9gqhs=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uhqM1DKsUBkSb34ZnuySBr11C/IVPTDM78HhVr6YtPYQ3Bc4x1bvgqjEx581Hv2FW
-         EIuFsrRT+78H956XxDDewcRuBohQqiLDDl575JzoIe5NYEoONSm81aWVgO2DaJDI9D
-         DOoHqhOtl8Tr4c+O5x3B1xslQtiC68LEHOSdon54=
-Received: by mail-oi1-f176.google.com with SMTP id t4so318186oij.9;
-        Tue, 14 Jul 2020 16:14:25 -0700 (PDT)
-X-Gm-Message-State: AOAM530cKChUQxMJmm8eJgrEdFK4uZOvLQOdzu4mM5vWYYybiIBjcVs/
-        7dN1utjuHPfTdn2zBuqgolJhnjJyVlDFnHljIA==
-X-Google-Smtp-Source: ABdhPJyPeAsck+oWahDAYilS/PEH/rJeSk/8KZU/L05nx97DSP/InZ2NhVXCgkioINrDYey4E+B55UCj7W0qHUAPUos=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr5744639oiw.147.1594768464844;
- Tue, 14 Jul 2020 16:14:24 -0700 (PDT)
+        b=OTYv7SW64RJ7rcBLNLixgDhz1BOtm1ZlPfGu0RW7CKMz/+ee2kQZnsPya33XRsqSZ
+         NSY9JKrQ2FHqtYIo/G1nklBOWhlXLpB3Bb80i2eXAScH3Qkvmz4gkSVFZ3xyOmHSB2
+         fS1zjaVyGJOhZPsVcQWQD09xHBVeLAHPlnAO/7HE=
+Received: by mail-ot1-f47.google.com with SMTP id h13so68081otr.0;
+        Tue, 14 Jul 2020 16:18:27 -0700 (PDT)
+X-Gm-Message-State: AOAM531sTp1Rzu6UUNRYLmVqQbl0CpurZMh5yerLiQhkx5Ucm1Hde/hl
+        nUGH9qkEQoMlwdLXNKEmpqSFXENueBn9VUlgcQ==
+X-Google-Smtp-Source: ABdhPJzamyUgo6UiqW59FuZ+b+pvPCuOFw/T+vorF7nM8Yc7QjaPRAdppkgkTdGO/rge6EQOKevq7Mn09VhM3JKnhr0=
+X-Received: by 2002:a9d:4002:: with SMTP id m2mr6332092ote.129.1594768706856;
+ Tue, 14 Jul 2020 16:18:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
- <20200714184550.GA397277@bjorn-Precision-5520>
-In-Reply-To: <20200714184550.GA397277@bjorn-Precision-5520>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+ <20200612171334.26385-2-nsaenzjulienne@suse.de> <20200713182356.GA413630@bogus>
+ <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de> <20200714210708.GA2897216@bogus>
+ <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
+In-Reply-To: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 17:14:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL21k8wyxfGfVdwz0jBEVME5b+rvLrwF4waZeiHZkuvhA@mail.gmail.com>
-Message-ID: <CAL_JsqL21k8wyxfGfVdwz0jBEVME5b+rvLrwF4waZeiHZkuvhA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+Date:   Tue, 14 Jul 2020 17:18:15 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
+Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, tim.gover@raspberrypi.org,
+        PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:45 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Jul 14, 2020 at 3:18 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
-> [trimmed the cc list; it's still too large but maybe arch folks care]
 >
-> On Mon, Jul 13, 2020 at 05:08:10PM +0200, Arnd Bergmann wrote:
-> > On Mon, Jul 13, 2020 at 3:22 PM Saheed O. Bolarinwa
-> > <refactormyself@gmail.com> wrote:
-> > > This goal of these series is to move the definition of *all*
-> > > PCIBIOS* from include/linux/pci.h to arch/x86 and limit their use
-> > > within there.  All other tree specific definition will be left for
-> > > intact. Maybe they can be renamed.
-> > >
-> > > PCIBIOS* is an x86 concept as defined by the PCI spec. The
-> > > returned error codes of PCIBIOS* are positive values and this
-> > > introduces some complexities which other archs need not incur.
+>
+> On 7/14/2020 2:07 PM, Rob Herring wrote:
+> > On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
+> >> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
+> >>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+> >>>> The firmware running on the RPi VideoCore can be used to reset and
+> >>>> initialize HW controlled by the firmware.
+> >>>>
+> >>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>>>
+> >>>> ---
+> >>>> Changes since v2:
+> >>>>  - Add include file for reset IDs
+> >>>>
+> >>>> Changes since v1:
+> >>>>  - Correct cells binding as per Florian's comment
+> >>>>  - Change compatible string to be more generic
+> >>>>
+> >>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+> >>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+> >>>>  2 files changed, 34 insertions(+)
+> >>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> index b48ed875eb8e..23a885af3a28 100644
+> >>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> @@ -39,6 +39,22 @@ properties:
+> >>>>        - compatible
+> >>>>        - "#clock-cells"
+> >>>>
+> >>>> +  reset:
+> >>>
+> >>> I'm not really thrilled how this is evolving with a node per provider.
+> >>> There's no reason you can't just add #clock-cells and #reset-cells to
+> >>> the parent firmware node.
+> >>
+> >> What are the downsides? The way I see it there is not much difference. And this
+> >> way of handling things is feels more intuitive and flexible (overlays can
+> >> control what to enable easily, we can take advantage of the platform device
+> >> core).
 > >
-> > I think the intention is good, but I find the series in its current
-> > form very hard to review, in particular the way you touch some
-> > functions three times with trivial changes. Instead of
+> > What the OS wants can evolve, so designing around the current needs of
+> > the OS is not how bindings should be done.
 > >
-> > 1) replace PCIBIOS_SUCCESSFUL with 0
-> > 2) drop pointless 0-comparison
-> > 3) reformat whitespace
+> > Using overlays to add clocks or resets wouldn't really work given they
+> > are spread out over the tree. And with clocks in particular, you'd have
+> > to replace dummy fixed clocks with actual firmware clocks. Sounds
+> > fragile and messy...
 > >
-> > I would suggest to combine the first two steps into one patch per
-> > subsystem and drop the third step.
->
-> I agree.  BUT please don't just run out and post new patches to do
-> this.  Let's talk about Arnd's further ideas below first.
->
-> > ...
-> > Maybe the work can be split up differently, with a similar end
-> > result but fewer and easier reviewed patches. The way I'd look at
-> > the problem, there are three main areas that can be dealt with one
-> > at a time:
+> >>> I probably should have complained with the clocks node, but that's only
+> >>> pending for 5.9.
+> >>
+> >> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
+> >> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
+> >> this it[1]. :P
 > >
-> > a) callers of the high-level config space accessors
-> >    pci_{write,read}_config_{byte,word,dword}, mostly in device
-> >    drivers.
-> > b) low-level implementation of the config space accessors
-> >     through struct pci_ops
-> > c) all other occurrences of these constants
+> > Sigh, this is why I dislike incomplete examples...
 > >
-> > Starting with a), my first question is whether any high-level
-> > drivers even need to care about errors from these functions. I see
-> > 4913 callers that ignore the return code, and 576 that actually
-> > check it, and almost none care about the specific error (as you
-> > found as well). Unless we conclude that most PCI drivers are wrong,
-> > could we just change the return type to 'void' and assume they never
-> > fail for valid arguments on a valid pci_device* ?
+> > Based on that,
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > And please get gpio and ts converted to schema and referenced here
+> > before the next time I look at this.
+> >
+> >> There already is a fair amount of churn in these drivers because of all the DT
+> >> changes we did in the past, and if we need to change how we integrate these
+> >> again, I'd really like it to be for good.
+> >>
+> >>> The bigger issue is this stuff is just trickling in one bit at a time
+> >>> which gives no context for review. What's next? Is it really a mystery
+> >>> as to what functions the firmware provides?
+> >>
+> >> We have no control over it, RPi engineers integrate new designs and new
+> >> firmware interfaces show up. This is a good example of it.
+> >>
+> >> I proposed them to use SCMI as it covers most of what they are already
+> >> providing here. But no luck so far.
+> >
+> > Once we get tired of supporting all the different firmware interfaces
+> > and the mess they become, we'll just have to start refusing custom ones.
+> > Worked for PSCI.
 >
-> I really like this idea.
->
-> pci_write_config_*() has one return value, and only 100ish of 2500
-> callers check for errors.  It's sometimes possible for config
-> accessors to detect PCI errors and return failure, e.g., device was
-> removed or didn't respond, but most of them don't, and detecting these
-> errors is not really that valuable.
->
-> pci_read_config_*() is much more interesting because it returns two
-> things, the function return value and the value read from the PCI
-> device, and it's complicated to check both.
->
-> Again it's sometimes possible for config read accessors to detect PCI
-> errors, but in most cases a PCI error means the accessor returns
-> success and the value from PCI is ~0.
->
-> Checking the function return value catches programming errors (bad
-> alignment, etc) but misses most of the interesting errors (device was
-> unplugged or reported a PCI error).
->
-> Checking the value returned from PCI is tricky because ~0 is a valid
-> value for some config registers, and only the driver knows for sure.
-> If the driver knows that ~0 is a possible value, it would have to do
-> something else, e.g., another config read of a register that *cannot*
-> be ~0, to see whether it's really an error.
->
-> I suspect that if we had a single value to look at it would be easier
-> to get right.  Error checking with current interface would look like
-> this:
->
->   err = pci_read_config_word(dev, addr, &val);
->   if (err)
->     return -EINVAL;
->
->   if (PCI_POSSIBLE_ERROR(val)) {
->     /* if driver knows ~0 is invalid */
->     return -EINVAL;
->
->     /* if ~0 is potentially a valid value */
->     err = pci_read_config_word(dev, PCI_VENDOR_ID, &val2);
->     if (err)
->       return -EINVAL;
->
->     if (PCI_POSSIBLE_ERROR(val2))
->       return -EINVAL;
->   }
->
-> Error checking with a possible interface that returned only a single
-> value could look like this:
->
->   val = pci_config_read_word(dev, addr);
->   if (PCI_POSSIBLE_ERROR(val)) {
->     /* if driver knows ~0 is invalid */
->     return -EINVAL;
->
->     /* if ~0 is potentially a valid value */
->     val2 = pci_config_read_word(dev, PCI_VENDOR_ID);
->     if (PCI_POSSIBLE_ERROR(val2))
->       return -EINVAL;
->   }
->
-> Am I understanding you correctly?
->
-> > For b), it might be nice to also change other aspects of the
-> > interface, e.g. passing a pci_host_bridge pointer plus bus number
-> > instead of a pci_bus pointer, or having the callback in the
-> > pci_host_bridge structure.
->
-> I like this idea a lot, too.  I think the fact that
-> pci_bus_read_config_word() requires a pci_bus * complicates things in
-> a few places.
+> In this particular case, the Raspberry Pi Foundation VPU firmware should
+> just implement SCMI and that would avoid having to write new client
+> drivers for Linux, it is not clear to me why this has not been done yet.
 
-I've been looking at the various host implementations of config
-accessors as well as probe functions. Needing the pci_bus pointer is a
-big reason why host drivers will have 2 sets of config accessors or
-don't use the generic ones. Often that's just for the root bus config
-space init before pci_host_probe() is called. Perhaps that's better
-addressed with a fixup hook for the host bridge? ftpci100i is a good
-example of this.
+Writing drivers is fun?
 
-The root bus accesses are often different from the rest of config
-space. Determining if an access is for the root bus or not is all over
-the map, but often involves a private bus number variable. I have a
-series to use pci_is_root_bus() instead and eliminate a bunch of bus
-number handling in the host drivers (I'm sure there's a bunch of hosts
-that would be broken if the root bus is not 0). The majority of hosts
-don't really need to know anything about the bus number. The more I've
-thought about it, it would be better if the PCI core handled this and
-picked the right ops to call. We already have several cases of host
-drivers with their own ops for this and we could eliminate several
-layers of indirection (looking at you, DWC). Any thoughts on direction
-here would be helpful.
-
-> I think it's completely separate, as you say, and we should defer it
-> for now because even part a) is a lot of work.  I added it to my list
-> of possible future projects.
-
-Got that published somewhere? :)
+Perhaps we should start refusing new firmware interfaces now.
 
 Rob
