@@ -2,135 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 879CC21F430
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 16:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B15B21F5D4
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 17:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgGNOgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 10:36:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:34706 "EHLO foss.arm.com"
+        id S1726187AbgGNPI1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 11:08:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:38354 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgGNOgW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:36:22 -0400
+        id S1725876AbgGNPI0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:08:26 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 734AF1FB;
-        Tue, 14 Jul 2020 07:36:21 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFDDC30E;
+        Tue, 14 Jul 2020 08:08:25 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C1A13F792;
-        Tue, 14 Jul 2020 07:36:20 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 15:36:14 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FD5B3F792;
+        Tue, 14 Jul 2020 08:08:24 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 16:08:22 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Shmuel Hazan <sh@tkos.co.il>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3] PCI: mvebu: Setup BAR0 in order to fix MSI
-Message-ID: <20200714143614.GA14416@e121166-lin.cambridge.arm.com>
-References: <20200623060334.108444-1-sh@tkos.co.il>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>, Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v2] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
+ bridge_class_quirk()
+Message-ID: <20200714150822.GB14416@e121166-lin.cambridge.arm.com>
+References: <1591925417-27665-1-git-send-email-yangtiezhu@loongson.cn>
+ <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623060334.108444-1-sh@tkos.co.il>
+In-Reply-To: <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:03:35AM +0300, Shmuel Hazan wrote:
-> According to the Armada XP datasheet, section 10.2.6: "in order for
-> the device to do a write to the MSI doorbell address, it needs to write
-> to a register in the internal registers space".
+On Tue, Jul 14, 2020 at 03:37:51PM +0800, Tiezhu Yang wrote:
+> On 06/12/2020 09:30 AM, Tiezhu Yang wrote:
+> > Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
+> > for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
+> > has no effect.
+> > 
+> > Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
+> > 
+> > v2:
+> >    - modify the patch subject used with lower case "loongson"
+> > 
+> > This patch is based on mips-next tree.
+> > 
+> >   drivers/pci/controller/pci-loongson.c | 6 +++---
+> >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > index 459009c..58b862a 100644
+> > --- a/drivers/pci/controller/pci-loongson.c
+> > +++ b/drivers/pci/controller/pci-loongson.c
+> > @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+> >   {
+> >   	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> >   }
+> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >   			DEV_PCIE_PORT_0, bridge_class_quirk);
+> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >   			DEV_PCIE_PORT_1, bridge_class_quirk);
+> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >   			DEV_PCIE_PORT_2, bridge_class_quirk);
+> >   static void system_bus_quirk(struct pci_dev *pdev)
 > 
-> As a result of the requirement above, without this patch, MSI won't
-> function and therefore some devices won't operate properly without
-> pci=nomsi.
+> Hi,
 > 
-> This requirement was not present at the time of writing this driver
-> since the vendor u-boot always initializes all PCIe controllers
-> (incl. BAR0 initialization) and for some time, the vendor u-boot was
-> the only available bootloader for this driver's SoCs (e.g. A38x,A37x,
-> etc).
-> 
-> Tested on an Armada 385 board on mainline u-boot (2020.4), without
-> u-boot PCI initialization and the following PCIe devices:
->         - Wilocity Wil6200 rev 2 (wil6210)
->         - Qualcomm Atheros QCA6174 (ath10k_pci)
-> 
-> Both failed to get a response from the device after loading the
-> firmware and seem to operate properly with this patch.
-> 
-> Signed-off-by: Shmuel Hazan <sh@tkos.co.il>
-> 
-> ---
-> 
-> Changes in v3:
-> 	* Added sign-off. 
-> 
-> ---
->  drivers/pci/controller/pci-mvebu.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
+> Any comments?
 
-Applied to pci/mvebu, thanks.
+(1) how was this driver tested if this patch is required ? Is it because
+    you are testing on a different platform ?
+(2) Please explain why it is needed (I mean describe what happens
+    in current code and how this fixes it) in the commit log, it is
+    useful for people who may need to tweak this code further
+
+I will apply it then, thanks.
 
 Lorenzo
 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 153a64676bc9..101c06602aa1 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -105,6 +105,7 @@ struct mvebu_pcie_port {
->  	struct mvebu_pcie_window memwin;
->  	struct mvebu_pcie_window iowin;
->  	u32 saved_pcie_stat;
-> +	struct resource regs;
->  };
->  
->  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
-> @@ -149,7 +150,9 @@ static void mvebu_pcie_set_local_dev_nr(struct mvebu_pcie_port *port, int nr)
->  
->  /*
->   * Setup PCIE BARs and Address Decode Wins:
-> - * BAR[0,2] -> disabled, BAR[1] -> covers all DRAM banks
-> + * BAR[0] -> internal registers (needed for MSI)
-> + * BAR[1] -> covers all DRAM banks
-> + * BAR[2] -> Disabled
->   * WIN[0-3] -> DRAM bank[0-3]
->   */
->  static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
-> @@ -203,6 +206,12 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
->  	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(1));
->  	mvebu_writel(port, ((size - 1) & 0xffff0000) | 1,
->  		     PCIE_BAR_CTRL_OFF(1));
-> +
-> +	/*
-> +	 * Point BAR[0] to the device's internal registers.
-> +	 */
-> +	mvebu_writel(port, round_down(port->regs.start, SZ_1M), PCIE_BAR_LO_OFF(0));
-> +	mvebu_writel(port, 0, PCIE_BAR_HI_OFF(0));
->  }
->  
->  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> @@ -708,14 +717,13 @@ static void __iomem *mvebu_pcie_map_registers(struct platform_device *pdev,
->  					      struct device_node *np,
->  					      struct mvebu_pcie_port *port)
->  {
-> -	struct resource regs;
->  	int ret = 0;
->  
-> -	ret = of_address_to_resource(np, 0, &regs);
-> +	ret = of_address_to_resource(np, 0, &port->regs);
->  	if (ret)
->  		return (void __iomem *)ERR_PTR(ret);
->  
-> -	return devm_ioremap_resource(&pdev->dev, &regs);
-> +	return devm_ioremap_resource(&pdev->dev, &port->regs);
->  }
->  
->  #define DT_FLAGS_TO_TYPE(flags)       (((flags) >> 24) & 0x03)
-> -- 
-> 2.27.0
+> Could you please apply this patch?
+> 
+> Thanks,
+> Tiezhu
 > 
