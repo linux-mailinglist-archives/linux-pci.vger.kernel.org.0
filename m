@@ -2,83 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D2221EA3A
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 09:38:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D97621EB06
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 10:10:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbgGNHiy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 03:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgGNHix (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:38:53 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06F482084C;
-        Tue, 14 Jul 2020 07:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594712333;
-        bh=D9X12rzUdjdFj13IA0SQy7lT+r0nIG2ebG23ZycYooo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AjbVNXfqwfJCMrv83a4TBW2KQlgSPYZoRCZ2dyPGQ1L0rB7E0Ao5fqRdVamRJCVaQ
-         XW+aGrhAPXs0BGRK58cXBAhBQvMQs8dcotHaCXyDWKOoN7mgnc1S/yVL8puPbnyTe0
-         lg6Q2vZI1zLrG9u+Oyyj9aRQpRso4NfJVV1eFU80=
-Received: by pali.im (Postfix)
-        id 340C8842; Tue, 14 Jul 2020 09:38:50 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 09:38:50 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200714073850.rvuknigpj3jt7kp4@pali>
-References: <20200702083036.12230-1-pali@kernel.org>
- <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
- <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
- <20200709150959.wq6zfkcy4m6hvvpl@pali>
- <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
- <20200713082747.e3q3ml3wpbszn4j7@pali>
- <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
- <20200713145003.foarsdixquicvivy@pali>
- <20200713164140.GA29307@e121166-lin.cambridge.arm.com>
+        id S1725793AbgGNIKG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 14 Jul 2020 04:10:06 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:51957 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbgGNIKF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 04:10:05 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-47-quVXGfyEOkSmpSddwNFlhw-1; Tue, 14 Jul 2020 09:10:01 +0100
+X-MC-Unique: quVXGfyEOkSmpSddwNFlhw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 14 Jul 2020 09:10:01 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 14 Jul 2020 09:10:01 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Saheed Olayemi Bolarinwa' <refactormyself@gmail.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "bjorn@helgaas.com" <bjorn@helgaas.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 11/14 v3] PCI/PM: Check return value of
+ pcie_capability_read_*()
+Thread-Topic: [PATCH 11/14 v3] PCI/PM: Check return value of
+ pcie_capability_read_*()
+Thread-Index: AQHWVwhf1JBBv8jM7kKvf2XRj4wYvqkGvVFg
+Date:   Tue, 14 Jul 2020 08:10:00 +0000
+Message-ID: <80c7a253134b43289ba28a320ba99f9c@AcuMS.aculab.com>
+References: <20200710212026.27136-1-refactormyself@gmail.com>
+ <20200710212026.27136-12-refactormyself@gmail.com>
+In-Reply-To: <20200710212026.27136-12-refactormyself@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713164140.GA29307@e121166-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 13 July 2020 17:41:40 Lorenzo Pieralisi wrote:
-> On Mon, Jul 13, 2020 at 04:50:03PM +0200, Pali Rohár wrote:
-> > On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
-> > > I will go over the thread again but I suspect I can merge the patch even
-> > > though I still believe there is work to be done to understand the issue
-> > > we are facing.
-> > 
-> > Just to note that pci-mvebu.c also checks if pcie link is up before
-> > trying to access the real PCIe interface registers, similarly as in my
-> > patch.
+> From: Saheed Olayemi Bolarinwa
+> Sent: 10 July 2020 22:20
+> To: helgaas@kernel.org
+> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 > 
-> I understand - that does not change my opinion though, the link check
-> is just a workaround, it'd be best if we pinpoint the real issue which
-> is likely to a HW one.
+> On failure pcie_capability_read_dword() sets it's last parameter,
+> val to 0.
+> However, with Patch 14/14, it is possible that val is set to ~0 on
+> failure. This would introduce a bug because (x & x) == (~0 & x).
+> 
+> This bug can be avoided if the return value of pcie_capability_read_dword
+> is checked to confirm success.
+> 
+> Check the return value of pcie_capability_read_dword() to ensure success.
+> 
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> ---
+>  drivers/pci/pci.c | 52 ++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 33 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce096272f52b..9f18ffbf7bd4 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3207,6 +3207,7 @@ void pci_configure_ari(struct pci_dev *dev)
+>  {
+>  	u32 cap;
+>  	struct pci_dev *bridge;
+> +	int ret;
+> 
+>  	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
+>  		return;
+> @@ -3215,8 +3216,8 @@ void pci_configure_ari(struct pci_dev *dev)
+>  	if (!bridge)
+>  		return;
+> 
+> -	pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
+> -	if (!(cap & PCI_EXP_DEVCAP2_ARI))
+> +	ret = pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
+> +	if (ret || !(cap & PCI_EXP_DEVCAP2_ARI))
+>  		return;
 
-Lorenzo, if you have an idea how to debug this issue or if you would
-like to see some test results, let me know. I can do some tests, but I
-currently really do not know more then what I wrote in previous emails.
+Why not make the function result 64bit?
+Then you can return ~0ull on failure and the capability value on success.
+Gets rid of the horrid error + return value pair.
 
-In my opinion, problem is in HW which Marvell has not documented nor
-proved that it exists. Other option is that problem is in Compex card
-which can be triggered only by Marvell aardvark HW.
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
