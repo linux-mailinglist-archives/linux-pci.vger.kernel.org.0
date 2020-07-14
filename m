@@ -2,290 +2,446 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75E3421FE7C
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 22:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F78521FEAF
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 22:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgGNUYQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 16:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgGNUYQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 16:24:16 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30661C061794;
-        Tue, 14 Jul 2020 13:24:16 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e11so16928891qkm.3;
-        Tue, 14 Jul 2020 13:24:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=04bAG3qp4rwYcvB5k1KgBf1j51ZtWk9+/pw9Ffy3XX4=;
-        b=hc2SV3Piu7MZNxeMfvkMgG0gKHHfEwnaocwxkVxDODjNPWLl4XEhF23LS1CLgHdM2m
-         u8fs/DJJlcmhZ/fZ4RoSSu+mN+c52PjpoAMpw4XjETgnrMVXj8nT5wPllORzx+ubcsvv
-         Z2op2hSFqBFko4P+CJh+BAr/I6U40lJ6+YVqWNixKVd5t+dzo8/XMr/BaD2I8nSlC0iC
-         tjyyQEj0L0FhKa2X9FraGdJ7nUfHXk8CAvm+kYjYVX51rMhDGEjJI+L1D/rLtXOXQDWf
-         cUCmu4FQyj9Oz+zdz+WsVfBuH8IlbAYcqxOAZzDEUtTiO6bFO8Yk3hhytCajyNdEEoL8
-         XcHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=04bAG3qp4rwYcvB5k1KgBf1j51ZtWk9+/pw9Ffy3XX4=;
-        b=hsDFwK69qhvjiY97PPfW6o7b2gTWHHrjGwEtTAF8DwJijOfe+ZjRXm8EB6vcsRlmCU
-         miCuYh7oO5E1JxdEv6T29IBlJGdqoMshKo3a8KOInDXudB4aXj7Sk0s62XN6Ua9ZE4Md
-         cUU+xcfR2+mYwAojitb6oxRzHKhbCh9Yc4IVDRdcPvWksijVr6388REufi8oUVxtVyvG
-         8dMZbbB+nIFqO72QimC8zUqZ9aUHGy9ZrgB88N3+m8ZYaby5QZDY0k3rIpLeyKAQx0I2
-         NMGt26v1ZzHkDxpHtMw6AaP4aAdJmrmkdbIfFajd2rFxPVrgqVKaEq36RlOyx5By3hx4
-         sE+Q==
-X-Gm-Message-State: AOAM5327QH2O6nucFaFrjnjj17TGB2qbJnxbuOgeVShnCgnrGMrKY4gx
-        lwESnH2bYOvdFcNnIQ873mqmQ3yBSdfaygfiM0E=
-X-Google-Smtp-Source: ABdhPJwUlk2xtLflkrh6FLiLsvOUjxJvVb+2ta6K9/z+ZFXMkqLSdHvqsCzm3+15BphUHyeIpISndqw0NchaaJRmNIE=
-X-Received: by 2002:a37:4753:: with SMTP id u80mr6563697qka.317.1594758255149;
- Tue, 14 Jul 2020 13:24:15 -0700 (PDT)
+        id S1726479AbgGNUgo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 16:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgGNUgo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 16:36:44 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0B12064B;
+        Tue, 14 Jul 2020 20:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594759003;
+        bh=HaM7jfd1jk6mP2SYNDJFlLA4pr8W8AbZf4ZfVWZGmLg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZLxykPeVJIhZ9VwcgNldVTtx9EYI5tTquc25Hjr1BLTmZa2kMBA15Vju37MRG7YP7
+         Df+epZMj+UTJWS0fel0m2pgBTJO/2g324nrPV+hbtLA7up6+dDWBmDmV4Hb2wHBI2K
+         i5iltCg0f3xX0gFCQvitNUItscwKg7R513h9W7io=
+Date:   Tue, 14 Jul 2020 15:36:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin@geanix.com,
+        Ingo Molnar <mingo@redhat.com>, linux-ia64@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, linuxarm@huawei.com,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH] ACPI: Only create numa nodes from entries in SRAT or
+ SRAT emulation.
+Message-ID: <20200714203641.GA411640@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200714201540.3139140-1-rajatja@google.com>
-In-Reply-To: <20200714201540.3139140-1-rajatja@google.com>
-Reply-To: rajatxjain@gmail.com
-From:   Rajat Jain <rajatxjain@gmail.com>
-Date:   Tue, 14 Jul 2020 13:24:03 -0700
-Message-ID: <CAA93t1rzHbTVCrXhz3YBExJS1FOHBe=GCnns9=q1Ry9zdWb4VA@mail.gmail.com>
-Subject: Re: [PATCH v5] PCI/ACS: Enable PCI_ACS_TB and disable only when
- needed for ATS
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713151018.2267079-1-Jonathan.Cameron@huawei.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 1:15 PM Rajat Jain <rajatja@google.com> wrote:
->
-> The ACS "Translation Blocking" bit blocks the translated addresses from
-> the devices. We don't expect such traffic from devices unless ATS is
-> enabled on them. A device sending such traffic without ATS enabled,
-> indicates malicious intent, and thus should be blocked.
->
-> Enable PCI_ACS_TB by default for all devices, and it stays enabled until
-> atleast one of the devices downstream wants to enable ATS. It gets
-> disabled to enable ATS on a device downstream it, and then gets enabled
-> back on once all the downstream devices don't need ATS.
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+The subject suggests that currently we create NUMA nodes from SRAT
+*and* other sources, and that this patch will remove the other
+sources.  Is that right?
+
+On Mon, Jul 13, 2020 at 11:10:18PM +0800, Jonathan Cameron wrote:
+> Here, I will use the term Proximity Domains for the ACPI description and
+> Numa Nodes for the in kernel representation.
+
+ACPI spells it "NUMA".  Maybe in subject line, too.
+
+> Until ACPI 6.3 it was arguably possible to interpret the specification as
+> allowing _PXM in DSDT and similar to define additional Proximity Domains.
+
+I *think* you mean that the SRAT defines proximity domains (ACPI v6.3,
+sec 5.2.16) and the possible interpretation is that _PXM can define
+new proximity domains that were not mentioned in the SRAT.
+
+> The reality was that was never the intent, and a 'clarification' was added
+> in ACPI 6.3 [1].  In practice I think the kernel has never allowed any other
+> interpretaion, except possibly on adhoc base within some out of tree driver
+> (using it very very carefully given potential to crash when using various
+> standard calls such as devm_kzalloc).
+
+Drop the "was never the intent" part; who knows what intent of the
+cabal that wrote the spec was, and it isn't really useful anyway.  I'd
+say the "Note" in 5.2.16 qualifies as a clarification and doesn't need
+scare quotes around it.
+
+s/interpretaion/interpretation/
+s/adhoc/ad hoc/
+s/base/basis/ (I guess?)
+
+Personally I don't see the point of mentioning out-of-tree drivers
+that might be doing something wrong unless it helps us maintain
+*in-tree* stuff.
+
+> Proximity Domains are always defined in SRAT.  In ACPI, there are methods
+> defined in ACPI to allow their characteristics to be tweaked later but
+> Proximity Domains have to be referenced in this table at boot, thus
+> allowing Linux to instantiate relevant Numa Node data structures.
+
+s/In ACPI, there/There/
+
+> We ran into a problem when enabling _PXM handling for PCI devices and found
+> there were boards out there advertising devices in proximity domains that
+> didn't exist [2].
+> 
+> The fix suggested here is to modfiy the function acpi_map_pxm_to_node.
+> This function is both used to create and lookup proximity domains.
+> A parameter is added to specify whether it should create a new
+> proximity domain when it encounters a Proximity Domain ID that it
+> hasn't seen before.
+
+s/modfiy/modify/
+
+> Naturally there is a quirk.  For SRAT ITS entries on ARM64 the handling is
+> done with an additional pass of SRAT, potentially later in the boot. We
+> could modify that behaviour so we could identify the existence of Proximity
+> Domains unique to the ITS structures, and handle them as a special case
+> of a Genric Initiator (once support for those merges) however...
+
+s/ITS/Interrupt Translation Service (ITS)/ (first time)
+s/Genric/Generic/ (or maybe "generic initiator" as used in ACPI spec)
+
+> Currently (5.8-rc2) setting the Proximity Domain of an ITS to one that hasn't
+> been instantiated by being specified in another type of SRAT resource entry
+> results in:
+
+Are you saying the _PXM of an ITS mentions a proximity domain that
+wasn't mentioned in the SRAT?
+
+Or are you saying an SRAT ITS entry mentions a proximity domain that
+wasn't mentioned in a different type of SRAT entry?  I *think* this is
+what you're saying, but I don't see anything in the spec about which
+entry types are allowed to define proximity domains.
+
+> ITS [mem 0x202100000-0x20211ffff]
+> ITS@0x0000000202100000: Using ITS number 0
+> Unable to handle kernel paging request at virtual address 0000000000001a08
+> Mem abort info:
+> ESR = 0x96000004
+> EC = 0x25: DABT (current EL), IL = 32 bits
+> SET = 0, FnV = 0
+> EA = 0, S1PTW = 0
+> Data abort info:
+> ISV = 0, ISS = 0x00000004
+> CM = 0, WnR = 0
+> [0000000000001a08] user address but active_mm is swapper
+> Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper/0 Tainted: G       A          5.8.0-rc2 #483
+> pstate: 80000089 (Nzcv daIf -PAN -UAO BTYPE=--)
+> pc : __alloc_pages_nodemask+0xe8/0x338
+> lr : __alloc_pages_nodemask+0xc0/0x338
+> sp : ffffa81540c139b0
+> x29: ffffa81540c139b0 x28: 0000000000000001
+> x27: 0000000000000100 x26: ffffa81540c1ad38
+> x25: 0000000000000000 x24: 0000000000000000
+> x23: ffffa81540c23c00 x22: 0000000000000004
+> x21: 0000000000000002 x20: 0000000000001a00
+> x19: 0000000000000100 x18: 0000000000000010
+> x17: 000000000001f000 x16: 000000000000007f
+> x15: ffffa81540c24070 x14: ffffffffffffffff
+> x13: ffffa815c0c137d7 x12: ffffa81540c137e4
+> x11: ffffa81540c3e000 x10: ffffa81540ecee68
+> x9 : ffffa8153f0f61d8 x8 : ffffa81540ecf000
+> x7 : 0000000000000141 x6 : ffffa81540ecf401
+> x5 : 0000000000000000 x4 : 0000000000000000
+> x3 : 0000000000000000 x2 : 0000000000000000
+> x1 : 0000000000000081 x0 : 0000000000001a00
+
+Some of this is not really relevant to the commit log.  The ITS info,
+page fault, some of the backtrace might help people google for this,
+but I think the register dump is overkill.
+
+> Call trace:
+>  __alloc_pages_nodemask+0xe8/0x338
+>  alloc_pages_node.constprop.0+0x34/0x40
+>  its_probe_one+0x2f8/0xb18
+>  gic_acpi_parse_madt_its+0x108/0x150
+>  acpi_table_parse_entries_array+0x17c/0x264
+>  acpi_table_parse_entries+0x48/0x6c
+>  acpi_table_parse_madt+0x30/0x3c
+>  its_init+0x1c4/0x644
+>  gic_init_bases+0x4b8/0x4ec
+>  gic_acpi_init+0x134/0x264
+>  acpi_match_madt+0x4c/0x84
+>  acpi_table_parse_entries_array+0x17c/0x264
+>  acpi_table_parse_entries+0x48/0x6c
+>  acpi_table_parse_madt+0x30/0x3c
+>  __acpi_probe_device_table+0x8c/0xe8
+>  irqchip_init+0x3c/0x48
+>  init_IRQ+0xcc/0x100
+>  start_kernel+0x33c/0x548
+> 
+> As we die in this case in existing kernels, we can be fairly sure that no one
+> actually has such a firmware in production.  As such this patch avoids the
+> complexity that would be needed to handle this corner case, and simply does
+> not allow the ITS entry parsing code to instantiate new Numa Nodes.  If one
+> is encountered that does not already exist, then NO_NUMA_NODE is assigned
+> and a warning printed just as if the value had been greater than allowed
+> Numa Nodes.
+
+Are you saying we won't create a NUMA node based on an SRAT ITS entry?
+Is there something about that in the spec?
+
+> "SRAT: Invalid NUMA node -1 in ITS affinity"
+> 
+> I have only tested this for now on our ARM64 Kunpeng920 servers and
+> a range of qemu x86 and arm64 configurations.
+> 
+> Note minor merge issue with Dan William's series [3].  Merge fixes should be
+> straight forward.
+
+It's a little hard to figure out what's going on here.  It might help
+if you made a preliminary patch that added your new parameter but
+preserved all existing behavior, then follow up with a second patch
+that makes the real change you need.
+
+> [1] Note in ACPI Specification 6.3 5.2.16 System Resource Affinity Table (SRAT)
+> [2] https://patchwork.kernel.org/patch/10597777/
+> [3] https://lore.kernel.org/patchwork/cover/1271398/
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
-> Note that I'm ignoring the devices that require quirks to enable or
-> disable ACS, instead of using the standard way for ACS configuration.
-> The reason is that it would require adding yet another quirk table or
-> quirk function pointer, that I don't know how to implement for those
-> devices, and will neither have the devices to test that code.
->
-> v5: Enable TB and disable ATS for all devices on boot. Disable TB later
->     only if needed to enable ATS on downstream devices.
-> v4: Add braces to avoid warning from kernel robot
->     print warning for only external-facing devices.
-> v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
->     Minor code comments fixes.
-> v2: Commit log change
->
->  drivers/pci/ats.c   |  5 ++++
->  drivers/pci/pci.c   | 57 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h   |  2 ++
->  drivers/pci/probe.c |  2 +-
->  include/linux/pci.h |  2 ++
->  5 files changed, 67 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index b761c1f72f67..e2ea9083f30f 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -28,6 +28,9 @@ void pci_ats_init(struct pci_dev *dev)
->                 return;
->
->         dev->ats_cap = pos;
-> +
-> +       dev->ats_enabled = 1; /* To avoid WARN_ON from pci_disable_ats() */
-> +       pci_disable_ats(dev);
+> 
+> Possible open questions:
+> * should we warn about a broken firmware trying to assign any device
+>   to a non existent Proximity Domain?
+> * previously an smmuv3 in IORT with a Proximity Domain set to a non existent
+>   value would have resulted in a failure to add the device. After this change
+>   it will be added to the default node.  Is that a problem?
+> * for the smmuv3 we print that we have successfully mapped to a node even if
+>   we have not.  Would making this clear be useful?
+>   Perhaps this is a topic for a separate patch.
+> 
+>  Changes since RFC
+>  * Fixed missing parameter in dmar.c
+>  * Tested on some Qemu x86 models so confident enough to drop the RFC.
+> 
+>  arch/arm64/kernel/acpi_numa.c    | 2 +-
+>  arch/ia64/kernel/acpi.c          | 2 +-
+>  arch/x86/mm/srat.c               | 4 ++--
+>  drivers/acpi/arm64/iort.c        | 2 +-
+>  drivers/acpi/nfit/core.c         | 2 +-
+>  drivers/acpi/numa/hmat.c         | 2 +-
+>  drivers/acpi/numa/srat.c         | 8 ++++----
+>  drivers/iommu/intel/dmar.c       | 2 +-
+>  drivers/irqchip/irq-gic-v3-its.c | 7 ++++++-
+>  include/acpi/acpi_numa.h         | 2 +-
+>  include/linux/acpi.h             | 6 +++---
+>  11 files changed, 22 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
+> index 7ff800045434..6ed47b058d76 100644
+> --- a/arch/arm64/kernel/acpi_numa.c
+> +++ b/arch/arm64/kernel/acpi_numa.c
+> @@ -107,7 +107,7 @@ void __init acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa)
+>  		return;
+>  
+>  	pxm = pa->proximity_domain;
+> -	node = acpi_map_pxm_to_node(pxm);
+> +	node = acpi_map_pxm_to_node(pxm, true);
+>  
+>  	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
+>  		pr_err("SRAT: Too many proximity domains %d\n", pxm);
+> diff --git a/arch/ia64/kernel/acpi.c b/arch/ia64/kernel/acpi.c
+> index a5636524af76..760a468864b7 100644
+> --- a/arch/ia64/kernel/acpi.c
+> +++ b/arch/ia64/kernel/acpi.c
+> @@ -456,7 +456,7 @@ void __init acpi_numa_fixup(void)
+>  	nodes_clear(node_online_map);
+>  	for (i = 0; i < MAX_PXM_DOMAINS; i++) {
+>  		if (pxm_bit_test(i)) {
+> -			int nid = acpi_map_pxm_to_node(i);
+> +			int nid = acpi_map_pxm_to_node(i, true);
+>  			node_set_online(nid);
+>  		}
+>  	}
+> diff --git a/arch/x86/mm/srat.c b/arch/x86/mm/srat.c
+> index dac07e4f5834..6497d7c241ec 100644
+> --- a/arch/x86/mm/srat.c
+> +++ b/arch/x86/mm/srat.c
+> @@ -45,7 +45,7 @@ acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa)
+>  			 pxm, apic_id);
+>  		return;
+>  	}
+> -	node = acpi_map_pxm_to_node(pxm);
+> +	node = acpi_map_pxm_to_node(pxm, true);
+>  	if (node < 0) {
+>  		printk(KERN_ERR "SRAT: Too many proximity domains %x\n", pxm);
+>  		bad_srat();
+> @@ -80,7 +80,7 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
+>  	pxm = pa->proximity_domain_lo;
+>  	if (acpi_srat_revision >= 2)
+>  		pxm |= *((unsigned int*)pa->proximity_domain_hi) << 8;
+> -	node = acpi_map_pxm_to_node(pxm);
+> +	node = acpi_map_pxm_to_node(pxm, true);
+>  	if (node < 0) {
+>  		printk(KERN_ERR "SRAT: Too many proximity domains %x\n", pxm);
+>  		bad_srat();
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 28a6b387e80e..8133e7e6f9e3 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -1293,7 +1293,7 @@ static int  __init arm_smmu_v3_set_proximity(struct device *dev,
+>  
+>  	smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
+>  	if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
+> -		int dev_node = acpi_map_pxm_to_node(smmu->pxm);
+> +		int dev_node = acpi_map_pxm_to_node(smmu->pxm, false);
+>  
+>  		if (dev_node != NUMA_NO_NODE && !node_online(dev_node))
+>  			return -EINVAL;
+> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+> index 7c138a4edc03..6cb44bbaa71f 100644
+> --- a/drivers/acpi/nfit/core.c
+> +++ b/drivers/acpi/nfit/core.c
+> @@ -2948,7 +2948,7 @@ static int acpi_nfit_register_region(struct acpi_nfit_desc *acpi_desc,
+>  		ndr_desc->numa_node = acpi_map_pxm_to_online_node(
+>  						spa->proximity_domain);
+>  		ndr_desc->target_node = acpi_map_pxm_to_node(
+> -				spa->proximity_domain);
+> +				spa->proximity_domain, false);
+>  	} else {
+>  		ndr_desc->numa_node = NUMA_NO_NODE;
+>  		ndr_desc->target_node = NUMA_NO_NODE;
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 2c32cfb72370..3c0414816772 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -666,7 +666,7 @@ static void hmat_register_target_device(struct memory_target *target,
+>  
+>  	pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->memory_pxm);
+>  	info = (struct memregion_info) {
+> -		.target_node = acpi_map_pxm_to_node(target->memory_pxm),
+> +		.target_node = acpi_map_pxm_to_node(target->memory_pxm, false),
+>  	};
+>  	rc = platform_device_add_data(pdev, &info, sizeof(info));
+>  	if (rc < 0) {
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 5be5a977da1b..ed7d31795f4d 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -52,7 +52,7 @@ static void __acpi_map_pxm_to_node(int pxm, int node)
+>  		node_to_pxm_map[node] = pxm;
 >  }
->
+>  
+> -int acpi_map_pxm_to_node(int pxm)
+> +int acpi_map_pxm_to_node(int pxm, bool create)
+>  {
+>  	int node;
+>  
+> @@ -62,7 +62,7 @@ int acpi_map_pxm_to_node(int pxm)
+>  	node = pxm_to_node_map[pxm];
+>  
+>  	if (node == NUMA_NO_NODE) {
+> -		if (nodes_weight(nodes_found_map) >= MAX_NUMNODES)
+> +		if (nodes_weight(nodes_found_map) >= MAX_NUMNODES || !create)
+>  			return NUMA_NO_NODE;
+>  		node = first_unset_node(nodes_found_map);
+>  		__acpi_map_pxm_to_node(pxm, node);
+> @@ -229,7 +229,7 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
+>  	if (acpi_srat_revision <= 1)
+>  		pxm &= 0xff;
+>  
+> -	node = acpi_map_pxm_to_node(pxm);
+> +	node = acpi_map_pxm_to_node(pxm, true);
+>  	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
+>  		pr_err("SRAT: Too many proximity domains.\n");
+>  		goto out_err_bad_srat;
+> @@ -444,6 +444,6 @@ int acpi_get_node(acpi_handle handle)
+>  
+>  	pxm = acpi_get_pxm(handle);
+>  
+> -	return acpi_map_pxm_to_node(pxm);
+> +	return acpi_map_pxm_to_node(pxm, false);
+>  }
+>  EXPORT_SYMBOL(acpi_get_node);
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index 683b812c5c47..fec90800381e 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -473,7 +473,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
+>  	rhsa = (struct acpi_dmar_rhsa *)header;
+>  	for_each_drhd_unit(drhd) {
+>  		if (drhd->reg_base_addr == rhsa->base_address) {
+> -			int node = acpi_map_pxm_to_node(rhsa->proximity_domain);
+> +			int node = acpi_map_pxm_to_node(rhsa->proximity_domain, false);
+>  
+>  			if (!node_online(node))
+>  				node = NUMA_NO_NODE;
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 6a5a87fc4601..44cb53fa6afe 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -5248,7 +5248,12 @@ static int __init gic_acpi_parse_srat_its(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	node = acpi_map_pxm_to_node(its_affinity->proximity_domain);
+> +	/*
+> +	 * Note that in theory a new proximity node could be created by this
+> +	 * entry as it is an SRAT resource allocation structure.
+> +	 * We do not currently support doing so.
+> +	 */
+> +	node = acpi_map_pxm_to_node(its_affinity->proximity_domain, false);
+>  
+>  	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
+>  		pr_err("SRAT: Invalid NUMA node %d in ITS affinity\n", node);
+> diff --git a/include/acpi/acpi_numa.h b/include/acpi/acpi_numa.h
+> index fdebcfc6c8df..6935c7516262 100644
+> --- a/include/acpi/acpi_numa.h
+> +++ b/include/acpi/acpi_numa.h
+> @@ -15,7 +15,7 @@
+>  
+>  extern int pxm_to_node(int);
+>  extern int node_to_pxm(int);
+> -extern int acpi_map_pxm_to_node(int);
+> +extern int acpi_map_pxm_to_node(int, bool);
+>  extern unsigned char acpi_srat_revision;
+>  extern int acpi_numa __initdata;
+>  
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index d661cd0ee64d..1414b7e0a486 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -416,7 +416,7 @@ extern void acpi_osi_setup(char *str);
+>  extern bool acpi_osi_is_win8(void);
+>  
+>  #ifdef CONFIG_ACPI_NUMA
+> -int acpi_map_pxm_to_node(int pxm);
+> +int acpi_map_pxm_to_node(int pxm, bool create);
+>  int acpi_get_node(acpi_handle handle);
+>  
 >  /**
-> @@ -82,6 +85,7 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
->         }
->         pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
->
-> +       pci_disable_acs_trans_blocking(dev);
->         dev->ats_enabled = 1;
->         return 0;
+> @@ -436,7 +436,7 @@ int acpi_get_node(acpi_handle handle);
+>   */
+>  static inline int acpi_map_pxm_to_online_node(int pxm)
+>  {
+> -	int node = acpi_map_pxm_to_node(pxm);
+> +	int node = acpi_map_pxm_to_node(pxm, false);
+>  
+>  	return numa_map_to_online_node(node);
 >  }
-> @@ -102,6 +106,7 @@ void pci_disable_ats(struct pci_dev *dev)
->         ctrl &= ~PCI_ATS_CTRL_ENABLE;
->         pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
->
-> +       pci_enable_acs_trans_blocking(dev);
->         dev->ats_enabled = 0;
+> @@ -445,7 +445,7 @@ static inline int acpi_map_pxm_to_online_node(int pxm)
+>  {
+>  	return 0;
 >  }
->  EXPORT_SYMBOL_GPL(pci_disable_ats);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 73a862782214..614e3c1e8c56 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -876,6 +876,9 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->         /* Upstream Forwarding */
->         ctrl |= (cap & PCI_ACS_UF);
->
-> +       /* Translation Blocking */
-> +       ctrl |= (cap & PCI_ACS_TB);
-> +
->         pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+> -static inline int acpi_map_pxm_to_node(int pxm)
+> +static inline int acpi_map_pxm_to_node(int pxm, bool create)
+>  {
+>  	return 0;
 >  }
->
-> @@ -904,6 +907,60 @@ static void pci_enable_acs(struct pci_dev *dev)
->         pci_disable_acs_redir(dev);
->  }
->
-> +void pci_disable_acs_trans_blocking(struct pci_dev *pdev)
-> +{
-> +       u16 cap, ctrl, pos;
-> +       struct pci_dev *dev;
-> +
-> +       if (!pci_acs_enable)
-> +               return;
-> +
-> +       for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
-> +
-> +               pos = dev->acs_cap;
-> +               if (!pos)
-> +                       continue;
-> +
-> +               /*
-> +                * Disable translation blocking when first downstream
-> +                * device that needs it (for ATS) wants to enable ATS
-> +                */
-> +               if (++dev->ats_dependencies == 1) {
-
-I am a little worried about a potential race condition here. I know
-that 2 PCI devices cannot be enumerating at the same time. Do we know
-if multiple pci_enable_ats() and pci_disable_ats() function calls can
-be simultaneously executing (even for different devices)? If so, we
-may need an atomic_t variable for ats_dependencies.
-
-Thanks,
-
-Rajat
-
-
-> +                       pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-> +                       pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-> +                       ctrl &= ~(cap & PCI_ACS_TB);
-> +                       pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> +               }
-> +       }
-> +}
-> +
-> +void pci_enable_acs_trans_blocking(struct pci_dev *pdev)
-> +{
-> +       u16 cap, ctrl, pos;
-> +       struct pci_dev *dev;
-> +
-> +       if (!pci_acs_enable)
-> +               return;
-> +
-> +       for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
-> +
-> +               pos = dev->acs_cap;
-> +               if (!pos)
-> +                       continue;
-> +
-> +               /*
-> +                * Enable translation blocking when last downstream device
-> +                * that depends on it (for ATS), doesn't need ATS anymore
-> +                */
-> +               if (--dev->ats_dependencies == 0) {
-> +                       pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-> +                       pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-> +                       ctrl |= (cap & PCI_ACS_TB);
-> +                       pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> +               }
-> +       }
-> +}
-> +
->  /**
->   * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
->   * @dev: PCI device to have its BARs restored
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 12fb79fbe29d..f5d8ecb6ba96 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -552,6 +552,8 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
->         return -ENOTTY;
->  }
->  #endif
-> +void pci_disable_acs_trans_blocking(struct pci_dev *dev);
-> +void pci_enable_acs_trans_blocking(struct pci_dev *dev);
->
->  /* PCI error reporting and recovery */
->  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 8c40c00413e7..e2ff3a94e621 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2387,10 +2387,10 @@ static void pci_init_capabilities(struct pci_dev *dev)
->         pci_vpd_init(dev);              /* Vital Product Data */
->         pci_configure_ari(dev);         /* Alternative Routing-ID Forwarding */
->         pci_iov_init(dev);              /* Single Root I/O Virtualization */
-> +       pci_acs_init(dev);              /* Access Control Services */
->         pci_ats_init(dev);              /* Address Translation Services */
->         pci_pri_init(dev);              /* Page Request Interface */
->         pci_pasid_init(dev);            /* Process Address Space ID */
-> -       pci_acs_init(dev);              /* Access Control Services */
->         pci_ptm_init(dev);              /* Precision Time Measurement */
->         pci_aer_init(dev);              /* Advanced Error Reporting */
->         pci_dpc_init(dev);              /* Downstream Port Containment */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 7a40cd5caed0..31da4355f0fd 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -480,6 +480,8 @@ struct pci_dev {
->         u16             ats_cap;        /* ATS Capability offset */
->         u8              ats_stu;        /* ATS Smallest Translation Unit */
->  #endif
-> +       /* Total number of downstream devices below a bridge that need ATS */
-> +       u8              ats_dependencies;
->  #ifdef CONFIG_PCI_PRI
->         u16             pri_cap;        /* PRI Capability offset */
->         u32             pri_reqs_alloc; /* Number of PRI requests allocated */
-> --
-> 2.27.0.389.gc38d7665816-goog
->
+> -- 
+> 2.19.1
+> 
