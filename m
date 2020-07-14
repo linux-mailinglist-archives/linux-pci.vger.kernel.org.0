@@ -2,154 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2B221EFE5
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 13:59:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 125A721F0CB
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 14:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGNL7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 07:59:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50290 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgGNL7Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:59:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 710A2B013;
-        Tue, 14 Jul 2020 11:59:25 +0000 (UTC)
-Message-ID: <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-Date:   Tue, 14 Jul 2020 13:59:21 +0200
-In-Reply-To: <20200713182356.GA413630@bogus>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
-         <20200612171334.26385-2-nsaenzjulienne@suse.de>
-         <20200713182356.GA413630@bogus>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-cyjjn9iMFbQ+NRASHXx8"
-User-Agent: Evolution 3.36.4 
+        id S1728256AbgGNMQt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 08:16:49 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:40297 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728471AbgGNMQs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:16:48 -0400
+Received: from [192.168.0.4] (ip5f5af29b.dynamic.kabel-deutschland.de [95.90.242.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id B7E0220643C4C;
+        Tue, 14 Jul 2020 14:16:44 +0200 (CEST)
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        x86@kernel.org
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
+ <CABCJKuedpxAqndgL=jHT22KtjnLkb1dsYaM6hQYyhqrWjkEe6A@mail.gmail.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <2ac9e722-949b-aa92-3553-df1bf69bf9e5@molgen.mpg.de>
+Date:   Tue, 14 Jul 2020 14:16:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CABCJKuedpxAqndgL=jHT22KtjnLkb1dsYaM6hQYyhqrWjkEe6A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---=-cyjjn9iMFbQ+NRASHXx8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
-> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
-> > The firmware running on the RPi VideoCore can be used to reset and
-> > initialize HW controlled by the firmware.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> >=20
-> > ---
-> > Changes since v2:
-> >  - Add include file for reset IDs
-> >=20
-> > Changes since v1:
-> >  - Correct cells binding as per Florian's comment
-> >  - Change compatible string to be more generic
-> >=20
-> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
-> >  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
-> >  2 files changed, 34 insertions(+)
-> >  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-rese=
-t.h
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
-835-
-> > firmware.yaml
-> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > index b48ed875eb8e..23a885af3a28 100644
-> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > @@ -39,6 +39,22 @@ properties:
-> >        - compatible
-> >        - "#clock-cells"
-> > =20
-> > +  reset:
->=20
-> I'm not really thrilled how this is evolving with a node per provider.=
-=20
-> There's no reason you can't just add #clock-cells and #reset-cells to=20
-> the parent firmware node.
-
-What are the downsides? The way I see it there is not much difference. And =
-this
-way of handling things is feels more intuitive and flexible (overlays can
-control what to enable easily, we can take advantage of the platform device
-core).
-
-> I probably should have complained with the clocks node, but that's only=
-=20
-> pending for 5.9.
-
-Note that there are more users for this pattern: "raspberrypi,firmware-ts" =
-and
-"raspberrypi,firmware-gpio". Actually you were the one to originally propos=
-e
-this it[1]. :P
-
-There already is a fair amount of churn in these drivers because of all the=
- DT
-changes we did in the past, and if we need to change how we integrate these
-again, I'd really like it to be for good.
-
-> The bigger issue is this stuff is just trickling in one bit at a time=20
-> which gives no context for review. What's next? Is it really a mystery=
-=20
-> as to what functions the firmware provides?
-
-We have no control over it, RPi engineers integrate new designs and new
-firmware interfaces show up. This is a good example of it.
-
-I proposed them to use SCMI as it covers most of what they are already
-providing here. But no luck so far.
-
-> You don't have to have a driver in place for every function.
-
-I see your point, it could be more monolithic, that said, having a driver i=
-s
-essential. See the reverts I managed to pull off at the end of the series.
-
-[1] https://patchwork.kernel.org/patch/10166783/#21421571
+Dear Sami,
 
 
---=-cyjjn9iMFbQ+NRASHXx8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Am 13.07.20 um 01:34 schrieb Sami Tolvanen:
+> On Sat, Jul 11, 2020 at 9:32 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>> Thank you very much for sending these changes.
+>>
+>> Do you have a branch, where your current work can be pulled from? Your
+>> branch on GitHub [1] seems 15 months old.
+> 
+> The clang-lto branch is rebased regularly on top of Linus' tree.
+> GitHub just looks at the commit date of the last commit in the tree,
+> which isn't all that informative.
 
------BEGIN PGP SIGNATURE-----
+Thank you for clearing this up, and sorry for not checking myself.
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8NnhkACgkQlfZmHno8
-x/7gMAf/WpgWrzZn8OWvm5HWyZhbLlpudApJFqIMveDTldhi/2C/3fqEMLewG6PW
-XjENuKydy6YXzpsn4CMxU8M2ELLf8hBU6rN0om2oW9IcQuxbNCT/DLQjjXxkzLkk
-HBZnE4AomVfl9BgNPVHtwodK1tmCuNLSxLggfnCmkgAB5/6mV3/1VhKUEe4AmTba
-/r7ZMNhJJHDdOc5BqCtPLj2MxwNzaFLhEgxR9TmYQuzX66BFJwggq/If8088Ektx
-pk1jTsE+mkRsOUq2Pdu2kl6WQM0mxOyPefDgJDQwry/YePCuVj1JOVeCnKvKgbF5
-JGPa7jelAE3azkvNQOBKXW1HiBYgsQ==
-=tEOc
------END PGP SIGNATURE-----
+>> Out of curiosity, I applied the changes, allowed the selection for i386
+>> (x86), and with Clang 1:11~++20200701093119+ffee8040534-1~exp1 from
+>> Debian experimental, it failed with `Invalid absolute R_386_32
+>> relocation: KERNEL_PAGES`:
+> 
+> I haven't looked at getting this to work on i386, which is why we only
+> select ARCH_SUPPORTS_LTO for x86_64. I would expect there to be a few
+> issues to address.
+> 
+>>>    arch/x86/tools/relocs vmlinux > arch/x86/boot/compressed/vmlinux.relocs;arch/x86/tools/relocs --abs-relocs vmlinux
+>>> Invalid absolute R_386_32 relocation: KERNEL_PAGES
+> 
+> KERNEL_PAGES looks like a constant, so it's probably safe to ignore
+> the absolute relocation in tools/relocs.c.
 
---=-cyjjn9iMFbQ+NRASHXx8--
+Thank you for pointing me to the right direction. I am happy to report, 
+that with the diff below (no idea to what list to add the string), Linux 
+5.8-rc5 with the LLVM/Clang/LTO patches on top, builds and boots on the 
+ASRock E350M1.
 
+```
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index 8f3bf34840cef..e91af127ed3c0 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -79,6 +79,7 @@ static const char * const 
+sym_regex_kernel[S_NSYMTYPES] = {
+         "__end_rodata_hpage_align|"
+  #endif
+         "__vvar_page|"
++       "KERNEL_PAGES|"
+         "_end)$"
+  };
+```
+
+
+Kind regards,
+
+Paul
