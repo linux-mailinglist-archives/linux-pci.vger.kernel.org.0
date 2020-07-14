@@ -2,189 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CF9821FADD
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 20:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6CE021FD06
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 21:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbgGNS40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 14:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54326 "EHLO mail.kernel.org"
+        id S1729091AbgGNSpx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 14:45:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729896AbgGNS4Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:25 -0400
+        id S1728948AbgGNSpw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:45:52 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D38622AAB;
-        Tue, 14 Jul 2020 18:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839FA222B9;
+        Tue, 14 Jul 2020 18:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752984;
-        bh=1I0jIPo3SZCaMFdDVykFs1GKYtGMomQMM+VqNQstfJg=;
+        s=default; t=1594752352;
+        bh=3OfvyawWxOWWLmXQVPZtn6FECuVWd3F0Ue8HezI5sRQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dgtA8cR+j01hdstpLlBLDb9TdhIStnYKNavj+wqqyuH3EJj3686EnGrrwRI1wqa/r
-         VF70QJU9tQG0jSn0ew7XrdV2+Cb8SD31SbqLEBYFUL8biYPtSXwG+4PgmUoM3ylMSb
-         vmT5ApqX+4CqbX3W0qBvhlg/FhjdDjRDJLE/SOoA=
-Date:   Tue, 14 Jul 2020 13:56:22 -0500
+        b=M9TjDOCdh9hdhfOxp+E/b+GQRQRJigrTzFdSr08bZTbYfgplA8ZfIK7sw2uU4D17i
+         JnwGLNAMtpemAssFF0Jl2PbTYsF6P1lbaXH8vsBMr+WVIisiILxg/v2D+n7zNSVt6u
+         tBiC82XAr1HVg4w3jwKWvTKOh5aFHvV/m2Ll8Hf4=
+Date:   Tue, 14 Jul 2020 13:45:50 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Edward Cree <ecree@solarflare.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     kbuild-all@lists.01.org, linux-renesas-soc@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [renesas-drivers:master 69/80]
- drivers/net/ethernet/sfc/efx_common.c:1232:19: sparse: sparse: incompatible
- types for operation (==):
-Message-ID: <20200714185622.GA408711@bjorn-Precision-5520>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+Message-ID: <20200714184550.GA397277@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202007150206.kfukZxuy%lkp@intel.com>
+In-Reply-To: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Luc, linux-pci]
+[trimmed the cc list; it's still too large but maybe arch folks care]
 
-On Wed, Jul 15, 2020 at 02:02:11AM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git master
-> head:   541708cc1e6ad29fdb4c294831dfa855bd64487b
-> commit: 428d2a440d43ba81b698ec71de5125e4aeddf752 [69/80] Merge remote-tracking branch 'pci/next' into renesas-drivers
-> config: parisc-randconfig-s031-20200714 (attached as .config)
-> compiler: hppa-linux-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # apt-get install sparse
->         # sparse version: v0.6.2-41-g14e84ffc-dirty
->         git checkout 428d2a440d43ba81b698ec71de5125e4aeddf752
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=parisc 
+On Mon, Jul 13, 2020 at 05:08:10PM +0200, Arnd Bergmann wrote:
+> On Mon, Jul 13, 2020 at 3:22 PM Saheed O. Bolarinwa
+> <refactormyself@gmail.com> wrote:
+> > This goal of these series is to move the definition of *all*
+> > PCIBIOS* from include/linux/pci.h to arch/x86 and limit their use
+> > within there.  All other tree specific definition will be left for
+> > intact. Maybe they can be renamed.
+> >
+> > PCIBIOS* is an x86 concept as defined by the PCI spec. The
+> > returned error codes of PCIBIOS* are positive values and this
+> > introduces some complexities which other archs need not incur.
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+> I think the intention is good, but I find the series in its current
+> form very hard to review, in particular the way you touch some
+> functions three times with trivial changes. Instead of
 > 
+> 1) replace PCIBIOS_SUCCESSFUL with 0
+> 2) drop pointless 0-comparison
+> 3) reformat whitespace
 > 
-> sparse warnings: (new ones prefixed by >>)
-> 
-> >> drivers/net/ethernet/sfc/efx_common.c:1232:19: sparse: sparse: incompatible types for operation (==):
-> >> drivers/net/ethernet/sfc/efx_common.c:1232:19: sparse:    incomplete type enum pci_channel_state state
-> >> drivers/net/ethernet/sfc/efx_common.c:1232:19: sparse:    restricted pci_channel_state_t
-> >> drivers/net/ethernet/sfc/efx_common.c:1308:27: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different base types)) @@     expected restricted pci_ers_result_t ( *error_detected )( ... ) @@     got restricted pci_ers_result_t ( * )( ... ) @@
-> >> drivers/net/ethernet/sfc/efx_common.c:1308:27: sparse:     expected restricted pci_ers_result_t ( *error_detected )( ... )
-> >> drivers/net/ethernet/sfc/efx_common.c:1308:27: sparse:     got restricted pci_ers_result_t ( * )( ... )
+> I would suggest to combine the first two steps into one patch per
+> subsystem and drop the third step.
 
-I think what's necessary here is to replace "enum pci_channel_state
-state" with "pci_channel_state_t state", as in 16d79cd4e23b ("PCI: Use
-'pci_channel_state_t' instead of 'enum pci_channel_state'"):
+I agree.  BUT please don't just run out and post new patches to do
+this.  Let's talk about Arnd's further ideas below first.
 
-https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=16d79cd4e23b
-
-This change should be safe even without 16d79cd4e23b, so there won't
-be a revlock if you make it in the renesas-drivers tree.
-
-> vim +1232 drivers/net/ethernet/sfc/efx_common.c
+> ...
+> Maybe the work can be split up differently, with a similar end
+> result but fewer and easier reviewed patches. The way I'd look at
+> the problem, there are three main areas that can be dealt with one
+> at a time:
 > 
-> 21ea21252eddb3c Edward Cree 2020-06-29  1221  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1222  /* A PCI error affecting this device was detected.
-> 21ea21252eddb3c Edward Cree 2020-06-29  1223   * At this point MMIO and DMA may be disabled.
-> 21ea21252eddb3c Edward Cree 2020-06-29  1224   * Stop the software path and request a slot reset.
-> 21ea21252eddb3c Edward Cree 2020-06-29  1225   */
-> 21ea21252eddb3c Edward Cree 2020-06-29  1226  static pci_ers_result_t efx_io_error_detected(struct pci_dev *pdev,
-> 21ea21252eddb3c Edward Cree 2020-06-29  1227  					      enum pci_channel_state state)
-> 21ea21252eddb3c Edward Cree 2020-06-29  1228  {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1229  	pci_ers_result_t status = PCI_ERS_RESULT_RECOVERED;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1230  	struct efx_nic *efx = pci_get_drvdata(pdev);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1231  
-> 21ea21252eddb3c Edward Cree 2020-06-29 @1232  	if (state == pci_channel_io_perm_failure)
-> 21ea21252eddb3c Edward Cree 2020-06-29  1233  		return PCI_ERS_RESULT_DISCONNECT;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1234  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1235  	rtnl_lock();
-> 21ea21252eddb3c Edward Cree 2020-06-29  1236  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1237  	if (efx->state != STATE_DISABLED) {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1238  		efx->state = STATE_RECOVERY;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1239  		efx->reset_pending = 0;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1240  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1241  		efx_device_detach_sync(efx);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1242  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1243  		efx_stop_all(efx);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1244  		efx_disable_interrupts(efx);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1245  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1246  		status = PCI_ERS_RESULT_NEED_RESET;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1247  	} else {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1248  		/* If the interface is disabled we don't want to do anything
-> 21ea21252eddb3c Edward Cree 2020-06-29  1249  		 * with it.
-> 21ea21252eddb3c Edward Cree 2020-06-29  1250  		 */
-> 21ea21252eddb3c Edward Cree 2020-06-29  1251  		status = PCI_ERS_RESULT_RECOVERED;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1252  	}
-> 21ea21252eddb3c Edward Cree 2020-06-29  1253  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1254  	rtnl_unlock();
-> 21ea21252eddb3c Edward Cree 2020-06-29  1255  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1256  	pci_disable_device(pdev);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1257  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1258  	return status;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1259  }
-> 21ea21252eddb3c Edward Cree 2020-06-29  1260  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1261  /* Fake a successful reset, which will be performed later in efx_io_resume. */
-> 21ea21252eddb3c Edward Cree 2020-06-29  1262  static pci_ers_result_t efx_io_slot_reset(struct pci_dev *pdev)
-> 21ea21252eddb3c Edward Cree 2020-06-29  1263  {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1264  	struct efx_nic *efx = pci_get_drvdata(pdev);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1265  	pci_ers_result_t status = PCI_ERS_RESULT_RECOVERED;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1266  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1267  	if (pci_enable_device(pdev)) {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1268  		netif_err(efx, hw, efx->net_dev,
-> 21ea21252eddb3c Edward Cree 2020-06-29  1269  			  "Cannot re-enable PCI device after reset.\n");
-> 21ea21252eddb3c Edward Cree 2020-06-29  1270  		status =  PCI_ERS_RESULT_DISCONNECT;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1271  	}
-> 21ea21252eddb3c Edward Cree 2020-06-29  1272  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1273  	return status;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1274  }
-> 21ea21252eddb3c Edward Cree 2020-06-29  1275  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1276  /* Perform the actual reset and resume I/O operations. */
-> 21ea21252eddb3c Edward Cree 2020-06-29  1277  static void efx_io_resume(struct pci_dev *pdev)
-> 21ea21252eddb3c Edward Cree 2020-06-29  1278  {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1279  	struct efx_nic *efx = pci_get_drvdata(pdev);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1280  	int rc;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1281  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1282  	rtnl_lock();
-> 21ea21252eddb3c Edward Cree 2020-06-29  1283  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1284  	if (efx->state == STATE_DISABLED)
-> 21ea21252eddb3c Edward Cree 2020-06-29  1285  		goto out;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1286  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1287  	rc = efx_reset(efx, RESET_TYPE_ALL);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1288  	if (rc) {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1289  		netif_err(efx, hw, efx->net_dev,
-> 21ea21252eddb3c Edward Cree 2020-06-29  1290  			  "efx_reset failed after PCI error (%d)\n", rc);
-> 21ea21252eddb3c Edward Cree 2020-06-29  1291  	} else {
-> 21ea21252eddb3c Edward Cree 2020-06-29  1292  		efx->state = STATE_READY;
-> 21ea21252eddb3c Edward Cree 2020-06-29  1293  		netif_dbg(efx, hw, efx->net_dev,
-> 21ea21252eddb3c Edward Cree 2020-06-29  1294  			  "Done resetting and resuming IO after PCI error.\n");
-> 21ea21252eddb3c Edward Cree 2020-06-29  1295  	}
-> 21ea21252eddb3c Edward Cree 2020-06-29  1296  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1297  out:
-> 21ea21252eddb3c Edward Cree 2020-06-29  1298  	rtnl_unlock();
-> 21ea21252eddb3c Edward Cree 2020-06-29  1299  }
-> 21ea21252eddb3c Edward Cree 2020-06-29  1300  
-> 21ea21252eddb3c Edward Cree 2020-06-29  1301  /* For simplicity and reliability, we always require a slot reset and try to
-> 21ea21252eddb3c Edward Cree 2020-06-29  1302   * reset the hardware when a pci error affecting the device is detected.
-> 21ea21252eddb3c Edward Cree 2020-06-29  1303   * We leave both the link_reset and mmio_enabled callback unimplemented:
-> 21ea21252eddb3c Edward Cree 2020-06-29  1304   * with our request for slot reset the mmio_enabled callback will never be
-> 21ea21252eddb3c Edward Cree 2020-06-29  1305   * called, and the link_reset callback is not used by AER or EEH mechanisms.
-> 21ea21252eddb3c Edward Cree 2020-06-29  1306   */
-> 21ea21252eddb3c Edward Cree 2020-06-29  1307  const struct pci_error_handlers efx_err_handlers = {
-> 21ea21252eddb3c Edward Cree 2020-06-29 @1308  	.error_detected = efx_io_error_detected,
-> 21ea21252eddb3c Edward Cree 2020-06-29  1309  	.slot_reset	= efx_io_slot_reset,
-> 21ea21252eddb3c Edward Cree 2020-06-29  1310  	.resume		= efx_io_resume,
-> 21ea21252eddb3c Edward Cree 2020-06-29  1311  };
-> 2d73515a1ce4ef8 Edward Cree 2020-06-30  1312  
+> a) callers of the high-level config space accessors
+>    pci_{write,read}_config_{byte,word,dword}, mostly in device
+>    drivers.
+> b) low-level implementation of the config space accessors
+>     through struct pci_ops
+> c) all other occurrences of these constants
 > 
-> :::::: The code at line 1232 was first introduced by commit
-> :::::: 21ea21252eddb3cea56845f58f87208062799bef sfc: commonise PCI error handlers
-> 
-> :::::: TO: Edward Cree <ecree@solarflare.com>
-> :::::: CC: David S. Miller <davem@davemloft.net>
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> Starting with a), my first question is whether any high-level
+> drivers even need to care about errors from these functions. I see
+> 4913 callers that ignore the return code, and 576 that actually
+> check it, and almost none care about the specific error (as you
+> found as well). Unless we conclude that most PCI drivers are wrong,
+> could we just change the return type to 'void' and assume they never
+> fail for valid arguments on a valid pci_device* ?
 
+I really like this idea.
 
+pci_write_config_*() has one return value, and only 100ish of 2500
+callers check for errors.  It's sometimes possible for config
+accessors to detect PCI errors and return failure, e.g., device was
+removed or didn't respond, but most of them don't, and detecting these
+errors is not really that valuable.
+
+pci_read_config_*() is much more interesting because it returns two
+things, the function return value and the value read from the PCI
+device, and it's complicated to check both. 
+
+Again it's sometimes possible for config read accessors to detect PCI
+errors, but in most cases a PCI error means the accessor returns
+success and the value from PCI is ~0.
+
+Checking the function return value catches programming errors (bad
+alignment, etc) but misses most of the interesting errors (device was
+unplugged or reported a PCI error).
+
+Checking the value returned from PCI is tricky because ~0 is a valid
+value for some config registers, and only the driver knows for sure.
+If the driver knows that ~0 is a possible value, it would have to do
+something else, e.g., another config read of a register that *cannot*
+be ~0, to see whether it's really an error.
+
+I suspect that if we had a single value to look at it would be easier
+to get right.  Error checking with current interface would look like
+this:
+
+  err = pci_read_config_word(dev, addr, &val);
+  if (err)
+    return -EINVAL;
+
+  if (PCI_POSSIBLE_ERROR(val)) {
+    /* if driver knows ~0 is invalid */
+    return -EINVAL;
+
+    /* if ~0 is potentially a valid value */
+    err = pci_read_config_word(dev, PCI_VENDOR_ID, &val2);
+    if (err)
+      return -EINVAL;
+
+    if (PCI_POSSIBLE_ERROR(val2))
+      return -EINVAL;
+  }
+
+Error checking with a possible interface that returned only a single
+value could look like this:
+
+  val = pci_config_read_word(dev, addr);
+  if (PCI_POSSIBLE_ERROR(val)) {
+    /* if driver knows ~0 is invalid */
+    return -EINVAL;
+
+    /* if ~0 is potentially a valid value */
+    val2 = pci_config_read_word(dev, PCI_VENDOR_ID);
+    if (PCI_POSSIBLE_ERROR(val2))
+      return -EINVAL;
+  }
+
+Am I understanding you correctly?
+
+> For b), it might be nice to also change other aspects of the
+> interface, e.g. passing a pci_host_bridge pointer plus bus number
+> instead of a pci_bus pointer, or having the callback in the
+> pci_host_bridge structure.
+
+I like this idea a lot, too.  I think the fact that
+pci_bus_read_config_word() requires a pci_bus * complicates things in
+a few places.
+
+I think it's completely separate, as you say, and we should defer it
+for now because even part a) is a lot of work.  I added it to my list
+of possible future projects.
+
+Bjorn
