@@ -2,92 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F8EA21E40D
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 01:57:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6371A21E513
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 03:30:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgGMX5z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jul 2020 19:57:55 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38744 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGMX5y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 19:57:54 -0400
-Received: by mail-io1-f67.google.com with SMTP id l1so15454848ioh.5;
-        Mon, 13 Jul 2020 16:57:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7c5zEhAAZe4ARtWE37/DC1WUrD4G1u+Olxon0OQTcTY=;
-        b=FrkBCxvdggVsVNG6H4Jnm6V7x9uOSI5XlXEDbTbC3jEVi2Y6noEdWM302mvv6m5aHr
-         xxEbMG4DffO0LSQ2vPfUHYOagQa+z3/KmsKJgsAyh08kMGPZKvZWNz9XkUxwe0VtcWyh
-         lcKa+2AunMWwZnXde0IjsXvuyaJVXvbJP6q03k5XTlSgIDimvkWIiBkA2MiFDD3HpIG0
-         Di4hwK4cQ6qrALCH16plN0c79fTM9mz+3sQUlPvQEUUI5PC0L4ohSCByqSej3XypERsc
-         kdRxl8qK1AlQ2fpEyv1I7M/d5jM2lbN/2A21Y2JAsqoMckfuWCj+O8lQP2Cp4UL38We3
-         BvgA==
-X-Gm-Message-State: AOAM532WMpNhQsb9fCOqxC/26kpPJ9QaBD6cjY0z+jvjXRTs3+sfNWUG
-        Q9aMb9xuEiNnnfd1qlplMw==
-X-Google-Smtp-Source: ABdhPJzk0xad7Wqvui02rA9XsQsYeJbjiQrhI195AJtDwQfLcpp3zuMxhjsKkSZEBtUKqrliJBcwUQ==
-X-Received: by 2002:a6b:8d4d:: with SMTP id p74mr2302931iod.173.1594684674059;
-        Mon, 13 Jul 2020 16:57:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k1sm9003186ilr.35.2020.07.13.16.57.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 16:57:53 -0700 (PDT)
-Received: (nullmailer pid 959222 invoked by uid 1000);
-        Mon, 13 Jul 2020 23:57:51 -0000
-Date:   Mon, 13 Jul 2020 17:57:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-acpi@vger.kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>
-Subject: Re: [PATCH v2 06/12] of/iommu: Make of_map_rid() PCI agnostic
-Message-ID: <20200713235751.GA959175@bogus>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-7-lorenzo.pieralisi@arm.com>
+        id S1726409AbgGNBaE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jul 2020 21:30:04 -0400
+Received: from regular1.263xmail.com ([211.150.70.199]:42118 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgGNBaE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jul 2020 21:30:04 -0400
+X-Greylist: delayed 376 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Jul 2020 21:30:02 EDT
+Received: from localhost (unknown [192.168.167.69])
+        by regular1.263xmail.com (Postfix) with ESMTP id A8A03F1C
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jul 2020 09:23:35 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.64] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P8590T140098590988032S1594689814192411_;
+        Tue, 14 Jul 2020 09:23:34 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <f9f841f32d9a6b1a29002a599f3737b0>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: xxm@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Cc:     shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Simon Xue <xxm@rock-chips.com>
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_1/2=5d_PCI=3a_rockchip=3a_Enable_IO_base_a?=
+ =?UTF-8?B?bmQgbGltaXQgcmVnaXN0ZXJz44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgt?=
+ =?UTF-8?Q?rockchip-bounces+shawn=2elin=3drock-chips=2ecom=40lists=2einfrade?=
+ =?UTF-8?B?YWQub3Jn5Luj5Y+R44CR?=
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Anand Moon <linux.amoon@gmail.com>
+References: <1590023130-137406-1-git-send-email-shawn.lin@rock-chips.com>
+ <CANAwSgRXuMQaytB4BXL89JQAmU=XutBXj6iMhfKdZp3JwM9a4g@mail.gmail.com>
+ <eb0acd3d-92d0-db00-78e4-8a17033f7f0a@rock-chips.com>
+ <CANAwSgSzoc5TaO6ks9kdN7W+xDo1STbtsA0dUpsk8hqP6swkYg@mail.gmail.com>
+ <20200708150135.GA4238@e121166-lin.cambridge.arm.com>
+ <CANAwSgQO0yNOT6c+Bchfj08w1+aOqKzzTHMmrud-j7-Q=uDFjg@mail.gmail.com>
+ <20200713164550.GB29307@e121166-lin.cambridge.arm.com>
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <139e0296-e845-500f-8899-72b0f0b22e8c@rock-chips.com>
+Date:   Tue, 14 Jul 2020 09:23:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619082013.13661-7-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20200713164550.GB29307@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 19 Jun 2020 09:20:07 +0100, Lorenzo Pieralisi wrote:
-> There is nothing PCI specific (other than the RID - requester ID)
-> in the of_map_rid() implementation, so the same function can be
-> reused for input/output IDs mapping for other busses just as well.
+On 2020/7/14 0:45, Lorenzo Pieralisi wrote:
+> On Thu, Jul 09, 2020 at 09:18:27AM +0530, Anand Moon wrote:
+>> hi Lorenzo,
+>>
+>> On Wed, 8 Jul 2020 at 20:31, Lorenzo Pieralisi
+>> <lorenzo.pieralisi@arm.com> wrote:
+>>>
+>>> On Fri, May 22, 2020 at 05:59:14PM +0530, Anand Moon wrote:
+>>>> Hi Shawn
+>>>>
+>>>> On Fri, 22 May 2020 at 08:30, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>>>>>
+>>>>>
+>>>>> 在 2020/5/21 18:51, Anand Moon 写道:
+>>>>>> Hi Shawn,
+>>>>>>
+>>>>>> On Thu, 21 May 2020 at 06:35, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>>>>>>>
+>>>>>>> According to RK3399 user manual, bit 9 in PCIE_RC_BAR_CONF should
+>>>>>>> be set, otherwise accessing to IO base and limit registers would
+>>>>>>> fail.
+>>>>>>>
+>>>>>>> [    0.411318] pci_bus 0000:00: root bus resource [bus 00-1f]
+>>>>>>> [    0.411822] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff]
+>>>>>>> [    0.412440] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus address [0xfbe00000-0xfbefffff])
+>>>>>>> [    0.413665] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>>>>>>> [    0.414698] pci 0000:01:00.0: reg 0x10: initial BAR value 0x00000000 invalid
+>>>>>>> [    0.415412] pci 0000:01:00.0: reg 0x18: initial BAR value 0x00000000 invalid
+>>>>>>> [    0.418456] pci 0000:00:00.0: BAR 8: assigned [mem 0xfa000000-0xfa0fffff]
+>>>>>>> [    0.419065] pci 0000:01:00.0: BAR 1: assigned [mem 0xfa000000-0xfa007fff pref]
+>>>>>>> [    0.419728] pci 0000:01:00.0: BAR 6: assigned [mem 0xfa008000-0xfa00ffff pref]
+>>>>>>> [    0.420377] pci 0000:01:00.0: BAR 0: no space for [io  size 0x0100]
+>>>>>>> [    0.420935] pci 0000:01:00.0: BAR 0: failed to assign [io  size 0x0100]
+>>>>>>> [    0.421526] pci 0000:01:00.0: BAR 2: no space for [io  size 0x0004]
+>>>>>>> [    0.422084] pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0004]
+>>>>>>> [    0.422687] pci 0000:00:00.0: PCI bridge to [bus 01]
+>>>>>>> [    0.423135] pci 0000:00:00.0:   bridge window [mem 0xfa000000-0xfa0fffff]
+>>>>>>> [    0.423794] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
+>>>>>>> [    0.424566] pcieport 0000:00:00.0: Signaling PME through PCIe PME interrupt
+>>>>>>> [    0.425182] pci 0000:01:00.0: Signaling PME through PCIe PME interrupt
+>>>>>>>
+>>>>>>> 01:00.0 Class 0700: Device 1c00:3853 (rev 10) (prog-if 05)
+>>>>>>>           Subsystem: Device 1c00:3853
+>>>>>>>           Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+>>>>>>>           Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>>>>>>>           Interrupt: pin A routed to IRQ 230
+>>>>>>>           Region 0: I/O ports at <unassigned> [disabled]
+>>>>>>>           Region 1: Memory at fa000000 (32-bit, prefetchable) [disabled] [size=32K]
+>>>>>>>           Region 2: I/O ports at <unassigned> [disabled]
+>>>>>>>           [virtual] Expansion ROM at fa008000 [disabled] [size=32K]
+>>>>>>>
+>>>>>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>>>>>> ---
+>>>>>>
+>>>>>> I have old development board Odroid N1 (RK3399),  It has onboard PCIe
+>>>>>> 2 dual sata bridge.
+>>>>>> I have tested this patch, but I am still getting following log on
+>>>>>> Odroid N1 board.
+>>>>>> Is their any more configuration needed for sata ports ?
+>>>>>
+>>>>> Thanks for testing. I made a mistake that it should be bit 19, so
+>>>>> can you try using BIT(19)?
+>>>>>
+>>>>
+>>>> Nop enable this bit dose not solve the issue see at my end.
+>>>>
+>>>> But as per RK3399 TMR  17.6.7.1.45 Root Complex BAR Configuration Register
+>>>> their are many bits that are not tuned correctly.
+>>>> I tried to set some bit to BAR Configuration register. but it dose not
+>>>> work at my end.
+>>>> I feel some more core configuration is missing.
+>>>> If I have some update I will share it with you.
+>>>
+>>> What's the status of this discussion and therefore this series ?
+>>>
+>>> Thanks,
+>>> Lorenzo
+>>
+>> Well I have looked into the RK3399 TRM  (Rockchip RK3399 TRM V1.3 Part2.pdf)
+>> There seems to be some core configuration missing, but I could not
+>> resolve this on my board.
 > 
-> Rename the RID instances/names to a generic "id" tag.
+> So what are we going to do with this series ?
+
+I didn't test it on N1 board so I cannot say what happened there, but I
+incline to suspend this series untile I have a sufficient offlist
+debugging with Anand.
+
 > 
-> No functionality change intended.
+> Lorenzo
 > 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/iommu/of_iommu.c |  4 ++--
->  drivers/of/base.c        | 42 ++++++++++++++++++++--------------------
->  drivers/of/irq.c         |  2 +-
->  include/linux/of.h       |  4 ++--
->  4 files changed, 26 insertions(+), 26 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
