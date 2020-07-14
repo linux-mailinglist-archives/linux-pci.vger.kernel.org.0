@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6798E21EDF7
+	by mail.lfdr.de (Postfix) with ESMTP id 69A1A21EDF8
 	for <lists+linux-pci@lfdr.de>; Tue, 14 Jul 2020 12:31:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgGNKbj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 06:31:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:19781 "EHLO mga05.intel.com"
+        id S1725955AbgGNKbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 06:31:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:26847 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbgGNKbj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1726375AbgGNKbj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Tue, 14 Jul 2020 06:31:39 -0400
-IronPort-SDR: XMjMNenIyAA/c9LIV9pElj3E73d2U1Y5RDxK24bg8YKZ57jFJaBn9ZjI2eMHl7Z2++vPdeaVH/
- SWhXxP0K/v1g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233726963"
+IronPort-SDR: fq3tMexqCYybrrjGPWFhTH/u+knnDjeLsrVZOjNVXIZdU/hcilQm/UIij7zU3qgtQC+xenap0S
+ UZyIaJwMC2eg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="137001435"
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="233726963"
+   d="scan'208";a="137001435"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 03:31:36 -0700
-IronPort-SDR: 5vFIpla/CbOpw02ixeuJ8Jspc5ciZZNUphnQlZyzQ0iyWMfgtqfHGelXdGjjLEl2RdfndbtQjO
- nOqmi4g5Xexg==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 03:31:36 -0700
+IronPort-SDR: w2zg3mH1S7ju+ARd1Fc+EoEicM0z2wQKr+kTsQRqExLOhWdty7FIXeytAmWSU5vwKfkP5+9BTd
+ +KO1HshtvKEA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="281709860"
+   d="scan'208";a="429719543"
 Received: from lkp-server02.sh.intel.com (HELO 393d9bdf0d5c) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jul 2020 03:31:34 -0700
+  by orsmga004.jf.intel.com with ESMTP; 14 Jul 2020 03:31:34 -0700
 Received: from kbuild by 393d9bdf0d5c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jvIDl-00002d-St; Tue, 14 Jul 2020 10:31:33 +0000
-Date:   Tue, 14 Jul 2020 18:30:03 +0800
+        id 1jvIDm-00002t-8l; Tue, 14 Jul 2020 10:31:34 +0000
+Date:   Tue, 14 Jul 2020 18:31:18 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/hotplug] BUILD SUCCESS
- 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5
-Message-ID: <5f0d892b.o8RmodHb79YL7NIZ%lkp@intel.com>
+Subject: [pci:pci/enumeration] BUILD SUCCESS
+ 99b50be9d8ec9ef319cc7d5de07f4d405fac7764
+Message-ID: <5f0d8976.5tsyGZj1oS1ciPYX%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,32 +46,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/hotplug
-branch HEAD: 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5  PCI: Fix pci_create_slot() reference count leak
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/enumeration
+branch HEAD: 99b50be9d8ec9ef319cc7d5de07f4d405fac7764  PCI: Treat "external-facing" devices themselves as internal
 
-elapsed time: 4888m
+elapsed time: 4889m
 
-configs tested: 101
-configs skipped: 2
+configs tested: 105
+configs skipped: 3
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
 arm64                            allyesconfig
 arm64                               defconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
-nios2                         3c120_defconfig
-arm                          pcm027_defconfig
-mips                          ath79_defconfig
-powerpc                         ps3_defconfig
-sh                      rts7751r2d1_defconfig
-arm                      tct_hammer_defconfig
-sh                             shx3_defconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+xtensa                           allyesconfig
+sh                           se7712_defconfig
+arm                     am200epdkit_defconfig
+csky                             allyesconfig
+m68k                       m5249evb_defconfig
+arm                            dove_defconfig
+sh                        sh7757lcr_defconfig
 i386                              allnoconfig
 i386                                defconfig
 i386                              debian-10.3
@@ -85,13 +85,17 @@ m68k                              allnoconfig
 m68k                           sun3_defconfig
 m68k                                defconfig
 m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
 nds32                               defconfig
 nds32                             allnoconfig
-csky                             allyesconfig
 csky                                defconfig
 alpha                               defconfig
 alpha                            allyesconfig
-xtensa                           allyesconfig
 h8300                            allyesconfig
 h8300                            allmodconfig
 xtensa                              defconfig
@@ -100,12 +104,6 @@ arc                              allyesconfig
 sh                               allmodconfig
 sh                                allnoconfig
 microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
 mips                             allyesconfig
 mips                              allnoconfig
 mips                             allmodconfig
@@ -124,18 +122,24 @@ i386                 randconfig-a006-20200710
 i386                 randconfig-a002-20200710
 i386                 randconfig-a003-20200710
 i386                 randconfig-a004-20200710
-x86_64               randconfig-a012-20200710
-x86_64               randconfig-a011-20200710
-x86_64               randconfig-a016-20200710
-x86_64               randconfig-a014-20200710
-x86_64               randconfig-a015-20200710
-x86_64               randconfig-a013-20200710
-i386                 randconfig-a016-20200710
-i386                 randconfig-a015-20200710
-i386                 randconfig-a011-20200710
-i386                 randconfig-a012-20200710
-i386                 randconfig-a013-20200710
-i386                 randconfig-a014-20200710
+x86_64               randconfig-a012-20200712
+x86_64               randconfig-a011-20200712
+x86_64               randconfig-a016-20200712
+x86_64               randconfig-a014-20200712
+x86_64               randconfig-a015-20200712
+x86_64               randconfig-a013-20200712
+i386                 randconfig-a016-20200712
+i386                 randconfig-a015-20200712
+i386                 randconfig-a011-20200712
+i386                 randconfig-a012-20200712
+i386                 randconfig-a013-20200712
+i386                 randconfig-a014-20200712
+i386                 randconfig-a016-20200713
+i386                 randconfig-a015-20200713
+i386                 randconfig-a011-20200713
+i386                 randconfig-a012-20200713
+i386                 randconfig-a013-20200713
+i386                 randconfig-a014-20200713
 riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
