@@ -2,225 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62948220976
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 12:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98DD6220981
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 12:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbgGOKEV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 06:04:21 -0400
-Received: from mx.socionext.com ([202.248.49.38]:44653 "EHLO mx.socionext.com"
+        id S1728199AbgGOKGp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 06:06:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:33208 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgGOKES (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:04:18 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 15 Jul 2020 19:04:16 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id D7A7860060;
-        Wed, 15 Jul 2020 19:04:16 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 15 Jul 2020 19:04:16 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 80C131A0507;
-        Wed, 15 Jul 2020 19:04:16 +0900 (JST)
-Received: from [10.212.4.153] (unknown [10.212.4.153])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id CA66912012E;
-        Wed, 15 Jul 2020 19:04:15 +0900 (JST)
-Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= 
-        <yamada.masahiro@socionext.com>, Marc Zyngier <maz@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        id S1725838AbgGOKGp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:06:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB79730E;
+        Wed, 15 Jul 2020 03:06:43 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA0563F718;
+        Wed, 15 Jul 2020 03:06:41 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 11:06:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Makarand Pawagi <makarand.pawagi@nxp.com>
+Cc:     "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
- <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <293ed6fe-6e73-f664-c26e-0aef744ce933@socionext.com>
-Date:   Wed, 15 Jul 2020 19:04:13 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Joerg Roedel <joro@8bytes.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [EXT] Re: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for
+ fsl-mc
+Message-ID: <20200715100636.GA31330@e121166-lin.cambridge.arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
+ <a7845603-9bc9-9099-dfc4-19b7bc4f4e44@nxp.com>
+ <20200709091950.GA18149@e121166-lin.cambridge.arm.com>
+ <DB7PR04MB4986D1A0BB7B685911DF4831EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
+ <203372be-144c-54ba-d011-30d0746dd615@nxp.com>
+ <DB7PR04MB4986C63772CB47A2A827D028EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
+ <d41589da-c2f9-a750-f57a-25dccf51e69f@oss.nxp.com>
+ <DB7PR04MB4986A56021750A3D104CA244EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB7PR04MB4986A56021750A3D104CA244EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+On Thu, Jul 09, 2020 at 10:52:52AM +0000, Makarand Pawagi wrote:
 
-On 2020/07/14 22:27, Lorenzo Pieralisi wrote:
-> On Thu, Jun 18, 2020 at 05:38:09PM +0900, Kunihiko Hayashi wrote:
->> The misc interrupts consisting of PME, AER, and Link event, is handled
->> by INTx handler, however, these interrupts should be also handled by
->> MSI handler.
-> 
-> Define what you mean please.
+[...]
 
-AER/PME signals are assigned to the same signal as MSI by internal logic,
-that is, AER/PME and MSI are assigned to the same GIC interrupt number.
-So it's necessary to modify the code to call the misc handler from MSI handler.
+> > >>>> fsl_mc_bus_probe(struct platform_device *pdev)
+> > >>>>>>      struct fsl_mc_io *mc_io = NULL;
+> > >>>>>>      int container_id;
+> > >>>>>>      phys_addr_t mc_portal_phys_addr;
+> > >>>>>> -   u32 mc_portal_size;
+> > >>>>>> -   struct resource res;
+> > >>>>>> +   u32 mc_portal_size, mc_stream_id;
+> > >>>>>> +   struct resource *plat_res;
+> > >>>>>> +
+> > >>>>>> +   if (!iommu_present(&fsl_mc_bus_type))
+> > >>>>>> +           return -EPROBE_DEFER;
+> > >>>>>>
+> > >>>>>>      mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
+> > >>>>>>      if (!mc)
+> > >>>>>> @@ -874,19 +887,33 @@ static int fsl_mc_bus_probe(struct
+> > >>>>>> platform_device *pdev)
+> > >>>>>>
+> > >>>>>>      platform_set_drvdata(pdev, mc);
+> > >>>>>>
+> > >>>>>> +   plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > >>>>>> +   mc->fsl_mc_regs = devm_ioremap_resource(&pdev->dev, plat_res);
+> > >>>>>> +   if (IS_ERR(mc->fsl_mc_regs))
+> > >>>>>> +           return PTR_ERR(mc->fsl_mc_regs);
+> > >>>>>> +
+> > >>>>>> +   if (IS_ENABLED(CONFIG_ACPI) && !dev_of_node(&pdev->dev)) {
+> > >>>>>> +           mc_stream_id = readl(mc->fsl_mc_regs + FSL_MC_FAPR);
+> > >>>>>> +           /*
+> > >>>>>> +            * HW ORs the PL and BMT bit, places the result in bit 15 of
+> > >>>>>> +            * the StreamID and ORs in the ICID. Calculate it accordingly.
+> > >>>>>> +            */
+> > >>>>>> +           mc_stream_id = (mc_stream_id & 0xffff) |
+> > >>>>>> +                           ((mc_stream_id & (MC_FAPR_PL | MC_FAPR_BMT)) ?
+> > >>>>>> +                                   0x4000 : 0);
+> > >>>>>> +           error = acpi_dma_configure_id(&pdev->dev,
+> > DEV_DMA_COHERENT,
+> > >>>>>> +                                         &mc_stream_id);
+> > >>>>>> +           if (error)
+> > >>>>>> +                   dev_warn(&pdev->dev, "failed to configure dma: %d.\n",
+> > >>>>>> +                            error);
+> > >>>>>> +   }
+> > >>>>>> +
+> > >>>>>>      /*
+> > >>>>>>       * Get physical address of MC portal for the root DPRC:
+> > >>>>>>       */
+> > >>>>>> -   error = of_address_to_resource(pdev->dev.of_node, 0, &res);
+> > >>>>>> -   if (error < 0) {
+> > >>>>>> -           dev_err(&pdev->dev,
+> > >>>>>> -                   "of_address_to_resource() failed for %pOF\n",
+> > >>>>>> -                   pdev->dev.of_node);
+> > >>>>>> -           return error;
+> > >>>>>> -   }
+> > >>>>>> -
+> > >>>>>> -   mc_portal_phys_addr = res.start;
+> > >>>>>> -   mc_portal_size = resource_size(&res);
+> > >>>>>> +   plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >>>>>> +   mc_portal_phys_addr = plat_res->start;
+> > >>>>>> +   mc_portal_size = resource_size(plat_res);
+> > >>>>>>      error = fsl_create_mc_io(&pdev->dev, mc_portal_phys_addr,
+> > >>>>>>                               mc_portal_size, NULL,
+> > >>>>>>                               FSL_MC_IO_ATOMIC_CONTEXT_PORTAL,
+> > >>>>>> &mc_io); @@ -903,11 +930,13 @@ static int fsl_mc_bus_probe(struct
+> > >>>> platform_device *pdev)
+> > >>>>>>      dev_info(&pdev->dev, "MC firmware version: %u.%u.%u\n",
+> > >>>>>>               mc_version.major, mc_version.minor,
+> > >>>>>> mc_version.revision);
+> > >>>>>>
+> > >>>>>> -   error = get_mc_addr_translation_ranges(&pdev->dev,
+> > >>>>>> -                                          &mc->translation_ranges,
+> > >>>>>> -                                          &mc->num_translation_ranges);
+> > >>>>>> -   if (error < 0)
+> > >>>>>> -           goto error_cleanup_mc_io;
+> > >>>>>> +   if (dev_of_node(&pdev->dev)) {
+> > >>>>>> +           error = get_mc_addr_translation_ranges(&pdev->dev,
+> > >>>>>> +                                           &mc->translation_ranges,
+> > >>>>>> +                                           &mc->num_translation_ranges);
+> > >>>>>> +           if (error < 0)
+> > >>>>>> +                   goto error_cleanup_mc_io;
+> > >>>>>> +   }
+> > >>>>>>
+> > >>>>>>      error = dprc_get_container_id(mc_io, 0, &container_id);
+> > >>>>>>      if (error < 0) {
+> > >>>>>> @@ -934,6 +963,7 @@ static int fsl_mc_bus_probe(struct
+> > >>>>>> platform_device
+> > >>>> *pdev)
+> > >>>>>>              goto error_cleanup_mc_io;
+> > >>>>>>
+> > >>>>>>      mc->root_mc_bus_dev = mc_bus_dev;
+> > >>>>>> +   mc_bus_dev->dev.fwnode = pdev->dev.fwnode;
+> > >>>>> Makarand, this looks a bit weird. Is there really a reason for it?
+> > >>>> Can you clarify please so that we can reach a conclusion on this matter ?
+> > >>>>
+> > >>> Laurentiu, can you clarify what exactly is the doubt here? Are you
+> > >>> asking about
+> > >> fwnode assignment from pdev to mc_bus_dev?
+> > >> Yes. I remember that a while ago I tested without this fwnode
+> > >> assignment and didn't encounter any issues. Maybe we can just drop it?
+> > > Did you tested with PHY changes? Because this is needed for MAC driver,
+> > where it needs the mc bus node.
+> > 
+> > Maybe it worth a comment or maybe have it in a different patch?
+> > 
+> Since this change is needed for ACPI case and this is ACPI support
+> case, I feel we should have this change in this patch only instead of
+> separate patch. 
 
-I'll rewrite it next.
+Anyway - you need to seek feedback from Marc on whether patches
+11 and 12 are OK from an irqchip perspective, it is possible we
+can take the rest of the series independently if everyone agrees
+but I don't necessarily see a reason for that.
 
-> 
->> This adds the function uniphier_pcie_misc_isr() that handles misc
->> interrupts, which is called from both INTx and MSI handlers.
->> This function detects PME and AER interrupts with the status register,
->> and invoke PME and AER drivers related to MSI.
->>
->> And this sets the mask for misc interrupts from INTx if MSI is enabled
->> and sets the mask for misc interrupts from MSI if MSI is disabled.
->>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Jingoo Han <jingoohan1@gmail.com>
->> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
->>   1 file changed, 46 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
->> index a5401a0..5ce2479 100644
->> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
->> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
->> @@ -44,7 +44,9 @@
->>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
->>   
->>   #define PCL_RCV_INT			0x8108
->> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
->>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
->> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
->>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
->>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
->>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
->> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
->>   
->>   static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->>   {
->> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
->> +	u32 val;
->> +
->> +	val = PCL_RCV_INT_ALL_ENABLE;
->> +	if (pci_msi_enabled())
->> +		val |= PCL_RCV_INT_ALL_INT_MASK;
->> +	else
->> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
->> +
->> +	writel(val, priv->base + PCL_RCV_INT);
->>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->>   }
->>   
->> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
->>   	.map = uniphier_pcie_intx_map,
->>   };
->>   
->> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
->>   {
->> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
->>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->> -	struct irq_chip *chip = irq_desc_get_chip(desc);
->> -	unsigned long reg;
->> -	u32 val, bit, virq;
->> +	u32 val, virq;
->>   
->> -	/* INT for debug */
->>   	val = readl(priv->base + PCL_RCV_INT);
->>   
->>   	if (val & PCL_CFG_BW_MGT_STATUS)
->>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
->> +
->>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
->> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->> -		dev_dbg(pci->dev, "Root Error\n");
->> -	if (val & PCL_CFG_PME_MSI_STATUS)
->> -		dev_dbg(pci->dev, "PME Interrupt\n");
->> +
->> +	if (is_msi) {
->> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->> +			dev_dbg(pci->dev, "Root Error Status\n");
->> +
->> +		if (val & PCL_CFG_PME_MSI_STATUS)
->> +			dev_dbg(pci->dev, "PME Interrupt\n");
->> +
->> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
->> +			   PCL_CFG_PME_MSI_STATUS)) {
->> +			virq = irq_linear_revmap(pp->irq_domain, 0);
-> 
-> I think this is wrong. pp->irq_domain is the DWC MSI domain, how do
-> you know that hwirq 0 *is* the AER/PME interrupt ?
+Long story short: you need Marc's ACK on [11-12], it is your code.
 
-When AER/PME drivers are probed, AER/PME interrupts are registered
-as MSI-0.
-
-The pcie_message_numbers() function refers the following fields of
-PCI registers,
-
-   - PCI_EXP_FLAGS_IRQ (for PME)
-   - PCI_ERR_ROOT_AER_IRQ (for AER)
-
-and decides AER/PME interrupts numbers in MSI domain.
-Initial values of both fields are 0, so these interrupts are set to MSI-0.
-
-However, pcie_uniphier driver doesn't know that these interrupts are MSI-0.
-Surely using 0 here is wrong.
-I think that the method to get virq for AER/PME from pcieport is needed.
-
->
-> It just *works* in this case because the port driver probes and alloc
-> MSIs before any PCI device has a chance to do it and actually I think
-> this is just wrong also because hwirq 0 *is* usable by devices but
-> it can't be used because current code takes it for the PME/AER interrupt
-> (which AFAICS is an internal signal disconnected from the DWC MSI
-> interrupt controller).
-
-AER/PME interrupts are with IRQF_SHARED, so hwirq 0 can share
-any PCI device, however, the multiple handlers might be called
-with other factor, so I don't think it is desiable.
-
-> 
-> I think this extra glue logic should be separate MSI domain
-> otherwise there is no way you can reliably look-up the virq
-> corresponding to AER/PME.
-
-Ok, however, it seems that there is no way to get virq for AER/PME
-from pcieport in pcie/portdrv_core.c.
-
-When I try to separate AER/PME interrtups from MSI domain,
-how should I get virq for AER/PME?
-
-> 
-> How does it work in HW ? Is the root port really sending a memory
-> write to raise an IRQ or it just signal the IRQ through internal
-> logic ? I think the root port MSI handling is different from the
-> DWC logic and should be treated separately.
-
-The internal logic assigns the same signal as MSI interrupt
-to AER/PME interrupts.
-
-The MSI handler checks internal status register PCL_RCV_INT,
-and know if the signal is AER or PME interrupt. MSI memory write
-isn't used for the signal.
-
-Since DWC MSI handler doesn't have a method to check the internal
-status register, I added callback .msi_host_isr() to DWC MSI handler
-in patch 1/6.
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+Thanks,
+Lorenzo
