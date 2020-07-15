@@ -2,117 +2,577 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44D34221431
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 20:23:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3F68221597
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 21:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgGOSXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 14:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgGOSXB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 14:23:01 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE96C061755;
-        Wed, 15 Jul 2020 11:23:00 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id n22so233877ejy.3;
-        Wed, 15 Jul 2020 11:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A1O8hMul/CJLSbV1N5c3JTA54EIaO3M+DVJ+l+X2WwY=;
-        b=uONZHPpirU56iDmZf7UJPLf4XCv8SFTwAJCeF0ZahyHBh2Q1OZwv9p7PFDP0YsAK9v
-         HWH1Qz9J+uEzZpnVXgmqPR6piZHgQeVFyzB5DWgE8/05Sh9s0hQ3THroLvv1ldx81Cu7
-         78P78TU2pwfpEdKUXHZvo0/9asBMkzKlr4RaEigWa8zdpf2fGph1xxnFye4ImwlgoLKk
-         HHX2/CW+BCqHhB/xZwEtYAlJNpMSq++rA2wRCULjRheyqx7teTCOWEKoH8n4hckjvd0C
-         zwws5WFYH1YmucevJN7vUlkYZPrzwo4u5LIkLoNE6Avj0ZWE8bo/Olu7CZyVvEn/yAg+
-         hY7A==
+        id S1726832AbgGOTzd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 15:55:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37047 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgGOTzd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 15:55:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so3582345iob.4;
+        Wed, 15 Jul 2020 12:55:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A1O8hMul/CJLSbV1N5c3JTA54EIaO3M+DVJ+l+X2WwY=;
-        b=N+T3Pf07ChXnCRXfLt41uV7lpG7XAiGmNKGOOMo/pMjwhO+a9+uCXGzTwxQHCA1c6V
-         Pji6CPDyXKZIOa92c/6gvqNVGvdAjYhis58P3K3aPWyhKvWaP7jqPnm7gxhb/fk2Tvly
-         ONEY9thiSMeMuTjsLIEEA9D4dznXA3rDi4t7M/zVbTTstAy5sUOMtZOQBXeuLOKxe7al
-         rBWO4gJtnZ0VnwufOy2T8pniasOjmZzv/85q4jHjZqhNsgAyEXjCBGlgo4gKfhuZG57p
-         tjRKxwMX4xcBcipvF3oLXPy38vLIiDy4pEUB/3zCKJmPSbKcV/SLmxSMx4YMJTk6VZwf
-         XdOw==
-X-Gm-Message-State: AOAM530v8mZBSd4WaKFCU/MbIK0XmclJ7mZmOlnlSWRcNoWvg4cnWLsp
-        uoBGWYF0yrzdwtILbXVEBE98BI89L3w=
-X-Google-Smtp-Source: ABdhPJwlaflYv2TqUtLyq5VbaHKn8hR3K68nDNQ9YAiP4xnxsgqI9AEw9CvyJigjI4uMFC5edDMJuQ==
-X-Received: by 2002:a17:906:c943:: with SMTP id fw3mr232794ejb.55.1594837379427;
-        Wed, 15 Jul 2020 11:22:59 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:99de:6366:d65c:d599? (p200300ea8f23570099de6366d65cd599.dip0.t-ipconnect.de. [2003:ea:8f23:5700:99de:6366:d65c:d599])
-        by smtp.googlemail.com with ESMTPSA id ai4sm2756085ejc.91.2020.07.15.11.22.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 11:22:58 -0700 (PDT)
-Subject: Re: PCI: Disable not requested resource types in pci_enable_resources
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200710210924.GA80868@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <eeae5c45-a718-71d8-04e8-4042eaed54de@gmail.com>
-Date:   Wed, 15 Jul 2020 20:22:51 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wwLSc8ACOFK5x6W6Wvc0FQ/VTmCQze+BtXUUtGB4oGs=;
+        b=Nu7O4X1RDHmNsyZ406/6JhkNjwV9+v31JLfRLDpZAhFFhc2pc6uflmIpYa9wqrJZlo
+         JhcmWXfCDmvzFTQW2459T0B19dsCqENVhO2548AZozqVvm/mir0dTsRrYMCRNKV6MSZE
+         kmqLB8vlyyuiPD62aJXvmf3tnpBiMeI+j2xB0TsOqBMNJ+XL+52jViUJbN7BG9oqqRXn
+         FohWKtaaDttbLWKBbZdxRZ9MuDCZAdgW5cku3x6fzmlA61E/wGy7SnuY1brZOYcETWNb
+         J3JNkNfgJsQ9Ruf+4wYzgV/6Ik6PVP/Y9K+fpiO45pwmVVOFEchEfYc5RuIPxaZ4aIs4
+         2n6A==
+X-Gm-Message-State: AOAM533DrcHnwgzsJkFKYz9Aklhin7oy/B5VhYmEAOqrJDegLsBjghH0
+        XZIrrog4v9tOcAI00RwlpQ==
+X-Google-Smtp-Source: ABdhPJzbwNj6HZcfmjrTSF00MePBWZMUTjuo0Qfo+4m272Hj76BlzCDEDKDNRCkcQY54y9jeKs+5XA==
+X-Received: by 2002:a02:b0d5:: with SMTP id w21mr1176522jah.27.1594842931059;
+        Wed, 15 Jul 2020 12:55:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t7sm1579252iol.2.2020.07.15.12.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 12:55:30 -0700 (PDT)
+Received: (nullmailer pid 720192 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:55:29 -0000
+Date:   Wed, 15 Jul 2020 13:55:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pci: convert QCOM pci bindings to YAML
+Message-ID: <20200715195529.GA710312@bogus>
+References: <1592982124-27160-1-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200710210924.GA80868@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592982124-27160-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10.07.2020 23:09, Bjorn Helgaas wrote:
-> On Thu, May 28, 2020 at 08:47:12PM +0200, Heiner Kallweit wrote:
->> Currently, if both resource types are enabled before the call, the mask
->> value doesn't matter. Means as of today I wouldn't be able to e.g.
->> disable PCI_COMMAND_IO. At least my interpretation is that mask defines
->> which resource types are enabled after the call. Therefore change the
->> behavior to disable not requested resource types.
->>
->> At least on my x86 devices this change doesn't have side effects.
+On Wed, Jun 24, 2020 at 12:32:04PM +0530, Sivaprakash Murugesan wrote:
+> Convert QCOM pci bindings to YAML schema
 > 
-> Does this have a practical benefit?  If it fixes a bug or if there's
-> something useful we can do because of this patch, I'll push it higher
-> up the priority list.
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 470 +++++++++++++++++++++
+>  2 files changed, 470 insertions(+), 330 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+
+
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> new file mode 100644
+> index 000000000000..b119ce4711b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -0,0 +1,470 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm PCI express root complex
+> +
+> +maintainers:
+> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> +
+> +description:
+> +  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
+> +  wrappers.
+> +
+
+Need to reference pci-bus.yaml.
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,pcie-apq8064
+> +      - qcom,pcie-apq8084
+> +      - qcom,pcie-ipq4019
+> +      - qcom,pcie-ipq8064
+> +      - qcom,pcie-ipq8074
+> +      - qcom,pcie-msm8996
+> +      - qcom,pcie-qcs404
+> +      - qcom,pcie-sdm845
+> +
+> +  reg:
+> +    description: Register ranges as listed in the reg-names property
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: elbi
+> +      - const: parf
+> +      - const: config
+> +
+
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  device_type:
+> +    items:
+> +      - const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+
+Drop these, pci-bus.yaml covers them.
+
+> +
+> +  ranges:
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    items:
+> +      - description: MSI interrupts
+> +
+> +  interrupt-names:
+> +    const: msi
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+> +    items:
+> +      - description: standard PCI properties to define mapping of PCIe
+> +                     interface to interrupt numbers.
+> +
+> +  interrupt-map:
+> +    maxItems: 4
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 7
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 7
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  power-domains:
+> +    items:
+> +      - description: phandle to the power domain responsible for collapsing
+> +                     and restoring power to peripherals
+
+Just 'maxItems: 1'. No need for generic descriptions.
+
+> +
+> +  vdda-supply:
+> +    items:
+> +      - description: phandle to power supply
+
+*-supply is not an array.
+
+> +
+> +  vdda_phy-supply:
+> +    items:
+> +      - description: phandle to the power supply to PHY
+> +
+> +  vdda_refclk-supply:
+> +    items:
+> +      - description: phandle to power supply for ref clock generator
+> +
+> +  vddpe-3v3-supply:
+> +    items:
+> +      - description: PCIe endpoint power supply
+> +
+> +  phys:
+> +    items:
+> +      - description: phandle to the PHY block
+
+maxItems: 1
+
+> +
+> +  phy-names:
+> +    const: pciephy
+> +
+> +  perst-gpios:
+> +    description: Endpoint reset signal line
+
+Add 'maxItems: 1' as *-gpios is an array.
+
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller
+
+Can drop.
+
+> +
+> +  num-lanes:
+> +    const: 1
+> +
+> +  linux,pci-domain:
+> +    description: pci host bridge domain number
+
+Can drop.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - device_type
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +  - interrupts
+> +  - interrupt-names
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - phys
+> +  - phy-names
+
+Can drop everything pci-bus.yaml says is required.
+
+> +
+> +additionalProperties: false
+
+Will need to be 'unevaluatedProperties: false' with pci-bus.yaml 
+referenced.
+
+> +
+> +allOf:
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-apq8064
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: clock for pcie hw block
+> +           - description: clock for pcie phy block
+> +       clock-names:
+> +         items:
+> +           - const: core
+> +           - const: phy
+> +       resets:
+> +         items:
+> +           - description: AXI reset
+> +           - description: AHB reset
+> +           - description: POR reset
+> +           - description: PCI reset
+> +           - description: PHY reset
+> +       reset-names:
+> +         items:
+> +           - const: axi
+> +           - const: ahb
+> +           - const: por
+> +           - const: pci
+> +           - const: phy
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-apq8084
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: AUX clock
+> +           - description: Master AXI clock
+> +           - description: Slave AXI clock
+> +       clock-names:
+> +         items:
+> +           - const: aux
+> +           - const: bus_master
+> +           - const: bus_slave
+> +       resets:
+> +         items:
+> +           - description: core reset
+> +       reset-names:
+> +         items:
+> +           - const: core
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-ipq4019
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: AUX clock
+> +           - description: Master AXI clock
+> +           - description: Slave AXI clock
+> +       clock-names:
+> +         items:
+> +           - const: aux
+> +           - const: master_bus
+> +           - const: master_slave
+> +       resets:
+> +         items:
+> +           - description: AXI master reset
+> +           - description: AXI slave reset
+> +           - description: PCIE pipe reset
+> +           - description: AXI vmid reset
+> +           - description: AXI XPU reset
+> +           - description: parf reset
+> +           - description: PHY reset
+> +           - description: AXI master sticky reset
+> +           - description: PCIE pipe sticky reset
+> +           - description: pwr reset
+> +           - description: AHB reset
+> +           - description: PHY AHB reset
+> +       reset-names:
+> +         items:
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: pipe
+> +           - const: axi_m_vmid
+> +           - const: axi_s_xpu
+> +           - const: parf
+> +           - const: phy
+> +           - const: axi_m_sticky
+> +           - const: pipe_sticky
+> +           - const: pwr
+> +           - const: ahb
+> +           - const: phy_ahb
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-ipq8064
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: core clock
+> +           - description: interface clock
+> +           - description: phy clock
+> +           - description: Auxilary clock
+> +           - description: reference clock
+> +       clock-names:
+> +         items:
+> +           - const: core
+> +           - const: iface
+> +           - const: phy
+> +           - const: aux
+> +           - const: ref
+> +       resets:
+> +         items:
+> +           - description: AXI reset
+> +           - description: AHB reset
+> +           - description: POR reset
+> +           - description: PCI reset
+> +           - description: PHY reset
+> +           - description: External reset
+> +       reset-names:
+> +         items:
+> +           - const: axi
+> +           - const: ahb
+> +           - const: por
+> +           - const: pci
+> +           - const: phy
+> +           - const: ext
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-ipq8074
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: sys noc interface clock
+> +           - description: AXI master clock
+> +           - description: AXI slave clock
+> +           - description: AHB clock
+> +           - description: Auxilary clock
+> +       clock-names:
+> +         items:
+> +           - const: iface
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: ahb
+> +           - const: aux
+> +       resets:
+> +         items:
+> +           - description: PIPE reset
+> +           - description: PCIe sleep reset
+> +           - description: PCIe sticky reset
+> +           - description: AXI master reset
+> +           - description: AXI slave reset
+> +           - description: AHB reset
+> +           - description: AXI master sticky reset
+> +       reset-names:
+> +         items:
+> +           - const: pipe
+> +           - const: sleep
+> +           - const: sticky
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: ahb
+> +           - const: axi_m_sticky
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-msm8996
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: PCIe pipe clock
+> +           - description: Auxilary clock
+> +           - description: AHB config clock
+> +           - description: AXI master clock
+> +           - description: AXI slave clock
+> +       clock-names:
+> +         items:
+> +           - const: pipe
+> +           - const: aux
+> +           - const: cfg
+> +           - const: bus_master
+> +           - const: bus_slave
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-qcs404
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: interface clock
+> +           - description: Auxilary clock
+> +           - description: AXI master clock
+> +           - description: AXI slave clock
+> +       clock-names:
+> +         items:
+> +           - const: iface
+> +           - const: aux
+> +           - const: master_bus
+> +           - const: slave_bus
+> +       resets:
+> +         items:
+> +           - description: AXI master reset
+> +           - description: AXI slave reset
+> +           - description: AXI master sticky reset
+> +           - description: PCIe pipe sticky reset
+> +           - description: power reset
+> +           - description: AHB reset
+> +       reset-names:
+> +         items:
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: axi_m_sticky
+> +           - const: pipe_sticky
+> +           - const: pwr
+> +           - const: ahb
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-sdm845
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: PCIE pipe clock
+> +           - description: Auxilary clock
+> +           - description: AHB config clock
+> +           - description: AXI Master clock
+> +           - description: AXI Slave clock
+> +           - description: AXI Slave Q2A clock
+> +           - description: NOC TBU clock
+> +       clock-names:
+> +         items:
+> +           - const: pipe
+> +           - const: aux
+> +           - const: cfg
+> +           - const: bus_master
+> +           - const: bus_slave
+> +           - const: slave_q2a
+> +           - const: tbu
+> +       resets:
+> +         items:
+> +           - description: PCI reset
+> +       reset-names:
+> +         items:
+> +           - const: pci
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pcie: pci@10000000 {
+> +        compatible = "qcom,pcie-qcs404";
+> +        reg =  <0x10000000 0xf1d>,
+> +               <0x10000f20 0xa8>,
+> +               <0x07780000 0x2000>,
+> +               <0x10001000 0x2000>;
+> +        reg-names = "dbi", "elbi", "parf", "config";
+> +        device_type = "pci";
+> +        linux,pci-domain = <0>;
+> +        bus-range = <0x00 0xff>;
+> +        num-lanes = <1>;
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +
+> +        ranges = <0x01000000 0 0          0x10003000 0 0x00010000>, /* I/O */
+> +                 <0x02000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
+> +
+> +        interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "msi";
+> +        #interrupt-cells = <1>;
+> +        interrupt-map-mask = <0 0 0 0x7>;
+> +        interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +                        <0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +                        <0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +                        <0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +        clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+> +                 <&gcc GCC_PCIE_0_AUX_CLK>,
+> +                 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+> +                 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
+> +        clock-names = "iface", "aux", "master_bus", "slave_bus";
+> +
+> +        resets = <&gcc 18>,
+> +                 <&gcc 17>,
+> +                 <&gcc 15>,
+> +                 <&gcc 19>,
+> +                 <&gcc GCC_PCIE_0_BCR>,
+> +                 <&gcc 16>;
+> +        reset-names = "axi_m",
+> +                      "axi_s",
+> +                      "axi_m_sticky",
+> +                      "pipe_sticky",
+> +                      "pwr",
+> +                      "ahb";
+> +
+> +        phys = <&pcie_phy>;
+> +        phy-names = "pciephy";
+> +
+> +    };
+> -- 
+> 2.7.4
 > 
-There's no big benefit. The current behavior just doesn't seem to be
-consistent, and I don't see why we have a function pci_enable_device_mem().
-Also after calling this function IO resources can be active.
-So why not remove this function and use pci_enable_device() always.
-
-Small benefit is that the change allows to guarantee that IO resources
-are disabled after calling pci_enable_device_mem().
-This might help to avoid using IO resources mistakenly in a driver.
-
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/pci/setup-res.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
->> index d21fa04fa..6ef458c10 100644
->> --- a/drivers/pci/setup-res.c
->> +++ b/drivers/pci/setup-res.c
->> @@ -459,8 +459,8 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
->>  	int i;
->>  	struct resource *r;
->>  
->> -	pci_read_config_word(dev, PCI_COMMAND, &cmd);
->> -	old_cmd = cmd;
->> +	pci_read_config_word(dev, PCI_COMMAND, &old_cmd);
->> +	cmd = old_cmd & ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
->>  
->>  	for (i = 0; i < PCI_NUM_RESOURCES; i++) {
->>  		if (!(mask & (1 << i)))
->> -- 
->> 2.26.2
->>
-
