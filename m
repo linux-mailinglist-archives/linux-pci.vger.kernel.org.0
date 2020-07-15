@@ -2,68 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D53F2217C8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 00:30:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8E3E221822
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 00:52:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgGOWaQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 18:30:16 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:37602 "EHLO
+        id S1726984AbgGOWw3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 18:52:29 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:37670 "EHLO
         kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGOWaQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 18:30:16 -0400
+        with ESMTP id S1726765AbgGOWw3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 18:52:29 -0400
 Received: from localhost (gate.crashing.org [63.228.1.57])
         (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06FMQfq2014030
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06FMnOHG014418
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 15 Jul 2020 17:26:45 -0500
-Message-ID: <627b214e6fc0624093caa8155d7006de111aacfb.camel@kernel.crashing.org>
+        Wed, 15 Jul 2020 17:49:27 -0500
+Message-ID: <5d4b3a716f85017c17c52a85915fba9e19509e81.camel@kernel.crashing.org>
 Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
 From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Cc:     "'Oliver O'Halloran'" <oohall@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Keith Busch <kbusch@kernel.org>,
         Paul Mackerras <paulus@samba.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Russell King <linux@armlinux.org.uk>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matt Turner <mattst88@gmail.com>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ray Jui <rjui@broadcom.com>, Jens Axboe <axboe@fb.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "bjorn@helgaas.com" <bjorn@helgaas.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         "David S. Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Kjetil Oftedal <oftedal@gmail.com>
-Date:   Thu, 16 Jul 2020 08:26:40 +1000
-In-Reply-To: <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
-References: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
-         <20200714234625.GA428442@bjorn-Precision-5520>
-         <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
+        Heiner Kallweit <hkallweit1@gmail.com>
+Date:   Thu, 16 Jul 2020 08:49:21 +1000
+In-Reply-To: <20200715221230.GA563957@bjorn-Precision-5520>
+References: <20200715221230.GA563957@bjorn-Precision-5520>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 Mime-Version: 1.0
@@ -73,21 +73,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2020-07-15 at 08:47 +0200, Arnd Bergmann wrote:
-> drivers/misc/cardreader/rts5261.c:      retval =
-> rtsx_pci_write_config_dword(pcr, PCR_SETTING_REG2, lval);
+On Wed, 2020-07-15 at 17:12 -0500, Bjorn Helgaas wrote:
+> > I've 'played' with PCIe error handling - without much success.
+> > What might be useful is for a driver that has just read ~0u to
+> > be able to ask 'has there been an error signalled for this device?'.
 > 
-> That last one is interesting because I think this is a case in which
-> we
-> actually want to check for errors, as the driver seems to use it
-> to ensure that accessing extended config space at offset 0x814
-> works before relying on the value. Unfortunately the implementation
-> seems buggy as it a) keeps using the possibly uninitialized value
-> after
-> printing a warning and b) returns the PCIBIOS_* value in place of a
-> negative errno and then ignores it in the caller.
+> In many cases a driver will know that ~0 is not a valid value for the
+> register it's reading.  But if ~0 *could* be valid, an interface like
+> you suggest could be useful.  I don't think we have anything like that
+> today, but maybe we could.  It would certainly be nice if the PCI core
+> noticed, logged, and cleared errors.  We have some of that for AER,
+> but that's an optional feature, and support for the error bits in the
+> garden-variety PCI_STATUS register is pretty haphazard.  As you note
+> below, this sort of SERR/PERR reporting is frequently hard-wired in
+> ways that takes it out of our purview.
 
-In cases like this, usually checking against ~0 is sufficient
+We do have pci_channel_state (via pci_channel_offline()) which covers
+the cases where the underlying error handling (such as EEH or unplug)
+results in the device being offlined though this tend to be
+asynchronous so it might take a few ~0's before you get it.
+
+It's typically used to break potentially infinite loops in some
+drivers.
+
+There is no interface to check whether *an* error happened though for
+the most cases it will be captured in the status register, which is
+harvested (and cleared ?) by some EDAC drivers iirc... 
+
+All this lacks coordination, I agree.
 
 Cheers,
 Ben.
