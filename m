@@ -2,116 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6F2422024E
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 04:22:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3BC522026E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 04:37:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgGOCWb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 22:22:31 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:36952 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgGOCWb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 22:22:31 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06F2JlC0001315
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 14 Jul 2020 21:19:51 -0500
-Message-ID: <2629240c07af7fec5989127ed6da405e12cf77a3.camel@kernel.crashing.org>
-Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        id S1728300AbgGOCg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 22:36:58 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:50126 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726396AbgGOCg6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jul 2020 22:36:58 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxidS0aw5ffNAEAA--.1431S3;
+        Wed, 15 Jul 2020 10:36:37 +0800 (CST)
+Subject: Re: [PATCH v2] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
+ bridge_class_quirk()
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <1591925417-27665-1-git-send-email-yangtiezhu@loongson.cn>
+ <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
+ <20200714150822.GB14416@e121166-lin.cambridge.arm.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Kjetil Oftedal <oftedal@gmail.com>
-Date:   Wed, 15 Jul 2020 12:19:46 +1000
-In-Reply-To: <20200714234625.GA428442@bjorn-Precision-5520>
-References: <20200714234625.GA428442@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
+        Rob Herring <robh@kernel.org>, Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <3dc48f99-68bd-89a9-6cbe-16274e1cf86a@loongson.cn>
+Date:   Wed, 15 Jul 2020 10:36:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <20200714150822.GB14416@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9CxidS0aw5ffNAEAA--.1431S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw48tryDGFy5Gw4kGw48JFb_yoW5Jw18pr
+        yrJa12kF4FqFs8AwnF9wsrWasI9as3Ca4kCFWru3ZF9r9IqF15Wr97KFyF9r4UXrW8Xa10
+        v3ykC3yfAa1Uur7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwI
+        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+        6cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+        0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUomiiDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2020-07-14 at 18:46 -0500, Bjorn Helgaas wrote:
-> Yes.  I have no problem with that.  There are a few cases where it's
-> important to check for errors, e.g., we read a status register and do
-> something based on a bit being set.  A failure will return all bits
-> set, and we may do the wrong thing.  But most of the errors we care
-> about will be on MMIO reads, not config reads, so we can probably
-> ignore most config read errors.
+On 07/14/2020 11:08 PM, Lorenzo Pieralisi wrote:
+> On Tue, Jul 14, 2020 at 03:37:51PM +0800, Tiezhu Yang wrote:
+>> On 06/12/2020 09:30 AM, Tiezhu Yang wrote:
+>>> Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
+>>> for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
+>>> has no effect.
+>>>
+>>> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> ---
+>>>
+>>> v2:
+>>>     - modify the patch subject used with lower case "loongson"
+>>>
+>>> This patch is based on mips-next tree.
+>>>
+>>>    drivers/pci/controller/pci-loongson.c | 6 +++---
+>>>    1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+>>> index 459009c..58b862a 100644
+>>> --- a/drivers/pci/controller/pci-loongson.c
+>>> +++ b/drivers/pci/controller/pci-loongson.c
+>>> @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+>>>    {
+>>>    	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>>    }
+>>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>    			DEV_PCIE_PORT_0, bridge_class_quirk);
+>>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>    			DEV_PCIE_PORT_1, bridge_class_quirk);
+>>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>    			DEV_PCIE_PORT_2, bridge_class_quirk);
+>>>    static void system_bus_quirk(struct pci_dev *pdev)
+>> Hi,
+>>
+>> Any comments?
 
-And in both cases, we don't have the plumbing to provide accurate
-and reliable error returns for all platforms anyways (esp. not for
-MMIO).
+Hi Lorenzo,
 
-I think it makes sense to stick to the good old "if all 1's, then go
-out of line" including for config space.
+Thanks for your reply.
 
- ../..
+> (1) how was this driver tested if this patch is required ? Is it because
+>      you are testing on a different platform ?
 
-> Yep, except for things like device removal or other PCI errors.
+According to the datasheet of Loongson LS7A bridge chip, the old
+version of Loongson LS7A PCIE port has a hardware bug about PCI
+class.
 
-A whole bunch of these are reported asynchronously, esp for writes (and
-yes, including config writes, they are supposed to be non-posted but
-more often than not, the path  from the CPU to the PCI bridge remains
-posted for writes including config ones).
+As far as I know, the latest version has already fixed this bug.
+I test it on the old version which has hardware bug.
 
-> So maybe a good place to start is by removing some of the useless
-> error checking for pci_read_config_*() and pci_write_config_*().
-> That's a decent-sized but not impractical project that could be done
-> per subsystem or something:
-> 
->   git grep -E "(if|return|=).*\<pci_(read|write)_config" drivers
-> 
-> finds about 400 matches.
-> 
-> Some of those callers probably really *do* want to check for errors,
-> and I guess we'd have to identify them and do them separately as you
-> mentioned.
+> (2) Please explain why it is needed (I mean describe what happens
+>      in current code and how this fixes it) in the commit log, it is
+>      useful for people who may need to tweak this code further
 
-I'd be curious about these considering how unreliable our error return
-is accross the board.
+OK, this patch is to maintain downward compatibility, I will add
+more info to the commit message and then send v3.
 
-Cheers,
-Ben.
+Thanks,
+Tiezhu
 
+>
+> I will apply it then, thanks.
+>
+> Lorenzo
+>
+>> Could you please apply this patch?
+>>
+>> Thanks,
+>> Tiezhu
+>>
 
