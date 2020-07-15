@@ -2,90 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B3842207BB
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 10:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B34922207E7
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 10:56:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgGOIsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 04:48:01 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:54580 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729377AbgGOIsB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 04:48:01 -0400
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.144])
-        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 5ED8A20055;
-        Wed, 15 Jul 2020 08:48:00 +0000 (UTC)
-Received: from us4-mdac16-74.at1.mdlocal (unknown [10.110.50.192])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 5D39C800A4;
-        Wed, 15 Jul 2020 08:48:00 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.12])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 19C344004D;
-        Wed, 15 Jul 2020 08:47:54 +0000 (UTC)
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id BD51C4005B;
-        Wed, 15 Jul 2020 08:47:53 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 15 Jul
- 2020 09:47:46 +0100
-Subject: Re: [renesas-drivers:master 69/80]
- drivers/net/ethernet/sfc/efx_common.c:1232:19: sparse: sparse: incompatible
- types for operation (==):
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     <kbuild-all@lists.01.org>, <linux-renesas-soc@vger.kernel.org>,
-        "Luc Van Oostenryck" <luc.vanoostenryck@gmail.com>,
-        <linux-pci@vger.kernel.org>
-References: <20200714185622.GA408711@bjorn-Precision-5520>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <a18d4e1e-2ecb-21dc-2547-fa7529e76edd@solarflare.com>
-Date:   Wed, 15 Jul 2020 09:47:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1729661AbgGOI4D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 04:56:03 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39629 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727930AbgGOI4D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 04:56:03 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 18so884962otv.6;
+        Wed, 15 Jul 2020 01:56:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pUzyHQ0QkLs25JZWLaLC5T7qg8r9CRBwSMhggfLS03U=;
+        b=F0msI4DhiaesSq06+XqI5Cd3K+Gmr/JG2kAIYof0Hjh0ztlhRZAZ8ZlS3nkFDDv+11
+         jaS0Dk1PeOZULDs0JuZdpw0UsD2H3aC9TdyPfCs+3OGjXAbyUz9SJjfG1yf3vLdVN7FD
+         uUvMxoMfmK93K88WCwcfifaECYdiNcwPc6EjitbCQdr2clB6BSh3vZ2ErLEtmqRWx8Iz
+         GRwkox34AKt8IxBzHMDvVh7w19JhvTyxZlRgdfPoB39DtpbL5G/ldAejRVN/cXOieQjH
+         cEmSokI3L8tyBvtB+QgoYDyZCZDJyJulh2nWr4WcBhUPUG03187jRi/fQv13Cw/yGjBl
+         /dkw==
+X-Gm-Message-State: AOAM533YcLu39KJiTJuDIcO+6+BFSg7Nv2Mt9aSck1cBKo6Y2yP9JMpl
+        JHSRIab8fhVCfjZyixweldDvxx4ybFt8rhhQ9vg=
+X-Google-Smtp-Source: ABdhPJw5bZ7qOaFwu5zExmR40PIX8CrhARWaK01y6ERKzbRsz+v0atbN2sIAtwmhmlbN3+liuSgfpIlAQr7C3GELSZA=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr7835345otp.250.1594803362475;
+ Wed, 15 Jul 2020 01:56:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200714185622.GA408711@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25542.003
-X-TM-AS-Result: No-3.164200-8.000000-10
-X-TMASE-MatchedRID: scwq2vQP8OEKZODMWRxkSfZvT2zYoYOwC/ExpXrHizxjjMm9SMavFZz/
-        bBwW32ikmWqGYs6oIWaSLFcga7P5vI+eiI05y0fpiVJZi91I9JjLRD51bz5RZC6Zl5fVYhDwSHg
-        UVMoIv2GqUwBa6QrA8isHa8EBpdHXDIaTPs5YLz8olijkrg/WpBlKjo8zguyKzP9LEqj2Ynh6xL
-        6D9mrQLm6lKwpaJzZc9cmyfKQ9I/wM8jMXjBF+sIMbH85DUZXyYxU/PH+vZxv6C0ePs7A07Y6HM
-        5rqDwqt/ICtW1gi3HFB2fMeLDfXVVPQd5RFlm6GYSut6mdoDxMF1eYA3tJgpxL8boLqOA9d6imA
-        JlIiDRcE4FNL3+X8n6eXsYmSOazI4vn0zMfSmjYrbLOj1GuP3A+hgLflG6KEo9QjuF9BKnl4IFx
-        QIbVomJRMZUCEHkRt
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--3.164200-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25542.003
-X-MDID: 1594802874-AYUraoqgDHcT
+References: <20200714185622.GA408711@bjorn-Precision-5520> <a18d4e1e-2ecb-21dc-2547-fa7529e76edd@solarflare.com>
+In-Reply-To: <a18d4e1e-2ecb-21dc-2547-fa7529e76edd@solarflare.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 10:55:51 +0200
+Message-ID: <CAMuHMdVDha=xAAHjKma4pm1bgNt=go0HgUMyCrc3H87cF0f5SA@mail.gmail.com>
+Subject: Re: [renesas-drivers:master 69/80] drivers/net/ethernet/sfc/efx_common.c:1232:19:
+ sparse: sparse: incompatible types for operation (==):
+To:     Edward Cree <ecree@solarflare.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, kbuild-all@lists.01.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14/07/2020 19:56, Bjorn Helgaas wrote:
-> [+cc Luc, linux-pci]
->
-> I think what's necessary here is to replace "enum pci_channel_state
-> state" with "pci_channel_state_t state", as in 16d79cd4e23b ("PCI: Use
-> 'pci_channel_state_t' instead of 'enum pci_channel_state'"):
->
-> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=16d79cd4e23b
->
-> This change should be safe even without 16d79cd4e23b, so there won't
-> be a revlock if you make it in the renesas-drivers tree.
-This is presumably goingto happen in any tree that pulls both net-next
- and pci/next.  So shouldn't we make the change in net-next, rather than
- in a renesas tree that really has little to do with it other than being
- the first place the problem showed up?
-Apart from that question, the fix you describe sounds reasonable afaict,
- and I'll happily Ack a patch.
+Hi Edward.
 
--ed
+On Wed, Jul 15, 2020 at 10:48 AM Edward Cree <ecree@solarflare.com> wrote:
+> On 14/07/2020 19:56, Bjorn Helgaas wrote:
+> > [+cc Luc, linux-pci]
+> >
+> > I think what's necessary here is to replace "enum pci_channel_state
+> > state" with "pci_channel_state_t state", as in 16d79cd4e23b ("PCI: Use
+> > 'pci_channel_state_t' instead of 'enum pci_channel_state'"):
+> >
+> > https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=16d79cd4e23b
+> >
+> > This change should be safe even without 16d79cd4e23b, so there won't
+> > be a revlock if you make it in the renesas-drivers tree.
+> This is presumably goingto happen in any tree that pulls both net-next
+>  and pci/next.  So shouldn't we make the change in net-next, rather than
+>  in a renesas tree that really has little to do with it other than being
+>  the first place the problem showed up?
+
+Indeed, it should be fixed at the core, not in an integration testing tree.
+BTW, did it show up in linux-next, too, or have I done a bad merge conflict
+resolution?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
