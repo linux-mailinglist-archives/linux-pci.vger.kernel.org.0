@@ -2,152 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2C25220348
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 06:19:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C789522055F
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 08:47:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgGOETA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 00:19:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgGOETA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 00:19:00 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73673C061755;
-        Tue, 14 Jul 2020 21:19:00 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id s21so824827ilk.5;
-        Tue, 14 Jul 2020 21:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+vY2OIlneWe5ztE2bvwwhli0jm6HqPh+OWIpoUB8BSw=;
-        b=bQAhGIZJE7XGnGYhwL0/1olYisauxe9ymI6u2tgG5vEOuz2Nq+QlDtF7dhHuDuByuD
-         qW96jNuM4d+gf7D3wc8J8orrZQS9iM0Icv2ATeffIzl0qNeTkHmX83cMCjFi8nTTJm5v
-         7ig6QsacBF0GCuiO/mGKrMcs7KLcULwA6yDS5Bhdj00wAveDS58I1htt6LsbCi5aopAo
-         94cRQMbn77WvY0ntAe3eMQsVBODihtWQxeS8Nk4f6gtDn95RBRSxHL19GMAyBDy2dM6S
-         N6sPHPVxHB/cnaCH/kcUf5eC7pYe8YR2n8bCiJu6OiN1Jb3CBLYelLNvpnWbwRHuU5zs
-         q8/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+vY2OIlneWe5ztE2bvwwhli0jm6HqPh+OWIpoUB8BSw=;
-        b=BOWJX3NgFQ2+4r50NHnYqGctDdbAW6O9OdStbysncoLz1ieX2ggmbhtxnpam+Nf/Of
-         Z+E9A42x5WhUraIybx4ZrOuzfikRVuOH75y82agNs0DqcAtstkKI3Q3+6HD34YbESbKF
-         hrQL/t1Nq/CIeMSz9vAFipi8XFc6j3RrbbiD+BzpYt2nbZsfDm5+gv+jYABqRo6ETLB/
-         /NWezqjD8wQ5f8/qlLspnhQ2U2GAIYF//SVZ5Qg2vTSdo8aD5o1Q0jGfl7ZaslB7k3LG
-         n0nuttBl7gKBP0OLGFw30HQHmnusOS+8lNdD0DuFlEFdaGN2JE02nF8VGGN1S+Ho842i
-         tFzQ==
-X-Gm-Message-State: AOAM5308dqJN0GErgcjMKhBzDXt5JMKRPj4f5xwWiUgku3KVKg1WEtXR
-        vsN5HUcAm/RSXbAwgTrb7NQ4X4vmEN93vIHL3tc=
-X-Google-Smtp-Source: ABdhPJxbEVXkXtWoblqKfj5L8JbBLsjm2+xbwAB3m5diPF3AzSD/1a23QyEn3OuWSfYYBfrU93OGI/PkJJ/ZoDLhhcU=
-X-Received: by 2002:a92:9a97:: with SMTP id c23mr8119143ill.258.1594786739362;
- Tue, 14 Jul 2020 21:18:59 -0700 (PDT)
+        id S1728297AbgGOGrj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 02:47:39 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:50153 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgGOGrj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 02:47:39 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M7sQ8-1jzSp816GY-0050Q9; Wed, 15 Jul 2020 08:47:36 +0200
+Received: by mail-qk1-f174.google.com with SMTP id b185so871202qkg.1;
+        Tue, 14 Jul 2020 23:47:35 -0700 (PDT)
+X-Gm-Message-State: AOAM532LrhM8hiVVJOK5szknGYigk+QyT6hGxaJj8ouEmzM0Tan6qN4p
+        6sOhYgiDfFfclZnxoY+vKIyb0FSRZ+r/GKo5AeU=
+X-Google-Smtp-Source: ABdhPJyFS0Zk4AmYJjgRoHnkDRGYzV2yqrKuev4xpaWExBMOSp+Vk7tlNoV31gVNZsw16288M3SPusHOFA0ODDFCn0I=
+X-Received: by 2002:a37:a496:: with SMTP id n144mr8314087qke.286.1594795654855;
+ Tue, 14 Jul 2020 23:47:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
- <20200714184550.GA397277@bjorn-Precision-5520> <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 15 Jul 2020 14:18:47 +1000
-Message-ID: <CAOSf1CEviMYySQhyQGks8hHjST-85wGpxEBasuxwSX_homBJ2A@mail.gmail.com>
+References: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
+ <20200714234625.GA428442@bjorn-Precision-5520>
+In-Reply-To: <20200714234625.GA428442@bjorn-Precision-5520>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Jul 2020 08:47:17 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
+Message-ID: <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
 Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Russell King <linux@armlinux.org.uk>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kevin Hilman <khilman@baylibre.com>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matt Turner <mattst88@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ray Jui <rjui@broadcom.com>, Jens Axboe <axboe@fb.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
+        sparclinux <sparclinux@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Kjetil Oftedal <oftedal@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Ov73+FkWwqGvDa0Nd9xKW4QYYDGcw0TUwF/8ivnuG1D8a0mbzvW
+ LVK/98InOx7ZAWF2Ybaus8kHATrC0tfSvZSg6GJJ9RYYOLnSVyK2RzSSmyVYdKEvOpn7JtU
+ xhXzOPSGrSBf06b3T2Ykg/Rtz55itFj0U9A1/pc5LbW/PXQY1V9e+H+YLfRFMdieO5Kp4RV
+ abg3RR8d6mSOt/zih4tow==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7ysEtf4/W10=:ErYqQP9WJNbcjMCKGNPZaL
+ SXuVyVI8Bxq7mRI3jEh9IJ9wZ7h1Gk0VOJe7yAFPGFii1qYzZdmww9s+Vol7k4WSNbxrfTa9P
+ maWNGQbXG6WgYs3uOa7b2HfWcgM5TiXYLZ5UTF9ty4hjHNaXkPEsd1LuDAI15xjDF6FZEhbOK
+ GrlC93UXHHwXaBsZNes07PPGGEwfUoAlI2q+bvlbC9NiNJO34YYcLE8o/zOZ66VHWvN5mdKh8
+ TLiA9elD4OcrxVgkG6OD2URYvoob4IVTM/lWNpOOXELPT9V2LoB7eWTIALUWrz9vfLsId15KT
+ ruYwqEziCy2jF8Q28G0+e5CehAY0Yn6z/xB30AOLme4Ue2vjKFkaHZv7qzDaBrm7fmXo7iHuj
+ k6Snjwpf9oomxvUTYYwWuc+NqIcNwDvykgAm2XB9jYLtZUq5E9UiLpLBxdSbhJFGBlhGuP91p
+ 6ddT/fhpEXn3St9B9Xburqq/AoI5BwWdltiYfO87oJ4HlzN7WPnvfuY5HvbvnCHkLwHx0T0lF
+ jP5Tnn91+Z7BO6I5ENKT470MUe36vIXVwtJUKFtboh50d824RUOh9G1C7X5VwsTkkCooxeSN5
+ cV2XqpO83DRYqEofW8IHTHWiyDkugVqfDE8o+bJhC08etgjkpHa9J8mh3J1sVJ5jX1eU2jL5j
+ Hv5OjT35eMzL8R7+Ij1iZIsFBBRwhSegzO+OfoTdvCLo/QAWiTnF8dxpuJITdPVDUpPOgothf
+ MRViAVrKjnEP7+I7gEwYwwGFIk5mZFOgog1apOiWiGuvhPPxXI7ssB1PW+5CNcBbcFU2FcrBZ
+ kdt0/qDvWkqAIt0nrrwAaooG0FS/5j4olvDVtvW/o2403TsGEWybMLig4sM+bICzMa3X47wwa
+ h9Pn5bSTiPUVxs71Gphsj5L5hTW1T8ysjpauL1A1NtsPEdbDqbb4fxHU7PHWZ9ibT4fViOqJU
+ InVriLguElFCSH67Fo/POd23hKoNMFlAmPNRjDK65NrGUGdl+trF9
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 8:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Wed, Jul 15, 2020 at 1:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+ So something like:
 >
-> - Most error checking is static: PCIBIOS_BAD_REGISTER_NUMBER
->   only happens if you pass an invalid register number, but most
->   callers pass a compile-time constant register number that is
->   known to be correct, or the driver would never work. Similarly,
->   PCIBIOS_DEVICE_NOT_FOUND wouldn't normally happen
->   since you pass a valid pci_device pointer that was already
->   probed.
+>   void pci_read_config_word(struct pci_dev *dev, int where, u16 *val)
+>
+> and where we used to return anything non-zero, we just set *val = ~0
+> instead?  I think we do that already in most, maybe all, cases.
 
-Having some feedback about obvious programming errors is still useful
-when doing driver development. Reporting those via printk() would
-probably be more useful to those who care though.
+Right, this is what I had in mind. If we start by removing the handling
+of the return code in all files that clearly don't need it, looking at
+whatever remains will give a much better idea of what a good interface
+should be.
 
-> - config space accesses are very rare compared to memory
->   space access and on the hardware side the error handling
->   would be similar, but readl/writel don't return errors, they just
->   access wrong registers or return 0xffffffff.
->   arch/powerpc/kernel/eeh.c has a ton extra code written to
->   deal with it, but no other architectures do.
+>  git grep -E "(if|return|=).*\<pci_(read|write)_config" drivers
+> finds about 400 matches.
 
-TBH the EEH MMIO hooks were probably a mistake to begin with. Errors
-detected via MMIO are almost always asynchronous to the error itself
-so you usually just wind up with a misleading stack trace rather than
-any kind of useful synchronous error reporting. It seems like most
-drivers don't bother checking for 0xFFs either and rely on the
-asynchronous reporting via .error_detected() instead, so I have to
-wonder what the point is. I've been thinking of removing the MMIO
-hooks and using a background poller to check for errors on each PHB
-periodically (assuming we don't have an EEH interrupt) instead. That
-would remove the requirement for eeh_dev_check_failure() to be
-interrupt safe too, so it might even let us fix all the godawful races
-in EEH.
+Right, and this is some 112 files to look at.
 
-> - If we add code to detect errors in pci_read_config_*
->   and do some of the stuff from powerpc's
->   eeh_dev_check_failure(), we are more likely to catch
->   intermittent failures when drivers don't check, or bugs
->   with invalid arguments in device drivers than relying on
->   drivers to get their error handling right when those code
->   paths don't ever get covered in normal testing.
+I had a slightly different regex, which found more false-positives, but
+also these:
 
-Adding some kind of error detection to the generic config accessors
-wouldn't hurt, but detection is only half the problem. The main job of
-eeh_dev_check_failure() is waking up the EEH recovery thread which
-actually handles notifying drivers, device resets, etc and you'd want
-something in the PCI core. Right now there's two implementations of
-that reporting logic: one for EEH in arch/powerpc/eeh_driver.c and one
-for AER/DPC in drivers/pci/pcie/err.c. I think the latter could be
-moved into the PCI core easily enough since there's not much about it
-that's really specific to PCIe. Ideally we could drop the EEH specific
-one too, but I'm not sure how to implement that without it devolving
-into callback spaghetti.
+arch/x86/kernel/amd_nb.c:      : pci_read_config_dword(root, 0x64, value));
+drivers/i2c/busses/i2c-sis630.c:     pci_write_config_byte(sis630_dev,
+SIS630_BIOS_CTL_REG, b | 0x80)) {
+drivers/i2c/busses/i2c-viapro.c:     !pci_read_config_word(pdev,
+SMBBA2, &vt596_smba) &&
+drivers/ide/rz1000.c:     !pci_write_config_word(dev, 0x40, reg & 0xdfff)) {
+drivers/net/ethernet/realtek/r8169_main.c:
+pci_write_config_byte(pdev, 0x070f, val) == PCIBIOS_SUCCESSFUL)
+include/linux/rtsx_pci.h:#define rtsx_pci_read_config_dword(pcr,
+where, val) pci_read_config_dword((pcr)->pci, where, val)
+include/linux/rtsx_pci.h:#define rtsx_pci_write_config_dword(pcr,
+where, val) pci_write_config_dword((pcr)->pci, where, val)
+drivers/misc/cardreader/rts5261.c:              retval =
+rtsx_pci_read_config_dword(pcr,
+drivers/misc/cardreader/rts5261.c:      retval =
+rtsx_pci_write_config_dword(pcr, PCR_SETTING_REG2, lval);
 
-Oliver
+That last one is interesting because I think this is a case in which we
+actually want to check for errors, as the driver seems to use it
+to ensure that accessing extended config space at offset 0x814
+works before relying on the value. Unfortunately the implementation
+seems buggy as it a) keeps using the possibly uninitialized value after
+printing a warning and b) returns the PCIBIOS_* value in place of a
+negative errno and then ignores it in the caller.
+
+      Arnd
