@@ -2,149 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A28A2220868
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 11:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62948220976
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 12:05:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgGOJPp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 05:15:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:54634 "EHLO foss.arm.com"
+        id S1730969AbgGOKEV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 06:04:21 -0400
+Received: from mx.socionext.com ([202.248.49.38]:44653 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729577AbgGOJPo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:15:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A2411FB;
-        Wed, 15 Jul 2020 02:15:44 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED8903F718;
-        Wed, 15 Jul 2020 02:15:41 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 10:15:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Will Deacon <will@kernel.org>, Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        id S1726023AbgGOKES (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:04:18 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 15 Jul 2020 19:04:16 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id D7A7860060;
+        Wed, 15 Jul 2020 19:04:16 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 15 Jul 2020 19:04:16 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 80C131A0507;
+        Wed, 15 Jul 2020 19:04:16 +0900 (JST)
+Received: from [10.212.4.153] (unknown [10.212.4.153])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id CA66912012E;
+        Wed, 15 Jul 2020 19:04:15 +0900 (JST)
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH v2 03/12] ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
-Message-ID: <20200715091539.GB30074@e121166-lin.cambridge.arm.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-4-lorenzo.pieralisi@arm.com>
+        =?UTF-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= 
+        <yamada.masahiro@socionext.com>, Marc Zyngier <maz@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <293ed6fe-6e73-f664-c26e-0aef744ce933@socionext.com>
+Date:   Wed, 15 Jul 2020 19:04:13 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619082013.13661-4-lorenzo.pieralisi@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 09:20:04AM +0100, Lorenzo Pieralisi wrote:
-> There is nothing PCI specific in iort_msi_map_rid().
-> 
-> Rename the function using a bus protocol agnostic name,
-> iort_msi_map_id(), and convert current callers to it.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Hanjun Guo <guohanjun@huawei.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> ---
->  drivers/acpi/arm64/iort.c | 12 ++++++------
->  drivers/pci/msi.c         |  2 +-
+Hi Lorenzo,
 
-Hi Bjorn,
-
-please let me know if you are OK with this change, thanks.
-
-Lorenzo
-
->  include/linux/acpi_iort.h |  6 +++---
->  3 files changed, 10 insertions(+), 10 deletions(-)
+On 2020/07/14 22:27, Lorenzo Pieralisi wrote:
+> On Thu, Jun 18, 2020 at 05:38:09PM +0900, Kunihiko Hayashi wrote:
+>> The misc interrupts consisting of PME, AER, and Link event, is handled
+>> by INTx handler, however, these interrupts should be also handled by
+>> MSI handler.
 > 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 902e2aaca946..53f9ef515089 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -568,22 +568,22 @@ static struct acpi_iort_node *iort_find_dev_node(struct device *dev)
->  }
->  
->  /**
-> - * iort_msi_map_rid() - Map a MSI requester ID for a device
-> + * iort_msi_map_id() - Map a MSI input ID for a device
->   * @dev: The device for which the mapping is to be done.
-> - * @req_id: The device requester ID.
-> + * @input_id: The device input ID.
->   *
-> - * Returns: mapped MSI RID on success, input requester ID otherwise
-> + * Returns: mapped MSI ID on success, input ID otherwise
->   */
-> -u32 iort_msi_map_rid(struct device *dev, u32 req_id)
-> +u32 iort_msi_map_id(struct device *dev, u32 input_id)
->  {
->  	struct acpi_iort_node *node;
->  	u32 dev_id;
->  
->  	node = iort_find_dev_node(dev);
->  	if (!node)
-> -		return req_id;
-> +		return input_id;
->  
-> -	iort_node_map_id(node, req_id, &dev_id, IORT_MSI_TYPE);
-> +	iort_node_map_id(node, input_id, &dev_id, IORT_MSI_TYPE);
->  	return dev_id;
->  }
->  
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 74a91f52ecc0..77f48b95e277 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1536,7 +1536,7 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
->  
->  	of_node = irq_domain_get_of_node(domain);
->  	rid = of_node ? of_msi_map_rid(&pdev->dev, of_node, rid) :
-> -			iort_msi_map_rid(&pdev->dev, rid);
-> +			iort_msi_map_id(&pdev->dev, rid);
->  
->  	return rid;
->  }
-> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-> index 08ec6bd2297f..e51425e083da 100644
-> --- a/include/linux/acpi_iort.h
-> +++ b/include/linux/acpi_iort.h
-> @@ -28,7 +28,7 @@ void iort_deregister_domain_token(int trans_id);
->  struct fwnode_handle *iort_find_domain_token(int trans_id);
->  #ifdef CONFIG_ACPI_IORT
->  void acpi_iort_init(void);
-> -u32 iort_msi_map_rid(struct device *dev, u32 req_id);
-> +u32 iort_msi_map_id(struct device *dev, u32 id);
->  struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
->  					  enum irq_domain_bus_token bus_token);
->  void acpi_configure_pmsi_domain(struct device *dev);
-> @@ -39,8 +39,8 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev);
->  int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
->  #else
->  static inline void acpi_iort_init(void) { }
-> -static inline u32 iort_msi_map_rid(struct device *dev, u32 req_id)
-> -{ return req_id; }
-> +static inline u32 iort_msi_map_id(struct device *dev, u32 id)
-> +{ return id; }
->  static inline struct irq_domain *iort_get_device_domain(
->  	struct device *dev, u32 id, enum irq_domain_bus_token bus_token)
->  { return NULL; }
-> -- 
-> 2.26.1
+> Define what you mean please.
+
+AER/PME signals are assigned to the same signal as MSI by internal logic,
+that is, AER/PME and MSI are assigned to the same GIC interrupt number.
+So it's necessary to modify the code to call the misc handler from MSI handler.
+
+I'll rewrite it next.
+
 > 
+>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>> interrupts, which is called from both INTx and MSI handlers.
+>> This function detects PME and AER interrupts with the status register,
+>> and invoke PME and AER drivers related to MSI.
+>>
+>> And this sets the mask for misc interrupts from INTx if MSI is enabled
+>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> index a5401a0..5ce2479 100644
+>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> @@ -44,7 +44,9 @@
+>>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>>   
+>>   #define PCL_RCV_INT			0x8108
+>> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+>> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>>   
+>>   static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>>   {
+>> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>> +	u32 val;
+>> +
+>> +	val = PCL_RCV_INT_ALL_ENABLE;
+>> +	if (pci_msi_enabled())
+>> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+>> +	else
+>> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+>> +
+>> +	writel(val, priv->base + PCL_RCV_INT);
+>>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>   }
+>>   
+>> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>>   	.map = uniphier_pcie_intx_map,
+>>   };
+>>   
+>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>>   {
+>> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> -	unsigned long reg;
+>> -	u32 val, bit, virq;
+>> +	u32 val, virq;
+>>   
+>> -	/* INT for debug */
+>>   	val = readl(priv->base + PCL_RCV_INT);
+>>   
+>>   	if (val & PCL_CFG_BW_MGT_STATUS)
+>>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>> +
+>>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "Root Error\n");
+>> -	if (val & PCL_CFG_PME_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +	if (is_msi) {
+>> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "Root Error Status\n");
+>> +
+>> +		if (val & PCL_CFG_PME_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>> +			   PCL_CFG_PME_MSI_STATUS)) {
+>> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+> 
+> I think this is wrong. pp->irq_domain is the DWC MSI domain, how do
+> you know that hwirq 0 *is* the AER/PME interrupt ?
+
+When AER/PME drivers are probed, AER/PME interrupts are registered
+as MSI-0.
+
+The pcie_message_numbers() function refers the following fields of
+PCI registers,
+
+   - PCI_EXP_FLAGS_IRQ (for PME)
+   - PCI_ERR_ROOT_AER_IRQ (for AER)
+
+and decides AER/PME interrupts numbers in MSI domain.
+Initial values of both fields are 0, so these interrupts are set to MSI-0.
+
+However, pcie_uniphier driver doesn't know that these interrupts are MSI-0.
+Surely using 0 here is wrong.
+I think that the method to get virq for AER/PME from pcieport is needed.
+
+>
+> It just *works* in this case because the port driver probes and alloc
+> MSIs before any PCI device has a chance to do it and actually I think
+> this is just wrong also because hwirq 0 *is* usable by devices but
+> it can't be used because current code takes it for the PME/AER interrupt
+> (which AFAICS is an internal signal disconnected from the DWC MSI
+> interrupt controller).
+
+AER/PME interrupts are with IRQF_SHARED, so hwirq 0 can share
+any PCI device, however, the multiple handlers might be called
+with other factor, so I don't think it is desiable.
+
+> 
+> I think this extra glue logic should be separate MSI domain
+> otherwise there is no way you can reliably look-up the virq
+> corresponding to AER/PME.
+
+Ok, however, it seems that there is no way to get virq for AER/PME
+from pcieport in pcie/portdrv_core.c.
+
+When I try to separate AER/PME interrtups from MSI domain,
+how should I get virq for AER/PME?
+
+> 
+> How does it work in HW ? Is the root port really sending a memory
+> write to raise an IRQ or it just signal the IRQ through internal
+> logic ? I think the root port MSI handling is different from the
+> DWC logic and should be treated separately.
+
+The internal logic assigns the same signal as MSI interrupt
+to AER/PME interrupts.
+
+The MSI handler checks internal status register PCL_RCV_INT,
+and know if the signal is AER or PME interrupt. MSI memory write
+isn't used for the signal.
+
+Since DWC MSI handler doesn't have a method to check the internal
+status register, I added callback .msi_host_isr() to DWC MSI handler
+in patch 1/6.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
