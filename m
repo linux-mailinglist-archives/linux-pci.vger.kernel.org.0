@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5547E220F21
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 16:26:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B43E220F23
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 16:26:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgGOO0A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 10:26:00 -0400
-Received: from lists.nic.cz ([217.31.204.67]:34900 "EHLO mail.nic.cz"
+        id S1728417AbgGOO0C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 10:26:02 -0400
+Received: from mail.nic.cz ([217.31.204.67]:34916 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727908AbgGOOZ7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:25:59 -0400
+        id S1728142AbgGOO0A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:26:00 -0400
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 79497140A5D;
+        by mail.nic.cz (Postfix) with ESMTP id 9B2D6140A60;
         Wed, 15 Jul 2020 16:25:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594823158; bh=sQp6sw1pd1H2vwHpvza0rOe5XDLopPj0Q2DKS+BS2DA=;
+        t=1594823158; bh=HGzVBMJNvnfwKhKQhtGT6vLn/Of8aFHOs4tiRb2T8p4=;
         h=From:To:Date;
-        b=A6FljPmOlB1YnkZW/BHqu5LZjzNogxWbG6hQ4nOYYzJrD1Am/M3LlZiDZ2b0DXsez
-         sZoEMejCL3j/AsKLsfB5iooPQu+6uJOrT31E4d9Si8bLSSUTP3YFxkXJ0V/cwUCtEI
-         yUXc/6PHDHH3kQOBR12cZ/gv1fWgz6J/DQepYB3M=
+        b=rWrgS2NVc+Tk0wMGetcQrSYqhVs0AvL4XWhfOb0Mzz/jUHuByiFGrmmtelaLpLaJ0
+         3Y57YyImilrUDUUf8P1ceKFqNLT910MKmaMqVBvT/4Qn22v9O5oztY09A4pg1nxUUE
+         rP5naHcy2SjuQ0gmxy9CqeMxftWuNYMv+yJ2qNBQ=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     linux-pci@vger.kernel.org
 Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
@@ -30,9 +30,9 @@ Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
         Xogium <contact@xogium.me>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 3/5] PCI: pci-bridge-emul: Export API functions
-Date:   Wed, 15 Jul 2020 16:25:55 +0200
-Message-Id: <20200715142557.17115-4-marek.behun@nic.cz>
+Subject: [PATCH 4/5] PCI: aardvark: Implement driver 'remove' function and allow to build it as module
+Date:   Wed, 15 Jul 2020 16:25:56 +0200
+Message-Id: <20200715142557.17115-5-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200715142557.17115-1-marek.behun@nic.cz>
 References: <20200715142557.17115-1-marek.behun@nic.cz>
@@ -51,48 +51,92 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-It allows kernel modules which are not compiled into kernel image to use
-pci-bridge-emul API functions.
+Providing driver's 'remove' function allows kernel to bind and unbind devices
+from aardvark driver. It also allows to build aardvark driver as a module.
+
+Compiling aardvark as a module simplifies development and debugging of
+this driver as it can be reloaded at runtime without the need to reboot
+to new kernel.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <marek.behun@nic.cz>
 ---
- drivers/pci/pci-bridge-emul.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/controller/Kconfig        |  2 +-
+ drivers/pci/controller/pci-aardvark.c | 25 ++++++++++++++++++++++---
+ 2 files changed, 23 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index ccf26d12ec61..139869d50eb2 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -294,6 +294,7 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index adddf21fa381..f9da5ff2c517 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -12,7 +12,7 @@ config PCI_MVEBU
+ 	select PCI_BRIDGE_EMUL
  
+ config PCI_AARDVARK
+-	bool "Aardvark PCIe controller"
++	tristate "Aardvark PCIe controller"
+ 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index d5f58684d962..0a5aa6d77f5d 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -14,6 +14,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/phy/phy.h>
+@@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->pdev = pdev;
++	platform_set_drvdata(pdev, pcie);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pcie->base = devm_ioremap_resource(dev, res);
+@@ -1204,18 +1206,35 @@ static int advk_pcie_probe(struct platform_device *pdev)
  	return 0;
  }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_init);
  
- /*
-  * Cleanup a pci_bridge_emul structure that was previously initialized
-@@ -305,6 +306,7 @@ void pci_bridge_emul_cleanup(struct pci_bridge_emul *bridge)
- 		kfree(bridge->pcie_cap_regs_behavior);
- 	kfree(bridge->pci_regs_behavior);
- }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_cleanup);
++static int advk_pcie_remove(struct platform_device *pdev)
++{
++	struct advk_pcie *pcie = platform_get_drvdata(pdev);
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
++
++	pci_stop_root_bus(bridge->bus);
++	pci_remove_root_bus(bridge->bus);
++
++	advk_pcie_remove_msi_irq_domain(pcie);
++	advk_pcie_remove_irq_domain(pcie);
++
++	return 0;
++}
++
+ static const struct of_device_id advk_pcie_of_match_table[] = {
+ 	{ .compatible = "marvell,armada-3700-pcie", },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, advk_pcie_of_match_table);
  
- /*
-  * Should be called by the PCI controller driver when reading the PCI
-@@ -366,6 +368,7 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_conf_read);
- 
- /*
-  * Should be called by the PCI controller driver when writing the PCI
-@@ -430,3 +433,4 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_conf_write);
+ static struct platform_driver advk_pcie_driver = {
+ 	.driver = {
+ 		.name = "advk-pcie",
+ 		.of_match_table = advk_pcie_of_match_table,
+-		/* Driver unloading/unbinding currently not supported */
+-		.suppress_bind_attrs = true,
+ 	},
+ 	.probe = advk_pcie_probe,
++	.remove = advk_pcie_remove,
+ };
+-builtin_platform_driver(advk_pcie_driver);
++module_platform_driver(advk_pcie_driver);
++
++MODULE_DESCRIPTION("Aardvark PCIe controller");
++MODULE_LICENSE("GPL v2");
 -- 
 2.26.2
 
