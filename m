@@ -2,137 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EB99220FA3
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 16:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2624822114D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 17:41:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgGOOie (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 10:38:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:40703 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729329AbgGOOid (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 10:38:33 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-77-9crfze-iNZqlCsLzYG0IKA-1; Wed, 15 Jul 2020 15:38:30 +0100
-X-MC-Unique: 9crfze-iNZqlCsLzYG0IKA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 15 Jul 2020 15:38:29 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 15 Jul 2020 15:38:29 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Oliver O'Halloran' <oohall@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        "Paul Mackerras" <paulus@samba.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        "Toan Le" <toan@os.amperecomputing.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        "Marek Vasut" <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Russell King <linux@armlinux.org.uk>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matt Turner <mattst88@gmail.com>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ray Jui <rjui@broadcom.com>, Jens Axboe <axboe@fb.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "bjorn@helgaas.com" <bjorn@helgaas.com>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: RE: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-Thread-Topic: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-Thread-Index: AQHWWl8Tn5bD1WsSsUK40p+tBVrtaakIsp9A
-Date:   Wed, 15 Jul 2020 14:38:29 +0000
-Message-ID: <1e2ae69a55f542faa18988a49e9b9491@AcuMS.aculab.com>
-References: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
- <20200714184550.GA397277@bjorn-Precision-5520>
- <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
- <CAOSf1CEviMYySQhyQGks8hHjST-85wGpxEBasuxwSX_homBJ2A@mail.gmail.com>
-In-Reply-To: <CAOSf1CEviMYySQhyQGks8hHjST-85wGpxEBasuxwSX_homBJ2A@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S1725770AbgGOPiH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 11:38:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgGOPiF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jul 2020 11:38:05 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC25C061755
+        for <linux-pci@vger.kernel.org>; Wed, 15 Jul 2020 08:38:05 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id h16so2332115ilj.11
+        for <linux-pci@vger.kernel.org>; Wed, 15 Jul 2020 08:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WfIdeZLZov6NfnmmqQlv+Rb5MpsRzDo+FOzJR5t4gYs=;
+        b=FZDdVDJVoiLHHzBHe0aiqJLbmNlC5iFh+SkgJid8YYrKUrtn5IIpqkkHxbpsO0BySp
+         smbOSz9A1X2dJzpEWh/Da6y1WA2oHs20ODbqX5GILpc2tesIM9rkvrG8BRNGet3UbnWP
+         PqCrbtSwGqB+tdxzVM83L2Bdn1hHSMwxg57uooz9i+FqavIrMK0RNhqIori25jLjcmZW
+         lbkCd8E7f64sNSnYZXht8XHFVYVKwGKPSXwZIt0wjdIFsvAx3623oR82Gv3NpS+0mDLw
+         vigttZlP4vpQlVNufIFNphlm8dnsk74Z5kW0AbOwi7N8AyE5ycFuoI9kZPTHJodHnE77
+         2OKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WfIdeZLZov6NfnmmqQlv+Rb5MpsRzDo+FOzJR5t4gYs=;
+        b=TPUuK+wlz+/7fecF/hSp0o3wCHm5z6mc5gTCrHrqaHp/4uEk3tr/ccQu7UBonCAVVR
+         YJcI4mKAHiAKxDOQYcmhIoo3Yv5fTudeb+fFcynoT6nUFwm/FA+n/tvkcJBX0iBGw8We
+         j9/uFbSzdyAi5FbBeAlrfZ8rJ67prTaTJaQq+1MchYzo9BeRG+KXlc/43oaf9+XDm0GT
+         q5ftAaF348yKanT+OOWSQZ0uv/rTPXiuMIIE0mQf1dypIr797ByqT10b6OIRCf7/BhEZ
+         5vjGoezwGH74kfd6y6Cgmu8vB3q4XX1bxpRHunLJ2dKtJoe25HqrgSlYzC0Cw3XjvCzn
+         slzQ==
+X-Gm-Message-State: AOAM533ZUZExLvR7JuiD6sO+sQy3V4wvpJrO+PtDAGcPfphEP1M0QmgJ
+        2T5BBiNP4JiJSmKKHCrPyHOjkRLSmBx6uPQmhi5wes/X2w==
+X-Google-Smtp-Source: ABdhPJxud2/xIlpsVfp7fb8qx4o80lN+0L3wBqYefFShxcH/lWMl7pHBhLw9qMKvJ6fWnwdbgV2B8bJ28ovfgpeXfmU=
+X-Received: by 2002:a92:6a02:: with SMTP id f2mr102523ilc.68.1594827484238;
+ Wed, 15 Jul 2020 08:38:04 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <5f99bc07-9b56-04c0-f022-3cbde3af5bb4@gmail.com>
+In-Reply-To: <5f99bc07-9b56-04c0-f022-3cbde3af5bb4@gmail.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed, 15 Jul 2020 10:37:53 -0500
+Message-ID: <CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com>
+Subject: Fwd: Hybrid graphics regression in 5.4.49+ [bisected]
+To:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <bjorn@helgaas.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogT2xpdmVyIE8nSGFsbG9yYW4NCj4gU2VudDogMTUgSnVseSAyMDIwIDA1OjE5DQo+IA0K
-PiBPbiBXZWQsIEp1bCAxNSwgMjAyMCBhdCA4OjAzIEFNIEFybmQgQmVyZ21hbm4gPGFybmRAYXJu
-ZGIuZGU+IHdyb3RlOg0KLi4uDQo+ID4gLSBjb25maWcgc3BhY2UgYWNjZXNzZXMgYXJlIHZlcnkg
-cmFyZSBjb21wYXJlZCB0byBtZW1vcnkNCj4gPiAgIHNwYWNlIGFjY2VzcyBhbmQgb24gdGhlIGhh
-cmR3YXJlIHNpZGUgdGhlIGVycm9yIGhhbmRsaW5nDQo+ID4gICB3b3VsZCBiZSBzaW1pbGFyLCBi
-dXQgcmVhZGwvd3JpdGVsIGRvbid0IHJldHVybiBlcnJvcnMsIHRoZXkganVzdA0KPiA+ICAgYWNj
-ZXNzIHdyb25nIHJlZ2lzdGVycyBvciByZXR1cm4gMHhmZmZmZmZmZi4NCj4gPiAgIGFyY2gvcG93
-ZXJwYy9rZXJuZWwvZWVoLmMgaGFzIGEgdG9uIGV4dHJhIGNvZGUgd3JpdHRlbiB0bw0KPiA+ICAg
-ZGVhbCB3aXRoIGl0LCBidXQgbm8gb3RoZXIgYXJjaGl0ZWN0dXJlcyBkby4NCj4gDQo+IFRCSCB0
-aGUgRUVIIE1NSU8gaG9va3Mgd2VyZSBwcm9iYWJseSBhIG1pc3Rha2UgdG8gYmVnaW4gd2l0aC4g
-RXJyb3JzDQo+IGRldGVjdGVkIHZpYSBNTUlPIGFyZSBhbG1vc3QgYWx3YXlzIGFzeW5jaHJvbm91
-cyB0byB0aGUgZXJyb3IgaXRzZWxmDQo+IHNvIHlvdSB1c3VhbGx5IGp1c3Qgd2luZCB1cCB3aXRo
-IGEgbWlzbGVhZGluZyBzdGFjayB0cmFjZSByYXRoZXIgdGhhbg0KPiBhbnkga2luZCBvZiB1c2Vm
-dWwgc3luY2hyb25vdXMgZXJyb3IgcmVwb3J0aW5nLiBJdCBzZWVtcyBsaWtlIG1vc3QNCj4gZHJp
-dmVycyBkb24ndCBib3RoZXIgY2hlY2tpbmcgZm9yIDB4RkZzIGVpdGhlciBhbmQgcmVseSBvbiB0
-aGUNCj4gYXN5bmNocm9ub3VzIHJlcG9ydGluZyB2aWEgLmVycm9yX2RldGVjdGVkKCkgaW5zdGVh
-ZCwgc28gSSBoYXZlIHRvDQo+IHdvbmRlciB3aGF0IHRoZSBwb2ludCBpcy4gSSd2ZSBiZWVuIHRo
-aW5raW5nIG9mIHJlbW92aW5nIHRoZSBNTUlPDQo+IGhvb2tzIGFuZCB1c2luZyBhIGJhY2tncm91
-bmQgcG9sbGVyIHRvIGNoZWNrIGZvciBlcnJvcnMgb24gZWFjaCBQSEINCj4gcGVyaW9kaWNhbGx5
-IChhc3N1bWluZyB3ZSBkb24ndCBoYXZlIGFuIEVFSCBpbnRlcnJ1cHQpIGluc3RlYWQuIFRoYXQN
-Cj4gd291bGQgcmVtb3ZlIHRoZSByZXF1aXJlbWVudCBmb3IgZWVoX2Rldl9jaGVja19mYWlsdXJl
-KCkgdG8gYmUNCj4gaW50ZXJydXB0IHNhZmUgdG9vLCBzbyBpdCBtaWdodCBldmVuIGxldCB1cyBm
-aXggYWxsIHRoZSBnb2Rhd2Z1bCByYWNlcw0KPiBpbiBFRUguDQoNCkkndmUgJ3BsYXllZCcgd2l0
-aCBQQ0llIGVycm9yIGhhbmRsaW5nIC0gd2l0aG91dCBtdWNoIHN1Y2Nlc3MuDQpXaGF0IG1pZ2h0
-IGJlIHVzZWZ1bCBpcyBmb3IgYSBkcml2ZXIgdGhhdCBoYXMganVzdCByZWFkIH4wdSB0bw0KYmUg
-YWJsZSB0byBhc2sgJ2hhcyB0aGVyZSBiZWVuIGFuIGVycm9yIHNpZ25hbGxlZCBmb3IgdGhpcyBk
-ZXZpY2U/Jy4NCg0KSSBnb3QgYW4gZXJyb3IgZ2VuZXJhdGVkIGJ5IGRvaW5nIGFuIE1NSU8gYWNj
-ZXNzIHRoYXQgd2FzIGluc2lkZQ0KdGhlIGFkZHJlc3MgcmFuZ2UgZm9yd2FyZGVkIHRvIHRoZSBz
-bGF2ZSwgYnV0IG91dHNpZGUgYW55IG9mIGl0cyBCQVJzLg0KKFR3byBCQVJzIG9mIGRpZmZlcmVu
-dCBzaXplcyBsZWF2ZXMgYSBuaWNlIGdhcC4pDQpUaGlzIGdvdCByZXBvcnRlZCB1cCB0byB0aGUg
-YnJpZGdlIG5lYXJlc3QgdGhlIHNsYXZlICh3aGljaCBzdXBwb3J0ZWQNCmVycm9yIGhhbmRsaW5n
-KSwgYnV0IG5vdCB0byB0aGUgcm9vdCBicmlkZ2UgKHdoaWNoIEkgZG9uJ3QgdGhpbmsgZG9lcyku
-DQpJU1RSIGEgbWVzc2FnZSBhYm91dCBFRUggYmVpbmcgaGFuZGxlZCBieSB0aGUgaGFyZHdhcmUg
-KHRoZSBtYWNoaW5lDQppcyB1cCBidXQgZG1lc2cgaXMgZnVsbCBvZiBtZXNzYWdlcyBmcm9tIGEg
-Ym91bmNpbmcgVVNCIG1vdXNlKS4NCg0KV2l0aCBzdWNoIHBhcnRpYWwgZXJyb3IgcmVwb3J0aW5n
-IHVzZWZ1bCBpbmZvIGNhbiBzdGlsbCBiZSBleHRyYWN0ZWQuDQoNCk9mIGNvdXJzZSwgd2hhdCBh
-Y3R1YWxseSBoYXBwZW5zIG9uIGEgUENJZSBlcnJvciBpcyB0aGF0IHRoZSBzaWduYWwNCmdldHMg
-cm91dGVkIHRvIHNvbWUgJ2JvYXJkIHN1cHBvcnQgbG9naWMnIGFuZCB0aGVuIHBhc3NlZCBiYWNr
-IGludG8NCnRoZSBrZXJuZWwgYXMgYW4gTk1JIC0gd2hpY2ggdGhlbiBjcmFzaGVzIHRoZSBrZXJu
-ZWwhDQpUaGlzIGV2ZW4gaGFwcGVucyB3aGVuIHRoZSBQQ0llIGxpbmsgZ29lcyBkb3duIGFmdGVy
-IHdlJ3ZlIGRvbmUgYQ0Kc29mdC1yZW1vdmUgb2YgdGhlIGRldmljZSBpdHNlbGYhDQpSYXRoZXIg
-bWFrZXMgdXBkYXRpbmcgdGhlIGJvYXJkJ3MgRlBHQSB3aXRob3V0IGEgcmVib290IHRyaWNreS4N
-Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
-LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
-OiAxMzk3Mzg2IChXYWxlcykNCg==
+---------- Forwarded message ---------
+From: Patrick Volkerding <volkerdi@gmail.com>
+Date: Tue, Jul 14, 2020 at 2:22 PM
+Subject: Hybrid graphics regression in 5.4.49+ [bisected]
+To: Bjorn Helgaas <bhelgaas@google.com>, Mika Westerberg
+<mika.westerberg@linux.intel.com>
+Cc: Patrick Volkerding <volkerdi@gmail.com>
 
+
+Hello,
+
+I ran into a problem recently with a laptop with hybrid graphics. Here
+are the specs of the machine:
+
+OS: Slackware 14.2 x86_64 (post 14.2 -current) x86_64
+Host: 20QV000GUS ThinkPad X1 Extreme 2nd
+CPU: Intel i7-9850H (12) @ 4.600GHz
+GPU: NVIDIA GeForce GTX 1650 Mobile / Max-Q
+GPU: Intel UHD Graphics 630
+
+The graphics are set to hybrid in the BIOS, and no proprietary drivers
+are in use.
+
+With 5.4.48, starting X from a console works as expected and the Intel
+UHD Graphics 630 is used.
+
+Starting with 5.4.49, attempting to start X from a console causes the
+machine to become unresponsive, and thousands of these messages are
+found in the syslog:
+
+Jul  1 14:39:26 z-mp kernel: [ 1657.318941] nouveau 0000:01:00.0: fifo:
+PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
+
+A git bisect between 5.4.48 and 5.4.49 pointed to the commit
+[828b192c57e8f4fee77f7a34bd19c1b58b049dad] PCI/PM: Assume ports without
+DLL Link Active train links in 100 ms.
+
+The commit reverts cleanly from 5.4.51, and then that kernel works as
+expected. Additionally I should note that an unmodified kernel 5.7.7
+also works as expected.
+
+Happy to help test any proposed fix.
+
+Here's the git bisect log:
+
+git bisect start
+# good: [67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d] Linux 5.4.48
+git bisect good 67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d
+# good: [67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d] Linux 5.4.48
+git bisect good 67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d
+# bad: [99705220b22ca116457edeae51ae817d056a6622] net: core:
+device_rename: Use rwsem instead of a seqcount
+git bisect bad 99705220b22ca116457edeae51ae817d056a6622
+# bad: [7454c171a88c188583bbfe17db1f9e6e75723b5f] tty: n_gsm: Fix bogus
+i++ in gsm_data_kick
+git bisect bad 7454c171a88c188583bbfe17db1f9e6e75723b5f
+# good: [390f1688fb4648474b29c8ea6c2c710b689cd669] f2fs: handle readonly
+filesystem in f2fs_ioc_shutdown()
+git bisect good 390f1688fb4648474b29c8ea6c2c710b689cd669
+# good: [9eb54d0e8962d2f5d7a430f3a245037c990e3b42] PCI: v3-semi: Fix a
+memory leak in v3_pci_probe() error handling paths
+git bisect good 9eb54d0e8962d2f5d7a430f3a245037c990e3b42
+# good: [4536dbe64bd17b7d16cb0da56a15616dda247940] USB: ohci-sm501: fix
+error return code in ohci_hcd_sm501_drv_probe()
+git bisect good 4536dbe64bd17b7d16cb0da56a15616dda247940
+# bad: [b1bc8753eefc82b79e285977c6177c67bc17344e] ipmi: use vzalloc
+instead of kmalloc for user creation
+git bisect bad b1bc8753eefc82b79e285977c6177c67bc17344e
+# good: [860b8717f7247384e500ba15c89e9b5327d00423] tty: n_gsm: Fix
+waking up upper tty layer when room available
+git bisect good 860b8717f7247384e500ba15c89e9b5327d00423
+# good: [c6737f3a1b01120ce0991bb0b6b4c8da2b086f1e] HID: Add quirks for
+Trust Panora Graphic Tablet
+git bisect good c6737f3a1b01120ce0991bb0b6b4c8da2b086f1e
+# bad: [5c2207ba2394ee6c2dd7383890818aca89ff4b9b] habanalabs: increase
+timeout during reset
+git bisect bad 5c2207ba2394ee6c2dd7383890818aca89ff4b9b
+# bad: [828b192c57e8f4fee77f7a34bd19c1b58b049dad] PCI/PM: Assume ports
+without DLL Link Active train links in 100 ms
+git bisect bad 828b192c57e8f4fee77f7a34bd19c1b58b049dad
+# first bad commit: [828b192c57e8f4fee77f7a34bd19c1b58b049dad] PCI/PM:
+Assume ports without DLL Link Active train links in 100 ms
+
+Best regards,
+
+Pat
