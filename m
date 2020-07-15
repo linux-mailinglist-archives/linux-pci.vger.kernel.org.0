@@ -2,108 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E039B220CC9
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 14:17:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05C6E220D9B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 15:05:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGOMR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 08:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42162 "EHLO mail.kernel.org"
+        id S1731130AbgGONFK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 09:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgGOMR3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:17:29 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1729900AbgGONFK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:05:10 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8303D2065D;
-        Wed, 15 Jul 2020 12:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 659CC20657;
+        Wed, 15 Jul 2020 13:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594815448;
-        bh=oox3IXWADMTRayXaRJ2ttv7qQ4vHlGzipTP8KKgGols=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LlI75eE7yhlwt979Nx/dOdJXZJs8+5qMb3+utgc8rqZR/gwMjbq6Bnvw9X9CU7DUT
-         0nrp3nGJEHjA5B4L1TEIT0JdL1zUk+ihUPhllCD+q8ciqqb0wi/Fk+4vPaKxHf1qvX
-         0b64zk3z7FOMl0SvH9SXRuHivUu1unSUJJ4MmLZE=
-Received: by pali.im (Postfix)
-        id 55E077AC; Wed, 15 Jul 2020 14:17:26 +0200 (CEST)
-Date:   Wed, 15 Jul 2020 14:17:26 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200715121726.eh4xglkdbcqkh7td@pali>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
- <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
- <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
- <20200709150959.wq6zfkcy4m6hvvpl@pali>
- <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
- <20200713082747.e3q3ml3wpbszn4j7@pali>
- <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
+        s=default; t=1594818309;
+        bh=/JbnkKca9isth2Byqb4RT/WZLJphSaAVAFp0XT01uu0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=11WLdv3zamDVHmM6A7sD3vIrgCjWwh2+roNC+ngAh1r1bKzwRyZN5Hv+dK7odXwI5
+         Z96N6IXf1vw98heHULxcTXjVl85NZfzyR30Aywy25KKdwDK5SlEJumKgoTpN0pRPd3
+         3TcKkQHsxLcEAqtcWXhh1ufg29KGZjgEkTtjUSf0=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jvh5v-00BzoN-VJ; Wed, 15 Jul 2020 14:05:08 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 15 Jul 2020 14:05:07 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Joerg Roedel <joro@8bytes.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2 11/12] bus/fsl-mc: Refactor the MSI domain creation in
+ the DPRC driver
+In-Reply-To: <20200619082013.13661-12-lorenzo.pieralisi@arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-12-lorenzo.pieralisi@arm.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <bd07f44dad1d029e0d023202cbf5fc94@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org, diana.craciun@oss.nxp.com, iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, robh+dt@kernel.org, rjw@rjwysocki.net, joro@8bytes.org, guohanjun@huawei.com, bhelgaas@google.com, sudeep.holla@arm.com, robin.murphy@arm.com, catalin.marinas@arm.com, will@kernel.org, makarand.pawagi@nxp.com, laurentiu.tudor@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
-> On Mon, Jul 13, 2020 at 10:27:47AM +0200, Pali Rohár wrote:
-> > On Friday 10 July 2020 10:18:00 Lorenzo Pieralisi wrote:
-> > > On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
-> > > > > I understand that but the bridge bus resource can be trimmed to just
-> > > > > contain the root bus because that's the only one where there is a
-> > > > > chance you can enumerate a device.
-> > > > 
-> > > > It is possible to register only root bridge without endpoint?
-> > > 
-> > > It is possible to register the root bridge with a trimmed IORESOURCE_BUS
-> > > so that you don't enumerate anything other than the root port.
-> > 
-> > Hello Lorenzo! I really do not know how to achieve it. From code it
-> > looks like that pci/probe.c scans child buses unconditionally.
-> > 
-> > pci-aardvark.c calls pci_host_probe() which calls functions
-> > pci_scan_root_bus_bridge() which calls pci_scan_child_bus() which calls
-> > pci_scan_child_bus_extend() which calls pci_scan_bridge_extend() (bridge
-> > needs to be reconfigured) which then try to probe child bus via
-> > pci_scan_child_bus_extend() because bridge is not card bus.
-> > 
-> > In function pci_scan_bridge_extend() I do not see a way how to skip
-> > probing for child buses which would avoid enumerating aardvark root
-> > bridge when PCIe device is not connected.
-> > 
-> > dmesg output contains:
-> > 
-> >   advk-pcie d0070000.pcie: link never came up
-> >   advk-pcie d0070000.pcie: PCI host bridge to bus 0000:00
-> >   pci_bus 0000:00: root bus resource [bus 00-ff]
+On 2020-06-19 09:20, Lorenzo Pieralisi wrote:
+> From: Diana Craciun <diana.craciun@oss.nxp.com>
 > 
-> This resource can be limited to the root bus number only before calling
-> pci_host_probe() (ie see pci_parse_request_of_pci_ranges() and code in
-> pci_scan_bridge_extend() that programs primary/secondary/subordinate
-> busses) but I think that only papers over the issue, it does not fix it.
+> The DPRC driver is not taking into account the msi-map property
+> and assumes that the icid is the same as the stream ID. Although
+> this assumption is correct, generalize the code to include a
+> translation between icid and streamID.
+> 
+> Furthermore do not just copy the MSI domain from parent (for child
+> containers), but use the information provided by the msi-map property.
+> 
+> If the msi-map property is missing from the device tree retain the old
+> behaviour for backward compatibility ie the child DPRC objects
+> inherit the MSI domain from the parent.
+> 
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/bus/fsl-mc/dprc-driver.c            | 31 ++++++---------------
+>  drivers/bus/fsl-mc/fsl-mc-bus.c             |  4 +--
+>  drivers/bus/fsl-mc/fsl-mc-msi.c             | 31 +++++++++++++--------
+>  drivers/bus/fsl-mc/fsl-mc-private.h         |  6 ++--
+>  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 15 +++++++++-
+>  5 files changed, 47 insertions(+), 40 deletions(-)
 
-I looked at the code in pci/probe.c again and I do not think it is
-possible to avoid scanning devices. pci_scan_child_bus_extend() is
-unconditionally calling pci_scan_slot() for devfn=0 as the first thing.
-And this function unconditionally calls pci_scan_device() which is
-directly trying to read vendor id from config register.
+For this patch and the following one:
 
-So for me it looks like that kernel expects that can read vendor id and
-device id from config register for device which is not connected.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-And trying to read config register would cause those timeouts in
-aardvark.
+         M.
+-- 
+Jazz is not dead. It just smells funny...
