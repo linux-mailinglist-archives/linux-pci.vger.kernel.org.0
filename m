@@ -2,67 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 232E422012F
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 01:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7EA9220234
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 04:16:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgGNX6O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jul 2020 19:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbgGNX6N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:58:13 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F416420674;
-        Tue, 14 Jul 2020 23:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594771093;
-        bh=0GSa/vVCcx42dxvvYTf+RjT7Q8jkxKwjCrADCf84T9I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l/XewjLCrd7mBMmLFyFKhMrkJw6V6+SJWGzw2FiDegtDkHNXyZrIObbeauAIJu7Tv
-         5DA1MrHRz2/ApdIN6JvRLBeyjYMQP8YsB+cCsfH85ROs1s1w8qpVXCHJQJizdBlS3m
-         LKBPtWwF1Pivdy2kazXUi6s14xHYYsLdbbNwTpcc=
-Date:   Tue, 14 Jul 2020 18:58:11 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Ian May <ian.may@canonical.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCIe hotplug interrupt and AER deadlock with
- reset_lock and device_lock
-Message-ID: <20200714235811.GA431846@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615185650.mzxndbw7ghvh5qiv@wunner.de>
+        id S1726767AbgGOCQM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jul 2020 22:16:12 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:36854 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbgGOCQL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jul 2020 22:16:11 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06F2CWXx001242
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 14 Jul 2020 21:12:38 -0500
+Message-ID: <fb40545a8de8df8914df40d7d6167752c5244ce6.camel@kernel.crashing.org>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Date:   Wed, 15 Jul 2020 12:12:29 +1000
+In-Reply-To: <20200714184550.GA397277@bjorn-Precision-5520>
+References: <20200714184550.GA397277@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 08:56:50PM +0200, Lukas Wunner wrote:
-> On Mon, Jun 15, 2020 at 09:32:49AM -0500, Ian May wrote:
-> > Currently when a hotplug interrupt and AER recovery triggers simultaneously
-> > the following deadlock can occur.
-> > 
-> >         Hotplug				       AER
-> > ----------------------------       ---------------------------
-> > device_lock(&dev->dev)		   down_write(&ctrl->reset_lock)
-> > down_read(&ctrl->reset_lock)       device_lock(&dev->dev)
-> > 
-> > This patch adds a reset_lock and reset_unlock hotplug_slot_op.
-> > This would allow the controller reset_lock/reset_unlock to be moved
-> > from pciehp_reset_slot to pci_slot_reset function allowing the controller
-> > reset_lock to be acquired before the device lock allowing for both hotplug
-> > and AER to grab the reset_lock and device lock in proper order.
+On Tue, 2020-07-14 at 13:45 -0500, Bjorn Helgaas wrote:
 > 
-> I've posted a patch to address such issues on Mar 31, just haven't
-> gotten around to respin it with a proper commit message:
+> > fail for valid arguments on a valid pci_device* ?
 > 
-> https://lore.kernel.org/linux-pci/20200331130139.46oxbade6rcbaicb@wunner.de/
+> I really like this idea.
 > 
-> I've solved it by moving the reset lock into struct pci_slot.
-> I think that's simpler than adding two callbacks.
+> pci_write_config_*() has one return value, and only 100ish of 2500
+> callers check for errors.  It's sometimes possible for config
+> accessors to detect PCI errors and return failure, e.g., device was
+> removed or didn't respond, but most of them don't, and detecting
+> these
+> errors is not really that valuable.
 > 
-> Do you think the AER deadlock could be fixed based on my approach?
+> pci_read_config_*() is much more interesting because it returns two
+> things, the function return value and the value read from the PCI
+> device, and it's complicated to check both. 
 
-How should we proceed on this?
+  .../...
+
+I agree. It's a mess at the moment.
+
+We have separate mechanism to convey PCI errors (among other things the
+channel state) which should apply to config space when detection is
+possible.
+
+I think returning all 1's is the right thing to do here and avoids odd
+duplicate error detection logic which I bet you is never properly
+tested.
+
+> > For b), it might be nice to also change other aspects of the
+> > interface, e.g. passing a pci_host_bridge pointer plus bus number
+> > instead of a pci_bus pointer, or having the callback in the
+> > pci_host_bridge structure.
+> 
+> I like this idea a lot, too.  I think the fact that
+> pci_bus_read_config_word() requires a pci_bus * complicates things in
+> a few places.
+> 
+> I think it's completely separate, as you say, and we should defer it
+> for now because even part a) is a lot of work.  I added it to my list
+> of possible future projects.
+
+Agreed on both points.
+
+Cheers,
+Ben.
+
+
