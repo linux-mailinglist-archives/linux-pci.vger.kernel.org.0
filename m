@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13C08220F27
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 16:26:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5547E220F21
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jul 2020 16:26:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgGOO0J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jul 2020 10:26:09 -0400
-Received: from mail.nic.cz ([217.31.204.67]:34950 "EHLO mail.nic.cz"
+        id S1728264AbgGOO0A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jul 2020 10:26:00 -0400
+Received: from lists.nic.cz ([217.31.204.67]:34900 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728418AbgGOO0D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:26:03 -0400
+        id S1727908AbgGOOZ7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:25:59 -0400
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 50B2E140A51;
+        by mail.nic.cz (Postfix) with ESMTP id 79497140A5D;
         Wed, 15 Jul 2020 16:25:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594823158; bh=keURn+22u253qVA/hwtaY7TRtboxhUkiOumfUMd4baA=;
+        t=1594823158; bh=sQp6sw1pd1H2vwHpvza0rOe5XDLopPj0Q2DKS+BS2DA=;
         h=From:To:Date;
-        b=HYUl/mJ3o5KBM3YacMPRiu5S1O2iHhqHTQUlts0pF/3ISXfoBh4yNBfbNWAqv5mil
-         7aUNiIt9vl7BrHwktWtDXh08y5xnpA2QsGdp54xV4aeDd9OLXcdH6VZeILhzqG3rda
-         tFKWDTlUBZc2kOiWT5L9uckmWxSoawEcIuyTV0XI=
+        b=A6FljPmOlB1YnkZW/BHqu5LZjzNogxWbG6hQ4nOYYzJrD1Am/M3LlZiDZ2b0DXsez
+         sZoEMejCL3j/AsKLsfB5iooPQu+6uJOrT31E4d9Si8bLSSUTP3YFxkXJ0V/cwUCtEI
+         yUXc/6PHDHH3kQOBR12cZ/gv1fWgz6J/DQepYB3M=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     linux-pci@vger.kernel.org
 Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
@@ -30,9 +30,9 @@ Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
         Xogium <contact@xogium.me>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 2/5] PCI: aardvark: Check for errors from pci_bridge_emul_init() call
-Date:   Wed, 15 Jul 2020 16:25:54 +0200
-Message-Id: <20200715142557.17115-3-marek.behun@nic.cz>
+Subject: [PATCH 3/5] PCI: pci-bridge-emul: Export API functions
+Date:   Wed, 15 Jul 2020 16:25:55 +0200
+Message-Id: <20200715142557.17115-4-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200715142557.17115-1-marek.behun@nic.cz>
 References: <20200715142557.17115-1-marek.behun@nic.cz>
@@ -51,51 +51,48 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-Function pci_bridge_emul_init() may fail so correctly check for errors.
+It allows kernel modules which are not compiled into kernel image to use
+pci-bridge-emul API functions.
 
-Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <marek.behun@nic.cz>
 ---
- drivers/pci/controller/pci-aardvark.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pci/pci-bridge-emul.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 8caa80b19cf8..d5f58684d962 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -608,7 +608,7 @@ static struct pci_bridge_emul_ops advk_pci_bridge_emul_ops = {
-  * Initialize the configuration space of the PCI-to-PCI bridge
-  * associated with the given PCIe interface.
-  */
--static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
-+static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
- {
- 	struct pci_bridge_emul *bridge = &pcie->bridge;
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index ccf26d12ec61..139869d50eb2 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -294,6 +294,7 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
  
-@@ -634,8 +634,7 @@ static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
- 	bridge->data = pcie;
- 	bridge->ops = &advk_pci_bridge_emul_ops;
- 
--	pci_bridge_emul_init(bridge, 0);
--
-+	return pci_bridge_emul_init(bridge, 0);
+ 	return 0;
  }
++EXPORT_SYMBOL_GPL(pci_bridge_emul_init);
  
- static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-@@ -1169,7 +1168,11 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ /*
+  * Cleanup a pci_bridge_emul structure that was previously initialized
+@@ -305,6 +306,7 @@ void pci_bridge_emul_cleanup(struct pci_bridge_emul *bridge)
+ 		kfree(bridge->pcie_cap_regs_behavior);
+ 	kfree(bridge->pci_regs_behavior);
+ }
++EXPORT_SYMBOL_GPL(pci_bridge_emul_cleanup);
  
- 	advk_pcie_setup_hw(pcie);
+ /*
+  * Should be called by the PCI controller driver when reading the PCI
+@@ -366,6 +368,7 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
  
--	advk_sw_pci_bridge_init(pcie);
-+	ret = advk_sw_pci_bridge_init(pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to register emulated root PCI bridge\n");
-+		return ret;
-+	}
+ 	return PCIBIOS_SUCCESSFUL;
+ }
++EXPORT_SYMBOL_GPL(pci_bridge_emul_conf_read);
  
- 	ret = advk_pcie_init_irq_domain(pcie);
- 	if (ret) {
+ /*
+  * Should be called by the PCI controller driver when writing the PCI
+@@ -430,3 +433,4 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
+ 
+ 	return PCIBIOS_SUCCESSFUL;
+ }
++EXPORT_SYMBOL_GPL(pci_bridge_emul_conf_write);
 -- 
 2.26.2
 
