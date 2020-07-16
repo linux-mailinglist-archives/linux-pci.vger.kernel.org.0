@@ -2,148 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACEAE2228AB
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 19:05:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 874C62228E0
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 19:18:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgGPRFB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jul 2020 13:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgGPRFA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jul 2020 13:05:00 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF74C08C5C0
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jul 2020 10:04:59 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id x205so3373099vsc.11
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jul 2020 10:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yXCXHIokDzodhKUObyVjOxa03jfGTBYMvv8WAppwfWw=;
-        b=OMAZ17R5F4R2ot+nESDlRmF/PsTGBo0nI3RT7xp1G/cqE2oqUY3bc9Fb+ugMS80xrb
-         znXaX4PAarGdFPR4LBReIhms/8bt9bKPhyvwhSRlY7CU0GUd57x4rIKKEuvgWWBKz69x
-         i4xQ0ZoPWC36Gw/dqdOsafiQp1tUyNns5fk/cRljFa68IvfNSHwcTnQ9lYZzLLPNsfPk
-         PWK9Mi4QjWU6/kksGKdQKviiSIGSdka8ufAadG90A+Y7rITCQ8IDj/3BXZUBVKib3mkE
-         LA2ISGCmf/Id/n0XHdIlXCmmGZ/EntO1PICDf4G+PB6Vr1opRAuVYeK7+34wA+8GrRfo
-         rWxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yXCXHIokDzodhKUObyVjOxa03jfGTBYMvv8WAppwfWw=;
-        b=ZIPRfmDggZbjhfrRD5E6fak3KsZrL1cHjQemvg3FgfU1yz1yz7Ybtg24UHB9aBHGyh
-         qMsRze6eNkTUKRSpgPaaYs5E7qnIQckb7ICiPpYSjGhMbpLXyIfReYmhujcAO+4Jr5jM
-         zRcuO+Z1ucXxlft9jAGUzedl3O6qJ80O5NE4/esioVSygmuYHqzKya6XHBqu6O7H8ZaP
-         duI/ELI0Zu6519ZYlyld7yP7GLY5BaLYELfHmMLPsB1DtSzeGe6/qFKXk6ufNTIikMCJ
-         2W3x8mio2otrg17UGyGBGMKGjOE8WCMoxa3wpiMQjX9x7oO+oWmH9wtRjKo+sqn38RkR
-         poOw==
-X-Gm-Message-State: AOAM533iM2uvPK5JM8/P1CRuANkX1+cRKjj4WkD60Ac7wLGHhM4c7u2t
-        rANUN1M1kQITNnHuk1cdtHbb+IucYr8CwYMZcxQFbg==
-X-Google-Smtp-Source: ABdhPJy+joudz+/azfNGzNGeAboNVq0ccJyFmfsvE4PWZBNI06UJy8K3PCy86RDOtundUZK2A9jXmpiX35sAbL82qYw=
-X-Received: by 2002:a67:d01a:: with SMTP id r26mr4172278vsi.200.1594919098955;
- Thu, 16 Jul 2020 10:04:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716141534.30241-1-ulf.hansson@linaro.org> <20200716161358.GA3135454@kroah.com>
-In-Reply-To: <20200716161358.GA3135454@kroah.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 16 Jul 2020 19:04:21 +0200
-Message-ID: <CAPDyKFr6eSZr2V-=YvAEZH9SmsE2SZ9j5ZS5zZEFHBqwyWRfpw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: Initial support for SD express card/host
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        linux-nvme@lists.infradead.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728885AbgGPRSo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jul 2020 13:18:44 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:52329 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728182AbgGPRSn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jul 2020 13:18:43 -0400
+X-IronPort-AV: E=Sophos;i="5.75,360,1589209200"; 
+   d="scan'208";a="52107158"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Jul 2020 02:18:41 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 75C8B40B5142;
+        Fri, 17 Jul 2020 02:18:36 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+Cc:     linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
+        linux-usb@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/20] Add support for SATA/PCIe/USB2[3]/VIN/CSI on R8A774E1
+Date:   Thu, 16 Jul 2020 18:18:15 +0100
+Message-Id: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 16 Jul 2020 at 18:14, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 16, 2020 at 04:15:34PM +0200, Ulf Hansson wrote:
-> > +int mmc_send_if_cond_pcie(struct mmc_host *host, u32 ocr)
-> > +{
-> > +     u32 resp = 0;
-> > +     u8 pcie_bits = 0;
-> > +     int ret;
-> > +
-> > +     if (host->caps2 & MMC_CAP2_SD_EXP) {
-> > +             /* Probe card for SD express support via PCIe. */
-> > +             pcie_bits = 0x10;
-> > +             if (host->caps2 & MMC_CAP2_SD_EXP_1_2V)
-> > +                     /* Probe also for 1.2V support. */
-> > +                     pcie_bits = 0x30;
-> > +     }
-> > +
-> > +     ret = __mmc_send_if_cond(host, ocr, pcie_bits, &resp);
-> > +     if (ret)
-> > +             return 0;
-> > +
-> > +     /* Continue with the SD express init, if the card supports it. */
-> > +     resp &= 0x3000;
-> > +     if (pcie_bits && resp) {
-> > +             if (resp == 0x3000)
->
-> 0x3000 should be some defined value, right?  Otherwise it just looks
-> like magic bits :)
+Hi All,
 
-Yeah, I was considering that, but there are already lots of magic bits
-around here in this code. On top of that, the bits are shifted,
-depending on how they are used.
+This patch series adds support for the following peripherals on RZ/G2H SoC
+ * PCIe
+ * SATA
+ * USB2
+ * USB3
+ * Audio
+ * VIN
+ * CSI
 
-We should probably look into doing a cleanup, so this gets clearer overall.
+Cheers,
+Prabhakar
 
->
-> > --- a/include/linux/mmc/host.h
-> > +++ b/include/linux/mmc/host.h
-> > @@ -60,6 +60,8 @@ struct mmc_ios {
-> >  #define MMC_TIMING_MMC_DDR52 8
-> >  #define MMC_TIMING_MMC_HS200 9
-> >  #define MMC_TIMING_MMC_HS400 10
-> > +#define MMC_TIMING_SD_EXP    11
-> > +#define MMC_TIMING_SD_EXP_1_2V       12
-> >
-> >       unsigned char   signal_voltage;         /* signalling voltage (1.8V or 3.3V) */
-> >
-> > @@ -172,6 +174,9 @@ struct mmc_host_ops {
-> >        */
-> >       int     (*multi_io_quirk)(struct mmc_card *card,
-> >                                 unsigned int direction, int blk_size);
-> > +
-> > +     /* Initialize an SD express card, mandatory for MMC_CAP2_SD_EXP. */
-> > +     int     (*init_sd_express)(struct mmc_host *host, struct mmc_ios *ios);
-> >  };
-> >
-> >  struct mmc_cqe_ops {
-> > @@ -357,6 +362,8 @@ struct mmc_host {
-> >  #define MMC_CAP2_HS200_1_2V_SDR      (1 << 6)        /* can support */
-> >  #define MMC_CAP2_HS200               (MMC_CAP2_HS200_1_8V_SDR | \
-> >                                MMC_CAP2_HS200_1_2V_SDR)
-> > +#define MMC_CAP2_SD_EXP              (1 << 7)        /* SD express via PCIe */
->
-> BIT(7)?
->
-> > +#define MMC_CAP2_SD_EXP_1_2V (1 << 8)        /* SD express 1.2V */
->
-> BIT(8)?
+Lad Prabhakar (20):
+  dt-bindings: pci: rcar-pci: Add device tree support for r8a774e1
+  arm64: dts: renesas: r8a774e1: Add PCIe device nodes
+  dt-bindings: ata: renesas,rcar-sata: Add r8a774e1 support
+  arm64: dts: renesas: r8a774e1: Add SATA controller node
+  dt-bindings: phy: renesas,usb2-phy: Add r8a774e1 support
+  arm64: dts: renesas: r8a774e1: Add USB2.0 phy and host (EHCI/OHCI)
+    device nodes
+  dt-bindings: usb: renesas,usb3-peri: Document r8a774e1 support
+  dt-bindings: usb: usb-xhci: Document r8a774e1 support
+  dt-bindings: phy: renesas,usb3-phy: Add r8a774e1 support
+  arm64: dts: renesas: r8a774e1: Add USB3.0 device nodes
+  dt-bindings: usb: renesas,usbhs: Add r8a774e1 support
+  dt-bindings: dma: renesas,usb-dmac: Add binding for r8a774e1
+  arm64: dts: renesas: r8a774e1: Add USB-DMAC and HSUSB device nodes
+  dt-bindings: sound: renesas,rsnd: Document r8a774e1 bindings
+  arm64: dts: renesas: r8a774e1: Add audio support
+  dt-bindings: media: renesas,csi2: Add R8A774E1 support
+  dt-bindings: media: renesas,vin: Add R8A774E1 support
+  media: rcar-csi2: Enable support for R8A774E1
+  media: rcar-vin: Enable support for R8A774E1
+  arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
 
-I can change to that, but it wouldn't be consistent with existing
-code. Again, probably better targeted as a separate bigger cleanup on
-top.
+ .../bindings/ata/renesas,rcar-sata.yaml       |   1 +
+ .../bindings/dma/renesas,usb-dmac.yaml        |   1 +
+ .../bindings/media/renesas,csi2.yaml          |   1 +
+ .../bindings/media/renesas,vin.yaml           |   1 +
+ .../devicetree/bindings/pci/rcar-pci.txt      |   1 +
+ .../bindings/phy/renesas,usb2-phy.yaml        |   1 +
+ .../bindings/phy/renesas,usb3-phy.yaml        |   1 +
+ .../bindings/sound/renesas,rsnd.txt           |   1 +
+ .../bindings/usb/renesas,usb3-peri.yaml       |   1 +
+ .../bindings/usb/renesas,usbhs.yaml           |   1 +
+ .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+ arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 989 +++++++++++++++++-
+ drivers/media/platform/rcar-vin/rcar-core.c   |  40 +
+ drivers/media/platform/rcar-vin/rcar-csi2.c   |   4 +
+ 14 files changed, 1022 insertions(+), 22 deletions(-)
 
->
-> thanks,
->
-> greg k-h
+-- 
+2.17.1
 
-Thanks for reviewing!
-
-Kind regards
-Uffe
