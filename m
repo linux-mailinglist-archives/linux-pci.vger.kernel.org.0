@@ -2,66 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EA06222338
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 14:59:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75BFE22233D
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 15:00:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGPM7t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jul 2020 08:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33684 "EHLO
+        id S1727044AbgGPNAl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jul 2020 09:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgGPM7t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jul 2020 08:59:49 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA252C061755;
-        Thu, 16 Jul 2020 05:59:48 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d18so4687363edv.6;
-        Thu, 16 Jul 2020 05:59:48 -0700 (PDT)
+        with ESMTP id S1728225AbgGPNAk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jul 2020 09:00:40 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F252C061755;
+        Thu, 16 Jul 2020 06:00:40 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dp18so6433944ejc.8;
+        Thu, 16 Jul 2020 06:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pQOZGxTaJl4Wu4T0GxXQ1XQ4sweLDjO8O7bR9W9rXI0=;
-        b=BzXkF2Pw2Ez64e9nUXzyvcQB85t0xYz1OsnzJ4iz4EZGtdgWLMqRj3PirK+XwbUUoA
-         +vCXjHV+TfG1TXi4civEpOKv6gvPEJeB3Ib2og0CtA+0U5PSLdGV/RIR5ka1XA2kOzYk
-         JiwHeO8+YlRv3aQJ2TBhpOoYhXaeOC3ysC4exkLIcY55ddFQbdR2GQlVNbShrrYOCxDF
-         qDME8ajZG8baCSTFsxXS2/439qsHzHuXdEoWR9QDcDOIdxMfpPlL6Fg4l1G2+KC0361X
-         DRVNxdIe/cPA4yUi8HfCGR89DT4XMihjmfOsbRDN9yb1bWbbFXNP52es8EZGeoKUCbLE
-         J48g==
+        bh=wyNClx2HVjapyhGcNIWDV4ScP7ULx68JRSSlXC1OVHE=;
+        b=oaTu0FjpuT+NKl2OyV2efLc/8BJZShIrmgwd+Ln6PGwrvNVV7fTDae6ibqI0x/qDX5
+         MPcLTueTDTnQup1a5N5Z+oWCtxbGtiaaxiK0cH9nB6iRnUacTEGcMkNpeOOrICGwzMgQ
+         wFqs034fsx5Prjed7IRo0lJ42HqJOFOdCIGujWsZjt4sTewXZPJjAzL8lBH/UqwFhqqQ
+         HQfkce9DgMNdeKcmtoL1TeknEk0FURozfWrJJZplbuO6CZSF5Muan/RcDP2oHhlmEq7I
+         /jwXBhpEBsYlOuf7wbz8mv/ofCwkIfg9pjRenCLLk2hWWCOI/3MlyJyFCf2cFkFIK5C+
+         oF2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pQOZGxTaJl4Wu4T0GxXQ1XQ4sweLDjO8O7bR9W9rXI0=;
-        b=og1VzPV5RnU8ZaqHPfDUhmfOWk6x6m2Xd+GKyHygEIRzvcBZfnBlx8cQ29IgnW5k/Y
-         yxNq9ABF3Mp0OloPzXOBFKIffoWqYOQumvBFjB/QeM79OWfcJd7C4elBDcbih3/mZnGf
-         sMBrr+XxFa7Pl8peDDyYxNIoNHRZkWkMPYi5979MHu8UqGtiwu5nBQKjHht1wBQzKMYs
-         ErM+wJVVMBLDZ9B310w4hup75oLUdBdZYNxx54RP3k6YZRJ5pbzOs+0XAnKCnMFiF/LB
-         nmjxHBViDqfHW8zCr5uaOFEB+m88uNOhHF0+ETschmQov9kXh4j82yO3twJ0dlFtNoG6
-         tsPw==
-X-Gm-Message-State: AOAM532VVblkb3wLjbaM4T4SMxdSaTWwA5smB/IIrmGdmNQQTg+YPtVN
-        LzubyhtIAODKnFKyZcE7OEfdbdcI
-X-Google-Smtp-Source: ABdhPJwrYs0NpL45FHuM2mG+iBXEXKvzRO8k/BROdQZg3A65Xk31k1sanxTYhikFK3yN7IwZw34BlA==
-X-Received: by 2002:aa7:da8a:: with SMTP id q10mr4383546eds.139.1594904387362;
-        Thu, 16 Jul 2020 05:59:47 -0700 (PDT)
+        bh=wyNClx2HVjapyhGcNIWDV4ScP7ULx68JRSSlXC1OVHE=;
+        b=tNyYZUg2EALsASLtF+LIyCqF2yCMIOe2Gw4PJEFpugbP2TzcOKrBRBseMy2+9XHMCU
+         8pGT4JdSnNGHqeehaQrvrDV0xieXOVtt1+xQdT5jEqQKkXOQhsvhaXuRzojffjpbYcZo
+         7uOExOO+CrLBSRlvgrXMLJU19YbsA8OsgT99qMGgUs0lOXAt8PLdzEYBrkObd2Tzu3UI
+         vV7IMvWYoAqGFVHvygq8xnXbPZYyaRUJHpPLUYzK9OzM8JF/gTsuywgnJmwx4F5oAdOr
+         qTNBVVH+q2xkMcAcKwb16EUdc/M76m+woT9t8rdcPTVg8wp+kgyc9Lgye+2danNnXmMT
+         rMrA==
+X-Gm-Message-State: AOAM533lKyTcwFovG5Z/bNxELLRjmKtJDw/QkXU1OJEyPV5iS9me5JiL
+        SyC7REdUuiMpsxeNEd4isUApXlSA
+X-Google-Smtp-Source: ABdhPJwvwf2S3xWM/6ktn9Lb82FKyGCGRyt4pmWBKQCMQt+8aR52GW1/E41eRRPoOwri7cOvgCWKMQ==
+X-Received: by 2002:a17:906:7250:: with SMTP id n16mr3768793ejk.290.1594904438845;
+        Thu, 16 Jul 2020 06:00:38 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id n9sm5398605edr.46.2020.07.16.05.59.45
+        by smtp.gmail.com with ESMTPSA id e4sm5050994ejx.76.2020.07.16.06.00.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 05:59:46 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 14:59:45 +0200
+        Thu, 16 Jul 2020 06:00:35 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 15:00:34 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: pci: tegra: Remove PLL power supplies
-Message-ID: <20200716125945.GD535268@ulmo>
+Subject: Re: [PATCH v2 2/2] PCI: tegra: Remove PLL power supplies
+Message-ID: <20200716130034.GE535268@ulmo>
 References: <20200623145528.1658337-1-thierry.reding@gmail.com>
+ <20200623145528.1658337-2-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KdquIMZPjGJQvRdI"
+        protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
 Content-Disposition: inline
-In-Reply-To: <20200623145528.1658337-1-thierry.reding@gmail.com>
+In-Reply-To: <20200623145528.1658337-2-thierry.reding@gmail.com>
 User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -69,110 +70,98 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---KdquIMZPjGJQvRdI
+--ZInfyf7laFu/Kiw7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 23, 2020 at 04:55:27PM +0200, Thierry Reding wrote:
+On Tue, Jun 23, 2020 at 04:55:28PM +0200, Thierry Reding wrote:
 > From: Thierry Reding <treding@nvidia.com>
 >=20
-> The XUSB pad controller, which provides access to various USB, PCI and
-> SATA pads (or PHYs), needs to bring up the PLLs associated with these
-> pads. In order to properly do so, it needs to control the power supplied
-> to these PLLs.
->=20
-> Remove the PLL power supplies from the PCIe controller because it does
-> not need direct access to them. Instead it will only use the configured
-> pads provided by the XUSB pad controller.
+> The Tegra PCI controller driver doesn't need to control the PLL power
+> supplies directly, but rather uses the pads provided by the XUSB pad
+> controller, which in turn is responsible for supplying power to the
+> PLLs.
 >=20
 > Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
-> Hi Rob,
->=20
-> I already made this change as part of the conversion series, but wanted
-> to send this out as part of this subseries since it addresses a fairly
-> long-standing issue that I'd like to clean up irrespective of the DT
-> binding conversion. Since it looks like the conversion series will take
-> a bit longer, I think it makes sense to send this out separately.
->=20
-> Thierry
->=20
->  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt  | 12 ------------
->  1 file changed, 12 deletions(-)
+>  drivers/pci/controller/pci-tegra.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
 
-Hi Rob, any feedback on this?
+Hi Lorenzo,
+
+do you have any comments on this? Can we get this into v5.9?
 
 Thanks,
 Thierry
 
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.tx=
-t b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> index 7939bca47861..d099f3476ccc 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> @@ -112,28 +112,16 @@ Power supplies for Tegra124:
->  - Required:
->    - avddio-pex-supply: Power supply for analog PCIe logic. Must supply 1=
-=2E05 V.
->    - dvddio-pex-supply: Power supply for digital PCIe I/O. Must supply 1.=
-05 V.
-> -  - avdd-pex-pll-supply: Power supply for dedicated (internal) PCIe PLL.=
- Must
-> -    supply 1.05 V.
->    - hvdd-pex-supply: High-voltage supply for PCIe I/O and PCIe output cl=
-ocks.
->      Must supply 3.3 V.
-> -  - hvdd-pex-pll-e-supply: High-voltage supply for PLLE (shared with USB=
-3).
-> -    Must supply 3.3 V.
->    - vddio-pex-ctl-supply: Power supply for PCIe control I/O partition. M=
-ust
->      supply 2.8-3.3 V.
-> -  - avdd-pll-erefe-supply: Power supply for PLLE (shared with USB3). Must
-> -    supply 1.05 V.
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/=
+pci-tegra.c
+> index 235b456698fc..f87a09d21eb0 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2025,7 +2025,7 @@ static int tegra_pcie_get_regulators(struct tegra_p=
+cie *pcie, u32 lane_mask)
+>  		pcie->supplies[i++].supply =3D "hvdd-pex";
+>  		pcie->supplies[i++].supply =3D "vddio-pexctl-aud";
+>  	} else if (of_device_is_compatible(np, "nvidia,tegra210-pcie")) {
+> -		pcie->num_supplies =3D 6;
+> +		pcie->num_supplies =3D 3;
 > =20
->  Power supplies for Tegra210:
->  - Required:
-> -  - avdd-pll-uerefe-supply: Power supply for PLLE (shared with USB3). Mu=
-st
-> -    supply 1.05 V.
->    - hvddio-pex-supply: High-voltage supply for PCIe I/O and PCIe output
->      clocks. Must supply 1.8 V.
->    - dvddio-pex-supply: Power supply for digital PCIe I/O. Must supply 1.=
-05 V.
-> -  - dvdd-pex-pll-supply: Power supply for dedicated (internal) PCIe PLL.=
- Must
-> -    supply 1.05 V.
-> -  - hvdd-pex-pll-e-supply: High-voltage supply for PLLE (shared with USB=
-3).
-> -    Must supply 3.3 V.
->    - vddio-pex-ctl-supply: Power supply for PCIe control I/O partition. M=
-ust
->      supply 1.8 V.
+>  		pcie->supplies =3D devm_kcalloc(pcie->dev, pcie->num_supplies,
+>  					      sizeof(*pcie->supplies),
+> @@ -2033,14 +2033,11 @@ static int tegra_pcie_get_regulators(struct tegra=
+_pcie *pcie, u32 lane_mask)
+>  		if (!pcie->supplies)
+>  			return -ENOMEM;
+> =20
+> -		pcie->supplies[i++].supply =3D "avdd-pll-uerefe";
+>  		pcie->supplies[i++].supply =3D "hvddio-pex";
+>  		pcie->supplies[i++].supply =3D "dvddio-pex";
+> -		pcie->supplies[i++].supply =3D "dvdd-pex-pll";
+> -		pcie->supplies[i++].supply =3D "hvdd-pex-pll-e";
+>  		pcie->supplies[i++].supply =3D "vddio-pex-ctl";
+>  	} else if (of_device_is_compatible(np, "nvidia,tegra124-pcie")) {
+> -		pcie->num_supplies =3D 7;
+> +		pcie->num_supplies =3D 4;
+> =20
+>  		pcie->supplies =3D devm_kcalloc(dev, pcie->num_supplies,
+>  					      sizeof(*pcie->supplies),
+> @@ -2050,11 +2047,8 @@ static int tegra_pcie_get_regulators(struct tegra_=
+pcie *pcie, u32 lane_mask)
+> =20
+>  		pcie->supplies[i++].supply =3D "avddio-pex";
+>  		pcie->supplies[i++].supply =3D "dvddio-pex";
+> -		pcie->supplies[i++].supply =3D "avdd-pex-pll";
+>  		pcie->supplies[i++].supply =3D "hvdd-pex";
+> -		pcie->supplies[i++].supply =3D "hvdd-pex-pll-e";
+>  		pcie->supplies[i++].supply =3D "vddio-pex-ctl";
+> -		pcie->supplies[i++].supply =3D "avdd-pll-erefe";
+>  	} else if (of_device_is_compatible(np, "nvidia,tegra30-pcie")) {
+>  		bool need_pexa =3D false, need_pexb =3D false;
 > =20
 > --=20
 > 2.27.0
 >=20
 
---KdquIMZPjGJQvRdI
+--ZInfyf7laFu/Kiw7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8QTz4ACgkQ3SOs138+
-s6FeQg/8CaFK3+6Kkic0c11leZZI9E0xjgiAmN+q72Hw95NEPMk8ylPzMpsmm772
-MFJF0I7jtjlRt4mU0tt68B6xZT9itW7XiaHmvOxXZBaHp7MZsRVYHShaHMt1NM8Z
-FIN6RCgVOHxKiKKf04oj03kGwcQY/7HIimM3Jwf2xp75Nd2pfloJV1vj7m70t52A
-hUbazU4yJkliasOVz8i1zMbI2sgfOvHYVszO9OBme/hMH6mvPPrAoI3v6LZ90T+H
-n34YptT8gR5ZC/9RsxClClLgchqycHVKoB+WG17Au9B6ezbOHlwSyMQSJDDJG5N5
-z1lwVrTaM2ccPhc1FOHd6TFRWiImwg4CobXN1jeo+h6akSUwCC7K5n3mNnl5c3pq
-jiMy4CgWi8byYeCXkEA5SgZptpdQ36vhpTpU8pTnM2m4hEMjTSOcb/te7l0EDa2K
-voN+XuapYTAKjALdspqU6SVOiTtJsRNl6jpSn96K1888CZfnZsT3/JPMHgttNrF4
-6i6TwNPCytFkG81IwuOMYVFyUjyaYtJpBsiBGDkFiMVngf1pIDZ3q44Pm1Ehs9wi
-DpIKYQNyKZNKLHa13zCSHNel9mG5Mnb5pJVo/KC+NdC0gBoKZ/BAi0pCfHYmVhqA
-3EEe5p4eSIBeh8dC2hrXXQSfjHSm/WAxtf+hgO9rORcIlf8MgPE=
-=j1RD
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8QT3IACgkQ3SOs138+
+s6EuqxAAmbuhEZ73eykpJoyukSD0EIbLgRuPnj9vhKPQFXy7MYsbMqCX8t/T41eM
+5SoxSB6uAZ73QqLWsx8OnzwJwwTRJYBVUQ19mA7YV31NL4BPER6RnreAX1JGhOt1
+pWJrzNvYK1EwQJVwPUh1eal4vg2psQeFJevJmiokHwP7f6ylVOx04tK5jdq0BneH
+nes+VllTvszh7dAURzlEg9vZ7sFFo5am4GBCgnL+WmXkMhB2PRcxdZTvpmcvS8FX
+OR5Na17hyKDeWldpcpqhErfkkPozXnZ3KeanpIoiMk2sFRXuyM/qP4fYPtNc0oKB
+PtjTf1ByAOc6sTSemCYF6OCp6WGulpjdBiJfNKUTIXZig5Stcwetu8OcI5QdiVwP
+ztA7wCbbTmYecH+1/jqgNoLzSq/ZDKIze7uwmk9eLimHJa0Vf8c8XojqoTonVjUQ
+iEZGKmRnFHfIzgc6hiWGmL54ZVfWdIEPsEydpulEtgQUd/sxaBdXCxLNzS+0eoFl
+fX2I7WmvQHfQEb4B6H8/i5iMRVvSIWskivjkYcHvLDFKzn3HmUPlp2z9PnuKrvcp
+xEZllBdRf7CRUD/yg5tdfhFtHRL7T4qzn1BZZP2Aam887xC4DR3EYN7UMpUJtSMS
+iABYTTAj9cqr8Ev52nwLcGZ4DHGSHx2Nr/63KTDM5dMRuYtEcT0=
+=Sp/M
 -----END PGP SIGNATURE-----
 
---KdquIMZPjGJQvRdI--
+--ZInfyf7laFu/Kiw7--
