@@ -2,90 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47AD7222AF8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 20:23:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A49F222B0F
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jul 2020 20:31:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgGPSXN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jul 2020 14:23:13 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:52849 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGPSXM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jul 2020 14:23:12 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mn2Fb-1kfxPt3VPr-00k99o; Thu, 16 Jul 2020 20:23:11 +0200
-Received: by mail-qk1-f179.google.com with SMTP id 80so6447878qko.7;
-        Thu, 16 Jul 2020 11:23:10 -0700 (PDT)
-X-Gm-Message-State: AOAM530huo458TG5uk3Z/WsTLqhlmCFbrPZjAMEQAI827hRKlTINiWTw
-        ez81v9L38s7QIwEJHT5pbXXDfw07c3Cu6qP0quk=
-X-Google-Smtp-Source: ABdhPJxGrriyRsR3c/KbpnjkC2s9ZK2i9yjLtrI7t9taPXMe6YEy79uW5SDiSgg7Rvt4nATRSACGzmEr51YGyOvKzdk=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr5371218qke.286.1594923789486;
- Thu, 16 Jul 2020 11:23:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716141534.30241-1-ulf.hansson@linaro.org>
-In-Reply-To: <20200716141534.30241-1-ulf.hansson@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Jul 2020 20:22:53 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1+rwY5uFpUMijgET_W78Tj+tqqKDevgqstjUmmhxdKuA@mail.gmail.com>
-Message-ID: <CAK8P3a1+rwY5uFpUMijgET_W78Tj+tqqKDevgqstjUmmhxdKuA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: Initial support for SD express card/host
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        linux-nvme@lists.infradead.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        id S1728257AbgGPSb1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jul 2020 14:31:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48421 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbgGPSb1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:31:27 -0400
+IronPort-SDR: X2qH1R9trpAYXz79ljqZHuyAmQ6G09RJh6CMikZ+t71g3UWqLd1FKLbWIo3HbfaZjFwbuCuTBs
+ 1c3+bxhTF+sw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="214199627"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="214199627"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:31:26 -0700
+IronPort-SDR: 2t0dmylMk3iWIbS6vD/SuFnigW7SF7YBbtcIIx3Mhigunsx4L5VmqjzHrquvxZ6wZWUsILMegO
+ TNWxlA3BD68Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="308731140"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Jul 2020 11:31:25 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id B3A945804BB;
+        Thu, 16 Jul 2020 11:31:25 -0700 (PDT)
+Message-ID: <e051971b327d870476dad209ddf27055d001b9b4.camel@linux.intel.com>
+Subject: Re: [PATCH V3 1/3] PCI: Add defines for Designated Vendor-Specific
+ Capability
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>, lee.jones@linaro.org,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Thu, 16 Jul 2020 11:31:25 -0700
+In-Reply-To: <dc459a96-1434-16bf-80d2-06b0680f9fda@linux.intel.com>
+References: <20200508021844.6911-1-david.e.box@linux.intel.com>
+         <20200714062323.19990-2-david.e.box@linux.intel.com>
+         <3f490460-62f8-8b49-0735-ad29653bfbc0@infradead.org>
+         <dc459a96-1434-16bf-80d2-06b0680f9fda@linux.intel.com>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+TjDQ9YUAMYyAEtk98Cm3V/08UfVGlPkR6Yp9cG9e0a8gFt3h07
- 3AnnmZL7waJLYasGA6NDFjQPYJ1yyyRYpJf/wasOBsOi4+LI2SFJOwBHKzL+ITG6Sf69tP7
- I88E1UDokMqPfftDjM+1wQ5thTYl46T59zRHIayUPGPWloZw6G0H3LF9seqGcwZPmxWguCy
- oxPxlBaX81A+9jNsiFEmA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uZs/R89mfro=:SC6jXf7/yn75Xjer/U6coL
- +JsUU+t2kRt3Iq74fK9DOUlLz+2EjGqKwjd9492PCn8BA3abiZoUdTaxd3HjpTc2UNBRJLUFY
- MYI0aXbZ5Mtefnkrr1IU7+Ryex8gBsBFCJUd7wgc/q2NUpMjC3tKJ2t7B4WpFQT20q/JkBLgp
- GWHmjzhFTeviqwDElHZ3P1oUG4ILOZDtsTVcHUoL4YFKxuoGvE131PgZukPPGdjxZKf0aiRSP
- BAAWEeSCCR9LBNleJ13Jt97ia1cG09ET57QocXeE9lLse2ftTYG71PpibgmF49NVUnrDX5PxL
- GjlTebdmXKHddFzGNAa8SUKayjFDiJk3PajwcSbiAMf422F+sa3LkeAY7A/0B/YKNUI7mnhuZ
- 0QG1Ar2J3JYYg5ycoLvdiQ2w5TbUD0iwbrN/ZDiDpCSs2Qo+pFaUmLA0bBx0rjHbwqceF6tpu
- cn2FUBxzAEYDmWhuU1WeqEuIiKSJom0z0UvL14uLbPnlqhaTtSHiaoT4Zm0gW4br0FcvhxAQK
- 7TX9qqk/Do4JxM+Sd6yGIXwaRa/4EWQOV1XXXJkdDtF+RrhM4EhmWRohgb2D4HAbmGh4KxieG
- phUnjQZcH+8KsHRIhMddZnfz7qHITNM2DrZTyb32M787r1rkDH9bdJAjlLhmQXoRHxabzlItI
- 3wvfeM0Ob5O6SCpIp3NeBhhDa2cuSMH5WgAGlpQzy9M6aNj3FIhx4xFYEJ8cScIACQdNW5rXq
- onT1Ce7c2WI5PXhJZh9sco0+FW7g2jTjoYKtThNmchUQ1T1UBx75z9P7lgf1tsrU9lPGaCkIj
- B2lbFRovJGfGJ4Vaaw+7Hrhg4Y5Gmalr7VFQRIPR8fo3Lw1tE5XIaWFuxV8Rz6sG+5t7Zyv
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 4:16 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+On Thu, 2020-07-16 at 10:18 -0700, Alexander Duyck wrote:
+> 
+> On 7/15/2020 7:55 PM, Randy Dunlap wrote:
+> > On 7/13/20 11:23 PM, David E. Box wrote:
+> > > Add PCIe DVSEC extended capability ID and defines for the header
+> > > offsets.
+> > > Defined in PCIe r5.0, sec 7.9.6.
+> > > 
+> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > ---
+> > >   include/uapi/linux/pci_regs.h | 5 +++++
+> > >   1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/include/uapi/linux/pci_regs.h
+> > > b/include/uapi/linux/pci_regs.h
+> > > index f9701410d3b5..09daa9f07b6b 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -720,6 +720,7 @@
+> > > +#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-
+> > > Specific */
+> > > @@ -1062,6 +1063,10 @@
+> > > +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> > > +#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific
+> > > Header1 */
+> > > +#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific
+> > > Header2 */
 
-> +       /* Continue with the SD express init, if the card supports it. */
-> +       resp &= 0x3000;
-> +       if (pcie_bits && resp) {
-> +               if (resp == 0x3000)
-> +                       host->ios.timing = MMC_TIMING_SD_EXP_1_2V;
-> +               else
-> +                       host->ios.timing = MMC_TIMING_SD_EXP;
-> +
-> +               /*
-> +                * According to the spec the clock shall also be gated, but
-> +                * let's leave this to the host driver for more flexibility.
-> +                */
-> +               return host->ops->init_sd_express(host, &host->ios);
-> +       }
-> +
->         return 0;
->  }
+These comments I'll fix to say "Designated Vendor-Specific"
 
-Does this need an additional handshake or timeout to see if the
-device was successfully probed by the nvme driver?
+> > 
+> > Just a little comment: It would make more sense to me to
+> > s/DVSEC/DVSPEC/g.
+> > 
+> > But then I don't have the PCIe documentation.
+> 
+> Arguably some of the confusion might be from the patch title. DVSEC
+> is 
+> acronym for Designated Vendor-Specific Extended Capability if I
+> recall 
+> correctly. It would probably be best to call that out since the
+> extended 
+> implies it lives in the config space accessible via the memory
+> mapped 
+> config.
 
-It looks like the card would just disappear here if e.g. the nvme driver
-is not loaded or runs into a runtime error.
+I'll change the patch title as well, but agree DVSEC is better as it's
+consistent with the spec.
 
-     Arnd
+Thanks
+
+David
+
