@@ -2,118 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98C3C22398F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 12:43:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 924E32239AE
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 12:48:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgGQKnk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 06:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgGQKnj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 06:43:39 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3742C061755;
-        Fri, 17 Jul 2020 03:43:39 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id f23so9940446iof.6;
-        Fri, 17 Jul 2020 03:43:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k8uVrhgOhQqs7eK819gJP8Isbzose7d4S6jSpx+aI80=;
-        b=Sh5xu9u/wMBK0BIZ3S3CrccFZFXqFVJ4Ty0AQHr0cL8kZHGhS3jOuXUk9jXjaeRefF
-         y+C9/gckVZKpTLyBboNKSeD5GSoq5i2gnSTzY9jDo1h3YCoOiz021y7F01Wt1gFKGePd
-         ZEIpDHPAYgr9nTouyQ75MdKyfuqMKP/WY7KRH7f6B6cDSyWsBc0eTi6RWbW19OBEIpWR
-         7mu5uRRArsi5V/QNvhzymvCcRP0TD3pa0BJ+pTr2rbnt3ONv6qKPOKajYE/O+NHxx83H
-         7vJ/K9Y/CIfHTKFwaRU7xDEQeKUUtOjYSvtWxNDzSpOm0gdBf9n+IcV7LZJHGe/MSHLZ
-         3vzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k8uVrhgOhQqs7eK819gJP8Isbzose7d4S6jSpx+aI80=;
-        b=oaLGEZLDPTUwrKyb3Q1+CkKQ1BbYh08jDTFoxlta5YUEvq1GYFgqVKsUGlH+prFLhx
-         hBaxcOisWoZ/C3l0aYcfKNb+raSXRt7wX+lPr2nkR6AC5iGB6wO0boc8ZQtEjN1sT7WH
-         5puzdvsiqr+GyU0Dj2ChfG+EUIm/8H1UdMePExglEdV+KlCU7uL+Up5CjoXBgT01hraV
-         XYx8KLD/mF5NuteBo9g2i7hPB9bzsg1/T9HBIOJR3ZX+U6eXZ1n3xVXDW5mK/nM8KeiN
-         VL1Z5bEp6k2Z6BlmiYcO9t599yVb+7sHWbZ/EknSVYVj0Pt9yW+aeoxsGrkiU1ZnuERM
-         qyCw==
-X-Gm-Message-State: AOAM531Msi8hvySRT+gVjBzGdG+c+OPHRhDGhnmtOw32H9xEwXx+W1gO
-        vuAq+lfuN9H5wVXjRdq3tcE4iVhrWdG2LKw1M9UZ0fAII2o=
-X-Google-Smtp-Source: ABdhPJxtuasrS8D2ZlPmVecjcSsGZsiTpJFsPWZr7RaOLcuYkOg1E6NK9odWW/xu2ORR28QduMslbT/r0b/7WEdeWxM=
-X-Received: by 2002:a6b:c343:: with SMTP id t64mr9228896iof.66.1594982618648;
- Fri, 17 Jul 2020 03:43:38 -0700 (PDT)
+        id S1726200AbgGQKsp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 06:48:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:53706 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgGQKsp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:48:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4144AD6E;
+        Fri, 17 Jul 2020 03:48:44 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A61F3F66E;
+        Fri, 17 Jul 2020 03:48:43 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 11:48:41 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pci: tegra: Remove PLL power supplies
+Message-ID: <20200717104841.GB4353@e121166-lin.cambridge.arm.com>
+References: <20200623145528.1658337-1-thierry.reding@gmail.com>
+ <20200716125945.GD535268@ulmo>
 MIME-Version: 1.0
-References: <CAO3ALPy8_pxVyFROZUWNafEH1vUCP6LVpNmBBuMDSewGitzdLw@mail.gmail.com>
- <CAOSf1CEOu5jX6KXKWiConBf=TDwF3qdASMxtfDjqSR6vOKN4XA@mail.gmail.com> <CAO3ALPwZPN1vdqHaFsuSpgj63o6Z69VUg0LngmCSnvESrO4kNg@mail.gmail.com>
-In-Reply-To: <CAO3ALPwZPN1vdqHaFsuSpgj63o6Z69VUg0LngmCSnvESrO4kNg@mail.gmail.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Fri, 17 Jul 2020 20:43:27 +1000
-Message-ID: <CAOSf1CEiCOjTQ8XX=cC10eghaC+1xaRG-bju8VBFQStOCaU_xQ@mail.gmail.com>
-Subject: Re: ASMedia USB 3.x host controllers triggering EEH on POWER9
-To:     Forest Crossman <cyrozap@gmail.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-pci <linux-pci@vger.kernel.org>, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716125945.GD535268@ulmo>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 8:10 PM Forest Crossman <cyrozap@gmail.com> wrote:
->
-> > From word 2 of the PEST entry the faulting DMA address is:
-> > 0x0000203974c00000. That address is interesting since it looks a lot
-> > like a memory address on the 2nd chip, but it doesn't have bit 59 set
-> > so TVE#0 is used to validate it. Obviously that address is above 2GB
-> > so we get the error.
->
-> Ah, I see. Do you know if the information on the PEST registers is
-> documented publicly somewhere? I tried searching for what those
-> registers meant in the PHB4 spec but it basically just said, "the PEST
-> registers contain PEST data," which isn't particularly helpful.
+On Thu, Jul 16, 2020 at 02:59:45PM +0200, Thierry Reding wrote:
+> On Tue, Jun 23, 2020 at 04:55:27PM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> > 
+> > The XUSB pad controller, which provides access to various USB, PCI and
+> > SATA pads (or PHYs), needs to bring up the PLLs associated with these
+> > pads. In order to properly do so, it needs to control the power supplied
+> > to these PLLs.
+> > 
+> > Remove the PLL power supplies from the PCIe controller because it does
+> > not need direct access to them. Instead it will only use the configured
+> > pads provided by the XUSB pad controller.
+> > 
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> > Hi Rob,
+> > 
+> > I already made this change as part of the conversion series, but wanted
+> > to send this out as part of this subseries since it addresses a fairly
+> > long-standing issue that I'd like to clean up irrespective of the DT
+> > binding conversion. Since it looks like the conversion series will take
+> > a bit longer, I think it makes sense to send this out separately.
+> > 
+> > Thierry
+> > 
+> >  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt  | 12 ------------
+> >  1 file changed, 12 deletions(-)
+> 
+> Hi Rob, any feedback on this?
 
-Most of it is in the IODA spec. See Sec 2.2.6 "Partitionable-Endpoint
-State Table", the only part that isn't documented there is the top
-bits of each word which are documented in the PHB spec for some
-reason. For word one the top bit (PPCBIT(0)) means MMIO is frozen and
-for word two (PPCBIT(64)) the top bit indicates DMA is frozen.
+Hi Rob,
 
-> > What's probably happening is that the ASmedia controller doesn't
-> > actually implement all 64 address bits and truncates the upper bits of
-> > the DMA address. Doing that is a blatant violation of the PCIe (and
-> > probably the xHCI) spec, but it's also pretty common since "it works
-> > on x86." Something to try would be booting with the iommu=nobypass in
-> > the kernel command line. That'll disable TVE#1 and force all DMAs to
-> > go through TVE#0.
->
-> Thanks, iommu=nobypass fixed it! Plugging in one or more USB devices
-> no longer triggers any EEH errors.
->
-> > Assuming the nobypass trick above works, what you really need to do is
-> > have the driver report that it can't address all 64bits by setting its
-> > DMA mask accordingly. For the xhci driver it looks like this is done
-> > in xhci_gen_setup(), there might be a quirks-style interface for
-> > working around bugs in specific controllers that you can use. Have a
-> > poke around and see what you can find :)
->
-> Yup, the xhci driver has a quirks system, and conveniently one of
-> those is XHCI_NO_64BIT_SUPPORT. After making a 3-line patch to
-> xhci-pci.c to add that quirk for this chip, the host controller is now
-> able to work without setting iommu=nobypass in the kernel arguments.
+I'd like to queue both patches, please let me know if that's OK with
+you.
 
-Cool
+Thank you very much.
 
-> Thank you so much for your help! You've likely saved me several hours
-> of reading documentation, as well as several more hours of fiddling
-> around with the xhci driver.
+Lorenzo
 
-> I'm almost disappointed the fix was so
-> simple, but the time savings alone more than makes up for it. I'll
-> submit the patch to the USB ML shortly.
+> > index 7939bca47861..d099f3476ccc 100644
+> > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > @@ -112,28 +112,16 @@ Power supplies for Tegra124:
+> >  - Required:
+> >    - avddio-pex-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
+> >    - dvddio-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
+> > -  - avdd-pex-pll-supply: Power supply for dedicated (internal) PCIe PLL. Must
+> > -    supply 1.05 V.
+> >    - hvdd-pex-supply: High-voltage supply for PCIe I/O and PCIe output clocks.
+> >      Must supply 3.3 V.
+> > -  - hvdd-pex-pll-e-supply: High-voltage supply for PLLE (shared with USB3).
+> > -    Must supply 3.3 V.
+> >    - vddio-pex-ctl-supply: Power supply for PCIe control I/O partition. Must
+> >      supply 2.8-3.3 V.
+> > -  - avdd-pll-erefe-supply: Power supply for PLLE (shared with USB3). Must
+> > -    supply 1.05 V.
+> >  
+> >  Power supplies for Tegra210:
+> >  - Required:
+> > -  - avdd-pll-uerefe-supply: Power supply for PLLE (shared with USB3). Must
+> > -    supply 1.05 V.
+> >    - hvddio-pex-supply: High-voltage supply for PCIe I/O and PCIe output
+> >      clocks. Must supply 1.8 V.
+> >    - dvddio-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
+> > -  - dvdd-pex-pll-supply: Power supply for dedicated (internal) PCIe PLL. Must
+> > -    supply 1.05 V.
+> > -  - hvdd-pex-pll-e-supply: High-voltage supply for PLLE (shared with USB3).
+> > -    Must supply 3.3 V.
+> >    - vddio-pex-ctl-supply: Power supply for PCIe control I/O partition. Must
+> >      supply 1.8 V.
+> >  
+> > -- 
+> > 2.27.0
+> > 
 
-It might be only three lines, but it doesn't mean it's trivial. Most
-bugs like that require a lot of context to understand, let alone fix.
-Thanks for looking into it!
 
-Oliver
