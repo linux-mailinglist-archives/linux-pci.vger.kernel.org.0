@@ -2,138 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 516B622428B
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 19:50:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC3DB2242B3
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 20:02:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgGQRsF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 13:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbgGQRsE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 13:48:04 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D51C0619D4
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 10:48:04 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o18so11724746eje.7
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 10:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ouPoIbaznwUvpvUZ+d9Lmd0+7ZlkFrw9Vubc0luuMm4=;
-        b=T6HKmBM9wpL/nF5N2IowQkS/pBz5KcI4emAgAF/8bejb3Rhx2qwrGgob1UjZiG3w7S
-         sV6mfszfROVCaEu8RGIpZ4VkI2TfV76l3kRAt5KhIYLORviINuEzJTcBZun0PPQ+17yC
-         sL7ngdlkBSr0haa/a+I8w89hJ7YH96WrmJqjEEQ0IghXlJVhpi5weKEIajlkG6ys7hyd
-         bZmMEpFCkEu4wbXN27ODtK768/E5FhwvDDArao/vNYiIfxrf2lW3myBzMBQ5v233gbff
-         d1eBjiTWMO6Gs1QkbbmCsFdWavwcujwbbYY4NlsshvUcQAPvgs23KuSHpFcZHhwd9zi3
-         jBBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ouPoIbaznwUvpvUZ+d9Lmd0+7ZlkFrw9Vubc0luuMm4=;
-        b=PKVGACf8i4hJjeHt9lAvZrSFHffM7pJxPb7U3nZOASBg6MT8InA3sPIJtGNj28I7xB
-         EqfzCrI1fT+OWSG0maNG2RBhURSwqspsdhI0uS35T+FEF/XxEA9pgcEjD0cwUtGR+K/w
-         ngnVk+foWBSfcq6sDw+XXHafRE+xp5yVQIm51VPiEspUac11jSN7OO/c/bm9FVr/qmeQ
-         e1NfL5FaoRpP3WyOQPaXtXojzrha538/Q/8Of0LB6hIoPf0IiGlLysqLLmmg4GO/5/Qt
-         AWPdHQNHXdnuShwGWpJh1rRTMBM/TA2qGlElnGmr7wz40mYlCvBqzYgKH9pc2TOn30d6
-         pOuA==
-X-Gm-Message-State: AOAM5327HHLQTwbH2twGN5Lk4F9HSVcavjOAu/a4A3WlvXsqpQuizQDI
-        mFPySkLhtR/YkRZNxVxOsh97K4gFIX/8IQKTf4UKUw==
-X-Google-Smtp-Source: ABdhPJxAkNoEdvBMsNoiwT/xtC3KzAJM3mngqfnMyotl0K4+5QQM9nsSc91iJTIh6/lQ8mnSCUp3b+j2mW212gFA81Q=
-X-Received: by 2002:a17:906:6959:: with SMTP id c25mr9393908ejs.375.1595008082575;
- Fri, 17 Jul 2020 10:48:02 -0700 (PDT)
+        id S1727121AbgGQSAr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 14:00:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2497 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbgGQSAq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:00:46 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id A95D0E120BD21A2B8C95;
+        Fri, 17 Jul 2020 19:00:44 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Fri, 17 Jul 2020 19:00:44 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <martin@geanix.com>,
+        Ingo Molnar <mingo@redhat.com>, <linux-ia64@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Song Bao Hua <song.bao.hua@hisilicon.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 0/6] ACPI: Only create NUMA nodes from entries in SRAT or SRAT emulation.
+Date:   Sat, 18 Jul 2020 01:59:53 +0800
+Message-ID: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com> <20200624212737.GV4817@hirez.programming.kicks-ass.net>
- <20200624214530.GA120457@google.com> <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com> <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
- <20200625224042.GA169781@google.com> <20200626112931.GF4817@hirez.programming.kicks-ass.net>
- <CABCJKucSM7gqWmUtiBPbr208wB0pc25afJXc6yBQzJDZf4LSWA@mail.gmail.com> <20200717133645.7816c0b6@oasis.local.home>
-In-Reply-To: <20200717133645.7816c0b6@oasis.local.home>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 17 Jul 2020 10:47:51 -0700
-Message-ID: <CABCJKuda0AFCZ-1J2NTLc-M0xax007a9u-fzOoxmU2z60jvzbA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:36 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 17 Jul 2020 10:28:13 -0700
-> Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> > On Fri, Jun 26, 2020 at 4:29 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Thu, Jun 25, 2020 at 03:40:42PM -0700, Sami Tolvanen wrote:
-> > >
-> > > > > Not boot tested, but it generates the required sections and they look
-> > > > > more or less as expected, ymmv.
-> > >
-> > > > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > > > > index a291823f3f26..189575c12434 100644
-> > > > > --- a/arch/x86/Kconfig
-> > > > > +++ b/arch/x86/Kconfig
-> > > > > @@ -174,7 +174,6 @@ config X86
-> > > > >     select HAVE_EXIT_THREAD
-> > > > >     select HAVE_FAST_GUP
-> > > > >     select HAVE_FENTRY                      if X86_64 || DYNAMIC_FTRACE
-> > > > > -   select HAVE_FTRACE_MCOUNT_RECORD
-> > > > >     select HAVE_FUNCTION_GRAPH_TRACER
-> > > > >     select HAVE_FUNCTION_TRACER
-> > > > >     select HAVE_GCC_PLUGINS
-> > > >
-> > > > This breaks DYNAMIC_FTRACE according to kernel/trace/ftrace.c:
-> > > >
-> > > >   #ifndef CONFIG_FTRACE_MCOUNT_RECORD
-> > > >   # error Dynamic ftrace depends on MCOUNT_RECORD
-> > > >   #endif
-> > > >
-> > > > And the build errors after that seem to confirm this. It looks like we might
-> > > > need another flag to skip recordmcount.
-> > >
-> > > Hurm, Steve, how you want to do that?
-> >
-> > Steven, did you have any thoughts about this? Moving recordmcount to
-> > an objtool pass that knows about call sites feels like a much cleaner
-> > solution than annotating kernel code to avoid unwanted relocations.
-> >
->
-> Bah, I started to reply to this then went to look for details, got
-> distracted, forgot about it, my laptop crashed (due to a zoom call),
-> and I lost the email I was writing (haven't looked in the drafts
-> folder, but my idea about this has changed since anyway).
->
-> So the problem is that we process mcount references in other areas and
-> that confuses the ftrace modification portion?
+Here, I will use the term Proximity Domains for the ACPI description and
+NUMA Nodes for the in kernel representation.
 
-Correct.
+ACPI 6.3 included a clarification that only Static Resource Allocation
+Structures in SRAT may define the existence of proximity domains
+(sec 5.2.16). This clarification closed a possible interpretation that
+other parts of ACPI (e.g. DSDT _PXM, NFIT etc) could define new proximity
+domains that were not also mentioned in SRAT structures.
 
-> Someone just submitted a patch for arm64 for this:
->
-> https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
->
-> Is that what you want?
+In practice the kernel has never allowed this alternative interpretation as
+such nodes are only partially initialized. This is architecture specific
+but to take an example, on x86 alloc_node_data has not been called.
+Any use of them for node specific allocation, will result in a crash as the
+infrastructure to fallback to a node with memory is not setup.
 
-That looks like the same issue, but we need to fix this on x86 instead.
+We ran into a problem when enabling _PXM handling for PCI devices and found
+there were boards out there advertising devices in proximity domains that
+didn't exist [2].
 
-Sami
+The fix suggested in this series is to replace instances that should not
+'create' new nodes with pxm_to_node.  This function needs a some additional
+hardening against invalid inputs to make sure it is safe for use in these
+new callers.
+
+Patch 1 Hardens pxm_to_node() against numa_off, and pxm entry being too large.
+
+Patch 2-4 change the various callers not related to SRAT entries so that they
+set this parameter to false, so do not attempt to initialize a new NUMA node
+if the relevant one does not already exist.
+
+Patch 5 is a function rename to reflect change in functionality of
+acpi_map_pxm_to_online_node() as it no longer creates a new map, but just does a
+lookup of existing maps.
+
+Patch 6 covers the one place we do not allow the full flexibility defined
+in the ACPI spec.  For SRAT GIC Interrupt Translation Service (ITS) Affinity
+Structures, on ARM64, the driver currently makes an additional pass of SRAT
+later in the boot than the one used to identify NUMA domains.
+Note, this currently means that an ITS placed in a proximity domain that is
+not defined by another SRAT structure will result in the a crash.
+
+To avoid this crash with minimal changes we do not create new NUMA nodes based
+on this particular entry type.  Any current platform trying to do this will not
+boot, so this is an improvement, if perhaps not a perfect solution.
+
+[1] Note in ACPI Specification 6.3 5.2.16 System Resource Affinity Table (SRAT)
+[2] https://patchwork.kernel.org/patch/10597777/
+
+Thanks to Bjorn Helgaas for review of v1 and Barry Song for internal reviews that
+lead to a slightly different approach for this v2.
+
+Changes since v1.
+* Use pxm_to_node for what was previously the path using acpi_map_pxm_to_node
+  with create==false. (Barry)
+* Broke patch up into an initial noop stage followed by patches (Bjorn)
+  to update each type of case in which partial creation of NUMA nodes is prevented.
+* Added patch 5 to rename function to reflect change of functionality.
+* Updated descriptions (now mostly in individual patches) inline with Bjorn's comments.
+
+Jonathan Cameron (6):
+  ACPI: Add out of bounds and numa_off protections to pxm_to_node
+  ACPI: Do not create new NUMA domains from ACPI static tables that are
+    not SRAT
+  ACPI: Remove side effect of partly creating a node in
+    acpi_map_pxm_to_online_node
+  ACPI: rename acpi_map_pxm_to_online_node to pxm_to_online_node
+  ACPI: Remove side effect of partly creating a node in acpi_get_node
+  irq-chip/gic-v3-its: Fix crash if ITS is in a proximity domain without
+    processor or memory
+
+ drivers/acpi/arm64/iort.c        |  2 +-
+ drivers/acpi/nfit/core.c         |  6 ++----
+ drivers/acpi/numa/hmat.c         |  4 ++--
+ drivers/acpi/numa/srat.c         |  4 ++--
+ drivers/iommu/intel/dmar.c       |  2 +-
+ drivers/irqchip/irq-gic-v3-its.c |  7 ++++++-
+ include/linux/acpi.h             | 15 +++++++--------
+ 7 files changed, 21 insertions(+), 19 deletions(-)
+
+-- 
+2.19.1
+
