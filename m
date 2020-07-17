@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 229F02242BA
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 20:02:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DFD62242BF
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 20:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgGQSBr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 14:01:47 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2499 "EHLO huawei.com"
+        id S1728047AbgGQSCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 14:02:17 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2500 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbgGQSBr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:01:47 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 9528D7C04693B679C619;
-        Fri, 17 Jul 2020 19:01:45 +0100 (IST)
+        id S1726232AbgGQSCR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:02:17 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 102AE61B9167C6AA9A63;
+        Fri, 17 Jul 2020 19:02:16 +0100 (IST)
 Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Fri, 17 Jul 2020 19:01:45 +0100
+ 15.1.1913.5; Fri, 17 Jul 2020 19:02:15 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
@@ -31,9 +31,9 @@ CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Song Bao Hua <song.bao.hua@hisilicon.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 2/6] ACPI: Do not create new NUMA domains from ACPI static tables that are not SRAT
-Date:   Sat, 18 Jul 2020 01:59:55 +0800
-Message-ID: <20200717175959.899775-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 3/6] ACPI: Remove side effect of partly creating a node in acpi_map_pxm_to_online_node
+Date:   Sat, 18 Jul 2020 01:59:56 +0800
+Message-ID: <20200717175959.899775-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
 References: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
@@ -49,101 +49,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Several ACPI static tables contain references to proximity domains.
-ACPI 6.3 has clarified that only entries in SRAT may define a new domain
-(sec 5.2.16).
+Whilst this function will only return an online node, it can have the side
+effect of partially creating a new node.  The existing comments suggest this
+is intentional, but the usecases of this function are related to NFIT and
+HMAT parsing, neither of which should be able to define new nodes.
 
-Those tables described in the ACPI spec have additional clarifying text.
+One route by which the existing behaviour would cause a crash is to have a
+_PXM entry in ACPI DSDT attempt to place a device within this partly
+created proximity domain. A subsequent call to devm_kzalloc or similar
+would result in an attempt to allocate memory on a node for which zone
+lists have not been set up and a null pointer dereference.
 
-NFIT: Table 5-132,
-
-"Integer that represents the proximity domain to which the memory belongs.
- This number must match with corresponding entry in the SRAT table."
-
-HMAT: Table 5-145,
-
-"... This number must match with the corresponding entry in the SRAT
- table's processor affinity structure ... if the initiator is a processor,
- or the Generic Initiator Affinity Structure if the initiator is a generic
- initiator".
-
-IORT and DMAR are defined by external specifications.
-
-Intel Virtualization Technology for Directed I/O Rev 3.1 does not make any
-explicit statements, but the general SRAT statement above will still apply.
-https://software.intel.com/sites/default/files/managed/c5/15/vt-directed-io-spec.pdf
-
-IO Remapping Table, Platform Design Document rev D, also makes not explicit
-statement, but refers to ACPI SRAT table for more information and again the
-generic SRAT statement above applies.
-https://developer.arm.com/documentation/den0049/d/
-
-In conclusion, any proximity domain specified in these tables, should be a
-reference to a proximity domain also found in SRAT, and they should not be able
-to instantiate a new domain.  Hence we switch to pxm_to_node() which will only
-return existing nodes.
+We prevent such cases by switching to pxm_to_node() within
+acpi_map_pxm_to_online_node which cannot cause a new node to be partly
+created. If one would previously have been created we now return
+NO_NUMA_NODE.  Documentation updated to reflect this change.
+We may want to think about renaming acpi_map_pxm_to_online_node to
+pxm_to_online_node to reflect this change.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/acpi/arm64/iort.c  | 2 +-
- drivers/acpi/nfit/core.c   | 3 +--
- drivers/acpi/numa/hmat.c   | 2 +-
- drivers/iommu/intel/dmar.c | 2 +-
- 4 files changed, 4 insertions(+), 5 deletions(-)
+ include/linux/acpi.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 28a6b387e80e..eb0f158612c8 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1293,7 +1293,7 @@ static int  __init arm_smmu_v3_set_proximity(struct device *dev,
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index d661cd0ee64d..b541a0b444fd 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -430,13 +430,12 @@ int acpi_get_node(acpi_handle handle);
+  * ACPI device drivers, which are called after the NUMA initialization has
+  * completed in the kernel, can call this interface to obtain their device
+  * NUMA topology from ACPI tables.  Such drivers do not have to deal with
+- * offline nodes.  A node may be offline when a device proximity ID is
+- * unique, SRAT memory entry does not exist, or NUMA is disabled, ex.
+- * "numa=off" on x86.
++ * offline nodes.  A node may be offline when SRAT memory entry does not exist,
++ * or NUMA is disabled, ex. "numa=off" on x86.
+  */
+ static inline int acpi_map_pxm_to_online_node(int pxm)
+ {
+-	int node = acpi_map_pxm_to_node(pxm);
++	int node = pxm_to_node(pxm);
  
- 	smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
- 	if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
--		int dev_node = acpi_map_pxm_to_node(smmu->pxm);
-+		int dev_node = pxm_to_node(smmu->pxm);
- 
- 		if (dev_node != NUMA_NO_NODE && !node_online(dev_node))
- 			return -EINVAL;
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 7c138a4edc03..d933a4636d00 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -2947,8 +2947,7 @@ static int acpi_nfit_register_region(struct acpi_nfit_desc *acpi_desc,
- 	if (spa->flags & ACPI_NFIT_PROXIMITY_VALID) {
- 		ndr_desc->numa_node = acpi_map_pxm_to_online_node(
- 						spa->proximity_domain);
--		ndr_desc->target_node = acpi_map_pxm_to_node(
--				spa->proximity_domain);
-+		ndr_desc->target_node = pxm_to_node(spa->proximity_domain);
- 	} else {
- 		ndr_desc->numa_node = NUMA_NO_NODE;
- 		ndr_desc->target_node = NUMA_NO_NODE;
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 2c32cfb72370..cf6df2df26cd 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -666,7 +666,7 @@ static void hmat_register_target_device(struct memory_target *target,
- 
- 	pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->memory_pxm);
- 	info = (struct memregion_info) {
--		.target_node = acpi_map_pxm_to_node(target->memory_pxm),
-+		.target_node = pxm_to_node(target->memory_pxm),
- 	};
- 	rc = platform_device_add_data(pdev, &info, sizeof(info));
- 	if (rc < 0) {
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index 683b812c5c47..b1acdaead059 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -473,7 +473,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
- 	rhsa = (struct acpi_dmar_rhsa *)header;
- 	for_each_drhd_unit(drhd) {
- 		if (drhd->reg_base_addr == rhsa->base_address) {
--			int node = acpi_map_pxm_to_node(rhsa->proximity_domain);
-+			int node = pxm_to_node(rhsa->proximity_domain);
- 
- 			if (!node_online(node))
- 				node = NUMA_NO_NODE;
+ 	return numa_map_to_online_node(node);
+ }
 -- 
 2.19.1
 
