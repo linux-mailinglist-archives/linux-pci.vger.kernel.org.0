@@ -2,137 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39F4822451D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 22:20:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0708722452B
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 22:26:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgGQUUY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 16:20:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:44166 "EHLO mga17.intel.com"
+        id S1728387AbgGQU0W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 16:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgGQUUX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:20:23 -0400
-IronPort-SDR: 88PfWby2AeNsuquskwwhlnLPkkPnr9MKmUIo70/1SnmUo2vTGcUimAHIGFH5WIFSc4R3dfNo9u
- p4q7soQwy2Eg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="129751324"
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="129751324"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 13:20:23 -0700
-IronPort-SDR: p4yUaDfPSPz9A38C7vdgN0+hqvDVPOAUVtv4PWPU8KQAlgfIqc5jnlUqz6cDWmEXwIVadqNHmD
- sZ6xvf1jmO5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="460961618"
-Received: from jmharral-mobl.amr.corp.intel.com (HELO [10.254.77.39]) ([10.254.77.39])
-  by orsmga005.jf.intel.com with ESMTP; 17 Jul 2020 13:20:22 -0700
-Subject: Re: [PATCH] PCI/ERR: Rename pci_aer_clear_device_status() to
- pcie_clear_device_status()
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sean Kelley <sean.v.kelley@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linuxarm@huawei.com, Bjorn Helgaas <bhelgaas@google.com>
-References: <20200717195619.766662-1-helgaas@kernel.org>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <0cee203b-3ba9-3e42-0caa-92d12b9086fe@linux.intel.com>
-Date:   Fri, 17 Jul 2020 13:20:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726510AbgGQU0W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 16:26:22 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C36A20684;
+        Fri, 17 Jul 2020 20:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595017582;
+        bh=/hYopkLccKkwFpSirohLu9rK4PERmsXifMkvfY8na74=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=s3QH/t9ocNHEPH2/jvWRB8qEQKIK64CQ+GlRWp8yjZLbWaD3J5hfVQ80kDY7xshpH
+         xeiUCkt/Irn0dwJ5rev9qj5TqMu055YbwJsqTl3kaW+lblQMHHzeP7vMEYgEstIATL
+         o2+gGzz8bNJr4YllTtvOL6MhViMZk5u3gpLyaYYU=
+Date:   Fri, 17 Jul 2020 15:26:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 11/22] pci: lto: fix PREL32 relocations
+Message-ID: <20200717202620.GA768846@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200717195619.766662-1-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624203200.78870-12-samitolvanen@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+OK by me, but please update the subject to match convention:
 
-On 7/17/20 12:56 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+  PCI: Fix PREL32 relocations for LTO
+
+and include a hint in the commit log about what LTO is.  At least
+expand the initialism once.  Googling for "LTO" isn't very useful.
+
+  With Clang's Link Time Optimization (LTO), the compiler ... ?
+
+On Wed, Jun 24, 2020 at 01:31:49PM -0700, Sami Tolvanen wrote:
+> With LTO, the compiler can rename static functions to avoid global
+> naming collisions. As PCI fixup functions are typically static,
+> renaming can break references to them in inline assembly. This
+> change adds a global stub to DECLARE_PCI_FIXUP_SECTION to fix the
+> issue when PREL32 relocations are used.
 > 
-> pci_aer_clear_device_status() clears the error bits in the PCIe Device
-> Status Register (PCI_EXP_DEVSTA).  Every PCIe device has this register,
-> regardless of whether it supports AER.
-Since its not related to AER, can we move it out of AER driver ? May be
-to pci.c ?
-> 
-> Rename pci_aer_clear_device_status() to pcie_clear_device_status() to make
-> clear that it is PCIe-specific but not AER-specific.  No functional change
-> intended.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
 > ---
->   drivers/pci/pci.h      | 4 ++--
->   drivers/pci/pcie/aer.c | 4 ++--
->   drivers/pci/pcie/err.c | 2 +-
->   3 files changed, 5 insertions(+), 5 deletions(-)
+>  include/linux/pci.h | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index c6c0c455f59f..c5f271e6e276 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -657,16 +657,16 @@ void pci_no_aer(void);
->   void pci_aer_init(struct pci_dev *dev);
->   void pci_aer_exit(struct pci_dev *dev);
->   extern const struct attribute_group aer_stats_attr_group;
-> +void pcie_clear_device_status(struct pci_dev *dev);
->   void pci_aer_clear_fatal_status(struct pci_dev *dev);
-> -void pci_aer_clear_device_status(struct pci_dev *dev);
->   int pci_aer_clear_status(struct pci_dev *dev);
->   int pci_aer_raw_clear_status(struct pci_dev *dev);
->   #else
->   static inline void pci_no_aer(void) { }
->   static inline void pci_aer_init(struct pci_dev *d) { }
->   static inline void pci_aer_exit(struct pci_dev *d) { }
-> +static inline void pcie_clear_device_status(struct pci_dev *dev) { }
->   static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
-> -static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
->   static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
->   static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
->   #endif
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ca886bf91fd9..d3ea667c8520 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -241,7 +241,7 @@ int pci_disable_pcie_error_reporting(struct pci_dev *dev)
->   }
->   EXPORT_SYMBOL_GPL(pci_disable_pcie_error_reporting);
->   
-> -void pci_aer_clear_device_status(struct pci_dev *dev)
-> +void pcie_clear_device_status(struct pci_dev *dev)
->   {
->   	u16 sta;
->   
-> @@ -947,7 +947,7 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->   		if (aer)
->   			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
->   					info->status);
-> -		pci_aer_clear_device_status(dev);
-> +		pcie_clear_device_status(dev);
->   	} else if (info->severity == AER_NONFATAL)
->   		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
->   	else if (info->severity == AER_FATAL)
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 467686ee2d8b..55755bc493f1 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -197,7 +197,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	pci_dbg(dev, "broadcast resume message\n");
->   	pci_walk_bus(bus, report_resume, &status);
->   
-> -	pci_aer_clear_device_status(dev);
-> +	pcie_clear_device_status(dev);
->   	pci_aer_clear_nonfatal_status(dev);
->   	pci_info(dev, "device recovery successful\n");
->   	return status;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c79d83304e52..1e65e16f165a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1909,19 +1909,24 @@ enum pci_fixup_pass {
+>  };
+>  
+>  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> -#define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+> -				    class_shift, hook)			\
+> -	__ADDRESSABLE(hook)						\
+> +#define ___DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+> +				    class_shift, hook, stub)		\
+> +	void stub(struct pci_dev *dev) { hook(dev); }			\
+>  	asm(".section "	#sec ", \"a\"				\n"	\
+>  	    ".balign	16					\n"	\
+>  	    ".short "	#vendor ", " #device "			\n"	\
+>  	    ".long "	#class ", " #class_shift "		\n"	\
+> -	    ".long "	#hook " - .				\n"	\
+> +	    ".long "	#stub " - .				\n"	\
+>  	    ".previous						\n");
+> +
+> +#define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+> +				  class_shift, hook, stub)		\
+> +	___DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+> +				  class_shift, hook, stub)
+>  #define DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+>  				  class_shift, hook)			\
+>  	__DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+> -				  class_shift, hook)
+> +				  class_shift, hook, __UNIQUE_ID(hook))
+>  #else
+>  /* Anonymous variables would be nice... */
+>  #define DECLARE_PCI_FIXUP_SECTION(section, name, vendor, device, class,	\
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
 > 
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
