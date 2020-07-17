@@ -2,170 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4496A223C2F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 15:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B002F223CB2
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 15:33:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgGQNTI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 09:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33136 "EHLO
+        id S1726656AbgGQNaQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 09:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQNTH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 09:19:07 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B0FC08C5DB
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 06:19:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s9so12562924ljm.11
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 06:19:06 -0700 (PDT)
+        with ESMTP id S1726221AbgGQNaQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 09:30:16 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297F8C061755;
+        Fri, 17 Jul 2020 06:30:16 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k5so6363083pjg.3;
+        Fri, 17 Jul 2020 06:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=npEG3Q8JCnzZnur7Cq6JNk21xogenaqhRA7YjsM9ezY=;
-        b=WJr5l5M97ciW2c/gjJQoeEJGmETPzM7Qr5IRBgUn1YBScg98hUkSzHSeJTg3OUPsqN
-         2Scj6G4YGWug3QNMtbZFC3QoKcWR/SfrE+ZlfdaUJN+16ebomabpyO890QKs0TfSwssg
-         GlwRJGVRacdblC9JpOlqVPmVq4YaiPWGimGKkIvrIMvoClA502INAywjscaO+jMQtYNV
-         FrdLzlPp8YBw4RfuDqDeOxlxXRKz4NzqUy+mC4V9pnVDfAFmeYBYR87xX8F1retQgweA
-         OtrVCgFfRj6hzdkmswIkViUTlADJQfm9E7KSYC+qLFxp8Njn3jYAupxNP8CkZ765YQba
-         sztw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KA8+BCThQcJ0LRUas8mEHnLeHf4G0JN/o4kBoJ11ao4=;
+        b=Ew7go265THrXcCo9R7QqWPFNUC6m+Vh6NUeRwvXlPSe0VJZbR9rQfMfYlxSKi6RaRA
+         gVb2Kvq/vbg4rZtdMgU4zzpyoX0eMTJ+JWtKzKZgulGNc9Vxv0CjB63kr8JW2jbPTgaB
+         +5eHRJ6epadXZHiChy1g5fTc8SmbomqyqvoKfAdm94q3xU1OxI1ClfrzRD/54HHA8kZ6
+         A22lh+Sn3ahXiS7Wq0KwYg7RKteQlr2DUvuD4NO6tR4WK/1zt+aQSj08kvrauISzdOhg
+         8ldOhoRF2r3Vcelfcm5j/brDYmiLq52RsoI+ermOb5Tw/N5dNQcBbKMivzNWK8v3qJ6Q
+         3cnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=npEG3Q8JCnzZnur7Cq6JNk21xogenaqhRA7YjsM9ezY=;
-        b=TtTp7mu2kzjaKYblAS3IB2JvU1ToRRuSVyPF+eNjSnJ1A5G7br6MPBVosjlM9JSAI+
-         05LGGr7UfK9Zj6sUcSCbIN859K0jd0Ip0RqqZmUAKQFHKykIYsy9dRY+c9/pDw2F5Rg0
-         kUWGZ7KPOPf2mA91ulcJZ47c7xURwiM5smZFQri883h5e+GGXrxKcsvSKrEkTU35PqJx
-         I6N2sTr4YqZHAKcIcy9n4PwFdnvtOnPbBrIbQUv56QboAPLUrFFIJofrNSUqyHu9ep99
-         n0Efto2nYcieTpWABnZr/0+1xWElEEWSBl2WjOry1aFTPy04bN3aY+clfuHwOYmZrezG
-         txyw==
-X-Gm-Message-State: AOAM530jaqCIRkF9P6zuz/VygrVY1xYHf9cUXvf8lS63IOdg1Vua5foF
-        7rmRxYo82xLFbm9d/yt3Hruqrw==
-X-Google-Smtp-Source: ABdhPJxEMQOqJH/bssfF2AGyslt8NjbQrH6kwGSmbOflAyOcRsfWYlCaG5NnnWf5rAblr67M877IMw==
-X-Received: by 2002:a05:651c:c5:: with SMTP id 5mr4934690ljr.9.1594991945447;
-        Fri, 17 Jul 2020 06:19:05 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id y69sm1861534lfa.86.2020.07.17.06.19.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:19:04 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 15:19:04 +0200
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 19/20] media: rcar-vin: Enable support for R8A774E1
-Message-ID: <20200717131904.GC175137@oden.dyn.berto.se>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KA8+BCThQcJ0LRUas8mEHnLeHf4G0JN/o4kBoJ11ao4=;
+        b=Qw5LqgaEdivSDDmimTVe1t5FvoxhXOKA5ZxDW1ro1z6s6RP1SoA/78oraHJK4KaFyY
+         evqhqZLtN/qEFCgkReXfCYQXLHqm56VCnS+TVhztaast2Q22fFQb80TDnsXeAMgXSQdb
+         dZcmZvggYrw/YFADrbQ6mrWVYGzisHqJz26uFUez7rcsKm9TTftjQeiskSxPwZGPoNup
+         kVbttvE2WdaoaCnhg+uKhCozsoryx6sH+3Vmd0yp9CJDt9+9gjc8Sgsh+xcgW3p5vp6M
+         8sAYiBrr2oOLqxCt7AUS0K24myb5d+DNe+xXZlQKH1peOXJ7Oq+B74LxBfd5nNbNgYL4
+         Y08Q==
+X-Gm-Message-State: AOAM5309lK3nYTLaKO6N2McMTCpF1UhDz02VcG2hdojFMlOdLvp1IZzA
+        cvHiMrG2yTOglKGlLKm19h0=
+X-Google-Smtp-Source: ABdhPJyTEisx3beIa/u5++UyoSvIIfKcqCyUwaWL1AJo3A+t3cP0eYEO1wwLNqXySkLvcofRnsjoYg==
+X-Received: by 2002:a17:90a:ed87:: with SMTP id k7mr10231962pjy.31.1594992615587;
+        Fri, 17 Jul 2020 06:30:15 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id t20sm7974375pfc.158.2020.07.17.06.30.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Jul 2020 06:30:14 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     m-karicheri2@ti.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v1] PCI: dwc: fix a warning about variable 'res' is uninitialized
+Date:   Fri, 17 Jul 2020 21:30:07 +0800
+Message-Id: <20200717133007.23858-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1594919915-5225-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lad,
+The kernel test robot reported a compile warning,
 
-Thanks for your work.
+drivers/pci/controller/dwc/pci-keystone.c:1236:18: warning: variable 'res'
+is uninitialized when used here [-Wuninitialized]
 
-On 2020-07-16 18:18:34 +0100, Lad Prabhakar wrote:
-> Add the SoC specific information for RZ/G2H (R8A774E1) SoC. Also add
-> the routing information between CSI2 and VIN (which is similar to
-> R-Car H3 except it lacks CSI41).
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+The commit c59a7d771134b5 ("PCI: dwc: Convert to
+devm_platform_ioremap_resource_byname()") did a wrong conversion for
+keystone driver. the commit use devm_platform_ioremap_resource_byname()
+to replace platform_get_resource_byname() and devm_ioremap_resource().
+but the subsequent code needs to use the variable 'res', which is got by
+platform_get_resource_byname() for resource "app". so revert it.
 
-I do not have access to the datasheet so I can't verify the routing 
-table so I trust it is correct.
+Fixes: c59a7d771134b5 ("PCI: dwc: Convert to devm_platform_ioremap_resource_byname()")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
->  drivers/media/platform/rcar-vin/rcar-core.c | 40 +++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> index 7440c8965d27..4fb76d1df308 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -944,6 +944,42 @@ static const struct rvin_info rcar_info_gen2 = {
->  	.max_height = 2048,
->  };
->  
-> +static const struct rvin_group_route rcar_info_r8a774e1_routes[] = {
-> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 0, .mask = BIT(0) | BIT(3) },
-> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 0, .mask = BIT(1) | BIT(4) },
-> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 0, .mask = BIT(2) },
-> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 1, .mask = BIT(0) },
-> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 1, .mask = BIT(1) | BIT(3) },
-> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 1, .mask = BIT(2) },
-> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 1, .mask = BIT(4) },
-> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 2, .mask = BIT(0) },
-> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 2, .mask = BIT(1) },
-> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 2, .mask = BIT(2) },
-> +	{ .csi = RVIN_CSI40, .channel = 2, .vin = 2, .mask = BIT(3) },
-> +	{ .csi = RVIN_CSI20, .channel = 2, .vin = 2, .mask = BIT(4) },
-> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 3, .mask = BIT(0) },
-> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 3, .mask = BIT(1) | BIT(2) },
-> +	{ .csi = RVIN_CSI40, .channel = 3, .vin = 3, .mask = BIT(3) },
-> +	{ .csi = RVIN_CSI20, .channel = 3, .vin = 3, .mask = BIT(4) },
-> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 4, .mask = BIT(1) | BIT(4) },
-> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 5, .mask = BIT(0) },
-> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 5, .mask = BIT(4) },
-> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 6, .mask = BIT(0) },
-> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 6, .mask = BIT(2) },
-> +	{ .csi = RVIN_CSI20, .channel = 2, .vin = 6, .mask = BIT(4) },
-> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 7, .mask = BIT(1) | BIT(2) },
-> +	{ .csi = RVIN_CSI20, .channel = 3, .vin = 7, .mask = BIT(4) },
-> +	{ /* Sentinel */ }
-> +};
-> +
-> +static const struct rvin_info rcar_info_r8a774e1 = {
-> +	.model = RCAR_GEN3,
-> +	.use_mc = true,
-> +	.max_width = 4096,
-> +	.max_height = 4096,
-> +	.routes = rcar_info_r8a774e1_routes,
-> +};
-> +
->  static const struct rvin_group_route rcar_info_r8a7795_routes[] = {
->  	{ .csi = RVIN_CSI40, .channel = 0, .vin = 0, .mask = BIT(0) | BIT(3) },
->  	{ .csi = RVIN_CSI20, .channel = 0, .vin = 0, .mask = BIT(1) | BIT(4) },
-> @@ -1220,6 +1256,10 @@ static const struct of_device_id rvin_of_id_table[] = {
->  		.compatible = "renesas,vin-r8a774c0",
->  		.data = &rcar_info_r8a77990,
->  	},
-> +	{
-> +		.compatible = "renesas,vin-r8a774e1",
-> +		.data = &rcar_info_r8a774e1,
-> +	},
->  	{
->  		.compatible = "renesas,vin-r8a7778",
->  		.data = &rcar_info_m1,
-> -- 
-> 2.17.1
-> 
-
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 5ffc3b40c4f6..00279002102e 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	if (!pci)
+ 		return -ENOMEM;
+ 
+-	ks_pcie->va_app_base =
+-		devm_platform_ioremap_resource_byname(pdev, "app");
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
++	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(ks_pcie->va_app_base))
+ 		return PTR_ERR(ks_pcie->va_app_base);
+ 
 -- 
-Regards,
-Niklas Söderlund
+2.25.0
+
