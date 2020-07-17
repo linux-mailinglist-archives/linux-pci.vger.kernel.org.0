@@ -2,126 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA83224600
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 23:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69A9F224678
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 00:55:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgGQVxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 17:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48554 "EHLO mail.kernel.org"
+        id S1726569AbgGQWzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 18:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgGQVxG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 17:53:06 -0400
+        id S1726204AbgGQWzn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 18:55:43 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6D822070A;
-        Fri, 17 Jul 2020 21:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A2F62070E;
+        Fri, 17 Jul 2020 22:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595022786;
-        bh=ZAVaom5QhjHBn6ca9BuiQd8MD1k+/iw1bY0PSQH8YKc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MZtg7O5xNufxkgYT//r++u+TUAkFBKKOuCfbQNU52hEQTuSlF//6vijfE1nkNyKCx
-         HM6Tev7IgCO9geyHbYkSxcPjiRjCY77tIXMwEamcCgb97wvdqy/x59QD3NJ1OIFSaY
-         RUbdQsNXckoipyqHch8jZjBS2xqJpteSUDL0NFZw=
-Date:   Fri, 17 Jul 2020 16:53:04 -0500
+        s=default; t=1595026542;
+        bh=0weQ6vGskysex0rpvIFBX+H/4pwUJ8bSIH5Pw3bN3Eo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bsGzYCxwM9Cei6eDpgCVIbOsPq8FkK/rZK/ZeuHxXW9z/nE8dRZBpE+ysSo0wktmV
+         H4uFoS21XiQ7Bs+6N35miSh8uqyfqs7dV8pqX6BoT7AZjG7Uyo6YWOwltcEKX6RMkz
+         ViDLQq6IRNBZLJOAP+fD+0Mj8ZDdgK2//EdvJD6Q=
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicolas Chauvet <kwizart@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] pci: tegra: Revert raw_violation_fixup for tegra124
-Message-ID: <20200717215304.GA775582@bjorn-Precision-5520>
+To:     linux-pci@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
+Date:   Fri, 17 Jul 2020 17:55:33 -0500
+Message-Id: <20200717225533.783790-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717213510.171726-1-kwizart@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Please update subject to follow the convention ("git log --online
-drivers/pci/controller/pci-tegra.c") to see it:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-  PCI: tegra: Revert tegra124 raw_violation_fixup
+This reverts commit ec411e02b7a2e785a4ed9ed283207cd14f48699d.
 
-On Fri, Jul 17, 2020 at 11:35:10PM +0200, Nicolas Chauvet wrote:
-> As reported in https://bugzilla.kernel.org/206217 , raw_violation_fixup
-> is causing more harm than good in some common use-cases.
-> 
-> This patch is a partial revert of the 191cd6fb5 commit:
->  "PCI: tegra: Add SW fixup for RAW violations"
+Patrick reported that this commit broke hybrid graphics on a ThinkPad X1
+Extreme 2nd with Intel UHD Graphics 630 and NVIDIA GeForce GTX 1650 Mobile:
 
-Usual style is:
-191cd6fb5d2c ("PCI: tegra: Add SW fixup for RAW violations")
+  nouveau 0000:01:00.0: fifo: PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
 
-> that was first introduced in 5.3-rc1 kernel.
-> This fix the following regression since then.
-> 
-> * Description:
-> When both the NIC and MMC are used one can see the following message:
-> 
-> NETDEV WATCHDOG: enp1s0 (r8169): transmit queue 0 timed out
-> 
->   and
-> 
-> pcieport 0000:00:02.0: AER: Uncorrected (Non-Fatal) error received: 0000:01:00.0
-> r8169 0000:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> r8169 0000:01:00.0: AER:   device [10ec:8168] error status/mask=00004000/00400000
-> r8169 0000:01:00.0: AER:    [14] CmpltTO                (First)
-> r8169 0000:01:00.0: AER: can't recover (no error_detected callback)
-> pcieport 0000:00:02.0: AER: device recovery failed
+Karol reported that this commit broke Nouveau firmware loading on a Lenovo
+P1G2 with Intel UHD Graphics 630 and NVIDIA TU117GLM [Quadro T1000 Mobile]:
 
-Indent the quoted text (messages) two spaces so it's distinct from the
-prose.
+  nouveau 0000:01:00.0: acr: AHESASC binary failed
 
-> After that, the ethernet NIC isn't functional anymore even after reloading
-> the r8169 module.
-> After a reboot, this is reproducible by copying a large file over the
-> NIC to the MMC.
+In both cases, reverting ec411e02b7a2 solved the problem.  Unfortunately,
+this revert will reintroduce the "Thunderbolt bridges take long time to
+resume from D3cold" problem:
+https://bugzilla.kernel.org/show_bug.cgi?id=206837
 
-This looks like two paragraphs; if so, put a blank line between them.
-Otherwise wrap them so they fill the line.  It's hard to read when
-there are line breaks that look unnecessary.
+Link: https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+Link: https://lore.kernel.org/r/CACO55tsAEa5GXw5oeJPG=mcn+qxNvspXreJYWDJGZBy5v82JDA@mail.gmail.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208597
+Reported-by: Patrick Volkerding <volkerdi@gmail.com>
+Reported-by: Karol Herbst <kherbst@redhat.com>
+Fixes: ec411e02b7a2 ("PCI/PM: Assume ports without DLL Link Active train links in 100 ms")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/pci.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-> For some reasons this cannot be reproduced when the same file is copied
-> to a tmpfs.
-> 
-> * Little background on the fixup, by Manikanta Maddireddy:
->   "In the internal testing with dGPU on Tegra124, CmplTO is reported by
-> dGPU. This happened because FIFO queue in AFI(AXI to PCIe) module
-> get full by upstream posted writes. Back to back upstream writes
-> interleaved with infrequent reads, triggers RAW violation and CmpltTO.
-> This is fixed by reducing the posted write credits and by changing
-> updateFC timer frequency. These settings are fixed after stress test.
-> 
-> In the current case, RTL NIC is also reporting CmplTO. These settings
-> seems to be aggravating the issue instead of fixing it."
-> 
-> v1: first non-RFC version
->  - Disable raw_violation_fixup and fully remove unused code and macros
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce096272f52b..c9338f914a0e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4638,8 +4638,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+  * pcie_wait_for_link_delay - Wait until link is active or inactive
+  * @pdev: Bridge device
+  * @active: waiting for active or inactive?
+- * @delay: Delay to wait after link has become active (in ms). Specify %0
+- *	   for no delay.
++ * @delay: Delay to wait after link has become active (in ms)
+  *
+  * Use this to wait till link becomes active or inactive.
+  */
+@@ -4680,7 +4679,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+ 		msleep(10);
+ 		timeout -= 10;
+ 	}
+-	if (active && ret && delay)
++	if (active && ret)
+ 		msleep(delay);
+ 	else if (ret != active)
+ 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
+@@ -4801,28 +4800,17 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	if (!pcie_downstream_port(dev))
+ 		return;
+ 
+-	/*
+-	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
+-	 * speeds > 5 GT/s, we must wait for link training to complete
+-	 * before the mandatory delay.
+-	 *
+-	 * We can only tell when link training completes via DLL Link
+-	 * Active, which is required for downstream ports that support
+-	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
+-	 * devices do not implement Link Active reporting even when it's
+-	 * required, so we'll check for that directly instead of checking
+-	 * the supported link speed.  We assume devices without Link Active
+-	 * reporting can train in 100 ms regardless of speed.
+-	 */
+-	if (dev->link_active_reporting) {
+-		pci_dbg(dev, "waiting for link to train\n");
+-		if (!pcie_wait_for_link_delay(dev, true, 0)) {
++	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
++		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
++		msleep(delay);
++	} else {
++		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
++			delay);
++		if (!pcie_wait_for_link_delay(dev, true, delay)) {
+ 			/* Did not train, no need to wait any further */
+ 			return;
+ 		}
+ 	}
+-	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
+-	msleep(delay);
+ 
+ 	if (!pci_device_is_present(child)) {
+ 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
+-- 
+2.25.1
 
-This version history can go after the "---" so it doesn't get included
-in the final commit log.  It's nice if your subject line includes
-"[PATCH v2]" or whatever is appropriate.
-
-Add this just before your Signed-off-by:
-
-  Fixes: 191cd6fb5d2c ("PCI: tegra: Add SW fixup for RAW violations")
-
-> Signed-off-by: Nicolas Chauvet <kwizart@gmail.com>
-> Reviewed-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> Cc: <stable@vger.kernel.org> # 5.4.x
-
-No "<>" needed around stable@vger.kernel.org
-
-You need not (and shouldn't) cc: stable@vger.kernel.org when you post
-this to the list.  The stable tag here in the commit log is
-sufficient.  Documentation/process/stable-kernel-rules.rst for more
-details.
-
-Is v5.4.x really the oldest kernel that should get this fix?  It looks
-like 191cd6fb5d2c appeared in v5.3.
