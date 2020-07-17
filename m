@@ -2,94 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 446A4223FC7
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 17:40:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B10622409A
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 18:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGQPkC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 11:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
+        id S1726742AbgGQQbT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 12:31:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:45286 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726256AbgGQPkC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:40:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D94742076A;
-        Fri, 17 Jul 2020 15:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595000401;
-        bh=oUWXy3XEEdACj4VXB3S0A8gloCT8UAGtaaANZlTOhcY=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=egmxPzhCJaO5Pklo2wFUgCisrdBaL7j2ncVrgoys66Ov9LXhgVzxXGFqIlODz/BYm
-         SBeDYsmknwq4gkwP74D2/j5goaQrPlJbtdJY2ErVv8nPqEDRjP6D+aAJZpnM8njnoZ
-         FRAkq9i/JLIztXRgN6hLt6p5JYwLKxyZ+Mt0PWp4=
-Date:   Fri, 17 Jul 2020 16:39:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-ide@vger.kernel.org
-In-Reply-To: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 00/20] Add support for SATA/PCIe/USB2[3]/VIN/CSI on R8A774E1
-Message-Id: <159500037996.27597.9512992990495217445.b4-ty@kernel.org>
+        id S1726393AbgGQQbS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:31:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D75312FC;
+        Fri, 17 Jul 2020 09:31:17 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82CF33F68F;
+        Fri, 17 Jul 2020 09:31:16 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 17:31:11 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     m-karicheri2@ti.com, robh@kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v1] PCI: dwc: fix a warning about variable 'res' is
+ uninitialized
+Message-ID: <20200717163111.GA8421@e121166-lin.cambridge.arm.com>
+References: <20200717133007.23858-1-zhengdejin5@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717133007.23858-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 16 Jul 2020 18:18:15 +0100, Lad Prabhakar wrote:
-> This patch series adds support for the following peripherals on RZ/G2H SoC
->  * PCIe
->  * SATA
->  * USB2
->  * USB3
->  * Audio
->  * VIN
->  * CSI
+On Fri, Jul 17, 2020 at 09:30:07PM +0800, Dejin Zheng wrote:
+> The kernel test robot reported a compile warning,
 > 
-> [...]
+> drivers/pci/controller/dwc/pci-keystone.c:1236:18: warning: variable 'res'
+> is uninitialized when used here [-Wuninitialized]
+> 
+> The commit c59a7d771134b5 ("PCI: dwc: Convert to
+> devm_platform_ioremap_resource_byname()") did a wrong conversion for
+> keystone driver. the commit use devm_platform_ioremap_resource_byname()
+> to replace platform_get_resource_byname() and devm_ioremap_resource().
+> but the subsequent code needs to use the variable 'res', which is got by
+> platform_get_resource_byname() for resource "app". so revert it.
+> 
+> Fixes: c59a7d771134b5 ("PCI: dwc: Convert to devm_platform_ioremap_resource_byname()")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Applied to
+Squashed in the commit it is fixing, thanks.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Lorenzo
 
-Thanks!
-
-[1/1] dt-bindings: sound: renesas, rsnd: Document r8a774e1 bindings
-      commit: 92e37407811b98a7eb54eb6a6b3d65847a46e0e6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 5ffc3b40c4f6..00279002102e 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>  	if (!pci)
+>  		return -ENOMEM;
+>  
+> -	ks_pcie->va_app_base =
+> -		devm_platform_ioremap_resource_byname(pdev, "app");
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+> +	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(ks_pcie->va_app_base))
+>  		return PTR_ERR(ks_pcie->va_app_base);
+>  
+> -- 
+> 2.25.0
+> 
