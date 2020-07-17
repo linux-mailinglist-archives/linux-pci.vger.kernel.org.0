@@ -2,127 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E53F8223E79
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 16:43:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8548223EE7
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 16:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGQOnU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 10:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
+        id S1726593AbgGQO6X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 10:58:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54992 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgGQOnU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:43:20 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B7E22B4D;
-        Fri, 17 Jul 2020 14:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594996999;
-        bh=kfIT860OGYjpsG+nnhvbf8g/TLaZHhOpaJXIoOPMX4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CtmQXYemaxq5EZM3qammzH9eXI+H3tIAZbwTf1FIOvkKux2il9kBx8+m0GP3sZGVJ
-         yiyiFCcl0C04iZ8omtucXb3T4HxWEcBwG9Vq94CCPlfzmb8UATfR9ys9FrqWQCz0aP
-         tdactR5dpsJmLPN0Y4uFVqZbHsv8hZ4i3nc6+Sgk=
-Date:   Fri, 17 Jul 2020 10:43:18 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        stable@vger.kernel.org
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200717144318.GP2722994@sasha-vm>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
- <20200716235440.GA675421@bjorn-Precision-5520>
- <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+        id S1726232AbgGQO6X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:58:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 151C3AE7B;
+        Fri, 17 Jul 2020 14:58:26 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 16:58:20 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     helgaas@kernel.org, bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH 14/35] i2c/busses: Change PCIBIOS_SUCCESSFUL to 0
+Message-ID: <20200717165820.6b5318ad@endymion>
+In-Reply-To: <20200713122247.10985-15-refactormyself@gmail.com>
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+        <20200713122247.10985-15-refactormyself@gmail.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 02:43:52AM +0200, Karol Herbst wrote:
->On Fri, Jul 17, 2020 at 1:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->> [+cc Sasha -- stable kernel regression]
->> [+cc Patrick, Kai-Heng, LKML]
->>
->> On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
->> > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
->> > >
->> > > Hi everybody,
->> > >
->> > > with the mentioned commit Nouveau isn't able to load firmware onto the
->> > > GPU on one of my systems here. Even though the issue doesn't always
->> > > happen I am quite confident this is the commit breaking it.
->> > >
->> > > I am still digging into the issue and trying to figure out what
->> > > exactly breaks, but it shows up in different ways. Either we are not
->> > > able to boot the engines on the GPU or the GPU becomes unresponsive.
->> > > Btw, this is also a system where our runtime power management issue
->> > > shows up, so maybe there is indeed something funky with the bridge
->> > > controller.
->> > >
->> > > Just pinging you in case you have an idea on how this could break Nouveau
->> > >
->> > > most of the times it shows up like this:
->> > > nouveau 0000:01:00.0: acr: AHESASC binary failed
->> > >
->> > > Sometimes it works at boot and fails at runtime resuming with random
->> > > faults. So I will be investigating a bit more, but yeah... I am super
->> > > sure the commit triggered this issue, no idea if it actually causes
->> > > it.
->> >
->> > so yeah.. I reverted that locally and never ran into issues again.
->> > Still valid on latest 5.7. So can we get this reverted or properly
->> > fixed? This breaks runtime pm for us on at least some hardware.
->>
->> Yeah, that stinks.  We had another similar report from Patrick:
->>
->>   https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
->>
->> Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
->> DLL Link Active train links in 100 ms"), which Patrick found was
->> backported to v5.4.49 as 828b192c57e8, and you found was backported to
->> v5.7.6 as afaff825e3a4.
->>
->> Oddly, Patrick reported that v5.7.7 worked correctly, even though it
->> still contains afaff825e3a4.
->>
->> I guess in the absence of any other clues we'll have to revert it.
->> I hate to do that because that means we'll have slow resume of
->> Thunderbolt-connected devices again, but that's better than having
->> GPUs completely broken.
->>
->> Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
->> logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
->> original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
->> and to this thread?
->>
->> There must be a way to fix the slow resume problem without breaking
->> the GPUs.
->>
->
->I wouldn't be surprised if this is related to the Intel bridge we
->check against for Nouveau.. I still have to check on another laptop
->with the same bridge our workaround was required as well but wouldn't
->be surprised if it shows the same problem. Will get you the
->information from both systems tomorrow then.
+Hi Saheed,
 
-I take it that ec411e02b7a2 will be reverted upstream?
+On Mon, 13 Jul 2020 14:22:26 +0200, Saheed O. Bolarinwa wrote:
+> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+> Their scope should be limited within arch/x86.
+
+Which PCI specification are you talking about here. In my "PCI Local
+Bus Revision 2.3" specification (March 29, 2002), chapter 2 is about
+Signal Definition and has nothing to do with the BIOS.
+
+> 
+> Change all PCIBIOS_SUCCESSFUL to 0
+> 
+> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-ali15x3.c |  4 ++--
+>  drivers/i2c/busses/i2c-nforce2.c |  2 +-
+>  drivers/i2c/busses/i2c-sis5595.c | 10 +++++-----
+>  3 files changed, 8 insertions(+), 8 deletions(-)
+
+Hmmm. That seems to be a lot of changes to solve an essentially
+theoretical problem (if a problem at all). I am not familiar enough
+with the PCI subsystem to claim that it is fundamentally wrong, but
+enough to say I'm skeptical.
+
+PCI is a cross-architecture standard, and we can't possibly have the
+return value of core functions such as pci_write_config_word follow
+different conventions depending on the architecture, can we? Does
+pci_write_config_word() currently return PCIBIOS_SUCCESSFUL on success
+on x86 and 0 on success on other architectures? What about errors, do
+we return positive, "PCIBIOS-specific" error codes on x86 and negative,
+unix-like error codes on other architectures?
+
+> diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
+> index 02185a1cfa77..359ee3e0864a 100644
+> --- a/drivers/i2c/busses/i2c-ali15x3.c
+> +++ b/drivers/i2c/busses/i2c-ali15x3.c
+> @@ -167,11 +167,11 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
+>  	if(force_addr) {
+>  		dev_info(&ALI15X3_dev->dev, "forcing ISA address 0x%04X\n",
+>  			ali15x3_smba);
+> -		if (PCIBIOS_SUCCESSFUL != pci_write_config_word(ALI15X3_dev,
+> +		if (0 != pci_write_config_word(ALI15X3_dev,
+>  								SMBBA,
+>  								ali15x3_smba))
+>  			goto error;
+
+This leaves the code horribly aligned.
+
+> -		if (PCIBIOS_SUCCESSFUL != pci_read_config_word(ALI15X3_dev,
+> +		if (0 != pci_read_config_word(ALI15X3_dev,
+>  								SMBBA, &a))
+>  			goto error;
+>  		if ((a & ~(ALI15X3_SMB_IOSIZE - 1)) != ali15x3_smba) {
+> diff --git a/drivers/i2c/busses/i2c-nforce2.c b/drivers/i2c/busses/i2c-nforce2.c
+> index 777278386f58..385f4f446f36 100644
+> --- a/drivers/i2c/busses/i2c-nforce2.c
+> +++ b/drivers/i2c/busses/i2c-nforce2.c
+> @@ -328,7 +328,7 @@ static int nforce2_probe_smb(struct pci_dev *dev, int bar, int alt_reg,
+>  		u16 iobase;
+>  
+>  		if (pci_read_config_word(dev, alt_reg, &iobase)
+> -		    != PCIBIOS_SUCCESSFUL) {
+> +		    != 0) {
+>  			dev_err(&dev->dev, "Error reading PCI config for %s\n",
+>  				name);
+>  			return -EIO;
+> diff --git a/drivers/i2c/busses/i2c-sis5595.c b/drivers/i2c/busses/i2c-sis5595.c
+> index c793a5c14cda..fbe3ee31eae3 100644
+> --- a/drivers/i2c/busses/i2c-sis5595.c
+> +++ b/drivers/i2c/busses/i2c-sis5595.c
+> @@ -176,10 +176,10 @@ static int sis5595_setup(struct pci_dev *SIS5595_dev)
+>  	if (force_addr) {
+>  		dev_info(&SIS5595_dev->dev, "forcing ISA address 0x%04X\n", sis5595_base);
+>  		if (pci_write_config_word(SIS5595_dev, ACPI_BASE, sis5595_base)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if (pci_read_config_word(SIS5595_dev, ACPI_BASE, &a)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if ((a & ~(SIS5595_EXTENT - 1)) != sis5595_base) {
+>  			/* doesn't work for some chips! */
+> @@ -189,15 +189,15 @@ static int sis5595_setup(struct pci_dev *SIS5595_dev)
+>  	}
+>  
+>  	if (pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val)
+> -	    != PCIBIOS_SUCCESSFUL)
+> +	    != 0)
+>  		goto error;
+>  	if ((val & 0x80) == 0) {
+>  		dev_info(&SIS5595_dev->dev, "enabling ACPI\n");
+>  		if (pci_write_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, val | 0x80)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if (pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if ((val & 0x80) == 0) {
+>  			/* doesn't work for some chips? */
+
 
 -- 
-Thanks,
-Sasha
+Jean Delvare
+SUSE L3 Support
