@@ -2,136 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A9F224678
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 00:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC25B224682
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 00:59:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgGQWzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 18:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
+        id S1726399AbgGQW7L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 18:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgGQWzn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:55:43 -0400
+        id S1726205AbgGQW7L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 18:59:11 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A2F62070E;
-        Fri, 17 Jul 2020 22:55:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 807BA2070E;
+        Fri, 17 Jul 2020 22:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595026542;
-        bh=0weQ6vGskysex0rpvIFBX+H/4pwUJ8bSIH5Pw3bN3Eo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bsGzYCxwM9Cei6eDpgCVIbOsPq8FkK/rZK/ZeuHxXW9z/nE8dRZBpE+ysSo0wktmV
-         H4uFoS21XiQ7Bs+6N35miSh8uqyfqs7dV8pqX6BoT7AZjG7Uyo6YWOwltcEKX6RMkz
-         ViDLQq6IRNBZLJOAP+fD+0Mj8ZDdgK2//EdvJD6Q=
+        s=default; t=1595026750;
+        bh=Si2p19g5Q2ejNUok1Tpdxy2XoGYOEq8JYIYD2SrPf2o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Xa78DP6cTPQwIDB+zLOdMNLq6OUmpcDgXzo1DstH7/SEVTcIQwQCOAlIZy0/xo/s8
+         WBsx7J7oBz8CAbGzB8qdJpOvBHGz/VNXFoeGmZq1s19GHQWZ3XrtSI2slMBi3OFVJy
+         qEeUZaUUB6aFmqcwWeU3nuixS2elvzP7gtDjMtfA=
+Date:   Fri, 17 Jul 2020 17:59:09 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
         Patrick Volkerding <volkerdi@gmail.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
-Date:   Fri, 17 Jul 2020 17:55:33 -0500
-Message-Id: <20200717225533.783790-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+Message-ID: <20200717225909.GA784064@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717144318.GP2722994@sasha-vm>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, Jul 17, 2020 at 10:43:18AM -0400, Sasha Levin wrote:
+> On Fri, Jul 17, 2020 at 02:43:52AM +0200, Karol Herbst wrote:
+> > On Fri, Jul 17, 2020 at 1:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
+> > > > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
+> > > > >
+> > > > > Hi everybody,
+> > > > >
+> > > > > with the mentioned commit Nouveau isn't able to load firmware onto the
+> > > > > GPU on one of my systems here. Even though the issue doesn't always
+> > > > > happen I am quite confident this is the commit breaking it.
+> > > > >
+> > > > > I am still digging into the issue and trying to figure out what
+> > > > > exactly breaks, but it shows up in different ways. Either we are not
+> > > > > able to boot the engines on the GPU or the GPU becomes unresponsive.
+> > > > > Btw, this is also a system where our runtime power management issue
+> > > > > shows up, so maybe there is indeed something funky with the bridge
+> > > > > controller.
+> > > > >
+> > > > > Just pinging you in case you have an idea on how this could break Nouveau
+> > > > >
+> > > > > most of the times it shows up like this:
+> > > > > nouveau 0000:01:00.0: acr: AHESASC binary failed
+> > > > >
+> > > > > Sometimes it works at boot and fails at runtime resuming with random
+> > > > > faults. So I will be investigating a bit more, but yeah... I am super
+> > > > > sure the commit triggered this issue, no idea if it actually causes
+> > > > > it.
+> > > >
+> > > > so yeah.. I reverted that locally and never ran into issues again.
+> > > > Still valid on latest 5.7. So can we get this reverted or properly
+> > > > fixed? This breaks runtime pm for us on at least some hardware.
+> > > 
+> > > Yeah, that stinks.  We had another similar report from Patrick:
+> > > 
+> > >   https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+> > > 
+> > > Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
+> > > DLL Link Active train links in 100 ms"), which Patrick found was
+> > > backported to v5.4.49 as 828b192c57e8, and you found was backported to
+> > > v5.7.6 as afaff825e3a4.
+> > > 
+> > > Oddly, Patrick reported that v5.7.7 worked correctly, even though it
+> > > still contains afaff825e3a4.
+> > > 
+> > > I guess in the absence of any other clues we'll have to revert it.
+> > > I hate to do that because that means we'll have slow resume of
+> > > Thunderbolt-connected devices again, but that's better than having
+> > > GPUs completely broken.
+> > > 
+> > > Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
+> > > logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
+> > > original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
+> > > and to this thread?
+> > > 
+> > > There must be a way to fix the slow resume problem without breaking
+> > > the GPUs.
+> > > 
+> > 
+> > I wouldn't be surprised if this is related to the Intel bridge we
+> > check against for Nouveau.. I still have to check on another laptop
+> > with the same bridge our workaround was required as well but wouldn't
+> > be surprised if it shows the same problem. Will get you the
+> > information from both systems tomorrow then.
+> 
+> I take it that ec411e02b7a2 will be reverted upstream?
 
-This reverts commit ec411e02b7a2e785a4ed9ed283207cd14f48699d.
+Yes, unless we have a better fix soon.  I applied the revert to my
+for-linus branch, so it will appear in -next soon.  I think it's a
+little late to get it in -rc5, so I'll probably ask Linus to pull it
+next week for -rc6.
 
-Patrick reported that this commit broke hybrid graphics on a ThinkPad X1
-Extreme 2nd with Intel UHD Graphics 630 and NVIDIA GeForce GTX 1650 Mobile:
-
-  nouveau 0000:01:00.0: fifo: PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
-
-Karol reported that this commit broke Nouveau firmware loading on a Lenovo
-P1G2 with Intel UHD Graphics 630 and NVIDIA TU117GLM [Quadro T1000 Mobile]:
-
-  nouveau 0000:01:00.0: acr: AHESASC binary failed
-
-In both cases, reverting ec411e02b7a2 solved the problem.  Unfortunately,
-this revert will reintroduce the "Thunderbolt bridges take long time to
-resume from D3cold" problem:
-https://bugzilla.kernel.org/show_bug.cgi?id=206837
-
-Link: https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
-Link: https://lore.kernel.org/r/CACO55tsAEa5GXw5oeJPG=mcn+qxNvspXreJYWDJGZBy5v82JDA@mail.gmail.com
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208597
-Reported-by: Patrick Volkerding <volkerdi@gmail.com>
-Reported-by: Karol Herbst <kherbst@redhat.com>
-Fixes: ec411e02b7a2 ("PCI/PM: Assume ports without DLL Link Active train links in 100 ms")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.c | 30 +++++++++---------------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce096272f52b..c9338f914a0e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4638,8 +4638,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
-  * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-- * @delay: Delay to wait after link has become active (in ms). Specify %0
-- *	   for no delay.
-+ * @delay: Delay to wait after link has become active (in ms)
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
-@@ -4680,7 +4679,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(10);
- 		timeout -= 10;
- 	}
--	if (active && ret && delay)
-+	if (active && ret)
- 		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
-@@ -4801,28 +4800,17 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	if (!pcie_downstream_port(dev))
- 		return;
- 
--	/*
--	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
--	 * speeds > 5 GT/s, we must wait for link training to complete
--	 * before the mandatory delay.
--	 *
--	 * We can only tell when link training completes via DLL Link
--	 * Active, which is required for downstream ports that support
--	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
--	 * devices do not implement Link Active reporting even when it's
--	 * required, so we'll check for that directly instead of checking
--	 * the supported link speed.  We assume devices without Link Active
--	 * reporting can train in 100 ms regardless of speed.
--	 */
--	if (dev->link_active_reporting) {
--		pci_dbg(dev, "waiting for link to train\n");
--		if (!pcie_wait_for_link_delay(dev, true, 0)) {
-+	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-+		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-+		msleep(delay);
-+	} else {
-+		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-+			delay);
-+		if (!pcie_wait_for_link_delay(dev, true, delay)) {
- 			/* Did not train, no need to wait any further */
- 			return;
- 		}
- 	}
--	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
--	msleep(delay);
- 
- 	if (!pci_device_is_present(child)) {
- 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
--- 
-2.25.1
-
+Bjorn
