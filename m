@@ -2,108 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A96BA223D30
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 15:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E53F8223E79
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 16:43:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgGQNo0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 09:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgGQNoZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 09:44:25 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6981C061755;
-        Fri, 17 Jul 2020 06:44:25 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id o1so5468811plk.1;
-        Fri, 17 Jul 2020 06:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Sezc8BEaAsci2qRl6XqFw9UDk0/wq5kFcGC+Dp/OyBQ=;
-        b=FVcLwzmoaBr0LiHpbPSSdTiQr7RKnDOCXUurChJ7G8lukDFKJktcOpfMc4sSK6cFnY
-         j4Fgw83mnCThVlIYPJFEEL8rXo9jYs8ShspntkEYgw+i7sLY/nQOb7OXS4EeaGs2sy7b
-         0+jz5Dcd+49D0Vbr7ynWanMW0wy1W0sDxKuzp3wm/+hon6woOAd+U+2pQ+liNUrCO+QO
-         7g9zLnAuaiX89s6KAH+d5scZJXW0F/fnDjZJtVyaott3z2oXZO4QhHf8DJ5a/g8COP6x
-         CKjF7O0glH0WNU20PjqRsqGoaFsdFFsGmd3RJtc7wH0SzTSrtJmLdY31C3F783XiFMBv
-         M9Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sezc8BEaAsci2qRl6XqFw9UDk0/wq5kFcGC+Dp/OyBQ=;
-        b=t6v/B+AsXTnOYvs6rEYS70K8X3zIpA5YyjhG3Ah5w3yiM/eMDYayCEpjcdYSt8ZuZv
-         B1lLWdnQzqld2fO8XAQM9rXbJnO1Dw9/daU7rG1hyDWwWjrdTW3yuVNMTnq3SX6Vd6hQ
-         //mvYHFzZESvwgZfUcFyaHlhEk+ytVGuu3zR2QwigJ78U/7u740USedYhc2O7rvJlWm9
-         WleoWhG+B+8RoMiIkQbdvMy2h7cly+Lu+InQcWoJWZJ9oH/53+pILVvROM25ufvGhqQQ
-         6XwwybjpWFCOF21DELyS/NJt3N6pLMWuwOMbBOOIhLpyNzhWHvnHBT8Ejxl4KxMrV5Xh
-         /MbA==
-X-Gm-Message-State: AOAM533QX/8eThVNeT/VR9kDdwCPO5eFYyTH4lNuLS6SQ5tK1131xZuQ
-        NmGkcv3rRw6cPOvr/icpE1A=
-X-Google-Smtp-Source: ABdhPJxLL8ZoJHEbuhUDQrrje5GwwAu3Dz0dB4NWevRgKQh1dlphcFY7EYaUPDEebY0iFVOhI2TPjw==
-X-Received: by 2002:a17:902:b706:: with SMTP id d6mr7774857pls.244.1594993465202;
-        Fri, 17 Jul 2020 06:44:25 -0700 (PDT)
-Received: from localhost ([89.208.244.139])
-        by smtp.gmail.com with ESMTPSA id u188sm8028426pfu.26.2020.07.17.06.44.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jul 2020 06:44:24 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 21:44:19 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
-Message-ID: <20200717134419.GA24896@nuc8i5>
-References: <20200526150954.4729-1-zhengdejin5@gmail.com>
- <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
- <20200527132005.GA7143@nuc8i5>
- <1b54c08f759c101a8db162f4f62c6b6a8a455d3f.camel@amazon.com>
- <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
- <20200706155847.GA32050@e121166-lin.cambridge.arm.com>
- <20200711074733.GD3112@nuc8i5>
- <20200715164559.GC3432@e121166-lin.cambridge.arm.com>
+        id S1726817AbgGQOnU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 10:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgGQOnU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:43:20 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41B7E22B4D;
+        Fri, 17 Jul 2020 14:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594996999;
+        bh=kfIT860OGYjpsG+nnhvbf8g/TLaZHhOpaJXIoOPMX4k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CtmQXYemaxq5EZM3qammzH9eXI+H3tIAZbwTf1FIOvkKux2il9kBx8+m0GP3sZGVJ
+         yiyiFCcl0C04iZ8omtucXb3T4HxWEcBwG9Vq94CCPlfzmb8UATfR9ys9FrqWQCz0aP
+         tdactR5dpsJmLPN0Y4uFVqZbHsv8hZ4i3nc6+Sgk=
+Date:   Fri, 17 Jul 2020 10:43:18 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+Message-ID: <20200717144318.GP2722994@sasha-vm>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+ <20200716235440.GA675421@bjorn-Precision-5520>
+ <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200715164559.GC3432@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 05:45:59PM +0100, Lorenzo Pieralisi wrote:
-> On Sat, Jul 11, 2020 at 03:47:33PM +0800, Dejin Zheng wrote:
-> > On Mon, Jul 06, 2020 at 04:58:47PM +0100, Lorenzo Pieralisi wrote:
-> > > On Tue, Jun 02, 2020 at 09:01:13AM -0600, Rob Herring wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > > The other 2 error cases as well don't print the resource name as far as
-> > > > > I recall (they will at least print the resource start/end).
-> > > > 
-> > > > Start/end are what are important for why either of these functions
-> > > > failed.
-> > > > 
-> > > > But sure, we could add 'name' here. That's a separate patch IMO.
-> > 
-> > Hi Lorenzo, Bob and Jonathan:                                                                                                     
-> > 
-> > Thank you very much for helping me review this patch,
-> 
-> I merge this patch in pci/misc, thanks.
-> 
-> > I sent a new patch for print the resource name when the request memory
-> > region or remapping of configuration space fails. and it is here:
-> > https://patchwork.kernel.org/patch/11657801/
-> 
-> We will get to it soon.
+On Fri, Jul 17, 2020 at 02:43:52AM +0200, Karol Herbst wrote:
+>On Fri, Jul 17, 2020 at 1:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>> [+cc Sasha -- stable kernel regression]
+>> [+cc Patrick, Kai-Heng, LKML]
+>>
+>> On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
+>> > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
+>> > >
+>> > > Hi everybody,
+>> > >
+>> > > with the mentioned commit Nouveau isn't able to load firmware onto the
+>> > > GPU on one of my systems here. Even though the issue doesn't always
+>> > > happen I am quite confident this is the commit breaking it.
+>> > >
+>> > > I am still digging into the issue and trying to figure out what
+>> > > exactly breaks, but it shows up in different ways. Either we are not
+>> > > able to boot the engines on the GPU or the GPU becomes unresponsive.
+>> > > Btw, this is also a system where our runtime power management issue
+>> > > shows up, so maybe there is indeed something funky with the bridge
+>> > > controller.
+>> > >
+>> > > Just pinging you in case you have an idea on how this could break Nouveau
+>> > >
+>> > > most of the times it shows up like this:
+>> > > nouveau 0000:01:00.0: acr: AHESASC binary failed
+>> > >
+>> > > Sometimes it works at boot and fails at runtime resuming with random
+>> > > faults. So I will be investigating a bit more, but yeah... I am super
+>> > > sure the commit triggered this issue, no idea if it actually causes
+>> > > it.
+>> >
+>> > so yeah.. I reverted that locally and never ran into issues again.
+>> > Still valid on latest 5.7. So can we get this reverted or properly
+>> > fixed? This breaks runtime pm for us on at least some hardware.
+>>
+>> Yeah, that stinks.  We had another similar report from Patrick:
+>>
+>>   https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+>>
+>> Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
+>> DLL Link Active train links in 100 ms"), which Patrick found was
+>> backported to v5.4.49 as 828b192c57e8, and you found was backported to
+>> v5.7.6 as afaff825e3a4.
+>>
+>> Oddly, Patrick reported that v5.7.7 worked correctly, even though it
+>> still contains afaff825e3a4.
+>>
+>> I guess in the absence of any other clues we'll have to revert it.
+>> I hate to do that because that means we'll have slow resume of
+>> Thunderbolt-connected devices again, but that's better than having
+>> GPUs completely broken.
+>>
+>> Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
+>> logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
+>> original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
+>> and to this thread?
+>>
+>> There must be a way to fix the slow resume problem without breaking
+>> the GPUs.
+>>
 >
-> Lorenzo
+>I wouldn't be surprised if this is related to the Intel bridge we
+>check against for Nouveau.. I still have to check on another laptop
+>with the same bridge our workaround was required as well but wouldn't
+>be surprised if it shows the same problem. Will get you the
+>information from both systems tomorrow then.
 
-Lorenzo, Thanks very much!
+I take it that ec411e02b7a2 will be reverted upstream?
 
-Dejin
-
+-- 
+Thanks,
+Sasha
