@@ -2,74 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F0F82242E4
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 20:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B0F72243B3
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 21:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgGQSFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 14:05:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgGQSFu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:05:50 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65C06206F4;
-        Fri, 17 Jul 2020 18:05:47 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 14:05:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-Message-ID: <20200717140545.6f008208@oasis.local.home>
-In-Reply-To: <CABCJKuda0AFCZ-1J2NTLc-M0xax007a9u-fzOoxmU2z60jvzbA@mail.gmail.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
-        <20200624203200.78870-5-samitolvanen@google.com>
-        <20200624212737.GV4817@hirez.programming.kicks-ass.net>
-        <20200624214530.GA120457@google.com>
-        <20200625074530.GW4817@hirez.programming.kicks-ass.net>
-        <20200625161503.GB173089@google.com>
-        <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
-        <20200625224042.GA169781@google.com>
-        <20200626112931.GF4817@hirez.programming.kicks-ass.net>
-        <CABCJKucSM7gqWmUtiBPbr208wB0pc25afJXc6yBQzJDZf4LSWA@mail.gmail.com>
-        <20200717133645.7816c0b6@oasis.local.home>
-        <CABCJKuda0AFCZ-1J2NTLc-M0xax007a9u-fzOoxmU2z60jvzbA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726439AbgGQTEV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 15:04:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46819 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727821AbgGQTES (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 15:04:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595012656;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VKQ3UPhST3OvzdKUW3dae3IGuD+EOft4yvMH2GzGai4=;
+        b=DP9EFJPvOPlwsY2lYZsv0SYVVE/OZqr/tFhuYE9XdvsIrpvb6SOLpkALhIIuMW7CQXDEpe
+        4Wpy6cHLFlebFlRF5aQYw232pQg4aabNnCnQ952IJvuCxGGDIpOq92unbv8TlcP+AzNHLz
+        ictCV+bwqDZie+XHoLuTGQJu6+b4AOg=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-218-8HzaSdHhNoS5PsMJCNHUrQ-1; Fri, 17 Jul 2020 15:04:12 -0400
+X-MC-Unique: 8HzaSdHhNoS5PsMJCNHUrQ-1
+Received: by mail-qk1-f200.google.com with SMTP id p21so2111629qke.7
+        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 12:04:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=VKQ3UPhST3OvzdKUW3dae3IGuD+EOft4yvMH2GzGai4=;
+        b=qBgyvECIcOIjPgRTOykgkSMYt99hTGVfuWEp0eXd3QQWKeN1pEeaiOrK+KMi1QSNFm
+         s6hEN2WJUnv5LiPlKHei+71yO+p28JOx902tcZ/2nBSXWezHDRz6FtF0UAZTh+6k9Cp9
+         el7LdzXCn/6KoJAD9B1rM/Iki+5yOfcqWKst+RgcTAMwi/YwkMr6IXIiWfGwVuWTJGv6
+         CkuBnrUK4ncmYTAb/XkXisKFL5oo1ifObZBSBZGE0V+dub3rD3ARU3n9gRJglyfwd2vh
+         3EB/Fb1tkUnmi3i7TPvx5MebZfI2GGjjdPunZzMBhhXM1SZRVEoOeu3EViKLTGdUEMUT
+         PZOg==
+X-Gm-Message-State: AOAM531yGtY3A25++VQVK4d/DGjLogkDpcriGh0TFUWUqNujXUdHbuXH
+        XRix8LA3rWdNZYA8ANkv941tFLuZqooxttiAxviSO4AFKpp7DQoy5xcs3LvCwU1/C5Ro3ou2LXd
+        T4gslF2IgefgNf5Wvb8VN
+X-Received: by 2002:a37:a046:: with SMTP id j67mr9892611qke.395.1595012652219;
+        Fri, 17 Jul 2020 12:04:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwgtOiKIUn5ao5bCnaTTskTcrkgF6EP4gHfCCcCRRv0vg7ItdvSMNS0FlNgUH04ZXSmho073g==
+X-Received: by 2002:a37:a046:: with SMTP id j67mr9892576qke.395.1595012651933;
+        Fri, 17 Jul 2020 12:04:11 -0700 (PDT)
+Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id e9sm11311764qtq.70.2020.07.17.12.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 12:04:11 -0700 (PDT)
+Message-ID: <ec6623032131fc3e656713b8ec644cdff89a8066.camel@redhat.com>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Karol Herbst <kherbst@redhat.com>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Fri, 17 Jul 2020 15:04:10 -0400
+In-Reply-To: <20200716235440.GA675421@bjorn-Precision-5520>
+References: <20200716235440.GA675421@bjorn-Precision-5520>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 17 Jul 2020 10:47:51 -0700
-Sami Tolvanen <samitolvanen@google.com> wrote:
-
-> > Someone just submitted a patch for arm64 for this:
-> >
-> > https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
-> >
-> > Is that what you want?  
+On Thu, 2020-07-16 at 18:54 -0500, Bjorn Helgaas wrote:
+> [+cc Sasha -- stable kernel regression]
+> [+cc Patrick, Kai-Heng, LKML]
 > 
-> That looks like the same issue, but we need to fix this on x86 instead.
+> On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
+> > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
+> > > Hi everybody,
+> > > 
+> > > with the mentioned commit Nouveau isn't able to load firmware onto the
+> > > GPU on one of my systems here. Even though the issue doesn't always
+> > > happen I am quite confident this is the commit breaking it.
+> > > 
+> > > I am still digging into the issue and trying to figure out what
+> > > exactly breaks, but it shows up in different ways. Either we are not
+> > > able to boot the engines on the GPU or the GPU becomes unresponsive.
+> > > Btw, this is also a system where our runtime power management issue
+> > > shows up, so maybe there is indeed something funky with the bridge
+> > > controller.
+> > > 
+> > > Just pinging you in case you have an idea on how this could break Nouveau
+> > > 
+> > > most of the times it shows up like this:
+> > > nouveau 0000:01:00.0: acr: AHESASC binary failed
+> > > 
+> > > Sometimes it works at boot and fails at runtime resuming with random
+> > > faults. So I will be investigating a bit more, but yeah... I am super
+> > > sure the commit triggered this issue, no idea if it actually causes
+> > > it.
+> > 
+> > so yeah.. I reverted that locally and never ran into issues again.
+> > Still valid on latest 5.7. So can we get this reverted or properly
+> > fixed? This breaks runtime pm for us on at least some hardware.
+> 
+> Yeah, that stinks.  We had another similar report from Patrick:
+> 
+>   
+> https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+> 
+> Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
+> DLL Link Active train links in 100 ms"), which Patrick found was
+> backported to v5.4.49 as 828b192c57e8, and you found was backported to
+> v5.7.6 as afaff825e3a4.
+> 
+> Oddly, Patrick reported that v5.7.7 worked correctly, even though it
+> still contains afaff825e3a4.
+> 
+> I guess in the absence of any other clues we'll have to revert it.
+> I hate to do that because that means we'll have slow resume of
+> Thunderbolt-connected devices again, but that's better than having
+> GPUs completely broken.
+> 
+> Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
+> logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
+> original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
+> and to this thread?
+> 
+> There must be a way to fix the slow resume problem without breaking
+> the GPUs.
 
-Does x86 have a way to differentiate between the two that record mcount
-can check?
+Isn't it possible to tell whether a PCI device is connected through thunderbolt
+or not? We could probably get away with just defaulting to 100ms for thunderbolt
+devices without DLL Link Active specified, and then default to the old delay
+value for non-thunderbolt devices.
 
--- Steve
+> 
+> Bjorn
+> 
+
