@@ -2,140 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC15F2244DD
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 22:03:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C40C52244EF
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 22:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgGQUBd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 16:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgGQUBd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:01:33 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF8822070E;
-        Fri, 17 Jul 2020 20:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595016092;
-        bh=LRG+TGJORIulFB++nyK9lTvfOFTTv5C3kISOBY0t8iY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zbdANefNPLVv8nIfgk4x2+yKpY+DKoqe/iY0UEd+WkavWu+Sv7JNbUKqARbr8c1TZ
-         G8s2Lye+J1A8LrECic1Quzyv5PRIBUWk3V4v62AsvqZ/V9YJVGckT1uX532g8ZMPVk
-         mpoBDZ/eCfTeJaV4/xSBPneb57mBo9jsz516fguA=
-Date:   Fri, 17 Jul 2020 15:01:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-pci@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Sean Kelley <sean.v.kelley@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linuxarm@huawei.com, Austin Bolen <Austin.Bolen@dell.com>
-Subject: Re: [PATCH v2] PCI/AER: Do not reset the port device status if doing
- firmware first handling.
-Message-ID: <20200717200129.GA671299@bjorn-Precision-5520>
+        id S1728521AbgGQULd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 16:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgGQULd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 16:11:33 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207F8C0619D2;
+        Fri, 17 Jul 2020 13:11:33 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so7195403pgb.6;
+        Fri, 17 Jul 2020 13:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gj+SF1uP1XQufJCq7QqUYQaIKzzxk/s/GrmcfjtHR50=;
+        b=ubDyEgHV9Y2tDnKO+NB95LzoOB4OlcjoCTsJa+SW+xzZUvgGNzqi43o34HmU/VnILQ
+         OEYQofz+2m8X1sb8sKABioeV4PeVOZAI/DvGnIkW9EAOHglOGj6d1oPuP9wzIU6m/IY0
+         rPqhkRqifTT1eNErmPOsKHbi2svxa56Uor9JcEBUHLwa8sPo9XT+MeDwbrQ8l2bfO1Ii
+         InTtIfnSeF8E90O7ugxTdipNtUtejDpsMjztGGCUh3/MhO+7KVqqjpQ+NhHb8BVK7B9E
+         chF2xH/Oi2w/N9WIiFbeDDEvio8MXqTzlL8fg8BwIJRa03xl9yyGdp+gCclzLkW35wlg
+         A1cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gj+SF1uP1XQufJCq7QqUYQaIKzzxk/s/GrmcfjtHR50=;
+        b=L3Nb1uUTGdLSVVKkWWj7opbvTYPeiVV0v86y/ei6qVYK0j5Km9xbaWOAARB2/rgq0L
+         fRAlAkiYg7Kv5VnW67gnpX3kNE+MOhLwgxtudAgrRJNA1flxZWoer1dNOP+2X7iWhhj8
+         n5x2ChcmvOd1254hTR4mdVjBqLYOUtfl25D1M6MDkLXwBkDISPcDdKxfK9sie9yFBtqC
+         moIhgUaYZqHtoEJ4oafJTqQ5/Mo838PcA2m2NHPTmOr04EHKB8eYsYU5RGy0z9ZxTGLf
+         VtQK8PRzr6UmS6YZPHo7nOv5VeZgzvnd3vO7eb5KUA0JUiJ5e7c0w6eowDWxSM6LkeAW
+         Rv0A==
+X-Gm-Message-State: AOAM532yyOz1sWNB4gc1dHL3NydpzlTcHZosTYvAU6rhTi/gtKJomrpX
+        eqm1M7wN3CAZhLFYM7k2WDcvTQR2c+CwcapApulB3hbE
+X-Google-Smtp-Source: ABdhPJx2lC7BmaEzpn7uXGLICSdt0Ct9vd/TU65OMo/eECbb17lBMT9bNBH/5FKY6swD+AJ4Ue0pdNur7WBnmP3ivL8=
+X-Received: by 2002:aa7:8bcb:: with SMTP id s11mr9175270pfd.170.1595016692513;
+ Fri, 17 Jul 2020 13:11:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622113523.891666-1-Jonathan.Cameron@huawei.com>
+References: <20200714062323.19990-1-david.e.box@linux.intel.com> <20200717190620.29821-2-david.e.box@linux.intel.com>
+In-Reply-To: <20200717190620.29821-2-david.e.box@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Jul 2020 23:11:16 +0300
+Message-ID: <CAHp75Vd3-Mc0=K+pDzpeB9MeHLFCni_4PbmsFTaXXzFMSmVgbg@mail.gmail.com>
+Subject: Re: [PATCH V4 1/3] PCI: Add defines for Designated Vendor-Specific
+ Extended Capability
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Austin, _OSC expert]
+On Fri, Jul 17, 2020 at 10:05 PM David E. Box
+<david.e.box@linux.intel.com> wrote:
+>
+> Add PCIe Designated Vendor-Specific Extended Capability (DVSEC) and defines
+> for the header offsets. Defined in PCIe r5.0, sec 7.9.6.
+>
 
-On Mon, Jun 22, 2020 at 07:35:23PM +0800, Jonathan Cameron wrote:
-> pci_aer_clear_device_status() currently resets the device status
-> (PCI_EXP_DEVSTA) on the downstream port above a device, or the port itself
-> if the port is the reported AER error source.  This happens even when error
-> handling is firmware first.
-> 
-> Our interpretation is that firmware first handling means that the firmware
-> will deal with clearing all relevant error reporting registers
-> including this one.
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-IMO "firmware-first" is meaningless to the kernel.  I see the bit
-defined in the ACPI HEST records (ACPI v6.3, sec 18.3.2.4), but there
-is no indication of anything the OS needs to *do* with it.  It does
-not influence the result of pcie_aer_is_native().  So I don't want to
-mention it in the subject or commit log.
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  include/uapi/linux/pci_regs.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..beafeee39e44 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -720,6 +720,7 @@
+>  #define PCI_EXT_CAP_ID_DPC     0x1D    /* Downstream Port Containment */
+>  #define PCI_EXT_CAP_ID_L1SS    0x1E    /* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM     0x1F    /* Precision Time Measurement */
+> +#define PCI_EXT_CAP_ID_DVSEC   0x23    /* Designated Vendor-Specific */
+>  #define PCI_EXT_CAP_ID_DLF     0x25    /* Data Link Feature */
+>  #define PCI_EXT_CAP_ID_PL_16GT 0x26    /* Physical Layer 16.0 GT/s */
+>  #define PCI_EXT_CAP_ID_MAX     PCI_EXT_CAP_ID_PL_16GT
+> @@ -1062,6 +1063,10 @@
+>  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE        0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>  #define PCI_L1SS_CTL2          0x0c    /* Control 2 Register */
+>
+> +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> +#define PCI_DVSEC_HEADER1              0x4 /* Designated Vendor-Specific Header1 */
+> +#define PCI_DVSEC_HEADER2              0x8 /* Designated Vendor-Specific Header2 */
+> +
+>  /* Data Link Feature */
+>  #define PCI_DLF_CAP            0x04    /* Capabilities Register */
+>  #define  PCI_DLF_EXCHANGE_ENABLE       0x80000000  /* Data Link Feature Exchange Enable */
+> --
+> 2.20.1
+>
 
-But I think what the _OSC negotiation for AER ownership is relevant,
-and that's what your patch tests, so I think this is the right thing
-to do.
 
-So I applied this as below to pci/error for v5.8, thanks a lot!
-
-Oh, I also propose a preliminary patch (posted and cc'd to you) to
-rename pci_aer_clear_device_status():
-
-  https://lore.kernel.org/r/20200717195619.766662-1-helgaas@kernel.org
-
-commit d6c8d24e3d5d ("PCI/ERR: Clear PCIe Device Status errors only if OS owns AER")
-Author: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date:   Mon Jun 22 19:35:23 2020 +0800
-
-    PCI/ERR: Clear PCIe Device Status errors only if OS owns AER
-    
-    pcie_clear_device_status() resets the error bits in the PCIe Device Status
-    Register (PCI_EXP_DEVSTA).
-    
-    Previously we did this unconditionally, but on ACPI systems, the _OSC AER
-    bit negotiates control of the AER capability.  Per sec 4.5.1 of the System
-    Firmware Intermediary _OSC and DPC Updates ECN [1], this bit also covers
-    other error enable/status bits including the following:
-    
-      Correctable Error Reporting Enable
-      Non-Fatal Error Reporting Enable
-      Fatal Error Reporting Enable
-      Unsupported Request Reporting Enable
-    
-    These bits are all in the PCIe Device Control register (the ECN omitted
-    "Reporting", but I think that's a typo), so by implication the _OSC AER bit
-    also applies to the error status bits in the PCIe Device Status register:
-    
-      Correctable Error Detected
-      Non-Fatal Error Detected
-      Fatal Error Detected
-      Unsupported Request Detected
-    
-    Clear the PCIe Device Status error bits only when the OS controls the AER
-    capability and related error enable/status bits.  If platform firmware
-    controls the AER capability, firmware is responsible for clearing these
-    bits.
-    
-    One call path leading here is:
-    
-      ghes_do_proc
-        ghes_handle_aer
-          aer_recover_queue
-            schedule_work(&aer_recover_work)
-      ...
-      aer_recover_work_func
-        pcie_do_recovery
-          pcie_clear_device_status
-    
-    [1] System Firmware Intermediary (SFI) _OSC and DPC Updates ECN, Feb 24,
-        2020, affecting PCI Firmware Specification, Rev. 3.2
-        https://members.pcisig.com/wg/PCI-SIG/document/14076
-    [bhelgaas: commit log]
-    Link: https://lore.kernel.org/r/20200622113523.891666-1-Jonathan.Cameron@huawei.com
-    Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index d3ea667c8520..34bfea5c52b3 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -245,6 +245,9 @@ void pcie_clear_device_status(struct pci_dev *dev)
- {
- 	u16 sta;
- 
-+	if (!pcie_aer_is_native(dev))
-+		return;
-+
- 	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
- 	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
- }
+-- 
+With Best Regards,
+Andy Shevchenko
