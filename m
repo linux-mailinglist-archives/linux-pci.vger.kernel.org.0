@@ -2,150 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAB3F223A91
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 13:32:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2EDE223BEC
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 15:07:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbgGQLc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 07:32:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38124 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgGQLcZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 07:32:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594985543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TYpWDk5YRbEJgevYd6gB8eGgLm0tIiJeUcncZGG+w6o=;
-        b=i6ABQZygQAef7piM003bSba61BBGO8Rvdm6v1YtrN9Uf4Fm32+vz9lXwjJcUQ+5oJMgedJ
-        7mRYlrUVRAV0uwNbnxqRcLYnCt9kPyaFOm3dpYXzxZSAL3ZUdCMdwpqWs0OOTA/kS7dDOg
-        Y1AYhXm+3PnveeHdtzlvHkWmmy4WDQc=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-M_dbPnGpPOCJs2Ej59CAjw-1; Fri, 17 Jul 2020 07:32:21 -0400
-X-MC-Unique: M_dbPnGpPOCJs2Ej59CAjw-1
-Received: by mail-qt1-f200.google.com with SMTP id r9so6032784qtp.7
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 04:32:21 -0700 (PDT)
+        id S1726442AbgGQNHg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 09:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgGQNHe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jul 2020 09:07:34 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC2CC061755
+        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 06:07:34 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e4so12545801ljn.4
+        for <linux-pci@vger.kernel.org>; Fri, 17 Jul 2020 06:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=a1qhOLKVmgbDxWR7DsBGPKppiVIcs98dPPN7Z4vRK7U=;
+        b=ZcpCVdZKMBTqfoayJtQADEX4zVTHWV2yxNakXh3yLSNrzebl3aH9tjryPIXyI3pz6I
+         E2E3jnn6/nLLS3nE0S8SBL5EhIZybuDyrLJ8SHFAg3d1SuO6BRbnY4H8ODY14ZMIU6aa
+         bmcXjLAzlncoRVHBH7XYqCt9t74/Qwj97l1fL/lhjkcXd/1k+4HwapoaSSbtq8rreAwQ
+         WqOP7vcgpQxfnV7i318A74jitSFLb1wO1WK01FmDR/P5sCd/VDuBBd+k8ePw7372X/j7
+         NIMH0Ym89cWouqdU8y2johbuaT26g3FYSTo0/3PXJ0Rfvj5tHrIEK1PSDeOM+hO3S/s6
+         CNNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TYpWDk5YRbEJgevYd6gB8eGgLm0tIiJeUcncZGG+w6o=;
-        b=SUfJ6s+s9blEckbvIeQBHmT5W/bKP+qWw76VsMlxAvfeJc0rstiC98CKpM5XmtYdd1
-         FpklZtYvWL2aBASZL54YVg74P3BuKKYJKqmDYrVPad+dtLfkPyEp8Gd8mTE7wthg7iMl
-         xgj2TPJpx6xmUVHghiRdj6XH4hYLqwBJtgA4rAqv95IisjwOmO3UBXpR3QgJVYqc7y6K
-         q7UXUIXx4nS4/2uhU1livx9ODvQYo6tweuPcwdtPEV1iqFX/enY+j3dG0Ulu5LOZcySw
-         8q8IlTGQf5de9x8z3i3fQXp50Mj4CftoKSZNUSYff2Mg6O9aMUJ3mpsxn/9/OaaMbmrV
-         IcgQ==
-X-Gm-Message-State: AOAM532wGMXdiMs9Fcpfp6gW0W72XLBzQy+L/cktXchQqbqsR2XYQ0MK
-        k0VZ09pXf6QwssRgYQ6mtNfAWZOIP12Cg5FsZQ8iUSrQprApx/hLRHopYKZC9I7ToCWkqiBHmDZ
-        7aKQAWXh1Ko0WIKFJtD57oqNymi1G/ccVdQi9
-X-Received: by 2002:a37:a589:: with SMTP id o131mr8525054qke.102.1594985541178;
-        Fri, 17 Jul 2020 04:32:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx8U5sWpquWmgK/Rg67k2lvFtnWDq2c6Co4MkYKbyr1oubN2HBDkG+dq9s8lm6gAwtT3o4kndbiPD79JItfOvo=
-X-Received: by 2002:a37:a589:: with SMTP id o131mr8525028qke.102.1594985540875;
- Fri, 17 Jul 2020 04:32:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
- <20200716235440.GA675421@bjorn-Precision-5520> <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
-In-Reply-To: <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Fri, 17 Jul 2020 13:32:10 +0200
-Message-ID: <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=a1qhOLKVmgbDxWR7DsBGPKppiVIcs98dPPN7Z4vRK7U=;
+        b=jtkZtfS9LEkYSMRLiHznkRviOf34EXyEGd9XQp7aNO2nwv+EPTJP04ZHYAlYlCRs6F
+         pyHOkUv4wwkr9zYQKjxecnYakt4tqvkGsSa/NuaoDse9OvfFk0Tg5teVNOiGFo9Hwgfz
+         IFe2P7nylaTxQSpXUfipgPYU3eglf/EN8qtyxcY/UoDuDz89uAP9rqy/7zWBC43fnPxe
+         axj64ZQoEhQqfb43pJI5j64+Lmx9wJVMpFoXyAhpzfDRbhuuF8QAs0vx3v79fP7iK4My
+         FVn4v3xSn5whrE8SWbyE/hNTXlQCvrKCgPOLmeDZKSVH6wLJeFjLpSMwPEk6pJuuBzkn
+         aUyA==
+X-Gm-Message-State: AOAM5332pYNCf/DcIKt+wsLrZsCsDhkXyPBvktyBKWey9sRbyklmQOq4
+        Hihrhh+h4s6y2xdL/t81oWTRcA==
+X-Google-Smtp-Source: ABdhPJzV0BbOtpw7WhJztEZ51jWAX1HJ1JFIJz6hmBPOoJG/oR+b2KfjYZfEVEra0G7K6n1rrFZL3Q==
+X-Received: by 2002:a2e:8047:: with SMTP id p7mr4660529ljg.414.1594991252832;
+        Fri, 17 Jul 2020 06:07:32 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id k25sm1651300ljk.87.2020.07.17.06.07.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 06:07:31 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:07:30 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 17/20] dt-bindings: media: renesas,vin: Add R8A774E1
+ support
+Message-ID: <20200717130730.GA3976796@oden.dyn.berto.se>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594919915-5225-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Filed at https://bugzilla.kernel.org/show_bug.cgi?id=208597
+Hi Lad,
 
-oddly enough I wasn't able to reproduce it on my XPS 9560, will ping
-once something breaks.
+Thanks for your work.
 
-On Fri, Jul 17, 2020 at 2:43 AM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Fri, Jul 17, 2020 at 1:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Sasha -- stable kernel regression]
-> > [+cc Patrick, Kai-Heng, LKML]
-> >
-> > On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
-> > > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
-> > > >
-> > > > Hi everybody,
-> > > >
-> > > > with the mentioned commit Nouveau isn't able to load firmware onto the
-> > > > GPU on one of my systems here. Even though the issue doesn't always
-> > > > happen I am quite confident this is the commit breaking it.
-> > > >
-> > > > I am still digging into the issue and trying to figure out what
-> > > > exactly breaks, but it shows up in different ways. Either we are not
-> > > > able to boot the engines on the GPU or the GPU becomes unresponsive.
-> > > > Btw, this is also a system where our runtime power management issue
-> > > > shows up, so maybe there is indeed something funky with the bridge
-> > > > controller.
-> > > >
-> > > > Just pinging you in case you have an idea on how this could break Nouveau
-> > > >
-> > > > most of the times it shows up like this:
-> > > > nouveau 0000:01:00.0: acr: AHESASC binary failed
-> > > >
-> > > > Sometimes it works at boot and fails at runtime resuming with random
-> > > > faults. So I will be investigating a bit more, but yeah... I am super
-> > > > sure the commit triggered this issue, no idea if it actually causes
-> > > > it.
-> > >
-> > > so yeah.. I reverted that locally and never ran into issues again.
-> > > Still valid on latest 5.7. So can we get this reverted or properly
-> > > fixed? This breaks runtime pm for us on at least some hardware.
-> >
-> > Yeah, that stinks.  We had another similar report from Patrick:
-> >
-> >   https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
-> >
-> > Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
-> > DLL Link Active train links in 100 ms"), which Patrick found was
-> > backported to v5.4.49 as 828b192c57e8, and you found was backported to
-> > v5.7.6 as afaff825e3a4.
-> >
-> > Oddly, Patrick reported that v5.7.7 worked correctly, even though it
-> > still contains afaff825e3a4.
-> >
-> > I guess in the absence of any other clues we'll have to revert it.
-> > I hate to do that because that means we'll have slow resume of
-> > Thunderbolt-connected devices again, but that's better than having
-> > GPUs completely broken.
-> >
-> > Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
-> > logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
-> > original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
-> > and to this thread?
-> >
-> > There must be a way to fix the slow resume problem without breaking
-> > the GPUs.
-> >
->
-> I wouldn't be surprised if this is related to the Intel bridge we
-> check against for Nouveau.. I still have to check on another laptop
-> with the same bridge our workaround was required as well but wouldn't
-> be surprised if it shows the same problem. Will get you the
-> information from both systems tomorrow then.
->
-> > Bjorn
-> >
+On 2020-07-16 18:18:32 +0100, Lad Prabhakar wrote:
+> Document support for the VIN module in the Renesas RZ/G2H (R8A774E1) SoC.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  Documentation/devicetree/bindings/media/renesas,vin.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> index 53c0a7238bac..4e0de280c1e5 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> @@ -40,6 +40,7 @@ properties:
+>                - renesas,vin-r8a774a1 # RZ/G2M
+>                - renesas,vin-r8a774b1 # RZ/G2N
+>                - renesas,vin-r8a774c0 # RZ/G2E
+> +              - renesas,vin-r8a774e1 # RZ/G2H
+>                - renesas,vin-r8a7778  # R-Car M1
+>                - renesas,vin-r8a7779  # R-Car H1
+>                - renesas,vin-r8a7795  # R-Car H3
+> -- 
+> 2.17.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
