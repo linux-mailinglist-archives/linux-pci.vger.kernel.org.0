@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC3DB2242B3
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 20:02:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 272432242B6
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jul 2020 20:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgGQSAr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 14:00:47 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2497 "EHLO huawei.com"
+        id S1726786AbgGQSBQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 14:01:16 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2498 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbgGQSAq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:00:46 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id A95D0E120BD21A2B8C95;
-        Fri, 17 Jul 2020 19:00:44 +0100 (IST)
+        id S1726232AbgGQSBQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:01:16 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 2142BCC913125B7CA8F5;
+        Fri, 17 Jul 2020 19:01:15 +0100 (IST)
 Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Fri, 17 Jul 2020 19:00:44 +0100
+ 15.1.1913.5; Fri, 17 Jul 2020 19:01:14 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
@@ -31,10 +31,12 @@ CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Song Bao Hua <song.bao.hua@hisilicon.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 0/6] ACPI: Only create NUMA nodes from entries in SRAT or SRAT emulation.
-Date:   Sat, 18 Jul 2020 01:59:53 +0800
-Message-ID: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 1/6] ACPI: Add out of bounds and numa_off protections to pxm_to_node
+Date:   Sat, 18 Jul 2020 01:59:54 +0800
+Message-ID: <20200717175959.899775-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
+References: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,85 +49,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Here, I will use the term Proximity Domains for the ACPI description and
-NUMA Nodes for the in kernel representation.
+The function should check the validity of the pxm value before using
+it to index the pxm_to_node_map array.
 
-ACPI 6.3 included a clarification that only Static Resource Allocation
-Structures in SRAT may define the existence of proximity domains
-(sec 5.2.16). This clarification closed a possible interpretation that
-other parts of ACPI (e.g. DSDT _PXM, NFIT etc) could define new proximity
-domains that were not also mentioned in SRAT structures.
+Whilst hardening this code may be good in general, the main intent
+here is to enable following patches that use this function to replace
+acpi_map_pxm_to_node for non SRAT usecases which should return
+NO_NUMA_NODE for PXM entries not matching with those in SRAT.
 
-In practice the kernel has never allowed this alternative interpretation as
-such nodes are only partially initialized. This is architecture specific
-but to take an example, on x86 alloc_node_data has not been called.
-Any use of them for node specific allocation, will result in a crash as the
-infrastructure to fallback to a node with memory is not setup.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/acpi/numa/srat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We ran into a problem when enabling _PXM handling for PCI devices and found
-there were boards out there advertising devices in proximity domains that
-didn't exist [2].
-
-The fix suggested in this series is to replace instances that should not
-'create' new nodes with pxm_to_node.  This function needs a some additional
-hardening against invalid inputs to make sure it is safe for use in these
-new callers.
-
-Patch 1 Hardens pxm_to_node() against numa_off, and pxm entry being too large.
-
-Patch 2-4 change the various callers not related to SRAT entries so that they
-set this parameter to false, so do not attempt to initialize a new NUMA node
-if the relevant one does not already exist.
-
-Patch 5 is a function rename to reflect change in functionality of
-acpi_map_pxm_to_online_node() as it no longer creates a new map, but just does a
-lookup of existing maps.
-
-Patch 6 covers the one place we do not allow the full flexibility defined
-in the ACPI spec.  For SRAT GIC Interrupt Translation Service (ITS) Affinity
-Structures, on ARM64, the driver currently makes an additional pass of SRAT
-later in the boot than the one used to identify NUMA domains.
-Note, this currently means that an ITS placed in a proximity domain that is
-not defined by another SRAT structure will result in the a crash.
-
-To avoid this crash with minimal changes we do not create new NUMA nodes based
-on this particular entry type.  Any current platform trying to do this will not
-boot, so this is an improvement, if perhaps not a perfect solution.
-
-[1] Note in ACPI Specification 6.3 5.2.16 System Resource Affinity Table (SRAT)
-[2] https://patchwork.kernel.org/patch/10597777/
-
-Thanks to Bjorn Helgaas for review of v1 and Barry Song for internal reviews that
-lead to a slightly different approach for this v2.
-
-Changes since v1.
-* Use pxm_to_node for what was previously the path using acpi_map_pxm_to_node
-  with create==false. (Barry)
-* Broke patch up into an initial noop stage followed by patches (Bjorn)
-  to update each type of case in which partial creation of NUMA nodes is prevented.
-* Added patch 5 to rename function to reflect change of functionality.
-* Updated descriptions (now mostly in individual patches) inline with Bjorn's comments.
-
-Jonathan Cameron (6):
-  ACPI: Add out of bounds and numa_off protections to pxm_to_node
-  ACPI: Do not create new NUMA domains from ACPI static tables that are
-    not SRAT
-  ACPI: Remove side effect of partly creating a node in
-    acpi_map_pxm_to_online_node
-  ACPI: rename acpi_map_pxm_to_online_node to pxm_to_online_node
-  ACPI: Remove side effect of partly creating a node in acpi_get_node
-  irq-chip/gic-v3-its: Fix crash if ITS is in a proximity domain without
-    processor or memory
-
- drivers/acpi/arm64/iort.c        |  2 +-
- drivers/acpi/nfit/core.c         |  6 ++----
- drivers/acpi/numa/hmat.c         |  4 ++--
- drivers/acpi/numa/srat.c         |  4 ++--
- drivers/iommu/intel/dmar.c       |  2 +-
- drivers/irqchip/irq-gic-v3-its.c |  7 ++++++-
- include/linux/acpi.h             | 15 +++++++--------
- 7 files changed, 21 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index 5be5a977da1b..8ef44ee0d76b 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -31,7 +31,7 @@ int acpi_numa __initdata;
+ 
+ int pxm_to_node(int pxm)
+ {
+-	if (pxm < 0)
++	if (pxm < 0 || pxm >= MAX_PXM_DOMAINS || numa_off)
+ 		return NUMA_NO_NODE;
+ 	return pxm_to_node_map[pxm];
+ }
 -- 
 2.19.1
 
