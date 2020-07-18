@@ -2,184 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE48F224D9C
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 21:31:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5911224DC3
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 22:04:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgGRTbw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Jul 2020 15:31:52 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45230 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbgGRTbw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 18 Jul 2020 15:31:52 -0400
-IronPort-SDR: n++1QHBP6Yuf2yZ5apeQ66WAuL+lqup0KJdU8XZqTGUqUj7+SrWk7OwZheZaP/ZlfwJWbEvRmf
- AgeAqy5ItQmw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9686"; a="151118433"
-X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
-   d="scan'208";a="151118433"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 12:31:51 -0700
-IronPort-SDR: 6ZIAE0ppVhpKB+VgXDENO4nkOz6De98++TQmhJzHwMAvnX+g8B3FfU7Kp2w1psUTRBwJ+uBvKV
- xzfclhgvlC2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
-   d="scan'208";a="283109860"
-Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 18 Jul 2020 12:31:50 -0700
-Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jwsYn-0000tQ-Qt; Sat, 18 Jul 2020 19:31:49 +0000
-Date:   Sun, 19 Jul 2020 03:30:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 91593041482847090228b5d6203da9d1ed17c511
-Message-ID: <5f134ddd.WaonvTnr2k7cB0Xu%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728071AbgGRUEq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Jul 2020 16:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgGRUEp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Jul 2020 16:04:45 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51EEC0619D2;
+        Sat, 18 Jul 2020 13:04:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r12so14194388wrj.13;
+        Sat, 18 Jul 2020 13:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=6iOmVRoMVbU4qIjJZMlbcTETVfsHT39IuIHdkQtrsZM=;
+        b=rupq1Mcd02Am9QpslDBvv9BvBLAWI3XaIjp8CXahnwPEU4u2vDw1NdsSCFqRtnC/q2
+         kEhbrawoocZE14sCY1S722viEoU365QLzhvMMQj8Mr/4Z7dr9XTmte16uuPPOfXioT2D
+         ouUVKomLIghO4nc+7Q9yJ22x96rIgkfcKmdZQxREZc1gy+S00KNb9LqOAGGB5Qbb/mK9
+         0PCVoBquQwzDCGx/6DAxrxLua/XSwJ4I8saRwsPA+ejk7fWD2QDRSIwpKTz55fjzroaN
+         qR/1QxvPcBurfddRlqhxJgpkSCMyrDQkPNmLuWIdSt9MZIr8D4WqyzHjA62etaQHTHEN
+         jfAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=6iOmVRoMVbU4qIjJZMlbcTETVfsHT39IuIHdkQtrsZM=;
+        b=m6XT3z7GprwJb23VLe+o2gGLy2UsksWlmRGo6YSi6QmgjBcrDR1zOZge9KmpztWvXk
+         aWAgZQkePttHsfgZP1SFW2SmQcPtcyOTqBKr+GfVeRMkXloa2rN4eVDL9UAe0/sI//nz
+         U/pGvs/2Ltcgtwfcaz4sHE96JoYbH7hQtFUAklBv4vBud1N6hNaO8e+HI6kolFLqt7bp
+         4XFSk8vmCYtnuoOQbrpwJMdmI7fQKhdB0N/9SnJ4igVQl9CBxTZVE8PnjYj48IT2HEdQ
+         jOG4DCeh/GWOgiha8oLrKSGIRggxOKm/qmWGtvqxYLOA7E2x+ruEyb+chA5uAX3DVw+Q
+         0pEg==
+X-Gm-Message-State: AOAM531CDXbDIQXZzyzol1XlPQP8akwpqPTh/s7wNrs5D2CM5cRyQEmX
+        ojGSeQCyt5TnDx4SHSqZfxIZGsj50rQYDA==
+X-Google-Smtp-Source: ABdhPJyIPgcYzZrlIDWvCmxIBQ+wXZNKSfXDuNrUb2LIjS1hZaqXB6MrhLcULcS0HRe7RH5epxWP5w==
+X-Received: by 2002:adf:e6ce:: with SMTP id y14mr15559924wrm.401.1595102683993;
+        Sat, 18 Jul 2020 13:04:43 -0700 (PDT)
+Received: from net.saheed (540018D7.dsl.pool.telekom.hu. [84.0.24.215])
+        by smtp.gmail.com with ESMTPSA id o7sm8289049wrv.50.2020.07.18.13.04.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 13:04:43 -0700 (PDT)
+Subject: Re: [RFC PATCH 14/35] i2c/busses: Change PCIBIOS_SUCCESSFUL to 0
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     helgaas@kernel.org, bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-15-refactormyself@gmail.com>
+ <20200717165820.6b5318ad@endymion>
+From:   Saheed Bolarinwa <refactormyself@gmail.com>
+Message-ID: <44eecce1-7c2d-32c8-865e-e80aa6c3a891@gmail.com>
+Date:   Sat, 18 Jul 2020 21:05:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200717165820.6b5318ad@endymion>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
-branch HEAD: 91593041482847090228b5d6203da9d1ed17c511  Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
 
-elapsed time: 1154m
+On 7/17/20 4:58 PM, Jean Delvare wrote:
 
-configs tested: 122
-configs skipped: 2
+> Which PCI specification are you talking about here. In my "PCI Local
+> Bus Revision 2.3" specification (March 29, 2002), chapter 2 is about
+> Signal Definition and has nothing to do with the BIOS.
+http://read.pudn.com/downloads211/doc/comm/994029/pcifw_r3_0_updated.pdf
+>> Change all PCIBIOS_SUCCESSFUL to 0
+>>
+>> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+>> ---
+>>   drivers/i2c/busses/i2c-ali15x3.c |  4 ++--
+>>   drivers/i2c/busses/i2c-nforce2.c |  2 +-
+>>   drivers/i2c/busses/i2c-sis5595.c | 10 +++++-----
+>>   3 files changed, 8 insertions(+), 8 deletions(-)
+> Hmmm. That seems to be a lot of changes to solve an essentially
+> theoretical problem (if a problem at all). I am not familiar enough
+> with the PCI subsystem to claim that it is fundamentally wrong, but
+> enough to say I'm skeptical.
+>
+> PCI is a cross-architecture standard, and we can't possibly have the
+> return value of core functions such as pci_write_config_word follow
+> different conventions depending on the architecture, can we? Does
+> pci_write_config_word() currently return PCIBIOS_SUCCESSFUL on success
+> on x86 and 0 on success on other architectures? What about errors, do
+> we return positive, "PCIBIOS-specific" error codes on x86 and negative,
+> unix-like error codes on other architectures?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Unfortunately, the cover letter did not go through. I have resent it now:
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-nds32                             allnoconfig
-powerpc                      ppc64e_defconfig
-arm                           viper_defconfig
-ia64                             alldefconfig
-sh                           se7721_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-ia64                          tiger_defconfig
-mips                        jmr3927_defconfig
-arm                            xcep_defconfig
-powerpc                 linkstation_defconfig
-sparc                       sparc32_defconfig
-arm                          badge4_defconfig
-powerpc                      pmac32_defconfig
-riscv                          rv32_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20200717
-i386                 randconfig-a005-20200717
-i386                 randconfig-a002-20200717
-i386                 randconfig-a006-20200717
-i386                 randconfig-a003-20200717
-i386                 randconfig-a004-20200717
-i386                 randconfig-a001-20200719
-i386                 randconfig-a006-20200719
-i386                 randconfig-a002-20200719
-i386                 randconfig-a005-20200719
-i386                 randconfig-a003-20200719
-i386                 randconfig-a004-20200719
-x86_64               randconfig-a005-20200717
-x86_64               randconfig-a006-20200717
-x86_64               randconfig-a002-20200717
-x86_64               randconfig-a001-20200717
-x86_64               randconfig-a003-20200717
-x86_64               randconfig-a004-20200717
-x86_64               randconfig-a012-20200716
-x86_64               randconfig-a011-20200716
-x86_64               randconfig-a016-20200716
-x86_64               randconfig-a014-20200716
-x86_64               randconfig-a013-20200716
-x86_64               randconfig-a015-20200716
-i386                 randconfig-a016-20200717
-i386                 randconfig-a011-20200717
-i386                 randconfig-a015-20200717
-i386                 randconfig-a012-20200717
-i386                 randconfig-a013-20200717
-i386                 randconfig-a014-20200717
-i386                 randconfig-a015-20200719
-i386                 randconfig-a011-20200719
-i386                 randconfig-a016-20200719
-i386                 randconfig-a012-20200719
-i386                 randconfig-a013-20200719
-i386                 randconfig-a014-20200719
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
+https://lore.kernel.org/linux-i2c/20200718184558.110942-1-refactormyself@gmail.com/T/#u
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Here is a discussion thread on it:
+
+https://lore.kernel.org/linux-pci/fb40545a8de8df8914df40d7d6167752c5244ce6.camel@kernel.crashing.org/T/#t
+
+>> diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
+>> index 02185a1cfa77..359ee3e0864a 100644
+>> --- a/drivers/i2c/busses/i2c-ali15x3.c
+>> +++ b/drivers/i2c/busses/i2c-ali15x3.c
+>> @@ -167,11 +167,11 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
+>>   	if(force_addr) {
+>>   		dev_info(&ALI15X3_dev->dev, "forcing ISA address 0x%04X\n",
+>>   			ali15x3_smba);
+>> -		if (PCIBIOS_SUCCESSFUL != pci_write_config_word(ALI15X3_dev,
+>> +		if (0 != pci_write_config_word(ALI15X3_dev,
+>>   								SMBBA,
+>>   								ali15x3_smba))
+>>   			goto error;
+> This leaves the code horribly aligned.
+
+Sorry about that, lessons learnt.
+
+Thank you for the review.
+
+- Saheed
+
