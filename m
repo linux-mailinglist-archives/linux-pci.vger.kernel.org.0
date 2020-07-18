@@ -2,124 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC25B224682
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 00:59:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F520224857
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 05:46:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgGQW7L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jul 2020 18:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgGQW7L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:59:11 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 807BA2070E;
-        Fri, 17 Jul 2020 22:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595026750;
-        bh=Si2p19g5Q2ejNUok1Tpdxy2XoGYOEq8JYIYD2SrPf2o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Xa78DP6cTPQwIDB+zLOdMNLq6OUmpcDgXzo1DstH7/SEVTcIQwQCOAlIZy0/xo/s8
-         WBsx7J7oBz8CAbGzB8qdJpOvBHGz/VNXFoeGmZq1s19GHQWZ3XrtSI2slMBi3OFVJy
-         qEeUZaUUB6aFmqcwWeU3nuixS2elvzP7gtDjMtfA=
-Date:   Fri, 17 Jul 2020 17:59:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        stable@vger.kernel.org
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200717225909.GA784064@bjorn-Precision-5520>
+        id S1727042AbgGRDqZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jul 2020 23:46:25 -0400
+Received: from mail-eopbgr1310105.outbound.protection.outlook.com ([40.107.131.105]:23376
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726923AbgGRDqZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jul 2020 23:46:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NZyaiiGUMcX7mrsYf0Qrs32PdSa9cgt/7c4/sMc1ewjfujuADYAGKsnQ8qP676I2iLgLSZKoWcWehiQM+j/sC1ukF83tn7DlpKA8SanKBL0gDLfEfSBChEdScWCsQSKqKPOzrkVB4jNl4nbxrrXPkxoHBD3F/bLBDqN53fEc6/Lm0a8UvJellyd1DOoNaJDixNTMQcC93dQ0z/AmGb77MHPwm9B2g4H+wzBYMQ8/JLqdRGc1GelTg1HQcfCUeT3hpqVWzMN/AIFE14i/94qTBHtcq+nx0wTsi1FACLgkGwFhroCgdbxjalaIKsgfrMnPeVKo+7W6mp/RSJY5a17CAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rLKCYw8VV/N9EdoeyVmckeNf5TPWjTFK4cZiHI1SoHI=;
+ b=UhG8jPzvvnJTGVLYLyMiiZcR+fxHADT42RjWqEDq+TpJ4rlD969A/yOyEnB3NsTqHAQJJxEpB0KiiNiQor70dzfDkkPcRkZLny/TjLrCn2qRU93ka14jIR0AabADcSFai1cInmM74ijWuLpw2Z+/C9RMqQrUrjlfpSae1ZmOc5T6gM9kEOOGn8RNmypyDo3Ma+v+iDVvplEFT5PmiasQNbNbES7/8YU7cX6tzB7S7rpiKdR0+0TQGpbUAdvlWRjhrMGepI7DZFKZguvQ4t7KOlJFJy+2GZDgUpx4Ebi4FLovO/fDCqYn1FnsiIjM5jd7K+bTPQBLHQj7yYh+zoryPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rLKCYw8VV/N9EdoeyVmckeNf5TPWjTFK4cZiHI1SoHI=;
+ b=bnwR/gzptv5VXCIOl5dw/LmfGrdehsG9RhwimdvxlwQ7wytu2Vu7cFAlXM6m/yKdu62ZsfLihIUaPb4yLesE3EkLhyTE/22bUsnZAnYAUmBfEHYheReRt+CQvG/V96rKg4RnCi3D8vwe7XmX4d+/NkgnKBgpgogrHnxQjA7xg70=
+Received: from SG2P153MB0377.APCP153.PROD.OUTLOOK.COM (2603:1096:0:1::15) by
+ SG2P153MB0269.APCP153.PROD.OUTLOOK.COM (2603:1096:4:ad::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.7; Sat, 18 Jul 2020 03:46:19 +0000
+Received: from SG2P153MB0377.APCP153.PROD.OUTLOOK.COM
+ ([fe80::b5e5:3111:30f0:8e01]) by SG2P153MB0377.APCP153.PROD.OUTLOOK.COM
+ ([fe80::b5e5:3111:30f0:8e01%3]) with mapi id 15.20.3216.014; Sat, 18 Jul 2020
+ 03:46:19 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH v2] PCI: hv: Fix a timing issue which causes kdump to fail
+ occasionally
+Thread-Topic: [PATCH v2] PCI: hv: Fix a timing issue which causes kdump to
+ fail occasionally
+Thread-Index: AQHWW+XQ2YjcaVAJF02S1C4ls9CN5qkMNRgAgAB9PiA=
+Date:   Sat, 18 Jul 2020 03:46:19 +0000
+Message-ID: <SG2P153MB0377A7193C7038BD1512EACCBB7D0@SG2P153MB0377.APCP153.PROD.OUTLOOK.COM>
+References: <20200717025528.3093-1-weh@microsoft.com>
+ <20200717201124.GA767548@bjorn-Precision-5520>
+In-Reply-To: <20200717201124.GA767548@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-18T03:46:16Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ec2a9284-60c7-463e-a55c-3fff1b0d5c72;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [122.225.129.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 18d9812a-8f29-4b06-24a6-08d82acd21af
+x-ms-traffictypediagnostic: SG2P153MB0269:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2P153MB0269203693BF3A8F1AA89168BB7D0@SG2P153MB0269.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uTb7dJEr+jHc1skdvKdn49lU64vciF2BwImcmWLA9BYtjjSRKg7Wfqs1wwy6GPoHqYLMaZt+UXREqDafCTW5GnY81qNz1SBAHo0Uu3QHhpoZQOiiTNoj7UDhWQCTbeUQ4r5UeyzImU/AwQQcyIA2y6OItO/NHOln+kFaM0khYAGrm6rOaS2tvIMZAoegKEBnLYCcqyCOxlKbSiASLR2c1Jh2p1Bt+UwwuPB3H/5G4gG8AKQGKn8mtfgqb5Krbm+p1lo6qVi0TRnyUfbYTgN/2XtivPidLPV+7VwQiJA8eu32jE+LQs1Pb+HmD0Sky73e75cixN7wqIwP8waN1mWejg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0377.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(53546011)(82950400001)(107886003)(55016002)(8676002)(8936002)(7696005)(8990500004)(10290500003)(26005)(4326008)(6916009)(9686003)(186003)(86362001)(83380400001)(66946007)(5660300002)(54906003)(6506007)(316002)(82960400001)(66476007)(33656002)(71200400001)(64756008)(76116006)(2906002)(52536014)(66556008)(66446008)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: A8LnXVTg8VxGhBUfOcCsTu3nIcFWAIQEsSkDvv6xy9QpW3KeYo1QtznJnkygfkLGNnmKScbgVECXA2NooU8iZ8wcZyr5XSSvjLqeiZUfj6SWYI36lji2GtpmN7gWU7kLTh4BGHqaF36mvF1iTAIJR6Md3QBEX8W5i5SGotH1bm9KVxqJgiA7TQFJDtnGVB/6/S3KF/jB9kk5V9nIAIEEeczTpijW12OpZDcSoJTPsaea3QsKZHibLgWuSKDWYqYlcHFPALDfsJKdyOg9xkUA8dEfCcMsIZXbpQbXWL1SqvYofkLJwTw/sUef2rxou1NbaWggz+FCZkOfRNT/47OqIoc8m8fFIYVftrcvnFflf8S5qknxWEER8ryJpAsXaNBH5sPDq4gGFRubtJHIX28k7nly2HnkxMxgVUqnBqD1RlloOkysdnuUVwH9J8Oaasc1baHNQ9yIqcMLKx3+GnfZMDS0QTXuG27uGYVI6Hgg+kmgr1IQ0m6pXgwNs0EFcjh3
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717144318.GP2722994@sasha-vm>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SG2P153MB0377.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18d9812a-8f29-4b06-24a6-08d82acd21af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2020 03:46:19.0571
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wtF1fQSl29RP7CyP7dull4gUPNFuz2qNALIymTi7ZypsleHXpQ3WTeL90RJWewXU2kJNyEd1glvH/YnQ5rBagQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0269
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:43:18AM -0400, Sasha Levin wrote:
-> On Fri, Jul 17, 2020 at 02:43:52AM +0200, Karol Herbst wrote:
-> > On Fri, Jul 17, 2020 at 1:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
-> > > > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
-> > > > >
-> > > > > Hi everybody,
-> > > > >
-> > > > > with the mentioned commit Nouveau isn't able to load firmware onto the
-> > > > > GPU on one of my systems here. Even though the issue doesn't always
-> > > > > happen I am quite confident this is the commit breaking it.
-> > > > >
-> > > > > I am still digging into the issue and trying to figure out what
-> > > > > exactly breaks, but it shows up in different ways. Either we are not
-> > > > > able to boot the engines on the GPU or the GPU becomes unresponsive.
-> > > > > Btw, this is also a system where our runtime power management issue
-> > > > > shows up, so maybe there is indeed something funky with the bridge
-> > > > > controller.
-> > > > >
-> > > > > Just pinging you in case you have an idea on how this could break Nouveau
-> > > > >
-> > > > > most of the times it shows up like this:
-> > > > > nouveau 0000:01:00.0: acr: AHESASC binary failed
-> > > > >
-> > > > > Sometimes it works at boot and fails at runtime resuming with random
-> > > > > faults. So I will be investigating a bit more, but yeah... I am super
-> > > > > sure the commit triggered this issue, no idea if it actually causes
-> > > > > it.
-> > > >
-> > > > so yeah.. I reverted that locally and never ran into issues again.
-> > > > Still valid on latest 5.7. So can we get this reverted or properly
-> > > > fixed? This breaks runtime pm for us on at least some hardware.
-> > > 
-> > > Yeah, that stinks.  We had another similar report from Patrick:
-> > > 
-> > >   https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
-> > > 
-> > > Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
-> > > DLL Link Active train links in 100 ms"), which Patrick found was
-> > > backported to v5.4.49 as 828b192c57e8, and you found was backported to
-> > > v5.7.6 as afaff825e3a4.
-> > > 
-> > > Oddly, Patrick reported that v5.7.7 worked correctly, even though it
-> > > still contains afaff825e3a4.
-> > > 
-> > > I guess in the absence of any other clues we'll have to revert it.
-> > > I hate to do that because that means we'll have slow resume of
-> > > Thunderbolt-connected devices again, but that's better than having
-> > > GPUs completely broken.
-> > > 
-> > > Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
-> > > logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
-> > > original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
-> > > and to this thread?
-> > > 
-> > > There must be a way to fix the slow resume problem without breaking
-> > > the GPUs.
-> > > 
-> > 
-> > I wouldn't be surprised if this is related to the Intel bridge we
-> > check against for Nouveau.. I still have to check on another laptop
-> > with the same bridge our workaround was required as well but wouldn't
-> > be surprised if it shows the same problem. Will get you the
-> > information from both systems tomorrow then.
-> 
-> I take it that ec411e02b7a2 will be reverted upstream?
 
-Yes, unless we have a better fix soon.  I applied the revert to my
-for-linus branch, so it will appear in -next soon.  I think it's a
-little late to get it in -rc5, so I'll probably ask Linus to pull it
-next week for -rc6.
 
-Bjorn
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Saturday, July 18, 2020 4:11 AM
+> To: Wei Hu <weh@microsoft.com>
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> wei.liu@kernel.org; lorenzo.pieralisi@arm.com; robh@kernel.org;
+> bhelgaas@google.com; linux-hyperv@vger.kernel.org; linux-
+> pci@vger.kernel.org; linux-kernel@vger.kernel.org; Dexuan Cui
+> <decui@microsoft.com>; Michael Kelley <mikelley@microsoft.com>
+> Subject: Re: [PATCH v2] PCI: hv: Fix a timing issue which causes kdump to=
+ fail
+> occasionally
+>=20
+> On Fri, Jul 17, 2020 at 10:55:28AM +0800, Wei Hu wrote:
+> > Kdump could fail sometime on HyperV guest over Accerlated Network
+> > interface. This is because the retry in hv_pci_enter_d0() relies on an
+> > asynchronous host event to arrive guest before calling
+> > hv_send_resources_allocated(). This fixes the problem by moving retry
+> > to hv_pci_probe(), removing this dependence and making the calling
+> > sequence synchronous.
+>=20
+> Lorenzo, if you apply this, can you fix this typo?
+>=20
+>   s/Accerlated/Accelerated/
+>=20
+> and maybe even
+>=20
+>   s/HyperV/Hyper-V/
+>   s/This fixes the problem/Fix the problem/
+>   s/this dependence/this dependency/
+>=20
+> Not sure if "relies on ... event to arrive guest" means "relies on ...
+> event arriving in the guest"?  Or maybe "relies on ... event arriving bef=
+ore the
+> guest calls ..."?
+>=20
+> This would probably all make perfect sense to me if I understood more abo=
+ut
+> Hyper-V :)
+>=20
+> > v2: Adding Fixes tag according to Michael Kelley's review comment.
+>=20
+> There's no need to include this "v2" comment in the commit log.  I think =
+if you
+> put it after a line containing only "---" (or maybe "--"?), it will be in=
+ the email
+> but not in the commit log.
+>=20
+Thanks Bjorn. I will send out a v3 version shortly to correct all these.=20
+Lorenzo, please pick up my v3 version if you have not started to apply it y=
+et.=20
+
+Thanks so much,
+Wei
