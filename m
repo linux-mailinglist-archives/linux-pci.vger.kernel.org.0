@@ -2,86 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCE782249BE
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 10:02:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C68182249E6
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 10:38:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgGRICa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Jul 2020 04:02:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:39396 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728936AbgGRICa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:02:30 -0400
-IronPort-SDR: 1MnRAX8ARDb9P3+/NCdFzIWLLqXFLSR/OJxFptkTcXheOngIE9jriw8wtWj1Hy8KQ0N091tb3o
- J3mRQ0oc7uPA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="214422212"
-X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="214422212"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 01:02:29 -0700
-IronPort-SDR: MXXqIORaX5UGpnUKXYIV8m/sFA0ZMkXIGFoEOttqIncTMN6NCseomwxr6oe+O7dfUng0ZfSzYA
- b7qaXNexa7Vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="300787745"
-Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 18 Jul 2020 01:02:27 -0700
-Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jwhnf-0000gg-8J; Sat, 18 Jul 2020 08:02:27 +0000
-Date:   Sat, 18 Jul 2020 16:01:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com, bhelgaas@google.com
-Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH] ACPI/PCI: fix array_size.cocci warnings
-Message-ID: <20200718080145.GA55766@adfac4dc55cb>
-References: <a5da506cb5cd5d590d88da8537ad01c0167840da.1595006564.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5da506cb5cd5d590d88da8537ad01c0167840da.1595006564.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726867AbgGRIhj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Jul 2020 04:37:39 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45526 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbgGRIhj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 18 Jul 2020 04:37:39 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxKuSwtBJf6MMAAA--.13S2;
+        Sat, 18 Jul 2020 16:37:05 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v4] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+Date:   Sat, 18 Jul 2020 16:37:04 +0800
+Message-Id: <1595061424-27701-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxKuSwtBJf6MMAAA--.13S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr17tFykJF1xCr1kZr18Xwb_yoW8Zw1Dpa
+        45Aa17KF4FqFWDAw1DWrWDWa45uF9rCa48Ca929wnF9asxX3WUWr9rKa4Fvr4UJrWkXayU
+        XayDCr48Ca1Duw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+        628vn2kIc2xKxwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+        AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
+        MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+        VFxhVjvjDU0xZFpf9x0JUSeHgUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
+According to the datasheet of Loongson LS7A bridge chip, the old version
+of Loongson LS7A PCIE port has a wrong value about PCI class which is
+0x060000, the correct value should be 0x060400, this bug can be fixed by
+"dev->class = PCI_CLASS_BRIDGE_PCI << 8;" at the software level. As far
+as I know, the latest version of LS7A has already fixed the value at the
+hardware level.
 
-drivers/acpi/pci_root.c:150:37-38: WARNING: Use ARRAY_SIZE
+In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
+instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
+early as possible.
 
- Use ARRAY_SIZE instead of dividing sizeof array with sizeof an element
+Otherwise, in the function pci_setup_device(), the related code about
+"dev->class" such as "class = dev->class >> 8;" and "dev->transparent
+= ((dev->class & 0xff) == 1);" maybe get wrong value due to without
+EARLY fixup.
 
-Semantic patch information:
- This makes an effort to find cases where ARRAY_SIZE can be used such as
- where there is a division of sizeof the array by the sizeof its first
- element or by any indexed element or the element type. It replaces the
- division of the two sizeofs by ARRAY_SIZE.
-
-Generated by: scripts/coccinelle/misc/array_size.cocci
-
-CC: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
+Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
 
-url:    https://github.com/0day-ci/linux/commits/sathyanarayanan-kuppuswamy-linux-intel-com/Simplify-PCIe-native-ownership-detection-logic/20200718-012614
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+v2: Modify the patch subject used with lower case "loongson"
 
- pci_root.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v3: Update the commit message
 
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -147,7 +147,7 @@ static struct pci_osc_bit_struct pci_osc
- 
- static char *get_osc_desc(u32 bit)
+v4: Update the commit message
+
+ drivers/pci/controller/pci-loongson.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 459009c..58b862a 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
  {
--	int len = sizeof(pci_osc_control_bit) / sizeof(pci_osc_control_bit[0]);
-+	int len = ARRAY_SIZE(pci_osc_control_bit);
- 	int i = 0;
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+ }
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_0, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_1, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_2, bridge_class_quirk);
  
- 	for (i = 0; i <len; i++)
+ static void system_bus_quirk(struct pci_dev *pdev)
+-- 
+2.1.0
+
