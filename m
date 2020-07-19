@@ -2,130 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5911224DC3
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jul 2020 22:04:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F650224ED0
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jul 2020 05:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGRUEq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Jul 2020 16:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgGRUEp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Jul 2020 16:04:45 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51EEC0619D2;
-        Sat, 18 Jul 2020 13:04:45 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r12so14194388wrj.13;
-        Sat, 18 Jul 2020 13:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=6iOmVRoMVbU4qIjJZMlbcTETVfsHT39IuIHdkQtrsZM=;
-        b=rupq1Mcd02Am9QpslDBvv9BvBLAWI3XaIjp8CXahnwPEU4u2vDw1NdsSCFqRtnC/q2
-         kEhbrawoocZE14sCY1S722viEoU365QLzhvMMQj8Mr/4Z7dr9XTmte16uuPPOfXioT2D
-         ouUVKomLIghO4nc+7Q9yJ22x96rIgkfcKmdZQxREZc1gy+S00KNb9LqOAGGB5Qbb/mK9
-         0PCVoBquQwzDCGx/6DAxrxLua/XSwJ4I8saRwsPA+ejk7fWD2QDRSIwpKTz55fjzroaN
-         qR/1QxvPcBurfddRlqhxJgpkSCMyrDQkPNmLuWIdSt9MZIr8D4WqyzHjA62etaQHTHEN
-         jfAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=6iOmVRoMVbU4qIjJZMlbcTETVfsHT39IuIHdkQtrsZM=;
-        b=m6XT3z7GprwJb23VLe+o2gGLy2UsksWlmRGo6YSi6QmgjBcrDR1zOZge9KmpztWvXk
-         aWAgZQkePttHsfgZP1SFW2SmQcPtcyOTqBKr+GfVeRMkXloa2rN4eVDL9UAe0/sI//nz
-         U/pGvs/2Ltcgtwfcaz4sHE96JoYbH7hQtFUAklBv4vBud1N6hNaO8e+HI6kolFLqt7bp
-         4XFSk8vmCYtnuoOQbrpwJMdmI7fQKhdB0N/9SnJ4igVQl9CBxTZVE8PnjYj48IT2HEdQ
-         jOG4DCeh/GWOgiha8oLrKSGIRggxOKm/qmWGtvqxYLOA7E2x+ruEyb+chA5uAX3DVw+Q
-         0pEg==
-X-Gm-Message-State: AOAM531CDXbDIQXZzyzol1XlPQP8akwpqPTh/s7wNrs5D2CM5cRyQEmX
-        ojGSeQCyt5TnDx4SHSqZfxIZGsj50rQYDA==
-X-Google-Smtp-Source: ABdhPJyIPgcYzZrlIDWvCmxIBQ+wXZNKSfXDuNrUb2LIjS1hZaqXB6MrhLcULcS0HRe7RH5epxWP5w==
-X-Received: by 2002:adf:e6ce:: with SMTP id y14mr15559924wrm.401.1595102683993;
-        Sat, 18 Jul 2020 13:04:43 -0700 (PDT)
-Received: from net.saheed (540018D7.dsl.pool.telekom.hu. [84.0.24.215])
-        by smtp.gmail.com with ESMTPSA id o7sm8289049wrv.50.2020.07.18.13.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 13:04:43 -0700 (PDT)
-Subject: Re: [RFC PATCH 14/35] i2c/busses: Change PCIBIOS_SUCCESSFUL to 0
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     helgaas@kernel.org, bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-15-refactormyself@gmail.com>
- <20200717165820.6b5318ad@endymion>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <44eecce1-7c2d-32c8-865e-e80aa6c3a891@gmail.com>
-Date:   Sat, 18 Jul 2020 21:05:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726428AbgGSDKX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Jul 2020 23:10:23 -0400
+Received: from sonic301-1.consmr.mail.bf2.yahoo.com ([74.6.129.40]:40823 "EHLO
+        sonic301-1.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726390AbgGSDKW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Jul 2020 23:10:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1595128221; bh=Zh8f6bORM80VqMgICWCij9HH7uxxBhlOlIApnEIDMwE=; h=Date:From:Reply-To:Subject:References:From:Subject; b=C4mxOty0rogOvlNLcQ2RkTnjHB7KxivKUnuFVetc9P1aGcz5W8R/0GGmvBpS/1fLfbST3kb7WrN0UKXWkWJes62eUVEwQiUq6mFJEmw4RH2wiUyzNFhpac10g44vntdJmlAAHAdNMA/KXi6dUk1BO/a2Ld/tgH8X3m+e6/mzpTzJGmDv6yckRPPs7vqTYv2OUS25YHdj+Y4rL9SNn3KTvc68SEJ2Wfz2YFK2/B4raO83ytlf2Y6x7NxSwzdm9R3xN3+bdSy3QakcZpjbBpScduAjgwWct4m8nKIqXB3g0Su0fP0fAtLFcUgTD9e9Nhum84BoNaTbJsJRh2ddJ3sZjg==
+X-YMail-OSG: WsxbFFkVM1lcK8gJMNYyfMohfJlQSAjV2ndqjvluKywGRoAAPRB6bCESKEfpA1x
+ ultmB25NiKJ_TGHnODGQzQPfaElXZgaraBfackImW2x.8QHOC0Q7Aoejd5JgVjTDAcPqJz0cTyta
+ Dw4X4E6uU.pXryKZyLD9hb8f9DfpsQku_wxklEpCf0jvSetYaNYdu3_avBt86yZkW_jL_h7Hg9Uh
+ ykAMPMo9v2r78cupnzaC.vZz2Yp.taDlD.GZOJM5kBZdFrF0nHeY8dipJLGGe3FTC7PQU_inGamM
+ k4UIaOyqkHfgG7_N5rkzLhUsEMHotPS1r7LEEPAQcjUQJLqernNJMocR92RbqRnfYERT7BKyiT_0
+ 17T3ogmxF5dYkP8HX7.XmjWcw7vdUibXrx5zX10vOGZ_TosLM3XEwNvZ3L6WSkDAhExNxgqrvALk
+ gueGnpob_t13fPut36m32JKzQB7lekb4SaP76rjazfy.iyEC1ojHLpnLvJd.sv.V03AsazaP24AT
+ lsOhXedUPUKEH7PEEiqNzHlIWleq_5lGYhVcOdc_.Dws_DaNDwC2lt_PtQ8EIxYAgjZI7o_sriIH
+ JFPKKR.E4P1rTO9WutUOIEy.ILjvOVB2.CDNmqbblWkgYTkqRQOPJWHtvkXBhIBrtCf1SQZdYeqE
+ aI3G9DIgIYzj8QPKWCG6bgn9Qjqr3O1jOJg8.QGrgAZF1kC1TeJWGgcclL2x5hQfYsy_oWJduSiM
+ Ce1lXQh4cZQMw.rbiAYQKpyCPjnBg_eZKSAiSdD2I7J_KY4ZyPQC5eh_EDA3StgUMV1LF8cTiqyn
+ VxPx8k_q_DbqGvZMV4CofIXMp7Owuzq4FBJz5P5ltNwgRdsxZ9NeMuOhowDYkI_ELV_zgSonNCes
+ Sdgh4gWqEssN3gj6wTt2cgOllgAYwaZxgAGBtHdlpzT7I9Ko54I0JOmaY.XxREdGqZo4qnQl96Eg
+ zaXlfQxogmYgHFTYtqc8._KtSlBEp.TO7EPkNMfWT4oUSRSmLMa82vhXinMn2..zWMrmd.ODtlgf
+ EsbRz1jvhEAsYXgKD9PszUse7SIgyrsBY5aSS7r7g_gET0k_6Pf6NOyDBfGP2OBDm9w6.3QAPCt6
+ kkZ3g_wiXqPczUjO.bMV15F1iz42oRozsmAfzeJcBIGyYCZUxPSEDZK9C9llqmEYiaXoLp8O7f.s
+ .4ImgTNSm.w6fqkdk6p3hfIxo_glipBK2ZKyDfegZZQWGdAPc.RezJye5Wvhxzy_wVD2imqHs1qS
+ ZiD1QqVGMBkPiaOdCu.pN0jdnYB8f2fy6kJ7K.Vp7Tm9vGytad6sFj8JOSXDQb_TnhpyOLMAJgrt
+ lI9BHI0Kwge9CO4EMUEit6RzcfA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Sun, 19 Jul 2020 03:10:21 +0000
+Date:   Sun, 19 Jul 2020 03:10:19 +0000 (UTC)
+From:   Sandrina Omaru <sandrinaomaru2019@outlook.fr>
+Reply-To: sandrinaomaru2019@gmail.com
+Message-ID: <806099504.2673787.1595128219562@mail.yahoo.com>
+Subject: =?UTF-8?Q?Ahoj_drah=C3=A1?=
 MIME-Version: 1.0
-In-Reply-To: <20200717165820.6b5318ad@endymion>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <806099504.2673787.1595128219562.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16271 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Ahoj drah=C3=A1
 
-On 7/17/20 4:58 PM, Jean Delvare wrote:
+Viem, =C5=BEe mi po=C5=A1lete e-mail, aby som v=C3=A1s prekvapil, preto=C5=
+=BEe v=C3=A1s pozn=C3=A1m. Pros=C3=ADm, je mi ve=C4=BEmi =C4=BE=C3=BAto, ak=
+ m=C3=A1m z=C3=A1sah do ochrany osobn=C3=BDch =C3=BAdajov. Je mi pote=C5=A1=
+en=C3=ADm kontaktova=C5=A5 v=C3=A1s s podnikate=C4=BEsk=C3=BDm z=C3=A1merom=
+, ktor=C3=BD je odhodlan=C3=BD zalo=C5=BEi=C5=A5 vo va=C5=A1ej krajine.
 
-> Which PCI specification are you talking about here. In my "PCI Local
-> Bus Revision 2.3" specification (March 29, 2002), chapter 2 is about
-> Signal Definition and has nothing to do with the BIOS.
-http://read.pudn.com/downloads211/doc/comm/994029/pcifw_r3_0_updated.pdf
->> Change all PCIBIOS_SUCCESSFUL to 0
->>
->> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
->> ---
->>   drivers/i2c/busses/i2c-ali15x3.c |  4 ++--
->>   drivers/i2c/busses/i2c-nforce2.c |  2 +-
->>   drivers/i2c/busses/i2c-sis5595.c | 10 +++++-----
->>   3 files changed, 8 insertions(+), 8 deletions(-)
-> Hmmm. That seems to be a lot of changes to solve an essentially
-> theoretical problem (if a problem at all). I am not familiar enough
-> with the PCI subsystem to claim that it is fundamentally wrong, but
-> enough to say I'm skeptical.
->
-> PCI is a cross-architecture standard, and we can't possibly have the
-> return value of core functions such as pci_write_config_word follow
-> different conventions depending on the architecture, can we? Does
-> pci_write_config_word() currently return PCIBIOS_SUCCESSFUL on success
-> on x86 and 0 on success on other architectures? What about errors, do
-> we return positive, "PCIBIOS-specific" error codes on x86 and negative,
-> unix-like error codes on other architectures?
+D=C3=B4vod, pre=C4=8Do som v=C3=A1s kontaktoval, aby ste to mali z d=C3=B4v=
+odu naliehavosti a n=C3=A1tlaku, =C5=BEe mus=C3=ADm n=C3=A1js=C5=A5 niekoho=
+, kto by mi pomohol. M=C3=B4j neskoro otec (Omaru, b=C3=BDval=C3=BD ministe=
+r hospod=C3=A1rstva a financi=C3=AD Laurent Gbagbo a zomrel 11. janu=C3=A1r=
+a 2012, ale zomrel pred svojou smr=C5=A5ou bol v obrovskom mno=C5=BEstve os=
+em mili=C3=B3nov =C5=A1es=C5=A5stotis=C3=ADc eur (8,6 mili=C3=B3na), ktor=
+=C3=A9 tu boli vo ved=C3=BAcej banke, Ivoire. Zriedka bol ulo=C5=BEen=C3=BD=
+ v Slonovine, kde =C4=8Dakal na pomoc, tak=C5=BEe ma neve=C4=8F ako bud=C3=
+=BA tieto peniaze preveden=C3=A9 mimo krajinu, tak sa odtia=C4=BEto s=C5=A5=
+ahujem, aby som pokra=C4=8Doval vo svojom vzdel=C3=A1van=C3=AD vo va=C5=A1e=
+j krajine, zatia=C4=BE =C4=8Do vy m=C3=A1te na starosti investovanie s peni=
+azmi.
 
-Unfortunately, the cover letter did not go through. I have resent it now:
+Pokorne h=C4=BEad=C3=A1m Bo=C5=BEiu pomoc nasleduj=C3=BAcimi sp=C3=B4sobmi;=
+ Mus=C3=ADm poskytn=C3=BA=C5=A5 bankov=C3=BD =C3=BA=C4=8Det skuto=C4=8Dnost=
+i, =C5=BEe tieto peniaze bud=C3=BA preveden=C3=A9, aby sl=C3=BA=C5=BEili ak=
+o str=C3=A1=C5=BEca tohto mosta pre siroty a st=C3=A1le ve=C4=BEmi mlad=C3=
+=A9. Ak mi m=C3=B4=C5=BEete pom=C3=B4c=C5=A5, som r=C3=A1d, =C5=BEe v=C3=A1=
+m m=C3=B4=C5=BEem pon=C3=BAknu=C5=A5 25% z celkovej sumy pe=C5=88az=C3=AD a=
+ 5% na v=C3=BDdavky, s ktor=C3=BDmi m=C3=B4=C5=BEete tento proces previes=
+=C5=A5. O=C4=8Dak=C3=A1va sa, =C5=BEe na v=C3=A1s budem okam=C5=BEite reago=
+va=C5=A5, tak=C5=BEe s vami budem hovori=C5=A5.
+Kontaktujte ma tu v mojom s=C3=BAkromnom e-mailovom ID sandrinaomaru2019@gm=
+ail.com
+Boh =C5=BEehnaj
+Needy.Love
+Sandrina Omaru.
 
-https://lore.kernel.org/linux-i2c/20200718184558.110942-1-refactormyself@gmail.com/T/#u
-
-Here is a discussion thread on it:
-
-https://lore.kernel.org/linux-pci/fb40545a8de8df8914df40d7d6167752c5244ce6.camel@kernel.crashing.org/T/#t
-
->> diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
->> index 02185a1cfa77..359ee3e0864a 100644
->> --- a/drivers/i2c/busses/i2c-ali15x3.c
->> +++ b/drivers/i2c/busses/i2c-ali15x3.c
->> @@ -167,11 +167,11 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
->>   	if(force_addr) {
->>   		dev_info(&ALI15X3_dev->dev, "forcing ISA address 0x%04X\n",
->>   			ali15x3_smba);
->> -		if (PCIBIOS_SUCCESSFUL != pci_write_config_word(ALI15X3_dev,
->> +		if (0 != pci_write_config_word(ALI15X3_dev,
->>   								SMBBA,
->>   								ali15x3_smba))
->>   			goto error;
-> This leaves the code horribly aligned.
-
-Sorry about that, lessons learnt.
-
-Thank you for the review.
-
-- Saheed
-
+Je n=C3=A1m =C4=BE=C3=BAto, =C5=BEe som t=C3=BAto spr=C3=A1vu odoslal do pr=
+ie=C4=8Dinka so spamom kv=C3=B4li chybe v sieti, preto=C5=BEe tu v mojej kr=
+ajine.
