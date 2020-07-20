@@ -2,98 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF4462261A3
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 16:10:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09A702261FD
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 16:26:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgGTOKn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jul 2020 10:10:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:49004 "EHLO foss.arm.com"
+        id S1728517AbgGTO0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jul 2020 10:26:08 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59636 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgGTOKm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:10:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EBFB113E;
-        Mon, 20 Jul 2020 07:10:42 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 101573F718;
-        Mon, 20 Jul 2020 07:10:40 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 15:10:34 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v5] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
- bridge_class_quirk()
-Message-ID: <20200720141034.GA26850@e121166-lin.cambridge.arm.com>
-References: <1595065176-460-1-git-send-email-yangtiezhu@loongson.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595065176-460-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1728081AbgGTO0H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:26:07 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1F2282002FE;
+        Mon, 20 Jul 2020 16:26:06 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 32CC12002DC;
+        Mon, 20 Jul 2020 16:25:56 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E3256402C3;
+        Mon, 20 Jul 2020 22:07:07 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     catalin.marinas@arm.com, will@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        p.zabel@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net,
+        amurray@thegoodpenguin.co.uk, treding@nvidia.com,
+        vidyas@nvidia.com, hayashi.kunihiko@socionext.com,
+        jonnyc@amazon.com, eswara.kota@linux.intel.com, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 1/3] reset: imx7: Support module build
+Date:   Mon, 20 Jul 2020 22:21:59 +0800
+Message-Id: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 05:39:36PM +0800, Tiezhu Yang wrote:
-> According to the datasheet of Loongson LS7A bridge chip, the old version
-> of Loongson LS7A PCIE port has a wrong value about PCI class which is
-> 0x060000, the correct value should be 0x060400, this bug can be fixed by
-> "dev->class = PCI_CLASS_BRIDGE_PCI << 8;" at the software level. As far
-> as I know, the latest version of LS7A has already fixed the value at the
-> hardware level.
-> 
-> In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
-> instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
-> early as possible.
-> 
-> Otherwise, in the function pci_setup_device(), the related code about
-> "dev->class" such as "class = dev->class >> 8;" and "dev->transparent
-> = ((dev->class & 0xff) == 1);" maybe get wrong value without EARLY fixup.
-> 
-> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
-> 
-> v2: Modify the patch subject used with lower case "loongson"
-> 
-> v3: Update the commit message
-> 
-> v4: Update the commit message to describe the bug
-> 
-> v5: Remove "due to" in the commit message suggested by Sergei Shtylyov
-> 
->  drivers/pci/controller/pci-loongson.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Use module_platform_driver(), add module device table, author,
+description and license to support module build, and
+CONFIG_RESET_IMX7 is changed to default 'y' ONLY for i.MX7D,
+other platforms need to select it in defconfig.
 
-Applied to pci/loongson, thanks.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- use module_platform_driver() instead of builtin_platform_driver().
+---
+ drivers/reset/Kconfig      | 5 +++--
+ drivers/reset/reset-imx7.c | 9 +++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-Lorenzo
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index d9efbfd..19f9773 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -65,9 +65,10 @@ config RESET_HSDK
+ 	  This enables the reset controller driver for HSDK board.
+ 
+ config RESET_IMX7
+-	bool "i.MX7/8 Reset Driver" if COMPILE_TEST
++	tristate "i.MX7/8 Reset Driver"
+ 	depends on HAS_IOMEM
+-	default SOC_IMX7D || (ARM64 && ARCH_MXC)
++	depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
++	default y if SOC_IMX7D
+ 	select MFD_SYSCON
+ 	help
+ 	  This enables the reset controller driver for i.MX7 SoCs.
+diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+index d170fe6..9832033 100644
+--- a/drivers/reset/reset-imx7.c
++++ b/drivers/reset/reset-imx7.c
+@@ -8,7 +8,7 @@
+  */
+ 
+ #include <linux/mfd/syscon.h>
+-#include <linux/mod_devicetable.h>
++#include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset-controller.h>
+@@ -386,6 +386,7 @@ static const struct of_device_id imx7_reset_dt_ids[] = {
+ 	{ .compatible = "fsl,imx8mp-src", .data = &variant_imx8mp },
+ 	{ /* sentinel */ },
+ };
++MODULE_DEVICE_TABLE(of, imx7_reset_dt_ids);
+ 
+ static struct platform_driver imx7_reset_driver = {
+ 	.probe	= imx7_reset_probe,
+@@ -394,4 +395,8 @@ static struct platform_driver imx7_reset_driver = {
+ 		.of_match_table	= imx7_reset_dt_ids,
+ 	},
+ };
+-builtin_platform_driver(imx7_reset_driver);
++module_platform_driver(imx7_reset_driver);
++
++MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
++MODULE_DESCRIPTION("NXP i.MX7 reset driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
 
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 459009c..58b862a 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
->  {
->  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->  }
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_PCIE_PORT_0, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_PCIE_PORT_1, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_PCIE_PORT_2, bridge_class_quirk);
->  
->  static void system_bus_quirk(struct pci_dev *pdev)
-> -- 
-> 2.1.0
-> 
