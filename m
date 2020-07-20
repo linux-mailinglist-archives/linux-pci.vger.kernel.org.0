@@ -2,116 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFE70226BA0
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 18:43:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC8CA226C74
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 18:53:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgGTQnJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jul 2020 12:43:09 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34808 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730116AbgGTQnI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:43:08 -0400
-IronPort-SDR: HCY3rPSSn6I2fxQg2ybSKsMgc5r8YNSkR/gj3gjGAY7lbtttvYtqg1ttt3/1W7ZGfxz4I/bHg3
- R7IdzA+6Mycw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="211497322"
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="211497322"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 09:43:06 -0700
-IronPort-SDR: d4PLIuEwn7c0OTzx6bO7SLAnEHKLtwtFBvlrqqp3K9C7F/ygYHygZcewVV6IJYkG5wc3JVAbLT
- ovlOs0gRdsWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="318061857"
-Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
-  by orsmga008.jf.intel.com with ESMTP; 20 Jul 2020 09:43:06 -0700
-From:   Ashok Raj <ashok.raj@intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>
-Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Date:   Mon, 20 Jul 2020 09:43:00 -0700
-Message-Id: <1595263380-209956-1-git-send-email-ashok.raj@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1729275AbgGTQwv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jul 2020 12:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbgGTQwu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jul 2020 12:52:50 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155DDC0619D4
+        for <linux-pci@vger.kernel.org>; Mon, 20 Jul 2020 09:52:50 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id ga4so18779289ejb.11
+        for <linux-pci@vger.kernel.org>; Mon, 20 Jul 2020 09:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WjwIKDNMRO86HLiza3ekP7Z4qpEbwmULQ/L4/V4YUtE=;
+        b=aKi09317EgbufEHdPz6ybPx9SBQ3iXd5Qr1oxjOv5QrJguwLfk+bp9TvU+POgEqNC8
+         E9WJUEpjgUVnd4A6HMqkPY1IIekaq1PzTfjnSMhOysWqSQHFxU2VpsbyaAfBSvi55tCf
+         OsQMetqysDIjWPonv8j8aSyT8PHbE2MY4MEap62x4hEwJiTGeKO4UE/AqW6CYkuqHJFK
+         +jNk4cgc5ueo3XySM27EJlzHTQmL7o1dFCUGkubIzjmwWtHygQSqOr7J4KrirT0N5ii5
+         6jmz3r9OZwZaSF0lhj6qB061kySusc6q4saf79ctFwnqDim1fh9xHMNQHSN4aeXTLI+e
+         WmFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WjwIKDNMRO86HLiza3ekP7Z4qpEbwmULQ/L4/V4YUtE=;
+        b=rHNMgg1TlJizldfHDElaic4Y23aZfEf+Oq9CQ8C0m6eBa6PaMvOg2IAmHHktDZy5eI
+         mJpCbMz/6omtQMsXhHmnQfmbfMeV+mObFGrLr9RwGHYUVW/PB9bGoqK7LwFmByAQUHsW
+         JatoJh8H9nnlIUeIPje9pW3YV8d6l3+hiK840TX9IoG8dQRvmhfEzUp9qAR+NvtD1c85
+         LogQaOM+mYDic+/c2f0n/HjurhXhFryfuXPywrZnVAh7Gb+cupFYcuyUltp9IX488SqN
+         WOdfDXwoon7Ar+pk+5RGv7kKyUZp2P+FbhSZYq4EEjBSd4q1GfHS3uLVSNflVwfaIvQH
+         gq9g==
+X-Gm-Message-State: AOAM532tOiyK32rpIHf0moa9xaY5ZCAgjg/l1G7jsj9vpBKHVpxhPgfN
+        h7JVx7Do0NtNlkxzYCrOndVGXnM2YvpEfY994J/r/xVb
+X-Google-Smtp-Source: ABdhPJwXfmksCBX85u+pwB/9F5hgtRX4ZE8Dkw8qbJ6G2uTpNqzPbNioN4uT7/TWkHbxi+iplWhAeGWkg23vKqV2cIc=
+X-Received: by 2002:a17:906:6959:: with SMTP id c25mr21009671ejs.375.1595263968366;
+ Mon, 20 Jul 2020 09:52:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-5-samitolvanen@google.com> <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+ <20200624214530.GA120457@google.com> <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+ <20200625161503.GB173089@google.com> <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+ <20200625224042.GA169781@google.com> <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+ <CABCJKucSM7gqWmUtiBPbr208wB0pc25afJXc6yBQzJDZf4LSWA@mail.gmail.com>
+ <20200717133645.7816c0b6@oasis.local.home> <CABCJKuda0AFCZ-1J2NTLc-M0xax007a9u-fzOoxmU2z60jvzbA@mail.gmail.com>
+ <20200717140545.6f008208@oasis.local.home>
+In-Reply-To: <20200717140545.6f008208@oasis.local.home>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 20 Jul 2020 09:52:37 -0700
+Message-ID: <CABCJKucDrS9wNZLjtmN5qMbZBTHLvB1Z7WqTwT3b11-K4kNcyg@mail.gmail.com>
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Matt Helsley <mhelsley@vmware.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PASID and PRI capabilities are only enumerated in PF devices. VF devices
-do not enumerate these capabilites. IOMMU drivers also need to enumerate
-them before enabling features in the IOMMU. Extending the same support as
-PASID feature discovery (pci_pasid_features) for PRI.
+On Fri, Jul 17, 2020 at 11:05 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Fri, 17 Jul 2020 10:47:51 -0700
+> Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> > > Someone just submitted a patch for arm64 for this:
+> > >
+> > > https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
+> > >
+> > > Is that what you want?
+> >
+> > That looks like the same issue, but we need to fix this on x86 instead.
+>
+> Does x86 have a way to differentiate between the two that record mcount
+> can check?
 
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+I'm not sure if looking at the relocation alone is sufficient on x86,
+we might also have to decode the instruction, which is what objtool
+does. Did you have any thoughts on Peter's patch, or my initial
+suggestion, which adds a __nomcount attribute to affected functions?
 
-To: Bjorn Helgaas <bhelgaas@google.com>
-To: Joerg Roedel <joro@8bytes.com>
-To: Lu Baolu <baolu.lu@intel.com>
-Cc: stable@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: iommu@lists.linux-foundation.org
----
- drivers/iommu/intel/iommu.c |  2 +-
- drivers/pci/ats.c           | 14 ++++++++++++++
- include/linux/pci-ats.h     |  1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index d759e7234e98..276452f5e6a7 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 			}
- 
- 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
--			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
-+			    pci_pri_supported(pdev))
- 				info->pri_supported = 1;
- 		}
- 	}
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b761c1f72f67..ffb4de8c5a77 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -461,6 +461,20 @@ int pci_pasid_features(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL_GPL(pci_pasid_features);
- 
-+/**
-+ * pci_pri_supported - Check if PRI is supported.
-+ * @pdev: PCI device structure
-+ *
-+ * Returns false when no PRI capability is present.
-+ * Returns true if PRI feature is supported and enabled
-+ */
-+bool pci_pri_supported(struct pci_dev *pdev)
-+{
-+	/* VFs share the PF PRI configuration */
-+	return !!(pci_physfn(pdev)->pri_cap);
-+}
-+EXPORT_SYMBOL_GPL(pci_pri_supported);
-+
- #define PASID_NUMBER_SHIFT	8
- #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
- /**
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index f75c307f346d..073d57292445 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -28,6 +28,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-+bool pci_pri_supported(struct pci_dev *pdev);
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
--- 
-2.7.4
-
+Sami
