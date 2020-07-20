@@ -2,82 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99BA7225814
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 09:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E2402258EC
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 09:46:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgGTHDM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jul 2020 03:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgGTHDL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jul 2020 03:03:11 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758EFC0619D2;
-        Mon, 20 Jul 2020 00:03:11 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id n2so11997752edr.5;
-        Mon, 20 Jul 2020 00:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1SXLMIBfdlyWcAZDCzCiZL8pBGjqpEdAnfRcPKA6Z+I=;
-        b=RkIeuIPVUEmRlE3Yg2c88oYDRAI99bhPZIp2uz0Ygc9M+y6/06ZcYgfjndg0tBoWw4
-         zAwhwMaJI09dCGSwkN2UrCeEsDHtr8AOlxxPjOOtYNP4ugvr7p1/czr4KfkOnJve/3rr
-         3YUZ+a3QOJpQ16CNoqRcZI3gwnd5vdnZZZjHb/dNY5PqyFT+RczJy9oNCvm2XdrUGrDd
-         ThI2UuGOWIu8mqd1J1Mqff/GEMYoHAIO55yp49kzuAlzgFGLTRn50ClcFW/+8+/jPhe/
-         3kI8huBnqSiAgi2A3C+qpEepCuGheTz0CjoEa0t0crBsq3pCRbcn6rm7ZmRQaT7VtZjp
-         /gGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1SXLMIBfdlyWcAZDCzCiZL8pBGjqpEdAnfRcPKA6Z+I=;
-        b=aC7hTmktBzcSbWWvSztWu+f1GH+5VYlIylPWNCfXySXalYp7p860xoaT68ZYi3LX4K
-         pMLxUhMem0NYd659kLfjerkmWhaG30ffXFjKfw123fZlQaxne1xaVe2PvlX9OGkkOYJ7
-         30C7+yBI6C/bVJ30qNb0YsfRuuICqLvfu9/tKvBXlcnEDroMYm3i1bhGc3upfXuRIBgh
-         U18T3CIlNq/DARweCeVKvcP61bCSxnp45SkR6DLWradCkUdwkkeMhqAYbyWWNLRad0fP
-         lyiRfvbItNVJSjyHdPWjy8DBrA88yKZVb+fmvlpn7rcyEqanYE3pDnOLIvFg2qeLXLgs
-         knIg==
-X-Gm-Message-State: AOAM532D4M/Di91mB4Z+a2zwLLMuAbFFtEhknbF2W7sJjRQfnQBid6wZ
-        wcjtNCxMN94Vr6jGcF4tJB/cel8vwOZCB2eDz4U=
-X-Google-Smtp-Source: ABdhPJzLszhKqRQKQT/n5dJhkrUH9K4aJ/xq9j1kS4fmR1NmGEntDUdFtIJFzLhecEhjwaj8gnY1UvxGm0oy/GZmV14=
-X-Received: by 2002:a05:6402:14c1:: with SMTP id f1mr21005708edx.342.1595228590248;
- Mon, 20 Jul 2020 00:03:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200717213510.171726-1-kwizart@gmail.com> <20200717215304.GA775582@bjorn-Precision-5520>
-In-Reply-To: <20200717215304.GA775582@bjorn-Precision-5520>
-From:   Nicolas Chauvet <kwizart@gmail.com>
-Date:   Mon, 20 Jul 2020 09:02:59 +0200
-Message-ID: <CABr+WTkJ8jZDkM_=-LYxpbrqrsPEb96YBRJvBjR5u+0Ck9R4CQ@mail.gmail.com>
-Subject: Re: [PATCH] pci: tegra: Revert raw_violation_fixup for tegra124
+        id S1725845AbgGTHqn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jul 2020 03:46:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44422 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbgGTHqm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Jul 2020 03:46:42 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F33E3A047A3BA07D7708;
+        Mon, 20 Jul 2020 15:46:35 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 15:46:26 +0800
+Subject: Re: [RFC PATCH] hwtracing: Add HiSilicon PCIe Tune and Trace device
+ driver
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20200716213120.GA648781@bjorn-Precision-5520>
+CC:     <linux-kernel@vger.kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <linux-pci@vger.kernel.org>,
+        <linuxarm@huawei.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <8ba5a585-bce3-94a6-850d-4bf5a22d6805@hisilicon.com>
+Date:   Mon, 20 Jul 2020 15:46:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <20200716213120.GA648781@bjorn-Precision-5520>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le ven. 17 juil. 2020 =C3=A0 23:53, Bjorn Helgaas <helgaas@kernel.org> a =
-=C3=A9crit :
+On 2020/7/17 5:31, Bjorn Helgaas wrote:
+> On Thu, Jul 16, 2020 at 05:06:19PM +0800, Yicong Yang wrote:
+>> On 2020/7/11 7:09, Bjorn Helgaas wrote:
+>>> On Sat, Jun 13, 2020 at 05:32:13PM +0800, Yicong Yang wrote:
+>>>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+>>>> integrated Endpoint(RCiEP) device, providing the capability
+>>>> to dynamically monitor and tune the PCIe traffic parameters(tune),
+>>>> and trace the TLP headers to the memory(trace).
+>>>>
+>>>> Add the driver for the device to enable its functions. The driver
+>>>> will create debugfs directory for each PTT device, and users can
+>>>> operate the device through the files under its directory.
+>>>> +Tune
+>>>> +====
+>>>> +
+>>>> +PTT tune is designed for monitoring and adjusting PCIe link parameters(events).
+>>>> +Currently we support events 4 classes. The scope of the events
+>>>> +covers the PCIe core with which the PTT device belongs to.
+>>> All of these look like things that have the potential to break the
+>>> PCIe protocol and cause errors like timeouts, receiver overflows, etc.
+>>> That's OK for a debug/analysis situation, but it should taint the
+>>> kernel somehow because I don't want to debug problems like that if
+>>> they're caused by users tweaking things.
+>>>
+>>> That might even be a reason *not* to merge the tune side of this.  I
+>>> can see how it might be useful for you internally, but it's not
+>>> obvious to me how it will benefit other users.  Maybe that part should
+>>> be an out-of-tree module?
+>> All the tuning values are not accurate, but abstracted to several
+>> _levels_ of each events. The levels are delicately designed to
+>> guarantee by the hardware that they are always valid and will not
+>> break the PCIe link.  The possible level values exposed to the users
+>> is tested and safe and other values will not be accepted.
+>>
+>> The final tuning events is not settled and we'll not exposed the
+>> events which will may lead to the link broken. Furthermore, maybe we
+>> could default disable the tune events' level adjustment and make
+>> them readonly. The user can enable the full tune function by a
+>> module parameters or in the BIOS, and a warning message will be
+>> displayed.
+>>
+>> The tune part is beneficial for the users and not only for our
+>> internal use.  We intends to provide a way to tune the link
+>> depending on the downstream components and link configuration. For
+>> example, users can tune the data path QoS level to get better
+>> performance according to the link width is x8 or x16, or according
+>> to the endpoints' class is a network card or a nvme disk.  It will
+>> make our controller adapt to different condition with high
+>> performance, so we hope this feature to be merged.
+> OK.  This driver itself is outside my area, so I guess merging it is
+> up to Alexander.
 >
-Thanks for the quick review. I've addressed all comments and I've
-resubmitted a v2 to
-https://www.spinics.net/lists/linux-pci/msg96863.html
-Unfortunately I've missed to modify the [Patch v2] tag. I hope this is
-fine. Let me know if I need to resend.
+> Do you have any measurements of performance improvements?  I think it
+> would be good to have real numbers showing that this is useful.
+>
+> You mentioned a warning message, so I assume you'll add some kind of
+> dmesg logging when tuning happens?
+>
+> Is this protected so it's only usable by root or other appropriate
+> privileged user?
 
-> Is v5.4.x really the oldest kernel that should get this fix?  It looks
-> like 191cd6fb5d2c appeared in v5.3.
-The commit was introduced in 5.3 indeed. I've added 5.4.x since it's
-the last maintained kernel from long term branches.
-Now I'm using the Fixes: tag, I've dropped the version of the kernel
-for stable as it seems duplicate and less accurate.
+We haven't got measurement statistic currently as the device is still in
+progress. We can measure the improvements when it's finalized.
 
-Thanks.
+I suppose to add some info/warning messages in dmesg log when tune happens.
+
+The whole PTT functions are accessible only by root.
+
+
+>
+>>>> +		 * The PTT can designate function for trace.
+>>>> +		 * Add the root port's subordinates in the list as we
+>>>> +		 * can specify certain function.
+>>>> +		 */
+>>>> +		child_bus = tpdev->subordinate;
+>>>> +		list_for_each_entry(tpdev, &child_bus->devices, bus_list) {
+>>> *This* looks like a potential problem with hotplug.  How do you deal
+>>> with devices being added/removed after this loop?
+>> Yes. I have considered the add/remove situation but not intend to address it
+>> in this RFC and assume the topology is static after probing.
+>> I will manage the situation in next version.
+> What happens if a device is added or removed after boot?  If the only
+> limitation is that you can't tune or trace a hot-added device, that's
+> fine.  (I mean, it's really *not* fine because it's a poor user
+> experience, but at least it's just a usability issue, not a crash.)
+>
+> But if hot-adding or hot-removing a device can cause an oops or a
+> crash or something, *that* is definitely a problem.
+
+The hot-adding or hot-removing will not cause a crash or an oops. If we
+trace a function which is removed after boot, we'll get no data as there
+is no TLPs on the link. If we trace a function added after boot,
+we can get valid datas.
+
+These situations should be considered by the driver. If user input a
+removed BDF, an -EINVAL should return. If user input a BDF added after
+boot, driver should address it properly(in this RFC, as the BDF is not
+in list so an -EINVAL will return).
+
+The available function/root port list of PTT in this RFC is static, it
+should be dynamic considering the hot-added/hot-removed situations. Or
+with other ways instead of maintaining a list.
+
+Regards,
+Yicong
+
+
+>
+> Bjorn
+> .
+>
+
