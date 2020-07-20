@@ -2,102 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC8CA226C74
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 18:53:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ADB0226C7D
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 18:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgGTQwv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jul 2020 12:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728898AbgGTQwu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jul 2020 12:52:50 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155DDC0619D4
-        for <linux-pci@vger.kernel.org>; Mon, 20 Jul 2020 09:52:50 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id ga4so18779289ejb.11
-        for <linux-pci@vger.kernel.org>; Mon, 20 Jul 2020 09:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WjwIKDNMRO86HLiza3ekP7Z4qpEbwmULQ/L4/V4YUtE=;
-        b=aKi09317EgbufEHdPz6ybPx9SBQ3iXd5Qr1oxjOv5QrJguwLfk+bp9TvU+POgEqNC8
-         E9WJUEpjgUVnd4A6HMqkPY1IIekaq1PzTfjnSMhOysWqSQHFxU2VpsbyaAfBSvi55tCf
-         OsQMetqysDIjWPonv8j8aSyT8PHbE2MY4MEap62x4hEwJiTGeKO4UE/AqW6CYkuqHJFK
-         +jNk4cgc5ueo3XySM27EJlzHTQmL7o1dFCUGkubIzjmwWtHygQSqOr7J4KrirT0N5ii5
-         6jmz3r9OZwZaSF0lhj6qB061kySusc6q4saf79ctFwnqDim1fh9xHMNQHSN4aeXTLI+e
-         WmFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WjwIKDNMRO86HLiza3ekP7Z4qpEbwmULQ/L4/V4YUtE=;
-        b=rHNMgg1TlJizldfHDElaic4Y23aZfEf+Oq9CQ8C0m6eBa6PaMvOg2IAmHHktDZy5eI
-         mJpCbMz/6omtQMsXhHmnQfmbfMeV+mObFGrLr9RwGHYUVW/PB9bGoqK7LwFmByAQUHsW
-         JatoJh8H9nnlIUeIPje9pW3YV8d6l3+hiK840TX9IoG8dQRvmhfEzUp9qAR+NvtD1c85
-         LogQaOM+mYDic+/c2f0n/HjurhXhFryfuXPywrZnVAh7Gb+cupFYcuyUltp9IX488SqN
-         WOdfDXwoon7Ar+pk+5RGv7kKyUZp2P+FbhSZYq4EEjBSd4q1GfHS3uLVSNflVwfaIvQH
-         gq9g==
-X-Gm-Message-State: AOAM532tOiyK32rpIHf0moa9xaY5ZCAgjg/l1G7jsj9vpBKHVpxhPgfN
-        h7JVx7Do0NtNlkxzYCrOndVGXnM2YvpEfY994J/r/xVb
-X-Google-Smtp-Source: ABdhPJwXfmksCBX85u+pwB/9F5hgtRX4ZE8Dkw8qbJ6G2uTpNqzPbNioN4uT7/TWkHbxi+iplWhAeGWkg23vKqV2cIc=
-X-Received: by 2002:a17:906:6959:: with SMTP id c25mr21009671ejs.375.1595263968366;
- Mon, 20 Jul 2020 09:52:48 -0700 (PDT)
+        id S1729164AbgGTQyv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jul 2020 12:54:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:34966 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728932AbgGTQyv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:54:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 612EC106F;
+        Mon, 20 Jul 2020 09:54:50 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FBB73F66E;
+        Mon, 20 Jul 2020 09:54:48 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 17:54:42 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, joro@8bytes.org
+Cc:     Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping APIs
+Message-ID: <20200720165442.GA19658@e121166-lin.cambridge.arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com> <20200624212737.GV4817@hirez.programming.kicks-ass.net>
- <20200624214530.GA120457@google.com> <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com> <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
- <20200625224042.GA169781@google.com> <20200626112931.GF4817@hirez.programming.kicks-ass.net>
- <CABCJKucSM7gqWmUtiBPbr208wB0pc25afJXc6yBQzJDZf4LSWA@mail.gmail.com>
- <20200717133645.7816c0b6@oasis.local.home> <CABCJKuda0AFCZ-1J2NTLc-M0xax007a9u-fzOoxmU2z60jvzbA@mail.gmail.com>
- <20200717140545.6f008208@oasis.local.home>
-In-Reply-To: <20200717140545.6f008208@oasis.local.home>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 20 Jul 2020 09:52:37 -0700
-Message-ID: <CABCJKucDrS9wNZLjtmN5qMbZBTHLvB1Z7WqTwT3b11-K4kNcyg@mail.gmail.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:05 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 17 Jul 2020 10:47:51 -0700
-> Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> > > Someone just submitted a patch for arm64 for this:
-> > >
-> > > https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
-> > >
-> > > Is that what you want?
-> >
-> > That looks like the same issue, but we need to fix this on x86 instead.
->
-> Does x86 have a way to differentiate between the two that record mcount
-> can check?
+On Fri, Jun 19, 2020 at 09:20:01AM +0100, Lorenzo Pieralisi wrote:
+> This series is a v2 of a previous posting:
+> 
+> v1 -> v2
+> 
+> - Removed _rid() wrappers
+> - Fixed !CONFIG_ACPI compilation issue
+> - Converted of_pci_iommu_init() to use of_iommu_configure_dev_id()
+> 
+> v1: https://lore.kernel.org/linux-arm-kernel/20200521130008.8266-1-lorenzo.pieralisi@arm.com/
+> 
+> Original cover letter
+> ---------------------
+> 
+> Firmware bindings provided in the ACPI IORT table[1] and device tree
+> bindings define rules to carry out input/output ID mappings - ie
+> retrieving an IOMMU/MSI controller input ID for a device with a given
+> ID.
+> 
+> At the moment these firmware bindings are used exclusively for PCI
+> devices and their requester ID to IOMMU/MSI id mapping but there is
+> nothing PCI specific in the ACPI and devicetree bindings that prevent
+> the firmware and kernel from using the firmware bindings to traslate
+> device IDs for any bus that requires its devices to carry out
+> input/output id translations.
+> 
+> The Freescale FSL bus is an example whereby the input/output ID
+> translation kernel code put in place for PCI can be reused for devices
+> attached to the bus that are not PCI devices.
+> 
+> This series updates the kernel code to make the MSI/IOMMU input/output
+> ID translation PCI agnostic and apply the resulting changes to the
+> device ID space provided by the Freescale FSL bus.
+> 
+> [1] http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: "Joerg Roedel <joro@8bytes.org>
+> Cc: Hanjun Guo <guohanjun@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> 
+> Diana Craciun (2):
+>   of/irq: make of_msi_map_get_device_domain() bus agnostic
+>   bus/fsl-mc: Refactor the MSI domain creation in the DPRC driver
+> 
+> Laurentiu Tudor (1):
+>   dt-bindings: arm: fsl: Add msi-map device-tree binding for fsl-mc bus
+> 
+> Lorenzo Pieralisi (8):
+>   ACPI/IORT: Make iort_match_node_callback walk the ACPI namespace for
+>     NC
+>   ACPI/IORT: Make iort_get_device_domain IRQ domain agnostic
+>   ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
+>   ACPI/IORT: Remove useless PCI bus walk
+>   ACPI/IORT: Add an input ID to acpi_dma_configure()
+>   of/iommu: Make of_map_rid() PCI agnostic
+>   of/device: Add input id to of_dma_configure()
+>   of/irq: Make of_msi_map_rid() PCI bus agnostic
+> 
+> Makarand Pawagi (1):
+>   bus: fsl-mc: Add ACPI support for fsl-mc
+> 
+>  .../devicetree/bindings/misc/fsl,qoriq-mc.txt |  50 +++++++-
+>  drivers/acpi/arm64/iort.c                     | 108 ++++++++++++------
+>  drivers/acpi/scan.c                           |   8 +-
+>  drivers/bus/fsl-mc/dprc-driver.c              |  31 ++---
+>  drivers/bus/fsl-mc/fsl-mc-bus.c               |  79 +++++++++----
+>  drivers/bus/fsl-mc/fsl-mc-msi.c               |  36 ++++--
+>  drivers/bus/fsl-mc/fsl-mc-private.h           |   6 +-
+>  drivers/iommu/of_iommu.c                      |  81 +++++++------
+>  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c   | 105 ++++++++++++++---
+>  drivers/of/base.c                             |  42 +++----
+>  drivers/of/device.c                           |   8 +-
+>  drivers/of/irq.c                              |  34 +++---
+>  drivers/pci/msi.c                             |   9 +-
+>  include/acpi/acpi_bus.h                       |   9 +-
+>  include/linux/acpi.h                          |   7 ++
+>  include/linux/acpi_iort.h                     |  20 ++--
+>  include/linux/of.h                            |   4 +-
+>  include/linux/of_device.h                     |  16 ++-
+>  include/linux/of_iommu.h                      |   6 +-
+>  include/linux/of_irq.h                        |  13 ++-
+>  20 files changed, 451 insertions(+), 221 deletions(-)
 
-I'm not sure if looking at the relocation alone is sufficient on x86,
-we might also have to decode the instruction, which is what objtool
-does. Did you have any thoughts on Peter's patch, or my initial
-suggestion, which adds a __nomcount attribute to affected functions?
+Hi guys,
 
-Sami
+I think this series is ready for upstream (there are two ACKs missing
+from Rafael on patch (5) and Bjorn on patch (3) - I asked for them), it
+touches lots of subsystems so I am not really sure what's the best way
+to pull it, more so given that it is also late in the cycle (I do think
+it is best to merge it via a single tree, it does not make sense to
+split it up in my opinion).
+
+Please let me know.
+
+Thanks,
+Lorenzo
