@@ -2,90 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DAFC226CE8
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 19:10:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEDA0226EE9
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 21:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbgGTRJz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jul 2020 13:09:55 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47988 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbgGTRJx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:09:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595264993; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=pEBC16t+YV4FGYaWikogHtEEGJZCLsu+AxuloV4iKJY=;
- b=M5YTGz+zsn0TjjzLP60McRuO2SOD2jK9cLke+LsnaGWfnmHYJga6heeb+L1gbUhJl7Wls7KU
- u2to3r8CGYqibuAR8oJHLrD8S0x5EPZEHBP6n2G25y9sVP/EVuvleWoJD1k0veArZKglSp05
- GwcFyB1KmjFz7BL3GM2rslLWGnU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f15cfdfeef925b694313ec5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 17:09:51
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3BFFDC433C9; Mon, 20 Jul 2020 17:09:51 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=2.0 tests=ALL_TRUSTED,MISSING_DATE,
-        MISSING_MID,SPF_NONE autolearn=no autolearn_force=no version=3.4.0
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCB1CC433C9;
-        Mon, 20 Jul 2020 17:09:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCB1CC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        id S1729690AbgGTTTT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jul 2020 15:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgGTTTS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jul 2020 15:19:18 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87521C061794
+        for <linux-pci@vger.kernel.org>; Mon, 20 Jul 2020 12:19:18 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id k7so9109639vso.2
+        for <linux-pci@vger.kernel.org>; Mon, 20 Jul 2020 12:19:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=MRJYdBEWDkphEZG/UEdwwg3luf4wsGYhc8hRIEMMM04=;
+        b=NwlBSpxN8MCJ53ycuv9AnYSRFcDCYJMx6xRsrMY2LZRjvYd8l+w9TGW/uuwe4Ce0FV
+         3eeYrvxxlhn+1iES56N9Q5w0k3Kwx+B7ip5txAvK8wQBXo4WHsFMVoKFbKZlU78lKizd
+         g++aRbQTFkemNd0Fl2Obc5YEt8sCEXhqWu+XA+ciVXQUbeXm93+dqE+vzNQ09fwTQIK9
+         BHfYO/acoYqvCTqQ7Ook9aNvtGl+DSYfCenmHO04fQDEGIZdGyWHvWGa/7fSGF/xT+ux
+         J0EGXwvy5cXeXRtaazR3Te/wI/TEjTHPwkMjbfeGGySQsMX3U5DAPGm2W0y6lxiZVv06
+         oNlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=MRJYdBEWDkphEZG/UEdwwg3luf4wsGYhc8hRIEMMM04=;
+        b=nq/UgV4keSuMmPDpoS+M3tjjnpyf/QI5mtF/+mRYetYuPTiAzCbRQTOKoag3bepti+
+         u2pv12Q0S8w7MfDkP1CQfBrdeQ/kK6C1aEq/K9ppZhKulbQyCHsHWtIIFm89NF5Obf9V
+         OaidKzNIhztXQn2cQLx2E9kuPDy5YSpb1z2ARkyOFahmpkA2ac3wNhHPzxGOpf1YzTp0
+         +I9EvnywDV7hRY5yqMTBemoVvdLzEKDR8ghgscuxJwJigQyfLtNhMee3c0rzmuKgdOwu
+         uotjUnATprnJzccQC3Jq++0hlPltqUadwXi6sGKBaNg6/Ko5TSDT6KcAThOn+xvphMBE
+         cY1w==
+X-Gm-Message-State: AOAM531fRCvHwzKFYmkH1E2xID4UA0HFuC1HAnTBiz++EJDRHcYBwn8I
+        j4zDDLtSNflAvAr9P0tEIfVYjgZhviL2QRuy+b4=
+X-Google-Smtp-Source: ABdhPJyN13kov/GY+pZO9+coE8uMAY+M9RuBi0RB/ZOTgBRSoKN6ZzbwMBSLMcRoRa4DylrTbDqdRPcAJ6xgW4kymlo=
+X-Received: by 2002:a67:fd0b:: with SMTP id f11mr16305639vsr.93.1595272757773;
+ Mon, 20 Jul 2020 12:19:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 3/14 v3] ath9k: Check the return value of
- pcie_capability_read_*()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200713175529.29715-2-refactormyself@gmail.com>
-References: <20200713175529.29715-2-refactormyself@gmail.com>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200720170951.3BFFDC433C9@smtp.codeaurora.org>
-Date:   Mon, 20 Jul 2020 17:09:51 +0000 (UTC)
+Received: by 2002:a05:6102:9cc:0:0:0:0 with HTTP; Mon, 20 Jul 2020 12:19:17
+ -0700 (PDT)
+Reply-To: jinghualiuyang@gmail.com
+From:   Frau JINGHUA Liu Yang <deleonalbertr@gmail.com>
+Date:   Mon, 20 Jul 2020 21:19:17 +0200
+Message-ID: <CAN6-f8swSmZiu2ZDvaOyhe7tRvNdw1Qeu07tF+m5NPgqWzTxRQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-"Saheed O. Bolarinwa" <refactormyself@gmail.com> wrote:
+--=20
+Sch=C3=B6nen Tag,
 
-> On failure pcie_capability_read_dword() sets it's last parameter, val
-> to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
-> failure. This would introduce a bug because (x & x) == (~0 & x).
-> 
-> This bug can be avoided without changing the function's behaviour if the
-> return value of pcie_capability_read_dword is checked to confirm success.
-> 
-> Check the return value of pcie_capability_read_dword() to ensure success.
-> 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+       Ich bin Frau JINGHUA Liu Yang f=C3=BCr die CITIBANK OF KOREA hier in
+der Republik KOREA. Ich habe einen Gesch=C3=A4ftsvorgang. Kann ich Ihnen
+vertrauen, dass Sie diesen Betrag von $9.356.669 USD =C3=BCberweisen? Wenn
+Sie bereit sind, mir zu helfen, melden Sie sich bei mir, damit ich Sie
+dar=C3=BCber informieren kann, wie wir diese Transaktion am besten
+perfektionieren k=C3=B6nnen, damit das Geld an Sie in Ihrem Land =C3=BCberw=
+iesen
+wird.
 
-Patch applied to ath-next branch of ath.git, thanks.
-
-9a8ab2bfb678 ath9k: Check the return value of pcie_capability_read_*()
-
--- 
-https://patchwork.kernel.org/patch/11660731/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Sch=C3=B6ne Gr=C3=BC=C3=9Fe..
+Frau JINGHUA Liu Yang
