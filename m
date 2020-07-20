@@ -2,50 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13064225109
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jul 2020 12:05:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD7A22255BA
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 04:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgGSKFB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 19 Jul 2020 06:05:01 -0400
-Received: from sonic314-13.consmr.mail.bf2.yahoo.com ([74.6.132.123]:39298
-        "EHLO sonic314-13.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725836AbgGSKFA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 19 Jul 2020 06:05:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1595153099; bh=qXBWf2EoWT9gmJgm/3NiogFnv3V/rxlq5ApKE+Dow4k=; h=Date:From:Reply-To:Subject:References:From:Subject; b=K/YcAjYk4TvQWaBwnMLFJcDqfvvcXv59nP2+IWEntIwmoRgRsNO05gCxGp2/nbbTXQR6jROAL75Tq5qivY9fixjfkBJQ0mA/paykAHzEz/pBnAhLctBdRl45sHJIdU8Ec2YlSgd5/s0Wjp3Pv0Ohjq92JImdnIVTc4RbGlaj0In2PQOBgp52faRBTCePGlh26rWsnAoaKmUGTOSI267MyNO9P8QiVVBkQUi6nVeUXRciu0XS6QLqP1h0s4R+/5KQ3bDSBCFWlasB/m1qWH4wvZuuP27d6FZ4r4FAL5pS8pNnsLbjDsvWJfDAJpQ9khYVDu3x+mVbqfTUvLSM44tdrw==
-X-YMail-OSG: vx0zszsVM1kxDqbotIPx00qKNUpRdDbVKPw829FURANzMC5wJ2Q.hCx9.sAsMH7
- ndt_U_oUrZpLJgOgOqb6zWHGyqBQ2Podqr0IZS8ieTq5Afodz_xGTy1n1IvY9Q5h6tMO9mgHQzXm
- ZKcoDux8V429JyaJgqBiVT7oeWVwYowd1rFb7IxWoDAZY5fbTUIC.6avrH9Hiy1CN7fCYPwnuFJX
- tpYVEnQCYAfAvBNhhfoCAwHgF4joz6IXEwmAB4Pwdf0FzWJBsndWqoLW9WwxrNg2e1ymQ3c9BFwk
- kjCR89dXTt_M18sqT7psAdbi.NQU4N7jIsnesNtyLSerIHxwC32jLupCOZ8kDWQBXuSbBPuJcFXE
- 1qXyX3shjKCYP6w.1sy.YtXVFmwIgq7iPwKkV96ukIpxr.vvTgsp1VRhDT4mPhAXS.zsQkYUXg7q
- 3u3SXEftVmsgiFm63j0gm_tBSVddwOVqQwfy2hXLgo0R2vSgUZg0BfYr_WerHujq4NeUAqPhQSSf
- 3O..9RnaXYCyaD5A8TQluqnSwvg3Yc5mRU3_Wc3i2.PFe3OcxGaiZySIhDp.esbSrr6fFnmgdWRE
- .ekHQCsywXOtOGHtxlHl1aFZDyPqHlkwD6C54zwOs.0Bf4uJEkhbhkyR5zAR0q9aH8x68y2ArAdS
- k9N.tBbA7mUw1wlnydG_q2732hCggZd61WskD3gxsgIDrWqlG3jzD5p3_kYIx.h7Ca1EqzCd7KrX
- ryBDHySKhU_KesH0W8DQ.2.SqLlGTwiis51qLbiT2OugjnUxa.tgsKL9bRbZDIlaBWSvUuQRB2Mw
- gA78HAyQx2kg3pXtFXtusayjTjz5gCkuS5ie.VX8g7TZ1mtIFkGM7Xeq8S.HhKtQ7xg1duT_pUB2
- rxq3XtMWCrZhWGImqMRZfLNylVyMekDtmSi4U8GiTnAJjE1t0HEd0Y3f47jwRS25DsOgKjijIbl4
- 6qLaMpLWLZ3lTIpPgUgm7CXCAKliauKy6N6BDoMNlF8vmIcwK4jlMXZ7RAIEf3hQMF8_9IuMj.Og
- 5rFaDiKFBRHGXGv1jgf9kjw761efEX59Pyy0uV8sYzmr8x_d49OVlXQ_SaobFmcRfedH17inpuLk
- QrkoubvyL7W23zgPQIl6jG1t3L6Lu1mj0ww5CYk4TCYm2oiRxoi6oPqLTAHmACU3H_60e5UQ6_0n
- X5358RL3vFIWv5oUMrmRthDt3u4RDRtcMxqsX7_jd6cBWx.pbpjSWqMM7Z812sJKqE8gDEoDaQU7
- 0d8zEpsSzXIPPW.5kPPSAzba_ixdCPI2kC9yQavVd_7llPLpkJ13I0BtKGOGHWqUx4qc9BnkVDA-
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.bf2.yahoo.com with HTTP; Sun, 19 Jul 2020 10:04:59 +0000
-Date:   Sun, 19 Jul 2020 10:04:55 +0000 (UTC)
-From:   Monica Render <prender1226@gmx.com>
-Reply-To: mrender377@gmail.com
-Message-ID: <1955651903.2694416.1595153095326@mail.yahoo.com>
-Subject: Nice to meet you!
+        id S1726312AbgGTCC5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 19 Jul 2020 22:02:57 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726225AbgGTCC4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 19 Jul 2020 22:02:56 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C24A7AB957D3D94B7215;
+        Mon, 20 Jul 2020 10:02:53 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.33) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 10:02:43 +0800
+Subject: Re: [PATCH v2 0/6] ACPI: Only create NUMA nodes from entries in SRAT
+ or SRAT emulation.
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <martin@geanix.com>,
+        "Ingo Molnar" <mingo@redhat.com>, <linux-ia64@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Song Bao Hua <song.bao.hua@hisilicon.com>
+References: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <9b679614-083b-cec4-e0de-34e1a66b103a@huawei.com>
+Date:   Mon, 20 Jul 2020 10:02:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-References: <1955651903.2694416.1595153095326.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16271 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0
-To:     unlisted-recipients:; (no To-header on input)
+X-Originating-IP: [10.174.179.33]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Please do you speak english?
+On 2020/7/18 1:59, Jonathan Cameron wrote:
+> Here, I will use the term Proximity Domains for the ACPI description and
+> NUMA Nodes for the in kernel representation.
+> 
+> ACPI 6.3 included a clarification that only Static Resource Allocation
+> Structures in SRAT may define the existence of proximity domains
+> (sec 5.2.16). This clarification closed a possible interpretation that
+> other parts of ACPI (e.g. DSDT _PXM, NFIT etc) could define new proximity
+> domains that were not also mentioned in SRAT structures.
+> 
+> In practice the kernel has never allowed this alternative interpretation as
+> such nodes are only partially initialized. This is architecture specific
+> but to take an example, on x86 alloc_node_data has not been called.
+> Any use of them for node specific allocation, will result in a crash as the
+> infrastructure to fallback to a node with memory is not setup.
+> 
+> We ran into a problem when enabling _PXM handling for PCI devices and found
+> there were boards out there advertising devices in proximity domains that
+> didn't exist [2].
+> 
+> The fix suggested in this series is to replace instances that should not
+> 'create' new nodes with pxm_to_node.  This function needs a some additional
+> hardening against invalid inputs to make sure it is safe for use in these
+> new callers.
+> 
+> Patch 1 Hardens pxm_to_node() against numa_off, and pxm entry being too large.
+> 
+> Patch 2-4 change the various callers not related to SRAT entries so that they
+> set this parameter to false, so do not attempt to initialize a new NUMA node
+> if the relevant one does not already exist.
+> 
+> Patch 5 is a function rename to reflect change in functionality of
+> acpi_map_pxm_to_online_node() as it no longer creates a new map, but just does a
+> lookup of existing maps.
+> 
+> Patch 6 covers the one place we do not allow the full flexibility defined
+> in the ACPI spec.  For SRAT GIC Interrupt Translation Service (ITS) Affinity
+> Structures, on ARM64, the driver currently makes an additional pass of SRAT
+> later in the boot than the one used to identify NUMA domains.
+> Note, this currently means that an ITS placed in a proximity domain that is
+> not defined by another SRAT structure will result in the a crash.
+> 
+> To avoid this crash with minimal changes we do not create new NUMA nodes based
+> on this particular entry type.  Any current platform trying to do this will not
+> boot, so this is an improvement, if perhaps not a perfect solution.
+
+Make sense to me,
+
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+
