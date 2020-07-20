@@ -2,153 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E2402258EC
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 09:46:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B13AE225B54
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jul 2020 11:23:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725845AbgGTHqn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jul 2020 03:46:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44422 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbgGTHqm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:46:42 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F33E3A047A3BA07D7708;
-        Mon, 20 Jul 2020 15:46:35 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
- 15:46:26 +0800
-Subject: Re: [RFC PATCH] hwtracing: Add HiSilicon PCIe Tune and Trace device
- driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20200716213120.GA648781@bjorn-Precision-5520>
-CC:     <linux-kernel@vger.kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <linux-pci@vger.kernel.org>,
-        <linuxarm@huawei.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <8ba5a585-bce3-94a6-850d-4bf5a22d6805@hisilicon.com>
-Date:   Mon, 20 Jul 2020 15:46:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1728025AbgGTJXC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 20 Jul 2020 05:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbgGTJW7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jul 2020 05:22:59 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F071C061794
+        for <linux-pci@vger.kernel.org>; Mon, 20 Jul 2020 02:22:59 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jxS0B-00035o-7c; Mon, 20 Jul 2020 11:22:27 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jxS06-0004dK-6S; Mon, 20 Jul 2020 11:22:22 +0200
+Message-ID: <9c2d6c888817880974f850622b14905a9338b60e.camel@pengutronix.de>
+Subject: Re: [PATCH V2 1/3] reset: imx7: Support module build
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net, treding@nvidia.com,
+        gustavo.pimentel@synopsys.com, amurray@thegoodpenguin.co.uk,
+        vidyas@nvidia.com, xiaowei.bao@nxp.com, jonnyc@amazon.com,
+        hayashi.kunihiko@socionext.com, eswara.kota@linux.intel.com,
+        krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Date:   Mon, 20 Jul 2020 11:22:22 +0200
+In-Reply-To: <1593443129-18766-1-git-send-email-Anson.Huang@nxp.com>
+References: <1593443129-18766-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20200716213120.GA648781@bjorn-Precision-5520>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/7/17 5:31, Bjorn Helgaas wrote:
-> On Thu, Jul 16, 2020 at 05:06:19PM +0800, Yicong Yang wrote:
->> On 2020/7/11 7:09, Bjorn Helgaas wrote:
->>> On Sat, Jun 13, 2020 at 05:32:13PM +0800, Yicong Yang wrote:
->>>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
->>>> integrated Endpoint(RCiEP) device, providing the capability
->>>> to dynamically monitor and tune the PCIe traffic parameters(tune),
->>>> and trace the TLP headers to the memory(trace).
->>>>
->>>> Add the driver for the device to enable its functions. The driver
->>>> will create debugfs directory for each PTT device, and users can
->>>> operate the device through the files under its directory.
->>>> +Tune
->>>> +====
->>>> +
->>>> +PTT tune is designed for monitoring and adjusting PCIe link parameters(events).
->>>> +Currently we support events 4 classes. The scope of the events
->>>> +covers the PCIe core with which the PTT device belongs to.
->>> All of these look like things that have the potential to break the
->>> PCIe protocol and cause errors like timeouts, receiver overflows, etc.
->>> That's OK for a debug/analysis situation, but it should taint the
->>> kernel somehow because I don't want to debug problems like that if
->>> they're caused by users tweaking things.
->>>
->>> That might even be a reason *not* to merge the tune side of this.  I
->>> can see how it might be useful for you internally, but it's not
->>> obvious to me how it will benefit other users.  Maybe that part should
->>> be an out-of-tree module?
->> All the tuning values are not accurate, but abstracted to several
->> _levels_ of each events. The levels are delicately designed to
->> guarantee by the hardware that they are always valid and will not
->> break the PCIe link.  The possible level values exposed to the users
->> is tested and safe and other values will not be accepted.
->>
->> The final tuning events is not settled and we'll not exposed the
->> events which will may lead to the link broken. Furthermore, maybe we
->> could default disable the tune events' level adjustment and make
->> them readonly. The user can enable the full tune function by a
->> module parameters or in the BIOS, and a warning message will be
->> displayed.
->>
->> The tune part is beneficial for the users and not only for our
->> internal use.  We intends to provide a way to tune the link
->> depending on the downstream components and link configuration. For
->> example, users can tune the data path QoS level to get better
->> performance according to the link width is x8 or x16, or according
->> to the endpoints' class is a network card or a nvme disk.  It will
->> make our controller adapt to different condition with high
->> performance, so we hope this feature to be merged.
-> OK.  This driver itself is outside my area, so I guess merging it is
-> up to Alexander.
->
-> Do you have any measurements of performance improvements?  I think it
-> would be good to have real numbers showing that this is useful.
->
-> You mentioned a warning message, so I assume you'll add some kind of
-> dmesg logging when tuning happens?
->
-> Is this protected so it's only usable by root or other appropriate
-> privileged user?
+On Mon, 2020-06-29 at 23:05 +0800, Anson Huang wrote:
+> Add module device table, author, description and license to support
+> module build, and CONFIG_RESET_IMX7 is changed to default 'y' ONLY
+> for i.MX7D, other platforms need to select it in defconfig.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- make it default 'y' for SOC_IMX7D;
+> 	- add module author, description;
+> 	- use device_initcall instead of builtin_platform_driver() to support
+> 	  module unload.
+> ---
+>  drivers/reset/Kconfig      |  5 +++--
+>  drivers/reset/reset-imx7.c | 14 ++++++++++++--
+>  2 files changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index d9efbfd..19f9773 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -65,9 +65,10 @@ config RESET_HSDK
+>  	  This enables the reset controller driver for HSDK board.
+>  
+>  config RESET_IMX7
+> -	bool "i.MX7/8 Reset Driver" if COMPILE_TEST
+> +	tristate "i.MX7/8 Reset Driver"
+>  	depends on HAS_IOMEM
+> -	default SOC_IMX7D || (ARM64 && ARCH_MXC)
+> +	depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
+> +	default y if SOC_IMX7D
+>  	select MFD_SYSCON
+>  	help
+>  	  This enables the reset controller driver for i.MX7 SoCs.
+> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+> index d170fe6..c710f789 100644
+> --- a/drivers/reset/reset-imx7.c
+> +++ b/drivers/reset/reset-imx7.c
+> @@ -8,7 +8,7 @@
+>   */
+>  
+>  #include <linux/mfd/syscon.h>
+> -#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/reset-controller.h>
+> @@ -386,6 +386,7 @@ static const struct of_device_id imx7_reset_dt_ids[] = {
+>  	{ .compatible = "fsl,imx8mp-src", .data = &variant_imx8mp },
+>  	{ /* sentinel */ },
+>  };
+> +MODULE_DEVICE_TABLE(of, imx7_reset_dt_ids);
+>  
+>  static struct platform_driver imx7_reset_driver = {
+>  	.probe	= imx7_reset_probe,
+> @@ -394,4 +395,13 @@ static struct platform_driver imx7_reset_driver = {
+>  		.of_match_table	= imx7_reset_dt_ids,
+>  	},
+>  };
+> -builtin_platform_driver(imx7_reset_driver);
+> +
+> +static int __init imx7_reset_init(void)
+> +{
+> +	return platform_driver_register(&imx7_reset_driver);
+> +}
+> +device_initcall(imx7_reset_init);
 
-We haven't got measurement statistic currently as the device is still in
-progress. We can measure the improvements when it's finalized.
+Shouldn't this use module_platform_driver instead?
 
-I suppose to add some info/warning messages in dmesg log when tune happens.
-
-The whole PTT functions are accessible only by root.
-
-
->
->>>> +		 * The PTT can designate function for trace.
->>>> +		 * Add the root port's subordinates in the list as we
->>>> +		 * can specify certain function.
->>>> +		 */
->>>> +		child_bus = tpdev->subordinate;
->>>> +		list_for_each_entry(tpdev, &child_bus->devices, bus_list) {
->>> *This* looks like a potential problem with hotplug.  How do you deal
->>> with devices being added/removed after this loop?
->> Yes. I have considered the add/remove situation but not intend to address it
->> in this RFC and assume the topology is static after probing.
->> I will manage the situation in next version.
-> What happens if a device is added or removed after boot?  If the only
-> limitation is that you can't tune or trace a hot-added device, that's
-> fine.  (I mean, it's really *not* fine because it's a poor user
-> experience, but at least it's just a usability issue, not a crash.)
->
-> But if hot-adding or hot-removing a device can cause an oops or a
-> crash or something, *that* is definitely a problem.
-
-The hot-adding or hot-removing will not cause a crash or an oops. If we
-trace a function which is removed after boot, we'll get no data as there
-is no TLPs on the link. If we trace a function added after boot,
-we can get valid datas.
-
-These situations should be considered by the driver. If user input a
-removed BDF, an -EINVAL should return. If user input a BDF added after
-boot, driver should address it properly(in this RFC, as the BDF is not
-in list so an -EINVAL will return).
-
-The available function/root port list of PTT in this RFC is static, it
-should be dynamic considering the hot-added/hot-removed situations. Or
-with other ways instead of maintaining a list.
-
-Regards,
-Yicong
-
-
->
-> Bjorn
-> .
->
-
+regards
+Philipp
