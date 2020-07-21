@@ -2,127 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52A972282D8
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 16:54:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 950402282F1
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 16:59:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgGUOyE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 10:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
+        id S1728692AbgGUO7G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 10:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgGUOyE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:54:04 -0400
+        id S1728064AbgGUO7F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:59:05 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4B2A20717;
-        Tue, 21 Jul 2020 14:54:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7F6E20578;
+        Tue, 21 Jul 2020 14:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595343243;
-        bh=LGjn1NQByMAtiMquXEdKNSg+VZngPld+GQLBIyWGQFA=;
+        s=default; t=1595343545;
+        bh=4IycvsYyfCQven5hmEHIv/wE1B/4BTld8UhyXIAjIwk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gAurnN/EAgwhJYBOP3FVWZ8Q1zkaIbD9GyL/qucE1v0WOfPMfD1E/SruAJUQUtCD2
-         eKB082UD1rxcMa4I2M21vXYK/6rPiwMWBp72swxptXHA8FF2J5+wUiH2aOXG2E+mLf
-         +jHmuqyjPBGrCSjJIVSKSoqd/zQwOeif5EIzkaqQ=
-Date:   Tue, 21 Jul 2020 09:54:01 -0500
+        b=BVngLU/SGFKGdQVLXD0kKAx7KrJjQBCObzjMI7XXMnLPcOaJ1uDP3ToNUia1AhmTw
+         uL3nZhL8/9Ucx6nS9GSO+uT81Lhla1RNKWihgB10H8s1NuCo6gFGz35ho5OvxTKi5S
+         nEC7yGL7Sb2KrxySzhtgq2rk86sZt5CTTiq5xGGw=
+Date:   Tue, 21 Jul 2020 09:59:03 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Message-ID: <20200721145401.GA1117318@bjorn-Precision-5520>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2 03/12] ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
+Message-ID: <20200721145903.GA1117934@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1595263380-209956-1-git-send-email-ashok.raj@intel.com>
+In-Reply-To: <20200619082013.13661-4-lorenzo.pieralisi@arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 09:43:00AM -0700, Ashok Raj wrote:
-> PASID and PRI capabilities are only enumerated in PF devices. VF devices
-> do not enumerate these capabilites. IOMMU drivers also need to enumerate
-> them before enabling features in the IOMMU. Extending the same support as
-> PASID feature discovery (pci_pasid_features) for PRI.
+On Fri, Jun 19, 2020 at 09:20:04AM +0100, Lorenzo Pieralisi wrote:
+> There is nothing PCI specific in iort_msi_map_rid().
 > 
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Rename the function using a bus protocol agnostic name,
+> iort_msi_map_id(), and convert current callers to it.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Hanjun Guo <guohanjun@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
-Hi Ashok,
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-When you update this for the 0-day implicit declaration thing, can you
-update the subject to say what the patch *does*, as opposed to what it
-is solving?  Also, no need for a period at the end.
+Sorry I missed this!
 
-Does this fix a regression?  Is it associated with a commit that we
-could add as a "Fixes:" tag so we know how far back to try to apply
-to stable kernels?
-
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> To: Joerg Roedel <joro@8bytes.com>
-> To: Lu Baolu <baolu.lu@intel.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: iommu@lists.linux-foundation.org
 > ---
->  drivers/iommu/intel/iommu.c |  2 +-
->  drivers/pci/ats.c           | 14 ++++++++++++++
->  include/linux/pci-ats.h     |  1 +
->  3 files changed, 16 insertions(+), 1 deletion(-)
+>  drivers/acpi/arm64/iort.c | 12 ++++++------
+>  drivers/pci/msi.c         |  2 +-
+>  include/linux/acpi_iort.h |  6 +++---
+>  3 files changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index d759e7234e98..276452f5e6a7 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
->  			}
->  
->  			if (info->ats_supported && ecap_prs(iommu->ecap) &&
-> -			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
-> +			    pci_pri_supported(pdev))
->  				info->pri_supported = 1;
->  		}
->  	}
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index b761c1f72f67..ffb4de8c5a77 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -461,6 +461,20 @@ int pci_pasid_features(struct pci_dev *pdev)
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 902e2aaca946..53f9ef515089 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -568,22 +568,22 @@ static struct acpi_iort_node *iort_find_dev_node(struct device *dev)
 >  }
->  EXPORT_SYMBOL_GPL(pci_pasid_features);
 >  
-> +/**
-> + * pci_pri_supported - Check if PRI is supported.
-> + * @pdev: PCI device structure
-> + *
-> + * Returns false when no PRI capability is present.
-> + * Returns true if PRI feature is supported and enabled
-> + */
-> +bool pci_pri_supported(struct pci_dev *pdev)
-> +{
-> +	/* VFs share the PF PRI configuration */
-> +	return !!(pci_physfn(pdev)->pri_cap);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_pri_supported);
-> +
->  #define PASID_NUMBER_SHIFT	8
->  #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
 >  /**
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index f75c307f346d..073d57292445 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -28,6 +28,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
->  void pci_disable_pri(struct pci_dev *pdev);
->  int pci_reset_pri(struct pci_dev *pdev);
->  int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> +bool pci_pri_supported(struct pci_dev *pdev);
->  #endif /* CONFIG_PCI_PRI */
+> - * iort_msi_map_rid() - Map a MSI requester ID for a device
+> + * iort_msi_map_id() - Map a MSI input ID for a device
+>   * @dev: The device for which the mapping is to be done.
+> - * @req_id: The device requester ID.
+> + * @input_id: The device input ID.
+>   *
+> - * Returns: mapped MSI RID on success, input requester ID otherwise
+> + * Returns: mapped MSI ID on success, input ID otherwise
+>   */
+> -u32 iort_msi_map_rid(struct device *dev, u32 req_id)
+> +u32 iort_msi_map_id(struct device *dev, u32 input_id)
+>  {
+>  	struct acpi_iort_node *node;
+>  	u32 dev_id;
 >  
->  #ifdef CONFIG_PCI_PASID
+>  	node = iort_find_dev_node(dev);
+>  	if (!node)
+> -		return req_id;
+> +		return input_id;
+>  
+> -	iort_node_map_id(node, req_id, &dev_id, IORT_MSI_TYPE);
+> +	iort_node_map_id(node, input_id, &dev_id, IORT_MSI_TYPE);
+>  	return dev_id;
+>  }
+>  
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 74a91f52ecc0..77f48b95e277 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -1536,7 +1536,7 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
+>  
+>  	of_node = irq_domain_get_of_node(domain);
+>  	rid = of_node ? of_msi_map_rid(&pdev->dev, of_node, rid) :
+> -			iort_msi_map_rid(&pdev->dev, rid);
+> +			iort_msi_map_id(&pdev->dev, rid);
+>  
+>  	return rid;
+>  }
+> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
+> index 08ec6bd2297f..e51425e083da 100644
+> --- a/include/linux/acpi_iort.h
+> +++ b/include/linux/acpi_iort.h
+> @@ -28,7 +28,7 @@ void iort_deregister_domain_token(int trans_id);
+>  struct fwnode_handle *iort_find_domain_token(int trans_id);
+>  #ifdef CONFIG_ACPI_IORT
+>  void acpi_iort_init(void);
+> -u32 iort_msi_map_rid(struct device *dev, u32 req_id);
+> +u32 iort_msi_map_id(struct device *dev, u32 id);
+>  struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
+>  					  enum irq_domain_bus_token bus_token);
+>  void acpi_configure_pmsi_domain(struct device *dev);
+> @@ -39,8 +39,8 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev);
+>  int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
+>  #else
+>  static inline void acpi_iort_init(void) { }
+> -static inline u32 iort_msi_map_rid(struct device *dev, u32 req_id)
+> -{ return req_id; }
+> +static inline u32 iort_msi_map_id(struct device *dev, u32 id)
+> +{ return id; }
+>  static inline struct irq_domain *iort_get_device_domain(
+>  	struct device *dev, u32 id, enum irq_domain_bus_token bus_token)
+>  { return NULL; }
 > -- 
-> 2.7.4
+> 2.26.1
 > 
