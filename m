@@ -2,90 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 168D022832F
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 17:07:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F26B2283BD
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 17:27:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgGUPH4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 11:07:56 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8348 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728362AbgGUPHz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:07:55 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 67FEC4F408849D84850E;
-        Tue, 21 Jul 2020 23:07:47 +0800 (CST)
-Received: from kernelci-master.huawei.com (10.175.101.6) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 21 Jul 2020 23:07:38 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Hulk Robot <hulkci@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>
-Subject: [PATCH -next] PCI: rpadlpar: Make some functions static
-Date:   Tue, 21 Jul 2020 23:17:35 +0800
-Message-ID: <20200721151735.41181-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        id S1728089AbgGUP1n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 11:27:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26547 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726830AbgGUP1n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:27:43 -0400
+IronPort-SDR: fokch5A8MiLp8qwwB+/oyksFB0yUUUMWhs+Ci4X/nkzPDzbRsZa2Mj40SiZHuYvlW0WtmMYNRT
+ 4jotY6LYi2CQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="150132751"
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="150132751"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 08:27:42 -0700
+IronPort-SDR: m9Yv3szcNnwqnBWnMd6YPHjbliYFF5XJkiXvnqC85+KMTFwgkgyG6ChCE/R2uNGy3aLyySdAzB
+ PtjfD4EwWf9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="392383055"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 21 Jul 2020 08:27:38 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 21 Jul 2020 18:27:37 +0300
+Date:   Tue, 21 Jul 2020 18:27:37 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+Message-ID: <20200721152737.GS5180@lahna.fi.intel.com>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+ <20200716235440.GA675421@bjorn-Precision-5520>
+ <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+ <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+ <20200721122247.GI5180@lahna.fi.intel.com>
+ <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The sparse tool report build warnings as follows:
+On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
+> Sure thing. Also, feel free to let me know if you'd like access to one of the
+> systems we saw breaking with this patch - I'm fairly sure I've got one of them
+> locally at my apartment and don't mind setting up AMT/KVM/SSH
 
-drivers/pci/hotplug/rpadlpar_core.c:355:5: warning:
- symbol 'dlpar_remove_pci_slot' was not declared. Should it be static?
-drivers/pci/hotplug/rpadlpar_core.c:461:12: warning:
- symbol 'rpadlpar_io_init' was not declared. Should it be static?
-drivers/pci/hotplug/rpadlpar_core.c:473:6: warning:
- symbol 'rpadlpar_io_exit' was not declared. Should it be static?
+Probably no need for remote access (thanks for the offer, though). I
+attached a test patch to the bug report:
 
-Those functions are not used outside of this file, so marks them
-static.
-Also mark rpadlpar_io_exit() as __exit.
+  https://bugzilla.kernel.org/show_bug.cgi?id=208597
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/pci/hotplug/rpadlpar_core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-index c5eb509c72f0..f979b7098acf 100644
---- a/drivers/pci/hotplug/rpadlpar_core.c
-+++ b/drivers/pci/hotplug/rpadlpar_core.c
-@@ -352,7 +352,7 @@ static int dlpar_remove_vio_slot(char *drc_name, struct device_node *dn)
-  * -ENODEV		Not a valid drc_name
-  * -EIO			Internal PCI Error
-  */
--int dlpar_remove_pci_slot(char *drc_name, struct device_node *dn)
-+static int dlpar_remove_pci_slot(char *drc_name, struct device_node *dn)
- {
- 	struct pci_bus *bus;
- 	struct slot *slot;
-@@ -458,7 +458,7 @@ static inline int is_dlpar_capable(void)
- 	return (int) (rc != RTAS_UNKNOWN_SERVICE);
- }
- 
--int __init rpadlpar_io_init(void)
-+static int __init rpadlpar_io_init(void)
- {
- 
- 	if (!is_dlpar_capable()) {
-@@ -470,7 +470,7 @@ int __init rpadlpar_io_init(void)
- 	return dlpar_sysfs_init();
- }
- 
--void rpadlpar_io_exit(void)
-+static void __exit rpadlpar_io_exit(void)
- {
- 	dlpar_sysfs_exit();
- }
-
+that tries to work it around (based on the ->pm_cap == 0). I wonder if
+anyone would have time to try it out.
