@@ -2,72 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72479228099
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 15:08:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52A972282D8
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 16:54:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGUNIx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 09:08:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7211 "EHLO mga18.intel.com"
+        id S1728089AbgGUOyE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 10:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbgGUNIw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:08:52 -0400
-IronPort-SDR: 7Puqgciov1Y2cQvXkpK7HqKoiWHRsA7ZXQe1PwdsF7rLr8kwgWPsOqUsdAD1i+kMNCKVjdWg36
- d2UCubrrC1xA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="137610798"
-X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="137610798"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 06:08:51 -0700
-IronPort-SDR: FscKyFSJYpwm0edcPqe8S2lioAjregQkXbQ0CxU62nEOHXi0ZBMcv3DeLh85gLVtyKSo/Tichb
- A0h4lCsEzetA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="392343948"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 21 Jul 2020 06:08:47 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 21 Jul 2020 16:08:47 +0300
-Date:   Tue, 21 Jul 2020 16:08:47 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Lyude Paul <lyude@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        Karol Herbst <kherbst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200721130847.GK5180@lahna.fi.intel.com>
-References: <20200716235440.GA675421@bjorn-Precision-5520>
- <ec6623032131fc3e656713b8ec644cdff89a8066.camel@redhat.com>
- <20200717195209.vmtyfmgweoo645lh@wunner.de>
+        id S1727941AbgGUOyE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:54:04 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4B2A20717;
+        Tue, 21 Jul 2020 14:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595343243;
+        bh=LGjn1NQByMAtiMquXEdKNSg+VZngPld+GQLBIyWGQFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gAurnN/EAgwhJYBOP3FVWZ8Q1zkaIbD9GyL/qucE1v0WOfPMfD1E/SruAJUQUtCD2
+         eKB082UD1rxcMa4I2M21vXYK/6rPiwMWBp72swxptXHA8FF2J5+wUiH2aOXG2E+mLf
+         +jHmuqyjPBGrCSjJIVSKSoqd/zQwOeif5EIzkaqQ=
+Date:   Tue, 21 Jul 2020 09:54:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ashok Raj <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
+Message-ID: <20200721145401.GA1117318@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717195209.vmtyfmgweoo645lh@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1595263380-209956-1-git-send-email-ashok.raj@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 09:52:09PM +0200, Lukas Wunner wrote:
-> On Fri, Jul 17, 2020 at 03:04:10PM -0400, Lyude Paul wrote:
-> > Isn't it possible to tell whether a PCI device is connected through
-> > thunderbolt or not? We could probably get away with just defaulting
-> > to 100ms for thunderbolt devices without DLL Link Active specified,
-> > and then default to the old delay value for non-thunderbolt devices.
+On Mon, Jul 20, 2020 at 09:43:00AM -0700, Ashok Raj wrote:
+> PASID and PRI capabilities are only enumerated in PF devices. VF devices
+> do not enumerate these capabilites. IOMMU drivers also need to enumerate
+> them before enabling features in the IOMMU. Extending the same support as
+> PASID feature discovery (pci_pasid_features) for PRI.
 > 
-> pci_is_thunderbolt_attached()
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
 
-That only works with some devices. I think we should try to keep the
-fact that some PCIe links may be tunneled over TBT/USB4 transparent to
-the PCI core and try to treat them as "standard" PCIe links if possible
-at all :)
+Hi Ashok,
+
+When you update this for the 0-day implicit declaration thing, can you
+update the subject to say what the patch *does*, as opposed to what it
+is solving?  Also, no need for a period at the end.
+
+Does this fix a regression?  Is it associated with a commit that we
+could add as a "Fixes:" tag so we know how far back to try to apply
+to stable kernels?
+
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> To: Joerg Roedel <joro@8bytes.com>
+> To: Lu Baolu <baolu.lu@intel.com>
+> Cc: stable@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: iommu@lists.linux-foundation.org
+> ---
+>  drivers/iommu/intel/iommu.c |  2 +-
+>  drivers/pci/ats.c           | 14 ++++++++++++++
+>  include/linux/pci-ats.h     |  1 +
+>  3 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index d759e7234e98..276452f5e6a7 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+>  			}
+>  
+>  			if (info->ats_supported && ecap_prs(iommu->ecap) &&
+> -			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
+> +			    pci_pri_supported(pdev))
+>  				info->pri_supported = 1;
+>  		}
+>  	}
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index b761c1f72f67..ffb4de8c5a77 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -461,6 +461,20 @@ int pci_pasid_features(struct pci_dev *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_pasid_features);
+>  
+> +/**
+> + * pci_pri_supported - Check if PRI is supported.
+> + * @pdev: PCI device structure
+> + *
+> + * Returns false when no PRI capability is present.
+> + * Returns true if PRI feature is supported and enabled
+> + */
+> +bool pci_pri_supported(struct pci_dev *pdev)
+> +{
+> +	/* VFs share the PF PRI configuration */
+> +	return !!(pci_physfn(pdev)->pri_cap);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_pri_supported);
+> +
+>  #define PASID_NUMBER_SHIFT	8
+>  #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+>  /**
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index f75c307f346d..073d57292445 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -28,6 +28,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+>  void pci_disable_pri(struct pci_dev *pdev);
+>  int pci_reset_pri(struct pci_dev *pdev);
+>  int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> +bool pci_pri_supported(struct pci_dev *pdev);
+>  #endif /* CONFIG_PCI_PRI */
+>  
+>  #ifdef CONFIG_PCI_PASID
+> -- 
+> 2.7.4
+> 
