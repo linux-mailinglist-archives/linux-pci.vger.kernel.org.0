@@ -2,125 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8586228A69
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 23:13:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B28E228B73
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 23:35:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgGUVN6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 17:13:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17248 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbgGUVN6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:13:58 -0400
-IronPort-SDR: 0/8cvnYsacs+FpCbujs67hhvGkU/pXUo0cWOjaMlfcho5ZXMcEOjKqk4//ShNUIhxGyrbB8dld
- y9mMRFygdf8Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="168377249"
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="168377249"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 14:13:58 -0700
-IronPort-SDR: jfP3vxj61yHJHjlo5BFoMGLMIGVER/KB9BFhTq7pwA32SEp1fHghBmm3qZzbILTAlgK6CnJ7wY
- 4vXaZlScbvfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="270554953"
-Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jul 2020 14:13:58 -0700
-From:   Ashok Raj <ashok.raj@intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Date:   Tue, 21 Jul 2020 14:13:45 -0700
-Message-Id: <1595366025-239046-1-git-send-email-ashok.raj@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1731054AbgGUVfX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 17:35:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730214AbgGUVfW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 17:35:22 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BC3C0619DC
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jul 2020 14:35:22 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id f12so23063602eja.9
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jul 2020 14:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pUG6c39OxzQ8IxUpaaU1wklcT+ZDA+H9y6wrizuP1IQ=;
+        b=fpVtZ5vr/bl4gwJZ660px4Eks0k0bFp5F00leanT0uPcOTgmoIVnokm+ua/STwjYYU
+         9V0Le4JZ7BwvhlVhFXG7Dk6uDAL6avESZPtpqEXkGTTx7a0UAf5JI5cLpd6qdzoiV4pc
+         OVZuIyutP3UYG7RX+wyFYILhVk9K+2Bf5Rkkvu4t2vAnzZGCeHNgevlyRyPEZajZKVWb
+         LJx3ccmgwBWG3aOFencD4vIdccFY+YTJ+h0qq1fXsevTE8RiRwpAEsyonT9mp1hrf2yM
+         MP/VlkjZk9cKmlm2n20iRO2IPBPgE/cY4y2TN8o594hbmdnreaFuvl/GYgmWrPMBcdz8
+         wb2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pUG6c39OxzQ8IxUpaaU1wklcT+ZDA+H9y6wrizuP1IQ=;
+        b=qxaIQA9KXIpyvY/zECukh7HNsgaAoNW7SDUhMHSCUCIrBQZ9p8xeqPiVGdIblMMSmq
+         6TQeWjcielnccuUAYQDaS4TplfmzijF7dwwlvJ1zlRITWwBNfiitlpkNUglC6a8/GIBH
+         8PwdwhDg8/2f8ca7SKdiA5TQDs4cHNNqZeJ594ZW/9Of8/6Lut2lPmKgRBztAYxjAxhr
+         U9jAFiZVcK7guomfoDcZClTvBNrrZcAH8hca3mIZG5WD8WTvOQrY389juzjk4oBki06/
+         D8CUo2a9i6ui3I5qfq8RdhTmMNpPuRI2MZiH+J/eyjxIy04s/FcuFI6rELKIzT55X0Wr
+         XvKQ==
+X-Gm-Message-State: AOAM531mqPzDil6S8whnoTwBhzaASp75wpDZKeXyDccwilSkUFcofPSS
+        Dc144AzozwD3EJ9DY+0sc1waE8MhgcKFnVdRPx7nUg==
+X-Google-Smtp-Source: ABdhPJybQSo8dZkcp7h1w6spji8sbGsdM1tSDGznEquhq3K0DjuECAckH4y+EAugj+bvtxFnwhrKgK1z4PC3S6mLDA0=
+X-Received: by 2002:a17:906:1a54:: with SMTP id j20mr26707162ejf.455.1595367320599;
+ Tue, 21 Jul 2020 14:35:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721162858.GA2139881@kroah.com>
+In-Reply-To: <20200721162858.GA2139881@kroah.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 21 Jul 2020 14:35:09 -0700
+Message-ID: <CAPcyv4gyYPNL87YnCgg6E+NL_URZfiumyaVfe4jGv4XQ0oO=0w@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>, maz@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Yi L Liu <yi.l.liu@intel.com>, Baolu Lu <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        Dave Hansen <dave.hansen@intel.com>, netanelg@mellanox.com,
+        shahafs@mellanox.com, yan.y.zhao@linux.intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
+        KVM list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PASID and PRI capabilities are only enumerated in PF devices. VF devices
-do not enumerate these capabilites. IOMMU drivers also need to enumerate
-them before enabling features in the IOMMU. Extending the same support as
-PASID feature discovery (pci_pasid_features) for PRI.
+On Tue, Jul 21, 2020 at 9:29 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jul 21, 2020 at 09:02:15AM -0700, Dave Jiang wrote:
+> > v2:
+>
+> "RFC" to me means "I don't really think this is mergable, so I'm
+> throwing it out there."  Which implies you know it needs more work
+> before others should review it as you are not comfortable with it :(
 
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+There's full blown reviewed-by from me on the irq changes. The VFIO /
+mdev changes looked ok to me, but I did not feel comfortable / did not
+have time to sign-off on them. At the same time I did not see much to
+be gained to keeping those internal. So "RFC" in this case is a bit
+modest. It's more internal reviewer said this looks like it is going
+in the right direction, but wants more community discussion on the
+approach.
 
-v2: Fixed build failure from lkp when CONFIG_PRI=n
-    Almost all the PRI functions were called only when CONFIG_PASID is
-    set. Except the new pci_pri_supported().
+> So, back-of-the-queue you go...
 
-    previous version sent in error because i missed dry-run before recompile
-    :-(
-
-To: Bjorn Helgaas <bhelgaas@google.com>
-To: Joerg Roedel <joro@8bytes.com>
-To: Lu Baolu <baolu.lu@intel.com>
-Cc: stable@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: iommu@lists.linux-foundation.org
----
- drivers/iommu/intel/iommu.c |  2 +-
- drivers/pci/ats.c           | 13 +++++++++++++
- include/linux/pci-ats.h     |  4 ++++
- 3 files changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index d759e7234e98..276452f5e6a7 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 			}
- 
- 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
--			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
-+			    pci_pri_supported(pdev))
- 				info->pri_supported = 1;
- 		}
- 	}
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b761c1f72f67..2e6cf0c700f7 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
- 
- 	return pdev->pasid_required;
- }
-+
-+/**
-+ * pci_pri_supported - Check if PRI is supported.
-+ * @pdev: PCI device structure
-+ *
-+ * Returns true if PRI capability is present, false otherwise.
-+ */
-+bool pci_pri_supported(struct pci_dev *pdev)
-+{
-+	/* VFs share the PF PRI configuration */
-+	return !!(pci_physfn(pdev)->pri_cap);
-+}
-+EXPORT_SYMBOL_GPL(pci_pri_supported);
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index f75c307f346d..df54cd5b15db 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-+bool pci_pri_supported(struct pci_dev *pdev);
-+#else
-+static inline bool pci_pri_supported(struct pci_dev *pdev)
-+{ return false; }
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
--- 
-2.7.4
-
+Let's consider this not RFC in that context. The drivers/base/ pieces
+have my review for you, the rest are dmaengine and vfio subsystem
+concerns that could use some commentary.
