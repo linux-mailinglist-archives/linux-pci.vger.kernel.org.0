@@ -2,111 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 492EF228468
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 18:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56D17228476
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jul 2020 18:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbgGUQA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 12:00:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26991 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729999AbgGUQA4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 12:00:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595347254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P0UrEz/GvXR1ZZ5iVqJP3qWd7bx+Q5rlrTYnl3WPpZ0=;
-        b=i8Qu/OYQZkaq1Irfx0chJjTxyFvUK0hIK32enmue9E2SVCq/O5k2JrNARdI/PTWxPxOmBk
-        JOwnJiINoMEWI+1OEJa2oppSvlf7XuwnA3aXmaWht5w3rbTitzc7KD/LQIUojHAfT18L5M
-        LL3+Sxodvt46qE5nDhzLHBGW/5ddrso=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-yKIRjsp0OFy1ghJoXhrVHQ-1; Tue, 21 Jul 2020 12:00:52 -0400
-X-MC-Unique: yKIRjsp0OFy1ghJoXhrVHQ-1
-Received: by mail-qv1-f69.google.com with SMTP id r12so12682355qvk.3
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jul 2020 09:00:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=P0UrEz/GvXR1ZZ5iVqJP3qWd7bx+Q5rlrTYnl3WPpZ0=;
-        b=uT54vjnLANM6SzdzDr1CbaKoMw8fJVt/ppMsT9tZKBo7LpmHjCYFZQ6d1l1H2cPwed
-         zyBSPAp+efc+dPkKEBBcUKiCwU8G6fTBbMD2lRM3rpiXBbLUlYv7SQa+63yx1xS8cD29
-         EH8BP3VAwRUDKtd20+XfKv9ePxDGmq46Av2slWbTAgcIbCUTcFhOPfGvbRo3d1JCXOKB
-         wpH4iOpKSsiSVVKGdt0vcOX2TgmaN2gzrDPeYPnp7LgyOmQoxp16v1U5lXYQiL4A9zJj
-         cvVeh2LtkLb6QvyfMpDP4kpTJyitoVmh77aElvmRuO2mbUF1yqV3YX/l3KgJmKLPULDr
-         pI+g==
-X-Gm-Message-State: AOAM531xuuYKkn6ulYA2Pub6BSnpO6mYrFcm3n1SiJLTnEpqr/O3ltgG
-        jLjgTz7Qv648JWkZbEQoMzkCxCB83qW2XlZe2OXyv/wJkJ0obMXgyXlSz/xbjP3coGe1bdFIUEs
-        OCmofdRzsvXnfrec2EinI
-X-Received: by 2002:ae9:ef43:: with SMTP id d64mr12959439qkg.326.1595347252176;
-        Tue, 21 Jul 2020 09:00:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyinIbVabueGMXoafK8P3B2fbzczvS1OyYVVhBZSVm9JqHV5WA7XsG5FVGYoO3j+1QlROT9pw==
-X-Received: by 2002:ae9:ef43:: with SMTP id d64mr12959408qkg.326.1595347251931;
-        Tue, 21 Jul 2020 09:00:51 -0700 (PDT)
-Received: from Ruby.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id x29sm21891103qtv.80.2020.07.21.09.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:00:51 -0700 (PDT)
-Message-ID: <dc7a592219f58f9a5df7fa7135fa3fc87d9450f0.camel@redhat.com>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-From:   Lyude Paul <lyude@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Tue, 21 Jul 2020 12:00:49 -0400
-In-Reply-To: <20200721152737.GS5180@lahna.fi.intel.com>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
-         <20200716235440.GA675421@bjorn-Precision-5520>
-         <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
-         <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
-         <20200721122247.GI5180@lahna.fi.intel.com>
-         <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
-         <20200721152737.GS5180@lahna.fi.intel.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        id S1728219AbgGUQCT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 12:02:19 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36437 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726919AbgGUQCS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:02:18 -0400
+IronPort-SDR: Ikg01JIzU+9DmhvfZXnh7DgMu7ahluJn9lmpdhH04xbEGB/PhPB9MKk1kM+BU7wvrlppmOIs3c
+ cC7KQvKplMWg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="211707972"
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="211707972"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 09:02:16 -0700
+IronPort-SDR: JMHzcjiPLeplMQlR4VYW9anJCqZ4TvwDn6hOSJgme6gv93lU3gu/moN1zQvfsvX+pglT4mvjLF
+ beoMO0yTIbDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="271755813"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jul 2020 09:02:15 -0700
+Subject: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver 
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
+        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, jgg@mellanox.com,
+        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        dan.j.williams@intel.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, parav@mellanox.com, jgg@mellanox.com,
+        rafael@kernel.org, dave.hansen@intel.com, netanelg@mellanox.com,
+        shahafs@mellanox.com, yan.y.zhao@linux.intel.com,
+        pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Date:   Tue, 21 Jul 2020 09:02:15 -0700
+Message-ID: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2020-07-21 at 18:27 +0300, Mika Westerberg wrote:
-> On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
-> > Sure thing. Also, feel free to let me know if you'd like access to one of
-> > the
-> > systems we saw breaking with this patch - I'm fairly sure I've got one of
-> > them
-> > locally at my apartment and don't mind setting up AMT/KVM/SSH
-> 
-> Probably no need for remote access (thanks for the offer, though). I
-> attached a test patch to the bug report:
-> 
->   https://bugzilla.kernel.org/show_bug.cgi?id=208597
-> 
-> that tries to work it around (based on the ->pm_cap == 0). I wonder if
-> anyone would have time to try it out.
+v2:
+IMS (now dev-msi):
+With recommendations from Jason/Thomas/Dan on making IMS more generic:
+Pass a non-pci generic device(struct device) for IMS management instead of mdev
+Remove all references to mdev and symbol_get/put
+Remove all references to IMS in common code and replace with dev-msi
+remove dynamic allocation of platform-msi interrupts: no groups,no new msi list or list helpers
+Create a generic dev-msi domain with and without interrupt remapping enabled.
+Introduce dev_msi_domain_alloc_irqs and dev_msi_domain_free_irqs apis
 
-Will give it a shot today and let you know the result
+mdev: 
+Removing unrelated bits from SVA enabling that’s not necessary for the submission. (Kevin)
+Restructured entire mdev driver series to make reviewing easier (Kevin)
+Made rw emulation more robust (Kevin)
+Removed uuid wq type and added single dedicated wq type (Kevin)
+Locking fixes for vdev (Yan Zhao)
+VFIO MSIX trigger fixes (Yan Zhao)
 
-> 
--- 
-Cheers,
-	Lyude Paul (she/her)
-	Software Engineer at Red Hat
+Link to previous discussions with Jason:
+https://lore.kernel.org/lkml/57296ad1-20fe-caf2-b83f-46d823ca0b5f@intel.com/
+The emulation part that can be moved to user space is very small due to the majority of the
+emulations being control bits and need to reside in the kernel. We can revisit the necessity of
+moving the small emulation part to userspace and required architectural changes at a later time.
 
+This RFC series has been reviewed by Dan Williams <dan.j.williams@intel.com>
+
+The actual code can be independent of the stage 2 driver code submission that adds support for SVM,
+ENQCMD(S), PASID, and shared workqueues. This code series will match the support of the 5.6 kernel
+(stage 1) driver but on guest. The code is dependent on Baolu’s iommu aux-domain API extensions
+patches that’s still in process of being reviewed:
+https://lkml.org/lkml/2020/7/14/48
+
+Stage 1 of the driver has been accepted in v5.6 kernel. It supports dedicated workqueue (wq)
+without Shared Virtual Memory (SVM) support. Stage 2 supports shared wq and SVM. It is pending
+upstream review and targeting kernel v5.9.
+
+VFIO mediated device framework allows vendor drivers to wrap a portion of device resources into
+virtual devices (mdev). Each mdev can be assigned to different guest using the same set of VFIO
+uAPIs as assigning a physical device. Accessing to the mdev resource is served with mixed policies.
+For example, vendor drivers typically mark data-path interface as pass-through for fast guest
+operations, and then trap-and-mediate the control-path interface to avoid undesired interference
+between mdevs. Some level of emulation is necessary behind vfio mdev to compose the virtual device
+interface. 
+
+This series brings mdev to idxd driver to enable Intel Scalable IOV (SIOV), a hardware-assisted
+mediated pass-through technology. SIOV makes each DSA wq independently assignable through
+PASID-granular resource/DMA isolation. It helps improve scalability and reduces mediation
+complexity against purely software-based mdev implementations. Each assigned wq is configured by
+host and exposed to the guest in a read-only configuration mode, which allows the guest to use the
+wq w/o additional setup. This design greatly reduces the emulation bits to focus on handling
+commands from guests.
+
+Introducing mdev types “1dwq” type. This mdev type allows allocation of a single dedicated wq from
+available dedicated wqs. After a workqueue (wq) is enabled, the user will generate an uuid. On mdev
+creation, the mdev driver code will find a dwq depending on the mdev type. When the create operation
+is successful, the user generated uuid can be passed to qemu. When the guest boots up, it should
+discover a DSA device when doing PCI discovery.
+
+For example of “1dwq” type:
+1. Enable wq with “mdev” wq type
+2. A user generated uuid.
+3. The uuid is written to the mdev class sysfs path:
+echo $UUID > /sys/class/mdev_bus/0000\:00\:0a.0/mdev_supported_types/idxd-wq/create
+4. Pass the following parameter to qemu:
+"-device vfio-pci,sysfsdev=/sys/bus/pci/devices/0000:00:0a.0/$UUID"
+ 
+The wq exported through mdev will have the read only config bit set for configuration. This means
+that the device does not require the typical configuration. After enabling the device, the user
+must set the WQ type and name. That is all is necessary to enable the WQ and start using it. The
+single wq configuration is not the only way to create the mdev. Multi wqs support for mdev will be
+in the future works.
+ 
+The mdev utilizes Interrupt Message Store or IMS[3], a device-specific MSI implementation, instead
+of MSIX for interrupts for the guest. This preserves MSIX for host usages and also allows a
+significantly larger number of interrupt vectors for guest usage.
+
+The idxd driver implements IMS as on-device memory mapped unified storage. Each interrupt message
+is stored as a DWORD size data payload and a 64-bit address (same as MSI-X). Access to the IMS is
+through the host idxd driver.
+
+This patchset extends the existing platform-msi framework (which provides a generic mechanism to
+support non-PCI compliant MSI interrupts) to benefit any driver which wants to allocate
+msi-like(dev-msi) interrupts and provide its own ops functions (mask/unmask etc.)
+
+Call-back functions defined by the kernel and implemented by the driver are used to
+1. program the interrupt addr/data values instead of the kernel directly programming them.
+2. mask/unmask the interrupt source
+
+The kernel can specify the requirements for these callback functions (e.g., the driver is not
+expected to block, or not expected to take a lock in the callback function).
+
+Support for 2 new IRQ chip/domain is added(with and without IRQ_REMAP support- DEV-MSI/IR-DEV-MSI).
+
+[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
+[2]: https://software.intel.com/en-us/articles/intel-sdm
+[3]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+[4]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+[5]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+[6]: https://intel.github.io/idxd/
+[7]: https://github.com/intel/idxd-driver idxd-stage2.5
+
+---
+
+Dave Jiang (13):
+      dmaengine: idxd: add support for readonly config devices
+      dmaengine: idxd: add interrupt handle request support
+      dmaengine: idxd: add DEV-MSI support in base driver
+      dmaengine: idxd: add device support functions in prep for mdev
+      dmaengine: idxd: add basic mdev registration and helper functions
+      dmaengine: idxd: add emulation rw routines
+      dmaengine: idxd: prep for virtual device commands
+      dmaengine: idxd: virtual device commands emulation
+      dmaengine: idxd: ims setup for the vdcm
+      dmaengine: idxd: add mdev type as a new wq type
+      dmaengine: idxd: add dedicated wq mdev type
+      dmaengine: idxd: add new wq state for mdev
+      dmaengine: idxd: add error notification from host driver to mediated device
+
+Jing Lin (1):
+      dmaengine: idxd: add ABI documentation for mediated device support
+
+Megha Dey (4):
+      platform-msi: Introduce platform_msi_ops
+      irq/dev-msi: Add support for a new DEV_MSI irq domain
+      irq/dev-msi: Create IR-DEV-MSI irq domain
+      irq/dev-msi: Introduce APIs to allocate/free dev-msi interrupts
+
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   15 
+ arch/x86/include/asm/hw_irq.h                  |    6 
+ arch/x86/kernel/apic/msi.c                     |   12 
+ drivers/base/Kconfig                           |    7 
+ drivers/base/Makefile                          |    1 
+ drivers/base/dev-msi.c                         |  170 ++++
+ drivers/base/platform-msi.c                    |   62 +
+ drivers/base/platform-msi.h                    |   23 
+ drivers/dma/Kconfig                            |    7 
+ drivers/dma/idxd/Makefile                      |    2 
+ drivers/dma/idxd/cdev.c                        |    6 
+ drivers/dma/idxd/device.c                      |  266 +++++-
+ drivers/dma/idxd/idxd.h                        |   62 +
+ drivers/dma/idxd/ims.c                         |  174 ++++
+ drivers/dma/idxd/ims.h                         |   17 
+ drivers/dma/idxd/init.c                        |  100 ++
+ drivers/dma/idxd/irq.c                         |    6 
+ drivers/dma/idxd/mdev.c                        | 1106 ++++++++++++++++++++++++
+ drivers/dma/idxd/mdev.h                        |  118 +++
+ drivers/dma/idxd/registers.h                   |   24 -
+ drivers/dma/idxd/submit.c                      |   37 +
+ drivers/dma/idxd/sysfs.c                       |   55 +
+ drivers/dma/idxd/vdev.c                        |  962 +++++++++++++++++++++
+ drivers/dma/idxd/vdev.h                        |   28 +
+ drivers/dma/mv_xor_v2.c                        |    6 
+ drivers/dma/qcom/hidma.c                       |    6 
+ drivers/iommu/arm-smmu-v3.c                    |    6 
+ drivers/iommu/intel/irq_remapping.c            |   11 
+ drivers/irqchip/irq-mbigen.c                   |    8 
+ drivers/irqchip/irq-mvebu-icu.c                |    6 
+ drivers/mailbox/bcm-flexrm-mailbox.c           |    6 
+ drivers/perf/arm_smmuv3_pmu.c                  |    6 
+ include/linux/intel-iommu.h                    |    1 
+ include/linux/irqdomain.h                      |   11 
+ include/linux/msi.h                            |   35 +
+ include/uapi/linux/idxd.h                      |    2 
+ 36 files changed, 3270 insertions(+), 100 deletions(-)
+ create mode 100644 drivers/base/dev-msi.c
+ create mode 100644 drivers/base/platform-msi.h
+ create mode 100644 drivers/dma/idxd/ims.c
+ create mode 100644 drivers/dma/idxd/ims.h
+ create mode 100644 drivers/dma/idxd/mdev.c
+ create mode 100644 drivers/dma/idxd/mdev.h
+ create mode 100644 drivers/dma/idxd/vdev.c
+ create mode 100644 drivers/dma/idxd/vdev.h
+
+--
