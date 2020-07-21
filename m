@@ -2,107 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7181228BE8
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 00:22:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3F7C228C35
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 00:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgGUWWK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 18:22:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgGUWWK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 18:22:10 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B199C061794
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jul 2020 15:22:10 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id 95so335224otw.10
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jul 2020 15:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gigaio-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=XJulkHtLO+mMPWALlKYBY/bLhAhk7+2o/jlFimjEMOo=;
-        b=wq6J6cpwdJBjI6mTP54hFwcwZMilBwGW7g+ttHAqjNONgm9zMMY+qa5n4XIV4ZGDud
-         hjqL9l1q/tQuTVWRtbYT2Q6Ij9jLNw/qwJqIRZuK64usOBK9e3GMs1qiNPIFHgaJJiWX
-         AI4uoOk4bd2suw7fiiIoP6yTVlDJoefdPFBQkxggmUJnHwr3kX4Z4wt1zCdYiLGkAmNu
-         7iqkCW+xKouF7iQxSnrpxyhy/E8xnYJpgIImLxIj6816j1zUSgKK9CEyRCcNODM+riMh
-         4kE0ni8Nysr5lhvWWscfp1Wd2mQ0etc1DNSRxRZd0LBpNHiA+86OfyUSPbhqYXA80qcc
-         JfpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=XJulkHtLO+mMPWALlKYBY/bLhAhk7+2o/jlFimjEMOo=;
-        b=qrdbp7eMC6mcGR7r26frlBDHjCD5Ju74ZVYpxL9jodCZqTHFK3b2BZOmE7bIpxLTXS
-         xBoH6mIjmg4dKTjBPKzD1po5nAs2wQWaFkSwAWQ1afe+ncD6kDaKRkvrp6ScpV7tYSbP
-         ojo9CI6P/jVsZWYWe8GbOXPlk9RRioqmYkPTLWJtAbCTSq/yoOEPnDpq9ArH41vrgsSq
-         Py1w9sn6I5jQeDq9939DW9K7yI0Go3qJFqdH5rDbhCcUkHGE9PyjSG4QBmPbMG/YkZpt
-         95z0/hTQ714OM+LcD7bABr8+moa6zLxwRlsnSL7ypNb984iWd2qTmRPcV3a2xxu5E4R1
-         1H/Q==
-X-Gm-Message-State: AOAM530mqabiB5XPxJbaHNlkwdRXQ+4mQzwNgkZmhyap/3K7NybC0RgW
-        SbDQvrwpRnfUyEhoHqRpRyHePntIWD7qZUSAbPp0zNJEpX+VlA==
-X-Google-Smtp-Source: ABdhPJw2C3UgvOyfxNDNaXmFy5DZqHcFCYH/Lco+saqJAhcLTU6w+S+TJ/rAY4Z9wwD1jbOrao+M8MK3uI1YaAMtzN4=
-X-Received: by 2002:a05:6830:1093:: with SMTP id y19mr26763187oto.204.1595370128967;
- Tue, 21 Jul 2020 15:22:08 -0700 (PDT)
+        id S1728007AbgGUWuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 18:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgGUWuJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Jul 2020 18:50:09 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8436E2073A;
+        Tue, 21 Jul 2020 22:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595371808;
+        bh=yWjyHl/+Jkepl7ur2pQs9fqUJrabWlVAD+P0xfkZ8Kw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=frZ/aCsGdwx2O0J6NiYCjmBnlCneYGd7++gMRCAzkGm0qIJiLxl8nrxh6lIuzD5WQ
+         pas5ZRYD0TGP+7oJo/QcrGE8Vl82oas9D/71bE4w7dEM8wcfwsQoBtcJlyzCfKqYNJ
+         HQdzsRQQaTfH9aTS6JsFq2dxZ/7UsgBFk+Vh2MTM=
+Date:   Tue, 21 Jul 2020 17:50:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irqdomain/treewide: Free firmware node after domain
+ removal
+Message-ID: <20200721225007.GA1167473@bjorn-Precision-5520>
 MIME-Version: 1.0
-From:   Doug Meyer <dmeyer@gigaio.com>
-Date:   Tue, 21 Jul 2020 15:21:53 -0700
-Message-ID: <CA+GK6emiHu9kQZED05jRnT0+kK_ZTr=upoYn2AJwEvFTts7eUg@mail.gmail.com>
-Subject: PCIe Enumeration w/o Provisioning
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595363169-7157-1-git-send-email-jonathan.derrick@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello everyone,
+On Tue, Jul 21, 2020 at 02:26:09PM -0600, Jon Derrick wrote:
+> Change 711419e504eb ("irqdomain: Add the missing assignment of
+> domain->fwnode for named fwnode") unintentionally caused a dangling
+> pointer page fault issue on firmware nodes that were freed after IRQ
+> domain allocation. Change e3beca48a45b fixed that dangling pointer issue
+> by only freeing the firmware node after an IRQ domain allocation
+> failure. That fix no longer frees the firmware node immediately, but
+> leaves the firmware node allocated after the domain is removed.
+> 
+> We need to keep the firmware node through irq_domain_remove, but should
+> free it afterwards. This patch saves the handle and adds the freeing of
+> firmware node after domain removal where appropriate.
+> 
+> Fixes: e3beca48a45b ("irqdomain/treewide: Keep firmware node unconditionally allocated")
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> Cc: stable@vger.kernel.org
 
-I hope you all are healthy, safe, and doing well.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
 
-I received an excellent suggestion from Bjorn H. to post my conundrum
-here, in hopes that perhaps some of you might offer some suggestions
-for a challenge I'm facing. Thank you for a bit of your time.
-
-I've gotten started on a challenging ask rooted in the desire to
-obtain resource box slot information (for orchestration) prior to
-binding the resource box to a host. It is an interesting challenge
-given the variety of hardware which may or may not support SMBus
-connections to cards, cards that may not support SMBus, and resource
-boxes that have varying degrees of functionality (if any).
-
-At my disposal is a pretty light-weight COM to which I can bind
-resource boxes one at a time via a fan-out switch. Having bound a
-resource box to the COM, the hope is to somehow enumerate/discover
-(but not provision) the PCIe tree of the resource box to obtain basic
-information available from Configuration Space such as EP
-vendor/device IDs, serial number (if available), BAR sizes, etc.
-
-I've made some basic attempts with setpci, but have found that setpci
-seems to really want the target devices to already have been
-enumerated. libpciaccess seems to depend on this as well. Might any of
-you know of a way by which I can manually perform configuration
-reads/writes to devices which have not been enumerated by the system?
-
-More heavily-handed, the rescan capabilities in
-/sys/devices/.../rescan does both enumeration and provisioning, which
-presents a different problem. The COM really doesn't have the
-resources to provision arbitrary JBOF/JBOG populations, and I've been
-able to prove that out. Using pci=assign-busses,hpbussize=<big number>
-with only partially populated resource boxes, rescan has successfully
-enumerated all of the buses, but complete provisioning fails (though
-the kernel happily does not crash). Because the buses get fully
-enumerated, I've then been able to extract the info I want via
-lspci/setpci, and then /sys/devices/.../remove the branch.
-
-This raises the question of whether someone might know of a way to ask
-the system to perform enumeration without provisioning? (or somehow
-suppress the provisioning?)
-
-Bjorn brainstormed/suggested looking at setpci's -H1/H2 options,
-trying ECAM from user space, and several other ideas, all of which
-I'll be looking into. If any of you have some experience with trying
-this kind of thing, or at least a reference or creative suggestion to
-try I'd be grateful for your thoughts.
-
-Again, thanks for your time.
-
-Blessings,
-Doug Meyer
+> ---
+>  arch/mips/pci/pci-xtalk-bridge.c    | 3 +++
+>  arch/x86/kernel/apic/io_apic.c      | 5 +++++
+>  drivers/iommu/intel/irq_remapping.c | 8 ++++++++
+>  drivers/mfd/ioc3.c                  | 6 ++++++
+>  drivers/pci/controller/vmd.c        | 3 +++
+>  5 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
+> index 5958217..9b3cc77 100644
+> --- a/arch/mips/pci/pci-xtalk-bridge.c
+> +++ b/arch/mips/pci/pci-xtalk-bridge.c
+> @@ -728,6 +728,7 @@ static int bridge_probe(struct platform_device *pdev)
+>  	pci_free_resource_list(&host->windows);
+>  err_remove_domain:
+>  	irq_domain_remove(domain);
+> +	irq_domain_free_fwnode(fn);
+>  	return err;
+>  }
+>  
+> @@ -735,8 +736,10 @@ static int bridge_remove(struct platform_device *pdev)
+>  {
+>  	struct pci_bus *bus = platform_get_drvdata(pdev);
+>  	struct bridge_controller *bc = BRIDGE_CONTROLLER(bus);
+> +	struct fwnode_handle *fn = bc->domain->fwnode;
+>  
+>  	irq_domain_remove(bc->domain);
+> +	irq_domain_free_fwnode(fn);
+>  	pci_lock_rescan_remove();
+>  	pci_stop_root_bus(bus);
+>  	pci_remove_root_bus(bus);
+> diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+> index 81ffcfb..21325a4a 100644
+> --- a/arch/x86/kernel/apic/io_apic.c
+> +++ b/arch/x86/kernel/apic/io_apic.c
+> @@ -2335,8 +2335,13 @@ static int mp_irqdomain_create(int ioapic)
+>  
+>  static void ioapic_destroy_irqdomain(int idx)
+>  {
+> +	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
+> +	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
+> +
+>  	if (ioapics[idx].irqdomain) {
+>  		irq_domain_remove(ioapics[idx].irqdomain);
+> +		if (!cfg->dev)
+> +			irq_domain_free_fwnode(fn);
+>  		ioapics[idx].irqdomain = NULL;
+>  	}
+>  }
+> diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
+> index 9564d23..aa096b3 100644
+> --- a/drivers/iommu/intel/irq_remapping.c
+> +++ b/drivers/iommu/intel/irq_remapping.c
+> @@ -628,13 +628,21 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
+>  
+>  static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
+>  {
+> +	struct fwnode_handle *fn;
+> +
+>  	if (iommu && iommu->ir_table) {
+>  		if (iommu->ir_msi_domain) {
+> +			fn = iommu->ir_msi_domain->fwnode;
+> +
+>  			irq_domain_remove(iommu->ir_msi_domain);
+> +			irq_domain_free_fwnode(fn);
+>  			iommu->ir_msi_domain = NULL;
+>  		}
+>  		if (iommu->ir_domain) {
+> +			fn = iommu->ir_domain->fwnode;
+> +
+>  			irq_domain_remove(iommu->ir_domain);
+> +			irq_domain_free_fwnode(fn);
+>  			iommu->ir_domain = NULL;
+>  		}
+>  		free_pages((unsigned long)iommu->ir_table->base,
+> diff --git a/drivers/mfd/ioc3.c b/drivers/mfd/ioc3.c
+> index 74cee7c..d939ccc 100644
+> --- a/drivers/mfd/ioc3.c
+> +++ b/drivers/mfd/ioc3.c
+> @@ -616,7 +616,10 @@ static int ioc3_mfd_probe(struct pci_dev *pdev,
+>  		/* Remove all already added MFD devices */
+>  		mfd_remove_devices(&ipd->pdev->dev);
+>  		if (ipd->domain) {
+> +			struct fwnode_handle *fn = ipd->domain->fwnode;
+> +
+>  			irq_domain_remove(ipd->domain);
+> +			irq_domain_free_fwnode(fn);
+>  			free_irq(ipd->domain_irq, (void *)ipd);
+>  		}
+>  		pci_iounmap(pdev, regs);
+> @@ -643,7 +646,10 @@ static void ioc3_mfd_remove(struct pci_dev *pdev)
+>  	/* Release resources */
+>  	mfd_remove_devices(&ipd->pdev->dev);
+>  	if (ipd->domain) {
+> +		struct fwnode_handle *fn = ipd->domain->fwnode;
+> +
+>  		irq_domain_remove(ipd->domain);
+> +		irq_domain_free_fwnode(fn);
+>  		free_irq(ipd->domain_irq, (void *)ipd);
+>  	}
+>  	pci_iounmap(pdev, ipd->regs);
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index f078114..91eb769 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -560,6 +560,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	if (!vmd->bus) {
+>  		pci_free_resource_list(&resources);
+>  		irq_domain_remove(vmd->irq_domain);
+> +		irq_domain_free_fwnode(fn);
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -673,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
+>  static void vmd_remove(struct pci_dev *dev)
+>  {
+>  	struct vmd_dev *vmd = pci_get_drvdata(dev);
+> +	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
+>  
+>  	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>  	pci_stop_root_bus(vmd->bus);
+> @@ -680,6 +682,7 @@ static void vmd_remove(struct pci_dev *dev)
+>  	vmd_cleanup_srcu(vmd);
+>  	vmd_detach_resources(vmd);
+>  	irq_domain_remove(vmd->irq_domain);
+> +	irq_domain_free_fwnode(fn);
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> -- 
+> 1.8.3.1
+> 
