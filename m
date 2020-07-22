@@ -2,157 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC198229B36
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 17:21:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5601E229D84
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 18:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgGVPV1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 11:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
+        id S1728511AbgGVQuy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 12:50:54 -0400
+Received: from mga07.intel.com ([134.134.136.100]:12009 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgGVPV1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:21:27 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B19362068F;
-        Wed, 22 Jul 2020 15:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595431286;
-        bh=MX48ABVUqy2xeiw9Zt3yJcZFN+gSzmjiN7Ad2W9zbaM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fgY5qr4gCXXFoH05PL/Habl6oLCj8rFfPmXFImau3YiAZ4FNfOk3vPDdmUxiLgm9L
-         nsVnNX1tAa9jFJXKPyPMoZu8Nx/XL3fMSXOjrOy1PWWjTKSeTxzZkQxV3C1N1fRfqr
-         SWoQMYmLuiebIcXHfXkevGW1bkQzj+4MEpUb+V50=
-Date:   Wed, 22 Jul 2020 10:21:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Baoquan He <bhe@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>, jroedel@suse.de,
-        Myron Stowe <myron.stowe@redhat.com>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Wright <rwright@hpe.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Dave Young <dyoung@redhat.com>,
-        Khalid Aziz <khalid@gonehiking.org>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200722152123.GA1278089@bjorn-Precision-5520>
+        id S1726642AbgGVQux (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Jul 2020 12:50:53 -0400
+IronPort-SDR: yiVEIujHbbYbaMEjiDiNcyTh5qmSgLPkrBiPOSmYpj6la6z/3lzSMs9ZwvI9PzJlF9sItzlAOc
+ b/rp1EmHkp+A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215002841"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="215002841"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 09:50:51 -0700
+IronPort-SDR: L+8m7J8RWmfQdUFP7nNVsRis/hvFKPt3CUmzdUuG4sPpU5xSTU/i5zwca/aG50/A9u2+9/d4gx
+ vrvmDvcVD7gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="462526859"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by orsmga005.jf.intel.com with ESMTP; 22 Jul 2020 09:50:50 -0700
+Received: from [10.254.181.38] (10.254.181.38) by ORSMSX101.amr.corp.intel.com
+ (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 Jul
+ 2020 09:50:50 -0700
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>
+CC:     <vkoul@kernel.org>, <maz@kernel.org>, <bhelgaas@google.com>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>,
+        <tglx@linutronix.de>, <hpa@zytor.com>,
+        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
+        <ashok.raj@intel.com>, <yi.l.liu@intel.com>, <baolu.lu@intel.com>,
+        <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>,
+        <tony.luck@intel.com>, <jing.lin@intel.com>,
+        <dan.j.williams@intel.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <parav@mellanox.com>,
+        <dave.hansen@intel.com>, <netanelg@mellanox.com>,
+        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
+        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
+        <mona.hossain@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+ <20200721161344.GA2021248@mellanox.com>
+From:   "Dey, Megha" <megha.dey@intel.com>
+Message-ID: <a99af84f-f3ef-ee3c-1f94-680909e97868@intel.com>
+Date:   Wed, 22 Jul 2020 09:50:47 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPcB9cpEX-uYeTp7DVEXtwDRWBCTVoPCB4dxPbyq1sDeixP_w@mail.gmail.com>
+In-Reply-To: <20200721161344.GA2021248@mellanox.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.254.181.38]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:52:26PM +0800, Kairui Song wrote:
-> On Fri, Mar 6, 2020 at 5:38 PM Baoquan He <bhe@redhat.com> wrote:
-> > On 03/04/20 at 08:53pm, Deepa Dinamani wrote:
-> > > On Wed, Mar 4, 2020 at 7:53 PM Baoquan He <bhe@redhat.com> wrote:
-> > > > On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
-> > > > > I looked at this some more. Looks like we do not clear irqs
-> > > > > when we do a kexec reboot. And, the bootup code maintains
-> > > > > the same table for the kexec-ed kernel. I'm looking at the
-> > > > > following code in
-> > > >
-> > > > I guess you are talking about kdump reboot here, right? Kexec
-> > > > and kdump boot take the similar mechanism, but differ a
-> > > > little.
-> > >
-> > > Right I meant kdump kernel here. And, clearly the
-> > > is_kdump_kernel() case below.
-> > >
-> > > > > intel_irq_remapping.c:
-> > > > >
-> > > > >         if (ir_pre_enabled(iommu)) {
-> > > > >                 if (!is_kdump_kernel()) {
-> > > > >                         pr_warn("IRQ remapping was enabled on %s but
-> > > > > we are not in kdump mode\n",
-> > > > >                                 iommu->name);
-> > > > >                         clear_ir_pre_enabled(iommu);
-> > > > >                         iommu_disable_irq_remapping(iommu);
-> > > > >                 } else if (iommu_load_old_irte(iommu))
-> > > >
-> > > > Here, it's for kdump kernel to copy old ir table from 1st kernel.
-> > >
-> > > Correct.
-> > >
-> > > > >                         pr_err("Failed to copy IR table for %s from
-> > > > > previous kernel\n",
-> > > > >                                iommu->name);
-> > > > >                 else
-> > > > >                         pr_info("Copied IR table for %s from previous kernel\n",
-> > > > >                                 iommu->name);
-> > > > >         }
-> > > > >
-> > > > > Would cleaning the interrupts(like in the non kdump path
-> > > > > above) just before shutdown help here? This should clear the
-> > > > > interrupts enabled for all the devices in the current
-> > > > > kernel. So when kdump kernel starts, it starts clean. This
-> > > > > should probably help block out the interrupts from a device
-> > > > > that does not have a driver.
-> > > >
-> > > > I think stopping those devices out of control from continue
-> > > > sending interrupts is a good idea. While not sure if only
-> > > > clearing the interrupt will be enough. Those devices which
-> > > > will be initialized by their driver will brake, but devices
-> > > > which drivers are not loaded into kdump kernel may continue
-> > > > acting. Even though interrupts are cleaning at this time, the
-> > > > on-flight DMA could continue triggerring interrupt since the
-> > > > ir table and iopage table are rebuilt.
-> > >
-> > > This should be handled by the IOMMU, right? And, hence you are
-> > > getting UR. This seems like the correct execution flow to me.
-> >
-> > Sorry for late reply.
-> > Yes, this is initializing IOMMU device.
-> >
-> > > Anyway, you could just test this theory by removing the
-> > > is_kdump_kernel() check above and see if it solves your problem.
-> > > Obviously, check the VT-d spec to figure out the exact sequence to
-> > > turn off the IR.
-> >
-> > OK, I will talk to Kairui and get a machine to test it. Thanks for your
-> > nice idea, if you have a draft patch, we are happy to test it.
-> >
-> > > Note that the device that is causing the problem here is a legit
-> > > device. We want to have interrupts from devices we don't know about
-> > > blocked anyway because we can have compromised firmware/ devices that
-> > > could cause a DoS attack. So blocking the unwanted interrupts seems
-> > > like the right thing to do here.
-> >
-> > Kairui said it's a device which driver is not loaded in kdump kernel
-> > because it's not needed by kdump. We try to only load kernel modules
-> > which are needed, e.g one device is the dump target, its driver has to
-> > be loaded in. In this case, the device is more like a out of control
-> > device to kdump kernel.
-> 
-> Hi Bao, Deepa, sorry for this very late response. The test machine was
-> not available for sometime, and I restarted to work on this problem.
-> 
-> For the workaround mention by Deepa (by remote the is_kdump_kernel()
-> check), it didn't work, the machine still hangs upon shutdown.
-> The devices that were left in an unknown state and sending interrupt
-> could be a problem, but it's irrelevant to this hanging problem.
-> 
-> I think I didn't make one thing clear, The PCI UR error never arrives
-> in kernel, it's the iLo BMC on that HPE machine caught the error, and
-> send kernel an NMI. kernel is panicked by NMI, I'm still trying to
-> figure out why the NMI hanged kernel, even with panic=-1,
-> panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
-> NMI by shutdown the devices in right order, that's also a solution.
+Hi Jason,
 
-I'm not sure how much sympathy to have for this situation.  A PCIe UR
-is fatal for the transaction and maybe even the device, but from the
-overall system point of view, it *should* be a recoverable error and
-we shouldn't panic.
+On 7/21/2020 9:13 AM, Jason Gunthorpe wrote:
+> On Tue, Jul 21, 2020 at 09:02:28AM -0700, Dave Jiang wrote:
+>> From: Megha Dey <megha.dey@intel.com>
+>>
+>> Add support for the creation of a new DEV_MSI irq domain. It creates a
+>> new irq chip associated with the DEV_MSI domain and adds the necessary
+>> domain operations to it.
+>>
+>> Add a new config option DEV_MSI which must be enabled by any
+>> driver that wants to support device-specific message-signaled-interrupts
+>> outside of PCI-MSI(-X).
+>>
+>> Lastly, add device specific mask/unmask callbacks in addition to a write
+>> function to the platform_msi_ops.
+>>
+>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Megha Dey <megha.dey@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>   arch/x86/include/asm/hw_irq.h |    5 ++
+>>   drivers/base/Kconfig          |    7 +++
+>>   drivers/base/Makefile         |    1
+>>   drivers/base/dev-msi.c        |   95 +++++++++++++++++++++++++++++++++++++++++
+>>   drivers/base/platform-msi.c   |   45 +++++++++++++------
+>>   drivers/base/platform-msi.h   |   23 ++++++++++
+>>   include/linux/msi.h           |    8 +++
+>>   7 files changed, 168 insertions(+), 16 deletions(-)
+>>   create mode 100644 drivers/base/dev-msi.c
+>>   create mode 100644 drivers/base/platform-msi.h
+>>
+>> diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
+>> index 74c12437401e..8ecd7570589d 100644
+>> +++ b/arch/x86/include/asm/hw_irq.h
+>> @@ -61,6 +61,11 @@ struct irq_alloc_info {
+>>   			irq_hw_number_t	msi_hwirq;
+>>   		};
+>>   #endif
+>> +#ifdef CONFIG_DEV_MSI
+>> +		struct {
+>> +			irq_hw_number_t hwirq;
+>> +		};
+>> +#endif
+> 
+> Why is this in this patch? I didn't see an obvious place where it is
+> used?
 
-Errors like that should be reported via the normal AER or ACPI/APEI
-mechanisms.  It sounds like in this case, the platform has decided
-these aren't enough and it is trying to force a reboot?  If this is
-"special" platform behavior, I'm not sure how much we need to cater
-for it.
+Since I have introduced the DEV-MSI domain and related ops, this is 
+required in the dev_msi_set_hwirq and dev_msi_set_desc in this patch.
 
-Bjorn
+>>   
+>> +static void __platform_msi_desc_mask_unmask_irq(struct msi_desc *desc, u32 mask)
+>> +{
+>> +	const struct platform_msi_ops *ops;
+>> +
+>> +	ops = desc->platform.msi_priv_data->ops;
+>> +	if (!ops)
+>> +		return;
+>> +
+>> +	if (mask) {
+>> +		if (ops->irq_mask)
+>> +			ops->irq_mask(desc);
+>> +	} else {
+>> +		if (ops->irq_unmask)
+>> +			ops->irq_unmask(desc);
+>> +	}
+>> +}
+>> +
+>> +void platform_msi_mask_irq(struct irq_data *data)
+>> +{
+>> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 1);
+>> +}
+>> +
+>> +void platform_msi_unmask_irq(struct irq_data *data)
+>> +{
+>> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 0);
+>> +}
+> 
+> This is a bit convoluted, just call the op directly:
+> 
+> void platform_msi_unmask_irq(struct irq_data *data)
+> {
+> 	const struct platform_msi_ops *ops = desc->platform.msi_priv_data->ops;
+> 
+> 	if (ops->irq_unmask)
+> 		ops->irq_unmask(desc);
+> }
+>
+
+Sure, I will update this.
+
+>> diff --git a/include/linux/msi.h b/include/linux/msi.h
+>> index 7f6a8eb51aca..1da97f905720 100644
+>> +++ b/include/linux/msi.h
+>> @@ -323,9 +323,13 @@ enum {
+>>   
+>>   /*
+>>    * platform_msi_ops - Callbacks for platform MSI ops
+>> + * @irq_mask:   mask an interrupt source
+>> + * @irq_unmask: unmask an interrupt source
+>>    * @write_msg:	write message content
+>>    */
+>>   struct platform_msi_ops {
+>> +	unsigned int            (*irq_mask)(struct msi_desc *desc);
+>> +	unsigned int            (*irq_unmask)(struct msi_desc *desc);
+> 
+> Why do these functions return things if the only call site throws it
+> away?
+
+Hmmm, fair enough, I will change it to void.
+
+> 
+> Jason
+> 
