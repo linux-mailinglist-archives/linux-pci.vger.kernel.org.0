@@ -2,101 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C847122A073
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 22:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82B6122A0E0
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 22:45:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732800AbgGVUDZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 16:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47474 "EHLO
+        id S1726642AbgGVUoz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 16:44:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732755AbgGVUDZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 16:03:25 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86F9C0619E1
-        for <linux-pci@vger.kernel.org>; Wed, 22 Jul 2020 13:03:24 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id br7so3618693ejb.5
-        for <linux-pci@vger.kernel.org>; Wed, 22 Jul 2020 13:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q5uho8c111Sif1rjA6es7LKqax+bTf/baHAxUzEgiBs=;
-        b=PPTfc7ofS2HU2+xEOjMWN0IYf6fcp270Om5s7QJSfrzzNXmADk8v71ZGdMdkkRTAax
-         NVRK3DHJsdFwMwSaAys3u2BAf0La4VMtXlTOgADR6wEvMjklDRaoFIIB6Xum7WpF7uMQ
-         ypktKp91IyG4RD00YrogGN1sYM6Y8KY9L91rR0XwVxsd0mRtoQ39Rx8npPbZlXihy3El
-         gQYTvwonVqPerONvAG74ahVIgSQWcPvCwjduf5+9xHV+7YMEbE4BqNZBDUUsFY0g/lAi
-         Fhhu/daQvEaSVXc8eCAcO9yxTSxiStt0pOyIX7T+9RbyWTUKOKqDIxXbNEB2Xr4GLpHV
-         BD7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q5uho8c111Sif1rjA6es7LKqax+bTf/baHAxUzEgiBs=;
-        b=LD9QBoEYOMpJVvJ42QC59ismlF3ndszFZ9Tb6Jhnoava6rUY+OgyjeCR8ADhwmo3Qf
-         ZHmfWRboPzYOSeL/MuaUioMPludn7fNsl9so0vJv2EL1Z+IdUMPYL3wnGbzzsyE9oB0/
-         vA04ZslvCOfBZw6VckA806t1CtHSOXFg2/mjmd+UPWqBHbFEs1PtXjO1F/n+TBgiTjmz
-         HrWPJL8o0uj7lpt2z8ln7JX2NjJZHoXwdOCzLFDL1disyoR4rD+ve9OsJ3vBbwFmcq82
-         sXLwFqXY9LODCoMGE1LuCjj6m3cJ9Zvebrbr2x3DdKbQRmq+cyIRTQCWYQSNkJxcRukp
-         uw4g==
-X-Gm-Message-State: AOAM530HcYpSAP4bD9ng9CI2P2NYmteVaNncnEaBvTh2kAi5pvtNV5P4
-        ybgnq3CXGGGy8yJiU88q5L/GtIK8FN1e0TV9LeEVVw==
-X-Google-Smtp-Source: ABdhPJyF1/TvRtGDiGqtJCE9/ZaqS8MWqJmh/44/JnQk8HhLwq5VDQLuH1PjTPWAuAmpVNS/nDZZEqrEYVoucPXQbvA=
-X-Received: by 2002:a17:906:6959:: with SMTP id c25mr1128516ejs.375.1595448203126;
- Wed, 22 Jul 2020 13:03:23 -0700 (PDT)
+        with ESMTP id S1726462AbgGVUoz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 16:44:55 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BDCC0619DC;
+        Wed, 22 Jul 2020 13:44:55 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595450693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wXmzNCf+SuxkNEeA2BGq+ls7ErUJp1r23WIHfZ6ytY8=;
+        b=wyajGkXnsNJNOy+GEr2xcZ7WbqirfqC0K6s21soI7YoKiIB/oTL8lqbKiapU9N/5ohnvku
+        D3d1K/LUt/HgfKgbGveYYjFG4S5Bbr61Udj8uCDDoq+B+pyjD4jgMs4OAMnAhKv+b4F9AL
+        xqM2zl08ylbrd0wK5RkmFEjouB8bmOF/1auaFPOop6yG+LS9aLhzqU/DoYMsCf3R3jYBJR
+        Gc6LB/4Te2ahHOIN3yOeBweEVBRa+9/1w7s/zqRYdz52xhOmBkI1IBDqBzjz4d3UUqUlHa
+        ot6lQapK1TZPQLBiqI++zY71ic1K+dJbvu4RcMJMzYMejR35bRW5NcdS5vY46w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595450693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wXmzNCf+SuxkNEeA2BGq+ls7ErUJp1r23WIHfZ6ytY8=;
+        b=xgKFFSG6c+aqvhtZbhIloJilsTGyEpYIJbC+QLyW5QnyNvEzVpja7KeGWisf5hs+2VAK2k
+        FXupTA7ESov48+AQ==
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        jgg@mellanox.com, rafael@kernel.org, dave.hansen@intel.com,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 03/18] irq/dev-msi: Create IR-DEV-MSI irq domain
+In-Reply-To: <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 22 Jul 2020 22:44:51 +0200
+Message-ID: <87lfjbz3cs.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com> <20200624212737.GV4817@hirez.programming.kicks-ass.net>
- <20200624214530.GA120457@google.com> <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com> <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
- <20200625224042.GA169781@google.com> <20200626112931.GF4817@hirez.programming.kicks-ass.net>
- <20200722135542.41127cc4@oasis.local.home> <20200722184137.GP10769@hirez.programming.kicks-ass.net>
- <20200722150943.53046592@oasis.local.home>
-In-Reply-To: <20200722150943.53046592@oasis.local.home>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 22 Jul 2020 13:03:12 -0700
-Message-ID: <CABCJKufW8rYG-R7b=ad8E5oRd+1xrVknWcTd2VFuvE7=SPtoTA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 12:09 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+Dave Jiang <dave.jiang@intel.com> writes:
+> From: Megha Dey <megha.dey@intel.com>
 >
-> On Wed, 22 Jul 2020 20:41:37 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > > That said, Andi Kleen added an option to gcc called -mnop-mcount which
-> > > will have gcc do both create the mcount section and convert the calls
-> > > into nops. When doing so, it defines CC_USING_NOP_MCOUNT which will
-> > > tell ftrace to expect the calls to already be converted.
-> >
-> > That seems like the much easier solution, then we can forget about
-> > recordmcount / objtool entirely for this.
->
-> Of course that was only for some gcc compilers, and I'm not sure if
-> clang can do this.
->
-> Or do you just see all compilers doing this in the future, and not
-> worrying about record-mcount at all, and bothering with objtool?
+> When DEV_MSI is enabled, the dev_msi_default_domain is updated to the
+> base DEV-MSI irq  domain. If interrupt remapping is enabled, we create
 
-Clang appears to only support -mrecord-mcount and -mnop-mcount for
-s390, so we still need recordmcount / objtool for x86.
+s/we//
 
-Sami
+> a new IR-DEV-MSI irq domain and update the dev_msi_default domain to
+> the same.
+>
+> For X86, introduce a new irq_alloc_type which will be used by the
+> interrupt remapping driver.
+>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Megha Dey <megha.dey@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  arch/x86/include/asm/hw_irq.h       |    1 +
+>  arch/x86/kernel/apic/msi.c          |   12 ++++++
+>  drivers/base/dev-msi.c              |   66 +++++++++++++++++++++++++++++++----
+>  drivers/iommu/intel/irq_remapping.c |   11 +++++-
+>  include/linux/intel-iommu.h         |    1 +
+>  include/linux/irqdomain.h           |   11 ++++++
+>  include/linux/msi.h                 |    3 ++
+
+Why is this mixing generic code, x86 core code and intel specific driver
+code? This is new functionality so:
+
+      1) Provide the infrastructure
+      2) Add support to architecture specific parts
+      3) Enable it
+
+> +
+> +#ifdef CONFIG_DEV_MSI
+> +int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +			   int nvec, msi_alloc_info_t *arg)
+> +{
+> +	memset(arg, 0, sizeof(*arg));
+> +
+> +	arg->type = X86_IRQ_ALLOC_TYPE_DEV_MSI;
+> +
+> +	return 0;
+> +}
+> +#endif
+
+What is this? Tons of new lines for taking up more space and not a
+single comment.
+
+> -static int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +int __weak dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+>  			   int nvec, msi_alloc_info_t *arg)
+>  {
+>  	memset(arg, 0, sizeof(*arg));
+
+Oh well. So every architecure which needs to override this and I assume
+all which are eventually going to support it need to do the memset() in
+their override.
+
+       memset(arg,,,);
+       arch_dev_msi_prepare();
+
+
+> -	dev_msi_default_domain = msi_create_irq_domain(fn, &dev_msi_domain_info, parent);
+> +	/*
+> +	 * This initcall may come after remap code is initialized. Ensure that
+> +	 * dev_msi_default domain is updated correctly.
+
+What? No, this is a disgusting hack. Get your ordering straight, that's
+not rocket science.
+
+> +#ifdef CONFIG_IRQ_REMAP
+
+IRQ_REMAP is x86 specific. Is this file x86 only or intended to be for
+general use? If it's x86 only, then this should be clearly
+documented. If not, then these x86'isms have no place here.
+
+> +struct irq_domain *create_remap_dev_msi_irq_domain(struct irq_domain *parent,
+> +						   const char *name)
+
+So we have msi_create_irq_domain() and this is about dev_msi, right? So
+can you please stick with a consistent naming scheme?
+
+> +{
+> +	struct fwnode_handle *fn;
+> +	struct irq_domain *domain;
+> +
+> +	fn = irq_domain_alloc_named_fwnode(name);
+> +	if (!fn)
+> +		return NULL;
+> +
+> +	domain = msi_create_irq_domain(fn, &dev_msi_ir_domain_info, parent);
+> +	if (!domain) {
+> +		pr_warn("failed to initialize irqdomain for IR-DEV-MSI.\n");
+> +		return ERR_PTR(-ENXIO);
+> +	}
+> +
+> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
+> +
+> +	if (!dev_msi_default_domain)
+> +		dev_msi_default_domain = domain;
+
+Can this be called several times? If so, then this lacks a comment. If
+not, then this condition is useless.
+
+Thanks,
+
+        tglx
