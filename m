@@ -2,60 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD208228E55
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EB2F228E74
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 05:13:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbgGVC7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 22:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731641AbgGVC7P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:59:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1CBC061794;
-        Tue, 21 Jul 2020 19:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=G0/7KtMKJzq/+2ucPHyrp8qSjT83rmF+pYA0uzJD1tg=; b=ovwuKXgqAUsxGhqPDyS22pRIeI
-        xMiOVOwxaoI5c7auIWBuoVznL5SJr5DYP15o191s5Z4IJ1vFobOjgG7Eqi9fTonf9G+CmEPV2wc4u
-        eEpj1NkrsXbwJSENqRbBC2FIFFZkKySr/GzEWC2Ws16UUJ1NWUboVaYWJlVv9ivIRRYJc9E0f+oiY
-        2tW1KFzpJZioc1hgC1abswih9oana9n2W5Bh7aIjAC5HjGicW7CMeKHscF0VMAbrwGE4c/G6FocvB
-        /Gm1YWWGrT6lAP4U3s69BCu3cCyepYsXgywdxY/Q9i6mlgvFZsWkcQeBdfERCRSMvNueyDKykDJuw
-        MCZZK8kg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jy4yO-0004YU-SQ; Wed, 22 Jul 2020 02:59:12 +0000
-Date:   Wed, 22 Jul 2020 03:59:12 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Julia Suvorova <jusual@redhat.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S1731630AbgGVDN1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 23:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731621AbgGVDN1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Jul 2020 23:13:27 -0400
+Received: from embeddedor (unknown [201.162.241.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C73E207CD;
+        Wed, 22 Jul 2020 03:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595387606;
+        bh=dtoCdUEmKe3K+GX9hTYYwHUWlcrljUxsFv8D57+cspo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vk2YMEdFcMgL1qzpSDrii3EXT+ZwZWyG3yjeh6eLsVrNH5wW8lCkZrVG7sGmOczxz
+         W9p1C7EmhHkpzPAJiRBP6s/LV6+2J1J6CJ5U9KXnreZh1+YRkScE+hu6r2box0BAjR
+         Qj9HYehoxzxiWxlmDRdQvSRGPKahBz4IbZ4EcBEY=
+Date:   Tue, 21 Jul 2020 22:19:03 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-Message-ID: <20200722025912.GM15516@casper.infradead.org>
-References: <20200722001513.298315-1-jusual@redhat.com>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2][next] PCI: imx6: Use fallthrough pseudo-keyword
+Message-ID: <20200722031903.GA3711@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722001513.298315-1-jusual@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 02:15:13AM +0200, Julia Suvorova wrote:
-> @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
->  {
->  	if (type == 0)
->  		return;
-> +
-> +	if (raw_pci_ext_ops && kvm_para_available())
-> +		return;
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-This is a bit of a subtle way of saying "If mmconfig exists, don't use
-the cf8 mechanism".  There's probably a better way of doing this, but
-the x86 pci init sequence is already byzantine and I don't understand it
-well enough to offer you an alternative.
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Update URL. Use proper URL to Linux v5.7 documentation.
+
+ drivers/pci/controller/dwc/pci-imx6.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 8f08ae53f53e..6c78903b49be 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -439,7 +439,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
+ 		break;
+-	case IMX6QP:		/* FALLTHROUGH */
++	case IMX6QP:
+ 	case IMX6Q:
+ 		/* power up core phy and enable ref clock */
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+@@ -642,7 +642,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
+ 				   IMX6SX_GPR12_PCIE_RX_EQ_2);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	default:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
+@@ -1107,7 +1107,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+ 			return PTR_ERR(imx6_pcie->pcie_aux);
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case IMX7D:
+ 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+ 			imx6_pcie->controller_id = 1;
+-- 
+2.27.0
 
