@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A73C228E02
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:25:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D33C228E05
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:25:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731787AbgGVCZc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 22:25:32 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43604 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731621AbgGVCZc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:25:32 -0400
-Received: by mail-io1-f68.google.com with SMTP id k23so840694iom.10;
-        Tue, 21 Jul 2020 19:25:31 -0700 (PDT)
+        id S1731621AbgGVCZh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 22:25:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37241 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731053AbgGVCZh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:25:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id v6so878573iob.4;
+        Tue, 21 Jul 2020 19:25:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dM76I8T2hvU/uGGdUwBCUr17ZUHx72+ziEfU2vyCYNg=;
-        b=PeyOJBN9LIUFwZE2Al1AL/yNbk+NhyQ9fvtftD/wUpY//pXlb4Mzw/K/R2cZl4CMte
-         q/nMG5Iik1ZwipuxxbkSHq0qtQkbEdLpMpewshurhIU1R8byUZRP77/+DwiABpLucfn/
-         TVJvxGlNMMKeT9HYnebksX0gYIUCT/Y0eJurWVp6W/un+Pb8iAW1K1Lt1du0ihNECxb8
-         lZGGDBf2Bu3zZDXSDFctkATl0EI+gAQACUkuohOjEM7/oBe+rz6KFpaA3EhAqFnv/1gO
-         g8eLbL3dO8IBzuFix4N3VXUOai54oaOn+n7wSQcMm/HyCplwdHrue3IGryAnoCaIJ8uB
-         L9+A==
-X-Gm-Message-State: AOAM5327deLybu+IFUxaZtT/XVEDAQEYA6NFrUIfDThMANfkRLI3b7+n
-        RcYoKYZo2s1aDh7BnEs86w==
-X-Google-Smtp-Source: ABdhPJwcM6hSvOl1VwpNPgxDhDu2K5qss0HSHlvrXTBU5Uq0xUO+ETk79Jm1CUbZAU/HX2ngncgWkQ==
-X-Received: by 2002:a92:9a4f:: with SMTP id t76mr30984574ili.174.1595384731436;
-        Tue, 21 Jul 2020 19:25:31 -0700 (PDT)
+        bh=oM4JjaIhGNUCsF1dxzKGJCBiD9UbSALjkOnB0iODMZ0=;
+        b=uNIqJth6crKNt4PuptFzeo6+HZ0KWlCA/dyaulJ6/Zen2/gCqF4jg/NoAIzSEvnYE4
+         dZW2sv8lnI8AWBJSatMP8t8sUCtvVEsB5jf09j9kBzEHBRFFYDq/luaUT5TgBhiZJc8k
+         vEJKKC1rE92rvboTycosymw1ui9QQ7L0NgzeGAE5Vllvyjg1GeQa1SBD+o55CAEmthxQ
+         WzJuLTRzeMnb6px0Eix8/cO2vv9h1Tb01xJdrkflmZL0fWAS9C0d4ylWlgDxieQZaoyg
+         wO/3xm/o84HwxWq5PTWW9z8aWy+lUwd/2OwV4NBfs+XOS/bA0gyX8YqM7lroizMAZkue
+         ahdg==
+X-Gm-Message-State: AOAM5306jiIhyd0EqjgAG5MWzhTmlS7gkp5Ki81GLgQs4WS/Ou/79fVG
+        BcxOE7HE9kYPihFjj7zVEw==
+X-Google-Smtp-Source: ABdhPJyN6+/cwBD//NLJoPanWPRv1QX1UiE0Njw0SkNnxIvIn/rh3ZWXUAQJ+Zy79aKcLX73FfSj/A==
+X-Received: by 2002:a92:cf51:: with SMTP id c17mr28985837ilr.122.1595384735554;
+        Tue, 21 Jul 2020 19:25:35 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id y2sm11687981iox.22.2020.07.21.19.25.28
+        by smtp.googlemail.com with ESMTPSA id y2sm11687981iox.22.2020.07.21.19.25.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 19:25:30 -0700 (PDT)
+        Tue, 21 Jul 2020 19:25:34 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -64,9 +64,9 @@ Cc:     Fabio Estevam <festevam@gmail.com>,
         linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 04/19] PCI: aardvark: Use pci_is_root_bus() to check if bus is root bus
-Date:   Tue, 21 Jul 2020 20:24:59 -0600
-Message-Id: <20200722022514.1283916-5-robh@kernel.org>
+Subject: [PATCH 05/19] PCI: designware: Use pci_is_root_bus() to check if bus is root bus
+Date:   Tue, 21 Jul 2020 20:25:00 -0600
+Message-Id: <20200722022514.1283916-6-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200722022514.1283916-1-robh@kernel.org>
 References: <20200722022514.1283916-1-robh@kernel.org>
@@ -82,80 +82,133 @@ determine if the bus is the root bus or not. This removes storing
 duplicated data as well as the need for the host bridge driver to have
 to care about the bus numbers in most cases.
 
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c          |  2 +-
+ drivers/pci/controller/dwc/pci-keystone.c      |  4 ++--
+ .../pci/controller/dwc/pcie-designware-host.c  | 18 +++++++-----------
+ drivers/pci/controller/dwc/pcie-designware.h   |  1 -
+ 4 files changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index f38663af795c..07d4a75b5c8f 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -195,7 +195,6 @@ struct advk_pcie {
- 	DECLARE_BITMAP(msi_used, MSI_IRQ_NUM);
- 	struct mutex msi_used_lock;
- 	u16 msi_msg;
--	int root_bus_nr;
- 	int link_gen;
- 	struct pci_bridge_emul bridge;
- 	struct gpio_desc *reset_gpio;
-@@ -641,7 +640,7 @@ static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
- static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
- 				  int devfn)
- {
--	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-+	if (pci_is_root_bus(bus) && PCI_SLOT(devfn) != 0)
- 		return false;
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 8f08ae53f53e..9f1e4d9c008b 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1269,7 +1269,7 @@ static void imx6_pcie_quirk(struct pci_dev *dev)
+ 	if (bus->dev.parent->parent->driver != &imx6_pcie_driver.driver)
+ 		return;
  
- 	return true;
-@@ -659,7 +658,7 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+-	if (bus->number == pp->root_bus_nr) {
++	if (pci_is_root_bus(bus)) {
+ 		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 		struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
+ 
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 790679fdfa48..fcc3586c345b 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -440,7 +440,7 @@ static int ks_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 
+ 	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
+ 		CFG_FUNC(PCI_FUNC(devfn));
+-	if (bus->parent->number != pp->root_bus_nr)
++	if (!pci_is_root_bus(bus->parent))
+ 		reg |= CFG_TYPE1;
+ 	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
+ 
+@@ -457,7 +457,7 @@ static int ks_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 
+ 	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
+ 		CFG_FUNC(PCI_FUNC(devfn));
+-	if (bus->parent->number != pp->root_bus_nr)
++	if (!pci_is_root_bus(bus->parent))
+ 		reg |= CFG_TYPE1;
+ 	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 4a16306cec25..9e8a9cfc6d3a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -473,10 +473,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		goto err_free_msi;
+ 	}
+ 
+-	pp->root_bus_nr = pp->busn->start;
+-
+ 	bridge->sysdata = pp;
+-	bridge->busnr = pp->root_bus_nr;
++	bridge->busnr = pp->busn->start;
+ 	bridge->ops = &dw_pcie_ops;
+ 	bridge->map_irq = of_irq_parse_and_map_pci;
+ 	bridge->swizzle_irq = pci_common_swizzle;
+@@ -528,7 +526,7 @@ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+ 		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+ 
+-	if (bus->parent->number == pp->root_bus_nr) {
++	if (pci_is_root_bus(bus->parent)) {
+ 		type = PCIE_ATU_TYPE_CFG0;
+ 		cpu_addr = pp->cfg0_base;
+ 		cfg_size = pp->cfg0_size;
+@@ -584,13 +582,11 @@ static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 
+ 	/* If there is no link, then there is no device */
+-	if (bus->number != pp->root_bus_nr) {
++	if (!pci_is_root_bus(bus)) {
+ 		if (!dw_pcie_link_up(pci))
+ 			return 0;
+-	}
+-
+-	/* Access only one slot on each root port */
+-	if (bus->number == pp->root_bus_nr && dev > 0)
++	} else if (dev > 0)
++		/* Access only one slot on each root port */
+ 		return 0;
+ 
+ 	return 1;
+@@ -606,7 +602,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
  		return PCIBIOS_DEVICE_NOT_FOUND;
  	}
  
--	if (bus->number == pcie->root_bus_nr)
+-	if (bus->number == pp->root_bus_nr)
 +	if (pci_is_root_bus(bus))
- 		return pci_bridge_emul_conf_read(&pcie->bridge, where,
- 						 size, val);
+ 		return dw_pcie_rd_own_conf(pp, where, size, val);
  
-@@ -670,7 +669,7 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
- 	/* Program the control register */
- 	reg = advk_readl(pcie, PIO_CTRL);
- 	reg &= ~PIO_CTRL_TYPE_MASK;
--	if (bus->primary ==  pcie->root_bus_nr)
-+	if (pci_is_root_bus(bus->parent))
- 		reg |= PCIE_CONFIG_RD_TYPE0;
- 	else
- 		reg |= PCIE_CONFIG_RD_TYPE1;
-@@ -715,7 +714,7 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 	if (!advk_pcie_valid_device(pcie, bus, devfn))
+ 	return dw_pcie_rd_other_conf(pp, bus, devfn, where, size, val);
+@@ -620,7 +616,7 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+ 	if (!dw_pcie_valid_device(pp, bus, PCI_SLOT(devfn)))
  		return PCIBIOS_DEVICE_NOT_FOUND;
  
--	if (bus->number == pcie->root_bus_nr)
+-	if (bus->number == pp->root_bus_nr)
 +	if (pci_is_root_bus(bus))
- 		return pci_bridge_emul_conf_write(&pcie->bridge, where,
- 						  size, val);
+ 		return dw_pcie_wr_own_conf(pp, where, size, val);
  
-@@ -729,7 +728,7 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 	/* Program the control register */
- 	reg = advk_readl(pcie, PIO_CTRL);
- 	reg &= ~PIO_CTRL_TYPE_MASK;
--	if (bus->primary == pcie->root_bus_nr)
-+	if (pci_is_root_bus(bus->parent))
- 		reg |= PCIE_CONFIG_WR_TYPE0;
- 	else
- 		reg |= PCIE_CONFIG_WR_TYPE1;
-@@ -1139,7 +1138,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 		dev_err(dev, "Failed to parse resources\n");
- 		return ret;
- 	}
--	pcie->root_bus_nr = bus->start;
-+	bridge->busnr = bus->start;
+ 	return dw_pcie_wr_other_conf(pp, bus, devfn, where, size, val);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 656e00f8fbeb..fd2146298b58 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -173,7 +173,6 @@ struct dw_pcie_host_ops {
+ };
  
- 	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
- 						       "reset-gpios", 0,
+ struct pcie_port {
+-	u8			root_bus_nr;
+ 	u64			cfg0_base;
+ 	void __iomem		*va_cfg0_base;
+ 	u32			cfg0_size;
 -- 
 2.25.1
 
