@@ -2,127 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49BD6228CEB
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 01:55:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A411228D03
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 02:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731084AbgGUXzs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 19:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728403AbgGUXzr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 19:55:47 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8060FC061794;
-        Tue, 21 Jul 2020 16:55:47 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id j187so354952qke.11;
-        Tue, 21 Jul 2020 16:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I/TusodCOkVvaPIPRv3/TkFGT0iZF4+jcIUhNwbLLts=;
-        b=XxDZjzBQX/JypgQFpbGMt9JBp3QupSQRR2l2cqBFlIY126M0k9476dLpAHG1P7qEBZ
-         q1de1ebTx1al4LolnfC1S/b6auhINY2jVYQJjmSXu19eyyUp/5a9SQ+fgHyH+WiX3JuP
-         XqZcWQDVyfT0nK8Jpt4fLDN/LUuqRhGPaOK9hvK3WWqXMk42p0zGDgf5w8pU10OjnFQH
-         8w59ktLw/pEIg/UODZJcH4qQyZFsb2Hl7yNfcnlbd1ytqUEKFQo1IBOv1tOpjdr6kZui
-         gVJAnmlLvHBhuCETxutU5NF4b/WUSTBfsq04EvBwv8YkOe1kNT0Fn0KtPE/Rh9i1w4FW
-         hbTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I/TusodCOkVvaPIPRv3/TkFGT0iZF4+jcIUhNwbLLts=;
-        b=HBSJVWYyHiuMyXYpjWZ7ky8y7XOoUW6SmbocI1cRU2zuAlPKEBleB7QB0XFzibbWp7
-         JJoqOdlSfguuab8qmXY9qR3gWOOUC4XFdqk3wT8Bw/oZYw79p80bqPOjD3EUpMyNv1v/
-         v2fMk8o6Z0jUV7M2JBhQjqxWxqMAZiYxRXiQDadq7v0fKsA+iy041hwtQuT/wivE89c2
-         XaUPTr/p3H7EGpzX6tgeWAY0140vrpA9UfiYIlEhokWs7EwLau7iHi+klXOT/Sh9UxIW
-         +lcf6A8eSUKcd3BNHSEvolDOSAgfsN1enWh6c85bsi11AhQEkwileWhDsMcCBsVv8pTc
-         +WRA==
-X-Gm-Message-State: AOAM532hQEiUq8Wuy7tc7uTJ9W/2nKffRiKt1KpoYI7xF8DzhN7kaC68
-        2gqM4BkBE435e5a4UqsbWpWXzHIe2XVi0ZfRAVBeXKeyLCE=
-X-Google-Smtp-Source: ABdhPJxwtExxUtytMeHyp1UWtmHIBO9JaJr6FDY7LSyCMpfDoQr3XDzM72FMj/39m8VxWHTo/XeVcK9/3lLCjqLH5J0=
-X-Received: by 2002:a37:9fcc:: with SMTP id i195mr30330309qke.415.1595375746474;
- Tue, 21 Jul 2020 16:55:46 -0700 (PDT)
+        id S1728336AbgGVAPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 20:15:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52558 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727953AbgGVAPa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 20:15:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595376930;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yb1tjJbEhpJuclMtgMyLcW78ZZjdWCXvTbVarsTz3+0=;
+        b=H3dcZf4eV5gd16Z+/bZtG4OcJNNHc0JkErIrK1Nr9RxEvnjuUgndYH2xC//j0vySp7pk80
+        o4j/nk0z1mpvGYH1pOgJgC9ca8SLFsLJUs4mhWBh4PZP6K+xpb8pQFsL4rBKKdVxjXAGeZ
+        nlrPsl09HM8VF18+oJFawtlzYgHsS1M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-WQwzR4y3OA-26v9M2oWiOw-1; Tue, 21 Jul 2020 20:15:26 -0400
+X-MC-Unique: WQwzR4y3OA-26v9M2oWiOw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 881FC1902EA2;
+        Wed, 22 Jul 2020 00:15:25 +0000 (UTC)
+Received: from pc-72.home.com (unknown [10.40.192.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CB606FECD;
+        Wed, 22 Jul 2020 00:15:16 +0000 (UTC)
+From:   Julia Suvorova <jusual@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Julia Suvorova <jusual@redhat.com>
+Subject: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
+Date:   Wed, 22 Jul 2020 02:15:13 +0200
+Message-Id: <20200722001513.298315-1-jusual@redhat.com>
 MIME-Version: 1.0
-References: <CADLC3L20DuXw8WbS=SApmu2m49mkxxWKZrMJS_GBHDX7Vh0TvQ@mail.gmail.com>
- <CADLC3L2ZnGTQJ+fwCy42dpxhHLpAFzFkjMRG3ZS=z7R4WK08og@mail.gmail.com>
-In-Reply-To: <CADLC3L2ZnGTQJ+fwCy42dpxhHLpAFzFkjMRG3ZS=z7R4WK08og@mail.gmail.com>
-From:   Robert Hancock <hancockrwd@gmail.com>
-Date:   Tue, 21 Jul 2020 17:55:35 -0600
-Message-ID: <CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com>
-Subject: Re: 5.7 regression: Lots of PCIe AER errors and suspend failure
- without pcie=noaer
-To:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 6:28 PM Robert Hancock <hancockrwd@gmail.com> wrote:
->
-> On Fri, Jul 10, 2020 at 6:23 PM Robert Hancock <hancockrwd@gmail.com> wrote:
-> >
-> > Noticed a problem on my desktop with an Asus PRIME H270-PRO
-> > motherboard after Fedora 32 upgraded to the 5.7 kernel (now on 5.7.8):
-> > periodically there are PCIe AER errors getting spewed in dmesg that
-> > weren't happening before, and this also seems to causes suspend to
-> > fail - the system just wakes back up again right away, I am assuming
-> > due to some AER errors interrupting the process. 5.6 kernels didn't
-> > have this problem. Setting "pcie=noaer" on the kernel command line
-> > works around the issue, but I'm not sure what would have changed to
-> > trigger this to occur?
->
-> Correction: the workaround option is "pci=noaer".
+Scanning for PCI devices at boot takes a long time for KVM guests. It
+can be reduced if KVM will handle all configuration space accesses for
+non-existent devices without going to userspace [1]. But for this to
+work, all accesses must go through MMCONFIG.
+This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
+guests making MMCONFIG the default access method.
 
-As a follow-up, from some more experimentation, it appears that
-disabling PCIe ASPM with setpci on both the ASMedia PCIe-PCI bridge as
-well as the PCIe root port it is connected to seems to silence the AER
-errors and allow suspend/resume to work again:
+[1] https://lkml.org/lkml/2020/5/14/936
 
-setpci -s 00:1c.0 0x50.B=0x00
-setpci -s 02:00.0 0x90.B=0x00
+Signed-off-by: Julia Suvorova <jusual@redhat.com>
+---
+ arch/x86/pci/direct.c      | 5 +++++
+ arch/x86/pci/mmconfig_64.c | 3 +++
+ 2 files changed, 8 insertions(+)
 
-It appears the behavior changed as a result of this patch (which went
-into the stable tree for 5.7.6 and so affects 5.7 kernels as well):
+diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
+index a51074c55982..8ff6b65d8f48 100644
+--- a/arch/x86/pci/direct.c
++++ b/arch/x86/pci/direct.c
+@@ -6,6 +6,7 @@
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/dmi.h>
++#include <linux/kvm_para.h>
+ #include <asm/pci_x86.h>
+ 
+ /*
+@@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
+ {
+ 	if (type == 0)
+ 		return;
++
++	if (raw_pci_ext_ops && kvm_para_available())
++		return;
++
+ 	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
+ 		 type);
+ 	if (type == 1) {
+diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
+index 0c7b6e66c644..9eb772821766 100644
+--- a/arch/x86/pci/mmconfig_64.c
++++ b/arch/x86/pci/mmconfig_64.c
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/acpi.h>
+ #include <linux/bitmap.h>
++#include <linux/kvm_para.h>
+ #include <linux/rcupdate.h>
+ #include <asm/e820/api.h>
+ #include <asm/pci_x86.h>
+@@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
+ 		}
+ 
+ 	raw_pci_ext_ops = &pci_mmcfg;
++	if (kvm_para_available())
++		raw_pci_ops = &pci_mmcfg;
+ 
+ 	return 1;
+ }
+-- 
+2.25.4
 
-commit 66ff14e59e8a30690755b08bc3042359703fb07a
-Author: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Wed May 6 01:34:21 2020 +0800
-
-    PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-
-    7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-    Linux to enable ASPM, but for some undocumented reason, it didn't enable
-    ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
-
-    Remove this exclusion so we can enable ASPM on these links.
-
-    The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-    PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-    Intel SoC to enter deeper Package C-states, which is a significant power
-    savings.
-
-    [bhelgaas: commit log]
-    Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-    Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-    Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-Unfortunately it appears that this ASMedia PCIe-PCI bridge:
-
-02:00.0 PCI bridge [0604]: ASMedia Technology Inc. ASM1083/1085 PCIe
-to PCI Bridge [1b21:1080] (rev 04)
-
-doesn't cope with ASPM properly and causes a bunch of PCIe link
-errors. (This is in addition to some broken-ness known as far back as
-2012 with these ASM1083/1085 chips with regard to PCI interrupts
-getting stuck, but this ASPM problem causes issues even if no devices
-are connected to the PCI side of the bridge, as is the case on my
-system.)
-
-Might need a quirk to disable ASPM on this device?
