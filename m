@@ -2,450 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61B69229688
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 12:45:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 780162296C5
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 12:59:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgGVKpg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 06:45:36 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2509 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726161AbgGVKpf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:45:35 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 7E4E81BC58A4EA6EC39D;
-        Wed, 22 Jul 2020 11:45:34 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.80.253) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Wed, 22 Jul 2020 11:45:33 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
-        <lenb@kernel.org>, <tony.luck@intel.com>,
-        <dan.carpenter@oracle.com>, <zhangliguang@linux.alibaba.com>,
-        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
-        <jroedel@suse.de>
-CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v13 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
-Date:   Wed, 22 Jul 2020 11:42:45 +0100
-Message-ID: <20200722104245.1060-3-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200722104245.1060-1-shiju.jose@huawei.com>
-References: <20200722104245.1060-1-shiju.jose@huawei.com>
+        id S1728437AbgGVK7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 06:59:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38031 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725847AbgGVK7k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 06:59:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595415578;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+wVWS16Js3jNxs8fWvzPR0bJin1jJLMhqNvzBKpigTI=;
+        b=dHZY67fFc74Kim10davzuwBatNSKlFMm/7nJ/Ogv6Ck0R3y6ahwtHk2hkoSAl3i6fjVIki
+        Nbk73+zggPhUhrMfbUbzO5mZ3+rXMGzecoZh0Y4Gc+mgXxWAyGeY/5mikhsKXZa8r7HyA8
+        lOSdLMc1COQU6J2ULuEgaizEepLlILo=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-18-WnVILqgrNraHNxg_Fq_-ug-1; Wed, 22 Jul 2020 06:59:35 -0400
+X-MC-Unique: WnVILqgrNraHNxg_Fq_-ug-1
+Received: by mail-wr1-f71.google.com with SMTP id 5so474217wrc.17
+        for <linux-pci@vger.kernel.org>; Wed, 22 Jul 2020 03:59:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+wVWS16Js3jNxs8fWvzPR0bJin1jJLMhqNvzBKpigTI=;
+        b=P7NmD/iRQwdroOTO0b8DWQYOUgPYBQmznsfiG1yrM4c05RHVUfFUcIBq66f2nLyP0d
+         1sEF9GUeLaQuoxZ0vIEd9NWXdzzcASrcHRWYEUxmTEB8ZGvT75DKq0epRBP4omHzzU+M
+         Me0RpvKiejM6ouSCZe1xQ0EcJq3rckOAwqwxEQ3TBIpwXc2qFIoXarYxWlKyloIoRfMl
+         hFz3ZtUUUf8O4D20zhAcaUfl10iLfFbG+rhphWEH3Qaaoa0yk3YS4Jb44cGDMRxaYNia
+         U57EAnenaZe98fEwf81SJ2+JJMt704Ih/+rGg+6v8cMc2I4q4v8/Cs5bA38m2ARFo8UU
+         OnCA==
+X-Gm-Message-State: AOAM533qONNyCaQWqS7xkXgaBtEsvs9wBcxS4Av9wnMG4bFou2Pm1qH3
+        RslzZ/Q6t81lQsPMtYzWM+An9WF/9232u+aWhA2lWlFOis0AUS25h5ew0vPj6/fUMYJuZVFgqNO
+        pWrh+hfwV2j77Oca0NIun
+X-Received: by 2002:a1c:9914:: with SMTP id b20mr7993419wme.15.1595415574372;
+        Wed, 22 Jul 2020 03:59:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy9QZoRxSWvVHYtlSvEF7S2m18o1nfqujK/Ho3Q48PC8wDk+ZICYWfCoWyUKVT38ewRFkGEVA==
+X-Received: by 2002:a1c:9914:: with SMTP id b20mr7993399wme.15.1595415574103;
+        Wed, 22 Jul 2020 03:59:34 -0700 (PDT)
+Received: from redhat.com ([192.117.173.58])
+        by smtp.gmail.com with ESMTPSA id 65sm48376335wre.6.2020.07.22.03.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 03:59:33 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 06:59:29 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Julia Suvorova <jusual@redhat.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
+Message-ID: <20200722052600-mutt-send-email-mst@kernel.org>
+References: <20200722001513.298315-1-jusual@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.80.253]
-X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722001513.298315-1-jusual@redhat.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On Wed, Jul 22, 2020 at 02:15:13AM +0200, Julia Suvorova wrote:
+> Scanning for PCI devices at boot takes a long time for KVM guests. It
+> can be reduced if KVM will handle all configuration space accesses for
+> non-existent devices without going to userspace [1]. But for this to
+> work, all accesses must go through MMCONFIG.
+> This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
+> guests making MMCONFIG the default access method.
+> 
+> [1] https://lkml.org/lkml/2020/5/14/936
+> 
+> Signed-off-by: Julia Suvorova <jusual@redhat.com>
 
-The HiSilicon HIP PCIe controller is capable of handling errors
-on root port and performing port reset separately at each root port.
+Thanks for the patch!
+Some comments:
 
-Add error handling driver for HIP PCIe controller to log
-and report recoverable errors. Perform root port reset and restore
-link status after the recovery.
 
-Following are some of the PCIe controller's recoverable errors
-1. completion transmission timeout error.
-2. CRS retry counter over the threshold error.
-3. ECC 2 bit errors
-4. AXI bresponse/rresponse errors etc.
+I guess the point is that on KVM, MMIO accesses of mmcfg are
+faster than two accesses needed for classic access - is that right?
+Worth mentioning in the commit log.
 
-The driver placed in the drivers/pci/controller/ because the
-HIP PCIe controller does not use DWC IP.
+> ---
+>  arch/x86/pci/direct.c      | 5 +++++
+>  arch/x86/pci/mmconfig_64.c | 3 +++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
+> index a51074c55982..8ff6b65d8f48 100644
+> --- a/arch/x86/pci/direct.c
+> +++ b/arch/x86/pci/direct.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/init.h>
+>  #include <linux/dmi.h>
+> +#include <linux/kvm_para.h>
+>  #include <asm/pci_x86.h>
+>  
+>  /*
+> @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
+>  {
+>  	if (type == 0)
+>  		return;
+> +
+> +	if (raw_pci_ext_ops && kvm_para_available())
+> +		return;
+> +
+>  	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
+>  		 type);
+>  	if (type == 1) {
+> diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
+> index 0c7b6e66c644..9eb772821766 100644
+> --- a/arch/x86/pci/mmconfig_64.c
+> +++ b/arch/x86/pci/mmconfig_64.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/acpi.h>
+>  #include <linux/bitmap.h>
+> +#include <linux/kvm_para.h>
+>  #include <linux/rcupdate.h>
+>  #include <asm/e820/api.h>
+>  #include <asm/pci_x86.h>
+> @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
+>  		}
+>  
+>  	raw_pci_ext_ops = &pci_mmcfg;
+> +	if (kvm_para_available())
+> +		raw_pci_ops = &pci_mmcfg;
+>  
+>  	return 1;
+>  }
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
---
-drivers/pci/controller/Kconfig           |   8 +
-drivers/pci/controller/Makefile          |   1 +
-drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
-3 files changed, 345 insertions(+)
-create mode 100644 drivers/pci/controller/pcie-hisi-error.c
----
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
- 3 files changed, 336 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+The issue with anything like this is that it breaks if we ever do
+some config accesses that affect mmconfig, e.g. to move it, or if
+disabling or sizing BARs on some device (e.g. the PCI bridge)
+also disables MMCFG.
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index adddf21fa381..b7949b37c029 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -286,6 +286,14 @@ config PCI_LOONGSON
- 	  Say Y here if you want to enable PCI controller support on
- 	  Loongson systems.
- 
-+config PCIE_HISI_ERR
-+	depends on ARM64 || COMPILE_TEST
-+	depends on ACPI
-+	bool "HiSilicon HIP PCIe controller error handling driver"
-+	help
-+	  Say Y here if you want error handling support
-+	  for the PCIe controller's errors on HiSilicon HIP SoCs
-+
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/mobiveil/Kconfig"
- source "drivers/pci/controller/cadence/Kconfig"
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index efd9733ead26..90afd865bf6b 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
- obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
- obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
-+obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- obj-y				+= mobiveil/
-diff --git a/drivers/pci/controller/pcie-hisi-error.c b/drivers/pci/controller/pcie-hisi-error.c
-new file mode 100644
-index 000000000000..e734ea6009c5
---- /dev/null
-+++ b/drivers/pci/controller/pcie-hisi-error.c
-@@ -0,0 +1,327 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for handling the PCIe controller errors on
-+ * HiSilicon HIP SoCs.
-+ *
-+ * Copyright (c) 2020 HiSilicon Limited.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <acpi/ghes.h>
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/kfifo.h>
-+#include <linux/spinlock.h>
-+
-+/* HISI PCIe controller error definitions */
-+#define HISI_PCIE_ERR_MISC_REGS	33
-+
-+#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
-+#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
-+#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
-+#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
-+#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
-+#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
-+#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
-+#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
-+#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
-+#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
-+
-+static guid_t hisi_pcie_sec_guid =
-+	GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
-+		  0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
-+
-+/*
-+ * Firmware reports the socket port ID where the error occurred.  These
-+ * macros convert that to the core ID and core port ID required by the
-+ * ACPI reset method.
-+ */
-+#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
-+#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
-+#define HISI_PCIE_CORE_PORT_ID(v)        (((v) & 7) << 1)
-+
-+struct hisi_pcie_error_data {
-+	u64	val_bits;
-+	u8	version;
-+	u8	soc_id;
-+	u8	socket_id;
-+	u8	nimbus_id;
-+	u8	sub_module_id;
-+	u8	core_id;
-+	u8	port_id;
-+	u8	err_severity;
-+	u16	err_type;
-+	u8	reserv[2];
-+	u32	err_misc[HISI_PCIE_ERR_MISC_REGS];
-+};
-+
-+struct hisi_pcie_error_private {
-+	struct notifier_block	nb;
-+	struct device *dev;
-+};
-+
-+enum hisi_pcie_submodule_id {
-+	HISI_PCIE_SUB_MODULE_ID_AP,
-+	HISI_PCIE_SUB_MODULE_ID_TL,
-+	HISI_PCIE_SUB_MODULE_ID_MAC,
-+	HISI_PCIE_SUB_MODULE_ID_DL,
-+	HISI_PCIE_SUB_MODULE_ID_SDI,
-+};
-+
-+static const char * const hisi_pcie_sub_module[] = {
-+	[HISI_PCIE_SUB_MODULE_ID_AP]	= "AP Layer",
-+	[HISI_PCIE_SUB_MODULE_ID_TL]	= "TL Layer",
-+	[HISI_PCIE_SUB_MODULE_ID_MAC]	= "MAC Layer",
-+	[HISI_PCIE_SUB_MODULE_ID_DL]	= "DL Layer",
-+	[HISI_PCIE_SUB_MODULE_ID_SDI]	= "SDI Layer",
-+};
-+
-+enum hisi_pcie_err_severity {
-+	HISI_PCIE_ERR_SEV_RECOVERABLE,
-+	HISI_PCIE_ERR_SEV_FATAL,
-+	HISI_PCIE_ERR_SEV_CORRECTED,
-+	HISI_PCIE_ERR_SEV_NONE,
-+};
-+
-+static const char * const hisi_pcie_error_sev[] = {
-+	[HISI_PCIE_ERR_SEV_RECOVERABLE]	= "recoverable",
-+	[HISI_PCIE_ERR_SEV_FATAL]	= "fatal",
-+	[HISI_PCIE_ERR_SEV_CORRECTED]	= "corrected",
-+	[HISI_PCIE_ERR_SEV_NONE]	= "none",
-+};
-+
-+static const char *hisi_pcie_get_string(const char * const *array,
-+					size_t n, u32 id)
-+{
-+	u32 index;
-+
-+	for (index = 0; index < n; index++) {
-+		if (index == id && array[index])
-+			return array[index];
-+	}
-+
-+	return "unknown";
-+}
-+
-+static int hisi_pcie_port_reset(struct platform_device *pdev,
-+				u32 chip_id, u32 port_id)
-+{
-+	struct device *dev = &pdev->dev;
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+	union acpi_object arg[3];
-+	struct acpi_object_list arg_list;
-+	acpi_status s;
-+	unsigned long long data = 0;
-+
-+	arg[0].type = ACPI_TYPE_INTEGER;
-+	arg[0].integer.value = chip_id;
-+	arg[1].type = ACPI_TYPE_INTEGER;
-+	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
-+	arg[2].type = ACPI_TYPE_INTEGER;
-+	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
-+
-+	arg_list.count = 3;
-+	arg_list.pointer = arg;
-+
-+	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
-+	if (ACPI_FAILURE(s)) {
-+		dev_err(dev, "No RST method\n");
-+		return -EIO;
-+	}
-+
-+	if (data) {
-+		dev_err(dev, "Failed to Reset\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_port_do_recovery(struct platform_device *dev,
-+				      u32 chip_id, u32 port_id)
-+{
-+	acpi_status s;
-+	struct device *device = &dev->dev;
-+	acpi_handle root_handle = ACPI_HANDLE(device);
-+	struct acpi_pci_root *pci_root;
-+	struct pci_bus *root_bus;
-+	struct pci_dev *pdev;
-+	u32 domain, busnr, devfn;
-+
-+	s = acpi_get_parent(root_handle, &root_handle);
-+	if (ACPI_FAILURE(s))
-+		return -ENODEV;
-+	pci_root = acpi_pci_find_root(root_handle);
-+	if (!pci_root)
-+		return -ENODEV;
-+	root_bus = pci_root->bus;
-+	domain = pci_root->segment;
-+
-+	busnr = root_bus->number;
-+	devfn = PCI_DEVFN(port_id, 0);
-+	pdev = pci_get_domain_bus_and_slot(domain, busnr, devfn);
-+	if (!pdev) {
-+		dev_info(device, "Fail to get root port %04x:%02x:%02x.%d device\n",
-+			 domain, busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
-+		return -ENODEV;
-+	}
-+
-+	pci_stop_and_remove_bus_device_locked(pdev);
-+	pci_dev_put(pdev);
-+
-+	if (hisi_pcie_port_reset(dev, chip_id, port_id))
-+		return -EIO;
-+
-+	/*
-+	 * The initialization time of subordinate devices after
-+	 * hot reset is no more than 1s, which is required by
-+	 * the PCI spec v5.0 sec 6.6.1. The time will shorten
-+	 * if Readiness Notifications mechanisms are used. But
-+	 * wait 1s here to adapt any conditions.
-+	 */
-+	ssleep(1UL);
-+
-+	/* add root port and downstream devices */
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(root_bus);
-+	pci_unlock_rescan_remove();
-+
-+	return 0;
-+}
-+
-+static void hisi_pcie_handle_error(struct platform_device *pdev,
-+				   const struct hisi_pcie_error_data *edata)
-+{
-+	struct device *dev = &pdev->dev;
-+	int idx, rc;
-+	const unsigned long valid_bits[] = {BITMAP_FROM_U64(edata->val_bits)};
-+
-+	if (edata->val_bits == 0) {
-+		dev_warn(dev, "%s: no valid error information\n", __func__);
-+		return;
-+	}
-+
-+	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
-+		dev_info(dev, "Table version = %d\n", edata->version);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
-+		dev_info(dev, "Socket ID = %d\n", edata->socket_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
-+		dev_info(dev, "Nimbus ID = %d\n", edata->nimbus_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
-+		dev_info(dev, "Sub Module = %s\n",
-+			 hisi_pcie_get_string(hisi_pcie_sub_module,
-+					      ARRAY_SIZE(hisi_pcie_sub_module),
-+					      edata->sub_module_id));
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
-+		dev_info(dev, "Core ID = core%d\n", edata->core_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
-+		dev_info(dev, "Port ID = port%d\n", edata->port_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
-+		dev_info(dev, "Error severity = %s\n",
-+			 hisi_pcie_get_string(hisi_pcie_error_sev,
-+					      ARRAY_SIZE(hisi_pcie_error_sev),
-+					      edata->err_severity));
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
-+		dev_info(dev, "Error type = 0x%x\n", edata->err_type);
-+
-+	dev_info(dev, "Reg Dump:\n");
-+	idx = HISI_PCIE_LOCAL_VALID_ERR_MISC;
-+	for_each_set_bit_from(idx, valid_bits,
-+			      HISI_PCIE_LOCAL_VALID_ERR_MISC + HISI_PCIE_ERR_MISC_REGS)
-+		dev_info(dev, "ERR_MISC_%d = 0x%x\n", idx - HISI_PCIE_LOCAL_VALID_ERR_MISC,
-+			 edata->err_misc[idx]);
-+
-+	if (edata->err_severity != HISI_PCIE_ERR_SEV_RECOVERABLE)
-+		return;
-+
-+	/* Recovery for the PCIe controller errors, try reset
-+	 * PCI port for the error recovery
-+	 */
-+	rc = hisi_pcie_port_do_recovery(pdev, edata->socket_id,
-+			HISI_PCIE_PORT_ID(edata->core_id, edata->port_id));
-+	if (rc)
-+		dev_info(dev, "fail to do hisi pcie port reset\n");
-+}
-+
-+static int hisi_pcie_notify_error(struct notifier_block *nb,
-+				  unsigned long event, void *data)
-+{
-+	struct acpi_hest_generic_data *gdata = data;
-+	const struct hisi_pcie_error_data *error_data = acpi_hest_get_payload(gdata);
-+	struct hisi_pcie_error_private *priv;
-+	struct device *dev;
-+	struct platform_device *pdev;
-+	guid_t err_sec_guid;
-+	u8 socket;
-+
-+	import_guid(&err_sec_guid, gdata->section_type);
-+	if (!guid_equal(&err_sec_guid, &hisi_pcie_sec_guid))
-+		return NOTIFY_DONE;
-+
-+	priv = container_of(nb, struct hisi_pcie_error_private, nb);
-+	dev = priv->dev;
-+
-+	if (device_property_read_u8(dev, "socket", &socket))
-+		return NOTIFY_DONE;
-+
-+	if (error_data->socket_id != socket)
-+		return NOTIFY_DONE;
-+
-+	pdev = container_of(dev, struct platform_device, dev);
-+	hisi_pcie_handle_error(pdev, error_data);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int hisi_pcie_error_handler_probe(struct platform_device *pdev)
-+{
-+	struct hisi_pcie_error_private *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->nb.notifier_call = hisi_pcie_notify_error;
-+	priv->dev = &pdev->dev;
-+	ret = ghes_register_vendor_record_notifier(&priv->nb);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Failed to register hisi pcie controller error handler with apei\n");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_error_handler_remove(struct platform_device *pdev)
-+{
-+	struct hisi_pcie_error_private *priv = platform_get_drvdata(pdev);
-+
-+	ghes_unregister_vendor_record_notifier(&priv->nb);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id hisi_pcie_acpi_match[] = {
-+	{ "HISI0361", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver hisi_pcie_error_handler_driver = {
-+	.driver = {
-+		.name	= "hisi-pcie-error-handler",
-+		.acpi_match_table = hisi_pcie_acpi_match,
-+	},
-+	.probe		= hisi_pcie_error_handler_probe,
-+	.remove		= hisi_pcie_error_handler_remove,
-+};
-+module_platform_driver(hisi_pcie_error_handler_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+I guess the explanation for why this works with QEMU is basically
+that at least on QEMU right now disabling memory on the root
+device does not disable MMCFG, and linux does not bother
+tweaking MMCFG range set up by the bios.
 
+Some suggestions:
+
+1.  It's worth mentioning all this in the commit log.
+
+2.  How do we know the above will always be correct?
+    Something like checking the ID of the root might be a good idea.
+    And given we know the ID, we can also make sure we don't
+    disable MMCFG. Does this make sense?
+
+3. Another idea: how about preferring pcbios on kvm instead? That can do
+   what's appropriate for the platform ...
+
+> -- 
+> 2.25.4
 
