@@ -2,123 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC2E22A2ED
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 01:19:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CCF722A36D
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 01:57:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgGVXTc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 19:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgGVXTc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:19:32 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1733290AbgGVX4u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 19:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbgGVX4u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 19:56:50 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1319CC0619E1;
+        Wed, 22 Jul 2020 16:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+o+RK6ajhbuXa8t53WrOJ/qO/QqSI4MSwqISfWHz0Bo=; b=AOTr95qzy3NNS7ydya0oEhrj0x
+        IXsE0BLHInLxK7LMENdQilIfh2cpaGkvHT95pCgdQwNllmzwOLo3+ojeCbEeS4ONogdi/FdZvcsKA
+        vAAlb2nO3vfaHmXrCG9JS/bvR5nFxAh//2dmSV204vs1qw1GWAabgr/uWXOtCYgSy/mF0P8ZAPH1a
+        0M834X7yscfS6C56SWvXovBm3e9oXECz2XoS4GyQhiQw3PA9SiSIXRP8eb+3AJdmfYbzvrwZxEpS7
+        UoeZWuAa/x/uCWzeKIKFz1PRB4jr7Bgi4tjCA67T2axhMjY8cp+HgOR0/H1DXp/uKqGGDB/OHYF0s
+        5GlHzNUw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyOb0-0007ot-PD; Wed, 22 Jul 2020 23:56:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 566B4207BB;
-        Wed, 22 Jul 2020 23:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595459971;
-        bh=Oiq+K8SOngY6f3NFNsUo76+Kiqk3fEginVJvQHM8cOw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1ZGjGy9u+OuLMV8lVWX+O52Z81EyGKFD8g2Fmg5mNJ5+PCNGBMSE+bp1e1JHZKjTO
-         c8o5n6AEoJtPKpNJdbPpxrswYjgHd4o1S9lQ0wi1WIV1OyetlRMe9uPoUsRt6XpKmA
-         BUlZ+yeojM69nbZ4GOVUCFzShdyZu92fPY0EW5EQ=
-Date:   Wed, 22 Jul 2020 18:19:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Julia Suvorova <jusual@redhat.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-Message-ID: <20200722231929.GA1314067@bjorn-Precision-5520>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A4C193060EF;
+        Thu, 23 Jul 2020 01:56:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8E31729BEC9E1; Thu, 23 Jul 2020 01:56:20 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 01:56:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+Message-ID: <20200722235620.GR10769@hirez.programming.kicks-ass.net>
+References: <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+ <20200624214530.GA120457@google.com>
+ <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+ <20200625161503.GB173089@google.com>
+ <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+ <20200625224042.GA169781@google.com>
+ <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+ <20200722135542.41127cc4@oasis.local.home>
+ <20200722184137.GP10769@hirez.programming.kicks-ass.net>
+ <20200722150943.53046592@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722001513.298315-1-jusual@redhat.com>
+In-Reply-To: <20200722150943.53046592@oasis.local.home>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 02:15:13AM +0200, Julia Suvorova wrote:
-> Scanning for PCI devices at boot takes a long time for KVM guests. It
-> can be reduced if KVM will handle all configuration space accesses for
-> non-existent devices without going to userspace [1]. But for this to
-> work, all accesses must go through MMCONFIG.
-> This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
-> guests making MMCONFIG the default access method.
-
-The above *looks* like it's intended to be two paragraphs, which would
-be easier to read with a blank line between.
-
-The last sentence should say what the patch actually *does*, e.g.,
-"Use pci_mmcfg as raw_pci_ops ..."
-
-> [1] https://lkml.org/lkml/2020/5/14/936
-
-Please use a lore.kernel.org URL instead because it's more usable and
-I'd rather depend on kernel.org than lkml.org.
-
-> Signed-off-by: Julia Suvorova <jusual@redhat.com>
-> ---
->  arch/x86/pci/direct.c      | 5 +++++
->  arch/x86/pci/mmconfig_64.c | 3 +++
->  2 files changed, 8 insertions(+)
+On Wed, Jul 22, 2020 at 03:09:43PM -0400, Steven Rostedt wrote:
+> On Wed, 22 Jul 2020 20:41:37 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
-> index a51074c55982..8ff6b65d8f48 100644
-> --- a/arch/x86/pci/direct.c
-> +++ b/arch/x86/pci/direct.c
-> @@ -6,6 +6,7 @@
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/dmi.h>
-> +#include <linux/kvm_para.h>
->  #include <asm/pci_x86.h>
->  
->  /*
-> @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
->  {
->  	if (type == 0)
->  		return;
-> +
-> +	if (raw_pci_ext_ops && kvm_para_available())
-> +		return;
->  	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
->  		 type);
->  	if (type == 1) {
-> diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
-> index 0c7b6e66c644..9eb772821766 100644
-> --- a/arch/x86/pci/mmconfig_64.c
-> +++ b/arch/x86/pci/mmconfig_64.c
-> @@ -10,6 +10,7 @@
->  #include <linux/init.h>
->  #include <linux/acpi.h>
->  #include <linux/bitmap.h>
-> +#include <linux/kvm_para.h>
->  #include <linux/rcupdate.h>
->  #include <asm/e820/api.h>
->  #include <asm/pci_x86.h>
-> @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
->  		}
->  
->  	raw_pci_ext_ops = &pci_mmcfg;
-> +	if (kvm_para_available())
-> +		raw_pci_ops = &pci_mmcfg;
-
-The idea of using MMCONFIG for *all* config space, not just extended
-config space, makes sense to me, although the very long discussion at
-https://lore.kernel.org/lkml/20071225032605.29147200@laptopd505.fenrus.org/
-makes me wary.  Of course I realize you're talking specifically about
-KVM, not doing this in general.
-
-But it doesn't seem right to make this specific to KVM, since it's not
-obvious to me that there's a basis in PCI for making this distinction.
-
->  	return 1;
->  }
-> -- 
-> 2.25.4
+> > > That said, Andi Kleen added an option to gcc called -mnop-mcount which
+> > > will have gcc do both create the mcount section and convert the calls
+> > > into nops. When doing so, it defines CC_USING_NOP_MCOUNT which will
+> > > tell ftrace to expect the calls to already be converted.  
+> > 
+> > That seems like the much easier solution, then we can forget about
+> > recordmcount / objtool entirely for this.
 > 
+> Of course that was only for some gcc compilers, and I'm not sure if
+> clang can do this.
+> 
+> Or do you just see all compilers doing this in the future, and not
+> worrying about record-mcount at all, and bothering with objtool?
+
+I got the GCC version wrong :/ Both -mnop-mcount and -mrecord-mcount
+landed in GCC-5, where our minimum GCC is now at 4.9.
+
+Anyway, what do you prefer, I suppose I can make objtool whatever we
+need, that patch is trivial. Simply recording the sites and not
+rewriting them should be simple enough.
