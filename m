@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D33C228E05
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:25:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CB3B228E08
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgGVCZh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 22:25:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37241 "EHLO
+        id S1731796AbgGVCZm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 22:25:42 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33045 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731053AbgGVCZh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:25:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id v6so878573iob.4;
-        Tue, 21 Jul 2020 19:25:35 -0700 (PDT)
+        with ESMTP id S1731764AbgGVCZk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:25:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id d18so895356ion.0;
+        Tue, 21 Jul 2020 19:25:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oM4JjaIhGNUCsF1dxzKGJCBiD9UbSALjkOnB0iODMZ0=;
-        b=uNIqJth6crKNt4PuptFzeo6+HZ0KWlCA/dyaulJ6/Zen2/gCqF4jg/NoAIzSEvnYE4
-         dZW2sv8lnI8AWBJSatMP8t8sUCtvVEsB5jf09j9kBzEHBRFFYDq/luaUT5TgBhiZJc8k
-         vEJKKC1rE92rvboTycosymw1ui9QQ7L0NgzeGAE5Vllvyjg1GeQa1SBD+o55CAEmthxQ
-         WzJuLTRzeMnb6px0Eix8/cO2vv9h1Tb01xJdrkflmZL0fWAS9C0d4ylWlgDxieQZaoyg
-         wO/3xm/o84HwxWq5PTWW9z8aWy+lUwd/2OwV4NBfs+XOS/bA0gyX8YqM7lroizMAZkue
-         ahdg==
-X-Gm-Message-State: AOAM5306jiIhyd0EqjgAG5MWzhTmlS7gkp5Ki81GLgQs4WS/Ou/79fVG
-        BcxOE7HE9kYPihFjj7zVEw==
-X-Google-Smtp-Source: ABdhPJyN6+/cwBD//NLJoPanWPRv1QX1UiE0Njw0SkNnxIvIn/rh3ZWXUAQJ+Zy79aKcLX73FfSj/A==
-X-Received: by 2002:a92:cf51:: with SMTP id c17mr28985837ilr.122.1595384735554;
-        Tue, 21 Jul 2020 19:25:35 -0700 (PDT)
+        bh=yZX8GtxzIvI0BLawXOSy34dS8zpbVsqdHlUxTpQVpL8=;
+        b=Oyz1NoMyNxs0QLSMOyLx73Mjh8W2f2ly36fcautVg1Dnpw0zDsjq34RW0hBRhbWSMT
+         OwKns5W30wvhBSAfzUB+qmI3KsfWP3fyN/6UHxDoLE6jOq0FJAKF7v2eqJLXPXwFPvHG
+         BW6saQaqw18mKO/omo3lYtL3yqUsZ0zyc00S5sc+JLrIfAwcXGSKnW4/ntC0jHCkdQIi
+         J8JTxDJ5PyRuZlbxF+DZCKtE8k/DQnPD4+YTBGEP3RwE2aGiOcH1BCaDAAto5Zu4DZMA
+         L4ffVV1YqSZwIl4LilJQ+u7R/YvyrpN0CnqF9SP2zGWnkYlQ3q+KATJYeyB1d0triDV0
+         uavw==
+X-Gm-Message-State: AOAM5336Rte40r0Ns9VUr5j+RbXuXwQmLxFrOd77T1VgKelxwpSbwjxp
+        bC91JkI2DltsfpfXWyebwQ==
+X-Google-Smtp-Source: ABdhPJz4sGi9luyOXYk58mq4r4siCaMJWINiGTp2AvzN9kAFUT92PuxemaSvg8HDlZCOqn4NVsZ7Ww==
+X-Received: by 2002:a6b:5502:: with SMTP id j2mr492985iob.204.1595384739849;
+        Tue, 21 Jul 2020 19:25:39 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id y2sm11687981iox.22.2020.07.21.19.25.31
+        by smtp.googlemail.com with ESMTPSA id y2sm11687981iox.22.2020.07.21.19.25.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 19:25:34 -0700 (PDT)
+        Tue, 21 Jul 2020 19:25:39 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -64,9 +64,9 @@ Cc:     Fabio Estevam <festevam@gmail.com>,
         linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 05/19] PCI: designware: Use pci_is_root_bus() to check if bus is root bus
-Date:   Tue, 21 Jul 2020 20:25:00 -0600
-Message-Id: <20200722022514.1283916-6-robh@kernel.org>
+Subject: [PATCH 06/19] PCI: mobiveil: Use pci_is_root_bus() to check if bus is root bus
+Date:   Tue, 21 Jul 2020 20:25:01 -0600
+Message-Id: <20200722022514.1283916-7-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200722022514.1283916-1-robh@kernel.org>
 References: <20200722022514.1283916-1-robh@kernel.org>
@@ -82,133 +82,70 @@ determine if the bus is the root bus or not. This removes storing
 duplicated data as well as the need for the host bridge driver to have
 to care about the bus numbers in most cases.
 
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-imx6.c          |  2 +-
- drivers/pci/controller/dwc/pci-keystone.c      |  4 ++--
- .../pci/controller/dwc/pcie-designware-host.c  | 18 +++++++-----------
- drivers/pci/controller/dwc/pcie-designware.h   |  1 -
- 4 files changed, 10 insertions(+), 15 deletions(-)
+ drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 10 +++-------
+ drivers/pci/controller/mobiveil/pcie-mobiveil.h      |  1 -
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 8f08ae53f53e..9f1e4d9c008b 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1269,7 +1269,7 @@ static void imx6_pcie_quirk(struct pci_dev *dev)
- 	if (bus->dev.parent->parent->driver != &imx6_pcie_driver.driver)
- 		return;
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+index 705542b4bd21..7250b84a7efe 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+@@ -29,18 +29,15 @@
  
--	if (bus->number == pp->root_bus_nr) {
-+	if (pci_is_root_bus(bus)) {
- 		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 		struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
- 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 790679fdfa48..fcc3586c345b 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -440,7 +440,7 @@ static int ks_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 
- 	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
- 		CFG_FUNC(PCI_FUNC(devfn));
--	if (bus->parent->number != pp->root_bus_nr)
-+	if (!pci_is_root_bus(bus->parent))
- 		reg |= CFG_TYPE1;
- 	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
- 
-@@ -457,7 +457,7 @@ static int ks_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 
- 	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
- 		CFG_FUNC(PCI_FUNC(devfn));
--	if (bus->parent->number != pp->root_bus_nr)
-+	if (!pci_is_root_bus(bus->parent))
- 		reg |= CFG_TYPE1;
- 	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 4a16306cec25..9e8a9cfc6d3a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -473,10 +473,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		goto err_free_msi;
- 	}
- 
--	pp->root_bus_nr = pp->busn->start;
+ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+ {
+-	struct mobiveil_pcie *pcie = bus->sysdata;
+-	struct mobiveil_root_port *rp = &pcie->rp;
 -
- 	bridge->sysdata = pp;
--	bridge->busnr = pp->root_bus_nr;
-+	bridge->busnr = pp->busn->start;
- 	bridge->ops = &dw_pcie_ops;
+ 	/* Only one device down on each root port */
+-	if ((bus->number == rp->root_bus_nr) && (devfn > 0))
++	if (pci_is_root_bus(bus) && (devfn > 0))
+ 		return false;
+ 
+ 	/*
+ 	 * Do not read more than one device on the bus directly
+ 	 * attached to RC
+ 	 */
+-	if ((bus->primary == rp->root_bus_nr) && (PCI_SLOT(devfn) > 0))
++	if ((bus->primary == to_pci_host_bridge(bus->bridge)->busnr) && (PCI_SLOT(devfn) > 0))
+ 		return false;
+ 
+ 	return true;
+@@ -61,7 +58,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+ 		return NULL;
+ 
+ 	/* RC config access */
+-	if (bus->number == rp->root_bus_nr)
++	if (pci_is_root_bus(bus))
+ 		return pcie->csr_axi_slave_base + where;
+ 
+ 	/*
+@@ -606,7 +603,6 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+ 
+ 	/* Initialize bridge */
+ 	bridge->sysdata = pcie;
+-	bridge->busnr = rp->root_bus_nr;
+ 	bridge->ops = &mobiveil_pcie_ops;
  	bridge->map_irq = of_irq_parse_and_map_pci;
  	bridge->swizzle_irq = pci_common_swizzle;
-@@ -528,7 +526,7 @@ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
- 		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
- 
--	if (bus->parent->number == pp->root_bus_nr) {
-+	if (pci_is_root_bus(bus->parent)) {
- 		type = PCIE_ATU_TYPE_CFG0;
- 		cpu_addr = pp->cfg0_base;
- 		cfg_size = pp->cfg0_size;
-@@ -584,13 +582,11 @@ static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 
- 	/* If there is no link, then there is no device */
--	if (bus->number != pp->root_bus_nr) {
-+	if (!pci_is_root_bus(bus)) {
- 		if (!dw_pcie_link_up(pci))
- 			return 0;
--	}
--
--	/* Access only one slot on each root port */
--	if (bus->number == pp->root_bus_nr && dev > 0)
-+	} else if (dev > 0)
-+		/* Access only one slot on each root port */
- 		return 0;
- 
- 	return 1;
-@@ -606,7 +602,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	}
- 
--	if (bus->number == pp->root_bus_nr)
-+	if (pci_is_root_bus(bus))
- 		return dw_pcie_rd_own_conf(pp, where, size, val);
- 
- 	return dw_pcie_rd_other_conf(pp, bus, devfn, where, size, val);
-@@ -620,7 +616,7 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 	if (!dw_pcie_valid_device(pp, bus, PCI_SLOT(devfn)))
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
--	if (bus->number == pp->root_bus_nr)
-+	if (pci_is_root_bus(bus))
- 		return dw_pcie_wr_own_conf(pp, where, size, val);
- 
- 	return dw_pcie_wr_other_conf(pp, bus, devfn, where, size, val);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 656e00f8fbeb..fd2146298b58 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -173,7 +173,6 @@ struct dw_pcie_host_ops {
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+index 767e36a8522d..6082b8afbc31 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+@@ -149,7 +149,6 @@ struct mobiveil_rp_ops {
  };
  
- struct pcie_port {
--	u8			root_bus_nr;
- 	u64			cfg0_base;
- 	void __iomem		*va_cfg0_base;
- 	u32			cfg0_size;
+ struct mobiveil_root_port {
+-	char root_bus_nr;
+ 	void __iomem *config_axi_slave_base;	/* endpoint config base */
+ 	struct resource *ob_io_res;
+ 	struct mobiveil_rp_ops *ops;
 -- 
 2.25.1
 
