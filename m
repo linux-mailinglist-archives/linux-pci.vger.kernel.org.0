@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E19B3228E23
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:26:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7068228E26
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:26:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbgGVC0M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 22:26:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36468 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731782AbgGVC0L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:26:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id t131so880839iod.3;
-        Tue, 21 Jul 2020 19:26:11 -0700 (PDT)
+        id S1731839AbgGVC0P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 22:26:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33139 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731782AbgGVC0P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:26:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id d18so897376ion.0;
+        Tue, 21 Jul 2020 19:26:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RXETcnjipP+8oLeDxXvLlltrH+ttPbWIrHJVUYWNNYw=;
-        b=I0ma5eoS2Fu4ssnO9Nlyqh6rR+1ZJJwpiRgwzOT+sEIySgYXA3jDP9gCbH1Ohhnof3
-         urE2mW9znfAcb++wxJ65VxUBURNnI/r022AFia0ym5ovvnh0A7l6He9WmgXXkckjvyhI
-         BM/gF8uAWQHu2J17g3JJKT+1ImP8KKNlko3wo7AZuD2gzVTNPQ3GQWR9nNgV0BK/BICx
-         bIgcf+P83juygJaZt/qakpdedGQf9jcti7jqkegfbu313SLDP816iFe8eOQtOP/wNrcN
-         QsF4f5+6fyOfFPVIMQ7t+MHNpmbNMXsim76M2lJTXEoBR/TzNFaJHOaZHxLyjXuy102a
-         pnnw==
-X-Gm-Message-State: AOAM530GA77cUQvTIQPs1ZWKhe+TArNnDKOskNl9I8U234EkbaKZdrzk
-        XVA1uDIxo3g/+3yQMdkDKw==
-X-Google-Smtp-Source: ABdhPJx1PBfbdrTR8EDCpBeiH1ZDyq2MNA+2sxSJnY23nUstn2PPiOrmXIVCkGTujbAUG6lB8THf7w==
-X-Received: by 2002:a5d:9b05:: with SMTP id y5mr30801250ion.59.1595384770914;
-        Tue, 21 Jul 2020 19:26:10 -0700 (PDT)
+        bh=1mTNQAve5povS8TrvE+0nUolFQg+WN5UXhl/Hn39DM0=;
+        b=mhJIUs564W/k6Zl1h91JI0v6kol2+PqnGaeqsFQvb7JQlsfMlKgTbWrvDUZxkQi58z
+         heMhdVPc1JB2WhLdmgAGOR4D0QiZtJJ8D7tYXd4lK+CqZiaa5QKaPq8EOj3RFCLjPUlR
+         aXpmo6nXPvBzz2W0QJ+wXqhjURiEASIEWBbk0O4ex+vyAg2uinAoznN6Sh/f8ZbkCNjY
+         QRsom6FEz48a0ZD7b9zYxRixJ3R5m5eRxbpelB8DZU8zJSKXsC1UeQiLWko5RAvMaC2u
+         szOojDxgCGBRTAOcu5gTkqrE2/uVp1sKBxPrJC3x6jJnOJlQmUxPYv09XBNiQ1vXTGlG
+         ur8Q==
+X-Gm-Message-State: AOAM531/kRKuA6DiS5dR2Iu5YJtzfDdb0wQ81f9LsiDrpjBauGMavjvq
+        rx9c7DFM3O6ULxEeLPjFOg==
+X-Google-Smtp-Source: ABdhPJwBWgPlDrivNv7yM8QtASYvLdMFektK4ZjC00WS80MxFWmYcuAiL14q2J7bkLOOQkMyVsL6vQ==
+X-Received: by 2002:a05:6602:2008:: with SMTP id y8mr24036196iod.69.1595384774572;
+        Tue, 21 Jul 2020 19:26:14 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id y2sm11687981iox.22.2020.07.21.19.26.06
+        by smtp.googlemail.com with ESMTPSA id y2sm11687981iox.22.2020.07.21.19.26.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 19:26:10 -0700 (PDT)
+        Tue, 21 Jul 2020 19:26:13 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -64,9 +64,9 @@ Cc:     Fabio Estevam <festevam@gmail.com>,
         linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 15/19] PCI: rcar: Use struct pci_host_bridge.windows list directly
-Date:   Tue, 21 Jul 2020 20:25:10 -0600
-Message-Id: <20200722022514.1283916-16-robh@kernel.org>
+Subject: [PATCH 16/19] PCI: of: Reduce missing non-prefetchable memory region to a warning
+Date:   Tue, 21 Jul 2020 20:25:11 -0600
+Message-Id: <20200722022514.1283916-17-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200722022514.1283916-1-robh@kernel.org>
 References: <20200722022514.1283916-1-robh@kernel.org>
@@ -77,120 +77,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There's no need to create a temporary resource list and then splice it to
-struct pci_host_bridge.windows list. Just use pci_host_bridge.windows
-directly. The necessary clean-up is already handled by the PCI core.
+The pci-rcar-gen2 controller requires only a prefetchable memory region,
+and the error prevents using pci_parse_request_of_pci_ranges() for it.
+Let's reduce this to just a warning message so this function can be used
+for pci-rcar-gen2.
 
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pcie-rcar-host.c | 45 +++----------------------
- 1 file changed, 4 insertions(+), 41 deletions(-)
+ drivers/pci/of.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index c470bff5af0f..fa7b89378904 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -53,7 +53,6 @@ struct rcar_pcie_host {
- 	struct device		*dev;
- 	struct phy		*phy;
- 	void __iomem		*base;
--	struct list_head	resources;
- 	struct clk		*bus_clk;
- 	struct			rcar_msi msi;
- 	int			(*phy_init_fn)(struct rcar_pcie_host *host);
-@@ -203,38 +202,6 @@ static struct pci_ops rcar_pcie_ops = {
- 	.write	= rcar_pcie_write_conf,
- };
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 27839cd2459f..cfb940c8b399 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -564,11 +564,10 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
+ 		}
+ 	}
  
--static int rcar_pcie_setup(struct list_head *resource,
--			   struct rcar_pcie_host *host)
--{
--	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(host);
--	struct resource_entry *win;
--	int i = 0;
--
--	/* Setup PCI resources */
--	resource_list_for_each_entry(win, &host->resources) {
--		struct resource *res = win->res;
--
--		if (!res->flags)
--			continue;
--
--		switch (resource_type(res)) {
--		case IORESOURCE_IO:
--		case IORESOURCE_MEM:
--			rcar_pcie_set_outbound(&host->pcie, i, win);
--			i++;
--			break;
--		case IORESOURCE_BUS:
--			break;
--		default:
--			continue;
--		}
--
--		pci_add_resource(resource, res);
--	}
--
--	return 1;
--}
--
- static void rcar_pcie_force_speedup(struct rcar_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -292,6 +259,7 @@ static void rcar_pcie_force_speedup(struct rcar_pcie *pcie)
- static void rcar_pcie_hw_enable(struct rcar_pcie_host *host)
- {
- 	struct rcar_pcie *pcie = &host->pcie;
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(host);
- 	struct resource_entry *win;
- 	LIST_HEAD(res);
- 	int i = 0;
-@@ -300,7 +268,7 @@ static void rcar_pcie_hw_enable(struct rcar_pcie_host *host)
- 	rcar_pcie_force_speedup(pcie);
+-	if (res_valid)
+-		return 0;
++	if (!res_valid)
++		dev_warn(dev, "non-prefetchable memory resource required\n");
  
- 	/* Setup PCI resources */
--	resource_list_for_each_entry(win, &host->resources) {
-+	resource_list_for_each_entry(win, &bridge->windows) {
- 		struct resource *res = win->res;
+-	dev_err(dev, "non-prefetchable memory resource required\n");
+-	err = -EINVAL;
++	return 0;
  
- 		if (!res->flags)
-@@ -319,12 +287,8 @@ static void rcar_pcie_hw_enable(struct rcar_pcie_host *host)
- static int rcar_pcie_enable(struct rcar_pcie_host *host)
- {
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(host);
--	struct rcar_pcie *pcie = &host->pcie;
- 
--	/* Try setting 5 GT/s link speed */
--	rcar_pcie_force_speedup(pcie);
--
--	rcar_pcie_setup(&bridge->windows, host);
-+	rcar_pcie_hw_enable(host);
- 
- 	pci_add_flags(PCI_REASSIGN_ALL_BUS);
- 
-@@ -949,7 +913,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 	pcie->dev = dev;
- 	platform_set_drvdata(pdev, host);
- 
--	err = pci_parse_request_of_pci_ranges(dev, &host->resources,
-+	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
- 					      &bridge->dma_ranges, NULL);
- 	if (err)
- 		return err;
-@@ -1032,7 +996,6 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 
- err_pm_disable:
- 	pm_runtime_disable(dev);
--	pci_free_resource_list(&host->resources);
- 
- 	return err;
- }
+  out_release_res:
+ 	pci_free_resource_list(resources);
 -- 
 2.25.1
 
