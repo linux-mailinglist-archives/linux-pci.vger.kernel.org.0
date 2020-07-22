@@ -2,164 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 780162296C5
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 12:59:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 672282296D7
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 13:02:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgGVK7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 06:59:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38031 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725847AbgGVK7k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 06:59:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595415578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+wVWS16Js3jNxs8fWvzPR0bJin1jJLMhqNvzBKpigTI=;
-        b=dHZY67fFc74Kim10davzuwBatNSKlFMm/7nJ/Ogv6Ck0R3y6ahwtHk2hkoSAl3i6fjVIki
-        Nbk73+zggPhUhrMfbUbzO5mZ3+rXMGzecoZh0Y4Gc+mgXxWAyGeY/5mikhsKXZa8r7HyA8
-        lOSdLMc1COQU6J2ULuEgaizEepLlILo=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-WnVILqgrNraHNxg_Fq_-ug-1; Wed, 22 Jul 2020 06:59:35 -0400
-X-MC-Unique: WnVILqgrNraHNxg_Fq_-ug-1
-Received: by mail-wr1-f71.google.com with SMTP id 5so474217wrc.17
-        for <linux-pci@vger.kernel.org>; Wed, 22 Jul 2020 03:59:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+wVWS16Js3jNxs8fWvzPR0bJin1jJLMhqNvzBKpigTI=;
-        b=P7NmD/iRQwdroOTO0b8DWQYOUgPYBQmznsfiG1yrM4c05RHVUfFUcIBq66f2nLyP0d
-         1sEF9GUeLaQuoxZ0vIEd9NWXdzzcASrcHRWYEUxmTEB8ZGvT75DKq0epRBP4omHzzU+M
-         Me0RpvKiejM6ouSCZe1xQ0EcJq3rckOAwqwxEQ3TBIpwXc2qFIoXarYxWlKyloIoRfMl
-         hFz3ZtUUUf8O4D20zhAcaUfl10iLfFbG+rhphWEH3Qaaoa0yk3YS4Jb44cGDMRxaYNia
-         U57EAnenaZe98fEwf81SJ2+JJMt704Ih/+rGg+6v8cMc2I4q4v8/Cs5bA38m2ARFo8UU
-         OnCA==
-X-Gm-Message-State: AOAM533qONNyCaQWqS7xkXgaBtEsvs9wBcxS4Av9wnMG4bFou2Pm1qH3
-        RslzZ/Q6t81lQsPMtYzWM+An9WF/9232u+aWhA2lWlFOis0AUS25h5ew0vPj6/fUMYJuZVFgqNO
-        pWrh+hfwV2j77Oca0NIun
-X-Received: by 2002:a1c:9914:: with SMTP id b20mr7993419wme.15.1595415574372;
-        Wed, 22 Jul 2020 03:59:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy9QZoRxSWvVHYtlSvEF7S2m18o1nfqujK/Ho3Q48PC8wDk+ZICYWfCoWyUKVT38ewRFkGEVA==
-X-Received: by 2002:a1c:9914:: with SMTP id b20mr7993399wme.15.1595415574103;
-        Wed, 22 Jul 2020 03:59:34 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id 65sm48376335wre.6.2020.07.22.03.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:59:33 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 06:59:29 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Julia Suvorova <jusual@redhat.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-Message-ID: <20200722052600-mutt-send-email-mst@kernel.org>
-References: <20200722001513.298315-1-jusual@redhat.com>
+        id S1726381AbgGVLBw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 07:01:52 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11667 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgGVLBv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Jul 2020 07:01:51 -0400
+IronPort-SDR: UReT7caanMw9IHtcaEd87zqu8/s3REOF84lWI53fpCuoQVCNlXJL3/49A7S4nPHAfoKh9ra8S4
+ vuCkb262bJfw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="211850855"
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="211850855"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 04:01:50 -0700
+IronPort-SDR: fZ6SHTvlHEVgZkFC8IVm371dDSplTZvMaC1Ev2OyawvRSN3MATnVwd7nbi0DVmj583oEBWGavv
+ /7Iw3ESiI8tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="487951806"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Jul 2020 04:01:46 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jyCVO-003F9Z-48; Wed, 22 Jul 2020 14:01:46 +0300
+Date:   Wed, 22 Jul 2020 14:01:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        helgaas@kernel.org, bp@alien8.de, james.morse@arm.com,
+        lenb@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
+        zhangliguang@linux.alibaba.com, wangkefeng.wang@huawei.com,
+        jroedel@suse.de, linuxarm@huawei.com, yangyicong@hisilicon.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
+Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Message-ID: <20200722110146.GW3703480@smile.fi.intel.com>
+References: <20200722103952.1009-1-shiju.jose@huawei.com>
+ <20200722103952.1009-2-shiju.jose@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722001513.298315-1-jusual@redhat.com>
+In-Reply-To: <20200722103952.1009-2-shiju.jose@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 02:15:13AM +0200, Julia Suvorova wrote:
-> Scanning for PCI devices at boot takes a long time for KVM guests. It
-> can be reduced if KVM will handle all configuration space accesses for
-> non-existent devices without going to userspace [1]. But for this to
-> work, all accesses must go through MMCONFIG.
-> This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
-> guests making MMCONFIG the default access method.
+On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
+> CPER records describing a firmware-first error are identified by GUID.
+> The ghes driver currently logs, but ignores any unknown CPER records.
+> This prevents describing errors that can't be represented by a standard
+> entry, that would otherwise allow a driver to recover from an error.
+> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+> version 2.8).
 > 
-> [1] https://lkml.org/lkml/2020/5/14/936
+> Add a notifier chain for these non-standard/vendor-records. Callers
+> must identify their type of records by GUID.
 > 
-> Signed-off-by: Julia Suvorova <jusual@redhat.com>
-
-Thanks for the patch!
-Some comments:
-
-
-I guess the point is that on KVM, MMIO accesses of mmcfg are
-faster than two accesses needed for classic access - is that right?
-Worth mentioning in the commit log.
-
-> ---
->  arch/x86/pci/direct.c      | 5 +++++
->  arch/x86/pci/mmconfig_64.c | 3 +++
->  2 files changed, 8 insertions(+)
+> Record data is copied to memory from the ghes_estatus_pool to allow
+> us to keep it until after the notifier has run.
 > 
-> diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
-> index a51074c55982..8ff6b65d8f48 100644
-> --- a/arch/x86/pci/direct.c
-> +++ b/arch/x86/pci/direct.c
-> @@ -6,6 +6,7 @@
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/dmi.h>
-> +#include <linux/kvm_para.h>
->  #include <asm/pci_x86.h>
->  
->  /*
-> @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
->  {
->  	if (type == 0)
->  		return;
-> +
-> +	if (raw_pci_ext_ops && kvm_para_available())
-> +		return;
-> +
->  	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
->  		 type);
->  	if (type == 1) {
-> diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
-> index 0c7b6e66c644..9eb772821766 100644
-> --- a/arch/x86/pci/mmconfig_64.c
-> +++ b/arch/x86/pci/mmconfig_64.c
-> @@ -10,6 +10,7 @@
->  #include <linux/init.h>
->  #include <linux/acpi.h>
->  #include <linux/bitmap.h>
-> +#include <linux/kvm_para.h>
->  #include <linux/rcupdate.h>
->  #include <asm/e820/api.h>
->  #include <asm/pci_x86.h>
-> @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
->  		}
->  
->  	raw_pci_ext_ops = &pci_mmcfg;
-> +	if (kvm_para_available())
-> +		raw_pci_ops = &pci_mmcfg;
->  
->  	return 1;
->  }
+> Co-developed-by: James Morse <james.morse@arm.com>
 
-The issue with anything like this is that it breaks if we ever do
-some config accesses that affect mmconfig, e.g. to move it, or if
-disabling or sizing BARs on some device (e.g. the PCI bridge)
-also disables MMCFG.
+Co-developed-by: is going _in conjunction with_ SoB tag which is missing here.
 
-I guess the explanation for why this works with QEMU is basically
-that at least on QEMU right now disabling memory on the root
-device does not disable MMCFG, and linux does not bother
-tweaking MMCFG range set up by the bios.
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-Some suggestions:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-1.  It's worth mentioning all this in the commit log.
-
-2.  How do we know the above will always be correct?
-    Something like checking the ID of the root might be a good idea.
-    And given we know the ID, we can also make sure we don't
-    disable MMCFG. Does this make sense?
-
-3. Another idea: how about preferring pcbios on kvm instead? That can do
-   what's appropriate for the platform ...
-
-> -- 
-> 2.25.4
 
