@@ -2,100 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93645229EA9
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 19:41:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF3E4229ECB
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 19:55:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgGVRkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 13:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
+        id S1727060AbgGVRzq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 13:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgGVRkL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:40:11 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1726535AbgGVRzq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:55:46 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E37A520787;
-        Wed, 22 Jul 2020 17:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595439611;
-        bh=lTXgEZOM6WAmbI17kym6nz1GakVkLb7xxhXhP7EnIE0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n5mWjM7/mkPPImvbpjDzNnrzgATHcFcYy651epkQHwXL39Ldnc0oR52J22knvfgxM
-         dxTlKRNbXzZ3wdzca6w1idgUgH4+P85bwMJsDKJPLYAOhdfuhZbJqKx5VEKUZNZ4l3
-         DsMVEmM1qTXCln9/LKkKVgbpr4uwPEc0NnkCrN/4=
-Date:   Wed, 22 Jul 2020 12:40:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Hancock <hancockrwd@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-        Puranjay Mohan <puranjay12@gmail.com>
-Subject: Re: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI
- bridge
-Message-ID: <20200722174009.GA1291928@bjorn-Precision-5520>
+        by mail.kernel.org (Postfix) with ESMTPSA id F362F20787;
+        Wed, 22 Jul 2020 17:55:43 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 13:55:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        mhelsley@vmware.com
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+Message-ID: <20200722135542.41127cc4@oasis.local.home>
+In-Reply-To: <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+        <20200624203200.78870-5-samitolvanen@google.com>
+        <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+        <20200624214530.GA120457@google.com>
+        <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+        <20200625161503.GB173089@google.com>
+        <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+        <20200625224042.GA169781@google.com>
+        <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722021803.17958-1-hancockrwd@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Puranjay]
+On Fri, 26 Jun 2020 13:29:31 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On Tue, Jul 21, 2020 at 08:18:03PM -0600, Robert Hancock wrote:
-> Recently ASPM handling was changed to no longer disable ASPM on all
-> PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
-> devices don't seem to function properly with ASPM enabled, as they
-> cause the parent PCIe root port to cause repeated AER timeout errors.
-> In addition to flooding the kernel log, this also causes the machine
-> to wake up immediately after suspend is initiated.
-
-Hi Robert, thanks a lot for the report of this problem
-(https://lore.kernel.org/r/CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com
-and https://bugzilla.redhat.com/show_bug.cgi?id=1853960).
-
-I'm pretty sure Linux ASPM support is missing some things.  This
-problem might be a hardware problem where a quirk is the right
-solution, but it could also be that it's a result of a Linux defect
-that we should fix.
-
-Could you collect the dmesg log and "sudo lspci -vvxxxx" output
-somewhere (maybe a bugzilla.kernel.org issue)?  I want to figure out
-whether this L1 PM substates are enabled on this link, and whether
-that's configured correctly.
-
-> Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
-> ---
->  drivers/pci/quirks.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> On Thu, Jun 25, 2020 at 03:40:42PM -0700, Sami Tolvanen wrote:
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 812bfc32ecb8..e5713114f2ab 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2330,6 +2330,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
->  
-> +static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-> +{
-> +	pci_info(dev, "Disabling ASPM L0s/L1\n");
-> +	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-> +}
-> +
-> +/*
-> + * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
-> + * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected,
-> + * disable both L0s and L1 for now to be safe.
-> + */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
-> +
->  /*
->   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
->   * Link bit cleared after starting the link retrain process to allow this
-> -- 
-> 2.26.2
+> > > Not boot tested, but it generates the required sections and they look
+> > > more or less as expected, ymmv.  
 > 
+> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > > index a291823f3f26..189575c12434 100644
+> > > --- a/arch/x86/Kconfig
+> > > +++ b/arch/x86/Kconfig
+> > > @@ -174,7 +174,6 @@ config X86
+> > >  	select HAVE_EXIT_THREAD
+> > >  	select HAVE_FAST_GUP
+> > >  	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
+> > > -	select HAVE_FTRACE_MCOUNT_RECORD
+> > >  	select HAVE_FUNCTION_GRAPH_TRACER
+> > >  	select HAVE_FUNCTION_TRACER
+> > >  	select HAVE_GCC_PLUGINS  
+> > 
+> > This breaks DYNAMIC_FTRACE according to kernel/trace/ftrace.c:
+> > 
+> >   #ifndef CONFIG_FTRACE_MCOUNT_RECORD
+> >   # error Dynamic ftrace depends on MCOUNT_RECORD
+> >   #endif
+> > 
+> > And the build errors after that seem to confirm this. It looks like we might
+> > need another flag to skip recordmcount.  
+> 
+> Hurm, Steve, how you want to do that?
+
+That was added when we removed that dangerous daemon that did the
+updates, and was added to make sure it didn't come back.
+
+We can probably just get rid of it.
+
+
+> 
+> > Anyway, since objtool is run before recordmcount, I just left this unchanged
+> > for testing and ignored the recordmcount warnings about __mcount_loc already
+> > existing. Something is a bit off still though, I see this at boot:
+> > 
+> >   ------------[ ftrace bug ]------------
+> >   ftrace failed to modify
+> >   [<ffffffff81000660>] __tracepoint_iter_initcall_level+0x0/0x40
+> >    actual:   0f:1f:44:00:00
+> >   Initializing ftrace call sites
+> >   ftrace record flags: 0
+> >    (0)
+> >    expected tramp: ffffffff81056500
+> >   ------------[ cut here ]------------
+> > 
+> > Otherwise, this looks pretty good.  
+> 
+> Ha! it is trying to convert the "CALL __fentry__" into a NOP and not
+> finding the CALL -- because objtool already made it a NOP...
+> 
+> Weird, I thought recordmcount would also write NOPs, it certainly has
+> code for that. I suppose we can use CC_USING_NOP_MCOUNT to avoid those,
+> but I'd rather Steve explain this before I wreck things further.
+
+The reason for not having recordmcount insert all the nops, is because
+x86 has more than one optimal nop which is determined by the machine it
+runs on, and not at compile time. So we figured just updated it then.
+
+We can change it to be a nop on boot, and just modify it if it's not
+the optimal nop already. 
+
+That said, Andi Kleen added an option to gcc called -mnop-mcount which
+will have gcc do both create the mcount section and convert the calls
+into nops. When doing so, it defines CC_USING_NOP_MCOUNT which will
+tell ftrace to expect the calls to already be converted.
+
+-- Steve
