@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED140228EB0
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 05:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 254FC228EB4
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 05:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731859AbgGVDlF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 23:41:05 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.84]:25918 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731781AbgGVDlF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 23:41:05 -0400
-X-Greylist: delayed 1429 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jul 2020 23:41:04 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 573A98D67
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jul 2020 22:17:13 -0500 (CDT)
+        id S1731955AbgGVDle (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 23:41:34 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.93]:40124 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731793AbgGVDld (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 23:41:33 -0400
+X-Greylist: delayed 1297 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jul 2020 23:41:32 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 40FDD846E
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jul 2020 22:19:54 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id y5FpjqDxqBb5dy5FpjdjnK; Tue, 21 Jul 2020 22:17:13 -0500
+        id y5IQj50DdSxZVy5IQjk2Oj; Tue, 21 Jul 2020 22:19:54 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -25,33 +25,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Qz12tSZOwxvrEelfi34PkqtoYAgKxxxRHM9F+fPHhTc=; b=DX3EID1Ds1ML0gwPG4xQOEWDCp
-        rJBWqa3k0SSjpMDMFYWkrI5QGtwqby8ZCS9bj6PiATpPElloyGYeHoHfKSA49pJI6f5/f3RR6zV+g
-        MWEgRQxuxedX2uydCttoO8xqHrEZGlQJ6XBUnkqGTJQ8k+Yhk7RacFJRvaO7cAc/47qBGCjIjwYfa
-        efZE8L8ElsTs/+bs4RS4vVjOpYXy1ULGTAG5eTwIJK5LswLlkGbiEldFs9BpXy4etG+AycG0xgY6M
-        0VOq8MpCv0VF/1T4z415tZK1lqJq0iI4+4Q2Cl0gL+aX3TSmhB24ZkCjwZBNQH246kHy8R1CAnfFn
-        NMEy7dUQ==;
-Received: from [201.162.241.127] (port=22113 helo=[192.168.43.132])
+        bh=k3PxIux8DcUqM16BlxYvPSjiVJeLosCqYWWdsc8vVy8=; b=pVEz8v+589UUIhSudE0lUmQ6BJ
+        osrOgYJtrfmt8LoQCitF6Lldd+UlBDiR+ZE/AJ9cKZLbRAjbzmcrQyICIqJAGGpgXWdpxRUeC1HbH
+        BZsaCDUDP8fe7hQLuEnWemJBawj0QAMHLgfKm0HWaMpmECcvEoSfzjArX8kYR6k76ri4zMfu1KpK8
+        tAiT+wHZdBDv3cnjtrTGK6wx+sxJZH+qD4jJqyk13lmwJn1l/HTlA1o6JN8gUs6C2+IL7Y5jhLcvw
+        E3MZVCARpGfY8N+fWHfPUMEghlBuqp43mCuCd/ond8A2kNzIPxyrR+SesOVRNvydybIzs5ixeloWm
+        OucGWnIQ==;
+Received: from [201.162.241.127] (port=12588 helo=[192.168.43.132])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jy5Fo-000qJI-JI; Tue, 21 Jul 2020 22:17:12 -0500
-Subject: Re: [PATCH][next] PCI: imx6: Use fallthrough pseudo-keyword
-To:     Bjorn Helgaas <helgaas@kernel.org>,
+        id 1jy5IP-000rbJ-NN; Tue, 21 Jul 2020 22:19:53 -0500
+Subject: Re: [PATCH][next] PCI: rcar-gen2: Use fallthrough pseudo-keyword
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200716220629.GA663054@bjorn-Precision-5520>
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200716211517.GA17174@embeddedor>
+ <CAMuHMdU7p6wY3vzV2mRzWrvn_nDuJBFVtc5QK-mLQ7kJbm1HqA@mail.gmail.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -97,12 +94,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9ehGZEO3+gCDFmK
  rjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrSVtSixD1uOgyt
  AP7RWS474w==
-Message-ID: <e20b7b95-4b61-4ade-cf90-40f49f3744bf@embeddedor.com>
-Date:   Tue, 21 Jul 2020 22:22:52 -0500
+Message-ID: <40316d8d-3d17-5ed1-b6ef-e965b657e1b6@embeddedor.com>
+Date:   Tue, 21 Jul 2020 22:25:34 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200716220629.GA663054@bjorn-Precision-5520>
+In-Reply-To: <CAMuHMdU7p6wY3vzV2mRzWrvn_nDuJBFVtc5QK-mLQ7kJbm1HqA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -114,13 +111,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.162.241.127
 X-Source-L: No
-X-Exim-ID: 1jy5Fo-000qJI-JI
+X-Exim-ID: 1jy5IP-000rbJ-NN
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.241.127]:22113
+X-Source-Sender: ([192.168.43.132]) [201.162.241.127]:12588
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
+X-Email-Count: 23
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-pci-owner@vger.kernel.org
@@ -128,40 +125,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Hi Geert,
 
-On 7/16/20 17:06, Bjorn Helgaas wrote:
-> On Thu, Jul 16, 2020 at 04:10:52PM -0500, Gustavo A. R. Silva wrote:
+On 7/17/20 02:18, Geert Uytterhoeven wrote:
+> Hi Gustavo,
+> 
+> Thanks for your patch!
+> 
+> On Thu, Jul 16, 2020 at 11:11 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
 >> Replace the existing /* fall through */ comments and its variants with
 >> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
 >> fall-through markings when it is the case.
+> 
+> Which unnecessary marking is being removed?
+> I don't see any.
+> 
+
+There is none. I will remove those lines and send v2 with a URL
+to the proper documentation for Linux v5.7 instead of 'lastest',
+see:
+
+https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+
+I'll add your Reviewed-by tag. :)
+
 >>
 >> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Hi Gustavo,
-> 
-> I'm certainly fine with these patches, and thanks for doing them!
-> 
-> And thanks for providing a link to the rationale.  But the URL
-> contains "latest", so I think it may break if deprecated.rst or the
-> section is ever renamed.
-> 
-> I think I would prefer if we could reference the current text, e.g.,
-> via
-> 
->   https://www.kernel.org/doc/html/v5.7-rc7/process/deprecated.html#implicit-switch-case-fall-through
+> For the actual patch contents:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
 
-I already sent v2 with a URL to proper documentation for Linux v5.7:
-
-https://lore.kernel.org/lkml/20200722031903.GA3711@embeddedor/
-
-> (The v5.7 doc would be better but doesn't seem to be generated yet; I
-> pinged the helpdesk about that.)
-> 
-
-Thanks for doing that. I wasn't aware that one could ask helpdesk about this.
-
+Thanks!
 --
 Gustavo
-
