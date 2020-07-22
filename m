@@ -2,155 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE7022A109
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 23:06:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5150322A135
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 23:15:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGVVGW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 17:06:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgGVVGV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:06:21 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87D892071A;
-        Wed, 22 Jul 2020 21:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595451981;
-        bh=0kXFnZ3eGvcksP1/5QGEmr83levSCrnfAw04C9aKAUg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qCcFLMldUA/lEuy1Bs0znS3D/fRFo80D7/8OMxvC7nOUlNwSzA+1hurh+FLGFEMHy
-         BIKMChOwtV2MdX3ldlZS050UVX51lsrhhhTLy/sQFGZnBVLgFU3pjt+GZi/R3oU1S0
-         vByHkBAlX67Zki5PkuVfXiMopJA5FFUN9m8EBh44=
-Date:   Wed, 22 Jul 2020 16:06:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726539AbgGVVPL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 17:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgGVVPL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 17:15:11 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D88C0619DC;
+        Wed, 22 Jul 2020 14:15:10 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595452509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wimSqbltrQnSesY3skr5Df0xojhTY8Yy4hyTLr3Fuak=;
+        b=4dUVs2L5wtvRxvFTUwKajtdmrXdtuL/NWjtIeoL7448CUD01XrjZnzuegTHzm0kSUsp8X3
+        89D/WUHrQqXRbLZcJU9q1ZQlKHB4G56oq1fFLqyfBfYzJeBXgt8s2mXGZPaLQfkcemRMZo
+        kzSKJHKTItfux2t4/pPvS3wU87aJUiXkl3IMdYThkb7fbSldc6JYFrzECtu8IKaaFN1Jr1
+        uceIz3uFl+PTnGOnZ98oA1kLBK9n9EDF2U7ma+74mv/1h0ZkN9SqRTPrJfdazzaGgv+dtH
+        NCH8/ks6cVcKeBDyYaD5e1Ep8udG4/H6y660n/qjL03Um5Lj3EOzE6ytbvdyTw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595452509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wimSqbltrQnSesY3skr5Df0xojhTY8Yy4hyTLr3Fuak=;
+        b=OPeSDaNTY1oms4EEQ9e2C7R0KptY3qCOSWgAj4fF9m9gcVMeBCoWhFC8lk4JeSvc4hEa/l
+        R2tvWd4o+ZJaxmDQ==
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 00/19] PCI: Another round of host clean-ups
-Message-ID: <20200722210619.GA1313543@bjorn-Precision-5520>
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irqdomain/treewide: Free firmware node after domain removal
+In-Reply-To: <1595363169-7157-1-git-send-email-jonathan.derrick@intel.com>
+References: <1595363169-7157-1-git-send-email-jonathan.derrick@intel.com>
+Date:   Wed, 22 Jul 2020 23:15:08 +0200
+Message-ID: <87h7tzz1yb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722022514.1283916-1-robh@kernel.org>
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 08:24:55PM -0600, Rob Herring wrote:
-> Here's another round PCI host bridge clean-ups. This one aims to
-> reduce the amount of duplication in host probe functions by providing
-> more default initialization of the pci_host_bridge. With the prior
-> clean-ups, it's now possible to alloc and initialize the pci_host_bridge
-> struct from DT in one step.
-> 
-> Patches 2 and 3 drop some pci_host_bridge init. Patches 4-11 clean-up
-> handling of root bus number and bus ranges. Patches 12 and 13 are cleanups
-> for Cadence driver. Patches 14 and 15 are clean-ups for rCar driver. Patch
-> 16 makes missing non-prefetchable region just a warning instead of an
-> error in order to work with rcar-gen2. Patch 17 converts rcar-gen2 to not
-> use the arm32 specific PCI setup. Patch 18 updates how the DT resource
-> parsing is done for all the controller drivers. Any other new controller
-> drivers will need updating. Patch 19 moves the default IRQ mapping to
-> the bridge init core code.
-> 
-> This is based on my previous series of clean-ups[1].
-> 
-> Compile tested only. Any testing would be appreciated as I don't have
-> any of this h/w (well, I have a rock960c, but have not gotten PCIe to work
-> on it).
-> 
-> Rob
-> 
-> [1] https://lore.kernel.org/linux-pci/20200522234832.954484-1-robh@kernel.org/
-> 
-> Rob Herring (19):
->   PCI: versatile: Drop flag PCI_ENABLE_PROC_DOMAINS
->   PCI: Set default bridge parent device
->   PCI: Drop unnecessary zeroing of bridge fields
->   PCI: aardvark: Use pci_is_root_bus() to check if bus is root bus
->   PCI: designware: Use pci_is_root_bus() to check if bus is root bus
->   PCI: mobiveil: Use pci_is_root_bus() to check if bus is root bus
->   PCI: xilinx-nwl: Use pci_is_root_bus() to check if bus is root bus
->   PCI: xilinx: Use pci_is_root_bus() to check if bus is root bus
->   PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus
->   PCI: rcar: Use pci_is_root_bus() to check if bus is root bus
->   PCI: Move setting pci_host_bridge.busnr out of host drivers
->   PCI: cadence: Use bridge resources for outbound window setup
->   PCI: cadence: Remove private bus number and range storage
->   PCI: rcar: Use devm_pci_alloc_host_bridge()
->   PCI: rcar: Use struct pci_host_bridge.windows list directly
->   PCI: of: Reduce missing non-prefetchable memory region to a warning
->   PCI: rcar-gen2: Convert to use modern host bridge probe functions
->   PCI: Move DT resource setup into devm_pci_alloc_host_bridge()
->   PCI: Set bridge map_irq and swizzle_irq to default functions
-> 
->  .../pci/controller/cadence/pcie-cadence-ep.c  |   6 +-
->  .../controller/cadence/pcie-cadence-host.c    |  65 +++----
->  drivers/pci/controller/cadence/pcie-cadence.c |   9 +-
->  drivers/pci/controller/cadence/pcie-cadence.h |   8 +-
->  drivers/pci/controller/dwc/pci-imx6.c         |   2 +-
->  drivers/pci/controller/dwc/pci-keystone.c     |   4 +-
->  .../pci/controller/dwc/pcie-designware-host.c |  28 +--
->  drivers/pci/controller/dwc/pcie-designware.h  |   2 -
->  .../controller/mobiveil/pcie-mobiveil-host.c  |  21 +--
->  .../pci/controller/mobiveil/pcie-mobiveil.h   |   1 -
->  drivers/pci/controller/pci-aardvark.c         |  25 +--
->  drivers/pci/controller/pci-ftpci100.c         |  10 --
->  drivers/pci/controller/pci-host-common.c      |  17 +-
->  drivers/pci/controller/pci-loongson.c         |   8 -
->  drivers/pci/controller/pci-mvebu.c            |   4 -
->  drivers/pci/controller/pci-rcar-gen2.c        | 162 +++++-------------
->  drivers/pci/controller/pci-tegra.c            |  10 --
->  drivers/pci/controller/pci-v3-semi.c          |  12 --
->  drivers/pci/controller/pci-versatile.c        |  13 +-
->  drivers/pci/controller/pci-xgene.c            |   9 -
->  drivers/pci/controller/pcie-altera.c          |  10 --
->  drivers/pci/controller/pcie-brcmstb.c         |   9 -
->  drivers/pci/controller/pcie-iproc-platform.c  |  10 +-
->  drivers/pci/controller/pcie-iproc.c           |   3 -
->  drivers/pci/controller/pcie-mediatek.c        |  16 --
->  drivers/pci/controller/pcie-rcar-host.c       |  73 +-------
->  drivers/pci/controller/pcie-rockchip-host.c   |  24 +--
->  drivers/pci/controller/pcie-rockchip.h        |   1 -
->  drivers/pci/controller/pcie-xilinx-nwl.c      |  20 +--
->  drivers/pci/controller/pcie-xilinx.c          |  22 +--
->  drivers/pci/of.c                              |  45 +++--
->  drivers/pci/pci.h                             |   8 +
->  drivers/pci/probe.c                           |   7 +
->  include/linux/pci.h                           |  12 --
->  34 files changed, 160 insertions(+), 516 deletions(-)
+Jon Derrick <jonathan.derrick@intel.com> writes:
+> Change 711419e504eb ("irqdomain: Add the missing assignment of
+> domain->fwnode for named fwnode") unintentionally caused a dangling
+> pointer page fault issue on firmware nodes that were freed after IRQ
+> domain allocation. Change e3beca48a45b fixed that dangling pointer issue
+> by only freeing the firmware node after an IRQ domain allocation
+> failure. That fix no longer frees the firmware node immediately, but
+> leaves the firmware node allocated after the domain is removed.
 
-Beautiful, thanks for doing all this!
+Gah, I missed that under the assumption that these nodes are freed when
+the domain is removed. What a mess.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> We need to keep the firmware node through irq_domain_remove, but should
+> free it afterwards. This patch saves the handle and adds the freeing of
+> firmware node after domain removal where appropriate.
+
+Care to read Documentation/process/submitting-patches.rst and look for
+'I/We' and 'This patch' next time?
+
+Thanks,
+
+        tglx
