@@ -2,59 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E128228DED
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:19:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 899DC228DF4
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jul 2020 04:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731641AbgGVCTq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jul 2020 22:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731595AbgGVCTp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:19:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AABAC061794;
-        Tue, 21 Jul 2020 19:19:45 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id k27so397425pgm.2;
-        Tue, 21 Jul 2020 19:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7wV7qhzZv3sbD4+KlzCK0zK14sIgrZ5cvRZxkccSQFE=;
-        b=hs7r6WmJiGZaRzMcj/QB6p0Qh7iJvLcLJvjwlInb0zYm6qRskYLKwviZ8EiP/3mmWZ
-         fvn6G4N481ZG3jla5XGocLKM/bAtJaDD8K7dX3ADizZygeTZg23SrewAUvcwmeWYbQ9M
-         F08xMcrfmzxbPqMWY61CkRe0LfsO7+erliQ7+SLASCoaC75iptIUdfNtYalJVQkkjzb/
-         FWyujWLlOyNrpCdGKAHjo72HmWGifFoN7drdyhAcVKKlBWRUA2ZJcXIEm44PQuhgo4k+
-         /DIqEkq7nozbSbvS6rQm6IOsjX1jE2GOZ8RmWmqNglcm2n7sHcv5yPXq3EsQ+SkplbVr
-         EVYg==
+        id S1731595AbgGVCZT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jul 2020 22:25:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39951 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731053AbgGVCZT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jul 2020 22:25:19 -0400
+Received: by mail-io1-f68.google.com with SMTP id l17so860047iok.7;
+        Tue, 21 Jul 2020 19:25:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=7wV7qhzZv3sbD4+KlzCK0zK14sIgrZ5cvRZxkccSQFE=;
-        b=kqVL4Eml3DObIcl/PSbJyqXNwGBIN47b9qjPgXzNxT5vgZkkhLDHVlMxnQrH4mnHGn
-         8OX4J2AcaWNO50LkEedjX+lj03uwDt96Z9L9pY3elqadxAf/PW9xpgysZoOddMbckvPI
-         wY6Dv7QSiHKzj1TUqeqhC30RQUSmAJcFcBD3MceaMbX/dOMX9SylZOYllEwbzJVMFZsY
-         Ym2F2dgGahxqEa6zM3Df+LOYmpX0lX2i87Cef8qKUEmGbZg7PUA4PHAkjNL7KJO6kZf1
-         0u0w4Cr4T/0wLfcjZ2ufITTq0HIFweF5NQTPN/buTZI1UTh2qRN13wBcuPNk8mSbt6DJ
-         7TGg==
-X-Gm-Message-State: AOAM533XjOG77rogxIW2H7Bt9X5Rm88VlHmzoJt8syfDupnNaNVd9isY
-        ibTAcJl4DA11W+4eWp62dI1giizMom0=
-X-Google-Smtp-Source: ABdhPJwco5bqHMdH+WElYnXoVzzywA0mbkIqRlI/FiDiOZLhyQ1sx13ZUtCN1IGbQ2tIzggG4hRLhA==
-X-Received: by 2002:a63:6dc1:: with SMTP id i184mr24987085pgc.345.1595384384680;
-        Tue, 21 Jul 2020 19:19:44 -0700 (PDT)
-Received: from haswell.lan ([2604:3d09:e37f:fce0::d4a])
-        by smtp.gmail.com with ESMTPSA id n2sm344237pfq.140.2020.07.21.19.19.43
+        bh=nVpjM+3Lpbcp75I5v0XW5iZgm+Uzzh+ISqSP/EdqLAY=;
+        b=hIWbYCXFeBfy6V6QLpo1qaXQ+W6k3O3tghTGozblAzWsz5R07VRxcq3Ek/O7lh0fDS
+         FoGGHs/G/gF5iA+qWrhM3ZuoLsCU98SlpVGJTWFw9teuoRFG7pK05f0fnzpHYsgmyLys
+         hMDUWf0+cKyjQuMitlUuxYlen7tczK+WydrHcfZFEsl3XQ/bq6NYHsUqCGVYz6hxoJdz
+         etAqWM4Q4/l3g26bNUi24vc+rdXANLxgG90/QKQo8F+PJSHequLAPu4k7MzbZBA90vgi
+         l9gb0B0KWAhSWaUnHFhVBqA5ZOKOovNq3rds7bUw45oFgVju6rzNPwE7KoEOV8qgS/xR
+         l/eg==
+X-Gm-Message-State: AOAM531S/6IEJ0uabNVuFmZb3CV0lV7Agrm307ieT+pooBCI3NZLWu7C
+        zk0XfV1DwEKir5tJq+7XrQ==
+X-Google-Smtp-Source: ABdhPJxr05rMMRsQFoBitzl6yB3DcYcw69YY56hOTSjh7VzNAqLbMzXVJl4H+CDkJ9g9oe8zU/qUjQ==
+X-Received: by 2002:a92:5a56:: with SMTP id o83mr31477790ilb.71.1595384717721;
+        Tue, 21 Jul 2020 19:25:17 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.252])
+        by smtp.googlemail.com with ESMTPSA id y2sm11687981iox.22.2020.07.21.19.25.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 19:19:43 -0700 (PDT)
-From:   Robert Hancock <hancockrwd@gmail.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Robert Hancock <hancockrwd@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI bridge
-Date:   Tue, 21 Jul 2020 20:18:03 -0600
-Message-Id: <20200722021803.17958-1-hancockrwd@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 21 Jul 2020 19:25:16 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Will Deacon <will@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: [PATCH 00/19] PCI: Another round of host clean-ups
+Date:   Tue, 21 Jul 2020 20:24:55 -0600
+Message-Id: <20200722022514.1283916-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -62,44 +75,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Recently ASPM handling was changed to no longer disable ASPM on all
-PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
-devices don't seem to function properly with ASPM enabled, as they
-cause the parent PCIe root port to cause repeated AER timeout errors.
-In addition to flooding the kernel log, this also causes the machine
-to wake up immediately after suspend is initiated.
+Here's another round PCI host bridge clean-ups. This one aims to
+reduce the amount of duplication in host probe functions by providing
+more default initialization of the pci_host_bridge. With the prior
+clean-ups, it's now possible to alloc and initialize the pci_host_bridge
+struct from DT in one step.
 
-Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
-Cc: stable@vger.kernel.org
-Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
----
- drivers/pci/quirks.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Patches 2 and 3 drop some pci_host_bridge init. Patches 4-11 clean-up
+handling of root bus number and bus ranges. Patches 12 and 13 are cleanups
+for Cadence driver. Patches 14 and 15 are clean-ups for rCar driver. Patch
+16 makes missing non-prefetchable region just a warning instead of an
+error in order to work with rcar-gen2. Patch 17 converts rcar-gen2 to not
+use the arm32 specific PCI setup. Patch 18 updates how the DT resource
+parsing is done for all the controller drivers. Any other new controller
+drivers will need updating. Patch 19 moves the default IRQ mapping to
+the bridge init core code.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 812bfc32ecb8..e5713114f2ab 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2330,6 +2330,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
- 
-+static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-+{
-+	pci_info(dev, "Disabling ASPM L0s/L1\n");
-+	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-+}
-+
-+/*
-+ * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
-+ * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected,
-+ * disable both L0s and L1 for now to be safe.
-+ */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
-+
- /*
-  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-  * Link bit cleared after starting the link retrain process to allow this
--- 
-2.26.2
+This is based on my previous series of clean-ups[1].
 
+Compile tested only. Any testing would be appreciated as I don't have
+any of this h/w (well, I have a rock960c, but have not gotten PCIe to work
+on it).
+
+Rob
+
+[1] https://lore.kernel.org/linux-pci/20200522234832.954484-1-robh@kernel.org/
+
+Rob Herring (19):
+  PCI: versatile: Drop flag PCI_ENABLE_PROC_DOMAINS
+  PCI: Set default bridge parent device
+  PCI: Drop unnecessary zeroing of bridge fields
+  PCI: aardvark: Use pci_is_root_bus() to check if bus is root bus
+  PCI: designware: Use pci_is_root_bus() to check if bus is root bus
+  PCI: mobiveil: Use pci_is_root_bus() to check if bus is root bus
+  PCI: xilinx-nwl: Use pci_is_root_bus() to check if bus is root bus
+  PCI: xilinx: Use pci_is_root_bus() to check if bus is root bus
+  PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus
+  PCI: rcar: Use pci_is_root_bus() to check if bus is root bus
+  PCI: Move setting pci_host_bridge.busnr out of host drivers
+  PCI: cadence: Use bridge resources for outbound window setup
+  PCI: cadence: Remove private bus number and range storage
+  PCI: rcar: Use devm_pci_alloc_host_bridge()
+  PCI: rcar: Use struct pci_host_bridge.windows list directly
+  PCI: of: Reduce missing non-prefetchable memory region to a warning
+  PCI: rcar-gen2: Convert to use modern host bridge probe functions
+  PCI: Move DT resource setup into devm_pci_alloc_host_bridge()
+  PCI: Set bridge map_irq and swizzle_irq to default functions
+
+ .../pci/controller/cadence/pcie-cadence-ep.c  |   6 +-
+ .../controller/cadence/pcie-cadence-host.c    |  65 +++----
+ drivers/pci/controller/cadence/pcie-cadence.c |   9 +-
+ drivers/pci/controller/cadence/pcie-cadence.h |   8 +-
+ drivers/pci/controller/dwc/pci-imx6.c         |   2 +-
+ drivers/pci/controller/dwc/pci-keystone.c     |   4 +-
+ .../pci/controller/dwc/pcie-designware-host.c |  28 +--
+ drivers/pci/controller/dwc/pcie-designware.h  |   2 -
+ .../controller/mobiveil/pcie-mobiveil-host.c  |  21 +--
+ .../pci/controller/mobiveil/pcie-mobiveil.h   |   1 -
+ drivers/pci/controller/pci-aardvark.c         |  25 +--
+ drivers/pci/controller/pci-ftpci100.c         |  10 --
+ drivers/pci/controller/pci-host-common.c      |  17 +-
+ drivers/pci/controller/pci-loongson.c         |   8 -
+ drivers/pci/controller/pci-mvebu.c            |   4 -
+ drivers/pci/controller/pci-rcar-gen2.c        | 162 +++++-------------
+ drivers/pci/controller/pci-tegra.c            |  10 --
+ drivers/pci/controller/pci-v3-semi.c          |  12 --
+ drivers/pci/controller/pci-versatile.c        |  13 +-
+ drivers/pci/controller/pci-xgene.c            |   9 -
+ drivers/pci/controller/pcie-altera.c          |  10 --
+ drivers/pci/controller/pcie-brcmstb.c         |   9 -
+ drivers/pci/controller/pcie-iproc-platform.c  |  10 +-
+ drivers/pci/controller/pcie-iproc.c           |   3 -
+ drivers/pci/controller/pcie-mediatek.c        |  16 --
+ drivers/pci/controller/pcie-rcar-host.c       |  73 +-------
+ drivers/pci/controller/pcie-rockchip-host.c   |  24 +--
+ drivers/pci/controller/pcie-rockchip.h        |   1 -
+ drivers/pci/controller/pcie-xilinx-nwl.c      |  20 +--
+ drivers/pci/controller/pcie-xilinx.c          |  22 +--
+ drivers/pci/of.c                              |  45 +++--
+ drivers/pci/pci.h                             |   8 +
+ drivers/pci/probe.c                           |   7 +
+ include/linux/pci.h                           |  12 --
+ 34 files changed, 160 insertions(+), 516 deletions(-)
+
+--
+2.25.1
