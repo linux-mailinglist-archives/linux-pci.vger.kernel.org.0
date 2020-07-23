@@ -2,180 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 942E922B8F4
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 23:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4272322B9C1
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 00:37:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgGWVry (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 17:47:54 -0400
-Received: from mga06.intel.com ([134.134.136.31]:13723 "EHLO mga06.intel.com"
+        id S1728237AbgGWWhe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 18:37:34 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61893 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbgGWVrw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:47:52 -0400
-IronPort-SDR: /hLMcVCvIPF20mboLfkd7Pz/uMfLiIiGBMe+3+DD4fqmVxAJjpb+aZBFpsxbev/edMXF/wv14K
- ih+ZbI48624g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="212161140"
+        id S1726608AbgGWWhd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:37:33 -0400
+IronPort-SDR: uYU1abVSkjql+DCz576wkVhPpEXy8JIXAHBpJPFauwq7WzxAkHQG1wMzGA6bWqbQsivE2lllVL
+ NPQnajQOAY4g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148553145"
 X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="212161140"
+   d="scan'208";a="148553145"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 14:47:51 -0700
-IronPort-SDR: ehrWjwYT1NJorsqzqdzYLsfJQ6u+ZKwW/OCm3Qa2SK4UKSKagWuiURPKiP54l3MfuuOZPg5HGQ
- +I6iuiLR2c3w==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:37:32 -0700
+IronPort-SDR: EY9s5rW5U1aQy5GNQAR9ZgvrDr76Axq9ss9gxITH1EAgoJHJ+6EbSpbf8LmFYkpNc8X3sUts6d
+ rG4eADnva0VQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="311184027"
-Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 14:47:44 -0700
-From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
-Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        fiona.trahe@intel.com, qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Subject: [PATCH v3 5/5] crypto: qat - use PCI_VDEVICE
-Date:   Thu, 23 Jul 2020 22:47:05 +0100
-Message-Id: <20200723214705.5399-6-giovanni.cabiddu@intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200723214705.5399-1-giovanni.cabiddu@intel.com>
-References: <20200723214705.5399-1-giovanni.cabiddu@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="272425639"
+Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jul 2020 15:37:32 -0700
+From:   Ashok Raj <ashok.raj@intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>
+Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device when SRIOV is enabled
+Date:   Thu, 23 Jul 2020 15:37:29 -0700
+Message-Id: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Build pci_device_id structure using the PCI_VDEVICE macro.
-This removes any references to the ADF_SYSTEM_DEVICE macro.
+PASID and PRI capabilities are only enumerated in PF devices. VF devices
+do not enumerate these capabilites. IOMMU drivers also need to enumerate
+them before enabling features in the IOMMU. Extending the same support as
+PASID feature discovery (pci_pasid_features) for PRI.
 
-Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+
+To: Bjorn Helgaas <bhelgaas@google.com>
+To: Joerg Roedel <joro@8bytes.com>
+To: Lu Baolu <baolu.lu@intel.com>
+Cc: stable@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: iommu@lists.linux-foundation.org
 ---
- drivers/crypto/qat/qat_c3xxx/adf_drv.c      | 7 ++-----
- drivers/crypto/qat/qat_c3xxxvf/adf_drv.c    | 7 ++-----
- drivers/crypto/qat/qat_c62x/adf_drv.c       | 7 ++-----
- drivers/crypto/qat/qat_c62xvf/adf_drv.c     | 7 ++-----
- drivers/crypto/qat/qat_dh895xcc/adf_drv.c   | 7 ++-----
- drivers/crypto/qat/qat_dh895xccvf/adf_drv.c | 7 ++-----
- 6 files changed, 12 insertions(+), 30 deletions(-)
+v3: Added Fixes tag
+v2: Fixed build failure reported from lkp when CONFIG_PRI=n
 
-diff --git a/drivers/crypto/qat/qat_c3xxx/adf_drv.c b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-index bba0f142f7f6..43929d70c41d 100644
---- a/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c3xxx_hw_data.h"
+ drivers/iommu/intel/iommu.c |  2 +-
+ drivers/pci/ats.c           | 13 +++++++++++++
+ include/linux/pci-ats.h     |  4 ++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index d759e7234e98..276452f5e6a7 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+ 			}
  
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C3XXX), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
+-			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
++			    pci_pri_supported(pdev))
+ 				info->pri_supported = 1;
+ 		}
+ 	}
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index b761c1f72f67..2e6cf0c700f7 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
  
-diff --git a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-index b77a58886599..dca52de22e8d 100644
---- a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c3xxxvf_hw_data.h"
+ 	return pdev->pasid_required;
+ }
++
++/**
++ * pci_pri_supported - Check if PRI is supported.
++ * @pdev: PCI device structure
++ *
++ * Returns true if PRI capability is present, false otherwise.
++ */
++bool pci_pri_supported(struct pci_dev *pdev)
++{
++	/* VFs share the PF PRI configuration */
++	return !!(pci_physfn(pdev)->pri_cap);
++}
++EXPORT_SYMBOL_GPL(pci_pri_supported);
+ #endif /* CONFIG_PCI_PRI */
  
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ #ifdef CONFIG_PCI_PASID
+diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+index f75c307f346d..df54cd5b15db 100644
+--- a/include/linux/pci-ats.h
++++ b/include/linux/pci-ats.h
+@@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+ void pci_disable_pri(struct pci_dev *pdev);
+ int pci_reset_pri(struct pci_dev *pdev);
+ int pci_prg_resp_pasid_required(struct pci_dev *pdev);
++bool pci_pri_supported(struct pci_dev *pdev);
++#else
++static inline bool pci_pri_supported(struct pci_dev *pdev)
++{ return false; }
+ #endif /* CONFIG_PCI_PRI */
  
-diff --git a/drivers/crypto/qat/qat_c62x/adf_drv.c b/drivers/crypto/qat/qat_c62x/adf_drv.c
-index 722838ff03be..f104c9d1195d 100644
---- a/drivers/crypto/qat/qat_c62x/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c62x/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c62x_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C62X), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_c62xvf/adf_drv.c b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-index a766cc18aae9..e0b909e70712 100644
---- a/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_c62xvf_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X_VF),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C62X_VF), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-index 4c3aea07f444..857aa4c8595f 100644
---- a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-+++ b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_dh895xcc_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_DH895XCC), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
-diff --git a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-index 673348ca5dea..2987855a70dc 100644
---- a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-@@ -18,12 +18,9 @@
- #include <adf_cfg.h>
- #include "adf_dh895xccvf_hw_data.h"
- 
--#define ADF_SYSTEM_DEVICE(device_id) \
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
--
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF),
--	{0,}
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF), },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
- 
+ #ifdef CONFIG_PCI_PASID
 -- 
-2.26.2
+2.7.4
 
