@@ -2,172 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C549E22A6C3
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 07:02:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9437D22AAED
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 10:45:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725849AbgGWFCT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 01:02:19 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22992 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725774AbgGWFCS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jul 2020 01:02:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595480536;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WQ8HFJRjSjgVFhmZYkcj0k9hnN0PLKzblt1+tXuDhM8=;
-        b=LeK8RXpwcXfg/sby/mFnkIXUMW3zwQBprvIgyoYYj53Rjv9hCNgkIt0qpsyM6m45ntG9ke
-        mKYxcMHxUClT6WhdYBW70R4Zl+6gofetef89sDz/0ix0rXmTRp7ttgz9yv4FgNrZGDsemy
-        rkUFd9c4oWzS++swLUnBbT8nFeevp4Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-aDaIhfkuPLWS2wb98L5psw-1; Thu, 23 Jul 2020 01:02:14 -0400
-X-MC-Unique: aDaIhfkuPLWS2wb98L5psw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94015106B245;
-        Thu, 23 Jul 2020 05:02:12 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 51CE01A888;
-        Thu, 23 Jul 2020 05:02:11 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 23:02:10 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     herbert@gondor.apana.org.au, cohuck@redhat.com, nhorman@redhat.com,
-        vdronov@redhat.com, bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] vfio/pci: Add device blocklist
-Message-ID: <20200722230210.55b2d326@x1.home>
-In-Reply-To: <20200714063610.849858-3-giovanni.cabiddu@intel.com>
-References: <20200714063610.849858-1-giovanni.cabiddu@intel.com>
-        <20200714063610.849858-3-giovanni.cabiddu@intel.com>
-Organization: Red Hat
+        id S1726303AbgGWIpb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 04:45:31 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59253 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGWIpb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:45:31 -0400
+IronPort-SDR: NN6rrectEP+wC4CWT4sfx7hY1gI3viTJ8BtyNwQK1eC8KBwNTJGeOzfEaljVm6drY8heZx7f5I
+ 9COshcioWXlA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="150471006"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="150471006"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 01:45:30 -0700
+IronPort-SDR: h49lPOeGEr9QNNbLCHfpDbVQtteko8a57uJCY1n/88FZXrTZTiD0kmzRWmQV35EUhtXJRvyz/N
+ c7LKX3uRxCeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="488758915"
+Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2020 01:45:29 -0700
+Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jyWr2-00001x-Qs; Thu, 23 Jul 2020 08:45:28 +0000
+Date:   Thu, 23 Jul 2020 16:44:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ d08c30d7a0d1826f771f16cde32bd86e48401791
+Message-ID: <5f194df8.3uJpyhj4NiRkdwnw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 14 Jul 2020 07:36:07 +0100
-Giovanni Cabiddu <giovanni.cabiddu@intel.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
+branch HEAD: d08c30d7a0d1826f771f16cde32bd86e48401791  Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
 
-> Add blocklist of devices that by default are not probed by vfio-pci.
-> Devices in this list may be susceptible to untrusted application, even
-> if the IOMMU is enabled. To be accessed via vfio-pci, the user has to
-> explicitly disable the blocklist.
-> 
-> The blocklist can be disabled via the module parameter disable_blocklist.
-> 
-> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
+elapsed time: 1031m
 
-Hi Giovanni,
+configs tested: 91
+configs skipped: 2
 
-I'm pretty satisfied with this series, except "blocklist" makes me
-think of block devices, ie. storage, or block chains, or building block
-types of things before I get to "block" as in a barrier.  The other
-alternative listed as a suggestion currently in linux-next is denylist,
-which is the counter to an allowlist.  I've already proposed changing
-some other terminology in vfio.c to use the term "allowed", so
-allow/deny would be my preference versus pass/block.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 7c0779018b1b..ea5904ca6cbf 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -60,6 +60,10 @@ module_param(enable_sriov, bool, 0644);
->  MODULE_PARM_DESC(enable_sriov, "Enable support for SR-IOV configuration.  Enabling SR-IOV on a PF typically requires support of the userspace PF driver, enabling VFs without such support may result in non-functional VFs or PF.");
->  #endif
->  
-> +static bool disable_blocklist;
-> +module_param(disable_blocklist, bool, 0444);
-> +MODULE_PARM_DESC(disable_blocklist, "Disable device blocklist. If set, i.e. blocklist disabled, then blocklisted devices are allowed to be probed by vfio-pci.");
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sh                               alldefconfig
+mips                         bigsur_defconfig
+arm                           sama5_defconfig
+arm                           omap1_defconfig
+mips                            e55_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20200719
+x86_64               randconfig-a002-20200719
+x86_64               randconfig-a006-20200719
+x86_64               randconfig-a001-20200719
+x86_64               randconfig-a003-20200719
+x86_64               randconfig-a004-20200719
+i386                 randconfig-a015-20200719
+i386                 randconfig-a011-20200719
+i386                 randconfig-a016-20200719
+i386                 randconfig-a012-20200719
+i386                 randconfig-a013-20200719
+i386                 randconfig-a014-20200719
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
 
-This seems a little obtuse, could we expand a bit to allow users to
-understand why a device might be on the denylist?  Ex:
-
-"Disable use of device denylist, which prevents binding to device with
-known errata that may lead to exploitable stability or security issues
-when accessed by untrusted users."
-
-I think that more properly sets expectations when a device is denied
-via this list and the admin looks to see how they might workaround it.
-
-> +
->  static inline bool vfio_vga_disabled(void)
->  {
->  #ifdef CONFIG_VFIO_PCI_VGA
-> @@ -69,6 +73,29 @@ static inline bool vfio_vga_disabled(void)
->  #endif
->  }
->  
-> +static bool vfio_pci_dev_in_blocklist(struct pci_dev *pdev)
-> +{
-> +	return false;
-> +}
-> +
-> +static bool vfio_pci_is_blocklisted(struct pci_dev *pdev)
-> +{
-> +	if (!vfio_pci_dev_in_blocklist(pdev))
-> +		return false;
-> +
-> +	if (disable_blocklist) {
-> +		pci_warn(pdev,
-> +			 "device blocklist disabled - allowing device %04x:%04x.\n",
-
-Here we even use "allowing" to describe what happens when the blocklist
-is disabled, "deny" is a more proper antonym of allow.
-
-> +			 pdev->vendor, pdev->device);
-> +		return false;
-> +	}
-> +
-> +	pci_warn(pdev, "%04x:%04x is blocklisted - probe will fail.\n",
-
-Perhaps "%04x:%04x exists in vfio-pci device denylist, driver probing
-disallowed.\n",...
-
-Thanks,
-Alex
-
-> +		 pdev->vendor, pdev->device);
-> +
-> +	return true;
-> +}
-> +
->  /*
->   * Our VGA arbiter participation is limited since we don't know anything
->   * about the device itself.  However, if the device is the only VGA device
-> @@ -1847,6 +1874,9 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct iommu_group *group;
->  	int ret;
->  
-> +	if (vfio_pci_is_blocklisted(pdev))
-> +		return -EINVAL;
-> +
->  	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
->  		return -EINVAL;
->  
-> @@ -2336,6 +2366,9 @@ static int __init vfio_pci_init(void)
->  
->  	vfio_pci_fill_ids();
->  
-> +	if (disable_blocklist)
-> +		pr_warn("device blocklist disabled.\n");
-> +
->  	return 0;
->  
->  out_driver:
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
