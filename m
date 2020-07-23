@@ -2,79 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 490FE22B6C1
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 21:31:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8921222B706
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 21:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725894AbgGWTao (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 15:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
+        id S1726029AbgGWT5q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 15:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbgGWTao (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:30:44 -0400
+        id S1725894AbgGWT5q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Jul 2020 15:57:46 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B2B2067D;
-        Thu, 23 Jul 2020 19:30:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFF32086A;
+        Thu, 23 Jul 2020 19:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595532643;
-        bh=7InW/I38muM+u0qDvAzcUWvmPajbXN7K+EHKB8+aI98=;
+        s=default; t=1595534265;
+        bh=dRVWMy39tT6wAPfPtn0iZAUMp/DpcR3/2Kj29ElInIQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VoGkpg7/H/Gv5IFWFsnv3YGd9Frr08vHEFmbXvHV17HbCRv5l1QxuOEeN+84FkX9M
-         TiN0omh+WS5rh/FCKxAypSKymdubnrxE3f/EiI+4VGLZxy0A4lBLQBqFTt2r8ylvVJ
-         RVPy/b29uNx5A8yMwdwYNa6gxhM5VF+H99Mm6Bmg=
-Date:   Thu, 23 Jul 2020 14:30:41 -0500
+        b=L/QfwoU4oC9NCaDNrwHinZeKXeR9zsJSkX6zYFw5RRMbQZXDnUIGf1yV+B8lS1+Ki
+         XjbrFTzYbkCA2/Alu+Ip6PtccBJRk65NnYKP1Jx5Y6TVLywojlIGBO94LhPJMLjsZP
+         k5VchAgtlSvB1CTg3X2ZM1c/6mNemM+n1Y75OsQY=
+Date:   Thu, 23 Jul 2020 14:57:42 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Message-ID: <20200723193041.GA1446817@bjorn-Precision-5520>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        Armen Baloyan <abaloyan@gigaio.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+Message-ID: <20200723195742.GA1447143@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200723173819.GA345408@otc-nc-03>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADnq5_Nqziz6TKfk7U6QvBjZtV7ibBfwwym1kTb1Q4t-cz04JQ@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:38:19AM -0700, Raj, Ashok wrote:
-> Hi Bjorn
-> 
-> On Tue, Jul 21, 2020 at 09:54:01AM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jul 20, 2020 at 09:43:00AM -0700, Ashok Raj wrote:
-> > > PASID and PRI capabilities are only enumerated in PF devices. VF devices
-> > > do not enumerate these capabilites. IOMMU drivers also need to enumerate
-> > > them before enabling features in the IOMMU. Extending the same support as
-> > > PASID feature discovery (pci_pasid_features) for PRI.
-> > > 
-> > > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > 
-> > Hi Ashok,
-> > 
-> > When you update this for the 0-day implicit declaration thing, can you
-> > update the subject to say what the patch *does*, as opposed to what it
-> > is solving?  Also, no need for a period at the end.
-> 
-> Yes, will update and resend. Goofed up a couple things, i'll update those
-> as well.
-> 
-> > Does this fix a regression?  Is it associated with a commit that we
-> > could add as a "Fixes:" tag so we know how far back to try to apply
-> > to stable kernels?
-> 
-> Yes, 
+[+cc Andrew, Armen, hpa]
 
-Does that mean "yes, this fixes a regression"?
+On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >
+> > The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+> > transactions between root ports and found to work. Therefore add it
+> > to the list.
+> >
+> > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Christian König <christian.koenig@amd.com>
+> > Cc: Huang Rui <ray.huang@amd.com>
+> > Cc: Alex Deucher <alexdeucher@gmail.com>
+> 
+> Starting with Zen, all AMD platforms support P2P for reads and writes.
 
-> but the iommu files moved location and git fixes tags only generates
-> for a few handful of commits and doesn't show the old ones. 
+What's the plan for getting out of the cycle of "update this list for
+every new chip"?  Any new _DSMs planned, for instance?
 
-Not sure how to interpret the rest of this.  I'm happy to include the
-SHA1 of the original commit that added the regression, even if the
-file has moved since then.
+A continuous trickle of updates like this is not really appealing.  So
+far we have:
 
-Bjorn
+  7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
+  7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+  bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
+  494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
+  0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
+
+And that's just from the last year, not including this patch.
+
+> > ---
+> >  drivers/pci/p2pdma.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> > index e8e444eeb1cd..3d67a1ee083e 100644
+> > --- a/drivers/pci/p2pdma.c
+> > +++ b/drivers/pci/p2pdma.c
+> > @@ -284,6 +284,8 @@ static const struct pci_p2pdma_whitelist_entry {
+> >         {PCI_VENDOR_ID_AMD,     0x1450, 0},
+> >         {PCI_VENDOR_ID_AMD,     0x15d0, 0},
+> >         {PCI_VENDOR_ID_AMD,     0x1630, 0},
+> > +       /* AMD ZEN 2 */
+> > +       {PCI_VENDOR_ID_AMD,     0x1480, 0},
+> >
+> >         /* Intel Xeon E5/Core i7 */
+> >         {PCI_VENDOR_ID_INTEL,   0x3c00, REQ_SAME_HOST_BRIDGE},
+> >
+> > base-commit: ba47d845d715a010f7b51f6f89bae32845e6acb7
+> > --
+> > 2.20.1
+> >
