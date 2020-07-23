@@ -2,122 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4272322B9C1
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 00:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F0D722B9C9
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 00:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgGWWhe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 18:37:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61893 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726608AbgGWWhd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:37:33 -0400
-IronPort-SDR: uYU1abVSkjql+DCz576wkVhPpEXy8JIXAHBpJPFauwq7WzxAkHQG1wMzGA6bWqbQsivE2lllVL
- NPQnajQOAY4g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148553145"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="148553145"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:37:32 -0700
-IronPort-SDR: EY9s5rW5U1aQy5GNQAR9ZgvrDr76Axq9ss9gxITH1EAgoJHJ+6EbSpbf8LmFYkpNc8X3sUts6d
- rG4eADnva0VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="272425639"
-Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Jul 2020 15:37:32 -0700
-From:   Ashok Raj <ashok.raj@intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>
-Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device when SRIOV is enabled
-Date:   Thu, 23 Jul 2020 15:37:29 -0700
-Message-Id: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727060AbgGWWle (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 18:41:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38310 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726368AbgGWWld (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jul 2020 18:41:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595544092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JNCEKJ42TJGwyjZg08MhJL5etwaa2Ujt2TOQmqOGcgw=;
+        b=VBvccxDiTvyUwghYcKMYloS7oMvT2616dFKpPlYn6yB5bSkTDyDe65bBxgavUoR4d5zsSR
+        gn6UKm78y0MJIOxPmhglCNcBEXAMAkD/LjLkfXZvdg8QYMh7vlwl1Qm8ua5z7ySxEj+OoU
+        Goadnu9ZjPfKyHjjqwK6M0DR2s8F2cE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368-gkvHuhYuNrKcPEkSY9pgFw-1; Thu, 23 Jul 2020 18:41:30 -0400
+X-MC-Unique: gkvHuhYuNrKcPEkSY9pgFw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 860B018C63C9;
+        Thu, 23 Jul 2020 22:41:28 +0000 (UTC)
+Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ED6D274F58;
+        Thu, 23 Jul 2020 22:41:26 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 16:41:26 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     herbert@gondor.apana.org.au, cohuck@redhat.com, nhorman@redhat.com,
+        vdronov@redhat.com, bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        fiona.trahe@intel.com, qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] vfio/pci: Add device denylist
+Message-ID: <20200723164126.0249b247@w520.home>
+In-Reply-To: <20200723214705.5399-3-giovanni.cabiddu@intel.com>
+References: <20200723214705.5399-1-giovanni.cabiddu@intel.com>
+        <20200723214705.5399-3-giovanni.cabiddu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PASID and PRI capabilities are only enumerated in PF devices. VF devices
-do not enumerate these capabilites. IOMMU drivers also need to enumerate
-them before enabling features in the IOMMU. Extending the same support as
-PASID feature discovery (pci_pasid_features) for PRI.
+On Thu, 23 Jul 2020 22:47:02 +0100
+Giovanni Cabiddu <giovanni.cabiddu@intel.com> wrote:
 
-Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Add denylist of devices that by default are not probed by vfio-pci.
+> Devices in this list may be susceptible to untrusted application, even
+> if the IOMMU is enabled. To be accessed via vfio-pci, the user has to
+> explicitly disable the denylist.
+> 
+> The denylist can be disabled via the module parameter disable_denylist.
+> 
+> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 7c0779018b1b..673f53c4798e 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -60,6 +60,10 @@ module_param(enable_sriov, bool, 0644);
+>  MODULE_PARM_DESC(enable_sriov, "Enable support for SR-IOV configuration.  Enabling SR-IOV on a PF typically requires support of the userspace PF driver, enabling VFs without such support may result in non-functional VFs or PF.");
+>  #endif
+>  
+> +static bool disable_denylist;
+> +module_param(disable_denylist, bool, 0444);
+> +MODULE_PARM_DESC(disable_denylist, "Disable use of device denylist. Disabling the denylist prevents binding to devices with known errata that may lead to exploitable stability or security issues when accessed by untrusted users.");
 
-To: Bjorn Helgaas <bhelgaas@google.com>
-To: Joerg Roedel <joro@8bytes.com>
-To: Lu Baolu <baolu.lu@intel.com>
-Cc: stable@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: iommu@lists.linux-foundation.org
----
-v3: Added Fixes tag
-v2: Fixed build failure reported from lkp when CONFIG_PRI=n
+s/prevents/allows/
 
- drivers/iommu/intel/iommu.c |  2 +-
- drivers/pci/ats.c           | 13 +++++++++++++
- include/linux/pci-ats.h     |  4 ++++
- 3 files changed, 18 insertions(+), 1 deletion(-)
+ie. the denylist prevents binding, therefore disabling the denylist
+allows binding
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index d759e7234e98..276452f5e6a7 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 			}
- 
- 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
--			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
-+			    pci_pri_supported(pdev))
- 				info->pri_supported = 1;
- 		}
- 	}
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b761c1f72f67..2e6cf0c700f7 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
- 
- 	return pdev->pasid_required;
- }
-+
-+/**
-+ * pci_pri_supported - Check if PRI is supported.
-+ * @pdev: PCI device structure
-+ *
-+ * Returns true if PRI capability is present, false otherwise.
-+ */
-+bool pci_pri_supported(struct pci_dev *pdev)
-+{
-+	/* VFs share the PF PRI configuration */
-+	return !!(pci_physfn(pdev)->pri_cap);
-+}
-+EXPORT_SYMBOL_GPL(pci_pri_supported);
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index f75c307f346d..df54cd5b15db 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-+bool pci_pri_supported(struct pci_dev *pdev);
-+#else
-+static inline bool pci_pri_supported(struct pci_dev *pdev)
-+{ return false; }
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
--- 
-2.7.4
+I can fix this on commit without a new version if you agree.  I also
+see that patch 1/5 didn't change since v2, so I'll transfer Bjorn's
+ack.  If that sounds good I'll queue the first 3 patches in my next
+branch for v5.9.  Thanks,
+
+Alex
+
+> +
+>  static inline bool vfio_vga_disabled(void)
+>  {
+>  #ifdef CONFIG_VFIO_PCI_VGA
+> @@ -69,6 +73,29 @@ static inline bool vfio_vga_disabled(void)
+>  #endif
+>  }
+>  
+> +static bool vfio_pci_dev_in_denylist(struct pci_dev *pdev)
+> +{
+> +	return false;
+> +}
+> +
+> +static bool vfio_pci_is_denylisted(struct pci_dev *pdev)
+> +{
+> +	if (!vfio_pci_dev_in_denylist(pdev))
+> +		return false;
+> +
+> +	if (disable_denylist) {
+> +		pci_warn(pdev,
+> +			 "device denylist disabled - allowing device %04x:%04x.\n",
+> +			 pdev->vendor, pdev->device);
+> +		return false;
+> +	}
+> +
+> +	pci_warn(pdev, "%04x:%04x exists in vfio-pci device denylist, driver probing disallowed.\n",
+> +		 pdev->vendor, pdev->device);
+> +
+> +	return true;
+> +}
+> +
+>  /*
+>   * Our VGA arbiter participation is limited since we don't know anything
+>   * about the device itself.  However, if the device is the only VGA device
+> @@ -1847,6 +1874,9 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct iommu_group *group;
+>  	int ret;
+>  
+> +	if (vfio_pci_is_denylisted(pdev))
+> +		return -EINVAL;
+> +
+>  	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
+>  		return -EINVAL;
+>  
+> @@ -2336,6 +2366,9 @@ static int __init vfio_pci_init(void)
+>  
+>  	vfio_pci_fill_ids();
+>  
+> +	if (disable_denylist)
+> +		pr_warn("device denylist disabled.\n");
+> +
+>  	return 0;
+>  
+>  out_driver:
 
