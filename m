@@ -2,122 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C793C22A4CA
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 03:42:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C549E22A6C3
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 07:02:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733309AbgGWBmC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 21:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729198AbgGWBmC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 21:42:02 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD487C0619DC;
-        Wed, 22 Jul 2020 18:42:01 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id a21so3261684otq.8;
-        Wed, 22 Jul 2020 18:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8M4Xkkh6oONnSId9T7Db7jDYkgAvaARFQjrwk9Nrj6Y=;
-        b=Q5Ii6hPyJ2G0aEmGCO00OiA5rSM5q1/oqcCcR4WKeTegYbf9rHBDDvJPG5XEsBsIHA
-         QfYycgqaOmYulO53hzYMlRp0wjNb0HdwmogsVWTj50kB+vnyd7clAEEpjUo99AubWaoP
-         PXVeSSO2BCQt6RDtEUDG664m/5VjTRMxraKSvhub0f1Z4f34d/F2H60qb9jPsRwabndc
-         kz9Ajtbba/Yf1R3YLtE/rJt4lUgcjFcjqPSK1nSXl5IaB5gWWsUeFY2kRW4yhKlhGPN1
-         H8TleEGj856nuHfBpcT4ChusnbLMAyaEb0GcZyqbhh9luIoqnc2qHyHB77G3r5PBqNAi
-         ZZyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8M4Xkkh6oONnSId9T7Db7jDYkgAvaARFQjrwk9Nrj6Y=;
-        b=d7yjgcWjc/xmzkQJ9CmB5RJRdgyDSLaPwQxEAPJHFcGnXPsTlejL1fZ9YAoISp5gAb
-         o4lNFkguKHBVyjp/LbO5cEAqtt5iLgoL/vjADdnbY3GcljnMWeClJ7hXENjKyDC66IEf
-         MFTyyI7mh9PCbgUfHvXNzAjoUT6Mal486DOoxVhNSZikvxcNNXBrD2P1gfBeoOon2bAC
-         dyBbWjSPguPAHhq0ewUriVXlml1uqKyL7y02UzT7AdCYh2kjc9thSeRNUMIGuGcKzg2S
-         XAJ6ttKBbQOorIMVx1txIBVsaShgT5f9ieKuyipVqWGoBG73xfaZoZj6Mt/8mEiEYqMZ
-         VE2g==
-X-Gm-Message-State: AOAM532CmN4MHCzHD4wKwuUxrxk1sA6VZ+ypDeVJzRbwCnDajjkKmBVv
-        G+j+Lya1OjGQosRKfAq9nqdUawfNgTeO1aAe9s4=
-X-Google-Smtp-Source: ABdhPJy4b+57zr/ei4gtWpjlioxvHvFFbfZJy9/UeAw4TppwPaZkiKmaXCPX0TB50LLhw8Dnut6Bbg7mk0MQ2PWYcYo=
-X-Received: by 2002:a05:6830:1301:: with SMTP id p1mr2108063otq.357.1595468521163;
- Wed, 22 Jul 2020 18:42:01 -0700 (PDT)
+        id S1725849AbgGWFCT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 01:02:19 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22992 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725774AbgGWFCS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jul 2020 01:02:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595480536;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WQ8HFJRjSjgVFhmZYkcj0k9hnN0PLKzblt1+tXuDhM8=;
+        b=LeK8RXpwcXfg/sby/mFnkIXUMW3zwQBprvIgyoYYj53Rjv9hCNgkIt0qpsyM6m45ntG9ke
+        mKYxcMHxUClT6WhdYBW70R4Zl+6gofetef89sDz/0ix0rXmTRp7ttgz9yv4FgNrZGDsemy
+        rkUFd9c4oWzS++swLUnBbT8nFeevp4Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-aDaIhfkuPLWS2wb98L5psw-1; Thu, 23 Jul 2020 01:02:14 -0400
+X-MC-Unique: aDaIhfkuPLWS2wb98L5psw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94015106B245;
+        Thu, 23 Jul 2020 05:02:12 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51CE01A888;
+        Thu, 23 Jul 2020 05:02:11 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 23:02:10 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     herbert@gondor.apana.org.au, cohuck@redhat.com, nhorman@redhat.com,
+        vdronov@redhat.com, bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] vfio/pci: Add device blocklist
+Message-ID: <20200722230210.55b2d326@x1.home>
+In-Reply-To: <20200714063610.849858-3-giovanni.cabiddu@intel.com>
+References: <20200714063610.849858-1-giovanni.cabiddu@intel.com>
+        <20200714063610.849858-3-giovanni.cabiddu@intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <CADLC3L0b8zqJoHt7aA6z6hb3cYC2z-32vmQsQ3tR0gGduC8+-Q@mail.gmail.com>
- <20200723010435.GA1334095@bjorn-Precision-5520>
-In-Reply-To: <20200723010435.GA1334095@bjorn-Precision-5520>
-From:   Robert Hancock <hancockrwd@gmail.com>
-Date:   Wed, 22 Jul 2020 19:41:50 -0600
-Message-ID: <CADLC3L1BRToNyqPV51++JOySgfaEs1YAWM5vCjSTZctuvqNyug@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI bridge
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-        Puranjay Mohan <puranjay12@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 7:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Jul 22, 2020 at 06:46:06PM -0600, Robert Hancock wrote:
-> > On Wed, Jul 22, 2020 at 11:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Tue, Jul 21, 2020 at 08:18:03PM -0600, Robert Hancock wrote:
-> > > > Recently ASPM handling was changed to no longer disable ASPM on all
-> > > > PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
-> > > > devices don't seem to function properly with ASPM enabled, as they
-> > > > cause the parent PCIe root port to cause repeated AER timeout errors.
-> > > > In addition to flooding the kernel log, this also causes the machine
-> > > > to wake up immediately after suspend is initiated.
-> > >
-> > > Hi Robert, thanks a lot for the report of this problem
-> > > (https://lore.kernel.org/r/CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com
-> > > and https://bugzilla.redhat.com/show_bug.cgi?id=1853960).
-> > >
-> > > I'm pretty sure Linux ASPM support is missing some things.  This
-> > > problem might be a hardware problem where a quirk is the right
-> > > solution, but it could also be that it's a result of a Linux defect
-> > > that we should fix.
-> > >
-> > > Could you collect the dmesg log and "sudo lspci -vvxxxx" output
-> > > somewhere (maybe a bugzilla.kernel.org issue)?  I want to figure out
-> > > whether this L1 PM substates are enabled on this link, and whether
-> > > that's configured correctly.
-> >
-> > Created a Bugzilla entry and added dmesg and lspci output:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=208667
-> >
-> > As I noted in that report, I subsequently found this page on ASMedia's
-> > site: https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
-> > which indicates this ASM1083 device has "No PCIe ASPM support".
->
-> How nice.  According to your lspci, the device itself claims to
-> support ASPM:
->
->   02:00.0 ... ASMedia Technology Inc. ASM1083/1085 PCIe to PCI Bridge
->     LnkCap: ... ASPM L0s L1 ...
->
-> but the web page claims otherwise.  That would mean the device is
-> defective for claiming something that's not true.  Or possibly those
-> capability bits can be set by BIOS.
->
-> > It's not clear why this problem isn't occurring on Windows however -
-> > either it is not enabling ASPM, somehow it doesn't cause issues with
-> > the PCIe link, or it is causing issues and just doesn't notify the
-> > user in any way. I can try and check if this bridge device is ending
-> > up with ASPM enabled under Windows 10 or not..
->
-> If Windows *does* manage to enable ASPM, that would be interesting.  I
-> don't know whether Windows has a similar quirk mechanism.  I suppose
-> they must have *some* way to work around defective devices.
+On Tue, 14 Jul 2020 07:36:07 +0100
+Giovanni Cabiddu <giovanni.cabiddu@intel.com> wrote:
 
-As I posted on the Bugzilla report, based on lspci output it appears
-Windows does have ASPM L0s enabled for this bridge. However, it
-appears to have the exact same problem: there are correctable PCIe
-error entries showing up in the Windows system event log against the
-root port the bridge is connected to. So I am thinking this hardware
-is just broken with ASPM enabled.
+> Add blocklist of devices that by default are not probed by vfio-pci.
+> Devices in this list may be susceptible to untrusted application, even
+> if the IOMMU is enabled. To be accessed via vfio-pci, the user has to
+> explicitly disable the blocklist.
+> 
+> The blocklist can be disabled via the module parameter disable_blocklist.
+> 
+> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+
+Hi Giovanni,
+
+I'm pretty satisfied with this series, except "blocklist" makes me
+think of block devices, ie. storage, or block chains, or building block
+types of things before I get to "block" as in a barrier.  The other
+alternative listed as a suggestion currently in linux-next is denylist,
+which is the counter to an allowlist.  I've already proposed changing
+some other terminology in vfio.c to use the term "allowed", so
+allow/deny would be my preference versus pass/block.
+
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 7c0779018b1b..ea5904ca6cbf 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -60,6 +60,10 @@ module_param(enable_sriov, bool, 0644);
+>  MODULE_PARM_DESC(enable_sriov, "Enable support for SR-IOV configuration.  Enabling SR-IOV on a PF typically requires support of the userspace PF driver, enabling VFs without such support may result in non-functional VFs or PF.");
+>  #endif
+>  
+> +static bool disable_blocklist;
+> +module_param(disable_blocklist, bool, 0444);
+> +MODULE_PARM_DESC(disable_blocklist, "Disable device blocklist. If set, i.e. blocklist disabled, then blocklisted devices are allowed to be probed by vfio-pci.");
+
+This seems a little obtuse, could we expand a bit to allow users to
+understand why a device might be on the denylist?  Ex:
+
+"Disable use of device denylist, which prevents binding to device with
+known errata that may lead to exploitable stability or security issues
+when accessed by untrusted users."
+
+I think that more properly sets expectations when a device is denied
+via this list and the admin looks to see how they might workaround it.
+
+> +
+>  static inline bool vfio_vga_disabled(void)
+>  {
+>  #ifdef CONFIG_VFIO_PCI_VGA
+> @@ -69,6 +73,29 @@ static inline bool vfio_vga_disabled(void)
+>  #endif
+>  }
+>  
+> +static bool vfio_pci_dev_in_blocklist(struct pci_dev *pdev)
+> +{
+> +	return false;
+> +}
+> +
+> +static bool vfio_pci_is_blocklisted(struct pci_dev *pdev)
+> +{
+> +	if (!vfio_pci_dev_in_blocklist(pdev))
+> +		return false;
+> +
+> +	if (disable_blocklist) {
+> +		pci_warn(pdev,
+> +			 "device blocklist disabled - allowing device %04x:%04x.\n",
+
+Here we even use "allowing" to describe what happens when the blocklist
+is disabled, "deny" is a more proper antonym of allow.
+
+> +			 pdev->vendor, pdev->device);
+> +		return false;
+> +	}
+> +
+> +	pci_warn(pdev, "%04x:%04x is blocklisted - probe will fail.\n",
+
+Perhaps "%04x:%04x exists in vfio-pci device denylist, driver probing
+disallowed.\n",...
+
+Thanks,
+Alex
+
+> +		 pdev->vendor, pdev->device);
+> +
+> +	return true;
+> +}
+> +
+>  /*
+>   * Our VGA arbiter participation is limited since we don't know anything
+>   * about the device itself.  However, if the device is the only VGA device
+> @@ -1847,6 +1874,9 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct iommu_group *group;
+>  	int ret;
+>  
+> +	if (vfio_pci_is_blocklisted(pdev))
+> +		return -EINVAL;
+> +
+>  	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
+>  		return -EINVAL;
+>  
+> @@ -2336,6 +2366,9 @@ static int __init vfio_pci_init(void)
+>  
+>  	vfio_pci_fill_ids();
+>  
+> +	if (disable_blocklist)
+> +		pr_warn("device blocklist disabled.\n");
+> +
+>  	return 0;
+>  
+>  out_driver:
+
