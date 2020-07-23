@@ -2,106 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F12222A374
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 02:00:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 408A922A37E
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 02:06:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgGWAAP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 20:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54746 "EHLO mail.kernel.org"
+        id S1731300AbgGWAGM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 20:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbgGWAAO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:00:14 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1729423AbgGWAGM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Jul 2020 20:06:12 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAB02080D;
-        Thu, 23 Jul 2020 00:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595462414;
-        bh=qR5Eq1BercnCXvvQ8dDOJRkLZbzeTnJgz4nvdEMwtTE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E6ws/PZfoxEU+IFafd8yFUq7Hh1Uk6qzAQ75Gl52bYOmFmQOb49XZR2MpLkijulCP
-         bn05E7kPch7jBputAARe/DKfIUAAJ6GfObdGWL6U1BDKFCNQGAAZwg3W2m1oS/eGFX
-         QP8Cm3oHSh7pQGDyi1iXEvrAJ53Fg8+qdT7aajB0=
-Date:   Wed, 22 Jul 2020 19:00:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>, jroedel@suse.de,
-        Myron Stowe <myron.stowe@redhat.com>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
-        Khalid Aziz <khalid@gonehiking.org>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200723000012.GA1325359@bjorn-Precision-5520>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8983C206E3;
+        Thu, 23 Jul 2020 00:06:10 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 20:06:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+Message-ID: <20200722200608.40ca9994@oasis.local.home>
+In-Reply-To: <20200722235620.GR10769@hirez.programming.kicks-ass.net>
+References: <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+        <20200624214530.GA120457@google.com>
+        <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+        <20200625161503.GB173089@google.com>
+        <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+        <20200625224042.GA169781@google.com>
+        <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+        <20200722135542.41127cc4@oasis.local.home>
+        <20200722184137.GP10769@hirez.programming.kicks-ass.net>
+        <20200722150943.53046592@oasis.local.home>
+        <20200722235620.GR10769@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722215048.GL220876@anatevka.americas.hpqcorp.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 03:50:48PM -0600, Jerry Hoemann wrote:
-> On Wed, Jul 22, 2020 at 10:21:23AM -0500, Bjorn Helgaas wrote:
-> > On Wed, Jul 22, 2020 at 10:52:26PM +0800, Kairui Song wrote:
+On Thu, 23 Jul 2020 01:56:20 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> > > I think I didn't make one thing clear, The PCI UR error never arrives
-> > > in kernel, it's the iLo BMC on that HPE machine caught the error, and
-> > > send kernel an NMI. kernel is panicked by NMI, I'm still trying to
-> > > figure out why the NMI hanged kernel, even with panic=-1,
-> > > panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
-> > > NMI by shutdown the devices in right order, that's also a solution.
+> Anyway, what do you prefer, I suppose I can make objtool whatever we
+> need, that patch is trivial. Simply recording the sites and not
+> rewriting them should be simple enough.
 
-ACPI v6.3, chapter 18, does mention NMIs several times, e.g., Table
-18-394 and sec 18.4.  I'm not familiar enough with APEI to know
-whether Linux correctly supports all those cases.  Maybe this is a
-symptom that we don't?
+Either way. If objtool turns it into nops, just make it where we can
+enable -DCC_USING_NOP_MCOUNT set, and the kernel will be unaware.
 
-> > I'm not sure how much sympathy to have for this situation.  A PCIe UR
-> > is fatal for the transaction and maybe even the device, but from the
-> > overall system point of view, it *should* be a recoverable error and
-> > we shouldn't panic.
-> > 
-> > Errors like that should be reported via the normal AER or ACPI/APEI
-> > mechanisms.  It sounds like in this case, the platform has decided
-> > these aren't enough and it is trying to force a reboot?  If this is
-> > "special" platform behavior, I'm not sure how much we need to cater
-> > for it.
-> 
-> Are these AER errors the type processed by the GHES code?
+Or if you just add the locations, then that would work too.
 
-My understanding from ACPI v6.3, sec 18.3.2, is that the Hardware
-Error Source Table may contain Error Source Descriptors of types like:
-
-  IA-32 Machine Check Exception
-  IA-32 Corrected Machine Check
-  IA-32 Non-Maskable Interrupt
-  PCIe Root Port AER
-  PCIe Device AER
-  Generic Hardware Error Source (GHES)
-  Hardware Error Notification
-  IA-32 Deferred Machine Check
-
-I would naively expect PCIe UR errors to be reported via one of the
-PCIe Error Sources, not GHES, but maybe there's some reason to use
-GHES.
-
-The kernel should already know how to deal with the PCIe AER errors,
-but we'd have to add new device-specific code to handle things
-reported via GHES, along the lines of what Shiju is doing here:
-
-  https://lore.kernel.org/r/20200722104245.1060-1-shiju.jose@huawei.com
-
-> I'll note that RedHat runs their crash kernel with:  hest_disable.
-> So, the ghes code is disabled in the crash kernel.
-
-That would disable all the HEST error sources, including the PCIe AER
-ones as well as GHES ones.  If we turn off some of the normal error
-handling mechanisms, I guess we have to expect that some errors won't
-be handled correctly.
-
-Bjorn
+-- Steve
