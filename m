@@ -2,153 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9437D22AAED
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 10:45:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C2F022AB13
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 10:53:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgGWIpb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 04:45:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59253 "EHLO mga03.intel.com"
+        id S1726425AbgGWIvz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 04:51:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGWIpb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:45:31 -0400
-IronPort-SDR: NN6rrectEP+wC4CWT4sfx7hY1gI3viTJ8BtyNwQK1eC8KBwNTJGeOzfEaljVm6drY8heZx7f5I
- 9COshcioWXlA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="150471006"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="150471006"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 01:45:30 -0700
-IronPort-SDR: h49lPOeGEr9QNNbLCHfpDbVQtteko8a57uJCY1n/88FZXrTZTiD0kmzRWmQV35EUhtXJRvyz/N
- c7LKX3uRxCeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="488758915"
-Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2020 01:45:29 -0700
-Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jyWr2-00001x-Qs; Thu, 23 Jul 2020 08:45:28 +0000
-Date:   Thu, 23 Jul 2020 16:44:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- d08c30d7a0d1826f771f16cde32bd86e48401791
-Message-ID: <5f194df8.3uJpyhj4NiRkdwnw%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725858AbgGWIvz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:51:55 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B3B72071A;
+        Thu, 23 Jul 2020 08:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595494314;
+        bh=IRF2/hQ81/fJN2jLe+emwgKLQGhbq9l8YIf8OxkkSik=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JoLsejGOUeUv83nQAMznfUoFwoaNSxjbwr27sVlLosQjoq8SM2k7dgTUgxUvKR+8r
+         zYhfXQFkgR18bjjIH+98j5xi2EK4WyKJq63OkADl9v+HxRRQj9Pgwx7OxMUDW18eS2
+         5B4NMpR85PDvoLQsxH3EtQR8ml/ZXD0/LjkdFNnk=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jyWxE-00EDOw-Q3; Thu, 23 Jul 2020 09:51:52 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Jul 2020 09:51:52 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+In-Reply-To: <20200722195928.GN2021248@mellanox.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+ <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <cfb8191e364e77f352b1483c415a83a5@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jgg@mellanox.com, dave.jiang@intel.com, vkoul@kernel.org, megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com, kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com, dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com, yan.y.zhao@linux.intel.com, pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
-branch HEAD: d08c30d7a0d1826f771f16cde32bd86e48401791  Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
+On 2020-07-22 20:59, Jason Gunthorpe wrote:
+> On Wed, Jul 22, 2020 at 07:52:33PM +0100, Marc Zyngier wrote:
+> 
+>> Which is exactly what platform-MSI already does. Why do we need
+>> something else?
+> 
+> It looks to me like all the code is around managing the
+> dev->msi_domain of the devices.
+> 
+> The intended use would have PCI drivers create children devices using
+> mdev or virtbus and those devices wouldn't have a msi_domain from the
+> platform. Looks like platform_msi_alloc_priv_data() fails immediately
+> because dev->msi_domain will be NULL for these kinds of devices.
+> 
+> Maybe that issue should be handled directly instead of wrappering
+> platform_msi_*?
+> 
+> For instance a trivial addition to the platform_msi API:
+> 
+>   platform_msi_assign_domain(struct_device 
+> *newly_created_virtual_device,
+>                              struct device *physical_device);
+> 
+> Which could set the msi_domain of new device using the topology of
+> physical_device to deduce the correct domain?
 
-elapsed time: 1031m
+That would seem like a sensible course of action, as losing
+the topology information will likely result in problems down
+the line.
 
-configs tested: 91
-configs skipped: 2
+> Then the question is how to properly create a domain within the
+> hardware topology of physical_device with the correct parameters for
+> the platform.
+> 
+> Why do we need a dummy msi_domain anyhow? Can this just use
+> physical_device->msi_domain directly? (I'm at my limit here of how
+> much of this I remember, sorry)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The parent device would be a PCI device, if I follow you correctly.
+It would thus expect to be able to program the MSI the PCI way,
+which wouldn't work. So we end-up with this custom MSI domain
+that knows about *this* particular family of devices.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sh                               alldefconfig
-mips                         bigsur_defconfig
-arm                           sama5_defconfig
-arm                           omap1_defconfig
-mips                            e55_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20200719
-x86_64               randconfig-a002-20200719
-x86_64               randconfig-a006-20200719
-x86_64               randconfig-a001-20200719
-x86_64               randconfig-a003-20200719
-x86_64               randconfig-a004-20200719
-i386                 randconfig-a015-20200719
-i386                 randconfig-a011-20200719
-i386                 randconfig-a016-20200719
-i386                 randconfig-a012-20200719
-i386                 randconfig-a013-20200719
-i386                 randconfig-a014-20200719
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
+> If you solve that it should solve the remapping problem too, as the
+> physical_device is already assigned by the platform to a remapping irq
+> domain if that is what the platform wants.
+> 
+>>> +	parent = irq_get_default_host();
+>> Really? How is it going to work once you have devices sending their
+>> MSIs to two different downstream blocks? This looks rather
+>> short-sighted.
+> 
+> .. and fix this too, the parent domain should be derived from the
+> topology of the physical_device which is originating the interrupt
+> messages.
+> 
+>> On the other hand, masking an interrupt is an irqchip operation, and
+>> only concerns the irqchip level. Here, you seem to be making it an
+>> end-point operation, which doesn't really make sense to me. Or is this
+>> device its own interrupt controller as well? That would be extremely
+>> surprising, and I'd expect some block downstream of the device to be
+>> able to control the masking of the interrupt.
+> 
+> These are message interrupts so they originate directly from the
+> device and generally travel directly to the CPU APIC. On the wire
+> there is no difference between a MSI, MSI-X and a device using the
+> dev-msi approach.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+I understand that.
+
+> IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
+
+Really? So you can't shut a device with a screaming interrupt,
+for example, should it become otherwise unresponsive?
+
+> So the model for MSI is always "mask at source". The closest mapping
+> to the Linux IRQ model is to say the end device has a irqchip that
+> encapsulates the ability of the device to generate the MSI in the
+> first place.
+
+This is an x86'ism, I'm afraid. Systems I deal with can mask any
+interrupt at the interrupt controller level, MSI or not.
+
+> It looks like existing platform_msi drivers deal with "masking"
+> implicitly by halting the device interrupt generation before releasing
+> the interrupt and have no way for the generic irqchip layer to mask
+> the interrupt.
+
+No. As I said above, the interrupt controller is perfectly capable
+of masking interrupts on its own, without touching the device.
+
+> I suppose the motivation to make it explicit is related to vfio using
+> the generic mask/unmask functionality?
+> 
+> Explicit seems better, IMHO.
+
+If masking at the source is the only way to shut the device up,
+and assuming that the device provides the expected semantics
+(a MSI raised by the device while the interrupt is masked
+isn't lost and gets sent when unmasked), that's fair enough.
+It's just ugly.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
