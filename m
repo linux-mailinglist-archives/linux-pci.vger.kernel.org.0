@@ -2,80 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2049522B4FD
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 19:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A129522B52A
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 19:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgGWRiU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 13:38:20 -0400
-Received: from mga03.intel.com ([134.134.136.65]:47251 "EHLO mga03.intel.com"
+        id S1726666AbgGWRsu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 13:48:50 -0400
+Received: from mga05.intel.com ([192.55.52.43]:10683 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgGWRiU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jul 2020 13:38:20 -0400
-IronPort-SDR: Swnt+x6Avvevd67Xah2bgxQEC3FGmqxGXZBxCQ95CovRjpc99PtBodv0EL+hIB3F7ElbD9tF3r
- 62M5hqOSorzg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150572895"
+        id S1726650AbgGWRsu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Jul 2020 13:48:50 -0400
+IronPort-SDR: F3vSngvOISsBZ6HxpzRm+n8Aoha2l6PWj2da6Z9NCI3aKbq/G5Hfjd6L5lxH9vHGDwBl4TdKlg
+ gIQLcbm7ZEcw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235467916"
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="150572895"
+   d="scan'208";a="235467916"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 10:38:19 -0700
-IronPort-SDR: RAlpV8HD4DHIIAZb8EmCMWGPilcgqD0Gm+gGatQLHiZhoYs228KT/Kn2JKaqWZpDGUSfH0aBLg
- jPu0+Fu/mxNg==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 10:48:49 -0700
+IronPort-SDR: uXMZRlxKFgs0luH4j5F8qLlwDLaC8krTN1weEVCzH+lwtw8Z4VSLAuiBUpdjWGXuMdOtDEcIs4
+ +44UiZEgQuPg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="462939769"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jul 2020 10:38:19 -0700
-Date:   Thu, 23 Jul 2020 10:38:19 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
+   d="scan'208";a="302393595"
+Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2020 10:48:48 -0700
+Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jyfKp-0000Yr-Ni; Thu, 23 Jul 2020 17:48:47 +0000
+Date:   Fri, 24 Jul 2020 01:48:29 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Message-ID: <20200723173819.GA345408@otc-nc-03>
-References: <1595263380-209956-1-git-send-email-ashok.raj@intel.com>
- <20200721145401.GA1117318@bjorn-Precision-5520>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/error] BUILD SUCCESS
+ 068c29a248b6ddbfdf7bb150b547569759620d36
+Message-ID: <5f19cd6d.vf8ww7SLYvGkuhk6%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721145401.GA1117318@bjorn-Precision-5520>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/error
+branch HEAD: 068c29a248b6ddbfdf7bb150b547569759620d36  PCI/ERR: Clear PCIe Device Status errors only if OS owns AER
 
-On Tue, Jul 21, 2020 at 09:54:01AM -0500, Bjorn Helgaas wrote:
-> On Mon, Jul 20, 2020 at 09:43:00AM -0700, Ashok Raj wrote:
-> > PASID and PRI capabilities are only enumerated in PF devices. VF devices
-> > do not enumerate these capabilites. IOMMU drivers also need to enumerate
-> > them before enabling features in the IOMMU. Extending the same support as
-> > PASID feature discovery (pci_pasid_features) for PRI.
-> > 
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> 
-> Hi Ashok,
-> 
-> When you update this for the 0-day implicit declaration thing, can you
-> update the subject to say what the patch *does*, as opposed to what it
-> is solving?  Also, no need for a period at the end.
+elapsed time: 1259m
 
-Yes, will update and resend. Goofed up a couple things, i'll update those
-as well.
+configs tested: 74
+configs skipped: 1
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> Does this fix a regression?  Is it associated with a commit that we
-> could add as a "Fixes:" tag so we know how far back to try to apply
-> to stable kernels?
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc64                          allmodconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-Yes, but the iommu files moved location and git fixes tags only generates
-for a few handful of commits and doesn't show the old ones. 
-
-Cheers,
-Ashok
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
