@@ -2,141 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEF8B22ABE9
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 11:46:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39D9122ABF1
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 11:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgGWJqw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 05:46:52 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39296 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgGWJqw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:46:52 -0400
-IronPort-SDR: bb0avlvWwz4s0fMo2M7fOM69+TAUUJATqq5xPNNVBLZBWQVj0cdYOB45f3Mrj4dRGAleGnytTR
- Jjyd3PpRmt4A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="130565386"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="130565386"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 02:46:51 -0700
-IronPort-SDR: glxdqQPveLWobhhDXj87uARLi7GY4fQzXDcMQMvCn/vrTeZpMmd+33zwU9630sGwHUIvweCmqt
- jmnKqYlhsWTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="392948539"
-Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Jul 2020 02:46:50 -0700
-Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jyXoQ-00003Y-14; Thu, 23 Jul 2020 09:46:50 +0000
-Date:   Thu, 23 Jul 2020 17:46:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS ee8ffa45ed3fde0955b9eadd57b61fdb359cfe89
-Message-ID: <5f195c7a.j8c1qdECkSp/4cxu%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728006AbgGWJv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 05:51:59 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:34609 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbgGWJv7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jul 2020 05:51:59 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id AF329300011A0;
+        Thu, 23 Jul 2020 11:51:52 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 68E6B36272; Thu, 23 Jul 2020 11:51:52 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 11:51:52 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Michael Haeuptle <michael.haeuptle@hpe.com>,
+        Ian May <ian.may@canonical.com>,
+        Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        Rick Farrington <ricardo.farrington@cavium.com>,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Govinda Tatti <govinda.tatti@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [PCI] 3233e41d3e:
+ WARNING:at_drivers/pci/pci.c:#pci_reset_hotplug_slot
+Message-ID: <20200723095152.nf3fmfzrjlpoi35h@wunner.de>
+References: <908047f7699d9de9ec2efd6b79aa752d73dab4b6.1595329748.git.lukas@wunner.de>
+ <20200723091305.GJ19262@shao2-debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200723091305.GJ19262@shao2-debian>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: ee8ffa45ed3fde0955b9eadd57b61fdb359cfe89  Merge branch 'remotes/lorenzo/pci/xilinx'
+On Thu, Jul 23, 2020 at 05:13:06PM +0800, kernel test robot wrote:
+> FYI, we noticed the following commit (built with gcc-9):
+[...]
+> commit: 3233e41d3e8ebcd44e92da47ffed97fd49b84278 ("[PATCH] PCI: pciehp: Fix AB-BA deadlock between reset_lock and device_lock")
+[...]
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> [    0.971752] WARNING: CPU: 0 PID: 1 at drivers/pci/pci.c:4905 pci_reset_hotplug_slot+0x70/0x80
 
-elapsed time: 1092m
+Thank you, trusty robot.
 
-configs tested: 80
-configs skipped: 1
+I botched the call to lockdep_assert_held_write(), it should have been
+conditional on "if (probe)".
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Happy to respin the patch, but I'd like to hear opinions on the locking
+issues surrounding xen and octeon (and the patch in general).
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-s390                          debug_defconfig
-arm                          pxa3xx_defconfig
-m68k                        m5407c3_defconfig
-sh                          sdk7780_defconfig
-c6x                         dsk6455_defconfig
-arm                           h5000_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
+In particular, would a solution be entertained wherein the pci_dev is
+reset by the PCI core after driver unbinding, contingent on a flag which
+is set by a PCI driver to indicate that the pci_dev is returned to the
+core in an unclean state?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Also, why does xen require a device reset on bind?
+
+Thanks!
+
+Lukas
