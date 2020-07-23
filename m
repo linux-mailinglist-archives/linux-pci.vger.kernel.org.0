@@ -2,68 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 408A922A37E
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 02:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2106E22A3D3
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jul 2020 02:46:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731300AbgGWAGM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jul 2020 20:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbgGWAGM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:06:12 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8983C206E3;
-        Thu, 23 Jul 2020 00:06:10 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 20:06:08 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-Message-ID: <20200722200608.40ca9994@oasis.local.home>
-In-Reply-To: <20200722235620.GR10769@hirez.programming.kicks-ass.net>
-References: <20200624212737.GV4817@hirez.programming.kicks-ass.net>
-        <20200624214530.GA120457@google.com>
-        <20200625074530.GW4817@hirez.programming.kicks-ass.net>
-        <20200625161503.GB173089@google.com>
-        <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
-        <20200625224042.GA169781@google.com>
-        <20200626112931.GF4817@hirez.programming.kicks-ass.net>
-        <20200722135542.41127cc4@oasis.local.home>
-        <20200722184137.GP10769@hirez.programming.kicks-ass.net>
-        <20200722150943.53046592@oasis.local.home>
-        <20200722235620.GR10769@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1733221AbgGWAqS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jul 2020 20:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733075AbgGWAqS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jul 2020 20:46:18 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1242C0619DC;
+        Wed, 22 Jul 2020 17:46:17 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 72so3212943otc.3;
+        Wed, 22 Jul 2020 17:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1tc0sllhtY7w34bXcpMVY0Netptnusq1Em3V/sqHWI0=;
+        b=Nlh1gZFqOje/wjQsqdXngrNxRXr5/jM+CCGVx6vQgKOJTZM+IIme1CORg+EAE0xqik
+         nQ74StMEiW15q7uL5gjsfhHuqvM8RWH+GkMOaJeGQfO+IBSJJ6UkJ2wXnJgO7saLm9DT
+         s2T96qbkRqEJttlsAJMdC6xIBC7R5ip0FiyKddFFn8mc85kuldHRaEaVi+8P27hkoo5J
+         sBoMAFOvPh4PkNAf4Zm7KPiGEAMQ/RCHzz3pwJGbNdp8EiajsyR94WKtMLxV5YN45tDa
+         9Q14/O+Xb5QZKTF5VtG2S7Osb2ZCqLDHTEjkpRG33RYss9PQ/HfrrbJg31AznsLFOTPQ
+         qsFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1tc0sllhtY7w34bXcpMVY0Netptnusq1Em3V/sqHWI0=;
+        b=oc8pCocdgJV/yXXHXZ2LEVbbWMQg1eS/JFPBluNbCwYaVTM3gkEJkr9RANoF5nuKkH
+         emwMUH0Bm0IC9YBg6z/W26/v3peOxg1gMGvinckS3N/ty52UjuLZcBq41TTWOj78v3uy
+         5TjT0gfPoKUsjSW7OL7d9fQ2uu0Hoz4zwdyvde7aNM56t8fsOwoQ2jJtl62VzVPYfucK
+         Naj4KPBYQSg1mlE+YfGq/pn12RVffzER/5qx1KHo7vxO3RkqAa3/rtxVQs7w9w0aqkpv
+         ZWzygMPWGCCsrsW0Bh1QhwEU9MiF2gsdbXXWbaynS6sB6LMxWEu9bH8wkX/LKyi2582e
+         3ECA==
+X-Gm-Message-State: AOAM532hLq22vapxnA9B3aTrlvArDEe2Pa04at6R1iODVrZF2BudDMMQ
+        dhsW54DElh0ElyVLiTo4m831o2+hZJmuVkD3tzA=
+X-Google-Smtp-Source: ABdhPJzqJOiYGRTIoq6oVthPZ4ese3vK8VW1DCnwjbIxJ84GTIETtTPTrzymv2zTBRjQETvttoKPI8msy2SfjIeQNIw=
+X-Received: by 2002:a9d:6410:: with SMTP id h16mr2184938otl.168.1595465177143;
+ Wed, 22 Jul 2020 17:46:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200722021803.17958-1-hancockrwd@gmail.com> <20200722174009.GA1291928@bjorn-Precision-5520>
+In-Reply-To: <20200722174009.GA1291928@bjorn-Precision-5520>
+From:   Robert Hancock <hancockrwd@gmail.com>
+Date:   Wed, 22 Jul 2020 18:46:06 -0600
+Message-ID: <CADLC3L0b8zqJoHt7aA6z6hb3cYC2z-32vmQsQ3tR0gGduC8+-Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI bridge
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+        Puranjay Mohan <puranjay12@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Jul 2020 01:56:20 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, Jul 22, 2020 at 11:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Puranjay]
+>
+> On Tue, Jul 21, 2020 at 08:18:03PM -0600, Robert Hancock wrote:
+> > Recently ASPM handling was changed to no longer disable ASPM on all
+> > PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
+> > devices don't seem to function properly with ASPM enabled, as they
+> > cause the parent PCIe root port to cause repeated AER timeout errors.
+> > In addition to flooding the kernel log, this also causes the machine
+> > to wake up immediately after suspend is initiated.
+>
+> Hi Robert, thanks a lot for the report of this problem
+> (https://lore.kernel.org/r/CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com
+> and https://bugzilla.redhat.com/show_bug.cgi?id=1853960).
+>
+> I'm pretty sure Linux ASPM support is missing some things.  This
+> problem might be a hardware problem where a quirk is the right
+> solution, but it could also be that it's a result of a Linux defect
+> that we should fix.
+>
+> Could you collect the dmesg log and "sudo lspci -vvxxxx" output
+> somewhere (maybe a bugzilla.kernel.org issue)?  I want to figure out
+> whether this L1 PM substates are enabled on this link, and whether
+> that's configured correctly.
 
-> Anyway, what do you prefer, I suppose I can make objtool whatever we
-> need, that patch is trivial. Simply recording the sites and not
-> rewriting them should be simple enough.
+Created a Bugzilla entry and added dmesg and lspci output:
+https://bugzilla.kernel.org/show_bug.cgi?id=208667
 
-Either way. If objtool turns it into nops, just make it where we can
-enable -DCC_USING_NOP_MCOUNT set, and the kernel will be unaware.
-
-Or if you just add the locations, then that would work too.
-
--- Steve
+As I noted in that report, I subsequently found this page on ASMedia's
+site: https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
+which indicates this ASM1083 device has "No PCIe ASPM support". It's
+not clear why this problem isn't occurring on Windows however - either
+it is not enabling ASPM, somehow it doesn't cause issues with the PCIe
+link, or it is causing issues and just doesn't notify the user in any
+way. I can try and check if this bridge device is ending up with ASPM
+enabled under Windows 10 or not..
