@@ -2,74 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39D8A22C476
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 13:43:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D4B022C4F0
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 14:17:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgGXLnb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jul 2020 07:43:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGXLna (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jul 2020 07:43:30 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63709C0619D3
-        for <linux-pci@vger.kernel.org>; Fri, 24 Jul 2020 04:43:30 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f12so9639459eja.9
-        for <linux-pci@vger.kernel.org>; Fri, 24 Jul 2020 04:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=MRJYdBEWDkphEZG/UEdwwg3luf4wsGYhc8hRIEMMM04=;
-        b=or6Uo2WlkGgO2Vs61tjrB0fI+DFwETamJwcYT8CEke4IqwDXc+j+d6lv3uz0cCMh93
-         r+hIlEwalrpnFOkI9Zm18CeIDJvSy1AqzMaGNOTWBXdxUwrDxxR1Y5qLuEa9tU86BFGh
-         xdCel97EytwpOu0mkJQ+AmwX4/LZNML/bNSTOeB/lZ8YIU7H41mCevU7AgYawv6dth70
-         066I5kQhVFxSZRNIyGO5VAfLv/DMA52dN30yGM3b8B00ZgmDfCjf5UB2Mdvei65vRhnP
-         e/UZYzJ+Dg8GxXe3Q8koxbBXgxqpOrUwG++dgfHdaORSPf+mXOlNZ8i5aYuiLbJvyGdv
-         rjbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=MRJYdBEWDkphEZG/UEdwwg3luf4wsGYhc8hRIEMMM04=;
-        b=P0agTaWUAByBtq1qa7PjqH4xEmk301b1Gt4UeYyD1VqG81QwMfBdxPlzv9g9AMQE9w
-         0W2LTtGmdsoxPwntaJVgHe5GOCNVjYSm6yImT+mYaZ5X4eJ07IVlddZJO+yF4MTPRMpM
-         rSepzLOFPJyMrP2HpAxi6/UpyU9EAqfypGJf4l11drYlcWYzZNSEUzEXsz2gebRObKGk
-         wVdQZZpAr8qyRjvJjbc4eohhdM7s2b9ICr1PVjKQF0U1JnGBiqUnOnQ9VbYCbQsMnhup
-         NGjdhNQ16b/seVBcqqscwHha89Rqs3cN0QZ/5ut+KL3zlzFhG/80X0EyS7il3d+t4lUJ
-         VxNQ==
-X-Gm-Message-State: AOAM530UjSM2JXzml8eAZ1K0wC2f806fNM7W55hKVVD9K9FUP2mh6ViU
-        H+R3B06+K+dvye22SZlvHzOcVyKpwWvkH/E9/RI=
-X-Google-Smtp-Source: ABdhPJz5/rkLkNsg5S94AUBHtyYkXjEmD8Bh/2CfzpK5urRz4iq9+RKHbzg9qThC8OC/fvAjv5WlS5rn5ntMVkWq0eo=
-X-Received: by 2002:a17:906:3a9b:: with SMTP id y27mr8676517ejd.38.1595591009128;
- Fri, 24 Jul 2020 04:43:29 -0700 (PDT)
+        id S1726280AbgGXMRk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jul 2020 08:17:40 -0400
+Received: from mga03.intel.com ([134.134.136.65]:14038 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbgGXMRk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:17:40 -0400
+IronPort-SDR: hymydJP0ZFSSws7fLxC44KuZRyZesJi86UZTpulGY1e19r8ZtLp1GzPKlSYjXOUBD21yB+0jXF
+ 0Ns/pC6AjEaw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150684438"
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="150684438"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 05:17:39 -0700
+IronPort-SDR: QQQu+DgdSARCQ5/VmmnjlZrL7cW1iyhfIQwdbxY6CB/y5sWIlCbH7hS8RhIZ86kEHSj3xYsRxV
+ LUFZ8oeW/V9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="288975674"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 05:17:35 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jywdq-003nw4-Ql; Fri, 24 Jul 2020 15:17:34 +0300
+Date:   Fri, 24 Jul 2020 15:17:34 +0300
+From:   "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: Re: [PATCH v13 0/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200724121734.GC3703480@smile.fi.intel.com>
+References: <20200722104245.1060-1-shiju.jose@huawei.com>
+ <20200723232301.GA1468407@bjorn-Precision-5520>
+ <5c86b434fe3a47eaabf488dea14efd25@huawei.com>
 MIME-Version: 1.0
-Received: by 2002:a50:114c:0:0:0:0:0 with HTTP; Fri, 24 Jul 2020 04:43:28
- -0700 (PDT)
-Reply-To: jinghualiuyang@gmail.com
-From:   Frau JINGHUA Liu Yang <dr.udaspellcaster100@gmail.com>
-Date:   Fri, 24 Jul 2020 13:43:28 +0200
-Message-ID: <CAH_k5AG0sxvm2QrhL9jBVWk7FHAe=bonL9s-vq=C2dBfE2CkyQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c86b434fe3a47eaabf488dea14efd25@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Sch=C3=B6nen Tag,
+On Fri, Jul 24, 2020 at 09:08:16AM +0000, Shiju Jose wrote:
+> >-----Original Message-----
+> >From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> >Sent: 24 July 2020 00:23
+> >On Wed, Jul 22, 2020 at 11:42:43AM +0100, Shiju Jose wrote:
 
-       Ich bin Frau JINGHUA Liu Yang f=C3=BCr die CITIBANK OF KOREA hier in
-der Republik KOREA. Ich habe einen Gesch=C3=A4ftsvorgang. Kann ich Ihnen
-vertrauen, dass Sie diesen Betrag von $9.356.669 USD =C3=BCberweisen? Wenn
-Sie bereit sind, mir zu helfen, melden Sie sich bei mir, damit ich Sie
-dar=C3=BCber informieren kann, wie wir diese Transaktion am besten
-perfektionieren k=C3=B6nnen, damit das Geld an Sie in Ihrem Land =C3=BCberw=
-iesen
-wird.
+...
 
-Sch=C3=B6ne Gr=C3=BC=C3=9Fe..
-Frau JINGHUA Liu Yang
+> >This series is ill-formed:
+
+I confirm this.
+
+> >  - Jul 22  5:39 Shiju Jose      [PATCH v13 0/2] ACPI / APEI: Add support to not
+> >  - Jul 22  5:39 Shiju Jose      └─>[PATCH v13 1/2] ACPI / APEI: Add a notifier
+> >  - Jul 22  5:42 Shiju Jose      [PATCH v13 0/2] ACPI / APEI: Add support to not
+> >  - Jul 22  5:42 Shiju Jose      └─>[PATCH v13 2/2] PCI: hip: Add handling of Hi
+> git send-email failed to send out one patch each time in the patch series
+> due to some internal error. 
+
+You have to fix your tools...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
