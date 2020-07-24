@@ -2,45 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C806322C132
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 10:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E62522C192
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 11:00:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgGXItD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jul 2020 04:49:03 -0400
-Received: from 8bytes.org ([81.169.241.247]:59022 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbgGXItD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:49:03 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 63D2F46A; Fri, 24 Jul 2020 10:49:02 +0200 (CEST)
-Date:   Fri, 24 Jul 2020 10:48:59 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lu Baolu <baolu.lu@intel.com>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device
- when SRIOV is enabled
-Message-ID: <20200724084859.GQ27672@8bytes.org>
-References: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
+        id S1726810AbgGXJAn convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 24 Jul 2020 05:00:43 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2521 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726692AbgGXJAn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:00:43 -0400
+Received: from lhreml713-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 7D54AF63A0924D1CFC96;
+        Fri, 24 Jul 2020 10:00:41 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml713-chm.china.huawei.com (10.201.108.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 24 Jul 2020 10:00:41 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Fri, 24 Jul 2020 10:00:41 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: RE: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Topic: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Index: AQHWYUfqroZbmVDLlEO3jLbzt/fllakWZmIg
+Date:   Fri, 24 Jul 2020 09:00:41 +0000
+Message-ID: <b76444fed0a2468983b2a2c45d7d31b2@huawei.com>
+References: <20200722103952.1009-2-shiju.jose@huawei.com>
+ <20200723232046.GA1468652@bjorn-Precision-5520>
+In-Reply-To: <20200723232046.GA1468652@bjorn-Precision-5520>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.85.142]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 03:37:29PM -0700, Ashok Raj wrote:
-> PASID and PRI capabilities are only enumerated in PF devices. VF devices
-> do not enumerate these capabilites. IOMMU drivers also need to enumerate
-> them before enabling features in the IOMMU. Extending the same support as
-> PASID feature discovery (pci_pasid_features) for PRI.
-> 
-> Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Hi Bjorn,
 
-Acked-by: Joerg Roedel <jroedel@suse.de>
+Thanks for reviewing.
 
+>-----Original Message-----
+>From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>Sent: 24 July 2020 00:21
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
+>james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
+>dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com;
+>andriy.shevchenko@linux.intel.com; Wangkefeng (OS Kernel Lab)
+><wangkefeng.wang@huawei.com>; jroedel@suse.de; Linuxarm
+><linuxarm@huawei.com>; yangyicong <yangyicong@huawei.com>; Jonathan
+>Cameron <jonathan.cameron@huawei.com>; tanxiaofei
+><tanxiaofei@huawei.com>
+>Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+>(vendor) CPER records
+>
+>On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
+>> CPER records describing a firmware-first error are identified by GUID.
+>> The ghes driver currently logs, but ignores any unknown CPER records.
+>> This prevents describing errors that can't be represented by a
+>> standard entry, that would otherwise allow a driver to recover from an
+>error.
+>> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+>> version 2.8).
+>
+>> +#ifdef CONFIG_ACPI_APEI_GHES
+>> +/**
+>> + * ghes_register_vendor_record_notifier - register a notifier for
+>> +vendor
+>> + * records that the kernel would otherwise ignore.
+>> + * @nb: pointer to the notifier_block structure of the event handler.
+>> + *
+>> + * return 0 : SUCCESS, non-zero : FAIL  */ int
+>> +ghes_register_vendor_record_notifier(struct notifier_block *nb);
+>> +
+>> +/**
+>> + * ghes_unregister_vendor_record_notifier - unregister the previously
+>> + * registered vendor record notifier.
+>> + * @nb: pointer to the notifier_block structure of the vendor record
+>handler.
+>> + */
+>> +void ghes_unregister_vendor_record_notifier(struct notifier_block
+>> +*nb); #else static inline int
+>> +ghes_register_vendor_record_notifier(struct notifier_block *nb) {
+>> +	return -ENODEV;
+>> +}
+>> +
+>> +static inline void ghes_unregister_vendor_record_notifier(struct
+>> +notifier_block *nb) { }
+>
+>If you made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES,
+>you'd be able to get rid of these stubs, wouldn't you?  It doesn't look like
+>there's any point in building pcie-hisi-error.c at all unless
+>CONFIG_ACPI_APEI_GHES is enabled.
+The stub is added because this interface is expected to use by the other drivers as well.
+Some drivers may not want add the build depend on the CONFIG_ACPI_APEI_GHES
+if the error reporting has less priority in the driver.
+However we can add dependency on CONFIG_ACPI_APEI_GHES for building pcie-hisi-error.c.  
+>
+>> +#endif
+>> +
+>>  int ghes_estatus_pool_init(int num_ghes);
+>>
+>>  /* From drivers/edac/ghes_edac.c */
+>> --
+>> 2.17.1
+>>
+>>
+
+Thanks,
+Shiju
