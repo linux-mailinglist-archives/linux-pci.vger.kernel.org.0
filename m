@@ -2,131 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7EAB22BB11
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 02:36:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B43F22BC0C
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 04:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGXAga (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jul 2020 20:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgGXAga (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jul 2020 20:36:30 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B63CC0619D3;
-        Thu, 23 Jul 2020 17:36:30 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595550988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/sRzv0b/bz/POqyqjoZfEPy4Nx5XjZu9PPTUOfSVGkE=;
-        b=EbjD2pbE9xi9X6EuT6/rBzkOU6K3d+v/6/JJb8wA5gqm5/NAbvriX9OxDb4zpEMrgT3P1V
-        8Qe43EfciXdkNx332TkQ91suJSH3eEOwHQWMu/kmgnAD/haYxa60VS00D+lYgh4/LnHCh5
-        Pdp+nBV5MrcyMlYKlw5U/71XhWmdCKmP/IeBlG5roj0NsKlY71fX5VB/DO8nREQfs3QSFO
-        upMIW0mFVX6JGEZITdAqxGSQWuwOn/g3zp6CNHoXEOC5i9hZC6xMdA7/xmrmEKMzFeAFYR
-        ilvTG4hHwzetSB2KYExZbiXuPHjKlavYT1DS6c4tB1x3tXXyCe5/elx1N8Q0/g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595550988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/sRzv0b/bz/POqyqjoZfEPy4Nx5XjZu9PPTUOfSVGkE=;
-        b=AXxWb6SEOMOM8pVovKOD5jMvjWwY8VB+Vyq6cRSWK7OH06fR2JFMaPSsDA9qW3J6czD05O
-        sxw3A3fEfTlP+dCg==
-To:     Jason Gunthorpe <jgg@mellanox.com>, Marc Zyngier <maz@kernel.org>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
-In-Reply-To: <20200724001606.GR2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com> <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com> <cfb8191e364e77f352b1483c415a83a5@kernel.org> <20200724001606.GR2021248@mellanox.com>
-Date:   Fri, 24 Jul 2020 02:36:27 +0200
-Message-ID: <87h7txvjec.fsf@nanos.tec.linutronix.de>
+        id S1726726AbgGXCg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jul 2020 22:36:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34637 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbgGXCg6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Jul 2020 22:36:58 -0400
+IronPort-SDR: R+s0XC6zSojE1MozXgKd3VQEVsws9zfsw+eApFuSgjjMBteAMt+RFjjA57hBrhKlZWYa2tkOiP
+ qVT6Cfjd+dNA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="215241481"
+X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
+   d="scan'208";a="215241481"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 19:36:57 -0700
+IronPort-SDR: VumJ4VEkWa/OzC1HjafHWG3PZMIWizMVXVztoxDHSS7WiXFyCR8JaetnBle565Tqk0tmfQOWpW
+ 8+Qiz+zmCQBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
+   d="scan'208";a="393186436"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Jul 2020 19:36:55 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device when
+ SRIOV is enabled
+To:     Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>
+References: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <4e14f3b7-fdd7-8710-5051-440597ea198d@linux.intel.com>
+Date:   Fri, 24 Jul 2020 10:32:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jason Gunthorpe <jgg@mellanox.com> writes:
-> On Thu, Jul 23, 2020 at 09:51:52AM +0100, Marc Zyngier wrote:
->> > IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
->> 
->> Really? So you can't shut a device with a screaming interrupt,
->> for example, should it become otherwise unresponsive?
->
-> Well, it used to be like that in the APICv1 days. I suppose modern
-> interrupt remapping probably changes things.
+On 7/24/20 6:37 AM, Ashok Raj wrote:
+> PASID and PRI capabilities are only enumerated in PF devices. VF devices
+> do not enumerate these capabilites. IOMMU drivers also need to enumerate
+> them before enabling features in the IOMMU. Extending the same support as
+> PASID feature discovery (pci_pasid_features) for PRI.
+> 
+> Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> 
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> To: Joerg Roedel <joro@8bytes.com>
+> To: Lu Baolu <baolu.lu@intel.com>
 
-The MSI side of affairs has nothing to do with Intel and neither with
-ACPIv1. It's a trainwreck on the PCI side.
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-MSI interrupts do not have mandatory masking. For those which do not
-implement it (and that's still the case with devices designed today
-especially CPU internal peripherals) there are only a few options to
-shut them up:
+Best regards,
+baolu
 
-  1) Disable MSI which has the problem that the interrupt gets
-     redirected to legacy PCI #A-#D interrupt unless the hardware
-     supports to disable that redirection, which is another optional
-     thing and hopeless case
-
-  2) Disable it at the IRQ remapping level which fortunately allows by
-     design to do so.
-
-  3) Disable it at the device level which is feasible for a device
-     driver but impossible for the irq side
-
->> > So the model for MSI is always "mask at source". The closest mapping
->> > to the Linux IRQ model is to say the end device has a irqchip that
->> > encapsulates the ability of the device to generate the MSI in the
->> > first place.
->> 
->> This is an x86'ism, I'm afraid. Systems I deal with can mask any
->> interrupt at the interrupt controller level, MSI or not.
-
-Yes, it's a pain, but reality.
-
-> Sure. However it feels like a bad practice to leave the source
-> unmasked and potentially continuing to generate messages if the
-> intention was to disable the IRQ that was assigned to it - even if the
-> messages do not result in CPU interrupts they will still consume
-> system resources.
-
-See above. You cannot reach out to the device driver to disable the
-underlying interrupt source, which is the ultimate ratio if #1 or #2 are
-not working or not there. That would be squaring the circle and
-violating all rules of layering and locking at once.
-
-The bad news is that we can't change the hardware. We have to deal with
-it. And yes, I told HW people publicly and in private conversations that
-unmaskable interrupts are broken by definition for more than a
-decade. They still get designed that way ...
-
->> If masking at the source is the only way to shut the device up,
->> and assuming that the device provides the expected semantics
->> (a MSI raised by the device while the interrupt is masked
->> isn't lost and gets sent when unmasked), that's fair enough.
->> It's just ugly.
->
-> It makes sense that the masking should follow the same semantics for
-> PCI MSI masking.
-
-Which semantics? The horrors of MSI or the halfways reasonable MSI-X
-variant?
-
-Thanks,
-
-        tglx
+> Cc: stable@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: iommu@lists.linux-foundation.org
+> ---
+> v3: Added Fixes tag
+> v2: Fixed build failure reported from lkp when CONFIG_PRI=n
+> 
+>   drivers/iommu/intel/iommu.c |  2 +-
+>   drivers/pci/ats.c           | 13 +++++++++++++
+>   include/linux/pci-ats.h     |  4 ++++
+>   3 files changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index d759e7234e98..276452f5e6a7 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+>   			}
+>   
+>   			if (info->ats_supported && ecap_prs(iommu->ecap) &&
+> -			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
+> +			    pci_pri_supported(pdev))
+>   				info->pri_supported = 1;
+>   		}
+>   	}
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index b761c1f72f67..2e6cf0c700f7 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>   
+>   	return pdev->pasid_required;
+>   }
+> +
+> +/**
+> + * pci_pri_supported - Check if PRI is supported.
+> + * @pdev: PCI device structure
+> + *
+> + * Returns true if PRI capability is present, false otherwise.
+> + */
+> +bool pci_pri_supported(struct pci_dev *pdev)
+> +{
+> +	/* VFs share the PF PRI configuration */
+> +	return !!(pci_physfn(pdev)->pri_cap);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_pri_supported);
+>   #endif /* CONFIG_PCI_PRI */
+>   
+>   #ifdef CONFIG_PCI_PASID
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index f75c307f346d..df54cd5b15db 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+>   void pci_disable_pri(struct pci_dev *pdev);
+>   int pci_reset_pri(struct pci_dev *pdev);
+>   int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> +bool pci_pri_supported(struct pci_dev *pdev);
+> +#else
+> +static inline bool pci_pri_supported(struct pci_dev *pdev)
+> +{ return false; }
+>   #endif /* CONFIG_PCI_PRI */
+>   
+>   #ifdef CONFIG_PCI_PASID
+> 
