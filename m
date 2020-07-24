@@ -2,92 +2,313 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EFD222D042
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 23:08:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A32C22D1E4
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jul 2020 00:42:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgGXVIR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jul 2020 17:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgGXVIR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jul 2020 17:08:17 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C77C0619D3;
-        Fri, 24 Jul 2020 14:08:17 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id g18so1229146ooa.0;
-        Fri, 24 Jul 2020 14:08:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k9egpgQL3ltlL+ONGWIllGBIJT2EgS30CUYnF3YyVCU=;
-        b=SFBfYzCPZ9fDw6LHS95FjI4E+dD6r6pLZgsHCUOQcppIvqHH01WCRbDwkRF9lA2D7w
-         uYW82BM0kQjxDqaDchErRDrM+C2zStFyMkwOPdG4Zitinh5nEBFR5UGGY11ma6dYwuLW
-         /OHBf4H/yKT26P/5ZE+p+0CNcD/uUPSEwU0Q3MOcl2NuE2cP01jRORxgCLQLFR9lgZEc
-         sOAd6yRQmxYb2nJZHYlSicb+ANIrdvzz6zK5gKubjTwOZ2nkAW58ebOP5aMPI7Ap2h06
-         mMBbHIx4ENNlu5w7VXchnbEqOz7CThth36mXNtfV1TTrImU5NPjVM5TsA2+CML3Gbwpq
-         0ULA==
+        id S1726570AbgGXWmI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jul 2020 18:42:08 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44009 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbgGXWmI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jul 2020 18:42:08 -0400
+Received: by mail-io1-f68.google.com with SMTP id k23so11339890iom.10
+        for <linux-pci@vger.kernel.org>; Fri, 24 Jul 2020 15:42:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k9egpgQL3ltlL+ONGWIllGBIJT2EgS30CUYnF3YyVCU=;
-        b=tOMkKhz3sArZMszgY3OdfpJuT6syZa5jUfsst6Ag1NaP4Q1EkUs6AgUhw0lMfU+TlR
-         4mDlNzesv0A+gUOPpmpAObyYsH4/53h4jtOGb9gH+Mmq7duiIL49LuZLGXY47stL53Xk
-         rSdIqVANyE1qsqbCRLbE8FrTEJOdVD3wlRxj0pdb67gYh1DaDDZWpF2pTXviaL1aj2e+
-         YJaJm1k7gGC9KXszjnBaVtNZTIdZGvHrGDKD1PaVj99xh3y/bB7asLlmY4XF/pf3UPvC
-         n0osvj2JERcxKqT+qDMdvxE8m4FV/aJynRaMH5EsuJ0K4NZlGRl2NQlewRCDqH13zGGD
-         jXTQ==
-X-Gm-Message-State: AOAM532VIOiGnD1TZI1EOBEBxFl15BltZYN6F6pxf1RcCa+myH71P8Oo
-        cqWMxIcVpUTbOXEt275dH28UiPa2zDfbDwcK51Y=
-X-Google-Smtp-Source: ABdhPJye40ASWtRv1qfpV93UKjRmfbYnV3XiN5viKeuGCRwuOzNYU2xMuOxLTmmpjtmrPumjK2YVH7Mjzt4fayWg02g=
-X-Received: by 2002:a4a:b503:: with SMTP id r3mr11108276ooo.92.1595624896777;
- Fri, 24 Jul 2020 14:08:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <CADLC3L20DuXw8WbS=SApmu2m49mkxxWKZrMJS_GBHDX7Vh0TvQ@mail.gmail.com>
- <CADLC3L2ZnGTQJ+fwCy42dpxhHLpAFzFkjMRG3ZS=z7R4WK08og@mail.gmail.com>
- <CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com> <87CA0F2C-5CEB-4CE7-8399-534CABE5ADD8@canonical.com>
-In-Reply-To: <87CA0F2C-5CEB-4CE7-8399-534CABE5ADD8@canonical.com>
-From:   Robert Hancock <hancockrwd@gmail.com>
-Date:   Fri, 24 Jul 2020 15:08:05 -0600
-Message-ID: <CADLC3L2ioR8c9oCyeg0t0qc_UeW9VSKqsK++mrrkCOkaMyD9WA@mail.gmail.com>
-Subject: Re: 5.7 regression: Lots of PCIe AER errors and suspend failure
- without pcie=noaer
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zcvJBovB8AUcA2S2qVmpOJhLHT3y3NQcUC4jkiOmF6g=;
+        b=K+svyMEuExgjY7AIpBiyaghetCpXxbB9BECXs6Lh7emA4j8XH3+Klk1q8t/dSSVyg3
+         IuqzZ15YLOtCzYQ0NdMSsyuDBIGDZin2EmyHc+Mc/MBN2qvftdUxujNFO03rLpjBLMsg
+         HSFVwiELivI6fz5ETmxB7Ov5e0dgL5Bh020lHB6wmowmXDRgUz0pKGdpjbAq6ucb3GFt
+         Dn+y+WkoTOWVbIfPT7J2BTzJHVO59ZHsh9Jzxp06ptJTHcKyrckVa20wNQqRdDNCF1B4
+         cjqrvf/OIbpu33Fz4HV+2+LjsVy+YbgUV3x5yJNoc9vrjUcdzwZXBr9opSkoseXlnbNV
+         ZLPQ==
+X-Gm-Message-State: AOAM532OJbCLM4hwVfbI2TVmHJWpUF6cILYoCA2F0UBGdvA+s0CEZNP4
+        g5AJ/yT9o3r2Wbx7ipQXs4js4HCNoQ==
+X-Google-Smtp-Source: ABdhPJxchmYpI2YRGcLJYu3bEUkPFNdStBZPY2F+DMahS52zSBb1NAFmWiUZfgqBdtgHZjDl4jvspg==
+X-Received: by 2002:a5e:8408:: with SMTP id h8mr1738695ioj.137.1595630526421;
+        Fri, 24 Jul 2020 15:42:06 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.252])
+        by smtp.googlemail.com with ESMTPSA id c67sm4037335iof.16.2020.07.24.15.42.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 15:42:05 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Zhou Wang <wangzhou1@hisilicon.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] PCI: dwc: hisi: Remove non-ECAM HiSilicon hip05/hip06 driver
+Date:   Fri, 24 Jul 2020 16:42:04 -0600
+Message-Id: <20200724224204.3249055-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 8:32 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> Hi Robert,
->
-> > Unfortunately it appears that this ASMedia PCIe-PCI bridge:
-> >
-> > 02:00.0 PCI bridge [0604]: ASMedia Technology Inc. ASM1083/1085 PCIe
-> > to PCI Bridge [1b21:1080] (rev 04)
-> >
-> > doesn't cope with ASPM properly and causes a bunch of PCIe link
-> > errors. (This is in addition to some broken-ness known as far back as
-> > 2012 with these ASM1083/1085 chips with regard to PCI interrupts
-> > getting stuck, but this ASPM problem causes issues even if no devices
-> > are connected to the PCI side of the bridge, as is the case on my
-> > system.)
-> >
-> > Might need a quirk to disable ASPM on this device?
->
-> Yes I think it's a great idea to do it.
->
-> Can you please file a bug on [1] and we can continue our discussion there.
->
-> [1] https://bugzilla.kernel.org
+The HiSilicon non-ECAM PCIe has been broken since March 2016 commit
+7e57fd1444bf ("PCI: designware: Move Root Complex setup code to
+dw_pcie_setup_rc()"). The reason is this commit moved the iATU setup code
+from dw_pcie_host_init() to dw_pcie_setup_rc(), but the hisi driver never
+calls dw_pcie_setup_rc(). The result is the PCI memory space is never
+configured and the driver can't work. It's also clear it has an iATU as
+the config space accesses use it.
 
-Hi, I created a bug entry earlier as a result of another discussion,
-which includes the debug info as well as a proposed patch:
-https://bugzilla.kernel.org/show_bug.cgi?id=208667
+There's also no dts file using either "hisilicon,hip05-pcie" or
+"hisilicon,hip06-pcie".
+
+Cc: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-hisi.c | 219 -------------------------
+ 1 file changed, 219 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
+index 0ad4e07dd4c2..5ca86796d43a 100644
+--- a/drivers/pci/controller/dwc/pcie-hisi.c
++++ b/drivers/pci/controller/dwc/pcie-hisi.c
+@@ -10,15 +10,10 @@
+  */
+ #include <linux/interrupt.h>
+ #include <linux/init.h>
+-#include <linux/mfd/syscon.h>
+-#include <linux/of_address.h>
+-#include <linux/of_pci.h>
+ #include <linux/platform_device.h>
+-#include <linux/of_device.h>
+ #include <linux/pci.h>
+ #include <linux/pci-acpi.h>
+ #include <linux/pci-ecam.h>
+-#include <linux/regmap.h>
+ #include "../../pci.h"
+ 
+ #if defined(CONFIG_PCI_HISI) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
+@@ -118,220 +113,6 @@ const struct pci_ecam_ops hisi_pcie_ops = {
+ 
+ #ifdef CONFIG_PCI_HISI
+ 
+-#include "pcie-designware.h"
+-
+-#define PCIE_SUBCTRL_SYS_STATE4_REG		0x6818
+-#define PCIE_HIP06_CTRL_OFF			0x1000
+-#define PCIE_SYS_STATE4				(PCIE_HIP06_CTRL_OFF + 0x31c)
+-#define PCIE_LTSSM_LINKUP_STATE			0x11
+-#define PCIE_LTSSM_STATE_MASK			0x3F
+-
+-#define to_hisi_pcie(x)	dev_get_drvdata((x)->dev)
+-
+-struct hisi_pcie;
+-
+-struct pcie_soc_ops {
+-	int (*hisi_pcie_link_up)(struct hisi_pcie *hisi_pcie);
+-};
+-
+-struct hisi_pcie {
+-	struct dw_pcie *pci;
+-	struct regmap *subctrl;
+-	u32 port_id;
+-	const struct pcie_soc_ops *soc_ops;
+-};
+-
+-/* HipXX PCIe host only supports 32-bit config access */
+-static int hisi_pcie_cfg_read(struct pcie_port *pp, int where, int size,
+-			      u32 *val)
+-{
+-	u32 reg;
+-	u32 reg_val;
+-	void *walker = &reg_val;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-
+-	walker += (where & 0x3);
+-	reg = where & ~0x3;
+-	reg_val = dw_pcie_readl_dbi(pci, reg);
+-
+-	if (size == 1)
+-		*val = *(u8 __force *) walker;
+-	else if (size == 2)
+-		*val = *(u16 __force *) walker;
+-	else if (size == 4)
+-		*val = reg_val;
+-	else
+-		return PCIBIOS_BAD_REGISTER_NUMBER;
+-
+-	return PCIBIOS_SUCCESSFUL;
+-}
+-
+-/* HipXX PCIe host only supports 32-bit config access */
+-static int hisi_pcie_cfg_write(struct pcie_port *pp, int where, int  size,
+-				u32 val)
+-{
+-	u32 reg_val;
+-	u32 reg;
+-	void *walker = &reg_val;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-
+-	walker += (where & 0x3);
+-	reg = where & ~0x3;
+-	if (size == 4)
+-		dw_pcie_writel_dbi(pci, reg, val);
+-	else if (size == 2) {
+-		reg_val = dw_pcie_readl_dbi(pci, reg);
+-		*(u16 __force *) walker = val;
+-		dw_pcie_writel_dbi(pci, reg, reg_val);
+-	} else if (size == 1) {
+-		reg_val = dw_pcie_readl_dbi(pci, reg);
+-		*(u8 __force *) walker = val;
+-		dw_pcie_writel_dbi(pci, reg, reg_val);
+-	} else
+-		return PCIBIOS_BAD_REGISTER_NUMBER;
+-
+-	return PCIBIOS_SUCCESSFUL;
+-}
+-
+-static int hisi_pcie_link_up_hip05(struct hisi_pcie *hisi_pcie)
+-{
+-	u32 val;
+-
+-	regmap_read(hisi_pcie->subctrl, PCIE_SUBCTRL_SYS_STATE4_REG +
+-		    0x100 * hisi_pcie->port_id, &val);
+-
+-	return ((val & PCIE_LTSSM_STATE_MASK) == PCIE_LTSSM_LINKUP_STATE);
+-}
+-
+-static int hisi_pcie_link_up_hip06(struct hisi_pcie *hisi_pcie)
+-{
+-	struct dw_pcie *pci = hisi_pcie->pci;
+-	u32 val;
+-
+-	val = dw_pcie_readl_dbi(pci, PCIE_SYS_STATE4);
+-
+-	return ((val & PCIE_LTSSM_STATE_MASK) == PCIE_LTSSM_LINKUP_STATE);
+-}
+-
+-static int hisi_pcie_link_up(struct dw_pcie *pci)
+-{
+-	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pci);
+-
+-	return hisi_pcie->soc_ops->hisi_pcie_link_up(hisi_pcie);
+-}
+-
+-static const struct dw_pcie_host_ops hisi_pcie_host_ops = {
+-	.rd_own_conf = hisi_pcie_cfg_read,
+-	.wr_own_conf = hisi_pcie_cfg_write,
+-};
+-
+-static int hisi_add_pcie_port(struct hisi_pcie *hisi_pcie,
+-			      struct platform_device *pdev)
+-{
+-	struct dw_pcie *pci = hisi_pcie->pci;
+-	struct pcie_port *pp = &pci->pp;
+-	struct device *dev = &pdev->dev;
+-	int ret;
+-	u32 port_id;
+-
+-	if (of_property_read_u32(dev->of_node, "port-id", &port_id)) {
+-		dev_err(dev, "failed to read port-id\n");
+-		return -EINVAL;
+-	}
+-	if (port_id > 3) {
+-		dev_err(dev, "Invalid port-id: %d\n", port_id);
+-		return -EINVAL;
+-	}
+-	hisi_pcie->port_id = port_id;
+-
+-	pp->ops = &hisi_pcie_host_ops;
+-
+-	ret = dw_pcie_host_init(pp);
+-	if (ret) {
+-		dev_err(dev, "failed to initialize host\n");
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static const struct dw_pcie_ops dw_pcie_ops = {
+-	.link_up = hisi_pcie_link_up,
+-};
+-
+-static int hisi_pcie_probe(struct platform_device *pdev)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct dw_pcie *pci;
+-	struct hisi_pcie *hisi_pcie;
+-	struct resource *reg;
+-	int ret;
+-
+-	hisi_pcie = devm_kzalloc(dev, sizeof(*hisi_pcie), GFP_KERNEL);
+-	if (!hisi_pcie)
+-		return -ENOMEM;
+-
+-	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+-	if (!pci)
+-		return -ENOMEM;
+-
+-	pci->dev = dev;
+-	pci->ops = &dw_pcie_ops;
+-
+-	hisi_pcie->pci = pci;
+-
+-	hisi_pcie->soc_ops = of_device_get_match_data(dev);
+-
+-	hisi_pcie->subctrl =
+-	    syscon_regmap_lookup_by_compatible("hisilicon,pcie-sas-subctrl");
+-	if (IS_ERR(hisi_pcie->subctrl)) {
+-		dev_err(dev, "cannot get subctrl base\n");
+-		return PTR_ERR(hisi_pcie->subctrl);
+-	}
+-
+-	reg = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
+-	pci->dbi_base = devm_pci_remap_cfg_resource(dev, reg);
+-	if (IS_ERR(pci->dbi_base))
+-		return PTR_ERR(pci->dbi_base);
+-	platform_set_drvdata(pdev, hisi_pcie);
+-
+-	ret = hisi_add_pcie_port(hisi_pcie, pdev);
+-	if (ret)
+-		return ret;
+-
+-	return 0;
+-}
+-
+-static struct pcie_soc_ops hip05_ops = {
+-		&hisi_pcie_link_up_hip05
+-};
+-
+-static struct pcie_soc_ops hip06_ops = {
+-		&hisi_pcie_link_up_hip06
+-};
+-
+-static const struct of_device_id hisi_pcie_of_match[] = {
+-	{
+-			.compatible = "hisilicon,hip05-pcie",
+-			.data	    = (void *) &hip05_ops,
+-	},
+-	{
+-			.compatible = "hisilicon,hip06-pcie",
+-			.data	    = (void *) &hip06_ops,
+-	},
+-	{},
+-};
+-
+-static struct platform_driver hisi_pcie_driver = {
+-	.probe  = hisi_pcie_probe,
+-	.driver = {
+-		   .name = "hisi-pcie",
+-		   .of_match_table = hisi_pcie_of_match,
+-		   .suppress_bind_attrs = true,
+-	},
+-};
+-builtin_platform_driver(hisi_pcie_driver);
+-
+ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
+ {
+ 	struct device *dev = cfg->parent;
+-- 
+2.25.1
+
