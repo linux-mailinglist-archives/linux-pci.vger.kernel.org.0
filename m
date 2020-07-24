@@ -2,127 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FC6E22C876
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 16:51:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1684322C8BE
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 17:06:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgGXOvm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jul 2020 10:51:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
+        id S1726535AbgGXPGn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jul 2020 11:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgGXOvm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:51:42 -0400
+        id S1726424AbgGXPGn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Jul 2020 11:06:43 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DEA720714;
-        Fri, 24 Jul 2020 14:51:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B81120714;
+        Fri, 24 Jul 2020 15:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595602301;
-        bh=XLmYbBwV24gUrETh08x29QFfu+35Dz7G0spWwwMW+ms=;
+        s=default; t=1595603202;
+        bh=d/lHftCugyAGXbmWZxAljFlvx4t6XIizbWGk9XJGek8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XXzJ8ly1CBJgnsOXdvg3ig9+8cTGK8sNjtpbRjkWMlBH0AB/x6iWxZwYkrfzDI18f
-         WpVMDDj0oDj4fUvWZ69e7CKKzUkVT/DWdXkL6lRwRgzdDfsCK5bgYxvZA5n5PbfPOf
-         h6ViAD396LrvXZX3oebcBd5FEkVFy41LyFGUbae8=
-Date:   Fri, 24 Jul 2020 09:51:39 -0500
+        b=YsjxJOVkT3utZoAopAiM9AzCy9/gsq8e90vIYnS8HCmi3TKoHyfjf4ovxvridIluu
+         oK0BfZXwVAPelnhcd/bQh4flU8Kxyvq1XaJ5KmGJEvPaAPjLA+qA8kgJPKYnLQdIfr
+         rDiTawY8yno4O21e5vcgirMSF5vKuAezym4//HAk=
+Date:   Fri, 24 Jul 2020 10:06:41 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device
- when SRIOV is enabled
-Message-ID: <20200724145139.GA1518290@bjorn-Precision-5520>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+Message-ID: <20200724150641.GA1518875@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 03:37:29PM -0700, Ashok Raj wrote:
-> PASID and PRI capabilities are only enumerated in PF devices. VF devices
-> do not enumerate these capabilites. IOMMU drivers also need to enumerate
-> them before enabling features in the IOMMU. Extending the same support as
-> PASID feature discovery (pci_pasid_features) for PRI.
+On Thu, Jul 23, 2020 at 02:10:52PM -0600, Logan Gunthorpe wrote:
+> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
+> > On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+> >> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >>>
+> >>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+> >>> transactions between root ports and found to work. Therefore add it
+> >>> to the list.
+> >>>
+> >>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>> Cc: Christian König <christian.koenig@amd.com>
+> >>> Cc: Huang Rui <ray.huang@amd.com>
+> >>> Cc: Alex Deucher <alexdeucher@gmail.com>
+> >>
+> >> Starting with Zen, all AMD platforms support P2P for reads and writes.
+> > 
+> > What's the plan for getting out of the cycle of "update this list for
+> > every new chip"?  Any new _DSMs planned, for instance?
 > 
-> Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Well there was an effort to add capabilities in the PCI spec to describe
+> this but, as far as I know, they never got anywhere, and hardware still
+> doesn't self describe with this.
 
-Applied with Baolu's reviewed-by and Joerg's ack to pci/virtualization
-for v5.9, thanks!
+Any idea what happened?  Is there hope for the future?  I'm really not
+happy about signing up for open-ended device-specific patches like
+this.  It's certainly not in the plug and play spirit that has made
+PCI successful.  I know, preaching to the choir here.
 
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> To: Joerg Roedel <joro@8bytes.com>
-> To: Lu Baolu <baolu.lu@intel.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: iommu@lists.linux-foundation.org
-> ---
-> v3: Added Fixes tag
-> v2: Fixed build failure reported from lkp when CONFIG_PRI=n
-> 
->  drivers/iommu/intel/iommu.c |  2 +-
->  drivers/pci/ats.c           | 13 +++++++++++++
->  include/linux/pci-ats.h     |  4 ++++
->  3 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index d759e7234e98..276452f5e6a7 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
->  			}
->  
->  			if (info->ats_supported && ecap_prs(iommu->ecap) &&
-> -			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
-> +			    pci_pri_supported(pdev))
->  				info->pri_supported = 1;
->  		}
->  	}
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index b761c1f72f67..2e6cf0c700f7 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->  
->  	return pdev->pasid_required;
->  }
-> +
-> +/**
-> + * pci_pri_supported - Check if PRI is supported.
-> + * @pdev: PCI device structure
-> + *
-> + * Returns true if PRI capability is present, false otherwise.
-> + */
-> +bool pci_pri_supported(struct pci_dev *pdev)
-> +{
-> +	/* VFs share the PF PRI configuration */
-> +	return !!(pci_physfn(pdev)->pri_cap);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_pri_supported);
->  #endif /* CONFIG_PCI_PRI */
->  
->  #ifdef CONFIG_PCI_PASID
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index f75c307f346d..df54cd5b15db 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
->  void pci_disable_pri(struct pci_dev *pdev);
->  int pci_reset_pri(struct pci_dev *pdev);
->  int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> +bool pci_pri_supported(struct pci_dev *pdev);
-> +#else
-> +static inline bool pci_pri_supported(struct pci_dev *pdev)
-> +{ return false; }
->  #endif /* CONFIG_PCI_PRI */
->  
->  #ifdef CONFIG_PCI_PASID
-> -- 
-> 2.7.4
-> 
+Bjorn
