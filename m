@@ -2,162 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9072C22CE5E
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 21:08:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C81CE22CE96
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jul 2020 21:21:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgGXTIC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jul 2020 15:08:02 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45715 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgGXTIC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:08:02 -0400
-IronPort-SDR: GBR8bqbgV9z/+bVnCf3ee0KKf3btc5wPpUf0bCsAOQukn3YOlQVmOfuSIQDLj28blvY4ZJZ8FV
- pMH3jsWiZPyA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130328294"
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="130328294"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 12:08:01 -0700
-IronPort-SDR: Owy6CufN3MA4RtuWmHr1DJ/EIMsQB/j95gTNub98sZpRdKxfWYj17mSesXnaoj8biylRxpgJ+o
- xE8l2Qu/S5yQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="272659690"
-Received: from pittner-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.254.77.166])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Jul 2020 12:08:00 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-Subject: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery() call
-Date:   Fri, 24 Jul 2020 12:07:55 -0700
-Message-Id: <cbba08a5e9ca62778c8937f44eda2192a2045da7.1595617529.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-Reply-To: 20200714230803.GA92891@bjorn-Precision-5520
+        id S1726625AbgGXTVI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jul 2020 15:21:08 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:60198 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXTVH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jul 2020 15:21:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3uSMvInD2Jk/6cMDVdGrLAgWn9ZHoqePo02Lz6hivfE=; b=P+weo+cY0o/lpm5Nzy0Xmn5+jK
+        dix62OJ3ciCGa5qYQThWzrPst7nAnSt2UJBWzBb0n6JLallV8DS8wMhcPcvyEqTWmTCOfCssOS7GD
+        uyh1Bdnu92ZzqaNHboHbwHAVTKv6nNvz3kRMt0bGpCxUIM4oKgcD16r3lVquIZjcDVMDmblq+8qLe
+        aF5ywXjS3PsILAhPbfyVRPxB4hryFcP3JlD45yM7bZU1olKdE0lHfNaj4NGTnC38MWG/zwaNZNOhI
+        YRjBYQ/8LRQNTL0cB1Gh+En1J1Rjkhy1y4iD99pT0KP1EcldanXJujY8LROUTcOP45Rrh/CZ9pr/X
+        C+mC+d3w==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jz3Fc-0000ue-JE; Fri, 24 Jul 2020 13:21:02 -0600
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200723195742.GA1447143@bjorn-Precision-5520>
+ <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
+ <CADnq5_NMKK83GaNA+w85MR8bqDbFqvcdvn9MCqZtLwctJKmOUw@mail.gmail.com>
+ <CADnq5_MCPTyxG31guPFL-uvs7HisGxwO5KpALnufc=Bj4MfYCw@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <7ba8fff5-990a-a59c-53cf-b0c9e9b54a6e@deltatee.com>
+Date:   Fri, 24 Jul 2020 13:20:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CADnq5_MCPTyxG31guPFL-uvs7HisGxwO5KpALnufc=Bj4MfYCw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: hpa@zytor.com, andrew.maier@eideticom.com, ray.huang@amd.com, christian.koenig@amd.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, alexdeucher@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.2 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Current pcie_do_recovery() implementation has following two issues:
 
-1. Fatal (DPC) error recovery is currently broken for non-hotplug
-capable devices. Current fatal error recovery implementation relies
-on PCIe hotplug (pciehp) handler for detaching and re-enumerating
-the affected devices/drivers. pciehp handler listens for DLLSC state
-changes and handles device/driver detachment on DLLSC_LINK_DOWN event
-and re-enumeration on DLLSC_LINK_UP event. So when dealing with
-non-hotplug capable devices, recovery code does not restore the state
-of the affected devices correctly. Correct implementation should
-restore the device state and call report_slot_reset() function after
-resetting the link to restore the state of the device/driver.
+On 2020-07-24 10:07 a.m., Alex Deucher wrote:
+> On Thu, Jul 23, 2020 at 4:18 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+>>
+>> On Thu, Jul 23, 2020 at 4:11 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>>
+>>>
+>>>
+>>> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
+>>>> [+cc Andrew, Armen, hpa]
+>>>>
+>>>> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+>>>>> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>>>>>
+>>>>>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+>>>>>> transactions between root ports and found to work. Therefore add it
+>>>>>> to the list.
+>>>>>>
+>>>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>>>>>> Cc: Christian König <christian.koenig@amd.com>
+>>>>>> Cc: Huang Rui <ray.huang@amd.com>
+>>>>>> Cc: Alex Deucher <alexdeucher@gmail.com>
+>>>>>
+>>>>> Starting with Zen, all AMD platforms support P2P for reads and writes.
+>>>>
+>>>> What's the plan for getting out of the cycle of "update this list for
+>>>> every new chip"?  Any new _DSMs planned, for instance?
+>>>
+>>> Well there was an effort to add capabilities in the PCI spec to describe
+>>> this but, as far as I know, they never got anywhere, and hardware still
+>>> doesn't self describe with this.
+>>>
+>>>> A continuous trickle of updates like this is not really appealing.  So
+>>>> far we have:
+>>>>
+>>>>   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
+>>>>   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+>>>>   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
+>>>>   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
+>>>>   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
+>>>>
+>>>> And that's just from the last year, not including this patch.
+>>>
+>>> Yes, it's not ideal. But most of these are adding old devices as people
+>>> test and care about running on those platforms -- a lot of this is
+>>> bootstrapping the list. I'd expect this to slow down a bit as by now we
+>>> have hopefully got a lot of the existing platforms people care about.
+>>> But we'd still probably expect to be adding a new Intel and AMD devices
+>>> about once a year as they produce new hardware designs.
+>>>
+>>> Unless, the Intel and AMD folks know of a way to detect this, or even to
+>>> query if a root complex is newer than a certain generation, I'm not sure
+>>> what else we can do here.
+>>
+>> I started a thread internally to see if I can find a way.  FWIW,
+>> pre-ZEN parts also support p2p DMA, but only for writes.  If I can get
+>> a definitive list, maybe we could switch to a blacklist for the old
+>> ones?
+> 
+> After talking with a few people internally, for AMD chips, it would
+> probably be easiest to just whitelist based on the CPU family id for
+> zen and newer (e.g., >= 0x17).
 
-You can find fatal non-hotplug related issues reported in following links:
+That seems sensible. I was trying to see if we could do something
+similar for Intel, and just allow anything after Skylake. I found
+this[1]. It seems they have been on family 6 for a long time, and I'm
+not comfortable enabling the whole family. Their model numbers also
+don't seem to increment in a favorable fashion, in that "small core"
+atoms (which have different host bridges with very much unknown support)
+have model numbers interspersed with regular "big core" CPUS.
 
-https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
-https://lore.kernel.org/linux-pci/12115.1588207324@famine/
-https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+So we might be stuck with the Intel white list for a while, but using
+the AMD family number will at least cut the number of additions down a
+fair amount. I can try to put a patch together in place of this one.
 
-2. For non-fatal errors if report_error_detected() or
-report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET then
-current pcie_do_recovery() implementation does not do the requested
-explicit device reset, instead just calls the report_slot_reset() on all
-affected devices. Notifying about the reset via report_slot_reset()
-without doing the actual device reset is incorrect.
+Logan
 
-To fix above issues, use PCI_ERS_RESULT_NEED_RESET as error state after
-successful reset_link() operation. This will ensure ->slot_reset() be
-called after reset_link() operation for fatal errors. Also call
-pci_bus_reset() to do slot/bus reset() before triggering device specific
-->slot_reset() callback. Also, using pci_bus_reset() will restore the state
-of the devices after performing the reset operation.
-
-Even though using pci_bus_reset() will do redundant reset operation after
-->reset_link() for fatal errors, it should should affect the functional
-behavior.
-
-[original patch is from jay.vosburgh@canonical.com]
-[original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
-Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
-
-Changes since v2:
- * Changed the subject of patch to "PCI/ERR: Fix reset logic in
-   pcie_do_recovery() call". v2 patch link is,
-   https://lore.kernel.org/linux-pci/ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com/
- * Squashed "PCI/ERR: Add reset support for non fatal errors" patch.
-
- drivers/pci/pcie/err.c | 41 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 37 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 14bb8f54723e..b5eb6ba65be1 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -165,8 +165,29 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	pci_dbg(dev, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bus(bus, report_frozen_detected, &status);
-+		/*
-+		 * After resetting the link using reset_link() call, the
-+		 * possible value of error status is either
-+		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
-+		 * PCI_ERS_RESULT_NEED_RESET (success case).
-+		 * So ignore the return value of report_error_detected()
-+		 * call for fatal errors.
-+		 *
-+		 * In EDR mode, since AER and DPC Capabilities are owned by
-+		 * firmware, reported_error_detected() will return error
-+		 * status PCI_ERS_RESULT_NO_AER_DRIVER. Continuing
-+		 * pcie_do_recovery() with error status as
-+		 * PCI_ERS_RESULT_NO_AER_DRIVER will report recovery failure
-+		 * irrespective of recovery status. But successful reset_link()
-+		 * call usually recovers all fatal errors. So ignoring the
-+		 * status result of report_error_detected() also helps EDR based
-+		 * error recovery.
-+		 */
- 		status = reset_link(dev);
--		if (status != PCI_ERS_RESULT_RECOVERED) {
-+		if (status == PCI_ERS_RESULT_RECOVERED) {
-+			status = PCI_ERS_RESULT_NEED_RESET;
-+		} else {
-+			status = PCI_ERS_RESULT_DISCONNECT;
- 			pci_warn(dev, "link reset failed\n");
- 			goto failed;
- 		}
-@@ -182,10 +203,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 
- 	if (status == PCI_ERS_RESULT_NEED_RESET) {
- 		/*
--		 * TODO: Should call platform-specific
--		 * functions to reset slot before calling
--		 * drivers' slot_reset callbacks?
-+		 * TODO: Optimize the call to pci_reset_bus()
-+		 *
-+		 * There are two components to pci_reset_bus().
-+		 *
-+		 * 1. Do platform specific slot/bus reset.
-+		 * 2. Save/Restore all devices in the bus.
-+		 *
-+		 * For hotplug capable devices and fatal errors,
-+		 * device is already in reset state due to link
-+		 * reset. So repeating platform specific slot/bus
-+		 * reset via pci_reset_bus() call is redundant. So
-+		 * can optimize this logic and conditionally call
-+		 * pci_reset_bus().
- 		 */
-+		pci_reset_bus(dev);
-+
- 		status = PCI_ERS_RESULT_RECOVERED;
- 		pci_dbg(dev, "broadcast slot_reset message\n");
- 		pci_walk_bus(bus, report_slot_reset, &status);
--- 
-2.17.1
-
+[1]
+https://elixir.bootlin.com/linux/latest/source/arch/x86/include/asm/intel-family.h#L73
