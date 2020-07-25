@@ -2,104 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9CB622D99E
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jul 2020 21:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C07322D9DB
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jul 2020 22:27:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgGYTrR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Jul 2020 15:47:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgGYTrR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Jul 2020 15:47:17 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35714C08C5C0
-        for <linux-pci@vger.kernel.org>; Sat, 25 Jul 2020 12:47:17 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l6so11879521qkc.6
-        for <linux-pci@vger.kernel.org>; Sat, 25 Jul 2020 12:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=eS3EtX+qz1HC1+aZmyuCFVYMdepqxCnSVXJwV1JHTcA=;
-        b=AzsIShiQPcOVb3k9kJn1IuCBvKd8iraijLBS8b/RPZnZE/0d2bXLH2kpfC/qXmjR0r
-         kS4yjcLT4Z/Mt8EQEXGN50t+ciGnTOpkigreYAfc5oozbiK32c0UaZTsHwWgXlD80Ghp
-         CMrAGWbeAZlGYWyIaibpTkvuo3nx4yAf9a+i495N4f3lN0U3xH9bNxtM1z3KfC1xAc3t
-         PZbYcH5NL9sCdWr3/G4gss1iEmMzhYd2dW8aHlWAzA7WXaEe/pRlsAFyJWsNh0D8THh+
-         7aNlB7N4ncsJ21s5TBRGwkP2e/QT+xOf+AmPmVQba/WVzLDfiwJonnGbReFuHaouFoDQ
-         fESg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=eS3EtX+qz1HC1+aZmyuCFVYMdepqxCnSVXJwV1JHTcA=;
-        b=iBPXOWu8z2on82kvp5rFyC+tpcTRihhVzp58bz8QiB/HijA41YM6Fwfl1Q/OjJmWzw
-         YKPnnEebTPIEEBCOwUAgF4QzPjOml2IqutHVh2SzCcMQdOst1FOItVtk9NqXDzocPLRU
-         Sl59mbLXoLe+Jt+kXlbb5JrjomVceKdApFOkdGnFamYj9zT9SceSesrwT1U42dEFepJ9
-         maaKewtg8x85oPPKyqyd2X28/6xZem8NREx/bCbdSc9ubE+4pK/9XMazoiE6mK1d7F/W
-         eNSsX6gO25Z5Cj0Z+CrVyp6o1uLXCDOclS/Dkn58onIefts9BsC6Nbn618UtRairoh60
-         VISA==
-X-Gm-Message-State: AOAM532FaU6/6grgKGAcRE/ZbO5/z8KoFKwiCb0dCtFpxEs2DifevJMi
-        MaFdCTMQdOV1mqzH+9+bHsw/gQaYTydtWzthIP9IejBD1oM=
-X-Google-Smtp-Source: ABdhPJxwVoMDBHQX/DosaOaacDNphDZkW1xEelaTc1TB6KvQMhuS2m6U4WtNJL+tV1hraOZs6k587cbzEyPyEV7JMIk=
-X-Received: by 2002:a37:9ccf:: with SMTP id f198mr17061360qke.168.1595706435875;
- Sat, 25 Jul 2020 12:47:15 -0700 (PDT)
-MIME-Version: 1.0
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Sat, 25 Jul 2020 21:47:05 +0200
-Message-ID: <CAA85sZvJQge6ETwF1GkdvK1Mpwazh_cYJcmeZVAohmt0FjbMZg@mail.gmail.com>
-Subject: [RFC] ASPM L1 link latencies
-To:     linux-pci@vger.kernel.org
+        id S1728010AbgGYU1t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Jul 2020 16:27:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:60735 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgGYU1t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Jul 2020 16:27:49 -0400
+Received: from dante.cb.ettle ([143.159.226.70]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.163]) with ESMTPSA (Nemesis) id
+ 1MG9c4-1k0YHa0v5Y-00GVa0; Sat, 25 Jul 2020 22:27:34 +0200
+Message-ID: <aaa64572fac0fc411b79a9adb59b5bbcbdf4b1a8.camel@ettle.org.uk>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+From:   James Ettle <james@ettle.org.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
+        <ricky_wu@realtek.com>
+Cc:     Rui Feng <rui_feng@realsil.com.cn>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Date:   Sat, 25 Jul 2020 21:27:11 +0100
+In-Reply-To: <20200724231309.GA1551055@bjorn-Precision-5520>
+References: <20200724231309.GA1551055@bjorn-Precision-5520>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:EA9tER/Bd2hSFPo8Zx7zt1ovwlzKiRiE/2Mb+rFMyCQNZ94yn8h
+ 32trVTFpvlNCdZG2EdRTb4vpPYGEpkDE7A3vE0QEHETZfcuJACx8jSLHgPRWwhcatGnhYPl
+ gzm8up2coi4KEamEz0R6ksGfJI/Qf14K+Kto4gaXCHTXgJ6+4ouWpXbeYAQY4gIDS7iTy+9
+ +hjMgTPvIj7NUgQZnV2yw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JZjZTjOj7SQ=:0KLvKiujkBxA7xC2K0ojRP
+ ehek6TkvcfaKJtlg1SEXJn49se4KFhN6rU6nhURuL7+L3+LZyldDNxpOwJPB2nQSb2fuNdyau
+ l2ngyyK6drHvr1UICh26PK8iiKwUQhg57UCsaZm81zC9S/mnsD7UR5WMa0eGtOYkul04k+0jD
+ 081QD9JqXZ0kxUABDyG0wu2An3sGeOAwVHQLt3wjTYSFaU3HdtfsIS7FSuKKpq5Vwo3//HUz+
+ JzzB874Y6vqCtTHoeyxJNGCYSMAvJh4n6iz9+HmMZie5/SStSZnXAsw7xrFFMAOyPdZEKzzfF
+ Emk/o/ZxWdH5aT/PwMX7FQpl8+gQPzptQywRgAnhcAlqdAu25sa2p/qqwl0/CE/bOHY67smtY
+ Ox3BXyZ68F9RjpQqWFR/ABHYFbK0Ci6slvdMnC4ncJGXUTksIA3npZSTBib/50SL+zUkYu/CY
+ oM4jcmpTSZiX4y41K+WNSz2gwU/YSHvCSgu0MImdOePchi9g5LHotWqe2pSi7wIiSVFxDcGVQ
+ aDdrpQRUJ7ne9QwpTByT1kXuUbR76yQoVFLEgN5yZlhvUlDs2JSwbkoWiQCxocZMebwBP2yht
+ eD0azSCJOJMooBskIMuQB+vXw6ApPJTkD6+AA0evsxodGjZkVDDvdbW0bAjMiy0K5eIgtjbL/
+ 1LdfXgeLJC0Ur/HUvor9W4ZVz/QQpyiZ11CL67hUZ9HCI/2mmzIk7zXAO/Z9FJPVCkl+KYMbc
+ KegWW4/1lSrZUd7YmMuGDvONxOo3l8NZMhqFjIufkmYxS5qdHKZSWBKQW/xl4ryJ/17EAJEsG
+ FzWqRSGPjvf6fI0dIWgTiyrtCq3ALaT9f3V56s55NfAf0pkDH79xkhVy9LD0tgHNrUV4LK5
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Fri, 2020-07-24 at 18:13 -0500, Bjorn Helgaas wrote:
+> 
+> Maybe we should simplify this a little bit more.  James, if you don't
+> touch ASPM config at all, either manually or via udev, does the ASPM
+> configuration stay the same across suspend/resume?
+> 
 
-A while ago I realised that I was having all kinds off issues with my
-connection, ~933 mbit had become ~40 mbit
+Yes, it stays the same. Explicitly: 
 
-This only applied on links to the internet (via a linux fw running
-NAT) however while debugging with the help of Alexander Duyck
-we realised that ASPM could be the culprit (at least disabling ASPM on
-the nic it self made things work just fine)...
+With the udev rule disabled, immediately following clean boot from
+power-off (and no additional tinkering), ASPM is OFF to the best of my
+knowledge:
 
-So while trying to understand PCIe and such things, I found this:
+ - link/l1_aspm in sysfs is 0 for PCI devices 0000:01:00.[01];
+ - the processor sleeps no deeper than package C3.
 
-The calculations of the max delay looked at "that node" + start latency * "hops"
+The situation above is the same following a suspend/resume cycle --
+both in terms of sysfs, and observed package C-state occupancy.
 
-But one hop might have a larger latency and break the acceptable delay...
+[Tested on kernel 5.7.10, but the behaviour is the same as prior
+kernels.]
 
-So after a lot playing around with the code, i ended up with this, and
-it seems to fix my problem and does
-set two pcie bridges to ASPM Disabled that didn't happen before.
+Thanks,
+James.
 
-I do however have questions.... Shouldn't the change be applied to the endpoint?
-Or should it be applied recursively along the path to the endpoint?
-
-Also, the L0S checks are only done on the local links, is this correct?
-
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index b17e5ffd31b1..bd53fba7f382 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
-
- static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- {
--       u32 latency, l1_switch_latency = 0;
-+       u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
-        struct aspm_latency *acceptable;
-        struct pcie_link_state *link;
-
-@@ -470,8 +470,9 @@ static void pcie_aspm_check_latency(struct pci_dev
-*endpoint)
-                 * substate latencies (and hence do not do any check).
-                 */
-                latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-+               l1_max_latency = max_t(u32, latency, l1_max_latency);
-                if ((link->aspm_capable & ASPM_STATE_L1) &&
--                   (latency + l1_switch_latency > acceptable->l1))
-+                   (l1_max_latency + l1_switch_latency > acceptable->l1))
-                        link->aspm_capable &= ~ASPM_STATE_L1;
-                l1_switch_latency += 1000;
