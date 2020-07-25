@@ -2,136 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 529F122D5EA
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jul 2020 09:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 485E922D664
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jul 2020 11:18:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgGYH47 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Jul 2020 03:56:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:11493 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbgGYH47 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 25 Jul 2020 03:56:59 -0400
-IronPort-SDR: h3vIfnOyjQtjkABz1bc/U8An7egyDh/5NlXsJuInKHO11TcPWL6TMpcBhbeQQUFKUZhx6bU+Hp
- YPqbgNeC+5mg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="168947244"
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="168947244"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2020 00:56:58 -0700
-IronPort-SDR: kEqtB7DWjt57k84HZRpEBJCBJ8zTFbcaBGT+nMfcSQZr7fX4tdO/NYJ9MkuyU2BmYqyn80FLEX
- UPyayXlNxmog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="363585944"
-Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 25 Jul 2020 00:56:56 -0700
-Received: from kbuild by df0563f96c37 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jzF3A-0000pS-9m; Sat, 25 Jul 2020 07:56:56 +0000
-Date:   Sat, 25 Jul 2020 15:55:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/virtualization] BUILD SUCCESS
- 3f9a7a13fe4cb6e119e4e4745fbf975d30bfac9b
-Message-ID: <5f1be58f.zojedW/OxISrbFAp%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726639AbgGYJSj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Jul 2020 05:18:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgGYJSj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Jul 2020 05:18:39 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999A2C0619D3;
+        Sat, 25 Jul 2020 02:18:38 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b25so12330282ljp.6;
+        Sat, 25 Jul 2020 02:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Tt4lBP8eHDcChTcrk6HpzOZG+ZscpSQCi8G310B6EEA=;
+        b=SsJ6neoxYIFGtlNWPoyAvoOlaM8lvGNtgbgtaZD/UQltNSFJfBPBIHqsdRF88KKdtJ
+         f3DUCdYuHgDEeMOBtFqaW0rDKpLRPV+MUaOuUxKpI67PAAuDGnJlQfD8EQUuX6Xb/tb2
+         oVop7ZBCmena9OX27q+XdEBlPk8mAwa0BH7t+r4uevtYzT8zMRKqwU2rcL3RfA0YkSSo
+         VYtiZLFshXQWUzuoxFGrAYKtf8/XPYr6nGuylX5b6iL5k23tefbaG/b4D/feMoTu6Ujv
+         yYHOrrEaUqi1Gne4Zhv7VWyfcSqwJxriBgozPG7cnrzZYp2Qn/YUfN1UOswhR3w+bw4Y
+         A0Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Tt4lBP8eHDcChTcrk6HpzOZG+ZscpSQCi8G310B6EEA=;
+        b=mba8pNNbfBi/7CzBLGy22BtHEWliQy/fViriza95n5XX+7Fa9cqHozhkpuIULcbUlb
+         vIvRnajKeaGp047boIrbwVNNeqCDKnYiRomRi7AiB9BtG/xCcWcLOnqTtt/lr3c5qUqi
+         U8jxyZZbpziTBxWCEXXCIIEsRE4ySHe9qPFk0iSYJYffpzTs3qSFtKxhzosEIoHPF7kF
+         hmEkGX1l3fFqw24YTphS98JYSdm7zA0jrzUrvZwDiSuYx4++dwQc9qAXCzyubEBxUwiP
+         H1VtaKtNZNxQ6NsjzMlE1RBjEtX3PJ6BkktrHs7Ew3TBqDFGd/MtCfBuZWOFOkMoZRnF
+         gw5g==
+X-Gm-Message-State: AOAM5330+pUeq/n+MxTgM8upKaQ/keX0sP8I7mOoxAmdgrxElA9M70e+
+        PLbMSXZ/oPAQ1Kl/5nPKwCisnIuUGYw=
+X-Google-Smtp-Source: ABdhPJzHxnxj5UPJ9LFQGOyklSNEPZ4gVbk/cPhkmFeEURr4kF3VAybMQ8Q1RkYu0E3EgNGoJmZ87w==
+X-Received: by 2002:a2e:9913:: with SMTP id v19mr963221lji.292.1595668716933;
+        Sat, 25 Jul 2020 02:18:36 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:253:4416:cc94:657b:2972:b01d? ([2a00:1fa0:253:4416:cc94:657b:2972:b01d])
+        by smtp.gmail.com with ESMTPSA id e22sm876553ljb.12.2020.07.25.02.18.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Jul 2020 02:18:36 -0700 (PDT)
+Subject: Re: [PATCH v9 02/12] ata: ahci_brcm: Fix use of BCM7216 reset
+ controller
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200724203407.16972-1-james.quinlan@broadcom.com>
+ <20200724203407.16972-3-james.quinlan@broadcom.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <4950d265-5aea-8d0b-7984-553e53f421f6@gmail.com>
+Date:   Sat, 25 Jul 2020 12:18:32 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200724203407.16972-3-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/virtualization
-branch HEAD: 3f9a7a13fe4cb6e119e4e4745fbf975d30bfac9b  PCI/ATS: Add pci_pri_supported() to check device or associated PF
+Hello!
 
-elapsed time: 938m
+On 24.07.2020 23:33, Jim Quinlan wrote:
 
-configs tested: 74
-configs skipped: 1
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> A reset controller "rescal" is shared between the AHCI driver and the PCIe
+> driver for the BrcmSTB 7216 chip.  Use
+> devm_reset_control_get_optional_shared() to handle this sharing.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+    Shouldn't break up the tag area with the empty lines.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
+> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
+> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
+[...]
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+MBR, Sergei
