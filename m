@@ -2,76 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A4FA22D652
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jul 2020 11:10:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F69C22D6CA
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jul 2020 12:36:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgGYJKS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Jul 2020 05:10:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48648 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726583AbgGYJKS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 25 Jul 2020 05:10:18 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 63500437AB6D9D7E53AA;
-        Sat, 25 Jul 2020 17:09:58 +0800 (CST)
-Received: from kernelci-master.huawei.com (10.175.101.6) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 25 Jul 2020 17:09:52 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Hulk Robot <hulkci@huawei.com>, Tom Joseph <tjoseph@cadence.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alan Douglas <adouglas@cadence.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-pci@vger.kernel.org>
-Subject: [PATCH -next] PCI: cadence: Fix unused-but-set-variable warning
-Date:   Sat, 25 Jul 2020 17:19:45 +0800
-Message-ID: <20200725091945.75176-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726636AbgGYKgB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Jul 2020 06:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgGYKgA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Jul 2020 06:36:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E6EC0619D3;
+        Sat, 25 Jul 2020 03:36:00 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f9so681215pju.4;
+        Sat, 25 Jul 2020 03:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B23U6TGnP6I2VN/If9ysGQ7jNwuYSviY699aZo0z2yM=;
+        b=F+rtXTld25M+7eWuLtkC8woPCSiLmMNbyxzhxmqdhDQG+InNnCuLtJzMqaB5KZiROB
+         mpcjcLAEzLRFmhNqMAJxJ4uwFq1sF+Py/i73cSrQtwVkdAHuvEyvEcw8H1o7c5SEiL1b
+         dSu/QNaeShspYZuQQoY/Cc5OxMLLcQxCSbowCTZpKbgqiXi15si01o/fYpPEeXCOC2YQ
+         LMqghddlagdLNVsQnHXiZNb7yNSxjdAwYqhE3QrYbxvgfAMJvnf52eGV70EtlTqYIizN
+         Rjq7yoLYtylCrm+a5NGRHkgEg57c4s1R7V7F9kHbHk/FFsCiFZWnszbVN305hlDkFgaD
+         iKeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B23U6TGnP6I2VN/If9ysGQ7jNwuYSviY699aZo0z2yM=;
+        b=Yu+7mz980c2Ack50HsFquSCGrJosLb/YtjecbckCiHUTY2ax2MFmAoVPqkWpYD7FZB
+         PX00Y3MB2A6DQF1DUqcaLbXDHBGeVxl4E0ZksdoxuEmKFTv72FcaAH2VwoCyfQBJz3EF
+         EQ0jmv1DvL3uyulfd11wtwTv941bmdgGQvAsMJ8JJUS1x+04AxoIyfYysx3/OHoWL1Gd
+         f57+FJptOSMRQecNXauSkDAFSR9IxkFDFpR6CpYrjnui8sHns/ExipYMMoVRzpLl1x1s
+         awLSH8RdRHYbWV2BNDG6j5WfnFeHRlakjoqa3cRmrTKqvPrVjGiEtxVhwCNGPHU7UJ91
+         D07A==
+X-Gm-Message-State: AOAM531ZiKO9AKGmwX+km0bBuvI4SqCp6ot6yCKvo87oRI/FfmZyI2om
+        MG15BtzvqofJbUFwihO1/ofQMZYiMLSNRM912zk=
+X-Google-Smtp-Source: ABdhPJxh/LpkqsYiBmOtQ6sJOOQq8mBeXc35QFQP0dPZqtAEC5QY3LnhJ1EUR44/+xbBPpPZinj3BNujb71xzCpDXpQ=
+X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr9409744pjb.181.1595673359620;
+ Sat, 25 Jul 2020 03:35:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+References: <cover.1595649348.git.sathyanarayanan.kuppuswamy@linux.intel.com> <ba80aa1cab7d244730c5abd48f3036bf527578cc.1595649348.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <ba80aa1cab7d244730c5abd48f3036bf527578cc.1595649348.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 25 Jul 2020 13:35:43 +0300
+Message-ID: <CAHp75VcswirG0EdtM0cVo4xx_p3C+3Unb4+c7p6=QLZe5LjOoQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/5] ACPI/PCI: Ignore _OSC negotiation result if
+ pcie_ports_native is set.
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Gcc report warning as followings:
+On Sat, Jul 25, 2020 at 7:01 AM
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> pcie_ports_native is set only if user requests native handling
 
-drivers/pci/controller/cadence/pcie-cadence-ep.c:390:33: warning:
- variable 'vec_ctrl' set but not used [-Wunused-but-set-variable]
-  390 |  u32 tbl_offset, msg_data, reg, vec_ctrl;
-      |                                 ^~~~~~~~
+the user
 
-This variable is not used so this commit removing it.
+> of PCIe capabilities via pcie_port_setup command line option.
+> User input takes precedence over _OSC based control negotiation
+> result. So consider the _OSC negotiated result only if
+> pcie_ports_native is unset.
+>
+> Also, since struct pci_host_bridge ->native_* members caches the
+> ownership status of various PCIe capabilities, use them instead
+> of distributed checks for pcie_ports_native.
 
-Fixes: dae15ff2c7a9 ("PCI: cadence: Add MSI-X support to Endpoint driver")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+...
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 87c76341eab4..ec1306da301f 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -387,7 +387,7 @@ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn,
- 				      u16 interrupt_num)
- {
- 	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
--	u32 tbl_offset, msg_data, reg, vec_ctrl;
-+	u32 tbl_offset, msg_data, reg;
- 	struct cdns_pcie *pcie = &ep->pcie;
- 	struct pci_epf_msix_tbl *msix_tbl;
- 	struct cdns_pcie_epf *epf;
-@@ -410,7 +410,6 @@ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn,
- 	msix_tbl = epf->epf_bar[bir]->addr + tbl_offset;
- 	msg_addr = msix_tbl[(interrupt_num - 1)].msg_addr;
- 	msg_data = msix_tbl[(interrupt_num - 1)].msg_data;
--	vec_ctrl = msix_tbl[(interrupt_num - 1)].vector_ctrl;
- 
- 	/* Set the outbound region if needed. */
- 	if (ep->irq_pci_addr != (msg_addr & ~pci_addr_mask) ||
+> +static char *get_osc_desc(u32 bit)
+> +{
 
+> +       int i = 0;
+
+Unneeded assignment.
+
+> +       for (i = 0; i < ARRAY_SIZE(pci_osc_control_bit); i++)
+> +               if (bit == pci_osc_control_bit[i].bit)
+> +                       return pci_osc_control_bit[i].desc;
+> +
+> +       return NULL;
+> +}
+
+...
+
+>         host_bridge = to_pci_host_bridge(bus->bridge);
+> -       if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+> -               host_bridge->native_pcie_hotplug = 0;
+> +       if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL)) {
+> +               if (!pcie_ports_native)
+> +                       host_bridge->native_pcie_hotplug = 0;
+> +               else
+
+> +                       dev_warn(&bus->dev, "OS overrides %s firmware control",
+
+pci_warn() ?
+
+> +                       get_osc_desc(OSC_PCI_EXPRESS_NATIVE_HP_CONTROL));
+> +       }
+> +
+
+>         if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+>                 host_bridge->native_shpc_hotplug = 0;
+
+Group them in the same way you did in the previous patch.
+
+> -       if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
+> -               host_bridge->native_aer = 0;
+> -       if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
+> -               host_bridge->native_pme = 0;
+> -       if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+> -               host_bridge->native_ltr = 0;
+> -       if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> -               host_bridge->native_dpc = 0;
+> +
+> +       if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL)) {
+
+> +               if (!pcie_ports_native)
+> +                       host_bridge->native_aer = 0;
+> +               else
+> +                       dev_warn(&bus->dev, "OS overrides %s firmware control",
+> +                       get_osc_desc(OSC_PCI_EXPRESS_AER_CONTROL));
+
+Looks like a lot of duplication here. Perhaps split out a helper ?
+
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
