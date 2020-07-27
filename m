@@ -2,129 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8602322FB45
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 23:24:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8261022FB6A
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 23:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgG0VYh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 17:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgG0VYh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:24:37 -0400
-Received: from localhost (unknown [13.85.75.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03103207BB;
-        Mon, 27 Jul 2020 21:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595885076;
-        bh=MLbhfNhfEWUuWMxtsosQROgke8OOlnnRmKKhop1HBKY=;
-        h=Date:From:To:To:To:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:
-         In-Reply-To:References:From;
-        b=lOC8em/eCe10ZWbtq336EyzrF6MJarubmtalkuk7A+eJVealxhety4YlWrNkMSRbV
-         T5yV6wzz0HcRXeKz/6FOlBj2qy2sUDkEVs+23uRDZhFmNDf2ih2pPwj+FH5ykICsad
-         Yko9Iea0KyNLNC58GVk/GamNr6usT5YQcpjDthE0=
-Date:   Mon, 27 Jul 2020 21:24:35 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Ashok Raj <ashok.raj@intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-To:     Joerg Roedel <joro@8bytes.com>
-To:     Lu Baolu <baolu.lu@intel.com>
-Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Cc:     Ashok Raj <ashok.raj@intel.com>
-Cc:     iommu@lists.linux-foundation.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device when SRIOV is enabled
-In-Reply-To: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
-References: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
-Message-Id: <20200727212436.03103207BB@mail.kernel.org>
+        id S1726320AbgG0Vax (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 17:30:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG0Vax (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 17:30:53 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05FDC061794
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jul 2020 14:30:52 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q6so18859149ljp.4
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jul 2020 14:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RgXgy4xCcEajnk+JpNDq/g/hOQmzIcVt8/kZ2R1fwks=;
+        b=SFUoUatl2mpnBcEO0Efrq2j11lm8Qf/NJBJPyhCcnukRCaJ3JgSPV26MURHAE5Ja8X
+         XwTtW+qCHGktzwJYoWd7X/3+kNXBKgEG1sFfV86cI2PAj9fhZO8tFfftKapVRrzd9WuZ
+         HhFTQSYsfNnez1sNQrmOmJebdwQrah9AidBfjuJ5OLKVl7iRXBgyEyVYRWFqO0A82yoP
+         IOhBz16RHKOn7EQQS4ygHFekxRV93BNL5c2XDXY+kSc7I4KovXYNNvjdYN2MT7E6hYMd
+         CskCjJU+OpKICo10eOwRAndEkBfnQuaoubGoIcyfrGPkC8Zsmb3v1J+cvsXGCnW0A11n
+         wpbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RgXgy4xCcEajnk+JpNDq/g/hOQmzIcVt8/kZ2R1fwks=;
+        b=DjOPoNbGc4iNkkGaqnA3yrRwPFz5dDvrJHtUXcfqwtYzuJYRWDFi/BGpBKd+gr0oHH
+         6O2ENLC/SqpmZi++NrNg5iSEA9jrZFgVaeCAR+oFyUMZjQfu0sWiU3dIJn4pOPyGzdhs
+         3kHC569v/4I0akuEtDTBug49tknIY3B7h8do6jxLMGiw/hSB76vQWDl4JrGHHcpGiDow
+         APxRtRwoY1tgz3LEYUnr5lhv9CF/AUaOZJHjtF9cI0E6+ItboK4ZfwzsKzNQPBuCyEQw
+         SVH6cJbiADYRLKeMB2qKcefIlSSWGT8GNuUHZXx2piViTG3fX28gub+47T1xtitTakjT
+         Kurw==
+X-Gm-Message-State: AOAM531uliKVO7/hWL4trvpW3mnOhRSToPPlzVOhDU5tR+Rw3VEBJo/N
+        /PRQ8rYJx0scWvoAQczRekYrSyQaqxY=
+X-Google-Smtp-Source: ABdhPJzmW0j0Km3yWcE7bU6IIoXobIbVELcSGPpf7xDLCZs40QBKjvOehPQTanqOOhDrmqGaWQ41lA==
+X-Received: by 2002:a2e:87d9:: with SMTP id v25mr10053511ljj.53.1595885450950;
+        Mon, 27 Jul 2020 14:30:50 -0700 (PDT)
+Received: from octa.pomac.com (c-f0d2225c.013-195-6c756e10.bbcust.telenor.se. [92.34.210.240])
+        by smtp.gmail.com with ESMTPSA id 202sm3298052lfg.24.2020.07.27.14.30.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 14:30:50 -0700 (PDT)
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     Ian Kumlien <ian.kumlien@gmail.com>
+Subject: [PATCH] Use maximum latency when determining L1 ASPM
+Date:   Mon, 27 Jul 2020 23:30:45 +0200
+Message-Id: <20200727213045.2117855-1-ian.kumlien@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
+Currently we check the maximum latency of upstream and downstream
+per link, not the maximum for the path
 
-[This is an automated email]
+This would work if all links have the same latency, but:
+endpoint -> c -> b -> a -> root  (in the order we walk the path)
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS").
+If c or b has the higest latency, it will not register
 
-The bot has tested the following trees: v5.7.10, v5.4.53, v4.19.134, v4.14.189, v4.9.231, v4.4.231.
+Fix this by maintaining the maximum latency value for the path
 
-v5.7.10: Build OK!
-v5.4.53: Failed to apply! Possible dependencies:
-    2b0ae7cc3bfc ("PCI/ATS: Handle sharing of PF PASID Capability with all VFs")
-    751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
-    8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
-    9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
-    c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
-    e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+This change fixes a regression introduced by:
+66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
 
-v4.19.134: Failed to apply! Possible dependencies:
-    2b0ae7cc3bfc ("PCI/ATS: Handle sharing of PF PASID Capability with all VFs")
-    4f802170a861 ("PCI/DPC: Save and restore config state")
-    6e1ffbb7c2ab ("PCI: Move ATS declarations outside of CONFIG_PCI")
-    751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
-    8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
-    8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
-    9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
-    9c2120090586 ("PCI: Provide pci_match_id() with CONFIG_PCI=n")
-    b92b512a435d ("PCI: Make pci_ats_init() private")
-    c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
-    e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
-    e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
-    fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
+Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+---
+ drivers/pci/pcie/aspm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-v4.14.189: Failed to apply! Possible dependencies:
-    1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
-    1e4511604dfa ("PCI/AER: Expose internal API for obtaining AER information")
-    3133e6dd07ed ("PCI: Tidy Makefiles")
-    37dddf14f1ae ("PCI: cadence: Add EndPoint Controller driver for Cadence PCIe controller")
-    4696b828ca37 ("PCI/AER: Hoist aerdrv.c, aer_inject.c up to drivers/pci/pcie/")
-    4f802170a861 ("PCI/DPC: Save and restore config state")
-    8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
-    8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
-    9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
-    9de0eec29c07 ("PCI: Regroup all PCI related entries into drivers/pci/Makefile")
-    b92b512a435d ("PCI: Make pci_ats_init() private")
-    c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
-    d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
-    e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
-    e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
-    fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
-
-v4.9.231: Failed to apply! Possible dependencies:
-    4ebeb1ec56d4 ("PCI: Restore PRI and PASID state after Function-Level Reset")
-    8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
-    8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
-    9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
-    a4f4fa681add ("PCI: Cache PRI and PASID bits in pci_dev")
-    c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
-    e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
-    e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
-    fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
-
-v4.4.231: Failed to apply! Possible dependencies:
-    2a2aca316aed ("PCI: Include <asm/dma.h> for isa_dma_bridge_buggy")
-    4d3f13845957 ("PCI: Add pci_unmap_iospace() to unmap I/O resources")
-    4ebeb1ec56d4 ("PCI: Restore PRI and PASID state after Function-Level Reset")
-    8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
-    9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
-    a4f4fa681add ("PCI: Cache PRI and PASID bits in pci_dev")
-    c5076cfe7689 ("PCI, of: Move PCI I/O space management to PCI core code")
-    e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index b17e5ffd31b1..bd53fba7f382 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+ 
+ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ {
+-	u32 latency, l1_switch_latency = 0;
++	u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+ 	struct aspm_latency *acceptable;
+ 	struct pcie_link_state *link;
+ 
+@@ -470,8 +470,9 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 		 * substate latencies (and hence do not do any check).
+ 		 */
+ 		latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
++		l1_max_latency = max_t(u32, latency, l1_max_latency);
+ 		if ((link->aspm_capable & ASPM_STATE_L1) &&
+-		    (latency + l1_switch_latency > acceptable->l1))
++		    (l1_max_latency + l1_switch_latency > acceptable->l1))
+ 			link->aspm_capable &= ~ASPM_STATE_L1;
+ 		l1_switch_latency += 1000;
+ 
 -- 
-Thanks
-Sasha
+2.27.0
+
