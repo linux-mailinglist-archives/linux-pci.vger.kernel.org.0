@@ -2,87 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C64D22F6EE
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 19:44:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 117EC22F985
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 21:52:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgG0RoB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 13:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbgG0RoA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:44:00 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 211BE20714;
-        Mon, 27 Jul 2020 17:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595871840;
-        bh=5/5EvEs7O/GbKgoqLg5+MWxLEXrZ46oBpCe/CaHYkO8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CwTbdQCXWvWHwgA+JYFxW0azkKcOxlQEhzfgzha/WDlC1ft9S6JYo2t+m6DSc6YBE
-         GudlawXr13klWVSd2jUHHMTT0yqh5xmcTYmlQLkoWZw4Jg3OLfMKbjcCnd69l5Bey6
-         ceRG3Y2rp1s91fD7EaXCmBFfptOP5OFxCQtPxw9Q=
-Received: by mail-oi1-f170.google.com with SMTP id 12so15059632oir.4;
-        Mon, 27 Jul 2020 10:44:00 -0700 (PDT)
-X-Gm-Message-State: AOAM5338kTMR0WtwjExv9sETwCDw8hRmtIHKvJBVTx14Hs2k+EataB33
-        fW+FrurmXDZB8xaj8KJYz5QQjpuXvUO83tz9jg==
-X-Google-Smtp-Source: ABdhPJxZ3dUGKZJ+t4+ExDE8iFtHmcY0Xe9S6fQlgx62P2z/ibIBpDxX9HohgCSHBmCtqT4HADrnqJc/41O56XTECzI=
-X-Received: by 2002:aca:4844:: with SMTP id v65mr378915oia.152.1595871839488;
- Mon, 27 Jul 2020 10:43:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623145528.1658337-1-thierry.reding@gmail.com>
- <20200623145528.1658337-2-thierry.reding@gmail.com> <CAL_Jsq+u=oFUAuURy-f8wCzagA-xKJES8RRf=kUSXJHoxOipBQ@mail.gmail.com>
- <20200727172149.GA3683017@ulmo>
-In-Reply-To: <20200727172149.GA3683017@ulmo>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 27 Jul 2020 11:43:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKztykYZDdeHgWEnwW_9rasDrNwz0Cz9K2Pe1BtmvembQ@mail.gmail.com>
-Message-ID: <CAL_JsqKztykYZDdeHgWEnwW_9rasDrNwz0Cz9K2Pe1BtmvembQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] PCI: tegra: Remove PLL power supplies
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
+        id S1728690AbgG0Twp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 15:52:45 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:46655 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728348AbgG0Two (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 15:52:44 -0400
+Received: from dante.cb.ettle ([143.159.226.70]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.179]) with ESMTPSA (Nemesis) id
+ 1MDhth-1k6zik1Bvr-00Am5E; Mon, 27 Jul 2020 21:52:29 +0200
+Message-ID: <f02332767323fc3ecccea13dd47ecfff12526112.camel@ettle.org.uk>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+From:   James Ettle <james@ettle.org.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
+        <ricky_wu@realtek.com>, Rui Feng <rui_feng@realsil.com.cn>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Date:   Mon, 27 Jul 2020 20:52:25 +0100
+In-Reply-To: <20200727141438.GA1743062@bjorn-Precision-5520>
+References: <20200727141438.GA1743062@bjorn-Precision-5520>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:9hfivm38n1X2xOxy/Suu/TO1CvJBOaht+YsoUaogoxU2UatFES1
+ yLbIx7EiMtZhjackxSMSZoMYO8ABl6QCTeqHGkykO4ApN3mCjgRPNtF5RciMeU0EM69bu2S
+ OynHPsgfDsivKrc6SkbIs2lGnk8XKXsRhl+4uLfUfNHrtcy3+v9xkwFnMQE9OzS6uLvjFKp
+ swW30Q12/xmzaYP+eWX5Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ftS2pohcS44=:t9NtZstD6U5IboUkPoKZr/
+ QuBjV/xi+EqWcbyOcIFWFIJshm/cxNM7FxtJVqjAEhnD7O6LpxKq+JP2unecoONFokTC9S/OJ
+ i/c7U6pwvgTY3kKrTFX1W1pakuXJDBp7a1pG2vLzpFnSjX4xnBbuzh+faqGUWc8IJibbQoEdh
+ LWfZmkWq05eCeDlIh5KZfCrurarxASSPuC/NCyew/ivYUDVO0WWidbXEOayMN4/4BUZDM2TlJ
+ tgrCDVfcjCgVoDm/Qk6a8u4q1cliB2st7gdtzwE3BMG/0ox4Peas6AkUKi0B547p1lS9/NP2p
+ MmgulaBcXD5d3ocSibBiBm47Bsb8DiGRnZDMzsyh+GzLGZ5wXJ0EisQmrRyvXoT7oQIC5/Npi
+ v1WliQ5cnNwWolvZ4gVt0HmDo0ltEju1iuPARcgiXmhOdhw1SzjeDXoVc64YbZ35odewz6gCP
+ R4wyfUjVGtArz4SIGpVFpB8jmsaW04Q1hvenZiREgEpEmY/ULOwyT6lbZ4zB6kwnU3yY8OxLT
+ MWGP+4tQlQxNUJ08rUazkVbxEBuy1NNkjDcAUsBc+jatGsGqfBlpsCVy+GL1BRUqUWrBp3kpJ
+ hLjnU6dB9a0CHOcmyCy5y3LLX/xmF7KP5zbdvw/GODMLhbY3RJ9z44e2CzB/1PnMo9Iz4LMCG
+ +DdMSfslEQNb2AJaFC9zWBQJycwowss57O1tPSrkT2EWhdXU6AzMELjhyHZIt6AflaciqxCcx
+ aKnumUXOBrUtxhy3yC7GZGJ+MZt2t6mdKzwZAkKWj99YmjUTEVJ3Ys0JMzsfVKw7tl9zq4r/T
+ AccI7JgKavL12PVXGy1R5pu4lf3SztPcBEmVnuKGcPaf9pWFdu2AhmRiGXzIAxDbT6dhJRK
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:21 AM Thierry Reding
-<thierry.reding@gmail.com> wrote:
->
-> On Mon, Jul 27, 2020 at 10:21:42AM -0600, Rob Herring wrote:
-> > On Tue, Jun 23, 2020 at 8:55 AM Thierry Reding <thierry.reding@gmail.com> wrote:
-> > >
-> > > From: Thierry Reding <treding@nvidia.com>
-> > >
-> > > The Tegra PCI controller driver doesn't need to control the PLL power
-> > > supplies directly, but rather uses the pads provided by the XUSB pad
-> > > controller, which in turn is responsible for supplying power to the
-> > > PLLs.
-> > >
-> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > > ---
-> > >  drivers/pci/controller/pci-tegra.c | 10 ++--------
-> > >  1 file changed, 2 insertions(+), 8 deletions(-)
-> >
-> > What's going to happen here with a new dtb and an old kernel? Is it
-> > going to error out due to missing supplies?
->
-> It's not going to error out but fallback to the "dummy" regulator, so
-> this should be fine from a forwards-compatibility point of view. Though
-> I didn't think we technically cared about that direction very much.
+On Mon, 2020-07-27 at 09:14 -0500, Bjorn Helgaas wrote:
+> I don't know the connection between ASPM and package C-states, so I
+> need to simplify this even more.  All I want to do right now is
+> verify
+> that if we don't have any outside influences on the ASPM
+> configuration
+> (eg, no manual changes and no udev rules), it stays the same across
+> suspend/resume.
 
-AIUI, SUSE ships newer DTs with stable kernels. Of course, the dtb's
-shouldn't really come from the OS vendors, but you wouldn't want a
-newer firmware (w/ dtb) to break your OS either.
+Basically this started from me observing deep package C-states weren't
+being used, until I went and fiddled with the ASPM state of the
+rtsx_pci card reader under sysfs -- so phenomenological poking on my
+part.
 
-In any case,
+> So let's read the ASPM state directly from the
+> hardware like this:
+> 
+>   sudo lspci -vvs 00:1d.0 | egrep "^0|Lnk|L1|LTR|snoop"
+>   sudo lspci -vvs 01:00   | egrep "^0|Lnk|L1|LTR|snoop"
+> 
+> Can you try that before and after suspend/resume?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I've attached these to the bugzilla entry at:
 
-Rob
+https://bugzilla.kernel.org/show_bug.cgi?id=208117
+
+Spoiler: With no udev rules or suspend hooks, things are the same
+before and after suspend/resume. One thing I do see (both before and
+after) is that ASPM L0s and L1 is enabled for the card reader, but
+disabled for the ethernet chip (does r8169 fiddle with ASPM too?).
+
+[Oddly when I set ASPM (e.g. using udev) the lspci tools show ASPM
+enabled after a suspend/resume, but still no deep package C-states
+until I manually fiddle via sysfs on the card reader. Sorry if this
+only muddies the water further!]
+
+Thanks,
+-James
+
+
+
