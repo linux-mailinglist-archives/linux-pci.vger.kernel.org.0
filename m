@@ -2,119 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 476BF22ECE5
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 15:10:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0DDD22EDE1
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 15:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgG0NKO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 09:10:14 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:56100 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728141AbgG0NKO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 09:10:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U3zRBsO_1595855409;
-Received: from B-J2UMLVDL-1650.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0U3zRBsO_1595855409)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Jul 2020 21:10:10 +0800
-Subject: Re: [PATCH v2] virtio_ring: use alloc_pages_node for NUMA-aware
- allocation
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Jiang Liu <liuj97@gmail.com>, linux-pci@vger.kernel.org,
-        bhelgaas@google.com
-References: <20200721070013.62894-1-shile.zhang@linux.alibaba.com>
- <20200721041550-mutt-send-email-mst@kernel.org>
- <d16c8191-3837-8734-8cdf-ae6dd75725f7@linux.alibaba.com>
-Message-ID: <222b40f1-a36c-0375-e965-cd949e8b9eeb@linux.alibaba.com>
-Date:   Mon, 27 Jul 2020 21:10:09 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        id S1729032AbgG0NtQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 09:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729184AbgG0NtP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 09:49:15 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D015AC061794
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jul 2020 06:49:14 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id t15so8058458iob.3
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jul 2020 06:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=1gnuycF6ZQb3/sS4OXDoVvCx15yeQSCyflOBMN+m0eE=;
+        b=ZWqei/Dt4KPYuvOSvnmOV5yD6yFkpdv4pXbMNgXF3huNGyeZHhHE/NXCAEJaq33eDw
+         r7t6Cq49ou8yGvcVR9SgiKVWm+K3c0J+JZDo5t7DaZUnQnYx54GHEF+Te4kXD0AmRS1u
+         UogtyF7Xe8PdSmHyx8zY6/Tpuz9TeNPazlvlQIceR1IcBnum+qgVBUOtBSoaBE3yaFp4
+         3tRdQeWkTrHEDFD+pKkYVp0vF6qSAhp54g6iDZLiFBIWGxLlDGClEkCo28WvLigjRRRT
+         aZsToR6ONHTg0sIX7rCQpXaPp8Alw5ep0/KcJ/ipw+tonztTM39ggc35BHcyWYPP6cpU
+         IjzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=1gnuycF6ZQb3/sS4OXDoVvCx15yeQSCyflOBMN+m0eE=;
+        b=MTS6FmM7JnarxLuh1eG/4IIpe5HRlZz7Xd0aNOfnKnd591rv+XRJJoMaGDXLI+AXNA
+         0jMG4H2mTfrvYNwecXyd0b7hnOqO0koW7iXbJUtSnd6g1x8WX2ZVFTaYVlycB7CH3nEs
+         mCZrVB+N3BuGSZByL2z3JjYD+zUrCetXagkgyZ9zIVe53UAR07mEIiWd0EEZWV5+O2eC
+         fuPp4FMoR+nlRokXwvOCjmpr7Jst2Pzsxj/ZHWJFGOiJu19VAIGU8bzo3WOeBbRKdYW8
+         FShU5GH+ePo5/y9O/I1ibLuV3khcKPyZgIy11hVagAiwvYNthx3K9fIBvJ5Qbb1s3Q3v
+         x4UQ==
+X-Gm-Message-State: AOAM532yqNE2FJkOk+d0evr/T3nSwLOXeq7R0Isx8FIrUQZUUnEEilQk
+        ij7jckDgMIBhONOZKhRpHFGRI2ImeYnlowLpslA=
+X-Google-Smtp-Source: ABdhPJxzjV9Wbh3SP4L3cOa39f+QQxUTZKDfocqkwHnP6rPO0GlbKz88BGhxb05GPmAbyqJW2c60kEBJoztaojbyGNg=
+X-Received: by 2002:a02:6d5d:: with SMTP id e29mr1847828jaf.139.1595857754102;
+ Mon, 27 Jul 2020 06:49:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d16c8191-3837-8734-8cdf-ae6dd75725f7@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6638:23c:0:0:0:0 with HTTP; Mon, 27 Jul 2020 06:49:13
+ -0700 (PDT)
+Reply-To: mrwaleedmazin11@gmail.com
+From:   Mr Waleed Mazin <johnsonouedraogo20@gmail.com>
+Date:   Mon, 27 Jul 2020 06:49:13 -0700
+Message-ID: <CADboJ43HeoVeN2kjgfqR9pQsPdEk-xwXkzGUsX5oHECAQiDfYw@mail.gmail.com>
+Subject: I NEED YOUR URGENT RESPOND PLEASE
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+My name is Mr Waleed Mazin . I have decided to seek a confidential
+co-operation with you in the execution of the deal described
+here-under for our both mutual benefit and I hope you will keep it a
+top secret because of the nature of the transaction, During the course
+of our bank year auditing, I discovered an unclaimed/abandoned fund,
+sum total of {US$19.3 Million United State Dollars} in the bank
+account that belongs to a Saudi Arabia businessman Who unfortunately
+lost his life and entire family in a Motor Accident.
 
+Now our bank has been waiting for any of the relatives to come-up for
+the claim but nobody has done that. I personally has been unsuccessful
+in locating any of the relatives, now, I sincerely seek your consent
+to present you as the next of kin / Will Beneficiary to the deceased
+so that the proceeds of this account valued at {US$19.Million United
+State Dollars} can be paid to you, which we will share in these
+percentages ratio, 60% to me and 40% to you. All I request is your
+utmost sincere co-operation; trust and maximum confidentiality to
+achieve this project successfully. I have carefully mapped out the
+moralities for execution of this transaction under a legitimate
+arrangement to protect you from any breach of the law both in your
+country and here in Burkina Faso when the fund is being transferred to
+your bank account.
 
-On 2020/7/21 19:28, Shile Zhang wrote:
-> 
-> 
-> On 2020/7/21 16:18, Michael S. Tsirkin wrote:
->> On Tue, Jul 21, 2020 at 03:00:13PM +0800, Shile Zhang wrote:
->>> Use alloc_pages_node() allocate memory for vring queue with proper
->>> NUMA affinity.
->>>
->>> Reported-by: kernel test robot <lkp@intel.com>
->>> Suggested-by: Jiang Liu <liuj97@gmail.com>
->>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
->>
->> Do you observe any performance gains from this patch?
-> 
-> Thanks for your comments!
-> Yes, the bandwidth can boost more than doubled (from 30Gbps to 80GBps) 
-> with this changes in my test env (8 numa nodes), with netperf test.
-> 
->>
->> I also wonder why isn't the probe code run on the correct numa node?
->> That would fix a wide class of issues like this without need to tweak
->> drivers.
-> 
-> Good point, I'll check this, thanks!
+I will have to provide all the relevant document that will be
+requested to indicate that you are the rightful beneficiary of this
+legacy and our bank will release the fund to you without any further
+delay, upon your consideration and acceptance of this offer, please
+send me the following information as stated below so we can proceed
+and get this fund transferred to your designated bank account
+immediately.
 
-Sorry, I have no idea about how the probe code to grab the appropriate 
-NUMA node.
+-Your Full Name:
+-Your Contact Address:
+-Your direct Mobile telephone Number:
+-Your Date of Birth:
+-Your occupation:
 
-> 
->>
->> Bjorn, what do you think? Was this considered?
+I await your swift response and re-assurance.
 
-Hi Bjorn, Could you please give any comments about this issue?
-Thanks!
-
->>
->>> ---
->>> Changelog
->>> v1 -> v2:
->>> - fixed compile warning reported by LKP.
->>> ---
->>>   drivers/virtio/virtio_ring.c | 10 ++++++----
->>>   1 file changed, 6 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
->>> index 58b96baa8d48..d38fd6872c8c 100644
->>> --- a/drivers/virtio/virtio_ring.c
->>> +++ b/drivers/virtio/virtio_ring.c
->>> @@ -276,9 +276,11 @@ static void *vring_alloc_queue(struct 
->>> virtio_device *vdev, size_t size,
->>>           return dma_alloc_coherent(vdev->dev.parent, size,
->>>                         dma_handle, flag);
->>>       } else {
->>> -        void *queue = alloc_pages_exact(PAGE_ALIGN(size), flag);
->>> -
->>> -        if (queue) {
->>> +        void *queue = NULL;
->>> +        struct page *page = 
->>> alloc_pages_node(dev_to_node(vdev->dev.parent),
->>> +                             flag, get_order(size));
->>> +        if (page) {
->>> +            queue = page_address(page);
->>>               phys_addr_t phys_addr = virt_to_phys(queue);
->>>               *dma_handle = (dma_addr_t)phys_addr;
->>> @@ -308,7 +310,7 @@ static void vring_free_queue(struct virtio_device 
->>> *vdev, size_t size,
->>>       if (vring_use_dma_api(vdev))
->>>           dma_free_coherent(vdev->dev.parent, size, queue, dma_handle);
->>>       else
->>> -        free_pages_exact(queue, PAGE_ALIGN(size));
->>> +        free_pages((unsigned long)queue, get_order(size));
->>>   }
->>>   /*
->>> -- 
->>> 2.24.0.rc2
+Best regards,
+Mr Waleed Mazin
