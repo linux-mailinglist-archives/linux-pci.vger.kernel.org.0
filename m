@@ -2,99 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 117EC22F985
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 21:52:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4664F22FB26
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 23:15:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbgG0Twp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 15:52:45 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:46655 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgG0Two (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 15:52:44 -0400
-Received: from dante.cb.ettle ([143.159.226.70]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.179]) with ESMTPSA (Nemesis) id
- 1MDhth-1k6zik1Bvr-00Am5E; Mon, 27 Jul 2020 21:52:29 +0200
-Message-ID: <f02332767323fc3ecccea13dd47ecfff12526112.camel@ettle.org.uk>
-Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
-From:   James Ettle <james@ettle.org.uk>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
-        <ricky_wu@realtek.com>, Rui Feng <rui_feng@realsil.com.cn>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacopo De Simoi <wilderkde@gmail.com>
-Date:   Mon, 27 Jul 2020 20:52:25 +0100
-In-Reply-To: <20200727141438.GA1743062@bjorn-Precision-5520>
-References: <20200727141438.GA1743062@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+        id S1726676AbgG0VPh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 17:15:37 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35801 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0VPh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 17:15:37 -0400
+Received: by mail-il1-f193.google.com with SMTP id t18so14404522ilh.2;
+        Mon, 27 Jul 2020 14:15:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aqOi16jjOnKG2O05yH0kyUxh/Ipp8QMsuyogqi4nzKU=;
+        b=r7QgxYvkQUH8rD3ZOeWR9notOWzHYxC4WEcfPlO7pf6TpQwoGLJFGTR41g8cfy8nu7
+         HVNgAghlgAq6TPeFqGRsnx1mntnbxWycI46K7nqtaeWAdsiWOQlHwiFI/9WYFfcWhaR7
+         JzfkRtHCHgn3zMHwMkV1c0FjxzHl2spEKpPKBT7QsDyg3JeO9Q9cUGxJMwbqGKv2QLuc
+         ghu1O52JAm9lKgvx9DTrtcuhXxiGA0w7FD64B0y66ZyWa53x91nsPA79PwodRMFFN+La
+         /Yzlbf7frrhIzrfsosyymWYi6lgb3lxnwo3i73QxxbVIS7HK6+chw2eaZ9BTEZJGkyb7
+         Yd9w==
+X-Gm-Message-State: AOAM531oUWDZnMjALNYy6PbZnIpmMPuF/ybfH44ai3Noyeo+rgjZxlHn
+        kB/0ahf7kl28YtnaJofVEA==
+X-Google-Smtp-Source: ABdhPJwxeh8JV9gP51L9KoRIkhHdJ1KYNRIHBeY3AeHjorP5YMvvt1YkkNkr1pHTdQ3JisHBWNDinw==
+X-Received: by 2002:a05:6e02:dd1:: with SMTP id l17mr25068482ilj.136.1595884536970;
+        Mon, 27 Jul 2020 14:15:36 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id z68sm1472415ilf.25.2020.07.27.14.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 14:15:35 -0700 (PDT)
+Received: (nullmailer pid 886288 invoked by uid 1000);
+        Mon, 27 Jul 2020 21:15:33 -0000
+Date:   Mon, 27 Jul 2020 15:15:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@qti.qualcomm.com>
+Cc:     agross@kernel.org, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, bjorn.andersson@linaro.org,
+        linux-pci@vger.kernel.org, sivaprak@codeaurora.org,
+        robh+dt@kernel.org
+Subject: Re: [PATCH V2] dt-bindings: pci: convert QCOM pci bindings to YAML
+Message-ID: <20200727211533.GA886087@bogus>
+References: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:9hfivm38n1X2xOxy/Suu/TO1CvJBOaht+YsoUaogoxU2UatFES1
- yLbIx7EiMtZhjackxSMSZoMYO8ABl6QCTeqHGkykO4ApN3mCjgRPNtF5RciMeU0EM69bu2S
- OynHPsgfDsivKrc6SkbIs2lGnk8XKXsRhl+4uLfUfNHrtcy3+v9xkwFnMQE9OzS6uLvjFKp
- swW30Q12/xmzaYP+eWX5Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ftS2pohcS44=:t9NtZstD6U5IboUkPoKZr/
- QuBjV/xi+EqWcbyOcIFWFIJshm/cxNM7FxtJVqjAEhnD7O6LpxKq+JP2unecoONFokTC9S/OJ
- i/c7U6pwvgTY3kKrTFX1W1pakuXJDBp7a1pG2vLzpFnSjX4xnBbuzh+faqGUWc8IJibbQoEdh
- LWfZmkWq05eCeDlIh5KZfCrurarxASSPuC/NCyew/ivYUDVO0WWidbXEOayMN4/4BUZDM2TlJ
- tgrCDVfcjCgVoDm/Qk6a8u4q1cliB2st7gdtzwE3BMG/0ox4Peas6AkUKi0B547p1lS9/NP2p
- MmgulaBcXD5d3ocSibBiBm47Bsb8DiGRnZDMzsyh+GzLGZ5wXJ0EisQmrRyvXoT7oQIC5/Npi
- v1WliQ5cnNwWolvZ4gVt0HmDo0ltEju1iuPARcgiXmhOdhw1SzjeDXoVc64YbZ35odewz6gCP
- R4wyfUjVGtArz4SIGpVFpB8jmsaW04Q1hvenZiREgEpEmY/ULOwyT6lbZ4zB6kwnU3yY8OxLT
- MWGP+4tQlQxNUJ08rUazkVbxEBuy1NNkjDcAUsBc+jatGsGqfBlpsCVy+GL1BRUqUWrBp3kpJ
- hLjnU6dB9a0CHOcmyCy5y3LLX/xmF7KP5zbdvw/GODMLhbY3RJ9z44e2CzB/1PnMo9Iz4LMCG
- +DdMSfslEQNb2AJaFC9zWBQJycwowss57O1tPSrkT2EWhdXU6AzMELjhyHZIt6AflaciqxCcx
- aKnumUXOBrUtxhy3yC7GZGJ+MZt2t6mdKzwZAkKWj99YmjUTEVJ3Ys0JMzsfVKw7tl9zq4r/T
- AccI7JgKavL12PVXGy1R5pu4lf3SztPcBEmVnuKGcPaf9pWFdu2AhmRiGXzIAxDbT6dhJRK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2020-07-27 at 09:14 -0500, Bjorn Helgaas wrote:
-> I don't know the connection between ASPM and package C-states, so I
-> need to simplify this even more.  All I want to do right now is
-> verify
-> that if we don't have any outside influences on the ASPM
-> configuration
-> (eg, no manual changes and no udev rules), it stays the same across
-> suspend/resume.
-
-Basically this started from me observing deep package C-states weren't
-being used, until I went and fiddled with the ASPM state of the
-rtsx_pci card reader under sysfs -- so phenomenological poking on my
-part.
-
-> So let's read the ASPM state directly from the
-> hardware like this:
+On Sun, 26 Jul 2020 20:36:53 +0530, Sivaprakash Murugesan wrote:
+> From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > 
->   sudo lspci -vvs 00:1d.0 | egrep "^0|Lnk|L1|LTR|snoop"
->   sudo lspci -vvs 01:00   | egrep "^0|Lnk|L1|LTR|snoop"
+> Convert QCOM pci bindings to YAML schema
 > 
-> Can you try that before and after suspend/resume?
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [v2]
+>   - Referenced pci-bus.yaml
+>   - removed duplicate properties already referenced by pci-bus.yaml
+>   - Addressed comments from Rob
+>  .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 447 +++++++++++++++++++++
+>  2 files changed, 447 insertions(+), 330 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> 
 
-I've attached these to the bugzilla entry at:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=208117
-
-Spoiler: With no udev rules or suspend hooks, things are the same
-before and after suspend/resume. One thing I do see (both before and
-after) is that ASPM L0s and L1 is enabled for the card reader, but
-disabled for the ethernet chip (does r8169 fiddle with ASPM too?).
-
-[Oddly when I set ASPM (e.g. using udev) the lspci tools show ASPM
-enabled after a suspend/resume, but still no deep package C-states
-until I manually fiddle via sysfs on the card reader. Sorry if this
-only muddies the water further!]
-
-Thanks,
--James
-
-
-
+Applied, thanks!
