@@ -2,111 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DEEF22EE33
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 16:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9727122EF3F
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 16:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgG0OEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 10:04:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgG0OEz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 10:04:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F94C061794;
-        Mon, 27 Jul 2020 07:04:55 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g67so9576870pgc.8;
-        Mon, 27 Jul 2020 07:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RyHF/+puhzg55DCNoaFMk4tPij78gjhmB7e2S31c+Mw=;
-        b=qi4gB50pKm/HTNHxwz2l1Wt6UHixmVaBVfd095HTeG1HF7fPr2fgjtU/lhdRFdLtpg
-         5GkR6ciAukxRBC+6p/hijprEOWr6N/ti21TRGyJLkERBWKbcmHE61jktGdd4ng2S4kqi
-         WShBSGiN26EzaKt5iiyEqR8/iq4Fkh1VgbsnEp0nPozR9K0APamac8qJVtU3IUVRLUjq
-         x5cjgotwkcFr5An8m7dLJTN+EeWNro1wS4oBt4ArK1Nh5ki2EP6RTF3iqXgM+RkuW7+r
-         /WL01dMKNkEocdqD8nVLUF1cENjPhpwaNbqiU1Go0XOwsAHSJ3tNCtaC6VS+os8eeaa8
-         e5Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RyHF/+puhzg55DCNoaFMk4tPij78gjhmB7e2S31c+Mw=;
-        b=ISPI0Z4WhibWSsl8pqyvWApTkmpBtJSq8peGBvhwvxipy8Tu4fHheKjWEPvrl3y8C4
-         rgKeYkX7RDNLYb9p0/8QeI/pi6BSqAKaxGlLi0Jse//jZw9G4GDQ+ULe3iJ2XhYbqY+I
-         HxyuT716ZVVbGIqgNphmcq9aEqHlpTqn5dQzfGUJalu5kN3q99WsBv6nYInWWxddhTFa
-         ty65LFLLzob7soynnqCiCk1ylMhvyYda2GE3dIg2y/CWQz2n5EFGFO++VeZkEO2MTP0g
-         GLLDYMpiavy8r0CZg0smT3tCVROedpgXPNuUN6A8YtX3xX5MPIn7Mpt3ACGP/BtWQ5LS
-         YM2Q==
-X-Gm-Message-State: AOAM531auIsid3FBpJymUN4y+YUcPl9dbXnXcecaAc+FQFaPdNqutbCH
-        w0vX3eH8Qzj/9cttIPqp7Up0e/Az+2Qqq35Z2vk=
-X-Google-Smtp-Source: ABdhPJzovOawUCJEI4j6HaCrflDk4hy4VX1DIO68Q/H7U8G0USPW7WPLKWfPlN3cxl4gmpC7xS9QZFiZXbVUBcWcqIA=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr20428734pgi.203.1595858694737;
- Mon, 27 Jul 2020 07:04:54 -0700 (PDT)
+        id S1730586AbgG0OOm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 10:14:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730582AbgG0OOl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:14:41 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82D1F2173E;
+        Mon, 27 Jul 2020 14:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859280;
+        bh=hqGjzG7kcr/MsbjRxsV9hAB3/B1VJxy+zFkGz8jLWdc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gVWT8qiP8B2d3sTJWw8jQuwCKb3Ijd21gSw5+UBWrb5jM7RD83N2Xm6QSWdZUsPF4
+         eGVxErBhMwzWE7lKlM103qKgBzyjtjdGMAgnxaU3R+cp4PsPNU3lmozQjqz094GyZx
+         2MntVodiw2oVVzOD8/Rq62m6IKmhl5bzXm6+YpII=
+Date:   Mon, 27 Jul 2020 09:14:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     James Ettle <james@ettle.org.uk>
+Cc:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
+        Rui Feng <rui_feng@realsil.com.cn>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+Message-ID: <20200727141438.GA1743062@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200722001513.298315-1-jusual@redhat.com> <87d04nq40h.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87d04nq40h.fsf@vitty.brq.redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 17:04:39 +0300
-Message-ID: <CAHp75VfLjYvFUVw+uHbMJCeoNfs6nb4Qh1OoQraA5bTkR9SeRg@mail.gmail.com>
-Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Julia Suvorova <jusual@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aaa64572fac0fc411b79a9adb59b5bbcbdf4b1a8.camel@ettle.org.uk>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 12:47 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> Julia Suvorova <jusual@redhat.com> writes:
+On Sat, Jul 25, 2020 at 09:27:11PM +0100, James Ettle wrote:
+> On Fri, 2020-07-24 at 18:13 -0500, Bjorn Helgaas wrote:
+> > 
+> > Maybe we should simplify this a little bit more.  James, if you don't
+> > touch ASPM config at all, either manually or via udev, does the ASPM
+> > configuration stay the same across suspend/resume?
+> 
+> Yes, it stays the same. Explicitly: 
+> 
+> With the udev rule disabled, immediately following clean boot from
+> power-off (and no additional tinkering), ASPM is OFF to the best of my
+> knowledge:
+> 
+>  - link/l1_aspm in sysfs is 0 for PCI devices 0000:01:00.[01];
+>  - the processor sleeps no deeper than package C3.
+> 
+> The situation above is the same following a suspend/resume cycle --
+> both in terms of sysfs, and observed package C-state occupancy.
+> 
+> [Tested on kernel 5.7.10, but the behaviour is the same as prior
+> kernels.]
 
-> > Scanning for PCI devices at boot takes a long time for KVM guests. It
-> > can be reduced if KVM will handle all configuration space accesses for
-> > non-existent devices without going to userspace [1]. But for this to
-> > work, all accesses must go through MMCONFIG.
-> > This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
-> > guests making MMCONFIG the default access method.
+I don't know the connection between ASPM and package C-states, so I
+need to simplify this even more.  All I want to do right now is verify
+that if we don't have any outside influences on the ASPM configuration
+(eg, no manual changes and no udev rules), it stays the same across
+suspend/resume.
 
-I'm not sure it won't break anything.
+In https://bugzilla.kernel.org/show_bug.cgi?id=208117#c12, we saw that
+ASPM L0s was disabled before suspend but was enabled after resume.
+That should not happen.
 
-> > [1] https://lkml.org/lkml/2020/5/14/936
+You're looking at the sysfs link/l1_aspm file, which tells us what the
+PCI core thinks the state is, but I'm not confident that's accurate,
+especially because the driver fiddles with the state behind the back
+of the PCI core.  So let's read the ASPM state directly from the
+hardware like this:
 
-use Link: tag and better to use lore.kernel.org.
+  sudo lspci -vvs 00:1d.0 | egrep "^0|Lnk|L1|LTR|snoop"
+  sudo lspci -vvs 01:00   | egrep "^0|Lnk|L1|LTR|snoop"
 
-> This implies mmconfig access method is always functional (when present)
-> for all KVM guests, regardless of hypervisor version/which KVM userspace
-> is is use/... In case the assumption is true the patch looks good (to
-> me) but in case it isn't or if we think that more control over this
-> is needed we may want to introduce a PV feature bit for KVM.
->
-> Also, I'm thinking about moving this to arch/x86/kernel/kvm.c: we can
-> override x86_init.pci.arch_init and reassign raw_pci_ops after doing
-> pci_arch_init().
-
-% git grep -n -w x86_init.pci.arch_init -- arch/x86/
-arch/x86/hyperv/hv_init.c:400:  x86_init.pci.arch_init = hv_pci_init;
-arch/x86/kernel/apic/apic_numachip.c:203:       x86_init.pci.arch_init
-= pci_numachip_init;
-arch/x86/kernel/jailhouse.c:207:        x86_init.pci.arch_init
- = jailhouse_pci_arch_init;
-arch/x86/pci/init.c:20: if (x86_init.pci.arch_init && !x86_init.pci.arch_init())
-arch/x86/platform/intel-mid/intel-mid.c:172:    x86_init.pci.arch_init
-= intel_mid_pci_init;
-arch/x86/platform/olpc/olpc.c:309:              x86_init.pci.arch_init
-= pci_olpc_init;
-arch/x86/xen/enlighten_pv.c:1411:
-x86_init.pci.arch_init = pci_xen_init;
-
-Are you going to update all these? Or how this is supposed to work (I
-may be missing something)?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Can you try that before and after suspend/resume?
