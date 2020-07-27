@@ -2,121 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E6FB22E627
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 08:58:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D48422E63B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 09:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgG0G6X convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 27 Jul 2020 02:58:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0G6X (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 02:58:23 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFA2C0619D2
-        for <linux-pci@vger.kernel.org>; Sun, 26 Jul 2020 23:58:22 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jzx5W-0006HG-KR; Mon, 27 Jul 2020 08:58:18 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jzx5U-0004Sa-7O; Mon, 27 Jul 2020 08:58:16 +0200
-Message-ID: <00892cf87c3da679d76c4632109ebcf21059d556.camel@pengutronix.de>
-Subject: Re: [PATCH v9 02/12] ata: ahci_brcm: Fix use of BCM7216 reset
- controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 27 Jul 2020 08:58:16 +0200
-In-Reply-To: <20200724203407.16972-3-james.quinlan@broadcom.com>
-References: <20200724203407.16972-1-james.quinlan@broadcom.com>
-         <20200724203407.16972-3-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+        id S1726183AbgG0HHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 03:07:42 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36546 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbgG0HHm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:07:42 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv98UfR5fIRkBAA--.653S2;
+        Mon, 27 Jul 2020 15:07:01 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Move pci_info() after pci_fixup_device() in pci_setup_device()
+Date:   Mon, 27 Jul 2020 15:06:55 +0800
+Message-Id: <1595833615-8049-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxv98UfR5fIRkBAA--.653S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw45Jr47ZFW8ury5ArykAFb_yoWkCrXEv3
+        yUuF4xWr4DAa10kFn8Jw43Z3sYk3Z09rWxWr48Ka4IvayIvrZ8XF4UXry7K3WUua15Cr90
+        qFWDGr4rCr10kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbwkYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC2
+        0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+        0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+        14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+        vaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8iL0UUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jim,
+In the current code, we can not see the PCI info after fixup which is
+correct to reflect the reality, it is better to move pci_info() after
+pci_fixup_device() in pci_setup_device().
 
-On Fri, 2020-07-24 at 16:33 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> A reset controller "rescal" is shared between the AHCI driver and the PCIe
-> driver for the BrcmSTB 7216 chip.  Use
-> devm_reset_control_get_optional_shared() to handle this sharing.
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
-> ---
->  drivers/ata/ahci_brcm.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> index 6853dbb4131d..d6115bc04b09 100644
-> --- a/drivers/ata/ahci_brcm.c
-> +++ b/drivers/ata/ahci_brcm.c
-> @@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  {
->  	const struct of_device_id *of_id;
->  	struct device *dev = &pdev->dev;
-> -	const char *reset_name = NULL;
->  	struct brcm_ahci_priv *priv;
->  	struct ahci_host_priv *hpriv;
->  	struct resource *res;
-> @@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  
->  	/* Reset is optional depending on platform and named differently */
->  	if (priv->version == BRCM_SATA_BCM7216)
-> -		reset_name = "rescal";
-> +		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
->  	else
-> -		reset_name = "ahci";
-> +		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/pci/probe.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Please use devm_reset_control_get_optional_exclusive() here.
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2f66988..7c046aed 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1802,9 +1802,6 @@ int pci_setup_device(struct pci_dev *dev)
+ 	dev->revision = class & 0xff;
+ 	dev->class = class >> 8;		    /* upper 3 bytes */
+ 
+-	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
+-		   dev->vendor, dev->device, dev->hdr_type, dev->class);
+-
+ 	if (pci_early_dump)
+ 		early_dump_pci_device(dev);
+ 
+@@ -1822,6 +1819,9 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Early fixups, before probing the BARs */
+ 	pci_fixup_device(pci_fixup_early, dev);
+ 
++	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
++		 dev->vendor, dev->device, dev->hdr_type, dev->class);
++
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
+ 
+-- 
+2.1.0
 
->  
-> -	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
->  	if (IS_ERR(priv->rcdev))
->  		return PTR_ERR(priv->rcdev);
->  
-> @@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  		break;
->  	}
->  
-> -	if (priv->version == BRCM_SATA_BCM7216)
-> -		ret = reset_control_reset(priv->rcdev);
-> -	else
-> -		ret = reset_control_deassert(priv->rcdev);
-> +	ret = reset_control_deassert(priv->rcdev);
->  	if (ret)
->  		return ret;
->  
-
-Since you switch from _reset to _deassert/_assert here, I suspect you
-should also change the out_reset error path, and the suspend/resume
-functions accordingly.
-
-regards
-Philipp
