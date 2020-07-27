@@ -2,165 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F48B22EBC4
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 14:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9542A22EC0F
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 14:24:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgG0MKt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 08:10:49 -0400
-Received: from mail-eopbgr1300095.outbound.protection.outlook.com ([40.107.130.95]:5920
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1728423AbgG0MYS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 08:24:18 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2535 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727855AbgG0MKt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:10:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nUY4JDCwYUzpsXNzdu4CyIFWvX4zsw5jDQqRuPVs8YnBCl7fxgj0zMDZrDUof08PKAp0yEzJHb9KIojn6KoMhN748zEfxRL+OSc/lkSs8ne8Mtd/CBNkSCioIohVSgva21fNis5qojIjXPXChsrR49Eb4JnUSK6Y0DVZhRE3g/rsU4yLYQvRHFBaF2rSAd4ZqpQoPE0nrGLsOOv04oiUrLVSu001rfqX9xc1KU5Y4ei1KFuZE1WPxJ6hoU1fMH5UVq7Fj98mklFuADNur1kN48crHtmYYhCQdxQ+9Az25nOUB+rMvYsaVhekUCpDWuztCArus+1lmGuYMDHiphpLHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yjndx/x5+JZJ+l8SatpZtKMbDb+umqL7zrzsmWiuU+0=;
- b=mcgSpznUlIaE2rJifua40QMx7vdumtJEVKOlm5VC5fIKrpbNRDBFHTSeMIQGxVO1Cu+cIJhWrWgLgGiof6qBi1cYtwZK7eryEuQ9jJPvo1zJNBNMzTnqHNZEJpgqAj3gq5LCotQQHEsEEHcBtR3FwM7k/V7hylxLFfQYARYevT1g6gS45ZcvWyOL6YTJJARI5N8KL9cQYCc61wAwL/sv6wybuzdJQwdccmwVVKlATYaZzDyczzHEESQ91zCPGTZxvGStYZge9CcDhLuv3qoDOY+Z11SMtVT6xiaD5fj/+QU8Wegh9v7uDRl+XylRDoYaVpgY/yj3lavWvqnPzhDyqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yjndx/x5+JZJ+l8SatpZtKMbDb+umqL7zrzsmWiuU+0=;
- b=HZ2C91DOjEeBETpoH7PsvwtjDMOGnGb3xEt566BI5mEBiMZfUSo0VdoDoizRfndL51wW9uEg6JugpPLf6NX3xLWS8y9zBqgWVJ+LvTM+qZ9fykeL8wpxzLg3gcz+Xyt7zFcvcbiuYvCZQxk3OvyGLTTX4KD7r2No6sJATKyF8lw=
-Received: from SG2P153MB0377.APCP153.PROD.OUTLOOK.COM (2603:1096:0:1::15) by
- SG2P153MB0379.APCP153.PROD.OUTLOOK.COM (2603:1096:0:7::7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3239.3; Mon, 27 Jul 2020 12:10:42 +0000
-Received: from SG2P153MB0377.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5e5:3111:30f0:8e01]) by SG2P153MB0377.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5e5:3111:30f0:8e01%3]) with mapi id 15.20.3239.015; Mon, 27 Jul 2020
- 12:10:42 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH v4] PCI: hv: Fix a timing issue which causes kdump to fail
- occasionally
-Thread-Topic: [PATCH v4] PCI: hv: Fix a timing issue which causes kdump to
- fail occasionally
-Thread-Index: AQHWY+YSLxC8RPb4v0CKay4JYMaVmKkbR54AgAAKXVA=
-Date:   Mon, 27 Jul 2020 12:10:40 +0000
-Message-ID: <SG2P153MB0377B86BE7882BC25857A64DBB720@SG2P153MB0377.APCP153.PROD.OUTLOOK.COM>
-References: <20200727071731.18516-1-weh@microsoft.com>
- <20200727111852.GA14239@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200727111852.GA14239@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-27T12:10:39Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=64a9e2b9-7243-4b59-be2b-f10ce4eceacd;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [116.233.42.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0c7eaae1-e706-46dc-d163-08d8322615a3
-x-ms-traffictypediagnostic: SG2P153MB0379:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SG2P153MB0379A8A9F98345D3801EB8BCBB720@SG2P153MB0379.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TsFZpw3fD2xMKWhpwpNY4d1wY9AlRiav5JOkox7b1PSnH3+NqoTPEiFRIdu2z1OBFAEc/RUQ0IBG1BQMPMnmPshGEl7QZplLQtDkDiKzuKOlsLyOlsUgEO1MjcFCHrP1za/LSWTy20o/ZaCUizVmI/Ys14aHghiZicpDLulPWiEmh57Zy6gUfNgtT0Tvaef3MJOmk1QY0nXMkjifPPzrzDpPLmZZIZN2LBAwT8tpKyXg69BOXJot6Lysr+7CEAOaDeQiWc+dyO8UYXdU3hGQVskdibpRiZ3Cjo2wakrYSxaBPCGL0MFP3XE+/eObwFYMgWHa2Ttg1ZNCcbAs86G7Eg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0377.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(316002)(478600001)(55016002)(54906003)(8990500004)(4326008)(107886003)(5660300002)(9686003)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(33656002)(53546011)(26005)(186003)(6916009)(7696005)(2906002)(71200400001)(8936002)(82950400001)(83380400001)(8676002)(52536014)(86362001)(6506007)(82960400001)(10290500003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: gN71LCJEROmVye2U4ijHckOCMs+jmCfyYr9Y5bxuGkkfpwHeoN2xx1ayACGzyjuM2CoqNfCrM3U9pA7o86tfa/w0Ml+M9BC2q6YV1k412YdagkT47fgXunYeRqUcw7HIaL0nru+b8wVZM3x2thMHv7J4t+GvRwdEkZcP4Qz29aZP8FItkVKQ3beQPgswkrIKXonwobsC6gS7ymYOyE6EesyYSbPN1V+kSlrXCdM6BkEqoPd+/bkEEeu1BFoTiNxK27O/HiLFGyAmFXIQ1MxXJq3hrUnu6DWiD7dtYEnb7+JD+hsw9keNx3272LRG319TGoPtdpONQVAeZB8OZc5j2Rs0yPd7X7inFxGvzEzaUXl+cmvd/gSoKh09o+9GxkzTRZFP2xbWvFM2X+5rmKsXmfOixgIg4lYr8vDzEvuzFk5vLZc1X4pV1+aia3IyN1zHRwWyYYHTJK5wIFXzSYfzi2EUQjOGGCCYvCZ2R5/okcTEuQSPiCVocQLOFpzFrmKdj5pj5ELpoivI7d0SKsmS9Ywdik+6YhRk+ZSxaxGVrVNbBnHKiYJaEIskeqJa3+mI6wLG335JRb6CNQtI4BAdBve8hEh1AhN9a2SU4+K9/zYVnYrGl/pdSl30c8mjrOeDY/rxT66FKhRGoj7eyIfIqw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728292AbgG0MYS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:24:18 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 50336B258D4D68A1850D;
+        Mon, 27 Jul 2020 13:24:16 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 13:24:15 +0100
+Date:   Mon, 27 Jul 2020 13:22:52 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 7/9] PCI/AER: Add RCEC AER handling
+Message-ID: <20200727132252.0000644c@Huawei.com>
+In-Reply-To: <20200724172223.145608-8-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-8-sean.v.kelley@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2P153MB0377.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c7eaae1-e706-46dc-d163-08d8322615a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2020 12:10:40.9999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cKxpgekG98P5zT6QSSnM4ZugRWO0yx3TyVZWqQyIY/pJqxhbcbzDUGcNe9woku9aRyALOrW2xaJIxni711hWBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0379
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, 24 Jul 2020 10:22:21 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
+
+> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
+> and also have the AER capability. So add RCEC support to the current AER
+> service driver and attach the AER service driver to the RCEC device.
+> 
+> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+
+A few questions and comments for this patch.
+
+See inline.
+
+Jonathan
 
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Monday, July 27, 2020 7:19 PM
-> To: Wei Hu <weh@microsoft.com>
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> wei.liu@kernel.org; robh@kernel.org; bhelgaas@google.com; linux-
-> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Dexuan Cui <decui@microsoft.com>; Michael Kelley
-> <mikelley@microsoft.com>
-> Subject: Re: [PATCH v4] PCI: hv: Fix a timing issue which causes kdump to=
- fail
-> occasionally
->=20
-> On Mon, Jul 27, 2020 at 03:17:31PM +0800, Wei Hu wrote:
-> > Kdump could fail sometime on Hyper-V guest over Accelerated Network
-> > interface. This is because the retry in hv_pci_enter_d0() releases
-> > child device strurctures in hv_pci_bus_exit(). Although there is a
-> > second asynchronous device relations message sending from the host, if
-> > this message arrives guest after hv_send_resource_allocated() is
-> > called, the retry would fail.
-> >
-> > Fix the problem by moving retry to hv_pci_probe() and starting retry
-> > from hv_pci_query_relations() call.  This will cause a device
-> > relations message to arrive guest synchronously.  The guest would be
-> > able to rebuild the child device structures before calling
-> > hv_send_resource_allocated().
-> >
-> > This problem only happens on Accelerated Network or SRIOV devices as
-> > only such devices currently are attached under vmbus PCI bridge.
-> >
-> > Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid
-> > device state")
-> > Signed-off-by: Wei Hu <weh@microsoft.com>
-> > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> > ---
-> >     v2: Adding Fixes tag according to Michael Kelley's review comment.
-> >     v3: Fix couple typos and reword commit message to make it clearer.
-> >     Thanks the comments from Bjorn Helgaas.
-> >     v4: Adding more  problem descritpions in the commit message
-> >     and code upon request from Lorenze Pieralisi.
-> >
-> >  drivers/pci/controller/pci-hyperv.c | 71
-> > +++++++++++++++--------------
-> >  1 file changed, 37 insertions(+), 34 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pci-hyperv.c
-> > b/drivers/pci/controller/pci-hyperv.c
->=20
-> I edited commit log and a comment in the code to fix a typo and pushed ou=
-t to
-> pci/hv.
->=20
-> Thanks,
-> Lorenzo
->=20
-Thanks Lorenzo. Appreciate your helps!
+> ---
+>  drivers/pci/pcie/aer.c | 34 +++++++++++++++++++++++++++-------
+>  1 file changed, 27 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f1bf06be449e..7cc430c74c46 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -303,7 +303,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
+>  		return -EIO;
+>  
+>  	port_type = pci_pcie_type(dev);
+> -	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT || port_type == PCI_EXP_TYPE_RC_EC) {
+>  		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
+>  		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
+>  	}
+> @@ -389,6 +389,12 @@ void pci_aer_init(struct pci_dev *dev)
+>  	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * n);
+>  
+>  	pci_aer_clear_status(dev);
+> +
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) {
+> +		if (!pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC))
+> +			return;
+> +		pci_info(dev, "AER: RCEC CAP FOUND and cap_has_rtctl = %d\n", n);
 
-Wei
+It feels like failing to find an RC_EC extended cap in a RCEC deserved
+a nice strong error message.  Perhaps this isn't the right place to do it
+though.  For that matter, why are we checking for it here?
+
+> +	}
+>  }
+>  
+>  void pci_aer_exit(struct pci_dev *dev)
+> @@ -577,7 +583,8 @@ static umode_t aer_stats_attrs_are_visible(struct kobject *kobj,
+>  	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
+>  	     a == &dev_attr_aer_rootport_total_err_fatal.attr ||
+>  	     a == &dev_attr_aer_rootport_total_err_nonfatal.attr) &&
+
+It is a bit ugly to have these called rootport_total_err etc for the rcec.
+Perhaps we should just add additional attributes to reflect we are looking at
+an RCEC?
+
+> -	    pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
+> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
+>  		return 0;
+>  
+>  	return a->mode;
+> @@ -894,7 +901,10 @@ static bool find_source_device(struct pci_dev *parent,
+>  	if (result)
+>  		return true;
+>  
+> -	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+> +	if (pci_pcie_type(parent) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(parent, find_device_iter, e_info);
+> +	else
+> +		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+>  
+>  	if (!e_info->error_dev_num) {
+>  		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
+> @@ -1030,6 +1040,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>  		if (!(info->status & ~info->mask))
+>  			return 0;
+>  	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> +		   pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC ||
+>  	           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+>  		   info->severity == AER_NONFATAL) {
+>  
+> @@ -1182,6 +1193,8 @@ static int set_device_error_reporting(struct pci_dev *dev, void *data)
+>  	int type = pci_pcie_type(dev);
+>  
+>  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
+> +	    (type == PCI_EXP_TYPE_RC_EC) ||
+> +	    (type == PCI_EXP_TYPE_RC_END) ||
+
+Why add RC_END here?
+
+>  	    (type == PCI_EXP_TYPE_UPSTREAM) ||
+>  	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
+>  		if (enable)
+> @@ -1206,9 +1219,11 @@ static void set_downstream_devices_error_reporting(struct pci_dev *dev,
+>  {
+>  	set_device_error_reporting(dev, &enable);
+>  
+> -	if (!dev->subordinate)
+> -		return;
+> -	pci_walk_bus(dev->subordinate, set_device_error_reporting, &enable);
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(dev, set_device_error_reporting, &enable);
+> +	else if (dev->subordinate)
+> +		pci_walk_bus(dev->subordinate, set_device_error_reporting, &enable);
+> +
+>  }
+>  
+>  /**
+> @@ -1306,6 +1321,11 @@ static int aer_probe(struct pcie_device *dev)
+>  	struct device *device = &dev->device;
+>  	struct pci_dev *port = dev->port;
+>  
+> +	/* Limit to Root Ports or Root Complex Event Collectors */
+> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
+> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+> +		return -ENODEV;
+> +
+>  	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
+>  	if (!rpc)
+>  		return -ENOMEM;
+> @@ -1362,7 +1382,7 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>  
+>  static struct pcie_port_service_driver aerdriver = {
+>  	.name		= "aer",
+> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
+> +	.port_type	= PCIE_ANY_PORT,
+
+Why this particular change?  Seems that is a lot wider than simply
+adding RCEC.  Obviously we'll then drop out in the aer_probe but it
+is still rather inelegant.
+
+>  	.service	= PCIE_PORT_SERVICE_AER,
+>  
+>  	.probe		= aer_probe,
+
+
