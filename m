@@ -2,117 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 625A922EE31
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 16:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DEEF22EE33
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 16:04:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgG0OEb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 10:04:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2538 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726222AbgG0OEb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:04:31 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 4F2AE8D2104DF16A698C;
-        Mon, 27 Jul 2020 15:04:27 +0100 (IST)
-Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 15:04:27 +0100
-Date:   Mon, 27 Jul 2020 15:04:26 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 4/9] PCI/AER: Extend AER error handling to RCECs
-Message-ID: <20200727150426.00005cde@huawei.com>
-In-Reply-To: <20200724172223.145608-5-sean.v.kelley@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-5-sean.v.kelley@intel.com>
-Organization: Huawei tech. R&D (UK)  Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1726451AbgG0OEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 10:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgG0OEz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 10:04:55 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F94C061794;
+        Mon, 27 Jul 2020 07:04:55 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g67so9576870pgc.8;
+        Mon, 27 Jul 2020 07:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RyHF/+puhzg55DCNoaFMk4tPij78gjhmB7e2S31c+Mw=;
+        b=qi4gB50pKm/HTNHxwz2l1Wt6UHixmVaBVfd095HTeG1HF7fPr2fgjtU/lhdRFdLtpg
+         5GkR6ciAukxRBC+6p/hijprEOWr6N/ti21TRGyJLkERBWKbcmHE61jktGdd4ng2S4kqi
+         WShBSGiN26EzaKt5iiyEqR8/iq4Fkh1VgbsnEp0nPozR9K0APamac8qJVtU3IUVRLUjq
+         x5cjgotwkcFr5An8m7dLJTN+EeWNro1wS4oBt4ArK1Nh5ki2EP6RTF3iqXgM+RkuW7+r
+         /WL01dMKNkEocdqD8nVLUF1cENjPhpwaNbqiU1Go0XOwsAHSJ3tNCtaC6VS+os8eeaa8
+         e5Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RyHF/+puhzg55DCNoaFMk4tPij78gjhmB7e2S31c+Mw=;
+        b=ISPI0Z4WhibWSsl8pqyvWApTkmpBtJSq8peGBvhwvxipy8Tu4fHheKjWEPvrl3y8C4
+         rgKeYkX7RDNLYb9p0/8QeI/pi6BSqAKaxGlLi0Jse//jZw9G4GDQ+ULe3iJ2XhYbqY+I
+         HxyuT716ZVVbGIqgNphmcq9aEqHlpTqn5dQzfGUJalu5kN3q99WsBv6nYInWWxddhTFa
+         ty65LFLLzob7soynnqCiCk1ylMhvyYda2GE3dIg2y/CWQz2n5EFGFO++VeZkEO2MTP0g
+         GLLDYMpiavy8r0CZg0smT3tCVROedpgXPNuUN6A8YtX3xX5MPIn7Mpt3ACGP/BtWQ5LS
+         YM2Q==
+X-Gm-Message-State: AOAM531auIsid3FBpJymUN4y+YUcPl9dbXnXcecaAc+FQFaPdNqutbCH
+        w0vX3eH8Qzj/9cttIPqp7Up0e/Az+2Qqq35Z2vk=
+X-Google-Smtp-Source: ABdhPJzovOawUCJEI4j6HaCrflDk4hy4VX1DIO68Q/H7U8G0USPW7WPLKWfPlN3cxl4gmpC7xS9QZFiZXbVUBcWcqIA=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr20428734pgi.203.1595858694737;
+ Mon, 27 Jul 2020 07:04:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.227.96.57]
-X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200722001513.298315-1-jusual@redhat.com> <87d04nq40h.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87d04nq40h.fsf@vitty.brq.redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 17:04:39 +0300
+Message-ID: <CAHp75VfLjYvFUVw+uHbMJCeoNfs6nb4Qh1OoQraA5bTkR9SeRg@mail.gmail.com>
+Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Julia Suvorova <jusual@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 24 Jul 2020 10:22:18 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+On Wed, Jul 22, 2020 at 12:47 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> Julia Suvorova <jusual@redhat.com> writes:
 
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Currently the kernel does not handle AER errors for Root Complex integrated
-> End Points (RCiEPs)[0]. These devices sit on a root bus within the Root Complex
-> (RC). AER handling is performed by a Root Complex Event Collector (RCEC) [1]
-> which is a effectively a type of RCiEP on the same root bus.
-> 
-> For an RCEC (technically not a Bridge), error messages "received" from
-> associated RCiEPs must be enabled for "transmission" in order to cause a
-> System Error via the Root Control register or (when the Advanced Error
-> Reporting Capability is present) reporting via the Root Error Command
-> register and logging in the Root Error Status register and Error Source
-> Identification register.
-> 
-> In addition to the defined OS level handling of the reset flow for the
-> associated RCiEPs of an RCEC, it is possible to also have a firmware first
-> model. In that case there is no need to take any actions on the RCEC because
-> the firmware is responsible for them. This is true where APEI [2] is used
-> to report the AER errors via a GHES[v2] HEST entry [3] and relevant
-> AER CPER record [4] and Firmware First handling is in use.
-> 
-> We effectively end up with two different types of discovery for
-> purposes of handling AER errors:
-> 
-> 1) Normal bus walk - we pass the downstream port above a bus to which
-> the device is attached and it walks everything below that point.
-> 
-> 2) An RCiEP with no visible association with an RCEC as there is no need to
-> walk devices. In that case, the flow is to just call the callbacks for the actual
-> device.
-> 
-> A new walk function, similar to pci_bus_walk is provided that takes a pci_dev
-> instead of a bus. If that dev corresponds to a downstream port it will walk
-> the subordinate bus of that downstream port. If the dev does not then it
-> will call the function on that device alone.
-> 
-> [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex Integrated
->     Endpoint Rules.
-> [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling and Logging
-> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface (APEI)
-> [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
-> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> ---
-...
+> > Scanning for PCI devices at boot takes a long time for KVM guests. It
+> > can be reduced if KVM will handle all configuration space accesses for
+> > non-existent devices without going to userspace [1]. But for this to
+> > work, all accesses must go through MMCONFIG.
+> > This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
+> > guests making MMCONFIG the default access method.
 
+I'm not sure it won't break anything.
 
->  	pci_dbg(dev, "broadcast resume message\n");
-> -	pci_walk_bus(bus, report_resume, &status);
-> +	pci_walk_dev_affected(dev, report_resume, &status);
->  
-> -	pci_aer_clear_device_status(dev);
-> -	pci_aer_clear_nonfatal_status(dev);
+> > [1] https://lkml.org/lkml/2020/5/14/936
 
-This code had changed a little in Bjorn's pci/next branch so do a rebase on that
-before v2.
+use Link: tag and better to use lore.kernel.org.
 
-> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
-> +		pci_aer_clear_device_status(dev);
-> +		pci_aer_clear_nonfatal_status(dev);
-> +	}
->  	pci_info(dev, "device recovery successful\n");
->  	return status;
->  
+> This implies mmconfig access method is always functional (when present)
+> for all KVM guests, regardless of hypervisor version/which KVM userspace
+> is is use/... In case the assumption is true the patch looks good (to
+> me) but in case it isn't or if we think that more control over this
+> is needed we may want to introduce a PV feature bit for KVM.
+>
+> Also, I'm thinking about moving this to arch/x86/kernel/kvm.c: we can
+> override x86_init.pci.arch_init and reassign raw_pci_ops after doing
+> pci_arch_init().
 
+% git grep -n -w x86_init.pci.arch_init -- arch/x86/
+arch/x86/hyperv/hv_init.c:400:  x86_init.pci.arch_init = hv_pci_init;
+arch/x86/kernel/apic/apic_numachip.c:203:       x86_init.pci.arch_init
+= pci_numachip_init;
+arch/x86/kernel/jailhouse.c:207:        x86_init.pci.arch_init
+ = jailhouse_pci_arch_init;
+arch/x86/pci/init.c:20: if (x86_init.pci.arch_init && !x86_init.pci.arch_init())
+arch/x86/platform/intel-mid/intel-mid.c:172:    x86_init.pci.arch_init
+= intel_mid_pci_init;
+arch/x86/platform/olpc/olpc.c:309:              x86_init.pci.arch_init
+= pci_olpc_init;
+arch/x86/xen/enlighten_pv.c:1411:
+x86_init.pci.arch_init = pci_xen_init;
+
+Are you going to update all these? Or how this is supposed to work (I
+may be missing something)?
+
+-- 
+With Best Regards,
+Andy Shevchenko
