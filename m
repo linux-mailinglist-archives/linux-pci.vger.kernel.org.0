@@ -2,75 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4664F22FB26
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 23:15:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D610722FB32
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 23:17:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgG0VPh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 17:15:37 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35801 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0VPh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 17:15:37 -0400
-Received: by mail-il1-f193.google.com with SMTP id t18so14404522ilh.2;
-        Mon, 27 Jul 2020 14:15:37 -0700 (PDT)
+        id S1726794AbgG0VRs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 17:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgG0VRr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 17:17:47 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DC8C061794
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jul 2020 14:17:47 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id a19so2185792qvy.3
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jul 2020 14:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=pKArutiGe7jj4mj6RmCQjYpYxaXVDrpcmCYcwBdJLbQ=;
+        b=kXKRCCzDYN2ooH/QE7ZbQcaIP8GjAoT1lbf6QD8ORLiPFgFQ2CWBwpzDB8s61IgHga
+         5FruRgXDSqUD5iVPqFss2zJqCydnon9WoOK0E2T0DFbDZjQFN1MNUe3UpJS8x6aJce5Q
+         n4MlJaatzI4B0EsOPdjhczqR6uBo7KbZbZ6xO2qa4m5yQss4eEjEwEXjDlL/uI7l82m6
+         jgNuN1J9a9UhHO2wk68E09kIZZhCDmzCs/WgY0wpVykd9CFdUTa1gwLSUbI/9xYefOfM
+         7Wx4QwxJcLEOMmxD7Ss3/2oxEZThPd6mueSlZUbqkWgKc8yCOTMUcIN0M5LW/neAY34s
+         tJeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aqOi16jjOnKG2O05yH0kyUxh/Ipp8QMsuyogqi4nzKU=;
-        b=r7QgxYvkQUH8rD3ZOeWR9notOWzHYxC4WEcfPlO7pf6TpQwoGLJFGTR41g8cfy8nu7
-         HVNgAghlgAq6TPeFqGRsnx1mntnbxWycI46K7nqtaeWAdsiWOQlHwiFI/9WYFfcWhaR7
-         JzfkRtHCHgn3zMHwMkV1c0FjxzHl2spEKpPKBT7QsDyg3JeO9Q9cUGxJMwbqGKv2QLuc
-         ghu1O52JAm9lKgvx9DTrtcuhXxiGA0w7FD64B0y66ZyWa53x91nsPA79PwodRMFFN+La
-         /Yzlbf7frrhIzrfsosyymWYi6lgb3lxnwo3i73QxxbVIS7HK6+chw2eaZ9BTEZJGkyb7
-         Yd9w==
-X-Gm-Message-State: AOAM531oUWDZnMjALNYy6PbZnIpmMPuF/ybfH44ai3Noyeo+rgjZxlHn
-        kB/0ahf7kl28YtnaJofVEA==
-X-Google-Smtp-Source: ABdhPJwxeh8JV9gP51L9KoRIkhHdJ1KYNRIHBeY3AeHjorP5YMvvt1YkkNkr1pHTdQ3JisHBWNDinw==
-X-Received: by 2002:a05:6e02:dd1:: with SMTP id l17mr25068482ilj.136.1595884536970;
-        Mon, 27 Jul 2020 14:15:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z68sm1472415ilf.25.2020.07.27.14.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 14:15:35 -0700 (PDT)
-Received: (nullmailer pid 886288 invoked by uid 1000);
-        Mon, 27 Jul 2020 21:15:33 -0000
-Date:   Mon, 27 Jul 2020 15:15:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@qti.qualcomm.com>
-Cc:     agross@kernel.org, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, bjorn.andersson@linaro.org,
-        linux-pci@vger.kernel.org, sivaprak@codeaurora.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH V2] dt-bindings: pci: convert QCOM pci bindings to YAML
-Message-ID: <20200727211533.GA886087@bogus>
-References: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=pKArutiGe7jj4mj6RmCQjYpYxaXVDrpcmCYcwBdJLbQ=;
+        b=d315UAZ6Ux+pXlE9Z83JQGd3jjpCYPWQfHL7cbI2tIWCPPDS5NUVpnF1zdtuIEhvN8
+         3E0s3RVRrKsc09KgCuEWeR80m2ccvL0eE7S+N7HDBtFdU1gSQIdbmLFXf3VUKFEOpbhn
+         /PfAR8AXNf6UjXkS5o5LRno+1RxgHzUFXVCIhVZcpyr8mZYKXmRQ8aPGbUi14oym45nC
+         Bw2cQVxuZcjbDDf88o4HWDblW/+jLYNzPwRIPg2JSeyWSZZs2MmdM8k19c0E+i77gVlj
+         Nt7V9Sza6U/AwW18dwAOdhZeXElb9NrQo63DbPf1Rm82DucPHExU/NpKVnQCDQkOcKg/
+         4V+g==
+X-Gm-Message-State: AOAM533Xmjgf6Xug8nq8ly7EaENUs9MgXSEoBpk24ozfL+sP9NFFca06
+        K5fGDjDeBABH3XClNDqMctWCbSYInLRrgRHX5rxQS9R6
+X-Google-Smtp-Source: ABdhPJxmAXUFGeRNjGSy/yhZNOWmqLbetWTkoPc8BBZlr663M2RTHZ5cGB8w8LBEjJioVHjkpELhe/ajX+SUbvKSgvE=
+X-Received: by 2002:a0c:b665:: with SMTP id q37mr21220293qvf.75.1595884666710;
+ Mon, 27 Jul 2020 14:17:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
+References: <20200726220653.635852-1-ian.kumlien@gmail.com> <20200726220653.635852-2-ian.kumlien@gmail.com>
+In-Reply-To: <20200726220653.635852-2-ian.kumlien@gmail.com>
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+Date:   Mon, 27 Jul 2020 23:17:35 +0200
+Message-ID: <CAA85sZv8y9WLwtqimkVw9dFWubYiV0=HmZQ49cKCTJYm8f+k2Q@mail.gmail.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1 ASPM
+To:     linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 26 Jul 2020 20:36:53 +0530, Sivaprakash Murugesan wrote:
-> From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> 
-> Convert QCOM pci bindings to YAML schema
-> 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
-> [v2]
->   - Referenced pci-bus.yaml
->   - removed duplicate properties already referenced by pci-bus.yaml
->   - Addressed comments from Rob
->  .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
->  .../devicetree/bindings/pci/qcom,pcie.yaml         | 447 +++++++++++++++++++++
->  2 files changed, 447 insertions(+), 330 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> 
+Sorry, the changelog is broken -- Will resend...
 
-Applied, thanks!
+That'll teach me for thinking after working out... =)
+
+On Mon, Jul 27, 2020 at 12:07 AM Ian Kumlien <ian.kumlien@gmail.com> wrote:
+>
+> The current solution verifies per "hop" but doesn't
+> check the maximum latency, instead it checks the
+> current "hops" max latency for upstream and downstrea,
+>
+> This would work if all "hops" have the same latency, but:
+>
+> root -> a -> b -> c -> endpoint
+>
+> If c or b has the higest latency, it might not register
+>
+> Fix this by maintaining a maximum value for comparison
+>
+> Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index b17e5ffd31b1..bd53fba7f382 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+>
+>  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  {
+> -       u32 latency, l1_switch_latency = 0;
+> +       u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+>         struct aspm_latency *acceptable;
+>         struct pcie_link_state *link;
+>
+> @@ -470,8 +470,9 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>                  * substate latencies (and hence do not do any check).
+>                  */
+>                 latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> +               l1_max_latency = max_t(u32, latency, l1_max_latency);
+>                 if ((link->aspm_capable & ASPM_STATE_L1) &&
+> -                   (latency + l1_switch_latency > acceptable->l1))
+> +                   (l1_max_latency + l1_switch_latency > acceptable->l1))
+>                         link->aspm_capable &= ~ASPM_STATE_L1;
+>                 l1_switch_latency += 1000;
+>
+> --
+> 2.27.0
+>
