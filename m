@@ -2,59 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 473E022E8F9
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 11:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F14A022E9AD
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 12:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgG0J2l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 05:28:41 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:42609 "EHLO mx1.molgen.mpg.de"
+        id S1726196AbgG0KBf convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 27 Jul 2020 06:01:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2529 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726139AbgG0J2l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:28:41 -0400
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 064DC206466D7;
-        Mon, 27 Jul 2020 11:28:39 +0200 (CEST)
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Delays in PCI/ACPI initialization
-Message-ID: <90c62e70-186c-f0cb-e2ac-8defcdb4405a@molgen.mpg.de>
-Date:   Mon, 27 Jul 2020 11:28:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726139AbgG0KBf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:01:35 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D2CE66CD8921393AABEB;
+        Mon, 27 Jul 2020 11:01:33 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 11:01:33 +0100
+Date:   Mon, 27 Jul 2020 11:00:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 1/9] pci_ids: Add class code and extended capability
+ for RCEC
+Message-ID: <20200727110010.00005042@Huawei.com>
+In-Reply-To: <20200724172223.145608-2-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-2-sean.v.kelley@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Linux folks,
+On Fri, 24 Jul 2020 10:22:15 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
+
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> 
+> A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
+> sub-class 0x07, and programming interface 0x00. Add the class code
+> 0x0807 to identify RCEC devices and add the defines for the RCEC
+> Endpoint Association Extended Capability.
+> 
+> See PCI Express Base Specification, version 5.0-1, section "1.3.4
+> Root Complex Event Collector" and section "7.9.10 Root Complex
+> Event Collector Endpoint Association Extended Capability"
+
+Add a reference to the document
+"PCI Code and ID Assignment Specification"
+for the class number.
+
+From the change log on latest version seems like it's been there since
+version 1.4.
+
+There is a worrying note (bottom of page 16 of 1.12 version of that docs)
+in there that says some older specs used 0x0806 for RCECs and that we
+should use the port type field to actually check if we have one.
+
+Hopefully we won't encounter any of those in the wild.
+
+Otherwise, it's exactly what the spec says.
+We could bike shed on naming choices, but the ones you have seem clear enough
+to me.
+
+FWIW
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
-Trying to decrease the boot time on a Acer TravelMate 5735Z with Debian 
-Sid/unstable and Linux 5.7.6, there are two delays of 100 ms. I created 
-a separate issue for each of the delays.
+Jonathan
+> 
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> ---
+>  include/linux/pci_ids.h       | 1 +
+>  include/uapi/linux/pci_regs.h | 7 +++++++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0ad57693f392..de8dff1fb176 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -81,6 +81,7 @@
+>  #define PCI_CLASS_SYSTEM_RTC		0x0803
+>  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
+>  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
+> +#define PCI_CLASS_SYSTEM_RCEC		0x0807
+>  #define PCI_CLASS_SYSTEM_OTHER		0x0880
+>  
+>  #define PCI_BASE_CLASS_INPUT		0x09
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..f335f65f65d6 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -828,6 +828,13 @@
+>  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
+>  #define PCI_EXT_CAP_PWR_SIZEOF	16
+>  
+> +/* Root Complex Event Collector Endpoint Association  */
+> +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
+> +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
+> +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
+> +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
+> +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
+> +
+>  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
+>  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
+>  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
 
-1.  [Bug 208703] PnP ACPI init has 100 ms delay until quirk message
-2.  [Bug 208705] New: 100 ms delay in PCI initialization
 
-But maybe they have the same cause, and are duplicates. It’d be great, 
-if you took a look.
-
-
-Kind regards,
-
-Paul
-
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=208703
-[2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
