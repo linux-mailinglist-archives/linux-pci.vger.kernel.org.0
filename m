@@ -2,211 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21B0C22F460
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 18:11:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75FA722F4DC
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 18:19:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgG0QLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 12:11:07 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2539 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727975AbgG0QLH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:11:07 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 974F2AD624387F33F0E5;
-        Mon, 27 Jul 2020 17:11:05 +0100 (IST)
-Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 17:11:05 +0100
-Date:   Mon, 27 Jul 2020 17:11:04 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 6/9] PCI: Add 'rcec' field to pci_dev for associated
- RCiEPs
-Message-ID: <20200727171104.000053f8@huawei.com>
-In-Reply-To: <20200727122358.00006c23@Huawei.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-7-sean.v.kelley@intel.com>
-        <20200727122358.00006c23@Huawei.com>
-Organization: Huawei tech. R&D (UK)  Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1731742AbgG0QSH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 12:18:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728717AbgG0QSG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Jul 2020 12:18:06 -0400
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D45521883;
+        Mon, 27 Jul 2020 16:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595866685;
+        bh=VbSJ7we7F7x94gn8MtdIpC00p71t6I2a2U/7FXBvqOg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zUq77H9YvtsQbDTgUzIyNOCY0Miln5H0R0NhefZ4bn+WVZIhEW7jIHCBHVO5iDpi4
+         /W+NsrMgHCXEmr1Ii7czPaUeyGKh/tFcSHOePe4cDk6bEgv0LMfRupVV9gB4Mi5hWf
+         rS7iHGwkSeOQlsouLNGafySTjpksGOi7xaLM6Gyk=
+Received: by mail-oo1-f49.google.com with SMTP id z10so377631ooi.10;
+        Mon, 27 Jul 2020 09:18:05 -0700 (PDT)
+X-Gm-Message-State: AOAM530J4PfQ5LAXjSxKGXlHnXQMCcdPYtY43y/Hfk9mr426SHkC/Xv0
+        revu9E0E1kwvioGg07DivcTUoQI4zVmdR9N3fQ==
+X-Google-Smtp-Source: ABdhPJxy2HNX2qe5qurpCuCASaH673vpWzF1fqD8RgM/pdLjw54HcFjl1uO6DNZz6SeGELq82YXp3iMU27l37r6AOz4=
+X-Received: by 2002:a4a:ae07:: with SMTP id z7mr20031067oom.25.1595866684651;
+ Mon, 27 Jul 2020 09:18:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.227.96.57]
-X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200623145528.1658337-1-thierry.reding@gmail.com>
+In-Reply-To: <20200623145528.1658337-1-thierry.reding@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 27 Jul 2020 10:17:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLzcx5R+FvoOJwRboDx-FWoiGa_8_q8-eSc=AG_fOz=HA@mail.gmail.com>
+Message-ID: <CAL_JsqLzcx5R+FvoOJwRboDx-FWoiGa_8_q8-eSc=AG_fOz=HA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pci: tegra: Remove PLL power supplies
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 27 Jul 2020 12:23:58 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Tue, Jun 23, 2020 at 8:55 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> From: Thierry Reding <treding@nvidia.com>
+>
+> The XUSB pad controller, which provides access to various USB, PCI and
+> SATA pads (or PHYs), needs to bring up the PLLs associated with these
+> pads. In order to properly do so, it needs to control the power supplied
+> to these PLLs.
+>
+> Remove the PLL power supplies from the PCIe controller because it does
+> not need direct access to them. Instead it will only use the configured
+> pads provided by the XUSB pad controller.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Hi Rob,
+>
+> I already made this change as part of the conversion series, but wanted
+> to send this out as part of this subseries since it addresses a fairly
+> long-standing issue that I'd like to clean up irrespective of the DT
+> binding conversion. Since it looks like the conversion series will take
+> a bit longer, I think it makes sense to send this out separately.
+>
+> Thierry
+>
+>  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt  | 12 ------------
+>  1 file changed, 12 deletions(-)
 
-> On Fri, 24 Jul 2020 10:22:20 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
-> 
-> > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > 
-> > When attempting error recovery for an RCiEP associated with an RCEC device,
-> > there needs to be a way to update the Root Error Status, the Uncorrectable
-> > Error Status and the Uncorrectable Error Severity of the parent RCEC.
-> > So add the 'rcec' field to the pci_dev structure and provide a hook for the
-> > Root Port Driver to associate RCiEPs with their respective parent RCEC.
-> > 
-> > Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>  
-> 
-> I haven't tested yet, but I think there is one path in here that breaks
-> my case (no OS visible rcec / all done in firmware GHESv2 / APEI)
-> 
-> Jonathan
-> 
-> > ---
-> >  drivers/pci/pcie/aer.c         |  9 +++++----
-> >  drivers/pci/pcie/err.c         |  9 +++++++++
-> >  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
-> >  include/linux/pci.h            |  3 +++
-> >  4 files changed, 32 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 3acf56683915..f1bf06be449e 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -1335,17 +1335,18 @@ static int aer_probe(struct pcie_device *dev)
-> >  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
-> >  {
-> >  	int aer = dev->aer_cap;
-> > +	int rc = 0;
-> >  	u32 reg32;
-> > -	int rc;
-> > -
-> >  
-> >  	/* Disable Root's interrupt in response to error messages */
-> >  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> >  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
-> >  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> >  
-> > -	rc = pci_bus_error_reset(dev);
-> > -	pci_info(dev, "Root Port link has been reset\n");
-> > +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
-> > +		rc = pci_bus_error_reset(dev);
-> > +		pci_info(dev, "Root Port link has been reset\n");
-> > +	}
-> >  
-> >  	/* Clear Root Error Status */
-> >  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> > index 9b3ec94bdf1d..0aae7643132e 100644
-> > --- a/drivers/pci/pcie/err.c
-> > +++ b/drivers/pci/pcie/err.c
-> > @@ -203,6 +203,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
-> >  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> >  			status = flr_on_rciep(dev);
-> > +			/*
-> > +			 * The callback only clears the Root Error Status
-> > +			 * of the RCEC (see aer.c).
-> > +			 */
-> > +			reset_link(dev->rcec);  
-> 
-> This looks dangerous for my case where APEI / GHESv2 is used.  In that case
-> we don't expose an RCEC at all.   I don't think the reset_link callback
-> is safe to a null pointer here.  Fix may be as simple as
-> if (dev->rcec)
-> 	reset_link(dev->rcec);
-> 
-> 
-> >  			if (status != PCI_ERS_RESULT_RECOVERED) {
-> >  				pci_warn(dev, "function level reset failed\n");
-> >  				goto failed;
-> > @@ -246,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >  	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
-> >  		pci_aer_clear_device_status(dev);
-> >  		pci_aer_clear_nonfatal_status(dev);
-> > +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> > +		pci_aer_clear_device_status(dev->rcec);
-This needs updating as well to match current approach in Bjorn's tree
-
-(reworked version of my fix for this in th !is_native case)
-
-> > +		pci_aer_clear_nonfatal_status(dev->rcec);  
-> 
-> These may be safe as in my both now have protections for !pcie_aer_is_native.
-Except I'm wrong.  That function performs a local check based
-on the pci_dev passed in, so blows up anyway.
-
-So this whole block needs an if(dev->rcec), or potentially protect it with
-a call to pci_aer_is_native(dev) on the basis we shouldn't be able to get
-here unless we are not doing native aer or we have an rcec.
-
-Jonathan
-
-> 
-> >  	}
-> > +
-> >  	pci_info(dev, "device recovery successful\n");
-> >  	return status;
-> >  
-> > diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> > index d5b109499b10..f9409a0110c2 100644
-> > --- a/drivers/pci/pcie/portdrv_pci.c
-> > +++ b/drivers/pci/pcie/portdrv_pci.c
-> > @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
-> >  #define PCIE_PORTDRV_PM_OPS	NULL
-> >  #endif /* !PM */
-> >  
-> > +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
-> > +{
-> > +	struct pci_dev *rcec = (struct pci_dev *)data;
-> > +
-> > +	pdev->rcec = rcec;
-> > +	pci_info(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
-> > +		 pci_domain_nr(pdev->bus), pdev->bus->number,
-> > +		 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));  
-> 
-> We may want to make this debug info at somepoint if we have a way
-> of discovering it from userspace.   The PCI boot up is extremely
-> verbose already!
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /*
-> >   * pcie_portdrv_probe - Probe PCI-Express port devices
-> >   * @dev: PCI-Express port device being probed
-> > @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
-> >  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
-> >  		return -ENODEV;
-> >  
-> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> > +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
-> > +
-> >  	status = pcie_port_device_register(dev);
-> >  	if (status)
-> >  		return status;
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 34c1c4f45288..e920f29df40b 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -326,6 +326,9 @@ struct pci_dev {
-> >  #ifdef CONFIG_PCIEAER
-> >  	u16		aer_cap;	/* AER capability offset */
-> >  	struct aer_stats *aer_stats;	/* AER stats for this device */
-> > +#endif
-> > +#ifdef CONFIG_PCIEPORTBUS
-> > +	struct pci_dev	*rcec;		/* Associated RCEC device */
-> >  #endif
-> >  	u8		pcie_cap;	/* PCIe capability offset */
-> >  	u8		msi_cap;	/* MSI capability offset */  
-> 
-
+Reviewed-by: Rob Herring <robh@kernel.org>
