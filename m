@@ -2,247 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A97022F661
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 19:16:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6172822F679
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jul 2020 19:21:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgG0RQG convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 27 Jul 2020 13:16:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2540 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728021AbgG0RQG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:16:06 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 8D3ED8F437775346153B;
-        Mon, 27 Jul 2020 18:16:04 +0100 (IST)
-Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 18:16:04 +0100
-Date:   Mon, 27 Jul 2020 18:14:40 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <tony.luck@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 7/9] PCI/AER: Add RCEC AER handling
-Message-ID: <20200727181440.0000614a@Huawei.com>
-In-Reply-To: <6C5C96C5-0365-48A0-B623-1A4C0CE0D13E@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-8-sean.v.kelley@intel.com>
-        <20200727132252.0000644c@Huawei.com>
-        <6C5C96C5-0365-48A0-B623-1A4C0CE0D13E@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1729925AbgG0RVy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jul 2020 13:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgG0RVy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 13:21:54 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E621AC061794;
+        Mon, 27 Jul 2020 10:21:53 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id v22so1950984edy.0;
+        Mon, 27 Jul 2020 10:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JQFg/tuqC69nq4syC+NIzcUchGfUtpXP0Ly9EEV6q9w=;
+        b=bR0FASMjL4z+0B/JjcAOfYteJgbqeP8phEzKi5euWMWPMmwA5lazWKCYGAUdocKlAy
+         tSc2QXxiNeAOixUwttglaxM+a+/PR/UpTPyn54J/dxBCixJsirZ47GVR6s7O9zitXJeY
+         fRk3QXB1fXKsPfFnQEw2g65ENidyRLvCIcnzvFoivqHwd67q5QlgbYUC6EGysfYlFvL9
+         cpdB8JtsNFnbHDZfpAYLA+a64bb8SP89P+ICFtmLlR4Hsv2aHCME4WQYTqspXHW3ZzRN
+         Vzso4Zpa4m51BFx71j8YLd3z1E9Ssc7RCVgixRBQJP10x+uljl7nRWLeJfDdl9Th80vJ
+         U5qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JQFg/tuqC69nq4syC+NIzcUchGfUtpXP0Ly9EEV6q9w=;
+        b=tmv9GhBpilzZnky/DaAj9BkPfiuP838MthiQ7WayqpwL3V6xVDtHZcSwCuLef7gy0w
+         BCEqyMcCPutqAySILeXwVQ6vKE8dhqaauR7zFGsynnIEVIJD2E68G3kmS8hMfdhlSgZb
+         oJOIv2qJs9mZMu2d+RGB/XxcTijc6s/2dZqqK3vMbmIozZfD3LGap2vHlILRshrJPjDZ
+         tYeNCtRCRld5AAYjTkHPj3FQh1FUZOqQPFOcseth3zzHO+F8L5DQ8s7JsN3+TEOHI+1X
+         lY4sRjkAizFbu+Uwx/Z7uT5F0vJ+ju+8qGLeLbqiPG2EaKCU1B2nCUINzCKZhn03Vxr8
+         2Nxg==
+X-Gm-Message-State: AOAM532f8m+vrn1t75KbiOlbrKQoA4HfQ0/VH4PM2HnamZH02+e9fxMr
+        nZsp1gMyDLJE23B3y2Ps6UA=
+X-Google-Smtp-Source: ABdhPJyKry89myng9wQIUC9m3H7em+oOGI6l4RFO9E36aaGOh8XqIHdY+ObjRip7xj/46V7E1bZ3SQ==
+X-Received: by 2002:a05:6402:1841:: with SMTP id v1mr22405337edy.198.1595870512455;
+        Mon, 27 Jul 2020 10:21:52 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id h24sm7373165ejg.53.2020.07.27.10.21.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 10:21:50 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 19:21:49 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] PCI: tegra: Remove PLL power supplies
+Message-ID: <20200727172149.GA3683017@ulmo>
+References: <20200623145528.1658337-1-thierry.reding@gmail.com>
+ <20200623145528.1658337-2-thierry.reding@gmail.com>
+ <CAL_Jsq+u=oFUAuURy-f8wCzagA-xKJES8RRf=kUSXJHoxOipBQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.121.176]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+u=oFUAuURy-f8wCzagA-xKJES8RRf=kUSXJHoxOipBQ@mail.gmail.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 27 Jul 2020 08:19:39 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
-> On 27 Jul 2020, at 5:22, Jonathan Cameron wrote:
-> 
-> > On Fri, 24 Jul 2020 10:22:21 -0700
-> > Sean V Kelley <sean.v.kelley@intel.com> wrote:
-> >  
-> >> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
-> >> and also have the AER capability. So add RCEC support to the current 
-> >> AER
-> >> service driver and attach the AER service driver to the RCEC device.
-> >>
-> >> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> >> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>  
-> >
-> > A few questions and comments for this patch.
-> >
-> > See inline.
-> >
-> > Jonathan
-> >
-> >  
-> >> ---
-> >>  drivers/pci/pcie/aer.c | 34 +++++++++++++++++++++++++++-------
-> >>  1 file changed, 27 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> >> index f1bf06be449e..7cc430c74c46 100644
-> >> --- a/drivers/pci/pcie/aer.c
-> >> +++ b/drivers/pci/pcie/aer.c
-> >> @@ -303,7 +303,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
-> >>  		return -EIO;
-> >>
-> >>  	port_type = pci_pcie_type(dev);
-> >> -	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
-> >> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT || port_type == 
-> >> PCI_EXP_TYPE_RC_EC) {
-> >>  		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
-> >>  		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
-> >>  	}
-> >> @@ -389,6 +389,12 @@ void pci_aer_init(struct pci_dev *dev)
-> >>  	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * 
-> >> n);
-> >>
-> >>  	pci_aer_clear_status(dev);
-> >> +
-> >> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) {
-> >> +		if (!pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC))
-> >> +			return;
-> >> +		pci_info(dev, "AER: RCEC CAP FOUND and cap_has_rtctl = %d\n", n);  
-> >
-> > It feels like failing to find an RC_EC extended cap in a RCEC deserved
-> > a nice strong error message.  Perhaps this isn't the right place to do 
-> > it
-> > though.  For that matter, why are we checking for it here?  
-> 
-> Sorry, I’ve left an in-development output in the code.  Will replace 
-> with a check with more meaningful output elsewhere.
-> 
-> >  
-> >> +	}
-> >>  }
-> >>
-> >>  void pci_aer_exit(struct pci_dev *dev)
-> >> @@ -577,7 +583,8 @@ static umode_t aer_stats_attrs_are_visible(struct 
-> >> kobject *kobj,
-> >>  	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
-> >>  	     a == &dev_attr_aer_rootport_total_err_fatal.attr ||
-> >>  	     a == &dev_attr_aer_rootport_total_err_nonfatal.attr) &&  
-> >
-> > It is a bit ugly to have these called rootport_total_err etc for the 
-> > rcec.
-> > Perhaps we should just add additional attributes to reflect we are 
-> > looking at
-> > an RCEC?  
-> 
-> I was trying to avoid any renaming to reduce churn as I did with my 
-> first patch for ACPI / CLX_OSC support.
-> Will take a look.
-> 
-> >  
-> >> -	    pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
-> >> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
-> >> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
-> >>  		return 0;
-> >>
-> >>  	return a->mode;
-> >> @@ -894,7 +901,10 @@ static bool find_source_device(struct pci_dev 
-> >> *parent,
-> >>  	if (result)
-> >>  		return true;
-> >>
-> >> -	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> >> +	if (pci_pcie_type(parent) == PCI_EXP_TYPE_RC_EC)
-> >> +		pcie_walk_rcec(parent, find_device_iter, e_info);
-> >> +	else
-> >> +		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> >>
-> >>  	if (!e_info->error_dev_num) {
-> >>  		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
-> >> @@ -1030,6 +1040,7 @@ int aer_get_device_error_info(struct pci_dev 
-> >> *dev, struct aer_err_info *info)
-> >>  		if (!(info->status & ~info->mask))
-> >>  			return 0;
-> >>  	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> >> +		   pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC ||
-> >>  	           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> >>  		   info->severity == AER_NONFATAL) {
-> >>
-> >> @@ -1182,6 +1193,8 @@ static int set_device_error_reporting(struct 
-> >> pci_dev *dev, void *data)
-> >>  	int type = pci_pcie_type(dev);
-> >>
-> >>  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
-> >> +	    (type == PCI_EXP_TYPE_RC_EC) ||
-> >> +	    (type == PCI_EXP_TYPE_RC_END) ||  
-> >
-> > Why add RC_END here?  
-> 
-> I’m not clear on your question.  Errors can come from RCEC or RCiEPs.  
-> We still need to enable reporting by the RCiEPs.
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I was curious to see that we need it in this code path for an RCiEP but
-not for a normal EP.  From a quick glance it looks like that is often
-done in the drivers for the EPs themselves rather than here.
-
-> 
-> >  
-> >>  	    (type == PCI_EXP_TYPE_UPSTREAM) ||
-> >>  	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
-> >>  		if (enable)
-> >> @@ -1206,9 +1219,11 @@ static void 
-> >> set_downstream_devices_error_reporting(struct pci_dev *dev,
-> >>  {
-> >>  	set_device_error_reporting(dev, &enable);
-> >>
-> >> -	if (!dev->subordinate)
-> >> -		return;
-> >> -	pci_walk_bus(dev->subordinate, set_device_error_reporting, 
-> >> &enable);
-> >> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> >> +		pcie_walk_rcec(dev, set_device_error_reporting, &enable);
-> >> +	else if (dev->subordinate)
-> >> +		pci_walk_bus(dev->subordinate, set_device_error_reporting, 
-> >> &enable);
-> >> +
-> >>  }
-> >>
-> >>  /**
-> >> @@ -1306,6 +1321,11 @@ static int aer_probe(struct pcie_device *dev)
-> >>  	struct device *device = &dev->device;
-> >>  	struct pci_dev *port = dev->port;
-> >>
-> >> +	/* Limit to Root Ports or Root Complex Event Collectors */
-> >> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-> >> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-> >> +		return -ENODEV;
-> >> +
-> >>  	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
-> >>  	if (!rpc)
-> >>  		return -ENOMEM;
-> >> @@ -1362,7 +1382,7 @@ static pci_ers_result_t aer_root_reset(struct 
-> >> pci_dev *dev)
-> >>
-> >>  static struct pcie_port_service_driver aerdriver = {
-> >>  	.name		= "aer",
-> >> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-> >> +	.port_type	= PCIE_ANY_PORT,  
+On Mon, Jul 27, 2020 at 10:21:42AM -0600, Rob Herring wrote:
+> On Tue, Jun 23, 2020 at 8:55 AM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
 > >
-> > Why this particular change?  Seems that is a lot wider than simply
-> > adding RCEC.  Obviously we'll then drop out in the aer_probe but it
-> > is still rather inelegant.  
-> 
-> In order to extend the service drivers to non-root-port devices (i.e., 
-> RCEC), the simple path appeared to only require setting the type to 
-> ANY_PORT and catching the needed types arriving in the probe.  Would you 
-> prefer extending to a type2?  I’m not sure how one is more elegant 
-> than another but open to that approach.  However, this seems to require 
-> less code perhaps and seems consistent with most ‘drop-out’ 
-> conditional patterns in the kernel.  The same applies to pme.
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > The Tegra PCI controller driver doesn't need to control the PLL power
+> > supplies directly, but rather uses the pads provided by the XUSB pad
+> > controller, which in turn is responsible for supplying power to the
+> > PLLs.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  drivers/pci/controller/pci-tegra.c | 10 ++--------
+> >  1 file changed, 2 insertions(+), 8 deletions(-)
+>=20
+> What's going to happen here with a new dtb and an old kernel? Is it
+> going to error out due to missing supplies?
 
-I'd miss understood this bit.  It's fine as you have it here.
+It's not going to error out but fallback to the "dummy" regulator, so
+this should be fine from a forwards-compatibility point of view. Though
+I didn't think we technically cared about that direction very much.
 
-Jonathan
+Thierry
 
-> 
-> Thanks,
-> 
-> Sean
-> 
-> 
-> >  
-> >>  	.service	= PCIE_PORT_SERVICE_AER,
-> >>
-> >>  	.probe		= aer_probe,  
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8fDSgACgkQ3SOs138+
+s6EHIQ//UL8Gqkmrx9PPmLdqE+raOpVdcOGUKg7dNSa1S/7o856UKMNFSJ9L+T2+
+Wyziy5ouGiB162Z/EH6mCLkOmen9IZ58HDuTYu4jLH8MY3Pr4u8+zRpbri+c2AVc
+joPgC+9jtfShilhBRy462g9LyDhKtW7PVuv1yjAcQEA2k6Xm9F8gt96m/UJBJltP
+SdcHo9apg6ilNdZj8MqM93ZwYL2++a7d7PGvmwh+gZlCpO9IVKrNATilvSJHwBWy
+0/RjxtZf7ZprY+izjvOarG8iQNU5Ag6bI2FrZ2k8N/zte696QcABU+5B78HTkLan
+iJ/230/yHsbiFBTJAU3K09KUIEh4GzGLBnOk+/6OiJjTwXuDDkmIu4Ua0QSTYqwq
+2NAUf3ivUwHMjmwfrhxM1RzLjBQ2dCCMVZuaRGFOyOMS8IkQsWv4ELQajETE0MCp
+4dofQK+ilqLjn8nMgQIha0enV8O7MlvBK958IJQLffRLm2itj4pWGKDdEtE9XALq
+oJrLfx6WL698hZj7VoeMz5c/QOaaw929kx9OL6q8bX9x2smLAIXLzxg3udn4t04V
+ZZdGct5NLlSNOV4ycAF51754TGZt6n+jZDYIDHC7i882n83wRxrKpVvmZ0jqkNor
+xAd+iGsSvDnJOaRq7ePZQU4CBK39293YuBU9vWEZXL1C+lGKa0c=
+=Da08
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
