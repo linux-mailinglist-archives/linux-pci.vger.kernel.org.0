@@ -2,163 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D5C7231469
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 23:03:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD14B23160A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 01:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgG1VDv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jul 2020 17:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbgG1VDu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jul 2020 17:03:50 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8B3C061794
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jul 2020 14:03:50 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id y10so22096633eje.1
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jul 2020 14:03:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=n8YTO6ok7dPJgRuGdy+eI17ddoVzqij6w23JGhuwc9Y=;
-        b=uxxNN0ngiJfxG2l2S3hUbKPcJmAxqWUhIBMwpoza7u+6m8gF7/jl4Cc1Qc9zRHvrsv
-         8jCnSMebmXXwy3nuO9uT5RHk3a2BlO2qZiUWsZopOj+nQO2ElBzaTeydKO284pxwDy8a
-         zNz1MhhMHv/GkoenVMNC+Ki+q3uuD3o8l5TfTcU04kCHJ3q4LgxMFwu0ArC/QB7wsvd/
-         D/55BlVfzSEevhD7kjFD7299cS7OjpwAyFUV2gawQ78z8WT6Q3tp2ESzyfFDVi2AyBfp
-         P+55aM4vmBRRJWfl/xJavqIEWB+I97RLvVYLIwAFhKKlPfd4ukwg/kGiKwibuVw/TWpR
-         IoMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=n8YTO6ok7dPJgRuGdy+eI17ddoVzqij6w23JGhuwc9Y=;
-        b=KwgrvIlOW6fLod7vhn1beTG932E+pbfap9ETmS6Izb2qlhpE/UHK7wpSbns27m+AIA
-         xt52RMp2SElEVeepTvlUKVS7g3nEW0YaGnLNYE6dYkJHXrqOeXZY8TfYotHQUm9ciSel
-         STvm9tfIRBBWby/io4fCWkdX7QhsOuXh8PkSDYMXKk0LLXeeJX49sih5/VsSSnsCh+ro
-         /1HkRwcn0r8lft0ZSRE2LhcsqqdEsj2LUueoy8hxaxBp6gGAb6zxD/1HMw7Z0csxAPAc
-         TGIsB6MDagox3W/2+ua6rLCEk0yh7pYdkPCjrFNWFb58fEfUxt8vM6aX4Z0m6M3rkgle
-         9NjQ==
-X-Gm-Message-State: AOAM533IhpQ2P9Z74UgDuUe0OSEhVEaAMozy6a1M/cPjDsJ5u7yAyf1k
-        e7CHveGanN++h30cEN14LRHjRzywXJo=
-X-Google-Smtp-Source: ABdhPJx3It/5GgAHK2xVKRw4pc7MXZXRFeC08suG5CGm6KZD6R6e6jxdgzNj9Eu2CrtVqhGn2zszNQ==
-X-Received: by 2002:a17:906:8782:: with SMTP id za2mr24557928ejb.419.1595970228988;
-        Tue, 28 Jul 2020 14:03:48 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:908b:a51b:1175:f3b2? (p200300ea8f235700908ba51b1175f3b2.dip0.t-ipconnect.de. [2003:ea:8f23:5700:908b:a51b:1175:f3b2])
-        by smtp.googlemail.com with ESMTPSA id n2sm60992edq.73.2020.07.28.14.03.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 14:03:48 -0700 (PDT)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] PCI: Remove pci_lost_interrupt
-Message-ID: <e328d059-3068-6a40-28df-f81f616d15a0@gmail.com>
-Date:   Tue, 28 Jul 2020 23:03:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1730191AbgG1XGI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jul 2020 19:06:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730323AbgG1XGG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jul 2020 19:06:06 -0400
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A2FD207FC;
+        Tue, 28 Jul 2020 23:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595977565;
+        bh=B+2S5YhP4tk2MBOwTpLzH1FWv0DJxUuyH1vXMpqRmAE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=yZc7OgrKqign9LaIBGmAgropcpP8jWuRJsqn/dRYetPxrtP750S30CTfAIjXJ3ubk
+         dZr37R2yv2gSUpF1EVS6ENca2qEcU3t1wVFRX2GYVjcIB1jUhSHNjw9eStZ3ypjd5j
+         yXBy+Fu3j4kPPW+bV53R3O29MQ8EnsKlIljlI/C0=
+Date:   Tue, 28 Jul 2020 18:06:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     James Ettle <james@ettle.org.uk>
+Cc:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
+        Rui Feng <rui_feng@realsil.com.cn>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+Message-ID: <20200728230603.GA1870954@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e051ac790380f04be4eec6937032b7dcd411ec77.camel@ettle.org.uk>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-388c8c16abaf ("PCI: add routines for debugging and handling lost
-interrupts") added pci_lost_interrupt() that apparently never has
-had a single user. So remove it.
+On Tue, Jul 28, 2020 at 09:57:55PM +0100, James Ettle wrote:
+> On Mon, 2020-07-27 at 16:47 -0500, Bjorn Helgaas wrote:
+> > 
+> > I don't see anything in rtsx that enables L0s.  Can you collect
+> > the dmesg log when booting with "pci=earlydump"?  That will show
+> > whether the BIOS left it this way.  The PCI core isn't supposed to
+> > do this, so if it did, we need to fix that.
+> 
+> dmesg log attached to the bugzilla as:
+> 
+> https://bugzilla.kernel.org/attachment.cgi?id=290655
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/pci/irq.c   | 50 ---------------------------------------------
- include/linux/pci.h |  7 -------
- 2 files changed, 57 deletions(-)
+Thank you!  BIOS left the Root Port and both Endpoints with L1 enabled
+but L0s disabled.
 
-diff --git a/drivers/pci/irq.c b/drivers/pci/irq.c
-index a1de501a2..12ecd0aaa 100644
---- a/drivers/pci/irq.c
-+++ b/drivers/pci/irq.c
-@@ -6,61 +6,11 @@
-  * Copyright (C) 2017 Christoph Hellwig.
-  */
- 
--#include <linux/acpi.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/export.h>
- #include <linux/pci.h>
- 
--static void pci_note_irq_problem(struct pci_dev *pdev, const char *reason)
--{
--	struct pci_dev *parent = to_pci_dev(pdev->dev.parent);
--
--	pci_err(pdev, "Potentially misrouted IRQ (Bridge %s %04x:%04x)\n",
--		dev_name(&parent->dev), parent->vendor, parent->device);
--	pci_err(pdev, "%s\n", reason);
--	pci_err(pdev, "Please report to linux-kernel@vger.kernel.org\n");
--	WARN_ON(1);
--}
--
--/**
-- * pci_lost_interrupt - reports a lost PCI interrupt
-- * @pdev:	device whose interrupt is lost
-- *
-- * The primary function of this routine is to report a lost interrupt
-- * in a standard way which users can recognise (instead of blaming the
-- * driver).
-- *
-- * Returns:
-- * a suggestion for fixing it (although the driver is not required to
-- * act on this).
-- */
--enum pci_lost_interrupt_reason pci_lost_interrupt(struct pci_dev *pdev)
--{
--	if (pdev->msi_enabled || pdev->msix_enabled) {
--		enum pci_lost_interrupt_reason ret;
--
--		if (pdev->msix_enabled) {
--			pci_note_irq_problem(pdev, "MSIX routing failure");
--			ret = PCI_LOST_IRQ_DISABLE_MSIX;
--		} else {
--			pci_note_irq_problem(pdev, "MSI routing failure");
--			ret = PCI_LOST_IRQ_DISABLE_MSI;
--		}
--		return ret;
--	}
--#ifdef CONFIG_ACPI
--	if (!(acpi_disabled || acpi_noirq)) {
--		pci_note_irq_problem(pdev, "Potential ACPI misrouting please reboot with acpi=noirq");
--		/* currently no way to fix acpi on the fly */
--		return PCI_LOST_IRQ_DISABLE_ACPI;
--	}
--#endif
--	pci_note_irq_problem(pdev, "unknown cause (not MSI or ACPI)");
--	return PCI_LOST_IRQ_NO_INFORMATION;
--}
--EXPORT_SYMBOL(pci_lost_interrupt);
--
- /**
-  * pci_request_irq - allocate an interrupt line for a PCI device
-  * @dev:	PCI device to operate on
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 2a2d00e9d..814d652f2 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1053,13 +1053,6 @@ void pci_sort_breadthfirst(void);
- 
- /* Generic PCI functions exported to card drivers */
- 
--enum pci_lost_interrupt_reason {
--	PCI_LOST_IRQ_NO_INFORMATION = 0,
--	PCI_LOST_IRQ_DISABLE_MSI,
--	PCI_LOST_IRQ_DISABLE_MSIX,
--	PCI_LOST_IRQ_DISABLE_ACPI,
--};
--enum pci_lost_interrupt_reason pci_lost_interrupt(struct pci_dev *dev);
- int pci_find_capability(struct pci_dev *dev, int cap);
- int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
- int pci_find_ext_capability(struct pci_dev *dev, int cap);
--- 
-2.27.0
+Next question is how L0s got enabled.  We don't see anything in the
+driver that does that.  And lspci claims L0s was enabled on the
+Endpoints even without any udev or other manual fiddling.
 
+I tried to deduce the problem from the code in aspm.c, but I didn't
+see the problem.  If you have the ability to build a kernel with a
+debug patch, can you boot with the patch below and collect the dmesg
+log?
+
+FWIW, here's the analysis of the earlydump output that shows L0s
+disabled:
+
+  #define PCI_CAPABILITY_LIST     0x34
+  #define  PCI_CAP_ID_MSI         0x05
+  #define  PCI_CAP_ID_EXP         0x10    /* PCI Express */
+  #define PCI_EXP_LNKCTL          16
+  #define  PCI_EXP_LNKCTL_ASPM_L0S 0x0001
+  #define  PCI_EXP_LNKCTL_ASPM_L1  0x0002
+  #define  PCI_EXP_LNKCTL_CCC     0x0040
+  #define  PCI_EXP_LNKCTL_CLKREQ_EN 0x0100
+
+  00:1d.0:
+    0034: 40        Offset of first capability
+    0040: 8010      PCIe capability ID, next cap at 0x80
+    0050: 0042      PCIe Link Control: CCC L1
+  01:00.0:
+    0034: 40        Offset of first capability
+    0040: 7005      MSI capability ID (0x05), next cap at 0x70
+    0070: b010      PCIe capability ID (0x10), next cap at 0xb0
+    0080: 0142      PCIe Link Control: CLKREQ_EN CCC L1
+  01:00.1:
+    0034: 40        Offset of first capability
+    0040: 7005      MSI capability ID (0x05), next cap at 0x70
+    0070: b010      PCIe capability ID (0x10), next cap at 0xb0
+    0080: 0142      PCIe Link Control: CLKREQ_EN CCC L1
+
+
+commit 555db6d25963 ("debug")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue Jul 28 17:52:58 2020 -0500
+
+    debug
+    
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index b17e5ffd31b1..262f35883a2a 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -577,6 +577,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	pcie_get_aspm_reg(parent, &upreg);
+ 	pcie_get_aspm_reg(child, &dwreg);
+ 
++	pci_info(parent, "%s support %x enabled %x\n", __func__, upreg.support,
++		 upreg.enabled);
++	pci_info(child, "%s support %x enabled %x\n", __func__, dwreg.support,
++		 dwreg.enabled);
++
+ 	/*
+ 	 * Setup L0s state
+ 	 *
+@@ -629,6 +634,10 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+ 
++	pci_info(parent, "%s link support %x enabled %x capable %x default %x disable %x\n",
++		 __func__, link->aspm_support, link->aspm_enabled,
++		 link->aspm_capable, link->aspm_default, link->aspm_disable);
++
+ 	/* Get and check endpoint acceptable latencies */
+ 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+ 		u32 reg32, encoding;
+@@ -744,6 +753,7 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ {
++	pci_info(pdev, "%s set state %x\n", __func__, val);
+ 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+ 					   PCI_EXP_LNKCTL_ASPMC, val);
+ }
+@@ -754,6 +764,9 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+ 	struct pci_bus *linkbus = parent->subordinate;
+ 
++	pci_info(parent, "%s requesting state %x (%s)\n", __func__,
++		 state, policy_str[state]);
++
+ 	/* Enable only the states that were not explicitly disabled */
+ 	state &= (link->aspm_capable & ~link->aspm_disable);
+ 
+@@ -767,6 +780,10 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ 		state |= (link->aspm_enabled & ASPM_STATE_L1_SS_PCIPM);
+ 	}
+ 
++	pci_info(parent, "%s link support %x enabled %x capable %x default %x disable %x\n",
++		 __func__, link->aspm_support, link->aspm_enabled,
++		 link->aspm_capable, link->aspm_default, link->aspm_disable);
++
+ 	/* Nothing to do if the link is already in the requested state */
+ 	if (link->aspm_enabled == state)
+ 		return;
