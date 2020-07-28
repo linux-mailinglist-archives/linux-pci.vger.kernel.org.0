@@ -2,148 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5835230F1A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 18:22:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFEF1230F4F
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 18:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbgG1QWV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jul 2020 12:22:21 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2545 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730679AbgG1QWV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:22:21 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 1F0292967315FFD4EDF5;
-        Tue, 28 Jul 2020 17:22:17 +0100 (IST)
-Received: from localhost (10.52.121.35) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 28 Jul
- 2020 17:22:16 +0100
-Date:   Tue, 28 Jul 2020 17:20:52 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <martin@geanix.com>,
-        Ingo Molnar <mingo@redhat.com>, <linux-ia64@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Song Bao Hua <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v2 0/6] ACPI: Only create NUMA nodes from entries in
- SRAT or SRAT emulation.
-Message-ID: <20200728172052.00007848@Huawei.com>
-In-Reply-To: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
-References: <20200717175959.899775-1-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.35]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+        id S1731437AbgG1Qbu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jul 2020 12:31:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:34128 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731383AbgG1Qbt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:31:49 -0400
+IronPort-SDR: 7Ksq8ImbIzMdX5bYfxub3ocr4icRkY/YxzDslyI90dejYtyngIHqsOQH73vxiDQrSi3SBowU6q
+ UPL7T6BHMlAg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="152502173"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="152502173"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:31:48 -0700
+IronPort-SDR: +QPBZKUrDVcXs3SicE62wIDczzMz+XCl3W2rJsusKE+NuUOdigJBcjIXvxVnQhAGp1LHubJJbJ
+ E0irz+pILeUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="464536516"
+Received: from unknown (HELO localhost.lm.intel.com) ([10.232.116.74])
+  by orsmga005.jf.intel.com with ESMTP; 28 Jul 2020 09:31:45 -0700
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        You-Sheng Yang <vicamo.yang@canonical.com>
+Subject: [RFC] PCI: vmd: Enable ASPM if BIOS requests it
+Date:   Tue, 28 Jul 2020 12:13:21 -0400
+Message-Id: <20200728161321.38229-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 18 Jul 2020 01:59:53 +0800
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+VMD domains are not ACPI-managed devices and do not have the necessary
+ACPI hooks to enable ASPM. However if the BIOS has requested ASPM
+enablement, we should try to honor that request regardless. This patch
+adds the ASPM support to VMD child devices if requested by the FADT
+table.
 
-> Here, I will use the term Proximity Domains for the ACPI description and
-> NUMA Nodes for the in kernel representation.
-> 
-> ACPI 6.3 included a clarification that only Static Resource Allocation
-> Structures in SRAT may define the existence of proximity domains
-> (sec 5.2.16). This clarification closed a possible interpretation that
-> other parts of ACPI (e.g. DSDT _PXM, NFIT etc) could define new proximity
-> domains that were not also mentioned in SRAT structures.
-> 
-> In practice the kernel has never allowed this alternative interpretation as
-> such nodes are only partially initialized. This is architecture specific
-> but to take an example, on x86 alloc_node_data has not been called.
-> Any use of them for node specific allocation, will result in a crash as the
-> infrastructure to fallback to a node with memory is not setup.
-> 
-> We ran into a problem when enabling _PXM handling for PCI devices and found
-> there were boards out there advertising devices in proximity domains that
-> didn't exist [2].
-> 
-> The fix suggested in this series is to replace instances that should not
-> 'create' new nodes with pxm_to_node.  This function needs a some additional
-> hardening against invalid inputs to make sure it is safe for use in these
-> new callers.
-> 
-> Patch 1 Hardens pxm_to_node() against numa_off, and pxm entry being too large.
-> 
-> Patch 2-4 change the various callers not related to SRAT entries so that they
-> set this parameter to false, so do not attempt to initialize a new NUMA node
-> if the relevant one does not already exist.
-> 
-> Patch 5 is a function rename to reflect change in functionality of
-> acpi_map_pxm_to_online_node() as it no longer creates a new map, but just does a
-> lookup of existing maps.
-> 
-> Patch 6 covers the one place we do not allow the full flexibility defined
-> in the ACPI spec.  For SRAT GIC Interrupt Translation Service (ITS) Affinity
-> Structures, on ARM64, the driver currently makes an additional pass of SRAT
-> later in the boot than the one used to identify NUMA domains.
-> Note, this currently means that an ITS placed in a proximity domain that is
-> not defined by another SRAT structure will result in the a crash.
-> 
-> To avoid this crash with minimal changes we do not create new NUMA nodes based
-> on this particular entry type.  Any current platform trying to do this will not
-> boot, so this is an improvement, if perhaps not a perfect solution.
-> 
-> [1] Note in ACPI Specification 6.3 5.2.16 System Resource Affinity Table (SRAT)
-> [2] https://patchwork.kernel.org/patch/10597777/
-> 
-> Thanks to Bjorn Helgaas for review of v1 and Barry Song for internal reviews that
-> lead to a slightly different approach for this v2.
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+---
 
-Thanks Barry / Hanjun,
 
-Anyone else have time to take a look?
+Hi,
 
-I'm happy to bring it back after the merge window closes, but would like to know
-if people are happy with the general approach.  I'm keen to finally be able to
-resolve that issue with _PXM and PCI. 
+My knowledge on these kinds of power modes is limited, and we are having
+trouble bringing the Root Port child device out of L1 with this patch.
 
-Thanks,
+Can you help me understand the correct flow for bringing the Root Port
+device out of L1 with kernel flow, and what I might be missing here?
 
-Jonathan
 
-> 
-> Changes since v1.
-> * Use pxm_to_node for what was previously the path using acpi_map_pxm_to_node
->   with create==false. (Barry)
-> * Broke patch up into an initial noop stage followed by patches (Bjorn)
->   to update each type of case in which partial creation of NUMA nodes is prevented.
-> * Added patch 5 to rename function to reflect change of functionality.
-> * Updated descriptions (now mostly in individual patches) inline with Bjorn's comments.
-> 
-> Jonathan Cameron (6):
->   ACPI: Add out of bounds and numa_off protections to pxm_to_node
->   ACPI: Do not create new NUMA domains from ACPI static tables that are
->     not SRAT
->   ACPI: Remove side effect of partly creating a node in
->     acpi_map_pxm_to_online_node
->   ACPI: rename acpi_map_pxm_to_online_node to pxm_to_online_node
->   ACPI: Remove side effect of partly creating a node in acpi_get_node
->   irq-chip/gic-v3-its: Fix crash if ITS is in a proximity domain without
->     processor or memory
-> 
->  drivers/acpi/arm64/iort.c        |  2 +-
->  drivers/acpi/nfit/core.c         |  6 ++----
->  drivers/acpi/numa/hmat.c         |  4 ++--
->  drivers/acpi/numa/srat.c         |  4 ++--
->  drivers/iommu/intel/dmar.c       |  2 +-
->  drivers/irqchip/irq-gic-v3-its.c |  7 ++++++-
->  include/linux/acpi.h             | 15 +++++++--------
->  7 files changed, 21 insertions(+), 19 deletions(-)
-> 
 
+ drivers/pci/controller/vmd.c |  9 ++++++++-
+ drivers/pci/pcie/aspm.c      | 19 ++-----------------
+ include/linux/pci.h          | 17 +++++++++++++++++
+ 3 files changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 76d8acbee7d5..f1b058efb642 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -14,6 +14,7 @@
+ #include <linux/srcu.h>
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
++#include <linux/acpi.h>
+ 
+ #include <asm/irqdomain.h>
+ #include <asm/device.h>
+@@ -601,8 +602,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	 * and will fail pcie_bus_configure_settings() early. It can instead be
+ 	 * run on each of the real root ports.
+ 	 */
+-	list_for_each_entry(child, &vmd->bus->children, node)
++	list_for_each_entry(child, &vmd->bus->children, node) {
++#if IS_ENABLED(CONFIG_PCIEASPM)
++		if (!(acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM))
++			pcie_config_aspm_link(child->self->link_state,
++					      ASPM_STATE_ALL);
++#endif
+ 		pcie_bus_configure_settings(child);
++	}
+ 
+ 	pci_bus_add_devices(vmd->bus);
+ 
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 253c30cc1967..04cdb0b5a672 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -25,22 +25,6 @@
+ #endif
+ #define MODULE_PARAM_PREFIX "pcie_aspm."
+ 
+-/* Note: those are not register definitions */
+-#define ASPM_STATE_L0S_UP	(1)	/* Upstream direction L0s state */
+-#define ASPM_STATE_L0S_DW	(2)	/* Downstream direction L0s state */
+-#define ASPM_STATE_L1		(4)	/* L1 state */
+-#define ASPM_STATE_L1_1		(8)	/* ASPM L1.1 state */
+-#define ASPM_STATE_L1_2		(0x10)	/* ASPM L1.2 state */
+-#define ASPM_STATE_L1_1_PCIPM	(0x20)	/* PCI PM L1.1 state */
+-#define ASPM_STATE_L1_2_PCIPM	(0x40)	/* PCI PM L1.2 state */
+-#define ASPM_STATE_L1_SS_PCIPM	(ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1_2_PCIPM)
+-#define ASPM_STATE_L1_2_MASK	(ASPM_STATE_L1_2 | ASPM_STATE_L1_2_PCIPM)
+-#define ASPM_STATE_L1SS		(ASPM_STATE_L1_1 | ASPM_STATE_L1_1_PCIPM |\
+-				 ASPM_STATE_L1_2_MASK)
+-#define ASPM_STATE_L0S		(ASPM_STATE_L0S_UP | ASPM_STATE_L0S_DW)
+-#define ASPM_STATE_ALL		(ASPM_STATE_L0S | ASPM_STATE_L1 |	\
+-				 ASPM_STATE_L1SS)
+-
+ struct aspm_latency {
+ 	u32 l0s;			/* L0s latency (nsec) */
+ 	u32 l1;				/* L1 latency (nsec) */
+@@ -748,7 +732,7 @@ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ 					   PCI_EXP_LNKCTL_ASPMC, val);
+ }
+ 
+-static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
++void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ {
+ 	u32 upstream = 0, dwstream = 0;
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+@@ -798,6 +782,7 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ 
+ 	link->aspm_enabled = state;
+ }
++EXPORT_SYMBOL_GPL(pcie_config_aspm_link);
+ 
+ static void pcie_config_aspm_path(struct pcie_link_state *link)
+ {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 7a40cd5caed0..1c41781b160a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -377,6 +377,22 @@ struct pci_dev {
+ 	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
+ 
+ #ifdef CONFIG_PCIEASPM
++/* Note: those are not register definitions */
++#define ASPM_STATE_L0S_UP	(1)	/* Upstream direction L0s state */
++#define ASPM_STATE_L0S_DW	(2)	/* Downstream direction L0s state */
++#define ASPM_STATE_L1		(4)	/* L1 state */
++#define ASPM_STATE_L1_1		(8)	/* ASPM L1.1 state */
++#define ASPM_STATE_L1_2		(0x10)	/* ASPM L1.2 state */
++#define ASPM_STATE_L1_1_PCIPM	(0x20)	/* PCI PM L1.1 state */
++#define ASPM_STATE_L1_2_PCIPM	(0x40)	/* PCI PM L1.2 state */
++#define ASPM_STATE_L1_SS_PCIPM	(ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1_2_PCIPM)
++#define ASPM_STATE_L1_2_MASK	(ASPM_STATE_L1_2 | ASPM_STATE_L1_2_PCIPM)
++#define ASPM_STATE_L1SS		(ASPM_STATE_L1_1 | ASPM_STATE_L1_1_PCIPM |\
++				 ASPM_STATE_L1_2_MASK)
++#define ASPM_STATE_L0S		(ASPM_STATE_L0S_UP | ASPM_STATE_L0S_DW)
++#define ASPM_STATE_ALL		(ASPM_STATE_L0S | ASPM_STATE_L1 |	\
++				 ASPM_STATE_L1SS)
++
+ 	struct pcie_link_state	*link_state;	/* ASPM link state */
+ 	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
+ 					   supported from root to here */
+@@ -1577,6 +1593,7 @@ extern bool pcie_ports_native;
+ #define PCIE_LINK_STATE_L1_2_PCIPM	BIT(6)
+ 
+ #ifdef CONFIG_PCIEASPM
++void pcie_config_aspm_link(struct pcie_link_state *link, u32 state);
+ int pci_disable_link_state(struct pci_dev *pdev, int state);
+ int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+ void pcie_no_aspm(void);
+-- 
+2.18.1
 
