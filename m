@@ -2,53 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DBC23143A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 22:50:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C42523145F
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 22:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgG1UuU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jul 2020 16:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgG1UuT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:50:19 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AD9320714;
-        Tue, 28 Jul 2020 20:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595969419;
-        bh=0RUGLkw9bXMRltztQqQdqFDeEUBYONqp+73QRhQhnGE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fLJtpmdLbfBGpy59khpGVfrHKjrXBdgSNOk6NKiIfQkWsoFcqs+EyO+AEClAnTIev
-         Tq4Hx6sV6lm44gYJrXhKjy1i6xEoLaEjuYdJ8MuqBOPJaX1weZz98Cfn5wwRyX03CE
-         jPQy1wY+iB9fcYIuqDqGbH5pSjvEUoCK9WyNpdrE=
-Date:   Tue, 28 Jul 2020 15:50:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: pci_lost_interrupt still needed?
-Message-ID: <20200728205017.GA1861444@bjorn-Precision-5520>
+        id S1728962AbgG1U7u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jul 2020 16:59:50 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:34489 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbgG1U7t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jul 2020 16:59:49 -0400
+Received: from dante.cb.ettle ([143.159.226.70]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.179]) with ESMTPSA (Nemesis) id
+ 1N4Q4m-1kk9592UdC-011ScG; Tue, 28 Jul 2020 22:57:57 +0200
+Message-ID: <e051ac790380f04be4eec6937032b7dcd411ec77.camel@ettle.org.uk>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+From:   James Ettle <james@ettle.org.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
+        <ricky_wu@realtek.com>, Rui Feng <rui_feng@realsil.com.cn>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Date:   Tue, 28 Jul 2020 21:57:55 +0100
+In-Reply-To: <20200727214712.GA1777201@bjorn-Precision-5520>
+References: <20200727214712.GA1777201@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63322b3a-3fae-2437-8359-e6f32bede850@gmail.com>
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ngSr6pffow2MrQKByZsOgkOjw+48NYsh/QNN7LLUjsPAUCqjVX8
+ tL1Q5y77Y/Bs2y+PjxM3AhKLg7QCGAYBHkpKPbeoKgVN8NP/QG2k/yRXk5++m3OetQh41Ya
+ DJ9/QeTBamu7kmt8fHgxdHGFq50o1X95ELCiESFFKaeYfotykVdh+uABvrcDJjdSac5fzVX
+ uWHE9VjHfUjE5Zz/8vLvw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I1+llK0lwZA=:1+7ikQm0qnZ3cRtuwgvMtX
+ xVzHZJ6LvJC74PFGUjYCPmw3FKUWyqLBJQMp0zpRCSj43yEiwBsyFbTfNv/B+8Wkoeb2zzpGy
+ GhCVDU1/m5pBYkJzF5gawSoJPIOSgVbY8K4iIJ8e3ByWO/wY1J9sVydnsXDsmzq2o3orfIp+s
+ 50xonzRQw0XJL9rMHfWjydEYRz9FG6NsVB/KHtktEgtGHm+8enL+TvaG0aAbE5brVgZC2DH5z
+ cGXfdFdylZrWxk+mK6tOFGIL00ZAd/mJZXBuh+/yk8SWyDUMT8OXVumjEISQygo28sh5Mdj4g
+ 6q+2OjpjYZrPlpdmN1gug540sln/YMFlpaNsl1ci+K9wFPQ693Lob5A0XUH6IXnyhOGPncsMF
+ mepD7X7E1QWOxMLXlolu1pbD6gsLlvTzysFnnJwx1OzY2y/G/lFbu/kQtLnOHX/iy/SZ0iZFp
+ ag4VHsTYBGUZI37IKeyDAECD86XZXh9VWLQvyUF6V0oWqcq4zcdcnQyiHpHufB9cHzLJGVqcA
+ ZDImJnreNYTTQQwYM7odkgnMyEax4axPqNweoGdeNYPREP4LTFloRFh1cMF6G/8j6jRIIA/S0
+ Cmz91i9mqs40hGtCEieLqMhsU+wMUeJh9F2xtQESk0x9s13MWs1FSEsATuc2f24eyjJrjsK5g
+ fNP9TRaWl6HKmE5bGCZnu57fruv4HdDYBE6bxQhETFzgoydlWx6F//luMGPvEZOJ5R8nyNpI8
+ /Kndv/TTIPcPa7eLH/79LABiQ7hmWKL78/+LDZ4n+myEyIxCUlF7OuwDPad+K+NIMN/6kX4pv
+ +aHhPB53pBMOfBaOpK99C/NMnnrsHscaKPHzeQ9xAqLMczpHuD5o03ee0Gd1y7kt4ZFjDhg
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 10:28:08PM +0200, Heiner Kallweit wrote:
-> On 28.07.2020 22:21, Bjorn Helgaas wrote:
-> > On Tue, Jul 28, 2020 at 09:20:34PM +0200, Heiner Kallweit wrote:
-> >> Seems that pci_lost_interrupt() has no user. Do we still need this function?
-> >> Same applies for related enum pci_lost_interrupt_reason.
-> > 
-> > If there's no user, remove it.  Bonus points if you look up the
-> > removal of the last use.
-> > 
-> It was introduced in 2.6.27, and apparently there never has been a single user.
-> So I'll submit a patch to remove it.
+On Mon, 2020-07-27 at 16:47 -0500, Bjorn Helgaas wrote:
+> 
+> I don't see anything in rtsx that enables L0s.  Can you collect the
+> dmesg log when booting with "pci=earlydump"?  That will show whether
+> the BIOS left it this way.  The PCI core isn't supposed to do this,
+> so
+> if it did, we need to fix that.
+> 
 
-Strange.  Please include the commit that added it and cc: the author.
+dmesg log attached to the bugzilla as:
+
+https://bugzilla.kernel.org/attachment.cgi?id=290655
+
+(to keep everything in one place).
+
+Thanks,
+-James
+
