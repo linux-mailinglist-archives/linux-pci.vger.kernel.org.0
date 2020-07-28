@@ -2,181 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C0D23105A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 19:04:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D581C23105E
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 19:04:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbgG1REC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jul 2020 13:04:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2546 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731406AbgG1REC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:04:02 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 2D6E1866C03738CB0E58;
-        Tue, 28 Jul 2020 18:04:00 +0100 (IST)
-Received: from localhost (10.52.121.35) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 28 Jul
- 2020 18:03:59 +0100
-Date:   Tue, 28 Jul 2020 18:02:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-CC:     <rjw@rjwysocki.net>, "Luck, Tony" <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP on
- fatal error
-Message-ID: <20200728180235.00006ffe@Huawei.com>
-In-Reply-To: <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-6-sean.v.kelley@intel.com>
-        <20200727121726.000072a8@Huawei.com>
-        <a79c227f0913438cb5a94dc80a075a7c@intel.com>
-        <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1731406AbgG1REf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jul 2020 13:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731070AbgG1REf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:04:35 -0400
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F16D2074F;
+        Tue, 28 Jul 2020 17:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595955874;
+        bh=MgYgMrmuz6zcIhySKtmmbw6L/GdzegrD2SqtRH5ZIS8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=00vkpUZs0vJ/iMqiL1dkU+pXCdQ1Ki9u9KyB999+sNTzLEMkauNvrPSKbjyMCVfzH
+         QkKGHrgTobJwJ8Cs66vczwZRVy/2zkVzL7ywu8yAINIJjJrAYQONq8N0xT6mHjtldz
+         eG+no87CowdU8XWzaj0+Mxc6qM0e553xkyFxRZFw=
+Date:   Tue, 28 Jul 2020 12:04:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        You-Sheng Yang <vicamo.yang@canonical.com>
+Subject: Re: [RFC] PCI: vmd: Enable ASPM if BIOS requests it
+Message-ID: <20200728170431.GA1843639@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.35]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728161321.38229-1-jonathan.derrick@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 28 Jul 2020 09:14:11 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+On Tue, Jul 28, 2020 at 12:13:21PM -0400, Jon Derrick wrote:
+> VMD domains are not ACPI-managed devices and do not have the necessary
+> ACPI hooks to enable ASPM. However if the BIOS has requested ASPM
+> enablement, we should try to honor that request regardless. This patch
+> adds the ASPM support to VMD child devices if requested by the FADT
+> table.
 
-> On 28 Jul 2020, at 6:27, Zhuo, Qiuxu wrote:
+ASPM is enabled by software but the actual link state transitions
+between L0, L0s, L1, etc are done autonomously by hardware.
+
+There should be no functional difference between ASPM being disabled
+vs being enabled.  The only difference should be power consumption and
+some latency.
+
+There are no ACPI hooks required to enable ASPM.  The
+ACPI_FADT_NO_ASPM bit tells the OS that "it must not enable OSPM ASPM
+control" (ACPI v6.3, sec 5.2.9.3).  AFAIK there is nothing in ACPI
+to request that the OS *should* enable ASPM.
+
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+> ---
 > 
-> >> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> >> Sent: Monday, July 27, 2020 7:17 PM
-> >> To: Kelley, Sean V <sean.v.kelley@intel.com>
-> >> Cc: bhelgaas@google.com; rjw@rjwysocki.net; ashok.raj@kernel.org; 
-> >> Luck,
-> >> Tony <tony.luck@intel.com>;
-> >> sathyanarayanan.kuppuswamy@linux.intel.com; 
-> >> linux-pci@vger.kernel.org;
-> >> linux-kernel@vger.kernel.org; Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
-> >> Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to 
-> >> RCiEP
-> >> on fatal error
-> >>
-> >> On Fri, 24 Jul 2020 10:22:19 -0700
-> >> Sean V Kelley <sean.v.kelley@intel.com> wrote:
-> >>  
-> >>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >>>
-> >>> Attempt to do function level reset for an RCiEP associated with an
-> >>> RCEC device on fatal error.  
-> >>
-> >> I'd like to understand more on your reasoning for flr here.
-> >> Is it simply that it is all we can do, or is there some basis in a 
-> >> spec
-> >> somewhere?
-> >>  
-> >
-> > Yes. Though there isn't the link reset for the RCiEP here, I think we 
-> > should still be able to reset the RCiEP via FLR on fatal error, if the 
-> > RCiEP supports FLR.
-> >
-> > -Qiuxu
-> >  
+> Hi,
 > 
-> Also see PCIe 5.0-1, Sec. 6.6.2 Function Level Reset (FLR)
+> My knowledge on these kinds of power modes is limited, and we are having
+> trouble bringing the Root Port child device out of L1 with this patch.
+
+Presumably this patch helps something.  Do you mean you're having
+trouble *without* this patch?
+
+> Can you help me understand the correct flow for bringing the Root Port
+> device out of L1 with kernel flow, and what I might be missing here?
+
+I don't understand the issue yet.  L1 is a state of the link, not of
+an individual device.  The devices on both ends of the link, e.g., a
+Root Port and an Endpoint or Switch Upstream Port below it, negotiate
+to determine the link state.  This all happens in hardware without
+software involvement.
+
+The only software influence is to enable hardware to select certain
+link states.
+
+>  drivers/pci/controller/vmd.c |  9 ++++++++-
+>  drivers/pci/pcie/aspm.c      | 19 ++-----------------
+>  include/linux/pci.h          | 17 +++++++++++++++++
+>  3 files changed, 27 insertions(+), 18 deletions(-)
 > 
-> Implementation of FLR is optional (not required), but is strongly 
-> recommended. For an example use case consider CXL. Function 0 DVSEC 
-> instances control for the CXL functionality of the entire CXL device. 
-> FLR may succeed in recovering from CXL.io domain errors.
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 76d8acbee7d5..f1b058efb642 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/srcu.h>
+>  #include <linux/rculist.h>
+>  #include <linux/rcupdate.h>
+> +#include <linux/acpi.h>
+>  
+>  #include <asm/irqdomain.h>
+>  #include <asm/device.h>
+> @@ -601,8 +602,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	 * and will fail pcie_bus_configure_settings() early. It can instead be
+>  	 * run on each of the real root ports.
+>  	 */
+> -	list_for_each_entry(child, &vmd->bus->children, node)
+> +	list_for_each_entry(child, &vmd->bus->children, node) {
+> +#if IS_ENABLED(CONFIG_PCIEASPM)
+> +		if (!(acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM))
+> +			pcie_config_aspm_link(child->self->link_state,
+> +					      ASPM_STATE_ALL);
+> +#endif
 
-That feels a little bit of a weak argument in favour.  PCI spec lists examples
-of use only for FLR and I can't see this matching any of them, but then they
-are only examples, so we could argue it doesn't exclude this use. It's not
-allowed to affect the link state, but I guess it 'might' recover from some
-other type of error?
+pcie_aspm_init_link_state() is called from pci_scan_slot() and should
+be doing ASPM configuration without help from VMD.  If that's not
+happening, I would instrument pcie_aspm_init_link_state() to make sure
+it's being called and to figure out if there's something there that
+prevents ASPM config for children of the VMD device.
 
-I'd have read the statement in the CXL spec you are referring to as matching
-with the first example in the PCIe spec which is about recovering from
-software errors.  For example, unexpected VM tear down.
-
-@Bjorn / All.  What's your view on using FLR as a reset to do when you don't
-have any other hammers to use?
-
-Personally I don't have a particular problem with this, it just doesn't fit
-with my mental model of what FLR is for (which may well need adjusting :)
-
-Jonathan
-
-
+>  		pcie_bus_configure_settings(child);
+> +	}
+>  
+>  	pci_bus_add_devices(vmd->bus);
+>  
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 253c30cc1967..04cdb0b5a672 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -25,22 +25,6 @@
+>  #endif
+>  #define MODULE_PARAM_PREFIX "pcie_aspm."
+>  
+> -/* Note: those are not register definitions */
+> -#define ASPM_STATE_L0S_UP	(1)	/* Upstream direction L0s state */
+> -#define ASPM_STATE_L0S_DW	(2)	/* Downstream direction L0s state */
+> -#define ASPM_STATE_L1		(4)	/* L1 state */
+> -#define ASPM_STATE_L1_1		(8)	/* ASPM L1.1 state */
+> -#define ASPM_STATE_L1_2		(0x10)	/* ASPM L1.2 state */
+> -#define ASPM_STATE_L1_1_PCIPM	(0x20)	/* PCI PM L1.1 state */
+> -#define ASPM_STATE_L1_2_PCIPM	(0x40)	/* PCI PM L1.2 state */
+> -#define ASPM_STATE_L1_SS_PCIPM	(ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1_2_PCIPM)
+> -#define ASPM_STATE_L1_2_MASK	(ASPM_STATE_L1_2 | ASPM_STATE_L1_2_PCIPM)
+> -#define ASPM_STATE_L1SS		(ASPM_STATE_L1_1 | ASPM_STATE_L1_1_PCIPM |\
+> -				 ASPM_STATE_L1_2_MASK)
+> -#define ASPM_STATE_L0S		(ASPM_STATE_L0S_UP | ASPM_STATE_L0S_DW)
+> -#define ASPM_STATE_ALL		(ASPM_STATE_L0S | ASPM_STATE_L1 |	\
+> -				 ASPM_STATE_L1SS)
+> -
+>  struct aspm_latency {
+>  	u32 l0s;			/* L0s latency (nsec) */
+>  	u32 l1;				/* L1 latency (nsec) */
+> @@ -748,7 +732,7 @@ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+>  					   PCI_EXP_LNKCTL_ASPMC, val);
+>  }
+>  
+> -static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+> +void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+>  {
+>  	u32 upstream = 0, dwstream = 0;
+>  	struct pci_dev *child = link->downstream, *parent = link->pdev;
+> @@ -798,6 +782,7 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+>  
+>  	link->aspm_enabled = state;
+>  }
+> +EXPORT_SYMBOL_GPL(pcie_config_aspm_link);
+>  
+>  static void pcie_config_aspm_path(struct pcie_link_state *link)
+>  {
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 7a40cd5caed0..1c41781b160a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -377,6 +377,22 @@ struct pci_dev {
+>  	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
+>  
+>  #ifdef CONFIG_PCIEASPM
+> +/* Note: those are not register definitions */
+> +#define ASPM_STATE_L0S_UP	(1)	/* Upstream direction L0s state */
+> +#define ASPM_STATE_L0S_DW	(2)	/* Downstream direction L0s state */
+> +#define ASPM_STATE_L1		(4)	/* L1 state */
+> +#define ASPM_STATE_L1_1		(8)	/* ASPM L1.1 state */
+> +#define ASPM_STATE_L1_2		(0x10)	/* ASPM L1.2 state */
+> +#define ASPM_STATE_L1_1_PCIPM	(0x20)	/* PCI PM L1.1 state */
+> +#define ASPM_STATE_L1_2_PCIPM	(0x40)	/* PCI PM L1.2 state */
+> +#define ASPM_STATE_L1_SS_PCIPM	(ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1_2_PCIPM)
+> +#define ASPM_STATE_L1_2_MASK	(ASPM_STATE_L1_2 | ASPM_STATE_L1_2_PCIPM)
+> +#define ASPM_STATE_L1SS		(ASPM_STATE_L1_1 | ASPM_STATE_L1_1_PCIPM |\
+> +				 ASPM_STATE_L1_2_MASK)
+> +#define ASPM_STATE_L0S		(ASPM_STATE_L0S_UP | ASPM_STATE_L0S_DW)
+> +#define ASPM_STATE_ALL		(ASPM_STATE_L0S | ASPM_STATE_L1 |	\
+> +				 ASPM_STATE_L1SS)
+> +
+>  	struct pcie_link_state	*link_state;	/* ASPM link state */
+>  	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
+>  					   supported from root to here */
+> @@ -1577,6 +1593,7 @@ extern bool pcie_ports_native;
+>  #define PCIE_LINK_STATE_L1_2_PCIPM	BIT(6)
+>  
+>  #ifdef CONFIG_PCIEASPM
+> +void pcie_config_aspm_link(struct pcie_link_state *link, u32 state);
+>  int pci_disable_link_state(struct pci_dev *pdev, int state);
+>  int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+>  void pcie_no_aspm(void);
+> -- 
+> 2.18.1
 > 
-> Thanks,
-> 
-> Sean
-> 
-> >>>
-> >>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >>> ---
-> >>>  drivers/pci/pcie/err.c | 31 ++++++++++++++++++++++---------
-> >>>  1 file changed, 22 insertions(+), 9 deletions(-)
-> >>>
-> >>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index
-> >>> 044df004f20b..9b3ec94bdf1d 100644
-> >>> --- a/drivers/pci/pcie/err.c
-> >>> +++ b/drivers/pci/pcie/err.c
-> >>> @@ -170,6 +170,17 @@ static void pci_walk_dev_affected(struct  
-> >> pci_dev *dev, int (*cb)(struct pci_dev  
-> >>>  }
-> >>>  }
-> >>>
-> >>> +static enum pci_channel_state flr_on_rciep(struct pci_dev *dev) {
-> >>> +if (!pcie_has_flr(dev))
-> >>> +return PCI_ERS_RESULT_NONE;
-> >>> +
-> >>> +if (pcie_flr(dev))
-> >>> +return PCI_ERS_RESULT_DISCONNECT;
-> >>> +
-> >>> +return PCI_ERS_RESULT_RECOVERED;
-> >>> +}
-> >>> +
-> >>>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >>>  enum pci_channel_state state,
-> >>>  pci_ers_result_t (*reset_link)(struct pci_dev *pdev))  
-> >> @@ -191,15  
-> >>> +202,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >>>  if (state == pci_channel_io_frozen) {
-> >>>  pci_walk_dev_affected(dev, report_frozen_detected,  
-> >> &status);  
-> >>>  if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> >>> -pci_warn(dev, "link reset not possible for RCiEP\n");
-> >>> -status = PCI_ERS_RESULT_NONE;
-> >>> -goto failed;
-> >>> -}
-> >>> -
-> >>> -status = reset_link(dev);
-> >>> -if (status != PCI_ERS_RESULT_RECOVERED) {
-> >>> -pci_warn(dev, "link reset failed\n");
-> >>> -goto failed;
-> >>> +status = flr_on_rciep(dev);
-> >>> +if (status != PCI_ERS_RESULT_RECOVERED) {
-> >>> +pci_warn(dev, "function level reset failed\n");
-> >>> +goto failed;
-> >>> +}
-> >>> +} else {
-> >>> +status = reset_link(dev);
-> >>> +if (status != PCI_ERS_RESULT_RECOVERED) {
-> >>> +pci_warn(dev, "link reset failed\n");
-> >>> +goto failed;
-> >>> +}
-> >>>  }
-> >>>  } else {
-> >>>  pci_walk_dev_affected(dev, report_normal_detected,  
-> >> &status);
-> >>  
-
-
