@@ -2,178 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFEF1230F4F
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 18:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2E56230F43
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 18:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbgG1Qbu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jul 2020 12:31:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34128 "EHLO mga09.intel.com"
+        id S1731385AbgG1QbW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jul 2020 12:31:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43593 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731383AbgG1Qbt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:31:49 -0400
-IronPort-SDR: 7Ksq8ImbIzMdX5bYfxub3ocr4icRkY/YxzDslyI90dejYtyngIHqsOQH73vxiDQrSi3SBowU6q
- UPL7T6BHMlAg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="152502173"
+        id S1731070AbgG1QbW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:31:22 -0400
+IronPort-SDR: A1KLpSDw7n/8uQjaYkQUHZDNIyvUOWw9pdA3O6jR6My5SM880iYmXzh+VDlBQL3/lOXgtPY+m2
+ u4YsR/cp9ssA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="149115433"
 X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="152502173"
+   d="scan'208";a="149115433"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:31:48 -0700
-IronPort-SDR: +QPBZKUrDVcXs3SicE62wIDczzMz+XCl3W2rJsusKE+NuUOdigJBcjIXvxVnQhAGp1LHubJJbJ
- E0irz+pILeUg==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:31:20 -0700
+IronPort-SDR: FVqAeH1LLFVhb4Lu6gBvZkqAQJvIrGgzbbkNoTPQdFgSd4E1/g0DVdAUfKN0IQuFjFhKOgaADS
+ 3xF7Ml2zbh7g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="464536516"
-Received: from unknown (HELO localhost.lm.intel.com) ([10.232.116.74])
-  by orsmga005.jf.intel.com with ESMTP; 28 Jul 2020 09:31:45 -0700
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        You-Sheng Yang <vicamo.yang@canonical.com>
-Subject: [RFC] PCI: vmd: Enable ASPM if BIOS requests it
-Date:   Tue, 28 Jul 2020 12:13:21 -0400
-Message-Id: <20200728161321.38229-1-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 2.18.1
+   d="scan'208";a="272366761"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Jul 2020 09:31:20 -0700
+Date:   Tue, 28 Jul 2020 09:31:20 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.com>, Lu Baolu <baolu.lu@intel.com>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device
+ when SRIOV is enabled
+Message-ID: <20200728163120.GA31231@otc-nc-03>
+References: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
+ <20200727212436.03103207BB@mail.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727212436.03103207BB@mail.kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-VMD domains are not ACPI-managed devices and do not have the necessary
-ACPI hooks to enable ASPM. However if the BIOS has requested ASPM
-enablement, we should try to honor that request regardless. This patch
-adds the ASPM support to VMD child devices if requested by the FADT
-table.
+Hi Sasha
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
----
+On Mon, Jul 27, 2020 at 09:24:35PM +0000, Sasha Levin wrote:
+> Hi
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a "Fixes:" tag
+> fixing commit: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS").
+> 
+> The bot has tested the following trees: v5.7.10, v5.4.53, v4.19.134, v4.14.189, v4.9.231, v4.4.231.
 
+Looks like the dependency is making this more involved with the backport. I
 
-Hi,
+We could pursue a simpler fix for these older versions where there is a
+conflict, but I'm not sure if that's recommended. 
 
-My knowledge on these kinds of power modes is limited, and we are having
-trouble bringing the Root Port child device out of L1 with this patch.
+In addition from our perspective 5.7 and above if there are other products
+that require PASID/PRI on prior versions for SRIOV devices  we can drop the
+backports. I see the same issue with other IOMMU's, for e.g. AMD as
+well, I'm not sure if there are real regressions. 
 
-Can you help me understand the correct flow for bringing the Root Port
-device out of L1 with kernel flow, and what I might be missing here?
-
-
-
- drivers/pci/controller/vmd.c |  9 ++++++++-
- drivers/pci/pcie/aspm.c      | 19 ++-----------------
- include/linux/pci.h          | 17 +++++++++++++++++
- 3 files changed, 27 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 76d8acbee7d5..f1b058efb642 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -14,6 +14,7 @@
- #include <linux/srcu.h>
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
-+#include <linux/acpi.h>
- 
- #include <asm/irqdomain.h>
- #include <asm/device.h>
-@@ -601,8 +602,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	 * and will fail pcie_bus_configure_settings() early. It can instead be
- 	 * run on each of the real root ports.
- 	 */
--	list_for_each_entry(child, &vmd->bus->children, node)
-+	list_for_each_entry(child, &vmd->bus->children, node) {
-+#if IS_ENABLED(CONFIG_PCIEASPM)
-+		if (!(acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM))
-+			pcie_config_aspm_link(child->self->link_state,
-+					      ASPM_STATE_ALL);
-+#endif
- 		pcie_bus_configure_settings(child);
-+	}
- 
- 	pci_bus_add_devices(vmd->bus);
- 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 253c30cc1967..04cdb0b5a672 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -25,22 +25,6 @@
- #endif
- #define MODULE_PARAM_PREFIX "pcie_aspm."
- 
--/* Note: those are not register definitions */
--#define ASPM_STATE_L0S_UP	(1)	/* Upstream direction L0s state */
--#define ASPM_STATE_L0S_DW	(2)	/* Downstream direction L0s state */
--#define ASPM_STATE_L1		(4)	/* L1 state */
--#define ASPM_STATE_L1_1		(8)	/* ASPM L1.1 state */
--#define ASPM_STATE_L1_2		(0x10)	/* ASPM L1.2 state */
--#define ASPM_STATE_L1_1_PCIPM	(0x20)	/* PCI PM L1.1 state */
--#define ASPM_STATE_L1_2_PCIPM	(0x40)	/* PCI PM L1.2 state */
--#define ASPM_STATE_L1_SS_PCIPM	(ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1_2_PCIPM)
--#define ASPM_STATE_L1_2_MASK	(ASPM_STATE_L1_2 | ASPM_STATE_L1_2_PCIPM)
--#define ASPM_STATE_L1SS		(ASPM_STATE_L1_1 | ASPM_STATE_L1_1_PCIPM |\
--				 ASPM_STATE_L1_2_MASK)
--#define ASPM_STATE_L0S		(ASPM_STATE_L0S_UP | ASPM_STATE_L0S_DW)
--#define ASPM_STATE_ALL		(ASPM_STATE_L0S | ASPM_STATE_L1 |	\
--				 ASPM_STATE_L1SS)
--
- struct aspm_latency {
- 	u32 l0s;			/* L0s latency (nsec) */
- 	u32 l1;				/* L1 latency (nsec) */
-@@ -748,7 +732,7 @@ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
- 					   PCI_EXP_LNKCTL_ASPMC, val);
- }
- 
--static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
-+void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
- {
- 	u32 upstream = 0, dwstream = 0;
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
-@@ -798,6 +782,7 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
- 
- 	link->aspm_enabled = state;
- }
-+EXPORT_SYMBOL_GPL(pcie_config_aspm_link);
- 
- static void pcie_config_aspm_path(struct pcie_link_state *link)
- {
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 7a40cd5caed0..1c41781b160a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -377,6 +377,22 @@ struct pci_dev {
- 	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
- 
- #ifdef CONFIG_PCIEASPM
-+/* Note: those are not register definitions */
-+#define ASPM_STATE_L0S_UP	(1)	/* Upstream direction L0s state */
-+#define ASPM_STATE_L0S_DW	(2)	/* Downstream direction L0s state */
-+#define ASPM_STATE_L1		(4)	/* L1 state */
-+#define ASPM_STATE_L1_1		(8)	/* ASPM L1.1 state */
-+#define ASPM_STATE_L1_2		(0x10)	/* ASPM L1.2 state */
-+#define ASPM_STATE_L1_1_PCIPM	(0x20)	/* PCI PM L1.1 state */
-+#define ASPM_STATE_L1_2_PCIPM	(0x40)	/* PCI PM L1.2 state */
-+#define ASPM_STATE_L1_SS_PCIPM	(ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1_2_PCIPM)
-+#define ASPM_STATE_L1_2_MASK	(ASPM_STATE_L1_2 | ASPM_STATE_L1_2_PCIPM)
-+#define ASPM_STATE_L1SS		(ASPM_STATE_L1_1 | ASPM_STATE_L1_1_PCIPM |\
-+				 ASPM_STATE_L1_2_MASK)
-+#define ASPM_STATE_L0S		(ASPM_STATE_L0S_UP | ASPM_STATE_L0S_DW)
-+#define ASPM_STATE_ALL		(ASPM_STATE_L0S | ASPM_STATE_L1 |	\
-+				 ASPM_STATE_L1SS)
-+
- 	struct pcie_link_state	*link_state;	/* ASPM link state */
- 	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
- 					   supported from root to here */
-@@ -1577,6 +1593,7 @@ extern bool pcie_ports_native;
- #define PCIE_LINK_STATE_L1_2_PCIPM	BIT(6)
- 
- #ifdef CONFIG_PCIEASPM
-+void pcie_config_aspm_link(struct pcie_link_state *link, u32 state);
- int pci_disable_link_state(struct pci_dev *pdev, int state);
- int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
- void pcie_no_aspm(void);
--- 
-2.18.1
-
+> 
+> v5.7.10: Build OK!
+> v5.4.53: Failed to apply! Possible dependencies:
+>     2b0ae7cc3bfc ("PCI/ATS: Handle sharing of PF PASID Capability with all VFs")
+>     751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+> 
+> v4.19.134: Failed to apply! Possible dependencies:
+>     2b0ae7cc3bfc ("PCI/ATS: Handle sharing of PF PASID Capability with all VFs")
+>     4f802170a861 ("PCI/DPC: Save and restore config state")
+>     6e1ffbb7c2ab ("PCI: Move ATS declarations outside of CONFIG_PCI")
+>     751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
+>     8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     9c2120090586 ("PCI: Provide pci_match_id() with CONFIG_PCI=n")
+>     b92b512a435d ("PCI: Make pci_ats_init() private")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+>     fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
+> 
+> v4.14.189: Failed to apply! Possible dependencies:
+>     1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+>     1e4511604dfa ("PCI/AER: Expose internal API for obtaining AER information")
+>     3133e6dd07ed ("PCI: Tidy Makefiles")
+>     37dddf14f1ae ("PCI: cadence: Add EndPoint Controller driver for Cadence PCIe controller")
+>     4696b828ca37 ("PCI/AER: Hoist aerdrv.c, aer_inject.c up to drivers/pci/pcie/")
+>     4f802170a861 ("PCI/DPC: Save and restore config state")
+>     8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     9de0eec29c07 ("PCI: Regroup all PCI related entries into drivers/pci/Makefile")
+>     b92b512a435d ("PCI: Make pci_ats_init() private")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+>     fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
+> 
+> v4.9.231: Failed to apply! Possible dependencies:
+>     4ebeb1ec56d4 ("PCI: Restore PRI and PASID state after Function-Level Reset")
+>     8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     a4f4fa681add ("PCI: Cache PRI and PASID bits in pci_dev")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+>     fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
+> 
+> v4.4.231: Failed to apply! Possible dependencies:
+>     2a2aca316aed ("PCI: Include <asm/dma.h> for isa_dma_bridge_buggy")
+>     4d3f13845957 ("PCI: Add pci_unmap_iospace() to unmap I/O resources")
+>     4ebeb1ec56d4 ("PCI: Restore PRI and PASID state after Function-Level Reset")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     a4f4fa681add ("PCI: Cache PRI and PASID bits in pci_dev")
+>     c5076cfe7689 ("PCI, of: Move PCI I/O space management to PCI core code")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+> 
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
+> 
+> -- 
+> Thanks
+> Sasha
