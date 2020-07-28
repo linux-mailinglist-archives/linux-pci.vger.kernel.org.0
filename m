@@ -2,210 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E73322FF1F
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 03:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 142802301FC
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jul 2020 07:46:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgG1Buy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jul 2020 21:50:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG1Buy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jul 2020 21:50:54 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA43EC061794;
-        Mon, 27 Jul 2020 18:50:53 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id r13so7772270ilt.6;
-        Mon, 27 Jul 2020 18:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=d8AIX6Jt0FrGJJO5RxD/791F0xEbWlpcv94oWhzTkkQ=;
-        b=C2LHZbx60OkuSsmGiL3SWROsKh85t9fN7z189B8DUbUN9j1FwVDMqO5oERtzxRKhU6
-         aMjvnaoUb1DsWpMbg9k1+utFyw4df2IiVO4rTn/SaOCrsWlBohDzGsKNu7/kEWc6j7jk
-         lZ4wTSulYDx0D5ehBrZcR4BPSRo0RAKuPjchN8rNK5V2b9KROzsM55DNsdqbFWLKfKTc
-         X1P1uvmvgxpCqpWwwabbnlzQnBH/d0kO8UnrOT76HcMZoTLrMIjNAalbE9DnQcVZpjM7
-         eAlbNQu+Tdt3m2HEerEmjxbTNshpzLMqEvagdqWbke3M0iDOVwiMKhgOISzSshS6hk10
-         tzvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=d8AIX6Jt0FrGJJO5RxD/791F0xEbWlpcv94oWhzTkkQ=;
-        b=X83mW0On7Yg1wEnlQmmry3pOOeUXj93wEEvHWuzybKeoEXD6Ts7OlBa+sNNhkNnFPY
-         35r1XZJC61GymFq+MeC9Ws85CJaqU2R45hRBE4IBsHf55v/4X3WlJybbi2+MBwfSyneo
-         QEZluNi10X3RqBGg8OfXabgz8CQUQj3csw0HlT9c7Nft9D1zcz/bYlJPik1GQQ8lZCfj
-         6yggpz3EGNSe4eJT2G70R34+WYXXUZD2KUpWt9LQFRQ/VBeEU7Y4ylVkswYZ7e5c+UjT
-         uIOnKDlTIWVKVNbRztO8rkOXXAc9ieZz1ACrJFvsOzroXcNa/tYXIc8125oV9/it2hpJ
-         cRbw==
-X-Gm-Message-State: AOAM531SWNMCNMERxn3PxWZDQJ/2tnYUzM/xWj+JTZpxmnyBcIV9kI70
-        TZFi0low4pnMWRgOEdyAC/0lhE39nE0SX2FaoE0=
-X-Google-Smtp-Source: ABdhPJwzdRuIxBXTsqmO3T8lV5HJYUyVEvHoJS4NFcEmdwrQH3gqqCuv4KOKHYoLewEVooxtEn7LK9uJ/t8opb5kHv0=
-X-Received: by 2002:a05:6e02:8e4:: with SMTP id n4mr18085163ilt.96.1595901053248;
- Mon, 27 Jul 2020 18:50:53 -0700 (PDT)
+        id S1726308AbgG1Fq4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jul 2020 01:46:56 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:42314 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgG1Fq4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jul 2020 01:46:56 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06S5kR9p9000735, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06S5kR9p9000735
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 28 Jul 2020 13:46:27 +0800
+Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 28 Jul 2020 13:46:27 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 28 Jul 2020 13:46:27 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8]) by
+ RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8%5]) with mapi id
+ 15.01.1779.005; Tue, 28 Jul 2020 13:46:27 +0800
+From:   =?big5?B?p2Sp/rzhIFJpY2t5?= <ricky_wu@realtek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        James Ettle <james@ettle.org.uk>
+CC:     Rui Feng <rui_feng@realsil.com.cn>, Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Subject: RE: rtsx_pci not restoring ASPM state after suspend/resume
+Thread-Topic: rtsx_pci not restoring ASPM state after suspend/resume
+Thread-Index: AQHWZF98DDVxZTXVzky/7XhwfZkLR6kccXXg
+Date:   Tue, 28 Jul 2020 05:46:27 +0000
+Message-ID: <bbbf5619b17e43029a75ef60b6f4fc40@realtek.com>
+References: <f02332767323fc3ecccea13dd47ecfff12526112.camel@ettle.org.uk>
+ <20200727214712.GA1777201@bjorn-Precision-5520>
+In-Reply-To: <20200727214712.GA1777201@bjorn-Precision-5520>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.88.99]
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Received: by 2002:a05:6602:2a46:0:0:0:0 with HTTP; Mon, 27 Jul 2020 18:50:52
- -0700 (PDT)
-In-Reply-To: <edab20f582d4402baeca9bb80e612ee2@willitsonline.com>
-References: <20191029170250.GA43972@google.com> <20200222165617.GA207731@google.com>
- <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
- <20200226011310.GA2116625@rani.riverdale.lan> <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
- <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com> <20200226045104.GA2191053@rani.riverdale.lan>
- <20200225212054.09865e0b@fido6> <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
- <edab20f582d4402baeca9bb80e612ee2@willitsonline.com>
-From:   "Michael ." <keltoiboy@gmail.com>
-Date:   Tue, 28 Jul 2020 11:50:52 +1000
-Message-ID: <CAFjuqNgAxTjHMw9AX+yoHxug-+hHVExsiccWG6eb=QZJsV3fSQ@mail.gmail.com>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
- on Panasonic Toughbook CF-29]
-To:     bluerocksaddles@willitsonline.com
-Cc:     Philip Langdale <philipl@overt.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I have just compiled and uploaded a kernel to test for this issue,
-members of the Toughbook community have been provided with the link,
-though a forum discussion, to download the kernel and test it.
-Hopefully we will get positive results and can confirm the
-MMC_RICOH_MMC flag is the culprit.
-Regards.
-Stay safe.
-Michael.
-
-On 27/02/2020, bluerocksaddles@willitsonline.com
-<bluerocksaddles@willitsonline.com> wrote:
-> Somewhere in these messages is a clue....in that SD reader was involved.
->
-> MK 4 and 5 have SD whilst MK 1, 2 and three do not.
->
->
->
-> On 2020-02-25 22:10, Michael . wrote:
->>> Someone with access to real hardware could
->>> easily experiment with changing that magic value and seeing if it
->>> changes which function is disabled.
->>
->> One of our members has offered to supply a machine to a dev that can
->> use it to test any theory.
->>
->> It is nearly beyond the scope of the majority of us to do much more
->> than just testing. We appreciate all the effort the devs put in and
->> are willing to help in anyway we can but we aren't kernel devs.
->>
->> I, personally, use Debian. Others use Debian based distros such as MX
->> and Mint. We have been able to test many different distros such as
->> those listed in other comments but don't have the skills or expertise
->> to do much more. It is our hope that this discussion and subsequent
->> effort may enable others who prefer distros other than Debian based
->> distros can use a CF-29 (and possibly earlier) Toughbook with the
->> distro of their choice without having to rebuild a kernel so they can
->> use hardware that worked back in 2010. To do this the fix needs to be
->> at the kernel dev level not a local enthusiast level because while I
->> can rebuild a Debian kernel I can't rebuild a Fedora or Arch or
->> Slackware kernel.
->>
->> I did a search about this issue before I made initial contact late
->> last year and the issue was discovered on more than Toughbooks and
->> posted about on various sites not long after distros moved from
->> 2.6.32. It seems back then people just got new machines that didn't
->> have a 2nd slot so the search for an answer stopped. Us Toughbook
->> users are a loyal group we use our machines because they are exactly
->> what we need and they take alot of "punishment" taht other machines
->> simply cannot handle. Our machines are used rather than recycled or
->> worse still just left to sit in waste management facilities in a
->> country that the western world dumps its rubbish in, we are Linux and
->> Toughbook enthusiasts and hope to be able to keep our machines running
->> for many years to come with all their native capabilities working as
->> they were designed to but using a modern Linux instead of Windows XP
->> or Windows 7. (that wasn't a pep talk, its just an explanation of why
->> we are passionate about this).
->>
->> Let us know what you need us to do, we will let you know if we are
->> capable of it and give you any feedback you ask for. Over the weekend
->> I will try to rebuild a Debian kernel with the relevant option
->> disabled, provide it to my peers for testing and report back here what
->> the outcome is.
->>
->> Thank you all for all your time and effort, it is truly appreciated.
->> Cheers.
->> Michael.
->>
->> On 26/02/2020, Philip Langdale <philipl@overt.org> wrote:
->>> On Tue, 25 Feb 2020 23:51:05 -0500
->>> Arvind Sankar <nivedita@alum.mit.edu> wrote:
->>>
->>>> On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
->>>> > That's correct, I tested a bunch of the old distros including
->>>> > slackware, and 2.6.32 is where the problem began.
->>>> >
->>>> > Also, the Panasonic Toughbook CF-29s effected that we tested are
->>>> > the later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just
->>>> > fine because it has different hardware supporting the PCMCIA slots.
->>>> > I have not tested a MK3 but suspect it would work ok as it also
->>>> > uses the older hardware.
->>>> >
->>>> > Thanks for your help guys!
->>>> > Trevor
->>>> >
->>>>
->>>> Right, the distros probably all enabled MMC_RICOH_MMC earlier than
->>>> upstream. Can you test a custom kernel based off your distro kernel
->>>> but just disabling that config option? That's probably the easiest
->>>> fix
->>>> currently, even though not ideal. Perhaps there should be a command
->>>> line option to disable specific pci quirks to make this easier.
->>>>
->>>> An ideal fix is I feel hard, given this quirk is based on
->>>> undocumented
->>>> config registers -- it worked on Dell machines (that's where the
->>>> original authors seem to have gotten their info from), perhaps they
->>>> had only one Cardbus slot, but the code ends up disabling your second
->>>> Cardbus slot instead of disabling the MMC controller.
->>>
->>> Keeping in mind that this was 12+ years ago, you can at least still
->>> read the original discussion in the archives. My original Dell laptop
->>> (XPS m1330) had no cardbus slots at all, and used the r5c832
->>> controller. There was a subsequent change that I was not involved with
->>> which added support for the rl5c476, which is the problematic device
->>> in
->>> this thread.
->>>
->>> As a hypothesis, based on the observed behaviour, the quirk (keeping
->>> in
->>> mind that these are magic configuration register values that are not
->>> documented) probably disabled function 1, regardless of what it is,
->>> and
->>> the original example that motivated adding the rl5c476 quirk probably
->>> had one cardbus slot and the card reader functions were all moved up
->>> one, or something along those lines.
->>>
->>> Truly making this smart would then involve having the code enumerate
->>> the pci functions and identify the one that is the unwanted mmc
->>> controller, based on function ID or class or whatever, and then
->>> disabling that (assuming the magic can be reverse engineered: eg, the
->>> current magic ORs the disable flag with 0x02 - chances are, that's the
->>> index of the function: 0x01 would be the 0th function, 0x04 would be
->>> the 2nd function, etc). Someone with access to real hardware could
->>> easily experiment with changing that magic value and seeing if it
->>> changes which function is disabled.
->>>
->>> Good luck.
->>>
->>> --phil
->>>
->
+DQo+IE9uIE1vbiwgSnVsIDI3LCAyMDIwIGF0IDA4OjUyOjI1UE0gKzAxMDAsIEphbWVzIEV0dGxl
+IHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAyMC0wNy0yNyBhdCAwOToxNCAtMDUwMCwgQmpvcm4gSGVs
+Z2FhcyB3cm90ZToNCj4gPiA+IEkgZG9uJ3Qga25vdyB0aGUgY29ubmVjdGlvbiBiZXR3ZWVuIEFT
+UE0gYW5kIHBhY2thZ2UgQy1zdGF0ZXMsIHNvIEkNCj4gPiA+IG5lZWQgdG8gc2ltcGxpZnkgdGhp
+cyBldmVuIG1vcmUuICBBbGwgSSB3YW50IHRvIGRvIHJpZ2h0IG5vdyBpcw0KPiA+ID4gdmVyaWZ5
+DQo+ID4gPiB0aGF0IGlmIHdlIGRvbid0IGhhdmUgYW55IG91dHNpZGUgaW5mbHVlbmNlcyBvbiB0
+aGUgQVNQTQ0KPiA+ID4gY29uZmlndXJhdGlvbg0KPiA+ID4gKGVnLCBubyBtYW51YWwgY2hhbmdl
+cyBhbmQgbm8gdWRldiBydWxlcyksIGl0IHN0YXlzIHRoZSBzYW1lIGFjcm9zcw0KPiA+ID4gc3Vz
+cGVuZC9yZXN1bWUuDQo+ID4NCj4gPiBCYXNpY2FsbHkgdGhpcyBzdGFydGVkIGZyb20gbWUgb2Jz
+ZXJ2aW5nIGRlZXAgcGFja2FnZSBDLXN0YXRlcyB3ZXJlbid0DQo+ID4gYmVpbmcgdXNlZCwgdW50
+aWwgSSB3ZW50IGFuZCBmaWRkbGVkIHdpdGggdGhlIEFTUE0gc3RhdGUgb2YgdGhlDQo+ID4gcnRz
+eF9wY2kgY2FyZCByZWFkZXIgdW5kZXIgc3lzZnMgLS0gc28gcGhlbm9tZW5vbG9naWNhbCBwb2tp
+bmcgb24gbXkNCj4gPiBwYXJ0Lg0KPiA+DQo+ID4gPiBTbyBsZXQncyByZWFkIHRoZSBBU1BNIHN0
+YXRlIGRpcmVjdGx5IGZyb20gdGhlDQo+ID4gPiBoYXJkd2FyZSBsaWtlIHRoaXM6DQo+ID4gPg0K
+PiA+ID4gICBzdWRvIGxzcGNpIC12dnMgMDA6MWQuMCB8IGVncmVwICJeMHxMbmt8TDF8TFRSfHNu
+b29wIg0KPiA+ID4gICBzdWRvIGxzcGNpIC12dnMgMDE6MDAgICB8IGVncmVwICJeMHxMbmt8TDF8
+TFRSfHNub29wIg0KPiA+ID4NCj4gPiA+IENhbiB5b3UgdHJ5IHRoYXQgYmVmb3JlIGFuZCBhZnRl
+ciBzdXNwZW5kL3Jlc3VtZT8NCj4gPg0KPiA+IEkndmUgYXR0YWNoZWQgdGhlc2UgdG8gdGhlIGJ1
+Z3ppbGxhIGVudHJ5IGF0Og0KPiA+DQo+ID4gaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3No
+b3dfYnVnLmNnaT9pZD0yMDgxMTcNCj4gPg0KPiA+IFNwb2lsZXI6IFdpdGggbm8gdWRldiBydWxl
+cyBvciBzdXNwZW5kIGhvb2tzLCB0aGluZ3MgYXJlIHRoZSBzYW1lDQo+ID4gYmVmb3JlIGFuZCBh
+ZnRlciBzdXNwZW5kL3Jlc3VtZS4gT25lIHRoaW5nIEkgZG8gc2VlIChib3RoIGJlZm9yZSBhbmQN
+Cj4gPiBhZnRlcikgaXMgdGhhdCBBU1BNIEwwcyBhbmQgTDEgaXMgZW5hYmxlZCBmb3IgdGhlIGNh
+cmQgcmVhZGVyLCBidXQNCj4gPiBkaXNhYmxlZCBmb3IgdGhlIGV0aGVybmV0IGNoaXAgKGRvZXMg
+cjgxNjkgZmlkZGxlIHdpdGggQVNQTSB0b28/KS4NCj4gDQo+IFRoYW5rIHlvdSEgIEl0J3MgZ29v
+ZCB0aGF0IHRoaXMgc3RheXMgdGhlIHNhbWUgYWNyb3NzIHN1c3BlbmQvcmVzdW1lLg0KPiBEbyB5
+b3Ugc2VlIGRpZmZlcmVudCBDLXN0YXRlIGJlaGF2aW9yIGJlZm9yZSB2cyBhZnRlcj8NCj4gDQo+
+IFRoaXMgaXMgdGhlIGNvbmZpZyBJIHNlZToNCj4gDQo+ICAgMDA6MWQuMCBicmlkZ2UgdG8gW2J1
+cyAwMV06IEFTUE0gTDEgc3VwcG9ydGVkOyAgICAgQVNQTSBEaXNhYmxlZA0KPiAgIDAxOjAwLjAg
+Y2FyZCByZWFkZXI6ICAgICAgICBBU1BNIEwwcyBMMSBzdXBwb3J0ZWQ7IEwwcyBMMSBFbmFibGVk
+DQo+ICAgMDE6MDAuMSBHaWdFIE5JQzogICAgICAgICAgIEFTUE0gTDBzIEwxIHN1cHBvcnRlZDsg
+QVNQTSBEaXNhYmxlZA0KPiANCj4gVGhpcyBpcyBhY3R1YWxseSBpbGxlZ2FsIGJlY2F1c2UgUENJ
+ZSByNS4wLCBzZWMgNS40LjEuMywgc2F5cyBzb2Z0d2FyZQ0KPiBtdXN0IG5vdCBlbmFibGUgTDBz
+IGluIGVpdGhlciBkaXJlY3Rpb24gdW5sZXNzIGNvbXBvbmVudHMgb24gYm90aCBlbmRzDQo+IG9m
+IHRoZSBsaW5rIHN1cHBvcnQgTDBzLiAgVGhlIGJyaWRnZSAoMDA6MWQuMCkgZG9lcyBub3Qgc3Vw
+cG9ydCBMMHMsDQo+IHNvIGl0J3MgaWxsZWdhbCB0byBlbmFibGUgTDBzIG9uIDAxOjAwLjAuICBJ
+IGRvbid0IGtub3cgd2hldGhlciB0aGlzDQo+IGNhdXNlcyBwcm9ibGVtcyBpbiBwcmFjdGljZS4N
+Cj4gDQoNCklmIHN5c3RlbSB3YW50IHRvIGVudHJ5IGRlZXAgQy1zdGF0ZSwgc3lzdGVtIGhhdmUg
+dG8gc3VwcG9ydCBMMS4gSG9zdCBicmlkZ2UgaGFuZHNoYWtlIHdpdGggZGV2aWNlIHRvIGRldGVy
+bWluZSB3aGV0aGVyIHRvIGVudGVyIHRoZSBMMSBzdGF0ZS4NCk91ciBjYXJkIHJlYWRlciBkcml2
+ZXIgZGlkIG5vdCBzZXQgTDBzLCBoZXJlIG5lZWQgdG8gY2hlY2sgd2hvIHNldCB0aGlzLCBidXQg
+d2UgdGhvdWdodCB0aGlzIEwwcyBlbmFibGUgc2hvdWxkIG5vdCBjYXVzZSBIb3N0IGJyaWRnZSBB
+U1BNIGRpc2FibGUNCiANCg0KPiBJIGRvbid0IHNlZSBhbnl0aGluZyBpbiBydHN4IHRoYXQgZW5h
+YmxlcyBMMHMuICBDYW4geW91IGNvbGxlY3QgdGhlDQo+IGRtZXNnIGxvZyB3aGVuIGJvb3Rpbmcg
+d2l0aCAicGNpPWVhcmx5ZHVtcCI/ICBUaGF0IHdpbGwgc2hvdyB3aGV0aGVyDQo+IHRoZSBCSU9T
+IGxlZnQgaXQgdGhpcyB3YXkuICBUaGUgUENJIGNvcmUgaXNuJ3Qgc3VwcG9zZWQgdG8gZG8gdGhp
+cywgc28NCj4gaWYgaXQgZGlkLCB3ZSBuZWVkIHRvIGZpeCB0aGF0Lg0KPiANCj4gSSBkb24ndCBr
+bm93IHdoZXRoZXIgcjgxNjkgbXVja3Mgd2l0aCBBU1BNLiAgSXQgaXMgbGVnYWwgdG8gaGF2ZQ0K
+PiBkaWZmZXJlbnQgY29uZmlndXJhdGlvbnMgZm9yIHRoZSB0d28gZnVuY3Rpb25zLCBldmVuIHRo
+b3VnaCB0aGV5IHNoYXJlDQo+IHRoZSBzYW1lIGxpbmsuICBTZWMgNS40LjEgaGFzIHJ1bGVzIGFi
+b3V0IGhvdyBoYXJkd2FyZSByZXNvbHZlcw0KPiBkaWZmZXJlbmNlcy4NCj4gDQo+ID4gW09kZGx5
+IHdoZW4gSSBzZXQgQVNQTSAoZS5nLiB1c2luZyB1ZGV2KSB0aGUgbHNwY2kgdG9vbHMgc2hvdyBB
+U1BNDQo+ID4gZW5hYmxlZCBhZnRlciBhIHN1c3BlbmQvcmVzdW1lLCBidXQgc3RpbGwgbm8gZGVl
+cCBwYWNrYWdlIEMtc3RhdGVzDQo+ID4gdW50aWwgSSBtYW51YWxseSBmaWRkbGUgdmlhIHN5c2Zz
+IG9uIHRoZSBjYXJkIHJlYWRlci4gU29ycnkgaWYgdGhpcw0KPiA+IG9ubHkgbXVkZGllcyB0aGUg
+d2F0ZXIgZnVydGhlciFdDQo+IA0KPiBMZXQncyBkZWZlciB0aGlzIGZvciBub3cuICBJdCBzb3Vu
+ZHMgd29ydGggcHVyc3VpbmcsIGJ1dCBJIGNhbid0IGtlZXANCj4gZXZlcnl0aGluZyBpbiBteSBo
+ZWFkIGF0IG9uY2UuDQo+IA0KPiBCam9ybg0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRo
+ZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
