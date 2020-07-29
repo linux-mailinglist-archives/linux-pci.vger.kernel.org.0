@@ -2,140 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B14DC2327AA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 00:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A2FD2327B2
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 00:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgG2Wna (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 18:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgG2Wna (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 18:43:30 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE69C061794
-        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 15:43:30 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h21so12559548qtp.11
-        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 15:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XVpqbRJSUpw3TmW9H1R5MG9usGVURZO389ioxmAxPlY=;
-        b=fNFYzj7VftcDf6txwaREOryMObVhf8wOguWZmnQqdJ5PSVRleWUfVfumiyqlECpm4a
-         AYzms6SCUpEymxjxgqaQ0XhuX115QUdR8yZYYm315GCs5mau9Ms8arpNwzpSXiqbL5mY
-         HIoubJp58d71RwRFyapV1RcNuDt7eA/a54oc22SmpRoVU6elTJRcciGrACqmirbvbOJ0
-         3tOiGjCl4H9pvuOknMqA6U0z33/zA4NXRatuCs4d8dFjLCbYiTgJcBYHOYYYSkZS5BTI
-         9mQdscMti5yfSp43AJs9RHjFm45lFHcomgOEe5FdR+ucBaSqt4CjQRwDTGSURH3Xobq0
-         kxEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XVpqbRJSUpw3TmW9H1R5MG9usGVURZO389ioxmAxPlY=;
-        b=aI+2jp1UfPXX3pDNJwJ6u9GoUr3ouwGRN2FV/Gs+JG41nDHxvLiFxK5Hksrh8Al4nF
-         LaRmmCADzaYq9m5X8UnvJyybMu2osCqsQHPdMWsFfKOUTBT3M25MOVWLvob2seb8gFuz
-         qR736VNPWr7ytjUQHq9np6FODYdu4qqklIJpS5y7HbehxveSNN/TJ8rTyHch9v7fnli1
-         26uK+ZqKRSqm1gEDWEMdoFx4H8R1sjVJOGj1i0QRPJ5S6RyMC9gImHg2lDeNEHVoIqMl
-         /f/bJZEVtyZiQA5Y4Z21E7ELQjtN/xCN1/UHo7pm4Bh4Xtb1aq1nTiXvEsguLjUeF6Gq
-         Rb7A==
-X-Gm-Message-State: AOAM532DL1OUznpqjT6h276FLoJOz3N74pzbHPPwEJuCVj3IgdpI/aac
-        vWcDn5rO/Zr8f8NbUBuXSBburVmnCWpt4yoj8wc=
-X-Google-Smtp-Source: ABdhPJzoel6ZkNL/PO0U1BBH+5gjw4IsZ5Qk5KinGlB9UhZGOtfstDXk61/i+RlkvLNOOnUHO40QGnOjUysqIEH1AJg=
-X-Received: by 2002:aed:3728:: with SMTP id i37mr90282qtb.347.1596062609336;
- Wed, 29 Jul 2020 15:43:29 -0700 (PDT)
+        id S1727968AbgG2WrO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 18:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbgG2WrO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Jul 2020 18:47:14 -0400
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A57052065C;
+        Wed, 29 Jul 2020 22:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596062833;
+        bh=36XtQWEJsEdp+ChV12HZH4Ktm83x8HHkNcFnnHcob2M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PfgGQXWhcVjcmVn+Fsc+3rS2CTjz2GQ96wh16M7EoYyF4rZfRXP7OPN6p9p04ccCB
+         gpko6RKIYcgGxKiOP8z+6h7gGRuBvJCbQD0xmjXVY//kckJiY+kQ2DNkEWAzCwUl3h
+         VqEkuLgYfYXGEJHBuOYXwzKCt1G+Bf9UdgykiP58=
+Date:   Wed, 29 Jul 2020 17:47:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: [RFC] ASPM L1 link latencies
+Message-ID: <20200729224710.GA1971834@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200727213045.2117855-1-ian.kumlien@gmail.com> <20200729222758.GA1963264@bjorn-Precision-5520>
-In-Reply-To: <20200729222758.GA1963264@bjorn-Precision-5520>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Thu, 30 Jul 2020 00:43:18 +0200
-Message-ID: <CAA85sZv0WTQAVyxr7LRKn-CDFgg5nTQTNzcn4bycLgNu+yO5cw@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1 ASPM
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA85sZvJQge6ETwF1GkdvK1Mpwazh_cYJcmeZVAohmt0FjbMZg@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 12:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Mon, Jul 27, 2020 at 11:30:45PM +0200, Ian Kumlien wrote:
-> > Currently we check the maximum latency of upstream and downstream
-> > per link, not the maximum for the path
-> >
-> > This would work if all links have the same latency, but:
-> > endpoint -> c -> b -> a -> root  (in the order we walk the path)
-> >
-> > If c or b has the higest latency, it will not register
-> >
-> > Fix this by maintaining the maximum latency value for the path
-> >
-> > This change fixes a regression introduced by:
-> > 66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
->
-> Hi Ian,
->
-> Sorry about the regression, and thank you very much for doing the
-> hard work of debugging and fixing it!
->
-> My guess is that 66ff14e59e8a isn't itself buggy, but it allowed ASPM
-> to be enabled on a longer path, and we weren't computing the maximum
-> latency correctly, so ASPM on that longer path exceeded the amount we
-> could tolerate.  If that's the case, 66ff14e59e8a probably just
-> exposed an existing problem that could occur in other topologies even
-> without 66ff14e59e8a.
+On Sat, Jul 25, 2020 at 09:47:05PM +0200, Ian Kumlien wrote:
+> Hi,
+> 
+> A while ago I realised that I was having all kinds off issues with my
+> connection, ~933 mbit had become ~40 mbit
+> 
+> This only applied on links to the internet (via a linux fw running
+> NAT) however while debugging with the help of Alexander Duyck
+> we realised that ASPM could be the culprit (at least disabling ASPM on
+> the nic it self made things work just fine)...
+> 
+> So while trying to understand PCIe and such things, I found this:
+> 
+> The calculations of the max delay looked at "that node" + start latency * "hops"
+> 
+> But one hop might have a larger latency and break the acceptable delay...
+> 
+> So after a lot playing around with the code, i ended up with this, and
+> it seems to fix my problem and does
+> set two pcie bridges to ASPM Disabled that didn't happen before.
+> 
+> I do however have questions.... Shouldn't the change be applied to
+> the endpoint?  Or should it be applied recursively along the path to
+> the endpoint?
 
-I agree, this is why I didn't do fixes:. but it does fix a regression
-- and it's hard to say
-exactly what - I'd like it to go in to stable when accepted...
+I don't understand this very well, but I think we do need to consider
+the latencies along the entire path.  PCIe r5.0, sec 5.4.1.3, contains
+this:
 
-But we can rewrite it anyway you see fit :)
+  Power management software, using the latency information reported by
+  all components in the Hierarchy, can enable the appropriate level of
+  ASPM by comparing exit latency for each given path from Root to
+  Endpoint against the acceptable latency that each corresponding
+  Endpoint can withstand.
 
-> I'd like to work through this latency code with concrete examples.
-> Can you collect the "sudo lspci -vv" output and attach it to an entry
-> at https://bugzilla.kernel.org?  If it's convenient, it would be
-> really nice to compare it with similar output from before this patch.
+Also this:
 
-I can cut from the mails i had in the conversation with Alexander Duyck
+  5.4.1.3.1 Software Flow for Enabling or Disabling ASPM
 
-I submitted it against PCI, you can find it here:
-https://bugzilla.kernel.org/show_bug.cgi?id=208741
+  Following is an example software algorithm that highlights how to
+  enable or disable ASPM in a component.
 
-Still filling in the data
+  - PCI Express components power up with an appropriate value in their
+    Slot Clock Configuration bit. The method by which they initialize
+    this bit is device-specific.
 
-> Bjorn
->
-> > Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
-> > ---
-> >  drivers/pci/pcie/aspm.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index b17e5ffd31b1..bd53fba7f382 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
-> >
-> >  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> >  {
-> > -     u32 latency, l1_switch_latency = 0;
-> > +     u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
-> >       struct aspm_latency *acceptable;
-> >       struct pcie_link_state *link;
-> >
-> > @@ -470,8 +470,9 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> >                * substate latencies (and hence do not do any check).
-> >                */
-> >               latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> > +             l1_max_latency = max_t(u32, latency, l1_max_latency);
-> >               if ((link->aspm_capable & ASPM_STATE_L1) &&
-> > -                 (latency + l1_switch_latency > acceptable->l1))
-> > +                 (l1_max_latency + l1_switch_latency > acceptable->l1))
-> >                       link->aspm_capable &= ~ASPM_STATE_L1;
-> >               l1_switch_latency += 1000;
-> >
-> > --
-> > 2.27.0
-> >
+  - PCI Express system software scans the Slot Clock Configuration bit
+    in the components on both ends of each Link to determine if both
+    are using the same reference clock source or reference clocks from
+    separate sources.  If the Slot Clock Configuration bits in both
+    devices are Set, they are both using the same reference clock
+    source, otherwise they're not.
+
+  - PCI Express software updates the Common Clock Configuration bits
+    in the components on both ends of each Link to indicate if those
+    devices share the same reference clock and triggers Link
+    retraining by writing 1b to the Retrain Link bit in the Link
+    Control register of the Upstream component.
+
+  - Devices must reflect the appropriate L0s/L1 exit latency in their
+    L0s /L1 Exit Latency fields, per the setting of the Common Clock
+    Configuration bit.
+
+  - PCI Express system software then reads and calculates the L0s/L1
+    exit latency for each Endpoint based on the latencies reported by
+    each Port. Refer to Section 5.4.1.2.2 for an example.
+
+  - For each component with one or more Endpoint Functions, PCI
+    Express system software examines the Endpoint L0s/L1 Acceptable
+    Latency, as reported by each Endpoint Function in its Link
+    Capabilities register, and enables or disables L0s/L1 entry (via
+    the ASPM Control field in the Link Control register) accordingly
+    in some or all of the intervening device Ports on that hierarchy.
+
+> Also, the L0S checks are only done on the local links, is this
+> correct?
+
+ASPM configuration is done on both ends of a link.  I'm not sure it
+makes sense to enable any state (L0s, L1, L1.1, L1.2) unless both ends
+of the link support it.  In particular, sec 5.4.1.3 says:
+
+  Software must not enable L0s in either direction on a given Link
+  unless components on both sides of the Link each support L0s;
+  otherwise, the result is undefined.
+
+But I think we do need to consider the entire path when enabling L0s;
+from sec 7.5.3.3:
+
+  Endpoint L0s Acceptable Latency - This field indicates the
+  acceptable total latency that an Endpoint can withstand due to the
+  transition from L0s state to the L0 state. It is essentially an
+  indirect measure of the Endpoint’s internal buffering.  Power
+  management software uses the reported L0s Acceptable Latency number
+  to compare against the L0s exit latencies reported by all components
+  comprising the data path from this Endpoint to the Root Complex Root
+  Port to determine whether ASPM L0s entry can be used with no loss of
+  performance.
+
+Does any of that help answer your question?
+
+Bjorn
+
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index b17e5ffd31b1..bd53fba7f382 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+> 
+>  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  {
+> -       u32 latency, l1_switch_latency = 0;
+> +       u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+>         struct aspm_latency *acceptable;
+>         struct pcie_link_state *link;
+> 
+> @@ -470,8 +470,9 @@ static void pcie_aspm_check_latency(struct pci_dev
+> *endpoint)
+>                  * substate latencies (and hence do not do any check).
+>                  */
+>                 latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> +               l1_max_latency = max_t(u32, latency, l1_max_latency);
+>                 if ((link->aspm_capable & ASPM_STATE_L1) &&
+> -                   (latency + l1_switch_latency > acceptable->l1))
+> +                   (l1_max_latency + l1_switch_latency > acceptable->l1))
+>                         link->aspm_capable &= ~ASPM_STATE_L1;
+>                 l1_switch_latency += 1000;
