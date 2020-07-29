@@ -2,136 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67B9C2324F2
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 20:56:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 783CB23255A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 21:24:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgG2S45 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 14:56:57 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37431 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgG2S45 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 14:56:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id w12so12050716iom.4;
-        Wed, 29 Jul 2020 11:56:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wWYpUB0B5F9DakDE/d7Jt/iFxH1JFsvV3Y7Iu2yZvWw=;
-        b=ot8aRS0MpEOywUs0MODSEAVSQPP8yeUijxbRMDFNASNKi7kwfL5AS/9+g7tKLhIIvV
-         l1YijZ4Ynd5HXInsB0oCM8PHX11GsWWovYigcF6KyXBvBv37FwBg9s6WBgqIaHSPAsZ4
-         AX0ARKGlJ/w3qH0mFwX0Nygr2dN/vVtH4iAYCHbN0Mclgi7hp2odtWhyVsrdl4wRJUsL
-         tg5jb0sqb7obIarT6/lrysXk93F2UIjXb0S/KIQHbi1viZSjtmE7Tgzayq8jeVeAQ3qR
-         hhX90Kne2Xo/znfvgF3Nf2n52mU/cEC6a1VplnYTumtJ+7tNQIhbOmtXPg3czawNRbTe
-         myqg==
-X-Gm-Message-State: AOAM531OKFD9yrHBcl0pKCkt+3cRZQvq2IZ2lGSZSXN8KiSTsQtyeqtf
-        8oUMZQFKPfdPysOTFj0GNQ==
-X-Google-Smtp-Source: ABdhPJy+3LMGUtVhao+r3gcbViMO39JZQ6pzxxMomQHJNwDvtPPaHxlrii3qwNXAfdIXjxfkmPp9Gw==
-X-Received: by 2002:a6b:b211:: with SMTP id b17mr17640659iof.29.1596049016119;
-        Wed, 29 Jul 2020 11:56:56 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u6sm1576835ilk.13.2020.07.29.11.56.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 11:56:55 -0700 (PDT)
-Received: (nullmailer pid 593935 invoked by uid 1000);
-        Wed, 29 Jul 2020 18:56:54 -0000
-Date:   Wed, 29 Jul 2020 12:56:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        amurray@thegoodpenguin.co.uk, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 1/2] PCI: dwc: Add support to handle prefetchable memory
- separately
-Message-ID: <20200729185654.GA585891@bogus>
-References: <20200602100940.10575-1-vidyas@nvidia.com>
- <20200602100940.10575-2-vidyas@nvidia.com>
+        id S1726710AbgG2TYU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 15:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2TYU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:24:20 -0400
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F29F62075D;
+        Wed, 29 Jul 2020 19:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596050659;
+        bh=S1E6H1oHWjFBLpWWWbW3nTMIr3sQ4srC4x2ffHleLB0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DxnV9e4Uc5N35ib1XYpUch1HA1F0T3nFdfYJZ01pLqQL45afKNUXtYZfQqJddHt9/
+         sRcit48nSKnoXHsBo/gPKSzGp9PtBfIvk8MFn6YGB07XfSR78iDzJVv7gJAZgrFNT1
+         MrwPqmttDXnZnNCMJPSGuj+HsFpJO1tSJLkmhZcQ=
+Date:   Wed, 29 Jul 2020 14:24:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Fix kerneldoc of pci_vc_do_save_buffer()
+Message-ID: <20200729192416.GA1952120@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602100940.10575-2-vidyas@nvidia.com>
+In-Reply-To: <20200729062620.4168-1-krzk@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:39:39PM +0530, Vidya Sagar wrote:
-> Add required structure members to struct pcie_port to handle prefetchable
-> memory aperture separately from non-prefetchable memory aperture so that
-> any dependency on the order of their appearance in the 'ranges' property
-> of the respective PCIe device tree node can be removed.
+On Wed, Jul 29, 2020 at 08:26:20AM +0200, Krzysztof Kozlowski wrote:
+> Fix W=1 compile warnings (invalid kerneldoc):
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>     drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+This looks great, but would you mind doing all the ones in drivers/pci
+at the same time?  When I tested this, I also found the following, and
+I don't think it's worth doing them one at a time:
+
+  $ make W=1 drivers/pci/
+  drivers/pci/hotplug/acpi_pcihp.c:69: warning: Function parameter or member 'pdev' not described in 'acpi_get_hp_hw_control_from_firmware'
+  drivers/pci/hotplug/acpi_pcihp.c:69: warning: Excess function parameter 'dev' description in 'acpi_get_hp_hw_control_from_firmware'
+  drivers/pci/hotplug/acpi_pcihp.c:199: warning: Function parameter or member 'handle' not described in 'acpi_pci_detect_ejectable'
+  drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Function parameter or member 'epf_test' not described in 'pci_epf_test_clean_dma_chan'
+  drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Excess function parameter 'epf' description in 'pci_epf_test_clean_dma_chan'
+  drivers/pci/endpoint/pci-ep-cfs.c:17: warning: Function parameter or member 'functions_idr' not described in 'DEFINE_IDR'
+  drivers/pci/endpoint/pci-epc-core.c:18: warning: cannot understand function prototype: 'struct class *pci_epc_class; '
+  drivers/pci/endpoint/pci-epf-core.c:18: warning: Function parameter or member 'pci_epf_mutex' not described in 'DEFINE_MUTEX'
+  drivers/pci/endpoint/pci-epf-core.c:80: warning: Function parameter or member 'epf' not described in 'pci_epf_free_space'
+  drivers/pci/endpoint/pci-epf-core.c:107: warning: Function parameter or member 'epf' not described in 'pci_epf_alloc_space'
+  drivers/pci/endpoint/pci-epc-mem.c:16: warning: Incorrect use of kernel-doc format:  * pci_epc_mem_get_order() - determine the allocation order of a memory size
+  drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'mem' not described in 'pci_epc_mem_get_order'
+  drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'size' not described in 'pci_epc_mem_get_order'
+  drivers/pci/setup-bus.c:62: warning: Function parameter or member 'min_align' not described in 'add_to_list'
+  drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
+  drivers/pci/of.c:262: warning: Function parameter or member 'ib_resources' not described in 'devm_of_pci_get_host_bridge_resources'
+  drivers/pci/ats.c:196: warning: Function parameter or member 'pdev' not described in 'pci_enable_pri'
+  drivers/pci/ats.c:196: warning: Function parameter or member 'reqs' not described in 'pci_enable_pri'
+  drivers/pci/pci-pf-stub.c:20: warning: cannot understand function prototype: 'const struct pci_device_id pci_pf_stub_whitelist[] = '
+
 > ---
->  .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++-------
->  drivers/pci/controller/dwc/pcie-designware.h  |  4 +++
->  2 files changed, 21 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 42fbfe2a1b8f..6f06d6bd9f00 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -363,13 +363,23 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  			pp->io_base = pci_pio_to_address(pp->io->start);
->  			break;
->  		case IORESOURCE_MEM:
-> -			pp->mem = win->res;
-> -			pp->mem->name = "MEM";
-> -			mem_size = resource_size(pp->mem);
-> -			if (upper_32_bits(mem_size))
-> -				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-> -			pp->mem_size = mem_size;
-> -			pp->mem_bus_addr = pp->mem->start - win->offset;
-> +			if (win->res->flags & IORESOURCE_PREFETCH) {
-> +				pp->prefetch = win->res;
-> +				pp->prefetch->name = "PREFETCH";
-> +				pp->prefetch_base = pp->prefetch->start;
-> +				pp->prefetch_size = resource_size(pp->prefetch);
-> +				pp->perfetch_bus_addr = pp->prefetch->start -
-> +							win->offset;
-> +			} else {
-> +				pp->mem = win->res;
-> +				pp->mem->name = "MEM";
-> +				pp->mem_base = pp->mem->start;
-> +				mem_size = resource_size(pp->mem);
-> +				if (upper_32_bits(mem_size))
-> +					dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-> +				pp->mem_size = mem_size;
-> +				pp->mem_bus_addr = pp->mem->start - win->offset;
-> +			}
->  			break;
->  		case 0:
->  			pp->cfg = win->res;
-> @@ -394,8 +404,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		}
->  	}
->  
-> -	pp->mem_base = pp->mem->start;
-> -
->  	if (!pp->va_cfg0_base) {
->  		pp->va_cfg0_base = devm_pci_remap_cfgspace(dev,
->  					pp->cfg0_base, pp->cfg0_size);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 656e00f8fbeb..c87c1b2a1177 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -186,9 +186,13 @@ struct pcie_port {
->  	u64			mem_base;
->  	phys_addr_t		mem_bus_addr;
->  	u32			mem_size;
-> +	u64			prefetch_base;
-> +	phys_addr_t		perfetch_bus_addr;
-> +	u64			prefetch_size;
-
-There's no reason to store these for all eternity as they are used in 
-one place and already stored as resources in bridge->windows.
-
-I have a patch series removing most of this that I will post in a few 
-days. There's a WIP branch, pci-dw-config-access, in my kernel.org 
-tree. Mostly you just need the bridge ptr which is isn't currently 
-saved in pcie_port.
-
-Rob
+> Changes since v1:
+> 1. Fix subject
+> ---
+>  drivers/pci/vc.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
+> index 5486f8768c86..5fc59ac31145 100644
+> --- a/drivers/pci/vc.c
+> +++ b/drivers/pci/vc.c
+> @@ -172,7 +172,6 @@ static void pci_vc_enable(struct pci_dev *dev, int pos, int res)
+>   * @dev: device
+>   * @pos: starting position of VC capability (VC/VC9/MFVC)
+>   * @save_state: buffer for save/restore
+> - * @name: for error message
+>   * @save: if provided a buffer, this indicates what to do with it
+>   *
+>   * Walking Virtual Channel config space to size, save, or restore it
+> -- 
+> 2.17.1
+> 
