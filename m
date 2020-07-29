@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDD1923218B
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 17:31:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E5DF232196
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 17:31:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgG2PbJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 11:31:09 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:10005 "EHLO
+        id S1726970AbgG2PbS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 11:31:18 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:10017 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726757AbgG2PbI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 11:31:08 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+        by vger.kernel.org with ESMTP id S1726790AbgG2PbJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 11:31:09 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
   by alexa-out-sd-01.qualcomm.com with ESMTP; 29 Jul 2020 08:31:07 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 29 Jul 2020 08:31:02 -0700
+  by ironmsg02-sd.qualcomm.com with ESMTP; 29 Jul 2020 08:31:02 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 37ABF21A05; Wed, 29 Jul 2020 21:00:55 +0530 (IST)
+        id 5D7C621A0C; Wed, 29 Jul 2020 21:00:55 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -26,10 +26,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         varada@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH V2 5/7] PCI: qcom: Do PHY power on before PCIe init
-Date:   Wed, 29 Jul 2020 21:00:05 +0530
-Message-Id: <1596036607-11877-6-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V2 6/7] PCI: qcom: Add ipq8074 PCIe controller support
+Date:   Wed, 29 Jul 2020 21:00:06 +0530
+Message-Id: <1596036607-11877-7-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596036607-11877-1-git-send-email-sivaprak@codeaurora.org>
 References: <1596036607-11877-1-git-send-email-sivaprak@codeaurora.org>
@@ -38,63 +37,271 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
-changed phy ops from init/deinit to power on/off, due to this phy enable
-is getting called after PCIe init.
+Add support for PCIe Gen3 port found in ipq8074 devices.
 
-On some platforms like ipq8074 phy should be inited before accessing the
-PCIe register space, otherwise the system would hang.
-
-So move phy_power_on API before PCIe init.
-
-Fixes: commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
-Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 177 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 176 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 3aac77a..e1b5651 100644
+index e1b5651..3bddfcff 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1265,18 +1265,18 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+@@ -40,6 +40,14 @@
+ #define L23_CLK_RMV_DIS				BIT(2)
+ #define L1_CLK_RMV_DIS				BIT(1)
  
- 	qcom_ep_reset_assert(pcie);
++#define PCIE_ATU_CR1_OUTBOUND_6_GEN3		0xC00
++#define PCIE_ATU_CR2_OUTBOUND_6_GEN3		0xC04
++#define PCIE_ATU_LIMIT_OUTBOUND_6_GEN3		0xC10
++#define PCIE_ATU_CR1_OUTBOUND_7_GEN3		0xE00
++#define PCIE_ATU_CR2_OUTBOUND_7_GEN3		0xE04
++#define PCIE_ATU_LOWER_BASE_OUTBOUND_7_GEN3	0xE08
++#define PCIE_ATU_LIMIT_OUTBOUND_7_GEN3		0xE10
++
+ #define PCIE20_PARF_PHY_CTRL			0x40
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+@@ -58,6 +66,13 @@
+ #define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
+ #define PCIE20_PARF_DEVICE_TYPE			0x1000
  
--	ret = pcie->ops->init(pcie);
-+	ret = phy_power_on(pcie->phy);
- 	if (ret)
- 		return ret;
++#define AHB_CLK_EN				BIT(0)
++#define MSTR_AXI_CLK_EN				BIT(1)
++#define BYPASS					BIT(4)
++
++#define PCIE20_PARF_BDF_TO_SID_TABLE		0x2000
++#define BDF_TO_SID_TABLE_SIZE			0x100
++
+ #define PCIE20_ELBI_SYS_CTRL			0x04
+ #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
  
--	ret = phy_power_on(pcie->phy);
-+	ret = pcie->ops->init(pcie);
- 	if (ret)
--		goto err_deinit;
-+		goto err_disable_phy;
+@@ -68,11 +83,13 @@
+ #define CFG_BRIDGE_SB_INIT			BIT(0)
  
- 	if (pcie->ops->post_init) {
- 		ret = pcie->ops->post_init(pcie);
- 		if (ret)
--			goto err_disable_phy;
-+			goto err_deinit;
+ #define PCIE20_CAP				0x70
+-#define PCIE20_DEVICE_CONTROL2_STATUS2		(PCIE20_CAP + PCI_EXP_DEVCTL2)
+ #define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + PCI_EXP_LNKCAP)
+ #define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
+ #define PCIE_CAP_LINK1_VAL			0x2FD7F
+ 
++#define PCIE20_DEVICE_CONTROL2_STATUS2		(PCIE20_CAP + PCI_EXP_DEVCTL2)
++#define PCIE_CAP_CPL_TIMEOUT_DISABLE           0x10
++
+ #define PCIE20_PARF_Q2A_FLUSH			0x1AC
+ 
+ #define PCIE20_MISC_CONTROL_1_REG		0x8BC
+@@ -96,9 +113,15 @@
+ #define SLV_ADDR_SPACE_SZ			0x10000000
+ 
+ #define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
++#define PCIE_CAP_CURR_DEEMPHASIS		BIT(16)
++#define SPEED_GEN3				0x3
+ 
+ #define DEVICE_TYPE_RC				0x4
+ 
++#define PCIE30_GEN3_RELATED_OFF			0x890
++#define RXEQ_RGRDLESS_RXTS			BIT(13)
++#define GEN3_ZRXDC_NONCOMPL			BIT(0)
++
+ #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+ #define QCOM_PCIE_2_1_0_MAX_CLOCKS	5
+ struct qcom_pcie_resources_2_1_0 {
+@@ -165,6 +188,11 @@ struct qcom_pcie_resources_2_7_0 {
+ 	struct clk *pipe_clk;
+ };
+ 
++struct qcom_pcie_resources_2_9_0 {
++	struct clk_bulk_data clks[7];
++	struct reset_control *rst[8];
++};
++
+ union qcom_pcie_resources {
+ 	struct qcom_pcie_resources_1_0_0 v1_0_0;
+ 	struct qcom_pcie_resources_2_1_0 v2_1_0;
+@@ -172,6 +200,7 @@ union qcom_pcie_resources {
+ 	struct qcom_pcie_resources_2_3_3 v2_3_3;
+ 	struct qcom_pcie_resources_2_4_0 v2_4_0;
+ 	struct qcom_pcie_resources_2_7_0 v2_7_0;
++	struct qcom_pcie_resources_2_9_0 v2_9_0;
+ };
+ 
+ struct qcom_pcie;
+@@ -1250,6 +1279,134 @@ static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
+ 	clk_disable_unprepare(res->pipe_clk);
+ }
+ 
++static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
++	struct dw_pcie *pci = pcie->pci;
++	struct device *dev = pci->dev;
++	int ret, i;
++	const char *rst_names[] = { "pipe", "sleep", "sticky", "axi_m",
++				    "axi_s", "ahb", "axi_m_sticky",
++				    "axi_s_sticky" };
++
++	res->clks[0].id = "iface";
++	res->clks[1].id = "axi_m";
++	res->clks[2].id = "axi_s";
++	res->clks[3].id = "ahb";
++	res->clks[4].id = "aux";
++	res->clks[5].id = "axi_bridge";
++	res->clks[6].id = "rchng";
++
++	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
++	if (ret < 0)
++		return ret;
++
++	for (i = 0; i < ARRAY_SIZE(rst_names); i++) {
++		res->rst[i] = devm_reset_control_get(dev, rst_names[i]);
++		if (IS_ERR(res->rst[i]))
++			return PTR_ERR(res->rst[i]);
++	}
++
++	return 0;
++}
++
++static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
++	struct dw_pcie *pci = pcie->pci;
++	struct device *dev = pci->dev;
++	int i, ret;
++	u32 val;
++	u32 bus_master_en = PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
++
++	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
++		ret = reset_control_assert(res->rst[i]);
++		if (ret) {
++			dev_err(dev, "reset #%d assert failed (%d)\n", i, ret);
++			return ret;
++		}
++	}
++
++	usleep_range(2000, 2500);
++
++	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
++		ret = reset_control_deassert(res->rst[i]);
++		if (ret) {
++			dev_err(dev, "reset #%d deassert failed (%d)\n", i,
++				ret);
++			return ret;
++		}
++	}
++
++	/*
++	 * Don't have a way to see if the reset has completed.
++	 * Wait for some time.
++	 */
++	usleep_range(2000, 2500);
++
++	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
++	if (ret)
++		return ret;
++
++	/* Parf config */
++	writel(SLV_ADDR_SPACE_SZ,
++	       pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
++
++	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val &= ~BIT(0);
++	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++
++	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
++	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
++	       pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++
++	writel(RXEQ_RGRDLESS_RXTS | GEN3_ZRXDC_NONCOMPL,
++	       pci->dbi_base + PCIE30_GEN3_RELATED_OFF);
++	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
++		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
++		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
++		pcie->parf + PCIE20_PARF_SYS_CTRL);
++	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
++
++	/* DBI config */
++	writel(bus_master_en, pci->dbi_base + PCI_COMMAND);
++
++	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
++	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + PCIE20_CAP_LINK_1);
++
++	/* Configure PCIe link capabilities for ASPM */
++	val = readl(pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
++	val &= ~PCI_EXP_LNKCAP_ASPMS;
++	writel(val, pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
++
++	writel(PCIE_CAP_CPL_TIMEOUT_DISABLE, pci->dbi_base +
++		PCIE20_DEVICE_CONTROL2_STATUS2);
++
++	writel(PCIE_CAP_CURR_DEEMPHASIS | SPEED_GEN3,
++	       pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
++
++	for (i = 0 ; i < BDF_TO_SID_TABLE_SIZE ; i++)
++		writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE + (4 * i));
++
++	writel(0x4, pci->atu_base + PCIE_ATU_CR1_OUTBOUND_6_GEN3);
++	writel(0x90000000, pci->atu_base + PCIE_ATU_CR2_OUTBOUND_6_GEN3);
++	writel(0x00107FFFF, pci->atu_base + PCIE_ATU_LIMIT_OUTBOUND_6_GEN3);
++	writel(0x5, pci->atu_base + PCIE_ATU_CR1_OUTBOUND_7_GEN3);
++	writel(0x90000000, pci->atu_base + PCIE_ATU_CR2_OUTBOUND_7_GEN3);
++	writel(0x200000, pci->atu_base + PCIE_ATU_LOWER_BASE_OUTBOUND_7_GEN3);
++	writel(0x7FFFFF, pci->atu_base + PCIE_ATU_LIMIT_OUTBOUND_7_GEN3);
++
++	return 0;
++}
++
++static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
++
++	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
++}
++
+ static int qcom_pcie_link_up(struct dw_pcie *pci)
+ {
+ 	u16 val = readw(pci->dbi_base + PCIE20_CAP + PCI_EXP_LNKSTA);
+@@ -1359,6 +1516,14 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
+ 	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+ };
+ 
++/* Qcom IP rev.: 2.9.0	Synopsys IP rev.: 5.00a */
++static const struct qcom_pcie_ops ops_2_9_0 = {
++	.get_resources = qcom_pcie_get_resources_2_9_0,
++	.init = qcom_pcie_init_2_9_0,
++	.deinit = qcom_pcie_deinit_2_9_0,
++	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
++};
++
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.link_up = qcom_pcie_link_up,
+ };
+@@ -1399,6 +1564,15 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 		goto err_pm_runtime_put;
  	}
  
- 	dw_pcie_setup_rc(pp);
-@@ -1295,10 +1295,10 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 	qcom_ep_reset_assert(pcie);
- 	if (pcie->ops->post_deinit)
- 		pcie->ops->post_deinit(pcie);
--err_disable_phy:
--	phy_power_off(pcie->phy);
- err_deinit:
- 	pcie->ops->deinit(pcie);
-+err_disable_phy:
-+	phy_power_off(pcie->phy);
++	if (pcie->ops == &ops_2_9_0) {
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
++		pci->atu_base = devm_pci_remap_cfg_resource(dev, res);
++		if (IS_ERR(pci->atu_base)) {
++			ret = PTR_ERR(pci->atu_base);
++			goto err_pm_runtime_put;
++		}
++	}
++
+ 	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
+ 	if (pcie->gen < 0)
+ 		pcie->gen = 2;
+@@ -1476,6 +1650,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
+ 	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
+ 	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
++	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &ops_2_9_0 },
+ 	{ }
+ };
  
- 	return ret;
- }
 -- 
 2.7.4
 
