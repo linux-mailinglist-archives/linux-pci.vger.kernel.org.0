@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CBFE2325EC
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 22:12:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F4E42325F0
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 22:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgG2UMi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 16:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
+        id S1726890AbgG2UMm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 16:12:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgG2UMi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:12:38 -0400
+        id S1726628AbgG2UMm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:12:42 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EAF82082E;
-        Wed, 29 Jul 2020 20:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20C1C21883;
+        Wed, 29 Jul 2020 20:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596053557;
-        bh=dpUFo+a7/by7OwDh4oaNLD2JZxAldvHdSI9yKa6o100=;
+        s=default; t=1596053561;
+        bh=2H2F2qOPJfU1SZxbWzf7bM4+AUNctmYvKQWay3zlHls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u5hfMepN9W0v/k26zsPusjpaQvmgqzu/qmFRniCFc3nXSh6q2z8YSEHAphIirZOJ3
-         0MQSpl4R3vQtQ18+8uNWs72Yy3PLkdmUXSVcPb0/3dHiiXaxLxPt3RPjnUx0KgEL96
-         FHVFaa3FAQJHaaJvBlclZI2uTm1iSxV26RQKabeI=
+        b=1MwIztj0NYN/ZAGQLwcTBtY6f39mlg+nxT7sZ+OrdmfDnfpF5zab/As1nXF4LSL8V
+         3FCK4Daess5lNCpDPuKLGI4Zi+VP7AfSxUFEt/1AmY8Xw1GUtshMOmdXJX42ppMxuO
+         tu6bjBuWVm7rfEUmaERBZ2OsGj5uYGRQgzjm8JEw=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jingoo Han <jingoohan1@gmail.com>,
@@ -38,9 +38,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 1/6] PCI: Fix kerneldoc
-Date:   Wed, 29 Jul 2020 22:12:19 +0200
-Message-Id: <20200729201224.26799-2-krzk@kernel.org>
+Subject: [PATCH v3 2/6] PCI: endpoint: Fix kerneldoc
+Date:   Wed, 29 Jul 2020 22:12:20 +0200
+Message-Id: <20200729201224.26799-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200729201224.26799-1-krzk@kernel.org>
 References: <20200729201224.26799-1-krzk@kernel.org>
@@ -51,86 +51,99 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Fix W=1 compile warnings (invalid kerneldoc):
 
-    drivers/pci/ats.c:196: warning: Function parameter or member 'pdev' not described in 'pci_enable_pri'
-    drivers/pci/ats.c:196: warning: Function parameter or member 'reqs' not described in 'pci_enable_pri'
-    drivers/pci/of.c:262: warning: Function parameter or member 'ib_resources' not described in 'devm_of_pci_get_host_bridge_resources'
-    drivers/pci/pci-pf-stub.c:20: warning: cannot understand function prototype: 'const struct pci_device_id pci_pf_stub_whitelist[] = '
-    drivers/pci/setup-bus.c:62: warning: Function parameter or member 'min_align' not described in 'add_to_list'
-    drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
+    drivers/pci/endpoint/pci-epc-core.c:18: warning: cannot understand function prototype: 'struct class *pci_epc_class; '
+    drivers/pci/endpoint/pci-ep-cfs.c:17: warning: Function parameter or member 'functions_idr' not described in 'DEFINE_IDR'
+    drivers/pci/endpoint/pci-epf-core.c:18: warning: Function parameter or member 'pci_epf_mutex' not described in 'DEFINE_MUTEX'
+    drivers/pci/endpoint/pci-epf-core.c:80: warning: Function parameter or member 'epf' not described in 'pci_epf_free_space'
+    drivers/pci/endpoint/pci-epf-core.c:107: warning: Function parameter or member 'epf' not described in 'pci_epf_alloc_space'
+    drivers/pci/endpoint/pci-epc-mem.c:16: warning: Incorrect use of kernel-doc format:  * pci_epc_mem_get_order() - determine the allocation order of a memory size
+    drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'mem' not described in 'pci_epc_mem_get_order'
+    drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'size' not described in 'pci_epc_mem_get_order'
+    drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Function parameter or member 'epf_test' not described in 'pci_epf_test_clean_dma_chan'
+    drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Excess function parameter 'epf' description in 'pci_epf_test_clean_dma_chan'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pci/ats.c         | 3 ++-
- drivers/pci/of.c          | 2 ++
- drivers/pci/pci-pf-stub.c | 2 +-
- drivers/pci/setup-bus.c   | 1 +
- drivers/pci/vc.c          | 1 -
- 5 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             | 2 +-
+ drivers/pci/endpoint/pci-epc-core.c           | 2 +-
+ drivers/pci/endpoint/pci-epc-mem.c            | 2 +-
+ drivers/pci/endpoint/pci-epf-core.c           | 4 +++-
+ 5 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b761c1f72f67..2e1073052509 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -188,7 +188,8 @@ void pci_pri_init(struct pci_dev *pdev)
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index c89a9561439f..e4e51d884553 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -181,7 +181,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
  
  /**
-  * pci_enable_pri - Enable PRI capability
-- * @ pdev: PCI device structure
-+ * @pdev: PCI device structure
-+ * @reqs: outstanding requests
+  * pci_epf_test_clean_dma_chan() - Function to cleanup EPF test DMA channel
+- * @epf: the EPF test device that performs data transfer operation
++ * @epf_test: the EPF test device that performs data transfer operation
   *
-  * Returns 0 on success, negative value on error
+  * Helper to cleanup EPF test DMA channel.
   */
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 22727fc9558d..d9621a603702 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -243,6 +243,8 @@ EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
-  * @busno: bus number associated with the bridge root bus
-  * @bus_max: maximum number of buses for this bridge
-  * @resources: list where the range of resources will be added after DT parsing
-+ * @ib_resources: list where the range of inbound resources (with addresses
-+ *                from 'dma-ranges' will be added after DT parsing
-  * @io_base: pointer to a variable that will contain on return the physical
-  * address for the start of the I/O range. Can be NULL if the caller doesn't
-  * expect I/O ranges to be present in the device tree.
-diff --git a/drivers/pci/pci-pf-stub.c b/drivers/pci/pci-pf-stub.c
-index ef293e735c55..a0b2bd6c918a 100644
---- a/drivers/pci/pci-pf-stub.c
-+++ b/drivers/pci/pci-pf-stub.c
-@@ -9,7 +9,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- 
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index 55edce50be96..3710adf51912 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
 -/**
 +/*
-  * pci_pf_stub_whitelist - White list of devices to bind pci-pf-stub onto
+  * configfs to configure the PCI endpoint
   *
-  * This table provides the list of IDs this driver is supposed to bind
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 4d870ed89385..3951e02b7ded 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -55,6 +55,7 @@ static void free_list(struct list_head *head)
-  * @dev:	Device to which the resource belongs
-  * @res:	Resource to be tracked
-  * @add_size:	Additional size to be optionally added to the resource
-+ * @min_align:	Minimum memory window alignment
-  */
- static int add_to_list(struct list_head *head, struct pci_dev *dev,
- 		       struct resource *res, resource_size_t add_size,
-diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
-index 5486f8768c86..5fc59ac31145 100644
---- a/drivers/pci/vc.c
-+++ b/drivers/pci/vc.c
-@@ -172,7 +172,6 @@ static void pci_vc_enable(struct pci_dev *dev, int pos, int res)
-  * @dev: device
-  * @pos: starting position of VC capability (VC/VC9/MFVC)
-  * @save_state: buffer for save/restore
-- * @name: for error message
-  * @save: if provided a buffer, this indicates what to do with it
+  * Copyright (C) 2017 Texas Instruments
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 82ba0dc7f2f5..cadd3db0cbb0 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * PCI Endpoint *Controller* (EPC) library
   *
-  * Walking Virtual Channel config space to size, save, or restore it
+  * Copyright (C) 2017 Texas Instruments
+diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+index 80c46f3a4590..a97b56a6d2db 100644
+--- a/drivers/pci/endpoint/pci-epc-mem.c
++++ b/drivers/pci/endpoint/pci-epc-mem.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * PCI Endpoint *Controller* Address Space Management
+  *
+  * Copyright (C) 2017 Texas Instruments
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 244e00f48c5c..c977cf9dce56 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * PCI Endpoint *Function* (EPF) library
+  *
+  * Copyright (C) 2017 Texas Instruments
+@@ -71,6 +71,7 @@ EXPORT_SYMBOL_GPL(pci_epf_bind);
+ 
+ /**
+  * pci_epf_free_space() - free the allocated PCI EPF register space
++ * @epf: the EPF device from whom to free the memory
+  * @addr: the virtual address of the PCI EPF register space
+  * @bar: the BAR number corresponding to the register space
+  *
+@@ -96,6 +97,7 @@ EXPORT_SYMBOL_GPL(pci_epf_free_space);
+ 
+ /**
+  * pci_epf_alloc_space() - allocate memory for the PCI EPF register space
++ * @epf: the EPF device to whom allocate the memory
+  * @size: the size of the memory that has to be allocated
+  * @bar: the BAR number corresponding to the allocated register space
+  * @align: alignment size for the allocation region
 -- 
 2.17.1
 
