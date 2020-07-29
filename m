@@ -2,139 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B62172327F6
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 01:18:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4640123280F
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 01:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgG2XSu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 19:18:50 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:55744 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgG2XSu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 19:18:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=89S+0e9qaMFizZD+RqQQwt4PtCqG160SQSXRodd2/rg=; b=HVEQ5APHaKvLskI7TAL5CaUC9X
-        pGYeq7ZPshVY64Hg8IB+e22hnLINwW/LMYgLoxtfKEYsXRqAZpchZC8TEDgjMBI1R8V66Vk2xwuEQ
-        xjFgOsfcv0uck1cZCu8/pyKreXsOHBwwmVc/3tCPrUpoKFuZVHsfBP/eejQ+KUTYfwNgYS1EvgnWj
-        BfAl6F78l2XuNaA+AQvNwrtHG1vOVfOgvNEzbG9+Y+Dy5nHgMVum/ITFGiiG9jEul8RIqUm/jNyx+
-        XFgO8vglejw+chzGuCfPbPVfQaSPW3WSirDgcE1xvB7mWD33jwhjuGSBM93AG3G3cLJZSjQ2GyAeT
-        CWwTtpRA==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0vLT-0002wJ-GY; Wed, 29 Jul 2020 17:18:49 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0vLS-0001Do-Du; Wed, 29 Jul 2020 17:18:46 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>
-Date:   Wed, 29 Jul 2020 17:18:44 -0600
-Message-Id: <20200729231844.4653-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        id S1728049AbgG2X0h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 19:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgG2X0h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 19:26:37 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE87C061794
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 16:26:36 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id g26so24045179qka.3
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 16:26:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dclWewewLkTP04bmYZyewwOCC5F2QPW1bIlRnVcKlKg=;
+        b=aI44Vh/F7d2okdDRVOSDabHppJpRqIelvQMZqN/B2Z7HF3ZFuKLxEnoE3hiKByN5rR
+         bX3e8aveNwaxjMoDjVmNSiNDwSDWi0XvERlKAb7ORaYVVeGDFoeT/nKMsA7YWSH77Dh9
+         aT36NHqpyWyOdWskQItmpczVSvqdIvg1rDVYhYpJElb50Z0g4JRvxiEbMUI4hiv2MMGw
+         AMcGX76UtikEzy6JyMzeu2m/iLYMWBdBrh/e3NVrQAVf+AUA7/TY54EI86WbRGVuAb2n
+         aZ75vE8OZ4CxxR+AYFdTAhLf1hcPaLXlb3CY497RGkw2NEUQTqGWwF4Nr5xf4+YYgWvc
+         lbNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dclWewewLkTP04bmYZyewwOCC5F2QPW1bIlRnVcKlKg=;
+        b=nfQpxnOQoVnw+rzgnQr7Xz+LmdcHWnLu25xy/WEHagARhPTgQIbE13nYfmph5LTFmQ
+         UsZZkkdVufRcXbIlrPubkIDrakU0y2CXlUkxePE/Y//RPYYuXms1G1WCkShX/pwQu2SN
+         qnlT5HoaouJDPNd1js37P/FoP0xQ6TxpL3ry2tJC/jOWHjbVKJyHWSmzQXNmJ2yRKcVL
+         wjA/8jbKR/VK68PLLlBwbuc03ZorCtX8gZsSHO5IGm31VkDBhMQb1YPU1jk5FgXOhhbs
+         cOiSfRt+a2n0eq1Nh+G1z3z/NPXQ4MkgmnxJoZqD11DrYdKaQ5Gpy2RHB6uXDopG89Xd
+         0cNw==
+X-Gm-Message-State: AOAM533R3hyJXQ/Y2e6PANGrIWfbSDTbU0Fo6U57dwioOEe1GYwizhau
+        7viIH29ekcxG+ZmaC0yATk00+neoVwVzRWmuNHqnjir6mnc=
+X-Google-Smtp-Source: ABdhPJwlUVyV6cxoe0W2q9f8rAWp5zqflReAWKWgeJAA507CKPdHv2AUvjAoQOrCE50A+fFbybHzadZF5ta7QYIrqow=
+X-Received: by 2002:a37:8fc6:: with SMTP id r189mr34224500qkd.159.1596065195902;
+ Wed, 29 Jul 2020 16:26:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, logang@deltatee.com, bhelgaas@google.com, alexdeucher@gmail.com, christian.koenig@amd.com, ray.huang@amd.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: [PATCH v2] PCI/P2PDMA: Allow P2PDMA on all AMD CPUs newer than the Zen family
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <CAA85sZvJQge6ETwF1GkdvK1Mpwazh_cYJcmeZVAohmt0FjbMZg@mail.gmail.com>
+ <20200729224710.GA1971834@bjorn-Precision-5520> <CAA85sZt7xHJc85Ok8j2QDmB-E_r-ch5kBKqYeUe1KnA6Gt-iDw@mail.gmail.com>
+ <CAA85sZvL4_mR=w2MU7JUx5eksnCt1yBZD=jbhAMoMVz38OJ5aA@mail.gmail.com>
+In-Reply-To: <CAA85sZvL4_mR=w2MU7JUx5eksnCt1yBZD=jbhAMoMVz38OJ5aA@mail.gmail.com>
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+Date:   Thu, 30 Jul 2020 01:26:25 +0200
+Message-ID: <CAA85sZuQchm20C4v9V+TnOx+GZ4DJ13jX4g7fPdDB0QJN2Ot=A@mail.gmail.com>
+Subject: Re: [RFC] ASPM L1 link latencies
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In order to avoid needing to add every new AMD CPU host bridge to the list
-every cycle, allow P2PDMA if the CPUs vendor is AMD and family is
-greater than 0x17 (Zen).
+On Thu, Jul 30, 2020 at 1:12 AM Ian Kumlien <ian.kumlien@gmail.com> wrote:
+>
+> On Thu, Jul 30, 2020 at 1:02 AM Ian Kumlien <ian.kumlien@gmail.com> wrote=
+:
+> > On Thu, Jul 30, 2020 at 12:47 AM Bjorn Helgaas <helgaas@kernel.org> wro=
+te:
+> > > On Sat, Jul 25, 2020 at 09:47:05PM +0200, Ian Kumlien wrote:
+> > > > Hi,
+> > > >
+> > > > A while ago I realised that I was having all kinds off issues with =
+my
+> > > > connection, ~933 mbit had become ~40 mbit
+> > > >
+> > > > This only applied on links to the internet (via a linux fw running
+> > > > NAT) however while debugging with the help of Alexander Duyck
+> > > > we realised that ASPM could be the culprit (at least disabling ASPM=
+ on
+> > > > the nic it self made things work just fine)...
+> > > >
+> > > > So while trying to understand PCIe and such things, I found this:
+> > > >
+> > > > The calculations of the max delay looked at "that node" + start lat=
+ency * "hops"
+> > > >
+> > > > But one hop might have a larger latency and break the acceptable de=
+lay...
+> > > >
+> > > > So after a lot playing around with the code, i ended up with this, =
+and
+> > > > it seems to fix my problem and does
+> > > > set two pcie bridges to ASPM Disabled that didn't happen before.
+> > > >
+> > > > I do however have questions.... Shouldn't the change be applied to
+> > > > the endpoint?  Or should it be applied recursively along the path t=
+o
+> > > > the endpoint?
+> > >
+> > > I don't understand this very well, but I think we do need to consider
+> > > the latencies along the entire path.  PCIe r5.0, sec 5.4.1.3, contain=
+s
+> > > this:
+> > >
+> > >   Power management software, using the latency information reported b=
+y
+> > >   all components in the Hierarchy, can enable the appropriate level o=
+f
+> > >   ASPM by comparing exit latency for each given path from Root to
+> > >   Endpoint against the acceptable latency that each corresponding
+> > >   Endpoint can withstand.
+> >
+> > One of the questions is this:
+> > They say from root to endpoint while we walk from endpoint to root
+> >
+> > So, is that more optimal in some way? or should latencies always be
+> > considered from root to endpoint?
+> > In that case, should the link ASPM be disabled somewhere else?
+> > (I tried to disable them on the "endpoint" and it didn't help for some =
+reason)
+> >
+> > > Also this:
+> >
+> > [--8<--]
+> >
+> > >   - For each component with one or more Endpoint Functions, PCI
+> > >     Express system software examines the Endpoint L0s/L1 Acceptable
+> > >     Latency, as reported by each Endpoint Function in its Link
+> > >     Capabilities register, and enables or disables L0s/L1 entry (via
+> > >     the ASPM Control field in the Link Control register) accordingly
+> > >     in some or all of the intervening device Ports on that hierarchy.
+> >
+> > > > Also, the L0S checks are only done on the local links, is this
+> > > > correct?
+> > >
+> > > ASPM configuration is done on both ends of a link.  I'm not sure it
+> > > makes sense to enable any state (L0s, L1, L1.1, L1.2) unless both end=
+s
+> > > of the link support it.  In particular, sec 5.4.1.3 says:
+> > >
+> > >   Software must not enable L0s in either direction on a given Link
+> > >   unless components on both sides of the Link each support L0s;
+> > >   otherwise, the result is undefined.
+> > >
+> > > But I think we do need to consider the entire path when enabling L0s;
+> > > from sec 7.5.3.3:
+> > >
+> > >   Endpoint L0s Acceptable Latency - This field indicates the
+> > >   acceptable total latency that an Endpoint can withstand due to the
+> > >   transition from L0s state to the L0 state. It is essentially an
+> > >   indirect measure of the Endpoint=E2=80=99s internal buffering.  Pow=
+er
+> > >   management software uses the reported L0s Acceptable Latency number
+> > >   to compare against the L0s exit latencies reported by all component=
+s
+> > >   comprising the data path from this Endpoint to the Root Complex Roo=
+t
+> > >   Port to determine whether ASPM L0s entry can be used with no loss o=
+f
+> > >   performance.
+> > >
+> > > Does any of that help answer your question?
+> >
+> > Yes! It's exactly what I wanted to know, :)
+> >
+> > So now the question is should I group the fixes into one patch or
+> > separate them for easier bisecting?
+>
+> Actually this raises a few questions...
+>
+> It does sound like this is sum(link->latency_up.l0s) +
+> sum(link->latency_dw.l0s) of the link vs acceptable->l0s
+>
+> But, would that mean that we walk the link backwards? so it's both sides?
+>
+> Currently they are separated - and they are not diaabled as a whole...
+>
+> How should we handle the difference between up and down to keep the
+> finer grained control we have?
 
-This should cut down a bunch of the churn adding to the list of allowed
-host bridges.
+so, this:
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index bd53fba7f382..18b659e6d3e8 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexdeucher@gmail.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Huang Rui <ray.huang@amd.com>
+ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ {
+-       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0;
++       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0,
++               l0s_max_latency =3D 0;
+        struct aspm_latency *acceptable;
+        struct pcie_link_state *link;
 
----
+@@ -448,14 +449,18 @@ static void pcie_aspm_check_latency(struct
+pci_dev *endpoint)
 
-Here's a reworked patch to enable P2PDMA on Zen2 (and in fact all
-subsequent Zen platforms).
+        while (link) {
+                /* Check upstream direction L0s latency */
+-               if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
+-                   (link->latency_up.l0s > acceptable->l0s))
+-                       link->aspm_capable &=3D ~ASPM_STATE_L0S_UP;
++               if (link->aspm_capable & ASPM_STATE_L0S_UP) {
++                       l0s_max_latency +=3D link->latency_up.l0s;
++                       if (l0s_max_latency > acceptable->l0s)
++                               link->aspm_capable &=3D ~ASPM_STATE_L0S_UP;
++               }
 
-This should remove all the churn on the list for the AMD side. Still
-don't have a good solution for Intel.
+                /* Check downstream direction L0s latency */
+-               if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+-                   (link->latency_dw.l0s > acceptable->l0s))
+-                       link->aspm_capable &=3D ~ASPM_STATE_L0S_DW;
++               if (link->aspm_capable & ASPM_STATE_L0S_DW) {
++                       l0s_max_latency +=3D link->latency_dw.l0s;
++                       if (l0s_max_latency > acceptable->l0s)
++                               link->aspm_capable &=3D ~ASPM_STATE_L0S_DW;
++               }
+                /*
+                 * Check L1 latency.
+                 * Every switch on the path to root complex need 1
 
- drivers/pci/p2pdma.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+--- vs ----
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index e8e444eeb1cd..f1cab2c50595 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -273,6 +273,24 @@ static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
- 	seq_buf_printf(buf, "%s;", pci_name(pdev));
- }
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index bd53fba7f382..74dee09e788b 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
 
-+#ifdef CONFIG_X86
-+static bool cpu_supports_p2pdma(void)
-+{
-+	struct cpuinfo_x86 *c = &cpu_data(0);
+ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ {
+-       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0;
++       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0,
++               l0s_max_latency =3D 0;
+        struct aspm_latency *acceptable;
+        struct pcie_link_state *link;
+
+@@ -448,14 +449,17 @@ static void pcie_aspm_check_latency(struct
+pci_dev *endpoint)
+
+        while (link) {
+                /* Check upstream direction L0s latency */
+-               if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
+-                   (link->latency_up.l0s > acceptable->l0s))
+-                       link->aspm_capable &=3D ~ASPM_STATE_L0S_UP;
++               if (link->aspm_capable & ASPM_STATE_L0S_UP)
++                       l0s_max_latency +=3D link->latency_up.l0s;
+
+                /* Check downstream direction L0s latency */
+-               if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+-                   (link->latency_dw.l0s > acceptable->l0s))
+-                       link->aspm_capable &=3D ~ASPM_STATE_L0S_DW;
++               if (link->aspm_capable & ASPM_STATE_L0S_DW)
++                       l0s_max_latency +=3D link->latency_dw.l0s;
 +
-+	/* Any AMD CPU who's family id is newer than Zen will support p2pdma */
-+	if (c->x86_vendor == X86_VENDOR_AMD && c->x86 >= 0x17)
-+		return true;
++               /* If the latency exceeds, disable both */
++               if (l0s_max_latency > acceptable->l0s)
++                       link->aspm_capable &=3D ~ASPM_STATE_L0S;
 +
-+	return false;
-+}
-+#else
-+static bool cpu_supports_p2pdma(void)
-+{
-+	return false;
-+}
-+#endif
-+
- static const struct pci_p2pdma_whitelist_entry {
- 	unsigned short vendor;
- 	unsigned short device;
-@@ -280,11 +298,6 @@ static const struct pci_p2pdma_whitelist_entry {
- 		REQ_SAME_HOST_BRIDGE	= 1 << 0,
- 	} flags;
- } pci_p2pdma_whitelist[] = {
--	/* AMD ZEN */
--	{PCI_VENDOR_ID_AMD,	0x1450,	0},
--	{PCI_VENDOR_ID_AMD,	0x15d0,	0},
--	{PCI_VENDOR_ID_AMD,	0x1630,	0},
--
- 	/* Intel Xeon E5/Core i7 */
- 	{PCI_VENDOR_ID_INTEL,	0x3c00, REQ_SAME_HOST_BRIDGE},
- 	{PCI_VENDOR_ID_INTEL,	0x3c01, REQ_SAME_HOST_BRIDGE},
-@@ -473,7 +486,8 @@ upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
- 					      acs_redirects, acs_list);
+                /*
+                 * Check L1 latency.
+                 * Every switch on the path to root complex need 1
 
- 	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
--		if (!host_bridge_whitelist(provider, client))
-+		if (!cpu_supports_p2pdma() &&
-+		    !host_bridge_whitelist(provider, client))
- 			map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
- 	}
+----
 
-
-base-commit: 92ed301919932f777713b9172e525674157e983d
---
-2.20.1
+Currently we don't make a difference between them and I don't quite
+understand the upstream and downstream terminology since it's a serial
+bus ;)
