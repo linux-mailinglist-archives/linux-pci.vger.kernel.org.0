@@ -2,162 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD14B23160A
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 01:06:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E8162317C6
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 04:49:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgG1XGI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jul 2020 19:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
+        id S1731030AbgG2CtP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jul 2020 22:49:15 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:32799 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbgG1XGG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:06:06 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726710AbgG2CtP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jul 2020 22:49:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595990954; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=s59Yw3fasEaqZROVI4pIOg10UgBffG1K/Zo2DcvLBPw=; b=cSrWky6S9DsR+gnbCRRuQjrSIfQzEqBAN4kv+ktdAYYqvu3Soo244diLRh84sSsFvD19+W4C
+ fIMKjUozZMUzabwjDzKl73q/e+00yYwCzvVCeWtTZjkKEXt9jzXwliwi3Xe+2F4TcY8La3JX
+ LuPN59yOUpclfVlenV/+w6hkSts=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f20e3a8a61bb9e3f5144c69 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 02:49:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF642C433CB; Wed, 29 Jul 2020 02:49:11 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.8 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.0.101] (unknown [49.204.127.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A2FD207FC;
-        Tue, 28 Jul 2020 23:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595977565;
-        bh=B+2S5YhP4tk2MBOwTpLzH1FWv0DJxUuyH1vXMpqRmAE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=yZc7OgrKqign9LaIBGmAgropcpP8jWuRJsqn/dRYetPxrtP750S30CTfAIjXJ3ubk
-         dZr37R2yv2gSUpF1EVS6ENca2qEcU3t1wVFRX2GYVjcIB1jUhSHNjw9eStZ3ypjd5j
-         yXBy+Fu3j4kPPW+bV53R3O29MQ8EnsKlIljlI/C0=
-Date:   Tue, 28 Jul 2020 18:06:03 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     James Ettle <james@ettle.org.uk>
-Cc:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacopo De Simoi <wilderkde@gmail.com>
-Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
-Message-ID: <20200728230603.GA1870954@bjorn-Precision-5520>
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE9CBC433C6;
+        Wed, 29 Jul 2020 02:49:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AE9CBC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V2] dt-bindings: pci: convert QCOM pci bindings to YAML
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
+ <CAL_Jsq+-rwG73mEkYmMQcnxHoBpbFMWHKDvzUK=6-fMAo77-9w@mail.gmail.com>
+ <CAL_JsqJU81U5CNSia3Lrzwb2VpPy3YMK=tJfXgU49TuGn1eRyQ@mail.gmail.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <fcb3df88-18bd-add1-5329-92af92948048@codeaurora.org>
+Date:   Wed, 29 Jul 2020 08:19:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e051ac790380f04be4eec6937032b7dcd411ec77.camel@ettle.org.uk>
+In-Reply-To: <CAL_JsqJU81U5CNSia3Lrzwb2VpPy3YMK=tJfXgU49TuGn1eRyQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 09:57:55PM +0100, James Ettle wrote:
-> On Mon, 2020-07-27 at 16:47 -0500, Bjorn Helgaas wrote:
-> > 
-> > I don't see anything in rtsx that enables L0s.  Can you collect
-> > the dmesg log when booting with "pci=earlydump"?  That will show
-> > whether the BIOS left it this way.  The PCI core isn't supposed to
-> > do this, so if it did, we need to fix that.
-> 
-> dmesg log attached to the bugzilla as:
-> 
-> https://bugzilla.kernel.org/attachment.cgi?id=290655
+Hi Rob,
 
-Thank you!  BIOS left the Root Port and both Endpoints with L1 enabled
-but L0s disabled.
+On 7/28/2020 9:24 PM, Rob Herring wrote:
+> On Tue, Jul 28, 2020 at 9:27 AM Rob Herring <robh+dt@kernel.org> wrote:
+>> On Sun, Jul 26, 2020 at 9:07 AM Sivaprakash Murugesan
+>> <sivaprak@qti.qualcomm.com> wrote:
+>>> From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>
+>>> Convert QCOM pci bindings to YAML schema
+>>>
+>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>> ---
+>>> [v2]
+>>>    - Referenced pci-bus.yaml
+>>>    - removed duplicate properties already referenced by pci-bus.yaml
+>>>    - Addressed comments from Rob
+>>>   .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+>>>   .../devicetree/bindings/pci/qcom,pcie.yaml         | 447 +++++++++++++++++++++
+>>>   2 files changed, 447 insertions(+), 330 deletions(-)
+>>>   delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>   create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> new file mode 100644
+>>> index 000000000000..ddb84f49ac1c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> @@ -0,0 +1,447 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
+>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>> +
+>>> +title: Qualcomm PCI express root complex
+>>> +
+>>> +maintainers:
+>>> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>> +
+>>> +description:
+>>> +  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
+>>> +  wrappers.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - qcom,pcie-apq8064
+>>> +      - qcom,pcie-apq8084
+>>> +      - qcom,pcie-ipq4019
+>>> +      - qcom,pcie-ipq8064
+>>> +      - qcom,pcie-ipq8074
+>>> +      - qcom,pcie-msm8996
+>>> +      - qcom,pcie-qcs404
+>>> +      - qcom,pcie-sdm845
+>>> +
+>>> +  reg:
+>>> +    description: Register ranges as listed in the reg-names property
+>> Can drop this.
+>>
+>>> +    maxItems: 4
+>>> +
+>>> +  reg-names:
+>>> +    items:
+>>> +      - const: dbi
+>>> +      - const: elbi
+>>> +      - const: parf
+>>> +      - const: config
+>>> +
+>>> +  ranges:
+>>> +    maxItems: 2
+>>> +
+>>> +  interrupts:
+>>> +    items:
+>>> +      - description: MSI interrupts
+>>> +
+>>> +  interrupt-names:
+>>> +    const: msi
+>>> +
+>>> +  "#interrupt-cells":
+>> In pci-bus.yaml, so you can drop.
 
-Next question is how L0s got enabled.  We don't see anything in the
-driver that does that.  And lspci claims L0s was enabled on the
-Endpoints even without any udev or other manual fiddling.
+I am getting the below error if I remove #interrupt-cells alone.
 
-I tried to deduce the problem from the code in aspm.c, but I didn't
-see the problem.  If you have the ability to build a kernel with a
-debug patch, can you boot with the patch below and collect the dmesg
-log?
+properties: '#interrupt-cells' is a dependency of 'interrupt-map'
 
-FWIW, here's the analysis of the earlydump output that shows L0s
-disabled:
-
-  #define PCI_CAPABILITY_LIST     0x34
-  #define  PCI_CAP_ID_MSI         0x05
-  #define  PCI_CAP_ID_EXP         0x10    /* PCI Express */
-  #define PCI_EXP_LNKCTL          16
-  #define  PCI_EXP_LNKCTL_ASPM_L0S 0x0001
-  #define  PCI_EXP_LNKCTL_ASPM_L1  0x0002
-  #define  PCI_EXP_LNKCTL_CCC     0x0040
-  #define  PCI_EXP_LNKCTL_CLKREQ_EN 0x0100
-
-  00:1d.0:
-    0034: 40        Offset of first capability
-    0040: 8010      PCIe capability ID, next cap at 0x80
-    0050: 0042      PCIe Link Control: CCC L1
-  01:00.0:
-    0034: 40        Offset of first capability
-    0040: 7005      MSI capability ID (0x05), next cap at 0x70
-    0070: b010      PCIe capability ID (0x10), next cap at 0xb0
-    0080: 0142      PCIe Link Control: CLKREQ_EN CCC L1
-  01:00.1:
-    0034: 40        Offset of first capability
-    0040: 7005      MSI capability ID (0x05), next cap at 0x70
-    0070: b010      PCIe capability ID (0x10), next cap at 0xb0
-    0080: 0142      PCIe Link Control: CLKREQ_EN CCC L1
+interrupt-map is also documented in pci-bus.yaml hence dropping that as 
+well.
 
 
-commit 555db6d25963 ("debug")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue Jul 28 17:52:58 2020 -0500
-
-    debug
-    
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index b17e5ffd31b1..262f35883a2a 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -577,6 +577,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	pcie_get_aspm_reg(parent, &upreg);
- 	pcie_get_aspm_reg(child, &dwreg);
- 
-+	pci_info(parent, "%s support %x enabled %x\n", __func__, upreg.support,
-+		 upreg.enabled);
-+	pci_info(child, "%s support %x enabled %x\n", __func__, dwreg.support,
-+		 dwreg.enabled);
-+
- 	/*
- 	 * Setup L0s state
- 	 *
-@@ -629,6 +634,10 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
- 
-+	pci_info(parent, "%s link support %x enabled %x capable %x default %x disable %x\n",
-+		 __func__, link->aspm_support, link->aspm_enabled,
-+		 link->aspm_capable, link->aspm_default, link->aspm_disable);
-+
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
- 		u32 reg32, encoding;
-@@ -744,6 +753,7 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
- {
-+	pci_info(pdev, "%s set state %x\n", __func__, val);
- 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
- 					   PCI_EXP_LNKCTL_ASPMC, val);
- }
-@@ -754,6 +764,9 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
- 	struct pci_bus *linkbus = parent->subordinate;
- 
-+	pci_info(parent, "%s requesting state %x (%s)\n", __func__,
-+		 state, policy_str[state]);
-+
- 	/* Enable only the states that were not explicitly disabled */
- 	state &= (link->aspm_capable & ~link->aspm_disable);
- 
-@@ -767,6 +780,10 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
- 		state |= (link->aspm_enabled & ASPM_STATE_L1_SS_PCIPM);
- 	}
- 
-+	pci_info(parent, "%s link support %x enabled %x capable %x default %x disable %x\n",
-+		 __func__, link->aspm_support, link->aspm_enabled,
-+		 link->aspm_capable, link->aspm_default, link->aspm_disable);
-+
- 	/* Nothing to do if the link is already in the requested state */
- 	if (link->aspm_enabled == state)
- 		return;
