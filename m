@@ -2,74 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 202032325FE
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 22:13:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CD3A2326CC
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 23:36:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgG2UM7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 16:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50076 "EHLO mail.kernel.org"
+        id S1726606AbgG2VgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 17:36:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59468 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgG2UM5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:12:57 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77AF02082E;
-        Wed, 29 Jul 2020 20:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596053577;
-        bh=sHLe5FuGDRZbbcJ2DSTc7bJp/OFHU619yFh5NL4U0aM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rp3Qd9sQ9P8TZLVuMXChB7CXqlnfo/dqXWu4FRNN6t0ptX3rEABLFCP3tncyfSOir
-         OjGFH1gXoWXB1u1xvkA0tz6CA3X7GWUR2bVIhL6yn+vpoxELbyxvlM82KFBajSXHRW
-         a4z/xjY14D/2HeDPXBYAXo2v/Befm22pd2jwhjcg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 6/6] PCI: xilinx: Fix kerneldoc
-Date:   Wed, 29 Jul 2020 22:12:24 +0200
-Message-Id: <20200729201224.26799-7-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200729201224.26799-1-krzk@kernel.org>
-References: <20200729201224.26799-1-krzk@kernel.org>
+        id S1726476AbgG2VgH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Jul 2020 17:36:07 -0400
+IronPort-SDR: kp6YkTS2t8lpLPwfV9kMUoWfni+rC5h4IqFdTkf8vhMAw7/YkTiXmuEyMDJCmOZcQfWLFKSQWn
+ ALsRxhtFrXtQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="139035035"
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="139035035"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 14:36:06 -0700
+IronPort-SDR: E6fg+LttELmsDsQ+HCmphtZp5SsyiFjerRYVgC8wTEs+DbFo+UN420+cEXKW/MHwqEjB6vy8Cv
+ v0f7rpn6A6UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="290671476"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 29 Jul 2020 14:36:05 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id AD5035807AD;
+        Wed, 29 Jul 2020 14:36:05 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V5 0/3] Intel Platform Monitoring Technology
+Date:   Wed, 29 Jul 2020 14:37:16 -0700
+Message-Id: <20200729213719.17795-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200717190620.29821-1-david.e.box@linux.intel.com>
+References: <20200717190620.29821-1-david.e.box@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix W=1 compile warnings (invalid kerneldoc):
+Intel Platform Monitoring Technology (PMT) is an architecture for
+enumerating and accessing hardware monitoring capabilities on a device.
+With customers increasingly asking for hardware telemetry, engineers not
+only have to figure out how to measure and collect data, but also how to
+deliver it and make it discoverable. The latter may be through some device
+specific method requiring device specific tools to collect the data. This
+in turn requires customers to manage a suite of different tools in order to
+collect the differing assortment of monitoring data on their systems.  Even
+when such information can be provided in kernel drivers, they may require
+constant maintenance to update register mappings as they change with
+firmware updates and new versions of hardware. PMT provides a solution for
+discovering and reading telemetry from a device through a hardware agnostic
+framework that allows for updates to systems without requiring patches to
+the kernel or software tools.
 
-    drivers/pci/controller/pcie-xilinx-cpm.c:122: warning: Function parameter or member 'cpm_domain' not described in 'xilinx_cpm_pcie_port'
+PMT defines several capabilities to support collecting monitoring data from
+hardware. All are discoverable as separate instances of the PCIE Designated
+Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+field uniquely identifies the capability. Each DVSEC also provides a BAR
+offset to a header that defines capability-specific attributes, including
+GUID, feature type, offset and length, as well as configuration settings
+where applicable. The GUID uniquely identifies the register space of any
+monitor data exposed by the capability. The GUID is associated with an XML
+file from the vendor that describes the mapping of the register space along
+with properties of the monitor data. This allows vendors to perform
+firmware updates that can change the mapping (e.g. add new metrics) without
+requiring any changes to drivers or software tools. The new mapping is
+confirmed by an updated GUID, read from the hardware, which software uses
+with a new XML.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/pci/controller/pcie-xilinx-cpm.c | 1 +
- 1 file changed, 1 insertion(+)
+The current capabilities defined by PMT are Telemetry, Watcher, and
+Crashlog.  The Telemetry capability provides access to a continuous block
+of read only data. The Watcher capability provides access to hardware
+sampling and tracing features. Crashlog provides access to device crash
+dumps.  While there is some relationship between capabilities (Watcher can
+be configured to sample from the Telemetry data set) each exists as stand
+alone features with no dependency on any other. The design therefore splits
+them into individual, capability specific drivers. MFD is used to create
+platform devices for each capability so that they may be managed by their
+own driver. The PMT architecture is (for the most part) agnostic to the
+type of device it can collect from. Devices nodes are consequently generic
+in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability driver
+creates a class to manage the list of devices supporting it.  Software can
+determine which devices support a PMT feature by searching through each
+device node entry in the sysfs class folder. It can additionally determine
+if a particular device supports a PMT feature by checking for a PMT class
+folder in the device folder.
 
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-index 66f554694e03..cd8c77457b5f 100644
---- a/drivers/pci/controller/pcie-xilinx-cpm.c
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -104,6 +104,7 @@
-  * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-  * @dev: Device pointer
-  * @intx_domain: Legacy IRQ domain pointer
-+ * @cpm_domain: CPM IRQ domain pointer
-  * @cfg: Holds mappings of config space window
-  * @intx_irq: legacy interrupt number
-  * @irq: Error interrupt number
+This patch set provides support for the PMT framework, along with support
+for Telemetry on Tiger Lake.
+
+Changes from V4:
+ 	- Replace MFD with PMT in driver title
+	- Fix commit tags in chronological order
+	- Fix includes in alphabetical order
+	- Use 'raw' string instead of defines for device names
+	- Add an error message when returning an error code for
+	  unrecognized capability id
+	- Use dev_err instead of dev_warn for messages when returning
+	  an error
+	- Change while loop to call pci_find_next_ext_capability once
+	- Add missing continue in while loop
+	- Keep PCI platform defines using PCI_DEVICE_DATA magic tied to
+	  the pci_device_id table
+	- Comment and kernel message cleanup
+
+Changes from V3:
+	- Write out full acronym for DVSEC in PCI patch commit message and
+	  add 'Designated' to comments
+	- remove unused variable caught by kernel test robot <lkp@intel.com>
+	- Add required Co-developed-by signoffs, noted by Andy
+	- Allow access using new CAP_PERFMON capability as suggested by
+	  Alexey Bundankov
+	- Fix spacing in Kconfig, noted by Randy
+	- Other style changes and fixups suggested by Andy
+
+Changes from V2:
+	- In order to handle certain HW bugs from the telemetry capability
+	  driver, create a single platform device per capability instead of
+	  a device per entry. Add the entry data as device resources and
+	  let the capability driver manage them as a set allowing for
+	  cleaner HW bug resolution.
+	- Handle discovery table offset bug in intel_pmt.c
+	- Handle overlapping regions in intel_pmt_telemetry.c
+	- Add description of sysfs class to testing ABI.
+	- Don't check size and count until confirming support for the PMT
+	  capability to avoid bailing out when we need to skip it.
+	- Remove unneeded header file. Move code to the intel_pmt.c, the
+	  only place where it's needed.
+	- Remove now unused platform data.
+	- Add missing header files types.h, bits.h.
+	- Rename file name and build options from telem to telemetry.
+	- Code cleanup suggested by Andy S.
+	- x86 mailing list added.
+
+Changes from V1:
+	- In the telemetry driver, set the device in device_create() to
+	  the parent PCI device (the monitoring device) for clear
+	  association in sysfs. Was set before to the platform device
+	  created by the PCI parent.
+	- Move telem struct into driver and delete unneeded header file.
+	- Start telem device numbering from 0 instead of 1. 1 was used
+	  due to anticipated changes, no longer needed.
+	- Use helper macros suggested by Andy S.
+	- Rename class to pmt_telemetry, spelling out full name
+	- Move monitor device name defines to common header
+	- Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
+
+David E. Box (3):
+  PCI: Add defines for Designated Vendor-Specific Extended Capability
+  mfd: Intel Platform Monitoring Technology support
+  platform/x86: Intel PMT Telemetry capability driver
+
+ .../ABI/testing/sysfs-class-pmt_telemetry     |  46 ++
+ MAINTAINERS                                   |   6 +
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/intel_pmt.c                       | 220 +++++++++
+ drivers/platform/x86/Kconfig                  |  10 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel_pmt_telemetry.c    | 448 ++++++++++++++++++
+ include/uapi/linux/pci_regs.h                 |   5 +
+ 9 files changed, 747 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_telemetry
+ create mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
+
 -- 
-2.17.1
+2.20.1
 
