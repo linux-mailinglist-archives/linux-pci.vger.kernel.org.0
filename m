@@ -2,122 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 067A823257B
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 21:35:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 530A9232595
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 21:48:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgG2TfH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 15:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
+        id S1726519AbgG2TsU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 15:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgG2TfH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:35:07 -0400
+        id S1726476AbgG2TsU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:48:20 -0400
 Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4401206D4;
-        Wed, 29 Jul 2020 19:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0685C20809;
+        Wed, 29 Jul 2020 19:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596051306;
-        bh=NzOavhypQiRK+fikxf4URNUQ281LTHgwzpWksY2B5j8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=va7MDQS4LRM/ecdjwCpXltGEt61+wCS4zFLaeboEgcCzWoFtgvvCQ4mSKNBo1v66o
-         wz2Uh5D6HO6Dy9eG/p1Bf0vSGoUPoVI+35+kLyInUV3IjtOr90muXlZHNNr4BbqMhN
-         JZLkbfYMCKz4mg72FAqJvBOtPjkvQUEKTX0JFhJw=
-Date:   Wed, 29 Jul 2020 14:35:04 -0500
+        s=default; t=1596052099;
+        bh=3GxIiR5QIEQBeQ+dtOrcBus4Bd7Lh0RVTWTSRDBCrdc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=H9kf3kRawzSGZUm4eHo4P7fjG/0EESE4MWscqMvp/2h93dl9ybAyrvd+mIdEvgjCe
+         xSUndsGB3h5LH1MNCafdgY0Y7iP2InXkT4TnIzu2cZNdnrNeL61aPT/8kxy7AxkiHP
+         wwvkvGgQAEIXndvzsFme1MZOPtyrAJcy55s6iV+A=
+Date:   Wed, 29 Jul 2020 14:48:15 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, Kelvin.Cao@microchip.com
-Subject: Re: [PATCH 1/2] PCI/switechtec: Add missing __iomem and __user tags
- to fix sparse warnings
-Message-ID: <20200729193504.GA1960928@bjorn-Precision-5520>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: sparse warnings
+Message-ID: <20200729194815.GA1961117@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728192434.18993-1-logang@deltatee.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 01:24:33PM -0600, Logan Gunthorpe wrote:
-> Fix a number of missing __iomem and __user tags in the ioctl functions of
-> the switchtec driver. This fixes a number of sparse warnings of the form:
-> 
->   sparse: sparse: incorrect type in ... (different address spaces)
-> 
-> Fixes: 52eabba5bcdb ("switchtec: Add IOCTLs to the Switchtec driver")
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Just FYI, I see the following sparse warnings (among others):
 
-Applied to pci/switchtec for v5.9, thanks!
+  $ make C=2 drivers/pci/
 
-> ---
-> 
-> Here are a couple quick patches to fix some sparse warnings I was
-> notified about a couple weeks ago.
-> 
-> I've split them into two patches based on Fixes tag, but they could be
-> squashed depending on the preference.
-> 
-> Thanks!
-> 
-> drivers/pci/switch/switchtec.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-> index 850cfeb74608..3d5da7f44378 100644
-> --- a/drivers/pci/switch/switchtec.c
-> +++ b/drivers/pci/switch/switchtec.c
-> @@ -940,7 +940,7 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
->  	size_t off;
-> 
->  	if (event_id < 0 || event_id >= SWITCHTEC_IOCTL_MAX_EVENTS)
-> -		return ERR_PTR(-EINVAL);
-> +		return (u32 __iomem *)ERR_PTR(-EINVAL);
-> 
->  	off = event_regs[event_id].offset;
-> 
-> @@ -948,10 +948,10 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
->  		if (index == SWITCHTEC_IOCTL_EVENT_LOCAL_PART_IDX)
->  			index = stdev->partition;
->  		else if (index < 0 || index >= stdev->partition_count)
-> -			return ERR_PTR(-EINVAL);
-> +			return (u32 __iomem *)ERR_PTR(-EINVAL);
->  	} else if (event_regs[event_id].map_reg == pff_ev_reg) {
->  		if (index < 0 || index >= stdev->pff_csr_count)
-> -			return ERR_PTR(-EINVAL);
-> +			return (u32 __iomem *)ERR_PTR(-EINVAL);
->  	}
-> 
->  	return event_regs[event_id].map_reg(stdev, off, index);
-> @@ -1057,11 +1057,11 @@ static int ioctl_event_ctl(struct switchtec_dev *stdev,
->  }
-> 
->  static int ioctl_pff_to_port(struct switchtec_dev *stdev,
-> -			     struct switchtec_ioctl_pff_port *up)
-> +			     struct switchtec_ioctl_pff_port __user *up)
->  {
->  	int i, part;
->  	u32 reg;
-> -	struct part_cfg_regs *pcfg;
-> +	struct part_cfg_regs __iomem *pcfg;
->  	struct switchtec_ioctl_pff_port p;
-> 
->  	if (copy_from_user(&p, up, sizeof(p)))
-> @@ -1104,10 +1104,10 @@ static int ioctl_pff_to_port(struct switchtec_dev *stdev,
->  }
-> 
->  static int ioctl_port_to_pff(struct switchtec_dev *stdev,
-> -			     struct switchtec_ioctl_pff_port *up)
-> +			     struct switchtec_ioctl_pff_port __user *up)
->  {
->  	struct switchtec_ioctl_pff_port p;
-> -	struct part_cfg_regs *pcfg;
-> +	struct part_cfg_regs __iomem *pcfg;
-> 
->  	if (copy_from_user(&p, up, sizeof(p)))
->  		return -EFAULT;
-> 
-> base-commit: 92ed301919932f777713b9172e525674157e983d
-> --
-> 2.20.1
+  drivers/pci/endpoint/functions/pci-epf-test.c:288:24: warning: incorrect type in argument 1 (different address spaces)
+  drivers/pci/endpoint/functions/pci-epf-test.c:288:24:    expected void *to
+  drivers/pci/endpoint/functions/pci-epf-test.c:288:24:    got void [noderef] <asn:2> *[assigned] dst_addr
+  drivers/pci/endpoint/functions/pci-epf-test.c:288:34: warning: incorrect type in argument 2 (different address spaces)
+  drivers/pci/endpoint/functions/pci-epf-test.c:288:34:    expected void const *from
+  drivers/pci/endpoint/functions/pci-epf-test.c:288:34:    got void [noderef] <asn:2> *[assigned] src_addr
+
+  drivers/pci/controller/dwc/pcie-designware.c:447:52: warning: cast truncates bits from constant value (ffffffff7fffffff becomes 7fffffff)
+
+It'd be nice to fix these if it's practical.
+
+There are a bunch more sparse warnings about pci_power_t in the
+generic code.  Not sure what those would involve, so they're a problem
+for another day.
+
+Bjorn
