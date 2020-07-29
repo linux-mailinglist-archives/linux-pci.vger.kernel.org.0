@@ -2,66 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B655231982
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 08:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C42A2319AE
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 08:45:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgG2G0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 02:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
+        id S1726548AbgG2Gp0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 02:45:26 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:14014 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgG2G0d (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:26:33 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
+        id S1726314AbgG2GpZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Jul 2020 02:45:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596005125; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=F8Dx2k2QTTUlJ3PVcw289iUoRDVJ4gqpdkDJN4dKpe8=; b=GazcNQmDsgNlb1oGZfSA68CIFH+HO+voGzCUuXNVCO76+6g7TEfyTFPjh7n9UwaMcXtU5v0i
+ WUk1KRp4vOpznp8j6mfyk33YtWzAaRmK5jh3eZMpRfkQAUCnAKzueJ37JNHd/bGSiqsMoDZB
+ lo71IpGnt4GB4jM0cE3fc392dlA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f211b0570ff737ddbb67b24 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 06:45:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6D9EDC4339C; Wed, 29 Jul 2020 06:45:24 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.8 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.0.101] (unknown [49.204.127.128])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C3952065E;
-        Wed, 29 Jul 2020 06:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596003993;
-        bh=vkIUhrSXc9r1hVlkGgUCMHbIKL3mi0oUqbt+Vn4a3P0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=l+l1H1rVblgSS73ZaAE2UC/kDo7iAjSnAOHiYXmMKW+eVDY1VDCG67tzGIS4d5baJ
-         OyoT6f0IsxM5s6mGsFyWJ9gf8jHWtWBkmd4Oe3IorumVdfK+PHfuyCrsQeJH3IQi1e
-         b/43PGTUoHrt24KHg8H5co4oMmRCcl7jlu4h5Rvs=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] PCI: Fix kerneldoc of pci_vc_do_save_buffer()
-Date:   Wed, 29 Jul 2020 08:26:20 +0200
-Message-Id: <20200729062620.4168-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 232CEC433C9;
+        Wed, 29 Jul 2020 06:45:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 232CEC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH 5/9] phy: qcom-qmp: use correct values for ipq8074 gen2
+ pcie phy init
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, mturquette@baylibre.com,
+        sboyd@kernel.org, svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
+        p.zabel@pengutronix.de, mgautam@codeaurora.org,
+        smuthayy@codeaurora.org, varada@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, stable@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+ <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
+ <20200713055558.GB34333@vkoul-mobl>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <9988249f-53aa-e615-f64b-28c0c0641ab4@codeaurora.org>
+Date:   Wed, 29 Jul 2020 12:15:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200713055558.GB34333@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix W=1 compile warnings (invalid kerneldoc):
 
-    drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
+On 7/13/2020 11:25 AM, Vinod Koul wrote:
+> On 05-07-20, 14:47, Sivaprakash Murugesan wrote:
+>> There were some problem in ipq8074 gen2 pcie phy init sequence, fix
+> Can you please describe these problems, it would help review to
+> understand the issues and also for future reference to you
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Hi Vinod,
 
----
+As you mentioned we are updating few register values
 
-Changes since v1:
-1. Fix subject
----
- drivers/pci/vc.c | 1 -
- 1 file changed, 1 deletion(-)
+and also adding clocks and resets.
 
-diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
-index 5486f8768c86..5fc59ac31145 100644
---- a/drivers/pci/vc.c
-+++ b/drivers/pci/vc.c
-@@ -172,7 +172,6 @@ static void pci_vc_enable(struct pci_dev *dev, int pos, int res)
-  * @dev: device
-  * @pos: starting position of VC capability (VC/VC9/MFVC)
-  * @save_state: buffer for save/restore
-- * @name: for error message
-  * @save: if provided a buffer, this indicates what to do with it
-  *
-  * Walking Virtual Channel config space to size, save, or restore it
--- 
-2.17.1
+the register values are given by the Hardware team and there
+
+is some fine tuning values are provided by Hardware team for the
+
+issues we faced downstream.
+
+Also, few register values are typos for example QSERDES_RX_SIGDET_CNTRL
+
+is a rx register it was wrongly in serdes table.
+
+I will try to mention these details in next patch.
 
