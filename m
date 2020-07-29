@@ -2,130 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1817E2327C3
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 00:59:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C78C12327C9
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 01:02:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgG2W7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 18:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53800 "EHLO
+        id S1727087AbgG2XCO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 19:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgG2W7l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 18:59:41 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55BFFC061794;
-        Wed, 29 Jul 2020 15:59:41 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id o13so15369584pgf.0;
-        Wed, 29 Jul 2020 15:59:41 -0700 (PDT)
+        with ESMTP id S1727071AbgG2XCO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 19:02:14 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E743C061794
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 16:02:14 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id s16so18973261qtn.7
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 16:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=IM1b8yUl/RyYaMsIDI5tr/fFnyyMh2e4jCTTItXJtug=;
-        b=A+IZUxsz/tr708s+cQD7u76yfXI9tVJyOIZyWOv/S9Gpxwkp6PpjNlPteDJWGgEYxG
-         /XlZeth3wKFGJb2BGVF0+J9gQzlkPZA1bI1ICjPtBFTlyePlAbGu/Kh9wdaDWdjK8rDJ
-         dfBI8SoRsKybFiB+1xJNxpu3iggm0+JADxeuRM8K/gmQvZXJXXFMNpz3eCFhtpAiTmOh
-         b9Ccc6JgRk6NSzbSosvxKRP+zoqHqPDZNTfyiRPyOg+5ppWd6+WcIkQXzUHfNNtgciKZ
-         OvlkthmK2kWn4qeaoPLBfqd1Vv8llCjc55Fr+Yk65x3vPE9Xg0xjv/iD/0fSo2p6jw4U
-         C6jQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3+GERmFSPZYroScy/h9ujatWLx9qIdWlhD4XOIqieYc=;
+        b=MLZENPEUUdTnPFoSWXu3feiXvu/QFkbxI9sb2G/3u7CF75c7mtLTarExZbVBMtFHmj
+         Z8cCi+pnU+JTUAm9QvKnkgnNglG07NzseEFAI+5MFlq91z8QGErqFzE7sCye2F2dw+5F
+         Q1AfNXXzpFgfl2yS6twee5Jl9Fqwd5KVlJc4VzH8eZH+vSApd3NKMKw3SSLizWa7H4eq
+         J7wgcGe2JRrJJYgVFnpVjlZMsVtanamcZJioOZLrnJY0dL5hJ0Er1nBaNvDGmKJP1Wr1
+         /n/ofQfr35EeEieBaoPuvf5PQkHHjPoYuw0x+e+vNSM8mE+80+uzfhZ0iSkhDK/Jdxmq
+         Li5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=IM1b8yUl/RyYaMsIDI5tr/fFnyyMh2e4jCTTItXJtug=;
-        b=cG5sJFJZi+YwsWQ7l0t+pNfwWP2+q3G7KABixbVcZhamGjNoQehYS+Zqq94mtFCHO5
-         TaHhP+S2YefMpMH8KCY4dBa8IDonOQ9b9YmD9N+dCj+4EC97eE6wJkTgIygBS/dS+liF
-         mOIBA9LO+G8eKMMKb8WFFI5Hl6/bz3lhXzRHvgUFIbw8hbvr6DIRoD62Y3TYvL/R443m
-         D1WSHPOnE0dAP3KzN8pHhzngNGR1AGUPP8fmVCcbLtzpojtyJUuPjyKYnJ1VVJ70Cwb1
-         J1f2MO4H82z6LxtVR8TejLsSHvHuwEPgKaQCZUc3XCYQUwWRI6lsvXGKpdKnHVWHVlQo
-         I+WA==
-X-Gm-Message-State: AOAM532WhpcM4oehtGHiPMb+7WV4W3BX2IVaMyLpijqn6hintDQqzcFo
-        +SQ/DC/gr7+ojOy9P4DxiP3OFBvPYOM=
-X-Google-Smtp-Source: ABdhPJwEU4zxHtuBlNAAsDhttJXr8dobV6va11FKRwYyCbstWJZoVfAg/x5Iee8gKWbGg7Q1XxHLsQ==
-X-Received: by 2002:aa7:9ac2:: with SMTP id x2mr292734pfp.57.1596063580650;
-        Wed, 29 Jul 2020 15:59:40 -0700 (PDT)
-Received: from [192.168.1.173] ([76.14.31.91])
-        by smtp.gmail.com with ESMTPSA id 76sm3598226pfu.139.2020.07.29.15.59.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jul 2020 15:59:39 -0700 (PDT)
-From:   Mark D Rustad <mrustad@gmail.com>
-Message-Id: <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_7DE39EFC-2EDC-4C73-8668-B39BBF04D3AF";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-Date:   Wed, 29 Jul 2020 15:59:37 -0700
-In-Reply-To: <20200728075859.GH1850026@dell>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>, dvhart@infradead.org,
-        andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
- <20200717190620.29821-3-david.e.box@linux.intel.com>
- <20200728075859.GH1850026@dell>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3+GERmFSPZYroScy/h9ujatWLx9qIdWlhD4XOIqieYc=;
+        b=s7icTxXHuH2THh9SISjmrQEUbkkxQ4MhwU3JQkCqGkoIp+kdkJ3nLHL+oD6C9MMS0E
+         6wmdISnL3jneMlR54REqOyaZlRHnEtB+DxKTn3LOLGkLBwVs0S314csTP5BBGPegpykd
+         vRzdleXSud0JHvAVIhYh8gBmGgRbvO9nB/Yc2LrRRQM2RqoT9jHP02/P3koU2Hc9o5CS
+         Ld26ddt1BeMfNvkoN2hUXS5hN1P/dZMra+GyFjlDR10QFpYhor8KzyRrx2LABaGbo+Fm
+         JBT+AJWZwc8WSyts3nDsnA1hz5pb7NZZGflfp+VHmbrtQ5vCMRsDxQd69vjdwsk85sAX
+         uHOA==
+X-Gm-Message-State: AOAM531vWfKgi0mL/ibfh1P8t4kjHcgxyFT6RueQ0HKdfoMC1akVKJ+M
+        amdC1N2TKPNTjgM43YWuXkMJ/V5h2L/HzkXIMmdAQv3Q
+X-Google-Smtp-Source: ABdhPJwF1WKTIZUdcdxivSGeolNiKh49HZTVJkJkfKM8vDi386vgFT4AdLTpQwYPIUXhRILdcoZ0qVjk5aT2+5yt1n0=
+X-Received: by 2002:aed:2821:: with SMTP id r30mr252375qtd.3.1596063733318;
+ Wed, 29 Jul 2020 16:02:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAA85sZvJQge6ETwF1GkdvK1Mpwazh_cYJcmeZVAohmt0FjbMZg@mail.gmail.com>
+ <20200729224710.GA1971834@bjorn-Precision-5520>
+In-Reply-To: <20200729224710.GA1971834@bjorn-Precision-5520>
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+Date:   Thu, 30 Jul 2020 01:02:02 +0200
+Message-ID: <CAA85sZt7xHJc85Ok8j2QDmB-E_r-ch5kBKqYeUe1KnA6Gt-iDw@mail.gmail.com>
+Subject: Re: [RFC] ASPM L1 link latencies
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---Apple-Mail=_7DE39EFC-2EDC-4C73-8668-B39BBF04D3AF
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii;
-	delsp=yes;
-	format=flowed
-
-at 12:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
-
-> If you do:
+On Thu, Jul 30, 2020 at 12:47 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Sat, Jul 25, 2020 at 09:47:05PM +0200, Ian Kumlien wrote:
+> > Hi,
+> >
+> > A while ago I realised that I was having all kinds off issues with my
+> > connection, ~933 mbit had become ~40 mbit
+> >
+> > This only applied on links to the internet (via a linux fw running
+> > NAT) however while debugging with the help of Alexander Duyck
+> > we realised that ASPM could be the culprit (at least disabling ASPM on
+> > the nic it self made things work just fine)...
+> >
+> > So while trying to understand PCIe and such things, I found this:
+> >
+> > The calculations of the max delay looked at "that node" + start latency=
+ * "hops"
+> >
+> > But one hop might have a larger latency and break the acceptable delay.=
+..
+> >
+> > So after a lot playing around with the code, i ended up with this, and
+> > it seems to fix my problem and does
+> > set two pcie bridges to ASPM Disabled that didn't happen before.
+> >
+> > I do however have questions.... Shouldn't the change be applied to
+> > the endpoint?  Or should it be applied recursively along the path to
+> > the endpoint?
 >
-> 	do {
-> 		int pos;
+> I don't understand this very well, but I think we do need to consider
+> the latencies along the entire path.  PCIe r5.0, sec 5.4.1.3, contains
+> this:
 >
-> 		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-> 		if (!pos)
-> 			break;
+>   Power management software, using the latency information reported by
+>   all components in the Hierarchy, can enable the appropriate level of
+>   ASPM by comparing exit latency for each given path from Root to
+>   Endpoint against the acceptable latency that each corresponding
+>   Endpoint can withstand.
+
+One of the questions is this:
+They say from root to endpoint while we walk from endpoint to root
+
+So, is that more optimal in some way? or should latencies always be
+considered from root to endpoint?
+In that case, should the link ASPM be disabled somewhere else?
+(I tried to disable them on the "endpoint" and it didn't help for some reas=
+on)
+
+> Also this:
+
+[--8<--]
+
+>   - For each component with one or more Endpoint Functions, PCI
+>     Express system software examines the Endpoint L0s/L1 Acceptable
+>     Latency, as reported by each Endpoint Function in its Link
+>     Capabilities register, and enables or disables L0s/L1 entry (via
+>     the ASPM Control field in the Link Control register) accordingly
+>     in some or all of the intervening device Ports on that hierarchy.
+
+> > Also, the L0S checks are only done on the local links, is this
+> > correct?
 >
-> Then you can invoke pci_find_next_ext_capability() once, no?
+> ASPM configuration is done on both ends of a link.  I'm not sure it
+> makes sense to enable any state (L0s, L1, L1.1, L1.2) unless both ends
+> of the link support it.  In particular, sec 5.4.1.3 says:
+>
+>   Software must not enable L0s in either direction on a given Link
+>   unless components on both sides of the Link each support L0s;
+>   otherwise, the result is undefined.
+>
+> But I think we do need to consider the entire path when enabling L0s;
+> from sec 7.5.3.3:
+>
+>   Endpoint L0s Acceptable Latency - This field indicates the
+>   acceptable total latency that an Endpoint can withstand due to the
+>   transition from L0s state to the L0 state. It is essentially an
+>   indirect measure of the Endpoint=E2=80=99s internal buffering.  Power
+>   management software uses the reported L0s Acceptable Latency number
+>   to compare against the L0s exit latencies reported by all components
+>   comprising the data path from this Endpoint to the Root Complex Root
+>   Port to determine whether ASPM L0s entry can be used with no loss of
+>   performance.
+>
+> Does any of that help answer your question?
 
-Part of your suggestion here won't work, because pos needs to be  
-initialized to 0 the first time. As such it needs to be declared and  
-initialized outside the loop. Other than that it may be ok.
+Yes! It's exactly what I wanted to know, :)
 
---
-Mark Rustad, MRustad@gmail.com
+So now the question is should I group the fixes into one patch or
+separate them for easier bisecting?
 
-
---Apple-Mail=_7DE39EFC-2EDC-4C73-8668-B39BBF04D3AF
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEE6ug8b0Wg+ULmnksNPA7/547j7m4FAl8h/1kACgkQPA7/547j
-7m5rPg/+PLg09fE2ihUlYc2tfxKI2OFvTYSVtj9/VzXoB+mGfkYbu6pvuo7TQxFJ
-EiKXeHRVk8X0b5fRitc+bfOh6Pnv5UomQBGlJ913QE9Z7ihTXIgqgehYGE2rUgXI
-c32yapNDuH5O+HcM1o2er+iBPkAZVTLvEbIss82F32QLFsDtouy0ZtlYL3hNE/9B
-eNW9PFKKoJ04uJwL31jM51jv/pZESGxaZljUDFEOmScsTg28KyBe1DwrXKFEUwyF
-ItlBTaY1AZ7rPktbJZUEuRXpjG5ryCfk+m3GU6CDwW/+bFTYNEJaEKA2IN6PqeHY
-FUltSWLSktecZqE49VTmlpfFiw+iTCOc7LnhzaV5S6HZRv8e3YGf/emqtsFs3NWY
-TkEAdOkNBpp+LF06Z0kkqHQfLiVG9sFv7WecHxYzJg5R9g3NM3e6H5B2B5gDre7V
-2Z5K0aJj+XfPAkyUR0qF5rJDkhjHM9BsPsEZecX7Bi8mh70eLFhI0FjCnEqrqlEc
-T9muHDC4bILxgm+42CJ+LuAyARt9q1v41hu47JuqLJEw1IetTaj8CptwRfMt1d6a
-jHmST0dxpYqjnHIZJetE3GmZeRe0UCb3J0OY+aXb0b9yNiBl8lC4XhiFQxQ1xKzJ
-LMVCGyobQ2oISbAW17Y0BtyN/C3XvK505BqXGrcM5RXrG//1zeo=
-=hBk9
------END PGP SIGNATURE-----
-
---Apple-Mail=_7DE39EFC-2EDC-4C73-8668-B39BBF04D3AF--
+> Bjorn
+>
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index b17e5ffd31b1..bd53fba7f382 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+> >
+> >  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+> >  {
+> > -       u32 latency, l1_switch_latency =3D 0;
+> > +       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0;
+> >         struct aspm_latency *acceptable;
+> >         struct pcie_link_state *link;
+> >
+> > @@ -470,8 +470,9 @@ static void pcie_aspm_check_latency(struct pci_dev
+> > *endpoint)
+> >                  * substate latencies (and hence do not do any check).
+> >                  */
+> >                 latency =3D max_t(u32, link->latency_up.l1, link->laten=
+cy_dw.l1);
+> > +               l1_max_latency =3D max_t(u32, latency, l1_max_latency);
+> >                 if ((link->aspm_capable & ASPM_STATE_L1) &&
+> > -                   (latency + l1_switch_latency > acceptable->l1))
+> > +                   (l1_max_latency + l1_switch_latency > acceptable->l=
+1))
+> >                         link->aspm_capable &=3D ~ASPM_STATE_L1;
+> >                 l1_switch_latency +=3D 1000;
