@@ -2,91 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FB8B2325B3
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 21:58:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A09F2325EA
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 22:12:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgG2T6L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 15:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43288 "EHLO mail.kernel.org"
+        id S1726802AbgG2UMe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 16:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgG2T6K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:58:10 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726628AbgG2UMe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:12:34 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFCB920658;
-        Wed, 29 Jul 2020 19:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F16F206D7;
+        Wed, 29 Jul 2020 20:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596052690;
-        bh=iGzz7rQ/5qZp9DO6zE6accMYxJGaMPhuoTKjf6mZI1Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kPLwqdflDcRM81w2WKbe4c+9PQaukq++cwHLQBZhZ+G5YNVgjKWFfRWAfE5QL3/EM
-         Mq7OtpUo1nK7THDOzpN5jbpHagndqaQbNMfnKF0aony5cZAgS7kML9CPlNMxVdZnkj
-         azil1Rzgxi9SI83ZECbcJR7OEB7iBMv3b84OPQnw=
-Date:   Wed, 29 Jul 2020 14:58:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, Alex Deucher <alexander.deucher@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken
-Message-ID: <20200729195808.GA1962849@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728104554.28927-1-kai.heng.feng@canonical.com>
+        s=default; t=1596053553;
+        bh=kdpsq8PMJl2/l+LJvMyLArAk9Zs2gSAW1t4EPgknXS8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=COAbw1pBwZY2vEEs56fbnU558HbMxPwgZDtcJSxO8cBqVMtvIeGrtnFFsbQESQzm8
+         G7nQjtKChSkgvdsPpS4qBmGe5B2YRQeI28rpZnIO0XYbHTtJ834Clill6yODgVhQbM
+         NvMP3xIuQEEOFtW01WT5BSOkfTtiss5KOYXT8ias=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 0/6] PCI: Minor kerneldoc warning fixes
+Date:   Wed, 29 Jul 2020 22:12:18 +0200
+Message-Id: <20200729201224.26799-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 06:45:53PM +0800, Kai-Heng Feng wrote:
-> We are seeing AMD Radeon Pro W5700 doesn't work when IOMMU is enabled:
-> [    3.375841] iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=63:00.0 address=0x42b5b01a0]
-> [    3.375845] iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=63:00.0 address=0x42b5b01c0]
-> 
-> The error also makes graphics driver fail to probe the device.
-> 
-> It appears to be the same issue as commit 5e89cd303e3a ("PCI: Mark AMD
-> Navi14 GPU rev 0xc5 ATS as broken") addresses, and indeed the same ATS
-> quirk can workaround the issue.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208725
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Hi,
 
-Applied with Alex's ack to pci/virtualization for v5.9, thanks!
+Changes since v2:
+1. Fix almost all warnings, except:
+   drivers/pci/controller/pci-hyperv.c:2534: warning: Function parameter or member 'version' not described in 'hv_pci_protocol_negotiation'
+   drivers/pci/controller/pci-hyperv.c:2534: warning: Function parameter or member 'num_version' not described in 'hv_pci_protocol_negotiation'
+   Not sure what are these.
 
-I also added a stable tag since we did that for 5e89cd303e3a.  Let me
-know if you *don't* want that.
+2. New patches, split per driver or subdirectory
 
-> ---
->  drivers/pci/quirks.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 812bfc32ecb8..052efeb9f053 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5192,7 +5192,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
->   */
->  static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
->  {
-> -	if (pdev->device == 0x7340 && pdev->revision != 0xc5)
-> +	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
-> +	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
->  		return;
->  
->  	pci_info(pdev, "disabling ATS\n");
-> @@ -5203,6 +5204,8 @@ static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
->  /* AMD Iceland dGPU */
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
-> +/* AMD Navi10 dGPU */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
->  /* AMD Navi14 dGPU */
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
->  #endif /* CONFIG_PCI_ATS */
-> -- 
-> 2.17.1
-> 
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (6):
+  PCI: Fix kerneldoc
+  PCI: endpoint: Fix kerneldoc
+  PCI: hotplug: Fix kerneldoc
+  PCI: dwc: Fix kerneldoc
+  PCI: rockchip: Fix kerneldoc
+  PCI: xilinx: Fix kerneldoc
+
+ drivers/pci/ats.c                               | 3 ++-
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
+ drivers/pci/controller/pcie-rockchip-ep.c       | 1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c        | 1 +
+ drivers/pci/endpoint/functions/pci-epf-test.c   | 2 +-
+ drivers/pci/endpoint/pci-ep-cfs.c               | 2 +-
+ drivers/pci/endpoint/pci-epc-core.c             | 2 +-
+ drivers/pci/endpoint/pci-epc-mem.c              | 2 +-
+ drivers/pci/endpoint/pci-epf-core.c             | 4 +++-
+ drivers/pci/hotplug/acpi_pcihp.c                | 4 ++--
+ drivers/pci/hotplug/pciehp_core.c               | 1 +
+ drivers/pci/of.c                                | 2 ++
+ drivers/pci/pci-pf-stub.c                       | 2 +-
+ drivers/pci/setup-bus.c                         | 1 +
+ drivers/pci/vc.c                                | 1 -
+ 15 files changed, 19 insertions(+), 11 deletions(-)
+
+-- 
+2.17.1
+
