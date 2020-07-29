@@ -2,108 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70955232178
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 17:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 977762321A2
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 17:31:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgG2P0X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jul 2020 11:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgG2P0W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:26:22 -0400
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A0D822BEA;
-        Wed, 29 Jul 2020 15:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596036382;
-        bh=e1IZGk2HLbSVU9AcuM8GnjZfSFc5InB7KRTY0ZrYV5I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=t3epJ9JgT70OxRHY9SR0cQhqzIwOkOkPFeVJF5ioZisTS105rlxyeVdprT+2yhYo5
-         JAi69THnCauCt76IoxxgsfIKXND4ja9JKr0GMtVC76v7aJaSIi+Ovja8TMTjDqIhWo
-         KL5HRjx3iPyOutLs9RESRlLoevnlz8FnwCrEce/g=
-Received: by mail-oo1-f50.google.com with SMTP id x1so2422466oox.6;
-        Wed, 29 Jul 2020 08:26:22 -0700 (PDT)
-X-Gm-Message-State: AOAM530T6+mPn2hqL5TVm3/DWCnfL0UiIn/c7RUGUJJrJerS3hJhg4M7
-        AKCXE8QHZ2jtHD0PZJFzyhzz3sNqhZ7GxSNkIQ==
-X-Google-Smtp-Source: ABdhPJyHJnvAb/U1N/MkxmKfSNlaFzpRh95wJ6AQkIeYAkMZZkRld+tazFAGbEN9i2pfBjAX0CU9GBAveAt1MMRDXaQ=
-X-Received: by 2002:a4a:ae07:: with SMTP id z7mr28490313oom.25.1596036381394;
- Wed, 29 Jul 2020 08:26:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com> <1595254921-26050-3-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1595254921-26050-3-git-send-email-Anson.Huang@nxp.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 29 Jul 2020 09:26:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
-Message-ID: <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
-Subject: Re: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yang-Leo Li <leoyang.li@nxp.com>, Vinod <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727050AbgG2Pbe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jul 2020 11:31:34 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:10005 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726365AbgG2PbG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 11:31:06 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 29 Jul 2020 08:31:04 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 29 Jul 2020 08:30:56 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id A89C42114B; Wed, 29 Jul 2020 21:00:54 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
+        svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
+        p.zabel@pengutronix.de, sivaprak@codeaurora.org,
+        mgautam@codeaurora.org, smuthayy@codeaurora.org,
+        varada@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/7] Add PCIe support for IPQ8074
+Date:   Wed, 29 Jul 2020 21:00:00 +0530
+Message-Id: <1596036607-11877-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 8:26 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> i.MX7 reset driver now supports module build and it is no longer
-> built in by default, so i.MX PCI driver needs to select it explicitly
-> due to it is NOT supporting loadable module currently.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->  drivers/pci/controller/dwc/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 044a376..bcf63ce 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -90,6 +90,7 @@ config PCI_EXYNOS
->
->  config PCI_IMX6
->         bool "Freescale i.MX6/7/8 PCIe controller"
-> +       select RESET_IMX7
+IPQ8074 has two PCIe ports both are based on synopsis designware PCIe
+controller. while it was assumed that PCIe support for IPQ8074 was already
+available, it was not functional until now.
 
-This will break as select will not cause all of RESET_IMX7's
-dependencies to be met. It also doesn't scale. Are you going to do the
-same thing for clocks, pinctrl, gpio, etc.?
+This patch series adds support for PCIe ports on IPQ8074.
 
-You should make the PCI driver work as a module.
+First PCIe port is of Gen2 synposis version is 2_3_2 which has already been
+enabled. But it had some problems on phy init and needed dt updates.
 
-Rob
+Second PCIe port is Gen3 synopsis version is 2_9_0. This series adds
+support for this PCIe port while fixing dt nodes.
 
->         depends on ARCH_MXC || COMPILE_TEST
->         depends on PCI_MSI_IRQ_DOMAIN
->         select PCIE_DW_HOST
-> --
-> 2.7.4
->
+Patch 1 on this series depends on qcom PCIe bindings patch
+https://lkml.org/lkml/2020/6/24/162
+
+[V2]
+ * Fixed commit headers and messages to have PCIe and Gen[2-3]
+ * Addressed Vinod's review comments on phy init
+ * Patches are rebased on linux-next to resolve dependencies with recent
+   PCI patches
+ * Patch 1 depends on https://lkml.org/lkml/2020/7/28/1462
+ * Dropped clock patches as it has picked up by Stephen
+
+Sivaprakash Murugesan (7):
+  dt-bindings: PCI: qcom: Add ipq8074 Gen3 PCIe compatible
+  dt-bindings: phy: qcom,qmp: Add ipq8074 PCIe Gen3 phy
+  phy: qcom-qmp: Use correct values for ipq8074 PCIe Gen2 PHY init
+  phy: qcom-qmp: Add compatible for ipq8074 PCIe Gen3 qmp phy
+  PCI: qcom: Do PHY power on before PCIe init
+  PCI: qcom: Add ipq8074 PCIe controller support
+  arm64: dts: ipq8074: Fixup PCIe dts nodes
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  47 +++++
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   1 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   8 +-
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 109 ++++++++----
+ drivers/pci/controller/dwc/pcie-qcom.c             | 189 ++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h          | 139 +++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 187 +++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |   2 +
+ 8 files changed, 627 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+
+-- 
+2.7.4
+
