@@ -2,59 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 455562321E4
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 17:48:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6126B2321E2
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jul 2020 17:48:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgG2Ps1 convert rfc822-to-8bit (ORCPT
+        id S1726998AbgG2Ps1 convert rfc822-to-8bit (ORCPT
         <rfc822;lists+linux-pci@lfdr.de>); Wed, 29 Jul 2020 11:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43878 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgG2Ps0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 11:48:26 -0400
+        with ESMTP id S1726476AbgG2PsY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jul 2020 11:48:24 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50BA7C0619D4
-        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 08:48:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC9B7C061794
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jul 2020 08:48:23 -0700 (PDT)
 Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0oJB-0001wi-1O; Wed, 29 Jul 2020 17:47:57 +0200
+        id 1k0oJB-0001x3-1O; Wed, 29 Jul 2020 17:47:57 +0200
 Received: from pza by lupine with local (Exim 4.92)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0oJ5-0005Bq-Cr; Wed, 29 Jul 2020 17:47:51 +0200
-Message-ID: <0cdecff564215de6711ca04e063fa696a160fad9.camel@pengutronix.de>
-Subject: Re: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
+        id 1k0oJ7-0005C1-FL; Wed, 29 Jul 2020 17:47:53 +0200
+Message-ID: <6501768cd96f88a65fd15d93433203c203b28b45.camel@pengutronix.de>
+Subject: Re: [PATCH V3 1/3] reset: imx7: Support module build
 From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>, Anson Huang <Anson.Huang@nxp.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yang-Leo Li <leoyang.li@nxp.com>, Vinod <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Date:   Wed, 29 Jul 2020 17:47:51 +0200
-In-Reply-To: <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, bjorn.andersson@linaro.org, leoyang.li@nxp.com,
+        vkoul@kernel.org, geert+renesas@glider.be, olof@lixom.net,
+        amurray@thegoodpenguin.co.uk, treding@nvidia.com,
+        vidyas@nvidia.com, hayashi.kunihiko@socionext.com,
+        jonnyc@amazon.com, eswara.kota@linux.intel.com, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Linux-imx@nxp.com
+Date:   Wed, 29 Jul 2020 17:47:53 +0200
+In-Reply-To: <20200728105345.GC905@e121166-lin.cambridge.arm.com>
 References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
-         <1595254921-26050-3-git-send-email-Anson.Huang@nxp.com>
-         <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
+         <e89fa4f3ba2b1b6fe94e662c6ab3cfbaa25867fa.camel@pengutronix.de>
+         <20200728105345.GC905@e121166-lin.cambridge.arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 User-Agent: Evolution 3.30.5-1.1 
@@ -68,40 +54,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2020-07-29 at 09:26 -0600, Rob Herring wrote:
-> On Mon, Jul 20, 2020 at 8:26 AM Anson Huang <Anson.Huang@nxp.com> wrote:
-> > i.MX7 reset driver now supports module build and it is no longer
-> > built in by default, so i.MX PCI driver needs to select it explicitly
-> > due to it is NOT supporting loadable module currently.
+On Tue, 2020-07-28 at 11:53 +0100, Lorenzo Pieralisi wrote:
+> On Fri, Jul 24, 2020 at 10:03:11AM +0200, Philipp Zabel wrote:
+> > On Mon, 2020-07-20 at 22:21 +0800, Anson Huang wrote:
+> > > Use module_platform_driver(), add module device table, author,
+> > > description and license to support module build, and
+> > > CONFIG_RESET_IMX7 is changed to default 'y' ONLY for i.MX7D,
+> > > other platforms need to select it in defconfig.
+> > > 
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > > Changes since V2:
+> > > 	- use module_platform_driver() instead of builtin_platform_driver().
 > > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> > No change.
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index 044a376..bcf63ce 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -90,6 +90,7 @@ config PCI_EXYNOS
-> > 
-> >  config PCI_IMX6
-> >         bool "Freescale i.MX6/7/8 PCIe controller"
-> > +       select RESET_IMX7
+> > Thank you, applied to reset/next.
 > 
-> This will break as select will not cause all of RESET_IMX7's
-> dependencies to be met. It also doesn't scale. Are you going to do the
-> same thing for clocks, pinctrl, gpio, etc.?
-> 
-> You should make the PCI driver work as a module.
+> I think you should pick up patch (3) as well please if PCI_IMX6
+> maintainers ACK it - merging just patch(1) will trigger regressions
+> AFAICS.
 
-Oh, also PCI_IMX6 is used on (surprise) i.MX6, which doesn't need
-RESET_IMX7 at all.
-
-How about hiding the RESET_IMX7 option and setting it default y if
-PCI_IMX6 is enabled, as an interim solution?
+Thank you for raising this, I'll put these patches on hold until the
+PCI_IMX6 issue is resolved.
 
 regards
 Philipp
