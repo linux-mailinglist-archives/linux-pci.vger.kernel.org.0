@@ -2,129 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A09C7233550
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 17:27:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42CFE233659
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 18:10:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgG3P1Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jul 2020 11:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60142 "EHLO mail.kernel.org"
+        id S1728412AbgG3QKC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jul 2020 12:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbgG3P1N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:27:13 -0400
+        id S1726275AbgG3QKB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:10:01 -0400
 Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2752E20829;
-        Thu, 30 Jul 2020 15:27:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75EB220829;
+        Thu, 30 Jul 2020 16:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596122832;
-        bh=KCyq/zOj5qNJ2u6DpNndotsDRFFpeiKIXrv4aEsMJKY=;
+        s=default; t=1596125400;
+        bh=FAeJmqJWUwun8tkRthozqocoLOawjcpNH+44TDl/UnM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FiDyM/K3WXa4OsjNfuAXQZEuHxIna/1+4SXUrzaHELeqDig8rBQTLr1+B8AcuXMuL
-         UmIEL+Ys/GWJ/oLVJDViCHAsIUi4yXry1nrfmWKb4NPatO01Wwd+Xtersxv0MGE5nn
-         ePlzes8VcumqqZnHqR48si433BmvVZArHu4M+lqA=
-Date:   Thu, 30 Jul 2020 10:27:07 -0500
+        b=BOSve1uri58VZSQ/Ky+ZrJuqsF12h7bv4c4Xw/nLmhKh0tCdoxJlfFHN068iAt9Lf
+         DOS14cK8OlWc/day8ilhyEHUYv9MclMdvwap3XKhHz/cEdLceQ4+/R/oDXjeXIBxHc
+         5josqv9rJ4GVKZqOxdkGt4bZMaCFe775I+xKP9TQ=
+Date:   Thu, 30 Jul 2020 11:09:58 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>
-Subject: Re: [PATCH v2] PCI/P2PDMA: Allow P2PDMA on all AMD CPUs newer than
- the Zen family
-Message-ID: <20200730152707.GA2037922@bjorn-Precision-5520>
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc:     bhelgaas@google.com, rjui@broadcom.com, sbranden@broadcom.com,
+        f.fainelli@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] PCI: iproc: Stop using generic config read/write
+ functions
+Message-ID: <20200730160958.GA2038661@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200729231844.4653-1-logang@deltatee.com>
+In-Reply-To: <20200730033747.18931-2-mark.tomlinson@alliedtelesis.co.nz>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 05:18:44PM -0600, Logan Gunthorpe wrote:
-> In order to avoid needing to add every new AMD CPU host bridge to the list
-> every cycle, allow P2PDMA if the CPUs vendor is AMD and family is
-> greater than 0x17 (Zen).
+[+cc Lorenzo, Rob]
+
+On Thu, Jul 30, 2020 at 03:37:46PM +1200, Mark Tomlinson wrote:
+> The pci_generic_config_write32() function will give warning messages
+> whenever writing less than 4 bytes at a time. As there is nothing we can
+> do about this without changing the hardware, the message is just a
+> nuisance. So instead of using the generic functions, use the functions
+> that have already been written for reading/writing the config registers.
+
+The reason that pci_generic_config_write32() message is there is
+because, as the message says, a read/modify/write may corrupt bits in
+adjacent registers.  
+
+It makes me a little queasy to do these read/modify/write sequences
+silently.  A generic driver doing an 8- or 16-bit config write has no
+idea that the write may corrupt an adjacent register.  That leads to
+bugs that are very difficult to debug and only reproducible on iProc.
+
+The ratelimiting on the current pci_generic_config_write32() message
+is based on the call site, not on the device.  That's not ideal: we
+may emit several messages for device A, trigger ratelimiting, then do
+a write for device B that doesn't generate a message.
+
+I think it would be better to have a warning once per device, so if
+XYZ device has a problem and we look at the dmesg log, we would find a
+single message for device XYZ as a hint.  Would that reduce the
+nuisance level enough?
+
+So I think I did it wrong in fb2659230120 ("PCI: Warn on possible RW1C
+corruption for sub-32 bit config writes").  Ratelimiting is the wrong
+concept because what we want is a single warning per device, not a
+limit on the similar messages for *all* devices, maybe something like
+this:
+
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 79c4a2ef269a..e5f956b7e3b7 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+ 	 * write happen to have any RW1C (write-one-to-clear) bits set, we
+ 	 * just inadvertently cleared something we shouldn't have.
+ 	 */
+-	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
++	if (!(bus->unsafe_warn & (1 << devfn))) {
++		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+ 			     size, pci_domain_nr(bus), bus->number,
+ 			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
++		bus->unsafe_warn |= 1 << devfn;
++	}
+ 
+ 	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+ 	tmp = readl(addr) & mask;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c79d83304e52..264b009fa4a6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -613,6 +613,7 @@ struct pci_bus {
+ 	unsigned char	primary;	/* Number of primary bridge */
+ 	unsigned char	max_bus_speed;	/* enum pci_bus_speed */
+ 	unsigned char	cur_bus_speed;	/* enum pci_bus_speed */
++	u8		unsafe_warn;	/* warned about R/M/W config write */
+ #ifdef CONFIG_PCI_DOMAINS_GENERIC
+ 	int		domain_nr;
+ #endif
+
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+>  drivers/pci/controller/pcie-iproc.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> This should cut down a bunch of the churn adding to the list of allowed
-> host bridges.
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index 2c836eede42c..68ecd3050529 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -709,12 +709,13 @@ static int iproc_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
+>  {
+>  	int ret;
+>  	struct iproc_pcie *pcie = iproc_data(bus);
+> +	int busno = bus->number;
+>  
+>  	iproc_pcie_apb_err_disable(bus, true);
+>  	if (pcie->iproc_cfg_read)
+>  		ret = iproc_pcie_config_read(bus, devfn, where, size, val);
+>  	else
+> -		ret = pci_generic_config_read32(bus, devfn, where, size, val);
+> +		ret = iproc_pci_raw_config_read32(pcie, busno, devfn, where, size, val);
+>  	iproc_pcie_apb_err_disable(bus, false);
+>  
+>  	return ret;
+> @@ -724,9 +725,11 @@ static int iproc_pcie_config_write32(struct pci_bus *bus, unsigned int devfn,
+>  				     int where, int size, u32 val)
+>  {
+>  	int ret;
+> +	struct iproc_pcie *pcie = iproc_data(bus);
+> +	int busno = bus->number;
+>  
+>  	iproc_pcie_apb_err_disable(bus, true);
+> -	ret = pci_generic_config_write32(bus, devfn, where, size, val);
+> +	ret = iproc_pci_raw_config_write32(pcie, busno, devfn, where, size, val);
+>  	iproc_pcie_apb_err_disable(bus, false);
+>  
+>  	return ret;
+> -- 
+> 2.28.0
 > 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Alex Deucher <alexdeucher@gmail.com>
-> Cc: Christian König <christian.koenig@amd.com>
-> Cc: Huang Rui <ray.huang@amd.com>
-
-Thanks, applied as below with Alex's reviewed-by to pci/peer-to-peer
-for v5.9.
-
-I had to enable CONFIG_MEMORY_HOTREMOVE and CONFIG_ZONE_DEVICE in
-order to compile p2pdma.c.  I see some reasons why that is, but it's
-not exactly intuitive, especially for MEMORY_HOTREMOVE.
-
-
-commit dea286bb71ba ("PCI/P2PDMA: Allow P2PDMA on AMD Zen and newer CPUs")
-Author: Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed Jul 29 17:18:44 2020 -0600
-
-    PCI/P2PDMA: Allow P2PDMA on AMD Zen and newer CPUs
-    
-    Allow P2PDMA if the CPU vendor is AMD and family is 0x17 (Zen) or greater.
-    
-    [bhelgaas: commit log, simplify #if/#else/#endif]
-    Link: https://lore.kernel.org/r/20200729231844.4653-1-logang@deltatee.com
-    Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-    Cc: Christian König <christian.koenig@amd.com>
-    Cc: Huang Rui <ray.huang@amd.com>
-
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index e8e444eeb1cd..1ec61fced4c3 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -273,6 +273,19 @@ static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
- 	seq_buf_printf(buf, "%s;", pci_name(pdev));
- }
- 
-+static bool cpu_supports_p2pdma(void)
-+{
-+#ifdef CONFIG_X86
-+	struct cpuinfo_x86 *c = &cpu_data(0);
-+
-+	/* Any AMD CPU whose family ID is Zen or newer supports p2pdma */
-+	if (c->x86_vendor == X86_VENDOR_AMD && c->x86 >= 0x17)
-+		return true;
-+#endif
-+
-+	return false;
-+}
-+
- static const struct pci_p2pdma_whitelist_entry {
- 	unsigned short vendor;
- 	unsigned short device;
-@@ -280,11 +293,6 @@ static const struct pci_p2pdma_whitelist_entry {
- 		REQ_SAME_HOST_BRIDGE	= 1 << 0,
- 	} flags;
- } pci_p2pdma_whitelist[] = {
--	/* AMD ZEN */
--	{PCI_VENDOR_ID_AMD,	0x1450,	0},
--	{PCI_VENDOR_ID_AMD,	0x15d0,	0},
--	{PCI_VENDOR_ID_AMD,	0x1630,	0},
--
- 	/* Intel Xeon E5/Core i7 */
- 	{PCI_VENDOR_ID_INTEL,	0x3c00, REQ_SAME_HOST_BRIDGE},
- 	{PCI_VENDOR_ID_INTEL,	0x3c01, REQ_SAME_HOST_BRIDGE},
-@@ -473,7 +481,8 @@ upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
- 					      acs_redirects, acs_list);
- 
- 	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
--		if (!host_bridge_whitelist(provider, client))
-+		if (!cpu_supports_p2pdma() &&
-+		    !host_bridge_whitelist(provider, client))
- 			map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
- 	}
- 
