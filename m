@@ -2,116 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F08D233A55
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 23:10:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 705D8233B9C
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jul 2020 00:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgG3VKL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jul 2020 17:10:11 -0400
-Received: from mga07.intel.com ([134.134.136.100]:57923 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbgG3VKL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Jul 2020 17:10:11 -0400
-IronPort-SDR: BFbZcBFN3Ffs9NMaOUyIPQDbHeyzD9WuRvjtwP5k3pw+Mdrsnfpc0bOEhT/lxTL+9MmjAhLxH9
- 1SLkVXUbSLnA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="216155003"
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="216155003"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 14:10:10 -0700
-IronPort-SDR: StjDQXtas3D83If+0/SxKLCWbgBiTacJRp3MrQ9fh0I8+r/r85FXPadPQF+C2N8yn844KeJwkI
- YsvSMVbku97w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="321208213"
-Received: from lkp-server02.sh.intel.com (HELO d4d86dd808e0) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2020 14:10:06 -0700
-Received: from kbuild by d4d86dd808e0 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k1FoT-0000Es-Hr; Thu, 30 Jul 2020 21:10:05 +0000
-Date:   Fri, 31 Jul 2020 05:09:27 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/virtualization] BUILD SUCCESS
- 45beb31d3afb651bb5c41897e46bd4fa9980c51c
-Message-ID: <5f233707.R5YOqndZEUEpvYQg%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1730435AbgG3W6L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jul 2020 18:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgG3W6J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jul 2020 18:58:09 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0CBC061574
+        for <linux-pci@vger.kernel.org>; Thu, 30 Jul 2020 15:58:09 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7876B8066C;
+        Fri, 31 Jul 2020 10:58:04 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1596149884;
+        bh=RbVCEkYiIo113LiclSdCPmwd7Z4op8xK+9phR72pNYA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=TILig4iYZQds39R0cOsd1QzFQet+TJRHuGsv3iJAbH9Ij1yIrnVEEk/v3uWS8sBok
+         iftR+T6Ci/C0iHt8fodJaBPJCN+vQp0q68Qichh09UlVqIuPzWpL2/RWss5eJnfWgk
+         asvRhaR/23fSrD2wAtlCAUdm0xPHnDWT2yAx1Vajja/tx0h4fayM977fN3DqDjvXL2
+         bLcaWBkCftlKv4VU295eqB6nx/1/4TbGH55wyCOpbQ6XR+CMAvMOCM1z6PjzbbpNlY
+         R8kO3A3ElVhA1+46+Vzb2vTv8Wwhd3Ko9mwgHjZgDfzCNX5lM15hHOM8PWGQqOLHoV
+         nNuRZEVUp44AQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f23507a0001>; Fri, 31 Jul 2020 10:58:02 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 31 Jul 2020 10:58:04 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Fri, 31 Jul 2020 10:58:04 +1200
+From:   Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: Re: [PATCH 2/3] PCI: iproc: Stop using generic config read/write
+ functions
+Thread-Topic: [PATCH 2/3] PCI: iproc: Stop using generic config read/write
+ functions
+Thread-Index: AQHWZiLShW7/hIyd+02gOchr4KBXl6kfgk0AgAByBYA=
+Date:   Thu, 30 Jul 2020 22:58:03 +0000
+Message-ID: <5ee5e0f76435883d6f5eec9f6483e283e2e652e0.camel@alliedtelesis.co.nz>
+References: <20200730160958.GA2038661@bjorn-Precision-5520>
+In-Reply-To: <20200730160958.GA2038661@bjorn-Precision-5520>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:23:2150:a287:ad2f:f26b]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AA0756D425D80245996E0B8C5C7B91E5@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/virtualization
-branch HEAD: 45beb31d3afb651bb5c41897e46bd4fa9980c51c  PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken
-
-elapsed time: 1493m
-
-configs tested: 54
-configs skipped: 1
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a016-20200730
-i386                 randconfig-a012-20200730
-i386                 randconfig-a014-20200730
-i386                 randconfig-a015-20200730
-i386                 randconfig-a011-20200730
-i386                 randconfig-a013-20200730
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+T24gVGh1LCAyMDIwLTA3LTMwIGF0IDExOjA5IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBJIHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0byBoYXZlIGEgd2FybmluZyBvbmNlIHBlciBk
+ZXZpY2UsIHNvIGlmDQo+IFhZWiBkZXZpY2UgaGFzIGEgcHJvYmxlbSBhbmQgd2UgbG9vayBhdCB0
+aGUgZG1lc2cgbG9nLCB3ZSB3b3VsZCBmaW5kIGENCj4gc2luZ2xlIG1lc3NhZ2UgZm9yIGRldmlj
+ZSBYWVogYXMgYSBoaW50LiAgV291bGQgdGhhdCByZWR1Y2UgdGhlDQo+IG51aXNhbmNlIGxldmVs
+IGVub3VnaD8NCg0KV2Ugd291bGQgYmUgT0sgd2l0aCB0aGF0Lg0KDQo+IFNvIEkgdGhpbmsgSSBk
+aWQgaXQgd3JvbmcgaW4gZmIyNjU5MjMwMTIwICgiUENJOiBXYXJuIG9uIHBvc3NpYmxlIFJXMUMN
+Cj4gY29ycnVwdGlvbiBmb3Igc3ViLTMyIGJpdCBjb25maWcgd3JpdGVzIikuICBSYXRlbGltaXRp
+bmcgaXMgdGhlIHdyb25nDQo+IGNvbmNlcHQgYmVjYXVzZSB3aGF0IHdlIHdhbnQgaXMgYSBzaW5n
+bGUgd2FybmluZyBwZXIgZGV2aWNlLCBub3QgYQ0KPiBsaW1pdCBvbiB0aGUgc2ltaWxhciBtZXNz
+YWdlcyBmb3IgKmFsbCogZGV2aWNlcywgbWF5YmUgc29tZXRoaW5nIGxpa2UNCj4gdGhpczoNCj4g
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9hY2Nlc3MuYyBiL2RyaXZlcnMvcGNpL2FjY2Vz
+cy5jDQo+IGluZGV4IDc5YzRhMmVmMjY5YS4uZTVmOTU2YjdlM2I3IDEwMDY0NA0KPiAtLS0gYS9k
+cml2ZXJzL3BjaS9hY2Nlc3MuYw0KPiArKysgYi9kcml2ZXJzL3BjaS9hY2Nlc3MuYw0KPiBAQCAt
+MTYwLDkgKzE2MCwxMiBAQCBpbnQgcGNpX2dlbmVyaWNfY29uZmlnX3dyaXRlMzIoc3RydWN0IHBj
+aV9idXMgKmJ1cywgdW5zaWduZWQgaW50IGRldmZuLA0KPiAgCSAqIHdyaXRlIGhhcHBlbiB0byBo
+YXZlIGFueSBSVzFDICh3cml0ZS1vbmUtdG8tY2xlYXIpIGJpdHMgc2V0LCB3ZQ0KPiAgCSAqIGp1
+c3QgaW5hZHZlcnRlbnRseSBjbGVhcmVkIHNvbWV0aGluZyB3ZSBzaG91bGRuJ3QgaGF2ZS4NCj4g
+IAkgKi8NCj4gLQlkZXZfd2Fybl9yYXRlbGltaXRlZCgmYnVzLT5kZXYsICIlZC1ieXRlIGNvbmZp
+ZyB3cml0ZSB0byAlMDR4OiUwMng6JTAyeC4lZCBvZmZzZXQgJSN4IG1heSBjb3JydXB0IGFkamFj
+ZW50IFJXMUMgYml0c1xuIiwNCj4gKwlpZiAoIShidXMtPnVuc2FmZV93YXJuICYgKDEgPDwgZGV2
+Zm4pKSkgew0KPiArCQlkZXZfd2FybigmYnVzLT5kZXYsICIlZC1ieXRlIGNvbmZpZyB3cml0ZSB0
+byAlMDR4OiUwMng6JTAyeC4lZCBvZmZzZXQgJSN4IG1heSBjb3JydXB0IGFkamFjZW50IFJXMUMg
+Yml0c1xuIiwNCj4gIAkJCSAgICAgc2l6ZSwgcGNpX2RvbWFpbl9ucihidXMpLCBidXMtPm51bWJl
+ciwNCj4gIAkJCSAgICAgUENJX1NMT1QoZGV2Zm4pLCBQQ0lfRlVOQyhkZXZmbiksIHdoZXJlKTsN
+Cj4gKwkJYnVzLT51bnNhZmVfd2FybiB8PSAxIDw8IGRldmZuOw0KPiArCX0NCg0KQXMgSSB1bmRl
+cnN0YW5kIGl0LCBkZXZmbiBpcyBhbiA4LWJpdCB2YWx1ZSB3aXRoIGZpdmUgYml0cyBvZiBkZXZp
+Y2UNCmFuZCB0aHJlZSBiaXRzIG9mIGZ1bmN0aW9uLiBTbyAoMSA8PCBkZXZmbikgaXMgbm90IGdv
+aW5nIHRvIGZpdCBpbiBhbg0KOC1iaXQgbWFzay4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJl
+PyAoSSBkbyBhZG1pdCB0aGF0IG15IFBDSQ0Ka25vd2xlZGdlIGlzIG5vdCBncmVhdCkuDQoNCg0K
