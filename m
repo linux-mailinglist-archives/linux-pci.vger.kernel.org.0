@@ -2,95 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BA13233706
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 18:45:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBDAA23370B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jul 2020 18:45:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgG3QpD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jul 2020 12:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgG3QpD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:45:03 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E489206F5;
-        Thu, 30 Jul 2020 16:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596127502;
-        bh=ZHv49bRPUMc8wtqHmDDXY167SM8hCdQeAcjRFf6RGUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=J6wuVBg/QSGnSMbRxcVnjyEtVvOa02ubGczlviZgxT7DRV1gn+TmqNUDQ2+85yaXV
-         rROxCduJ6BfYQ2DoJwFyHypyGfZ5dpIuHSJE3A8tdK0hrtqtW29xsqrJWqwxb/vG+M
-         /ZJcWfFFGbJHBnJ7bM2JVleuIYHT38G3nX2zDv40=
-Date:   Thu, 30 Jul 2020 11:45:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        id S1729843AbgG3Qp0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jul 2020 12:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbgG3Qp0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jul 2020 12:45:26 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF41C061574
+        for <linux-pci@vger.kernel.org>; Thu, 30 Jul 2020 09:45:26 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id y3so25536343wrl.4
+        for <linux-pci@vger.kernel.org>; Thu, 30 Jul 2020 09:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ej86RLhiH25iZDP4wdWxFB2UmXj5vFm/8QPxIezwAmw=;
+        b=YTk7AnLaFlkL+C5U3ihsRpQI0XMJOdvkoUEWMS9jcSJYPJZwNBQDr6HcZ+wxr3xCaw
+         AuAy4DSgV2DR6MQgxwofQT7xWRRUHdLTqDRgjutaTia7srGw7KXsio2BKdaK15EOYGL8
+         HNWPYs2SUOV5KARFWNpe9q41o1boLHHtcq1GQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ej86RLhiH25iZDP4wdWxFB2UmXj5vFm/8QPxIezwAmw=;
+        b=IiM5Af7aDIUZN0+Pd8vzEfhk93I/mPFLM3DQVpXkuNR2BxsDH+a8Pt4DXTqlzKWVMh
+         X7vEzeviBaQoE14URElytiI84ZbWWic7eJbUI8MvPkx3hILukRj3y7/CO9P/5Vza1Gd2
+         JBZxKGIxNpthxY/z/lHnIkqmgVyoY/cBMwFsl/PyS71QMUzQEENLAJdLvSHhlPEo0qk7
+         vtn/EJt+HWikmBDYgeqrWKJvX/WAosyYmmnR71jTMvN8xPaHcyS+j01K+NtmOfi4gDOe
+         HlK4JDlPtgC1emoDlgks/XBcgtLKLS4gMGKiMAjiyj1JTXgqQbmzY6co3+Ielu+OTJL5
+         KcaA==
+X-Gm-Message-State: AOAM531fnAsu3w5gpyyIWxkpjReRvNy+4on9YqW6AWwmNd0lzlNbzNvj
+        gzOzrumUZ3lxZM6kFL5FbCtgJQ==
+X-Google-Smtp-Source: ABdhPJxQ+4Py8GSmISIKP5nUNjBHnbsK7/iDIeqxIPnglPJHKmzJTwilIeilvMYgJKN8kLcSf/V1Ng==
+X-Received: by 2002:adf:ee51:: with SMTP id w17mr36482383wro.239.1596127524535;
+        Thu, 30 Jul 2020 09:45:24 -0700 (PDT)
+Received: from [10.136.8.246] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id n5sm10013589wrx.22.2020.07.30.09.45.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 09:45:23 -0700 (PDT)
+Subject: Re: [PATCH 3/3] PCI: iproc: Set affinity mask on MSI interrupts
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
         bhelgaas@google.com, rjui@broadcom.com, sbranden@broadcom.com,
-        f.fainelli@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] PCI: iproc: Stop using generic config read/write
- functions
-Message-ID: <20200730164500.GA2046343@bjorn-Precision-5520>
+        f.fainelli@gmail.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200730033747.18931-1-mark.tomlinson@alliedtelesis.co.nz>
+ <20200730033747.18931-3-mark.tomlinson@alliedtelesis.co.nz>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <ddef93f0-4f5b-f860-bc2e-96ccc84ad040@broadcom.com>
+Date:   Thu, 30 Jul 2020 09:45:19 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18c0d88e-8aa0-c0a4-52f7-c9ae9fc5f495@broadcom.com>
+In-Reply-To: <20200730033747.18931-3-mark.tomlinson@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:36:14AM -0700, Ray Jui wrote:
-> On 7/30/2020 9:09 AM, Bjorn Helgaas wrote:
-> > On Thu, Jul 30, 2020 at 03:37:46PM +1200, Mark Tomlinson wrote:
-> >> The pci_generic_config_write32() function will give warning messages
-> >> whenever writing less than 4 bytes at a time. As there is nothing we can
-> >> do about this without changing the hardware, the message is just a
-> >> nuisance. So instead of using the generic functions, use the functions
-> >> that have already been written for reading/writing the config registers.
-> > 
-> > The reason that pci_generic_config_write32() message is there is
-> > because, as the message says, a read/modify/write may corrupt bits in
-> > adjacent registers.  
-> > 
-> > It makes me a little queasy to do these read/modify/write sequences
-> > silently.  A generic driver doing an 8- or 16-bit config write has no
-> > idea that the write may corrupt an adjacent register.  That leads to
-> > bugs that are very difficult to debug and only reproducible on iProc.
-> > 
-> > The ratelimiting on the current pci_generic_config_write32() message
-> > is based on the call site, not on the device.  That's not ideal: we
-> > may emit several messages for device A, trigger ratelimiting, then do
-> > a write for device B that doesn't generate a message.
-> > 
-> > I think it would be better to have a warning once per device, so if
-> > XYZ device has a problem and we look at the dmesg log, we would find a
-> > single message for device XYZ as a hint.  Would that reduce the
-> > nuisance level enough?
+
+
+On 7/29/2020 8:37 PM, Mark Tomlinson wrote:
+> The core interrupt code expects the irq_set_affinity call to update the
+> effective affinity for the interrupt. This was not being done, so update
+> iproc_msi_irq_set_affinity() to do so.
 > 
-> I'm in favor of this. I agree with you that we do need the warnings
-> because some PCIe config registers that are read/write to clear.
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+>  drivers/pci/controller/pcie-iproc-msi.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> But the current amount of warning messages generated from these config
-> register access is quite massive and often concerns the users who are
-> less familiar with the reason/purpose of the warnings. We were asked
-> about these warnings by multiple customers. People freaked out when they
-> see "corrupt" in the warning messages, :)
+> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> index 3176ad3ab0e5..908475d27e0e 100644
+> --- a/drivers/pci/controller/pcie-iproc-msi.c
+> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> @@ -209,15 +209,20 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
+>  	struct iproc_msi *msi = irq_data_get_irq_chip_data(data);
+>  	int target_cpu = cpumask_first(mask);
+>  	int curr_cpu;
+> +	int ret;
+>  
+>  	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
+>  	if (curr_cpu == target_cpu)
+> -		return IRQ_SET_MASK_OK_DONE;
+> +		ret = IRQ_SET_MASK_OK_DONE;
+> +	else {
+> +		/* steer MSI to the target CPU */
+> +		data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
+> +		ret = IRQ_SET_MASK_OK;
+> +	}
+>  
+> -	/* steer MSI to the target CPU */
+> -	data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
+> +	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
+>  
+> -	return IRQ_SET_MASK_OK;
+> +	return ret;
+>  }
+>  
+>  static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
+> 
 
-Yeah, I'm sure they would.  Hopefully the message makes it all the way
-back to the hardware designers ;)
+This change looks good to me. Thanks.
 
-> Limiting the warning to once per device seems to be a reasonable
-> compromise to me.
-
-We (you, I mean :)) could also look at the particular warnings.  If
-they're triggered by PCI core writes that are 8- or 16-bits when they
-*could* be 32-bits, it might make sense to widen them.  I know there
-are places that do 8-bit writes to 16-bit registers; maybe there are
-similar ones to 32-bit registers.
-
-Bjorn
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
