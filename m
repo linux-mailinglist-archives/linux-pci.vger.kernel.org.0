@@ -2,115 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 792E823420A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jul 2020 11:08:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD61B23452E
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jul 2020 14:03:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbgGaJIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Jul 2020 05:08:18 -0400
-Received: from mail-eopbgr1300112.outbound.protection.outlook.com ([40.107.130.112]:3296
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728437AbgGaJIR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:08:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SpFvtDHQxCGg7cINZIGnZkvlMAFjKxbESrkPPaKdtJWIF/o3f3PP6OI2FUqhOcRzo8HzpZEpuYJGNU0aavmo2WuBsovtcMdYKpkpjSK8Hgklfzvsf2K2DYguEiWADEvPGC92gPWQOZ0n+O+gUSLoevEU+tovQYloT12DZKmeouGgcw9lqNjbl8w3B9Wr7LbYbOKT/Cshmr+Da6dvv+c9V6pqAu5qK8wnNtGKxYGH+Xrs7/+droE/1KJmarlaKiIeIDXQQqCqoi0u/B2yxVHu87LaLq5OMAXRZ9YbKUchfsmgfu5Ih6ss6wbJnwgzuNhYD2EBwdpYs6EOgunBrzrDYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YZe+GeX8gEp3tpKSIQYaiQmaKoTTBNCq9uZ9jj4YTw4=;
- b=bmEYOQyhQcF+T0Nxg/KuF9pHJI3JtQsT/cY7Ne8mDK48GUd/SZDR7HapsrDBxaoXb5hpAn0wTQqnR7lorzQBXw8AmT4SjqFq+gcWKYf0KXAHdoGc7kpnWd/n0mL3xvKFSYubPQPqVuUUomdveILM9kmdXxhFj3cmgUGrDSnTTHlKX8WThV+EgtA7Aooa/Yy/agfKNEPChIB/br428pdezmiYP44xIciGEwqes6MJlMSyqFJbot+Cwb19yOFxHkHh/3Zm2GcpCsl/uPWnJVFdvczkdaFq8pFxjFMaNXL7jyw8F1NqiOR0KhgAY0IOxbWGos4SlUXKX6qPpQILNKbAYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        id S1732860AbgGaMCT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Jul 2020 08:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732699AbgGaMCS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Jul 2020 08:02:18 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F592C061574;
+        Fri, 31 Jul 2020 05:02:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id bo3so8536250ejb.11;
+        Fri, 31 Jul 2020 05:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YZe+GeX8gEp3tpKSIQYaiQmaKoTTBNCq9uZ9jj4YTw4=;
- b=N62qO5wGMDAZHI0muPlDlawZ6RRHtlBuhCKskfifd/rPxKg2UDdiCXqEZmAiJu010ZvsZiKWqrtP8UMPL+E41PEhOUDyzIWYKmJ0Pl84gH7XuGOR/Ldngv80xDt37bHPhZi3s7zZGdW3YhmrTXnC2qNzKRw+pxR2wiabA7j9EUs=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TY2PR01MB3515.jpnprd01.prod.outlook.com (2603:1096:404:d6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Fri, 31 Jul
- 2020 09:08:12 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3239.017; Fri, 31 Jul 2020
- 09:08:11 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: RE: [PATCH v2][next] PCI: rcar-gen2: Use fallthrough pseudo-keyword
-Thread-Topic: [PATCH v2][next] PCI: rcar-gen2: Use fallthrough pseudo-keyword
-Thread-Index: AQHWX9dxg3v+SSLQ3Uetc/hFRqLsz6khdGEw
-Date:   Fri, 31 Jul 2020 09:08:10 +0000
-Message-ID: <TY2PR01MB369218139A78BB84DB6B2FDAD84E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <20200722032851.GA4251@embeddedor>
-In-Reply-To: <20200722032851.GA4251@embeddedor>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [240f:60:5f3e:1:7d28:3e82:377f:8a0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5d623a29-132d-4257-4963-08d835314034
-x-ms-traffictypediagnostic: TY2PR01MB3515:
-x-microsoft-antispam-prvs: <TY2PR01MB3515BE6E83C386B42C5EC7D5D84E0@TY2PR01MB3515.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lplCsK/T9b29Boqiod+W7QaesWeguRnsEM8UQWkiaGp6O2GPtOKBDjrRh0IzkJR+NJ+e7qCFyjwKnHhTDCSRT34m1LH98obSQ5VrWetz8LPtdlePDcnLiaHa7wh5mOzLlfCydSQ8Y6GhVZDckTLzSCwF4cJ6tGmUj5pqt75PlgLySMPFZvpPitoN6HwOFw0fYzuyayUTc1JSk98CgJoH4Ftzd6dGauYYfSm8Va+1GhosmAzwzO9P5yQS5I3hPT5HOgiP6SnPOVfe2h9epjoZ9J4fg4f9EdhfVcynhnL5DmDG+9ms/5N9UusLPOVsoleT1DLXn1q4kTos5bxwEKmAn1vYXigBFGL3ut0V88+gt/qoNMYrT96omlDoMdUOEiSfx6uTZXALneDbr8+ZnNvCMA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(33656002)(86362001)(71200400001)(9686003)(966005)(55016002)(110136005)(5660300002)(4744005)(66946007)(66556008)(66446008)(76116006)(52536014)(478600001)(64756008)(66476007)(8676002)(54906003)(7696005)(2906002)(7416002)(316002)(186003)(8936002)(4326008)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: S0mWKjs+hZjnCkWiQQ+x6uq+rGrVD72haST3vhF/TH0GjfkA9Ckhh8wowOqqIi4lCcWo2h5f22qR6DqU5ywvS90FjMHqcXQqXQOLeXqNs5BVnOTYQJTDr8oILfl5vfaTEQZF0GE/ncra7SKQ5ijkQ+fXJcRaHgwtb6/BOTE9BteUq/QXCssfUJmtL9O+q8vuGJP4IGSSDCjyKN17DegkI3/lYUD/FTatelrQEj8CLr8M+3abKzvPZ1vvRdBXb8x7toIWmpr2NJprqzNcMvhBpZHHcOCirxhcQRqdQDVz5L3kzofLawHECQyCocveeiN6JzGqIuIcf/12scNlp+eUxOJW8llPvmJ0GqSG6NMTQDUSqbdY6k5I2wdfbdLAFhMTmm81PY01defnY6K4YQoTqD4d8UiX6dA7dSDnk6Q/xB9OLwP/4Ks1rLEFK1piHBtb0t/FNtgdMUW9vuTktJ0LSX47R1zqeLKUxERPjLtNr0XXpH6DsPfHZZoRNA3GtdOid8UFR95Lu21waHZF7JnTF5nnHP+pn0isIrQ7yCHetq6Cdu1n5WJ+cL0+XmgsyDngef5e62yskEt4WBhWJdN/k3s9Fih3PoJj421d1yKwA742OJaIHswwGhVc7MenDVxomc1PaKZnm5PE0pcT4htD27CF88VGD1vayZoNkgeAhyJJHKpNY6up1o/x6SPDbIB+RJxR4I2pOVE43tosZ+U0wQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d623a29-132d-4257-4963-08d835314034
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2020 09:08:11.5036
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b55ULJNfF7qYu2VBeYMQMj2W8zH0/gEZHrSMWt+2uEu2HeJEu9OD8KxenVAyGvImVdir2rTcdtSYmnc612W6dVftlFIRIqgKisOXrzuozzCAx5XWx1I1G84kewRruhDE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB3515
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZPoeO3tTC7ewTWnbFijLfWrL4pIpzl5ZB76dv/p6S+8=;
+        b=IV77SFHdlJClAFDI4KSZtVJdC2DAtGrxQmIzbw7GOFGworBySBIYMfm9Yv26Y/SKyP
+         rJ/5xlxCVrVFPq8kGTy8sYSnl8lJJRNSCrGsHmSuT/Q/6f6ZNhMo+IUMump4oyHXnbT4
+         zdg6GnXC6I2EnnmIO+QWUt/QBdgUQDiMTBzZ1MF6LcHzPH6p6WiuMJRqgKLwdVXr0w6T
+         A41vxNL3Pbxy7zwarGyvn0JkT7Sx1d9otfI42XD75uRhNvxzHSotK52Z7UcRx/7L0KoB
+         ev5oiKfqKrPihVeHMlZvAQD8DrotfvZAdy9sCn3f87cYflYMriFMzeKWHMdJMTvHmefD
+         7wSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZPoeO3tTC7ewTWnbFijLfWrL4pIpzl5ZB76dv/p6S+8=;
+        b=BsQ1TTmSRZiL4D5NH9xf1aEOOZBBt3vZfd4bEA4JHu9OWhAtNu+3FV56Db1NJ1FAeQ
+         lpquwahRKHUW6130T5Vjg0oncoVqWjlWDg8zvui4GvHH2W2fk4/+eWLgovZQCaUQ55X8
+         Me4TuiWUCfi2deewwUJZ9aRKkbIsMMQJHpDMMUigmc4lQk5lplU29nr1Mx+Ba3nDYe2S
+         I4y/Y3vs/QztHBQtfW4x53UBA9h2COZbyHvaE6KASClOXTpQph+ENV2lnPpFFnJzw6LP
+         JSN+xvc5G6WSWIyEnLgjJRsSCuHjZrCEu5xzKslUf3dcAcJLUlzYxGwdbkhl1t80Y4rm
+         J+3w==
+X-Gm-Message-State: AOAM530eMoGsMzeW6I7P3ZOQ9J7SJ0np+8an32G8XaTnZawo1nPjK848
+        VzYuOP1H4DFt1v57gniiBMiWw9y6/hcxOQ==
+X-Google-Smtp-Source: ABdhPJzjoTcnAvyDzlAqwJiXlviIPrdknthesuHRXw6Drk1Mxsa9h9E21KaWBpHYtCNmp+wuQyAJqg==
+X-Received: by 2002:a17:906:d7b1:: with SMTP id pk17mr3684852ejb.554.1596196936900;
+        Fri, 31 Jul 2020 05:02:16 -0700 (PDT)
+Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
+        by smtp.gmail.com with ESMTPSA id j5sm9091734ejk.87.2020.07.31.05.02.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 05:02:16 -0700 (PDT)
+From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+To:     helgaas@kernel.org, Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v4 00/12] PCI: Remove '*val = 0' from pcie_capability_read_*()
+Date:   Fri, 31 Jul 2020 13:02:28 +0200
+Message-Id: <20200731110240.98326-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+v4 CHANGES:
+- Drop uses of pcie_capability_read_*() return value. This related to
+  [1] which is pointing towards making the accessors return void.
+- Remove patches found to be unnecessary
+- Reword some commit messages
 
-> From: Gustavo A. R. Silva, Sent: Wednesday, July 22, 2020 12:29 PM
->=20
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
->=20
-> [1]
-> https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=3D=
-fallthrough#implicit-switch-case-fall-through
->=20
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+v3 CHANGES:
+- Split previous PATCH 6/13 into two : PATCH 6/14 and PATCH 7/14
+- Fix commit message of PATCH 5/14
+- Update Patch numbering and Commit messages
+- Add 'Acked by Greg KH' to PATCH 2/14
+- Add PATCH version
 
-Thank you for the patch!
+v2 CHANGES:
+- Fix missing comma, causing the email cc error
+- Fix typos and numbering errors in commit messages
+- Add commit message to 13/13
+- Add two more patches: PATCH 3/13 and PATCH 4/13
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+MERGING:
+- Patch 6/12 depends on Patch 5/12. However Patch 5/12 has no dependency.
+  Please, merge PATCH 6/12 only after Patch 5/12.
+- Patch 12/12 depends on all preceding patches. Please merge Patch 12/12
+  only after other patches in this series have been merged.
+- All other patches have no dependencies besides those mentioned above and
+  can be merge individually.
 
-Best regards,
-Yoshihiro Shimoda
+PATCH 5/12:
+Set the default case in the switch-statement to set status
+to "Power On".
+
+PATCH 1/12 to 11/12:
+Use the value read by pcie_capability_read_*() to determine success or
+failure. This is done by checking if it is ~0, while maintaining the
+functions' behaviour. This ensures that the changes in PATCH 12/12 does
+not introduce any bug.
+
+PATCH 12/12:
+There are several reasons why a PCI capability read may fail whether the
+device is present or not. If this happens, pcie_capability_read_*() will
+return -EINVAL/PCIBIOS_BAD_REGISTER_NUMBER or PCIBIOS_DEVICE_NOT_FOUND
+and *val is set to 0.
+
+This behaviour if further ensured by this code inside
+pcie_capability_read_*()
+
+ ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+ /*
+  * Reset *val to 0 if pci_read_config_dword() fails, it may
+  * have been written as 0xFFFFFFFF if hardware error happens
+  * during pci_read_config_dword().
+  */
+ if (ret)
+	 *val = 0;
+ return ret;
+
+a) Since all pci_generic_config_read() does is read a register value,
+it may return success after reading a ~0 which *may* have been fabricated
+by the PCI host bridge due to a read timeout. Hence pci_read_config_*() 
+will return success with a fabricated ~0 in *val, indicating a problem.
+In this case, the assumed behaviour of  pcie_capability_read_*() will be
+wrong. To avoid error slipping through, more checks are necessary.
+
+b) pci_read_config_*() will return PCIBIOS_DEVICE_NOT_FOUND only if 
+dev->error_state = pci_channel_io_perm_failure (i.e. 
+pci_dev_is_disconnected()) or if pci_generic_config_read() can't find the
+device. In both cases *val is initially set to ~0 but as shown in the code
+above pcie_capability_read_*() resets it back to 0. Even with this effort,
+drivers still have to perform validation checks more so if 0 is a valid
+value.
+
+Most drivers only consider the case (b) and in some cases, there is the 
+expectation that on timeout *val has a fabricated value of ~0, which *may*
+not always be true as explained in (a).
+
+In any case, checks need to be done to validate the value read and maybe
+confirm which error has occurred. It is better left to the drivers to do.
+
+Check the return value of pcie_capability_read_dword() to ensure success
+and avoid bug as a result of Patch 14/14.
+Remove the reset of *val to 0 when pci_read_config_*() fails.
+
+[1] https://lore.kernel.org/linux-pci/20200714234625.GA428442@bjorn-Precision-5520/
+
+
+Saheed O. Bolarinwa (12):
+  IB/hfi1: Check if pcie_capability_read_*() reads ~0
+  misc: rtsx: Check if pcie_capability_read_*() reads ~0
+  ath9k: Check if pcie_capability_read_*() reads ~0
+  iwlegacy: Check if pcie_capability_read_*() reads ~0
+  PCI: pciehp: Set "Power On" as the default get_power_status
+  PCI: pciehp: Check if pcie_capability_read_*() reads ~0
+  PCI/ACPI: Check if pcie_capability_read_*() reads ~0
+  PCI: Check if pcie_capability_read_*() reads ~0
+  PCI/PM: Check if pcie_capability_read_*() reads ~0
+  PCI/AER: Check if pcie_capability_read_*() reads ~0
+  PCI/ASPM: Check if pcie_capability_read_*() reads ~0
+  PCI: Remove '*val = 0' from pcie_capability_read_*()
+
+ drivers/infiniband/hw/hfi1/aspm.c            |  6 ++--
+ drivers/misc/cardreader/rts5227.c            |  2 +-
+ drivers/misc/cardreader/rts5249.c            |  2 +-
+ drivers/misc/cardreader/rts5260.c            |  2 +-
+ drivers/misc/cardreader/rts5261.c            |  2 +-
+ drivers/net/wireless/ath/ath9k/pci.c         |  3 +-
+ drivers/net/wireless/intel/iwlegacy/common.c |  2 +-
+ drivers/pci/access.c                         | 14 --------
+ drivers/pci/hotplug/pciehp_hpc.c             | 13 +++++---
+ drivers/pci/pci-acpi.c                       |  4 +--
+ drivers/pci/pci.c                            | 34 ++++++++++++++------
+ drivers/pci/pcie/aer.c                       |  2 +-
+ drivers/pci/pcie/aspm.c                      | 10 +++---
+ drivers/pci/probe.c                          | 12 +++----
+ 14 files changed, 56 insertions(+), 52 deletions(-)
+
+-- 
+2.18.4
 
