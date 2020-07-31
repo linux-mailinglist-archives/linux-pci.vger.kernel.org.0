@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDC8923451A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jul 2020 14:02:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BBF2234525
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jul 2020 14:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733034AbgGaMC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Jul 2020 08:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56220 "EHLO
+        id S1732825AbgGaMCk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Jul 2020 08:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733029AbgGaMCZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Jul 2020 08:02:25 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CA1C061575;
-        Fri, 31 Jul 2020 05:02:25 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id g19so17353807ejc.9;
-        Fri, 31 Jul 2020 05:02:25 -0700 (PDT)
+        with ESMTP id S1733033AbgGaMC1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Jul 2020 08:02:27 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01EDC061574;
+        Fri, 31 Jul 2020 05:02:26 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id qc22so16378962ejb.4;
+        Fri, 31 Jul 2020 05:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+B0ZiRGGkQHGfacBVvFgt+7CbN36ujRN2OQHpeuEl8Q=;
-        b=q1ELpRRFFJl8UZ7DlKSBerPXQVxyKAd4T3Rh0sn2R47QsC0y9Bjo6tJovpznNhS8yR
-         1ky2nz6HbkWcz/wRA3cUSi86NBcbDAf4+sQAuPbHZ8KjHOPop1D8Cs+efmggmlP6kaTE
-         cejWvPxN+7BdWCABfsSrVCZ4a5ZrEbPMMx43Rj6x8ChHzQReQfKVL+7BtF+0ppl8pHIg
-         OL7ouoqnTXagdt4YbGlYplW9EAo5EKk4QJ1SbxuVOJbBf7HvSjYGpb3GROvrXv/pNevl
-         XjTzuyStpqPFCaHph9dgTIXXlp1veqq0qMTJH3ugoZ/2xMD+1DQd5SwmH+/K6LZVIxpl
-         iQSg==
+        bh=MwqyF9CqW8A2iZOP3zewT7pOoo+Y4wjTCBBLr9pFHV8=;
+        b=lHoHf9/m1kx7BZ7ww7TnAOjVdHgOjMgE7yLieOTnDqQNJxPrzZpx4X7luLE6X5qwZS
+         MSfM/WDG7Z7cYyAiYMXIgsf1/QIs51JUxiIZRyCPeJq5PHrzXYxoL9BclsHkuD1PanUC
+         KN2TTvAcBF4bg2m0vXqdzEoStoCvDD/GLmoS+SebIRyOdOr6Eg6ZksoFBxWVKMYxIfo+
+         bIEm18ANbRdC7thEM0MAPhXn+OJ1s0C2E7tVzn6L91sQsZhNgOe88CHyvFgroBFxhBlS
+         26c6SmuBWXqQk1wEhtz7P/KBka4UMvcRd8VoKGhOPGOWlRPPvTUpLoV1+aGynqXJqYbq
+         2UqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+B0ZiRGGkQHGfacBVvFgt+7CbN36ujRN2OQHpeuEl8Q=;
-        b=fzWphx4Ujf37TII2q03MipMpictfkM3Yqkwu+mu6iJqcvNtjI1hRAN1DFt0nhonxCD
-         ueXbWJ6Zu7fpFbW6j/GR2+pIBz78VZoOLuf2qhSx4z9BClPWf5+gaJxJJ7GRNoFep8P1
-         W73nk9cEW10plqGsMffmWf7Njnh2yR4rGWKdtHIOQvYeg6cQTUXh/gPI4YCSoYAxkal9
-         NxZlmpWE026lRKd/tMXuXG+2NIJMmHzK2uUMCnYdkSN5/FoGoq+Btp6sQJF5lsUA1J3f
-         YxYZgGyLpIkV5Lfn0JdzbG80dgeD1WroAZRdinQKX4Kv2efl6cwXQQvZNZ6ImGk5qRNc
-         NY4g==
-X-Gm-Message-State: AOAM533IHQS426NleByawD7pFIc54XMruY2bLlX7YgoJTuhm0OSr3oeJ
-        m5/iLipUg1ynm29iNl4VZjA=
-X-Google-Smtp-Source: ABdhPJxgR17bqYSQeGy025fhxigm0MVrq5A7QiKas69UQZRDtn4IPk1fEsdjUzNRp0lVrz4itO5j9Q==
-X-Received: by 2002:a17:906:3756:: with SMTP id e22mr3810103ejc.487.1596196944109;
-        Fri, 31 Jul 2020 05:02:24 -0700 (PDT)
+        bh=MwqyF9CqW8A2iZOP3zewT7pOoo+Y4wjTCBBLr9pFHV8=;
+        b=mXO4CtjnGnWpGQXJId15HUrT92EeFb1dnOsIaC3JukKdHwt5W2S0Jwrtw6DXXp3x6U
+         +V82TksGcCo2A80liQLtqJemUb4pIt92VzG+LXNaUWWWbAfRBkmN9CuzX4PWqIGNZxBw
+         9Q6Rr7+3fZMmHGK+VHm5cFw/NSNkN/nPPPoRb1qyD77VM6wT3XhBsxpMq4hL681OGnSR
+         uf7CdI+rQfV8GzDeixBG7bGaHnVDqpQQriv6Jl+DGSaZ2UXxHhmL63fNr7Jx7gzV7gsB
+         Ph3S37GiguCbP34B2y7MpXolWvMZyyCi6GErxgLo1hjkEUGM2PukOFNzA+8isc8sU1bw
+         EVtg==
+X-Gm-Message-State: AOAM530KOIruYvLsuXd2iWenaEqhmV2P+6F8yF1ppcRO8MEbti6JucQF
+        KY+z/9LzW5vNlPbt3muSfe4=
+X-Google-Smtp-Source: ABdhPJxTrzSFodIyak2PVFdWY/r/1cAygHW7Lv6TgpA0BgOnyI9xtpwXpNfkEtXqEA40584a4tXzpA==
+X-Received: by 2002:a17:906:8748:: with SMTP id hj8mr3778605ejb.477.1596196945471;
+        Fri, 31 Jul 2020 05:02:25 -0700 (PDT)
 Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
-        by smtp.gmail.com with ESMTPSA id j5sm9091734ejk.87.2020.07.31.05.02.22
+        by smtp.gmail.com with ESMTPSA id j5sm9091734ejk.87.2020.07.31.05.02.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 05:02:23 -0700 (PDT)
+        Fri, 31 Jul 2020 05:02:24 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
@@ -53,9 +53,9 @@ Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 05/12] PCI: pciehp: Set "Power On" as the default get_power_status
-Date:   Fri, 31 Jul 2020 13:02:33 +0200
-Message-Id: <20200731110240.98326-6-refactormyself@gmail.com>
+Subject: [PATCH v4 06/12] PCI: pciehp: Check if pcie_capability_read_*() reads ~0
+Date:   Fri, 31 Jul 2020 13:02:34 +0200
+Message-Id: <20200731110240.98326-7-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20200731110240.98326-1-refactormyself@gmail.com>
 References: <20200731110240.98326-1-refactormyself@gmail.com>
@@ -64,39 +64,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The default case of the switch statement is redundant since
-PCI_EXP_SLTCTL_PCC is only a single bit.
+On failure pcie_capability_read_word() sets it's last parameter, val
+to 0. However, with Patch 12/12, it is possible that val is set to
+~0 on failure. This introduces a bug because (x & x) == (~0 & x).
 
-Set the default case in the switch-statement to set status
-to "Power On"
+Since ~0 is an invalid value here,
+
+pciehp_get_power_status():
+Add an extra check for ~0 on the value read. If found, set status
+to 'Power On' and return.
+
+pcie_wait_for_presence():
+Add an extra check for no ~0 to the exit condition of the loop
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/pci/hotplug/pciehp_hpc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 53433b37e181..b89c9ee4a3b5 100644
+index b89c9ee4a3b5..39305aabc3a2 100644
 --- a/drivers/pci/hotplug/pciehp_hpc.c
 +++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -400,14 +400,12 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status)
+@@ -278,7 +278,7 @@ static void pcie_wait_for_presence(struct pci_dev *pdev)
+ 
+ 	do {
+ 		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+-		if (slot_status & PCI_EXP_SLTSTA_PDS)
++		if ((slot_status != (u16)~0) && (slot_status & PCI_EXP_SLTSTA_PDS))
+ 			return;
+ 		msleep(10);
+ 		timeout -= 10;
+@@ -399,6 +399,11 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status)
+ 	ctrl_dbg(ctrl, "%s: SLOTCTRL %x value read %x\n", __func__,
  		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_ctrl);
  
++	if (slot_ctrl == (u16)~0) {
++		*status = 1;    /* On */
++		return;
++	}
++
  	switch (slot_ctrl & PCI_EXP_SLTCTL_PCC) {
--	case PCI_EXP_SLTCTL_PWR_ON:
--		*status = 1;	/* On */
--		break;
  	case PCI_EXP_SLTCTL_PWR_OFF:
  		*status = 0;	/* Off */
- 		break;
-+	case PCI_EXP_SLTCTL_PWR_ON:
- 	default:
--		*status = 0xFF;
-+		*status = 1;	/* On */
- 		break;
- 	}
- }
 -- 
 2.18.4
 
