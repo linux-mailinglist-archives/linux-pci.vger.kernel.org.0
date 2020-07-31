@@ -2,146 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE56233EB9
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jul 2020 07:44:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B938B233EFD
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jul 2020 08:19:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgGaFoF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Jul 2020 01:44:05 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21491 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbgGaFoF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 31 Jul 2020 01:44:05 -0400
-IronPort-SDR: J+9LpI2BkJnnU/1ja3yP912icGTXPCzG6lSlbNpUJd/p3fBKJGNmlHTBvqGfCyNezISLSto/FH
- 3BPFoRdV4Zbg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="150931686"
-X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
-   d="scan'208";a="150931686"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 22:44:04 -0700
-IronPort-SDR: y7EsUSxcWa05vfLWgMKNZ1F9dlhVrvbc8ZiKT28Bq5vLaI7UibGK+gO0YSDjbT0IUB3UWNR0KE
- Sr16MkGMJMTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
-   d="scan'208";a="323134648"
-Received: from lkp-server02.sh.intel.com (HELO d4d86dd808e0) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2020 22:44:02 -0700
-Received: from kbuild by d4d86dd808e0 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k1Npp-0000RG-W1; Fri, 31 Jul 2020 05:44:01 +0000
-Date:   Fri, 31 Jul 2020 13:43:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/hotplug] BUILD SUCCESS
- 2e4770a5661a727be1ccb65ebc97baec3fa863a0
-Message-ID: <5f23af69.+gaXHATx8f+LoMMx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1731403AbgGaGTY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Jul 2020 02:19:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731341AbgGaGTY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Jul 2020 02:19:24 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC7E0C061575
+        for <linux-pci@vger.kernel.org>; Thu, 30 Jul 2020 23:19:23 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 3so8186738wmi.1
+        for <linux-pci@vger.kernel.org>; Thu, 30 Jul 2020 23:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qPKXXpJdjKCrkxbnD31J9NcdUb/tXEBn+ARL8Y6Ysd8=;
+        b=tXVqKIx9YeutJTEwLUXbENDyhttvDO3dblr6fxNoUIoyOSofGamNKD+xTV0WpAfiEG
+         3ETCLAtRqNYrUxOT8PIb1nlELDzskGVDilJdLjyn69+hgV+lW/viQf+ympqGXsDJo9xD
+         sY/kqBtch/f0zMWm1AVKLTE9ZGdpSTtfzRjrkNU5oWnX/gbBMQNZJis6dQY9ZVuDr/Ph
+         tUPi0o6j4p5N89JlWf62pCKWk/t36X1Mdf/pz9wMf3LNac7hKSDW604IMOJJTNEiwg9l
+         xwiVZQ9EAUdWLT2hXFEUlY5jGh1Fz6m8IQORxoTZDMtO33eEQkiouNcCDRBj7zo8AGmt
+         K00Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qPKXXpJdjKCrkxbnD31J9NcdUb/tXEBn+ARL8Y6Ysd8=;
+        b=qvuHv2iPdPj5Fc6P+nSfD33wpw7SDm6mzJWZmWgE3PGUdW/KqVEiCsDwtzqh3uD/bo
+         vKrLdtMSml1OBmlY//B3D2rjK9+M8/613IXvsfZ4Nr7/A81psjuMQsgYjhuv2EyumDXg
+         7OcHcuY2b/2UanR/2H/BC24h//onfy2MCp0MO+2lje03SEOpaUXFVzqqlQ3Lr4i1VHcd
+         Mj9ooOkUS4ezWk6xpbrhU372ByIoUKlMlNrkL0kmIhKz15esLI2zxxmice9eCQeT6XdL
+         xjXHljs/M4QhXaxwFX5gia5CuOkhKOe+5fCAVSw7QVnmUslLOnNjSddiLYR4t5m75aGY
+         jMuw==
+X-Gm-Message-State: AOAM531OT2RZxc2OOLyl1YH94/OdZGzHp6bNLeCrVL0VSvZGz/5X3fe9
+        VuNXcNB0/Q9xMwNJxJ+Dl+qSeg==
+X-Google-Smtp-Source: ABdhPJwcZeUYAOIT7hP4EH+JmFxHst2IgQ5lloYBKPkq4SUaU7RgmepyQcQ91JfPqooLOOrlqaMcEA==
+X-Received: by 2002:a1c:dc02:: with SMTP id t2mr2360258wmg.55.1596176362350;
+        Thu, 30 Jul 2020 23:19:22 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id n24sm4604652wmi.36.2020.07.30.23.19.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 23:19:21 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 07:19:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark D Rustad <mrustad@gmail.com>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>, dvhart@infradead.org,
+        andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
+Message-ID: <20200731061919.GJ2419169@dell>
+References: <20200714062323.19990-1-david.e.box@linux.intel.com>
+ <20200717190620.29821-3-david.e.box@linux.intel.com>
+ <20200728075859.GH1850026@dell>
+ <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/hotplug
-branch HEAD: 2e4770a5661a727be1ccb65ebc97baec3fa863a0  PCI: rpadlpar: Make functions static
+On Wed, 29 Jul 2020, Mark D Rustad wrote:
 
-elapsed time: 721m
+> at 12:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> 
+> > If you do:
+> > 
+> > 	do {
+> > 		int pos;
+> > 
+> > 		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
+> > 		if (!pos)
+> > 			break;
+> > 
+> > Then you can invoke pci_find_next_ext_capability() once, no?
+> 
+> Part of your suggestion here won't work, because pos needs to be initialized
+> to 0 the first time. As such it needs to be declared and initialized outside
+> the loop. Other than that it may be ok.
 
-configs tested: 84
-configs skipped: 1
+Right.  It was just an example I quickly hacked out.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Feel free to move the variable, or make it static, etc.
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a001-20200730
-x86_64               randconfig-a004-20200730
-x86_64               randconfig-a002-20200730
-x86_64               randconfig-a006-20200730
-x86_64               randconfig-a003-20200730
-x86_64               randconfig-a005-20200730
-i386                 randconfig-a005-20200730
-i386                 randconfig-a004-20200730
-i386                 randconfig-a006-20200730
-i386                 randconfig-a002-20200730
-i386                 randconfig-a001-20200730
-i386                 randconfig-a003-20200730
-i386                 randconfig-a005-20200731
-i386                 randconfig-a004-20200731
-i386                 randconfig-a006-20200731
-i386                 randconfig-a002-20200731
-i386                 randconfig-a001-20200731
-i386                 randconfig-a003-20200731
-x86_64               randconfig-a015-20200731
-x86_64               randconfig-a014-20200731
-x86_64               randconfig-a016-20200731
-x86_64               randconfig-a012-20200731
-x86_64               randconfig-a013-20200731
-x86_64               randconfig-a011-20200731
-i386                 randconfig-a016-20200730
-i386                 randconfig-a012-20200730
-i386                 randconfig-a014-20200730
-i386                 randconfig-a015-20200730
-i386                 randconfig-a011-20200730
-i386                 randconfig-a013-20200730
-i386                 randconfig-a016-20200731
-i386                 randconfig-a012-20200731
-i386                 randconfig-a014-20200731
-i386                 randconfig-a015-20200731
-i386                 randconfig-a011-20200731
-i386                 randconfig-a013-20200731
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
