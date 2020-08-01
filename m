@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9012C235212
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Aug 2020 14:24:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BDD523521E
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Aug 2020 14:25:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgHAMYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1729099AbgHAMYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 1 Aug 2020 08:24:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgHAMYl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 08:24:41 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED97C061756;
-        Sat,  1 Aug 2020 05:24:41 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o18so34005098eje.7;
-        Sat, 01 Aug 2020 05:24:41 -0700 (PDT)
+        with ESMTP id S1729086AbgHAMYm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 08:24:42 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75837C061757;
+        Sat,  1 Aug 2020 05:24:42 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id bo3so11390591ejb.11;
+        Sat, 01 Aug 2020 05:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UPMKmQkw5j2Bh/Rizmhe2Km1hW9ddbiX+OSz6ICfDL0=;
-        b=lxoAru1R5QoARIY5Zj8IRtaCQjydTdcDfATP28B1jbs7FRLq31y9L/U2SR0zijpXrz
-         bwjdGdwpBCY+OL8xy3+j8KOYTQ4iuc9pQ7t1ryeXThG/akFvuU5yTDz4bKRppe3UTI6S
-         mVk1U19Sq1sZ5/BFGKbeETK7mgjUoVVrEja3FLOzJB39cha7M1+zv2654sn/ZVjvDKjF
-         4pB4sPSLkEAGsjJ7lx/0i9X+FEoPJHHs30BL/XHuibQBDEMQsaMLSnn6J0s4EQ/nuUuK
-         JbxLd+JXACbythRSYj8Fo862E0AsZbbp92RxcFiBidmKNrCL1IdKeKAKnnBLqOIqjvx8
-         HRCw==
+        bh=f7EHkSWbrjhplB2d+YIJIh5vLQH5GmykUiEqLTIStB4=;
+        b=ncnCAE+5L7BB5/YjIaWKdov1rz6HP5TvXA9nZA3PXndUUW1xK5+ufbrRdCYCwHcqHm
+         t1EMuhi4tuEBdBJ5YsN9BB5sxWFTI0+q//E8z9o5Ck0ZyU+V5BrrZ5nZXdtol4sWPkxZ
+         b9MIFjQEbPFh3ySpTdLCOFWSkzspCjS2kD4irjY0YxXuW38z5ndkVpebr288Yek4HTE7
+         +2vr3ZHRUJaZVRsq+jCq8P6pvvPOtSBdlH0LEq1DjZSQP5YlhLmDT7iewerLkZWaqc/g
+         VR8PYab69Ni5ovDIAYK7FvMde3VGmx+R28fsxL9Zyq9QmFLaLLeo+1pPbnbJL/G3y8oR
+         c/IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UPMKmQkw5j2Bh/Rizmhe2Km1hW9ddbiX+OSz6ICfDL0=;
-        b=N9qcFM7oNv9apn3wRRO/t6e2dz+XudRblBdBfkn8OV83RzEiIuZYbcr9NooGHzDpL1
-         Av7uZZocpW6D8H9LURX/HjPJGSs7w8mCcrM4Y4a5l8lh7p5NXCd9XGX7ts58ubhvctGz
-         USS+VR7CrjtUu/MpjBE1lrLaspSNhKL2V2DnFqBA35Jj3JEYbrDUdn57s2ZZAMVD4OAj
-         1Qdwb3brbtbbquWmpx3KrTZs9sQ9JsXIdvL1263Xe9hyF+q6x0xc5oHFcdE8OV1AP/Ch
-         OlXU7hZeS2qyyGq3yAOUXnBJdC2gDdAqXqImt0yyIhz6R3uNMJ+fH21epEAKuSUGLELk
-         l6RQ==
-X-Gm-Message-State: AOAM533TO+vaJVBbTmTJY1YE882WUJMd8ssZg1DFVnffFrBCELIhASnP
-        Rn1KG3FzKQ1ApzmsemXWXLT75nW7/vN+tQ==
-X-Google-Smtp-Source: ABdhPJyCxIUjb+mwT7ePMCbvB9sb/Y2iHevdo/OKsCbDfX1QEQPPASWDc4dVgABKN92MfYabQCbrqA==
-X-Received: by 2002:a17:906:bce9:: with SMTP id op9mr8659385ejb.462.1596284679790;
-        Sat, 01 Aug 2020 05:24:39 -0700 (PDT)
+        bh=f7EHkSWbrjhplB2d+YIJIh5vLQH5GmykUiEqLTIStB4=;
+        b=Bhcu03CrvCaJhpZJX2C9eo2m2HsoOPftZ8cNgV+Fpwzv9tOYt2Lzi0CQJbhEnNsJWB
+         mQn+d4uy3gJpjwI3gnqRiCkvH4Sxd1F86PvRUy9PtXUtxlYXMMWic9/ovyNXAXfAFoA+
+         zneJIJCCt3/iT6OL4RBFM43GL9CLgFQ7BzHBAQVS0Q8fH62lVCpofXQQJI/ZNirhZu3G
+         uhKsLjuz5cGZ3NfarXidsdCrI9oWLnSdfjgk3VoytxVYGBGIUiB+HI3FD/YrjkwDgqRz
+         Upa+A1kCJS28fXBakfA1n3HjwICaA6S4UEQcfvTV2cDSmwvZV3nCjn1YuwRjWenOG0jW
+         QYbA==
+X-Gm-Message-State: AOAM531PtDbv4Hr3UCV4hSRBN4RQ1xhyaKmBGXFdg76c0H+8JBoFaP6u
+        GJK+ARPilP/Ut1874jMXHaI=
+X-Google-Smtp-Source: ABdhPJxK6QsCLubg/13FQ7axRtOuPxj8lfRiykbHYiquSlkMilSMcUUDzaC4VkaClUghhqDZwK4BZw==
+X-Received: by 2002:a17:906:c002:: with SMTP id e2mr8812396ejz.244.1596284681233;
+        Sat, 01 Aug 2020 05:24:41 -0700 (PDT)
 Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
-        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.38
+        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 05:24:39 -0700 (PDT)
+        Sat, 01 Aug 2020 05:24:40 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Wolfram Sang <wsa@kernel.org>
+To:     helgaas@kernel.org, "David S. Miller" <davem@davemloft.net>
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: [RFC PATCH 12/17] i2c: Drop uses of pci_read_config_*() return value
-Date:   Sat,  1 Aug 2020 13:24:41 +0200
-Message-Id: <20200801112446.149549-13-refactormyself@gmail.com>
+        linux-ide@vger.kernel.org
+Subject: [RFC PATCH 13/17] ide: Drop uses of pci_read_config_*() return value
+Date:   Sat,  1 Aug 2020 13:24:42 +0200
+Message-Id: <20200801112446.149549-14-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20200801112446.149549-1-refactormyself@gmail.com>
 References: <20200801112446.149549-1-refactormyself@gmail.com>
@@ -74,158 +74,126 @@ dependency on the return value of these functions is removed, then it
 can later be made to return void.
 
 Remove all uses of the return value of pci_read_config_*().
-Check the actual value read for ~0. In this case, ~0 is an invalid
-value thus it indicates some kind of error.
+Check the actual value read for ~0. In this case, ~0 is an invalid value
+thus it indicates some kind of error.
+
+drivers/ide/cs5536.c cs5536_read() :
+None of the callers of cs5536_read() uses the return value. The obtained
+value can be checked for validity to confirm success.
+
+Change the return type of cs5536_read() to void.
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/i2c/busses/i2c-ali15x3.c |  6 ++++--
- drivers/i2c/busses/i2c-elektor.c |  3 ++-
- drivers/i2c/busses/i2c-nforce2.c |  4 ++--
- drivers/i2c/busses/i2c-sis5595.c | 17 +++++++++++------
- drivers/i2c/busses/i2c-sis630.c  |  7 ++++---
- drivers/i2c/busses/i2c-viapro.c  | 11 ++++++-----
- 6 files changed, 29 insertions(+), 19 deletions(-)
+ drivers/ide/cs5536.c    |  6 +++---
+ drivers/ide/rz1000.c    |  3 ++-
+ drivers/ide/setup-pci.c | 26 ++++++++++++++++----------
+ 3 files changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
-index 02185a1cfa77..fa103131746d 100644
---- a/drivers/i2c/busses/i2c-ali15x3.c
-+++ b/drivers/i2c/busses/i2c-ali15x3.c
-@@ -171,9 +171,11 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
- 								SMBBA,
- 								ali15x3_smba))
- 			goto error;
--		if (PCIBIOS_SUCCESSFUL != pci_read_config_word(ALI15X3_dev,
--								SMBBA, &a))
-+
-+		pci_read_config_word(ALI15X3_dev, SMBBA, &a);
-+		if (a == (u16)~0)
- 			goto error;
-+
- 		if ((a & ~(ALI15X3_SMB_IOSIZE - 1)) != ali15x3_smba) {
- 			/* make sure it works */
- 			dev_err(&ALI15X3_dev->dev,
-diff --git a/drivers/i2c/busses/i2c-elektor.c b/drivers/i2c/busses/i2c-elektor.c
-index 140426db28df..82c8d6d55561 100644
---- a/drivers/i2c/busses/i2c-elektor.c
-+++ b/drivers/i2c/busses/i2c-elektor.c
-@@ -207,7 +207,8 @@ static int elektor_match(struct device *dev, unsigned int id)
- 		if (cy693_dev) {
- 			unsigned char config;
- 			/* yeap, we've found cypress, let's check config */
--			if (!pci_read_config_byte(cy693_dev, 0x47, &config)) {
-+			pci_read_config_byte(cy693_dev, 0x47, &config);
-+			if (config != (u8)~0) {
+diff --git a/drivers/ide/cs5536.c b/drivers/ide/cs5536.c
+index 8b5ca145191b..58d1cf37c013 100644
+--- a/drivers/ide/cs5536.c
++++ b/drivers/ide/cs5536.c
+@@ -55,16 +55,16 @@ enum {
  
- 				dev_dbg(dev, "found cy82c693, config "
- 					"register 0x47 = 0x%02x\n", config);
-diff --git a/drivers/i2c/busses/i2c-nforce2.c b/drivers/i2c/busses/i2c-nforce2.c
-index 777278386f58..dc5d032c5a1d 100644
---- a/drivers/i2c/busses/i2c-nforce2.c
-+++ b/drivers/i2c/busses/i2c-nforce2.c
-@@ -327,8 +327,8 @@ static int nforce2_probe_smb(struct pci_dev *dev, int bar, int alt_reg,
- 		/* Older incarnations of the device used non-standard BARs */
- 		u16 iobase;
+ static int use_msr;
  
--		if (pci_read_config_word(dev, alt_reg, &iobase)
--		    != PCIBIOS_SUCCESSFUL) {
-+		pci_read_config_word(dev, alt_reg, &iobase);
-+		if (iobase == (u16)~0) {
- 			dev_err(&dev->dev, "Error reading PCI config for %s\n",
- 				name);
- 			return -EIO;
-diff --git a/drivers/i2c/busses/i2c-sis5595.c b/drivers/i2c/busses/i2c-sis5595.c
-index c793a5c14cda..9b3fbde9cd9c 100644
---- a/drivers/i2c/busses/i2c-sis5595.c
-+++ b/drivers/i2c/busses/i2c-sis5595.c
-@@ -178,9 +178,11 @@ static int sis5595_setup(struct pci_dev *SIS5595_dev)
- 		if (pci_write_config_word(SIS5595_dev, ACPI_BASE, sis5595_base)
- 		    != PCIBIOS_SUCCESSFUL)
- 			goto error;
--		if (pci_read_config_word(SIS5595_dev, ACPI_BASE, &a)
--		    != PCIBIOS_SUCCESSFUL)
+-static int cs5536_read(struct pci_dev *pdev, int reg, u32 *val)
++static void cs5536_read(struct pci_dev *pdev, int reg, u32 *val)
+ {
+ 	if (unlikely(use_msr)) {
+ 		u32 dummy;
+ 
+ 		rdmsr(MSR_IDE_CFG + reg, *val, dummy);
+-		return 0;
++		return;
+ 	}
+ 
+-	return pci_read_config_dword(pdev, PCI_IDE_CFG + reg * 4, val);
++	pci_read_config_dword(pdev, PCI_IDE_CFG + reg * 4, val);
+ }
+ 
+ static int cs5536_write(struct pci_dev *pdev, int reg, int val)
+diff --git a/drivers/ide/rz1000.c b/drivers/ide/rz1000.c
+index fce2b7de5a19..19ac4328e707 100644
+--- a/drivers/ide/rz1000.c
++++ b/drivers/ide/rz1000.c
+@@ -27,7 +27,8 @@ static int rz1000_disable_readahead(struct pci_dev *dev)
+ {
+ 	u16 reg;
+ 
+-	if (!pci_read_config_word (dev, 0x40, &reg) &&
++	pci_read_config_word(dev, 0x40, &reg);
++	if ((reg != (u16)~0) &&
+ 	    !pci_write_config_word(dev, 0x40, reg & 0xdfff)) {
+ 		printk(KERN_INFO "%s: disabled chipset read-ahead "
+ 			"(buggy RZ1000/RZ1001)\n", pci_name(dev));
+diff --git a/drivers/ide/setup-pci.c b/drivers/ide/setup-pci.c
+index fdc8e813170c..a7b93ccd55d1 100644
+--- a/drivers/ide/setup-pci.c
++++ b/drivers/ide/setup-pci.c
+@@ -37,7 +37,8 @@ static int ide_setup_pci_baseregs(struct pci_dev *dev, const char *name)
+ 	/*
+ 	 * Place both IDE interfaces into PCI "native" mode:
+ 	 */
+-	if (pci_read_config_byte(dev, PCI_CLASS_PROG, &progif) ||
++	pci_read_config_byte(dev, PCI_CLASS_PROG, &progif);
++	if ((progif == (u8)~0) ||
+ 			 (progif & 5) != 5) {
+ 		if ((progif & 0xa) != 0xa) {
+ 			printk(KERN_INFO "%s %s: device not capable of full "
+@@ -47,7 +48,8 @@ static int ide_setup_pci_baseregs(struct pci_dev *dev, const char *name)
+ 		printk(KERN_INFO "%s %s: placing both ports into native PCI "
+ 			"mode\n", name, pci_name(dev));
+ 		(void) pci_write_config_byte(dev, PCI_CLASS_PROG, progif|5);
+-		if (pci_read_config_byte(dev, PCI_CLASS_PROG, &progif) ||
++		pci_read_config_byte(dev, PCI_CLASS_PROG, &progif);
++		if ((progif == (u8)~0) ||
+ 		    (progif & 5) != 5) {
+ 			printk(KERN_ERR "%s %s: rewrite of PROGIF failed, "
+ 				"wanted 0x%04x, got 0x%04x\n",
+@@ -251,7 +253,8 @@ static int ide_pci_configure(struct pci_dev *dev, const struct ide_port_info *d)
+ 			d->name, pci_name(dev));
+ 		return -ENODEV;
+ 	}
+-	if (pci_read_config_word(dev, PCI_COMMAND, &pcicmd)) {
++	pci_read_config_word(dev, PCI_COMMAND, &pcicmd);
++	if (pcicmd == (u16)~0) {
+ 		printk(KERN_ERR "%s %s: error accessing PCI regs\n",
+ 			d->name, pci_name(dev));
+ 		return -EIO;
+@@ -415,8 +418,8 @@ static int ide_setup_pci_controller(struct pci_dev *dev, int bars,
+ 	if (ret < 0)
+ 		goto out;
+ 
+-	ret = pci_read_config_word(dev, PCI_COMMAND, &pcicmd);
+-	if (ret < 0) {
++	pci_read_config_word(dev, PCI_COMMAND, &pcicmd);
++	if (pcicmd == (u16)~0) {
+ 		printk(KERN_ERR "%s %s: error accessing PCI regs\n",
+ 			d->name, pci_name(dev));
+ 		goto out_free_bars;
+@@ -466,11 +469,14 @@ void ide_pci_setup_ports(struct pci_dev *dev, const struct ide_port_info *d,
+ 	for (port = 0; port < channels; ++port) {
+ 		const struct ide_pci_enablebit *e = &d->enablebits[port];
+ 
+-		if (e->reg && (pci_read_config_byte(dev, e->reg, &tmp) ||
+-		    (tmp & e->mask) != e->val)) {
+-			printk(KERN_INFO "%s %s: IDE port disabled\n",
+-				d->name, pci_name(dev));
+-			continue;	/* port not enabled */
++		if (e->reg) {
++			pci_read_config_byte(dev, e->reg, &tmp);
 +
-+		pci_read_config_word(SIS5595_dev, ACPI_BASE, &a);
-+		if (a == (u16)~0)
- 			goto error;
-+
- 		if ((a & ~(SIS5595_EXTENT - 1)) != sis5595_base) {
- 			/* doesn't work for some chips! */
- 			dev_err(&SIS5595_dev->dev, "force address failed - not supported?\n");
-@@ -188,17 +190,20 @@ static int sis5595_setup(struct pci_dev *SIS5595_dev)
++			if ((tmp == (u8)~0) || ((tmp & e->mask) != e->val)) {
++				printk(KERN_INFO "%s %s: IDE port disabled\n",
++					d->name, pci_name(dev));
++				continue;	/* port not enabled */
++			}
  		}
- 	}
  
--	if (pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val)
--	    != PCIBIOS_SUCCESSFUL)
-+	pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val);
-+	if (val == (u8)~0)
- 		goto error;
-+
- 	if ((val & 0x80) == 0) {
- 		dev_info(&SIS5595_dev->dev, "enabling ACPI\n");
- 		if (pci_write_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, val | 0x80)
- 		    != PCIBIOS_SUCCESSFUL)
- 			goto error;
--		if (pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val)
--		    != PCIBIOS_SUCCESSFUL)
-+
-+		pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val);
-+		if (val == (u8)~0)
- 			goto error;
-+
- 		if ((val & 0x80) == 0) {
- 			/* doesn't work for some chips? */
- 			dev_err(&SIS5595_dev->dev, "ACPI enable failed - not supported?\n");
-diff --git a/drivers/i2c/busses/i2c-sis630.c b/drivers/i2c/busses/i2c-sis630.c
-index cfb8e04a2a83..73b17436f964 100644
---- a/drivers/i2c/busses/i2c-sis630.c
-+++ b/drivers/i2c/busses/i2c-sis630.c
-@@ -430,7 +430,8 @@ static int sis630_setup(struct pci_dev *sis630_dev)
- 	   Enable ACPI first , so we can accsess reg 74-75
- 	   in acpi io space and read acpi base addr
- 	*/
--	if (pci_read_config_byte(sis630_dev, SIS630_BIOS_CTL_REG, &b)) {
-+	pci_read_config_byte(sis630_dev, SIS630_BIOS_CTL_REG, &b);
-+	if (b == (u8)~0) {
- 		dev_err(&sis630_dev->dev, "Error: Can't read bios ctl reg\n");
- 		retval = -ENODEV;
- 		goto exit;
-@@ -444,8 +445,8 @@ static int sis630_setup(struct pci_dev *sis630_dev)
- 	}
- 
- 	/* Determine the ACPI base address */
--	if (pci_read_config_word(sis630_dev,
--				 SIS630_ACPI_BASE_REG, &acpi_base)) {
-+	pci_read_config_word(sis630_dev, SIS630_ACPI_BASE_REG, &acpi_base);
-+	if (acpi_base == (u16)~0) {
- 		dev_err(&sis630_dev->dev,
- 			"Error: Can't determine ACPI base address\n");
- 		retval = -ENODEV;
-diff --git a/drivers/i2c/busses/i2c-viapro.c b/drivers/i2c/busses/i2c-viapro.c
-index 4abc7771af06..14bfa5401845 100644
---- a/drivers/i2c/busses/i2c-viapro.c
-+++ b/drivers/i2c/busses/i2c-viapro.c
-@@ -321,12 +321,13 @@ static int vt596_probe(struct pci_dev *pdev,
- 		goto found;
- 	}
- 
--	if ((pci_read_config_word(pdev, id->driver_data, &vt596_smba)) ||
--	    !(vt596_smba & 0x0001)) {
-+	pci_read_config_word(pdev, id->driver_data, &vt596_smba);
-+	if ((vt596_smba == (u16)~0) || !(vt596_smba & 0x0001)) {
- 		/* try 2nd address and config reg. for 596 */
--		if (id->device == PCI_DEVICE_ID_VIA_82C596_3 &&
--		    !pci_read_config_word(pdev, SMBBA2, &vt596_smba) &&
--		    (vt596_smba & 0x0001)) {
-+		pci_read_config_word(pdev, SMBBA2, &vt596_smba);
-+		if ((id->device == PCI_DEVICE_ID_VIA_82C596_3) &&
-+					(vt596_smba != (u16)~0) &&
-+					(vt596_smba & 0x0001)) {
- 			SMBHSTCFG = 0x84;
- 		} else {
- 			/* no matches at all */
+ 		if (ide_hw_configure(dev, d, port, hw + port))
 -- 
 2.18.4
 
