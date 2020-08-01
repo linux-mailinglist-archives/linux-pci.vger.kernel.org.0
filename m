@@ -2,63 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6C6F23521C
+	by mail.lfdr.de (Postfix) with ESMTP id 3792F23521B
 	for <lists+linux-pci@lfdr.de>; Sat,  1 Aug 2020 14:25:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgHAMYg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1729028AbgHAMYg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 1 Aug 2020 08:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54192 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729004AbgHAMYb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 08:24:31 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBAE2C06174A;
-        Sat,  1 Aug 2020 05:24:30 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id df16so7781775edb.9;
-        Sat, 01 Aug 2020 05:24:30 -0700 (PDT)
+        with ESMTP id S1729007AbgHAMYd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 08:24:33 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F2CC061756;
+        Sat,  1 Aug 2020 05:24:31 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o23so6562832ejr.1;
+        Sat, 01 Aug 2020 05:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ugiOTcKJH92D5ouhrmd6nUXyIp1jeLijZ9Lgi26pKL8=;
-        b=W/vkOFTfxzqiiqs5PXjZUT+8QIuU0+pxzpIIqEsz/Iah7QiEJd93HPDsKT8TflOP/Z
-         vkokqeDy6Dhfa07r+1amoq4UimqMupmi6vEC/Z2KKJKd/6H6AUQEmduiJ6Zw6DSLqyKa
-         jDLhRax2V6eINcLZ1dLJJvXe2155H77nTZzGKcm96vWk2MiZMNOaCqLXan1u6UVF5zHA
-         Xeo1r1viDJH1NZLzBOqCaLwtu+Q97vwTx3n+mdsV+zBt3JyuxPiiBVO+wC9XKKShnelj
-         4W8tiRi0URtcz+pixxXLjAWPDnYF8u6tA4L7FyczjlelIPysvj9ACtw2Tuc/Fqe6C5+N
-         akag==
+        bh=4KwHv6QMJMXsH8yaJc8FAm3bwHGuyv+DgGa3tEGDGbc=;
+        b=M6ZCfvutD7TU/pOV2RNFZ9MidUceEEom3Nv3cE806feUIRVqBJG/pIaUprqT1xhcje
+         WdFRwEFWFMhXxFz9OgdZ1Gkc2To7DRldejROIxZU6c5ReUp9u6fMtabD/bp4nvv/xOZ1
+         gEJrQOJUtdKdJ1QlchgC8PcfGkZLKme+Hi3QCWETI9t5oBQZyeKu/wRZdwIN4fw+6/p2
+         aP/w5sc4rsYwGAOX8KMKUcMaGtvOVbby2SRPvd52QpVeN1oD1/I8CIBqPGmZsXStVK34
+         LWU73hZRIlZwQmIZU0I3USachekVwyf51qlBk3yWeO3Owwoptvz+TI+cen849fVsnjFy
+         6R5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ugiOTcKJH92D5ouhrmd6nUXyIp1jeLijZ9Lgi26pKL8=;
-        b=W6fZss5peTu5Ka7TB16RwJ1pastYNTaGVww9EagDu84NrrDBsjtLGAqnVTSl80JP1U
-         P+jx14x7b6BtN1I5r8Y7S5aAAmeGDPF8+lmjwAkgqNJ6H55zZ97pmw3m53MrP94CP0XA
-         qI8uJYai5C1dnYHzSMnbbQs4zgJUjGmrdizbNOeAQNbvtTlJyoUvX7w2KbO/j7Svg7DJ
-         b7IkWQogI83kg+zPIBEL28dO4AQNxVGF3+QkGXcr0mPTDIyy9geDX49w9JfxQCKmoHHC
-         l5ft8/FhqNTX1yJUQq9WhfbrbY7FKoko+2W0aknzIK8Fdwx7VThR9wPpqECMocgIU+DR
-         S1yg==
-X-Gm-Message-State: AOAM532VbtKejaswcCLG0+poQ2YvgFSDYZrBDwMy9u6VhbiZa79d24bS
-        yzsPiXnbsYmbmf07SANWFtw=
-X-Google-Smtp-Source: ABdhPJxHTS05lKwaHfmyLAfUgz62XiabbhKbOegL6lSQtaauPJSHYiZ4vVmubnufMFIzKuHLLLAvdg==
-X-Received: by 2002:a50:cfc6:: with SMTP id i6mr8111480edk.88.1596284669219;
-        Sat, 01 Aug 2020 05:24:29 -0700 (PDT)
+        bh=4KwHv6QMJMXsH8yaJc8FAm3bwHGuyv+DgGa3tEGDGbc=;
+        b=YLVC4rbM2SimPmRemE6dbeQ1ES8J8pTZ5TVo9zuqQLNaUp4NChsTrOnOMF8s4ut1Ts
+         f6fuSyp+H8WumrXW+4IhXOH0fWZnEO+EWiTDJBJqqlh6e6Zf5F8p8uCny4YZGOPmdUtB
+         nshFafUTJYAVzlLyQ2lgxosnZVtlXBl14WINvSruWtKCcX4Pxao8hD92LTL8cXVp11bG
+         HQB5al8vjPVxuTE57gXC5o+DEGc/yNWA4Dqy4Rk6VduqvJVYuWo4xsmeiPoSyPqq2xTp
+         /8asu7ee8zsqbj/VJjx5iHaTeyog6zgsqWkzjaEgjD/kwcun/GQ+wC5lkYu0FgNiAujQ
+         MSBA==
+X-Gm-Message-State: AOAM531PcsKvuwmUhQy5ZuZByzCBlEy0+uiaGY3N8w1qh5fmOQnQWmUA
+        cjs6UIA+YWA8LjiJdBZ288g=
+X-Google-Smtp-Source: ABdhPJyP/Khv/zO4ruS71OwrBP8neVvwznKuE/Wo/7tG658TgIhiZlq1Bl/1qqyQW8Ic4CfQutik3A==
+X-Received: by 2002:a17:906:694b:: with SMTP id c11mr8314854ejs.232.1596284670556;
+        Sat, 01 Aug 2020 05:24:30 -0700 (PDT)
 Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
-        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.27
+        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 05:24:28 -0700 (PDT)
+        Sat, 01 Aug 2020 05:24:30 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     helgaas@kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [RFC PATCH 04/17] hwrng: Drop uses of pci_read_config_*() return value
-Date:   Sat,  1 Aug 2020 13:24:33 +0200
-Message-Id: <20200801112446.149549-5-refactormyself@gmail.com>
+        dmaengine@vger.kernel.org
+Subject: [RFC PATCH 05/17] dmaengine: ioat: Drop uses of pci_read_config_*() return value
+Date:   Sat,  1 Aug 2020 13:24:34 +0200
+Message-Id: <20200801112446.149549-6-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20200801112446.149549-1-refactormyself@gmail.com>
 References: <20200801112446.149549-1-refactormyself@gmail.com>
@@ -83,26 +81,29 @@ value thus it indicates some kind of error.
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/char/hw_random/amd-rng.c | 6 +++---
+ drivers/dma/ioat/dma.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/hw_random/amd-rng.c b/drivers/char/hw_random/amd-rng.c
-index 9959c762da2f..e7bf17eedaa0 100644
---- a/drivers/char/hw_random/amd-rng.c
-+++ b/drivers/char/hw_random/amd-rng.c
-@@ -141,9 +141,9 @@ static int __init mod_init(void)
- 	return -ENODEV;
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index fd782aee02d9..e51418cf93b6 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -1016,12 +1016,12 @@ int ioat_reset_hw(struct ioatdma_chan *ioat_chan)
  
- found:
--	err = pci_read_config_dword(pdev, 0x58, &pmbase);
--	if (err)
--		return err;
-+	pci_read_config_dword(pdev, 0x58, &pmbase);
-+	if (pmbase == (u32)~0)
-+		return -ENODEV;
- 
- 	pmbase &= 0x0000FF00;
- 	if (pmbase == 0)
+ 	if (ioat_dma->version < IOAT_VER_3_3) {
+ 		/* clear any pending errors */
+-		err = pci_read_config_dword(pdev,
++		pci_read_config_dword(pdev,
+ 				IOAT_PCI_CHANERR_INT_OFFSET, &chanerr);
+-		if (err) {
++		if (chanerr == (u32)~0) {
+ 			dev_err(&pdev->dev,
+ 				"channel error register unreachable\n");
+-			return err;
++			return -ENODEV;
+ 		}
+ 		pci_write_config_dword(pdev,
+ 				IOAT_PCI_CHANERR_INT_OFFSET, chanerr);
 -- 
 2.18.4
 
