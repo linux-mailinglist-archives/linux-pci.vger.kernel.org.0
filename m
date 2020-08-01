@@ -2,90 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C0D823527B
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Aug 2020 14:56:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E68E235337
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Aug 2020 18:14:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgHAM4r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 Aug 2020 08:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgHAM4q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 08:56:46 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666AAC06174A;
-        Sat,  1 Aug 2020 05:56:46 -0700 (PDT)
-Received: from nazgul.tnic (unknown [78.130.214.198])
+        id S1726300AbgHAQOI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Aug 2020 12:14:08 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:46217 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbgHAQOH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 12:14:07 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B8CAE1EC02FA;
-        Sat,  1 Aug 2020 14:56:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1596286602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NfmlZOrLaBmBGlzbXE5z6x4RKpqqJJmlzC4+91fmYUA=;
-        b=n/7VNWjNwrVYldmM5JNyqQEVZd3Vp3hpjJSMuFhfSkrW8mQhIHtpfasKy9w1BEromsKKyZ
-        /CdJ8nlcvZTCqyn05aBVgUH+WGtmqEhe61zMEoDcH8PmujGuHYORgBg9sVbSuZSh5qLljK
-        uihuEhdcnAWg6tPbjyrRXoOKhqTEw/0=
-Date:   Sat, 1 Aug 2020 14:56:57 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     helgaas@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
-        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net
-Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
-Message-ID: <20200801125657.GA25391@nazgul.tnic>
-References: <20200801112446.149549-1-refactormyself@gmail.com>
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 8C7A328004995;
+        Sat,  1 Aug 2020 18:14:05 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 629A0372B5; Sat,  1 Aug 2020 18:14:05 +0200 (CEST)
+Date:   Sat, 1 Aug 2020 18:14:05 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Ian May <ian.may@canonical.com>
+Cc:     linux-pci@vger.kernel.org, Keith Busch <keith.busch@wdc.com>
+Subject: Re: [PATCH 1/2] PCIe hotplug interrupt and AER deadlock with
+ reset_lock and device_lock
+Message-ID: <20200801161405.bww7kvcfj5lrcso4@wunner.de>
+References: <20200615143250.438252-1-ian.may@canonical.com>
+ <20200615143250.438252-2-ian.may@canonical.com>
+ <20200615185650.mzxndbw7ghvh5qiv@wunner.de>
+ <0598848d-47ab-f436-04ea-7ef1f348905b@canonical.com>
+ <20200717052000.vsyvbnwbhni4iy6y@wunner.de>
+ <CAE1ug=a8PJpKh0Jx2ZZxo5kwQvvK883xs+mzyMWbW8T1oqyKDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200801112446.149549-1-refactormyself@gmail.com>
+In-Reply-To: <CAE1ug=a8PJpKh0Jx2ZZxo5kwQvvK883xs+mzyMWbW8T1oqyKDg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 01:24:29PM +0200, Saheed O. Bolarinwa wrote:
-> The return value of pci_read_config_*() may not indicate a device error.
-> However, the value read by these functions is more likely to indicate
-> this kind of error. This presents two overlapping ways of reporting
-> errors and complicates error checking.
+[cc += Keith]
 
-So why isn't the *value check done in the pci_read_config_* functions
-instead of touching gazillion callers?
+On Fri, Jul 17, 2020 at 09:02:22AM -0500, Ian May wrote:
+> I do now have a "better" patch that I was going to submit to the list
+> where I converted the pci_slot_mutex to a rw_semaphore.  Do you see
+> any potential problems with changing the lock type?  I attached the
+> patch if you are interested in checking it over.
 
-For example, pci_conf{1,2}_read() could check whether the u32 *value it
-just read depending on the access method, whether that value is ~0 and
-return proper PCIBIOS_ error in that case.
+The question is, if pci_slot_mutex is an rw_semaphore, can it happen
+that pciehp acquires it for writing, provoking a deadlock like this:
 
-The check you're replicating
+        Hotplug                                AER
+	----------------------------       ---------------------------
+      1 down_read(&ctrl->reset_lock)
+	                                 2 down_read(&pci_slot_mutex)
+      3 down_write(&pci_slot_mutex)
+                                         4 down_write(&ctrl->reset_lock)
+	** DEADLOCK **
 
-	if (val32 == (u32)~0)
+I think this can happen if the device inserted into the hotplug slot
+contains a PCIe switch which itself has hotplug ports.  That's the
+case with Thunderbolt:  Every Thunderbolt device contains a PCIe
+switch with hotplug ports to extend the Thunderbolt chain.  E.g.
+the PCIe hierarchy looks like this for a Thunderbolt host controller
+with a chain of two devices:
 
-everywhere, instead, is just ugly and tests a naked value ~0 which
-doesn't mean anything...
+Root - Upstream - Downstream - Upstream - Downstream - Upstream - Downstream
 
--- 
-Regards/Gruss,
-    Boris.
+(host ...)                     (1st device ...)        (2nd device ...)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+When a Thunderbolt device is attached, pci_slot_mutex would be taken
+for writing in pci_create_slot():
+
+pciehp_configure_device()
+  pci_scan_slot()
+    pci_scan_single_device()
+      pci_scan_device()
+            pci_setup_device()
+                pci_dev_assign_slot() # acquire pci_slot_mutex for reading
+        pci_device_add() # match_driver = false; device_add()
+    pci_bus_add_devices()
+      pci_bus_add_device() # match_driver = true;  device_attach()
+        device_attach()
+          __device_attach()
+            __device_attach_driver()
+              driver_probe_device()
+                pcie_portdrv_probe()
+                  pcie_port_device_register()
+                    pcie_device_init()
+                      device_register()
+                        device_add()
+                          bus_probe_device()
+                            device_initial_probe()
+                              __device_attach()
+                                __device_attach_driver()
+                                  driver_probe_device()
+                                    pciehp_probe()
+                                      init_slot()
+				        pci_hp_initialize()
+					  pci_create_slot()
+					    down_write(pci_slot_mutex)
+
+(You may want to double-check that I got this right.)
+
+In principle, Keith did the right thing to acquire pci_slot_mutex in
+pci_bus_error_reset() for accessing the bus->slots list.
+
+I need to think some more to come up with a solution for this particular
+deadlock.  Maybe using a klist and traversing it with klist_iter_init()
+(holds a ref on each slot, allowing concurrent list access) or something
+along those lines...
+
+Thanks,
+
+Lukas
