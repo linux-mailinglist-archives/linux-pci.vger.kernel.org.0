@@ -2,64 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F57C23522A
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Aug 2020 14:25:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AEBD235228
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Aug 2020 14:25:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgHAMZS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 Aug 2020 08:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54216 "EHLO
+        id S1728505AbgHAMZO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Aug 2020 08:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728933AbgHAMYh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 08:24:37 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3826BC06174A;
-        Sat,  1 Aug 2020 05:24:37 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id bs17so5368392edb.1;
-        Sat, 01 Aug 2020 05:24:37 -0700 (PDT)
+        with ESMTP id S1729043AbgHAMYi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 08:24:38 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865C7C06174A;
+        Sat,  1 Aug 2020 05:24:38 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c2so18272473edx.8;
+        Sat, 01 Aug 2020 05:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mTab8JNvsgo4CL+J2E65GCxL4zVDcvJICP1+e2MGiww=;
-        b=MxXS7aXGg49OI8aq1o2JxQSacx3GEkx7XRc4h3ldURK6zBJgpz5BCs4TCQi9vzW8bw
-         6N5rmJ/Bc2EsNZmNEy95m4VrSdD6S36XHIE0bXDvbmHdvv8Ihd/DN3YqOot8+XNsBn4K
-         uH6Ip0XLj/CLkS7OQbIMeU5cG1JmDbAF6R4dkjrmVllWjiJc6lq/K7WJN3y20CFnB+Zq
-         Veh4WXw6cFj5wfDJzSErjSaJ/GQ1p/YmseYNttpG96RLDnixkmg9o75N4xiBxD0qqPsJ
-         1iL8Qj7buxqLPP29VEWOUOsDSz4OPW5lGkFWyKdBy9bfKl3Yd4OWQ3uoiFlz2n2kpCGD
-         NGZg==
+        bh=bdwFdqR8uTJkBxeLE6+6M0ZT6V7Ev5F6Fk3j55l8Z9k=;
+        b=iYcYgSrZmWlo3R6AUjHZkTUqWlOCuvWQfp9o/jYHquATEwsySoI7qb/5R298C4XuP6
+         41LiSJR2F+wAaeJbMOPDCVFPHsL0+Fo4vxG7q9em4PQJboP6PNqu/EZa36fMsM/zZbBz
+         JCHW/o6zUF9a2HzOkDNo+9vZ2c5PCBRDQeUpdDN2BOT+MMhqCt4g8i2V0lS4IiBQw05V
+         he5n2kloQO33fgxJyOaPrLYN0f7EOtJSixf210mNPyBCU5yXE9oEPpuWtwkow02lziQ5
+         AygMJ24A5io1qUJTTJ+itzp+4YiuCii7XbUXLOjJXwTJ52oP7dmycNBHJfJeLprStDPf
+         kBJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=mTab8JNvsgo4CL+J2E65GCxL4zVDcvJICP1+e2MGiww=;
-        b=pa8PyqiRXCleEs8MJbgKvUwLyhtbQQKu/3LxyfJE9G9tvCw/rM1DitlyNwNeLnHt/q
-         mmjTUBnfiX5t3aWU6JVhZ03SdIITbjognEdB0rCuU/FsMt+ICDIx71iz2SLMKwYgTzqG
-         kij8iQ4YfXDa7vKTxTANaUB1UrcdFtKuqPtFPIQ3NuBCRWj9mMVLS9NXH7+V7WFQQ0i8
-         mRFm5ViuF3ydIDiD5m9asVBX4TwZdqLLg90Eo+2Cbb3PuaffIRRkK7RYiWy1JAZa5iPP
-         ZZOdBvCHUMCzn7YVxpsH5iedrviT+WwT5cPQvNqM8BpVM9C7twVKJN6ndStIcxdddgi7
-         kYdA==
-X-Gm-Message-State: AOAM533934lHCn1H2Qf5XdkoTyeyge9gkiIKcjj5cb0YC18dmILmUg9y
-        oTOQh/LUlPLi37H6hXaYj8Q=
-X-Google-Smtp-Source: ABdhPJyNuqCc/8r6/A/7Q7T/LnVDBWUQ9SzPEt/TNIqjoVA3EMIMDnSI53A+QOmplMa8tW5cITLjzA==
-X-Received: by 2002:aa7:d5d0:: with SMTP id d16mr7805559eds.212.1596284675988;
-        Sat, 01 Aug 2020 05:24:35 -0700 (PDT)
+        bh=bdwFdqR8uTJkBxeLE6+6M0ZT6V7Ev5F6Fk3j55l8Z9k=;
+        b=KrafF9SmbGjuxxq3QxgHGbOCL5EmkaHdjHj6jgJnrzUm2qRWpBoAiM6RBohiT+4VLS
+         WL+diT2bZyw0e98zwMy+5pAOaizCtRJyo23fKLMGVtsC/HagT/re9IRZbA4m/24REg7R
+         zcH8vBY6kFfFK5rdnMG2HEwALs/nl4wPozQVrkwQpOlzCrA+m+qCu8JBIg3clQfLxvfG
+         UPvHDeZ5lKanJhYVBz164790R0oMabsObbouCL142l0pO3WTncUMRSJwNccySZNrdUay
+         j56fbf6QqrkKOjuUQFXc5nA6ZravwdLN4ee9R3x1jeNK40Ub/5jExVXFqY0iyjaQFSL9
+         f8Bg==
+X-Gm-Message-State: AOAM531ql9NwKa4bBaCWZA6N05ppjS7ovsKDTCStcaje6mF1+kTmdMaX
+        Yg+n+fk6oLoedpxQUx8NlvJCcsMW4VmPrQ==
+X-Google-Smtp-Source: ABdhPJwD7rV3Z2sHm2Urux9ibnAQJLnjp5J8GSKRJQtu26ivkTzM9jU1IBe5MLhlZErz7vNjd6oCBw==
+X-Received: by 2002:aa7:da0e:: with SMTP id r14mr8200605eds.236.1596284677325;
+        Sat, 01 Aug 2020 05:24:37 -0700 (PDT)
 Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
-        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.34
+        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 05:24:35 -0700 (PDT)
+        Sat, 01 Aug 2020 05:24:36 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
+To:     helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: [RFC PATCH 09/17] drm/i915/vga: Drop uses of pci_read_config_*() return value
-Date:   Sat,  1 Aug 2020 13:24:38 +0200
-Message-Id: <20200801112446.149549-10-refactormyself@gmail.com>
+        linux-hwmon@vger.kernel.org
+Subject: [RFC PATCH 10/17] hwmon: Drop uses of pci_read_config_*() return value
+Date:   Sat,  1 Aug 2020 13:24:39 +0200
+Message-Id: <20200801112446.149549-11-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20200801112446.149549-1-refactormyself@gmail.com>
 References: <20200801112446.149549-1-refactormyself@gmail.com>
@@ -84,23 +81,72 @@ value thus it indicates some kind of error.
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/gpu/drm/i915/display/intel_vga.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwmon/i5k_amb.c | 12 ++++++++----
+ drivers/hwmon/vt8231.c  |  8 ++++----
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_vga.c b/drivers/gpu/drm/i915/display/intel_vga.c
-index be333699c515..6f9406699c9d 100644
---- a/drivers/gpu/drm/i915/display/intel_vga.c
-+++ b/drivers/gpu/drm/i915/display/intel_vga.c
-@@ -99,7 +99,8 @@ intel_vga_set_state(struct drm_i915_private *i915, bool enable_decode)
- 	unsigned int reg = INTEL_GEN(i915) >= 6 ? SNB_GMCH_CTRL : INTEL_GMCH_CTRL;
- 	u16 gmch_ctrl;
+diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
+index eeac4b04df27..b7497510323c 100644
+--- a/drivers/hwmon/i5k_amb.c
++++ b/drivers/hwmon/i5k_amb.c
+@@ -427,11 +427,13 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
+ 	if (!pcidev)
+ 		return -ENODEV;
  
--	if (pci_read_config_word(i915->bridge_dev, reg, &gmch_ctrl)) {
-+	pci_read_config_word(i915->bridge_dev, reg, &gmch_ctrl);
-+	if (gmch_ctrl == (u16)~0) {
- 		drm_err(&i915->drm, "failed to read control word\n");
- 		return -EIO;
+-	if (pci_read_config_dword(pcidev, I5K_REG_AMB_BASE_ADDR, &val32))
++	pci_read_config_dword(pcidev, I5K_REG_AMB_BASE_ADDR, &val32);
++	if (val32 == (u32)~0)
+ 		goto out;
+ 	data->amb_base = val32;
+ 
+-	if (pci_read_config_dword(pcidev, I5K_REG_AMB_LEN_ADDR, &val32))
++	pci_read_config_dword(pcidev, I5K_REG_AMB_LEN_ADDR, &val32);
++	if (val32 == (u32)~0)
+ 		goto out;
+ 	data->amb_len = val32;
+ 
+@@ -458,11 +460,13 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+ 	if (!pcidev)
+ 		return -ENODEV;
+ 
+-	if (pci_read_config_word(pcidev, I5K_REG_CHAN0_PRESENCE_ADDR, &val16))
++	pci_read_config_word(pcidev, I5K_REG_CHAN0_PRESENCE_ADDR, &val16);
++	if (val16 == (u16)~0)
+ 		goto out;
+ 	amb_present[0] = val16;
+ 
+-	if (pci_read_config_word(pcidev, I5K_REG_CHAN1_PRESENCE_ADDR, &val16))
++	pci_read_config_word(pcidev, I5K_REG_CHAN1_PRESENCE_ADDR, &val16);
++	if (val16 == (u16)~0)
+ 		goto out;
+ 	amb_present[1] = val16;
+ 
+diff --git a/drivers/hwmon/vt8231.c b/drivers/hwmon/vt8231.c
+index 2335d440f72d..6603727e15a0 100644
+--- a/drivers/hwmon/vt8231.c
++++ b/drivers/hwmon/vt8231.c
+@@ -992,8 +992,8 @@ static int vt8231_pci_probe(struct pci_dev *dev,
+ 			return -ENODEV;
  	}
+ 
+-	if (PCIBIOS_SUCCESSFUL != pci_read_config_word(dev, VT8231_BASE_REG,
+-							&val))
++	pci_read_config_word(dev, VT8231_BASE_REG, &val);
++	if (val == (u16)~0)
+ 		return -ENODEV;
+ 
+ 	address = val & ~(VT8231_EXTENT - 1);
+@@ -1002,8 +1002,8 @@ static int vt8231_pci_probe(struct pci_dev *dev,
+ 		return -ENODEV;
+ 	}
+ 
+-	if (PCIBIOS_SUCCESSFUL != pci_read_config_word(dev, VT8231_ENABLE_REG,
+-							&val))
++	pci_read_config_word(dev, VT8231_ENABLE_REG, &val);
++	if (val == (u16)~0)
+ 		return -ENODEV;
+ 
+ 	if (!(val & 0x0001)) {
 -- 
 2.18.4
 
