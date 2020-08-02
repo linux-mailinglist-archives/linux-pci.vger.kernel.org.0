@@ -2,301 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0258B2354B7
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 02:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E64C23559D
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 07:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgHBAaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 Aug 2020 20:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
+        id S1725991AbgHBF6m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Aug 2020 01:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgHBAaz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Aug 2020 20:30:55 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0F8C061757
-        for <linux-pci@vger.kernel.org>; Sat,  1 Aug 2020 17:30:54 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m15so18036998lfp.7
-        for <linux-pci@vger.kernel.org>; Sat, 01 Aug 2020 17:30:54 -0700 (PDT)
+        with ESMTP id S1725798AbgHBF6m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 01:58:42 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC0AEC06174A;
+        Sat,  1 Aug 2020 22:58:41 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id j8so23172194ioe.9;
+        Sat, 01 Aug 2020 22:58:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
          :cc;
-        bh=ec1r1tZZhLtfRlggg/zu2nnszPLvqXC5YM2YU2HZuDY=;
-        b=wKoGwjkuSquBXSKd6RQTvt7/zMJOD7H7+imD5zHmg2L+H3t4gEloPd3kF9yxhTiKah
-         lcGEhT4ciyCYaQXp6iTsxq1Y+wXANY1zKai63JAImoVEPGHaKdD/nOWoCUblOXZrRR8Y
-         RB479LKYTs136EmsDMlL4+Ck42tQrqHTmc9F63RooE6wGfKPBVgSdYvjBlBynHtowKXl
-         u60iHZeaLoli3mfMFJCkjHRH9QFu/ioE5Rmjywxz2jrHFJep3npflS7SGfHTYjZq32dw
-         rOikI4QTI/T38HN7+KdelWoEX+t9oBhkkv955OoeO3pxBWpN0whSIxl978qh5lUUqY9g
-         p3bg==
+        bh=m3t3RNk/1onNft0zrB9q4E9lIMyfRkyT8V1CJuWlqX4=;
+        b=i1/pwa8JSJ6Ns70X4ySb2bv5vd7X/uTyhIfgoZ021IHWci/vvy+RHgDK5krf8J7D7q
+         1v4jX0PeZAu7EbjPM/ObCNR8k+IwxfWsry+WgFJgcjRuEwWmGmdX/i1NXCqzcdI1+Rnt
+         uV899uWM9mw4BF37uKTuoEgGPKjILzSdGVWTdi2oswYLIL3nV0S2CBYFvLU2PDvxDcXh
+         i74XLBtFtGVF7qM05BPNosP8WPnGJXwLgSz5sinS8rQRFNIVPG/44/b4DfRKzRRcuCI5
+         s/6QNOgJucDsrVxJJAgqjcawnsf8zFP+Ts+M+kFsReXA9fM4RVmKbkmueiJ2BIiTEOdT
+         zwzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
          :message-id:subject:to:cc;
-        bh=ec1r1tZZhLtfRlggg/zu2nnszPLvqXC5YM2YU2HZuDY=;
-        b=MhX3Y7muUCUradgpRBsIKGQijUZbAzRo3Oep1PBJ7UDjnlsIZ+xkGd/SH+C/HZjA8g
-         MK2/M6GxEZDWg74tiMpIpkZvdZwJTL10CP7gfb3pHVUnFLTe25FdqwKo6nr9KCv9c5Cv
-         1eWGEI7Xj1B12CJjJAfaB67Ydajqn+kqdLZxRhLCIiRlRfHW9LS28nMOmLgWFd+GvLUZ
-         plyxMcrcIdXoRgK/9WQYbvvFNVJ2Kh7GsxBUIE9rcpO6f2usgJMMnxK/3+u0mN/rT2qc
-         Lsq3GxzQNG5v0XebA17bPQiEoec/WOXi2ujHhtks/feYYJpuIYLf5JHbHlpZH3UFG5bo
-         iq+w==
-X-Gm-Message-State: AOAM531kcTNrR0gwAsjCVRmAK15Jh9fIPg8j9Pb+V+vDSENOXhJN1qbG
-        s2sQ3qrmSDfw0sxpp4QNiGTJaiE/eLlTBPZA2LKS+w==
-X-Google-Smtp-Source: ABdhPJzPXTK3nzbTrtPHobAj0f/c0JCHdGHR3VQ22y/pyzxyJ8CpjPrgjT8x7nBt5Sb8DqcWMe+ntDTKifLmxyIc7Rk=
-X-Received: by 2002:a19:8705:: with SMTP id j5mr5098223lfd.122.1596328252690;
- Sat, 01 Aug 2020 17:30:52 -0700 (PDT)
+        bh=m3t3RNk/1onNft0zrB9q4E9lIMyfRkyT8V1CJuWlqX4=;
+        b=SqXrOdjd+nmith/KVBLPLZJmjOGjkWluKNHXcEy3tP/o83hxe3R3kKKxCigfOStJ76
+         Pc7hs50+HZ3LoiWjqdgVaG1940ynfPuGjg30+/uFVrla7pk1oEFhczUhQ5XjL4J2XJfJ
+         zWWSmXKVALcb89X2vDM3QQX380BRjkQan+bpFMdKeqW3E/kKxBVNJ0uiurOv59bzksL7
+         vhV0Gr+1A6bzPqaDSWvrs6KrFfHWgHO2Z9tk7RUMbWcqawbNMB601X5VCCE+Ybg0YuQ1
+         +zcDO0nLPvKa5Z+ECFanL8L0S1n8uIeXVwmBEu40nxHKJxvwcuZZTCv6qG/Cnjn+Vssq
+         spcw==
+X-Gm-Message-State: AOAM531z4VLiPdSVUtLHLRI7MCyr6s2rjVe80Fio37da77TSXgUQfGWe
+        /Re/obhzJgxP/3k4mDAhlBwLrvN3OI1Elwpu/u8=
+X-Google-Smtp-Source: ABdhPJzi1KOHlidCDADPjx+ro4rQhHpKG7SNvlCKpT1tLcQmL1RQ7yk41Zz5dzr3XtxS6Cf9/WzSD7BZOFVDkYNd5XA=
+X-Received: by 2002:a05:6602:2549:: with SMTP id j9mr10776881ioe.89.1596347921017;
+ Sat, 01 Aug 2020 22:58:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200714201540.3139140-1-rajatja@google.com> <CAA93t1rzHbTVCrXhz3YBExJS1FOHBe=GCnns9=q1Ry9zdWb4VA@mail.gmail.com>
-In-Reply-To: <CAA93t1rzHbTVCrXhz3YBExJS1FOHBe=GCnns9=q1Ry9zdWb4VA@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Sat, 1 Aug 2020 17:30:15 -0700
-Message-ID: <CACK8Z6EbWikLjDr3xjRqzDNeyk-6Qwe67sOp3hczWd3xSQL3vQ@mail.gmail.com>
-Subject: Re: [PATCH v5] PCI/ACS: Enable PCI_ACS_TB and disable only when
- needed for ATS
-To:     Rajat Jain <rajatxjain@gmail.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+Received: by 2002:a5d:9bd8:0:0:0:0:0 with HTTP; Sat, 1 Aug 2020 22:58:40 -0700 (PDT)
+In-Reply-To: <CAFjuqNgAxTjHMw9AX+yoHxug-+hHVExsiccWG6eb=QZJsV3fSQ@mail.gmail.com>
+References: <20191029170250.GA43972@google.com> <20200222165617.GA207731@google.com>
+ <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+ <20200226011310.GA2116625@rani.riverdale.lan> <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
+ <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com> <20200226045104.GA2191053@rani.riverdale.lan>
+ <20200225212054.09865e0b@fido6> <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
+ <edab20f582d4402baeca9bb80e612ee2@willitsonline.com> <CAFjuqNgAxTjHMw9AX+yoHxug-+hHVExsiccWG6eb=QZJsV3fSQ@mail.gmail.com>
+From:   "Michael ." <keltoiboy@gmail.com>
+Date:   Sun, 2 Aug 2020 15:58:40 +1000
+Message-ID: <CAFjuqNi09cHvJLesYSRdgScFx4yBouJ3+QROzoFH5OETy-uNBg@mail.gmail.com>
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
+ on Panasonic Toughbook CF-29]
+To:     bluerocksaddles@willitsonline.com
+Cc:     Philip Langdale <philipl@overt.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Morgan Klym <moklym@gmail.com>,
+        Pierre Ossman <pierre@ossman.eu>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        linux-mmc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Have just had confirmation that the mmc_ricoh_mmc change works and
+both PCMCIA slots now work as intended on Panasonic Toughbook CF-29 Mk
+4 and 5.
 
+Thank you to all who have made suggestions for this, your dedication
+to Linux is amazing and your help with this is appreciated.
 
-On Tue, Jul 14, 2020 at 1:24 PM Rajat Jain <rajatxjain@gmail.com> wrote:
->
-> On Tue, Jul 14, 2020 at 1:15 PM Rajat Jain <rajatja@google.com> wrote:
-> >
-> > The ACS "Translation Blocking" bit blocks the translated addresses from
-> > the devices. We don't expect such traffic from devices unless ATS is
-> > enabled on them. A device sending such traffic without ATS enabled,
-> > indicates malicious intent, and thus should be blocked.
-> >
-> > Enable PCI_ACS_TB by default for all devices, and it stays enabled until
-> > atleast one of the devices downstream wants to enable ATS. It gets
-> > disabled to enable ATS on a device downstream it, and then gets enabled
-> > back on once all the downstream devices don't need ATS.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
+Stay safe.
+Michael.
 
-Just checking to see if you got a chance to look at this V5 patch.
-
-Thanks & Best Regards,
-
-Rajat
-
-> > ---
-> > Note that I'm ignoring the devices that require quirks to enable or
-> > disable ACS, instead of using the standard way for ACS configuration.
-> > The reason is that it would require adding yet another quirk table or
-> > quirk function pointer, that I don't know how to implement for those
-> > devices, and will neither have the devices to test that code.
-> >
-> > v5: Enable TB and disable ATS for all devices on boot. Disable TB later
-> >     only if needed to enable ATS on downstream devices.
-> > v4: Add braces to avoid warning from kernel robot
-> >     print warning for only external-facing devices.
-> > v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
-> >     Minor code comments fixes.
-> > v2: Commit log change
-> >
-> >  drivers/pci/ats.c   |  5 ++++
-> >  drivers/pci/pci.c   | 57 +++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/pci.h   |  2 ++
-> >  drivers/pci/probe.c |  2 +-
-> >  include/linux/pci.h |  2 ++
-> >  5 files changed, 67 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > index b761c1f72f67..e2ea9083f30f 100644
-> > --- a/drivers/pci/ats.c
-> > +++ b/drivers/pci/ats.c
-> > @@ -28,6 +28,9 @@ void pci_ats_init(struct pci_dev *dev)
-> >                 return;
-> >
-> >         dev->ats_cap = pos;
-> > +
-> > +       dev->ats_enabled = 1; /* To avoid WARN_ON from pci_disable_ats() */
-> > +       pci_disable_ats(dev);
-> >  }
-> >
-> >  /**
-> > @@ -82,6 +85,7 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
-> >         }
-> >         pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
-> >
-> > +       pci_disable_acs_trans_blocking(dev);
-> >         dev->ats_enabled = 1;
-> >         return 0;
-> >  }
-> > @@ -102,6 +106,7 @@ void pci_disable_ats(struct pci_dev *dev)
-> >         ctrl &= ~PCI_ATS_CTRL_ENABLE;
-> >         pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
-> >
-> > +       pci_enable_acs_trans_blocking(dev);
-> >         dev->ats_enabled = 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_disable_ats);
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 73a862782214..614e3c1e8c56 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -876,6 +876,9 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-> >         /* Upstream Forwarding */
-> >         ctrl |= (cap & PCI_ACS_UF);
-> >
-> > +       /* Translation Blocking */
-> > +       ctrl |= (cap & PCI_ACS_TB);
-> > +
-> >         pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> >  }
-> >
-> > @@ -904,6 +907,60 @@ static void pci_enable_acs(struct pci_dev *dev)
-> >         pci_disable_acs_redir(dev);
-> >  }
-> >
-> > +void pci_disable_acs_trans_blocking(struct pci_dev *pdev)
-> > +{
-> > +       u16 cap, ctrl, pos;
-> > +       struct pci_dev *dev;
-> > +
-> > +       if (!pci_acs_enable)
-> > +               return;
-> > +
-> > +       for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
-> > +
-> > +               pos = dev->acs_cap;
-> > +               if (!pos)
-> > +                       continue;
-> > +
-> > +               /*
-> > +                * Disable translation blocking when first downstream
-> > +                * device that needs it (for ATS) wants to enable ATS
-> > +                */
-> > +               if (++dev->ats_dependencies == 1) {
+On 28/07/2020, Michael . <keltoiboy@gmail.com> wrote:
+> I have just compiled and uploaded a kernel to test for this issue,
+> members of the Toughbook community have been provided with the link,
+> though a forum discussion, to download the kernel and test it.
+> Hopefully we will get positive results and can confirm the
+> MMC_RICOH_MMC flag is the culprit.
+> Regards.
+> Stay safe.
+> Michael.
 >
-> I am a little worried about a potential race condition here. I know
-> that 2 PCI devices cannot be enumerating at the same time. Do we know
-> if multiple pci_enable_ats() and pci_disable_ats() function calls can
-> be simultaneously executing (even for different devices)? If so, we
-> may need an atomic_t variable for ats_dependencies.
+> On 27/02/2020, bluerocksaddles@willitsonline.com
+> <bluerocksaddles@willitsonline.com> wrote:
+>> Somewhere in these messages is a clue....in that SD reader was involved.
+>>
+>> MK 4 and 5 have SD whilst MK 1, 2 and three do not.
+>>
+>>
+>>
+>> On 2020-02-25 22:10, Michael . wrote:
+>>>> Someone with access to real hardware could
+>>>> easily experiment with changing that magic value and seeing if it
+>>>> changes which function is disabled.
+>>>
+>>> One of our members has offered to supply a machine to a dev that can
+>>> use it to test any theory.
+>>>
+>>> It is nearly beyond the scope of the majority of us to do much more
+>>> than just testing. We appreciate all the effort the devs put in and
+>>> are willing to help in anyway we can but we aren't kernel devs.
+>>>
+>>> I, personally, use Debian. Others use Debian based distros such as MX
+>>> and Mint. We have been able to test many different distros such as
+>>> those listed in other comments but don't have the skills or expertise
+>>> to do much more. It is our hope that this discussion and subsequent
+>>> effort may enable others who prefer distros other than Debian based
+>>> distros can use a CF-29 (and possibly earlier) Toughbook with the
+>>> distro of their choice without having to rebuild a kernel so they can
+>>> use hardware that worked back in 2010. To do this the fix needs to be
+>>> at the kernel dev level not a local enthusiast level because while I
+>>> can rebuild a Debian kernel I can't rebuild a Fedora or Arch or
+>>> Slackware kernel.
+>>>
+>>> I did a search about this issue before I made initial contact late
+>>> last year and the issue was discovered on more than Toughbooks and
+>>> posted about on various sites not long after distros moved from
+>>> 2.6.32. It seems back then people just got new machines that didn't
+>>> have a 2nd slot so the search for an answer stopped. Us Toughbook
+>>> users are a loyal group we use our machines because they are exactly
+>>> what we need and they take alot of "punishment" taht other machines
+>>> simply cannot handle. Our machines are used rather than recycled or
+>>> worse still just left to sit in waste management facilities in a
+>>> country that the western world dumps its rubbish in, we are Linux and
+>>> Toughbook enthusiasts and hope to be able to keep our machines running
+>>> for many years to come with all their native capabilities working as
+>>> they were designed to but using a modern Linux instead of Windows XP
+>>> or Windows 7. (that wasn't a pep talk, its just an explanation of why
+>>> we are passionate about this).
+>>>
+>>> Let us know what you need us to do, we will let you know if we are
+>>> capable of it and give you any feedback you ask for. Over the weekend
+>>> I will try to rebuild a Debian kernel with the relevant option
+>>> disabled, provide it to my peers for testing and report back here what
+>>> the outcome is.
+>>>
+>>> Thank you all for all your time and effort, it is truly appreciated.
+>>> Cheers.
+>>> Michael.
+>>>
+>>> On 26/02/2020, Philip Langdale <philipl@overt.org> wrote:
+>>>> On Tue, 25 Feb 2020 23:51:05 -0500
+>>>> Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>>>>
+>>>>> On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
+>>>>> > That's correct, I tested a bunch of the old distros including
+>>>>> > slackware, and 2.6.32 is where the problem began.
+>>>>> >
+>>>>> > Also, the Panasonic Toughbook CF-29s effected that we tested are
+>>>>> > the later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just
+>>>>> > fine because it has different hardware supporting the PCMCIA slots.
+>>>>> > I have not tested a MK3 but suspect it would work ok as it also
+>>>>> > uses the older hardware.
+>>>>> >
+>>>>> > Thanks for your help guys!
+>>>>> > Trevor
+>>>>> >
+>>>>>
+>>>>> Right, the distros probably all enabled MMC_RICOH_MMC earlier than
+>>>>> upstream. Can you test a custom kernel based off your distro kernel
+>>>>> but just disabling that config option? That's probably the easiest
+>>>>> fix
+>>>>> currently, even though not ideal. Perhaps there should be a command
+>>>>> line option to disable specific pci quirks to make this easier.
+>>>>>
+>>>>> An ideal fix is I feel hard, given this quirk is based on
+>>>>> undocumented
+>>>>> config registers -- it worked on Dell machines (that's where the
+>>>>> original authors seem to have gotten their info from), perhaps they
+>>>>> had only one Cardbus slot, but the code ends up disabling your second
+>>>>> Cardbus slot instead of disabling the MMC controller.
+>>>>
+>>>> Keeping in mind that this was 12+ years ago, you can at least still
+>>>> read the original discussion in the archives. My original Dell laptop
+>>>> (XPS m1330) had no cardbus slots at all, and used the r5c832
+>>>> controller. There was a subsequent change that I was not involved with
+>>>> which added support for the rl5c476, which is the problematic device
+>>>> in
+>>>> this thread.
+>>>>
+>>>> As a hypothesis, based on the observed behaviour, the quirk (keeping
+>>>> in
+>>>> mind that these are magic configuration register values that are not
+>>>> documented) probably disabled function 1, regardless of what it is,
+>>>> and
+>>>> the original example that motivated adding the rl5c476 quirk probably
+>>>> had one cardbus slot and the card reader functions were all moved up
+>>>> one, or something along those lines.
+>>>>
+>>>> Truly making this smart would then involve having the code enumerate
+>>>> the pci functions and identify the one that is the unwanted mmc
+>>>> controller, based on function ID or class or whatever, and then
+>>>> disabling that (assuming the magic can be reverse engineered: eg, the
+>>>> current magic ORs the disable flag with 0x02 - chances are, that's the
+>>>> index of the function: 0x01 would be the 0th function, 0x04 would be
+>>>> the 2nd function, etc). Someone with access to real hardware could
+>>>> easily experiment with changing that magic value and seeing if it
+>>>> changes which function is disabled.
+>>>>
+>>>> Good luck.
+>>>>
+>>>> --phil
+>>>>
+>>
 >
-> Thanks,
->
-> Rajat
->
->
-> > +                       pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-> > +                       pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-> > +                       ctrl &= ~(cap & PCI_ACS_TB);
-> > +                       pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> > +               }
-> > +       }
-> > +}
-> > +
-> > +void pci_enable_acs_trans_blocking(struct pci_dev *pdev)
-> > +{
-> > +       u16 cap, ctrl, pos;
-> > +       struct pci_dev *dev;
-> > +
-> > +       if (!pci_acs_enable)
-> > +               return;
-> > +
-> > +       for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
-> > +
-> > +               pos = dev->acs_cap;
-> > +               if (!pos)
-> > +                       continue;
-> > +
-> > +               /*
-> > +                * Enable translation blocking when last downstream device
-> > +                * that depends on it (for ATS), doesn't need ATS anymore
-> > +                */
-> > +               if (--dev->ats_dependencies == 0) {
-> > +                       pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-> > +                       pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-> > +                       ctrl |= (cap & PCI_ACS_TB);
-> > +                       pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> > +               }
-> > +       }
-> > +}
-> > +
-> >  /**
-> >   * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
-> >   * @dev: PCI device to have its BARs restored
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 12fb79fbe29d..f5d8ecb6ba96 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -552,6 +552,8 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
-> >         return -ENOTTY;
-> >  }
-> >  #endif
-> > +void pci_disable_acs_trans_blocking(struct pci_dev *dev);
-> > +void pci_enable_acs_trans_blocking(struct pci_dev *dev);
-> >
-> >  /* PCI error reporting and recovery */
-> >  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 8c40c00413e7..e2ff3a94e621 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2387,10 +2387,10 @@ static void pci_init_capabilities(struct pci_dev *dev)
-> >         pci_vpd_init(dev);              /* Vital Product Data */
-> >         pci_configure_ari(dev);         /* Alternative Routing-ID Forwarding */
-> >         pci_iov_init(dev);              /* Single Root I/O Virtualization */
-> > +       pci_acs_init(dev);              /* Access Control Services */
-> >         pci_ats_init(dev);              /* Address Translation Services */
-> >         pci_pri_init(dev);              /* Page Request Interface */
-> >         pci_pasid_init(dev);            /* Process Address Space ID */
-> > -       pci_acs_init(dev);              /* Access Control Services */
-> >         pci_ptm_init(dev);              /* Precision Time Measurement */
-> >         pci_aer_init(dev);              /* Advanced Error Reporting */
-> >         pci_dpc_init(dev);              /* Downstream Port Containment */
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 7a40cd5caed0..31da4355f0fd 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -480,6 +480,8 @@ struct pci_dev {
-> >         u16             ats_cap;        /* ATS Capability offset */
-> >         u8              ats_stu;        /* ATS Smallest Translation Unit */
-> >  #endif
-> > +       /* Total number of downstream devices below a bridge that need ATS */
-> > +       u8              ats_dependencies;
-> >  #ifdef CONFIG_PCI_PRI
-> >         u16             pri_cap;        /* PRI Capability offset */
-> >         u32             pri_reqs_alloc; /* Number of PRI requests allocated */
-> > --
-> > 2.27.0.389.gc38d7665816-goog
-> >
