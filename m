@@ -2,182 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F712355A2
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 08:10:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0091223576B
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 16:26:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgHBGKs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Aug 2020 02:10:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:64401 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgHBGKs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 2 Aug 2020 02:10:48 -0400
-IronPort-SDR: VzvBw5Q12wgep2XSgrNC4TmDDC1lp21a/d92cn3UHUR/RykcBuBMO35KXC/CmZ3phEG4dmHZMY
- GZQTSntyhDpQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="170083045"
-X-IronPort-AV: E=Sophos;i="5.75,425,1589266800"; 
-   d="scan'208";a="170083045"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 23:10:47 -0700
-IronPort-SDR: w4J6n2i2S1k+uUO8jZm5g1tydFwrLIlz/VroM7MLobu8ZWy3rRjoi3mBAQvVTx3k27QFZFUqXi
- jKhHZKqaJuZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,425,1589266800"; 
-   d="scan'208";a="331562338"
-Received: from lkp-server01.sh.intel.com (HELO e21119890065) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 01 Aug 2020 23:10:46 -0700
-Received: from kbuild by e21119890065 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k27Cn-0001X8-Aq; Sun, 02 Aug 2020 06:10:45 +0000
-Date:   Sun, 02 Aug 2020 14:09:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD REGRESSION
- d189141dc9d45bf2bcc7d990d105eed99237ac33
-Message-ID: <5f2658b4.KNFK0dVpQicPR9Q7%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726309AbgHBO0G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Aug 2020 10:26:06 -0400
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:34712 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgHBO0G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 10:26:06 -0400
+Received: by mail-lj1-f177.google.com with SMTP id q7so37010850ljm.1;
+        Sun, 02 Aug 2020 07:26:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zeiAgJxHrPijvNQknHHdvjYtJyFN1FT1e2QzBTPsm24=;
+        b=IHxpd+9SwtctYq+2qUbmhS2GVrZwFbbtOnDIOWWCVSr5gVtLd8XXEjSq/+0qA4+j2H
+         Sun37G5GM3LyEWWVFm0/9oN8ErxA6UeXyRirnvgka7BSQOtFKLJmNwmpT0+D0f/SbvgZ
+         WS8E8v1UjoYEZKyE5dh8krKABQhbT/6ZgKOumEmvPIGAcsWzMKAUgXQM/NcD8cBtThDc
+         34EuDS8nN+BNmLFgP5DmVdRIzbrk5d8y+J5ICCIlSA3A7O/GyKt7KH9bGjd50m5bzdLy
+         j60sWTTKcXUt8j+3iilSAgQl0rNPnFvekzj5QXOhP0n8Gs/BbV1IpZiWR+MPp50aXmlP
+         YCWQ==
+X-Gm-Message-State: AOAM5300QtaptUzlR8BKNxMkGLlsCKyztYxnSl//2nBwb90T7d+GOOxv
+        Vo6Q8sEnTOPURhcl4aRwkeg=
+X-Google-Smtp-Source: ABdhPJz3cgcIo8JIidtc9NrocQlQwtKoNwLE3saIsQCJHhsMNawOby6x6eEuxlT5d67lW0jGLW6Kmg==
+X-Received: by 2002:a2e:94d5:: with SMTP id r21mr6223757ljh.424.1596378363688;
+        Sun, 02 Aug 2020 07:26:03 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id 193sm4214136lfa.90.2020.08.02.07.26.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 07:26:02 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        rfi@lists.rocketboards.org
+Subject: [PATCH 00/10] Remove surplus dev_err() when handing an error from platform_get_irq()
+Date:   Sun,  2 Aug 2020 14:25:52 +0000
+Message-Id: <20200802142601.1635926-1-kw@linux.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: d189141dc9d45bf2bcc7d990d105eed99237ac33  Merge branch 'pci/doc'
+At the moment a lot of error handling code would print a duplicated
+error message should either the platform_get_irq() or
+platform_get_irq_byname() function fails to obtain an IRQ for a device.
 
-Error/Warning in current branch:
+There is no need to call the dev_err() function directly to print
+a custom message when handling an error from either of these functions
+as both are going to display an appropriate error message in case of
+a failure.
 
-drivers/pci/controller/pcie-xilinx-cpm.c:553:8: error: implicit declaration of function 'pci_parse_request_of_pci_ranges' [-Werror=implicit-function-declaration]
+This series aims to remove surplus call to dev_err() when handing an
+error originating from either platform_get_irq() or
+platform_get_irq_byname() function as per suggestion from Coccinelle.
 
-Error/Warning ids grouped by kconfigs:
+Related commits are commit 7723f4c5ecdb ("driver core: platform: Add an
+error message to platform_get_irq*()") and commit 98051ba2b28b
+("coccinelle: Add script to check for platform_get_irq() excessive
+prints").
 
-recent_errors
-|-- alpha-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- arm-allmodconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- arm-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- arm64-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- i386-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- ia64-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- mips-allmodconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- mips-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- parisc-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- powerpc-allmodconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- powerpc-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- riscv-allmodconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- s390-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- sparc-allyesconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-|-- x86_64-allmodconfig
-|   `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
-`-- xtensa-allyesconfig
-    `-- drivers-pci-controller-pcie-xilinx-cpm.c:error:implicit-declaration-of-function-pci_parse_request_of_pci_ranges
+Krzysztof Wilczyński (10):
+  PCI: dwc: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: mobiveil: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: tegra: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: altera: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: host-generic: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: v3-semi: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: altera-msi: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: xgene-msi: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: rockchip: Remove dev_err() when handing an error from
+    platform_get_irq()
+  PCI: xilinx-nwl: Remove dev_err() when handing an error from
+    platform_get_irq()
 
-elapsed time: 1861m
+ drivers/pci/controller/dwc/pci-dra7xx.c              |  8 ++------
+ drivers/pci/controller/dwc/pci-exynos.c              |  9 +++------
+ drivers/pci/controller/dwc/pci-imx6.c                |  4 +---
+ drivers/pci/controller/dwc/pci-keystone.c            |  4 +---
+ drivers/pci/controller/dwc/pci-meson.c               |  4 +---
+ drivers/pci/controller/dwc/pcie-armada8k.c           |  4 +---
+ drivers/pci/controller/dwc/pcie-artpec6.c            |  4 +---
+ drivers/pci/controller/dwc/pcie-histb.c              |  4 +---
+ drivers/pci/controller/dwc/pcie-kirin.c              |  5 +----
+ drivers/pci/controller/dwc/pcie-spear13xx.c          |  5 ++---
+ drivers/pci/controller/dwc/pcie-tegra194.c           |  4 +---
+ .../pci/controller/mobiveil/pcie-layerscape-gen4.c   |  5 ++---
+ drivers/pci/controller/mobiveil/pcie-mobiveil-host.c |  4 +---
+ drivers/pci/controller/pci-tegra.c                   |  8 ++------
+ drivers/pci/controller/pci-v3-semi.c                 |  5 ++---
+ drivers/pci/controller/pci-xgene-msi.c               |  2 --
+ drivers/pci/controller/pcie-altera-msi.c             |  1 -
+ drivers/pci/controller/pcie-altera.c                 |  4 +---
+ drivers/pci/controller/pcie-rockchip-host.c          | 12 +++---------
+ drivers/pci/controller/pcie-tango.c                  |  4 +---
+ drivers/pci/controller/pcie-xilinx-nwl.c             | 11 ++---------
+ 21 files changed, 29 insertions(+), 82 deletions(-)
 
-configs tested: 83
-configs skipped: 4
+-- 
+2.27.0
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-m68k                            q40_defconfig
-riscv                    nommu_virt_defconfig
-powerpc                     mpc512x_defconfig
-mips                 decstation_r4k_defconfig
-xtensa                    xip_kc705_defconfig
-arm                       versatile_defconfig
-arm                             ezx_defconfig
-powerpc                       maple_defconfig
-arm                            pleb_defconfig
-arm                            mmp2_defconfig
-arm                          lpd270_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20200802
-x86_64               randconfig-a001-20200802
-x86_64               randconfig-a004-20200802
-x86_64               randconfig-a003-20200802
-x86_64               randconfig-a002-20200802
-x86_64               randconfig-a005-20200802
-i386                 randconfig-a005-20200731
-i386                 randconfig-a004-20200731
-i386                 randconfig-a006-20200731
-i386                 randconfig-a002-20200731
-i386                 randconfig-a001-20200731
-i386                 randconfig-a003-20200731
-x86_64               randconfig-a015-20200731
-x86_64               randconfig-a014-20200731
-x86_64               randconfig-a016-20200731
-x86_64               randconfig-a012-20200731
-x86_64               randconfig-a013-20200731
-x86_64               randconfig-a011-20200731
-i386                 randconfig-a016-20200731
-i386                 randconfig-a012-20200731
-i386                 randconfig-a014-20200731
-i386                 randconfig-a015-20200731
-i386                 randconfig-a011-20200731
-i386                 randconfig-a013-20200731
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                           allyesconfig
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
