@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 852B7235776
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 16:26:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5E7323577C
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 16:26:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgHBO0M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Aug 2020 10:26:12 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39814 "EHLO
+        id S1725855AbgHBO0O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Aug 2020 10:26:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32920 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgHBO0L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 10:26:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v9so2518336ljk.6;
-        Sun, 02 Aug 2020 07:26:09 -0700 (PDT)
+        with ESMTP id S1725780AbgHBO0N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 10:26:13 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v4so27328631ljd.0;
+        Sun, 02 Aug 2020 07:26:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VMzZQXjK0WMetVDGn0tUCy2JU8NUEkR2xnKheZa8ZWc=;
-        b=pUvPnOP5fijAN41HPU/ZrVy7uOrR7hf7TWoHvH45/obxkm1cnfTYKErV5EYfggTJza
-         J2ypQ5H0cZOR82bgTH0PdCEHecoeqH5mFjQi1o42lUSFxUuYZibLLcfuBsGZgRRxpixe
-         2hSyFSeXgiCdlvRuxJtrZLjJ9DuR5yRzT0ktubj3FA4A+WfiyJJ8Pm6E2J8OPFu/9HOP
-         rwruXnK3f3MNnVMfdJ2539L6UdD5DZuaHomz3HqBVvpmspmazZ356D5O+VE88HTY4xPH
-         F5B8dsRkDPXNktA6V0XudwkdVGCXVa4tO82Bg3oLUF6Q78r4GO07J1xSU5QHMjv0FlVc
-         xKaA==
-X-Gm-Message-State: AOAM533XbWNVoUbg1bAUtU8fDU4poQZhdiJnjr6S6I3/EjKJFbyODpeQ
-        TBXGBTSgnEeqmD4Wy54MbG8=
-X-Google-Smtp-Source: ABdhPJyjgrQc0FDjQcMFVZPpVkua7bA294ZwM5k/dH6lFvq8PdcJNGDDSetrLxIi93uNdb0Ai2zdVg==
-X-Received: by 2002:a2e:752:: with SMTP id i18mr6183911ljd.428.1596378368431;
-        Sun, 02 Aug 2020 07:26:08 -0700 (PDT)
+        bh=Vqz66jFdWkrqKdTPiLpnKqTLTv8a5tORVk+kvNATVNQ=;
+        b=UxfOOTS+qGX9ZptYRtFnHWfRoFnuuPGc7opo+ehhRDIAVFcTwwIt+YKPENaTfxJKvA
+         fdprMmY/CIqeJ4ERcPATfyCyFRhQA8ehEF5WQGbsWW1ULyN5rEjG4lLZKL2DC5MV7MiY
+         /Qf87ZMl7B6APjnpHiHxndiBJrCP0DMthW3pFwDKj8rjlNkOhjlCRZEfz+oWu+bvPJa3
+         xOFl2Hrn7g6pREIqFVfXueSx0TAM7uxPZMs5PERMn1nKvutTP0ozAmFXrIMG11sREOFe
+         QghPX8j3YwSPza7BZ9pb32jNOMOzQyDQnvisddrJoCzpRE6zyHs4I9O9eOP240PrcKIU
+         uhPQ==
+X-Gm-Message-State: AOAM533ih2iZLQuF1OwiMqsHoIlvrSt6YxLH4jDywWM/nW5BnYfUjNIr
+        xaewBho9whSWuOqe4h7EPoU=
+X-Google-Smtp-Source: ABdhPJy4jSVIiW6PUqWFPiMQhKNWAsiM5j0yMAxbx3OUXIJ59hEmi0ME2i3lZ+iAJfoiqC9jsw91kA==
+X-Received: by 2002:a2e:85d1:: with SMTP id h17mr4003308ljj.341.1596378369981;
+        Sun, 02 Aug 2020 07:26:09 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id 193sm4214136lfa.90.2020.08.02.07.26.06
+        by smtp.gmail.com with ESMTPSA id 193sm4214136lfa.90.2020.08.02.07.26.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 07:26:07 -0700 (PDT)
+        Sun, 02 Aug 2020 07:26:09 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
@@ -60,9 +60,9 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
         rfi@lists.rocketboards.org
-Subject: [PATCH 03/10] PCI: tegra: Remove dev_err() when handing an error from platform_get_irq()
-Date:   Sun,  2 Aug 2020 14:25:55 +0000
-Message-Id: <20200802142601.1635926-4-kw@linux.com>
+Subject: [PATCH 04/10] PCI: altera: Remove dev_err() when handing an error from platform_get_irq()
+Date:   Sun,  2 Aug 2020 14:25:56 +0000
+Message-Id: <20200802142601.1635926-5-kw@linux.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200802142601.1635926-1-kw@linux.com>
 References: <20200802142601.1635926-1-kw@linux.com>
@@ -81,46 +81,31 @@ appropriate error message in case of a failure.
 
 This change is as per suggestion from Coccinelle:
 
-  drivers/pci/controller/pci-tegra.c:1524:2-9: line 1524 is redundant
-  because platform_get_irq() already prints an error
-
-  drivers/pci/controller/pci-tegra.c:1742:2-9: line 1742 is redundant
+  drivers/pci/controller/pcie-altera.c:717:2-9: line 717 is redundant
   because platform_get_irq() already prints an error
 
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/controller/pci-tegra.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-altera.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 235b456698fc..b11397475a4d 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1520,10 +1520,8 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 24cb1c331058..f6d73d282230 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -713,10 +713,8 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
  
- 	/* request interrupt */
- 	err = platform_get_irq_byname(pdev, "intr");
--	if (err < 0) {
--		dev_err(dev, "failed to get IRQ: %d\n", err);
-+	if (err < 0)
- 		goto phys_put;
+ 	/* setup IRQ */
+ 	pcie->irq = platform_get_irq(pdev, 0);
+-	if (pcie->irq < 0) {
+-		dev_err(dev, "failed to get IRQ: %d\n", pcie->irq);
++	if (pcie->irq < 0)
+ 		return pcie->irq;
 -	}
  
- 	pcie->irq = err;
- 
-@@ -1738,10 +1736,8 @@ static int tegra_pcie_msi_setup(struct tegra_pcie *pcie)
- 	}
- 
- 	err = platform_get_irq_byname(pdev, "msi");
--	if (err < 0) {
--		dev_err(dev, "failed to get IRQ: %d\n", err);
-+	if (err < 0)
- 		goto free_irq_domain;
--	}
- 
- 	msi->irq = err;
- 
+ 	irq_set_chained_handler_and_data(pcie->irq, altera_pcie_isr, pcie);
+ 	return 0;
 -- 
 2.27.0
 
