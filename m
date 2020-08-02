@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C0E235781
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 16:26:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87766235783
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 16:26:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725780AbgHBO0P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Aug 2020 10:26:15 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34522 "EHLO
+        id S1726472AbgHBO0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Aug 2020 10:26:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39824 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgHBO0O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 10:26:14 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q7so37011012ljm.1;
-        Sun, 02 Aug 2020 07:26:12 -0700 (PDT)
+        with ESMTP id S1726300AbgHBO0Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 10:26:16 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v9so2518447ljk.6;
+        Sun, 02 Aug 2020 07:26:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eygfm9r/GaNHVAKMUv8+SfoTHGAl/cjm4d2m8xjT5bc=;
-        b=eSAVVT8Se1/eLAu3B/IhsAOSd1uL4wgqqJRwhWt9f3Dyd3dpaBwrC3+1OmcRe5NCwN
-         /LvXVROYL5Bo0hA7tPXhlZq+ump5OkwvfbPzJ4myh1+HnaXeslsgi1TYdhELaodHIXKe
-         7sKWT/xlOc1oh4CrBye1b37cc3bLWWxVlaaUQodQ9L5KqqDHBduHf4pPbHf/bC5TNArw
-         ufhD60tT/DltI3HZ5+94LKa7cge/cGwlOnLs8Jrt9zFkDGPgYzv5lVIDj3cD/jDiFs1Q
-         F6mMfsVQQkU5H+qtQiESj5mcd/96jVAhAFlJKa1CNwkj9JY1RAhK3lYfQRipdvE1cdYb
-         oImA==
-X-Gm-Message-State: AOAM533dVA0usFAolcWTdAmn77vOjDcuUMU4+XpeornmgwfaNcNrr9l0
-        wp8omAQ8UmCQ26UBcCCXM1o=
-X-Google-Smtp-Source: ABdhPJzSmhttbDUgORpKlM914FzAS2b2KYbghno6w3+rxNJphXxD2jUo/xd+iwrLQer40nK+OI29Pw==
-X-Received: by 2002:a05:651c:31b:: with SMTP id a27mr5541281ljp.455.1596378371517;
-        Sun, 02 Aug 2020 07:26:11 -0700 (PDT)
+        bh=B3KSoQD71byHkg+Qsnb1jzju+E/FIRrV3OAj8SbgT+c=;
+        b=U/pXa3ZFFy1zZ6Hh+bsEfoaz+WOqKI+RYWU+6UbZAUiDnz+kx2JSj414b1X1eatMo4
+         PHjADBU7ud1snOlbQFSIbr4YXwEVOuMKFTQBEanOZOuIWtpLfz6NxUGMq49ZJJvvWBz5
+         2NWhUpuYcFdpfuwB1p9+ZoqJlG+8BqMCYq+W+8Lut/cCrsu3G1q94ky4ujanQFm5Lehj
+         qNqMSX2NbGMmCX/gZaG5wiohrhCiZBseNWBjeXayq4h5T1PVqXFIDD7dCim54N/t1hu5
+         vRVB8EUdgD9NBy2qv5kVOHB1wdaoFyvr21zbbAqtmBmqdpxgi2eWA1OxL8J1YOy6bCux
+         sAmQ==
+X-Gm-Message-State: AOAM532jezQ/lSoNzMrwys13VR7NyHIJBWl/sDIqbWRBBAHnY2GnKKJ4
+        7hdFdpnRUeQe6rgfDuA8dnQ=
+X-Google-Smtp-Source: ABdhPJy+xlZ4x5ScpsArHy4QaEW+arFDZ4OILOPVHDYUlBaUmY+RMdxu/xscCf5AhzmdVlScycAYuQ==
+X-Received: by 2002:a2e:9bc1:: with SMTP id w1mr6140877ljj.288.1596378373175;
+        Sun, 02 Aug 2020 07:26:13 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id 193sm4214136lfa.90.2020.08.02.07.26.10
+        by smtp.gmail.com with ESMTPSA id 193sm4214136lfa.90.2020.08.02.07.26.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 07:26:11 -0700 (PDT)
+        Sun, 02 Aug 2020 07:26:12 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
@@ -60,9 +60,9 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
         rfi@lists.rocketboards.org
-Subject: [PATCH 05/10] PCI: host-generic: Remove dev_err() when handing an error from platform_get_irq()
-Date:   Sun,  2 Aug 2020 14:25:57 +0000
-Message-Id: <20200802142601.1635926-6-kw@linux.com>
+Subject: [PATCH 06/10] PCI: v3-semi: Remove dev_err() when handing an error from platform_get_irq()
+Date:   Sun,  2 Aug 2020 14:25:58 +0000
+Message-Id: <20200802142601.1635926-7-kw@linux.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200802142601.1635926-1-kw@linux.com>
 References: <20200802142601.1635926-1-kw@linux.com>
@@ -81,31 +81,32 @@ appropriate error message in case of a failure.
 
 This change is as per suggestion from Coccinelle:
 
-  drivers/pci/controller/pcie-tango.c:277:2-9: line 277 is redundant
+  drivers/pci/controller/pci-v3-semi.c:781:2-9: line 781 is redundant
   because platform_get_irq() already prints an error
 
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/controller/pcie-tango.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pci/controller/pci-v3-semi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-index 8f640c70f936..d093a8ce4bb1 100644
---- a/drivers/pci/controller/pcie-tango.c
-+++ b/drivers/pci/controller/pcie-tango.c
-@@ -273,10 +273,8 @@ static int tango_pcie_probe(struct platform_device *pdev)
- 		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index 3681e5af3878..2a19f2a98945 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -777,10 +777,9 @@ static int v3_pci_probe(struct platform_device *pdev)
  
- 	virq = platform_get_irq(pdev, 1);
--	if (virq < 0) {
--		dev_err(dev, "Failed to map IRQ\n");
-+	if (virq < 0)
- 		return virq;
+ 	/* Get and request error IRQ resource */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "unable to obtain PCIv3 error IRQ\n");
++	if (irq < 0)
+ 		return irq;
 -	}
- 
- 	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &dom_ops, pcie);
- 	if (!irq_dom) {
++
+ 	ret = devm_request_irq(dev, irq, v3_irq, 0,
+ 			"PCIv3 error", v3);
+ 	if (ret < 0) {
 -- 
 2.27.0
 
