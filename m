@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E496F23578A
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 16:26:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E95DC235790
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Aug 2020 16:26:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgHBO0T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Aug 2020 10:26:19 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36598 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgHBO0S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 10:26:18 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t23so13489867ljc.3;
-        Sun, 02 Aug 2020 07:26:16 -0700 (PDT)
+        id S1726533AbgHBO0V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Aug 2020 10:26:21 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36759 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgHBO0U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Aug 2020 10:26:20 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c15so1838480lfi.3;
+        Sun, 02 Aug 2020 07:26:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KctYFubeJoKLzzl613htWFeciTcF38lRZu1u0/Rl6M8=;
-        b=WMnX3StBXk0A385Fs91TCvyVYNkZBXgGHm3Od9KmxYf6SImLlbA3zbi8k+iWtgaLpF
-         F6JkHHltSjl7Q/0W8jQGPY7eZrUplR2GNtr/W8vBTcLELFTsWXFYRvowzPTkYJxkiYdr
-         7Yt2Yw+1PpN4EEkR013Xid8sryO0OkI0WieVuIhMnYII2jKGMr9AWKogXNZ3cYpH85tV
-         TBE/tjb6g9EWStYD6SFeGWEfqqoY0RDdn8kPnRphmRBd4dMKr0G9Z7sm9LsUIyjxJM0z
-         EBG6E0JWi7I77uaN/qp+Ar8orj0U7woAd2Duh709EAaIujC7X3kFuD5zsYt3hZ1Jxb/Y
-         SQiQ==
-X-Gm-Message-State: AOAM531xcjEKPvz/7g0JDDguwgjj87kq6M8Kb6J56n0PLC6QeXZtZD/v
-        erxxFvLJcLxfzPiaD2gL+Oo=
-X-Google-Smtp-Source: ABdhPJzMcdshNqp2FVaeIW1qGszgg8tWQnvrwe+GCIZdRiYp+tWne0ejZ4gesGSqeO7GvTac2I4drw==
-X-Received: by 2002:a2e:9e89:: with SMTP id f9mr5229933ljk.212.1596378376233;
-        Sun, 02 Aug 2020 07:26:16 -0700 (PDT)
+        bh=/S75/rZPVtT/la0J520uvq4mcrCeNFGU2um+3tul+rI=;
+        b=eGYxKagEb+QN5Q7HCeGhnyhJKXIWmSd8RBVimVWipR+irMxje/N7qFbEo9bJg1Wjfr
+         /73rkoJLOwd6N5dnh3ZampC3gj12TE0GCc70OOJocJCMMdtceSvoWa2clFkVtfz42tfc
+         NVTbE3gDGn7bsADcEQq84BzSGxMRIHt9HfI+r2PzD42AqbYnIjjZfJbcHwXQnHr2aqu1
+         nV218QolJDfI8X1OyUZ1XhjebAyle3QGdgOg4XslQkNGxWl7gSMjpGEVoWy61YEdBC7i
+         e2/D2KSAFJiWtMIQqnOqpX6L3lLESHhiZ0Qjf+B9NExEmrDzEU/1KuhGueyXTVODCXmW
+         FQtw==
+X-Gm-Message-State: AOAM531OOYSQb6OEx2x8ckJJvP4MZ5XEzBRGm3PyMlBahdSl5ewxwwXr
+        XEM3Bp1fOAkrCKSRINjS+H4=
+X-Google-Smtp-Source: ABdhPJzNpdAF9CCzGfP8sG9ncd25/FPuC6g6AByGverT5oAgx7TlVWh8xE/g3DI5YXBMEkYyIP2c8Q==
+X-Received: by 2002:a19:189:: with SMTP id 131mr6399805lfb.128.1596378377807;
+        Sun, 02 Aug 2020 07:26:17 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id 193sm4214136lfa.90.2020.08.02.07.26.14
+        by smtp.gmail.com with ESMTPSA id 193sm4214136lfa.90.2020.08.02.07.26.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 07:26:15 -0700 (PDT)
+        Sun, 02 Aug 2020 07:26:17 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
@@ -60,9 +60,9 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
         rfi@lists.rocketboards.org
-Subject: [PATCH 08/10] PCI: xgene-msi: Remove dev_err() when handing an error from platform_get_irq()
-Date:   Sun,  2 Aug 2020 14:26:00 +0000
-Message-Id: <20200802142601.1635926-9-kw@linux.com>
+Subject: [PATCH 09/10] PCI: rockchip: Remove dev_err() when handing an error from platform_get_irq()
+Date:   Sun,  2 Aug 2020 14:26:01 +0000
+Message-Id: <20200802142601.1635926-10-kw@linux.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200802142601.1635926-1-kw@linux.com>
 References: <20200802142601.1635926-1-kw@linux.com>
@@ -81,28 +81,60 @@ appropriate error message in case of a failure.
 
 This change is as per suggestion from Coccinelle:
 
-  drivers/pci/controller/pci-xgene-msi.c:481:3-10: line 481 is redundant
-  because platform_get_irq() already prints an error
+  drivers/pci/controller/pcie-rockchip-host.c:553:2-9: line 553 is
+  redundant because platform_get_irq() already prints an error
+
+  drivers/pci/controller/pcie-rockchip-host.c:566:2-9: line 566 is
+  redundant because platform_get_irq() already prints an error
+
+  drivers/pci/controller/pcie-rockchip-host.c:576:2-9: line 576 is
+  redundant because platform_get_irq() already prints an error
 
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/controller/pci-xgene-msi.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/pci/controller/pcie-rockchip-host.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
-index f4c02da84e59..02271c6d17a1 100644
---- a/drivers/pci/controller/pci-xgene-msi.c
-+++ b/drivers/pci/controller/pci-xgene-msi.c
-@@ -478,8 +478,6 @@ static int xgene_msi_probe(struct platform_device *pdev)
- 	for (irq_index = 0; irq_index < NR_HW_IRQS; irq_index++) {
- 		virt_msir = platform_get_irq(pdev, irq_index);
- 		if (virt_msir < 0) {
--			dev_err(&pdev->dev, "Cannot translate IRQ index %d\n",
--				irq_index);
- 			rc = virt_msir;
- 			goto error;
- 		}
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index 94af6f5828a3..eebe05ab354f 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -549,10 +549,8 @@ static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 
+ 	irq = platform_get_irq_byname(pdev, "sys");
+-	if (irq < 0) {
+-		dev_err(dev, "missing sys IRQ resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	err = devm_request_irq(dev, irq, rockchip_pcie_subsys_irq_handler,
+ 			       IRQF_SHARED, "pcie-sys", rockchip);
+@@ -562,20 +560,16 @@ static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
+ 	}
+ 
+ 	irq = platform_get_irq_byname(pdev, "legacy");
+-	if (irq < 0) {
+-		dev_err(dev, "missing legacy IRQ resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	irq_set_chained_handler_and_data(irq,
+ 					 rockchip_pcie_legacy_int_handler,
+ 					 rockchip);
+ 
+ 	irq = platform_get_irq_byname(pdev, "client");
+-	if (irq < 0) {
+-		dev_err(dev, "missing client IRQ resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	err = devm_request_irq(dev, irq, rockchip_pcie_client_irq_handler,
+ 			       IRQF_SHARED, "pcie-client", rockchip);
 -- 
 2.27.0
 
