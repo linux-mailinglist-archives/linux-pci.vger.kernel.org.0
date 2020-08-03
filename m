@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA21E23AED0
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Aug 2020 23:01:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 835AD23AED6
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Aug 2020 23:01:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgHCVBV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Aug 2020 17:01:21 -0400
-Received: from mail-io1-f46.google.com ([209.85.166.46]:44953 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728889AbgHCVBU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Aug 2020 17:01:20 -0400
-Received: by mail-io1-f46.google.com with SMTP id v6so24749093iow.11;
-        Mon, 03 Aug 2020 14:01:19 -0700 (PDT)
+        id S1729030AbgHCVBX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Aug 2020 17:01:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34288 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728889AbgHCVBX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Aug 2020 17:01:23 -0400
+Received: by mail-io1-f65.google.com with SMTP id q75so31848823iod.1;
+        Mon, 03 Aug 2020 14:01:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=caU68Vks0Qq0qRNr1RcbbJo83bu5SQyVcphbC7uR/pw=;
-        b=eLf7LczPFnRjHgztRiF/SzIF4maOualtTBucdu4jKPARDpvweRK/8Ikey/hZ9uKHmW
-         q3ulkz9TB+0gsZyhMRRGV+RT0JScLW6eiRuVdy0h6Cs9wI3YAXyt530hyDYwClmvIrnF
-         PBSgvTeMUe4FM2Ri+r6Cu8rwmmPGbQ5HmLOvi3dURAioxjNXCSC6As/uyiRkpax9kg+I
-         MwVRonkBibAPH3Vqigm4NoLUZj9BsEoJF8P8u54s07kI5vpFnti4NApiVsjTXwetrzfw
-         Q7LbHWkLqRJaqwsn0wJl+urSidxjXe6DKTZ4jczt8GbdHlu8z0UQK1m9LWCB9sRnQUv+
-         icrQ==
-X-Gm-Message-State: AOAM530Wwp4vl3i/+A3lSiRwqAzCAJpP9Q+vPMGfTU/d18C2iXNGfuqi
-        1l7FTE3qx6SK7JIOdqNsdg==
-X-Google-Smtp-Source: ABdhPJwLvkQ8nLiW6KyvJ0FE/ZZBxba/47A0nMcMogCK9MlyD6FPHyseUZgrOPhESgV+UWpEU2XPBA==
-X-Received: by 2002:a5d:9b96:: with SMTP id r22mr1872679iom.66.1596488479389;
-        Mon, 03 Aug 2020 14:01:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bKskqR1BQLcQkRJa4jVCjBb26v/8ydnan9t1CfXlQP0=;
+        b=F3I5h+1s3UcJuJQIeVbdou8/lAyhnUMlEhtMa1/w69LqALXHoY4ZNvEqEZ8I7v1E4b
+         2jNorcDEgjjTASJg9DPX9XhGvMvRZK44Y7EHm00YQCDJ99YYZ3nYiKIKRMnhrRfj1cAR
+         uZv7WY5kUeNPzuJOy3HgdGN261vglpbF6hCEd8f/R0gPmI6/7Cv7ueRiqOEgllHS75Ks
+         J8u6RYTVWDsKnl6L6ECuQiOvJzm0qpFSZC0/IIjTrNZMPJO0uuZ3oP8hyfoFxL16n8xS
+         7pqLANaQt55//SdPd5NxH9pt31J4i7B6G+0hxwTZnbCNQ7qyWWtbGKMNK/oB7cPOJD1c
+         veuQ==
+X-Gm-Message-State: AOAM533y/m1MgN+Lfli8vdjoQidgdVwd3BzWF9Zq0d/6fMSOkfvVC/RZ
+        6yAZDex/edq+AqGKKbyugQ==
+X-Google-Smtp-Source: ABdhPJy4qG4p8bfrwbYSt3lvEPjhQpXlxLgUy+tuEvf+7Lf39Luq/OZA9TVNwuc57X3DpMVIygnSPw==
+X-Received: by 2002:a05:6638:2601:: with SMTP id m1mr1810484jat.141.1596488481653;
+        Mon, 03 Aug 2020 14:01:21 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id r6sm9292280iod.7.2020.08.03.14.01.17
+        by smtp.googlemail.com with ESMTPSA id r6sm9292280iod.7.2020.08.03.14.01.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 14:01:18 -0700 (PDT)
+        Mon, 03 Aug 2020 14:01:21 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -66,10 +66,12 @@ Cc:     Binghui Wang <wangbinghui@hisilicon.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         Yue Wang <yue.wang@Amlogic.com>
-Subject: [RFC 00/27] PCI: dwc: Driver clean-ups
-Date:   Mon,  3 Aug 2020 15:00:49 -0600
-Message-Id: <20200803210116.3132633-1-robh@kernel.org>
+Subject: [RFC 01/27] PCI: Allow root and child buses to have different pci_ops
+Date:   Mon,  3 Aug 2020 15:00:50 -0600
+Message-Id: <20200803210116.3132633-2-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200803210116.3132633-1-robh@kernel.org>
+References: <20200803210116.3132633-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -77,67 +79,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is a series of clean-ups for the Designware PCI driver. The series
-primarily reworks the config space accessors to use the existing pci_ops
-struct and removes various private data that's also present in the
-pci_host_bridge struct. There's also some duplicated common (PCI and
-DWC) register defines which I converted to use the common defines.
+PCI host bridges often have different ways to access the root and child
+bus config spaces. The host bridge drivers have invented their own
+abstractions to handle this. Let's support having different root and
+child bus pci_ops so these per driver abstractions can be removed.
 
-This is compile tested only as I don't have any DWC based h/w, so any
-testing would be helpful. This is an RFC as it will need to be rebased
-on 5.9-rc1 and my previous clean-up series.
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/probe.c | 8 +++++++-
+ include/linux/pci.h | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-Rob
-
-
-Rob Herring (27):
-  PCI: Allow root and child buses to have different pci_ops
-  PCI: dwc: Use DBI accessors instead of own config accessors
-  PCI: dwc: Allow overriding bridge pci_ops
-  PCI: dwc: Add a default pci_ops.map_bus for root port
-  PCI: dwc: al: Use pci_ops for child config space accessors
-  PCI: dwc: keystone: Use pci_ops for config space accessors
-  PCI: dwc: tegra: Use pci_ops for root config space accessors
-  PCI: dwc: meson: Use pci_ops for root config space accessors
-  PCI: dwc: kirin: Use pci_ops for root config space accessors
-  PCI: dwc: exynos: Use pci_ops for root config space accessors
-  PCI: dwc: histb: Use pci_ops for root config space accessors
-  PCI: dwc: Remove dwc specific config accessor ops
-  PCI: dwc: Use generic config accessors
-  PCI: Also call .add_bus() callback for root bus
-  PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus
-  PCI: dwc: Convert to use pci_host_probe()
-  PCI: dwc: Remove root_bus pointer
-  PCI: dwc: Remove storing of PCI resources
-  PCI: dwc: Simplify config space handling
-  PCI: dwc/keystone: Drop duplicated 'num-viewport'
-  PCI: dwc: Check CONFIG_PCI_MSI inside dw_pcie_msi_init()
-  PCI: dwc/imx6: Remove duplicate define PCIE_LINK_WIDTH_SPEED_CONTROL
-  PCI: dwc/meson: Drop unnecessary RC config space initialization
-  PCI: dwc/meson: Rework PCI config and DW port logic register accesses
-  PCI: dwc/qcom: Use common PCI register definitions
-  PCI: dwc: Remove hardcoded PCI_CAP_ID_EXP offset
-  PCI: dwc/tegra: Use common Designware port logic register definitions
-
- drivers/pci/controller/dwc/pci-dra7xx.c       |   4 +-
- drivers/pci/controller/dwc/pci-exynos.c       |  45 +--
- drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
- drivers/pci/controller/dwc/pci-keystone.c     |  90 +++--
- drivers/pci/controller/dwc/pci-meson.c        | 164 +++------
- drivers/pci/controller/dwc/pcie-al.c          |  70 +---
- drivers/pci/controller/dwc/pcie-artpec6.c     |  11 +-
- .../pci/controller/dwc/pcie-designware-host.c | 319 ++++++------------
- .../pci/controller/dwc/pcie-designware-plat.c |   4 +-
- drivers/pci/controller/dwc/pcie-designware.h  |  28 +-
- drivers/pci/controller/dwc/pcie-histb.c       |  45 +--
- drivers/pci/controller/dwc/pcie-kirin.c       |  43 +--
- drivers/pci/controller/dwc/pcie-qcom.c        |  31 +-
- drivers/pci/controller/dwc/pcie-spear13xx.c   |   4 +-
- drivers/pci/controller/dwc/pcie-tegra194.c    |  90 +++--
- drivers/pci/controller/dwc/pcie-uniphier.c    |   3 +-
- drivers/pci/probe.c                           |  14 +-
- include/linux/pci.h                           |   1 +
- 18 files changed, 368 insertions(+), 604 deletions(-)
-
---
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2f66988cea25..8712e595174d 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1030,6 +1030,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 					   struct pci_dev *bridge, int busnr)
+ {
+ 	struct pci_bus *child;
++	struct pci_host_bridge *host;
+ 	int i;
+ 	int ret;
+ 
+@@ -1039,11 +1040,16 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 		return NULL;
+ 
+ 	child->parent = parent;
+-	child->ops = parent->ops;
+ 	child->msi = parent->msi;
+ 	child->sysdata = parent->sysdata;
+ 	child->bus_flags = parent->bus_flags;
+ 
++	host = pci_find_host_bridge(parent);
++	if (host->child_ops)
++		child->ops = host->child_ops;
++	else
++		child->ops = parent->ops;
++
+ 	/*
+ 	 * Initialize some portions of the bus device, but don't register
+ 	 * it now as the parent is not properly set up yet.
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c79d83304e52..cec789a0437e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -516,6 +516,7 @@ struct pci_host_bridge {
+ 	struct device	dev;
+ 	struct pci_bus	*bus;		/* Root bus */
+ 	struct pci_ops	*ops;
++	struct pci_ops	*child_ops;
+ 	void		*sysdata;
+ 	int		busnr;
+ 	struct list_head windows;	/* resource_entry */
+-- 
 2.25.1
+
