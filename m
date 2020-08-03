@@ -2,40 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A492723A015
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Aug 2020 09:10:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FFA823A030
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Aug 2020 09:17:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgHCHKq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Aug 2020 03:10:46 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38595 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbgHCHKp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Aug 2020 03:10:45 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 140so19913827lfi.5;
-        Mon, 03 Aug 2020 00:10:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ay3Bi+IiWilbDlJUPitXEI+RuPwMq9ZiJzLYPsaopL8=;
-        b=VmEv7ht3tbzEjR43gO6kF/kKJefoGqpzYt2q/qWhKwQa9LjPBePoWAjwyDiQfjJAWL
-         6PoHp+toQ+tT2XT8kzPQoFyfx3/5KhMzCipUimY7uREgdOehqoc6uCRmaoC6a6q+255f
-         bU7vb/AJbkpbP1uxXYnOiFF6DlG6FFOM+p1qQDyPp96/YBBo6/HP0Zv/YESp23rE8Q2B
-         H6XnxmIZkhzx43Y9P06IAwsiXbbGSpILnKrnpkxfgQQIdPqvNTIlQmkacaTztkBxO39B
-         LQiFUVgIpI13D7By1fTGf9AAriz5C4t4L7L+zv9h3xVjf+jXGYoftv9qUg4ieLDYcWaD
-         diSg==
-X-Gm-Message-State: AOAM531UJGEfwo9xhUFqqUzIDalaeujpl0VQHXoYXaOy8rdNfX67fgIV
-        +IE21ruZHMWwALIKGDzcwrI=
-X-Google-Smtp-Source: ABdhPJzYw7yZDvJbTJfDGxm7OY2EE10qIOitHhsEhQ9czxB+hKmQdhCqIuug22Bs0Z17tX3e9sBetw==
-X-Received: by 2002:a19:a07:: with SMTP id 7mr7780618lfk.65.1596438642541;
-        Mon, 03 Aug 2020 00:10:42 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id r11sm3877560lji.104.2020.08.03.00.10.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 00:10:41 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
+        id S1725861AbgHCHQv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Aug 2020 03:16:51 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:28798 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgHCHQt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 3 Aug 2020 03:16:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=2377; q=dns/txt; s=axis-central1;
+  t=1596439009; x=1627975009;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=4eB+iWowqFuffEwqVhdlrnC6nMcvTTjY/U9qdPMCwa8=;
+  b=h6z/we2ZpIVLYLtPfrlKHe8MgcoQbZkD8iF5759ykTOOzVbavYjAMZCb
+   6UeD6cVC7cbZZuYc9lMk3UhEonQvPgcyFCyfNliKgBF8TwaZ7d29UkhJX
+   tPeXlFbJMsUvySweDFiMkj7az8qflbGxKxrU/AwMflKohmdrF2ol1WVF+
+   IN9t2ln4iOXcvcIvN9bkNgbZyD7o/WyUuT9o/azXb8c12oiYH1eqEZRhJ
+   idUlzDwULCNsgpO9b7ptdU9mE9zICuE1ygPr8Ywz2clfpcdbjNPjKnKuZ
+   N99Ctzr0gR7ZskdJ9cu6pmOe44Or25pz1k6OjwDf5v+XItSLntjCDCB2k
+   w==;
+IronPort-SDR: UaNM9T7tIvhQ2yXPgIs4QcPcTkk/tfeHxx4jq1y9AeEkV586tSbCWZGo0H5qrtreyMPTjbFCDP
+ Y+y01J24Qk+f1muOB9+jFlUTw/GiCYD6ZO6oqr3An7Wu5oBT/li8icS7SKZKOzsDp1RSGVRN/P
+ JHFVLeyn+a3oH1VPQGhXBUvrV08tJXL9Wa8+LfCSxrQA1U3yNOiSmezqWk0BLNTfFwG1BhdbMz
+ FL4tYFSx1r3MfsJ5/LVbLSSS2e7SbjJdVyXnLyuR9Epo7K9M2bAPofd6CFKML9itofxnvwJFEr
+ Bac=
+X-IronPort-AV: E=Sophos;i="5.75,429,1589234400"; 
+   d="scan'208";a="11438926"
+Date:   Mon, 3 Aug 2020 09:16:42 +0200
+From:   Jesper Nilsson <Jesper.Nilsson@axis.com>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
@@ -45,7 +46,7 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
         Yue Wang <yue.wang@Amlogic.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Jesper Nilsson <Jesper.Nilsson@axis.com>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         Binghui Wang <wangbinghui@hisilicon.com>,
         Pratyush Anand <pratyush.anand@gmail.com>,
@@ -55,95 +56,89 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>,
         Ley Foon Tan <ley.foon.tan@intel.com>,
         Shawn Lin <shawn.lin@rock-chips.com>,
         Heiko Stuebner <heiko@sntech.de>,
-        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        rfi@lists.rocketboards.org
-Subject: [PATCH 10/10] PCI: xilinx-nwl: Remove dev_err() when handing an error from platform_get_irq()
-Date:   Mon,  3 Aug 2020 07:10:40 +0000
-Message-Id: <20200803071040.1663662-1-kw@linux.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200802142601.1635926-1-kw@linux.com>
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@axis.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "rfi@lists.rocketboards.org" <rfi@lists.rocketboards.org>
+Subject: Re: [PATCH 01/10] PCI: dwc: Remove dev_err() when handing an error
+ from platform_get_irq()
+Message-ID: <20200803071642.7qgua4qnwrre4s3v@axis.com>
 References: <20200802142601.1635926-1-kw@linux.com>
+ <20200802142601.1635926-2-kw@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200802142601.1635926-2-kw@linux.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is no need to call the dev_err() function directly to print a
-custom message when handling an error from either the platform_get_irq()
-or platform_get_irq_byname() functions as both are going to display an
-appropriate error message in case of a failure.
+On Sun, Aug 02, 2020 at 04:25:53PM +0200, Krzysztof Wilczyński wrote:
+> There is no need to call the dev_err() function directly to print a
+> custom message when handling an error from either the platform_get_irq()
+> or platform_get_irq_byname() functions as both are going to display an
+> appropriate error message in case of a failure.
+> 
+> This change is as per suggestion from Coccinelle:
+> 
+>   drivers/pci/controller/dwc/pcie-armada8k.c:252:2-9: line 252 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pcie-kirin.c:459:3-10: line 459 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pci-imx6.c:872:3-10: line 872 is redundant
+>   because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pcie-artpec6.c:391:3-10: line 391 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pcie-spear13xx.c:202:2-9: line 202 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pci-keystone.c:1254:2-9: line 1254 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pci-exynos.c:406:2-9: line 406 is redundant
+>   because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pci-exynos.c:419:3-10: line 419 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pcie-tegra194.c:2193:2-9: line 2193 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pcie-histb.c:406:3-10: line 406 is
+>   redundant because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pci-meson.c:492:3-10: line 492 is redundant
+>   because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pci-dra7xx.c:633:2-9: line 633 is redundant
+>   because platform_get_irq() already prints an error
+> 
+>   drivers/pci/controller/dwc/pci-dra7xx.c:875:2-9: line 875 is redundant
+>   because platform_get_irq() already prints an error
+> 
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 
-This change is as per suggestion from Coccinelle:
+Looks good,
 
-  drivers/pci/controller/pcie-xilinx-nwl.c:732:2-9: line 732 is
-  redundant because platform_get_irq() already prints an error
+Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
 
-  drivers/pci/controller/pcie-xilinx-nwl.c:589:2-9: line 589 is
-  redundant because platform_get_irq() already prints an error
-
-  drivers/pci/controller/pcie-xilinx-nwl.c:600:2-9: line 600 is
-  redundant because platform_get_irq() already prints an error
-
-  drivers/pci/controller/pcie-xilinx-nwl.c:801:2-9: line 801 is
-  redundant because platform_get_irq() already prints an error
-
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/pcie-xilinx-nwl.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 9bd1427f2fd6..55489b728484 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -586,7 +586,6 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
- 	/* Get msi_1 IRQ number */
- 	msi->irq_msi1 = platform_get_irq_byname(pdev, "msi1");
- 	if (msi->irq_msi1 < 0) {
--		dev_err(dev, "failed to get IRQ#%d\n", msi->irq_msi1);
- 		ret = -EINVAL;
- 		goto err;
- 	}
-@@ -597,7 +596,6 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
- 	/* Get msi_0 IRQ number */
- 	msi->irq_msi0 = platform_get_irq_byname(pdev, "msi0");
- 	if (msi->irq_msi0 < 0) {
--		dev_err(dev, "failed to get IRQ#%d\n", msi->irq_msi0);
- 		ret = -EINVAL;
- 		goto err;
- 	}
-@@ -728,11 +726,8 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
- 
- 	/* Get misc IRQ number */
- 	pcie->irq_misc = platform_get_irq_byname(pdev, "misc");
--	if (pcie->irq_misc < 0) {
--		dev_err(dev, "failed to get misc IRQ %d\n",
--			pcie->irq_misc);
-+	if (pcie->irq_misc < 0)
- 		return -EINVAL;
--	}
- 
- 	err = devm_request_irq(dev, pcie->irq_misc,
- 			       nwl_pcie_misc_handler, IRQF_SHARED,
-@@ -797,10 +792,8 @@ static int nwl_pcie_parse_dt(struct nwl_pcie *pcie,
- 
- 	/* Get intx IRQ number */
- 	pcie->irq_intx = platform_get_irq_byname(pdev, "intx");
--	if (pcie->irq_intx < 0) {
--		dev_err(dev, "failed to get intx IRQ %d\n", pcie->irq_intx);
-+	if (pcie->irq_intx < 0)
- 		return pcie->irq_intx;
--	}
- 
- 	irq_set_chained_handler_and_data(pcie->irq_intx,
- 					 nwl_pcie_leg_handler, pcie);
+/^JN - Jesper Nilsson
 -- 
-2.27.0
-
+               Jesper Nilsson -- jesper.nilsson@axis.com
