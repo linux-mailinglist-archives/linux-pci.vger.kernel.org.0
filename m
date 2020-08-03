@@ -2,208 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E7EA23A5B0
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Aug 2020 14:41:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDDA523A6A7
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Aug 2020 14:51:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgHCMlH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Aug 2020 08:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728814AbgHCMkk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Aug 2020 08:40:40 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D8EC06174A
-        for <linux-pci@vger.kernel.org>; Mon,  3 Aug 2020 05:40:40 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k8so15311242wma.2
-        for <linux-pci@vger.kernel.org>; Mon, 03 Aug 2020 05:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mkm6CObS36SJAMkOLwAunKXfddEBXbzFKEGDTTUK8x8=;
-        b=ZRjMJ9i+3XtHFlvWGHZ8k1OJSiJIwYiuaYJjTSDvBsQo7p5Lw2lHEoeMLsDrOtbo5t
-         Y/L6ct5WPSxA6i5eDn+OJ1XtcPhING+tXhwhkyjJXP10dSlFTTYrNBfbMF0GZXXGSSzG
-         KHPqqWfMuDAAl6hwmgPB5+nYUkFTDd+lylEYs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mkm6CObS36SJAMkOLwAunKXfddEBXbzFKEGDTTUK8x8=;
-        b=tGa82d1M9ztH6mcYS/Jb1EtL8Ax2ruMtfEeM4QyMxt5BnU7QiFkjzSZO/daHd6p07F
-         3GZeHaXzw2Zd2rKz4VxHZutYmBzuLG4JSLEOqbQ9RmZk9sjB9cdd2OWggtiJ4MGwsq6I
-         K1Q6lNFwvv9I1GmA2Y7w2CZN6/luiA0M+QpGqw2D/LA1hv0LIoNYisiw0TXSk3ul1lB4
-         WRiY9momUfixmKcM6LS1jinvLxM2Oe2SeL3l2tgK+cfoJ2xRuU23vY88wWvCW29xYMBE
-         QLgdBdUKwC94BQY/nrvw0K+HYIzq8Y4N5ILKBPqDStI3bF6RjYEtHxIjZ5thvwx8FwJE
-         pR2Q==
-X-Gm-Message-State: AOAM530d+qtQod2GKvajJ97m6gAI9IZtAKTCGfv511/nCFS1zPTy/sk3
-        MUC9mV3p4ZRPLUG/IdRzzF6+hnJNY8ItXdEerQ+xtQ==
-X-Google-Smtp-Source: ABdhPJyhgboxKbPjxQ++0E3wx9USPAXOub0gcy5KJOARS+aCf/xp/ODALT+aGA7/GIEB4C7d3o1nsP0GO/rZzwXoO+I=
-X-Received: by 2002:a7b:c1c3:: with SMTP id a3mr16280931wmj.111.1596458438572;
- Mon, 03 Aug 2020 05:40:38 -0700 (PDT)
+        id S1728824AbgHCMvn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Aug 2020 08:51:43 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2554 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728641AbgHCMvY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:51:24 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id C6B88C09F0444F75199B;
+        Mon,  3 Aug 2020 13:49:49 +0100 (IST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.95.125) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 3 Aug 2020 13:49:49 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <lenb@kernel.org>,
+        <tony.luck@intel.com>, <dan.carpenter@oracle.com>,
+        <andriy.shevchenko@linux.intel.com>
+CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>
+Subject: [PATCH v14 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 3 Aug 2020 13:45:04 +0100
+Message-ID: <20200803124506.1260-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-References: <20200724203407.16972-1-james.quinlan@broadcom.com>
- <20200724203407.16972-10-james.quinlan@broadcom.com> <e37ff97826cf006bf1c9a3e0a134847f8030c79a.camel@suse.de>
-In-Reply-To: <e37ff97826cf006bf1c9a3e0a134847f8030c79a.camel@suse.de>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Mon, 3 Aug 2020 08:40:26 -0400
-Message-ID: <CA+-6iNyzD9DEqKw+w+Cx9ZXpc9j9RF3JS=avF7fk7CsCaTz=og@mail.gmail.com>
-Subject: Re: [PATCH v9 09/12] PCI: brcmstb: Set additional internal memory DMA
- viewport sizes
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.95.125]
+X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
+ lhreml715-chm.china.huawei.com (10.201.108.66)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-fls64
-On Sat, Aug 1, 2020 at 1:39 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Hi Jim,
->
-> On Fri, 2020-07-24 at 16:33 -0400, Jim Quinlan wrote:
-> > The Raspberry Pi (RPI) is currently the only chip using this driver
-> > (pcie-brcmstb.c).  There, only one memory controller is used, without an
-> > extension region, and the SCB0 viewport size is set to the size of the
-> > first and only dma-range region.  Other BrcmSTB SOCs have more complicated
-> > memory configurations that require setting additional viewport sizes.
-> >
-> > BrcmSTB PCIe controllers are intimately connected to the memory
-> > controller(s) on the SOC.  The SOC may have one to three memory
-> > controllers; they are indicated by the term SCBi.  Each controller has a
-> > base region and an optional extension region.  In physical memory, the base
-> > and extension regions of a controller are not adjacent, but in PCIe-space
-> > they are.
-> >
-> > There is a "viewport" for each memory controller that allows DMA from
-> > endpoint devices.  Each viewport's size must be set to a power of two, and
-> > that size must be equal to or larger than the amount of memory each
-> > controller supports which is the sum of base region and its optional
-> > extension.  Further, the 1-3 viewports are also adjacent in PCIe-space.
-> >
-> > Unfortunately the viewport sizes cannot be ascertained from the
-> > "dma-ranges" property so they have their own property, "brcm,scb-sizes".
-> > This is because dma-range information does not indicate what memory
-> > controller it is associated.  For example, consider the following case
-> > where the size of one dma-range is 2GB and the second dma-range is 1GB:
-> >
-> >     /* Case 1: SCB0 size set to 4GB */
-> >     dma-range0: 2GB (from memc0-base)
-> >     dma-range1: 1GB (from memc0-extension)
-> >
-> >     /* Case 2: SCB0 size set to 2GB, SCB1 size set to 1GB */
-> >     dma-range0: 2GB (from memc0-base)
-> >     dma-range1: 1GB (from memc0-extension)
-> >
-> > By just looking at the dma-ranges information, one cannot tell which
-> > situation applies. That is why an additional property is needed.  Its
-> > length indicates the number of memory controllers being used and each value
-> > indicates the viewport size.
-> >
-> > Note that the RPI DT does not have a "brcm,scb-sizes" property value,
-> > as it is assumed that it only requires one memory controller and no
-> > extension.  So the optional use of "brcm,scb-sizes" will be backwards
-> > compatible.
-> >
-> > One last layer of complexity exists: all of the viewports sizes must be
-> > added and rounded up to a power of two to determine what the "BAR" size is.
-> > Further, an offset must be given that indicates the base PCIe address of
-> > this "BAR".  The use of the term BAR is typically associated with endpoint
-> > devices, and the term is used here because the PCIe HW may be used as an RC
-> > or an EP.  In the former case, all of the system memory appears in a single
-> > "BAR" region in PCIe memory.  As it turns out, BrcmSTB PCIe HW is rarely
-> > used in the EP role and its system of mapping memory is an artifact that
-> > requires multiple dma-ranges regions.
-> >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
-> >  1 file changed, 50 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > index 8dacb9d3b7b6..3ef2d37cc43b 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
-> >                                                       u64 *rc_bar2_offset)
-> >  {
-> >       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > -     struct device *dev = pcie->dev;
-> >       struct resource_entry *entry;
-> > +     struct device *dev = pcie->dev;
-> > +     u64 lowest_pcie_addr = ~(u64)0;
-> > +     int ret, i = 0;
-> > +     u64 size = 0;
-> >
-> > -     entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
-> > -     if (!entry)
-> > -             return -ENODEV;
-> > +     resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-> > +             u64 pcie_beg = entry->res->start - entry->offset;
-> >
-> > +             size += entry->res->end - entry->res->start + 1;
-> > +             if (pcie_beg < lowest_pcie_addr)
-> > +                     lowest_pcie_addr = pcie_beg;
-> > +     }
-> >
-> > -     /*
-> > -      * The controller expects the inbound window offset to be calculated as
-> > -      * the difference between PCIe's address space and CPU's. The offset
-> > -      * provided by the firmware is calculated the opposite way, so we
-> > -      * negate it.
-> > -      */
-> > -     *rc_bar2_offset = -entry->offset;
-> > -     *rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
-> > +     if (lowest_pcie_addr == ~(u64)0) {
-> > +             dev_err(dev, "DT node has no dma-ranges\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
-> > +                                               PCIE_BRCM_MAX_MEMC);
-> > +
-> > +     if (ret <= 0) {
-> > +             /* Make an educated guess */
-> > +             pcie->num_memc = 1;
-> > +             pcie->memc_size[0] = 1 << fls64(size - 1);
->
-> You need to 1ULL here.
-Got it.
-Thanks,
-Jim
->
-> Regards,
-> Nicolas
->
-> > +     } else {
-> > +             pcie->num_memc = ret;
-> > +     }
-> > +
-> > +     /* Each memc is viewed through a "port" that is a power of 2 */
-> > +     for (i = 0, size = 0; i < pcie->num_memc; i++)
-> > +             size += pcie->memc_size[i];
-> > +
-> > +     /* System memory starts at this address in PCIe-space */
-> > +     *rc_bar2_offset = lowest_pcie_addr;
-> > +     /* The sum of all memc views must also be a power of 2 */
-> > +     *rc_bar2_size = 1ULL << fls64(size - 1);
-> >
-> >       /*
-> >        * We validate the inbound memory view even though we should trust
->
+CPER records describing a firmware-first error are identified by GUID.
+The ghes driver currently logs, but ignores any unknown CPER records.
+This prevents describing errors that can't be represented by a standard
+entry, that would otherwise allow a driver to recover from an error.
+The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+version 2.8).
+
+patch set
+1. add the notifier chain for these non-standard/vendor-records
+   in the ghes driver.
+
+2. add the driver to handle HiSilicon HIP PCIe controller's errors.
+   
+Changes:
+
+V14:
+1. Add patch[1] posted by James to the series.
+   
+2. Following changes made for Bjorn's comments,
+2.1 Deleted stub code from ghes.h
+2.2 Made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES.
+
+V13:
+1. Following changes in the HIP PCIe error handling driver.
+1.1 Add Bjorn's acked-by.
+1.2. Address the comments and macros order Bjorn mentioned.
+     Fix the words in the commit.
+
+V12:
+1. Changed the Signed-off-by tag to Co-developed-by tag in the patch
+   "ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records"
+
+V11:
+1. Following modifications made by James Morse in the APEI patch
+   for the vendor error record.
+   - Removed kfifo and ghes_gdata_pool. Expanded commit message.
+   
+2. Changes in the HIP PCIe error handling driver
+   for the comments by Andy Shevchenko.
+
+V10:
+1. Changes for Bjorn's comments on HIP PCIe error handler driver
+   and APEI patch.
+   
+2. Changes in the HIP PCIe error handler driver
+   for the feedbacks by Andy Shevchenko.
+   
+V9:
+1. Fixed 2 improvements suggested by the kbuild test robot. 
+1.1 Change ghes_gdata_pool_init() as static function.
+1.2. Removed using buffer to store the error data for
+     logging in the hisi_pcie_handle_error()
+
+V8:
+1. Removed reporting the standard errors through the interface
+   because of the conflict with the recent patches in the
+   memory error handling path.
+2. Fix comments by Dan Carpenter.
+   
+V7:
+1. Add changes in the APEI driver suggested by Borislav Petkov, for
+   queuing up all the non-fatal HW errors to the work queue and
+   notify the registered kernel drivers from the bottom half using
+   blocking notifier, common interface for both standard and
+   vendor-spcific errors.
+2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+   by Bjorn Helgaas.
+
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
+
+V4:
+1. Fix for the following smatch warning in the PCIe error driver,
+   reported by kbuild test robot<lkp@intel.com>:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 |  63 +++++
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
+ include/acpi/ghes.h                      |  18 ++
+ 5 files changed, 417 insertions(+)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+-- 
+2.17.1
+
+
