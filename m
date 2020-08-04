@@ -2,179 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F48823B7E3
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 11:39:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF20023B810
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 11:48:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgHDJjd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Aug 2020 05:39:33 -0400
-Received: from mga14.intel.com ([192.55.52.115]:7960 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgHDJjd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Aug 2020 05:39:33 -0400
-IronPort-SDR: oJO0CdJfLCxD0WoSgI9EpismJYFZFfHXdL7DW8Iad7J6JzPacQzoZULycJsYtvojRdSy+pzbnm
- 7yr/ymxW5zNg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151505925"
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="151505925"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 02:39:32 -0700
-IronPort-SDR: 2gbc2+/eynG5ti1PxsQLPkkOIwSNI6poS5Rgr5NT5lhBmeSWtlOcNpxiNHHqBGYdt6KED+KiQh
- HdZ3K3Bq9pJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="324584693"
-Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Aug 2020 02:39:31 -0700
-Received: from kbuild by 37a337f97289 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2tPv-00003n-6U; Tue, 04 Aug 2020 09:39:31 +0000
-Date:   Tue, 04 Aug 2020 17:39:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS ae86bd9f027080c4c1d1b8575cef50ef1a461ba1
-Message-ID: <5f292cc4.YYM6EVad+34tjATV%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728867AbgHDJsk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Aug 2020 05:48:40 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2565 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726844AbgHDJsk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Aug 2020 05:48:40 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A7CEA2CFDA64335D3338;
+        Tue,  4 Aug 2020 10:48:38 +0100 (IST)
+Received: from localhost (10.52.124.224) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 4 Aug 2020
+ 10:48:38 +0100
+Date:   Tue, 4 Aug 2020 10:47:13 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jay Fang <f.fangjian@huawei.com>
+CC:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
+        <rjw@rjwysocki.net>, <ashok.raj@kernel.org>, <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 8/9] PCI/PME: Add RCEC PME handling
+Message-ID: <20200804104713.0000767f@Huawei.com>
+In-Reply-To: <edbcf3da-a1d5-e1b6-6a1a-a286429fc4e3@huawei.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-9-sean.v.kelley@intel.com>
+        <edbcf3da-a1d5-e1b6-6a1a-a286429fc4e3@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.52.124.224]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: ae86bd9f027080c4c1d1b8575cef50ef1a461ba1  Merge branch 'pci/doc'
+On Tue, 4 Aug 2020 16:35:59 +0800
+Jay Fang <f.fangjian@huawei.com> wrote:
 
-elapsed time: 722m
+> ÔÚ 2020/7/25 1:22, Sean V Kelley Ð´µÀ:
+> > The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
+> > and also have the PME capability. So add RCEC support to the current PME
+> > service driver and attach the PME service driver to the RCEC device.
+> > 
+> > Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > ---
+> >  drivers/pci/pcie/pme.c | 15 +++++++++++----
+> >  1 file changed, 11 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+> > index 6a32970bb731..87799166c96a 100644
+> > --- a/drivers/pci/pcie/pme.c
+> > +++ b/drivers/pci/pcie/pme.c
+> > @@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
+> >  static void pcie_pme_mark_devices(struct pci_dev *port)
+> >  {
+> >  	pcie_pme_can_wakeup(port, NULL);
+> > -	if (port->subordinate)
+> > +
+> > +	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
+> > +		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
+> > +	else if (port->subordinate)
+> >  		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
+> >  }
+> >  
+> > @@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
+> >   */
+> >  static int pcie_pme_probe(struct pcie_device *srv)
+> >  {
+> > -	struct pci_dev *port;
+> > +	struct pci_dev *port = srv->port;
+> >  	struct pcie_pme_service_data *data;
+> >  	int ret;
+> >  
+> > +	/* Limit to Root Ports or Root Complex Event Collectors */
+> > +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
+> > +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+> > +		return -ENODEV;
+> > +
+> >  	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> >  	if (!data)
+> >  		return -ENOMEM;
+> > @@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
+> >  	data->srv = srv;
+> >  	set_service_data(srv, data);
+> >  
+> > -	port = srv->port;
+> >  	pcie_pme_interrupt_enable(port, false);
+> >  	pcie_clear_root_pme_status(port);
+> >  
+> > @@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
+> >  
+> >  static struct pcie_port_service_driver pcie_pme_driver = {
+> >  	.name		= "pcie_pme",
+> > -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
+> > +	.port_type	= PCIE_ANY_PORT,  
+> Maybe we can use port_type for driver matching. There is no need
+> to check the type of port in pcie_pme_probe function.
+> 
 
-configs tested: 118
-configs skipped: 1
+I walked into the same hole for the AER case.  
+port_type is effectively an enum so there is no way of specifying several
+types unless you want to register different instances of pcie_port_service_driver
+and that isn't currently possible.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The PCIE_ANY_PORT is a special case value.
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                          malta_defconfig
-powerpc                      ppc64e_defconfig
-mips                 pnx8335_stb225_defconfig
-sparc64                          alldefconfig
-arm                          badge4_defconfig
-arm                          ixp4xx_defconfig
-sh                          lboxre2_defconfig
-arm                    vt8500_v6_v7_defconfig
-arm                            lart_defconfig
-mips                        omega2p_defconfig
-mips                     loongson1c_defconfig
-m68k                       bvme6000_defconfig
-xtensa                           alldefconfig
-arm                       aspeed_g4_defconfig
-arc                          axs101_defconfig
-powerpc                    amigaone_defconfig
-sh                   sh7770_generic_defconfig
-mips                        bcm47xx_defconfig
-h8300                    h8300h-sim_defconfig
-arm                         lpc18xx_defconfig
-m68k                        m5307c3_defconfig
-arm                       aspeed_g5_defconfig
-sh                   rts7751r2dplus_defconfig
-m68k                        stmark2_defconfig
-arm                             pxa_defconfig
-sh                             sh03_defconfig
-powerpc64                           defconfig
-mips                         db1xxx_defconfig
-sparc                               defconfig
-arm                        trizeps4_defconfig
-h8300                       h8s-sim_defconfig
-arm                        spear6xx_defconfig
-mips                          rb532_defconfig
-powerpc                     mpc83xx_defconfig
-arm                      jornada720_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20200804
-x86_64               randconfig-a001-20200804
-x86_64               randconfig-a004-20200804
-x86_64               randconfig-a005-20200804
-x86_64               randconfig-a002-20200804
-x86_64               randconfig-a003-20200804
-i386                 randconfig-a004-20200803
-i386                 randconfig-a005-20200803
-i386                 randconfig-a001-20200803
-i386                 randconfig-a002-20200803
-i386                 randconfig-a003-20200803
-i386                 randconfig-a006-20200803
-i386                 randconfig-a005-20200804
-i386                 randconfig-a004-20200804
-i386                 randconfig-a001-20200804
-i386                 randconfig-a003-20200804
-i386                 randconfig-a002-20200804
-i386                 randconfig-a006-20200804
-x86_64               randconfig-a013-20200803
-x86_64               randconfig-a011-20200803
-x86_64               randconfig-a012-20200803
-x86_64               randconfig-a016-20200803
-x86_64               randconfig-a015-20200803
-x86_64               randconfig-a014-20200803
-i386                 randconfig-a011-20200804
-i386                 randconfig-a012-20200804
-i386                 randconfig-a013-20200804
-i386                 randconfig-a014-20200804
-i386                 randconfig-a015-20200804
-i386                 randconfig-a016-20200804
-i386                 randconfig-a011-20200803
-i386                 randconfig-a012-20200803
-i386                 randconfig-a015-20200803
-i386                 randconfig-a014-20200803
-i386                 randconfig-a013-20200803
-i386                 randconfig-a016-20200803
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/pci_regs.h#L477
+https://elixir.bootlin.com/linux/latest/source/drivers/pci/pci-driver.c#L1651
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+So odd corner case, but I think this is the right solution. Anything better
+would require a lot more code to change.
+
+Jonathan
+
+
+
+
+
+> 
+> Jay
+> 
+> >  	.service	= PCIE_PORT_SERVICE_PME,
+> >  
+> >  	.probe		= pcie_pme_probe,
+> >   
+
+
