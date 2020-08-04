@@ -2,40 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2066B23C029
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 21:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6F0A23C02E
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 21:41:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgHDTlE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Aug 2020 15:41:04 -0400
+        id S1728693AbgHDTlj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Aug 2020 15:41:39 -0400
 Received: from mga18.intel.com ([134.134.136.126]:29261 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHDTlD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:41:03 -0400
-IronPort-SDR: QHVZO2rEdmvI191fCAIifYPmz1suzK5RDaF2X8AF551YGkbjaizNY5+Co1ZUtOMPfZ7yI2gfLX
- tut9q96JtLOg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="139991083"
+        id S1728045AbgHDTlE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Aug 2020 15:41:04 -0400
+IronPort-SDR: iWOw+dNoMUMQGZS8UzErNg0cbEoLo3ThZqOO34UH5ubWwUH76P/eArjtMwwLWxc8QVpqOS0x2M
+ 6cXsj+evZXOw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="139991089"
 X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="139991083"
+   d="scan'208";a="139991089"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:03 -0700
-IronPort-SDR: FmmFAJk/DK9xN2F8YZq9q+CCjbMXS9iOHXJoznESNHqhGC8sYuKrqowOP5gLl2rGKHVfYjQuZM
- os2+Gwy0xFIQ==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:04 -0700
+IronPort-SDR: 0o+Z6doTjfr4NKPokwycz/HNBv3/ux+4RTqavSWoDWgGHwItObTrBxcy1FJ/SRslSqQWvaHfdN
+ DMymbwFDMsNw==
 X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="467199212"
+   d="scan'208";a="467199220"
 Received: from viveksh1-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.255.83.117])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:01 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:04 -0700
 From:   Sean V Kelley <sean.v.kelley@intel.com>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
         sathyanarayanan.kuppuswamy@linux.intel.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>
-Subject: [PATCH V2 0/9] Add RCEC handling to PCI/AER
-Date:   Tue,  4 Aug 2020 12:40:43 -0700
-Message-Id: <20200804194052.193272-1-sean.v.kelley@intel.com>
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: [PATCH V2 1/9] pci_ids: Add class code and extended capability for RCEC
+Date:   Tue,  4 Aug 2020 12:40:44 -0700
+Message-Id: <20200804194052.193272-2-sean.v.kelley@intel.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200804194052.193272-1-sean.v.kelley@intel.com>
+References: <20200804194052.193272-1-sean.v.kelley@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -43,144 +45,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sean V Kelley <sean.v.kelley@linux.intel.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-On the use of FLR on RCiEPs for the fatal case, still interested in more
-feedback from the earlier discussion here [1]:
+A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
+sub-class 0x07, and programming interface 0x00. Add the class code
+0x0807 to identify RCEC devices and add the defines for the RCEC
+Endpoint Association Extended Capability.
 
-[1] https://lore.kernel.org/linux-pci/C21C050B-48B1-4429-B019-C81F3AB8E843@intel.com/
+See PCI Express Base Specification, version 5.0-1, section "1.3.4
+Root Complex Event Collector" and section "7.9.10 Root Complex
+Event Collector Endpoint Association Extended Capability"
 
-There is also the question of the absence of an FLR for non-fatal error.
-If the device driver tells us that it needs "PCI_ERS_RESULT_NEED_RESET" by
-the callback report_normal_detected() then we should try FLR on the device
-as well.
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ include/linux/pci_ids.h       | 1 +
+ include/uapi/linux/pci_regs.h | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-On the use of variables with RP centric names such as the attributes
-dev_attr_aer_rootport_total_err_..., one concern is the ripple effect on code
-churn due to renaming. Open to suggestions, but trying to co-habitate so to
-speak RCECs with RPs in the same drivers has trade-offs.
-
-Changes since v1 [2]:
-
-- Make PME capability of RCEC discoverable in get_port_device_capability().
-- Replace the check on bnr with <= lastbusn in pcie_walk_rcec().
-- Fix comment header for pcie_walk_rcec().
-- Fix comment header for pci_walk_dev_affected().
-- Fix spurious newline.
-- Add sanity checks on dev->rcec.
-- Use pci_dbg() in place of pci_info() for discovered RCiEPs.
-- Remove AER RCEC AP FOUND message (accidently left in previously).
-- Remove the check for RC_END from set_device_error_reporting() since
-only Ports and RCECs are being passed.
-(Jonathan Cameron)
-- Fix the return type for flr_on_rciep().
-(reported by lkp on DEC Alpha arch.)
-
-[1] https://lore.kernel.org/linux-pci/20200724172223.145608-1-sean.v.kelley@intel.com/
-
-Root Complex Event Collectors (RCEC) provide support for terminating error
-and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
-resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
-a single bus. An RCEC will explicitly declare supported RCiEPs through the
-Root Complex Endpoint Association Extended Capability.
-
-(See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
-
-The kernel lacks handling for these RCECs and the error messages received
-from their respective associated RCiEPs. More recently, a new CPU
-interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
-purposes of error messaging from CXL 1.1 supported RCiEP devices.
-
-DocLink: https://www.computeexpresslink.org/
-
-This use case is not limited to CXL. Existing hardware today includes
-support for RCECs, such as the Denverton microserver product
-family. Future hardware will be forthcoming.
-
-(See Intel Document, Order number: 33061-003US)
-
-So services such as AER or PME could be associated with an RCEC driver.
-In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
-platform's RCEC it shall signal PME and AER error conditions through that
-RCEC.
-
-Towards the above use cases, add the missing RCEC class and extend the
-PCIe Root Port and service drivers to allow association of RCiEPs to their
-respective parent RCEC and facilitate handling of terminating error and PME
-messages.
-
-
-AER Test Results:
-1) Inject a correctable error to the RCiEP 0000:e9:00.0
-    Run ./aer_inject <a parameter file as below>:
-    AER
-    PCI_ID 0000:e9:00.0
-    COR_STATUS BAD_TLP
-    HEADER_LOG 0 1 2 3
-
-    Log:
-[   76.155963] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000040/00000000 into device 0000:e9:00.0
-[   76.166966] pcieport 0000:e8:00.4: AER: Corrected error received: 0000:e9:00.0
-[   76.175253] pci 0000:e9:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
-[   76.185633] pci 0000:e9:00.0:   device [8086:4940] error status/mask=00000040/00002000
-[   76.194604] pci 0000:e9:00.0:    [ 6] BadTLP
-
-2) Inject a non-fatal error to the RCiEP 0000:e8:01.0
-    Run ./aer_inject <a parameter file as below>:
-    AER
-    PCI_ID 0000:e8:01.0
-    UNCOR_STATUS COMP_ABORT
-    HEADER_LOG 0 1 2 3
-
-    Log:
-[  117.791854] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000000/00008000 into device 0000:e8:01.0
-[  117.804244] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) error received: 0000:e8:01.0
-[  117.814652] igen6_edac 0000:e8:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
-[  117.828511] igen6_edac 0000:e8:01.0:   device [8086:0b25] error status/mask=00008000/00100000
-[  117.839189] igen6_edac 0000:e8:01.0:    [15] CmpltAbrt
-[  117.847365] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 00000001 00000002 00000003
-[  117.857775] igen6_edac 0000:e8:01.0: AER: device recovery successful
-
-3) Inject a fatal error to the RCiEP 0000:ed:01.0
-    Run ./aer_inject <a parameter file as below>:
-    AER
-    PCI_ID 0000:ed:01.0
-    UNCOR_STATUS MALF_TLP
-    HEADER_LOG 0 1 2 3
-
-    Log:
-[  131.511623] pcieport 0000:ed:00.4: aer_inject: Injecting errors 00000000/00040000 into device 0000:ed:01.0
-[  131.523259] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error received: 0000:ed:01.0
-[  131.533842] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
-[  131.655618] igen6_edac 0000:ed:01.0: AER: device recovery successful
-
-Jonathan Cameron (1):
-  PCI/AER: Extend AER error handling to RCECs
-
-Qiuxu Zhuo (6):
-  pci_ids: Add class code and extended capability for RCEC
-  PCI: Extend Root Port Driver to support RCEC
-  PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
-  PCI/AER: Apply function level reset to RCiEP on fatal error
-  PCI: Add 'rcec' field to pci_dev for associated RCiEPs
-  PCI/AER: Add RCEC AER error injection support
-
-Sean V Kelley (2):
-  PCI/AER: Add RCEC AER handling
-  PCI/PME: Add RCEC PME handling
-
- drivers/pci/pcie/aer.c          | 36 +++++++++----
- drivers/pci/pcie/aer_inject.c   |  5 +-
- drivers/pci/pcie/err.c          | 90 +++++++++++++++++++++++++++------
- drivers/pci/pcie/pme.c          | 15 ++++--
- drivers/pci/pcie/portdrv.h      |  2 +
- drivers/pci/pcie/portdrv_core.c | 90 +++++++++++++++++++++++++++++++--
- drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
- include/linux/pci.h             |  3 ++
- include/linux/pci_ids.h         |  1 +
- include/uapi/linux/pci_regs.h   |  7 +++
- 10 files changed, 233 insertions(+), 36 deletions(-)
-
---
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 5c709a1450b1..bc6d1a4ca02d 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -81,6 +81,7 @@
+ #define PCI_CLASS_SYSTEM_RTC		0x0803
+ #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
+ #define PCI_CLASS_SYSTEM_SDHCI		0x0805
++#define PCI_CLASS_SYSTEM_RCEC		0x0807
+ #define PCI_CLASS_SYSTEM_OTHER		0x0880
+ 
+ #define PCI_BASE_CLASS_INPUT		0x09
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index f9701410d3b5..f335f65f65d6 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -828,6 +828,13 @@
+ #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
+ #define PCI_EXT_CAP_PWR_SIZEOF	16
+ 
++/* Root Complex Event Collector Endpoint Association  */
++#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
++#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
++#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
++#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
++#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
++
+ /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
+ #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
+ #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
+-- 
 2.27.0
 
