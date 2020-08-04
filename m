@@ -2,158 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0A3E23BAA7
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 14:46:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C445423BCFF
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 17:14:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgHDMqK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Aug 2020 08:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbgHDMoa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Aug 2020 08:44:30 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D46C0617A1
-        for <linux-pci@vger.kernel.org>; Tue,  4 Aug 2020 05:44:24 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 184so2790051wmb.0
-        for <linux-pci@vger.kernel.org>; Tue, 04 Aug 2020 05:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bN3d8Ia77BH2nBiHDQ6zBNPByWQO01hAGf1Nc3k/FjU=;
-        b=T8YDxwS+GAi/l87EqEDVnHA6L2vWdoJLRomogp4zswguktwRhtfY6a3S80oC+la+7Y
-         uBOGZPkWUazcUyhEPQsfO3QZ16muTbOfxNxa4uXdYwfXdmkfVzoMRSW4m/T7f0i4RLf7
-         dX+k8C7kUSi09yoGq/WkXRUuQWQIUOu80qSJ8B9K9QLhl5toYoFUrNUqUcTwdRw8GrmH
-         fMUA0SnmjEveRBv57i02a+TxYyxNXCrEDBzYs7JuFuOONWrjDdCFY0ND5r47wpeLc24V
-         fJMl0bur8BNgusZj++pQeoEnXBDmf1q7b4PbFj3Wzq0ri29fof8CCFp8ai4icK9pDdY1
-         JhtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bN3d8Ia77BH2nBiHDQ6zBNPByWQO01hAGf1Nc3k/FjU=;
-        b=LZwCiyGMQGrKtHNN22v8lqd64ACLv9Twbv3X9b2yrlNXX2IOpHHWKwxJtJQI344tAO
-         q4tvYDmA2QUoeYG0dN5Km+nBfpw2Z9iSgP6dctxRr+Qel9lsYVCKVDbPtuWtIIor9aWO
-         SWheKOWpqnGR5Lxn8OoudMj9moKy+8gjiMKtSmGwRlXXaFsSq/n3Hqvps53veFMjzUDV
-         eSZcXu2Y11OIGIkKEPFkuwxsmmF861l0YQhJ/7pMx+tTFg9AY8QxgBrpYVEW6IXx/y5i
-         uLMKUK6uN1UwO+xzrzUJKfMQrs1iZ1VDuoandJTUhiI0z+KOcPmevAb3QEh7Ai93vAj2
-         tOCA==
-X-Gm-Message-State: AOAM530DXgjS7sLVfn3ZtyHTbYtdmhk9U50G/L84ztd279DS0qNI29ds
-        bHh8Hdy6FZFkRkr2KtL+YegN0A==
-X-Google-Smtp-Source: ABdhPJz9A0fUr0s+57vaSQaPT8GQEVwMIBWtT6cib6RQGYxAGZypLJ4R2NHV8/yEEKGRo0R1n0bqCQ==
-X-Received: by 2002:a7b:c257:: with SMTP id b23mr3829607wmj.164.1596545062751;
-        Tue, 04 Aug 2020 05:44:22 -0700 (PDT)
-Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id b137sm4843577wmb.9.2020.08.04.05.44.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 05:44:18 -0700 (PDT)
-Received: from zen.lan (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id 860581FF87;
-        Tue,  4 Aug 2020 13:44:17 +0100 (BST)
-From:   =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
-To:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        christoffer.dall@arm.com, maz@kernel.org,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH  v1 1/3] arm64: allow de-selection of ThunderX PCI controllers
-Date:   Tue,  4 Aug 2020 13:44:15 +0100
-Message-Id: <20200804124417.27102-2-alex.bennee@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200804124417.27102-1-alex.bennee@linaro.org>
-References: <20200804124417.27102-1-alex.bennee@linaro.org>
+        id S1728467AbgHDPN6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Aug 2020 11:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729305AbgHDPN3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:13:29 -0400
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B4F22CBE;
+        Tue,  4 Aug 2020 15:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596554003;
+        bh=/VyvzXQa/AJF0fQ8y2ddiypbwJGanvNQVpDg2wnRSkc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JzgJXcblY2aiqIBY3aLoaCloWHWgaR70rKsKIYxIyOdz0DhDyOQk9jJjSNIfIzWWq
+         4Q7zxNn9fw/LoWSXL4WxUWSnQbZlm/cWSZok98Th63VWbQ/WaUIdjWh4CCg+L4Ntup
+         B1PCKPDjIx1Cos1t7RQtoiq6lDPRpUuVzWe3KIhs=
+Received: by mail-yb1-f176.google.com with SMTP id q16so19910150ybk.6;
+        Tue, 04 Aug 2020 08:13:23 -0700 (PDT)
+X-Gm-Message-State: AOAM531Qt6r4ky/NaID5YExCsYxhqP29cKhOjQ5meM3aQ3XAyAiw0/qf
+        mu3bA2dHlTq2zrmD2/I5VrACi396AuLjTjlVwA==
+X-Google-Smtp-Source: ABdhPJxh9dJbSLfU6Nwv/yJMmnpLPR54KOz7EmmOkgm7Ly+4ylRFpnDySUtwPNVJNs/aSiEi9+iiHmUJSMEt/gWTgiQ=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr17121176ote.107.1596554001883;
+ Tue, 04 Aug 2020 08:13:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200722022514.1283916-1-robh@kernel.org> <20200722022514.1283916-18-robh@kernel.org>
+ <CAMuHMdWVWoQDc3MMv9LjA+hA1EoXQjVM-JfO_hVqnDf0tC8LJg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWVWoQDc3MMv9LjA+hA1EoXQjVM-JfO_hVqnDf0tC8LJg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 4 Aug 2020 09:13:10 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+6Xcf5KT1Db5mGFWr9E04Jd8Rx4aVJpUmfUT8hPmtqBg@mail.gmail.com>
+Message-ID: <CAL_Jsq+6Xcf5KT1Db5mGFWr9E04Jd8Rx4aVJpUmfUT8hPmtqBg@mail.gmail.com>
+Subject: Re: [PATCH 17/19] PCI: rcar-gen2: Convert to use modern host bridge
+ probe functions
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Will Deacon <will@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For a pure VirtIO guest bringing in all the PCI quirk handling adds a
-significant amount of bloat to kernel we don't need. Solve this by
-adding a CONFIG symbol for the ThunderX PCI devices and allowing it to
-be turned off. Saving over 300k from the uncompressed vmlinux:
+On Tue, Aug 4, 2020 at 6:12 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Rob,
+>
+> On Wed, Jul 22, 2020 at 4:26 AM Rob Herring <robh@kernel.org> wrote:
+> > The rcar-gen2 host driver still uses the old Arm PCI setup function
+> > pci_common_init_dev(). Let's update it to use the modern
+> > devm_pci_alloc_host_bridge(), pci_parse_request_of_pci_ranges() and
+> > pci_host_probe() functions.
+> >
+> > Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: linux-renesas-soc@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> This is now commit 92d69cc6275845a7 ("PCI: rcar-gen2: Convert to use
+> modern host bridge probe functions"), and causes a crash on r8a7791/koelsch:
 
-  -rwxr-xr-x 1 alex alex  85652472 Aug  3 16:48 vmlinux*
-  -rwxr-xr-x 1 alex alex  86033880 Aug  3 16:39 vmlinux.orig*
+Can't say I'm surprised, this was a big change. Thanks for testing.
 
-Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm64/Kconfig.platforms    | 2 ++
- arch/arm64/configs/defconfig    | 1 +
- drivers/pci/controller/Kconfig  | 7 +++++++
- drivers/pci/controller/Makefile | 4 ++--
- 4 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 8dd05b2a925c..a328eebdaa59 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -253,12 +253,14 @@ config ARCH_SPRD
- 
- config ARCH_THUNDER
- 	bool "Cavium Inc. Thunder SoC Family"
-+        select PCI_THUNDER
- 	help
- 	  This enables support for Cavium's Thunder Family of SoCs.
- 
- config ARCH_THUNDER2
- 	bool "Cavium ThunderX2 Server Processors"
- 	select GPIOLIB
-+        select PCI_THUNDER
- 	help
- 	  This enables support for Cavium's ThunderX2 CN99XX family of
- 	  server processors.
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2ca7ba69c318..d840cba99941 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -199,6 +199,7 @@ CONFIG_PCI_HOST_GENERIC=y
- CONFIG_PCI_XGENE=y
- CONFIG_PCIE_ALTERA=y
- CONFIG_PCIE_ALTERA_MSI=y
-+CONFIG_PCI_THUNDER=y
- CONFIG_PCI_HOST_THUNDER_PEM=y
- CONFIG_PCI_HOST_THUNDER_ECAM=y
- CONFIG_PCIE_ROCKCHIP_HOST=m
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index adddf21fa381..28335ffa5d48 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -286,6 +286,13 @@ config PCI_LOONGSON
- 	  Say Y here if you want to enable PCI controller support on
- 	  Loongson systems.
- 
-+config PCI_THUNDER
-+       bool "Thunder X PCIE controllers"
-+       depends on ARM64
-+       select PCI_QUIRKS
-+       help
-+          Say Y here to enable ThunderX ECAM and PEM PCI controllers.
-+
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/mobiveil/Kconfig"
- source "drivers/pci/controller/cadence/Kconfig"
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index efd9733ead26..8fad4781a5d3 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -45,8 +45,8 @@ obj-y				+= mobiveil/
- # ARM64 and use internal ifdefs to only build the pieces we need
- # depending on whether ACPI, the DT driver, or both are enabled.
- 
-+obj-$(CONFIG_PCI_THUNDER) += pci-thunder-ecam.o
-+obj-$(CONFIG_PCI_THUNDER) += pci-thunder-pem.o
- ifdef CONFIG_PCI
--obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
--obj-$(CONFIG_ARM64) += pci-thunder-pem.o
- obj-$(CONFIG_ARM64) += pci-xgene.o
- endif
--- 
-2.20.1
+>     Unable to handle kernel NULL pointer dereference at virtual address 00000008
+>     pgd = (ptrval)
+>     [00000008] *pgd=00000000
+>     Internal error: Oops: 5 [#1] SMP ARM
+>     CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> 5.8.0-rc1-shmobile-00035-g92d69cc6275845a7 #645
+>     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+>     PC is at rcar_pci_probe+0x154/0x340
+>     LR is at _raw_spin_unlock_irqrestore+0x18/0x20
+>
+> > --- a/drivers/pci/controller/pci-rcar-gen2.c
+> > +++ b/drivers/pci/controller/pci-rcar-gen2.c
+> > @@ -189,19 +170,33 @@ static inline void rcar_pci_setup_errirq(struct rcar_pci_priv *priv) { }
+> >  #endif
+> >
+> >  /* PCI host controller setup */
+> > -static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
+> > +static void rcar_pci_setup(struct rcar_pci_priv *priv)
+> >  {
+> > -       struct rcar_pci_priv *priv = sys->private_data;
+> > +       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(priv);
+> >         struct device *dev = priv->dev;
+> >         void __iomem *reg = priv->reg;
+> > +       struct resource_entry *entry;
+> > +       unsigned long window_size;
+> > +       unsigned long window_addr;
+> > +       unsigned long window_pci;
+> >         u32 val;
+> > -       int ret;
+> > +
+> > +       entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
+>
+> bridge->dma_ranges is not initialized => BOOM.
+>
+> >  static int rcar_pci_probe(struct platform_device *pdev)
+> >  {
+> >         struct device *dev = &pdev->dev;
+> >         struct resource *cfg_res, *mem_res;
+> >         struct rcar_pci_priv *priv;
+> > +       struct pci_host_bridge *bridge;
+> >         void __iomem *reg;
+> > -       struct hw_pci hw;
+> > -       void *hw_private[1];
+> > +       int ret;
+> > +
+> > +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
+> > +       if (!bridge)
+> > +               return -ENOMEM;
+> > +
+> > +       priv = pci_host_bridge_priv(bridge);
+>
+> This is the "new" priv instance.
+>
+> > +       bridge->sysdata = priv;
+> >
+> >         cfg_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >         reg = devm_ioremap_resource(dev, cfg_res);
+>
+> However, the "old" instance is still allocated below, and should be removed.
+>
+> I've send a patch to fix that, which should appear soon at
+> https://lore.kernel.org/r/20200804120430.9253-1-geert+renesas@glider.be
+>
+> BTW, the conversion has the following impact on r8a7791/koelsch:
+>
+>     -pci-rcar-gen2 ee090000.pci: PCI: bus0 revision 11
+>     +pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
+>     +pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff
+> -> 0x00ee080000
+>     +pci-rcar-gen2 ee090000.pci: PCI: revision 11
+>      pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
+>     -pci_bus 0000:00: root bus resource [mem 0xee080000-0xee0810ff]
+>                                              ^^^^^^^^^^^^^^^^^^^^^
+>     -pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-ff]
+>     +pci_bus 0000:00: root bus resource [bus 00]
+>     +pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
+>                                              ^^^^^^^^^^^^^^^^^^^^^
+>
+>     pci0: pci@ee090000 {
+>             ...
+>             reg = <0 0xee090000 0 0xc00>,
+>                   <0 0xee080000 0 0x1100>;
+>             ...
+>             ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
+>             ...
+>             usb@1,0 {
+>                     reg = <0x800 0 0 0 0>;
+>                     ...
+>             };
+>
+>             usb@2,0 {
+>                     reg = <0x1000 0 0 0 0>;
+>                     ...
+>             };
+>
+>     }
+>
+> The old root bus resource size was based on the "reg" property.
+> The new root bus resource size is based on the "ranges" property.
 
+That was wrong to have PCI memory space in 'reg', but the driver could
+always adjust the size to 0x1100 if needed.
+
+BTW, the binding description seems to have the 'reg' description reversed.
+
+> Given the only children are hardcoded, I guess that is OK?
+
+In the sense that those are the only 2 devices and you know their
+memory fits, yes. However, the memory space itself isn't hardcoded. If
+you wanted to do that, then the children really need
+'assigned-addresses' properties. I guess it happens to work because
+memory space is allocated from the start and goes in order of device
+addresses. But if that changed to top down allocation?
+
+Rob
