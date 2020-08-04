@@ -2,139 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E55D23B58E
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 09:24:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4DF123B6D6
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 10:35:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgHDHYh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Aug 2020 03:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729814AbgHDHYf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:24:35 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D42DA2076E;
-        Tue,  4 Aug 2020 07:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596525875;
-        bh=iB6R7IBok3ueDFendbTSpkFcS7RL5r4SRINNMe8NET8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nt2MYSAxOYaKrjb6IUSebHGHE5UOKgAiKRZZUnyceUl5BqR6gN6496ejFkZVMAPTS
-         y1Yv9JJ8Az5lfzXzgJ5LZTlAOA4CZsrMifcVK66TMM1l9OW+EoqfiJrUZz241eJVJe
-         wZ6i0kKGZmWS2mzxhQ7t2pqgozPyPAC8/YuV7xjY=
-Received: by pali.im (Postfix)
-        id 67FB57FD; Tue,  4 Aug 2020 09:24:32 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 09:24:32 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        PCI <linux-pci@vger.kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, Xogium <contact@xogium.me>
-Subject: Re: [PATCH 4/5] PCI: aardvark: Implement driver 'remove' function
- and allow to build it as module
-Message-ID: <20200804072432.c27dmwzjyelgd4h4@pali>
-References: <20200715142557.17115-1-marek.behun@nic.cz>
- <20200715142557.17115-5-marek.behun@nic.cz>
- <20200729184809.GA569408@bogus>
- <20200803144634.nr5cjddyvdnv3lxo@pali>
- <CAL_JsqLvqt9VneSm3Up9ib0AH7jWytA9fss_QMfJwd8xrVEp4A@mail.gmail.com>
+        id S1729584AbgHDIfr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Aug 2020 04:35:47 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2601 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728163AbgHDIfr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:35:47 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 97260A2700479B0058EC;
+        Tue,  4 Aug 2020 16:35:44 +0800 (CST)
+Received: from [10.40.49.11] (10.40.49.11) by dggeme758-chm.china.huawei.com
+ (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Tue, 4 Aug
+ 2020 16:35:44 +0800
+Subject: Re: [RFC PATCH 8/9] PCI/PME: Add RCEC PME handling
+To:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
+        <Jonathan.Cameron@huawei.com>, <rjw@rjwysocki.net>,
+        <ashok.raj@kernel.org>, <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+ <20200724172223.145608-9-sean.v.kelley@intel.com>
+From:   Jay Fang <f.fangjian@huawei.com>
+Message-ID: <edbcf3da-a1d5-e1b6-6a1a-a286429fc4e3@huawei.com>
+Date:   Tue, 4 Aug 2020 16:35:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200724172223.145608-9-sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLvqt9VneSm3Up9ib0AH7jWytA9fss_QMfJwd8xrVEp4A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+X-Originating-IP: [10.40.49.11]
+X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 03 August 2020 14:00:37 Rob Herring wrote:
-> On Mon, Aug 3, 2020 at 8:46 AM Pali Roh√°r <pali@kernel.org> wrote:
-> >
-> > On Wednesday 29 July 2020 12:48:09 Rob Herring wrote:
-> > > On Wed, Jul 15, 2020 at 04:25:56PM +0200, Marek Beh√∫n wrote:
-> > > > From: Pali Roh√°r <pali@kernel.org>
-> > > >
-> > > > Providing driver's 'remove' function allows kernel to bind and unbind devices
-> > > > from aardvark driver. It also allows to build aardvark driver as a module.
-> > > >
-> > > > Compiling aardvark as a module simplifies development and debugging of
-> > > > this driver as it can be reloaded at runtime without the need to reboot
-> > > > to new kernel.
-> > > >
-> > > > Signed-off-by: Pali Roh√°r <pali@kernel.org>
-> > > > Reviewed-by: Marek Beh√∫n <marek.behun@nic.cz>
-> > > > ---
-> > > >  drivers/pci/controller/Kconfig        |  2 +-
-> > > >  drivers/pci/controller/pci-aardvark.c | 25 ++++++++++++++++++++++---
-> > > >  2 files changed, 23 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > > index adddf21fa381..f9da5ff2c517 100644
-> > > > --- a/drivers/pci/controller/Kconfig
-> > > > +++ b/drivers/pci/controller/Kconfig
-> > > > @@ -12,7 +12,7 @@ config PCI_MVEBU
-> > > >     select PCI_BRIDGE_EMUL
-> > > >
-> > > >  config PCI_AARDVARK
-> > > > -   bool "Aardvark PCIe controller"
-> > > > +   tristate "Aardvark PCIe controller"
-> > > >     depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
-> > > >     depends on OF
-> > > >     depends on PCI_MSI_IRQ_DOMAIN
-> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > index d5f58684d962..0a5aa6d77f5d 100644
-> > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > @@ -14,6 +14,7 @@
-> > > >  #include <linux/irq.h>
-> > > >  #include <linux/irqdomain.h>
-> > > >  #include <linux/kernel.h>
-> > > > +#include <linux/module.h>
-> > > >  #include <linux/pci.h>
-> > > >  #include <linux/init.h>
-> > > >  #include <linux/phy/phy.h>
-> > > > @@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
-> > > >
-> > > >     pcie = pci_host_bridge_priv(bridge);
-> > > >     pcie->pdev = pdev;
-> > > > +   platform_set_drvdata(pdev, pcie);
-> > > >
-> > > >     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > >     pcie->base = devm_ioremap_resource(dev, res);
-> > > > @@ -1204,18 +1206,35 @@ static int advk_pcie_probe(struct platform_device *pdev)
-> > > >     return 0;
-> > > >  }
-> > > >
-> > > > +static int advk_pcie_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +   struct advk_pcie *pcie = platform_get_drvdata(pdev);
-> > > > +   struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > > > +
-> > > > +   pci_stop_root_bus(bridge->bus);
-> > > > +   pci_remove_root_bus(bridge->bus);
-> > >
-> > > Based on pci_host_common_remove() implementation, doesn't this need a
-> > > lock around it (pci_lock_rescan_remove)?
-> >
-> > Well, I'm not sure. I looked into other pci drivers and none of
-> > following drivers pci-tegra.c, pcie-altera.c, pcie-brcmstb.c,
-> > pcie-iproc.c, pcie-mediatek.c, pcie-rockchip-host.c calls
-> > pci_lock_rescan_remove() and pci_unlock_rescan_remove().
-> 
-> The mutex protects the bus->devices list, so yes I believe it is needed.
-> 
-> Rob
 
-Thank you Rob! It means that all above pci drivers should be fixed too.
 
-I will prepare a new version of aardvark patches with protecting pci
-stop/remove functions. And later I can look at some common bridge remove
-function for fixing those other pci drivers.
+‘⁄ 2020/7/25 1:22, Sean V Kelley –¥µ¿:
+> The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
+> and also have the PME capability. So add RCEC support to the current PME
+> service driver and attach the PME service driver to the RCEC device.
+> 
+> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> ---
+>  drivers/pci/pcie/pme.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+> index 6a32970bb731..87799166c96a 100644
+> --- a/drivers/pci/pcie/pme.c
+> +++ b/drivers/pci/pcie/pme.c
+> @@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
+>  static void pcie_pme_mark_devices(struct pci_dev *port)
+>  {
+>  	pcie_pme_can_wakeup(port, NULL);
+> -	if (port->subordinate)
+> +
+> +	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
+> +	else if (port->subordinate)
+>  		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
+>  }
+>  
+> @@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
+>   */
+>  static int pcie_pme_probe(struct pcie_device *srv)
+>  {
+> -	struct pci_dev *port;
+> +	struct pci_dev *port = srv->port;
+>  	struct pcie_pme_service_data *data;
+>  	int ret;
+>  
+> +	/* Limit to Root Ports or Root Complex Event Collectors */
+> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
+> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+> +		return -ENODEV;
+> +
+>  	data = kzalloc(sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+> @@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
+>  	data->srv = srv;
+>  	set_service_data(srv, data);
+>  
+> -	port = srv->port;
+>  	pcie_pme_interrupt_enable(port, false);
+>  	pcie_clear_root_pme_status(port);
+>  
+> @@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
+>  
+>  static struct pcie_port_service_driver pcie_pme_driver = {
+>  	.name		= "pcie_pme",
+> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
+> +	.port_type	= PCIE_ANY_PORT,
+Maybe we can use port_type for driver matching. There is no need
+to check the type of port in pcie_pme_probe function.
+
+
+Jay
+
+>  	.service	= PCIE_PORT_SERVICE_PME,
+>  
+>  	.probe		= pcie_pme_probe,
+> 
