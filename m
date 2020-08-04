@@ -2,95 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC26E23BE5F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 18:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2066B23C029
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 21:41:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgHDQst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Aug 2020 12:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44686 "EHLO mail.kernel.org"
+        id S1728040AbgHDTlE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Aug 2020 15:41:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29261 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbgHDQsq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:48:46 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3540322B42;
-        Tue,  4 Aug 2020 16:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596559726;
-        bh=XtTYH2CBM+FfyYHxxzZ/HqJhy5od5481V87r3BsfF1g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cTYyYczrP2Fza0nJZl/33bicYLldzN3ycfuQiiZoGY7cIGCJZkmDJROuhIGkeneyD
-         aQhbyWQlDi9p33/rrob1WQynWVsYWvmPWYpwnhLIpgq6vWAxCqH7tfL6r1YansBg+1
-         G4xka8sQI+C1eDG15xLn4+TcEphbvVGqdFZwrFLE=
-Received: by mail-ot1-f53.google.com with SMTP id z18so10593951otk.6;
-        Tue, 04 Aug 2020 09:48:46 -0700 (PDT)
-X-Gm-Message-State: AOAM530+VfLZ55G+99Vzf2Y9o8YLz4NkcAfWq57tpDwk6SuoC77YbQSy
-        1vZdH2e5kNBdEFxOvyW5u0aHboQ2HWj3OgbWNg==
-X-Google-Smtp-Source: ABdhPJzPV8uvXqh6O/JUBpj5TnwgwzExJk0S9hLiInnICudH7jyw70A8FQVV0CT8jJVusYUZQSRCTMACd9K2r0hD+EA=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr10321004otp.192.1596559725452;
- Tue, 04 Aug 2020 09:48:45 -0700 (PDT)
+        id S1726090AbgHDTlD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Aug 2020 15:41:03 -0400
+IronPort-SDR: QHVZO2rEdmvI191fCAIifYPmz1suzK5RDaF2X8AF551YGkbjaizNY5+Co1ZUtOMPfZ7yI2gfLX
+ tut9q96JtLOg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="139991083"
+X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
+   d="scan'208";a="139991083"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:03 -0700
+IronPort-SDR: FmmFAJk/DK9xN2F8YZq9q+CCjbMXS9iOHXJoznESNHqhGC8sYuKrqowOP5gLl2rGKHVfYjQuZM
+ os2+Gwy0xFIQ==
+X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
+   d="scan'208";a="467199212"
+Received: from viveksh1-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.255.83.117])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:01 -0700
+From:   Sean V Kelley <sean.v.kelley@intel.com>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+Subject: [PATCH V2 0/9] Add RCEC handling to PCI/AER
+Date:   Tue,  4 Aug 2020 12:40:43 -0700
+Message-Id: <20200804194052.193272-1-sean.v.kelley@intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200804161325.GA11104@e121166-lin.cambridge.arm.com> <20200804162223.GA420993@bjorn-Precision-5520>
-In-Reply-To: <20200804162223.GA420993@bjorn-Precision-5520>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 4 Aug 2020 10:48:33 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKZTu0=MhFDOgPC92i48mGjtq9aSJAc84i+wq2YT3O31g@mail.gmail.com>
-Message-ID: <CAL_JsqKZTu0=MhFDOgPC92i48mGjtq9aSJAc84i+wq2YT3O31g@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rcar-gen2: Fix crash in resource_list_first_type()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 10:22 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Aug 04, 2020 at 05:13:25PM +0100, Lorenzo Pieralisi wrote:
-> > On Tue, Aug 04, 2020 at 02:04:30PM +0200, Geert Uytterhoeven wrote:
-> > > The conversion to modern host bridge probing made the driver allocate
-> > > its private data using devm_pci_alloc_host_bridge(), but forgot to
-> > > remove the old allocation.  Hence part of the driver initialization is
-> > > done using the new instance, while another part is done using the old
-> > > instance, leading to a crash due to uninitialized bridge DMA ranges:
-> > >
-> > >     Unable to handle kernel NULL pointer dereference at virtual address 00000008
-> > >     pgd = (ptrval)
-> > >     [00000008] *pgd=00000000
-> > >     Internal error: Oops: 5 [#1] SMP ARM
-> > >     CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1-shmobile-00035-g92d69cc6275845a7 #645
-> > >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-> > >     PC is at rcar_pci_probe+0x154/0x340
-> > >     LR is at _raw_spin_unlock_irqrestore+0x18/0x20
-> > >
-> > > Fix this by dropping the old allocation.
-> > >
-> > > Fixes: 92d69cc6275845a7 ("PCI: rcar-gen2: Convert to use modern host bridge probe functions")
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > ---
-> > >  drivers/pci/controller/pci-rcar-gen2.c | 4 ----
-> > >  1 file changed, 4 deletions(-)
-> >
-> > Squashed in the initial commit, pushed out on pci/misc.
->
-> I updated my 'next' branch with this.
->
-> Rob, are there any similar issues in other drivers that we should fix
-> before asking Linus to pull this?
+From: Sean V Kelley <sean.v.kelley@linux.intel.com>
 
-I'd expect only different issues. :)
+On the use of FLR on RCiEPs for the fatal case, still interested in more
+feedback from the earlier discussion here [1]:
 
-This commit is unique as it was using the old arm32 PCI functions and
-the most complicated change of the lot.
+[1] https://lore.kernel.org/linux-pci/C21C050B-48B1-4429-B019-C81F3AB8E843@intel.com/
 
-Rob
+There is also the question of the absence of an FLR for non-fatal error.
+If the device driver tells us that it needs "PCI_ERS_RESULT_NEED_RESET" by
+the callback report_normal_detected() then we should try FLR on the device
+as well.
+
+On the use of variables with RP centric names such as the attributes
+dev_attr_aer_rootport_total_err_..., one concern is the ripple effect on code
+churn due to renaming. Open to suggestions, but trying to co-habitate so to
+speak RCECs with RPs in the same drivers has trade-offs.
+
+Changes since v1 [2]:
+
+- Make PME capability of RCEC discoverable in get_port_device_capability().
+- Replace the check on bnr with <= lastbusn in pcie_walk_rcec().
+- Fix comment header for pcie_walk_rcec().
+- Fix comment header for pci_walk_dev_affected().
+- Fix spurious newline.
+- Add sanity checks on dev->rcec.
+- Use pci_dbg() in place of pci_info() for discovered RCiEPs.
+- Remove AER RCEC AP FOUND message (accidently left in previously).
+- Remove the check for RC_END from set_device_error_reporting() since
+only Ports and RCECs are being passed.
+(Jonathan Cameron)
+- Fix the return type for flr_on_rciep().
+(reported by lkp on DEC Alpha arch.)
+
+[1] https://lore.kernel.org/linux-pci/20200724172223.145608-1-sean.v.kelley@intel.com/
+
+Root Complex Event Collectors (RCEC) provide support for terminating error
+and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
+resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
+a single bus. An RCEC will explicitly declare supported RCiEPs through the
+Root Complex Endpoint Association Extended Capability.
+
+(See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+
+The kernel lacks handling for these RCECs and the error messages received
+from their respective associated RCiEPs. More recently, a new CPU
+interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
+purposes of error messaging from CXL 1.1 supported RCiEP devices.
+
+DocLink: https://www.computeexpresslink.org/
+
+This use case is not limited to CXL. Existing hardware today includes
+support for RCECs, such as the Denverton microserver product
+family. Future hardware will be forthcoming.
+
+(See Intel Document, Order number: 33061-003US)
+
+So services such as AER or PME could be associated with an RCEC driver.
+In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
+platform's RCEC it shall signal PME and AER error conditions through that
+RCEC.
+
+Towards the above use cases, add the missing RCEC class and extend the
+PCIe Root Port and service drivers to allow association of RCiEPs to their
+respective parent RCEC and facilitate handling of terminating error and PME
+messages.
+
+
+AER Test Results:
+1) Inject a correctable error to the RCiEP 0000:e9:00.0
+    Run ./aer_inject <a parameter file as below>:
+    AER
+    PCI_ID 0000:e9:00.0
+    COR_STATUS BAD_TLP
+    HEADER_LOG 0 1 2 3
+
+    Log:
+[   76.155963] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000040/00000000 into device 0000:e9:00.0
+[   76.166966] pcieport 0000:e8:00.4: AER: Corrected error received: 0000:e9:00.0
+[   76.175253] pci 0000:e9:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
+[   76.185633] pci 0000:e9:00.0:   device [8086:4940] error status/mask=00000040/00002000
+[   76.194604] pci 0000:e9:00.0:    [ 6] BadTLP
+
+2) Inject a non-fatal error to the RCiEP 0000:e8:01.0
+    Run ./aer_inject <a parameter file as below>:
+    AER
+    PCI_ID 0000:e8:01.0
+    UNCOR_STATUS COMP_ABORT
+    HEADER_LOG 0 1 2 3
+
+    Log:
+[  117.791854] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000000/00008000 into device 0000:e8:01.0
+[  117.804244] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) error received: 0000:e8:01.0
+[  117.814652] igen6_edac 0000:e8:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
+[  117.828511] igen6_edac 0000:e8:01.0:   device [8086:0b25] error status/mask=00008000/00100000
+[  117.839189] igen6_edac 0000:e8:01.0:    [15] CmpltAbrt
+[  117.847365] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 00000001 00000002 00000003
+[  117.857775] igen6_edac 0000:e8:01.0: AER: device recovery successful
+
+3) Inject a fatal error to the RCiEP 0000:ed:01.0
+    Run ./aer_inject <a parameter file as below>:
+    AER
+    PCI_ID 0000:ed:01.0
+    UNCOR_STATUS MALF_TLP
+    HEADER_LOG 0 1 2 3
+
+    Log:
+[  131.511623] pcieport 0000:ed:00.4: aer_inject: Injecting errors 00000000/00040000 into device 0000:ed:01.0
+[  131.523259] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error received: 0000:ed:01.0
+[  131.533842] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
+[  131.655618] igen6_edac 0000:ed:01.0: AER: device recovery successful
+
+Jonathan Cameron (1):
+  PCI/AER: Extend AER error handling to RCECs
+
+Qiuxu Zhuo (6):
+  pci_ids: Add class code and extended capability for RCEC
+  PCI: Extend Root Port Driver to support RCEC
+  PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
+  PCI/AER: Apply function level reset to RCiEP on fatal error
+  PCI: Add 'rcec' field to pci_dev for associated RCiEPs
+  PCI/AER: Add RCEC AER error injection support
+
+Sean V Kelley (2):
+  PCI/AER: Add RCEC AER handling
+  PCI/PME: Add RCEC PME handling
+
+ drivers/pci/pcie/aer.c          | 36 +++++++++----
+ drivers/pci/pcie/aer_inject.c   |  5 +-
+ drivers/pci/pcie/err.c          | 90 +++++++++++++++++++++++++++------
+ drivers/pci/pcie/pme.c          | 15 ++++--
+ drivers/pci/pcie/portdrv.h      |  2 +
+ drivers/pci/pcie/portdrv_core.c | 90 +++++++++++++++++++++++++++++++--
+ drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
+ include/linux/pci.h             |  3 ++
+ include/linux/pci_ids.h         |  1 +
+ include/uapi/linux/pci_regs.h   |  7 +++
+ 10 files changed, 233 insertions(+), 36 deletions(-)
+
+--
+2.27.0
+
