@@ -2,158 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6568B23B2D9
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 04:49:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4837523B486
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 07:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgHDCtj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Aug 2020 22:49:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44388 "EHLO mga01.intel.com"
+        id S1729040AbgHDFmm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Aug 2020 01:42:42 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47602 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729888AbgHDCtj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:49:39 -0400
-IronPort-SDR: 7CJ1eIo2KUy6AzQWPuK6tpZlmyg9EgsnYtsPWFT7cX31uGc+aLD1p66vHrbzjM1dYQqlj0HzdS
- d1yX7k46ZTzw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="170326640"
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="170326640"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 19:49:38 -0700
-IronPort-SDR: /DNJdKJ7ZOG9Cex3N+zBTZhD0mZ440z5AJmsDzpiyUZOIQPM1V1XYhOot56u8W3uz3MuwgyXyL
- lp3TPp6szG7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="275653037"
-Received: from lkp-server02.sh.intel.com (HELO 84ccfe698a63) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Aug 2020 19:49:36 -0700
-Received: from kbuild by 84ccfe698a63 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2n1D-0000NK-Cd; Tue, 04 Aug 2020 02:49:35 +0000
-Date:   Tue, 04 Aug 2020 10:48:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/irq-error] BUILD SUCCESS
- caecb05c800081c57907749f787f05f62011564e
-Message-ID: <5f28cc83.NQywWI6/eiQ9eixQ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        id S1728811AbgHDFml (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:42:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BDA862011A2;
+        Tue,  4 Aug 2020 07:42:39 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 70C75201194;
+        Tue,  4 Aug 2020 07:42:34 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A0D70402DE;
+        Tue,  4 Aug 2020 07:42:27 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     hongxing.zhu@nxp.com, l.stach@pengutronix.de,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] PCI: imx6: Do not output error message when devm_clk_get() failed with -EPROBE_DEFER
+Date:   Tue,  4 Aug 2020 13:38:01 +0800
+Message-Id: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/irq-error
-branch HEAD: caecb05c800081c57907749f787f05f62011564e  PCI: Remove dev_err() when handing an error from platform_get_irq()
+When devm_clk_get() returns -EPROBE_DEFER, i.MX6 PCI driver should
+NOT print error message, just return -EPROBE_DEFER is enough.
 
-elapsed time: 724m
-
-configs tested: 96
-configs skipped: 5
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                        generic_defconfig
-m68k                       bvme6000_defconfig
-arm                          pxa168_defconfig
-h8300                     edosk2674_defconfig
-arm                        shmobile_defconfig
-c6x                                 defconfig
-arm                            mmp2_defconfig
-arm                         lubbock_defconfig
-arc                     nsimosci_hs_defconfig
-arm                       aspeed_g4_defconfig
-arc                          axs101_defconfig
-powerpc                    amigaone_defconfig
-sh                   sh7770_generic_defconfig
-mips                        bcm47xx_defconfig
-h8300                    h8300h-sim_defconfig
-nds32                             allnoconfig
-powerpc                          alldefconfig
-mips                      bmips_stb_defconfig
-arm                        magician_defconfig
-arm                             pxa_defconfig
-sh                             sh03_defconfig
-mips                         db1xxx_defconfig
-arm                        trizeps4_defconfig
-parisc                           alldefconfig
-mips                           ip32_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a004-20200803
-i386                 randconfig-a005-20200803
-i386                 randconfig-a001-20200803
-i386                 randconfig-a002-20200803
-i386                 randconfig-a003-20200803
-i386                 randconfig-a006-20200803
-x86_64               randconfig-a013-20200803
-x86_64               randconfig-a011-20200803
-x86_64               randconfig-a012-20200803
-x86_64               randconfig-a016-20200803
-x86_64               randconfig-a015-20200803
-x86_64               randconfig-a014-20200803
-i386                 randconfig-a011-20200803
-i386                 randconfig-a012-20200803
-i386                 randconfig-a015-20200803
-i386                 randconfig-a014-20200803
-i386                 randconfig-a013-20200803
-i386                 randconfig-a016-20200803
-x86_64               randconfig-a006-20200804
-x86_64               randconfig-a001-20200804
-x86_64               randconfig-a004-20200804
-x86_64               randconfig-a005-20200804
-x86_64               randconfig-a002-20200804
-x86_64               randconfig-a003-20200804
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/pci/controller/dwc/pci-imx6.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 4e5c379..ee75d35 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1076,20 +1076,26 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	/* Fetch clocks */
+ 	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
+ 	if (IS_ERR(imx6_pcie->pcie_phy)) {
+-		dev_err(dev, "pcie_phy clock source missing or invalid\n");
+-		return PTR_ERR(imx6_pcie->pcie_phy);
++		ret = PTR_ERR(imx6_pcie->pcie_phy);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "pcie_phy clock source missing or invalid\n");
++		return ret;
+ 	}
+ 
+ 	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
+ 	if (IS_ERR(imx6_pcie->pcie_bus)) {
+-		dev_err(dev, "pcie_bus clock source missing or invalid\n");
+-		return PTR_ERR(imx6_pcie->pcie_bus);
++		ret = PTR_ERR(imx6_pcie->pcie_bus);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "pcie_bus clock source missing or invalid\n");
++		return ret;
+ 	}
+ 
+ 	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
+ 	if (IS_ERR(imx6_pcie->pcie)) {
+-		dev_err(dev, "pcie clock source missing or invalid\n");
+-		return PTR_ERR(imx6_pcie->pcie);
++		ret = PTR_ERR(imx6_pcie->pcie);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "pcie clock source missing or invalid\n");
++		return ret;
+ 	}
+ 
+ 	switch (imx6_pcie->drvdata->variant) {
+@@ -1097,15 +1103,19 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
+ 							   "pcie_inbound_axi");
+ 		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
+-			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+-			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
++			ret = PTR_ERR(imx6_pcie->pcie_inbound_axi);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
++			return ret;
+ 		}
+ 		break;
+ 	case IMX8MQ:
+ 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+ 		if (IS_ERR(imx6_pcie->pcie_aux)) {
+-			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+-			return PTR_ERR(imx6_pcie->pcie_aux);
++			ret = PTR_ERR(imx6_pcie->pcie_aux);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "pcie_aux clock source missing or invalid\n");
++			return ret;
+ 		}
+ 		/* fall through */
+ 	case IMX7D:
+-- 
+2.7.4
+
