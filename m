@@ -2,210 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ACC423CF4D
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Aug 2020 21:19:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88C7F23D140
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Aug 2020 21:58:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgHETTD convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 5 Aug 2020 15:19:03 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25621 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgHETSq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:18:46 -0400
-IronPort-SDR: G9zt/VUL2z3CtH1on6OKpniqUk2TCzWtOjUgmQF1oaZzeSDkUFx2H4PvEDqW2i8wR9BaXbF3Ci
- zltPsqZC1/dw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="214158511"
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="214158511"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 12:18:45 -0700
-IronPort-SDR: D0Vk6xev7JAvmeUfynzY+1BEcxv9Z8Bxnl7g4j/s5Q2ig5FW8QRbtY+zFR2Ns5n3z4J95TIZGX
- WJv71hfu1s4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="467570191"
-Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
-  by orsmga005.jf.intel.com with ESMTP; 05 Aug 2020 12:18:41 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 12:18:41 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 12:18:40 -0700
-Received: from orsmsx612.amr.corp.intel.com ([10.22.229.25]) by
- ORSMSX612.amr.corp.intel.com ([10.22.229.25]) with mapi id 15.01.1713.004;
- Wed, 5 Aug 2020 12:18:40 -0700
-From:   "Dey, Megha" <megha.dey@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>, Marc Zyngier <maz@kernel.org>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Thread-Topic: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Thread-Index: AQHWX3hgWhQMXvQig0qc4n40fOCoeakUaOyAgAASsgCAFXzAsA==
-Date:   Wed, 5 Aug 2020 19:18:39 +0000
-Message-ID: <96a1eb5ccc724790b5404a642583919d@intel.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
-In-Reply-To: <20200722195928.GN2021248@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1728229AbgHET6R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Aug 2020 15:58:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60268 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727968AbgHEQnW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Aug 2020 12:43:22 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075ARU1C060186;
+        Wed, 5 Aug 2020 10:27:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=0Ivf4+Arbx6SbDkNF5h5BBDWwD9RCtfGRW85wmjcgwY=;
+ b=GHhV5qqQE/RqWjh9yRfoxmGrPGOI8TDhL2f+KgdDGwUStOfZyjHnuchrlSHXhuFk165+
+ o5gByIz+nz0EhVNv3S4QvsPEJ6DDZhEH8DYztaFg9+oSHKmdJycqR3wybBPWvNWInjv7
+ 9t7w7VEKpXQ7oNt3jh08SNBMdLUKtDQTBYRguoOGl55a1WwT4EIzqBFtldOC3XE75QNH
+ oEAnRfT5rC31WdGQ2vnzEhmCuut2ojYOZb+AacZaPpzUMU1GV+Ob6+PTa3Psi7bS6KbQ
+ 2shA0Esfy2CyNSOIsZ0neYGNL9dAIgTlhR3lOuXXiKNc76jkjTKWKgTK2eD/gDF8FHeH 9A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32pdnqckaf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 05 Aug 2020 10:27:30 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075AIxZV038778;
+        Wed, 5 Aug 2020 10:27:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 32pdhdyvu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Aug 2020 10:27:29 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 075ARStB001626;
+        Wed, 5 Aug 2020 10:27:28 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 05 Aug 2020 03:27:28 -0700
+Date:   Wed, 5 Aug 2020 13:27:22 +0300
+From:   <dan.carpenter@oracle.com>
+To:     bharat.kumar.gogada@xilinx.com
+Cc:     linux-pci@vger.kernel.org
+Subject: [bug report] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Message-ID: <20200805102722.GA490427@mwanda>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ suspectscore=3 clxscore=1011 priorityscore=1501 bulkscore=0 adultscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050087
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jason,
+Hello Bharat Kumar Gogada,
 
-> -----Original Message-----
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Sent: Wednesday, July 22, 2020 12:59 PM
-> To: Marc Zyngier <maz@kernel.org>
-> Cc: Jiang, Dave <dave.jiang@intel.com>; vkoul@kernel.org; Dey, Megha
-> <megha.dey@intel.com>; bhelgaas@google.com; rafael@kernel.org;
-> gregkh@linuxfoundation.org; tglx@linutronix.de; hpa@zytor.com;
-> alex.williamson@redhat.com; Pan, Jacob jun <jacob.jun.pan@intel.com>; Raj,
-> Ashok <ashok.raj@intel.com>; Liu, Yi L <yi.l.liu@intel.com>; Lu, Baolu
-> <baolu.lu@intel.com>; Tian, Kevin <kevin.tian@intel.com>; Kumar, Sanjay K
-> <sanjay.k.kumar@intel.com>; Luck, Tony <tony.luck@intel.com>; Lin, Jing
-> <jing.lin@intel.com>; Williams, Dan J <dan.j.williams@intel.com>;
-> kwankhede@nvidia.com; eric.auger@redhat.com; parav@mellanox.com;
-> Hansen, Dave <dave.hansen@intel.com>; netanelg@mellanox.com;
-> shahafs@mellanox.com; yan.y.zhao@linux.intel.com; pbonzini@redhat.com;
-> Ortiz, Samuel <samuel.ortiz@intel.com>; Hossain, Mona
-> <mona.hossain@intel.com>; dmaengine@vger.kernel.org; linux-
-> kernel@vger.kernel.org; x86@kernel.org; linux-pci@vger.kernel.org;
-> kvm@vger.kernel.org
-> Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
-> irq domain
-> 
-> On Wed, Jul 22, 2020 at 07:52:33PM +0100, Marc Zyngier wrote:
-> 
-> > Which is exactly what platform-MSI already does. Why do we need
-> > something else?
-> 
-> It looks to me like all the code is around managing the
-> dev->msi_domain of the devices.
-> 
-> The intended use would have PCI drivers create children devices using mdev or
-> virtbus and those devices wouldn't have a msi_domain from the platform. Looks
-> like platform_msi_alloc_priv_data() fails immediately because dev->msi_domain
-> will be NULL for these kinds of devices.
-> 
-> Maybe that issue should be handled directly instead of wrappering
-> platform_msi_*?
-> 
-> For instance a trivial addition to the platform_msi API:
-> 
->   platform_msi_assign_domain(struct_device *newly_created_virtual_device,
->                              struct device *physical_device);
-> 
-> Which could set the msi_domain of new device using the topology of
-> physical_device to deduce the correct domain?
-> 
-> Then the question is how to properly create a domain within the hardware
-> topology of physical_device with the correct parameters for the platform.
-> 
-> Why do we need a dummy msi_domain anyhow? Can this just use
-> physical_device->msi_domain directly? (I'm at my limit here of how much of this
-> I remember, sorry)
-> 
-> If you solve that it should solve the remapping problem too, as the
-> physical_device is already assigned by the platform to a remapping irq domain if
-> that is what the platform wants.
+The patch 0189e6fb2c46: "PCI: xilinx-cpm: Add Versal CPM Root Port
+driver" from Jun 16, 2020, leads to the following static checker
+warning:
 
-Yeah most of what you said is right. For the most part, we are simply introducing a new IRQ domain
-which provides specific domain info ops for the classes of devices which want to provide custom
-mask/unmask callbacks..
+	drivers/pci/controller/pcie-xilinx-cpm.c:557 xilinx_cpm_pcie_probe()
+	error: uninitialized symbol 'bus_range'.
 
-Also, from your other comments, I've realized the same IRQ domain can be used when interrupt
-remapping is enabled/disabled.
+drivers/pci/controller/pcie-xilinx-cpm.c
+   537  static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+   538  {
+   539          struct xilinx_cpm_pcie_port *port;
+   540          struct device *dev = &pdev->dev;
+   541          struct pci_host_bridge *bridge;
+   542          struct resource *bus_range;
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Hence we will only have one create_dev_msi_domain which can be called by any device driver that
-wants to use the dev-msi IRQ domain to alloc/free IRQs. It would be the responsibility of the device
-driver to provide the correct device and update the dev->msi_domain.
-  
-> 
-> >> +	parent = irq_get_default_host();
-> > Really? How is it going to work once you have devices sending their
-> > MSIs to two different downstream blocks? This looks rather
-> > short-sighted.
-> 
-> .. and fix this too, the parent domain should be derived from the topology of the
-> physical_device which is originating the interrupt messages.
-> 
-Yes
+   543          int err;
+   544  
+   545          bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+   546          if (!bridge)
+   547                  return -ENODEV;
+   548  
+   549          port = pci_host_bridge_priv(bridge);
+   550  
+   551          port->dev = dev;
+   552  
+   553          err = xilinx_cpm_pcie_init_irq_domain(port);
+   554          if (err)
+   555                  return err;
+   556  
+   557          err = xilinx_cpm_pcie_parse_dt(port, bus_range);
+                                                     ^^^^^^^^^
+Never initialized.
 
-> > On the other hand, masking an interrupt is an irqchip operation, and
-> > only concerns the irqchip level. Here, you seem to be making it an
-> > end-point operation, which doesn't really make sense to me. Or is this
-> > device its own interrupt controller as well? That would be extremely
-> > surprising, and I'd expect some block downstream of the device to be
-> > able to control the masking of the interrupt.
-> 
-> These are message interrupts so they originate directly from the device and
-> generally travel directly to the CPU APIC. On the wire there is no difference
-> between a MSI, MSI-X and a device using the dev-msi approach.
-> 
-> IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
-> 
-> So the model for MSI is always "mask at source". The closest mapping to the
-> Linux IRQ model is to say the end device has a irqchip that encapsulates the
-> ability of the device to generate the MSI in the first place.
-> 
-> It looks like existing platform_msi drivers deal with "masking"
-> implicitly by halting the device interrupt generation before releasing the
-> interrupt and have no way for the generic irqchip layer to mask the interrupt.
-> 
-> I suppose the motivation to make it explicit is related to vfio using the generic
-> mask/unmask functionality?
-> 
-> Explicit seems better, IMHO.
+   558          if (err) {
+   559                  dev_err(dev, "Parsing DT failed\n");
+   560                  goto err_parse_dt;
+   561          }
+   562  
+   563          xilinx_cpm_pcie_init_port(port);
+   564  
+   565          err = xilinx_cpm_setup_irq(port);
+   566          if (err) {
+   567                  dev_err(dev, "Failed to set up interrupts\n");
+   568                  goto err_setup_irq;
+   569          }
+   570  
+   571          bridge->dev.parent = dev;
 
-I don't think I understand this fully, ive still kept the device specific mask/unmask calls in the next
-patch series, please let me know if it needs further modifications.
-> 
-> Jason
+regards,
+dan carpenter
