@@ -2,88 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 256FB23CB6F
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Aug 2020 16:19:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8570323CBC9
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Aug 2020 17:45:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgHEN16 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Aug 2020 09:27:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42345 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728426AbgHEMfj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Aug 2020 08:35:39 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j7so23030665oij.9;
-        Wed, 05 Aug 2020 05:31:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5lnCZoNdrZNQbQaV/iF1DKtpBff6Ck+1xozm4eqaEmw=;
-        b=aOLS0YI9SWLSUoNLnu8p9qwzutJsdBBtkn2A5QoLlzTZUMf0jB7nD9mhVxQb6HN6z5
-         8kbL+Gmi8kOZZFORMBklZGWLFqvj/btZNAttkTRoMziwYmii4etM3Ed++hA9p1uFgkw6
-         wYluwBY2STm+TRUFk7uymZ3tyAjfsYUagmLNKPx4sLuuU0dLlZGqq/oPDiNMidNNz0Rp
-         LEd6pHxpoefFACtirha+4tcvNFyTM4uFhh6o4yFRzvq+qMgavBiDBo13rHCCFUkZDIMQ
-         bhYcOUHWGm7eULfhprpPdIwPK6AQx6c1MfU0lG70z+DnEoR6BAQ+0UidT2+8ynnGdEbl
-         xKFw==
-X-Gm-Message-State: AOAM5331Fa40cBaCCw6jmNEScmXnFn+iDmHomF9v/PK8YducSlygeP+8
-        YpnL62MYrUH516Fs6TUsaKvc3rFqqFuhV1i8EbULynsj
-X-Google-Smtp-Source: ABdhPJwhUm4QHaZz7xbR+lTUoUQuyCH4le0QF/k75iMvl2tButnuNI7+iEhEoJyqrnRXlecEQMMJHtDC6cCth7F51hU=
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr2275594oia.54.1596626072299;
- Wed, 05 Aug 2020 04:14:32 -0700 (PDT)
+        id S1726205AbgHEPpf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Aug 2020 11:45:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64502 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726640AbgHEPkr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Aug 2020 11:40:47 -0400
+IronPort-SDR: iungMxntL79sPHxL2sV3Zs8CRAgB7Ix3w5iPKrOV1FROhU2sqyLMKifBZ4yy4GQ9wlDiWCTy8l
+ 2YDkL8TKfWjA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="214096488"
+X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
+   d="scan'208";a="214096488"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 08:30:01 -0700
+IronPort-SDR: 94qWMKUQFeyKjw08rseu7VO8G71WTlqDwzixd/GygvvyZcSJv/E4rJ5Mi7WVR3gaRpIbZCGZq5
+ TPeQucCdOJ8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
+   d="scan'208";a="493321467"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 08:30:01 -0700
+Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 5 Aug 2020 08:30:01 -0700
+Received: from orsmsx107.amr.corp.intel.com (10.22.240.5) by
+ orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 5 Aug 2020 08:30:01 -0700
+Received: from orsmsx103.amr.corp.intel.com ([169.254.5.158]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.70]) with mapi id 14.03.0439.000;
+ Wed, 5 Aug 2020 08:30:00 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "vicamo.yang@canonical.com" <vicamo.yang@canonical.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] PCI: vmd: Allow VMD PM to use PCI core PM code
+Thread-Topic: [PATCH] PCI: vmd: Allow VMD PM to use PCI core PM code
+Thread-Index: AQHWZ2DMvLKu8hekmkeNJCwhOBvOzqkpodkAgAB/SQA=
+Date:   Wed, 5 Aug 2020 15:30:00 +0000
+Message-ID: <31275a25f29cad2fbda49f94839e128afc15acee.camel@intel.com>
+References: <20200731171544.6155-1-jonathan.derrick@intel.com>
+         <7a46dec4-20a4-27d4-ae3d-f428608813e4@canonical.com>
+In-Reply-To: <7a46dec4-20a4-27d4-ae3d-f428608813e4@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.212.27.177]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8E711E9B1A61CB4FAEE6A83CBE6037EF@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 13:14:20 +0200
-Message-ID: <CAMuHMdW5_yBdEidPiVNeQO0QwuJfTe0kSiHLg4hkQLzVuRM7VA@mail.gmail.com>
-Subject: Re: [PATCH 10/20] arm64: dts: renesas: r8a774e1: Add USB3.0 device nodes
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add usb3.0 phy, host and function device nodes on RZ/G2H SoC dtsi.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gV2VkLCAyMDIwLTA4LTA1IGF0IDE1OjU0ICswODAwLCBZb3UtU2hlbmcgWWFuZyB3cm90ZToN
+Cj4gT24gMjAyMC0wOC0wMSAwMToxNSwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4gVGhlIHBjaV9z
+YXZlX3N0YXRlIGNhbGwgaW4gdm1kX3N1c3BlbmQgY2FuIGJlIHBlcmZvcm1lZCBieQ0KPiA+IHBj
+aV9wbV9zdXNwZW5kX2lycS4gVGhpcyBhbGxvd3MgdGhlIGNhbGwgdG8gcGNpX3ByZXBhcmVfdG9f
+c2xlZXAgaW50bw0KPiA+IEFTUE0gZmxvdy4NCj4gPiANCj4gPiBUaGUgcGNpX3Jlc3RvcmVfc3Rh
+dGUgY2FsbCBpbiB2bWRfcmVzdW1lIHdhcyByZXN0b3Jpbmcgc3RhdGUgYWZ0ZXINCj4gPiBwY2lf
+cG1fcmVzdW1lLT5wY2lfcmVzdG9yZV9zdGFuZGFyZF9jb25maWcgaGFkIGFscmVhZHkgcmVzdG9y
+ZWQgc3RhdGUuDQo+ID4gSXQncyBhbHNvIGJlZW4gc3VzcGVjdGVkIHRoYXQgdGhlIGNvbmZpZyBz
+dGF0ZSBzaG91bGQgYmUgcmVzdG9yZWQgYmVmb3JlDQo+ID4gcmUtcmVxdWVzdGluZyBJUlFzLg0K
+PiA+IA0KPiA+IFJlbW92ZSB0aGUgcGNpX3tzYXZlLHJlc3RvcmV9X3N0YXRlIGNhbGxzIGluIHZt
+ZF97c3VzcGVuZCxyZXN1bWV9IGluDQo+ID4gb3JkZXIgdG8gYWxsb3cgcHJvcGVyIGZsb3cgdGhy
+b3VnaCBQQ0kgY29yZSBwb3dlciBtYW5hZ2VtZW50IEFTUE0gY29kZS4NCj4gDQo+IEkgaGFkIGEg
+dHJ5IG9uIHRoaXMgcGF0Y2ggYnV0IGBsc3BjaWAgc3RpbGwgc2hvd3MgQVNQTSBEaXNhYmxlZC4N
+Cj4gQW55dGhpbmcgcHJlcmVxdWlzaXRlIG1pc3NpbmcgaGVyZT8NCj4gDQoNCklzIGVuYWJsaW5n
+IEwwcy9MMS9ldGMgb24gYSBkZXZpY2Ugc29tZXRoaW5nIHRoYXQgdGhlIGRyaXZlciBzaG91bGQg
+YmUNCmRvaW5nPw0KDQpEb2VzIHRoZSBzdGF0ZSBjaGFuZ2Ugd2l0aCBwY2llX2FzcG0ucG9saWN5
+PXBvd2Vyc2F2ZSA/DQoNCg0KPiBZb3UtU2hlbmcgWWFuZw0KPiANCg==
