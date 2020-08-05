@@ -2,240 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ABED23CF64
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Aug 2020 21:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A85123CF30
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Aug 2020 21:16:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgHETUP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Aug 2020 15:20:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbgHERsw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Aug 2020 13:48:52 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BCAC06179F
-        for <linux-pci@vger.kernel.org>; Wed,  5 Aug 2020 10:48:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id i92so3466685pje.0
-        for <linux-pci@vger.kernel.org>; Wed, 05 Aug 2020 10:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=AN9lXxTtUIqeSqnhtWqPoGBSysu+7woyVZhyjrKsSws=;
-        b=i1T15cW+HRL+p852S2fTs1hjBZSveLXDnk5dyOQ1naPnB8IlqcrYRJ2raHvn8KKQ+t
-         3AmssaQxfBZL5DwXppRiWMwzjlEg6F4gsvrulkvmWdqO+0ADxQklRCHhse2fTsYd13f8
-         m37Lo9uNFOYZaW/n+uWZF/gd+ECIMVc3JcrUQrz6A7JMbq45dfwz++RDsO3y76yf1zA8
-         NPqfUuiUOMXUoVm2W9Q78t7IG2kI5pldoyxzGCuiwPvQpTlLuIh9Z5Zk3ZY1DHx1mE4Y
-         Dv2T356bWIPPw9Dee7exTc3Ld0vX45KMgINZVyyuKCy/77jqGYOwpSadK5zIltWDT4G/
-         AyPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=AN9lXxTtUIqeSqnhtWqPoGBSysu+7woyVZhyjrKsSws=;
-        b=ODssJrNykoKkmJILLMqJE3FHxkhABMSHFHU6RlfS8mS9q8l/ZKkiqRRgJvrwEBYnJ8
-         pOmB7VK7B+AeEL6NDBPVk9V/iez/slHOYsH559p3oTsEw+vJ2zkIgL/biXAfmE0HzrdW
-         iqdf/WDjPPBfl8TeN5XuH9rXlofU+y9m9YVai6cx+ZfaVrzapBMWzUmglE75v8Jqh0xy
-         LFfaAn5jo3YcUBnLg44TjT21Vp135otY5PpSKrWuimJInPEH4MbN1W6Rz43FzCb/Fjkd
-         M3OG3e94ivY0wzsJ3w1Xa4/xIUwDeKYDQd5vSShKs2q0BkLvJsV5Pjc24TY+B0hJ24x2
-         v5WA==
-X-Gm-Message-State: AOAM530PV5x6JcCXZuzy8k20xOr3s2uf9zkGhhOp7v2LdqXEsZeViOr2
-        qiE3rT5wNmwJ2EJ8LFxUywadwQ==
-X-Google-Smtp-Source: ABdhPJyj978+UEa8ClNSaHWi3r3lQbgAj9hS3PWUrlDsGOSW08sBlMCtMtXlqGVUaieKyXqEzt3+wg==
-X-Received: by 2002:a17:90b:1106:: with SMTP id gi6mr4643433pjb.2.1596649730064;
-        Wed, 05 Aug 2020 10:48:50 -0700 (PDT)
-Received: from [10.213.170.159] (fmdmzpr04-ext.fm.intel.com. [192.55.55.39])
-        by smtp.gmail.com with ESMTPSA id z25sm4219247pfn.159.2020.08.05.10.48.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 10:48:49 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
-Cc:     bhelgaas@google.com, rjw@rjwysocki.net, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        id S1728623AbgHETQT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Aug 2020 15:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729146AbgHESAn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Aug 2020 14:00:43 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4887221D95;
+        Wed,  5 Aug 2020 18:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596650442;
+        bh=eaSKaq7jKQvkKuz0XPzzBEPB27hIZ62m3oOhE/XHOEI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fIyZusMrHX4zid5kO97lCYRpmzbz1CFPgZ9MndWP+x4s16Z6WMb5OmI3VOhm0Q8TO
+         Wkhz34Aku78zk0ShcWh3ItyMnuwav25ZRDf6NuWgK2yepETFsI/xvmLu0KyFSu4ccq
+         CB0U3aHnwX4TwCpQf2ODafc3WfH4H6pY2ChO11Es=
+Date:   Wed, 5 Aug 2020 13:00:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH V2 6/9] PCI: Add 'rcec' field to pci_dev for associated
- RCiEPs
-Date:   Wed, 05 Aug 2020 10:48:46 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <BE94DF65-ED67-4113-A932-58BFE86B1152@intel.com>
-In-Reply-To: <20200805184020.00000cf3@Huawei.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
- <20200804194052.193272-7-sean.v.kelley@intel.com>
- <20200805184020.00000cf3@Huawei.com>
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+Subject: Re: [PATCH V2 0/9] Add RCEC handling to PCI/AER
+Message-ID: <20200805180035.GA522190@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804194052.193272-1-sean.v.kelley@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5 Aug 2020, at 10:40, Jonathan Cameron wrote:
+On Tue, Aug 04, 2020 at 12:40:43PM -0700, Sean V Kelley wrote:
+> From: Sean V Kelley <sean.v.kelley@linux.intel.com>
+> 
+> On the use of FLR on RCiEPs for the fatal case, still interested in more
+> feedback from the earlier discussion here [1]:
+> 
+> [1] https://lore.kernel.org/linux-pci/C21C050B-48B1-4429-B019-C81F3AB8E843@intel.com/
+> 
+> There is also the question of the absence of an FLR for non-fatal error.
+> If the device driver tells us that it needs "PCI_ERS_RESULT_NEED_RESET" by
+> the callback report_normal_detected() then we should try FLR on the device
+> as well.
+> 
+> On the use of variables with RP centric names such as the attributes
+> dev_attr_aer_rootport_total_err_..., one concern is the ripple effect on code
+> churn due to renaming. Open to suggestions, but trying to co-habitate so to
+> speak RCECs with RPs in the same drivers has trade-offs.
+> 
+> Changes since v1 [2]:
+> 
+> - Make PME capability of RCEC discoverable in get_port_device_capability().
+> - Replace the check on bnr with <= lastbusn in pcie_walk_rcec().
+> - Fix comment header for pcie_walk_rcec().
+> - Fix comment header for pci_walk_dev_affected().
+> - Fix spurious newline.
+> - Add sanity checks on dev->rcec.
+> - Use pci_dbg() in place of pci_info() for discovered RCiEPs.
+> - Remove AER RCEC AP FOUND message (accidently left in previously).
+> - Remove the check for RC_END from set_device_error_reporting() since
+> only Ports and RCECs are being passed.
+> (Jonathan Cameron)
+> - Fix the return type for flr_on_rciep().
+> (reported by lkp on DEC Alpha arch.)
+> 
+> [1] https://lore.kernel.org/linux-pci/20200724172223.145608-1-sean.v.kelley@intel.com/
+> 
+> Root Complex Event Collectors (RCEC) provide support for terminating error
+> and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
+> resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
+> a single bus. An RCEC will explicitly declare supported RCiEPs through the
+> Root Complex Endpoint Association Extended Capability.
+> 
+> (See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+> 
+> The kernel lacks handling for these RCECs and the error messages received
+> from their respective associated RCiEPs. More recently, a new CPU
+> interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
+> purposes of error messaging from CXL 1.1 supported RCiEP devices.
+> 
+> DocLink: https://www.computeexpresslink.org/
+> 
+> This use case is not limited to CXL. Existing hardware today includes
+> support for RCECs, such as the Denverton microserver product
+> family. Future hardware will be forthcoming.
+> 
+> (See Intel Document, Order number: 33061-003US)
+> 
+> So services such as AER or PME could be associated with an RCEC driver.
+> In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
+> platform's RCEC it shall signal PME and AER error conditions through that
+> RCEC.
+> 
+> Towards the above use cases, add the missing RCEC class and extend the
+> PCIe Root Port and service drivers to allow association of RCiEPs to their
+> respective parent RCEC and facilitate handling of terminating error and PME
+> messages.
+> 
+> 
+> AER Test Results:
+> 1) Inject a correctable error to the RCiEP 0000:e9:00.0
+>     Run ./aer_inject <a parameter file as below>:
+>     AER
+>     PCI_ID 0000:e9:00.0
+>     COR_STATUS BAD_TLP
+>     HEADER_LOG 0 1 2 3
+> 
+>     Log:
+> [   76.155963] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000040/00000000 into device 0000:e9:00.0
+> [   76.166966] pcieport 0000:e8:00.4: AER: Corrected error received: 0000:e9:00.0
+> [   76.175253] pci 0000:e9:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
+> [   76.185633] pci 0000:e9:00.0:   device [8086:4940] error status/mask=00000040/00002000
+> [   76.194604] pci 0000:e9:00.0:    [ 6] BadTLP
 
-> On Tue, 4 Aug 2020 12:40:49 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
->
->> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>
->> When attempting error recovery for an RCiEP associated with an RCEC 
->> device,
->> there needs to be a way to update the Root Error Status, the 
->> Uncorrectable
->> Error Status and the Uncorrectable Error Severity of the parent RCEC.
->> So add the 'rcec' field to the pci_dev structure and provide a hook 
->> for the
->> Root Port Driver to associate RCiEPs with their respective parent 
->> RCEC.
->>
->> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
->> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Hi,
->
-> One question in line.
->
->> ---
->>  drivers/pci/pcie/aer.c         |  9 +++++----
->>  drivers/pci/pcie/err.c         | 12 ++++++++++++
->>  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
->>  include/linux/pci.h            |  3 +++
->>  4 files changed, 35 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 87283cda3990..f658607e8e00 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -1358,17 +1358,18 @@ static int aer_probe(struct pcie_device *dev)
->>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->>  {
->>  	int aer = dev->aer_cap;
->> +	int rc = 0;
->>  	u32 reg32;
->> -	int rc;
->> -
->>
->>  	/* Disable Root's interrupt in response to error messages */
->>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->>  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
->>  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->>
->> -	rc = pci_bus_error_reset(dev);
->> -	pci_info(dev, "Root Port link has been reset\n");
->> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
->> +		rc = pci_bus_error_reset(dev);
->> +		pci_info(dev, "Root Port link has been reset\n");
->> +	}
->>
->>  	/* Clear Root Error Status */
->>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 4812aa678eff..43f1c55c76db 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -203,6 +203,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
->> *dev,
->>  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
->>  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->>  			status = flr_on_rciep(dev);
->> +			/*
->> +			 * The callback only clears the Root Error Status
->> +			 * of the RCEC (see aer.c).
->> +			 */
->> +			if (pcie_aer_is_native(dev) && dev->rcec)
->> +				reset_link(dev->rcec);
->
-> I'm not sure about this pcie_aer_is_native check.
-> We don't check in the normal EP path.  Perhaps we should be checking 
-> there
-> as well?
+If you remove the timestamps, there will be less distraction here.  As
+I'm sure you know, the 0/n cover letter text doesn't really go
+anywhere except the email archives.  If this is potentially useful in
+the future, it should be in the actual patch commit logs.
 
-Looks like we should.  Will make adjustments and test.
+> 2) Inject a non-fatal error to the RCiEP 0000:e8:01.0
+>     Run ./aer_inject <a parameter file as below>:
+>     AER
+>     PCI_ID 0000:e8:01.0
+>     UNCOR_STATUS COMP_ABORT
+>     HEADER_LOG 0 1 2 3
 
->
-> I can contrive a CPER record that hits the reset_link for the normal 
-> EP on my qemu
-> test setup.  Just for fun it causes a synchronous external abort that 
-> I need
-> to track down but not related this patch or indeed reset_link and may 
-> just reflect
-> an impossible to hit path in the e1000e driver.
->
-> It needs a very contrived combination of blocks that say the error is 
-> fatal
-> and others that say it isn't so I'm not that worried about that.
+I think maybe this could be written in a way that could be cut and
+pasted?
 
-Okay, will also test on my end.
+>     Log:
+> [  117.791854] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000000/00008000 into device 0000:e8:01.0
+> [  117.804244] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) error received: 0000:e8:01.0
+> [  117.814652] igen6_edac 0000:e8:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
+> [  117.828511] igen6_edac 0000:e8:01.0:   device [8086:0b25] error status/mask=00008000/00100000
+> [  117.839189] igen6_edac 0000:e8:01.0:    [15] CmpltAbrt
+> [  117.847365] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 00000001 00000002 00000003
+> [  117.857775] igen6_edac 0000:e8:01.0: AER: device recovery successful
+> 
+> 3) Inject a fatal error to the RCiEP 0000:ed:01.0
+>     Run ./aer_inject <a parameter file as below>:
+>     AER
+>     PCI_ID 0000:ed:01.0
+>     UNCOR_STATUS MALF_TLP
+>     HEADER_LOG 0 1 2 3
+> 
+>     Log:
+> [  131.511623] pcieport 0000:ed:00.4: aer_inject: Injecting errors 00000000/00040000 into device 0000:ed:01.0
+> [  131.523259] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error received: 0000:ed:01.0
+> [  131.533842] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
+> [  131.655618] igen6_edac 0000:ed:01.0: AER: device recovery successful
+> 
+> Jonathan Cameron (1):
+>   PCI/AER: Extend AER error handling to RCECs
+> 
+> Qiuxu Zhuo (6):
+>   pci_ids: Add class code and extended capability for RCEC
+>   PCI: Extend Root Port Driver to support RCEC
+>   PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
+>   PCI/AER: Apply function level reset to RCiEP on fatal error
+>   PCI: Add 'rcec' field to pci_dev for associated RCiEPs
+>   PCI/AER: Add RCEC AER error injection support
+> 
+> Sean V Kelley (2):
+>   PCI/AER: Add RCEC AER handling
+>   PCI/PME: Add RCEC PME handling
+> 
 
-Thanks,
+>  drivers/pci/pcie/aer.c          | 36 +++++++++----
+>  drivers/pci/pcie/aer_inject.c   |  5 +-
+>  drivers/pci/pcie/err.c          | 90 +++++++++++++++++++++++++++------
+>  drivers/pci/pcie/pme.c          | 15 ++++--
+>  drivers/pci/pcie/portdrv.h      |  2 +
+>  drivers/pci/pcie/portdrv_core.c | 90 +++++++++++++++++++++++++++++++--
+>  drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
+>  include/linux/pci.h             |  3 ++
+>  include/linux/pci_ids.h         |  1 +
+>  include/uapi/linux/pci_regs.h   |  7 +++
+>  10 files changed, 233 insertions(+), 36 deletions(-)
 
-Sean
+I always apply patches to topic branches based at my "master" branch
+(typically -rc1, so currently v5.8-rc1, but will soon be v5.9-rc1).
 
->
->
->>  			if (status != PCI_ERS_RESULT_RECOVERED) {
->>  				pci_warn(dev, "function level reset failed\n");
->>  				goto failed;
->> @@ -247,7 +253,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
->> *dev,
->>  		if (pcie_aer_is_native(dev))
->>  			pcie_clear_device_status(dev);
->>  		pci_aer_clear_nonfatal_status(dev);
->> +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->> +		if (pcie_aer_is_native(dev) && dev->rcec)
->> +			pcie_clear_device_status(dev->rcec);
->> +		if (dev->rcec)
->> +			pci_aer_clear_nonfatal_status(dev->rcec);
->>  	}
->> +
->>  	pci_info(dev, "device recovery successful\n");
->>  	return status;
->>
->> diff --git a/drivers/pci/pcie/portdrv_pci.c 
->> b/drivers/pci/pcie/portdrv_pci.c
->> index 4d880679b9b1..dff5c9e13412 100644
->> --- a/drivers/pci/pcie/portdrv_pci.c
->> +++ b/drivers/pci/pcie/portdrv_pci.c
->> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops 
->> = {
->>  #define PCIE_PORTDRV_PM_OPS	NULL
->>  #endif /* !PM */
->>
->> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
->> +{
->> +	struct pci_dev *rcec = (struct pci_dev *)data;
->> +
->> +	pdev->rcec = rcec;
->> +	pci_dbg(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
->> +		pci_domain_nr(pdev->bus), pdev->bus->number,
->> +		PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
->> +
->> +	return 0;
->> +}
->> +
->>  /*
->>   * pcie_portdrv_probe - Probe PCI-Express port devices
->>   * @dev: PCI-Express port device being probed
->> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev 
->> *dev,
->>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->>  		return -ENODEV;
->>
->> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
->> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
->> +
->>  	status = pcie_port_device_register(dev);
->>  	if (status)
->>  		return status;
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index ee49469bd2b5..d5f7dbbf5e2f 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -326,6 +326,9 @@ struct pci_dev {
->>  #ifdef CONFIG_PCIEAER
->>  	u16		aer_cap;	/* AER capability offset */
->>  	struct aer_stats *aer_stats;	/* AER stats for this device */
->> +#endif
->> +#ifdef CONFIG_PCIEPORTBUS
->> +	struct pci_dev	*rcec;		/* Associated RCEC device */
->>  #endif
->>  	u8		pcie_cap;	/* PCIe capability offset */
->>  	u8		msi_cap;	/* MSI capability offset */
+If your series doesn't apply there (as this one doesn't), it saves me
+time if you tell me where it does apply.  I figured out that this
+applies cleanly on top of my pci/error branch, which does make sense.
+
+I'd actually *rather* have patches based on "master", even if I have
+to resolve conflicts, because that gives me the flexibility to squash
+in fixes and re-merge the topic branches.
+
+Bjorn
