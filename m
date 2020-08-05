@@ -2,163 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F5D223D3F8
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 00:36:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0852523D404
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 00:48:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgHEWg0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 5 Aug 2020 18:36:26 -0400
-Received: from mga06.intel.com ([134.134.136.31]:46643 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbgHEWgZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:36:25 -0400
-IronPort-SDR: RLirqUXo7HrWwklojeBehlF8me47hTIkHuWZ1BITssDU5Ynrp37mKYa/Dc18VaUj5MNV/n2SBz
- 26c3rDd+wypg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="214193135"
-X-IronPort-AV: E=Sophos;i="5.75,439,1589266800"; 
-   d="scan'208";a="214193135"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 15:36:24 -0700
-IronPort-SDR: 4jqAPXU8L1MlPNyvW2NBUzDdlzqBwLYZRmwkPKNexXoPqVyZVaGMJ89WXsSESBXG0BcEa5uZZ1
- Z+spat/UVAog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,439,1589266800"; 
-   d="scan'208";a="332993780"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga007.jf.intel.com with ESMTP; 05 Aug 2020 15:36:24 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 15:36:23 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 15:36:23 -0700
-Received: from orsmsx612.amr.corp.intel.com ([10.22.229.25]) by
- ORSMSX612.amr.corp.intel.com ([10.22.229.25]) with mapi id 15.01.1713.004;
- Wed, 5 Aug 2020 15:36:23 -0700
-From:   "Dey, Megha" <megha.dey@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Thread-Topic: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Thread-Index: AQHWX3hgWhQMXvQig0qc4n40fOCoeakUaOyAgAASsgCAFXzAsIAAqfsA//+MFHA=
-Date:   Wed, 5 Aug 2020 22:36:23 +0000
-Message-ID: <70465fd3a7ae428a82e19f98daa779e8@intel.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
- <96a1eb5ccc724790b5404a642583919d@intel.com>
- <20200805221548.GK19097@mellanox.com>
-In-Reply-To: <20200805221548.GK19097@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726256AbgHEWsn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Aug 2020 18:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgHEWsl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Aug 2020 18:48:41 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8EF6C061574
+        for <linux-pci@vger.kernel.org>; Wed,  5 Aug 2020 15:48:40 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f193so13411451pfa.12
+        for <linux-pci@vger.kernel.org>; Wed, 05 Aug 2020 15:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2f0chzsU8plamndGAVa0L+UE4xurrF8AKN1ix/elzeo=;
+        b=LOq++iuhI8DCPBmvAeXeK/R4Egf9sXfsO+JT+/SfxSso00VNm7Owtu/33R1IS0Wdeg
+         5cgE+2K4leqV8LFpAL8zTtFMcgIOH1TEuj2VQguyDAXEa0Fn1TvGiD5vMj9rq10q3ukx
+         xTNbJJ62lXn8Aog2ut6XDKkljIOiYrE58r4Ps=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2f0chzsU8plamndGAVa0L+UE4xurrF8AKN1ix/elzeo=;
+        b=jHBAQnFWwY6dbgYngDGMQrbN5UvG8UmE89gkFinO/FCsmrh44yBDOXMBfh3gTqbEaZ
+         mOttKh8UMBGgcolsumgK9lJJDAbsbWBSin8H+WeO9bsvnb2jRVU/mfs08AT8X9e190J/
+         dzMapA9UBWckNlmaaqd+ci6/GEcMMNiBCpZoqoTD58ifXRo9Fphfic2z6IIi7a8LcHjm
+         tLn/XQv9W98/mcjojRdo6e/MemfVm1pzcHTeTFqgdb3M+sPTB6yjL+9SBTu0x6oeaIWb
+         KuKaXYLfBsRlWCvsfMa2JgYCCKjfM78WhIcTzO/FOEGBusku8AvPbld6+TUpd2NA2rca
+         KLdQ==
+X-Gm-Message-State: AOAM530fjqC8U/tmlP1+Vc4S5SBP51FZXEaNR3asWF7/BbD3/6I6riHu
+        4fFDYg6YfuFM8ge2xAkPXJ9IJA==
+X-Google-Smtp-Source: ABdhPJyC+rZ3Bjtr0TdW+a+bIzEPmblHyS5UqJfZswoqNuslOCgYSdiV2Xf7kGGECmLcSIkxYh4bpA==
+X-Received: by 2002:a63:5349:: with SMTP id t9mr5210648pgl.204.1596667718770;
+        Wed, 05 Aug 2020 15:48:38 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id f3sm5378263pfj.206.2020.08.05.15.48.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 15:48:37 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] PCI: iproc: Set affinity mask on MSI interrupts
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        helgaas@kernel.org, sbranden@broadcom.com, f.fainelli@gmail.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <00166b29-f284-984c-81c2-54d5c1e3343a@broadcom.com>
+Date:   Wed, 5 Aug 2020 15:48:36 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jason,
 
-> -----Original Message-----
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Sent: Wednesday, August 5, 2020 3:16 PM
-> To: Dey, Megha <megha.dey@intel.com>
-> Cc: Marc Zyngier <maz@kernel.org>; Jiang, Dave <dave.jiang@intel.com>;
-> vkoul@kernel.org; bhelgaas@google.com; rafael@kernel.org;
-> gregkh@linuxfoundation.org; tglx@linutronix.de; hpa@zytor.com;
-> alex.williamson@redhat.com; Pan, Jacob jun <jacob.jun.pan@intel.com>; Raj,
-> Ashok <ashok.raj@intel.com>; Liu, Yi L <yi.l.liu@intel.com>; Lu, Baolu
-> <baolu.lu@intel.com>; Tian, Kevin <kevin.tian@intel.com>; Kumar, Sanjay K
-> <sanjay.k.kumar@intel.com>; Luck, Tony <tony.luck@intel.com>; Lin, Jing
-> <jing.lin@intel.com>; Williams, Dan J <dan.j.williams@intel.com>;
-> kwankhede@nvidia.com; eric.auger@redhat.com; parav@mellanox.com;
-> Hansen, Dave <dave.hansen@intel.com>; netanelg@mellanox.com;
-> shahafs@mellanox.com; yan.y.zhao@linux.intel.com; pbonzini@redhat.com;
-> Ortiz, Samuel <samuel.ortiz@intel.com>; Hossain, Mona
-> <mona.hossain@intel.com>; dmaengine@vger.kernel.org; linux-
-> kernel@vger.kernel.org; x86@kernel.org; linux-pci@vger.kernel.org;
-> kvm@vger.kernel.org
-> Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
-> irq domain
+
+On 8/2/2020 8:52 PM, Mark Tomlinson wrote:
+> The core interrupt code expects the irq_set_affinity call to update the
+> effective affinity for the interrupt. This was not being done, so update
+> iproc_msi_irq_set_affinity() to do so.
 > 
-> On Wed, Aug 05, 2020 at 07:18:39PM +0000, Dey, Megha wrote:
+> Fixes: 3bc2b2348835 ("PCI: iproc: Add iProc PCIe MSI support")
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+> changes in v2:
+>  - Patch 1/2 Added Fixes tag
+>  - Patch 2/2 Replace original change with change suggested by Bjorn
+>    Helgaas.
 > 
-> > Hence we will only have one create_dev_msi_domain which can be called
-> > by any device driver that wants to use the dev-msi IRQ domain to
-> > alloc/free IRQs. It would be the responsibility of the device driver
-> > to provide the correct device and update the dev->msi_domain.
+> changes in v3:
+>  - Use bitfield rather than bool to save memory.
 > 
-> I'm not sure that sounds like a good idea, why should a device driver touch dev-
-> >msi_domain?
+>  drivers/pci/controller/pcie-iproc-msi.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> There was a certain appeal to the api I suggested by having everything related to
-> setting up the new IRQs being in the core code.
-
-The basic API to create the dev_msi domain would be :
-
-struct irq_domain *create_dev_msi_irq_domain(struct irq_domain *parent)
-
-This can be called by devices according to their use case.
-
-For e.g. in dsa case, it is called from the irq remapping driver:
-iommu->ir_dev_msi_domain = create_dev_msi_domain(iommu->ir_domain)
-
-and from the dsa mdev driver:
-p_dev = get_parent_pci_dev(dev);
-iommu = device_to_iommu(p_dev);
-
-dev->msi_domain = iommu->ir_dev_msi_domain;
-
-So we are creating the domain in the IRQ  remapping domain which can be used by other devices which want to have the same IRQ parent domain and use dev-msi APIs. We are only updating that device's msi_domain to the already created dev-msi domain in the driver. 
-
-Other devices (your rdma driver etc) can create their own dev-msi domain by passing the appropriate parent IRq domain.
-
-We cannot have this in the core code since the parent domain cannot be the same?
-
-Please let me know if you think otherwise..
+> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> index 3176ad3ab0e5..908475d27e0e 100644
+> --- a/drivers/pci/controller/pcie-iproc-msi.c
+> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> @@ -209,15 +209,20 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
+>  	struct iproc_msi *msi = irq_data_get_irq_chip_data(data);
+>  	int target_cpu = cpumask_first(mask);
+>  	int curr_cpu;
+> +	int ret;
+>  
+>  	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
+>  	if (curr_cpu == target_cpu)
+> -		return IRQ_SET_MASK_OK_DONE;
+> +		ret = IRQ_SET_MASK_OK_DONE;
+> +	else {
+> +		/* steer MSI to the target CPU */
+> +		data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
+> +		ret = IRQ_SET_MASK_OK;
+> +	}
+>  
+> -	/* steer MSI to the target CPU */
+> -	data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
+> +	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
+>  
+> -	return IRQ_SET_MASK_OK;
+> +	return ret;
+>  }
+>  
+>  static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
 > 
-> Jason
+
+Looks good with the Fixes tag added. Thanks.
+
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
