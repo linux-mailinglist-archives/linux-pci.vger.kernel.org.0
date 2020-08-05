@@ -2,160 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 073AD23C168
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Aug 2020 23:26:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8120723C3CB
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Aug 2020 05:01:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgHDV0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Aug 2020 17:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgHDV0I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Aug 2020 17:26:08 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED63DC06174A;
-        Tue,  4 Aug 2020 14:26:07 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r11so13514964pfl.11;
-        Tue, 04 Aug 2020 14:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H53lbBysrvDenqcyvIC5UIxfvFKGaXbtjEmFJwaxIpE=;
-        b=T7fS5brMmb4wsPGHicKEipC/YARUq/fZUJQbVJ+Xk4BTkzZ9GzfejLGEQPEBcZ7tAq
-         f4tgYSeSMSqesC9fJTzH37W+mPN5bA15tpvb7fttWSh/rIQXEdSWbSK0ZHQ39DFHtaEO
-         IdAvLeQZu3/LLvABjTqO53RvtXGps7eAuOMvzLaA9lEMfUqme0I6MfqEBbDREDWHRcYT
-         G5if5wjnu51vBKn+XfiPXaNCo0J6Wx1Kzh63dCvaf6CThNqef/BCWLpH5UTNMPP3d2rY
-         nmqofLZ7F4cty7/B8i/xsWuZrAUts3iHqTtgQqwkPM0E3hh0ZbWL+4COSDa6WsibYTmj
-         lIRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H53lbBysrvDenqcyvIC5UIxfvFKGaXbtjEmFJwaxIpE=;
-        b=aT/mdz97hKM5MLgRybq3GxtXrzr8DpPfYkbxoRen8+qPf6E+3N+PFR7saJS48Ck8ru
-         mWgflwT/LWUA9w0S+rjLc5ODyBtlzNBe94YiayJXGOje5pVeoPNYXny/8N/1k6RZSxmB
-         JAJkTHXNeKgcblsBtIWoHUbPRSf/EvybTj3TLAblS/jfC+Mpr9DD+VgV5jSv8jxPJjLj
-         g9gaATsXuWrEQuqeIn1AAK8cgM1snRiVabMfOfukdCmpHAap41TjYxISLRHTj7hpfgM2
-         a7cLPIIy05Mz/SSRRJcrZNrS7DGHB3A23wu1KhPChMNMHrtQAzoFwktFd2nYVEjYlOMq
-         RDqw==
-X-Gm-Message-State: AOAM533p4KpAOGxLj+Thjx+ucfx8P9z3Z89wqFltzRVFR8p5dtE7I8+C
-        1vaZcgINkUL/gwZz52al+Us=
-X-Google-Smtp-Source: ABdhPJxillOY5cbn2FINKGZ40mF2Q8aHqizsQ7EqXczJv8PwJnzXaEl1BvDabEeUkMzRY7cIaHCkGA==
-X-Received: by 2002:a63:1a04:: with SMTP id a4mr297213pga.95.1596576367419;
-        Tue, 04 Aug 2020 14:26:07 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 63sm8759439pfu.196.2020.08.04.14.26.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Aug 2020 14:26:06 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 14:26:05 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
+        id S1726104AbgHEDBb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Aug 2020 23:01:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgHEDBa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Aug 2020 23:01:30 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A50206D4;
+        Wed,  5 Aug 2020 03:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596596490;
+        bh=8AH4/eUPZDsQ+fVW4NopE/hRdVe2VxDxDVRNG3gh8Hw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Ox4surQWFDCe/f1T3HysFeGsbODxhzyEL1Bad7uxlpfViYeKLxBCjlg2DFvgIcC4D
+         SlXbND10xcRebErpP9UcAfNCIF9IDNdk+0OzOv59IaP0KpMNa7pWzR/gvoyfC5q3s0
+         DzRPmTNkMjcd0vdXGjsPkB5e41W+FP1lSeW0YhgE=
+Date:   Tue, 4 Aug 2020 22:01:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Subject: Re: [RFC PATCH 10/17] hwmon: Drop uses of pci_read_config_*() return
- value
-Message-ID: <20200804212605.GA218592@roeck-us.net>
-References: <20200801112446.149549-1-refactormyself@gmail.com>
- <20200801112446.149549-11-refactormyself@gmail.com>
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH V2 1/9] pci_ids: Add class code and extended capability
+ for RCEC
+Message-ID: <20200805030128.GA470966@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200801112446.149549-11-refactormyself@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200804194052.193272-2-sean.v.kelley@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 01:24:39PM +0200, Saheed O. Bolarinwa wrote:
-> The return value of pci_read_config_*() may not indicate a device error.
-> However, the value read by these functions is more likely to indicate
-> this kind of error. This presents two overlapping ways of reporting
-> errors and complicates error checking.
+On Tue, Aug 04, 2020 at 12:40:44PM -0700, Sean V Kelley wrote:
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 > 
-> It is possible to move to one single way of checking for error if the
-> dependency on the return value of these functions is removed, then it
-> can later be made to return void.
+> A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
+> sub-class 0x07, and programming interface 0x00. Add the class code
+> 0x0807 to identify RCEC devices and add the defines for the RCEC
+> Endpoint Association Extended Capability.
 > 
-> Remove all uses of the return value of pci_read_config_*().
-> Check the actual value read for ~0. In this case, ~0 is an invalid
-> value thus it indicates some kind of error.
+> See PCI Express Base Specification, version 5.0-1, section "1.3.4
+> Root Complex Event Collector" and section "7.9.10 Root Complex
+> Event Collector Endpoint Association Extended Capability"
 > 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Applied.
+1) "git log --oneline include/linux/pci_ids.h".  Match it.  Mention
+the most important words, like "RCEC", early in the subject.
 
-Thanks,
-Guenter
+2) https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n555
 
 > ---
->  drivers/hwmon/i5k_amb.c | 12 ++++++++----
->  drivers/hwmon/vt8231.c  |  8 ++++----
->  2 files changed, 12 insertions(+), 8 deletions(-)
+>  include/linux/pci_ids.h       | 1 +
+>  include/uapi/linux/pci_regs.h | 7 +++++++
+>  2 files changed, 8 insertions(+)
 > 
-> diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
-> index eeac4b04df27..b7497510323c 100644
-> --- a/drivers/hwmon/i5k_amb.c
-> +++ b/drivers/hwmon/i5k_amb.c
-> @@ -427,11 +427,13 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
->  	if (!pcidev)
->  		return -ENODEV;
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 5c709a1450b1..bc6d1a4ca02d 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -81,6 +81,7 @@
+>  #define PCI_CLASS_SYSTEM_RTC		0x0803
+>  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
+>  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
+> +#define PCI_CLASS_SYSTEM_RCEC		0x0807
+>  #define PCI_CLASS_SYSTEM_OTHER		0x0880
 >  
-> -	if (pci_read_config_dword(pcidev, I5K_REG_AMB_BASE_ADDR, &val32))
-> +	pci_read_config_dword(pcidev, I5K_REG_AMB_BASE_ADDR, &val32);
-> +	if (val32 == (u32)~0)
->  		goto out;
->  	data->amb_base = val32;
+>  #define PCI_BASE_CLASS_INPUT		0x09
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..f335f65f65d6 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -828,6 +828,13 @@
+>  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
+>  #define PCI_EXT_CAP_PWR_SIZEOF	16
 >  
-> -	if (pci_read_config_dword(pcidev, I5K_REG_AMB_LEN_ADDR, &val32))
-> +	pci_read_config_dword(pcidev, I5K_REG_AMB_LEN_ADDR, &val32);
-> +	if (val32 == (u32)~0)
->  		goto out;
->  	data->amb_len = val32;
->  
-> @@ -458,11 +460,13 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
->  	if (!pcidev)
->  		return -ENODEV;
->  
-> -	if (pci_read_config_word(pcidev, I5K_REG_CHAN0_PRESENCE_ADDR, &val16))
-> +	pci_read_config_word(pcidev, I5K_REG_CHAN0_PRESENCE_ADDR, &val16);
-> +	if (val16 == (u16)~0)
->  		goto out;
->  	amb_present[0] = val16;
->  
-> -	if (pci_read_config_word(pcidev, I5K_REG_CHAN1_PRESENCE_ADDR, &val16))
-> +	pci_read_config_word(pcidev, I5K_REG_CHAN1_PRESENCE_ADDR, &val16);
-> +	if (val16 == (u16)~0)
->  		goto out;
->  	amb_present[1] = val16;
->  
-> diff --git a/drivers/hwmon/vt8231.c b/drivers/hwmon/vt8231.c
-> index 2335d440f72d..6603727e15a0 100644
-> --- a/drivers/hwmon/vt8231.c
-> +++ b/drivers/hwmon/vt8231.c
-> @@ -992,8 +992,8 @@ static int vt8231_pci_probe(struct pci_dev *dev,
->  			return -ENODEV;
->  	}
->  
-> -	if (PCIBIOS_SUCCESSFUL != pci_read_config_word(dev, VT8231_BASE_REG,
-> -							&val))
-> +	pci_read_config_word(dev, VT8231_BASE_REG, &val);
-> +	if (val == (u16)~0)
->  		return -ENODEV;
->  
->  	address = val & ~(VT8231_EXTENT - 1);
-> @@ -1002,8 +1002,8 @@ static int vt8231_pci_probe(struct pci_dev *dev,
->  		return -ENODEV;
->  	}
->  
-> -	if (PCIBIOS_SUCCESSFUL != pci_read_config_word(dev, VT8231_ENABLE_REG,
-> -							&val))
-> +	pci_read_config_word(dev, VT8231_ENABLE_REG, &val);
-> +	if (val == (u16)~0)
->  		return -ENODEV;
->  
->  	if (!(val & 0x0001)) {
+> +/* Root Complex Event Collector Endpoint Association  */
+> +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
+> +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
+> +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
+> +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
+> +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
+> +
+>  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
+>  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
+>  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
+> -- 
+> 2.27.0
+> 
