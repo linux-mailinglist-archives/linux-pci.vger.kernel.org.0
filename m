@@ -2,146 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 695E323D505
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 03:23:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15E8523D5F9
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 06:15:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHFBXQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Aug 2020 21:23:16 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46047 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726026AbgHFBXP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Aug 2020 21:23:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596676993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UMQQrEZ+Nh2Ng/k4GnJLH3osJ2CLCkGK7FDHnj5N9Y=;
-        b=h72aG7JNB/fpByqywxfMmb388ir0lOP8vy13mF1Ewnc51GaRlBNHE4n3KCDqkYnOA08qaA
-        BRkn975hNOyE4GcHxIU1R/D3/eDXXhL7LKsrldrfVvKbCy1AvypTtUqYf8Lr//e6NuCSPF
-        CGU8Mf7BGV+jP0r5HpZA6VWEEY3WzCI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-hlfFQIgrNMqgf_91JPS2og-1; Wed, 05 Aug 2020 21:23:09 -0400
-X-MC-Unique: hlfFQIgrNMqgf_91JPS2og-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A77180046B;
-        Thu,  6 Aug 2020 01:23:05 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA47910013D7;
-        Thu,  6 Aug 2020 01:22:59 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 19:22:58 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200805192258.5ee7a05b@x1.home>
-In-Reply-To: <20200724001930.GS2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com>
-Organization: Red Hat
+        id S1726388AbgHFEPL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Aug 2020 00:15:11 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37543 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbgHFEPK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Aug 2020 00:15:10 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1F1968011F;
+        Thu,  6 Aug 2020 16:15:06 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1596687306;
+        bh=y/TS5dY/e8pkHaHRXcCzB2vajvea5CBxtY3MHgzDUiw=;
+        h=From:To:Cc:Subject:Date;
+        b=Si2lRLsHzS9JXlt0wpsVDwE4y5ZY79wRzK0RtbWTtiIbLSzcsDamNJlBiLDap3SGy
+         EXI5ZMv6egTG38LtOrV8PKLi/2Rro8+g84jMQ2A5erGNm0aUiEENYCyXbVrWoW4edt
+         0ebmxxROMi+hkIrMqgYQxfO1mgBG1DEP72HAHsw8mm8Qxnvon5EhzWfFq2396w/Pb4
+         oBRBmff6pdQfFea8rWtJqPzl6jMgDXh/lmLhyMKYjPJsqwiVFxGK7VokDxovweFpx+
+         mcFN2mIbAXW5R2lWKYB1hv6Fqg4t3fS1U3Q5KIaLVLMFT8wgDM2CMTa7kKpLr282za
+         kDepSIhcOb6XQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f2b83ca0000>; Thu, 06 Aug 2020 16:15:06 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id AB2EB13EEBA;
+        Thu,  6 Aug 2020 16:15:04 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id CFB3E341096; Thu,  6 Aug 2020 16:15:05 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     ray.jui@broadcom.com, helgaas@kernel.org, sbranden@broadcom.com,
+        f.fainelli@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
+Date:   Thu,  6 Aug 2020 16:14:55 +1200
+Message-Id: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Jul 2020 21:19:30 -0300
-Jason Gunthorpe <jgg@mellanox.com> wrote:
+For hardware that only supports 32-bit writes to PCI there is the
+possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
+messages was introduced by fb2659230120, but rate-limiting is not the
+best choice here. Some devices may not show the warnings they should if
+another device has just produced a bunch of warnings. Also, the number
+of messages can be a nuisance on devices which are otherwise working
+fine.
 
-> On Tue, Jul 21, 2020 at 11:54:49PM +0000, Tian, Kevin wrote:
-> > In a nutshell, applications don't require raw WQ controllability as guest
-> > kernel drivers may expect. Extending DSA user space interface to be another
-> > passthrough interface just for virtualization needs is less compelling than
-> > leveraging established VFIO/mdev framework (with the major merit that
-> > existing user space VMMs just work w/o any change as long as they already
-> > support VFIO uAPI).  
-> 
-> Sure, but the above is how the cover letter should have summarized
-> that discussion, not as "it is not much code difference"
-> 
-> > In last review you said that you didn't hard nak this approach and would
-> > like to hear opinion from virtualization guys. In this version we CCed KVM
-> > mailing list, Paolo (VFIO/Qemu), Alex (VFIO), Samuel (Rust-VMM/Cloud
-> > hypervisor), etc. Let's see how they feel about this approach.  
-> 
-> Yes, the VFIO community should decide.
-> 
-> If we are doing emulation tasks in the kernel now, then I can think of
-> several nice semi-emulated mdevs to propose.
-> 
-> This will not be some one off, but the start of a widely copied
-> pattern.
+This patch changes the ratelimit to a single warning per bus. This
+ensures no bus is 'starved' of emitting a warning and also that there
+isn't a continuous stream of warnings. It would be preferable to have a
+warning per device, but the pci_dev structure is not available here, and
+a lookup from devfn would be far too slow.
 
-And that's definitely a concern, there should be a reason for
-implementing device emulation in the kernel beyond an easy path to get
-a device exposed up through a virtualization stack.  The entire idea of
-mdev is the mediation of access to a device to make it safe for a user
-and to fit within the vfio device API.  Mediation, emulation, and
-virtualization can be hard to differentiate, and there is some degree of
-emulation required to fill out the device API, for vfio-pci itself
-included.  So I struggle with a specific measure of where to draw the
-line, and also whose authority it is to draw that line.  I don't think
-it's solely mine, that's something we need to decide as a community.
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bi=
+t config writes")
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+---
+changes in v4:
+ - Use bitfield rather than bool to save memory (was meant to be in v3).
 
-If you see this as an abuse of the framework, then let's identify those
-specific issues and come up with a better approach.  As we've discussed
-before, things like basic PCI config space emulation are acceptable
-overhead and low risk (imo) and some degree of register emulation is
-well within the territory of an mdev driver.  Drivers are accepting
-some degree of increased attack surface by each addition of a uAPI and
-the complexity of those uAPIs, but it seems largely a decision for
-those drivers whether they're willing to take on that responsibility
-and burden.
+ drivers/pci/access.c | 9 ++++++---
+ include/linux/pci.h  | 1 +
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-At some point, possibly in the near-ish future, we might have a
-vfio-user interface with userspace vfio-over-socket servers that might
-be able to consume existing uAPIs and offload some of this complexity
-and emulation to userspace while still providing an easy path to insert
-devices into the virtualization stack.  Hopefully if/when that comes
-along, it would provide these sorts of drivers an opportunity to
-offload some of the current overhead out to userspace, but I'm not sure
-it's worth denying a mainline implementation now.  Thanks,
-
-Alex
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 79c4a2ef269a..b452467fd133 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, =
+unsigned int devfn,
+ 	 * write happen to have any RW1C (write-one-to-clear) bits set, we
+ 	 * just inadvertently cleared something we shouldn't have.
+ 	 */
+-	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x=
+.%d offset %#x may corrupt adjacent RW1C bits\n",
+-			     size, pci_domain_nr(bus), bus->number,
+-			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
++	if (!bus->unsafe_warn) {
++		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset =
+%#x may corrupt adjacent RW1C bits\n",
++			 size, pci_domain_nr(bus), bus->number,
++			 PCI_SLOT(devfn), PCI_FUNC(devfn), where);
++		bus->unsafe_warn =3D 1;
++	}
+=20
+ 	mask =3D ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+ 	tmp =3D readl(addr) & mask;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 34c1c4f45288..85211a787f8b 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -626,6 +626,7 @@ struct pci_bus {
+ 	struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
+ 	struct bin_attribute	*legacy_mem;	/* Legacy mem */
+ 	unsigned int		is_added:1;
++	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
+ };
+=20
+ #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
+--=20
+2.28.0
 
