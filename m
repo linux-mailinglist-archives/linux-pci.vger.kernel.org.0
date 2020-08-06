@@ -2,137 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33E2623DEEC
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 19:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60E0123DFF8
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 19:56:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgHFRek (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Aug 2020 13:34:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbgHFRbo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:31:44 -0400
-Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208C823122;
-        Thu,  6 Aug 2020 13:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596719609;
-        bh=DVhuP8UL/Dey1HcALXY+xyYV4uOthFoT+uVqZoV82jQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QYI7mLwkFAuWc+zsX3QicF8JtRLiIXc6aQxLd/8zcKr/Xiw2xjevHZmfWg71/6uHz
-         aWbfsTAyUkDUcbnwj82ljAIRJE9ulBdYa1mFX3Zzro5zlPb9LiBEUxdRpP6yosMeeN
-         TgYC+TfNJJL7A0ETqQDmr9zO9bK0U4B9SndYOw+o=
-Date:   Thu, 6 Aug 2020 08:13:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, robh@kernel.org, maz@kernel.org
-Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200806131327.GA654295@bjorn-Precision-5520>
+        id S1728027AbgHFR4F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Aug 2020 13:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729592AbgHFR4A (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Aug 2020 13:56:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 881AAC061574
+        for <linux-pci@vger.kernel.org>; Thu,  6 Aug 2020 10:55:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f1so44301173wro.2
+        for <linux-pci@vger.kernel.org>; Thu, 06 Aug 2020 10:55:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=VLToQkSGb9Fyj+rMmCyIoE12BtD4sRvLhirgEOkP9W4=;
+        b=aiclBWRQsaqlr4rxoQqEFfHk424DkMeqTmreM/zu7IQoemedoiGmY1RO05MmpZR6+P
+         w7xGe9fU76E3VMZ7Isj9CVyq5FEg4I8VDs+q0YobHeP9Ohy4GB5+BKuoR/WEUbUXJdph
+         UquQ9WkUAjpPvjtyL6o6gTPDC/x9qzlzrlEYI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=VLToQkSGb9Fyj+rMmCyIoE12BtD4sRvLhirgEOkP9W4=;
+        b=S+sjxR5bUikN14upeM3XQaRgzaeeZzj+HWpX7W5Q2qAtD71EIskvoSgNp6S1yGSbyI
+         9h45le7ppGzxph/jgPwfUS6jRL8goURpyAEoXNV2Nvxz4RsxwEcTuwx+hTodSy/OC6tu
+         YagpdOlkHEeW4330PrLSj9teF8GM70fe57dZcE5XDl2c2pO4F9pU9GvmHm3YRI7/juRs
+         j30akNE1xVkYGFjliF3zfpAR2USuBYaBReD9hT+IIaCrbKEfd9JpmhlkaGaWsQUm1n8q
+         4niuq1YZQ/0TpUQieNb/MoXleq+psQJFTZP9bNGEU2EWpAYa9kdGb9XwHE7FC5reQJ3X
+         AfAQ==
+X-Gm-Message-State: AOAM532Pz+qWHIg2IRGVIw/4QXOV8TxeJRllaUJRLX6HzpuKpTS4/xeI
+        hhVW30h8GF3FUBmazdVEbk32Ow==
+X-Google-Smtp-Source: ABdhPJzbtHnvN2YvogoQjvg6Nr1wWat0eDA9t2hrW3lsNiU9zCFscq1A7+T3HDp3Wo7bjV+9E+cWiQ==
+X-Received: by 2002:adf:bb07:: with SMTP id r7mr8403518wrg.102.1596736558012;
+        Thu, 06 Aug 2020 10:55:58 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id l11sm6978590wme.11.2020.08.06.10.55.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 10:55:57 -0700 (PDT)
+Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        ray.jui@broadcom.com, helgaas@kernel.org, sbranden@broadcom.com,
+        f.fainelli@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <16cbd3f5-722a-cf8b-487e-82a0bbf95053@broadcom.com>
+Date:   Thu, 6 Aug 2020 10:55:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806095445.GA9715@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-CA
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:54:45AM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Aug 05, 2020 at 06:30:50PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Aug 05, 2020 at 05:03:26PM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Aug 05, 2020 at 10:39:28PM +0100, Lorenzo Pieralisi wrote:
-> > > > On Wed, Aug 05, 2020 at 03:43:58PM -0500, Bjorn Helgaas wrote:
-> > > > > On Tue, Jun 16, 2020 at 06:26:54PM +0530, Bharat Kumar Gogada wrote:
-> > > > > > - Add support for Versal CPM as Root Port.
-> > > > > > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
-> > > > > >   block for CPM along with the integrated bridge can function
-> > > > > >   as PCIe Root Port.
-> > > > > > - Bridge error and legacy interrupts in Versal CPM are handled using
-> > > > > >   Versal CPM specific interrupt line.
-> > > > > 
-> > > > > > +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
-> > > > > > +{
-> > > > > > +	if (cpm_pcie_link_up(port))
-> > > > > > +		dev_info(port->dev, "PCIe Link is UP\n");
-> > > > > > +	else
-> > > > > > +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> > > > > > +
-> > > > > > +	/* Disable all interrupts */
-> > > > > > +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> > > > > > +		   XILINX_CPM_PCIE_REG_IMR);
-> > > > > > +
-> > > > > > +	/* Clear pending interrupts */
-> > > > > > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> > > > > > +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> > > > > > +		   XILINX_CPM_PCIE_REG_IDR);
-> > > > > > +
-> > > > > > +	/*
-> > > > > > +	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
-> > > > > > +	 * CPM SLCR block.
-> > > > > > +	 */
-> > > > > > +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-> > > > > > +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-> > > > > > +	/* Enable the Bridge enable bit */
-> > > > > > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> > > > > > +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-> > > > > > +		   XILINX_CPM_PCIE_REG_RPSC);
-> > > > > > +}
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * xilinx_cpm_pcie_parse_dt - Parse Device tree
-> > > > > > + * @port: PCIe port information
-> > > > > > + * @bus_range: Bus resource
-> > > > > > + *
-> > > > > > + * Return: '0' on success and error value on failure
-> > > > > > + */
-> > > > > > +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port,
-> > > > > > +				    struct resource *bus_range)
-> > > > > > +{
-> > > > > > +	struct device *dev = port->dev;
-> > > > > > +	struct platform_device *pdev = to_platform_device(dev);
-> > > > > > +	struct resource *res;
-> > > > > > +
-> > > > > > +	port->cpm_base = devm_platform_ioremap_resource_byname(pdev,
-> > > > > > +							       "cpm_slcr");
-> > > > > > +	if (IS_ERR(port->cpm_base))
-> > > > > > +		return PTR_ERR(port->cpm_base);
-> > > > > > +
-> > > > > > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> > > > > > +	if (!res)
-> > > > > > +		return -ENXIO;
-> > > > > > +
-> > > > > > +	port->cfg = pci_ecam_create(dev, res, bus_range,
-> > > > > > +				    &pci_generic_ecam_ops);
-> > > > > 
-> > > > > Aren't we passing an uninitialized pointer (bus_range) here?  This
-> > > > > looks broken to me.
-> > > > > 
-> > > > > The kernelci build warns about it:
-> > > > > https://kernelci.org/build/next/branch/master/kernel/next-20200805/
-> > > > > 
-> > > > >   /scratch/linux/drivers/pci/controller/pcie-xilinx-cpm.c:557:39: warning: variable 'bus_range' is uninitialized when used here [-Wuninitialized]
-> > > > > 
-> > > > > I'm dropping this for now.  I can't believe this actually works.
-> > > > 
-> > > > It is caused by my rebase to fix -next after the rework in pci/misc
-> > > > (I had to drop the call to pci_parse_request_of_pci_ranges()).
-> > > > 
-> > > > I will look into this tomorrow if Rob does not beat me to it.
-> > > > 
-> > > > Apologies, it is a new driver that was based on an interface
-> > > > that is being reworked, for good reasons, in pci/misc.
-> > > 
-> > > Oh, yep, I think I see what happened.  I'll try to fix this in hopes
-> > > of making linux-next tonight.
-> > 
-> > OK, I think I fixed it.  Man, that was a lot of work for a git novice
-> > like me ;)  Current head: 6f119ec8d9c8 ("Merge branch 'pci/irq-error'")
-> 
-> Sorry about that.
+Looks good.
 
-No problem, if I were less OCD and more smart about git, it would have
-been trivial.  But it did make it into the Aug 6 linux-next, so that's
-good!
+On 2020-08-05 9:14 p.m., Mark Tomlinson wrote:
+> For hardware that only supports 32-bit writes to PCI there is the
+> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
+> messages was introduced by fb2659230120, but rate-limiting is not the
+> best choice here. Some devices may not show the warnings they should if
+> another device has just produced a bunch of warnings. Also, the number
+> of messages can be a nuisance on devices which are otherwise working
+> fine.
+>
+> This patch changes the ratelimit to a single warning per bus. This
+> ensures no bus is 'starved' of emitting a warning and also that there
+> isn't a continuous stream of warnings. It would be preferable to have a
+> warning per device, but the pci_dev structure is not available here, and
+> a lookup from devfn would be far too slow.
+>
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+> changes in v4:
+>  - Use bitfield rather than bool to save memory (was meant to be in v3).
+>
+>  drivers/pci/access.c | 9 ++++++---
+>  include/linux/pci.h  | 1 +
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 79c4a2ef269a..b452467fd133 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>  	 * write happen to have any RW1C (write-one-to-clear) bits set, we
+>  	 * just inadvertently cleared something we shouldn't have.
+>  	 */
+> -	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> -			     size, pci_domain_nr(bus), bus->number,
+> -			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +	if (!bus->unsafe_warn) {
+> +		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> +			 size, pci_domain_nr(bus), bus->number,
+> +			 PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +		bus->unsafe_warn = 1;
+> +	}
+>  
+>  	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+>  	tmp = readl(addr) & mask;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 34c1c4f45288..85211a787f8b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -626,6 +626,7 @@ struct pci_bus {
+>  	struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
+>  	struct bin_attribute	*legacy_mem;	/* Legacy mem */
+>  	unsigned int		is_added:1;
+> +	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
+>  };
+>  
+>  #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
+
