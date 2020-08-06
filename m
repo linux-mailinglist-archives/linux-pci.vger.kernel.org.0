@@ -2,157 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB98023DA16
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 13:46:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 350F923DDCD
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 19:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgHFLnq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Aug 2020 07:43:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgHFLSd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Aug 2020 07:18:33 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16F0C0617A4;
-        Thu,  6 Aug 2020 04:17:31 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id v89so11271403ybi.8;
-        Thu, 06 Aug 2020 04:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IkZFSPvcY5I31SF4ovGBrfHT1rxg0M171V/0SMIVx2k=;
-        b=W1T7PMyTGM7VIbxN0FUlHyTKpaK0nw8VbeY8YI4ksk9CWWKzLOGNJsuFVpAeVzqEDQ
-         l5jy7ReADQ2WPptC19aMYCiHXKqdoGibvICjZi24Fx59vEVwEvfL4yZTHGzKYmCRL03U
-         RVTRjFq4TV8+2/gTNJkJ/Htgj1Fhq5P1qcxe/eQL/FoLz9bwZG6KJsHhvjn7+xr/6u/A
-         ZwyurJY9E7i7o/VwJb0vYHsxFh1fqfcI6q3MWsQ7MjEBH949S7NP+IoE180+3rUUw9UI
-         +/+wKAisrtczBHnl7YHt8MqtQz67j1T9EoVK3At6moXH+T7btd80HOMRDedl6B5O04Fc
-         C4rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IkZFSPvcY5I31SF4ovGBrfHT1rxg0M171V/0SMIVx2k=;
-        b=g67kPD/j95qTl+nSE82sBYDekoxbS1PiK2Tg09FZoroG9kInTPi/m/ggaM4nk9P9CC
-         iSnd0fPe+8394pPmMrq6GNs8+scxrtN8VyiLjMNFXulPSXoe5KORzJ3zGp3cpIuUiXEC
-         zepQ0ZkznvpuUvLmULR0+Bv5rSUSUejjz6SwMWuA2DKS7B96KlGvchGWcM6HPf+qZIvn
-         AlNWx1iUxAQp1s6JmbdIEFXXwUi2p3RDKrqzNbyW18TGybaFfbuVWz2pabsraTzrSrek
-         nMok3hQbEk44a9wlxHprIzAZvGHtNt3pWgqGwo95Ftofql4Wo6agwTLMeR256HhTh4Tm
-         0WRQ==
-X-Gm-Message-State: AOAM532SNiuhML1IP3RP2/AkmTWejLC4WI6F7qE3KRIy7Cs+sP9H+6rA
-        JYtYPHOnlsV3ojMSpRKIcVpsFUnL7aqd/hl33yA=
-X-Google-Smtp-Source: ABdhPJxC1QZwDQjfBbSfcHd9+nWr/d1KIV+hOzv93X+1QoDGFFoAz1yykeKI4ZMC4cs50cyA5iK5Orky9ZbUh/KQlXM=
-X-Received: by 2002:a25:c743:: with SMTP id w64mr11132228ybe.127.1596712641618;
- Thu, 06 Aug 2020 04:17:21 -0700 (PDT)
+        id S1730490AbgHFRO4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Aug 2020 13:14:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:49902 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730167AbgHFROz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:14:55 -0400
+IronPort-SDR: fdfoVCRE0W3mIYMDpNMFG4zW2fJCvLE5vbbg+6ZpA8k1HosqHGqM0+NIBXEuQ11POb1ed80iv6
+ sg9QMcObIo0w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="150245893"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="150245893"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 05:33:45 -0700
+IronPort-SDR: xJk0DjFzYspDbEfO8Lt7mTOr3lqzCG6R2jUytLEx5c9xZMfq8Ibl9b1CD3lteakHBJuUXfZDgY
+ V1uIxtaURXng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="331211618"
+Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Aug 2020 05:33:43 -0700
+Received: from kbuild by 37a337f97289 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k3f5a-0001IC-JY; Thu, 06 Aug 2020 12:33:42 +0000
+Date:   Thu, 06 Aug 2020 20:33:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 6f119ec8d9c8f68c0432d902312045a699c3e52a
+Message-ID: <5f2bf887.9+pt5BxJR/hpVEyd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 6 Aug 2020 12:16:55 +0100
-Message-ID: <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
-Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Geert,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 6f119ec8d9c8f68c0432d902312045a699c3e52a  Merge branch 'pci/irq-error'
 
-Thank you for the review.
+elapsed time: 722m
 
-On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> However, before I queue this in renesas-devel for v5.10, I'd like to
-> have some clarification about the issue below.
->
-> > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
->
-> > +               vin4: video@e6ef4000 {
-> > +                       compatible = "renesas,vin-r8a774e1";
-> > +                       reg = <0 0xe6ef4000 0 0x1000>;
-> > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&cpg CPG_MOD 807>;
-> > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> > +                       resets = <&cpg 807>;
-> > +                       renesas,id = <4>;
-> > +                       status = "disabled";
-> > +
-> > +                       ports {
-> > +                               #address-cells = <1>;
-> > +                               #size-cells = <0>;
-> > +
-> > +                               port@1 {
-> > +                                       #address-cells = <1>;
-> > +                                       #size-cells = <0>;
->
-> "make dtbs W=1" says:
->
->     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
-> (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
-> has single child node 'endpoint@0', #address-cells/#size-cells are not
-> necessary
->
-> (same for vin5-7 below)
->
-Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
-VIN endpoint numbering") we definitely need endpoint numbering.
-Probably the driver needs to be fixed to handle such cases.
+configs tested: 105
+configs skipped: 6
 
-Cheers,
-Prabhakar
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > +
-> > +                                       reg = <1>;
-> > +
-> > +                                       vin4csi20: endpoint@0 {
-> > +                                               reg = <0>;
-> > +                                               remote-endpoint = <&csi20vin4>;
-> > +                                       };
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                         axm55xx_defconfig
+xtensa                    xip_kc705_defconfig
+m68k                       m5475evb_defconfig
+powerpc                       holly_defconfig
+mips                         tb0287_defconfig
+sh                        dreamcast_defconfig
+arc                              allyesconfig
+mips                      fuloong2e_defconfig
+mips                     loongson1c_defconfig
+arm                          lpd270_defconfig
+m68k                       m5249evb_defconfig
+powerpc                  mpc885_ads_defconfig
+sh                   secureedge5410_defconfig
+ia64                          tiger_defconfig
+arm                         mv78xx0_defconfig
+microblaze                      mmu_defconfig
+mips                     loongson1b_defconfig
+sh                         apsh4a3a_defconfig
+arm                       imx_v4_v5_defconfig
+arm                     eseries_pxa_defconfig
+arm                            pleb_defconfig
+arm                        keystone_defconfig
+arm                          collie_defconfig
+s390                          debug_defconfig
+sh                           se7722_defconfig
+ia64                            zx1_defconfig
+mips                 decstation_r4k_defconfig
+openrisc                    or1ksim_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+nios2                               defconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+x86_64               randconfig-a006-20200806
+x86_64               randconfig-a001-20200806
+x86_64               randconfig-a004-20200806
+x86_64               randconfig-a005-20200806
+x86_64               randconfig-a003-20200806
+x86_64               randconfig-a002-20200806
+i386                 randconfig-a005-20200805
+i386                 randconfig-a004-20200805
+i386                 randconfig-a001-20200805
+i386                 randconfig-a003-20200805
+i386                 randconfig-a002-20200805
+i386                 randconfig-a006-20200805
+i386                 randconfig-a005-20200806
+i386                 randconfig-a004-20200806
+i386                 randconfig-a001-20200806
+i386                 randconfig-a002-20200806
+i386                 randconfig-a003-20200806
+i386                 randconfig-a006-20200806
+x86_64               randconfig-a013-20200805
+x86_64               randconfig-a011-20200805
+x86_64               randconfig-a012-20200805
+x86_64               randconfig-a016-20200805
+x86_64               randconfig-a015-20200805
+x86_64               randconfig-a014-20200805
+i386                 randconfig-a011-20200805
+i386                 randconfig-a012-20200805
+i386                 randconfig-a013-20200805
+i386                 randconfig-a014-20200805
+i386                 randconfig-a015-20200805
+i386                 randconfig-a016-20200805
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
