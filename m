@@ -2,142 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B88323DFE1
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 19:55:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E2623DEEC
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Aug 2020 19:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgHFQaU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Aug 2020 12:30:20 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41904 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgHFQ3Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Aug 2020 12:29:25 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a65so27461392otc.8;
-        Thu, 06 Aug 2020 09:28:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GfRNKclYJY9TFgLDludWTlpzguMceCfSaUZal/qDN6s=;
-        b=mucsV4XvZdLPQxIuifzETBesBUCVGlX5wh10vA6hs7DMJcqfZEeJRoYFy0Qstdp26z
-         dWDzFflwqajIGQk9ckIz++zQujOWL7HagizIRPK2zskVRYX9S8qqvgysDqX0acWwFpjP
-         hM/jzjBXUwNTLWPdPzBJTJ6l7lQL7hNVZ3Fbtf5AfmuPebkufn5i5pHbj0bdfsf9hFEC
-         zOg5SGURrR9Are5To1UFdHcB8modghHZmbkHjTIYClw4lhRXBgk22yR6A4lfHpkDMElN
-         FVmBpqqNdfcDvQiSH/rARb8NlhDS96slJgFrXwuPOVYHJF5QBkHNGAcqETd2PunleUAf
-         X+Fg==
-X-Gm-Message-State: AOAM533oCfizdYpwXQIXOZH0VxdJFyWGAcA1wczlg6qDS29Nn2k77/DE
-        7yWF52kGbJXnYuU+mOG4a/gvI3L46lf74I7tARo8Euib
-X-Google-Smtp-Source: ABdhPJxsjDZTTqPo+9e6awj5yV1LG1Imzyw5Civ8gt7ap18JuUVGKty3JozPE/qiMGjuARTMT9EOZFY2swizOMfqf1E=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr6431613ote.107.1596714489705;
- Thu, 06 Aug 2020 04:48:09 -0700 (PDT)
+        id S1727976AbgHFRek (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Aug 2020 13:34:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729687AbgHFRbo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:31:44 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208C823122;
+        Thu,  6 Aug 2020 13:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596719609;
+        bh=DVhuP8UL/Dey1HcALXY+xyYV4uOthFoT+uVqZoV82jQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QYI7mLwkFAuWc+zsX3QicF8JtRLiIXc6aQxLd/8zcKr/Xiw2xjevHZmfWg71/6uHz
+         aWbfsTAyUkDUcbnwj82ljAIRJE9ulBdYa1mFX3Zzro5zlPb9LiBEUxdRpP6yosMeeN
+         TgYC+TfNJJL7A0ETqQDmr9zO9bK0U4B9SndYOw+o=
+Date:   Thu, 6 Aug 2020 08:13:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh@kernel.org, maz@kernel.org
+Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Message-ID: <20200806131327.GA654295@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com> <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
-In-Reply-To: <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 6 Aug 2020 13:47:58 +0200
-Message-ID: <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com>
-Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806095445.GA9715@e121166-lin.cambridge.arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Prabhakar,
+On Thu, Aug 06, 2020 at 10:54:45AM +0100, Lorenzo Pieralisi wrote:
+> On Wed, Aug 05, 2020 at 06:30:50PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Aug 05, 2020 at 05:03:26PM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Aug 05, 2020 at 10:39:28PM +0100, Lorenzo Pieralisi wrote:
+> > > > On Wed, Aug 05, 2020 at 03:43:58PM -0500, Bjorn Helgaas wrote:
+> > > > > On Tue, Jun 16, 2020 at 06:26:54PM +0530, Bharat Kumar Gogada wrote:
+> > > > > > - Add support for Versal CPM as Root Port.
+> > > > > > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+> > > > > >   block for CPM along with the integrated bridge can function
+> > > > > >   as PCIe Root Port.
+> > > > > > - Bridge error and legacy interrupts in Versal CPM are handled using
+> > > > > >   Versal CPM specific interrupt line.
+> > > > > 
+> > > > > > +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
+> > > > > > +{
+> > > > > > +	if (cpm_pcie_link_up(port))
+> > > > > > +		dev_info(port->dev, "PCIe Link is UP\n");
+> > > > > > +	else
+> > > > > > +		dev_info(port->dev, "PCIe Link is DOWN\n");
+> > > > > > +
+> > > > > > +	/* Disable all interrupts */
+> > > > > > +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
+> > > > > > +		   XILINX_CPM_PCIE_REG_IMR);
+> > > > > > +
+> > > > > > +	/* Clear pending interrupts */
+> > > > > > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
+> > > > > > +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
+> > > > > > +		   XILINX_CPM_PCIE_REG_IDR);
+> > > > > > +
+> > > > > > +	/*
+> > > > > > +	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
+> > > > > > +	 * CPM SLCR block.
+> > > > > > +	 */
+> > > > > > +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
+> > > > > > +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
+> > > > > > +	/* Enable the Bridge enable bit */
+> > > > > > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
+> > > > > > +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
+> > > > > > +		   XILINX_CPM_PCIE_REG_RPSC);
+> > > > > > +}
+> > > > > > +
+> > > > > > +/**
+> > > > > > + * xilinx_cpm_pcie_parse_dt - Parse Device tree
+> > > > > > + * @port: PCIe port information
+> > > > > > + * @bus_range: Bus resource
+> > > > > > + *
+> > > > > > + * Return: '0' on success and error value on failure
+> > > > > > + */
+> > > > > > +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port,
+> > > > > > +				    struct resource *bus_range)
+> > > > > > +{
+> > > > > > +	struct device *dev = port->dev;
+> > > > > > +	struct platform_device *pdev = to_platform_device(dev);
+> > > > > > +	struct resource *res;
+> > > > > > +
+> > > > > > +	port->cpm_base = devm_platform_ioremap_resource_byname(pdev,
+> > > > > > +							       "cpm_slcr");
+> > > > > > +	if (IS_ERR(port->cpm_base))
+> > > > > > +		return PTR_ERR(port->cpm_base);
+> > > > > > +
+> > > > > > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> > > > > > +	if (!res)
+> > > > > > +		return -ENXIO;
+> > > > > > +
+> > > > > > +	port->cfg = pci_ecam_create(dev, res, bus_range,
+> > > > > > +				    &pci_generic_ecam_ops);
+> > > > > 
+> > > > > Aren't we passing an uninitialized pointer (bus_range) here?  This
+> > > > > looks broken to me.
+> > > > > 
+> > > > > The kernelci build warns about it:
+> > > > > https://kernelci.org/build/next/branch/master/kernel/next-20200805/
+> > > > > 
+> > > > >   /scratch/linux/drivers/pci/controller/pcie-xilinx-cpm.c:557:39: warning: variable 'bus_range' is uninitialized when used here [-Wuninitialized]
+> > > > > 
+> > > > > I'm dropping this for now.  I can't believe this actually works.
+> > > > 
+> > > > It is caused by my rebase to fix -next after the rework in pci/misc
+> > > > (I had to drop the call to pci_parse_request_of_pci_ranges()).
+> > > > 
+> > > > I will look into this tomorrow if Rob does not beat me to it.
+> > > > 
+> > > > Apologies, it is a new driver that was based on an interface
+> > > > that is being reworked, for good reasons, in pci/misc.
+> > > 
+> > > Oh, yep, I think I see what happened.  I'll try to fix this in hopes
+> > > of making linux-next tonight.
+> > 
+> > OK, I think I fixed it.  Man, that was a lot of work for a git novice
+> > like me ;)  Current head: 6f119ec8d9c8 ("Merge branch 'pci/irq-error'")
+> 
+> Sorry about that.
 
-On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > However, before I queue this in renesas-devel for v5.10, I'd like to
-> > have some clarification about the issue below.
-> >
-> > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> >
-> > > +               vin4: video@e6ef4000 {
-> > > +                       compatible = "renesas,vin-r8a774e1";
-> > > +                       reg = <0 0xe6ef4000 0 0x1000>;
-> > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > +                       clocks = <&cpg CPG_MOD 807>;
-> > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> > > +                       resets = <&cpg 807>;
-> > > +                       renesas,id = <4>;
-> > > +                       status = "disabled";
-> > > +
-> > > +                       ports {
-> > > +                               #address-cells = <1>;
-> > > +                               #size-cells = <0>;
-> > > +
-> > > +                               port@1 {
-> > > +                                       #address-cells = <1>;
-> > > +                                       #size-cells = <0>;
-> >
-> > "make dtbs W=1" says:
-> >
-> >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
-> > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
-> > has single child node 'endpoint@0', #address-cells/#size-cells are not
-> > necessary
-> >
-> > (same for vin5-7 below)
-> >
-> Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
-> VIN endpoint numbering") we definitely need endpoint numbering.
-> Probably the driver needs to be fixed to handle such cases.
-
-> > > +
-> > > +                                       reg = <1>;
-> > > +
-> > > +                                       vin4csi20: endpoint@0 {
-> > > +                                               reg = <0>;
-> > > +                                               remote-endpoint = <&csi20vin4>;
-
-On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
-complain. Here it is at address 0.
-
-Niklas?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+No problem, if I were less OCD and more smart about git, it would have
+been trivial.  But it did make it into the Aug 6 linux-next, so that's
+good!
