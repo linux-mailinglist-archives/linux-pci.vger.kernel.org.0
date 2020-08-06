@@ -2,417 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2970F23E3CF
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Aug 2020 00:09:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C177823E3FC
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Aug 2020 00:27:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgHFWJw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Aug 2020 18:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgHFWJv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Aug 2020 18:09:51 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9C06C061574
-        for <linux-pci@vger.kernel.org>; Thu,  6 Aug 2020 15:09:50 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ha11so7401221pjb.1
-        for <linux-pci@vger.kernel.org>; Thu, 06 Aug 2020 15:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CRP3FgRyQ/k48NTUuHSvU7SLO+Q+hOFOxehsPE+mY3A=;
-        b=koToQFz7v/FNbYDUnN7uUjTfsar8RnUGuRSmognn2IXLMfP3k0TA0YVizuDKsldhCB
-         oKL0TTm/CPbY9FwI+p94fRf/RVUPLuni/gRgietd/s6uKg0l4CXy14b0eKcAGA/tSijk
-         ozo6ZDCuptECLJz1cGm1K6VT/QjQNmNKjn8iMW7XksBfJkrHors35OlSwnYlpjb9xu/7
-         4wd8dLHukDPpGQ8yzP4CRj9SqSju3fi4muJJH7TnO3QuLzqSDWRlLuZLq9MARynzV126
-         b4+/uVQUOgtUiyM6hv2/2+TNV74S3w+bziPPQTsgXqD491pP6XoES/LHTtzUtL2U1acd
-         DhMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CRP3FgRyQ/k48NTUuHSvU7SLO+Q+hOFOxehsPE+mY3A=;
-        b=aNWCUbAidag/+iWRavZduEcR90AptAmQvfjj/EJHmQ0YEFkl914hKY8mYCeTSU/pkr
-         6FEDoesNO8sh8Bue/jyL7XjmkMyu+uN4bchPmZVtAs9W5rXTBugV/kXeXjsiV4FXge6B
-         NCeSVZ5x/ng2GBCN7NkboFxzB2BazYy2JziUzRwUEMMQctSgzV/I9Nrp0T/VXTQzSEnn
-         XnQYnteLlUnSdnBy4fxJIX/yEcD1TLZg0+o+EpaHK3/KRsl44Oxgf0WrtOrD/mBNm8Gw
-         PXoEQRcAv4SBTCFKxIhEHbiB3AwMBrJkliPLhf5cUq46M2MUWh64N23umIY9cwjFXtl2
-         zhNg==
-X-Gm-Message-State: AOAM530xpgARBIGWiDDabp2KRfqjf82hZi1W25ZeJYZVdlmsfLW6DFne
-        iDtwB1CojCPfISn1gm1tyVsqOA==
-X-Google-Smtp-Source: ABdhPJyIvDdOsrSRk0Aersg8zp7X6hgYDLE4DrekCgs3b7/u9ms0kPv6U1wN8B2b/xqJQTL8s6WaHg==
-X-Received: by 2002:a17:90a:2210:: with SMTP id c16mr10702188pje.65.1596751790067;
-        Thu, 06 Aug 2020 15:09:50 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id 193sm9352085pfu.169.2020.08.06.15.09.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 15:09:49 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 15:09:43 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-Message-ID: <20200806220943.GA1781224@google.com>
-References: <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com>
- <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
- <20200625224042.GA169781@google.com>
- <20200626112931.GF4817@hirez.programming.kicks-ass.net>
- <20200722135542.41127cc4@oasis.local.home>
- <20200722184137.GP10769@hirez.programming.kicks-ass.net>
- <20200722150943.53046592@oasis.local.home>
- <20200722235620.GR10769@hirez.programming.kicks-ass.net>
- <20200722200608.40ca9994@oasis.local.home>
+        id S1726027AbgHFW1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Aug 2020 18:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725927AbgHFW1P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:27:15 -0400
+Received: from localhost (130.sub-72-107-113.myvzw.com [72.107.113.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D17221E2;
+        Thu,  6 Aug 2020 22:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596752834;
+        bh=WgdGpbjoOqKRB5xCJJB1QUUR3NAm5AiI/g2A57rj4KI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qPv7UMmumdkk5aGIxvQqVqqb18le/xYKnvT2NLDxW1vNEmC3Ph4Qht7skoNahofop
+         f4yilJWzb9U+BSlCfhrRXW+mYxFr3x4aM7SMY6d+2qsXOAomi/LJl0WMvWd4RgfyQy
+         b/Rd8PhebQXbHyz/CLBputTdShNapNUxGxWiVOIc=
+Date:   Thu, 6 Aug 2020 17:27:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Tuan Phan <tuanphan@os.amperecomputing.com>
+Cc:     patches@amperecomputing.com, Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
+Message-ID: <20200806222713.GA704188@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722200608.40ca9994@oasis.local.home>
+In-Reply-To: <1596751055-12316-1-git-send-email-tuanphan@os.amperecomputing.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 08:06:08PM -0400, Steven Rostedt wrote:
-> On Thu, 23 Jul 2020 01:56:20 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Aug 06, 2020 at 02:57:34PM -0700, Tuan Phan wrote:
+> Ampere Altra SOC supports only 32-bit ECAM reading. Therefore,
+> add an MCFG quirk for the platform.
+
+This is interesting.  So this host bridge supports sub 32-bit config
+*writes*, but not reads?
+
+I actually don't know whether that complies with the spec or not.  If
+config registers are not allowed to have side effects on read, this
+*would* be compliant.
+
+PCIe r5.0, sec 7.4, doesn't list any register types with read side
+effects, so there shouldn't be any in the registers defined by the
+spec.  But I would think device-specific registers could do whatever
+they wanted, e.g., reading an interrupt status register or something
+could clear it.
+
+And I think sec 7.2.2 about ECAM implicitly requires sub 32-bit
+accesses because it mentions the access size and byte enables.
+
+Is this a one-off situation where future hardware will allow sub
+32-bit reads and writes?  We don't want a stream of quirks for future
+devices.
+
+> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+> ---
+>  drivers/acpi/pci_mcfg.c  | 20 ++++++++++++++++++++
+>  drivers/pci/ecam.c       | 10 ++++++++++
+>  include/linux/pci-ecam.h |  1 +
+>  3 files changed, 31 insertions(+)
 > 
-> > Anyway, what do you prefer, I suppose I can make objtool whatever we
-> > need, that patch is trivial. Simply recording the sites and not
-> > rewriting them should be simple enough.
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index 54b36b7ad47d..e526571e0ebd 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -142,6 +142,26 @@ static struct mcfg_fixup mcfg_quirks[] = {
+>  	XGENE_V2_ECAM_MCFG(4, 0),
+>  	XGENE_V2_ECAM_MCFG(4, 1),
+>  	XGENE_V2_ECAM_MCFG(4, 2),
+> +
+> +#define ALTRA_ECAM_QUIRK(rev, seg) \
+> +	{ "Ampere", "Altra   ", rev, seg, MCFG_BUS_ANY, &pci_32b_read_ops }
+> +
+> +	ALTRA_ECAM_QUIRK(1, 0),
+> +	ALTRA_ECAM_QUIRK(1, 1),
+> +	ALTRA_ECAM_QUIRK(1, 2),
+> +	ALTRA_ECAM_QUIRK(1, 3),
+> +	ALTRA_ECAM_QUIRK(1, 4),
+> +	ALTRA_ECAM_QUIRK(1, 5),
+> +	ALTRA_ECAM_QUIRK(1, 6),
+> +	ALTRA_ECAM_QUIRK(1, 7),
+> +	ALTRA_ECAM_QUIRK(1, 8),
+> +	ALTRA_ECAM_QUIRK(1, 9),
+> +	ALTRA_ECAM_QUIRK(1, 10),
+> +	ALTRA_ECAM_QUIRK(1, 11),
+> +	ALTRA_ECAM_QUIRK(1, 12),
+> +	ALTRA_ECAM_QUIRK(1, 13),
+> +	ALTRA_ECAM_QUIRK(1, 14),
+> +	ALTRA_ECAM_QUIRK(1, 15),
+>  };
+>  
+>  static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
+> index 8f065a42fc1a..b54d32a31669 100644
+> --- a/drivers/pci/ecam.c
+> +++ b/drivers/pci/ecam.c
+> @@ -168,4 +168,14 @@ const struct pci_ecam_ops pci_32b_ops = {
+>  		.write		= pci_generic_config_write32,
+>  	}
+>  };
+> +
+> +/* ECAM ops for 32-bit read only (non-compliant) */
+> +const struct pci_ecam_ops pci_32b_read_ops = {
+> +	.bus_shift	= 20,
+> +	.pci_ops	= {
+> +		.map_bus	= pci_ecam_map_bus,
+> +		.read		= pci_generic_config_read32,
+> +		.write		= pci_generic_config_write,
+> +	}
+> +};
+>  #endif
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index 1af5cb02ef7f..033ce74f02e8 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -51,6 +51,7 @@ extern const struct pci_ecam_ops pci_generic_ecam_ops;
+>  
+>  #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+>  extern const struct pci_ecam_ops pci_32b_ops;	/* 32-bit accesses only */
+> +extern const struct pci_ecam_ops pci_32b_read_ops; /* 32-bit read only */
+>  extern const struct pci_ecam_ops hisi_pcie_ops;	/* HiSilicon */
+>  extern const struct pci_ecam_ops thunder_pem_ecam_ops; /* Cavium ThunderX 1.x & 2.x */
+>  extern const struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+> -- 
+> 2.18.4
 > 
-> Either way. If objtool turns it into nops, just make it where we can
-> enable -DCC_USING_NOP_MCOUNT set, and the kernel will be unaware.
-> 
-> Or if you just add the locations, then that would work too.
-
-I took Peter's earlier patch, rebased it on top of the current mainline
-tree for easier testing, and tweaked the makefiles to only use objtool
---mcount when CONFIG_STACK_VALIDATION is enabled and the compiler
-supports -mfentry. This works for me with both gcc and clang. Thoughts?
-
-Sami
-
-
----
- Makefile                      | 38 ++++++++++++----
- arch/x86/Kconfig              |  1 +
- kernel/trace/Kconfig          |  5 +++
- scripts/Makefile.build        |  9 ++--
- tools/objtool/builtin-check.c |  3 +-
- tools/objtool/builtin.h       |  2 +-
- tools/objtool/check.c         | 83 +++++++++++++++++++++++++++++++++++
- tools/objtool/check.h         |  1 +
- tools/objtool/objtool.h       |  1 +
- 9 files changed, 129 insertions(+), 14 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 5cfc3481207f..2d23b6b6c4c9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -864,17 +864,34 @@ ifdef CONFIG_HAVE_FENTRY
-   ifeq ($(call cc-option-yn, -mfentry),y)
-     CC_FLAGS_FTRACE	+= -mfentry
-     CC_FLAGS_USING	+= -DCC_USING_FENTRY
-+    export CC_USING_FENTRY := 1
-   endif
- endif
- export CC_FLAGS_FTRACE
--KBUILD_CFLAGS	+= $(CC_FLAGS_FTRACE) $(CC_FLAGS_USING)
--KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
- ifdef CONFIG_DYNAMIC_FTRACE
--	ifdef CONFIG_HAVE_C_RECORDMCOUNT
--		BUILD_C_RECORDMCOUNT := y
--		export BUILD_C_RECORDMCOUNT
--	endif
-+  ifndef CC_USING_RECORD_MCOUNT
-+  ifndef CC_USING_PATCHABLE_FUNCTION_ENTRY
-+    # use objtool or recordmcount to generate mcount tables
-+    ifdef CONFIG_HAVE_OBJTOOL_MCOUNT
-+      ifdef CC_USING_FENTRY
-+        USE_OBJTOOL_MCOUNT := y
-+        CC_FLAGS_USING += -DCC_USING_NOP_MCOUNT
-+        export USE_OBJTOOL_MCOUNT
-+      endif
-+    endif
-+    ifndef USE_OBJTOOL_MCOUNT
-+      USE_RECORDMCOUNT := y
-+      export USE_RECORDMCOUNT
-+      ifdef CONFIG_HAVE_C_RECORDMCOUNT
-+        BUILD_C_RECORDMCOUNT := y
-+        export BUILD_C_RECORDMCOUNT
-+      endif
-+    endif
-+  endif
-+  endif
- endif
-+KBUILD_CFLAGS	+= $(CC_FLAGS_FTRACE) $(CC_FLAGS_USING)
-+KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
- endif
- 
- # We trigger additional mismatches with less inlining
-@@ -1211,11 +1228,16 @@ uapi-asm-generic:
- PHONY += prepare-objtool prepare-resolve_btfids
- prepare-objtool: $(objtool_target)
- ifeq ($(SKIP_STACK_VALIDATION),1)
-+objtool-lib-prompt := "please install libelf-dev, libelf-devel or elfutils-libelf-devel"
-+ifdef USE_OBJTOOL_MCOUNT
-+	@echo "error: Cannot generate __mcount_loc for CONFIG_DYNAMIC_FTRACE=y, $(objtool-lib-prompt)" >&2
-+	@false
-+endif
- ifdef CONFIG_UNWINDER_ORC
--	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
-+	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, $(objtool-lib-prompt)" >&2
- 	@false
- else
--	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
-+	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, $(objtool-lib-prompt)" >&2
- endif
- endif
- 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 9a2849527dd7..149c94a44cf0 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -163,6 +163,7 @@ config X86
- 	select HAVE_CMPXCHG_LOCAL
- 	select HAVE_CONTEXT_TRACKING		if X86_64
- 	select HAVE_C_RECORDMCOUNT
-+	select HAVE_OBJTOOL_MCOUNT		if STACK_VALIDATION
- 	select HAVE_DEBUG_KMEMLEAK
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index a4020c0b4508..b510af5b216c 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -56,6 +56,11 @@ config HAVE_C_RECORDMCOUNT
- 	help
- 	  C version of recordmcount available?
- 
-+config HAVE_OBJTOOL_MCOUNT
-+	bool
-+	help
-+	  Arch supports objtool --mcount
-+
- config TRACER_MAX_TRACE
- 	bool
- 
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 2e8810b7e5ed..f66f8c0ef294 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -175,8 +175,7 @@ cmd_modversions_c =								\
- 	fi
- endif
- 
--ifdef CONFIG_FTRACE_MCOUNT_RECORD
--ifndef CC_USING_RECORD_MCOUNT
-+ifdef USE_RECORDMCOUNT
- # compiler will not generate __mcount_loc use recordmcount or recordmcount.pl
- ifdef BUILD_C_RECORDMCOUNT
- ifeq ("$(origin RECORDMCOUNT_WARN)", "command line")
-@@ -203,8 +202,7 @@ recordmcount_source := $(srctree)/scripts/recordmcount.pl
- endif # BUILD_C_RECORDMCOUNT
- cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
- 	$(sub_cmd_record_mcount))
--endif # CC_USING_RECORD_MCOUNT
--endif # CONFIG_FTRACE_MCOUNT_RECORD
-+endif # USE_RECORDMCOUNT
- 
- ifdef CONFIG_STACK_VALIDATION
- ifneq ($(SKIP_STACK_VALIDATION),1)
-@@ -227,6 +225,9 @@ endif
- ifdef CONFIG_X86_SMAP
-   objtool_args += --uaccess
- endif
-+ifdef USE_OBJTOOL_MCOUNT
-+  objtool_args += --mcount
-+endif
- 
- # 'OBJECT_FILES_NON_STANDARD := y': skip objtool checking for a directory
- # 'OBJECT_FILES_NON_STANDARD_foo.o := 'y': skip objtool checking for a file
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 7a44174967b5..71595cf4946d 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -18,7 +18,7 @@
- #include "builtin.h"
- #include "objtool.h"
- 
--bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
-+bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, mcount;
- 
- static const char * const check_usage[] = {
- 	"objtool check [<options>] file.o",
-@@ -35,6 +35,7 @@ const struct option check_options[] = {
- 	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
- 	OPT_BOOLEAN('d', "duplicate", &validate_dup, "duplicate validation for vmlinux.o"),
- 	OPT_BOOLEAN('l', "vmlinux", &vmlinux, "vmlinux.o validation"),
-+	OPT_BOOLEAN('M', "mcount", &mcount, "generate __mcount_loc"),
- 	OPT_END(),
- };
- 
-diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
-index 85c979caa367..94565a72b701 100644
---- a/tools/objtool/builtin.h
-+++ b/tools/objtool/builtin.h
-@@ -8,7 +8,7 @@
- #include <subcmd/parse-options.h>
- 
- extern const struct option check_options[];
--extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
-+extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, mcount;
- 
- extern int cmd_check(int argc, const char **argv);
- extern int cmd_orc(int argc, const char **argv);
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index e034a8f24f46..6e0b478dc065 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -433,6 +433,65 @@ static int add_dead_ends(struct objtool_file *file)
- 	return 0;
- }
- 
-+static int create_mcount_loc_sections(struct objtool_file *file)
-+{
-+	struct section *sec, *reloc_sec;
-+	struct reloc *reloc;
-+	unsigned long *loc;
-+	struct instruction *insn;
-+	int idx;
-+
-+	sec = find_section_by_name(file->elf, "__mcount_loc");
-+	if (sec) {
-+		INIT_LIST_HEAD(&file->mcount_loc_list);
-+		WARN("file already has __mcount_loc section, skipping");
-+		return 0;
-+	}
-+
-+	if (list_empty(&file->mcount_loc_list))
-+		return 0;
-+
-+	idx = 0;
-+	list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node)
-+		idx++;
-+
-+	sec = elf_create_section(file->elf, "__mcount_loc", sizeof(unsigned long), idx);
-+	if (!sec)
-+		return -1;
-+
-+	reloc_sec = elf_create_reloc_section(file->elf, sec, SHT_RELA);
-+	if (!reloc_sec)
-+		return -1;
-+
-+	idx = 0;
-+	list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node) {
-+
-+		loc = (unsigned long *)sec->data->d_buf + idx;
-+		memset(loc, 0, sizeof(unsigned long));
-+
-+		reloc = malloc(sizeof(*reloc));
-+		if (!reloc) {
-+			perror("malloc");
-+			return -1;
-+		}
-+		memset(reloc, 0, sizeof(*reloc));
-+
-+		reloc->sym = insn->sec->sym;
-+		reloc->addend = insn->offset;
-+		reloc->type = R_X86_64_64;
-+		reloc->offset = idx * sizeof(unsigned long);
-+		reloc->sec = reloc_sec;
-+		elf_add_reloc(file->elf, reloc);
-+
-+		idx++;
-+	}
-+
-+	if (elf_rebuild_reloc_section(file->elf, reloc_sec))
-+		return -1;
-+
-+	return 0;
-+}
-+
- /*
-  * Warnings shouldn't be reported for ignored functions.
-  */
-@@ -784,6 +843,22 @@ static int add_call_destinations(struct objtool_file *file)
- 			insn->type = INSN_NOP;
- 		}
- 
-+		if (mcount && !strcmp(insn->call_dest->name, "__fentry__")) {
-+			if (reloc) {
-+				reloc->type = R_NONE;
-+				elf_write_reloc(file->elf, reloc);
-+			}
-+
-+			elf_write_insn(file->elf, insn->sec,
-+				       insn->offset, insn->len,
-+				       arch_nop_insn(insn->len));
-+
-+			insn->type = INSN_NOP;
-+
-+			list_add_tail(&insn->mcount_loc_node,
-+				      &file->mcount_loc_list);
-+		}
-+
- 		/*
- 		 * Whatever stack impact regular CALLs have, should be undone
- 		 * by the RETURN of the called function.
-@@ -2791,6 +2866,7 @@ int check(const char *_objname, bool orc)
- 
- 	INIT_LIST_HEAD(&file.insn_list);
- 	hash_init(file.insn_hash);
-+	INIT_LIST_HEAD(&file.mcount_loc_list);
- 	file.c_file = !vmlinux && find_section_by_name(file.elf, ".comment");
- 	file.ignore_unreachables = no_unreachable;
- 	file.hints = false;
-@@ -2838,6 +2914,13 @@ int check(const char *_objname, bool orc)
- 		warnings += ret;
- 	}
- 
-+	if (mcount) {
-+		ret = create_mcount_loc_sections(&file);
-+		if (ret < 0)
-+			goto out;
-+		warnings += ret;
-+	}
-+
- 	if (orc) {
- 		ret = create_orc(&file);
- 		if (ret < 0)
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index 061aa96e15d3..b62afd3d970b 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -22,6 +22,7 @@ struct insn_state {
- struct instruction {
- 	struct list_head list;
- 	struct hlist_node hash;
-+	struct list_head mcount_loc_node;
- 	struct section *sec;
- 	unsigned long offset;
- 	unsigned int len;
-diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
-index 528028a66816..427806079540 100644
---- a/tools/objtool/objtool.h
-+++ b/tools/objtool/objtool.h
-@@ -16,6 +16,7 @@ struct objtool_file {
- 	struct elf *elf;
- 	struct list_head insn_list;
- 	DECLARE_HASHTABLE(insn_hash, 20);
-+	struct list_head mcount_loc_list;
- 	bool ignore_unreachables, c_file, hints, rodata;
- };
- 
-
