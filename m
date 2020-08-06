@@ -2,186 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B17123E401
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Aug 2020 00:28:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2D5B23E41F
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Aug 2020 00:40:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgHFW2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Aug 2020 18:28:01 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36351 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgHFW2A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:28:00 -0400
-IronPort-SDR: ZnEhlsh1lsBzpOXo/EGa+7XwGhav6cnFn2OT5slb7GKcBucUvZjr66bs3008nFPU/feAAlV6tF
- szNAZrWV4ZQw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="150669248"
-X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
-   d="scan'208";a="150669248"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 15:27:59 -0700
-IronPort-SDR: 7pIRHeDz2zm4c3qDcZtKcAy9UQTRcCaTH4mM+QrS6Ic4wZyuU7XbJ2w6Z0X7t48WtvqX5j7jms
- Mj6C0RSAwkhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
-   d="scan'208";a="275207863"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Aug 2020 15:27:59 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Aug 2020 15:27:58 -0700
-Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Aug 2020 15:27:58 -0700
-Received: from [10.213.170.239] (10.213.170.239) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 6 Aug 2020 15:27:58 -0700
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@mellanox.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
- <96a1eb5ccc724790b5404a642583919d@intel.com>
- <20200805221548.GK19097@mellanox.com>
- <70465fd3a7ae428a82e19f98daa779e8@intel.com>
- <20200805225330.GL19097@mellanox.com>
- <630e6a4dc17b49aba32675377f5a50e0@intel.com>
- <20200806001927.GM19097@mellanox.com>
- <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
- <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
- <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
- <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <78a0cdd6-ba05-e153-b25e-2c0fe8c1e7b9@intel.com>
-Date:   Thu, 6 Aug 2020 15:27:54 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1725947AbgHFWkt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Aug 2020 18:40:49 -0400
+Received: from mail-eopbgr770090.outbound.protection.outlook.com ([40.107.77.90]:42782
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725927AbgHFWks (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:40:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HxrxhyQ13l69M6lspIDYhLmWMcEjYT7DPKkl/47heEuxQnbdQISxjW+pN0otu5ryEQ3Y4I/cl3MluKpX2IRLWgKlY/gUK2j5Qhofv7HskaklKg6eRW+EtiHSGQsFPHcHgYZmbr53kpUd7BJP5CGIpmAKLGXmna3J/I/GMNffEoAaJB95yXjG3AnKpBU32k5TzsQ1Sy71qZEjBKjWFJ9yxmerV0NlXq2I/+btaiKidSOZMvsIJz3gAioLdSBmVLwnEBgwbJ17qgf7JZHbWGpktMPDRoYK7YN15FfNWIJqaMIPWg5f8VePzIfWPkI14AY/SW+VtPXtAkFK40otsMYchA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2KHaNfrghcvk5vvnQTVQ3Bfg0LhKfnpVYv9SfNhol8=;
+ b=HhIN4MMuk4AwLxoA/QTeoXBmLxmdcNL09Tm+l/pCjYxiP3s3CCQe/FGnSS+zyPEPTbQVfxf0ozIUL4I3wUksLbtjLm5OoyynFAmpYSqRcaTHtLEb3VL0XPyQqb1/4JFOE5lyqxCGQPWq+mpyYUMipYowsNqUNpeuFHEr9L19qTGOzezudn/gX4tp06C6DFTxpZFFpgqAAfTXQj9dMYZuEzyr8Z8TgE23ytU2COY9vahT82OGlqE5i6hkXVAqXDbLgGSgz0xJ2yWe/NMIawtGW9peTzQ1++vJhxZ4tZK2crjKf5epQ9kbhTVdv+wOY9D3eXcuIj0teb/56KrEUF5/eA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=amperemail.onmicrosoft.com; dkim=pass
+ header.d=amperemail.onmicrosoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2KHaNfrghcvk5vvnQTVQ3Bfg0LhKfnpVYv9SfNhol8=;
+ b=92tqIobShmb7lU94RGRp+nxwLlq0nrYNusPyH6HPkYbhWfWKdIxOCWasAsYjmVEsh8vuT+2xfZ8COZw7GsueZEFWSBdljAVMhiu4T3azlXrYu+L42sZaE2JsdtcKFtGK/nlMi9B9mdzpEvl3kW6Nn6wSyOPtdxrx5nfgUtN/6HQ=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none
+ header.from=amperemail.onmicrosoft.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB5576.prod.exchangelabs.com (2603:10b6:a03:126::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3239.19; Thu, 6 Aug 2020 22:40:44 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::5c26:c6ca:c444:e947]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::5c26:c6ca:c444:e947%3]) with mapi id 15.20.3239.021; Thu, 6 Aug 2020
+ 22:40:44 +0000
+Content-Type: text/plain;
+        charset=utf-8
+Subject: Re: [PATCH] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
+From:   Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+In-Reply-To: <20200806222713.GA704188@bjorn-Precision-5520>
+Date:   Thu, 6 Aug 2020 15:40:41 -0700
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        patches@amperecomputing.com, Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0A228AB4-25C4-40D8-ABA1-CB9C774825B5@amperemail.onmicrosoft.com>
+References: <20200806222713.GA704188@bjorn-Precision-5520>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-ClientProxiedBy: CY4PR08CA0040.namprd08.prod.outlook.com
+ (2603:10b6:903:151::26) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-In-Reply-To: <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.213.170.239]
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.148] (73.151.56.145) by CY4PR08CA0040.namprd08.prod.outlook.com (2603:10b6:903:151::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Thu, 6 Aug 2020 22:40:43 +0000
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Originating-IP: [73.151.56.145]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 59f888b6-2db9-4054-77c1-08d83a59c144
+X-MS-TrafficTypeDiagnostic: BYAPR01MB5576:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB55768789713DEBA947FED19BE0480@BYAPR01MB5576.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NTqEJlY0IZJElRe87fPX0Syaa3pIDQxQLXgsQV+KMxPmVFnFjV6AZiKF8/Ai/Q7rdmceDBhpIQq1s8mrY49T/ncShuxLLhPZd/u6cCn/zvtFmUehSNqSfUvd2nblzZMesplhKEctT+VUomrEXIMQvjjPDssXwG8hPDgyGGqg0zSiE84qizarDToZqBxf3WCv8m5kkdBBirsc3S+LAU/RQ8JZMTHXfGJ9M8AcOmmnIElgrxn1GXxzfWNBEJyo/XnggUyGv/URMmwKcS67sYkN1NF+Lzpu2SD77xFg6/yeTP3F87n+nwCNDpsrqynmV355jdgAlMgXWVk4J+C9d2NYbg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(346002)(396003)(376002)(136003)(366004)(53546011)(16576012)(316002)(83380400001)(478600001)(16526019)(42882007)(186003)(5660300002)(8676002)(66556008)(8936002)(6486002)(2616005)(956004)(4326008)(6916009)(26005)(66476007)(54906003)(33656002)(83170400001)(66946007)(52116002)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: cGUX5HJ/cQrFfKXGGZDFtRHPJy+qg4V3/9s1JFMH+vRlH47aQt6zLugQkCIVkX9ItY3b6mZO+ne2x9/wENX18gC+kkcjm2pB+MoRMg2JY50if4Md4Ve48RFcsI33/+zb8Ywf2kWjKAUz4dJxQ2SXYy9PAf14NyMAF8XVhrd9kDlLIPaR3fFTpFE2z3lWp2SQY3OqkJvOy9udc7WlCaiGlaiQq9TEtoHA34u/HaDHMRXKw8XxSZUd4DdO3J/drkySdTHF8kt5524gWDkY8llOnfv8x1j6aFwsAr0nISnVe5RvYkN/GTEl79HtfNFcmKOra6YHpfhLCV7sqFGV+8YrtrVfF/UJXWCZJHXgDQQmicoPOpOFRPeEESz18z51ZdLqvPdBIFL0IAk+9vd2rVnJb9xZgbWnhbItbA1YrQCbCifJmUYR1k2VRDIwmyBrA12Oyv0X91pF2S3+UY8sJogWeM8av4GdQmNcgkg69d9qfBw3BWhXIVvnEvuud3bX9HOY4SCYIOztiX14dRBef9J+6nczDk4D5I5qVQT8+smYWpQnC5xZxOqY5Td3MVosHglDwy5R9Y4rQERoGSM4097R4L3I2g92Q55jbGN5jFinqeSQAptyxSdNi8/2wm8/6xD4qb517is9YU5bm7xW7l3Img==
+X-OriginatorOrg: amperemail.onmicrosoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59f888b6-2db9-4054-77c1-08d83a59c144
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR01MB4598.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 22:40:44.4993
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SjFzpDPUR0JntYFKI0IQPjUY58QxYA7o+fvSIMVMY8V4VkafG3oEwVUPAKQ+byr3hKQbT7uvHuRppKiRpjzLl4lvbuN4gEFz/9sDYdaquFzGHtGSqqYnwiczQlh3IKSd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5576
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
 
-On 8/6/2020 1:21 PM, Thomas Gleixner wrote:
-> Megha,
->
-> "Dey, Megha" <megha.dey@intel.com> writes:
->> On 8/6/2020 10:10 AM, Thomas Gleixner wrote:
->>> If the DEV/MSI domain has it's own per IR unit resource management, then
->>> you need one per IR unit.
->>>
->>> If the resource management is solely per device then having a domain per
->>> device is the right choice.
->> The dev-msi domain can be used by other devices if they too would want
->> to follow the vector->intel IR->dev-msi IRQ hierarchy.  I do create
->> one dev-msi IRQ domain instance per IR unit. So I guess for this case,
->> it makes most sense to have a dev-msi IRQ domain per IR unit as
->> opposed to create one per individual driver..
-> I'm not really convinced. I looked at the idxd driver and that has it's
-> own interrupt related resource management for the IMS slots and provides
-> the mask,unmask callbacks for the interrupt chip via this crude platform
-> data indirection.
->
-> So I don't see the value of the dev-msi domain per IR unit. The domain
-> itself does not provide much functionality other than indirections and
-> you clearly need per device interrupt resource management on the side
-> and a customized irq chip. I rather see it as a plain layering
-> violation.
->
-> The point is that your IDXD driver manages the per device IMS slots
-> which is a interrupt related resource. The story would be different if
-> the IMS slots would be managed by some central or per IR unit entity,
-> but in that case you'd need IMS specific domain(s).
->
-> So the obvious consequence of the hierarchical irq design is:
->
->     vector -> IR -> IDXD
->
-> which makes the control flow of allocating an interrupt for a subdevice
-> straight forward following the irq hierarchy rules.
->
-> This still wants to inherit the existing msi domain functionality, but
-> the amount of code required is small and removes all these pointless
-> indirections and integrates the slot management naturally.
->
-> If you expect or know that there are other devices coming up with IMS
-> integrated then most of that code can be made a common library. But for
-> this to make sense, you really want to make sure that these other
-> devices do not require yet another horrible layer of indirection.
-Yes Thomas, for now this may look odd since there is only one device 
-using this
-IRQ domain. But there will be other devices following suit, hence I have 
-added
-all the IRQ chip/domain bits in a separate file in drivers/irqchip in 
-the next
-version of patches. I'll submit the patches shortly and it will be great 
-if I
-can get more feedback on it.
-> A side note: I just read back on the specification and stumbled over
-> the following gem:
->
->   "IMS may also optionally support per-message masking and pending bit
->    status, similar to the per-vector mask and pending bit array in the
->    PCI Express MSI-X capability."
->
-> Optionally? Please tell the hardware folks to make this mandatory. We
-> have enough pain with non maskable MSI interrupts already so introducing
-> yet another non maskable interrupt trainwreck is not an option.
->
-> It's more than a decade now that I tell HW people not to repeat the
-> non-maskable MSI failure, but obviously they still think that
-> non-maskable interrupts are a brilliant idea. I know that HW folks
-> believe that everything they omit can be fixed in software, but they
-> have to finally understand that this particular issue _cannot_ be fixed
-> at all.
-hmm, I asked the hardware folks and they have informed me that all IMS 
-devices
-will support per vector masking/pending bit. This will be updated in the 
-next SIOV
-spec which will be published soon.
->
-> Thanks,
->
->          tglx
+> On Aug 6, 2020, at 3:27 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>=20
+> On Thu, Aug 06, 2020 at 02:57:34PM -0700, Tuan Phan wrote:
+>> Ampere Altra SOC supports only 32-bit ECAM reading. Therefore,
+>> add an MCFG quirk for the platform.
+>=20
+> This is interesting.  So this host bridge supports sub 32-bit config
+> *writes*, but not reads?
+>=20
+> I actually don't know whether that complies with the spec or not.  If
+> config registers are not allowed to have side effects on read, this
+> *would* be compliant.
+>=20
+> PCIe r5.0, sec 7.4, doesn't list any register types with read side
+> effects, so there shouldn't be any in the registers defined by the
+> spec.  But I would think device-specific registers could do whatever
+> they wanted, e.g., reading an interrupt status register or something
+> could clear it.
+>=20
+> And I think sec 7.2.2 about ECAM implicitly requires sub 32-bit
+> accesses because it mentions the access size and byte enables.
+>=20
+> Is this a one-off situation where future hardware will allow sub
+> 32-bit reads and writes?  We don't want a stream of quirks for future
+> devices.
+
+Hi Bjorn,
+
+Actually, this is a silicon bug inside current Altra Soc. Our SOC supports
+sub 32-bit reads and writes. But using byte read for some devices like AMD =
+graphic
+card causing corrupted data due to host controller HW errata.
+
+Future devices will have this issue fixed so this quirk applies only for cu=
+rrent Altra
+Soc.
+
+So you think I can drop the =E2=80=9Cnon-compliant=E2=80=9D as there are no=
+ read side effects
+for all registers?
+
+>=20
+>> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+>> ---
+>> drivers/acpi/pci_mcfg.c  | 20 ++++++++++++++++++++
+>> drivers/pci/ecam.c       | 10 ++++++++++
+>> include/linux/pci-ecam.h |  1 +
+>> 3 files changed, 31 insertions(+)
+>>=20
+>> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+>> index 54b36b7ad47d..e526571e0ebd 100644
+>> --- a/drivers/acpi/pci_mcfg.c
+>> +++ b/drivers/acpi/pci_mcfg.c
+>> @@ -142,6 +142,26 @@ static struct mcfg_fixup mcfg_quirks[] =3D {
+>> 	XGENE_V2_ECAM_MCFG(4, 0),
+>> 	XGENE_V2_ECAM_MCFG(4, 1),
+>> 	XGENE_V2_ECAM_MCFG(4, 2),
+>> +
+>> +#define ALTRA_ECAM_QUIRK(rev, seg) \
+>> +	{ "Ampere", "Altra   ", rev, seg, MCFG_BUS_ANY, &pci_32b_read_ops }
+>> +
+>> +	ALTRA_ECAM_QUIRK(1, 0),
+>> +	ALTRA_ECAM_QUIRK(1, 1),
+>> +	ALTRA_ECAM_QUIRK(1, 2),
+>> +	ALTRA_ECAM_QUIRK(1, 3),
+>> +	ALTRA_ECAM_QUIRK(1, 4),
+>> +	ALTRA_ECAM_QUIRK(1, 5),
+>> +	ALTRA_ECAM_QUIRK(1, 6),
+>> +	ALTRA_ECAM_QUIRK(1, 7),
+>> +	ALTRA_ECAM_QUIRK(1, 8),
+>> +	ALTRA_ECAM_QUIRK(1, 9),
+>> +	ALTRA_ECAM_QUIRK(1, 10),
+>> +	ALTRA_ECAM_QUIRK(1, 11),
+>> +	ALTRA_ECAM_QUIRK(1, 12),
+>> +	ALTRA_ECAM_QUIRK(1, 13),
+>> +	ALTRA_ECAM_QUIRK(1, 14),
+>> +	ALTRA_ECAM_QUIRK(1, 15),
+>> };
+>>=20
+>> static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+>> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
+>> index 8f065a42fc1a..b54d32a31669 100644
+>> --- a/drivers/pci/ecam.c
+>> +++ b/drivers/pci/ecam.c
+>> @@ -168,4 +168,14 @@ const struct pci_ecam_ops pci_32b_ops =3D {
+>> 		.write		=3D pci_generic_config_write32,
+>> 	}
+>> };
+>> +
+>> +/* ECAM ops for 32-bit read only (non-compliant) */
+>> +const struct pci_ecam_ops pci_32b_read_ops =3D {
+>> +	.bus_shift	=3D 20,
+>> +	.pci_ops	=3D {
+>> +		.map_bus	=3D pci_ecam_map_bus,
+>> +		.read		=3D pci_generic_config_read32,
+>> +		.write		=3D pci_generic_config_write,
+>> +	}
+>> +};
+>> #endif
+>> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+>> index 1af5cb02ef7f..033ce74f02e8 100644
+>> --- a/include/linux/pci-ecam.h
+>> +++ b/include/linux/pci-ecam.h
+>> @@ -51,6 +51,7 @@ extern const struct pci_ecam_ops pci_generic_ecam_ops;
+>>=20
+>> #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+>> extern const struct pci_ecam_ops pci_32b_ops;	/* 32-bit accesses only */
+>> +extern const struct pci_ecam_ops pci_32b_read_ops; /* 32-bit read only =
+*/
+>> extern const struct pci_ecam_ops hisi_pcie_ops;	/* HiSilicon */
+>> extern const struct pci_ecam_ops thunder_pem_ecam_ops; /* Cavium Thunder=
+X 1.x & 2.x */
+>> extern const struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium Thunder=
+X 1.x */
+>> --=20
+>> 2.18.4
+>>=20
+
