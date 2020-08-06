@@ -2,138 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C177823E3FC
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Aug 2020 00:27:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B17123E401
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Aug 2020 00:28:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgHFW1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Aug 2020 18:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49868 "EHLO mail.kernel.org"
+        id S1726282AbgHFW2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Aug 2020 18:28:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36351 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbgHFW1P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:27:15 -0400
-Received: from localhost (130.sub-72-107-113.myvzw.com [72.107.113.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74D17221E2;
-        Thu,  6 Aug 2020 22:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596752834;
-        bh=WgdGpbjoOqKRB5xCJJB1QUUR3NAm5AiI/g2A57rj4KI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qPv7UMmumdkk5aGIxvQqVqqb18le/xYKnvT2NLDxW1vNEmC3Ph4Qht7skoNahofop
-         f4yilJWzb9U+BSlCfhrRXW+mYxFr3x4aM7SMY6d+2qsXOAomi/LJl0WMvWd4RgfyQy
-         b/Rd8PhebQXbHyz/CLBputTdShNapNUxGxWiVOIc=
-Date:   Thu, 6 Aug 2020 17:27:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     patches@amperecomputing.com, Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
-Message-ID: <20200806222713.GA704188@bjorn-Precision-5520>
+        id S1725947AbgHFW2A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:28:00 -0400
+IronPort-SDR: ZnEhlsh1lsBzpOXo/EGa+7XwGhav6cnFn2OT5slb7GKcBucUvZjr66bs3008nFPU/feAAlV6tF
+ szNAZrWV4ZQw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="150669248"
+X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
+   d="scan'208";a="150669248"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 15:27:59 -0700
+IronPort-SDR: 7pIRHeDz2zm4c3qDcZtKcAy9UQTRcCaTH4mM+QrS6Ic4wZyuU7XbJ2w6Z0X7t48WtvqX5j7jms
+ Mj6C0RSAwkhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
+   d="scan'208";a="275207863"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Aug 2020 15:27:59 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 6 Aug 2020 15:27:58 -0700
+Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 6 Aug 2020 15:27:58 -0700
+Received: from [10.213.170.239] (10.213.170.239) by
+ ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Aug 2020 15:27:58 -0700
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@mellanox.com>
+CC:     Marc Zyngier <maz@kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+ <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
+ <96a1eb5ccc724790b5404a642583919d@intel.com>
+ <20200805221548.GK19097@mellanox.com>
+ <70465fd3a7ae428a82e19f98daa779e8@intel.com>
+ <20200805225330.GL19097@mellanox.com>
+ <630e6a4dc17b49aba32675377f5a50e0@intel.com>
+ <20200806001927.GM19097@mellanox.com>
+ <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
+ <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
+ <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
+ <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
+From:   "Dey, Megha" <megha.dey@intel.com>
+Message-ID: <78a0cdd6-ba05-e153-b25e-2c0fe8c1e7b9@intel.com>
+Date:   Thu, 6 Aug 2020 15:27:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596751055-12316-1-git-send-email-tuanphan@os.amperecomputing.com>
+In-Reply-To: <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.213.170.239]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 02:57:34PM -0700, Tuan Phan wrote:
-> Ampere Altra SOC supports only 32-bit ECAM reading. Therefore,
-> add an MCFG quirk for the platform.
+Hi Thomas,
 
-This is interesting.  So this host bridge supports sub 32-bit config
-*writes*, but not reads?
-
-I actually don't know whether that complies with the spec or not.  If
-config registers are not allowed to have side effects on read, this
-*would* be compliant.
-
-PCIe r5.0, sec 7.4, doesn't list any register types with read side
-effects, so there shouldn't be any in the registers defined by the
-spec.  But I would think device-specific registers could do whatever
-they wanted, e.g., reading an interrupt status register or something
-could clear it.
-
-And I think sec 7.2.2 about ECAM implicitly requires sub 32-bit
-accesses because it mentions the access size and byte enables.
-
-Is this a one-off situation where future hardware will allow sub
-32-bit reads and writes?  We don't want a stream of quirks for future
-devices.
-
-> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
-> ---
->  drivers/acpi/pci_mcfg.c  | 20 ++++++++++++++++++++
->  drivers/pci/ecam.c       | 10 ++++++++++
->  include/linux/pci-ecam.h |  1 +
->  3 files changed, 31 insertions(+)
-> 
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index 54b36b7ad47d..e526571e0ebd 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -142,6 +142,26 @@ static struct mcfg_fixup mcfg_quirks[] = {
->  	XGENE_V2_ECAM_MCFG(4, 0),
->  	XGENE_V2_ECAM_MCFG(4, 1),
->  	XGENE_V2_ECAM_MCFG(4, 2),
-> +
-> +#define ALTRA_ECAM_QUIRK(rev, seg) \
-> +	{ "Ampere", "Altra   ", rev, seg, MCFG_BUS_ANY, &pci_32b_read_ops }
-> +
-> +	ALTRA_ECAM_QUIRK(1, 0),
-> +	ALTRA_ECAM_QUIRK(1, 1),
-> +	ALTRA_ECAM_QUIRK(1, 2),
-> +	ALTRA_ECAM_QUIRK(1, 3),
-> +	ALTRA_ECAM_QUIRK(1, 4),
-> +	ALTRA_ECAM_QUIRK(1, 5),
-> +	ALTRA_ECAM_QUIRK(1, 6),
-> +	ALTRA_ECAM_QUIRK(1, 7),
-> +	ALTRA_ECAM_QUIRK(1, 8),
-> +	ALTRA_ECAM_QUIRK(1, 9),
-> +	ALTRA_ECAM_QUIRK(1, 10),
-> +	ALTRA_ECAM_QUIRK(1, 11),
-> +	ALTRA_ECAM_QUIRK(1, 12),
-> +	ALTRA_ECAM_QUIRK(1, 13),
-> +	ALTRA_ECAM_QUIRK(1, 14),
-> +	ALTRA_ECAM_QUIRK(1, 15),
->  };
->  
->  static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-> index 8f065a42fc1a..b54d32a31669 100644
-> --- a/drivers/pci/ecam.c
-> +++ b/drivers/pci/ecam.c
-> @@ -168,4 +168,14 @@ const struct pci_ecam_ops pci_32b_ops = {
->  		.write		= pci_generic_config_write32,
->  	}
->  };
-> +
-> +/* ECAM ops for 32-bit read only (non-compliant) */
-> +const struct pci_ecam_ops pci_32b_read_ops = {
-> +	.bus_shift	= 20,
-> +	.pci_ops	= {
-> +		.map_bus	= pci_ecam_map_bus,
-> +		.read		= pci_generic_config_read32,
-> +		.write		= pci_generic_config_write,
-> +	}
-> +};
->  #endif
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 1af5cb02ef7f..033ce74f02e8 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -51,6 +51,7 @@ extern const struct pci_ecam_ops pci_generic_ecam_ops;
->  
->  #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
->  extern const struct pci_ecam_ops pci_32b_ops;	/* 32-bit accesses only */
-> +extern const struct pci_ecam_ops pci_32b_read_ops; /* 32-bit read only */
->  extern const struct pci_ecam_ops hisi_pcie_ops;	/* HiSilicon */
->  extern const struct pci_ecam_ops thunder_pem_ecam_ops; /* Cavium ThunderX 1.x & 2.x */
->  extern const struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
-> -- 
-> 2.18.4
-> 
+On 8/6/2020 1:21 PM, Thomas Gleixner wrote:
+> Megha,
+>
+> "Dey, Megha" <megha.dey@intel.com> writes:
+>> On 8/6/2020 10:10 AM, Thomas Gleixner wrote:
+>>> If the DEV/MSI domain has it's own per IR unit resource management, then
+>>> you need one per IR unit.
+>>>
+>>> If the resource management is solely per device then having a domain per
+>>> device is the right choice.
+>> The dev-msi domain can be used by other devices if they too would want
+>> to follow the vector->intel IR->dev-msi IRQ hierarchy.  I do create
+>> one dev-msi IRQ domain instance per IR unit. So I guess for this case,
+>> it makes most sense to have a dev-msi IRQ domain per IR unit as
+>> opposed to create one per individual driver..
+> I'm not really convinced. I looked at the idxd driver and that has it's
+> own interrupt related resource management for the IMS slots and provides
+> the mask,unmask callbacks for the interrupt chip via this crude platform
+> data indirection.
+>
+> So I don't see the value of the dev-msi domain per IR unit. The domain
+> itself does not provide much functionality other than indirections and
+> you clearly need per device interrupt resource management on the side
+> and a customized irq chip. I rather see it as a plain layering
+> violation.
+>
+> The point is that your IDXD driver manages the per device IMS slots
+> which is a interrupt related resource. The story would be different if
+> the IMS slots would be managed by some central or per IR unit entity,
+> but in that case you'd need IMS specific domain(s).
+>
+> So the obvious consequence of the hierarchical irq design is:
+>
+>     vector -> IR -> IDXD
+>
+> which makes the control flow of allocating an interrupt for a subdevice
+> straight forward following the irq hierarchy rules.
+>
+> This still wants to inherit the existing msi domain functionality, but
+> the amount of code required is small and removes all these pointless
+> indirections and integrates the slot management naturally.
+>
+> If you expect or know that there are other devices coming up with IMS
+> integrated then most of that code can be made a common library. But for
+> this to make sense, you really want to make sure that these other
+> devices do not require yet another horrible layer of indirection.
+Yes Thomas, for now this may look odd since there is only one device 
+using this
+IRQ domain. But there will be other devices following suit, hence I have 
+added
+all the IRQ chip/domain bits in a separate file in drivers/irqchip in 
+the next
+version of patches. I'll submit the patches shortly and it will be great 
+if I
+can get more feedback on it.
+> A side note: I just read back on the specification and stumbled over
+> the following gem:
+>
+>   "IMS may also optionally support per-message masking and pending bit
+>    status, similar to the per-vector mask and pending bit array in the
+>    PCI Express MSI-X capability."
+>
+> Optionally? Please tell the hardware folks to make this mandatory. We
+> have enough pain with non maskable MSI interrupts already so introducing
+> yet another non maskable interrupt trainwreck is not an option.
+>
+> It's more than a decade now that I tell HW people not to repeat the
+> non-maskable MSI failure, but obviously they still think that
+> non-maskable interrupts are a brilliant idea. I know that HW folks
+> believe that everything they omit can be fixed in software, but they
+> have to finally understand that this particular issue _cannot_ be fixed
+> at all.
+hmm, I asked the hardware folks and they have informed me that all IMS 
+devices
+will support per vector masking/pending bit. This will be updated in the 
+next SIOV
+spec which will be published soon.
+>
+> Thanks,
+>
+>          tglx
