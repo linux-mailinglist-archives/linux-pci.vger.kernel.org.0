@@ -2,271 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9DA240416
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Aug 2020 11:34:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BA7240623
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Aug 2020 14:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHJJeY convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 10 Aug 2020 05:34:24 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2586 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726304AbgHJJeY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:34:24 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id CACCEA4E080892432639;
-        Mon, 10 Aug 2020 10:34:21 +0100 (IST)
-Received: from localhost (10.52.123.94) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 10 Aug
- 2020 10:34:21 +0100
-Date:   Mon, 10 Aug 2020 10:32:52 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>, <rjw@rjwysocki.net>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <bhelgaas@google.com>,
-        <ashok.raj@intel.com>, <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 4/9] PCI/AER: Extend AER error handling to RCECs
-Message-ID: <20200810103252.00000318@Huawei.com>
-In-Reply-To: <D24FD705-BFE3-4623-AC7B-E53FCDC06EC5@intel.com>
-References: <20200807225314.GA521346@bjorn-Precision-5520>
-        <D24FD705-BFE3-4623-AC7B-E53FCDC06EC5@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1726614AbgHJMst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Aug 2020 08:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgHJMss (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Aug 2020 08:48:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCDA0C061756
+        for <linux-pci@vger.kernel.org>; Mon, 10 Aug 2020 05:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=t+csojCNqg5EFlnTFsTFMvWsaON2fdiMbVsMLKa0fLs=; b=elknGK+8kVpfTuPJG9QGFoDJhz
+        7JQu5jdl2ki62rlZ2aPStzhLaAew1vzDNdVlhDRpJCTdFZ5TdUmGG7KFpL58ZempxeKiYoFC8rmf5
+        xnhhG62xmKnvrg7NZLfKdE997tBe1qDyjV09dDjHJoURJ/7myi5elvo/FazLm9U9/FC53eDDdfLr/
+        edgM1axQv3pq306ZIFPyJuOEnAg70c+VaGvPeiMxYCRRD0Uk6PMk60s2n3RQiZW29RL2mdoSMaFXI
+        OOvg8fc6gDswxw6sVH1BGNC4ZJqGQXb3Yy2GRUfrd1kKU3d4wobfETGxZl1Gr5riqyyNc6xFZhMEo
+        l9zfsa/Q==;
+Received: from [2001:4bb8:18c:29c:3742:758b:3638:ce12] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k57EK-0006xe-4g; Mon, 10 Aug 2020 12:48:44 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     logang@deltatee.com, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH] PCI/P2PDMA: fix build without dma ops
+Date:   Mon, 10 Aug 2020 14:48:43 +0200
+Message-Id: <20200810124843.1532738-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.123.94]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 7 Aug 2020 17:55:17 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+My commit to make dma ops support optional missed the reference in
+the p2pdma code.  And while the build bot didn't manage to find a config
+where this can happen, Matthew did.  Fix this by replacing two IS_ENABLED
+checks with ifdefs.
 
-> On 7 Aug 2020, at 15:53, Bjorn Helgaas wrote:
-> 
-> > On Tue, Aug 04, 2020 at 12:40:47PM -0700, Sean V Kelley wrote:  
-> >> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >>
-> >> Currently the kernel does not handle AER errors for Root Complex 
-> >> integrated
-> >> End Points (RCiEPs)[0]. These devices sit on a root bus within the 
-> >> Root Complex
-> >> (RC). AER handling is performed by a Root Complex Event Collector 
-> >> (RCEC) [1]
-> >> which is a effectively a type of RCiEP on the same root bus.
-> >>
-> >> For an RCEC (technically not a Bridge), error messages "received" 
-> >> from
-> >> associated RCiEPs must be enabled for "transmission" in order to 
-> >> cause a
-> >> System Error via the Root Control register or (when the Advanced 
-> >> Error
-> >> Reporting Capability is present) reporting via the Root Error Command
-> >> register and logging in the Root Error Status register and Error 
-> >> Source
-> >> Identification register.
-> >>
-> >> In addition to the defined OS level handling of the reset flow for 
-> >> the
-> >> associated RCiEPs of an RCEC, it is possible to also have a firmware 
-> >> first
-> >> model. In that case there is no need to take any actions on the RCEC 
-> >> because
-> >> the firmware is responsible for them. This is true where APEI [2] is 
-> >> used
-> >> to report the AER errors via a GHES[v2] HEST entry [3] and relevant
-> >> AER CPER record [4] and Firmware First handling is in use.  
-> >
-> > I don't see anything in the patch that mentions "firmware first." Do
-> > we need it in the commit log?  After
-> > https://git.kernel.org/linus/708b20003624 ("PCI/AER: Remove
-> > HEST/FIRMWARE_FIRST parsing for AER ownership"), I think we no longer
-> > know anything about firmware-first in the kernel.  
-> 
-> I’ll let Jonathan reply here.
+Fixes: 2f9237d4f6d ("dma-mapping: make support for dma ops optional")
+Reported-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/pci/p2pdma.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-This is a terminology question rather about what the distinction
-between "Firmware First" vs "non native handling" is.
-
-Note that in ARM world, native handling tends to be referred to as
-'kernel first' and firmware based handling as 'firmware first' 
-but that isn't that relevant here other than perhaps explaining why I used
-this terminology. e.g.
-http://connect.linaro.org.s3.amazonaws.com/hkg18/presentations/hkg18-116.pdf
-The distinction is who receives the notification of the error from hardware
-and hence who sees it 'first' - basically where does the interrupt go?
-
-Anyhow, if we want to avoid confusion here, we can just use the phrase
-"non native handling" which I think is unambiguous?
-
-
-...
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 64ebed129dbf5f..f357f9a32b3a57 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -556,13 +556,14 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
+ 		return -1;
  
-> >  
-> >> + * including any bridged devices on buses under this bus.
-> >> + * Call the provided callback on each device found.
-> >> + *
-> >> + * If the device provided has no subordinate bus, call the provided
-> >> + * callback on the device itself.
-> >> + */
-> >> +static void pci_walk_dev_affected(struct pci_dev *dev, int 
-> >> (*cb)(struct pci_dev *, void *),  
-> >
-> > I don't understand the "affected" reference in the function name.
-> > This doesn't test anything to see whether devices are "affected".
-> > Naming is the hardest part of programming :)  
-> 
-> In earlier discussion, Cameron had suggested pci_walk_aer_affected(). 
-> But I thought perhaps that the focus should be on the devices.  Perhaps 
-> a better description would be pci_walk_aer_devices() or something along 
-> those lines.  The original incarnation was pci_walk_below_dev().
-> 
-> I’m open to anything, really.
-
-Agreed. It is really hard to name this function and would be great to 
-have a better option.
-
-> >>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >>  			pci_channel_state_t state,
-> >>  			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
-> >>  {
-> >>  	pci_ers_result_t 'status = PCI_ERS_RESULT_CAN_RECOVER;
-> >> -	struct pci_bus *bus;
-> >>
-> >>  	/*
-> >>  	 * Error recovery runs on all subordinates of the first downstream 
-> >> port.
-> >>  	 * If the downstream port detected the error, it is cleared at the 
-> >> end.
-> >> +	 * For RCiEPs we should reset just the RCiEP itself.
-> >>  	 */
-> >>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> >> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
-> >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
-> >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
-> >>  		dev = dev->bus->self;
-> >> -	bus = dev->subordinate;
-> >>
-> >>  	pci_dbg(dev, "broadcast error_detected message\n");
-> >>  	if (state == pci_channel_io_frozen) {
-> >> -		pci_walk_bus(bus, report_frozen_detected, &status);
-> >> +		pci_walk_dev_affected(dev, report_frozen_detected, &status);
-> >> +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> >> +			pci_warn(dev, "link reset not possible for RCiEP\n");
-> >> +			status = PCI_ERS_RESULT_NONE;
-> >> +			goto failed;
-> >> +		}
-> >> +
-> >>  		status = reset_link(dev);  
-> >
-> > reset_link() might be misnamed.  IIUC "dev" is a bridge, and the point
-> > is really to reset any devices below "dev."  Whether we do that by
-> > resetting link, DPC trigger, secondary bus reset, FLR, etc, is sort of
-> > immaterial.  Some of those methods might be applicable for RCiEPs.
-> >
-> > But you didn't add that name; I'm just trying to understand this
-> > better.  
-> 
-> Yes, that’s a confusing term with the _link attached. It’s difficult 
-> to relate to the different resets that might be applicable. I was 
-> thinking about that when looking at the callback path via the 
-> “reset_link” of the RCiEP to the RCEC for the sole purpose of 
-> clearing the Root Port Error Status. It would be worth time to spend 
-> looking at better descriptive naming/methods.
-
-Agreed, this caused me some some confusion as well so more descriptive
-naming would be good.
-
-> 
-> >  
-> >>  		if (status != PCI_ERS_RESULT_RECOVERED) {
-> >>  			pci_warn(dev, "link reset failed\n");
-> >>  			goto failed;
-> >>  		}
-> >>  	} else {
-> >> -		pci_walk_bus(bus, report_normal_detected, &status);
-> >> +		pci_walk_dev_affected(dev, report_normal_detected, &status);
-> >>  	}
-> >>
-> >>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-> >>  		status = PCI_ERS_RESULT_RECOVERED;
-> >>  		pci_dbg(dev, "broadcast mmio_enabled message\n");
-> >> -		pci_walk_bus(bus, report_mmio_enabled, &status);
-> >> +		pci_walk_dev_affected(dev, report_mmio_enabled, &status);
-> >>  	}
-> >>
-> >>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> >> @@ -188,18 +219,22 @@ pci_ers_result_t pcie_do_recovery(struct 
-> >> pci_dev *dev,
-> >>  		 */
-> >>  		status = PCI_ERS_RESULT_RECOVERED;
-> >>  		pci_dbg(dev, "broadcast slot_reset message\n");
-> >> -		pci_walk_bus(bus, report_slot_reset, &status);
-> >> +		pci_walk_dev_affected(dev, report_slot_reset, &status);
-> >>  	}
-> >>
-> >>  	if (status != PCI_ERS_RESULT_RECOVERED)
-> >>  		goto failed;
-> >>
-> >>  	pci_dbg(dev, "broadcast resume message\n");
-> >> -	pci_walk_bus(bus, report_resume, &status);
-> >> -
-> >> -	if (pcie_aer_is_native(dev))
-> >> -		pcie_clear_device_status(dev);
-> >> -	pci_aer_clear_nonfatal_status(dev);
-> >> +	pci_walk_dev_affected(dev, report_resume, &status);
-> >> +
-> >> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> >> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> >> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
-> >> +		if (pcie_aer_is_native(dev))
-> >> +			pcie_clear_device_status(dev);
-> >> +		pci_aer_clear_nonfatal_status(dev);  
-> >
-> > This change (testing pci_pcie_type()) looks like it's not strictly
-> > related to the rest of this patch and maybe should be split out into
-> > its own patch?  
-> 
-> This change was also based on a commit (068c29a24) in the pci/next 
-> branch. The type testing was brought over from Jonathan’s original V2, 
-> but actually, it went full circle by adding the RC_EC type, because now 
-> it was no longer a no-op. There was an original concern about the need 
-> for those to be called on the RCEC from Jonathan’s RFC.
-
-What this is doing is ensuring that we do not call these reset functions
-if dev is an RCiEP.  This patch is introducing that possibility for the
-first time.  Breaking it out to a precursor patch might be possible but
-would seem a bit odd.  Perhaps we could invert the logic to check it
-isn't PCI_EXP_TYPE_RC_END?  That seems less intuitive than a positive
-check to me.  It might not be obvious to a future reader that we can't get
-here with most of the other types.
-
-Thanks,
-
-Jonathan
-
-
-
-> 
-> Thoughts Jonathan?
-> 
-> Thanks,
-> 
-> Sean
-> 
-> >  
-> >> +	}
-> >>  	pci_info(dev, "device recovery successful\n");
-> >>  	return status;
-> >>
-> >> -- 
-> >> 2.27.0
-> >>  
-
+ 	for (i = 0; i < num_clients; i++) {
+-		if (IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
+-		    clients[i]->dma_ops == &dma_virt_ops) {
++#ifdef CONFIG_DMA_VIRT_OPS
++		if (clients[i]->dma_ops == &dma_virt_ops) {
+ 			if (verbose)
+ 				dev_warn(clients[i],
+ 					 "cannot be used for peer-to-peer DMA because the driver makes use of dma_virt_ops\n");
+ 			return -1;
+ 		}
++#endif
+ 
+ 		pci_client = find_parent_pci_dev(clients[i]);
+ 		if (!pci_client) {
+@@ -842,9 +843,10 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
+ 	 * this should never happen because it will be prevented
+ 	 * by the check in pci_p2pdma_distance_many()
+ 	 */
+-	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
+-			 dev->dma_ops == &dma_virt_ops))
++#ifdef CONFIG_DMA_VIRT_OPS
++	if (WARN_ON_ONCE(dev->dma_ops == &dma_virt_ops))
+ 		return 0;
++#endif
+ 
+ 	for_each_sg(sg, s, nents, i) {
+ 		paddr = sg_phys(s);
+-- 
+2.28.0
 
