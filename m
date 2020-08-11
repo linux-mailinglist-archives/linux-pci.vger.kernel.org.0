@@ -2,330 +2,461 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 752E2241F23
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 19:25:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7AAF241FCE
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 20:39:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgHKRZf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Aug 2020 13:25:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14068 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729116AbgHKRZf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Aug 2020 13:25:35 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07BHDMkv090865;
-        Tue, 11 Aug 2020 13:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=HyLHnK6FD4SyK6sPlQ+898grA3/mkQQaDf94D2rAktI=;
- b=CDC9DinVq2QM5JpfrpsBh4ZsRP6K+bD95Fpjn2KuE8CYRGIRPaAkSnDvtfDqJdp4V5tg
- yN7JoTML4+fruhpJLKLldTnH4mE/LOoqeUYQsjA9ViPkAymIPj7PeoMwMa1wzaNuE4Eo
- JBQGt5aJlEcZpU+jEPymOYhVBxeParHKRPFmrOKW/iDBGXkGsdXj0DotVPcUnRCvL6sG
- jPowwY/DoJjidrRm+kv91LjwYM5s0G/Vg9y9DUQtlY26BL3B9k2fxdAVk8JWx97l3U/u
- X7dCzv0Kuc68cT1rPOyOSmY7AKwFrdpMrDHC3oD8luuCi4PV4ZCPPAoEHIgTwD3m42zM 0Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32uvjawgmd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Aug 2020 13:25:16 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07BHFqoU097851;
-        Tue, 11 Aug 2020 13:25:15 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32uvjawgkd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Aug 2020 13:25:15 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07BHLmMW017551;
-        Tue, 11 Aug 2020 17:25:13 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 32skahbkfn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Aug 2020 17:25:13 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07BHPBmj21037418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Aug 2020 17:25:11 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5888CA4057;
-        Tue, 11 Aug 2020 17:25:11 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 01C41A405B;
-        Tue, 11 Aug 2020 17:25:11 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.14.231])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Aug 2020 17:25:10 +0000 (GMT)
-Subject: Re: [PATCH 2/2 v2] powerpc/powernv: Enable and setup PCI P2P
-To:     "Oliver O'Halloran" <oohall@gmail.com>,
-        Max Gurtovoy <maxg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        israelr@mellanox.com, idanw@mellanox.com, vladimirk@mellanox.com,
-        shlomin@mellanox.com, Carol L Soto <clsoto@us.ibm.com>,
-        aneela@mellanox.com
-References: <20200430131520.51211-1-maxg@mellanox.com>
- <20200430131520.51211-2-maxg@mellanox.com>
- <CAOSf1CGv=0bwShzzK5zP3dtKg=RxeTFvq52j-Vi4GDfZ4UpBJA@mail.gmail.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Message-ID: <56e60f7e-115b-c699-b5fa-c6026785649a@linux.ibm.com>
-Date:   Tue, 11 Aug 2020 19:25:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725886AbgHKSje (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Aug 2020 14:39:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62008 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgHKSjd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 Aug 2020 14:39:33 -0400
+IronPort-SDR: XtScYMvmNypHlON/sX23XvTpEn98ANlqsgFVb6/vO+D/NbjaoFEOesDHjmNBGB3UZMyFHEdRYd
+ Ul99Dc2BfrgQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="215320560"
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="215320560"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 11:39:25 -0700
+IronPort-SDR: DSCptk9unTTsZolcqSeQUsixDuqqqM1xUH+RWpqa9c31Q5XdGVtt9F8AAkPVQQbVTfZZqZ4ygb
+ 01W0QCw4hDiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="324841739"
+Received: from orsmsx601-2.jf.intel.com (HELO ORSMSX601.amr.corp.intel.com) ([10.22.229.81])
+  by orsmga008.jf.intel.com with ESMTP; 11 Aug 2020 11:39:24 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 11 Aug 2020 11:39:24 -0700
+Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 11 Aug 2020 11:39:24 -0700
+Received: from [10.212.86.9] (10.212.86.9) by ORSMSX101.amr.corp.intel.com
+ (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Aug
+ 2020 11:39:23 -0700
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     Marc Zyngier <maz@kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de>
+From:   "Dey, Megha" <megha.dey@intel.com>
+Message-ID: <996854e7-ab11-b76b-64dc-b760b3ad2365@intel.com>
+Date:   Tue, 11 Aug 2020 11:39:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CGv=0bwShzzK5zP3dtKg=RxeTFvq52j-Vi4GDfZ4UpBJA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <87h7tcgbs2.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-11_15:2020-08-11,2020-08-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 spamscore=0 clxscore=1011 mlxscore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008110115
+Content-Language: en-US
+X-Originating-IP: [10.212.86.9]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Thomas,
 
-
-Le 03/08/2020 à 09:35, Oliver O'Halloran a écrit :
-> On Thu, Apr 30, 2020 at 11:15 PM Max Gurtovoy <maxg@mellanox.com> wrote:
->> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->> index 57d3a6a..9ecc576 100644
->> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->> @@ -3706,18 +3706,208 @@ static void pnv_pci_ioda_dma_bus_setup(struct pci_bus *bus)
->>          }
->>   }
+On 8/8/2020 12:47 PM, Thomas Gleixner wrote:
+> Megha,
+>
+> "Dey, Megha" <megha.dey@intel.com> writes:
+>> On 8/7/2020 9:47 AM, Thomas Gleixner wrote:
+>>> I'm all for sharing code and making the life of driver writers simple
+>>> because that makes my life simple as well, but not by creating a layer
+>>> at the wrong level and then hacking it into submission until it finally
+>>> collapses.
+>>>
+>>> Designing the infrastructure following the clear layering rules of
+>>> hierarchical domains so it works for IMS and also replaces the platform
+>>> MSI hack is the only sane way to go forward, not the other way round.
+>>   From what I've gathered, I need to:
 >>
->> +#ifdef CONFIG_PCI_P2PDMA
->> +static DEFINE_MUTEX(p2p_mutex);
->> +
->> +static bool pnv_pci_controller_owns_addr(struct pci_controller *hose,
->> +                                        phys_addr_t addr, size_t size)
->> +{
->> +       int i;
->> +
->> +       /*
->> +        * It seems safe to assume the full range is under the same PHB, so we
->> +        * can ignore the size.
->> +        */
->> +       for (i = 0; i < ARRAY_SIZE(hose->mem_resources); i++) {
->> +               struct resource *res = &hose->mem_resources[i];
->> +
->> +               if (res->flags && addr >= res->start && addr < res->end)
->> +                       return true;
->> +       }
->> +       return false;
->> +}
->> +
->> +/*
->> + * find the phb owning a mmio address if not owned locally
->> + */
->> +static struct pnv_phb *pnv_pci_find_owning_phb(struct pci_dev *pdev,
->> +                                              phys_addr_t addr, size_t size)
->> +{
->> +       struct pci_controller *hose;
->> +
->> +       /* fast path */
->> +       if (pnv_pci_controller_owns_addr(pdev->bus->sysdata, addr, size))
->> +               return NULL;
-> 
-> Do we actually need this fast path? It's going to be slow either way.
-> Also if a device is doing p2p to another device under the same PHB
-> then it should not be happening via the root complex. Is this a case
-> you've tested?
+>> 1. Get rid of the mantra that "IMS" is an extension of platform-msi.
+>> 2. Make this new infra devoid of any platform-msi references
+> See below.
+ok..
+>
+>> 3. Come up with a ground up approach which adheres to the layering
+>> constraints of the IRQ subsystem
+> Yes. It's something which can be used by all devices which have:
+>
+>     1) A device specific irq chip implementation including a msi write function
+>     2) Device specific resource management (slots in the IMS case)
+>
+> The infrastructure you need is basically a wrapper around the core MSI
+> domain (similar to PCI, platform-MSI etc,) which provides the specific
+> functionality to handle the above.
+
+ok, i will create a per device irq chip which will directly have the 
+device specific callbacks instead of another layer of redirection.
+
+This way i will get rid of the 'platform_msi_ops' data structure.
+
+I am not sure what you mean by device specific resource management, are 
+you referring to dev_msi_alloc/free_irqs?
+
+>> 4. Have common code (drivers/irqchip maybe??) where we put in all the
+>> generic ims-specific bits for the IRQ chip and domain
+>> which can be used by all device drivers belonging to this "IMS"class.
+> Yes, you can provide a common implementation for devices which share the
+> same irq chip and domain (slot management functionality)
+yeah i think most of the msi_domain_ops (msi_prepare, set_desc etc) are 
+common and can be moved into a common file.
+>
+>> 5. Have the device driver do the rest:
+>>       create the chip/domain (one chip/domain per device?)
+>>       provide device specific callbacks for masking, unmasking, write
+>>   message
+> Correct, but you don't need any magic new data structures for that, the
+> existing msi_domain_info/msi_domain_ops and related structures are
+> either sufficient or can be extended when necessary.
+>
+> So for the IDXD case you need:
+>
+>    1) An irq chip with mask/unmask callbacks and a write msg function
+>    2) A slot allocation or association function and their 'free'
+>       counterpart (irq_domain_ops)
+
+This is one part I didn't understand.
+
+Currently my dev_msi_alloc_irqs is simply a wrapper over 
+platform_msi_domain_alloc_irqs which again mostly calls 
+msi_domain_alloc_irqs.
+
+When you say add a .alloc, .free, does this mean we should add a device 
+specific alloc/free and not use the default 
+msi_domain_alloc/msi_domain_free?
+
+I don't see anything device specific to be done for IDXD atleast, can 
+you please let me know?
+
+>
+> The function and struct pointers go into the appropriate
+> msi_info/msi_ops structures along with the correct flags to set up the
+> whole thing and then the infrastructure creates your domain, fills in
+> the shared functions and sets the whole thing up.
+>
+> That's all what a device driver needs to provide, i.e. stick the device
+> specific functionality into right data structures and let the common
+> infrastructure deal with it. The rest just works and the device specific
+> functions are invoked from the right places when required.
+yeah. makes sense..
+>
+>> So from the hierarchical domain standpoint, we will have:
+>> - For DSA device: vector->intel-IR->IDXD
+>> - For Jason's device: root domain-> domain A-> Jason's device's IRQ domain
+>> - For any other intel IMS device in the future which
+>>       does not require interrupt remapping: vector->new device IRQ domain
+>>       requires interrupt remapping: vector->intel-IR->new device IRQ
+>> domain (i.e. create a new domain even though IDXD is already present?)
+> What's special about IDXD? It's just one specific implementation of IMS
+> and any other device implementing IMS is completely independent and as
+> documented in the specification the IMS slot management and therefore
+> the mask/unmask functionality can and will be completely different. IDXD
+> has a storage array with slots, Jason's hardware puts the IMS slot into
+> the queue storage.
+>
+> It does not matter whether a device comes from Intel or any other vendor,
+> it does neither matter whether the device works with direct vector
+> delivery or interrupt remapping.
+>
+> IDXD is not any different from any other IMS capable device when you
+> look at it from the interrupt hierarchy. It's either:
+>
+>       vector -> IR -> device
+> or
+>       vector -> device
+>
+> The only point where this is differentiated is when the irq domain is
+> created. Anything else just falls into place.
+yeah, so I will create the IRQ domain in the IDXD driver with INTEL-IR 
+as the parent, instead of creating a common per IR unit domain
+>
+> To answer Jason's question: No, the parent is never the PCI/MSI irq
+> domain because that sits at the same level as that device
+> domain. Remember the scheme:
+>
+>     vector --- DMAR-MSI
+> 	  |
+> 	  |-- ....
+> 	  |
+> 	  |-- IR-0 --- IO/APIC-0
+> 	  |        |
+> 	  |        |-- IO/APIC-1
+> 	  |        |
+> 	  |        |-- PCI/MSI-0
+> 	  |        |
+> 	  |        |-- HPET/MSI-0
+> 	  |        |
+> 	  |        |-- DEV-A/MSI-0
+> 	  |        |-- DEV-A/MSI-1
+> 	  |        |-- DEV-B/MSI-2
+> 	  |
+> 	  |-- IR-1 --- PCI/MSI-1
+> 	  |        |
+> 	  |        |-- DEV-C/MSI-3
+>
+> The PCI/MSI domain(s) are dealing solely with PCI standard compliant
+> MSI/MSI-X. IMS or similar (platform-MSI being one variant) sit at the
+> same level as the PCI/MSI domains.
+>
+> Why? It's how the hardware operates.
+>
+> The PCI/MSI "irq chip" is configured by the PCI/MSI domain level and it
+> sends its message to the interrupt parent in the hierarchy, i.e. either
+> to the Interrupt Remap unit or to the configured vector of the target
+> CPU.
+>
+> IMS does not send it to some magic PCI layer first at least not at the
+> conceptual level. The fact that the message is transported by PCIe does
+> not change that at all. PCIe in that case is solely the transport, but
+> the "irq chip" at the PCI/MSI level of the device is not involved at
+> all. If it were that would be a different story.
+>
+> So now you might ask why we have a single PCI/MSI domain per IR unit and
+> why I want seperate IMS domains.
+>
+> The answer is in the hardware again. PCI/MSI is uniform accross devices
+> so the irq chip and all of the domain functionality can be shared. But
+> then we have two PCI/MSI domains in the above example because again the
+> hardware has one connected to IR unit 0 and the other to IR unit 1.
+> IR 0 and IR 1 manage different resources (remap tables) so PCI/MSI-0
+> depends on IR-0 and PCI/MSI-1 on IR-1 which is reflected in the
+> parent/child relation ship of the domains.
+>
+> There is another reason why we can spawn a single PCI/MSI domain per
+> root complex / IR unit. The PCI/MSI domains are not doing any resource
+> management at all. The resulting message is created from the allocated
+> vector (direct CPU delivery) or from the allocated Interrupt remapping
+> slot information. The domain just deals with the logic required to
+> handle PCI/MSI(X) and the necessary resources are provided by the parent
+> interrupt layers.
+>
+> IMS is different. It needs device specific resource management to
+> allocate an IMS slot which is clearly part of the "irq chip" management
+> layer, aka. irq domain. If the IMS slot management would happen in a
+> global or per IR unit table and as a consequence the management, layout,
+> mask/unmask operations would be uniform then an IMS domain per system or
+> IR unit would be the right choice, but that's not how the hardware is
+> specified and implemented.
+>
+> Now coming back to platform MSI. The way it looks is:
+>
+>   CPU --- (IR) ---- PLATFORM-MSI  --- PLATFORM-DEVICE-MSI-0
+>                                   |-- PLATFORM-DEVICE-MSI-1
+>                                   |...
+>
+> PLATFORM-MSI is a common resource management which also provides a
+> shared interrupt chip which operates at the PLATFORM-MSI level with one
+> exception:
+>
+>    The irq_msi_write_msg() callback has an indirection so the actual
+>    devices can provide their device specific msi_write_msg() function.
+>
+> That's a borderline abuse of the hierarchy, but it makes sense to some
+> extent as the actual PLATFORM-MSI domain is a truly shared resource and
+> the only device specific functionality required is the message
+> write. But that message write is not something which has it's own
+> resource management, it's just a non uniform storage accessor. IOW, the
+> underlying PLATFORM-MSI domain does all resource management including
+> message creation and the quirk allows to write the message in the device
+> specific way. Not that I love it, but ...
+>
+> That is the main difference between platform MSI and IMS. IMS is
+> completely non uniform and the devices do not share any common resource
+> or chip functionality. Each device has its own message store management,
+> slot allocation/assignment and a device specifc interrupt chip
+> functionality which goes way beyond the nasty write msg quirk.
+Thanks for giving such a detailed explanation! really helps :)
+>
+>> What I still don't understand fully is what if all the IMS devices
+>> need the same domain ops and chip callbacks, we will be creating
+>> various instances of the same IRQ chip and domain right? Is that ok?
+> Why would it be not ok? Are you really worried about a few hundred bytes
+> of memory required for this?
+>
+> Sharing an instance only makes sense if the instance handles a shared or
+> uniform resource space, which is clearly not the case with IMS.
+>
+> We create several PCI/MSI domains and several IO/APIC domains on larger
+> systems. They all share the code, but they are dealing with seperate
+> resources so they have seperate storage.
+ok, got it ..
+>
+>> Currently the creation of the IRQ domain happens at the IR level so that
+>> we can reuse the same domain but if it advisable to have a per device
+>> interrupt domain, I will shift this to the device driver.
+> Again. Look at the layering. What you created now is a pseudo shared
+> domain which needs
+>
+>     1) An indirection layer for providing device specific functions
+>
+>     2) An extra allocation layer in the device specific driver to assign
+>        IMS slots completely outside of the domain allocation mechanism.
+hmmm, again I am not sure of which extra allocation layer you are 
+referring to..
+>
+>     In other words you try to make things which are neither uniform nor
+>     share a resource space look the same way. That's the "all I have is a
+>     hammer so everything is a nail" approach. That never worked out well.
+>
+> With a per device domain/chip approach you get one consistent domain
+> per device which provides
+>
+>     1) The device specific resource management (i.e. slot allocation
+>        becomes part of the irq domain operations)
+>
+>     2) The device specific irq chip functions at the correct point in the
+>        layering without the horrid indirections
+>
+>     3) Consolidated data storage at the device level where the actual
+>        data is managed.
+>
+>     This is of course sharing as much code as possible with the MSI core
+>     implementation.
+>
+>     As a side effect any extension of this be it on the domain or the irq
+>     chip side is just a matter of adding the functionality to that
+>     particular incarnation and not by having yet another indirection
+>     logic at the wrong place.
+>
+> The price you pay is a bit of memory but you get a clean layering and
+> seperation of functionality as a reward. The amount of code in the
+> actual IMS device driver is not going to be much more than with the
+> approach you have now.
+>
+> The infrastructure itself is not more than a thin wrapper around the
+> existing msi domain infrastructure and might even share code with
+> platform-msi.
+
+ From your explanation:
 
 
-The "fast path" comment is misleading and we should rephrase. The point 
-is to catch if we're mapping a resource under the same PHB, in which 
-case we don't modify the PHB configuration. So we need to catch it 
-early, but it's not a fast path.
-If the 2 devices are under the same PHB, the code above shouldn't do 
-anything. So I guess behavior depends on the underlying bridge? We'll 
-need another platform than witherspoon to test it. Probably worth checking.
+In the device driver:
 
 
->> +       list_for_each_entry(hose, &hose_list, list_node) {
->> +               struct pnv_phb *phb = hose->private_data;
->> +
->> +               if (phb->type != PNV_PHB_NPU_NVLINK &&
->> +                   phb->type != PNV_PHB_NPU_OCAPI) {
->> +                       if (pnv_pci_controller_owns_addr(hose, addr, size))
->> +                               return phb;
->> +               }
->> +       }
->> +       return NULL;
->> +}
->> +
->> +static u64 pnv_pci_dma_dir_to_opal_p2p(enum dma_data_direction dir)
->> +{
->> +       if (dir == DMA_TO_DEVICE)
->> +               return OPAL_PCI_P2P_STORE;
->> +       else if (dir == DMA_FROM_DEVICE)
->> +               return OPAL_PCI_P2P_LOAD;
->> +       else if (dir == DMA_BIDIRECTIONAL)
->> +               return OPAL_PCI_P2P_LOAD | OPAL_PCI_P2P_STORE;
->> +       else
->> +               return 0;
->> +}
->> +
->> +static int pnv_pci_ioda_enable_p2p(struct pci_dev *initiator,
->> +                                  struct pnv_phb *phb_target,
->> +                                  enum dma_data_direction dir)
->> +{
->> +       struct pci_controller *hose;
->> +       struct pnv_phb *phb_init;
->> +       struct pnv_ioda_pe *pe_init;
->> +       u64 desc;
->> +       int rc;
->> +
->> +       if (!opal_check_token(OPAL_PCI_SET_P2P))
->> +               return -ENXIO;
->> +
-> 
->> +       hose = pci_bus_to_host(initiator->bus);
->> +       phb_init = hose->private_data;
-> 
-> You can use the pci_bus_to_pnvhb() helper
-> 
->> +
->> +       pe_init = pnv_ioda_get_pe(initiator);
->> +       if (!pe_init)
->> +               return -ENODEV;
->> +
->> +       if (!pe_init->tce_bypass_enabled)
->> +               return -EINVAL;
->> +
->> +       /*
->> +        * Configuring the initiator's PHB requires to adjust its TVE#1
->> +        * setting. Since the same device can be an initiator several times for
->> +        * different target devices, we need to keep a reference count to know
->> +        * when we can restore the default bypass setting on its TVE#1 when
->> +        * disabling. Opal is not tracking PE states, so we add a reference
->> +        * count on the PE in linux.
->> +        *
->> +        * For the target, the configuration is per PHB, so we keep a
->> +        * target reference count on the PHB.
->> +        */
-> 
-> This irks me a bit because configuring the DMA address limits for the
-> TVE is the kernel's job. What we really should be doing is using
-> opal_pci_map_pe_dma_window_real() to set the bypass-mode address limit
-> for the TVE to something large enough to hit the MMIO ranges rather
-> than having set_p2p do it as a side effect. Unfortunately, for some
-> reason skiboot doesn't implement support for enabling 56bit addressing
-> using opal_pci_map_pe_dma_window_real() and we do need to support
-> older kernel's which used this stuff so I guess we're stuck with it
-> for now. It'd be nice if we could fix this in the longer term
-> though...
+static const struct irq_domain_ops idxd_irq_domain_ops = {
+
+.alloc= idxd_domain_alloc, //not sure what this should do
+
+.free= idxd_domain_free,
+
+};
+
+struct irq_chip idxd_irq_chip = {
+
+.name= "idxd"
+
+.irq_mask= idxd_irq_mask,
+
+.irq_unmask= idxd_irq_unmask,
+
+.irq_write_msg = idxd_irq_write_msg,
+
+.irq_ack= irq_chip_ack_parent,
+
+.irq_retrigger= irq_chip_retrigger_hierarchy,
+
+.flags= IRQCHIP_SKIP_SET_WAKE,
+
+}
+
+struct msi_domain_info idxd_domain_info = {
+
+.flags        =MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
+
+.ops          =&dev_msi_domain_ops,//can be common
+
+.chip         =&idxd_irq_chip //per device
+
+.handler= handle_edge_irq,
+
+.handler_name = "edge",
+
+}
+
+dev->msi_domain = dev_msi_create_irq_domain(iommu->ir_domain, 
+idxd_domain_info, idxd_irq_domain_ops)
+
+msi_domain_alloc_irqs(dev->msi_domain, dev, nvec);
+
+Common code:
 
 
-OK. We'd need more than a 56-bit opal_pci_map_pe_dma_window_real() 
-though, there's also a queue setting change on the target PHB.
+struct irq_domain *dev_msi_create_irq_domain(struct irq_domain *parent,
 
-   Fred
+struct msi_domain_info *dev_msi_domain_info,
+
+struct irq_domain_ops dev_msi_irq_domain_ops)
+
+{
+
+struct irq_domain *domain;
+
+         .......
+
+domain = irq_domain_create_hierarchy(parent, IRQ_DOMAIN_FLAG_MSI, 0,
+NULL, &dev_msi_irq_domain_ops, info);
+
+         .......
+
+return domain;
+
+}
+
+static struct msi_domain_ops dev_msi_domain_ops = {
+
+.set_desc= dev_msi_set_desc,
+
+.msi_prepare= dev_msi_prepare,
+
+.get_hwirq= dev_msi_get_hwirq,
+
+}; // can re-use platform-msi data structures
 
 
->> +       mutex_lock(&p2p_mutex);
->> +
->> +       desc = OPAL_PCI_P2P_ENABLE | pnv_pci_dma_dir_to_opal_p2p(dir);
->> +       /* always go to opal to validate the configuration */
->> +       rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id, desc,
->> +                             pe_init->pe_number);
->> +       if (rc != OPAL_SUCCESS) {
->> +               rc = -EIO;
->> +               goto out;
->> +       }
->> +
->> +       pe_init->p2p_initiator_count++;
->> +       phb_target->p2p_target_count++;
->> +
->> +       rc = 0;
->> +out:
->> +       mutex_unlock(&p2p_mutex);
->> +       return rc;
->> +}
->> +
->> +static int pnv_pci_dma_map_resource(struct pci_dev *pdev,
->> +                                   phys_addr_t phys_addr, size_t size,
->> +                                   enum dma_data_direction dir)
->> +{
->> +       struct pnv_phb *target_phb;
->> +
->> +       target_phb = pnv_pci_find_owning_phb(pdev, phys_addr, size);
->> +       if (!target_phb)
->> +               return 0;
->> +
->> +       return pnv_pci_ioda_enable_p2p(pdev, target_phb, dir);
->> +}
->> +
->> +static int pnv_pci_ioda_disable_p2p(struct pci_dev *initiator,
->> +               struct pnv_phb *phb_target)
->> +{
->> +       struct pci_controller *hose;
->> +       struct pnv_phb *phb_init;
->> +       struct pnv_ioda_pe *pe_init;
->> +       int rc;
->> +
->> +       if (!opal_check_token(OPAL_PCI_SET_P2P))
->> +               return -ENXIO;
-> 
-> This should probably have a WARN_ON() since we can't hit this path
-> unless the initial map succeeds.
-> 
->> +       hose = pci_bus_to_host(initiator->bus);
->> +       phb_init = hose->private_data;
-> 
-> pci_bus_to_pnvhb()
-> 
->> +       pe_init = pnv_ioda_get_pe(initiator);
->> +       if (!pe_init)
->> +               return -ENODEV;
->> +
->> +       mutex_lock(&p2p_mutex);
->> +
->> +       if (!pe_init->p2p_initiator_count || !phb_target->p2p_target_count) {
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if (--pe_init->p2p_initiator_count == 0)
->> +               pnv_pci_ioda2_set_bypass(pe_init, true);
->> +
->> +       if (--phb_target->p2p_target_count == 0) {
->> +               rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id,
->> +                                     0, pe_init->pe_number);
->> +               if (rc != OPAL_SUCCESS) {
->> +                       rc = -EIO;
->> +                       goto out;
->> +               }
->> +       }
->> +
->> +       rc = 0;
->> +out:
->> +       mutex_unlock(&p2p_mutex);
->> +       return rc;
->> +}
->> +
->> +static void pnv_pci_dma_unmap_resource(struct pci_dev *pdev,
->> +                                      dma_addr_t addr, size_t size,
->> +                                      enum dma_data_direction dir)
->> +{
->> +       struct pnv_phb *target_phb;
->> +       int rc;
->> +
->> +       target_phb = pnv_pci_find_owning_phb(pdev, addr, size);
->> +       if (!target_phb)
->> +               return;
->> +
->> +       rc = pnv_pci_ioda_disable_p2p(pdev, target_phb);
->> +       if (rc)
->> +               dev_err(&pdev->dev, "Failed to undo PCI peer-to-peer setup for address %llx: %d\n",
->> +                       addr, rc);
-> 
-> Use pci_err() or pe_err().
-> 
+except the alloc/free irq_domain_ops, does this look fine to you?
+
+
+-Megha
+
+>
+> Thanks,
+>
+>          tglx
