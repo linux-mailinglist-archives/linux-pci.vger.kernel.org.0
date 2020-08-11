@@ -2,77 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02C83241CBE
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 16:50:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6B19241ED6
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 19:02:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgHKOuQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Aug 2020 10:50:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61161 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbgHKOuQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:50:16 -0400
-IronPort-SDR: PLDrom9O7eW0yYAw8U7AzYOTkNRkwUxVUp0TUYGRBF6Jz4y2N1YVy33rdKBZoL6USsGUNbj1gz
- RzgSbcFUnj8w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="171786762"
-X-IronPort-AV: E=Sophos;i="5.76,300,1592895600"; 
-   d="scan'208";a="171786762"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 07:50:15 -0700
-IronPort-SDR: lim6dOyM7M6ZjxPMl1KN6NPpY/oExwYlaK43P+XCsOgQRcza64TZDr2+3+xuFH2SGxqgGG0sKo
- YQj3ql6dmddg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,300,1592895600"; 
-   d="scan'208";a="308421631"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 11 Aug 2020 07:50:15 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 6E906580785;
-        Tue, 11 Aug 2020 07:50:15 -0700 (PDT)
-Message-ID: <4989e6bdfcd787e01c8459f4b5b9517a2ae73b24.camel@linux.intel.com>
-Subject: Re: [PATCH V5 0/3] Intel Platform Monitoring Technology
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Tue, 11 Aug 2020 07:50:15 -0700
-In-Reply-To: <20200811080433.GI4411@dell>
-References: <20200717190620.29821-1-david.e.box@linux.intel.com>
-         <20200729213719.17795-1-david.e.box@linux.intel.com>
-         <74c03fe9fea12f4b056bf694a0d03d5200244231.camel@linux.intel.com>
-         <20200811080433.GI4411@dell>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1729273AbgHKRBu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Aug 2020 13:01:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55517 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729260AbgHKRAz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Aug 2020 13:00:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597165252;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8f8+cJ+l1fMhcVKWX+3dHLkMxd5ok8TAOd+bF0aoOT0=;
+        b=RxKe3E2cDYM4w0fyv7S6vcU/0UFfXoG8C8750pvRnchvIhPocR0v83ZGZwXzF9qIAGoRzl
+        0Th6OtoSqwf9jQLS//1DYIJV13NBbEegLvuPeZpe6tAlUFMukWk6Kb2ErRpCeWuQ2+UoaZ
+        iHdE03t40Pm4Tjr4Fq4nWrakdjBePz8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-N10_X-MaNOazefTjWZZngg-1; Tue, 11 Aug 2020 13:00:47 -0400
+X-MC-Unique: N10_X-MaNOazefTjWZZngg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 698498015FC;
+        Tue, 11 Aug 2020 17:00:42 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E35812DE99;
+        Tue, 11 Aug 2020 17:00:36 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 11:00:36 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Message-ID: <20200811110036.7d337837@x1.home>
+In-Reply-To: <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+        <20200721164527.GD2021248@mellanox.com>
+        <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+        <20200724001930.GS2021248@mellanox.com>
+        <20200805192258.5ee7a05b@x1.home>
+        <20200807121955.GS16789@nvidia.com>
+        <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2020-08-11 at 09:04 +0100, Lee Jones wrote:
-> On Mon, 10 Aug 2020, David E. Box wrote:
-> 
-> > Friendly ping.
-> 
-> Don't do that.  Sending contentless pings is seldom helpful.
-> 
-> If you think your set has been dropped please just send a [RESEND].
-> 
-> This is probably worth doing anyway, since you've sent v2, v3, v4 and
-> now v5 has reply-tos of one another.  The thread has become quite
-> messy as a result.
-> 
-> Also please take the time to identify where we are with respect to
-> the
-> current release cycle.  The merge-window is open presently.  Meaning
-> that most maintainers are busy, either sending out pull-requests or
-> ramping up for the next cycle (or just taking a quick breather).
-> 
+On Mon, 10 Aug 2020 07:32:24 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-No problem. I'll resend v5 in a new thread when rc1 is tagged. Thanks.
+> > From: Jason Gunthorpe <jgg@nvidia.com>
+> > Sent: Friday, August 7, 2020 8:20 PM
+> > 
+> > On Wed, Aug 05, 2020 at 07:22:58PM -0600, Alex Williamson wrote:
+> >   
+> > > If you see this as an abuse of the framework, then let's identify those
+> > > specific issues and come up with a better approach.  As we've discussed
+> > > before, things like basic PCI config space emulation are acceptable
+> > > overhead and low risk (imo) and some degree of register emulation is
+> > > well within the territory of an mdev driver.  
+> > 
+> > What troubles me is that idxd already has a direct userspace interface
+> > to its HW, and does userspace DMA. The purpose of this mdev is to
+> > provide a second direct userspace interface that is a little different
+> > and trivially plugs into the virtualization stack.  
+> 
+> No. Userspace DMA and subdevice passthrough (what mdev provides)
+> are two distinct usages IMO (at least in idxd context). and this might 
+> be the main divergence between us, thus let me put more words here. 
+> If we could reach consensus in this matter, which direction to go 
+> would be clearer.
+> 
+> First, a passthrough interface requires some unique requirements 
+> which are not commonly observed in an userspace DMA interface, e.g.:
+> 
+> - Tracking DMA dirty pages for live migration;
+> - A set of interfaces for using SVA inside guest;
+> 	* PASID allocation/free (on some platforms);
+> 	* bind/unbind guest mm/page table (nested translation);
+> 	* invalidate IOMMU cache/iotlb for guest page table changes;
+> 	* report page request from device to guest;
+> 	* forward page response from guest to device;
+> - Configuring irqbypass for posted interrupt;
+> - ...
+> 
+> Second, a passthrough interface requires delegating raw controllability
+> of subdevice to guest driver, while the same delegation might not be
+> required for implementing an userspace DMA interface (especially for
+> modern devices which support SVA). For example, idxd allows following
+> setting per wq (guest driver may configure them in any combination):
+> 	- put in dedicated or shared mode;
+> 	- enable/disable SVA;
+> 	- Associate guest-provided PASID to MSI/IMS entry;
+> 	- set threshold;
+> 	- allow/deny privileged access;
+> 	- allocate/free interrupt handle (enlightened for guest);
+> 	- collect error status;
+> 	- ...
+> 
+> We plan to support idxd userspace DMA with SVA. The driver just needs 
+> to prepare a wq with a predefined configuration (e.g. shared, SVA, 
+> etc.), bind the process mm to IOMMU (non-nested) and then map 
+> the portal to userspace. The goal that userspace can do DMA to 
+> associated wq doesn't change the fact that the wq is still *owned* 
+> and *controlled* by kernel driver. However as far as passthrough 
+> is concerned, the wq is considered 'owned' by the guest driver thus 
+> we need an interface which can support low-level *controllability* 
+> from guest driver. It is sort of a mess in uAPI when mixing the
+> two together.
+> 
+> Based on above two reasons, we see distinct requirements between 
+> userspace DMA and passthrough interfaces, at least in idxd context 
+> (though other devices may have less distinction in-between). Therefore,
+> we didn't see the value/necessity of reinventing the wheel that mdev 
+> already handles well to evolve an simple application-oriented usespace 
+> DMA interface to a complex guest-driver-oriented passthrough interface. 
+> The complexity of doing so would incur far more kernel-side changes 
+> than the portion of emulation code that you've been concerned about...
+>  
+> > 
+> > I don't think VFIO should be the only entry point to
+> > virtualization. If we say the universe of devices doing user space DMA
+> > must also implement a VFIO mdev to plug into virtualization then it
+> > will be alot of mdevs.  
+> 
+> Certainly VFIO will not be the only entry point. and This has to be a 
+> case-by-case decision.  If an userspace DMA interface can be easily 
+> adapted to be a passthrough one, it might be the choice. But for idxd, 
+> we see mdev a much better fit here, given the big difference between 
+> what userspace DMA requires and what guest driver requires in this hw.
+> 
+> > 
+> > I would prefer to see that the existing userspace interface have the
+> > extra needed bits for virtualization (eg by having appropriate
+> > internal kernel APIs to make this easy) and all the emulation to build
+> > the synthetic PCI device be done in userspace.  
+> 
+> In the end what decides the direction is the amount of changes that
+> we have to put in kernel, not whether we call it 'emulation'. For idxd,
+> adding special passthrough requirements (guest SVA, dirty tracking,
+> etc.) and raw controllability to the simple userspace DMA interface 
+> is for sure making kernel more complex than reusing the mdev
+> framework (plus some degree of emulation mockup behind). Not to
+> mention the merit of uAPI compatibility with mdev...
+
+I agree with a lot of this argument, exposing a device through a
+userspace interface versus allowing user access to a device through a
+userspace interface are different levels of abstraction and control.
+In an ideal world, perhaps we could compose one from the other, but I
+don't think the existence of one is proof that the other is redundant.
+That's not to say that mdev/vfio isn't ripe for abuse in this space,
+but I'm afraid the test for that abuse is probably much more subtle.
+
+I'll also remind folks that LPC is coming up in just a couple short
+weeks and this might be something we should discuss (virtually)
+in-person.  uconf CfPs are currently open. </plug>   Thanks,
+
+Alex
 
