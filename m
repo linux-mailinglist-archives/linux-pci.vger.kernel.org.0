@@ -2,109 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4D6724191F
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 11:53:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14E55241935
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 12:02:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgHKJxf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Aug 2020 05:53:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56888 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbgHKJxf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Aug 2020 05:53:35 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597139612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=34NxuTHuuaxlTrp0QBpYwXdJxhoYhWgkXsT79ACXhBI=;
-        b=yXFv45j/NkN12I89hPKrRRt3y6IsbXp2z30BW9LR1+SIMEFThp1pdeaQ4LM9L9tiAa69no
-        OxF24BGPWPyOplVt5AYdHm0lzBQPC7WqiZBg7GprfATjSKTVoHqu7aZNMhwmN8VMuE7VzF
-        PU4DBYxA9+atj4AOLidlBQ71941w/45ny6a9eL9yMvPKZHRm08ocVrwOr4tN6lc2EbCfi2
-        dFobLLI83Tl6TLwvgx01ezVcJ6H2SRevkfo3LB4VAsKYpsUY5bPf3nqv2pfT6ZqSxqVVCZ
-        MUc+cyl80tzreWSxW2glFKK9WZ4rsz6Zwwl0yY+5FvSLfHBKxEcOyFg3+KRE+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597139612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=34NxuTHuuaxlTrp0QBpYwXdJxhoYhWgkXsT79ACXhBI=;
-        b=neMWOMBKOlsGBQxKGobT2vLvpDelklSE+tFhByonXtY94FggYvZ0ZvmMgZA35XKqEp1WwM
-        Hbwv0AiwaKv3KDAA==
-To:     "Dey\, Megha" <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "hpa\@zytor.com" <hpa@zytor.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "Lin\, Jing" <jing.lin@intel.com>,
-        "Williams\, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "Hansen\, Dave" <dave.hansen@intel.com>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
-In-Reply-To: <87ft8uxjga.fsf@nanos>
-References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de> <87ft8uxjga.fsf@nanos>
-Date:   Tue, 11 Aug 2020 11:53:31 +0200
-Message-ID: <87d03x5x0k.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S1728346AbgHKKCB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Aug 2020 06:02:01 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41462 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728265AbgHKKCB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:02:01 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AA0C8201EED;
+        Tue, 11 Aug 2020 12:01:59 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C2059201E80;
+        Tue, 11 Aug 2020 12:01:52 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EF188402DD;
+        Tue, 11 Aug 2020 12:01:43 +0200 (CEST)
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, robh+dt@kernel.org,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, roy.zang@nxp.com,
+        jingoohan1@gmail.com, andrew.murray@arm.com
+Cc:     mingkai.hu@nxp.com, minghuan.Lian@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv7 00/12]PCI: dwc: Add the multiple PF support for DWC and Layerscape
+Date:   Tue, 11 Aug 2020 17:54:29 +0800
+Message-Id: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-CC+: XEN folks
+Add the PCIe EP multiple PF support for DWC and Layerscape, and use
+a list to manage the PFs of each PCIe controller; add the doorbell
+MSIX function for DWC; and refactor the Layerscape EP driver due to
+some difference in Layercape platforms PCIe integration.
 
-> Thomas Gleixner <tglx@linutronix.de> writes:
->> The infrastructure itself is not more than a thin wrapper around the
->> existing msi domain infrastructure and might even share code with
->> platform-msi.
->
-> And the annoying fact that you need XEN support which opens another can
-> of worms...
+Hou Zhiqiang (1):
+  misc: pci_endpoint_test: Add driver data for Layerscape PCIe
+    controllers
 
-which needs some real cleanup first.
+Xiaowei Bao (11):
+  PCI: designware-ep: Add multiple PFs support for DWC
+  PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+  PCI: designware-ep: Move the function of getting MSI capability
+    forward
+  PCI: designware-ep: Modify MSI and MSIX CAP way of finding
+  dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
+    and ls2088a
+  PCI: layerscape: Fix some format issue of the code
+  PCI: layerscape: Modify the way of getting capability with different
+    PEX
+  PCI: layerscape: Modify the MSIX to the doorbell mode
+  PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+  arm64: dts: layerscape: Add PCIe EP node for ls1088a
+  misc: pci_endpoint_test: Add LS1088a in pci_device_id table
 
-x86 still does not associate the irq domain to devices at device
-discovery time, i.e. the device::msi_domain pointer is never populated.
+ .../bindings/pci/layerscape-pci.txt           |   2 +
+ .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi |  31 +++
+ drivers/misc/pci_endpoint_test.c              |   8 +-
+ .../pci/controller/dwc/pci-layerscape-ep.c    | 100 +++++--
+ .../pci/controller/dwc/pcie-designware-ep.c   | 258 ++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.c  |  59 ++--
+ drivers/pci/controller/dwc/pcie-designware.h  |  48 +++-
+ 7 files changed, 410 insertions(+), 96 deletions(-)
 
-So to support this new fangled device MSI stuff we'd need yet more
-x86/xen specific arch_*msi_irqs() indirection and hackery, which is not
-going to happen.
+-- 
+2.17.1
 
-The right thing to do is to convert XEN MSI support over to proper irq
-domains. This allows to populate device::msi_domain which makes a lot of
-things simpler and also more consistent.
-
-Thanks,
-
-        tglx
