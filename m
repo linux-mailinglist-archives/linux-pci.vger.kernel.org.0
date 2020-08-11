@@ -2,202 +2,330 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B19241ED6
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 19:02:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 752E2241F23
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Aug 2020 19:25:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgHKRBu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Aug 2020 13:01:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55517 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729260AbgHKRAz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Aug 2020 13:00:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597165252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8f8+cJ+l1fMhcVKWX+3dHLkMxd5ok8TAOd+bF0aoOT0=;
-        b=RxKe3E2cDYM4w0fyv7S6vcU/0UFfXoG8C8750pvRnchvIhPocR0v83ZGZwXzF9qIAGoRzl
-        0Th6OtoSqwf9jQLS//1DYIJV13NBbEegLvuPeZpe6tAlUFMukWk6Kb2ErRpCeWuQ2+UoaZ
-        iHdE03t40Pm4Tjr4Fq4nWrakdjBePz8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-N10_X-MaNOazefTjWZZngg-1; Tue, 11 Aug 2020 13:00:47 -0400
-X-MC-Unique: N10_X-MaNOazefTjWZZngg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 698498015FC;
-        Tue, 11 Aug 2020 17:00:42 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E35812DE99;
-        Tue, 11 Aug 2020 17:00:36 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 11:00:36 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200811110036.7d337837@x1.home>
-In-Reply-To: <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
-        <20200721164527.GD2021248@mellanox.com>
-        <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
-        <20200724001930.GS2021248@mellanox.com>
-        <20200805192258.5ee7a05b@x1.home>
-        <20200807121955.GS16789@nvidia.com>
-        <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
-Organization: Red Hat
+        id S1729136AbgHKRZf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Aug 2020 13:25:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14068 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729116AbgHKRZf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Aug 2020 13:25:35 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07BHDMkv090865;
+        Tue, 11 Aug 2020 13:25:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=HyLHnK6FD4SyK6sPlQ+898grA3/mkQQaDf94D2rAktI=;
+ b=CDC9DinVq2QM5JpfrpsBh4ZsRP6K+bD95Fpjn2KuE8CYRGIRPaAkSnDvtfDqJdp4V5tg
+ yN7JoTML4+fruhpJLKLldTnH4mE/LOoqeUYQsjA9ViPkAymIPj7PeoMwMa1wzaNuE4Eo
+ JBQGt5aJlEcZpU+jEPymOYhVBxeParHKRPFmrOKW/iDBGXkGsdXj0DotVPcUnRCvL6sG
+ jPowwY/DoJjidrRm+kv91LjwYM5s0G/Vg9y9DUQtlY26BL3B9k2fxdAVk8JWx97l3U/u
+ X7dCzv0Kuc68cT1rPOyOSmY7AKwFrdpMrDHC3oD8luuCi4PV4ZCPPAoEHIgTwD3m42zM 0Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32uvjawgmd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 13:25:16 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07BHFqoU097851;
+        Tue, 11 Aug 2020 13:25:15 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32uvjawgkd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 13:25:15 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07BHLmMW017551;
+        Tue, 11 Aug 2020 17:25:13 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 32skahbkfn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 17:25:13 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07BHPBmj21037418
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Aug 2020 17:25:11 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5888CA4057;
+        Tue, 11 Aug 2020 17:25:11 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01C41A405B;
+        Tue, 11 Aug 2020 17:25:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.14.231])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Aug 2020 17:25:10 +0000 (GMT)
+Subject: Re: [PATCH 2/2 v2] powerpc/powernv: Enable and setup PCI P2P
+To:     "Oliver O'Halloran" <oohall@gmail.com>,
+        Max Gurtovoy <maxg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        israelr@mellanox.com, idanw@mellanox.com, vladimirk@mellanox.com,
+        shlomin@mellanox.com, Carol L Soto <clsoto@us.ibm.com>,
+        aneela@mellanox.com
+References: <20200430131520.51211-1-maxg@mellanox.com>
+ <20200430131520.51211-2-maxg@mellanox.com>
+ <CAOSf1CGv=0bwShzzK5zP3dtKg=RxeTFvq52j-Vi4GDfZ4UpBJA@mail.gmail.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Message-ID: <56e60f7e-115b-c699-b5fa-c6026785649a@linux.ibm.com>
+Date:   Tue, 11 Aug 2020 19:25:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <CAOSf1CGv=0bwShzzK5zP3dtKg=RxeTFvq52j-Vi4GDfZ4UpBJA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-11_15:2020-08-11,2020-08-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 spamscore=0 clxscore=1011 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008110115
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 10 Aug 2020 07:32:24 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-> > From: Jason Gunthorpe <jgg@nvidia.com>
-> > Sent: Friday, August 7, 2020 8:20 PM
-> > 
-> > On Wed, Aug 05, 2020 at 07:22:58PM -0600, Alex Williamson wrote:
-> >   
-> > > If you see this as an abuse of the framework, then let's identify those
-> > > specific issues and come up with a better approach.  As we've discussed
-> > > before, things like basic PCI config space emulation are acceptable
-> > > overhead and low risk (imo) and some degree of register emulation is
-> > > well within the territory of an mdev driver.  
-> > 
-> > What troubles me is that idxd already has a direct userspace interface
-> > to its HW, and does userspace DMA. The purpose of this mdev is to
-> > provide a second direct userspace interface that is a little different
-> > and trivially plugs into the virtualization stack.  
-> 
-> No. Userspace DMA and subdevice passthrough (what mdev provides)
-> are two distinct usages IMO (at least in idxd context). and this might 
-> be the main divergence between us, thus let me put more words here. 
-> If we could reach consensus in this matter, which direction to go 
-> would be clearer.
-> 
-> First, a passthrough interface requires some unique requirements 
-> which are not commonly observed in an userspace DMA interface, e.g.:
-> 
-> - Tracking DMA dirty pages for live migration;
-> - A set of interfaces for using SVA inside guest;
-> 	* PASID allocation/free (on some platforms);
-> 	* bind/unbind guest mm/page table (nested translation);
-> 	* invalidate IOMMU cache/iotlb for guest page table changes;
-> 	* report page request from device to guest;
-> 	* forward page response from guest to device;
-> - Configuring irqbypass for posted interrupt;
-> - ...
-> 
-> Second, a passthrough interface requires delegating raw controllability
-> of subdevice to guest driver, while the same delegation might not be
-> required for implementing an userspace DMA interface (especially for
-> modern devices which support SVA). For example, idxd allows following
-> setting per wq (guest driver may configure them in any combination):
-> 	- put in dedicated or shared mode;
-> 	- enable/disable SVA;
-> 	- Associate guest-provided PASID to MSI/IMS entry;
-> 	- set threshold;
-> 	- allow/deny privileged access;
-> 	- allocate/free interrupt handle (enlightened for guest);
-> 	- collect error status;
-> 	- ...
-> 
-> We plan to support idxd userspace DMA with SVA. The driver just needs 
-> to prepare a wq with a predefined configuration (e.g. shared, SVA, 
-> etc.), bind the process mm to IOMMU (non-nested) and then map 
-> the portal to userspace. The goal that userspace can do DMA to 
-> associated wq doesn't change the fact that the wq is still *owned* 
-> and *controlled* by kernel driver. However as far as passthrough 
-> is concerned, the wq is considered 'owned' by the guest driver thus 
-> we need an interface which can support low-level *controllability* 
-> from guest driver. It is sort of a mess in uAPI when mixing the
-> two together.
-> 
-> Based on above two reasons, we see distinct requirements between 
-> userspace DMA and passthrough interfaces, at least in idxd context 
-> (though other devices may have less distinction in-between). Therefore,
-> we didn't see the value/necessity of reinventing the wheel that mdev 
-> already handles well to evolve an simple application-oriented usespace 
-> DMA interface to a complex guest-driver-oriented passthrough interface. 
-> The complexity of doing so would incur far more kernel-side changes 
-> than the portion of emulation code that you've been concerned about...
->  
-> > 
-> > I don't think VFIO should be the only entry point to
-> > virtualization. If we say the universe of devices doing user space DMA
-> > must also implement a VFIO mdev to plug into virtualization then it
-> > will be alot of mdevs.  
-> 
-> Certainly VFIO will not be the only entry point. and This has to be a 
-> case-by-case decision.  If an userspace DMA interface can be easily 
-> adapted to be a passthrough one, it might be the choice. But for idxd, 
-> we see mdev a much better fit here, given the big difference between 
-> what userspace DMA requires and what guest driver requires in this hw.
-> 
-> > 
-> > I would prefer to see that the existing userspace interface have the
-> > extra needed bits for virtualization (eg by having appropriate
-> > internal kernel APIs to make this easy) and all the emulation to build
-> > the synthetic PCI device be done in userspace.  
-> 
-> In the end what decides the direction is the amount of changes that
-> we have to put in kernel, not whether we call it 'emulation'. For idxd,
-> adding special passthrough requirements (guest SVA, dirty tracking,
-> etc.) and raw controllability to the simple userspace DMA interface 
-> is for sure making kernel more complex than reusing the mdev
-> framework (plus some degree of emulation mockup behind). Not to
-> mention the merit of uAPI compatibility with mdev...
 
-I agree with a lot of this argument, exposing a device through a
-userspace interface versus allowing user access to a device through a
-userspace interface are different levels of abstraction and control.
-In an ideal world, perhaps we could compose one from the other, but I
-don't think the existence of one is proof that the other is redundant.
-That's not to say that mdev/vfio isn't ripe for abuse in this space,
-but I'm afraid the test for that abuse is probably much more subtle.
+Le 03/08/2020 à 09:35, Oliver O'Halloran a écrit :
+> On Thu, Apr 30, 2020 at 11:15 PM Max Gurtovoy <maxg@mellanox.com> wrote:
+>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>> index 57d3a6a..9ecc576 100644
+>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>> @@ -3706,18 +3706,208 @@ static void pnv_pci_ioda_dma_bus_setup(struct pci_bus *bus)
+>>          }
+>>   }
+>>
+>> +#ifdef CONFIG_PCI_P2PDMA
+>> +static DEFINE_MUTEX(p2p_mutex);
+>> +
+>> +static bool pnv_pci_controller_owns_addr(struct pci_controller *hose,
+>> +                                        phys_addr_t addr, size_t size)
+>> +{
+>> +       int i;
+>> +
+>> +       /*
+>> +        * It seems safe to assume the full range is under the same PHB, so we
+>> +        * can ignore the size.
+>> +        */
+>> +       for (i = 0; i < ARRAY_SIZE(hose->mem_resources); i++) {
+>> +               struct resource *res = &hose->mem_resources[i];
+>> +
+>> +               if (res->flags && addr >= res->start && addr < res->end)
+>> +                       return true;
+>> +       }
+>> +       return false;
+>> +}
+>> +
+>> +/*
+>> + * find the phb owning a mmio address if not owned locally
+>> + */
+>> +static struct pnv_phb *pnv_pci_find_owning_phb(struct pci_dev *pdev,
+>> +                                              phys_addr_t addr, size_t size)
+>> +{
+>> +       struct pci_controller *hose;
+>> +
+>> +       /* fast path */
+>> +       if (pnv_pci_controller_owns_addr(pdev->bus->sysdata, addr, size))
+>> +               return NULL;
+> 
+> Do we actually need this fast path? It's going to be slow either way.
+> Also if a device is doing p2p to another device under the same PHB
+> then it should not be happening via the root complex. Is this a case
+> you've tested?
 
-I'll also remind folks that LPC is coming up in just a couple short
-weeks and this might be something we should discuss (virtually)
-in-person.  uconf CfPs are currently open. </plug>   Thanks,
 
-Alex
+The "fast path" comment is misleading and we should rephrase. The point 
+is to catch if we're mapping a resource under the same PHB, in which 
+case we don't modify the PHB configuration. So we need to catch it 
+early, but it's not a fast path.
+If the 2 devices are under the same PHB, the code above shouldn't do 
+anything. So I guess behavior depends on the underlying bridge? We'll 
+need another platform than witherspoon to test it. Probably worth checking.
 
+
+>> +       list_for_each_entry(hose, &hose_list, list_node) {
+>> +               struct pnv_phb *phb = hose->private_data;
+>> +
+>> +               if (phb->type != PNV_PHB_NPU_NVLINK &&
+>> +                   phb->type != PNV_PHB_NPU_OCAPI) {
+>> +                       if (pnv_pci_controller_owns_addr(hose, addr, size))
+>> +                               return phb;
+>> +               }
+>> +       }
+>> +       return NULL;
+>> +}
+>> +
+>> +static u64 pnv_pci_dma_dir_to_opal_p2p(enum dma_data_direction dir)
+>> +{
+>> +       if (dir == DMA_TO_DEVICE)
+>> +               return OPAL_PCI_P2P_STORE;
+>> +       else if (dir == DMA_FROM_DEVICE)
+>> +               return OPAL_PCI_P2P_LOAD;
+>> +       else if (dir == DMA_BIDIRECTIONAL)
+>> +               return OPAL_PCI_P2P_LOAD | OPAL_PCI_P2P_STORE;
+>> +       else
+>> +               return 0;
+>> +}
+>> +
+>> +static int pnv_pci_ioda_enable_p2p(struct pci_dev *initiator,
+>> +                                  struct pnv_phb *phb_target,
+>> +                                  enum dma_data_direction dir)
+>> +{
+>> +       struct pci_controller *hose;
+>> +       struct pnv_phb *phb_init;
+>> +       struct pnv_ioda_pe *pe_init;
+>> +       u64 desc;
+>> +       int rc;
+>> +
+>> +       if (!opal_check_token(OPAL_PCI_SET_P2P))
+>> +               return -ENXIO;
+>> +
+> 
+>> +       hose = pci_bus_to_host(initiator->bus);
+>> +       phb_init = hose->private_data;
+> 
+> You can use the pci_bus_to_pnvhb() helper
+> 
+>> +
+>> +       pe_init = pnv_ioda_get_pe(initiator);
+>> +       if (!pe_init)
+>> +               return -ENODEV;
+>> +
+>> +       if (!pe_init->tce_bypass_enabled)
+>> +               return -EINVAL;
+>> +
+>> +       /*
+>> +        * Configuring the initiator's PHB requires to adjust its TVE#1
+>> +        * setting. Since the same device can be an initiator several times for
+>> +        * different target devices, we need to keep a reference count to know
+>> +        * when we can restore the default bypass setting on its TVE#1 when
+>> +        * disabling. Opal is not tracking PE states, so we add a reference
+>> +        * count on the PE in linux.
+>> +        *
+>> +        * For the target, the configuration is per PHB, so we keep a
+>> +        * target reference count on the PHB.
+>> +        */
+> 
+> This irks me a bit because configuring the DMA address limits for the
+> TVE is the kernel's job. What we really should be doing is using
+> opal_pci_map_pe_dma_window_real() to set the bypass-mode address limit
+> for the TVE to something large enough to hit the MMIO ranges rather
+> than having set_p2p do it as a side effect. Unfortunately, for some
+> reason skiboot doesn't implement support for enabling 56bit addressing
+> using opal_pci_map_pe_dma_window_real() and we do need to support
+> older kernel's which used this stuff so I guess we're stuck with it
+> for now. It'd be nice if we could fix this in the longer term
+> though...
+
+
+OK. We'd need more than a 56-bit opal_pci_map_pe_dma_window_real() 
+though, there's also a queue setting change on the target PHB.
+
+   Fred
+
+
+>> +       mutex_lock(&p2p_mutex);
+>> +
+>> +       desc = OPAL_PCI_P2P_ENABLE | pnv_pci_dma_dir_to_opal_p2p(dir);
+>> +       /* always go to opal to validate the configuration */
+>> +       rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id, desc,
+>> +                             pe_init->pe_number);
+>> +       if (rc != OPAL_SUCCESS) {
+>> +               rc = -EIO;
+>> +               goto out;
+>> +       }
+>> +
+>> +       pe_init->p2p_initiator_count++;
+>> +       phb_target->p2p_target_count++;
+>> +
+>> +       rc = 0;
+>> +out:
+>> +       mutex_unlock(&p2p_mutex);
+>> +       return rc;
+>> +}
+>> +
+>> +static int pnv_pci_dma_map_resource(struct pci_dev *pdev,
+>> +                                   phys_addr_t phys_addr, size_t size,
+>> +                                   enum dma_data_direction dir)
+>> +{
+>> +       struct pnv_phb *target_phb;
+>> +
+>> +       target_phb = pnv_pci_find_owning_phb(pdev, phys_addr, size);
+>> +       if (!target_phb)
+>> +               return 0;
+>> +
+>> +       return pnv_pci_ioda_enable_p2p(pdev, target_phb, dir);
+>> +}
+>> +
+>> +static int pnv_pci_ioda_disable_p2p(struct pci_dev *initiator,
+>> +               struct pnv_phb *phb_target)
+>> +{
+>> +       struct pci_controller *hose;
+>> +       struct pnv_phb *phb_init;
+>> +       struct pnv_ioda_pe *pe_init;
+>> +       int rc;
+>> +
+>> +       if (!opal_check_token(OPAL_PCI_SET_P2P))
+>> +               return -ENXIO;
+> 
+> This should probably have a WARN_ON() since we can't hit this path
+> unless the initial map succeeds.
+> 
+>> +       hose = pci_bus_to_host(initiator->bus);
+>> +       phb_init = hose->private_data;
+> 
+> pci_bus_to_pnvhb()
+> 
+>> +       pe_init = pnv_ioda_get_pe(initiator);
+>> +       if (!pe_init)
+>> +               return -ENODEV;
+>> +
+>> +       mutex_lock(&p2p_mutex);
+>> +
+>> +       if (!pe_init->p2p_initiator_count || !phb_target->p2p_target_count) {
+>> +               rc = -EINVAL;
+>> +               goto out;
+>> +       }
+>> +
+>> +       if (--pe_init->p2p_initiator_count == 0)
+>> +               pnv_pci_ioda2_set_bypass(pe_init, true);
+>> +
+>> +       if (--phb_target->p2p_target_count == 0) {
+>> +               rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id,
+>> +                                     0, pe_init->pe_number);
+>> +               if (rc != OPAL_SUCCESS) {
+>> +                       rc = -EIO;
+>> +                       goto out;
+>> +               }
+>> +       }
+>> +
+>> +       rc = 0;
+>> +out:
+>> +       mutex_unlock(&p2p_mutex);
+>> +       return rc;
+>> +}
+>> +
+>> +static void pnv_pci_dma_unmap_resource(struct pci_dev *pdev,
+>> +                                      dma_addr_t addr, size_t size,
+>> +                                      enum dma_data_direction dir)
+>> +{
+>> +       struct pnv_phb *target_phb;
+>> +       int rc;
+>> +
+>> +       target_phb = pnv_pci_find_owning_phb(pdev, addr, size);
+>> +       if (!target_phb)
+>> +               return;
+>> +
+>> +       rc = pnv_pci_ioda_disable_p2p(pdev, target_phb);
+>> +       if (rc)
+>> +               dev_err(&pdev->dev, "Failed to undo PCI peer-to-peer setup for address %llx: %d\n",
+>> +                       addr, rc);
+> 
+> Use pci_err() or pe_err().
+> 
