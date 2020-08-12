@@ -2,163 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B4A242E62
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Aug 2020 20:04:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BB43242F10
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Aug 2020 21:21:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgHLSEM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Aug 2020 14:04:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58106 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726512AbgHLSEL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Aug 2020 14:04:11 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CI2GHJ165546;
-        Wed, 12 Aug 2020 14:04:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=SRzTkpxr5LdPeSrEjmAc06YCSZqbsTO5DEVlTIu4cU0=;
- b=b4ZpXqdpAH2PFfAAoDPtHG0UcBz+cEHJ6ggcX7qzNo7jsAFL34dqGN7sb62kkEvBfJdD
- dPv4SlBxymgPimGCPt6TV92Ze9d5H/A0uSKpGpsyFToE31FoKhN5sPLwa6ECOkml1k1z
- 2+358E3niYhsNS8joH4WDNO0C37ZKVtIb9K0LSLjebMIzIEDeRYzlIpCJpKwxyAgKRTi
- bFQ1nxhUW8cFoZ8dE/AjxZEJgC0Tg/I6E9JwVebdKq3kCBuXj2B7MaL0Umx2AFrfjolE
- AE6PrInBUu6QQMVs4qlYWmH/FcWOSi9lC5aUoSwPL9qgXKyPwyd4iPdXk98/8b4F7e+Y aw== 
+        id S1726596AbgHLTV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Aug 2020 15:21:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726512AbgHLTVZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Aug 2020 15:21:25 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CJ58vd101214;
+        Wed, 12 Aug 2020 15:21:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=CHSXnYQWMFZcz1RKn84neMS6ZuPvr0AKPxkNnK1oAJQ=;
+ b=i+ucGRBuqc+BfrIjdJfyFAHKleXUsZNwCEnU48LD8d14rLSek0oAWWNywpTdxsGPXmLt
+ pgkEfqCORS3luNbeLOH22kkOgMblGUIH6yw7IowR0PvmF3rQdzgZn52EdBIWozIKcj/0
+ zFGirlYmGP+AQOY/bHTD6a7ySw6OuXDG4xJrLFhIMb7xHVd08yKID6bZEPoOEB+XnJx6
+ M4RKQySwLKyCuK8oXJF6yxeYfboUp2NLYjeBwlNPwqWk6PKsqi8RDUfDIt5ti8ngGxVh
+ k6J+zQs9Bm08oEN5nFWzXQNy+L8FOcCUOsJ/8h3zJuKFv+DjxiHLcu5fsnyxt6Bp+kOU Bw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32v83c61ne-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32v7v0fmpt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 14:04:07 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07CI3hY0173359;
-        Wed, 12 Aug 2020 14:04:07 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32v83c61kx-1
+        Wed, 12 Aug 2020 15:21:18 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07CJB5VS115073;
+        Wed, 12 Aug 2020 15:21:18 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32v7v0fmp9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 14:04:06 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07CHj3ZL001961;
-        Wed, 12 Aug 2020 18:04:05 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 32skp9cdh2-1
+        Wed, 12 Aug 2020 15:21:18 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07CJ58qJ020922;
+        Wed, 12 Aug 2020 19:21:17 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma03dal.us.ibm.com with ESMTP id 32skp9d14x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 18:04:05 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07CI406h31654290
+        Wed, 12 Aug 2020 19:21:17 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07CJLB4137880176
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Aug 2020 18:04:01 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9811FC6063;
-        Wed, 12 Aug 2020 18:04:03 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5054C6055;
-        Wed, 12 Aug 2020 18:04:01 +0000 (GMT)
+        Wed, 12 Aug 2020 19:21:11 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 577066A04D;
+        Wed, 12 Aug 2020 19:21:15 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 607906A051;
+        Wed, 12 Aug 2020 19:21:14 +0000 (GMT)
 Received: from oc4221205838.ibm.com (unknown [9.163.7.238])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Aug 2020 18:04:01 +0000 (GMT)
-Subject: Re: [PATCH] PCI: Introduce flag for detached virtual functions
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     bhelgaas@google.com, schnelle@linux.ibm.com, pmorel@linux.ibm.com,
-        mpe@ellerman.id.au, oohall@gmail.com, linux-s390@vger.kernel.org,
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Aug 2020 19:21:14 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-pci@vger.kernel.org
-References: <1597243817-3468-1-git-send-email-mjrosato@linux.ibm.com>
- <1597243817-3468-2-git-send-email-mjrosato@linux.ibm.com>
- <20200812104351.3668cc0f@x1.home>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Message-ID: <05c46459-7d00-c01c-6387-68bc7d6c4f63@linux.ibm.com>
-Date:   Wed, 12 Aug 2020 14:04:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200812104351.3668cc0f@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v2] PCI: Identifying detached virtual functions
+Date:   Wed, 12 Aug 2020 15:21:10 -0400
+Message-Id: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-12_13:2020-08-11,2020-08-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 spamscore=0 bulkscore=0 impostorscore=0 phishscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008120114
+ definitions=2020-08-12_15:2020-08-11,2020-08-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 mlxscore=0
+ impostorscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=866
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008120117
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/12/20 12:43 PM, Alex Williamson wrote:
-> On Wed, 12 Aug 2020 10:50:17 -0400
-> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
-> 
->> s390x has the notion of providing VFs to the kernel in a manner
->> where the associated PF is inaccessible other than via firmware.
->> These are not treated as typical VFs and access to them is emulated
->> by underlying firmware which can still access the PF.  After
->> abafbc55 however these detached VFs were no longer able to work
->> with vfio-pci as the firmware does not provide emulation of the
->> PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
->> these detached VFs so that vfio-pci can allow memory access to
->> them again.
->>
->> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->> Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
->> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
->> ---
->>   arch/s390/pci/pci.c                | 8 ++++++++
->>   drivers/vfio/pci/vfio_pci_config.c | 3 ++-
->>   include/linux/pci.h                | 1 +
->>   3 files changed, 11 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
->> index 3902c9f..04ac76d 100644
->> --- a/arch/s390/pci/pci.c
->> +++ b/arch/s390/pci/pci.c
->> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
->>   {
->>   	struct zpci_dev *zdev = to_zpci(pdev);
->>   
->> +	/*
->> +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
->> +	 * detached from its parent PF.  We rely on firmware emulation to
->> +	 * provide underlying PF details.
->> +	 */
->> +	if (zdev->vfn && !zdev->zbus->multifunction)
->> +		pdev->detached_vf = 1;
->> +
->>   	zpci_debug_init_device(zdev, dev_name(&pdev->dev));
->>   	zpci_fmb_enable_device(zdev);
->>   
->> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
->> index d98843f..17845fc 100644
->> --- a/drivers/vfio/pci/vfio_pci_config.c
->> +++ b/drivers/vfio/pci/vfio_pci_config.c
->> @@ -406,7 +406,8 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
->>   	 * PF SR-IOV capability, there's therefore no need to trigger
->>   	 * faults based on the virtual value.
->>   	 */
->> -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
->> +	return pdev->is_virtfn || pdev->detached_vf ||
->> +	       (cmd & PCI_COMMAND_MEMORY);
->>   }
->>   
->>   /*
-> 
-> Wouldn't we also want to enable the is_virtfn related code in
-> vfio_basic_config_read() and at least the initial setting of the
-> command register in vfio_config_init()?  Otherwise we're extending the
-> incomplete emulation out to userspace.  Thanks,
-> 
+Changes for v2:
+- Added code to vfio_basic_config_read() and vfio_config_init() to
+  extend emulation to userspace
+- Added detached_vf check to vfio_bar_restore()
+- @Niklas/@Pierre, I removed your review tags since I made changes,
+  please have another look
 
-We had discussed doing this internally and I ultimately left it out of 
-this patch to keep the changes small...  But I agree that it makes sense 
-to fix the emulation for userspace.  I can add the changes you suggest + 
-would also need to change vfio_restore_bar() with:
 
--       if (pdev->is_virtfn)
-+       if (pdev->is_virtfn || pdev->detached_vf)
-                 return;
+As discussed previously in a qemu-devel thread:
 
-to prevent the config changes from tripping the restore code.
+https://www.mail-archive.com/qemu-devel@nongnu.org/msg725141.html
 
-I'll send a V2 with this included.
+s390x has the notion of unlinked VFs being available at the LPAR-level
+(Virtual Functions where the kernel does not have access to the associated
+Physical Function).  These devices are currently not marked as is_virtfn.
+There seems to be some precedent (ex: in powerpc, eeh_debugfs_break_device())
+where pdev->is_virtfn && pdev->physfn == 0 is used to detect these sort of
+detached VFs.  We toyed with the idea of doing this but it causes additional
+fallout as various other areas of kernel code have an expectation that
+is_virtfn=1 implies there is a linked PF available to the kernel. 
+
+In the s390x case, the firmware layer underneath handles the VF emulation
+as it still has access to the PF that the LPAR (and thus the kernel) cannot
+see.  But one thing this firmware layer does not do is emulate the
+PCI_COMMAND_MEMORY bit, which was OK until vfio-pci started enforcing it
+via abafbc55.  The vfio-pci check is waived for VFs as of ebfa440c, but
+vfio-pci can't actually tell that these particular devices are VFs.
+
+The proposed patch attempts to identify these detached VFs and subsequently
+provide this information to vfio-pci so that it knows to also accept the
+lack of PCI_COMMAND_MEMORY for these sorts of devices.  For now the bit is
+only set for s390x but other architectures could opt in to it as well if
+needed.
+
+
+
+Matthew Rosato (1):
+  PCI: Introduce flag for detached virtual functions
+
+ arch/s390/pci/pci.c                |  8 ++++++++
+ drivers/vfio/pci/vfio_pci_config.c | 11 +++++++----
+ include/linux/pci.h                |  1 +
+ 3 files changed, 16 insertions(+), 4 deletions(-)
+
+-- 
+1.8.3.1
 
