@@ -2,79 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16012244196
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 01:01:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8AEB244296
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 02:54:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHMXBF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Aug 2020 19:01:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgHMXBD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Aug 2020 19:01:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFC8C061757;
-        Thu, 13 Aug 2020 16:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=LmFzg/3+uisMve0eTQ3IP8+ToCgU0urO4/G8i4AUQS4=; b=Nv/Y7PokL0eIVMWBaif9bsxXR3
-        Q/CnuuAvJkH7OH1dTi7qSFmHvq+TJK6dEmv4dI1y+wW6TL8MpLX5RF1VdHmXg8A78kRyn4Wp3xhJ9
-        YFILbPjLgmWcxMniMrAPxWwmHffuWItdgqGVz9s+7VAZMERfLTSIC7e2/ksCxWhM0+TN8CF41m5Qi
-        BNFPjR1crmZXO6+9fUR0i/RMX80py4udxHsfPtcHYfIfyy8ipNd2afRbPyDTpKV/3RFyUBSn7pEYV
-        8cKATufrLsz5VGFE5BPjQzc3/yeYOLO6zm3GGr5wQxp0VFFGHBkXIrdHJRZ1KJG6W18RzOHkaqzaf
-        NjsihXKQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6MDN-0000R2-Ne; Thu, 13 Aug 2020 23:00:54 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel <xen-devel@lists.xenproject.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] x86/pci: fix xen.c build error when CONFIG_ACPI is not set
-Message-ID: <a020884b-fa44-e732-699f-2b79c9b7d15e@infradead.org>
-Date:   Thu, 13 Aug 2020 16:00:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726564AbgHNAyL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 13 Aug 2020 20:54:11 -0400
+Received: from [186.47.21.114] ([186.47.21.114]:41282 "EHLO mail.hmvi.gob.ec"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726205AbgHNAyL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Aug 2020 20:54:11 -0400
+X-Greylist: delayed 19369 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 20:54:10 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hmvi.gob.ec (Postfix) with ESMTP id 58B9FC01E54E8;
+        Thu, 13 Aug 2020 12:37:01 -0500 (-05)
+Received: from mail.hmvi.gob.ec ([127.0.0.1])
+        by localhost (mail.hmvi.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id zgodfKXAcPl3; Thu, 13 Aug 2020 12:37:01 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hmvi.gob.ec (Postfix) with ESMTP id BE8EBC032D371;
+        Thu, 13 Aug 2020 12:24:50 -0500 (-05)
+X-Virus-Scanned: amavisd-new at hmvi.gob.ec
+Received: from mail.hmvi.gob.ec ([127.0.0.1])
+        by localhost (mail.hmvi.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id GRIBH0-TPxDB; Thu, 13 Aug 2020 12:24:50 -0500 (-05)
+Received: from [10.73.80.190] (unknown [105.8.3.183])
+        by mail.hmvi.gob.ec (Postfix) with ESMTPSA id AF1F5C030802B;
+        Thu, 13 Aug 2020 12:07:44 -0500 (-05)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
+To:     Recipients <danny.puetate@mail.hmvi.gob.ec>
+From:   ''Tayeb Souami'' <danny.puetate@mail.hmvi.gob.ec>
+Date:   Thu, 13 Aug 2020 19:07:24 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20200813170744.AF1F5C030802B@mail.hmvi.gob.ec>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Lieber Freund,
 
-Fix build error when CONFIG_ACPI is not set/enabled:
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika,
+der Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich
+an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre
+E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines
+Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und
+Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die
+Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden,
+um meine Gewinne zu überprüfen, sehen Sie bitte meine You Tube Seite
+unten.
 
-../arch/x86/pci/xen.c: In function ‘pci_xen_init’:
-../arch/x86/pci/xen.c:410:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
-  acpi_noirq_set();
 
-Fixes: 88e9ca161c13 ("xen/pci: Use acpi_noirq_set() helper to avoid #ifdef")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: xen-devel@lists.xenproject.org
-Cc: linux-pci@vger.kernel.org
----
- arch/x86/pci/xen.c |    1 +
- 1 file changed, 1 insertion(+)
+UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
 
---- linux-next-20200813.orig/arch/x86/pci/xen.c
-+++ linux-next-20200813/arch/x86/pci/xen.c
-@@ -26,6 +26,7 @@
- #include <asm/xen/pci.h>
- #include <asm/xen/cpuid.h>
- #include <asm/apic.h>
-+#include <asm/acpi.h>
- #include <asm/i8259.h>
- 
- static int xen_pcifront_enable_irq(struct pci_dev *dev)
 
+Das ist dein Spendencode: [TS530342018]
+
+
+Antworten Sie mit dem SPENDE-CODE an diese
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+
+Grüße
+
+Herr Tayeb Souami
