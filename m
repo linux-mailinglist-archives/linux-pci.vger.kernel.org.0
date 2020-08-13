@@ -2,191 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCDEF2433C0
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Aug 2020 08:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A1DC243588
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Aug 2020 09:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgHMGCi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Aug 2020 02:02:38 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42237 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726249AbgHMGCh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Aug 2020 02:02:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597298555;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vY8vnehO56XjlQrEEeygaT/MkeY3wULexFdzVU37Xfc=;
-        b=S2Ds+7rty5t9Ma3eeyVgzvoNyhyvvRuqiFWSYHUSIO72nMnAp2RyXO2SiGEbaK+VqcaJLW
-        upoZPnnbbvDxYcEdRMW+Min2bWFkv/aR9vO2EDU4Yj9k9Aq8yla/PACFVBHwExSXOomdJv
-        J1rYti89Z0BTkrVNhPsPBwXUV1khKQg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-iMb9FvaNOg2PnYpJQ4BiPA-1; Thu, 13 Aug 2020 02:02:31 -0400
-X-MC-Unique: iMb9FvaNOg2PnYpJQ4BiPA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3A591005504;
-        Thu, 13 Aug 2020 06:02:27 +0000 (UTC)
-Received: from [10.72.13.44] (ovpn-13-44.pek2.redhat.com [10.72.13.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A26415D9E8;
-        Thu, 13 Aug 2020 06:02:00 +0000 (UTC)
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        id S1726100AbgHMHyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Aug 2020 03:54:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10960 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726574AbgHMHyj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Aug 2020 03:54:39 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07D7XLor098999;
+        Thu, 13 Aug 2020 03:54:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=pvGpKk/te6wBrI+pp2guEgQc15OWxh2xznhiozF4vwo=;
+ b=HhXmpc/felX4qtADi4vUIKF8kMcmVNbRzYF1X51Jj0/NU1jqJnPuBbgtsfBwPE26viZ0
+ iVlm+QEP5uRr1QWvj9rRYOmDUm92JTfxLRqk4dIPeyyzDOmFraCFsB1RqJnVa8rMHdHp
+ ABFWseoOzlWEMoKn0QNjFR93MMruiMZ/huAWb3TAujmHZ5eSvJapndNcBlpaMzp1sJO6
+ RsE/p7/HtHQL3ylNp2x6T/s+Vq6nU0ZyHXe+VrD3DboNls8mAdEMvIjCjIUHRSvU5lP/
+ Mh34Of93SED6xqlLeMJVpZMxa0A4+ALJvmaWAyN3NDVMI4rVrTQRxLnyZTIR6/xy0d2u fA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32w0n09qk5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 03:54:32 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07D7ZNcl105533;
+        Thu, 13 Aug 2020 03:54:31 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32w0n09qjf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 03:54:31 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07D7ns1a000342;
+        Thu, 13 Aug 2020 07:54:29 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03fra.de.ibm.com with ESMTP id 32skp838g2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 07:54:29 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07D7sQKF34013482
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Aug 2020 07:54:27 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2CAF4C046;
+        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A7944C044;
+        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
+Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
+To:     "Oliver O'Halloran" <oohall@gmail.com>,
         Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
- <20200807121955.GS16789@nvidia.com>
- <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
- <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
- <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
- <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
- <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <e3f45862-c3a5-8bac-e04d-7be0e76908a9@redhat.com>
-Date:   Thu, 13 Aug 2020 14:01:58 +0800
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-s390@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
+ <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
+ <20200812143254.2f080c38@x1.home>
+ <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <19bb6ca8-f6bb-841c-e4dd-cd9e8e6e430f@linux.ibm.com>
+Date:   Thu, 13 Aug 2020 09:54:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_05:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 clxscore=1011 malwarescore=0 impostorscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008130057
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 2020/8/13 下午1:26, Tian, Kevin wrote:
->> From: Jason Wang <jasowang@redhat.com>
->> Sent: Thursday, August 13, 2020 12:34 PM
+
+On 8/13/20 3:59 AM, Oliver O'Halloran wrote:
+> On Thu, Aug 13, 2020 at 6:33 AM Alex Williamson
+> <alex.williamson@redhat.com> wrote:
 >>
+>> On Wed, 12 Aug 2020 15:21:11 -0400
+>> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 >>
->> On 2020/8/12 下午12:05, Tian, Kevin wrote:
->>>> The problem is that if we tie all controls via VFIO uAPI, the other
->>>> subsystem like vDPA is likely to duplicate them. I wonder if there is a
->>>> way to decouple the vSVA out of VFIO uAPI?
->>> vSVA is a per-device (either pdev or mdev) feature thus naturally should
->>> be managed by its device driver (VFIO or vDPA). From this angle some
->>> duplication is inevitable given VFIO and vDPA are orthogonal passthrough
->>> frameworks. Within the kernel the majority of vSVA handling is done by
->>> IOMMU and IOASID modules thus most logic are shared.
+... snip ...
 >>
->> So why not introduce vSVA uAPI at IOMMU or IOASID layer?
-> One may ask a similar question why IOMMU doesn't expose map/unmap
-> as uAPI...
-
-
-I think this is probably a good idea as well. If there's anything missed 
-in the infrastructure, we can invent. Besides vhost-vDPA, there are 
-other subsystems that relaying their uAPI to IOMMU API. Duplicating 
-uAPIs is usually a hint of the codes duplication. Simple map/unmap could 
-be easy but vSVA uAPI is much more complicated.
-
-
->
+>> Is there too much implicit knowledge in defining a "detached VF"?  For
+>> example, why do we know that we can skip the portion of
+>> vfio_config_init() that copies the vendor and device IDs from the
+>> struct pci_dev into the virtual config space?  It's true on s390x, but
+>> I think that's because we know that firmware emulates those registers
+>> for us.
 >>
->>>>>     If an userspace DMA interface can be easily
->>>>> adapted to be a passthrough one, it might be the choice.
->>>> It's not that easy even for VFIO which requires a lot of new uAPIs and
->>>> infrastructures(e.g mdev) to be invented.
->>>>
->>>>
->>>>> But for idxd,
->>>>> we see mdev a much better fit here, given the big difference between
->>>>> what userspace DMA requires and what guest driver requires in this hw.
->>>> A weak point for mdev is that it can't serve kernel subsystem other than
->>>> VFIO. In this case, you need some other infrastructures (like [1]) to do
->>>> this.
->>> mdev is not exclusive from kernel usages. It's perfectly fine for a driver
->>> to reserve some work queues for host usages, while wrapping others
->>> into mdevs.
->>
->> I meant you may want slices to be an independent device from the kernel
->> point of view:
->>
->> E.g for ethernet devices, you may want 10K mdevs to be passed to guest.
->>
->> Similarly, you may want 10K net devices which is connected to the kernel
->> networking subsystems.
->>
->> In this case it's not simply reserving queues but you need some other
->> type of device abstraction. There could be some kind of duplication
->> between this and mdev.
->>
-> yes, some abstraction required but isn't it what the driver should
-> care about instead of mdev framework itself?
+>> We also skip the INTx pin register sanity checking.  Do we do
+>> that because we haven't installed the broken device into an s390x
+>> system?  Because we know firmware manages that for us too?  Or simply
+>> because s390x doesn't support INTx anyway, and therefore it's another
+>> architecture implicit decision?
+> 
+> Agreed. Any hacks we put in for normal VFs are going to be needed for
+> the passed-though VF case. Only applying the memory space enable
+> workaround doesn't make sense to me either.
 
+We did actually have the detached_vf check in that if in
+a previous patch version, turning on the INTx and quirk checks.
+We decided to send a minimal version for the discussion.
+That said I agree that this is currently too specific to our
+case.
 
-With mdev you present a "PCI" device, but what's kind of device it tries 
-to present to kernel? If it's still PCI, there's duplication with mdev, 
-if it's something new, maybe we can switch to that API.
+> 
+>> If detached_vf is really equivalent to is_virtfn for all cases that
+>> don't care about referencing physfn on the pci_dev, then we should
+>> probably have a macro to that effect.
 
+In my opinion it really is, that's why we initially tried to just
+set pdev->is_virtfn leaving the physfn pointer NULL for these
+detached VFs. 
+But as you said that gets uncomfortable because of the union and existing code
+assuming that pdev->is_virtfn always means physfn is set.
 
-> If the driver reports
-> the same set of resource to both mdev and networking, it needs to
-> make sure when the resource is claimed in one interface then it
-> should be marked in-use in another. e.g. each mdev includes a
-> available_intances attribute. the driver could report 10k available
-> instances initially and then update it to 5K when another 5K is used
-> for net devices later.
+I think the underlying problem here is, that the current use
+of pdev->is_virtfn conflates the two reasons we need to know whether
+something is a VF:
 
+1. For dealing with the differences in how a VF presents itself vs a PF
+2. For knowing whether the physfn/sriov union is a pointer to the parent PF
 
-Right but this probably means you need another management layer under mdev.
+If we could untangle this in a sane way I think that would
+be the best long term solution.
 
+> 
+> A pci_is_virtfn() helper would be better than open coding both checks
+> everywhere. That said, it might be solving the wrong problem. The
+> union between ->physfn and ->sriov has always seemed like a footgun to
+> me so we might be better off switching the users who want a physfn to
+> a helper instead. i.e.
+> 
+> struct pci_dev *pci_get_vf_physfn(struct pci_dev *vf)
+> {
+>         if (!vf->is_virtfn)
+>                 return NULL;
+> 
+>         return vf->physfn;
+> }
 
->
-> Mdev definitely has its usage limitations. Some may be improved
-> in the future, some may not. But those are distracting from the
-> original purpose of this thread (mdev vs. userspace DMA) and better
-> be discussed in other places e.g. LPC...
+Hmm, this is almost exactly  include/linux/pci.h:pci_physfn()
+except that returns the argument pdev itself when is_virtfn
+is not set.
 
+> 
+> ...
+> 
+> pf = pci_get_vf_physfn(vf)
+> if (pf)
+>     /* do pf things */
+> 
+> Then we can just use ->is_virtfn for the normal and detached cases.
 
-Ok.
+I'm asssuming you mean by setting vf->is_virtfn = 1; vf->physfn = NULL
+for the detached case? I think that actually also works with the existing
+pci_physfn() helper but it requires handling a returned NULL at
+all callsites.
 
-Thanks
-
-
->
-> Thanks
-> Kevin
-
+> 
+> Oliver
+> 
