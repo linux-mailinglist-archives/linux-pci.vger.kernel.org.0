@@ -2,87 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A80DD244E17
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 19:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECA4A244E29
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 19:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgHNReQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 13:34:16 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:6977 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726241AbgHNReP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 13:34:15 -0400
-X-IronPort-AV: E=Sophos;i="5.76,313,1592838000"; 
-   d="scan'208";a="54383380"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 Aug 2020 02:34:14 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id F3F5540062AC;
-        Sat, 15 Aug 2020 02:34:10 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        id S1726241AbgHNRnz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 13:43:55 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9833 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbgHNRny (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:43:54 -0400
+IronPort-SDR: vGAXPZy8F/jTSBpYO21dEezlUmvM7E0rv+upMSLVgFF2ZX+eYQw0qgT1B7rFo3HedZON8+JgLQ
+ 8IKP/B8aiPZw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9713"; a="133981859"
+X-IronPort-AV: E=Sophos;i="5.76,313,1592895600"; 
+   d="scan'208";a="133981859"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 10:43:54 -0700
+IronPort-SDR: 56GZK3HCJ5S+NgciwhUxgyqs/MOQyUO14k8ZdUcbzmojtfxGJeDQuqsyeFFVvHEdkJiMjC7D9a
+ cdgnbODvF9hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,313,1592895600"; 
+   d="scan'208";a="325784697"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 14 Aug 2020 10:43:52 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k6dk7-008hvQ-83; Fri, 14 Aug 2020 20:43:51 +0300
+Date:   Fri, 14 Aug 2020 20:43:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: [PATCH 5/5] arm64: dts: renesas: r8a774c0: Add PCIe EP node
-Date:   Fri, 14 Aug 2020 18:30:37 +0100
-Message-Id: <20200814173037.17822-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v1 3/7] resource: Introduce resource_union() for
+ overlapping resources
+Message-ID: <20200814174351.GD1891694@smile.fi.intel.com>
+References: <20200813175729.15088-1-andriy.shevchenko@linux.intel.com>
+ <20200813175729.15088-3-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0iDZ6UZK_WW6pvWCqsrUH3uqfjRXSoMDTsAcbXoBuMYqw@mail.gmail.com>
+ <20200814153730.GQ1891694@smile.fi.intel.com>
+ <CAJZ5v0jOA30iL6AQq3BEY=N3xQdvpC0BJEcLzz2Frv+CByKhPQ@mail.gmail.com>
+ <20200814162105.GX1891694@smile.fi.intel.com>
+ <CAJZ5v0j_tSuGrEmFb-WYLpjS+AviwQ2zJmHmN-u_MzVAkf7HrA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0j_tSuGrEmFb-WYLpjS+AviwQ2zJmHmN-u_MzVAkf7HrA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe EP node to R8A774C0 (RZ/G2E) SoC dtsi.
+On Fri, Aug 14, 2020 at 07:17:18PM +0200, Rafael J. Wysocki wrote:
+> On Fri, Aug 14, 2020 at 6:23 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Aug 14, 2020 at 06:09:53PM +0200, Rafael J. Wysocki wrote:
+> > > On Fri, Aug 14, 2020 at 5:37 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Fri, Aug 14, 2020 at 05:23:07PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Thu, Aug 13, 2020 at 7:57 PM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > ...
+> >
+> > > > > Well, what about using min() and max() here?
+> > > >
+> > > > I devoted one paragraph in the commit message to answer this. The kernel.h
+> > > > (which I'm planning to split at some point) is a monster which brings more pain
+> > > > than solves here. Note, this is a header file and it's quite clean from
+> > > > dependencies perspective.
+> > >
+> > > But this is code duplication (even if really small) and it is not
+> > > entirely clean too.
+> > >
+> > > Maybe move the definitions of min() and max() to a separate header file?
+> >
+> > That is the plan in the kernel.h splitting project. But do you want me to do it
+> > here? I can try to bring that patch into this series.
+> 
+> Well, ostensibly the purpose of this series is to reduce code
+> duplication, but if it adds code duplication, that kind of defeats the
+> purpose IMO.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Okay, I will append minmax.h split in v2.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index 5c72a7efbb03..81f218539688 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -1698,6 +1698,25 @@
- 			status = "disabled";
- 		};
- 
-+		pciec0_ep: pcie_ep@fe000000 {
-+			compatible = "renesas,r8a774c0-pcie-ep",
-+				     "renesas,rcar-gen3-pcie-ep";
-+			reg = <0x0 0xfe000000 0 0x80000>,
-+			      <0x0 0xfe100000 0 0x100000>,
-+			      <0x0 0xfe200000 0 0x200000>,
-+			      <0x0 0x30000000 0 0x8000000>,
-+			      <0x0 0x38000000 0 0x8000000>;
-+			reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 319>;
-+			clock-names = "pcie";
-+			resets = <&cpg 319>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
- 		vspb0: vsp@fe960000 {
- 			compatible = "renesas,vsp2";
- 			reg = <0 0xfe960000 0 0x8000>;
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
