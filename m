@@ -2,102 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E42E2447CD
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 12:16:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BFAE244927
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 13:44:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgHNKQC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 06:16:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:32858 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgHNKQB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:16:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAF991063;
-        Fri, 14 Aug 2020 03:16:00 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF8E53F6CF;
-        Fri, 14 Aug 2020 03:15:58 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 11:15:56 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de,
-        andy.shevchenko@gmail.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com
-Subject: Re: [PATCH v5 9/9] Revert "PCI: brcmstb: Wait for Raspberry Pi's
- firmware when present"
-Message-ID: <20200814101556.GB19387@e121166-lin.cambridge.arm.com>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
- <20200629161845.6021-10-nsaenzjulienne@suse.de>
+        id S1727037AbgHNLoA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 14 Aug 2020 07:44:00 -0400
+Received: from mail.munisurquillo.gob.pe ([190.187.155.157]:47464 "EHLO
+        mail.munisurquillo.gob.pe" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726641AbgHNLnn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 07:43:43 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.munisurquillo.gob.pe (Postfix) with ESMTP id 53CB240239BC3;
+        Fri, 14 Aug 2020 02:17:16 -0500 (-05)
+Received: from mail.munisurquillo.gob.pe ([127.0.0.1])
+        by localhost (mail.munisurquillo.gob.pe [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ALkcCc-0ZBD3; Fri, 14 Aug 2020 02:17:16 -0500 (-05)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.munisurquillo.gob.pe (Postfix) with ESMTP id 4A1A84024921D;
+        Fri, 14 Aug 2020 02:16:55 -0500 (-05)
+X-Virus-Scanned: amavisd-new at munisurquillo.gob.pe
+Received: from mail.munisurquillo.gob.pe ([127.0.0.1])
+        by localhost (mail.munisurquillo.gob.pe [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id wUp7vyIAKS2s; Fri, 14 Aug 2020 02:16:55 -0500 (-05)
+Received: from [10.54.17.114] (unknown [105.4.7.153])
+        by mail.munisurquillo.gob.pe (Postfix) with ESMTPSA id A3FBF402301F3;
+        Fri, 14 Aug 2020 02:16:28 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629161845.6021-10-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
+To:     Recipients <lu.marin@munisurquillo.gob.pe>
+From:   ''charles jackson'' <lu.marin@munisurquillo.gob.pe>
+Date:   Fri, 14 Aug 2020 09:16:18 +0200
+Reply-To: charlesjacksonjr001@gmail.com
+Message-Id: <20200814071628.A3FBF402301F3@mail.munisurquillo.gob.pe>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:18:45PM +0200, Nicolas Saenz Julienne wrote:
-> This reverts commit 44331189f9082c7e659697bbac1747db3def73e7.
-> 
-> Now that the VL805 init routine is run through a reset controller driver
-> the device dependencies are being taken care of by the device core. No
-> need to do it manually here.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 17 -----------------
->  1 file changed, 17 deletions(-)
+Hallo
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Ich bin Charles W. Jackson aus North Carolina, Vereinigte Staaten von Amerika, und ich bin der Gewinner des Mega-Millionen-Jackpots von 344 Millionen US-Dollar. Ich spende die Summe von 2.000.000 Millionen Euro als Teil der Hilfsgelder für das Corona-Virus.
 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 7730ea845ff2..752f5b331579 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -28,8 +28,6 @@
->  #include <linux/string.h>
->  #include <linux/types.h>
->  
-> -#include <soc/bcm2835/raspberrypi-firmware.h>
-> -
->  #include "../pci.h"
->  
->  /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-> @@ -931,26 +929,11 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node, *msi_np;
->  	struct pci_host_bridge *bridge;
-> -	struct device_node *fw_np;
->  	struct brcm_pcie *pcie;
->  	struct pci_bus *child;
->  	struct resource *res;
->  	int ret;
->  
-> -	/*
-> -	 * We have to wait for Raspberry Pi's firmware interface to be up as a
-> -	 * PCI fixup, rpi_firmware_init_vl805(), depends on it. This driver's
-> -	 * probe can race with the firmware interface's (see
-> -	 * drivers/firmware/raspberrypi.c) and potentially break the PCI fixup.
-> -	 */
-> -	fw_np = of_find_compatible_node(NULL, NULL,
-> -					"raspberrypi,bcm2835-firmware");
-> -	if (fw_np && !rpi_firmware_get(fw_np)) {
-> -		of_node_put(fw_np);
-> -		return -EPROBE_DEFER;
-> -	}
-> -	of_node_put(fw_np);
-> -
->  	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
->  	if (!bridge)
->  		return -ENOMEM;
-> -- 
-> 2.27.0
-> 
+Dies ist Ihr Spendencode: [CJ530342019]
+
+www.youtube.com/watch?v=BSr8myiLPMQ
+
+Bitte antworten Sie auf diese E-Mail mit dem SPENDERCODE:
+
+charlesjacksonjr001@gmail.com
+
+Ich hoffe, dass Sie und Ihre Familie dies durchkommen
+
+
+Herr Charles Jackson
