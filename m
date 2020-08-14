@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2BAD244E0C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 19:33:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A31C244E12
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 19:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgHNRdd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 13:33:33 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:57426 "EHLO
+        id S1728566AbgHNRdz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 13:33:55 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:51303 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726270AbgHNRdb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 13:33:31 -0400
+        by vger.kernel.org with ESMTP id S1726270AbgHNRdy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 13:33:54 -0400
 X-IronPort-AV: E=Sophos;i="5.76,313,1592838000"; 
-   d="scan'208";a="54596892"
+   d="scan'208";a="54596904"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 15 Aug 2020 02:33:29 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 15 Aug 2020 02:33:53 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7F11640062AC;
-        Sat, 15 Aug 2020 02:33:26 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5DE2D40061B7;
+        Sat, 15 Aug 2020 02:33:50 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
@@ -34,9 +34,9 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Biju Das <biju.das.jz@bp.renesas.com>
-Subject: [PATCH 3/5] arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
-Date:   Fri, 14 Aug 2020 18:30:35 +0100
-Message-Id: <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 4/5] arm64: dts: renesas: r8a774b1: Add PCIe EP nodes
+Date:   Fri, 14 Aug 2020 18:30:36 +0100
+Message-Id: <20200814173037.17822-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -45,24 +45,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe EP nodes to R8A774A1 (RZ/G2M) SoC dtsi.
+Add PCIe EP nodes to R8A774B1 (RZ/G2N) SoC dtsi.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 38 +++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a774b1.dtsi | 38 +++++++++++++++++++++++
  1 file changed, 38 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index a603d947970e..50e9ed16a36d 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -2369,6 +2369,44 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+index 1e51855c7cd3..e45ac177eb58 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+@@ -2238,6 +2238,44 @@
  			status = "disabled";
  		};
  
 +		pciec0_ep: pcie_ep@fe000000 {
-+			compatible = "renesas,r8a774a1-pcie-ep",
++			compatible = "renesas,r8a774b1-pcie-ep",
 +				     "renesas,rcar-gen3-pcie-ep";
 +			reg = <0x0 0xfe000000 0 0x80000>,
 +			      <0x0 0xfe100000 0 0x100000>,
@@ -76,12 +76,12 @@ index a603d947970e..50e9ed16a36d 100644
 +			clocks = <&cpg CPG_MOD 319>;
 +			clock-names = "pcie";
 +			resets = <&cpg 319>;
-+			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
 +			status = "disabled";
 +		};
 +
 +		pciec1_ep: pcie_ep@ee800000 {
-+			compatible = "renesas,r8a774a1-pcie-ep",
++			compatible = "renesas,r8a774b1-pcie-ep",
 +				     "renesas,rcar-gen3-pcie-ep";
 +			reg = <0x0 0xee800000 0 0x80000>,
 +			      <0x0 0xee900000 0 0x100000>,
@@ -95,7 +95,7 @@ index a603d947970e..50e9ed16a36d 100644
 +			clocks = <&cpg CPG_MOD 318>;
 +			clock-names = "pcie";
 +			resets = <&cpg 318>;
-+			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
 +			status = "disabled";
 +		};
 +
