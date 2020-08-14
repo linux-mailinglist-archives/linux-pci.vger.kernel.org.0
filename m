@@ -2,91 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C749E244C53
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 17:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2A37244C59
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 17:55:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgHNPvK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 11:51:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41732 "EHLO mail.kernel.org"
+        id S1726652AbgHNPzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 11:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgHNPvK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:51:10 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        id S1726285AbgHNPzh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:55:37 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 660DF2065C;
-        Fri, 14 Aug 2020 15:51:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87E9520768;
+        Fri, 14 Aug 2020 15:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597420269;
-        bh=Iz49/lPLFhH+6nCqxuxoI6YovUPNpCIHAW3SX/qxQYo=;
+        s=default; t=1597420535;
+        bh=zoa+ut1WbMyFnWgB8xhbbBgiPvLBJ5ASa6+HjTkjJeA=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cGOiBQusy6JKsx8U5w07zf2ZfdaFMUvpYbXzIIYMG3IJRHEab8cHamYLdPBckaowa
-         A4SR37EgAMugOqf0GFkHpntz/eRLXhXFnt3NZ3hT0oGypmHuoDoRokcVVLxSFtgdyg
-         R2dGt3o19QHOdBhNNSfZEM4im7sRxJajoA/LDOh4=
-Received: by mail-qt1-f179.google.com with SMTP id k18so7222906qtm.10;
-        Fri, 14 Aug 2020 08:51:09 -0700 (PDT)
-X-Gm-Message-State: AOAM533AnUwJm9cW2q3CKT/1KsmsI3q+/mUneqMUmkF9QkYyJ/3ARst/
-        uC6ks0J45PhLgbZLJt8sjd0A4oJe9qNZCtIgJg==
-X-Google-Smtp-Source: ABdhPJwalDgAOrAcn5WYJDfouU4gwDgJP0qyY9UfEF240aXWt0tyu0IbpZMWP+9YK9OyrxWKAX8nUaT5mkjgztf1fuE=
-X-Received: by 2002:aed:24f2:: with SMTP id u47mr2591700qtc.137.1597420268638;
- Fri, 14 Aug 2020 08:51:08 -0700 (PDT)
+        b=ktAcEr0h9wBlewT2JRHzwBHJHhvjfoOjpsgwy8Kogce6wyc4D0FayGMDsLWYQ4U7E
+         d7sCDHHEpcLeS6qlKJdso617e951RzH0pmAfwOUhRu6tJfZyZfqvX8YjTR1iIWwDTe
+         IlysCOkzGFNHfdPTb3lUP1E8dkI3gswkIeyJqG48=
+Received: by mail-qk1-f173.google.com with SMTP id b14so8770174qkn.4;
+        Fri, 14 Aug 2020 08:55:35 -0700 (PDT)
+X-Gm-Message-State: AOAM532XvmnV/tqwcZVZWm9tFJAO8aFZGKRSo44+/57KJTLB65S6Rv+T
+        vsJ8XmS8EhHzfiaI37OJcwVh78J+NazOSuVUIg==
+X-Google-Smtp-Source: ABdhPJzQn5hvqDdVbAUx/i7n0mBCBw6qmaHAQRSOghi9ECkbVZ+694cX3OUNz/opcd5rfswo01laJxkQkN1JbM64SZo=
+X-Received: by 2002:a37:84c:: with SMTP id 73mr2596374qki.464.1597420534748;
+ Fri, 14 Aug 2020 08:55:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200814080813.8070-1-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20200814080813.8070-1-Zhiqiang.Hou@nxp.com>
+References: <eb2abaa7fc97a6e700a7c4ed37182820803414c3.camel@microchip.com> <4bcbacfb4b117dfde38a57541dd37b02b887a318.camel@microchip.com>
+In-Reply-To: <4bcbacfb4b117dfde38a57541dd37b02b887a318.camel@microchip.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 14 Aug 2020 09:50:52 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+a7kRVgnRhOxffZedz3M3s3DPcB6Q_tc4_Vu-WT55ZDQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+a7kRVgnRhOxffZedz3M3s3DPcB6Q_tc4_Vu-WT55ZDQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: designware-ep: Fix the Header Type check
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
+Date:   Fri, 14 Aug 2020 09:55:19 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKeXDB-4N1_-EutEKiH34cDcXE6tkaGY8Gc4WB-xcVjFA@mail.gmail.com>
+Message-ID: <CAL_JsqKeXDB-4N1_-EutEKiH34cDcXE6tkaGY8Gc4WB-xcVjFA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/2] dt-bindings: PCI: microchip: Add Microchip
+ PolarFire host binding
+To:     Daire McNamara <Daire.McNamara@microchip.com>
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 2:15 AM Zhiqiang Hou <Zhiqiang.Hou@nxp.com> wrote:
+On Fri, Aug 7, 2020 at 7:23 AM <Daire.McNamara@microchip.com> wrote:
 >
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 >
-> The current check will result in the multiple function device
-> fails to initialize. So fix the check by masking out the
-> multiple function bit.
+> Add device tree bindings for the Microchip PolarFire PCIe controller
+> when configured in host (Root Complex) mode.
 >
-> Fixes: 0b24134f7888 ("PCI: dwc: Add validation that PCIe core is set to correct mode")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 4680a51c49c0..4b7abfb1e669 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -654,7 +654,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->         int i;
->
->         hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> -       if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> +       if (hdr_type & 0x7f != PCI_HEADER_TYPE_NORMAL) {
+>  .../bindings/pci/microchip,pcie-host.yaml     | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
 
-Should have () around 'hdr_type & 0x7f'.
-
->                 dev_err(pci->dev,
->                         "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
->                         hdr_type);
-
-However, shouldn't the printed value be masked too? I'd just do:
-
-hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) & 0x7f;
-
-Perhaps add a #define too. '0x7f' is used in several places.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
