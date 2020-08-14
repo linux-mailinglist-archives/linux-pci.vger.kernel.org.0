@@ -2,201 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE7D724469F
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 10:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 435C42447A2
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 12:04:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgHNIxJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 04:53:09 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41700 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgHNIxJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 04:53:09 -0400
-Received: by mail-qt1-f194.google.com with SMTP id v22so6424058qtq.8
-        for <linux-pci@vger.kernel.org>; Fri, 14 Aug 2020 01:53:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wxxLsPZozTLX3ObZXi0EdS+EhzoX/NcH97R45uZV6+0=;
-        b=W/L+wYfbRjxgK0NdR3uNDO7Vx/oR/l1IVo/dXrMvbbCf5RxI61Dtq4+Vu2XYiuRi++
-         x3fdH6vJks7XbPZSMRtJs+1CcEo9WTW00ig1D2CdiVtWfKWYTJUo3xfd5V+CFICtpA69
-         yq1914bvWZy9pOK1ySomOQM6VlD1i2O7kEeYPIQQUJpcdTGD4tISylYix3SDA0mgGv+G
-         P53aRIefoBx6m1IaOq7Cd2BKRERZDOjmJHfQ80FtbKy22ApczzfHaFhNMFaJdi2iUdm0
-         0nyPLNm+ykxjOQNBKIpYkz6TmWDyPHmlfCf2JhuynGRfq5DijOrr+mc70yf+ptz/GZds
-         lBbg==
-X-Gm-Message-State: AOAM531g64lx+thgvOpOo6cWx9mOqGKn0ky0gq9xIEHkJaIKqFjjPaFE
-        oVr47/5MhcOAkAmcRR7lliBTjxmQttd8PQ==
-X-Google-Smtp-Source: ABdhPJyL2QbMhbJ3t7cmmxB/u+IkiJ6tDrEgzuzq4TFYfIy/JHMfbUGOXUmdtYcmfk3866Z2uVew1A==
-X-Received: by 2002:ac8:7341:: with SMTP id q1mr1080475qtp.8.1597395187452;
-        Fri, 14 Aug 2020 01:53:07 -0700 (PDT)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
-        by smtp.gmail.com with ESMTPSA id z24sm7642246qki.57.2020.08.14.01.53.06
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 01:53:07 -0700 (PDT)
-Received: by mail-qk1-f169.google.com with SMTP id d14so7692034qke.13
-        for <linux-pci@vger.kernel.org>; Fri, 14 Aug 2020 01:53:06 -0700 (PDT)
-X-Received: by 2002:a05:620a:5f8:: with SMTP id z24mr1106540qkg.372.1597395186493;
- Fri, 14 Aug 2020 01:53:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAri2DpQnrGH5bnjC==W+HmnD4XMh8gcp9u-_LQ=K-jtrdHwAg@mail.gmail.com>
- <20200713221451.GA285058@bjorn-Precision-5520> <MN2PR12MB448830959FDA665230B94FCBF7600@MN2PR12MB4488.namprd12.prod.outlook.com>
-In-Reply-To: <MN2PR12MB448830959FDA665230B94FCBF7600@MN2PR12MB4488.namprd12.prod.outlook.com>
-From:   Marcos Scriven <marcos@scriven.org>
-Date:   Fri, 14 Aug 2020 09:52:55 +0100
-X-Gmail-Original-Message-ID: <CAAri2Dq2L0MOPeocRE5fF7qzgGbCCi_gYS+CU7mU=EqVe0Y3iw@mail.gmail.com>
-Message-ID: <CAAri2Dq2L0MOPeocRE5fF7qzgGbCCi_gYS+CU7mU=EqVe0Y3iw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Avoid FLR for AMD Starship USB 3.0
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        Kevin Buettner <kevinb@redhat.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
+        id S1727814AbgHNKEJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 06:04:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43908 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgHNKEJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:04:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6BDFBAE65;
+        Fri, 14 Aug 2020 10:04:30 +0000 (UTC)
+Message-ID: <21baf85fa476f62a56895d77fa76dc0d73c1b3a0.camel@suse.de>
+Subject: Re: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     robh@kernel.org, wahrenst@gmx.net, p.zabel@pengutronix.de,
+        andy.shevchenko@gmail.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com
+Date:   Fri, 14 Aug 2020 12:04:05 +0200
+In-Reply-To: <20200814061105.GG1409566@kroah.com>
+References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+         <a6aecb7a4d270cb23430d25850c85a332555af55.camel@suse.de>
+         <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
+         <20200814061105.GG1409566@kroah.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 13 Jul 2020 at 23:48, Deucher, Alexander
-<Alexander.Deucher@amd.com> wrote:
->
-> [AMD Public Use]
->
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Monday, July 13, 2020 6:15 PM
-> > To: Marcos Scriven <marcos@scriven.org>
-> > Cc: Shah, Nehal-bakulchandra <Nehal-bakulchandra.Shah@amd.com>;
-> > Deucher, Alexander <Alexander.Deucher@amd.com>; Kevin Buettner
-> > <kevinb@redhat.com>; linux-pci@vger.kernel.org; Bjorn Helgaas
-> > <bhelgaas@google.com>; Alex Williamson <alex.williamson@redhat.com>;
-> > Koenig, Christian <Christian.Koenig@amd.com>
-> > Subject: Re: [PATCH] PCI: Avoid FLR for AMD Starship USB 3.0
-> >
-> > On Mon, Jul 13, 2020 at 01:44:44PM +0100, Marcos Scriven wrote:
-> > > On Thu, 25 Jun 2020 at 11:22, Marcos Scriven <marcos@scriven.org> wrote:
-> > > > On Tue, 9 Jun 2020 at 12:47, Shah, Nehal-bakulchandra
-> > > > <nehal-bakulchandra.shah@amd.com> wrote:
-> > > > > On 6/8/2020 11:17 PM, Marcos Scriven wrote:
-> > > > > > On Thu, 28 May 2020 at 09:12, Marcos Scriven
-> > > > > > <marcos@scriven.org>
-> > > > wrote:
-> > > > > >> On Wed, 27 May 2020 at 22:42, Deucher, Alexander
-> > > > > >> <Alexander.Deucher@amd.com> wrote:
-> > > > > >>>> -----Original Message-----
-> > > > > >>>> From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > >>>>
-> > > > > >>>> [+cc Alex D, Christian -- do you guys have any contacts or
-> > > > > >>>> insight
-> > > > into why we
-> > > > > >>>> suddenly have three new AMD devices that advertise FLR
-> > > > > >>>> support but
-> > > > it
-> > > > > >>>> doesn't work?  Are we doing something wrong in Linux, or are
-> > > > > >>>> these
-> > > > devices
-> > > > > >>>> defective?
-> > > > > >>> +Nehal who handles our USB drivers.
-> > > > > >>>
-> > > > > >>> Nehal any ideas about FLR or whether it should be advertised?
-> > > > > >>>
-> > > > > Sorry for the delay. We are looking into this with BIOS team. I
-> > > > > shall
-> > > > revert soon on this.
-> > > >
-> > > > Sorry to keep pestering about this, but wondering if there's any
-> > > > movement on this?
-> > > >
-> > > > Is it something that's likely to be fixed and actually rolled out by
-> > > > motherboard manufacturers?
-> > > >
-> > > > There's been some grumblings in the community about adding
-> > > > workarounds rather than fixing, so it would be good to pass on
-> > expectations here.
-> > >
-> > > Any word on this please? Would be keen to know if the BIOS can be
-> > > fixed, and this workaround can eventually be dropped.
-> >
-> > Just to clarify what the possible outcomes are:
-> >
-> >   1) If these AMD devices are defective, but future ones are fixed, we
-> >   keep the quirk.
-> >
-> >   2) If these AMD devices are defective *and* future ones are also
-> >   defective, we keep the quirk and keep adding device IDs to it.
-> >
-> >   3) If the BIOS is defective, we keep the quirk.  If anybody cares
-> >   about FLR enough, they can make the quirk smart enough to identify
-> >   fixed BIOS versions and enable FLR.
-> >
-> >   4) If Linux is defective, we can fix Linux and drop the quirk.
-> >
-> > The ideal outcome would be 4), but we don't have any indication that Linux is
-> > doing something wrong.
-> >
-> > What we're really trying to avoid is 2) because that means new devices will
-> > break Linux until somebody figures out the problem again, updates the quirk,
-> > and gets the update into distro kernels.
-> >
-> > In case 3), we don't drop the quirk because that forces people to upgrade
-> > their BIOS, and most people will not.  We can't drop the quirk, reintroduce
-> > the problem on old BIOSes, and hide behind the excuse of "you need to
-> > upgrade the BIOS."  That wastes the user's time and our time.
-> >
->
-> Understood.  Just trying to find the right people internally to understand what has been validated and productized with respect to FLR on various peripherals.
->
-> Alex
->
+On Fri, 2020-08-14 at 08:11 +0200, Greg KH wrote:
+> On Thu, Aug 13, 2020 at 12:17:49PM -0700, Florian Fainelli wrote:
+> > 
+> > On 8/13/2020 3:01 AM, Nicolas Saenz Julienne wrote:
+> > > Hi everyone.
+> > > 
+> > > On Mon, 2020-06-29 at 18:18 +0200, Nicolas Saenz Julienne wrote:
+> > > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+> > > > loaded directly from an EEPROM or, if not present, by the SoC's
+> > > > co-processor, VideoCore. This series reworks how we handle this.
+> > > > 
+> > > > The previous solution makes use of PCI quirks and exporting platform
+> > > > specific functions. Albeit functional it feels pretty shoehorned. This
+> > > > proposes an alternative way of handling the triggering of the xHCI chip
+> > > > initialization trough means of a reset controller.
+> > > > 
+> > > > The benefits are pretty evident: less platform churn in core xHCI code,
+> > > > and no explicit device dependency management in pcie-brcmstb.
+> > > > 
+> > > > Note that patch #1 depends on another series[1], that was just applied
+> > > > into the clk maintainer's tree.
+> > > > 
+> > > > The series is based on v5.8-rc3
+> > > > 
+> > > > v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
+> > > > v2: https://lkml.org/lkml/2020/6/9/875
+> > > > v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
+> > > > 
+> > > > [1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
+> > > > 
+> > > > ---
+> > > 
+> > > We were waiting on a dependency to be merged upstream to get this. They are now
+> > > in, so could we move things forward?
+> > > 
+> > > I can take the device tree patches, I guess philipp can take the reset
+> > > controller code. But I'm not so sure who should be taking the PCI/USB
+> > > counterparts.
+> > 
+> > Should we route everything through the USB tree since that is where the
+> > changes that do require synchronization with other subsystems and DTS is
+> > needed the most?
+> > -- 
+> > Florian
+> 
+> That's fine with me, if everyone else is ok with it :)
 
-Hi Alex
+Sounds good to me.
 
-Sorry to keep bugging - wondering if you'd had any success finding the
-people internally to look at this?
-
-My main personal concern is that I faced some criticism from users in
-submitting the quirk, as people felt that took the pressure off AMD to
-fix.
-
-Thanks
-
-Marcos
-
-> > > > > >>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > > > >>>>> index 43a0c2ce635e..b1db58d00d2b 100644
-> > > > > >>>>> --- a/drivers/pci/quirks.c
-> > > > > >>>>> +++ b/drivers/pci/quirks.c
-> > > > > >>>>> @@ -5133,6 +5133,7 @@
-> > > > > >>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,
-> > > > > >>>> quirk_intel_qat_vf_cap);
-> > > > > >>>>>   * FLR may cause the following to devices to hang:
-> > > > > >>>>>   *
-> > > > > >>>>>   * AMD Starship/Matisse HD Audio Controller 0x1487
-> > > > > >>>>> + * AMD Starship USB 3.0 Host Controller 0x148c
-> > > > > >>>>>   * AMD Matisse USB 3.0 Host Controller 0x149c
-> > > > > >>>>>   * Intel 82579LM Gigabit Ethernet Controller 0x1502
-> > > > > >>>>>   * Intel 82579V Gigabit Ethernet Controller 0x1503 @@
-> > > > > >>>>> -5143,6
-> > > > +5144,7
-> > > > > >>>>> @@ static void quirk_no_flr(struct pci_dev *dev)
-> > > > > >>>>>     dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;  }
-> > > > > >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487,
-> > > > > >>>>> quirk_no_flr);
-> > > > > >>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c,
-> > > > > >>>> quirk_no_flr);
-> > > > > >>>>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c,
-> > > > > >>>> quirk_no_flr);
-> > > > > >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502,
-> > > > > >>>> quirk_no_flr);
-> > > > > >>>>> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503,
-> > > > > >>>> quirk_no_flr);
-> > > > >
-> > > > > Regard
-> > > > >
-> > > > > Nehal Shah
-> > > > >
-> > > >
