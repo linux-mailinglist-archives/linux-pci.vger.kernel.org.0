@@ -2,100 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECA4A244E29
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 19:43:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53343244E2C
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 19:45:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgHNRnz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 13:43:55 -0400
-Received: from mga12.intel.com ([192.55.52.136]:9833 "EHLO mga12.intel.com"
+        id S1727906AbgHNRpX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 13:45:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbgHNRny (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:43:54 -0400
-IronPort-SDR: vGAXPZy8F/jTSBpYO21dEezlUmvM7E0rv+upMSLVgFF2ZX+eYQw0qgT1B7rFo3HedZON8+JgLQ
- 8IKP/B8aiPZw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9713"; a="133981859"
-X-IronPort-AV: E=Sophos;i="5.76,313,1592895600"; 
-   d="scan'208";a="133981859"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 10:43:54 -0700
-IronPort-SDR: 56GZK3HCJ5S+NgciwhUxgyqs/MOQyUO14k8ZdUcbzmojtfxGJeDQuqsyeFFVvHEdkJiMjC7D9a
- cdgnbODvF9hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,313,1592895600"; 
-   d="scan'208";a="325784697"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 14 Aug 2020 10:43:52 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k6dk7-008hvQ-83; Fri, 14 Aug 2020 20:43:51 +0300
-Date:   Fri, 14 Aug 2020 20:43:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v1 3/7] resource: Introduce resource_union() for
- overlapping resources
-Message-ID: <20200814174351.GD1891694@smile.fi.intel.com>
-References: <20200813175729.15088-1-andriy.shevchenko@linux.intel.com>
- <20200813175729.15088-3-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0iDZ6UZK_WW6pvWCqsrUH3uqfjRXSoMDTsAcbXoBuMYqw@mail.gmail.com>
- <20200814153730.GQ1891694@smile.fi.intel.com>
- <CAJZ5v0jOA30iL6AQq3BEY=N3xQdvpC0BJEcLzz2Frv+CByKhPQ@mail.gmail.com>
- <20200814162105.GX1891694@smile.fi.intel.com>
- <CAJZ5v0j_tSuGrEmFb-WYLpjS+AviwQ2zJmHmN-u_MzVAkf7HrA@mail.gmail.com>
+        id S1726213AbgHNRpX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:45:23 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2D1420838;
+        Fri, 14 Aug 2020 17:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597427123;
+        bh=FiIcjZUHsrXzXH0x/aRcjN5xj+GMmd6ZOirtzojIXcY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZAQA2SeRvHDUZUCMEMhk/0up8jQO6zukqnZPWP2/qF2LxON+B1HgoWgA/aPl1RNA7
+         qtJbKBIz4H7GgYO6dX6Ge62lOOT16nrHFZKhmD2Ez7iBwdidw6GnjDn+71qIYW6vVB
+         eQC7EmThFZFXHOkecVbdctpD+ccrkYJynET6VPu4=
+Received: by mail-ot1-f52.google.com with SMTP id k12so8229332otr.1;
+        Fri, 14 Aug 2020 10:45:22 -0700 (PDT)
+X-Gm-Message-State: AOAM531YlG85wTcCJPTgxKfXDXmXdX6Isun3I0FwukXkSoIASwQ196bI
+        WOR24Obi5zLDD5MzFJpKmI9+Zkm3OCXKPaaC3Q==
+X-Google-Smtp-Source: ABdhPJzLneaV1U/oXF/OaPVbM1bWrBHv2LQr0VSykU63XEDKIJjDJeWXJvk+9sbW6PNCVPqJyPVi9PedlAYR9QizpQk=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2509020ote.107.1597427122326;
+ Fri, 14 Aug 2020 10:45:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0j_tSuGrEmFb-WYLpjS+AviwQ2zJmHmN-u_MzVAkf7HrA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
+In-Reply-To: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 14 Aug 2020 11:45:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJpuoGi4r9a+nKGyTyh4zXtFr-M8oAmJLcQjiN3V54F9g@mail.gmail.com>
+Message-ID: <CAL_JsqJpuoGi4r9a+nKGyTyh4zXtFr-M8oAmJLcQjiN3V54F9g@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc:     Ray Jui <ray.jui@broadcom.com>, Bjorn Helgaas <helgaas@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:17:18PM +0200, Rafael J. Wysocki wrote:
-> On Fri, Aug 14, 2020 at 6:23 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, Aug 14, 2020 at 06:09:53PM +0200, Rafael J. Wysocki wrote:
-> > > On Fri, Aug 14, 2020 at 5:37 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Fri, Aug 14, 2020 at 05:23:07PM +0200, Rafael J. Wysocki wrote:
-> > > > > On Thu, Aug 13, 2020 at 7:57 PM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > ...
-> >
-> > > > > Well, what about using min() and max() here?
-> > > >
-> > > > I devoted one paragraph in the commit message to answer this. The kernel.h
-> > > > (which I'm planning to split at some point) is a monster which brings more pain
-> > > > than solves here. Note, this is a header file and it's quite clean from
-> > > > dependencies perspective.
-> > >
-> > > But this is code duplication (even if really small) and it is not
-> > > entirely clean too.
-> > >
-> > > Maybe move the definitions of min() and max() to a separate header file?
-> >
-> > That is the plan in the kernel.h splitting project. But do you want me to do it
-> > here? I can try to bring that patch into this series.
-> 
-> Well, ostensibly the purpose of this series is to reduce code
-> duplication, but if it adds code duplication, that kind of defeats the
-> purpose IMO.
+On Wed, Aug 5, 2020 at 10:15 PM Mark Tomlinson
+<mark.tomlinson@alliedtelesis.co.nz> wrote:
+>
+> For hardware that only supports 32-bit writes to PCI there is the
+> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
+> messages was introduced by fb2659230120, but rate-limiting is not the
+> best choice here. Some devices may not show the warnings they should if
+> another device has just produced a bunch of warnings. Also, the number
+> of messages can be a nuisance on devices which are otherwise working
+> fine.
+>
+> This patch changes the ratelimit to a single warning per bus. This
+> ensures no bus is 'starved' of emitting a warning and also that there
+> isn't a continuous stream of warnings. It would be preferable to have a
+> warning per device, but the pci_dev structure is not available here, and
+> a lookup from devfn would be far too slow.
+>
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+> changes in v4:
+>  - Use bitfield rather than bool to save memory (was meant to be in v3).
+>
+>  drivers/pci/access.c | 9 ++++++---
+>  include/linux/pci.h  | 1 +
+>  2 files changed, 7 insertions(+), 3 deletions(-)
 
-Okay, I will append minmax.h split in v2.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
