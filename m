@@ -2,46 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8C9244BE8
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 17:23:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC6C7244C12
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 17:27:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgHNPXU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 11:23:20 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39173 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgHNPXU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 11:23:20 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z18so7846145otk.6;
-        Fri, 14 Aug 2020 08:23:19 -0700 (PDT)
+        id S1726772AbgHNP1M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 11:27:12 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:43215 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgHNP1L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 11:27:11 -0400
+Received: by mail-oo1-f67.google.com with SMTP id z10so1982989ooi.10;
+        Fri, 14 Aug 2020 08:27:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=m4s76eJi1HyL+NXonoWfmZoTC1Xq7QOIoC3N0JmmMDQ=;
-        b=nsJ8MtTlxLYYW403Jk1F/38ursLHq25yGpXJP+1jcGPKtUxf5ZtNp5o9ozl43Mlrqt
-         IveSAKxQNTGOkR3TnJ6xy2DK1Gl7VSsIR48PFQvaCoDRQQrB7BF55zbrMNLAQhdiCuQy
-         tZWjakdHYs+ERyOmTtBeVr6yvMus6KItoS5ee3ejMB/SnOzjxKIbODqpQicA2nkDR+N5
-         DtyWe6962yV3iaGb/0nlulGCoBP4ZV2mW4SYqKqM8d/p5qhLkvciXZ9xPrgdUzXIlWdl
-         JWCXDWv9sOmilKBsIFwpJPgqwWT2Oi7P27SxPtzJEHxJxSNnpxWfKv0C41P2ETxLy6X7
-         ZjOA==
-X-Gm-Message-State: AOAM5322wSLwcz4YkELKI6YDD7oAlmjD6nMHF+riHST9YoTfhTy0oVhq
-        LOKrM/ODWWP4LhHY8G2ZQZY3/ZZLGRwoHa2GizQ=
-X-Google-Smtp-Source: ABdhPJyuU8RKO2uVZAaubWhnCLHenAsYFpioXVUF+4OfePM8DUuQRDy4EDVjxwiGjDsC8ZLu8eZoxKLj/sl+oZxrqG0=
-X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr2193175otj.118.1597418599210;
- Fri, 14 Aug 2020 08:23:19 -0700 (PDT)
+        bh=AR2vjh3UpjcMGH0kCnD6EsK8SKt3wIhYT8SgdJ9mnkk=;
+        b=fyXSkOfXy06CUPL9NkwpQBpc33HFAgF7YHrBZ5+8v/wj86SGZsEDIJX1usK/x6BPZm
+         /ZieUKpRwIYNZK8BH1FhIrhMIUvyun4Kinu0JyvuhqEqpENK4itofdSyXrFivgYn6zVC
+         cbUMP/1kDCzRQaUHFZBvitAmZtj2eN+tVJgUSZiDSweYRdpT9KBhQ64VAMG+cdPg5noV
+         /uu/kfedmeUs1sfJo6VoBdJESiXS+jpZMCeGABcfQljYHeFGG4Hv+2uHVSljQY1hX52i
+         etOS2s1R41gZAArIWbLPrpl5iDQLvHzBflAVMOokHiD1a0EaA6onMX8FkPPZAK5Ypd7U
+         e0AA==
+X-Gm-Message-State: AOAM531OfiGXUnzN+g4hu4a96oDVgz4kVX2OxdmONhOb0drqyEknBaM7
+        oNCSxqMIBcNaUVSALM3dHZ53eQbVMWpOPrpXFFjORWE3
+X-Google-Smtp-Source: ABdhPJzzAVEoq3ESxvkVWjiDgWgrr2M2X/ahFvjTCi5ARt7WCNNYUolh/NxN3kHRoSeHAAOO0MPmsK369JOdkEhHL44=
+X-Received: by 2002:a4a:d62c:: with SMTP id n12mr2093505oon.38.1597418830664;
+ Fri, 14 Aug 2020 08:27:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200813175729.15088-1-andriy.shevchenko@linux.intel.com> <20200813175729.15088-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200813175729.15088-3-andriy.shevchenko@linux.intel.com>
+References: <20200813175729.15088-1-andriy.shevchenko@linux.intel.com> <20200813175729.15088-5-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200813175729.15088-5-andriy.shevchenko@linux.intel.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 14 Aug 2020 17:23:07 +0200
-Message-ID: <CAJZ5v0iDZ6UZK_WW6pvWCqsrUH3uqfjRXSoMDTsAcbXoBuMYqw@mail.gmail.com>
-Subject: Re: [PATCH v1 3/7] resource: Introduce resource_union() for
- overlapping resources
+Date:   Fri, 14 Aug 2020 17:26:59 +0200
+Message-ID: <CAJZ5v0jyshOjj2cPeWC6-1NhQNuv8wnK883x7RQ1U5FTwwkhEA@mail.gmail.com>
+Subject: Re: [PATCH v1 5/7] PCI/ACPI: Replace open coded variant of resource_union()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -55,50 +53,34 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Thu, Aug 13, 2020 at 7:57 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> Some already present users may utilize resource_union() helper.
-> Provide it for them and for wider use in the future.
->
-> Deliberately avoid min()/max() macro as they are still parts of
-> kernel.h which is quite a burden to be included here in order
-> to avoid circular dependencies.
+> Since we have resource_union() helper, let's utilize it here.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 > Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
 > Cc: linux-pci@vger.kernel.org
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
 > ---
->  include/linux/ioport.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/acpi/pci_root.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index 0193987b9968..c98df0ec7422 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -232,6 +232,16 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
->         return (r1->start <= r2->end && r1->end >= r2->start);
->  }
->
-> +static inline bool
-> +resource_union(struct resource *r1, struct resource *r2, struct resource *r)
-> +{
-> +       if (!resource_overlaps(r1, r2))
-> +               return false;
-
-I tend to add empty lines after return statements like this to make
-them more clearly visible.
-
-> +       r->start = r2->start < r1->start ? r2->start : r1->start;
-> +       r->end = r2->end > r1->end ? r2->end : r1->end;
-
-Well, what about using min() and max() here?
-
-> +       return true;
-> +}
-> +
->  /* Convenience shorthand with allocation */
->  #define request_region(start,n,name)           __request_region(&ioport_resource, (start), (n), (name), 0)
->  #define request_muxed_region(start,n,name)     __request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index f90e841c59f5..2a6a741896de 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -724,9 +724,7 @@ static void acpi_pci_root_validate_resources(struct device *dev,
+>                          * our resources no longer match the ACPI _CRS, but
+>                          * the kernel resource tree doesn't allow overlaps.
+>                          */
+> -                       if (resource_overlaps(res1, res2)) {
+> -                               res2->start = min(res1->start, res2->start);
+> -                               res2->end = max(res1->end, res2->end);
+> +                       if (resource_union(res1, res2, res2)) {
+>                                 dev_info(dev, "host bridge window expanded to %pR; %pR ignored\n",
+>                                          res2, res1);
+>                                 free = true;
 > --
 > 2.28.0
 >
