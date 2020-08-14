@@ -2,128 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94BD424447B
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 07:22:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22A322444E1
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 08:11:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgHNFWh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 01:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgHNFWh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Aug 2020 01:22:37 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580D2C061757
-        for <linux-pci@vger.kernel.org>; Thu, 13 Aug 2020 22:22:37 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d188so4007106pfd.2
-        for <linux-pci@vger.kernel.org>; Thu, 13 Aug 2020 22:22:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=pOwR0DFf1OQDKNYmtGdPOfJcNQgrHnTbjvvzAVpgXD4=;
-        b=aBKEJWOH3xxlQ+lEBRBnJIRTQbDc/QaVVZCf5iOatu5c3Jm12VkVJ299xIKe3xZF9H
-         jTyoh0J/qJ+cBH8DwXCEhycV33ASTPjP3/cfgIQe2Cka9DjYEUQz0BLOjsz83SPzBNL+
-         5g0OYG/GxC9j7vP+fObICyt8pV1tzKkVXqKQaFJvUHKQe1KfVqFvCwO/qcrxozSodTpj
-         OJ2kHjy/FIaReJ8e+giaDEgOkFaTRVIFBmxae/ASbuJ+vTpag7NhpUt+USoto3godWxs
-         C+T9AXtGpGJlTwWB7somyjP1fgW38Fz9IMXXlcH2q9CZ9zAJIOb+0FMLZI+9ImClXqzt
-         AxHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=pOwR0DFf1OQDKNYmtGdPOfJcNQgrHnTbjvvzAVpgXD4=;
-        b=PrfQdLpv7RlDX/C2b1C32D6MT1lN5YINTh5YhV1/vxrvcCk206jOl3QHd52KQGHbLh
-         gX2rntwWCfNOrbXLrJIfHVYB27um74Va2c8R+yQ5cUS2dHEufTWGmGYXPpjM1k1kesha
-         jzQ3wEZwUY/KSIZXUvpkkDOCJln4cJ5wUQZIQ6SMnkrH275bIuVyeUS1RerVKQUyIweT
-         igM1qtlemR/6wagXfb9knhvpaL6eIX/6kYuIemrP6MP2ldjU5E2IUlC67GCBLf2Md1Rs
-         0/gkdhBPYYQ3YeyYoHE2kFpMMk92XSKnLh8aX6VNKWR99bS+X/ouNUdYuaNsz5p/O0nl
-         cBGA==
-X-Gm-Message-State: AOAM533wKBauOSM2ELNijoBF5DII2APAcVEMJ76PDiv5ZtOVP2lJjjVZ
-        0JpXy8Sgcj5xEN1sxIRBzq0=
-X-Google-Smtp-Source: ABdhPJys8IOnzzZmKH5LWPS2o4yr2lTBVt/1S8dNps2A6BwiBINJrTUIv2IPFas/1P8ebr7loHUzwg==
-X-Received: by 2002:a62:1b0e:: with SMTP id b14mr624183pfb.281.1597382556724;
-        Thu, 13 Aug 2020 22:22:36 -0700 (PDT)
-Received: from localhost.localdomain (194-193-34-182.tpgi.com.au. [194.193.34.182])
-        by smtp.googlemail.com with ESMTPSA id j94sm7072461pje.44.2020.08.13.22.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 22:22:36 -0700 (PDT)
-Message-ID: <7a9f64ecf56effc2771f1a8a0d48ff32741ff091.camel@gmail.com>
-Subject: VFs and the rescan/remove lock
-From:   Oliver O'Halloran <oohall@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>
-Date:   Fri, 14 Aug 2020 15:22:30 +1000
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        id S1726151AbgHNGLJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 02:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgHNGLI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Aug 2020 02:11:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B0B20708;
+        Fri, 14 Aug 2020 06:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597385468;
+        bh=sXqxn17Ji4agz3DcSXOOpYy8haJnA9Hug1dQgMfh6LA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fjkvJBkNFtRmFsrkuQO3mQq9UPvk/L+JCX3yfli0s3CgT/bnDh+LDirmFLmjNxLBk
+         4myKFL0kMUEsAvSY7GF/d7xVQy9P8IjZKuSfS2CwEsSs2qMMi6Z94COImcbBbttqBu
+         llok/yhehuEZmnKBjdiAuUdk8J3ehd3s5APM7W0Q=
+Date:   Fri, 14 Aug 2020 08:11:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, robh@kernel.org,
+        wahrenst@gmx.net, p.zabel@pengutronix.de,
+        andy.shevchenko@gmail.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
+Message-ID: <20200814061105.GG1409566@kroah.com>
+References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+ <a6aecb7a4d270cb23430d25850c85a332555af55.camel@suse.de>
+ <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello PCI friends,
+On Thu, Aug 13, 2020 at 12:17:49PM -0700, Florian Fainelli wrote:
+> 
+> 
+> On 8/13/2020 3:01 AM, Nicolas Saenz Julienne wrote:
+> > Hi everyone.
+> > 
+> > On Mon, 2020-06-29 at 18:18 +0200, Nicolas Saenz Julienne wrote:
+> > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+> > > loaded directly from an EEPROM or, if not present, by the SoC's
+> > > co-processor, VideoCore. This series reworks how we handle this.
+> > > 
+> > > The previous solution makes use of PCI quirks and exporting platform
+> > > specific functions. Albeit functional it feels pretty shoehorned. This
+> > > proposes an alternative way of handling the triggering of the xHCI chip
+> > > initialization trough means of a reset controller.
+> > > 
+> > > The benefits are pretty evident: less platform churn in core xHCI code,
+> > > and no explicit device dependency management in pcie-brcmstb.
+> > > 
+> > > Note that patch #1 depends on another series[1], that was just applied
+> > > into the clk maintainer's tree.
+> > > 
+> > > The series is based on v5.8-rc3
+> > > 
+> > > v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
+> > > v2: https://lkml.org/lkml/2020/6/9/875
+> > > v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
+> > > 
+> > > [1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
+> > > 
+> > > ---
+> > 
+> > We were waiting on a dependency to be merged upstream to get this. They are now
+> > in, so could we move things forward?
+> > 
+> > I can take the device tree patches, I guess philipp can take the reset
+> > controller code. But I'm not so sure who should be taking the PCI/USB
+> > counterparts.
+> 
+> Should we route everything through the USB tree since that is where the
+> changes that do require synchronization with other subsystems and DTS is
+> needed the most?
+> -- 
+> Florian
 
-I've been looking at cleaning up the powerpc PCI error recovery (EEH) paths and
-noticed some interesting locking in eeh_rmv_device(). Pruning the surrounding
-EEH gunk leaves us with:
-
-if (edev->physfn) {
-	pci_iov_remove_virtfn(edev->physfn, edev->vf_index);
-} else {
-	pci_lock_rescan_remove();
-	pci_stop_and_remove_bus_device(edev->pdev);
-	pci_unlock_rescan_remove();
-}
-
-So for normal devices we're doing the right thing and taking the rescan
-lock and for VFs we aren't. pci_iov_remove_virtfn() uses
-pci_stop_and_remove_bus_device() internally so I figure it should have the
-same locking requirements.
-
-This was pointed out about two years ago while discussing a patch[1] from
-Keith to fix the same problem in sriov_numvfs_store(), which also
-doesn't take the rescan lock. That case and EEH case above are simple
-enough to fix since they can be wrapped in an lock / unlock pair. What is
-less easy to fix are when VFs are manipulated in the a driver's .probe()
-and .remove() methods.
-
-When a device is first scanned we try to attach a driver in
-pci_bus_add_device(). In that context the driver's .probe() will be
-called with the rescan lock held. If we attach a driver at a later point
-(sysfs bind, module load, or deferred probe) the .probe() function is
-called without the rescan lock being held. Admittedly, enabling VFs in
-.probe() is pretty unconventional and Bjorn pointed out in [1] there's
-only a handful of drivers which do this. Unfortunately, the removal
-path has the same issue.
-
-If a device is removed using pci_stop_and_remove_bus_device() (sysfs
-remove, hot-unplug, EEH recovery) then .remove() is called with the lock
-held. If a driver is unbound "normally" via sysfs then .remove() is called
-without the lock held. Unlike the probe case tearing down VFs in .remove()
-seems to be pretty universal among PF drivers. IMO it's the correct thing
-for a PF driver to be doing too so I'm not sure what to do about this.
-
-The Linux mutex API doesn't permit recursive locking or provide a way to
-check if the executing thread owns the lock so we can't just add a hack
-the to sriov_enable() / sriov_disable() to take the lock if needed.
-Recursion and ownership checking for mutexes is implemented in the kernel,
-but it's not part of the public API. I figure we probably shouldn't try
-abuse those features :) The best we have is a way to test if the mutex is
-locked by someone (possibly not us) and that's of limited use here.
-
-IMO we probably want to change how attaching/detaching drivers works so
-we can guarantee that the rescan lock won't be held when the driver
-functions are called. That would allow us to have sriov_enable() /
-sriov_disable() take the rescan lock when they need it. That will
-probably cause some churn since we'd need to ensure drivers are
-detached seperately to removing their devices, but I can't think of
-anything better. I'm open to other suggestions though.
-
-Oliver
-
-[1] https://patchwork.ozlabs.org/project/linux-pci/patch/20180809163356.18650-1-keith.busch@intel.com/
-
+That's fine with me, if everyone else is ok with it :)
