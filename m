@@ -2,95 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22A322444E1
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 08:11:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86096244647
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Aug 2020 10:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgHNGLJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Aug 2020 02:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60570 "EHLO mail.kernel.org"
+        id S1727053AbgHNIPc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Aug 2020 04:15:32 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46076 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgHNGLI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:11:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B0B20708;
-        Fri, 14 Aug 2020 06:11:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597385468;
-        bh=sXqxn17Ji4agz3DcSXOOpYy8haJnA9Hug1dQgMfh6LA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fjkvJBkNFtRmFsrkuQO3mQq9UPvk/L+JCX3yfli0s3CgT/bnDh+LDirmFLmjNxLBk
-         4myKFL0kMUEsAvSY7GF/d7xVQy9P8IjZKuSfS2CwEsSs2qMMi6Z94COImcbBbttqBu
-         llok/yhehuEZmnKBjdiAuUdk8J3ehd3s5APM7W0Q=
-Date:   Fri, 14 Aug 2020 08:11:05 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de,
-        andy.shevchenko@gmail.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
-Message-ID: <20200814061105.GG1409566@kroah.com>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
- <a6aecb7a4d270cb23430d25850c85a332555af55.camel@suse.de>
- <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
+        id S1726050AbgHNIPc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:15:32 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0631B1A0372;
+        Fri, 14 Aug 2020 10:15:31 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 384A61A0366;
+        Fri, 14 Aug 2020 10:15:27 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 36E9B402A8;
+        Fri, 14 Aug 2020 10:15:22 +0200 (CEST)
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        amurray@thegoodpenguin.co.uk, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCH] PCI: designware-ep: Fix the Header Type check
+Date:   Fri, 14 Aug 2020 16:08:13 +0800
+Message-Id: <20200814080813.8070-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 12:17:49PM -0700, Florian Fainelli wrote:
-> 
-> 
-> On 8/13/2020 3:01 AM, Nicolas Saenz Julienne wrote:
-> > Hi everyone.
-> > 
-> > On Mon, 2020-06-29 at 18:18 +0200, Nicolas Saenz Julienne wrote:
-> > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> > > loaded directly from an EEPROM or, if not present, by the SoC's
-> > > co-processor, VideoCore. This series reworks how we handle this.
-> > > 
-> > > The previous solution makes use of PCI quirks and exporting platform
-> > > specific functions. Albeit functional it feels pretty shoehorned. This
-> > > proposes an alternative way of handling the triggering of the xHCI chip
-> > > initialization trough means of a reset controller.
-> > > 
-> > > The benefits are pretty evident: less platform churn in core xHCI code,
-> > > and no explicit device dependency management in pcie-brcmstb.
-> > > 
-> > > Note that patch #1 depends on another series[1], that was just applied
-> > > into the clk maintainer's tree.
-> > > 
-> > > The series is based on v5.8-rc3
-> > > 
-> > > v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
-> > > v2: https://lkml.org/lkml/2020/6/9/875
-> > > v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
-> > > 
-> > > [1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
-> > > 
-> > > ---
-> > 
-> > We were waiting on a dependency to be merged upstream to get this. They are now
-> > in, so could we move things forward?
-> > 
-> > I can take the device tree patches, I guess philipp can take the reset
-> > controller code. But I'm not so sure who should be taking the PCI/USB
-> > counterparts.
-> 
-> Should we route everything through the USB tree since that is where the
-> changes that do require synchronization with other subsystems and DTS is
-> needed the most?
-> -- 
-> Florian
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-That's fine with me, if everyone else is ok with it :)
+The current check will result in the multiple function device
+fails to initialize. So fix the check by masking out the
+multiple function bit.
+
+Fixes: 0b24134f7888 ("PCI: dwc: Add validation that PCIe core is set to correct mode")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 4680a51c49c0..4b7abfb1e669 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -654,7 +654,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ 	int i;
+ 
+ 	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+-	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
++	if (hdr_type & 0x7f != PCI_HEADER_TYPE_NORMAL) {
+ 		dev_err(pci->dev,
+ 			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+ 			hdr_type);
+-- 
+2.17.1
+
