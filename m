@@ -2,92 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57BD824541B
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Aug 2020 00:12:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 635622454DF
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Aug 2020 01:22:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbgHOWMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 Aug 2020 18:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41794 "EHLO mail.kernel.org"
+        id S1728032AbgHOXWb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 15 Aug 2020 19:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbgHOWK2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:10:28 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726021AbgHOXWa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 15 Aug 2020 19:22:30 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDA6D20773;
-        Sat, 15 Aug 2020 12:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739D82065C;
+        Sat, 15 Aug 2020 23:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597495886;
-        bh=dwHjwC8GiChPu67IbBCb6Ypn7HuxNZ4cqMQsl04lslg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/R4wtUnbTIYAx3BaALrwOrakrpNSuLBsmGVH2WZFIO6EmqnHDgxBjPSx5cu6vn0F
-         D4GqHDerBcH7cE1HSubCkreBnggluVbZCvEVAjCaAePCbi5PPdEbJ7tNlgeDs4UEsT
-         7+bplO4I190caNSk7lhZGj2Zv6aWWl1GiJsFNcgU=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6vee-002Kds-BL; Sat, 15 Aug 2020 13:51:24 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        s=default; t=1597533749;
+        bh=SB9wxVHgt3m7T/tEhx/Oa+YJt9VN49b1ddeU7NMOvEk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aVN9qcq6cqmxvD4IsLLewly56VryrzoOr3d3eGSPE1tXpVvGPQOKs97rPBlll36uG
+         7bM0cxwtJTA4bjf/rGTjcr8A0Xrcoy9KS/l92ag5S/On003FKZrPumPtta4UJtBrD7
+         ghyyujWRbGVHMF1kSphFqAtvcGhXkHRpnPPnx+L8=
+Date:   Sat, 15 Aug 2020 18:22:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com
-Subject: [PATCH 2/2] arm64: dts: rockchip: Fix PCIe DT properties
-Date:   Sat, 15 Aug 2020 13:51:12 +0100
-Message-Id: <20200815125112.462652-3-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200815125112.462652-1-maz@kernel.org>
-References: <20200815125112.462652-1-maz@kernel.org>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Roh Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com
+Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
+ property in DT
+Message-ID: <20200815232228.GA1325245@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815125112.462652-2-maz@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It recently became apparent that the lack of a 'device_type = "pci"'
-in the PCIe root complex node for rk3399 is a violation of the PCI
-binding, as documented in IEEE Std 1275-1994. Changes to the kernel's
-parsing of the DT made such violation fatal, as drivers cannot
-probe the controller anymore.
+On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
+> Recent changes to the DT PCI bus parsing made it mandatory for
+> device tree nodes describing a PCI controller to have the
+> 'device_type = "pci"' property for the node to be matched.
+> 
+> Although this follows the letter of the specification, it
+> breaks existing device-trees that have been working fine
+> for years.  Rockchip rk3399-based systems are a prime example
+> of such collateral damage, and have stopped discovering their
+> PCI bus.
+> 
+> In order to paper over the blunder, let's add a workaround
+> to the pcie-rockchip driver, adding the missing property when
+> none is found at boot time. A warning will hopefully nudge the
+> user into updating their DT to a fixed version if they can, but
+> the insentive is obviously pretty small.
 
-Add the missing property makes the PCIe node compliant. While we
-are at it, drop the pointless linux,pci-domain property, which only
-makes sense when there are multiple host bridges.
+s/insentive/incentive/ (Lorenzo or I can fix this up)
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> Suggested-by: Roh Herring <robh+dt@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index ada724b12f01..a80fc4d563b5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -231,6 +231,7 @@ pcie0: pcie@f8000000 {
- 		reg = <0x0 0xf8000000 0x0 0x2000000>,
- 		      <0x0 0xfd000000 0x0 0x1000000>;
- 		reg-names = "axi-base", "apb-base";
-+		device_type = "pci";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		#interrupt-cells = <1>;
-@@ -249,7 +250,6 @@ pcie0: pcie@f8000000 {
- 				<0 0 0 2 &pcie0_intc 1>,
- 				<0 0 0 3 &pcie0_intc 2>,
- 				<0 0 0 4 &pcie0_intc 3>;
--		linux,pci-domain = <0>;
- 		max-link-speed = <1>;
- 		msi-map = <0x0 &its 0x0 0x1000>;
- 		phys = <&pcie_phy 0>, <&pcie_phy 1>,
--- 
-2.27.0
+s/Roh/Rob/ (similarly)
 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+This looks like a candidate for v5.9, since 2f96593ecc37 was merged
+during the v5.9 merge window, right?
+
+I wonder how many other DTs are similarly broken?  Maybe Rob's DT
+checker has already looked?
+
+> ---
+>  drivers/pci/controller/pcie-rockchip-host.c | 29 +++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 0bb2fb3e8a0b..d7dd04430a99 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -949,6 +949,35 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  	if (!dev->of_node)
+>  		return -ENODEV;
+>  
+> +	/*
+> +	 * Most rk3399 DTs are missing the 'device_type = "pci"' property,
+> +	 * potentially leading to PCIe probing failure. Be kind to the
+> +	 * users and fix it up for them. Upgrading is recommended.
+> +	 */
+> +	if (!of_find_property(dev->of_node, "device_type", NULL)) {
+> +		const char dtype[] = "pci";
+> +		struct property *prop;
+> +
+> +		dev_warn(dev, "Working around missing device_type property\n");
+> +
+> +		prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+> +		if (!prop)
+> +			return -ENOMEM;
+> +
+> +		prop->name	= kstrdup("device_type", GFP_KERNEL);
+> +		prop->value	= kstrdup(dtype, GFP_KERNEL);
+> +		prop->length	= ARRAY_SIZE(dtype);
+> +		if (!prop->name || !prop->value) {
+> +			kfree(prop->name);
+> +			kfree(prop->value);
+> +			kfree(prop);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		if (of_add_property(dev->of_node, prop))
+> +			dev_warn(dev, "Failed to add property, probing may fail");
+> +	}
+> +
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rockchip));
+>  	if (!bridge)
+>  		return -ENOMEM;
+> -- 
+> 2.27.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
