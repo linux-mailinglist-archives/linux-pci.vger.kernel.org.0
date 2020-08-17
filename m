@@ -2,138 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16245246F84
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Aug 2020 19:48:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45B59246EAC
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Aug 2020 19:34:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389578AbgHQRsQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Aug 2020 13:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
+        id S1731140AbgHQReY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Aug 2020 13:34:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:23627 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388746AbgHQQNM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:12 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E72C820882;
-        Mon, 17 Aug 2020 16:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680791;
-        bh=gOa0eYxDEsJl2GQzrDLlhSJ5bJ/ZSXUtDonvSlh0ISI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vLRATeCcDCX/WCszaMIH4H6QE5Q8qaxo+6lOPhJY3rU/qC3/KnPHOgpGDtINee7Gq
-         VcWIayKF3Q5vcKl+04xcwMH7/dbSBKTxAP7wJHZxqdCIaZTaY9H7oqkp8AkQMziwc8
-         C466cFsSL7D9DSNpN4oisiuWqbgpp5MlAwUUJYj4=
-Received: by mail-ot1-f43.google.com with SMTP id h22so13818866otq.11;
-        Mon, 17 Aug 2020 09:13:10 -0700 (PDT)
-X-Gm-Message-State: AOAM531NhY7Wt0pAoz/CGBobj3yGVukH2RMWCgIJe/MsLh2Zs4iCYRgU
-        XEGus4Y64M0JWEZhp8O1r0TWjGYLEjztDfWyJw==
-X-Google-Smtp-Source: ABdhPJyXcxsLxb+WyZgDqUvX+ZXB5O5RvpOgmleI0+UY8O6F4IJdy3paAveojUJFPRMuv9DQhsNQTGig0iW3qRkFcQI=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr11916864otp.192.1597680790121;
- Mon, 17 Aug 2020 09:13:10 -0700 (PDT)
+        id S2388854AbgHQQhR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:37:17 -0400
+IronPort-SDR: q+rzcPlq90Auq/aRPLAqlDPeH5GJT3VVQz+mWjVNSDqeJKKzsh40NnKWiSgkCOSaD7WCgZTn4L
+ Kl0jiT2yyU3Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216269420"
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="216269420"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 09:36:50 -0700
+IronPort-SDR: 6VDQ7tEzI4M1L/xzj1ckwh8odXomutyoBpGCJ9nkA6cYDqM3x0JDySAeufqtdAIucOWs7C+VAH
+ M8OATdHytvbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="296541466"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 17 Aug 2020 09:36:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D68BA250; Mon, 17 Aug 2020 19:36:47 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v2 4/8] resource: Introduce resource_union() for overlapping resources
+Date:   Mon, 17 Aug 2020 19:36:43 +0300
+Message-Id: <20200817163647.48982-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817163647.48982-1-andriy.shevchenko@linux.intel.com>
+References: <20200817163647.48982-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200815125112.462652-2-maz@kernel.org> <20200815232228.GA1325245@bjorn-Precision-5520>
- <87pn7qnabq.wl-maz@kernel.org>
-In-Reply-To: <87pn7qnabq.wl-maz@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 17 Aug 2020 10:12:58 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
-Message-ID: <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
- property in DT
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 4:40 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> On Sun, 16 Aug 2020 00:22:28 +0100,
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
-> > > Recent changes to the DT PCI bus parsing made it mandatory for
-> > > device tree nodes describing a PCI controller to have the
-> > > 'device_type = "pci"' property for the node to be matched.
-> > >
-> > > Although this follows the letter of the specification, it
-> > > breaks existing device-trees that have been working fine
-> > > for years.  Rockchip rk3399-based systems are a prime example
-> > > of such collateral damage, and have stopped discovering their
-> > > PCI bus.
-> > >
-> > > In order to paper over the blunder, let's add a workaround
-> > > to the pcie-rockchip driver, adding the missing property when
-> > > none is found at boot time. A warning will hopefully nudge the
-> > > user into updating their DT to a fixed version if they can, but
-> > > the insentive is obviously pretty small.
-> >
-> > s/insentive/incentive/ (Lorenzo or I can fix this up)
-> >
-> > > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> > > Suggested-by: Roh Herring <robh+dt@kernel.org>
-> >
-> > s/Roh/Rob/ (similarly)
->
-> Clearly not my day when it comes to proofreading commit messages.
-> Thanks for pointing this out, and in advance for fixing it up.
->
-> >
-> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> >
-> > This looks like a candidate for v5.9, since 2f96593ecc37 was merged
-> > during the v5.9 merge window, right?
->
-> Absolutely.
->
-> > I wonder how many other DTs are similarly broken?  Maybe Rob's DT
-> > checker has already looked?
->
-> I've just managed to run the checker, which comes up with all kinds of
-> goodies. Apart from the above, it also spots the following:
->
-> - arch/arm64/boot/dts/mediatek/mt7622.dtsi: Has a device_type property
->   in its main PCIe node, but not in the child nodes. It isn't obvious
->   to me whether that's a violation or not (the spec doesn't say
->   whether the property should be set on a per-port basis). Rob?
+Some already present users may utilize resource_union() helper.
+Provide it for them and for wider use in the future.
 
-The rule is bridge nodes should have 'device_type = "pci"'. But what's
-needed to fix these cases is setting device_type where we are parsing
-ranges or dma-ranges which we're not doing on the child ndes.
-Otherwise, I don't think it matters in this case unless you have child
-(grandchild here) nodes for PCI devices. If you did have child nodes,
-the address translation was already broken before this change.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+---
+v2: reused min/max (Rafael)
+ include/linux/ioport.h | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-> - arch/arm64/boot/dts/qcom/msm8996.dtsi: Only one out of the three
->   PCIe nodes has the device_type property, probably broken similarly
->   to rk3399.
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 50fed618d3fb..a7d50b9a3406 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -10,9 +10,10 @@
+ #define _LINUX_IOPORT_H
+ 
+ #ifndef __ASSEMBLY__
++#include <linux/bits.h>
+ #include <linux/compiler.h>
++#include <linux/minmax.h>
+ #include <linux/types.h>
+-#include <linux/bits.h>
+ /*
+  * Resources are tree-like, allowing
+  * nesting etc..
+@@ -232,6 +233,16 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
+        return r1->start <= r2->end && r1->end >= r2->start;
+ }
+ 
++static inline bool
++resource_union(struct resource *r1, struct resource *r2, struct resource *r)
++{
++	if (!resource_overlaps(r1, r2))
++		return false;
++	r->start = min(r1->start, r2->start);
++	r->end = max(r1->end, r2->end);
++	return true;
++}
++
+ /* Convenience shorthand with allocation */
+ #define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
+ #define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
+-- 
+2.28.0
 
-The only upstream board is DB820c, so probably not as wide an impact...
-
-There are also 92 (lots of duplicates due to multiple boards) more
-cases in arch/arm/. A log is here[1].
-
-> I could move the workaround to drivers/pci/of.c, and have it called
-> from the individual drivers. I don't have the HW to test those though.
->
-> Thoughts?
-
-I think we should go with my other suggestion of looking at the node
-name. Looks like just checking 'pcie' is enough. We can skip 'pci' as
-I don't see any cases.
-
-Rob
-
-[1] https://gitlab.com/robherring/linux-dt-bindings/-/jobs/688752562
