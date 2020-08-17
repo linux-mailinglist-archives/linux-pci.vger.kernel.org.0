@@ -2,93 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FDC82477AF
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Aug 2020 21:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B2492477D2
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Aug 2020 22:01:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgHQTv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Aug 2020 15:51:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48558 "EHLO mail.kernel.org"
+        id S1729159AbgHQUBu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Aug 2020 16:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbgHQTvz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:51:55 -0400
+        id S1729118AbgHQUBu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Aug 2020 16:01:50 -0400
 Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0766320658;
-        Mon, 17 Aug 2020 19:51:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFBB4204EC;
+        Mon, 17 Aug 2020 20:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597693912;
-        bh=0rp3HaYyrFqjqOgeBKmXfxkTYZRRN21khxtx5T7t3kM=;
+        s=default; t=1597694509;
+        bh=v/fyguDJgngMm4D7i8RenkD4TNEW+1PlLNlPWyhPCMA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=svuShRSH9NtUvVZYhoTJxgYctTstz9KTB/SbGbCiWgit7JKJxQbK5mZO8LXoJHoaw
-         S4+9fQEsC4V7UBo4p3vOPLNBvtHp/DEDq191ohqem6L8yjfMlZOFdavskrONrzmfuC
-         lzg3NBqcbzJU4fZMC00WsmTJdtjtfnHGfXUYNCXA=
-Date:   Mon, 17 Aug 2020 14:51:50 -0500
+        b=HgNGlfQuhDucmukwOltDYSq8Cr51/e0tYsvwbQaCFdB4G0jwq8kyxoudqo7kV+erE
+         A/ROK83tkaAUJUlxhOby0oA0wkIpLg4i0JGJom9ho0BSX93an/0/JxJYL/ces7lhXx
+         XNNOqkKDDT98Jj7RnoFIMnFOzMvpI4Bm3laiUvZQ=
+Date:   Mon, 17 Aug 2020 15:01:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     logang@deltatee.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] PCI/P2PDMA: fix build without dma ops
-Message-ID: <20200817195150.GA1437811@bjorn-Precision-5520>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: Drop pcibios_pm_ops from the PCI subsystem
+Message-ID: <20200817200147.GA1438651@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810124843.1532738-1-hch@lst.de>
+In-Reply-To: <20200730194416.1029509-1-vaibhavgupta40@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 02:48:43PM +0200, Christoph Hellwig wrote:
-> My commit to make dma ops support optional missed the reference in
-> the p2pdma code.  And while the build bot didn't manage to find a config
-> where this can happen, Matthew did.  Fix this by replacing two IS_ENABLED
-> checks with ifdefs.
+On Fri, Jul 31, 2020 at 01:14:16AM +0530, Vaibhav Gupta wrote:
+> The "struct dev_pm_ops pcibios_pm_ops", declared in include/linux/pci.h and
+> defined in drivers/pci/pci-driver.c, provided arch-specific hooks when a
+> PCI device was doing a hibernate transisiton.
 > 
-> Fixes: 2f9237d4f6d ("dma-mapping: make support for dma ops optional")
-> Reported-by: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Although it lost its last usage after
+> 394216275c7d ("s390: remove broken hibernate / power management support")
+> patch.
+> 
+> After that, instances of it are found only in drivers/pci/pci-driver.c and
+> include/linux/pci.h, which are now unnecessary. Thus it is safe and
+> reasonable to remove even that.
+> 
+> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 
-Applied with Logan's reviewed-by to for-linus for v5.9, thanks!
+Applied to pci/pm for v5.10, thanks!
 
 > ---
->  drivers/pci/p2pdma.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>  drivers/pci/pci-driver.c | 24 ------------------------
+>  include/linux/pci.h      |  4 ----
+>  2 files changed, 28 deletions(-)
 > 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 64ebed129dbf5f..f357f9a32b3a57 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -556,13 +556,14 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
->  		return -1;
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index da6510af1221..0bebbdf85be8 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -966,12 +966,6 @@ static int pci_pm_resume(struct device *dev)
 >  
->  	for (i = 0; i < num_clients; i++) {
-> -		if (IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
-> -		    clients[i]->dma_ops == &dma_virt_ops) {
-> +#ifdef CONFIG_DMA_VIRT_OPS
-> +		if (clients[i]->dma_ops == &dma_virt_ops) {
->  			if (verbose)
->  				dev_warn(clients[i],
->  					 "cannot be used for peer-to-peer DMA because the driver makes use of dma_virt_ops\n");
->  			return -1;
->  		}
-> +#endif
+>  #ifdef CONFIG_HIBERNATE_CALLBACKS
 >  
->  		pci_client = find_parent_pci_dev(clients[i]);
->  		if (!pci_client) {
-> @@ -842,9 +843,10 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
->  	 * this should never happen because it will be prevented
->  	 * by the check in pci_p2pdma_distance_many()
->  	 */
-> -	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
-> -			 dev->dma_ops == &dma_virt_ops))
-> +#ifdef CONFIG_DMA_VIRT_OPS
-> +	if (WARN_ON_ONCE(dev->dma_ops == &dma_virt_ops))
->  		return 0;
-> +#endif
+> -/*
+> - * pcibios_pm_ops - provide arch-specific hooks when a PCI device is doing
+> - * a hibernate transition
+> - */
+> -struct dev_pm_ops __weak pcibios_pm_ops;
+> -
+>  static int pci_pm_freeze(struct device *dev)
+>  {
+>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+> @@ -1030,9 +1024,6 @@ static int pci_pm_freeze_noirq(struct device *dev)
 >  
->  	for_each_sg(sg, s, nents, i) {
->  		paddr = sg_phys(s);
+>  	pci_pm_set_unknown_state(pci_dev);
+>  
+> -	if (pcibios_pm_ops.freeze_noirq)
+> -		return pcibios_pm_ops.freeze_noirq(dev);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1042,12 +1033,6 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>  	int error;
+>  
+> -	if (pcibios_pm_ops.thaw_noirq) {
+> -		error = pcibios_pm_ops.thaw_noirq(dev);
+> -		if (error)
+> -			return error;
+> -	}
+> -
+>  	/*
+>  	 * The pm->thaw_noirq() callback assumes the device has been
+>  	 * returned to D0 and its config state has been restored.
+> @@ -1171,9 +1156,6 @@ static int pci_pm_poweroff_noirq(struct device *dev)
+>  
+>  	pci_fixup_device(pci_fixup_suspend_late, pci_dev);
+>  
+> -	if (pcibios_pm_ops.poweroff_noirq)
+> -		return pcibios_pm_ops.poweroff_noirq(dev);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1183,12 +1165,6 @@ static int pci_pm_restore_noirq(struct device *dev)
+>  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>  	int error;
+>  
+> -	if (pcibios_pm_ops.restore_noirq) {
+> -		error = pcibios_pm_ops.restore_noirq(dev);
+> -		if (error)
+> -			return error;
+> -	}
+> -
+>  	pci_pm_default_resume_early(pci_dev);
+>  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 34c1c4f45288..c4900975041c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2034,10 +2034,6 @@ int pcibios_alloc_irq(struct pci_dev *dev);
+>  void pcibios_free_irq(struct pci_dev *dev);
+>  resource_size_t pcibios_default_alignment(void);
+>  
+> -#ifdef CONFIG_HIBERNATE_CALLBACKS
+> -extern struct dev_pm_ops pcibios_pm_ops;
+> -#endif
+> -
+>  #if defined(CONFIG_PCI_MMCONFIG) || defined(CONFIG_ACPI_MCFG)
+>  void __init pci_mmcfg_early_init(void);
+>  void __init pci_mmcfg_late_init(void);
 > -- 
-> 2.28.0
+> 2.27.0
 > 
