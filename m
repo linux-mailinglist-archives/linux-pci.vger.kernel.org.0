@@ -2,127 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED94F2486B9
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Aug 2020 16:09:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4659924874F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Aug 2020 16:23:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgHROJ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Aug 2020 10:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHROJ0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Aug 2020 10:09:26 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8F7C061389;
-        Tue, 18 Aug 2020 07:09:25 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l2so18406503wrc.7;
-        Tue, 18 Aug 2020 07:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1H2yOHeG6qsldeZpoyc2sz7sMJshfjbS1b8gZKRx98Y=;
-        b=jiEOFlujIONfp3NsuPDQRxhggX67lZRgtm1FlIVKeSOqATb5V31ZYHVr3DR37JNiwl
-         Anqx/RkRSGwmNHjOcjr4dLGi4XANj5Ezf5JBhYwObSiJKvAg033ZQ/gaxzc9hHjN195I
-         lClOJqR70hNEt0beS5Y8JILTPR49xNoWIZjG2RBC6uUT0y4L41R1wZJyXQRi0PE9DYwz
-         l1GGIx58h4ul20GqBWe+bREP0afY0y522dCXM0ars4vTFUT9pGiXuqLkIZE58z11PJBG
-         oUH6f9JQ68R1sSXkgwo+2lNSCAI8lVt807P+6e6DupMlPtiefVULfci/WybApzDkrI2Z
-         7Flw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1H2yOHeG6qsldeZpoyc2sz7sMJshfjbS1b8gZKRx98Y=;
-        b=sEtiJGX5FRm+0pYkIBq7BrZj7C5K4zaDpmrRFDUy+TQJzN3ynhXIx9FdXrniMtCdom
-         Qvy3/MW5RtpvOBVXzQIyx6nxxLPWt3/rzGxomfXVCD7Cmoh1gII9nNKlLBSb8emHqEkt
-         rbLgOK/e0M9arzkXhm7/WaF11fHF/OOZk/AgIoOb+FXWQJyW4HNvP2YrobQZr9WStr4m
-         BHBa2asdu+XO2HO3wCyi9TQyvkW7Wjl9vhb1lxIoJHOO4nLcbi8Br9TK+RGD1cS82eRk
-         SZ1Ca8CueY5mCr++9KbRnXuLvy43DOO8gZ2jSh2WWmcyrJXJEJtnT7RtaiV7ldV9wWO+
-         SHfA==
-X-Gm-Message-State: AOAM5303UPl3pdHZfBbeGU91Im+k/UO9LTKdBp9Trl94WIExNwhjggtU
-        MaCj/2vYlfE+coS/2wG9uTc=
-X-Google-Smtp-Source: ABdhPJzuOGcRH65pQQhWEPOum5p4OObacHriBq62kw/b4exT9sD7ZnV8iohBJO6BMKN2IE56kRzmdw==
-X-Received: by 2002:adf:ed0c:: with SMTP id a12mr20170776wro.24.1597759764468;
-        Tue, 18 Aug 2020 07:09:24 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id b7sm31979036wrs.67.2020.08.18.07.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 07:09:23 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 16:09:21 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: no need to check return value of
- debugfs_create functions
-Message-ID: <20200818140921.GA814860@ulmo>
-References: <20200818133739.463193-1-gregkh@linuxfoundation.org>
+        id S1726569AbgHROXv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Aug 2020 10:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbgHROXg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:23:36 -0400
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0585220786;
+        Tue, 18 Aug 2020 14:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597760616;
+        bh=+GOujhHAY+gAEigj74Monf6Mzd+lgkl+g0F3Tv3WS8o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=URvpGZeB90KNMmrakNX0199Z+p6eJK53RHlpKE8iE+cnXzL6kGjr0FV70wFlRDu0b
+         +4iIc5cxrXz4PPqUbVLnwGreeJ9OPV2INoNFJYHssg+lFDduRK2D990Zji5oSQG8mm
+         r73S8S0ktI7fb8elJGj03MMRXYlceUxXz4PW8kQw=
+Received: by mail-oo1-f48.google.com with SMTP id z11so4182621oon.5;
+        Tue, 18 Aug 2020 07:23:35 -0700 (PDT)
+X-Gm-Message-State: AOAM532MU8Uw9JQfb3/Z+jyhuluhrppxh35Y7A2apLxlVPNynDVSzc5b
+        aVfBw+t9S+d0grKESJiVEMRxgGFjBvknJl63jA==
+X-Google-Smtp-Source: ABdhPJx/OxIxzT0i2pOqWVTEd+J0VZRhMCUcmr0cGzPYOXpagNM4BQrXXTT1e4HT0/tDAhSgVCFIOUZ0yyBT/uxJqAc=
+X-Received: by 2002:a4a:a60a:: with SMTP id e10mr15069228oom.25.1597760615266;
+ Tue, 18 Aug 2020 07:23:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
-Content-Disposition: inline
-In-Reply-To: <20200818133739.463193-1-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+References: <20200815125112.462652-2-maz@kernel.org> <20200815232228.GA1325245@bjorn-Precision-5520>
+ <87pn7qnabq.wl-maz@kernel.org> <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
+ <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org>
+In-Reply-To: <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 18 Aug 2020 08:23:23 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
+Message-ID: <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
+ property in DT
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Aug 18, 2020 at 1:35 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2020-08-17 17:12, Rob Herring wrote:
+> > On Sun, Aug 16, 2020 at 4:40 AM Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On Sun, 16 Aug 2020 00:22:28 +0100,
+> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >> >
+> >> > On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
+> >> > > Recent changes to the DT PCI bus parsing made it mandatory for
+> >> > > device tree nodes describing a PCI controller to have the
+> >> > > 'device_type = "pci"' property for the node to be matched.
+> >> > >
+> >> > > Although this follows the letter of the specification, it
+> >> > > breaks existing device-trees that have been working fine
+> >> > > for years.  Rockchip rk3399-based systems are a prime example
+> >> > > of such collateral damage, and have stopped discovering their
+> >> > > PCI bus.
+> >> > >
+> >> > > In order to paper over the blunder, let's add a workaround
+> >> > > to the pcie-rockchip driver, adding the missing property when
+> >> > > none is found at boot time. A warning will hopefully nudge the
+> >> > > user into updating their DT to a fixed version if they can, but
+> >> > > the insentive is obviously pretty small.
+> >> >
+> >> > s/insentive/incentive/ (Lorenzo or I can fix this up)
+> >> >
+> >> > > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> >> > > Suggested-by: Roh Herring <robh+dt@kernel.org>
+> >> >
+> >> > s/Roh/Rob/ (similarly)
+> >>
+> >> Clearly not my day when it comes to proofreading commit messages.
+> >> Thanks for pointing this out, and in advance for fixing it up.
+> >>
+> >> >
+> >> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> >> >
+> >> > This looks like a candidate for v5.9, since 2f96593ecc37 was merged
+> >> > during the v5.9 merge window, right?
+> >>
+> >> Absolutely.
+> >>
+> >> > I wonder how many other DTs are similarly broken?  Maybe Rob's DT
+> >> > checker has already looked?
+> >>
+> >> I've just managed to run the checker, which comes up with all kinds of
+> >> goodies. Apart from the above, it also spots the following:
+> >>
+> >> - arch/arm64/boot/dts/mediatek/mt7622.dtsi: Has a device_type property
+> >>   in its main PCIe node, but not in the child nodes. It isn't obvious
+> >>   to me whether that's a violation or not (the spec doesn't say
+> >>   whether the property should be set on a per-port basis). Rob?
+> >
+> > The rule is bridge nodes should have 'device_type = "pci"'. But what's
+> > needed to fix these cases is setting device_type where we are parsing
+> > ranges or dma-ranges which we're not doing on the child ndes.
+> > Otherwise, I don't think it matters in this case unless you have child
+> > (grandchild here) nodes for PCI devices. If you did have child nodes,
+> > the address translation was already broken before this change.
+>
+> Fair enough.
+>
+> >> - arch/arm64/boot/dts/qcom/msm8996.dtsi: Only one out of the three
+> >>   PCIe nodes has the device_type property, probably broken similarly
+> >>   to rk3399.
+> >
+> > The only upstream board is DB820c, so probably not as wide an impact...
+> >
+> > There are also 92 (lots of duplicates due to multiple boards) more
+> > cases in arch/arm/. A log is here[1].
+>
+> Mostly Broadcom stuff, apparently. I'll see if I can have a stab
+> at it (although someone will have to test it).
+>
+> >
+> >> I could move the workaround to drivers/pci/of.c, and have it called
+> >> from the individual drivers. I don't have the HW to test those though.
+> >>
+> >> Thoughts?
+> >
+> > I think we should go with my other suggestion of looking at the node
+> > name. Looks like just checking 'pcie' is enough. We can skip 'pci' as
+> > I don't see any cases.
+>
+> I really dislike it.
+>
+> Once we put this node name matching in, there is no incentive for
+> people to write their DT correctly at all. It also sound pretty
+> fragile (what if the PCIe node is named something else?).
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That would require 2 wrongs. Both missing device_type and wrong node
+name. You could still warn if we matched on node name.
 
-On Tue, Aug 18, 2020 at 03:37:39PM +0200, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
->=20
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Vidya Sagar <vidyas@nvidia.com>
-> Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 20 +++++------------
->  drivers/pci/controller/pci-tegra.c         | 25 +++++-----------------
->  2 files changed, 10 insertions(+), 35 deletions(-)
+This is just one possible error out of thousands. It's not the
+kernel's job to validate DTs (if it is, we're doing a horrible job).
+We have a solution for this with schema. The question is how to get to
+the point the schema checks are part of the main build flow. The
+primary issue is just getting to some platforms being warning free,
+and then they could opt in. There's effort around some platforms
+(Rockchip is not one), but I think we have a ways to go. The other
+aspect is what's the coverage with the schema. There's 2900 remaining
+bindings to convert to schema. We're doing about 100-200 a cycle, so
+that's what the next ~5 years looks like for me. :(
 
-Looks good to me:
+> My preference goes towards having point fixes in the affected drivers,
+> clearly showing that this is addressing a firmware bug.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+I didn't filter down how many drivers all the failures equates to in
+terms of drivers. I guess all of Broadcom is just one. If you want to
+fixup all the drivers, then I'm fine with that.
 
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl874Q8ACgkQ3SOs138+
-s6EPYhAAiOKXbVExfZ5GF1JdSWf/MtDFL//RZskjZAr4Qt2mz45OBpoOSLNz5ZxT
-kY8TAAiQXmIB8SvO1CeMYbJhX9yZKZHdTq9PsPwH7D9ReJ/G6wr18HFQCsmZru+v
-MvoUUz77VPh21olmyPr5k53OOwNb/8HSf3JAWuide4a6dZB+DfxE1LXZFjtMLRYl
-oqsQV3tiCRqcw9O+nsAkTrEbw5Kj2n1PN2E8QxgSX/YsVRW695obVMBVJkmpX67W
-ly1/a7rVhvNfvZD3nkYPtcG8/deJ87w9/ztckn4gsGyg77PH/qlWQLmXcwMPCG+Q
-wt5+tdeN9HKwrVQcL7NKUOW0unFCeSYFliwTc4//LqCLg/3ZdHnuuqeaQmXCtxnG
-biOlDzgn3GoaUBBKaQ1x3wgb09fgfsnJP2Rboe6Jm2pYeVT7w6F0IHoZH2gqLPHr
-MRj71MZGyrQrivsI7cLk5nhWlyOl4HTguD762djx9p+gi+Gf8MXKUIrWiM0A+hj5
-WJYfZ0IUpFaLpBZRK+WrpVUU+qe+ZkwKQWDPq9t3YZcxvBhsjEEtrA/heEDLX5xq
-/A41Qj97BirCtqLj/RDYhCaGqAFl5Xk7bHESRiHakB8UFVwi+uk+d2QyH8vhQUwL
-9wERatxDfRdHK0fMSg2AtpLTYljlVlBcEqTY2aCf9qbSAeB+51Q=
-=cp7x
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
+Rob
