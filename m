@@ -2,158 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71666248E6E
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Aug 2020 21:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBC5A248F38
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Aug 2020 22:00:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHRTHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Aug 2020 15:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgHRTHF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:07:05 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72D1620772;
-        Tue, 18 Aug 2020 19:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597777624;
-        bh=55pVwpT0xEtPZVEROShTJ0Uc3arN8xwipdI+p/ChKAM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=quvDvkQpVKXStBOSmRMymOqkLwjWtVzNRoBo4xkbhmnR3elsXvxbmTGTA8NpwwlfS
-         AbbVotQBwANhm/JVXvB5O2+9aGEBU8FJKQspBEEl88rUic9O2BlQY6SFLI1PRUq/Pr
-         YNsu8AlgTVEui/hPehzU9/pe0Ye0hliUlPyxSUp4=
-Received: by mail-oi1-f181.google.com with SMTP id k4so18884839oik.2;
-        Tue, 18 Aug 2020 12:07:04 -0700 (PDT)
-X-Gm-Message-State: AOAM531AhpRGDQ0xkKLA0of7So9qZLt/mYXwL/2cmLGd0sPpfwMVAKC9
-        Cmw+R62PenBORyZ6RYgQGOxpnJbkMwpOa1lxQA==
-X-Google-Smtp-Source: ABdhPJy0LflVo0MIWnhHUiGwo2npwXpKDh8efjVZ0OkgXzrN+b7fkI66kwoECSvpC/NEsckpFvqnjd3FkrDbH5HAa5Y=
-X-Received: by 2002:aca:190c:: with SMTP id l12mr1083286oii.147.1597777623829;
- Tue, 18 Aug 2020 12:07:03 -0700 (PDT)
+        id S1726673AbgHRUAE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Aug 2020 16:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgHRUAC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Aug 2020 16:00:02 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 041E0C061342
+        for <linux-pci@vger.kernel.org>; Tue, 18 Aug 2020 13:00:02 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 62so19479937qkj.7
+        for <linux-pci@vger.kernel.org>; Tue, 18 Aug 2020 13:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/ZDCPDwW9euB1yf1r32n/nOxApA5CLlHLcrrfHIoPe0=;
+        b=mY9/qM2MC8h80QmH/L2o3ebU+oUQNUCW63wm7YBmbeK4YBE5Xe3Rjqtwof4g90Gl5j
+         Nashil2BSJxW/GC+DcTms+MTs3zm8+LkClOf/U2jUP/YJlxAmvLXG+Y1SxzjQuQdOmRe
+         FaeRrNHm7nBp0Ire6IgS6r1s0gdLxjr1afa0E+smJ3xN4nEInrIvlWBT7CW0TEmor1mO
+         FIgviwqTSYceSMveg047w1orQVPvufjnGz94qi/TKhCr8AbTj6GPs3BxF/aFHmnO4n+M
+         XlWMZtYVdzdVxOkWy4H/ual/TZMNFFmE2xwQGOV4ybgkF4mcBltQ5wgUueSnWH61nlUt
+         zm4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/ZDCPDwW9euB1yf1r32n/nOxApA5CLlHLcrrfHIoPe0=;
+        b=o/7M08hHS2IOC3NfenKDv/9PyHu1WHy7BsDun3VyVJ4FsRto6SZzHYrX03jm/JL7EW
+         nlXgS3pbX1tfpWT2UriJFoPXEAA5EVP5iD8MvRxZTGFT9UQ2ewIZtnfvB9Z8M34AH4V1
+         P5cuJ8PuPrxIfAI0f312FSfJu0ELPeudN4FzobOXZMUI17UNveNvGclkODAtcRrfDs3X
+         onZjGVxRUAjMaXIsATeJT7C8RUtwaghpwVY5OxOVKrcZRjMZvu67Htpbk/sDtlIRAz3I
+         Bkbbf7v4aDF5QlV9fx4Q78mVIHBfgA12vgNzj/vjKpdO5bVFZ2hX7PaE43jcakMDMlZh
+         +09Q==
+X-Gm-Message-State: AOAM530tqy2oBd7TpqO6W7iecT32yYbROcsIXxIiSOgaB+9aymdzwsSD
+        KWMMY7+J1JehAA36lB+RlB6KWGOPK6wOcnYHTqaMtA==
+X-Google-Smtp-Source: ABdhPJzURAYX1VluYbg81khU/4BFMEQ5XggeNrYg7amfOd007KJmuQPkzQNHuZnA3kRR7pjm2ZwfV6zrZkG75TYorqc=
+X-Received: by 2002:a37:a495:: with SMTP id n143mr19146148qke.330.1597780801253;
+ Tue, 18 Aug 2020 13:00:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200815125112.462652-2-maz@kernel.org> <20200815232228.GA1325245@bjorn-Precision-5520>
- <87pn7qnabq.wl-maz@kernel.org> <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
- <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org> <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
- <72c10e43023289b9a4c36226fe3fd5d9@kernel.org> <CAGETcx-hkz8fyAHuhRi=JhBFu4YUmL2UpHfgs7doLHK-RdKA0A@mail.gmail.com>
- <d6f0894a81c645d66480310cd741a44e@kernel.org>
-In-Reply-To: <d6f0894a81c645d66480310cd741a44e@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Aug 2020 13:06:51 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLMqbGBKsh=0BuTUxhf5g6qC0TsOWK+xX8DdxpEGAbG5w@mail.gmail.com>
-Message-ID: <CAL_JsqLMqbGBKsh=0BuTUxhf5g6qC0TsOWK+xX8DdxpEGAbG5w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
- property in DT
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Android Kernel Team <kernel-team@android.com>
+References: <20200801112446.149549-1-refactormyself@gmail.com> <20200801112446.149549-9-refactormyself@gmail.com>
+In-Reply-To: <20200801112446.149549-9-refactormyself@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 18 Aug 2020 21:59:50 +0200
+Message-ID: <CAMpxmJX8SV6RTgy4vKNRPzKvnVaJZpZKQmOf1pX1wGd+H2zaeA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/17] gpio: Drop uses of pci_read_config_*() return value
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 1:03 PM Marc Zyngier <maz@kernel.org> wrote:
+On Sat, Aug 1, 2020 at 2:24 PM Saheed O. Bolarinwa
+<refactormyself@gmail.com> wrote:
 >
-> On 2020-08-18 18:48, Saravana Kannan wrote:
-> > On Tue, Aug 18, 2020 at 10:34 AM Marc Zyngier <maz@kernel.org> wrote:
+> The return value of pci_read_config_*() may not indicate a device error.
+> However, the value read by these functions is more likely to indicate
+> this kind of error. This presents two overlapping ways of reporting
+> errors and complicates error checking.
 >
-> [...]
+> It is possible to move to one single way of checking for error if the
+> dependency on the return value of these functions is removed, then it
+> can later be made to return void.
 >
-> >> OK. So how about something like this?
-> >>
-> >> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> >> index 590493e04b01..a7a6ee599b14 100644
-> >> --- a/drivers/of/address.c
-> >> +++ b/drivers/of/address.c
-> >> @@ -134,9 +134,13 @@ static int of_bus_pci_match(struct device_node
-> >> *np)
-> >>          * "pciex" is PCI Express
-> >>          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
-> >>          * "ht" is hypertransport
-> >> +        *
-> >> +        * If none of the device_type match, and that the node name is
-> >> +        * "pcie", accept the device as PCI (with a warning).
-> >>          */
-> >>         return of_node_is_type(np, "pci") || of_node_is_type(np,
-> >> "pciex") ||
-> >> -               of_node_is_type(np, "vci") || of_node_is_type(np,
-> >> "ht");
-> >> +               of_node_is_type(np, "vci") || of_node_is_type(np,
-> >> "ht") ||
-> >> +               WARN_ON_ONCE(of_node_name_eq(np, "pcie"));
-> >
-> > I don't think we need the _ONCE. Otherwise, it'd warn only for the
-> > first device that has this problem.
+> Remove all uses of the return value of pci_read_config_*().
+> Check the actual value read for ~0. In this case, ~0 is an invalid
+> value thus it indicates some kind of error.
 >
-> Because probing devices doesn't necessarily occur once. Case in point,
-> it takes *10 to 15* attempts for a rk3399 system such as mine to finally
-> probe its PCIe device, thanks to the wonderful -EPROBE_DEFER.
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
+> ---
+>  drivers/gpio/gpio-amd8111.c |  7 +++++--
+>  drivers/gpio/gpio-rdc321x.c | 21 ++++++++++++---------
+>  2 files changed, 17 insertions(+), 11 deletions(-)
 >
-> Do I want to see the same stack trace 10 (or more) times? No.
+> diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
+> index fdcebe59510d..7b9882380cbc 100644
+> --- a/drivers/gpio/gpio-amd8111.c
+> +++ b/drivers/gpio/gpio-amd8111.c
+> @@ -198,9 +198,12 @@ static int __init amd_gpio_init(void)
+>         goto out;
 >
-> > How about?
-> > WARN(of_node_name_eq(np, "pcie"), "Missing device type in %pOF", np)
-> >
-> > That'll even tell them which node is bad.
->
-> I explained my objections above. Spitting out the device node is
-> useful, but there is no need to be exhaustive (if you're in a
-> position to fix the DT, you can track all the broken instances
-> for your device easily).
->
-> I'm actually minded to tone it down even more, because the stack
-> trace is meaningless to most users. See below for a revised patch.
-
-LGTM.
-
->          M.
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 590493e04b01..b37bd9cc2810 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -128,15 +128,29 @@ static unsigned int of_bus_pci_get_flags(const
-> __be32 *addr)
->    * PCI bus specific translator
->    */
->
-> +static bool of_node_is_pcie(struct device_node *np)
-> +{
-> +       bool is_pcie = of_node_name_eq(np, "pcie");
+>  found:
+> -       err = pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> -       if (err)
+> +       pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> +       if (gp.pmbase == (u32)~0) {
+> +               err = -ENODEV;
+>                 goto out;
+> +       }
 > +
-> +       if (is_pcie)
-> +               pr_warn_once("%pOF: Missing device_type\n", np);
-> +
-> +       return is_pcie;
-> +}
-> +
->   static int of_bus_pci_match(struct device_node *np)
->   {
->         /*
->          * "pciex" is PCI Express
->          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
->          * "ht" is hypertransport
-> +        *
-> +        * If none of the device_type match, and that the node name is
-> +        * "pcie", accept the device as PCI (with a warning).
->          */
->         return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
-> -               of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
-> +               of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
-> +               of_node_is_pcie(np);
->   }
+>         err = -EIO;
+>         gp.pmbase &= 0x0000FF00;
+>         if (gp.pmbase == 0)
+> diff --git a/drivers/gpio/gpio-rdc321x.c b/drivers/gpio/gpio-rdc321x.c
+> index 01ed2517e9fd..03f1ff07b844 100644
+> --- a/drivers/gpio/gpio-rdc321x.c
+> +++ b/drivers/gpio/gpio-rdc321x.c
+> @@ -85,10 +85,13 @@ static int rdc_gpio_config(struct gpio_chip *chip,
+>         gpch = gpiochip_get_data(chip);
 >
->   static void of_bus_pci_count_cells(struct device_node *np,
+>         spin_lock(&gpch->lock);
+> -       err = pci_read_config_dword(gpch->sb_pdev, gpio < 32 ?
+> -                       gpch->reg1_ctrl_base : gpch->reg2_ctrl_base, &reg);
+> -       if (err)
+> +       pci_read_config_dword(gpch->sb_pdev,
+> +                               (gpio < 32) ? gpch->reg1_ctrl_base
+> +                                       : gpch->reg2_ctrl_base, &reg);
+> +       if (reg == (u32)~0) {
+> +               err = -ENODEV;
+>                 goto unlock;
+> +       }
 >
+>         reg |= 1 << (gpio & 0x1f);
+>
+> @@ -166,17 +169,17 @@ static int rdc321x_gpio_probe(struct platform_device *pdev)
+>         /* This might not be, what others (BIOS, bootloader, etc.)
+>            wrote to these registers before, but it's a good guess. Still
+>            better than just using 0xffffffff. */
+> -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+>                                         rdc321x_gpio_dev->reg1_data_base,
+>                                         &rdc321x_gpio_dev->data_reg[0]);
+> -       if (err)
+> -               return err;
+> +       if (rdc321x_gpio_dev->data_reg[0] == (u32)~0)
+> +               return -ENODEV;
+>
+> -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+>                                         rdc321x_gpio_dev->reg2_data_base,
+>                                         &rdc321x_gpio_dev->data_reg[1]);
+> -       if (err)
+> -               return err;
+> +       if (rdc321x_gpio_dev->data_reg[1] == (u32)~0)
+> +               return -ENODEV;
+>
+>         dev_info(&pdev->dev, "registering %d GPIOs\n",
+>                                         rdc321x_gpio_dev->chip.ngpio);
 > --
-> Jazz is not dead. It just smells funny...
+> 2.18.4
+>
+
+Bjorn,
+
+I don't know the pci sub-system at all. Does this look good to you?
+
+Bartosz
