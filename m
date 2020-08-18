@@ -2,118 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D54247F51
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Aug 2020 09:24:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62954247F93
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Aug 2020 09:36:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgHRHYT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Aug 2020 03:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgHRHYS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Aug 2020 03:24:18 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B959C061389;
-        Tue, 18 Aug 2020 00:24:18 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id x10so10824032ybj.13;
-        Tue, 18 Aug 2020 00:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HmoQCZpGaKbIsYS8+rvFpQeHNY5B2Hi6SrMeFT5bb98=;
-        b=GLEHCiCChrPivNJbmyGftlp3kKltoTTqQa0tA2ZPntqqIrTYG5p5BC7XOo+bkkvFXc
-         h07xzo32mFj+5EyR+HxvTynASwrNLzu29gqeCvFDgcfM6+fGXn7it8nyXfS1NOsSU2IE
-         R7cpDqr2jKz3WLdS3niS1oE0D8lpn+G5scmCp2T0Q6cqbPEtOcXaqpVnPsU6xopZCNQ1
-         /6LrtwfCBslzAlNMqz39FjY8c8anTv0oWKAWWyr4KofvMkZQOykKBDZqxu387ogYyZrC
-         s5NcAdArrPTA0lu0Cd8apu/RdsvKz2QATaeZWXh9NxGeoddjFvjSvUfqzes7r6MzRCzH
-         dV1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HmoQCZpGaKbIsYS8+rvFpQeHNY5B2Hi6SrMeFT5bb98=;
-        b=bXgkQFSbvNWNEdjOeK96IyvdRHA4LkaCY2TS9PKktkOOQf0lWqLTSp9tcN9vKr9Snk
-         ITDeH3IUsrLLMuNROiH9z6YN5tn3mUBQtJtqMsFa9OMhMPzi9bPqI3P6+lNQbuFkbaBd
-         zjCpb3eKU7+FTRTutUX1+2KV2om25IrFlNV+3aH8n7jicIB7Sd9P6NwS2+ybyJ2UUl8h
-         mIFLPBIdHsc+GTjk2Sjg14hJmwVl1/TQDJvrjxYKc+uGVDJtq/cIVaxa4+KTr71N4wz6
-         LClWYQwDblEH62sTJZU8fauL6gbzNeQynb+alaJQzp2VQHqz4gFXiqRwAZUdM1prk5RZ
-         MqRA==
-X-Gm-Message-State: AOAM531ToJMUXJD2TgBYZgjcVtw6BMAkw2hQk6sP261fWoa200Zpl/ye
-        g/pATTY7BbO18Qcjf2SotWWo9xS/AxlpbT3QdK0=
-X-Google-Smtp-Source: ABdhPJzCDvUjiPWK649tyEh566910nzut2TlASPlTv0REFfFarykk7m1GFizATC9HgE6RSovRKmc3BBmUiq3wT1GcQU=
-X-Received: by 2002:a25:5384:: with SMTP id h126mr6977055ybb.445.1597735456307;
- Tue, 18 Aug 2020 00:24:16 -0700 (PDT)
+        id S1726391AbgHRHf7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Aug 2020 03:35:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbgHRHf5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:35:57 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 012B72075E;
+        Tue, 18 Aug 2020 07:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597736157;
+        bh=FSflGG563MojbZsMsPV+BFtE2GMuiClJfxAeRJzUuWk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Rzu34fbstVr+KAaOvT8HP8j/3BLkFv/Vcs1C9A+4dmJ2xFWgth4FGUk5mmHVXSYOE
+         IyB2jD+s7MusjkMTmGFNXJlUWzvvDYMvKu9a6UniNFZmoBC9cUy5JJANjpChQdNS2s
+         6v3G/H+ZOKigLTAyGj5YBosyb5j25OJ8syXNsmjg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k7w9z-003pem-8P; Tue, 18 Aug 2020 08:35:55 +0100
 MIME-Version: 1.0
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <fcabccab-54fb-8b8a-7034-9b0da9d32339@gmail.com>
-In-Reply-To: <fcabccab-54fb-8b8a-7034-9b0da9d32339@gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 18 Aug 2020 08:23:49 +0100
-Message-ID: <CA+V-a8v74fkzE8SYaaA5Wg=NT_mdgjNLTd0nha=UbHEC0pw0UA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 08:35:55 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
+ property in DT
+In-Reply-To: <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
+References: <20200815125112.462652-2-maz@kernel.org>
+ <20200815232228.GA1325245@bjorn-Precision-5520>
+ <87pn7qnabq.wl-maz@kernel.org>
+ <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: robh@kernel.org, helgaas@kernel.org, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, heiko@sntech.de, shawn.lin@rock-chips.com, bhelgaas@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sergei,
+On 2020-08-17 17:12, Rob Herring wrote:
+> On Sun, Aug 16, 2020 at 4:40 AM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> On Sun, 16 Aug 2020 00:22:28 +0100,
+>> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> >
+>> > On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
+>> > > Recent changes to the DT PCI bus parsing made it mandatory for
+>> > > device tree nodes describing a PCI controller to have the
+>> > > 'device_type = "pci"' property for the node to be matched.
+>> > >
+>> > > Although this follows the letter of the specification, it
+>> > > breaks existing device-trees that have been working fine
+>> > > for years.  Rockchip rk3399-based systems are a prime example
+>> > > of such collateral damage, and have stopped discovering their
+>> > > PCI bus.
+>> > >
+>> > > In order to paper over the blunder, let's add a workaround
+>> > > to the pcie-rockchip driver, adding the missing property when
+>> > > none is found at boot time. A warning will hopefully nudge the
+>> > > user into updating their DT to a fixed version if they can, but
+>> > > the insentive is obviously pretty small.
+>> >
+>> > s/insentive/incentive/ (Lorenzo or I can fix this up)
+>> >
+>> > > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+>> > > Suggested-by: Roh Herring <robh+dt@kernel.org>
+>> >
+>> > s/Roh/Rob/ (similarly)
+>> 
+>> Clearly not my day when it comes to proofreading commit messages.
+>> Thanks for pointing this out, and in advance for fixing it up.
+>> 
+>> >
+>> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> >
+>> > This looks like a candidate for v5.9, since 2f96593ecc37 was merged
+>> > during the v5.9 merge window, right?
+>> 
+>> Absolutely.
+>> 
+>> > I wonder how many other DTs are similarly broken?  Maybe Rob's DT
+>> > checker has already looked?
+>> 
+>> I've just managed to run the checker, which comes up with all kinds of
+>> goodies. Apart from the above, it also spots the following:
+>> 
+>> - arch/arm64/boot/dts/mediatek/mt7622.dtsi: Has a device_type property
+>>   in its main PCIe node, but not in the child nodes. It isn't obvious
+>>   to me whether that's a violation or not (the spec doesn't say
+>>   whether the property should be set on a per-port basis). Rob?
+> 
+> The rule is bridge nodes should have 'device_type = "pci"'. But what's
+> needed to fix these cases is setting device_type where we are parsing
+> ranges or dma-ranges which we're not doing on the child ndes.
+> Otherwise, I don't think it matters in this case unless you have child
+> (grandchild here) nodes for PCI devices. If you did have child nodes,
+> the address translation was already broken before this change.
 
-Thank you for the review.
+Fair enough.
 
-On Sat, Aug 15, 2020 at 9:45 AM Sergei Shtylyov
-<sergei.shtylyov@gmail.com> wrote:
->
-> Hello!
->
-> On 14.08.2020 20:30, Lad Prabhakar wrote:
->
-> > Add PCIe EP nodes to R8A774A1 (RZ/G2M) SoC dtsi.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> >   arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 38 +++++++++++++++++++++++
-> >   1 file changed, 38 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> > index a603d947970e..50e9ed16a36d 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> > @@ -2369,6 +2369,44 @@
-> >                       status = "disabled";
-> >               };
-> >
-> > +             pciec0_ep: pcie_ep@fe000000 {
->
->     Hyphens are preferred over underscores in the node/prop names.
->
-> [...]> +                pciec1_ep: pcie_ep@ee800000 {
->
->     Ditto, should be "pci-ep@ee800000".
->
-My bad will fix that in v2.
+>> - arch/arm64/boot/dts/qcom/msm8996.dtsi: Only one out of the three
+>>   PCIe nodes has the device_type property, probably broken similarly
+>>   to rk3399.
+> 
+> The only upstream board is DB820c, so probably not as wide an impact...
+> 
+> There are also 92 (lots of duplicates due to multiple boards) more
+> cases in arch/arm/. A log is here[1].
 
-Cheers,
-Prabhakar
+Mostly Broadcom stuff, apparently. I'll see if I can have a stab
+at it (although someone will have to test it).
 
-> [...]
->
-> MBR, Sergei
+> 
+>> I could move the workaround to drivers/pci/of.c, and have it called
+>> from the individual drivers. I don't have the HW to test those though.
+>> 
+>> Thoughts?
+> 
+> I think we should go with my other suggestion of looking at the node
+> name. Looks like just checking 'pcie' is enough. We can skip 'pci' as
+> I don't see any cases.
+
+I really dislike it.
+
+Once we put this node name matching in, there is no incentive for
+people to write their DT correctly at all. It also sound pretty
+fragile (what if the PCIe node is named something else?).
+
+My preference goes towards having point fixes in the affected drivers,
+clearly showing that this is addressing a firmware bug.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
