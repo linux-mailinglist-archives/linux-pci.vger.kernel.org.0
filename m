@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E91C9249D03
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 13:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD6A5249D00
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 13:59:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgHSL7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1728476AbgHSL7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 19 Aug 2020 07:59:19 -0400
-Received: from mga17.intel.com ([192.55.52.151]:31803 "EHLO mga17.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:50012 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbgHSL7N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1728357AbgHSL7N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 19 Aug 2020 07:59:13 -0400
-IronPort-SDR: yHw3ZwBnEmCkLaPo/LX8AVe2sU/KdiWDAkGCaK8dS2YGBHNPEus8HfCkVYsyjJi1bVmgN0TOpM
- SvFxakRfr+YA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="135160284"
+IronPort-SDR: DLQJhcqScln7J7x0Z09Qul6nInTS5H2qXfGnBmMEYrpJHEXAmi7wpc3Pruks6dHLC8EgBMo5nl
+ E33YSXaHgW6g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="155060155"
 X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="135160284"
+   d="scan'208";a="155060155"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 04:59:10 -0700
-IronPort-SDR: nxi/5AY/23BGtTBP5/pHeITqLiRkcnCFR+WljHGgHaq95cDGgK+GQ2RtjcVvqXw47tF8sWQAWo
- kqq06Rwa5Szg==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 04:59:10 -0700
+IronPort-SDR: jlJ1sNCxmI3NEFOl3iykLMYBESZ9h6W1Un94eLawz7S9fIFbNuDcnWkTcDLVHNNVDlVlCDPQB8
+ n30go2nRjGMg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="497212550"
+   d="scan'208";a="279686688"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Aug 2020 04:59:07 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2020 04:59:07 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 5A4C326A; Wed, 19 Aug 2020 14:59:06 +0300 (EEST)
+        id 69B84371; Wed, 19 Aug 2020 14:59:06 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -43,9 +43,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Len Brown <lenb@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 02/19] thunderbolt: Optimize NHI LC mailbox command processing
-Date:   Wed, 19 Aug 2020 14:58:48 +0300
-Message-Id: <20200819115905.59834-3-mika.westerberg@linux.intel.com>
+Subject: [PATCH 03/19] thunderbolt: Software CM only should set force power in Tiger Lake
+Date:   Wed, 19 Aug 2020 14:58:49 +0300
+Message-Id: <20200819115905.59834-4-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
 References: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
@@ -56,38 +56,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rajmohan Mani <rajmohan.mani@intel.com>
+When Software CM is running it should not send any NHI mailbox command
+during PM flows. Only force power bit needs to be set and cleared so
+change Tiger Lake (well and Ice Lake) nhi_ops to take this into account.
 
-Currently the Ice Lake and Tiger Lake NHI (host controller) LC (link
-controller) mailbox command processing checks for the completion of
-command every 100 msecs. These controllers are found to complete this in
-the order of 1 ms or so. Since this delay is in suspend path, surplus
-delay is effectively affecting runtime PM suspend flows.
-
-Optimize this so that we do the wait for 1 ms after reading the mailbox
-register. This should make Ice Lake and Tiger Lake runtime suspend take
-less time to complete.
-
-Reported-by: Dana Alkattan <dana.alkattan@intel.com>
-Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/nhi_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thunderbolt/nhi_ops.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/thunderbolt/nhi_ops.c b/drivers/thunderbolt/nhi_ops.c
-index c0d5ccbb10f5..28583f9faf46 100644
+index 28583f9faf46..96da07e88c52 100644
 --- a/drivers/thunderbolt/nhi_ops.c
 +++ b/drivers/thunderbolt/nhi_ops.c
-@@ -97,7 +97,7 @@ static int icl_nhi_lc_mailbox_cmd_complete(struct tb_nhi *nhi, int timeout)
- 		pci_read_config_dword(nhi->pdev, VS_CAP_18, &data);
- 		if (data & VS_CAP_18_DONE)
- 			goto clear;
--		msleep(100);
-+		usleep_range(1000, 1100);
- 	} while (time_before(jiffies, end));
+@@ -121,31 +121,38 @@ static void icl_nhi_set_ltr(struct tb_nhi *nhi)
  
- 	return -ETIMEDOUT;
+ static int icl_nhi_suspend(struct tb_nhi *nhi)
+ {
++	struct tb *tb = pci_get_drvdata(nhi->pdev);
+ 	int ret;
+ 
+ 	if (icl_nhi_is_device_connected(nhi))
+ 		return 0;
+ 
+-	/*
+-	 * If there is no device connected we need to perform both: a
+-	 * handshake through LC mailbox and force power down before
+-	 * entering D3.
+-	 */
+-	icl_nhi_lc_mailbox_cmd(nhi, ICL_LC_PREPARE_FOR_RESET);
+-	ret = icl_nhi_lc_mailbox_cmd_complete(nhi, ICL_LC_MAILBOX_TIMEOUT);
+-	if (ret)
+-		return ret;
++	if (tb_switch_is_icm(tb->root_switch)) {
++		/*
++		 * If there is no device connected we need to perform
++		 * both: a handshake through LC mailbox and force power
++		 * down before entering D3.
++		 */
++		icl_nhi_lc_mailbox_cmd(nhi, ICL_LC_PREPARE_FOR_RESET);
++		ret = icl_nhi_lc_mailbox_cmd_complete(nhi, ICL_LC_MAILBOX_TIMEOUT);
++		if (ret)
++			return ret;
++	}
+ 
+ 	return icl_nhi_force_power(nhi, false);
+ }
+ 
+ static int icl_nhi_suspend_noirq(struct tb_nhi *nhi, bool wakeup)
+ {
++	struct tb *tb = pci_get_drvdata(nhi->pdev);
+ 	enum icl_lc_mailbox_cmd cmd;
+ 
+ 	if (!pm_suspend_via_firmware())
+ 		return icl_nhi_suspend(nhi);
+ 
++	if (!tb_switch_is_icm(tb->root_switch))
++		return 0;
++
+ 	cmd = wakeup ? ICL_LC_GO2SX : ICL_LC_GO2SX_NO_WAKE;
+ 	icl_nhi_lc_mailbox_cmd(nhi, cmd);
+ 	return icl_nhi_lc_mailbox_cmd_complete(nhi, ICL_LC_MAILBOX_TIMEOUT);
 -- 
 2.28.0
 
