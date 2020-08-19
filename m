@@ -2,156 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D823C249203
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 02:50:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A602492D7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 04:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgHSAuW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Aug 2020 20:50:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:49881 "EHLO mga05.intel.com"
+        id S1726632AbgHSCVe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Aug 2020 22:21:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbgHSAuV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:50:21 -0400
-IronPort-SDR: vuVZFP3O1NnO4WRNTOJzUOCDBRwk2Hd6cCdSryrEUn5rhF1yfTT0dT+1+RK1fJ3yDL0C7Nll5f
- r8O7NjWbPOMg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="239858347"
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="239858347"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 17:50:20 -0700
-IronPort-SDR: X0CUcLf+pQE/Y7V9anqxshd9eI14aMU5cYdntA8UyFgeF0jUUep6Dr1piJIBHYiQczruPNr2s7
- sGbo7DDD1t6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="310612097"
-Received: from lkp-server02.sh.intel.com (HELO 2f0d8b563e65) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 18 Aug 2020 17:50:19 -0700
-Received: from kbuild by 2f0d8b563e65 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k8CJ0-0001Wx-Fe; Wed, 19 Aug 2020 00:50:18 +0000
-Date:   Wed, 19 Aug 2020 08:49:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 7c2308f79fc81ba0bf24ccd2429fb483a91bcd51
-Message-ID: <5f3c770b.N7Q00lb5p5XJws9z%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726372AbgHSCVb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Aug 2020 22:21:31 -0400
+Received: from localhost (unknown [12.195.163.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFFB1205CB;
+        Wed, 19 Aug 2020 02:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597803691;
+        bh=tTd6dZ3NlZC+UPHZ2QtCzG/g0WugnXRx0IlELaokIjI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lIS6eyp32dSzoHIz4UfGjqqP6fNmQEYpSxugsDG+oeVbZEaZqRu3/FTcFEbY0q9IJ
+         nmIUcl4sGaBdlQTmPFiHCFlcYvgJtjcJR9+p24XQI2USYpI0UwPb/v/rKRjwIAAs48
+         qozQmKPP/dJIXgBunOp7RHJ3r42zO8ZNddv7aRDc=
+Date:   Tue, 18 Aug 2020 21:21:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC PATCH 08/17] gpio: Drop uses of pci_read_config_*() return
+ value
+Message-ID: <20200819022127.GA1496569@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJX8SV6RTgy4vKNRPzKvnVaJZpZKQmOf1pX1wGd+H2zaeA@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
-branch HEAD: 7c2308f79fc81ba0bf24ccd2429fb483a91bcd51  PCI/P2PDMA: Fix build without DMA ops
+On Tue, Aug 18, 2020 at 09:59:50PM +0200, Bartosz Golaszewski wrote:
+> On Sat, Aug 1, 2020 at 2:24 PM Saheed O. Bolarinwa
+> <refactormyself@gmail.com> wrote:
+> >
+> > The return value of pci_read_config_*() may not indicate a device error.
+> > However, the value read by these functions is more likely to indicate
+> > this kind of error. This presents two overlapping ways of reporting
+> > errors and complicates error checking.
+> >
+> > It is possible to move to one single way of checking for error if the
+> > dependency on the return value of these functions is removed, then it
+> > can later be made to return void.
+> >
+> > Remove all uses of the return value of pci_read_config_*().
+> > Check the actual value read for ~0. In this case, ~0 is an invalid
+> > value thus it indicates some kind of error.
+> >
+> > Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> > Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-amd8111.c |  7 +++++--
+> >  drivers/gpio/gpio-rdc321x.c | 21 ++++++++++++---------
+> >  2 files changed, 17 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
+> > index fdcebe59510d..7b9882380cbc 100644
+> > --- a/drivers/gpio/gpio-amd8111.c
+> > +++ b/drivers/gpio/gpio-amd8111.c
+> > @@ -198,9 +198,12 @@ static int __init amd_gpio_init(void)
+> >         goto out;
+> >
+> >  found:
+> > -       err = pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> > -       if (err)
+> > +       pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> > +       if (gp.pmbase == (u32)~0) {
+> > +               err = -ENODEV;
+> >                 goto out;
+> > +       }
+> > +
+> >         err = -EIO;
+> >         gp.pmbase &= 0x0000FF00;
+> >         if (gp.pmbase == 0)
+> > diff --git a/drivers/gpio/gpio-rdc321x.c b/drivers/gpio/gpio-rdc321x.c
+> > index 01ed2517e9fd..03f1ff07b844 100644
+> > --- a/drivers/gpio/gpio-rdc321x.c
+> > +++ b/drivers/gpio/gpio-rdc321x.c
+> > @@ -85,10 +85,13 @@ static int rdc_gpio_config(struct gpio_chip *chip,
+> >         gpch = gpiochip_get_data(chip);
+> >
+> >         spin_lock(&gpch->lock);
+> > -       err = pci_read_config_dword(gpch->sb_pdev, gpio < 32 ?
+> > -                       gpch->reg1_ctrl_base : gpch->reg2_ctrl_base, &reg);
+> > -       if (err)
+> > +       pci_read_config_dword(gpch->sb_pdev,
+> > +                               (gpio < 32) ? gpch->reg1_ctrl_base
+> > +                                       : gpch->reg2_ctrl_base, &reg);
+> > +       if (reg == (u32)~0) {
+> > +               err = -ENODEV;
+> >                 goto unlock;
+> > +       }
+> >
+> >         reg |= 1 << (gpio & 0x1f);
+> >
+> > @@ -166,17 +169,17 @@ static int rdc321x_gpio_probe(struct platform_device *pdev)
+> >         /* This might not be, what others (BIOS, bootloader, etc.)
+> >            wrote to these registers before, but it's a good guess. Still
+> >            better than just using 0xffffffff. */
+> > -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> > +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> >                                         rdc321x_gpio_dev->reg1_data_base,
+> >                                         &rdc321x_gpio_dev->data_reg[0]);
+> > -       if (err)
+> > -               return err;
+> > +       if (rdc321x_gpio_dev->data_reg[0] == (u32)~0)
+> > +               return -ENODEV;
+> >
+> > -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> > +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> >                                         rdc321x_gpio_dev->reg2_data_base,
+> >                                         &rdc321x_gpio_dev->data_reg[1]);
+> > -       if (err)
+> > -               return err;
+> > +       if (rdc321x_gpio_dev->data_reg[1] == (u32)~0)
+> > +               return -ENODEV;
+> >
+> >         dev_info(&pdev->dev, "registering %d GPIOs\n",
+> >                                         rdc321x_gpio_dev->chip.ngpio);
+> > --
+> > 2.18.4
+> >
+> 
+> Bjorn,
+> 
+> I don't know the pci sub-system at all. Does this look good to you?
 
-elapsed time: 1587m
+I wouldn't apply this at this point.  It's definitely true that when
+pci_read_config_dword() returns an error, it's likely an alignment
+problem or some other programming error, not an actual PCI error.
 
-configs tested: 94
-configs skipped: 6
+If an actual PCI error occurs (device failed to respond, transaction
+failed because of noise or electrical issue, etc),
+pci_read_config_dword() will *not* return an error; the data it reads,
+e.g., rdc321x_gpio_dev->data_reg[1], will be ~0.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+So with the current pci_read_config_dword() implementation, we really
+need to test *both* the return value and the read data to be
+completely, obsessively correct.  But that's really not practical,
+hence this RFC patch where we're considering getting rid of the return
+value and just making it set the read data to ~0 for all errors.
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                        apsh4ad0a_defconfig
-arm                            hisi_defconfig
-mips                      malta_kvm_defconfig
-sparc                            alldefconfig
-mips                       capcella_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                      tqm8xx_defconfig
-mips                        nlm_xlr_defconfig
-sh                          lboxre2_defconfig
-m68k                       m5208evb_defconfig
-mips                      pic32mzda_defconfig
-arm                   milbeaut_m10v_defconfig
-c6x                        evmc6472_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20200817
-i386                 randconfig-a005-20200817
-i386                 randconfig-a001-20200817
-i386                 randconfig-a005-20200818
-i386                 randconfig-a002-20200818
-i386                 randconfig-a001-20200818
-i386                 randconfig-a006-20200818
-i386                 randconfig-a003-20200818
-i386                 randconfig-a004-20200818
-x86_64               randconfig-a013-20200818
-x86_64               randconfig-a016-20200818
-x86_64               randconfig-a012-20200818
-x86_64               randconfig-a011-20200818
-x86_64               randconfig-a014-20200818
-x86_64               randconfig-a015-20200818
-i386                 randconfig-a016-20200818
-i386                 randconfig-a011-20200818
-i386                 randconfig-a015-20200818
-i386                 randconfig-a013-20200818
-i386                 randconfig-a012-20200818
-i386                 randconfig-a014-20200818
-i386                 randconfig-a016-20200817
-i386                 randconfig-a011-20200817
-i386                 randconfig-a013-20200817
-i386                 randconfig-a015-20200817
-i386                 randconfig-a014-20200817
-i386                 randconfig-a012-20200817
-x86_64               randconfig-a006-20200819
-x86_64               randconfig-a001-20200819
-x86_64               randconfig-a003-20200819
-x86_64               randconfig-a005-20200819
-x86_64               randconfig-a004-20200819
-x86_64               randconfig-a002-20200819
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+We might still get there someday, but we don't yet set the read data
+to ~0 on all errors, and if/when we do that, we should have some sort
+of descriptive macro that we can grep for instead of open-coding "~0"
+everywhere.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Bjorn
