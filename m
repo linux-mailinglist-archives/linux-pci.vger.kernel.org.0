@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E959249CFF
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 13:59:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E91C9249D03
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 13:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgHSL7S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Aug 2020 07:59:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:34054 "EHLO mga12.intel.com"
+        id S1728477AbgHSL7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Aug 2020 07:59:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:31803 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbgHSL7N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1728324AbgHSL7N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 19 Aug 2020 07:59:13 -0400
-IronPort-SDR: l/Vi+p/oYDFIQJwWbC5851F8JjEQnuFR0gtB1Y2dcbKHvvvjDDdn3MOvj/9K/deaTYGCWQ8nIn
- QBF+QwcqC7Pg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="134610550"
+IronPort-SDR: yHw3ZwBnEmCkLaPo/LX8AVe2sU/KdiWDAkGCaK8dS2YGBHNPEus8HfCkVYsyjJi1bVmgN0TOpM
+ SvFxakRfr+YA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="135160284"
 X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="134610550"
+   d="scan'208";a="135160284"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 04:59:10 -0700
-IronPort-SDR: 0WeEkQrRE1815QZ5UKWM7RLitpA5/2/UWF8TiRGsVS+Dr5XU01lFBN42/NXfcjuBBt0n1uPYcK
- myHhCWxaOYtA==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 04:59:10 -0700
+IronPort-SDR: nxi/5AY/23BGtTBP5/pHeITqLiRkcnCFR+WljHGgHaq95cDGgK+GQ2RtjcVvqXw47tF8sWQAWo
+ kqq06Rwa5Szg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="293095693"
+   d="scan'208";a="497212550"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 19 Aug 2020 04:59:07 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 19 Aug 2020 04:59:07 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 493281FD; Wed, 19 Aug 2020 14:59:06 +0300 (EEST)
+        id 5A4C326A; Wed, 19 Aug 2020 14:59:06 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -43,10 +43,12 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Len Brown <lenb@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 00/19] thunderbolt: Power Management improvements
-Date:   Wed, 19 Aug 2020 14:58:46 +0300
-Message-Id: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
+Subject: [PATCH 02/19] thunderbolt: Optimize NHI LC mailbox command processing
+Date:   Wed, 19 Aug 2020 14:58:48 +0300
+Message-Id: <20200819115905.59834-3-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
+References: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -54,64 +56,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+From: Rajmohan Mani <rajmohan.mani@intel.com>
 
-This series improves power management in the Thunderbolt driver. We already
-have a quite complete power management on systems where Firmware based
-Connection Manager is used (this is pretty much all non-Apple systems out
-there) so this series adds a couple of optimizations to make certain power
-transitions slightly faster, hopefully improving user experience.
+Currently the Ice Lake and Tiger Lake NHI (host controller) LC (link
+controller) mailbox command processing checks for the completion of
+command every 100 msecs. These controllers are found to complete this in
+the order of 1 ms or so. Since this delay is in suspend path, surplus
+delay is effectively affecting runtime PM suspend flows.
 
-Rest of the patches improve power management in the Software Connection
-manager side of the driver. USB4 spec covers power management for USB4
-hosts and devices, and also TBT3 compatible devices so these patches
-implement that. We also switch to use device links instead of PCI quirk to
-make sure the Thunderbolt/USB4 host controller is resumed before tunneled
-PCIe and USB 3.x ports (so that it gets the chance to restore the tunnels
-properly before). Tiger Lake systems with Software Connection Manager
-enabled describe these relationships using a new ACPI _DSD property that we
-parse in the driver and populate device links accordingly.
+Optimize this so that we do the wait for 1 ms after reading the mailbox
+register. This should make Ice Lake and Tiger Lake runtime suspend take
+less time to complete.
 
-Mika Westerberg (17):
-  thunderbolt: Software CM only should set force power in Tiger Lake
-  thunderbolt: Use bit 31 to check if Firmware CM is running in Tiger Lake
-  thunderbolt: Do not program NFC buffers for USB4 router protocol adapters
-  thunderbolt: No need to log an error if tb_switch_lane_bonding_enable() fails
-  thunderbolt: Send reset only to first generation routers
-  thunderbolt: Tear down DP tunnels when suspending
-  thunderbolt: Initialize TMU again on resume
-  thunderbolt: Do not change default USB4 router notification timeout
-  thunderbolt: Configure link after lane bonding is enabled
-  thunderbolt: Set port configured for both ends of the link
-  thunderbolt: Configure port for XDomain
-  thunderbolt: Disable lane 1 for XDomain connection
-  thunderbolt: Enable wakes from system suspend
-  PCI / thunderbolt: Switch to use device links instead of PCI quirk
-  ACPI: Export acpi_get_first_physical_node() to modules
-  thunderbolt: Create device links from ACPI description
-  thunderbolt: Add runtime PM for Software CM
+Reported-by: Dana Alkattan <dana.alkattan@intel.com>
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/thunderbolt/nhi_ops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rajmohan Mani (2):
-  thunderbolt: Optimize Force Power logic
-  thunderbolt: Optimize NHI LC mailbox command processing
-
- drivers/acpi/bus.c            |   1 +
- drivers/pci/quirks.c          |  57 --------
- drivers/thunderbolt/Makefile  |   2 +
- drivers/thunderbolt/acpi.c    | 117 ++++++++++++++++
- drivers/thunderbolt/domain.c  |   2 +
- drivers/thunderbolt/icm.c     |   5 +-
- drivers/thunderbolt/lc.c      | 151 ++++++++++++++++----
- drivers/thunderbolt/nhi.c     |  69 ++++++++++
- drivers/thunderbolt/nhi_ops.c |  31 +++--
- drivers/thunderbolt/switch.c  | 209 +++++++++++++++++++++++-----
- drivers/thunderbolt/tb.c      | 189 +++++++++++++++++++++++--
- drivers/thunderbolt/tb.h      |  35 ++++-
- drivers/thunderbolt/tb_regs.h |  16 +++
- drivers/thunderbolt/usb4.c    | 251 ++++++++++++++++++++++++++--------
- 14 files changed, 935 insertions(+), 200 deletions(-)
- create mode 100644 drivers/thunderbolt/acpi.c
-
+diff --git a/drivers/thunderbolt/nhi_ops.c b/drivers/thunderbolt/nhi_ops.c
+index c0d5ccbb10f5..28583f9faf46 100644
+--- a/drivers/thunderbolt/nhi_ops.c
++++ b/drivers/thunderbolt/nhi_ops.c
+@@ -97,7 +97,7 @@ static int icl_nhi_lc_mailbox_cmd_complete(struct tb_nhi *nhi, int timeout)
+ 		pci_read_config_dword(nhi->pdev, VS_CAP_18, &data);
+ 		if (data & VS_CAP_18_DONE)
+ 			goto clear;
+-		msleep(100);
++		usleep_range(1000, 1100);
+ 	} while (time_before(jiffies, end));
+ 
+ 	return -ETIMEDOUT;
 -- 
 2.28.0
 
