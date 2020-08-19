@@ -2,119 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CCC3249990
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 11:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E959249CFF
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 13:59:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHSJnH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Aug 2020 05:43:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43490 "EHLO mail.kernel.org"
+        id S1728472AbgHSL7S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Aug 2020 07:59:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34054 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgHSJnF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:43:05 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85206206FA;
-        Wed, 19 Aug 2020 09:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597830184;
-        bh=eQfdoB63wdKPPwQKDY/l7Z1OnRZwiyuLG2TBV1XF/ug=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oTtCwPnCyX7AXZ5deKcl0ylPWh4hsAbWdc6VVFHGPIFzKZggRNOlfKISY6gZfzMKA
-         2z3aqXCQIPT8QgiUY+OXkN/3jkj0GleL54IVej5nyCAYJ/ct6priOa6uiq58oEwzQW
-         //AguAVc6yros8+HkbnrXSFPHY8EDxAxbAc9toSE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k8KcZ-0049nd-22; Wed, 19 Aug 2020 10:43:03 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        id S1728207AbgHSL7N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:59:13 -0400
+IronPort-SDR: l/Vi+p/oYDFIQJwWbC5851F8JjEQnuFR0gtB1Y2dcbKHvvvjDDdn3MOvj/9K/deaTYGCWQ8nIn
+ QBF+QwcqC7Pg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="134610550"
+X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
+   d="scan'208";a="134610550"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 04:59:10 -0700
+IronPort-SDR: 0WeEkQrRE1815QZ5UKWM7RLitpA5/2/UWF8TiRGsVS+Dr5XU01lFBN42/NXfcjuBBt0n1uPYcK
+ myHhCWxaOYtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
+   d="scan'208";a="293095693"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 19 Aug 2020 04:59:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 493281FD; Wed, 19 Aug 2020 14:59:06 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Dana Alkattan <dana.alkattan@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2] of: address: Work around missing device_type property in pcie nodes
-Date:   Wed, 19 Aug 2020 10:42:55 +0100
-Message-Id: <20200819094255.474565-1-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 00/19] thunderbolt: Power Management improvements
+Date:   Wed, 19 Aug 2020 14:58:46 +0300
+Message-Id: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com, frowand.list@gmail.com, jiaxun.yang@flygoat.com, robh+dt@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Recent changes to the DT PCI bus parsing made it mandatory for
-device tree nodes describing a PCI controller to have the
-'device_type = "pci"' property for the node to be matched.
+Hi all,
 
-Although this follows the letter of the specification, it
-breaks existing device-trees that have been working fine
-for years.  Rockchip rk3399-based systems are a prime example
-of such collateral damage, and have stopped discovering their
-PCI bus.
+This series improves power management in the Thunderbolt driver. We already
+have a quite complete power management on systems where Firmware based
+Connection Manager is used (this is pretty much all non-Apple systems out
+there) so this series adds a couple of optimizations to make certain power
+transitions slightly faster, hopefully improving user experience.
 
-In order to paper over it, let's add a workaround to the code
-matching the device type, and accept as PCI any node that is
-named "pcie",
+Rest of the patches improve power management in the Software Connection
+manager side of the driver. USB4 spec covers power management for USB4
+hosts and devices, and also TBT3 compatible devices so these patches
+implement that. We also switch to use device links instead of PCI quirk to
+make sure the Thunderbolt/USB4 host controller is resumed before tunneled
+PCIe and USB 3.x ports (so that it gets the chance to restore the tunnels
+properly before). Tiger Lake systems with Software Connection Manager
+enabled describe these relationships using a new ACPI _DSD property that we
+parse in the driver and populate device links accordingly.
 
-A warning will hopefully nudge the user into updating their
-DT to a fixed version if they can, but the incentive is
-obviously pretty small.
+Mika Westerberg (17):
+  thunderbolt: Software CM only should set force power in Tiger Lake
+  thunderbolt: Use bit 31 to check if Firmware CM is running in Tiger Lake
+  thunderbolt: Do not program NFC buffers for USB4 router protocol adapters
+  thunderbolt: No need to log an error if tb_switch_lane_bonding_enable() fails
+  thunderbolt: Send reset only to first generation routers
+  thunderbolt: Tear down DP tunnels when suspending
+  thunderbolt: Initialize TMU again on resume
+  thunderbolt: Do not change default USB4 router notification timeout
+  thunderbolt: Configure link after lane bonding is enabled
+  thunderbolt: Set port configured for both ends of the link
+  thunderbolt: Configure port for XDomain
+  thunderbolt: Disable lane 1 for XDomain connection
+  thunderbolt: Enable wakes from system suspend
+  PCI / thunderbolt: Switch to use device links instead of PCI quirk
+  ACPI: Export acpi_get_first_physical_node() to modules
+  thunderbolt: Create device links from ACPI description
+  thunderbolt: Add runtime PM for Software CM
 
-Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-Suggested-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/of/address.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Rajmohan Mani (2):
+  thunderbolt: Optimize Force Power logic
+  thunderbolt: Optimize NHI LC mailbox command processing
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 590493e04b01..b37bd9cc2810 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -128,15 +128,29 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
-  * PCI bus specific translator
-  */
- 
-+static bool of_node_is_pcie(struct device_node *np)
-+{
-+	bool is_pcie = of_node_name_eq(np, "pcie");
-+
-+	if (is_pcie)
-+		pr_warn_once("%pOF: Missing device_type\n", np);
-+
-+	return is_pcie;
-+}
-+
- static int of_bus_pci_match(struct device_node *np)
- {
- 	/*
-  	 * "pciex" is PCI Express
- 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
- 	 * "ht" is hypertransport
-+	 *
-+	 * If none of the device_type match, and that the node name is
-+	 * "pcie", accept the device as PCI (with a warning).
- 	 */
- 	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
--		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
-+		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
-+		of_node_is_pcie(np);
- }
- 
- static void of_bus_pci_count_cells(struct device_node *np,
+ drivers/acpi/bus.c            |   1 +
+ drivers/pci/quirks.c          |  57 --------
+ drivers/thunderbolt/Makefile  |   2 +
+ drivers/thunderbolt/acpi.c    | 117 ++++++++++++++++
+ drivers/thunderbolt/domain.c  |   2 +
+ drivers/thunderbolt/icm.c     |   5 +-
+ drivers/thunderbolt/lc.c      | 151 ++++++++++++++++----
+ drivers/thunderbolt/nhi.c     |  69 ++++++++++
+ drivers/thunderbolt/nhi_ops.c |  31 +++--
+ drivers/thunderbolt/switch.c  | 209 +++++++++++++++++++++++-----
+ drivers/thunderbolt/tb.c      | 189 +++++++++++++++++++++++--
+ drivers/thunderbolt/tb.h      |  35 ++++-
+ drivers/thunderbolt/tb_regs.h |  16 +++
+ drivers/thunderbolt/usb4.c    | 251 ++++++++++++++++++++++++++--------
+ 14 files changed, 935 insertions(+), 200 deletions(-)
+ create mode 100644 drivers/thunderbolt/acpi.c
+
 -- 
-2.27.0
+2.28.0
 
