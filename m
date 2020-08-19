@@ -2,172 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5CCF249F1D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 15:07:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B8A824A3E6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 18:22:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgHSNHJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Aug 2020 09:07:09 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31923 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728681AbgHSNGk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:06:40 -0400
-IronPort-SDR: QvVdf37NAn0whfsu35IaKCKARCrZAY+EH22IYe7LthvvIK0sC6e9evKMCJmQm6q96wLUY7YDWC
- EhUWU7mtHlpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="142732570"
-X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="142732570"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 06:06:29 -0700
-IronPort-SDR: LHu8zE4mkBo2+KtYNOyXMXM8CHviRlmlmFpKy+jdmP8mcqp0hVJSG2d1Zzj1QWyrQyBH+Klwb1
- O8t/VwywvU4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="310763578"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 19 Aug 2020 06:06:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 1AC7426A; Wed, 19 Aug 2020 16:06:25 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI/PM: Assume ports without DLL Link Active train links in 100 ms
-Date:   Wed, 19 Aug 2020 16:06:25 +0300
-Message-Id: <20200819130625.12778-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+        id S1726735AbgHSQWo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Aug 2020 12:22:44 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:58076 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726731AbgHSQWl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Aug 2020 12:22:41 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JGJYrj024027;
+        Wed, 19 Aug 2020 09:22:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0220; bh=SIEBDEqt+TndDR3Oy+gr+t//mT7+V83M7R6Yny4slA4=;
+ b=ampZ/g+qX8BWqKuw717DyS1h/uNtYLJD3LkVfbrgZGh/q+ktw3FYLizulrfI02VqFYCY
+ hp1uKwNhOmsG6JcfYhQzfsZfZDHg5jdMiFiOPLAde5PwGHG2vqklEkdv6+k2ki/aQFkt
+ pFHa3gSnyxZLSIjzJcW+dIiryo1NMYvzzt7pL1DgISMFdi4CicrFZiPKPsXdr/hPr7Jb
+ MIudtlYxyV612XKcKlIHkrvksR2eS5wSS3QjWkG8qwuvDsCJa4/k84YPJNHWXGPNCX9S
+ cfEYz6SH0WL0y0BxwTsh3Ze1Y3Dsqgy1EqW1yiNeq11LmLKzcWL9AJVpwgFGrbvOX9zL 9Q== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 3304fhrw4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 09:22:32 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug
+ 2020 09:22:32 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug
+ 2020 09:22:31 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 09:22:31 -0700
+Received: from hyd1584.caveonetworks.com (unknown [10.29.37.82])
+        by maili.marvell.com (Postfix) with ESMTP id D39773F703F;
+        Wed, 19 Aug 2020 09:22:28 -0700 (PDT)
+From:   George Cherian <george.cherian@marvell.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     <bhelgaas@google.com>, <arnd@arndb.de>,
+        George Cherian <george.cherian@marvell.com>
+Subject: [PATCH] PCI: Add pci_iounmap
+Date:   Wed, 19 Aug 2020 21:52:08 +0530
+Message-ID: <20200819162208.1965707-1-george.cherian@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-19_09:2020-08-19,2020-08-19 signatures=0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kai-Heng Feng reported that it takes a long time (> 1 s) to resume
-Thunderbolt-connected devices from both runtime suspend and system sleep
-(s2idle).
+In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
+CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
+function. Due to this the managed release variants or even the explicit
+pci_iounmap calls doesn't really remove the mappings.
 
-This was because some Downstream Ports that support > 5 GT/s do not also
-support Data Link Layer Link Active reporting.  Per PCIe r5.0 sec 6.6.1:
+This issue is seen on an arm64 based system. arm64 by default selects
+only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
+'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
 
-  With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
-  software must wait a minimum of 100 ms after Link training completes
-  before sending a Configuration Request to the device immediately below
-  that Port. Software can determine when Link training completes by polling
-  the Data Link Layer Link Active bit or by setting up an associated
-  interrupt (see Section 6.7.3.3).
+Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
+would lead to the following error message after long hour tests
 
-Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
-at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
-JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
+"allocation failed: out of vmalloc space - use vmalloc=<size> to
+increase size."
 
-Previously we tried to wait for Link training to complete, but since there
-was no DLL Link Active reporting, all we could do was wait the worst-case
-1000 ms, then another 100 ms.
-
-Instead of using the supported speeds to determine whether to wait for Link
-training, check whether the port supports DLL Link Active reporting.  The
-Ports in question do not, so we'll wait only the 100 ms required for Ports
-that support Link speeds <= 5 GT/s.
-
-This of course assumes these Ports always train the Link within 100 ms even
-if they are operating at > 5 GT/s, which is not required by the spec.
-
-This version adds a special check for devices whose power management is
-disabled by their driver (->pm_cap is set to zero). This is needed to
-avoid regression with some NVIDIA GPUs.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208597
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
-Link: https://lore.kernel.org/r/20200514133043.27429-1-mika.westerberg@linux.intel.com
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: George Cherian <george.cherian@marvell.com>
 ---
- drivers/pci/pci.c | 37 +++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ include/asm-generic/io.h | 4 ++++
+ lib/pci_iomap.c          | 9 +++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a458c46d7e39..33eb502a60c8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4658,7 +4658,8 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
-  * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-- * @delay: Delay to wait after link has become active (in ms)
-+ * @delay: Delay to wait after link has become active (in ms). Specify %0
-+ *	   for no delay.
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
-@@ -4699,7 +4700,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(10);
- 		timeout -= 10;
- 	}
--	if (active && ret)
-+	if (active && ret && delay)
- 		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
-@@ -4793,8 +4794,13 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	 * accessing the device after reset (that is 1000 ms + 100 ms). In
- 	 * practice this should not be needed because we don't do power
- 	 * management for them (see pci_bridge_d3_possible()).
-+	 *
-+	 * Also do the same for devices that have power management disabled
-+	 * by their driver and are completely power managed through the
-+	 * root port power resource instead. This is a special case for
-+	 * nouveau.
- 	 */
--	if (!pci_is_pcie(dev)) {
-+	if (!pci_is_pcie(dev) || !child->pm_cap) {
- 		pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
- 		msleep(1000 + delay);
- 		return;
-@@ -4820,17 +4826,28 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	if (!pcie_downstream_port(dev))
- 		return;
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index dabf8cb7203b..5986b37226b7 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
+ struct pci_dev;
+ extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
  
--	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
--		msleep(delay);
--	} else {
--		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
--			delay);
--		if (!pcie_wait_for_link_delay(dev, true, delay)) {
-+	/*
-+	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
-+	 * speeds > 5 GT/s, we must wait for link training to complete
-+	 * before the mandatory delay.
-+	 *
-+	 * We can only tell when link training completes via DLL Link
-+	 * Active, which is required for downstream ports that support
-+	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
-+	 * devices do not implement Link Active reporting even when it's
-+	 * required, so we'll check for that directly instead of checking
-+	 * the supported link speed.  We assume devices without Link Active
-+	 * reporting can train in 100 ms regardless of speed.
-+	 */
-+	if (dev->link_active_reporting) {
-+		pci_dbg(dev, "waiting for link to train\n");
-+		if (!pcie_wait_for_link_delay(dev, true, 0)) {
- 			/* Did not train, no need to wait any further */
- 			return;
- 		}
- 	}
-+	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
-+	msleep(delay);
++#ifdef CONFIG_GENERIC_PCI_IOMAP
++extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
++#else
+ #ifndef pci_iounmap
+ #define pci_iounmap pci_iounmap
+ static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
+ {
+ }
+ #endif
++#endif /* CONFIG_GENERIC_PCI_IOMAP */
+ #endif /* CONFIG_GENERIC_IOMAP */
  
- 	if (!pci_device_is_present(child)) {
- 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
+ /*
+diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
+index 2d3eb1cb73b8..36128af05e1c 100644
+--- a/lib/pci_iomap.c
++++ b/lib/pci_iomap.c
+@@ -134,4 +134,13 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
+ 	return pci_iomap_wc_range(dev, bar, 0, maxlen);
+ }
+ EXPORT_SYMBOL_GPL(pci_iomap_wc);
++
++#ifndef CONFIG_GENERIC_IOMAP
++#define pci_iounmap pci_iounmap
++void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
++{
++	iounmap(addr);
++}
++EXPORT_SYMBOL(pci_iounmap);
++#endif
+ #endif /* CONFIG_PCI */
 -- 
-2.28.0
+2.25.1
 
