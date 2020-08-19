@@ -2,95 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED41424A4C7
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 19:20:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED3A224A4E3
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 19:24:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgHSRUQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Aug 2020 13:20:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:36258 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHSRUM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:20:12 -0400
-IronPort-SDR: qKKIN/Kc5kEQEC4IeXq8O0w++nucQXnfBaQgfEwV7C04wAUMPwcd1jVKUJqpxptXZghEfI/3qa
- WBSdG+OtmdVw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="173209235"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="173209235"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 10:20:12 -0700
-IronPort-SDR: yLwMDgiIvep4xw0xNoe4nd6iOtncElL1vTq8HlEZ+a5c+uhYBVN+KUPxq2nFfMKRLqz1Tn8RZy
- LAFe2ODt9nMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="400892933"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 19 Aug 2020 10:20:09 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 19 Aug 2020 20:20:08 +0300
-Date:   Wed, 19 Aug 2020 20:20:08 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Assume ports without DLL Link Active train links
- in 100 ms
-Message-ID: <20200819172008.GO1375436@lahna.fi.intel.com>
-References: <20200819130625.12778-1-mika.westerberg@linux.intel.com>
- <1777574256b2f8acacbf1d77ec78862a638b28e0.camel@redhat.com>
+        id S1726209AbgHSRYZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Aug 2020 13:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgHSRYZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Aug 2020 13:24:25 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9EAC061757
+        for <linux-pci@vger.kernel.org>; Wed, 19 Aug 2020 10:24:24 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 185so26220416ljj.7
+        for <linux-pci@vger.kernel.org>; Wed, 19 Aug 2020 10:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ojSwV7SvqjKQoGPMxqvv0gsrf/RgVZcGIvS7BBup7+g=;
+        b=VqmL0RedfzzSImBcYBoGClC2Z6UAihg/BXc1CnhHqoj0eUre8BVYOlCvNPxklLBSgP
+         nLwLIR++4Kv0RE3BiZIjFu22n6R2TU8ldYKmSwwnJVI5fpKvaO5Bk8kN2QeVTaDGBaIB
+         JecUwHCUkkhy3+ouO37q6Lbgs6Q0YKuzlgzOGSHh8P2qEyQ2n4X8ifsghKJEfdSUpDV2
+         II4EPmn9sjsOTLN2W1jvcNyey4oQaTVB5YdxMCK5BE9RakLnb425R7BvQcuqBbQFcvbv
+         Fb+Z4pAjirOJ8+ypaGxN3by36PWwpqSyDvhx52C75yHNWJLb1H1DtEBru0XXh4lYXi4r
+         pUvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ojSwV7SvqjKQoGPMxqvv0gsrf/RgVZcGIvS7BBup7+g=;
+        b=sR7AQjPKdYuKqdVVAwW7ZnkEk2vzectkb+feH/NN811TkefmrrIfYmwlubCckqN7TX
+         rnFfjczaA/cfDLLJog9DLwCU8SwlkI+6lA+z19rSpGZNCi1wd0hj/mjYtnsyaGDFM1m3
+         NsdqQ0mVacNRlOyhhp5BTOj58x6HLGa0dlmnEqSXlLdwH5cg4b46IG2IUIlAm6ADw1Jn
+         jIdp54Z5W7k7v6X612rVV1QFXhx1mqc05D4AY62iWKcOvnIAEslK0YK3i7y3kh41I0uN
+         A2dGeO9rNnp6p7ayW77XMwAf+tXarD6PWCH/1XCjQ34oJeLpIhkVCpRiE5XulgZYPqJ5
+         6lZw==
+X-Gm-Message-State: AOAM5318GFf0ecGnxp/0NAvvrVyCEei8azQDADNF39rPQePhNt0kzfmZ
+        T1cyAKWF/KKR7HJlacgPyPnMqXZDc2cDhuc2/y0UV/Nz
+X-Google-Smtp-Source: ABdhPJwjmNsnMo5isiZXimlZyKlSIpiYa8wlISdAoXklEf5GhXE97QZWwcR2YV+uN3jTPIX0sexyhbE3XCYyFg/tNhQ=
+X-Received: by 2002:a2e:9047:: with SMTP id n7mr13443758ljg.125.1597857862328;
+ Wed, 19 Aug 2020 10:24:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1777574256b2f8acacbf1d77ec78862a638b28e0.camel@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200819171326.35931-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200819171326.35931-1-andriy.shevchenko@linux.intel.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 19 Aug 2020 14:24:10 -0300
+Message-ID: <CAOMZO5B9FGqSsnQcw1hhyOQnvkgxXK_xAkvNbjdtNuH+5V8kBA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] swiotlb: Use %pa to print phys_addr_t variables
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        iommu@lists.linux-foundation.org, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, x86@kernel.org,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:58:18PM -0400, Lyude Paul wrote:
-> On Wed, 2020-08-19 at 16:06 +0300, Mika Westerberg wrote:
-> > Kai-Heng Feng reported that it takes a long time (> 1 s) to resume
-> > Thunderbolt-connected devices from both runtime suspend and system sleep
-> > (s2idle).
-> > 
-> > This was because some Downstream Ports that support > 5 GT/s do not also
-> > support Data Link Layer Link Active reporting.  Per PCIe r5.0 sec 6.6.1:
-> > 
-> >   With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
-> >   software must wait a minimum of 100 ms after Link training completes
-> >   before sending a Configuration Request to the device immediately below
-> >   that Port. Software can determine when Link training completes by polling
-> >   the Data Link Layer Link Active bit or by setting up an associated
-> >   interrupt (see Section 6.7.3.3).
-> > 
-> > Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
-> > at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
-> > JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
-> > 
-> > Previously we tried to wait for Link training to complete, but since there
-> > was no DLL Link Active reporting, all we could do was wait the worst-case
-> > 1000 ms, then another 100 ms.
-> > 
-> > Instead of using the supported speeds to determine whether to wait for Link
-> > training, check whether the port supports DLL Link Active reporting.  The
-> > Ports in question do not, so we'll wait only the 100 ms required for Ports
-> > that support Link speeds <= 5 GT/s.
-> > 
-> > This of course assumes these Ports always train the Link within 100 ms even
-> > if they are operating at > 5 GT/s, which is not required by the spec.
-> > 
-> > This version adds a special check for devices whose power management is
-> > disabled by their driver (->pm_cap is set to zero). This is needed to
-> > avoid regression with some NVIDIA GPUs.
-> 
-> Hm, I'm not entirely sure that the link training delay is specific to laptops
-> with ->pm_cap set to 0, I think we should try figuring out if there's any
-> laptops that match those characteristics before moving forward with this - I'll
-> take a look through the test machines I've got available today
+Hi Andy,
 
-OK, thanks!
+On Wed, Aug 19, 2020 at 2:16 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+
+> -       unsigned long bytes = io_tlb_nslabs << IO_TLB_SHIFT;
+> +       unsigned long mb = (io_tlb_nslabs << IO_TLB_SHIFT) >> 20;
+
+Looks like an unrelated change.
