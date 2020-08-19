@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0F06249D32
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 14:03:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 969C1249D18
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 14:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgHSMCo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Aug 2020 08:02:44 -0400
+        id S1728106AbgHSMAx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Aug 2020 08:00:53 -0400
 Received: from mga05.intel.com ([192.55.52.43]:49555 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728467AbgHSL7S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:59:18 -0400
-IronPort-SDR: KbSCkfzyQ1/fg0ETZf9hyu64kPg4Y8yrSikqgjJLB2SA7fd0B4TkH/mDFFPfRRToCvToazvZ6v
- BjgrAFVuAbTg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="239922670"
+        id S1727807AbgHSL7x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:59:53 -0400
+IronPort-SDR: W+DdLoC+9vlXB9bb2N0is9Ry0Ehtg8ON8X4sIhF3JJTqwZlExEjewqMzH9BsHN8J5WBdWcZ3wN
+ HneTjVCwFSCg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="239922673"
 X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="239922670"
+   d="scan'208";a="239922673"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 04:59:14 -0700
-IronPort-SDR: avVy1w0z+mAauYiDQZDZCgLFig7bmX2LHOQKkBXqLmOhv7WEfmlRbsaubXDb8ArWfAn8nyBMbY
- Du0Qzkdhf7tg==
+IronPort-SDR: WUm0ykx4GA/OhJSVT4Cx2Yc7W5T3nzYLqgOMINs2bwhSiqON0DmKvb7elpSsAkEucGGWcVn6kx
+ 0g6hMMGp2kbA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="329310758"
+   d="scan'208";a="278309127"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Aug 2020 04:59:11 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 19 Aug 2020 04:59:11 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id C543B5FF; Wed, 19 Aug 2020 14:59:06 +0300 (EEST)
+        id CE3AF656; Wed, 19 Aug 2020 14:59:06 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -43,9 +43,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Len Brown <lenb@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 12/19] thunderbolt: Set port configured for both ends of the link
-Date:   Wed, 19 Aug 2020 14:58:58 +0300
-Message-Id: <20200819115905.59834-13-mika.westerberg@linux.intel.com>
+Subject: [PATCH 13/19] thunderbolt: Configure port for XDomain
+Date:   Wed, 19 Aug 2020 14:58:59 +0300
+Message-Id: <20200819115905.59834-14-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
 References: <20200819115905.59834-1-mika.westerberg@linux.intel.com>
@@ -56,259 +56,228 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Both ends of the link needs to have this set. Otherwise the link is not
-re-established properly after sleep. Now since it is possible to have
-mixed USB4 and Thunderbolt 1, 2 and 3 devices we need to split the link
-configuration functionality to happen per port so we can pick the
-correct implementation.
+When the port is connected to another host it should be marked as such
+in the USB4 port capability. This information is used by the router
+during sleep and wakeup.
+
+Also do the same for legacy switches via link controller vendor specific
+registers.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/lc.c     | 48 +++++--------------
- drivers/thunderbolt/switch.c | 33 ++++++++++---
- drivers/thunderbolt/tb.h     |  8 ++--
- drivers/thunderbolt/usb4.c   | 92 +++++++++++++++++-------------------
- 4 files changed, 87 insertions(+), 94 deletions(-)
+ drivers/thunderbolt/lc.c      | 54 +++++++++++++++++++++++++++++++++++
+ drivers/thunderbolt/tb.c      | 32 ++++++++++++++++++---
+ drivers/thunderbolt/tb.h      |  4 +++
+ drivers/thunderbolt/tb_regs.h |  3 ++
+ drivers/thunderbolt/usb4.c    | 45 +++++++++++++++++++++++++++++
+ 5 files changed, 134 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
-index b2f62ba0421d..5c209a570360 100644
+index 5c209a570360..44647fa1ec1c 100644
 --- a/drivers/thunderbolt/lc.c
 +++ b/drivers/thunderbolt/lc.c
-@@ -45,7 +45,7 @@ static int find_port_lc_cap(struct tb_port *port)
- 	return sw->cap_lc + start + phys * size;
+@@ -104,6 +104,60 @@ void tb_lc_unconfigure_port(struct tb_port *port)
+ 	tb_lc_set_port_configured(port, false);
  }
  
--static int tb_lc_configure_lane(struct tb_port *port, bool configure)
-+static int tb_lc_set_port_configured(struct tb_port *port, bool configured)
- {
- 	bool upstream = tb_is_upstream_port(port);
- 	struct tb_switch *sw = port->sw;
-@@ -69,7 +69,7 @@ static int tb_lc_configure_lane(struct tb_port *port, bool configure)
- 	else
- 		lane = TB_LC_SX_CTRL_L2C;
- 
--	if (configure) {
-+	if (configured) {
- 		ctrl |= lane;
- 		if (upstream)
- 			ctrl |= TB_LC_SX_CTRL_UPSTREAM;
-@@ -83,49 +83,25 @@ static int tb_lc_configure_lane(struct tb_port *port, bool configure)
- }
- 
- /**
-- * tb_lc_configure_link() - Let LC know about configured link
-- * @sw: Switch that is being added
-+ * tb_lc_configure_port() - Let LC know about configured port
-+ * @port: Port that is set as configured
-  *
-- * Informs LC of both parent switch and @sw that there is established
-- * link between the two.
-+ * Sets the port configured for power management purposes.
-  */
--int tb_lc_configure_link(struct tb_switch *sw)
-+int tb_lc_configure_port(struct tb_port *port)
- {
--	struct tb_port *up, *down;
--	int ret;
--
--	up = tb_upstream_port(sw);
--	down = tb_port_at(tb_route(sw), tb_to_switch(sw->dev.parent));
--
--	/* Configure parent link toward this switch */
--	ret = tb_lc_configure_lane(down, true);
--	if (ret)
--		return ret;
--
--	/* Configure upstream link from this switch to the parent */
--	ret = tb_lc_configure_lane(up, true);
--	if (ret)
--		tb_lc_configure_lane(down, false);
--
--	return ret;
-+	return tb_lc_set_port_configured(port, true);
- }
- 
- /**
-- * tb_lc_unconfigure_link() - Let LC know about unconfigured link
-- * @sw: Switch to unconfigure
-+ * tb_lc_unconfigure_port() - Let LC know about unconfigured port
-+ * @port: Port that is set as configured
-  *
-- * Informs LC of both parent switch and @sw that the link between the
-- * two does not exist anymore.
-+ * Sets the port unconfigured for power management purposes.
-  */
--void tb_lc_unconfigure_link(struct tb_switch *sw)
-+void tb_lc_unconfigure_port(struct tb_port *port)
- {
--	struct tb_port *up, *down;
--
--	up = tb_upstream_port(sw);
--	down = tb_port_at(tb_route(sw), tb_to_switch(sw->dev.parent));
--
--	tb_lc_configure_lane(up, false);
--	tb_lc_configure_lane(down, false);
-+	tb_lc_set_port_configured(port, false);
- }
- 
- /**
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index ecc47ea81bb6..1c45f8baf487 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -2321,12 +2321,24 @@ void tb_switch_lane_bonding_disable(struct tb_switch *sw)
-  */
- int tb_switch_configure_link(struct tb_switch *sw)
- {
-+	struct tb_port *up, *down;
-+	int ret;
++static int tb_lc_set_xdomain_configured(struct tb_port *port, bool configure)
++{
++	struct tb_switch *sw = port->sw;
++	u32 ctrl, lane;
++	int cap, ret;
 +
- 	if (!tb_route(sw) || tb_switch_is_icm(sw))
- 		return 0;
- 
--	if (tb_switch_is_usb4(sw))
--		return usb4_switch_configure_link(sw);
--	return tb_lc_configure_link(sw);
-+	up = tb_upstream_port(sw);
-+	if (tb_switch_is_usb4(up->sw))
-+		ret = usb4_port_configure(up);
-+	else
-+		ret = tb_lc_configure_port(up);
++	if (sw->generation < 2)
++		return 0;
++
++	cap = find_port_lc_cap(port);
++	if (cap < 0)
++		return cap;
++
++	ret = tb_sw_read(sw, &ctrl, TB_CFG_SWITCH, cap + TB_LC_SX_CTRL, 1);
 +	if (ret)
 +		return ret;
 +
-+	down = up->remote;
-+	if (tb_switch_is_usb4(down->sw))
-+		return usb4_port_configure(down);
-+	return tb_lc_configure_port(down);
- }
- 
- /**
-@@ -2338,15 +2350,24 @@ int tb_switch_configure_link(struct tb_switch *sw)
-  */
- void tb_switch_unconfigure_link(struct tb_switch *sw)
- {
-+	struct tb_port *up, *down;
-+
- 	if (sw->is_unplugged)
- 		return;
- 	if (!tb_route(sw) || tb_switch_is_icm(sw))
- 		return;
- 
--	if (tb_switch_is_usb4(sw))
--		usb4_switch_unconfigure_link(sw);
-+	up = tb_upstream_port(sw);
-+	if (tb_switch_is_usb4(up->sw))
-+		usb4_port_unconfigure(up);
++	/* Resolve correct lane */
++	if (port->port % 2)
++		lane = TB_LC_SX_CTRL_L1D;
 +	else
-+		tb_lc_unconfigure_port(up);
++		lane = TB_LC_SX_CTRL_L2D;
 +
-+	down = up->remote;
-+	if (tb_switch_is_usb4(down->sw))
-+		usb4_port_unconfigure(down);
- 	else
--		tb_lc_unconfigure_link(sw);
-+		tb_lc_unconfigure_port(down);
++	if (configure)
++		ctrl |= lane;
++	else
++		ctrl &= ~lane;
++
++	return tb_sw_write(sw, &ctrl, TB_CFG_SWITCH, cap + TB_LC_SX_CTRL, 1);
++}
++
++/**
++ * tb_lc_configure_xdomain() - Inform LC that the link is XDomain
++ * @port: Switch downstream port connected to another host
++ *
++ * Sets the lane configured for XDomain accordingly so that the LC knows
++ * about this. Returns %0 in success and negative errno in failure.
++ */
++int tb_lc_configure_xdomain(struct tb_port *port)
++{
++	return tb_lc_set_xdomain_configured(port, true);
++}
++
++/**
++ * tb_lc_unconfigure_xdomain() - Unconfigure XDomain from port
++ * @port: Switch downstream port that was connected to another host
++ *
++ * Unsets the lane XDomain configuration.
++ */
++void tb_lc_unconfigure_xdomain(struct tb_port *port)
++{
++	tb_lc_set_xdomain_configured(port, false);
++}
++
+ /**
+  * tb_lc_set_sleep() - Inform LC that the switch is going to sleep
+  * @sw: Switch to set sleep
+diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+index 54a4daf0b1b4..602e00e0b45e 100644
+--- a/drivers/thunderbolt/tb.c
++++ b/drivers/thunderbolt/tb.c
+@@ -140,6 +140,21 @@ static void tb_discover_tunnels(struct tb_switch *sw)
+ 	}
  }
  
- /**
++static int tb_port_configure_xdomain(struct tb_port *port)
++{
++	if (tb_switch_is_usb4(port->sw))
++		return usb4_port_configure_xdomain(port);
++	return tb_lc_configure_xdomain(port);
++}
++
++static void tb_port_unconfigure_xdomain(struct tb_port *port)
++{
++	if (tb_switch_is_usb4(port->sw))
++		usb4_port_unconfigure_xdomain(port);
++	else
++		tb_lc_unconfigure_xdomain(port);
++}
++
+ static void tb_scan_xdomain(struct tb_port *port)
+ {
+ 	struct tb_switch *sw = port->sw;
+@@ -158,6 +173,7 @@ static void tb_scan_xdomain(struct tb_port *port)
+ 			      NULL);
+ 	if (xd) {
+ 		tb_port_at(route, sw)->xdomain = xd;
++		tb_port_configure_xdomain(port);
+ 		tb_xdomain_add(xd);
+ 	}
+ }
+@@ -566,6 +582,7 @@ static void tb_scan_port(struct tb_port *port)
+ 	 */
+ 	if (port->xdomain) {
+ 		tb_xdomain_remove(port->xdomain);
++		tb_port_unconfigure_xdomain(port);
+ 		port->xdomain = NULL;
+ 	}
+ 
+@@ -1047,6 +1064,7 @@ static void tb_handle_hotplug(struct work_struct *work)
+ 	struct tb_cm *tcm = tb_priv(tb);
+ 	struct tb_switch *sw;
+ 	struct tb_port *port;
++
+ 	mutex_lock(&tb->lock);
+ 	if (!tcm->hotplug_active)
+ 		goto out; /* during init, suspend or shutdown */
+@@ -1103,6 +1121,7 @@ static void tb_handle_hotplug(struct work_struct *work)
+ 			port->xdomain = NULL;
+ 			__tb_disconnect_xdomain_paths(tb, xd);
+ 			tb_xdomain_put(xd);
++			tb_port_unconfigure_xdomain(port);
+ 		} else if (tb_port_is_dpout(port) || tb_port_is_dpin(port)) {
+ 			tb_dp_resource_unavailable(tb, port);
+ 		} else {
+@@ -1269,13 +1288,17 @@ static void tb_restore_children(struct tb_switch *sw)
+ 		tb_sw_warn(sw, "failed to restore TMU configuration\n");
+ 
+ 	tb_switch_for_each_port(sw, port) {
+-		if (!tb_port_has_remote(port))
++		if (!tb_port_has_remote(port) && !port->xdomain)
+ 			continue;
+ 
+-		tb_switch_lane_bonding_enable(port->remote->sw);
+-		tb_switch_configure_link(port->remote->sw);
++		if (port->remote) {
++			tb_switch_lane_bonding_enable(port->remote->sw);
++			tb_switch_configure_link(port->remote->sw);
+ 
+-		tb_restore_children(port->remote->sw);
++			tb_restore_children(port->remote->sw);
++		} else if (port->xdomain) {
++			tb_port_configure_xdomain(port);
++		}
+ 	}
+ }
+ 
+@@ -1321,6 +1344,7 @@ static int tb_free_unplugged_xdomains(struct tb_switch *sw)
+ 		if (port->xdomain && port->xdomain->is_unplugged) {
+ 			tb_retimer_remove_all(port);
+ 			tb_xdomain_remove(port->xdomain);
++			tb_port_unconfigure_xdomain(port);
+ 			port->xdomain = NULL;
+ 			ret++;
+ 		} else if (port->remote) {
 diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index dcdc886412f5..082ae9da4cbc 100644
+index 082ae9da4cbc..dbe332c3e95e 100644
 --- a/drivers/thunderbolt/tb.h
 +++ b/drivers/thunderbolt/tb.h
-@@ -846,8 +846,8 @@ int tb_drom_read(struct tb_switch *sw);
- int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
- 
+@@ -848,6 +848,8 @@ int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
  int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
--int tb_lc_configure_link(struct tb_switch *sw);
--void tb_lc_unconfigure_link(struct tb_switch *sw);
-+int tb_lc_configure_port(struct tb_port *port);
-+void tb_lc_unconfigure_port(struct tb_port *port);
+ int tb_lc_configure_port(struct tb_port *port);
+ void tb_lc_unconfigure_port(struct tb_port *port);
++int tb_lc_configure_xdomain(struct tb_port *port);
++void tb_lc_unconfigure_xdomain(struct tb_port *port);
  int tb_lc_set_sleep(struct tb_switch *sw);
  bool tb_lc_lane_bonding_possible(struct tb_switch *sw);
  bool tb_lc_dp_sink_query(struct tb_switch *sw, struct tb_port *in);
-@@ -902,8 +902,6 @@ int usb4_switch_setup(struct tb_switch *sw);
- int usb4_switch_read_uid(struct tb_switch *sw, u64 *uid);
- int usb4_switch_drom_read(struct tb_switch *sw, unsigned int address, void *buf,
- 			  size_t size);
--int usb4_switch_configure_link(struct tb_switch *sw);
--void usb4_switch_unconfigure_link(struct tb_switch *sw);
- bool usb4_switch_lane_bonding_possible(struct tb_switch *sw);
- int usb4_switch_set_sleep(struct tb_switch *sw);
- int usb4_switch_nvm_sector_size(struct tb_switch *sw);
-@@ -921,6 +919,8 @@ struct tb_port *usb4_switch_map_usb3_down(struct tb_switch *sw,
- 					  const struct tb_port *port);
- 
+@@ -921,6 +923,8 @@ struct tb_port *usb4_switch_map_usb3_down(struct tb_switch *sw,
  int usb4_port_unlock(struct tb_port *port);
-+int usb4_port_configure(struct tb_port *port);
-+void usb4_port_unconfigure(struct tb_port *port);
+ int usb4_port_configure(struct tb_port *port);
+ void usb4_port_unconfigure(struct tb_port *port);
++int usb4_port_configure_xdomain(struct tb_port *port);
++void usb4_port_unconfigure_xdomain(struct tb_port *port);
  int usb4_port_enumerate_retimers(struct tb_port *port);
  
  int usb4_port_retimer_read(struct tb_port *port, u8 index, u8 reg, void *buf,
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index fd4fc144d17f..a553be24f1c0 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -303,6 +303,7 @@ struct tb_regs_port_header {
+ #define PORT_CS_18_TCM				BIT(9)
+ #define PORT_CS_19				0x13
+ #define PORT_CS_19_PC				BIT(3)
++#define PORT_CS_19_PID				BIT(4)
+ 
+ /* Display Port adapter registers */
+ #define ADP_DP_CS_0				0x00
+@@ -417,7 +418,9 @@ struct tb_regs_hop {
+ 
+ #define TB_LC_SX_CTRL			0x96
+ #define TB_LC_SX_CTRL_L1C		BIT(16)
++#define TB_LC_SX_CTRL_L1D		BIT(17)
+ #define TB_LC_SX_CTRL_L2C		BIT(20)
++#define TB_LC_SX_CTRL_L2D		BIT(21)
+ #define TB_LC_SX_CTRL_UPSTREAM		BIT(30)
+ #define TB_LC_SX_CTRL_SLP		BIT(31)
+ 
 diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
-index dd601a6db23c..b2677427789f 100644
+index b2677427789f..59b8b51d1fa4 100644
 --- a/drivers/thunderbolt/usb4.c
 +++ b/drivers/thunderbolt/usb4.c
-@@ -338,54 +338,6 @@ int usb4_switch_drom_read(struct tb_switch *sw, unsigned int address, void *buf,
- 				 usb4_switch_drom_read_block, sw);
+@@ -785,6 +785,51 @@ void usb4_port_unconfigure(struct tb_port *port)
+ 	usb4_port_set_configured(port, false);
  }
  
--static int usb4_set_port_configured(struct tb_port *port, bool configured)
--{
--	int ret;
--	u32 val;
--
--	ret = tb_port_read(port, &val, TB_CFG_PORT,
--			   port->cap_usb4 + PORT_CS_19, 1);
--	if (ret)
--		return ret;
--
--	if (configured)
--		val |= PORT_CS_19_PC;
--	else
--		val &= ~PORT_CS_19_PC;
--
--	return tb_port_write(port, &val, TB_CFG_PORT,
--			     port->cap_usb4 + PORT_CS_19, 1);
--}
--
--/**
-- * usb4_switch_configure_link() - Set upstream USB4 link configured
-- * @sw: USB4 router
-- *
-- * Sets the upstream USB4 link to be configured for power management
-- * purposes.
-- */
--int usb4_switch_configure_link(struct tb_switch *sw)
--{
--	struct tb_port *up;
--
--	up = tb_upstream_port(sw);
--	return usb4_set_port_configured(up, true);
--}
--
--/**
-- * usb4_switch_unconfigure_link() - Un-set upstream USB4 link configuration
-- * @sw: USB4 router
-- *
-- * Reverse of usb4_switch_configure_link().
-- */
--void usb4_switch_unconfigure_link(struct tb_switch *sw)
--{
--	struct tb_port *up;
--
--	up = tb_upstream_port(sw);
--	usb4_set_port_configured(up, false);
--}
--
- /**
-  * usb4_switch_lane_bonding_possible() - Are conditions met for lane bonding
-  * @sw: USB4 router
-@@ -789,6 +741,50 @@ int usb4_port_unlock(struct tb_port *port)
- 	return tb_port_write(port, &val, TB_CFG_PORT, ADP_CS_4, 1);
- }
- 
-+static int usb4_port_set_configured(struct tb_port *port, bool configured)
++static int usb4_set_xdomain_configured(struct tb_port *port, bool configured)
 +{
 +	int ret;
 +	u32 val;
@@ -322,34 +291,35 @@ index dd601a6db23c..b2677427789f 100644
 +		return ret;
 +
 +	if (configured)
-+		val |= PORT_CS_19_PC;
++		val |= PORT_CS_19_PID;
 +	else
-+		val &= ~PORT_CS_19_PC;
++		val &= ~PORT_CS_19_PID;
 +
 +	return tb_port_write(port, &val, TB_CFG_PORT,
 +			     port->cap_usb4 + PORT_CS_19, 1);
 +}
 +
 +/**
-+ * usb4_port_configure() - Set USB4 port configured
-+ * @port: USB4 router
++ * usb4_port_configure_xdomain() - Configure port for XDomain
++ * @port: USB4 port connected to another host
 + *
-+ * Sets the USB4 link to be configured for power management purposes.
++ * Marks the USB4 port as being connected to another host. Returns %0 in
++ * success and negative errno in failure.
 + */
-+int usb4_port_configure(struct tb_port *port)
++int usb4_port_configure_xdomain(struct tb_port *port)
 +{
-+	return usb4_port_set_configured(port, true);
++	return usb4_set_xdomain_configured(port, true);
 +}
 +
 +/**
-+ * usb4_port_unconfigure() - Set USB4 port unconfigured
-+ * @port: USB4 router
++ * usb4_port_unconfigure_xdomain() - Unconfigure port for XDomain
++ * @port: USB4 port that was connected to another host
 + *
-+ * Sets the USB4 link to be unconfigured for power management purposes.
++ * Clears USB4 port from being marked as XDomain.
 + */
-+void usb4_port_unconfigure(struct tb_port *port)
++void usb4_port_unconfigure_xdomain(struct tb_port *port)
 +{
-+	usb4_port_set_configured(port, false);
++	usb4_set_xdomain_configured(port, false);
 +}
 +
  static int usb4_port_wait_for_bit(struct tb_port *port, u32 offset, u32 bit,
