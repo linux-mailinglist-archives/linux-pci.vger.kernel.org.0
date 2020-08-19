@@ -2,72 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED3A224A4E3
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 19:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A705824A51B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Aug 2020 19:42:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgHSRYZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Aug 2020 13:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgHSRYZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Aug 2020 13:24:25 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9EAC061757
-        for <linux-pci@vger.kernel.org>; Wed, 19 Aug 2020 10:24:24 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 185so26220416ljj.7
-        for <linux-pci@vger.kernel.org>; Wed, 19 Aug 2020 10:24:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ojSwV7SvqjKQoGPMxqvv0gsrf/RgVZcGIvS7BBup7+g=;
-        b=VqmL0RedfzzSImBcYBoGClC2Z6UAihg/BXc1CnhHqoj0eUre8BVYOlCvNPxklLBSgP
-         nLwLIR++4Kv0RE3BiZIjFu22n6R2TU8ldYKmSwwnJVI5fpKvaO5Bk8kN2QeVTaDGBaIB
-         JecUwHCUkkhy3+ouO37q6Lbgs6Q0YKuzlgzOGSHh8P2qEyQ2n4X8ifsghKJEfdSUpDV2
-         II4EPmn9sjsOTLN2W1jvcNyey4oQaTVB5YdxMCK5BE9RakLnb425R7BvQcuqBbQFcvbv
-         Fb+Z4pAjirOJ8+ypaGxN3by36PWwpqSyDvhx52C75yHNWJLb1H1DtEBru0XXh4lYXi4r
-         pUvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ojSwV7SvqjKQoGPMxqvv0gsrf/RgVZcGIvS7BBup7+g=;
-        b=sR7AQjPKdYuKqdVVAwW7ZnkEk2vzectkb+feH/NN811TkefmrrIfYmwlubCckqN7TX
-         rnFfjczaA/cfDLLJog9DLwCU8SwlkI+6lA+z19rSpGZNCi1wd0hj/mjYtnsyaGDFM1m3
-         NsdqQ0mVacNRlOyhhp5BTOj58x6HLGa0dlmnEqSXlLdwH5cg4b46IG2IUIlAm6ADw1Jn
-         jIdp54Z5W7k7v6X612rVV1QFXhx1mqc05D4AY62iWKcOvnIAEslK0YK3i7y3kh41I0uN
-         A2dGeO9rNnp6p7ayW77XMwAf+tXarD6PWCH/1XCjQ34oJeLpIhkVCpRiE5XulgZYPqJ5
-         6lZw==
-X-Gm-Message-State: AOAM5318GFf0ecGnxp/0NAvvrVyCEei8azQDADNF39rPQePhNt0kzfmZ
-        T1cyAKWF/KKR7HJlacgPyPnMqXZDc2cDhuc2/y0UV/Nz
-X-Google-Smtp-Source: ABdhPJwjmNsnMo5isiZXimlZyKlSIpiYa8wlISdAoXklEf5GhXE97QZWwcR2YV+uN3jTPIX0sexyhbE3XCYyFg/tNhQ=
-X-Received: by 2002:a2e:9047:: with SMTP id n7mr13443758ljg.125.1597857862328;
- Wed, 19 Aug 2020 10:24:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819171326.35931-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200819171326.35931-1-andriy.shevchenko@linux.intel.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 19 Aug 2020 14:24:10 -0300
-Message-ID: <CAOMZO5B9FGqSsnQcw1hhyOQnvkgxXK_xAkvNbjdtNuH+5V8kBA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] swiotlb: Use %pa to print phys_addr_t variables
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1726707AbgHSRmA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Aug 2020 13:42:00 -0400
+Received: from mga11.intel.com ([192.55.52.93]:64742 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726702AbgHSRl7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:41:59 -0400
+IronPort-SDR: 9GePG7TSx19MVHI3q5n9VMrar3WGx+855WPW8fTQBhKkVDMgJzZ5PDcaP3qBOQVPj1GVy8jkOk
+ zDQrE7Mbhpvw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="152775787"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="152775787"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 10:41:58 -0700
+IronPort-SDR: /Gw14F3T8MavSsw3w+CZqaHM4PiaxwU3a5v7JUXi420k8E2r9jXx2lHUbjBfc2ZPH65C/BQLuH
+ iWMvySpupPaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="327159666"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2020 10:41:56 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k8S3s-009w8o-L8; Wed, 19 Aug 2020 20:39:44 +0300
+Date:   Wed, 19 Aug 2020 20:39:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Fabio Estevam <festevam@gmail.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         iommu@lists.linux-foundation.org, Christoph Hellwig <hch@lst.de>,
         Marek Szyprowski <m.szyprowski@samsung.com>, x86@kernel.org,
         Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1 1/3] swiotlb: Use %pa to print phys_addr_t variables
+Message-ID: <20200819173944.GR1891694@smile.fi.intel.com>
+References: <20200819171326.35931-1-andriy.shevchenko@linux.intel.com>
+ <CAOMZO5B9FGqSsnQcw1hhyOQnvkgxXK_xAkvNbjdtNuH+5V8kBA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5B9FGqSsnQcw1hhyOQnvkgxXK_xAkvNbjdtNuH+5V8kBA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andy,
+On Wed, Aug 19, 2020 at 02:24:10PM -0300, Fabio Estevam wrote:
+> On Wed, Aug 19, 2020 at 2:16 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > -       unsigned long bytes = io_tlb_nslabs << IO_TLB_SHIFT;
+> > +       unsigned long mb = (io_tlb_nslabs << IO_TLB_SHIFT) >> 20;
+> 
+> Looks like an unrelated change.
 
-On Wed, Aug 19, 2020 at 2:16 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+To put pr_info() onto one (not so long) line. But of course, can leave it.
 
-> -       unsigned long bytes = io_tlb_nslabs << IO_TLB_SHIFT;
-> +       unsigned long mb = (io_tlb_nslabs << IO_TLB_SHIFT) >> 20;
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Looks like an unrelated change.
+
