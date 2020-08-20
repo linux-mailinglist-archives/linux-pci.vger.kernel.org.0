@@ -2,133 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3DE824C222
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 17:24:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54B4524C24E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 17:36:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgHTPYr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 11:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbgHTPYn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 11:24:43 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF03C061386
-        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 08:24:42 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id a65so1747564otc.8
-        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 08:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/gFfZIvWRZ4wg4R/uBBAuZhKNYjvYxxfxHZSYVxIT+Q=;
-        b=QT6mSW+Jn8IOX6L4osdroRSC5BZInGyhbEx/g8kE7d9yyhODCp+9Q2hmSjS47By6XX
-         KQVwtChOySNvSJCdQ/o6Dj+2NPYS2WmSLGsHnIfgA5TYlPFL+zYXJc31maYK/uiz+soR
-         tnLx2iR5RsQBpnrzAzpIHMUY5iWHi849WT3NQfM63n4BYFdJCuj0OpjlSwLxfyzcsLNu
-         ZuGqZIZ75TTpoQvBSbPbCMt3ldbA6Kq3UZfZCTVcdhG3+D3KOdX3LrtdZM5ELN+4uRV0
-         oMQ56H35xZoXUDPWMRPms/prbldwAQEA5hgmAG0n5wZg41Re6bMqd2eLJxh2dErw6/ka
-         2vnQ==
+        id S1729092AbgHTPgq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 11:36:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35102 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729091AbgHTPgo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 11:36:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597937802;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EoZ5OGb6TmDVGND9bPZ/+clJ+2p6aDqeJH5F5modhrM=;
+        b=DBY9xfWfIyQIXlUKWn8Dwv3ihZmFzTa8dE6/+hZMXrTekcTo4kS5Qkt4QnPESz2Q2YN8+x
+        ia6vHALaK/g2B35OBjBzfESNVsiiePG+zw0hYVtwms4D5bsuM0mSWiFkriAYPMsMYVh7Yo
+        Rm+pM/cFXfmAEmbNFc/aNuBJIcezo4o=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-kquLe1yYM1ulT6Vp_mrbpA-1; Thu, 20 Aug 2020 11:36:41 -0400
+X-MC-Unique: kquLe1yYM1ulT6Vp_mrbpA-1
+Received: by mail-qt1-f200.google.com with SMTP id r24so1819701qtu.3
+        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 08:36:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/gFfZIvWRZ4wg4R/uBBAuZhKNYjvYxxfxHZSYVxIT+Q=;
-        b=JZfng0Jw0GaqyobDL8Li60CJtUXyS2Sttmlq0l3HVPghqzcCyfMk2ZOgtErmf4uY5k
-         RXIhUXWMpl445f5870aVWzK7dwfoK1kB0d/lhyejdmbNZOlHhKku/TpMCSWBGmH0/flY
-         +LwiT5bMZI5bq+cSKXrZ2LIWTXa0XX+O7rbCWc6FxAejzHHxFFpoiqSddzQJCo0W26+s
-         Z3hIekiJCu3TGaAyOhuO0PBa9YvwRYQl0cV/rUI/JPRmTyvd/17lGnxUUt9FiflLunUi
-         /K7+DPfG92JeOvJvk2az0mIBBWxKIkyHyyOYRtiwzhtPB+OlA7/Hi6Y6PoxPHY7n1QJ/
-         HCuw==
-X-Gm-Message-State: AOAM530QCf8ah3e5QkgLpiEARxRbkUINnyKD5OXJhK50DKi/GlyeaTXN
-        8onbnfEWjEUcQg1K/N7gYEzsdpsu/t/KeffXQBoP2A==
-X-Google-Smtp-Source: ABdhPJwh8kb5Z50Vf5lSdANxMDzBzkJTMkmz+R8SwNsqzMM0RY19OYAksQesFFwBCai3OIQWl/QOmwdqcrz0afkW7pM=
-X-Received: by 2002:a9d:7f8e:: with SMTP id t14mr2620491otp.63.1597937081310;
- Thu, 20 Aug 2020 08:24:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
- <810f1b0e-0adf-c316-f23c-172338f9ef0a@linux.intel.com> <CAHp75VcJCjJJvbkSiGHC+3_shWRwoqeZHE2KNDLQBjneW=02dg@mail.gmail.com>
- <2b14b6be-a031-a28b-6585-8307d2fdae21@infradead.org>
-In-Reply-To: <2b14b6be-a031-a28b-6585-8307d2fdae21@infradead.org>
-From:   Jesse Barnes <jsbarnes@google.com>
-Date:   Thu, 20 Aug 2020 08:24:30 -0700
-Message-ID: <CAJmaN=khV6By1e8LnkbK+mgFweqnmXcu6hhjDzyD1uiFASC2Rg@mail.gmail.com>
-Subject: Re: [PATCH] x86/pci: fix intel_mid_pci.c build error when ACPI is not enabled
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=EoZ5OGb6TmDVGND9bPZ/+clJ+2p6aDqeJH5F5modhrM=;
+        b=UIKUZ/LPsotLOrw1v0H1WdSp2gLNKJu0HsWGEwl4N/AQEc7PnDlmigMc59DTdxyIsy
+         OaJxBq7dGSTBa94jM/i0N1vXGLg3kpybAmh/wr1LxzRpY7OT/LWpCnhz5nQMDsyQZ8bb
+         mipCMcBS9sqbEi/haSMPRL78zS6L87QZOeU8dzH/ZJ5aEsu83Y6AoSKr7QH6zlKV6yFU
+         hTI4izHFtIvzPhL7AbYW7/a9exkvq6zstEasKYy7XOahS2UaHAtFzkbrD4D4fk8ea9cm
+         ZiFD1DhQs9QC6tPi0wnHRb+0xYZKQdS1xVDfS/OLqBFqOlYtoYEGiViWO2N0n4Yec8aR
+         NI0g==
+X-Gm-Message-State: AOAM530IQsSDEw1WxoJrThQqdFvEmBke+HPQQ930ldJDtTnUh4bMn6Y8
+        b7gTwaZWvrj9F+jvWvBomVvzb7+FydZAtk1dNgufcnmQ3062wMwKQQHgWt2+2HxFepmhuA9pnyO
+        3tWduNWv2cA7Eqd5iAjYQ
+X-Received: by 2002:a37:a756:: with SMTP id q83mr3148646qke.328.1597937800624;
+        Thu, 20 Aug 2020 08:36:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw4pYlM2PaJuPvbSgqi4EWNKR0qdBZh4Nkva/XSelUmqXUMl+z+DfwEspVBCF2KiIlan4nOGA==
+X-Received: by 2002:a37:a756:: with SMTP id q83mr3148627qke.328.1597937800383;
+        Thu, 20 Aug 2020 08:36:40 -0700 (PDT)
+Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id j61sm3159421qtd.52.2020.08.20.08.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 08:36:38 -0700 (PDT)
+Message-ID: <825a566040de2eedc81350cc914dd38dcc3ba4ff.camel@redhat.com>
+Subject: Re: [PATCH] PCI/PM: Assume ports without DLL Link Active train
+ links in 100 ms
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Lukas Wunner <lukas@wunner.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org
+Date:   Thu, 20 Aug 2020 11:36:37 -0400
+In-Reply-To: <20200820081314.l25cjoehbnvbjbrk@wunner.de>
+References: <20200819130625.12778-1-mika.westerberg@linux.intel.com>
+         <20200820081314.l25cjoehbnvbjbrk@wunner.de>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 9:08 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 8/13/20 1:55 PM, Andy Shevchenko wrote:
-> > On Thu, Aug 13, 2020 at 11:31 PM Arjan van de Ven <arjan@linux.intel.co=
-m> wrote:
-> >> On 8/13/2020 12:58 PM, Randy Dunlap wrote:
-> >>> From: Randy Dunlap <rdunlap@infradead.org>
-> >>>
-> >>> Fix build error when CONFIG_ACPI is not set/enabled by adding
-> >>> the header file <asm/acpi.h> which contains a stub for the function
-> >>> in the build error.
-> >>>
-> >>> ../arch/x86/pci/intel_mid_pci.c: In function =E2=80=98intel_mid_pci_i=
-nit=E2=80=99:
-> >>> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of=
- function =E2=80=98acpi_noirq_set=E2=80=99; did you mean =E2=80=98acpi_irq_=
-get=E2=80=99? [-Werror=3Dimplicit-function-declaration]
-> >>>    acpi_noirq_set();
-> >
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Thanks!
->
-> also:
-> Reviewed-by: Jesse Barnes <jsbarnes@google.com>
->
-> >
-> >>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> >>> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >>> Cc: Len Brown <lenb@kernel.org>
-> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >>> Cc: Jesse Barnes <jsbarnes@google.com>
-> >>> Cc: Arjan van de Ven <arjan@linux.intel.com>
-> >>> Cc: linux-pci@vger.kernel.org
-> >>> ---
-> >>> Found in linux-next, but applies to/exists in mainline also.
-> >>>
-> >>> Alternative.1: X86_INTEL_MID depends on ACPI
-> >>> Alternative.2: drop X86_INTEL_MID support
-> >>
-> >> at this point I'd suggest Alternative 2; the products that needed that=
- (past tense, that technology
-> >> is no longer need for any newer products) never shipped in any form wh=
-ere a 4.x or 5.x kernel could
-> >> work, and they are also all locked down...
-> >
-> > This is not true. We have Intel Edison which runs nicely on vanilla
-> > (not everything, some is still requiring a couple of patches, but most
-> > of it works out-of-the-box).
-> >
-> > And for the record, I have been working on removing quite a pile of
-> > code (~13kLOCs to the date IIRC) in MID area. Just need some time to
-> > fix Edison watchdog for that.
->
->
-> I didn't see a consensus on this patch, although Andy says it's still nee=
-ded,
-> so it shouldn't be removed (yet). Maybe his big removal patch can remove =
-it
-> later. For now can we just fix the build error?
+On Thu, 2020-08-20 at 10:13 +0200, Lukas Wunner wrote:
+> On Wed, Aug 19, 2020 at 04:06:25PM +0300, Mika Westerberg wrote:
+> > Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
+> > at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
+> > JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
+> [...]
+> > +	 * Also do the same for devices that have power management disabled
+> > +	 * by their driver and are completely power managed through the
+> > +	 * root port power resource instead. This is a special case for
+> > +	 * nouveau.
+> >  	 */
+> > -	if (!pci_is_pcie(dev)) {
+> > +	if (!pci_is_pcie(dev) || !child->pm_cap) {
+> 
+> It sounds like the above-mentioned Thunderbolt controllers are broken,
+> not the Nvidia cards, so to me (as an outside observer) it would seem
+> more logical that a quirk for the former is needed.  The code comment
+> suggests that nouveau somehow has a problem, but that doesn't seem to
+> be the case (IIUC).  Also, it's a little ugly to have references to
+> specific drivers in PCI core code.
+> 
+> Maybe this can be fixed with quirks for the Thunderbolt controllers
+> which set a flag, and that flag causes the 1000 msec wait to be skipped?
+Sorry, some stuff came up yesterday so I didn't get the time to go through my
+laptops and test them. I do agree with this though - I'd be worried as well that
+nouveau might not be the only driver out there that needs this kind of delay
 
+> 
+> Thanks,
+> 
+> Lukas
+> 
+-- 
+Sincerely,
+      Lyude Paul (she/her)
+      Software Engineer at Red Hat
 
-Yeah I think it makes sense to land it.  Doesn't get in the way of a
-future removal and fixes a build error in the meantime.
-
-Jesse
