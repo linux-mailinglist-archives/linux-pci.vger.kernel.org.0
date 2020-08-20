@@ -2,125 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B229C24C775
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 23:55:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9394524C79B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 00:11:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgHTVzx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 17:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46586 "EHLO mail.kernel.org"
+        id S1726806AbgHTWLs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 18:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgHTVzw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:55:52 -0400
+        id S1727090AbgHTWLp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Aug 2020 18:11:45 -0400
 Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17417204FD;
-        Thu, 20 Aug 2020 21:55:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0922E207DA;
+        Thu, 20 Aug 2020 22:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597960551;
-        bh=5ULzVEcGtTnweVu+hyjjAnP9S4wCcq1qytib5KiiV2w=;
+        s=default; t=1597961504;
+        bh=hQLn8f05VaasNn8PdcyJKXuA9IhbW747RfOgp0dwy1A=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1XKDiQcwbYSrv8Z4WVaOtJLooY4nfviEtxoPo0Y2NitTUuU8LYIu2bSKyRd8WQr0L
-         aN+ZWgAz5Hc65TmNcYJVWDD/yr5T+tCdq/45aqqethpzi9q7hBrkKKy8P8WzFsEOnq
-         NIWuz91tc4hJtRfSZd1UAfb3iDvkP5BRBg2NWEaU=
-Date:   Thu, 20 Aug 2020 16:55:49 -0500
+        b=JisBUDGzywd0EU23tAc0zxOcZggfK7/Yd5/DGGteUVJ0i+5IAoF2IZ2egdnOYRgma
+         dUi3XDECWHRabaC0FReJ92JAeL9UPMku0wh2iJ86Z5uPar0R9NH+NaFnTq7SHDsUGH
+         ukorNBEAIcX5CE4gLT0W0pStS0c2rDhhfZZiFa0Y=
+Date:   Thu, 20 Aug 2020 17:11:42 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     George Cherian <george.cherian@marvell.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, bhelgaas@google.com, arnd@arndb.de,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCHv2] PCI: Add pci_iounmap
-Message-ID: <20200820215549.GA1569713@bjorn-Precision-5520>
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc:     ray.jui@broadcom.com, sbranden@broadcom.com, f.fainelli@gmail.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
+Message-ID: <20200820221142.GA1571008@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820050306.2015009-1-george.cherian@marvell.com>
+In-Reply-To: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Michael, author of 66eab4df288a ("lib: add GENERIC_PCI_IOMAP")]
+On Thu, Aug 06, 2020 at 04:14:55PM +1200, Mark Tomlinson wrote:
+> For hardware that only supports 32-bit writes to PCI there is the
+> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
+> messages was introduced by fb2659230120, but rate-limiting is not the
+> best choice here. Some devices may not show the warnings they should if
+> another device has just produced a bunch of warnings. Also, the number
+> of messages can be a nuisance on devices which are otherwise working
+> fine.
+> 
+> This patch changes the ratelimit to a single warning per bus. This
+> ensures no bus is 'starved' of emitting a warning and also that there
+> isn't a continuous stream of warnings. It would be preferable to have a
+> warning per device, but the pci_dev structure is not available here, and
+> a lookup from devfn would be far too slow.
+> 
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 
-On Thu, Aug 20, 2020 at 10:33:06AM +0530, George Cherian wrote:
-> In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
-> CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
-> function. Due to this the managed release variants or even the explicit
-> pci_iounmap calls doesn't really remove the mappings.
-> 
-> This issue is seen on an arm64 based system. arm64 by default selects
-> only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
-> 'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
-> 
-> Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
-> would lead to the following error message after long hour tests
-> 
-> "allocation failed: out of vmalloc space - use vmalloc=<size> to
-> increase size."
-> 
-> Signed-off-by: George Cherian <george.cherian@marvell.com>
+Applied with collected reviews/acks to pci/enumeration for v5.10,
+thanks!
+
 > ---
-> * Changes from v1
-> 	- Fix the 0-day compilation error.
-> 	- Mark the lib/iomap pci_iounmap call as weak incase 
-> 	  if any architecture have there own implementation.
+> changes in v4:
+>  - Use bitfield rather than bool to save memory (was meant to be in v3).
 > 
->  include/asm-generic/io.h |  4 ++++
->  lib/pci_iomap.c          | 10 ++++++++++
->  2 files changed, 14 insertions(+)
+>  drivers/pci/access.c | 9 ++++++---
+>  include/linux/pci.h  | 1 +
+>  2 files changed, 7 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> index dabf8cb7203b..5986b37226b7 100644
-> --- a/include/asm-generic/io.h
-> +++ b/include/asm-generic/io.h
-> @@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
->  struct pci_dev;
->  extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 79c4a2ef269a..b452467fd133 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>  	 * write happen to have any RW1C (write-one-to-clear) bits set, we
+>  	 * just inadvertently cleared something we shouldn't have.
+>  	 */
+> -	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> -			     size, pci_domain_nr(bus), bus->number,
+> -			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +	if (!bus->unsafe_warn) {
+> +		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> +			 size, pci_domain_nr(bus), bus->number,
+> +			 PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +		bus->unsafe_warn = 1;
+> +	}
 >  
-> +#ifdef CONFIG_GENERIC_PCI_IOMAP
-> +extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
-> +#else
->  #ifndef pci_iounmap
->  #define pci_iounmap pci_iounmap
->  static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
->  {
->  }
->  #endif
-> +#endif /* CONFIG_GENERIC_PCI_IOMAP */
->  #endif /* CONFIG_GENERIC_IOMAP */
+>  	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+>  	tmp = readl(addr) & mask;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 34c1c4f45288..85211a787f8b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -626,6 +626,7 @@ struct pci_bus {
+>  	struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
+>  	struct bin_attribute	*legacy_mem;	/* Legacy mem */
+>  	unsigned int		is_added:1;
+> +	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
+>  };
 >  
->  /*
-> diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
-> index 2d3eb1cb73b8..ecd1eb3f6c25 100644
-> --- a/lib/pci_iomap.c
-> +++ b/lib/pci_iomap.c
-> @@ -134,4 +134,14 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
->  	return pci_iomap_wc_range(dev, bar, 0, maxlen);
->  }
->  EXPORT_SYMBOL_GPL(pci_iomap_wc);
-> +
-> +#ifndef CONFIG_GENERIC_IOMAP
-> +#define pci_iounmap pci_iounmap
-> +void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr);
-> +void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-> +{
-> +	iounmap(addr);
-> +}
-> +EXPORT_SYMBOL(pci_iounmap);
-> +#endif
-
-I completely agree that this looks like a leak that needs to be fixed.
-
-But my head hurts after trying to understand pci_iomap() and
-pci_iounmap().  I hate to add even more #ifdefs here.  Can't we
-somehow rationalize this and put pci_iounmap() next to pci_iomap()?
-
-66eab4df288a ("lib: add GENERIC_PCI_IOMAP") moved pci_iomap() from
-lib/iomap.c to lib/pci_iomap.c, but left pci_iounmap() in lib/iomap.c.
-There must be some good reason why they're separated, but I don't know
-what it is.
-
->  #endif /* CONFIG_PCI */
+>  #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
 > -- 
-> 2.25.1
+> 2.28.0
 > 
