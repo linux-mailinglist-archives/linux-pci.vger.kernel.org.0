@@ -2,110 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F1A24AD8D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 06:08:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A390424AE3B
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 07:03:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725468AbgHTEIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 00:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgHTEIG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 00:08:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FF1C061757;
-        Wed, 19 Aug 2020 21:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=WmtpAyrOA4FNl/DzMNF6BC2DOQ6KxPXZ7lYWa9s+4RI=; b=VhClpoNayNggIskH4KYA/2gjpq
-        8CRQIlSfkOcazgLZzjoaXLal48fioUKxGp4HTIn/7cR0HJTGaDDN3oG7UR+oL3/aQzqps4yG4gMpT
-        v4Ku7BjMjtle8IQmv63/UFe7dTKg5M97APX2X3oZIH5qyXEGng2Imymm24OkHZMjDOGfpbDwZk4vF
-        TNM/yV4ipesWvORZLWFfxYQ29gxADn17KBppzv/FxOAGDWDiU8E1y7VxbG5raUpGJ6qRSyN5CYH40
-        ftBCnAtnhsgoa46/XOzHxTVTSvAVDiV8v/jbqJLhNIcGYRQhyNygSeuWPVPrpvDzGBQ6m89s9K0rd
-        T/MR/Fyw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8brp-0006ak-Gn; Thu, 20 Aug 2020 04:07:58 +0000
-Subject: Re: [PATCH] x86/pci: fix intel_mid_pci.c build error when ACPI is not
- enabled
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arjan van de Ven <arjan@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
- <810f1b0e-0adf-c316-f23c-172338f9ef0a@linux.intel.com>
- <CAHp75VcJCjJJvbkSiGHC+3_shWRwoqeZHE2KNDLQBjneW=02dg@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2b14b6be-a031-a28b-6585-8307d2fdae21@infradead.org>
-Date:   Wed, 19 Aug 2020 21:07:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725798AbgHTFD0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 01:03:26 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:57906 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725780AbgHTFDZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 01:03:25 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07K50FEE015293;
+        Wed, 19 Aug 2020 22:03:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0220; bh=uwgbRGsLu7TM3L7kScUPbHo+Zd1DkfFIByzJ2VIUTeQ=;
+ b=KlfHUjej9R399YagK5RL/iVywco9xKfBzrbBBgbfinkZQ892HjoADoAEP5zbqNJNJBI+
+ N8uxbJYdD/rqh1WecyUS6GlUdj1NEyqB3R9bTGknMXu7xiyWqXQTs2pFF/VtthaEBHYK
+ FYLLRbphmevd05Dd7+D82xwQJYcnFK32PVfdWMS4iXl4ShF6HxycE1XG8EKZtQIxdDix
+ 0mly4nl/8RndcqP0NcId//tP08A4h/6goXzZpB/B+SNucMKuRQnbao/u+nwO4F7+h/wy
+ PrDFd5w5KIgHlCuhsOcnwvgd35TmBr/y+B6rE1FCxFNhC3We4OENHG0jP3xem9Y8XfLH NA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 3304hhudxq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 22:03:19 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug
+ 2020 22:03:17 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 22:03:17 -0700
+Received: from hyd1584.caveonetworks.com (unknown [10.29.37.82])
+        by maili.marvell.com (Postfix) with ESMTP id 187863F7044;
+        Wed, 19 Aug 2020 22:03:14 -0700 (PDT)
+From:   George Cherian <george.cherian@marvell.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     <bhelgaas@google.com>, <arnd@arndb.de>,
+        George Cherian <george.cherian@marvell.com>
+Subject: [PATCHv2] PCI: Add pci_iounmap
+Date:   Thu, 20 Aug 2020 10:33:06 +0530
+Message-ID: <20200820050306.2015009-1-george.cherian@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcJCjJJvbkSiGHC+3_shWRwoqeZHE2KNDLQBjneW=02dg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-19_13:2020-08-19,2020-08-19 signatures=0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/13/20 1:55 PM, Andy Shevchenko wrote:
-> On Thu, Aug 13, 2020 at 11:31 PM Arjan van de Ven <arjan@linux.intel.com> wrote:
->> On 8/13/2020 12:58 PM, Randy Dunlap wrote:
->>> From: Randy Dunlap <rdunlap@infradead.org>
->>>
->>> Fix build error when CONFIG_ACPI is not set/enabled by adding
->>> the header file <asm/acpi.h> which contains a stub for the function
->>> in the build error.
->>>
->>> ../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
->>> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
->>>    acpi_noirq_set();
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Thanks!
+In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
+CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
+function. Due to this the managed release variants or even the explicit
+pci_iounmap calls doesn't really remove the mappings.
 
-also:
-Reviewed-by: Jesse Barnes <jsbarnes@google.com>
+This issue is seen on an arm64 based system. arm64 by default selects
+only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
+'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
 
-> 
->>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> Cc: Len Brown <lenb@kernel.org>
->>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>> Cc: Jesse Barnes <jsbarnes@google.com>
->>> Cc: Arjan van de Ven <arjan@linux.intel.com>
->>> Cc: linux-pci@vger.kernel.org
->>> ---
->>> Found in linux-next, but applies to/exists in mainline also.
->>>
->>> Alternative.1: X86_INTEL_MID depends on ACPI
->>> Alternative.2: drop X86_INTEL_MID support
->>
->> at this point I'd suggest Alternative 2; the products that needed that (past tense, that technology
->> is no longer need for any newer products) never shipped in any form where a 4.x or 5.x kernel could
->> work, and they are also all locked down...
-> 
-> This is not true. We have Intel Edison which runs nicely on vanilla
-> (not everything, some is still requiring a couple of patches, but most
-> of it works out-of-the-box).
-> 
-> And for the record, I have been working on removing quite a pile of
-> code (~13kLOCs to the date IIRC) in MID area. Just need some time to
-> fix Edison watchdog for that.
+Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
+would lead to the following error message after long hour tests
 
+"allocation failed: out of vmalloc space - use vmalloc=<size> to
+increase size."
 
-I didn't see a consensus on this patch, although Andy says it's still needed,
-so it shouldn't be removed (yet). Maybe his big removal patch can remove it
-later. For now can we just fix the build error?
+Signed-off-by: George Cherian <george.cherian@marvell.com>
+---
+* Changes from v1
+	- Fix the 0-day compilation error.
+	- Mark the lib/iomap pci_iounmap call as weak incase 
+	  if any architecture have there own implementation.
 
+ include/asm-generic/io.h |  4 ++++
+ lib/pci_iomap.c          | 10 ++++++++++
+ 2 files changed, 14 insertions(+)
 
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index dabf8cb7203b..5986b37226b7 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
+ struct pci_dev;
+ extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
+ 
++#ifdef CONFIG_GENERIC_PCI_IOMAP
++extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
++#else
+ #ifndef pci_iounmap
+ #define pci_iounmap pci_iounmap
+ static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
+ {
+ }
+ #endif
++#endif /* CONFIG_GENERIC_PCI_IOMAP */
+ #endif /* CONFIG_GENERIC_IOMAP */
+ 
+ /*
+diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
+index 2d3eb1cb73b8..ecd1eb3f6c25 100644
+--- a/lib/pci_iomap.c
++++ b/lib/pci_iomap.c
+@@ -134,4 +134,14 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
+ 	return pci_iomap_wc_range(dev, bar, 0, maxlen);
+ }
+ EXPORT_SYMBOL_GPL(pci_iomap_wc);
++
++#ifndef CONFIG_GENERIC_IOMAP
++#define pci_iounmap pci_iounmap
++void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr);
++void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr)
++{
++	iounmap(addr);
++}
++EXPORT_SYMBOL(pci_iounmap);
++#endif
+ #endif /* CONFIG_PCI */
 -- 
-~Randy
+2.25.1
 
