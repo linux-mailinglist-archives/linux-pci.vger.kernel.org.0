@@ -2,116 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54B4524C24E
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 17:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E79924C46F
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 19:24:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgHTPgq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 11:36:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35102 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729091AbgHTPgo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 11:36:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597937802;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EoZ5OGb6TmDVGND9bPZ/+clJ+2p6aDqeJH5F5modhrM=;
-        b=DBY9xfWfIyQIXlUKWn8Dwv3ihZmFzTa8dE6/+hZMXrTekcTo4kS5Qkt4QnPESz2Q2YN8+x
-        ia6vHALaK/g2B35OBjBzfESNVsiiePG+zw0hYVtwms4D5bsuM0mSWiFkriAYPMsMYVh7Yo
-        Rm+pM/cFXfmAEmbNFc/aNuBJIcezo4o=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-kquLe1yYM1ulT6Vp_mrbpA-1; Thu, 20 Aug 2020 11:36:41 -0400
-X-MC-Unique: kquLe1yYM1ulT6Vp_mrbpA-1
-Received: by mail-qt1-f200.google.com with SMTP id r24so1819701qtu.3
-        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 08:36:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=EoZ5OGb6TmDVGND9bPZ/+clJ+2p6aDqeJH5F5modhrM=;
-        b=UIKUZ/LPsotLOrw1v0H1WdSp2gLNKJu0HsWGEwl4N/AQEc7PnDlmigMc59DTdxyIsy
-         OaJxBq7dGSTBa94jM/i0N1vXGLg3kpybAmh/wr1LxzRpY7OT/LWpCnhz5nQMDsyQZ8bb
-         mipCMcBS9sqbEi/haSMPRL78zS6L87QZOeU8dzH/ZJ5aEsu83Y6AoSKr7QH6zlKV6yFU
-         hTI4izHFtIvzPhL7AbYW7/a9exkvq6zstEasKYy7XOahS2UaHAtFzkbrD4D4fk8ea9cm
-         ZiFD1DhQs9QC6tPi0wnHRb+0xYZKQdS1xVDfS/OLqBFqOlYtoYEGiViWO2N0n4Yec8aR
-         NI0g==
-X-Gm-Message-State: AOAM530IQsSDEw1WxoJrThQqdFvEmBke+HPQQ930ldJDtTnUh4bMn6Y8
-        b7gTwaZWvrj9F+jvWvBomVvzb7+FydZAtk1dNgufcnmQ3062wMwKQQHgWt2+2HxFepmhuA9pnyO
-        3tWduNWv2cA7Eqd5iAjYQ
-X-Received: by 2002:a37:a756:: with SMTP id q83mr3148646qke.328.1597937800624;
-        Thu, 20 Aug 2020 08:36:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw4pYlM2PaJuPvbSgqi4EWNKR0qdBZh4Nkva/XSelUmqXUMl+z+DfwEspVBCF2KiIlan4nOGA==
-X-Received: by 2002:a37:a756:: with SMTP id q83mr3148627qke.328.1597937800383;
-        Thu, 20 Aug 2020 08:36:40 -0700 (PDT)
-Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id j61sm3159421qtd.52.2020.08.20.08.36.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 08:36:38 -0700 (PDT)
-Message-ID: <825a566040de2eedc81350cc914dd38dcc3ba4ff.camel@redhat.com>
-Subject: Re: [PATCH] PCI/PM: Assume ports without DLL Link Active train
- links in 100 ms
-From:   Lyude Paul <lyude@redhat.com>
-Reply-To: lyude@redhat.com
-To:     Lukas Wunner <lukas@wunner.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org
-Date:   Thu, 20 Aug 2020 11:36:37 -0400
-In-Reply-To: <20200820081314.l25cjoehbnvbjbrk@wunner.de>
-References: <20200819130625.12778-1-mika.westerberg@linux.intel.com>
-         <20200820081314.l25cjoehbnvbjbrk@wunner.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        id S1730529AbgHTRYk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 13:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730489AbgHTRYe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Aug 2020 13:24:34 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ADB620724;
+        Thu, 20 Aug 2020 17:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597944273;
+        bh=PbAS4aeO0zd58lvXTmAoGZtS2G3ppxv2EpTV5wCK05w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=K0WpCJS/sR3eYPfF27ufor6aZXVKXbDk1rnF3qMrncCMZ8N/Zv6STMJE6QBJ6qvqz
+         OxHRCsd2S1NBWIzaVAOxA3nG9pM/PmVlHJE4Z7ZtWUacZRDMKMZziummgNSPj5OGIK
+         25cLFK5Z5ehktoYaQxVLyZtUB+B7d+4uQHJdXQ1s=
+Date:   Thu, 20 Aug 2020 12:24:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org, Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Dana Alkattan <dana.alkattan@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 16/19] PCI / thunderbolt: Switch to use device links
+ instead of PCI quirk
+Message-ID: <20200820172431.GA1550503@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819115905.59834-17-mika.westerberg@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2020-08-20 at 10:13 +0200, Lukas Wunner wrote:
-> On Wed, Aug 19, 2020 at 04:06:25PM +0300, Mika Westerberg wrote:
-> > Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
-> > at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
-> > JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
-> [...]
-> > +	 * Also do the same for devices that have power management disabled
-> > +	 * by their driver and are completely power managed through the
-> > +	 * root port power resource instead. This is a special case for
-> > +	 * nouveau.
-> >  	 */
-> > -	if (!pci_is_pcie(dev)) {
-> > +	if (!pci_is_pcie(dev) || !child->pm_cap) {
+On Wed, Aug 19, 2020 at 02:59:02PM +0300, Mika Westerberg wrote:
+> On older Apple systems there is currently a PCI quirk in place to block
+> resume of tunneled PCIe ports until NHI (Thunderbolt controller) is
+> resumed. This makes sure the PCIe tunnels are re-established before PCI
+> core notices it.
 > 
-> It sounds like the above-mentioned Thunderbolt controllers are broken,
-> not the Nvidia cards, so to me (as an outside observer) it would seem
-> more logical that a quirk for the former is needed.  The code comment
-> suggests that nouveau somehow has a problem, but that doesn't seem to
-> be the case (IIUC).  Also, it's a little ugly to have references to
-> specific drivers in PCI core code.
+> With device links the same thing can be done without quirks. The driver
+> core will make sure the supplier (NHI) is resumed before consumers (PCIe
+> downstream ports).
 > 
-> Maybe this can be fixed with quirks for the Thunderbolt controllers
-> which set a flag, and that flag causes the 1000 msec wait to be skipped?
-Sorry, some stuff came up yesterday so I didn't get the time to go through my
-laptops and test them. I do agree with this though - I'd be worried as well that
-nouveau might not be the only driver out there that needs this kind of delay
+> For this reason switch the Thunderbolt driver to use device links and
+> remove the PCI quirk.
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-> 
-> Thanks,
-> 
-> Lukas
-> 
--- 
-Sincerely,
-      Lyude Paul (she/her)
-      Software Engineer at Red Hat
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
+> ---
+>  drivers/pci/quirks.c      | 57 ---------------------------------
+>  drivers/thunderbolt/nhi.c | 66 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 57 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index bdf9b52567e0..a25471436523 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3673,63 +3673,6 @@ static void quirk_apple_poweroff_thunderbolt(struct pci_dev *dev)
+>  DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_INTEL,
+>  			       PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C,
+>  			       quirk_apple_poweroff_thunderbolt);
+> -
+> -/*
+> - * Apple: Wait for the Thunderbolt controller to reestablish PCI tunnels
+> - *
+> - * During suspend the Thunderbolt controller is reset and all PCI
+> - * tunnels are lost. The NHI driver will try to reestablish all tunnels
+> - * during resume. We have to manually wait for the NHI since there is
+> - * no parent child relationship between the NHI and the tunneled
+> - * bridges.
+> - */
+> -static void quirk_apple_wait_for_thunderbolt(struct pci_dev *dev)
+> -{
+> -	struct pci_dev *sibling = NULL;
+> -	struct pci_dev *nhi = NULL;
+> -
+> -	if (!x86_apple_machine)
+> -		return;
+> -	if (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
+> -		return;
+> -
+> -	/*
+> -	 * Find the NHI and confirm that we are a bridge on the Thunderbolt
+> -	 * host controller and not on a Thunderbolt endpoint.
+> -	 */
+> -	sibling = pci_get_slot(dev->bus, 0x0);
+> -	if (sibling == dev)
+> -		goto out; /* we are the downstream bridge to the NHI */
+> -	if (!sibling || !sibling->subordinate)
+> -		goto out;
+> -	nhi = pci_get_slot(sibling->subordinate, 0x0);
+> -	if (!nhi)
+> -		goto out;
+> -	if (nhi->vendor != PCI_VENDOR_ID_INTEL
+> -		    || (nhi->device != PCI_DEVICE_ID_INTEL_LIGHT_RIDGE &&
+> -			nhi->device != PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C &&
+> -			nhi->device != PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI &&
+> -			nhi->device != PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI)
+> -		    || nhi->class != PCI_CLASS_SYSTEM_OTHER << 8)
+> -		goto out;
+> -	pci_info(dev, "quirk: waiting for Thunderbolt to reestablish PCI tunnels...\n");
+> -	device_pm_wait_for_dev(&dev->dev, &nhi->dev);
+> -out:
+> -	pci_dev_put(nhi);
+> -	pci_dev_put(sibling);
+> -}
+> -DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_INTEL,
+> -			       PCI_DEVICE_ID_INTEL_LIGHT_RIDGE,
+> -			       quirk_apple_wait_for_thunderbolt);
+> -DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_INTEL,
+> -			       PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C,
+> -			       quirk_apple_wait_for_thunderbolt);
+> -DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_INTEL,
+> -			       PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_BRIDGE,
+> -			       quirk_apple_wait_for_thunderbolt);
+> -DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_INTEL,
+> -			       PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_BRIDGE,
+> -			       quirk_apple_wait_for_thunderbolt);
+>  #endif
+>  
+>  /*
+> diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+> index 24d2b7eff59b..e499fe78756b 100644
+> --- a/drivers/thunderbolt/nhi.c
+> +++ b/drivers/thunderbolt/nhi.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/delay.h>
+>  #include <linux/property.h>
+> +#include <linux/platform_data/x86/apple.h>
+>  
+>  #include "nhi.h"
+>  #include "nhi_regs.h"
+> @@ -1069,6 +1070,69 @@ static bool nhi_imr_valid(struct pci_dev *pdev)
+>  	return true;
+>  }
+>  
+> +/*
+> + * During suspend the Thunderbolt controller is reset and all PCIe
+> + * tunnels are lost. The NHI driver will try to reestablish all tunnels
+> + * during resume. This adds device links between the tunneled PCIe
+> + * downstream ports and the NHI so that the device core will make sure
+> + * NHI is resumed first before the rest.
+> + */
+> +static void tb_apple_add_links(struct tb_nhi *nhi)
+> +{
+> +	struct pci_dev *upstream, *pdev;
+> +
+> +	if (!x86_apple_machine)
+> +		return;
+> +
+> +	switch (nhi->pdev->device) {
+> +	case PCI_DEVICE_ID_INTEL_LIGHT_RIDGE:
+> +	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C:
+> +	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
+> +	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +
+> +	upstream = pci_upstream_bridge(nhi->pdev);
+> +	while (upstream) {
+> +		if (!pci_is_pcie(upstream))
+> +			return;
+> +		if (pci_pcie_type(upstream) == PCI_EXP_TYPE_UPSTREAM)
+> +			break;
+> +		upstream = pci_upstream_bridge(upstream);
+> +	}
+> +
+> +	if (!upstream)
+> +		return;
+> +
+> +	/*
+> +	 * For each hotplug downstream port, create add device link
+> +	 * back to NHI so that PCIe tunnels can be re-established after
+> +	 * sleep.
+> +	 */
+> +	for_each_pci_bridge(pdev, upstream->subordinate) {
+> +		const struct device_link *link;
+> +
+> +		if (!pci_is_pcie(pdev))
+> +			continue;
+> +		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM ||
+> +		    !pdev->is_hotplug_bridge)
+> +			continue;
+> +
+> +		link = device_link_add(&pdev->dev, &nhi->pdev->dev,
+> +				       DL_FLAG_AUTOREMOVE_SUPPLIER |
+> +				       DL_FLAG_PM_RUNTIME);
+> +		if (link) {
+> +			dev_dbg(&nhi->pdev->dev, "created link from %s\n",
+> +				dev_name(&pdev->dev));
+> +		} else {
+> +			dev_warn(&nhi->pdev->dev, "device link creation from %s failed\n",
+> +				 dev_name(&pdev->dev));
+> +		}
+> +	}
+> +}
+> +
+>  static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct tb_nhi *nhi;
+> @@ -1134,6 +1198,8 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  			return res;
+>  	}
+>  
+> +	tb_apple_add_links(nhi);
+> +
+>  	tb = icm_probe(nhi);
+>  	if (!tb)
+>  		tb = tb_probe(nhi);
+> -- 
+> 2.28.0
+> 
