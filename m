@@ -2,109 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD42F24C089
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 16:24:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A0E624C0BD
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 16:39:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHTOY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 10:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbgHTOYZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 10:24:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD947C061385
-        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 07:24:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=yaOdd8onww5sWiYJKpVRSo31g6ReGrkblmX6jCKde8g=; b=k91rk+1knalAOHP33CAlyGD4CU
-        +rCSrGtUDgYRZwm7lGitIyMRbFo/0z51Qqi+LPWcGL15k6FqnpikI2roslYCE8B+DQ+5R7tAVPanm
-        II6jfp+8eOAw9tLJqPOsPKt4+ORQZIc3OZ6blYjZlo8QIN/NxZQMNoVsbzbm3cO8QyGb8vBLzYQNC
-        kA8O0ezQyGg7UHdUIIVE43KfYy7/Fpzyhd4H5EVqc8En6STUStQ6umYJiUzpYBSt91sYhdD0TIEwc
-        HLa9GWTIcaP6hxKf1jzabDyfaDvB1ljUmHOahI9cyO3bcStTd0QgPnBl3vm91TrwN1z/WdI21+mGp
-        54Djti7g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8lUL-0001VB-BA; Thu, 20 Aug 2020 14:24:22 +0000
-Subject: Re: [PATCH] x86/pci: don't set acpi stuff if !CONFIG_ACPI
-To:     Adam Borowski <kilobyte@angband.pl>,
+        id S1726809AbgHTOj1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 10:39:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46204 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgHTOjX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 10:39:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KEXTOs049256;
+        Thu, 20 Aug 2020 14:39:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to : content-transfer-encoding; s=corp-2020-01-29;
+ bh=8vkwBt/4YEhoEn8LKQ2IVN15+QakSrmeykzU+jcBU6Q=;
+ b=CIToX4O3a8L3vRrM7lAPdqrTJKJpsCnugXltQ6XPMk1tKX3qSDtlF2ujRL+rQi65/Jcp
+ Cs0pcFQ5DSkVwMS2EqhLeLNPTSpH9gthrHB2r9ufPiQzpqcrb0dzbdAIIDyuE2Zn2yQg
+ Fm+n+NYnshUVrdTuRwtQlo6Sd93FfSpcXN1gXCVMU1uZC0Q3i0A485xyOOJCBmM0Ue1V
+ 07Bx/BFbk57oU6+5LiTYULEfWGHimqdkBe87zWzqGUgzGp4YMGePwcrziguLRNnNjSFc
+ q/MSYsAMh5Ja/J+mXa8X9RCpuxBu4nW2vhCQPOBcfSjPoDxoNFFW80y+z0fwmv6Pl1P5 7Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32x74rh064-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 14:39:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KEX2bf098374;
+        Thu, 20 Aug 2020 14:39:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 32xsn1f46n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 14:39:08 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07KEd63Y000740;
+        Thu, 20 Aug 2020 14:39:07 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Aug 2020 07:39:05 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 4456A6A0127; Thu, 20 Aug 2020 10:40:20 -0400 (EDT)
+Date:   Thu, 20 Aug 2020 10:40:20 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, jgross@suse.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-pci@vger.kernel.org
-References: <20200820125320.9967-1-kilobyte@angband.pl>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5429dfd4-0cd0-c84b-f34f-5b5548c5d47a@infradead.org>
-Date:   Thu, 20 Aug 2020 07:24:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        xen-devel <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH] x86/pci: fix xen.c build error when CONFIG_ACPI is not
+ set
+Message-ID: <20200820144020.GA31230@char.us.oracle.com>
+References: <a020884b-fa44-e732-699f-2b79c9b7d15e@infradead.org>
+ <88afdd4a-1b30-d836-05ce-8919b834579b@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200820125320.9967-1-kilobyte@angband.pl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <88afdd4a-1b30-d836-05ce-8919b834579b@infradead.org>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200121
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/20/20 5:53 AM, Adam Borowski wrote:
-> Not that x86 without ACPI sees any real use...
-> 
-> Signed-off-by: Adam Borowski <kilobyte@angband.pl>
-> ---
-> Found by randconfig builds.
+On Wed, Aug 19, 2020 at 08:09:11PM -0700, Randy Dunlap wrote:
+> Hi Konrad,
 
-Note that
-#include <asm/acpi.h>
-has a stub for acpi_noirq_set() when ACPI is not set/enabled.
-That would be better.  And I have submitted that for
-arch/x86/pci/xen.c -- and a different patch for intel_mid_pci.c
+Hey Randy,
 
-But I didn't submit them to the X86 maintainers because the
-MAINTAINERS file pointed me to the PCI maintainer and to the
-XEN PCI maintainer....
-
-
-> 
->  arch/x86/pci/intel_mid_pci.c | 2 ++
->  arch/x86/pci/xen.c           | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-> index 00c62115f39c..f14a911f0d06 100644
-> --- a/arch/x86/pci/intel_mid_pci.c
-> +++ b/arch/x86/pci/intel_mid_pci.c
-> @@ -299,8 +299,10 @@ int __init intel_mid_pci_init(void)
->  	pcibios_disable_irq = intel_mid_pci_irq_disable;
->  	pci_root_ops = intel_mid_pci_ops;
->  	pci_soc_mode = 1;
-> +#ifdef CONFIG_ACPI
->  	/* Continue with standard init */
->  	acpi_noirq_set();
-> +#endif
->  	return 1;
->  }
->  
-> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-> index 9f9aad42ccff..681eb5c34c03 100644
-> --- a/arch/x86/pci/xen.c
-> +++ b/arch/x86/pci/xen.c
-> @@ -406,8 +406,10 @@ int __init pci_xen_init(void)
->  	pcibios_enable_irq = xen_pcifront_enable_irq;
->  	pcibios_disable_irq = NULL;
->  
-> +#ifdef CONFIG_ACPI
->  	/* Keep ACPI out of the picture */
->  	acpi_noirq_set();
-> +#endif
->  
->  #ifdef CONFIG_PCI_MSI
->  	x86_msi.setup_msi_irqs = xen_setup_msi_irqs;
-> 
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+I believe Juergen is picking this up.
+>=20
+> ping.
+>=20
+> I am still seeing this build error. It looks like this is
+> in your territory to merge...
+>=20
+>=20
+> On 8/13/20 4:00 PM, Randy Dunlap wrote:
+> > From: Randy Dunlap <rdunlap@infradead.org>
+> >=20
+> > Fix build error when CONFIG_ACPI is not set/enabled:
+> >=20
+> > ../arch/x86/pci/xen.c: In function =E2=80=98pci_xen_init=E2=80=99:
+> > ../arch/x86/pci/xen.c:410:2: error: implicit declaration of function =
+=E2=80=98acpi_noirq_set=E2=80=99; did you mean =E2=80=98acpi_irq_get=E2=80=
+=99? [-Werror=3Dimplicit-function-declaration]
+> >   acpi_noirq_set();
+> >=20
+> > Fixes: 88e9ca161c13 ("xen/pci: Use acpi_noirq_set() helper to avoid #=
+ifdef")
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> > Cc: xen-devel@lists.xenproject.org
+> > Cc: linux-pci@vger.kernel.org
+> > ---
+> >  arch/x86/pci/xen.c |    1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > --- linux-next-20200813.orig/arch/x86/pci/xen.c
+> > +++ linux-next-20200813/arch/x86/pci/xen.c
+> > @@ -26,6 +26,7 @@
+> >  #include <asm/xen/pci.h>
+> >  #include <asm/xen/cpuid.h>
+> >  #include <asm/apic.h>
+> > +#include <asm/acpi.h>
+> >  #include <asm/i8259.h>
+> > =20
+> >  static int xen_pcifront_enable_irq(struct pci_dev *dev)
+> >=20
+>=20
+>=20
+> thanks.
+> --=20
+> ~Randy
+>=20
