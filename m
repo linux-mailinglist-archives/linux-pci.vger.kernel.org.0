@@ -2,94 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4169B24B02C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 09:30:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8274F24B0E3
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 10:16:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgHTHaP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 03:30:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26636 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHTHaO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:30:14 -0400
-IronPort-SDR: 8bBDYl41AyOx7NDwWl206ipj+SdbHB5Qhpi5KFLKwK5o04ELkZXK2noc/khjdoEsg7IIxDTmVg
- FbF0k9dXR1pA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="155225865"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="155225865"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 00:30:13 -0700
-IronPort-SDR: V0bNGK+unpSW220Mv1SyOPGZuGAnuaTlwOCopnjwvfUbDavGw+l76ufZosNkFRFVu19fHTMzAO
- M3q/6zpbWVFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="497513364"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2020 00:30:13 -0700
-Received: from [10.249.73.140] (ekotax-MOBL.gar.corp.intel.com [10.249.73.140])
-        by linux.intel.com (Postfix) with ESMTP id 0595558045A;
-        Thu, 20 Aug 2020 00:30:11 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: PCI: intel,lgm-pcie: Fix matching on all
- snps,dw-pcie instances
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-References: <20200819222002.2059917-1-robh@kernel.org>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <e089ab71-e203-7d24-c1a5-6213c925b153@linux.intel.com>
-Date:   Thu, 20 Aug 2020 15:30:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726793AbgHTIQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 04:16:45 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:36653 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgHTINW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 04:13:22 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 4566C30000CCE;
+        Thu, 20 Aug 2020 10:13:15 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id E4AED16038D; Thu, 20 Aug 2020 10:13:14 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 10:13:14 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/PM: Assume ports without DLL Link Active train links
+ in 100 ms
+Message-ID: <20200820081314.l25cjoehbnvbjbrk@wunner.de>
+References: <20200819130625.12778-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200819222002.2059917-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819130625.12778-1-mika.westerberg@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Aug 19, 2020 at 04:06:25PM +0300, Mika Westerberg wrote:
+> Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
+> at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
+> JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
+[...]
+> +	 * Also do the same for devices that have power management disabled
+> +	 * by their driver and are completely power managed through the
+> +	 * root port power resource instead. This is a special case for
+> +	 * nouveau.
+>  	 */
+> -	if (!pci_is_pcie(dev)) {
+> +	if (!pci_is_pcie(dev) || !child->pm_cap) {
 
-On 8/20/2020 6:20 AM, Rob Herring wrote:
-> The intel,lgm-pcie binding is matching on all snps,dw-pcie instances
-> which is wrong. Add a custom 'select' entry to fix this.
->
-> Fixes: e54ea45a4955 ("dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller")
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Dilip Kota <eswara.kota@linux.intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> I'll take this via the DT tree.
->
-> Rob
->
->   Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml | 8 ++++++++
->   1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> index 64b2c64ca806..a1e2be737eec 100644
-> --- a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> @@ -9,6 +9,14 @@ title: PCIe RC controller on Intel Gateway SoCs
->   maintainers:
->     - Dilip Kota <eswara.kota@linux.intel.com>
->   
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: intel,lgm-pcie
-> +  required:
-> +    - compatible
-> +
->   properties:
->     compatible:
->       items:
+It sounds like the above-mentioned Thunderbolt controllers are broken,
+not the Nvidia cards, so to me (as an outside observer) it would seem
+more logical that a quirk for the former is needed.  The code comment
+suggests that nouveau somehow has a problem, but that doesn't seem to
+be the case (IIUC).  Also, it's a little ugly to have references to
+specific drivers in PCI core code.
 
-Reviewed-by: Dilip Kota <eswara.kota@linux.intel.com>
+Maybe this can be fixed with quirks for the Thunderbolt controllers
+which set a flag, and that flag causes the 1000 msec wait to be skipped?
 
-Regards,
-Dilip
+Thanks,
+
+Lukas
