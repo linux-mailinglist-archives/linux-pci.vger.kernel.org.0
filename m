@@ -2,80 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D40B24B80D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 13:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DBFF24BDCA
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Aug 2020 15:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgHTLI1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 07:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43894 "EHLO
+        id S1728676AbgHTNNw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 09:13:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730658AbgHTLIJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 07:08:09 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E40C061385
-        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 04:08:07 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id u24so1494175oic.7
-        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 04:08:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=pe4BzKN/MOG4yyWAf6hzgbTCg++Gl/K9MSYKaDmdyQg=;
-        b=GCgw36S6tnnFLxVxl6QPJGXWGpUjVvmXJxD8pqXSChnzdhCrwfhGamk8sWaEUwPfFA
-         f61V+J2biqmp2ub0IaatPTlz/y4tCNvB38bHoYbaZL4s1mapDeluHa4HVEfOL8fXbuVE
-         uxkCllXytqEFw9Kb9SxFwyUeJHhSxObYS9Iq0wOR/lHSmxnlxzb8ZWD0mvWI4wq9SrjC
-         8EB4x97nX8DPNxtoQKZi1QyKi9UU1mK1+tsWKNkoFCasbgdcoitYzmQKiVKsc1d7t6wo
-         tgNKjgb25taKdzui0Jjw8N3iQt/gKKa7ab/iA1Mi5avFvew0cVMWoFEaGXDfx263+ZHn
-         e7ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=pe4BzKN/MOG4yyWAf6hzgbTCg++Gl/K9MSYKaDmdyQg=;
-        b=i27MKo/Ww1yyQxVSOC+/5tlkfOK4ATxe/BvS9oRJb3of3EFAwXujFZoQCHxZuktU4H
-         3xrTngESkpCLL799ixIT+93s0eUD9LhLUtltYte955JsL+6Tu5kQdwSfgQ2l0EEd0ouI
-         jL+Ff6MgeaeumeLKUl17pQv07pv8931erJrDpCTRDkb0SShwjuGkiuWQF+9K0OWk5v6f
-         Aq6JqQtFrJBcme2wgDPa5o/Xac7s3YY75fkTPL/9k/+GX5wbUjXBE7LHcI5kz9QpjHfn
-         7txsldzYOGfZVUcpVR3h7wolFrBfoIUftfAiLFHlnSx4IOvTeo2YKPJt/fVi2mg3jFYP
-         HuLg==
-X-Gm-Message-State: AOAM530UPNQFQGYva4UOFYjdb5bTsXc6RxHmRRLWdI+awadW8WozzLRG
-        UrD5LJIHMi8ce/waA43NH82M9SAmjbRxDrAg8jM=
-X-Google-Smtp-Source: ABdhPJzQSTJ0cWIpVyILLxlyzWfepjg+G1lzn/aSqgHbFw79ESMEqZMKQtj6+n7oUGko5ywyNdn0/Kt9Nw5EJdQeylc=
-X-Received: by 2002:a54:4195:: with SMTP id 21mr1279895oiy.64.1597921686251;
- Thu, 20 Aug 2020 04:08:06 -0700 (PDT)
+        with ESMTP id S1728724AbgHTNNX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 09:13:23 -0400
+X-Greylist: delayed 1176 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 20 Aug 2020 06:13:22 PDT
+Received: from tartarus.angband.pl (tartarus.angband.pl [IPv6:2001:41d0:602:dbe::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9393AC061386
+        for <linux-pci@vger.kernel.org>; Thu, 20 Aug 2020 06:13:21 -0700 (PDT)
+Received: from [2a02:a31c:8245:f980::4] (helo=valinor.angband.pl)
+        by tartarus.angband.pl with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1k8k4J-0002dR-Q1; Thu, 20 Aug 2020 14:53:25 +0200
+Received: from kilobyte by valinor.angband.pl with local (Exim 4.94)
+        (envelope-from <kilobyte@valinor.angband.pl>)
+        id 1k8k4J-0002ba-9U; Thu, 20 Aug 2020 14:53:23 +0200
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-pci@vger.kernel.org
+Cc:     Adam Borowski <kilobyte@angband.pl>
+Date:   Thu, 20 Aug 2020 14:53:20 +0200
+Message-Id: <20200820125320.9967-1-kilobyte@angband.pl>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Received: by 2002:a4a:d254:0:0:0:0:0 with HTTP; Thu, 20 Aug 2020 04:08:05
- -0700 (PDT)
-Reply-To: Aisha.Al-Qaddafi01@protonmail.com
-From:   Aisha Al-Qaddafi <maiamook1a@gmail.com>
-Date:   Thu, 20 Aug 2020 11:08:05 +0000
-Message-ID: <CAAa5L=trv21bA9zGOMw6uCaAVoF3vtnJN4Kj_LjNvBzky0Wbnw@mail.gmail.com>
-Subject: I am Aisha Al-Qaddafi, please receive this for benefit
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a02:a31c:8245:f980::4
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on tartarus.angband.pl
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=8.0 tests=BAYES_00=-1.9,RDNS_NONE=0.793,
+        SPF_PASS=-0.001 autolearn=no autolearn_force=no languages=ro en fr
+Subject: [PATCH] x86/pci: don't set acpi stuff if !CONFIG_ACPI
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on tartarus.angband.pl)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Friend,
+Not that x86 without ACPI sees any real use...
 
-I came across your e-mail contact prior a private search while in need
-of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
-single Mother and a Widow with three Children.
+Signed-off-by: Adam Borowski <kilobyte@angband.pl>
+---
+Found by randconfig builds.
 
-I need to invest, I want you to receive my fund, for joint investment,
-and I need a trusted investment Manager/Partner like you, because of
-my current refugee status, I can not do it alone.  However, I am
-interested in you for investment project assistance in your country,
-may be from there, we can build together business relationship in the
-nearest future.
-I am willing to negotiate investment/business profit sharing ratio
-with you from my fund,if you receive it I give you some percentage,
-also in the future investment you will profit.
-If you are willing to handle my fund and this project on my behalf,
-kindly reply urgent to enable me provide you more information about
-the investment and my fund value. PLEASE REPLY ME THROUGH THIS EMAIL:
-Aisha.Al-Qaddafi01@protonmail.com
+ arch/x86/pci/intel_mid_pci.c | 2 ++
+ arch/x86/pci/xen.c           | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Your Urgent Reply Will Be Appreciated
+diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
+index 00c62115f39c..f14a911f0d06 100644
+--- a/arch/x86/pci/intel_mid_pci.c
++++ b/arch/x86/pci/intel_mid_pci.c
+@@ -299,8 +299,10 @@ int __init intel_mid_pci_init(void)
+ 	pcibios_disable_irq = intel_mid_pci_irq_disable;
+ 	pci_root_ops = intel_mid_pci_ops;
+ 	pci_soc_mode = 1;
++#ifdef CONFIG_ACPI
+ 	/* Continue with standard init */
+ 	acpi_noirq_set();
++#endif
+ 	return 1;
+ }
+ 
+diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+index 9f9aad42ccff..681eb5c34c03 100644
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -406,8 +406,10 @@ int __init pci_xen_init(void)
+ 	pcibios_enable_irq = xen_pcifront_enable_irq;
+ 	pcibios_disable_irq = NULL;
+ 
++#ifdef CONFIG_ACPI
+ 	/* Keep ACPI out of the picture */
+ 	acpi_noirq_set();
++#endif
+ 
+ #ifdef CONFIG_PCI_MSI
+ 	x86_msi.setup_msi_irqs = xen_setup_msi_irqs;
+-- 
+2.28.0
+
