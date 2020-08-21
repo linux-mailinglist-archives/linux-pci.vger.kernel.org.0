@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A0A924CC31
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:56:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE81824CC36
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:56:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgHUD4M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 23:56:12 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34415 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbgHUD4K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:56:10 -0400
-Received: by mail-il1-f196.google.com with SMTP id t4so349016iln.1;
-        Thu, 20 Aug 2020 20:56:09 -0700 (PDT)
+        id S1727854AbgHUD4Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 23:56:16 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34980 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbgHUD4P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:56:15 -0400
+Received: by mail-io1-f68.google.com with SMTP id s2so492644ioo.2;
+        Thu, 20 Aug 2020 20:56:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=plPAfT6jsv3fD4ktL6XVG9iUJUN4lTKUvUyacbP7UOE=;
-        b=FhNj1D9+/iO6IfqC0v7A8tlFkC5qewqOybqkqRv/X1LIgXy3LjDRf/lhfaoY0goNtR
-         3K5lcHcgq46i5NwaWEFV20uJruo2DE3YYJDeNB0XLEwbvjVMtIYjKirdjagWreL+O+WU
-         OWjmsbld//VsX+3jsQ0D6damiSwbrO7Kowu1Uvbr8RUIuAt27IhSJ+fX4WdLZSyhH3uV
-         wCgpT2riV1GVAeCJRDRxx2O5C9WVKObgxGYIIXGUEVQLoJh+6namdSz3T0CFyjop3+yJ
-         bMPNBdQzauGgOitOS+EnggRjz0YoKIDC4qfP5Drl2TkkbPCZlWtTmfKmeaX6ae2uXNoE
-         KPyA==
-X-Gm-Message-State: AOAM530XJplyL0lTVG5BJUS3vq3MnJflBwEbFhoHso2rZ+OtCsi6uDs7
-        TRDTaa5t8ngS1T3+hxVaXg==
-X-Google-Smtp-Source: ABdhPJyRffWnopuuNv/0Z5NXVEnyP27O7kgM+pkiMrghGFx17DPrdLFvgAOgtagD9saPcgT9z5takQ==
-X-Received: by 2002:a92:d089:: with SMTP id h9mr954256ilh.60.1597982168647;
-        Thu, 20 Aug 2020 20:56:08 -0700 (PDT)
+        bh=U5dhy5lfNiv2CBspsoOGjvk1pottUqD5VgIGcHG48iU=;
+        b=rzsOgmesKbjjSYHh1O3FvI/AzNGetiWHCDm5FlhuyZBwbBo7NAJSNg0QmKlqxpHgQr
+         sdUROTgt8MiXV0Uy2XA9xvh5TKgKN8J5neH0alHbdU80IK5fmdHPkrDQ+TL6EhJ0N7pe
+         ORk7gEWWslsdtyW6YLQxc9NGzDdBItJgPiXGzfpnx9QqcmkwKm9to0tSdhGEH3vFf5Yp
+         SBtV9eT1DJqw4aXoCcXPdKgecDl5dr/p9CWDybwmrM9f9D8Y9fUQ2V95ZcMfOeMOd0pv
+         3BGGe9oUiGy4Np8XZc/I3kgp/d58mIQ28WK10WUYVSe/KREaFCQAw8gAg/KQ0ciwFflf
+         RzbA==
+X-Gm-Message-State: AOAM533F0cIRjUR6TRpFSInczZrVZ9WdXpVmA7Peubv/6y23uEkDwhY+
+        inkLZ5UG5p+yAPdn+lbP0w==
+X-Google-Smtp-Source: ABdhPJxzrVgFDfxvtmE+MBNV+SieBk2ccjoW678S5hB6PbaJ4gStjqTHhwpWyikffZyFaD36Hauq7Q==
+X-Received: by 2002:a05:6638:bc2:: with SMTP id g2mr963413jad.21.1597982174122;
+        Thu, 20 Aug 2020 20:56:14 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.56.04
+        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.56.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 20:56:08 -0700 (PDT)
+        Thu, 20 Aug 2020 20:56:13 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -72,9 +72,9 @@ Cc:     linux-pci@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v2 25/40] PCI: dwc/meson: Drop the duplicate number of lanes setup
-Date:   Thu, 20 Aug 2020 21:54:05 -0600
-Message-Id: <20200821035420.380495-26-robh@kernel.org>
+Subject: [PATCH v2 26/40] PCI: dwc/meson: Drop unnecessary RC config space initialization
+Date:   Thu, 20 Aug 2020 21:54:06 -0600
+Message-Id: <20200821035420.380495-27-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821035420.380495-1-robh@kernel.org>
 References: <20200821035420.380495-1-robh@kernel.org>
@@ -85,80 +85,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The meson lanes initialization is the same DWC port logic registers as
-in dw_pcie_setup(). We just need to initialize 'num_lanes' to 1 to do
-the same init.
+The common Designware init already initializes the RC PCI_COMMAND, BAR0
+and BAR1 registers.
 
-dw_pcie_setup_rc() sets the PORT_LOGIC_SPEED_CHANGE bit, so setting it
-can be dropped.
+The only difference here is the common code sets SERR. If clearing SERR
+is what's desired, then the Meson driver should do that instead.
 
 Cc: Yue Wang <yue.wang@Amlogic.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: linux-amlogic@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 29 +-------------------------
- 1 file changed, 1 insertion(+), 28 deletions(-)
+ drivers/pci/controller/dwc/pci-meson.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 67ca73528aad..96308743faf4 100644
+index 96308743faf4..cca423e834e8 100644
 --- a/drivers/pci/controller/dwc/pci-meson.c
 +++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -22,18 +22,6 @@
+@@ -22,15 +22,6 @@
  
  #define to_meson_pcie(x) dev_get_drvdata((x)->dev)
  
--/* External local bus interface registers */
--#define PLR_OFFSET			0x700
--#define PCIE_PORT_LINK_CTRL_OFF		(PLR_OFFSET + 0x10)
--#define FAST_LINK_MODE			BIT(7)
--#define LINK_CAPABLE_MASK		GENMASK(21, 16)
--#define LINK_CAPABLE_X1			BIT(16)
+-#define TYPE1_HDR_OFFSET		0x0
+-#define PCIE_STATUS_COMMAND		(TYPE1_HDR_OFFSET + 0x04)
+-#define PCI_IO_EN			BIT(0)
+-#define PCI_MEM_SPACE_EN		BIT(1)
+-#define PCI_BUS_MASTER_EN		BIT(2)
 -
--#define PCIE_GEN2_CTRL_OFF		(PLR_OFFSET + 0x10c)
--#define NUM_OF_LANES_MASK		GENMASK(12, 8)
--#define NUM_OF_LANES_X1			BIT(8)
--#define DIRECT_SPEED_CHANGE		BIT(17)
+-#define PCIE_BASE_ADDR0			(TYPE1_HDR_OFFSET + 0x10)
+-#define PCIE_BASE_ADDR1			(TYPE1_HDR_OFFSET + 0x14)
 -
- #define TYPE1_HDR_OFFSET		0x0
- #define PCIE_STATUS_COMMAND		(TYPE1_HDR_OFFSET + 0x04)
- #define PCI_IO_EN			BIT(0)
-@@ -288,22 +276,6 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
+ #define PCIE_CAP_OFFSET			0x70
+ #define PCIE_DEV_CTRL_DEV_STUS		(PCIE_CAP_OFFSET + 0x08)
+ #define PCIE_CAP_MAX_PAYLOAD_MASK	GENMASK(7, 5)
+@@ -275,9 +266,6 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
+ 	val = meson_cfg_readl(mp, PCIE_CFG0);
  	val |= APP_LTSSM_ENABLE;
  	meson_cfg_writel(mp, val, PCIE_CFG0);
- 
--	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
--	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
 -
--	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val |= LINK_CAPABLE_X1;
--	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
--
--	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
--	val &= ~NUM_OF_LANES_MASK;
--	meson_elb_writel(mp, val, PCIE_GEN2_CTRL_OFF);
--
--	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
--	val |= NUM_OF_LANES_X1 | DIRECT_SPEED_CHANGE;
--	meson_elb_writel(mp, val, PCIE_GEN2_CTRL_OFF);
--
- 	meson_elb_writel(mp, 0x0, PCIE_BASE_ADDR0);
- 	meson_elb_writel(mp, 0x0, PCIE_BASE_ADDR1);
+-	meson_elb_writel(mp, 0x0, PCIE_BASE_ADDR0);
+-	meson_elb_writel(mp, 0x0, PCIE_BASE_ADDR1);
  }
-@@ -513,6 +485,7 @@ static int meson_pcie_probe(struct platform_device *pdev)
- 	pci = &mp->pci;
- 	pci->dev = dev;
- 	pci->ops = &dw_pcie_ops;
-+	pci->num_lanes = 1;
  
- 	mp->phy = devm_phy_get(dev, "pcie");
- 	if (IS_ERR(mp->phy)) {
+ static int meson_size_to_payload(struct meson_pcie *mp, int size)
+@@ -325,13 +313,6 @@ static void meson_set_max_rd_req_size(struct meson_pcie *mp, int size)
+ 	meson_elb_writel(mp, val, PCIE_DEV_CTRL_DEV_STUS);
+ }
+ 
+-static inline void meson_enable_memory_space(struct meson_pcie *mp)
+-{
+-	/* Set the RC Bus Master, Memory Space and I/O Space enables */
+-	meson_elb_writel(mp, PCI_IO_EN | PCI_MEM_SPACE_EN | PCI_BUS_MASTER_EN,
+-			 PCIE_STATUS_COMMAND);
+-}
+-
+ static int meson_pcie_establish_link(struct meson_pcie *mp)
+ {
+ 	struct dw_pcie *pci = &mp->pci;
+@@ -342,7 +323,6 @@ static int meson_pcie_establish_link(struct meson_pcie *mp)
+ 	meson_set_max_rd_req_size(mp, MAX_READ_REQ_SIZE);
+ 
+ 	dw_pcie_setup_rc(pp);
+-	meson_enable_memory_space(mp);
+ 
+ 	meson_pcie_assert_reset(mp);
+ 
 -- 
 2.25.1
 
