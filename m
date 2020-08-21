@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA67D24CBDE
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:55:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B08524CBE3
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:55:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgHUDzK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 23:55:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42979 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgHUDzF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:55:05 -0400
-Received: by mail-io1-f68.google.com with SMTP id g13so464340ioo.9;
-        Thu, 20 Aug 2020 20:55:04 -0700 (PDT)
+        id S1727833AbgHUDzO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 23:55:14 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40519 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbgHUDzK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:55:10 -0400
+Received: by mail-io1-f66.google.com with SMTP id b17so471477ion.7;
+        Thu, 20 Aug 2020 20:55:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7rh6G+pSUvMo/kfJhXJbE4GkdnlNpr7WklVnmm/bzwU=;
-        b=Gj30bUdrufJJLPp9UXrdObScmNkj5FLWa3ok32GWNYh/4ojOl1pwcKrivpBrK8wNpE
-         gG9GYJXrIT1EL+sM2Om0qLWTsAza0fvtOCjKalrpqEJNkIqtHqZVzOXW/sL0fI6ZXQKE
-         g1fB0QTCffp1EYHx0ygoukNJzv8u/t+ukEymVwrObkmadk0PgC08x5LuwSVY6q0NLS4S
-         +R+sP1u4pBFYxfxdEEvdi7dDJE/8igC0536fz5OR9SRBn+Jpu61nTB71q/p2Ce0IgMt+
-         KbqX1Cvi7CUl/2QXTgpJZ1D9FLA/4Wbh+i7Y6Y/QIHiu4ZBxJDP1Ztnvc8N1//cQFPxc
-         rsXw==
-X-Gm-Message-State: AOAM533fFJQB1LywjrA37OMZKguUzOW6p36rV8Rp8WgbhIMfGbdtqJQd
-        DGOGw8lnfHSD3dhy/lc1CA==
-X-Google-Smtp-Source: ABdhPJxFNP+9p3GGDQpm7EPUPc+wX9H2iPB71LxQvc3q85Wa7WNWwtlDpQjSXqCEbwssrGemQZMHVQ==
-X-Received: by 2002:a05:6638:1a7:: with SMTP id b7mr917900jaq.1.1597982103862;
-        Thu, 20 Aug 2020 20:55:03 -0700 (PDT)
+        bh=nFg1YpOXTjGvAAjYWr6Bj6FfzEbwYJGtjSsSCN/Mie0=;
+        b=K4BrF9gWGQMoXEk/8uQ5gRsEVMScPBp/PSlrM7DqpJtl4g2GIgp3BH/p2rHEJK/+Nm
+         Xil1fH+/kkJoRwhnlZbXZSeiSaQqogZKGYkJwQyBT4I1KcYKe8gQOdchkH7wW4cSAW85
+         OxECeJrPVa5ZBEdaqHfFce93FH2bnSEPBYfPf4dWQNDiy4QBahOLp60pGkIXQ1HHhLHl
+         TA3Nqf26f947eyV+zRlFXKvQvqcvEyXW8y5FOzu7dT4SqjlveS+Gxt15HuW9KVP/cwFK
+         GRSE3mWMTI9K5Y5IeBAnw79nMl8soIbiks/V8UTQmGHDHpmtng95a6rZVFnbG6Xqo0x3
+         X/jA==
+X-Gm-Message-State: AOAM532A3XORi1U/nkBUOc5RU/O899pVfIwar/e6PQrLz57z8UwXygXP
+        5815+dPygaIqHTCfhXVYeA==
+X-Google-Smtp-Source: ABdhPJxYgLoP8TuODrHoVFznYdMs1PDoYAX/0YMmlaFkI6tCOH/kTSu793FCitBMJXoZOfNcnv5Smg==
+X-Received: by 2002:a6b:dc0a:: with SMTP id s10mr898987ioc.18.1597982109347;
+        Thu, 20 Aug 2020 20:55:09 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.54.58
+        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.55.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 20:55:03 -0700 (PDT)
+        Thu, 20 Aug 2020 20:55:08 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -72,9 +72,9 @@ Cc:     linux-pci@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v2 08/40] PCI: dwc: meson: Use pci_ops for root config space accessors
-Date:   Thu, 20 Aug 2020 21:53:48 -0600
-Message-Id: <20200821035420.380495-9-robh@kernel.org>
+Subject: [PATCH v2 09/40] PCI: dwc: kirin: Use pci_ops for root config space accessors
+Date:   Thu, 20 Aug 2020 21:53:49 -0600
+Message-Id: <20200821035420.380495-10-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821035420.380495-1-robh@kernel.org>
 References: <20200821035420.380495-1-robh@kernel.org>
@@ -86,75 +86,92 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Now that DWC drivers can setup their own pci_ops for the root and child
-buses, convert the Amlogic meson driver to use the standard pci_ops for
-root bus config accesses.
+buses, convert the HiSilicon Kirin driver to use the standard pci_ops
+for root bus config accesses.
 
-Cc: Yue Wang <yue.wang@Amlogic.com>
+Cc: Xiaowei Song <songxiaowei@hisilicon.com>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ drivers/pci/controller/dwc/pcie-kirin.c | 39 +++++++++++++------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 4f183b96afbb..f4d822190359 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -383,13 +383,12 @@ static void meson_pcie_enable_interrupts(struct meson_pcie *mp)
- 		dw_pcie_msi_init(&mp->pci.pp);
+diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+index e496f51e0152..8a01ab0a4a65 100644
+--- a/drivers/pci/controller/dwc/pcie-kirin.c
++++ b/drivers/pci/controller/dwc/pcie-kirin.c
+@@ -330,34 +330,37 @@ static void kirin_pcie_sideband_dbi_r_mode(struct kirin_pcie *kirin_pcie,
+ 	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL1_ADDR);
  }
  
--static int meson_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
--				  u32 *val)
-+static int meson_pcie_rd_own_conf(struct pci_bus *bus, u32 devfn,
-+				  int where, int size, u32 *val)
+-static int kirin_pcie_rd_own_conf(struct pcie_port *pp,
++static int kirin_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
+ 				  int where, int size, u32 *val)
  {
 -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	int ret;
+-	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+-	int ret;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
  
+-	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
 -	ret = dw_pcie_read(pci->dbi_base + where, size, val);
-+	ret = pci_generic_config_read(bus, devfn, where, size, val);
- 	if (ret != PCIBIOS_SUCCESSFUL)
- 		return ret;
+-	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
++	if (PCI_SLOT(devfn)) {
++		*val = ~0;
++		return PCIBIOS_DEVICE_NOT_FOUND;
++	}
  
-@@ -410,13 +409,11 @@ static int meson_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
- 	return PCIBIOS_SUCCESSFUL;
+-	return ret;
++	*val = dw_pcie_read_dbi(pci, where, size);
++	return PCIBIOS_SUCCESSFUL;
  }
  
--static int meson_pcie_wr_own_conf(struct pcie_port *pp, int where,
--				  int size, u32 val)
--{
--	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--
--	return dw_pcie_write(pci->dbi_base + where, size, val);
--}
-+static struct pci_ops meson_pci_ops = {
-+	.map_bus = dw_pcie_own_conf_map_bus,
-+	.read = meson_pcie_rd_own_conf,
-+	.write = pci_generic_config_write,
-+};
- 
- static int meson_pcie_link_up(struct dw_pcie *pci)
+-static int kirin_pcie_wr_own_conf(struct pcie_port *pp,
++static int kirin_pcie_wr_own_conf(struct pci_bus *bus, unsigned int devfn,
+ 				  int where, int size, u32 val)
  {
-@@ -463,6 +460,8 @@ static int meson_pcie_host_init(struct pcie_port *pp)
- 	struct meson_pcie *mp = to_meson_pcie(pci);
- 	int ret;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+-	int ret;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
  
-+	pp->bridge->ops = &meson_pci_ops;
-+
- 	ret = meson_pcie_establish_link(mp);
- 	if (ret)
- 		return ret;
-@@ -473,8 +472,6 @@ static int meson_pcie_host_init(struct pcie_port *pp)
+-	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
+-	ret = dw_pcie_write(pci->dbi_base + where, size, val);
+-	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
++	if (PCI_SLOT(devfn))
++		return PCIBIOS_DEVICE_NOT_FOUND;
+ 
+-	return ret;
++	dw_pcie_write_dbi(pci, where, size, val);
++	return PCIBIOS_SUCCESSFUL;
  }
  
- static const struct dw_pcie_host_ops meson_pcie_host_ops = {
--	.rd_own_conf = meson_pcie_rd_own_conf,
--	.wr_own_conf = meson_pcie_wr_own_conf,
- 	.host_init = meson_pcie_host_init,
++static struct pci_ops kirin_pci_ops = {
++	.read = kirin_pcie_rd_own_conf,
++	.write = kirin_pcie_wr_own_conf,
++};
++
+ static u32 kirin_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
+ 			       u32 reg, size_t size)
+ {
+@@ -423,6 +426,8 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
+ 
+ static int kirin_pcie_host_init(struct pcie_port *pp)
+ {
++	pp->bridge->ops = &kirin_pci_ops;
++
+ 	kirin_pcie_establish_link(pp);
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+@@ -438,8 +443,6 @@ static const struct dw_pcie_ops kirin_dw_pcie_ops = {
+ };
+ 
+ static const struct dw_pcie_host_ops kirin_pcie_host_ops = {
+-	.rd_own_conf = kirin_pcie_rd_own_conf,
+-	.wr_own_conf = kirin_pcie_wr_own_conf,
+ 	.host_init = kirin_pcie_host_init,
  };
  
 -- 
