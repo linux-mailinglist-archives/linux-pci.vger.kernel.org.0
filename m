@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9847424CBD6
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:55:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA67D24CBDE
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:55:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgHUDzA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 23:55:00 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36651 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgHUDy7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:54:59 -0400
-Received: by mail-il1-f196.google.com with SMTP id f75so52995ilh.3;
-        Thu, 20 Aug 2020 20:54:58 -0700 (PDT)
+        id S1727899AbgHUDzK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 23:55:10 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42979 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727841AbgHUDzF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:55:05 -0400
+Received: by mail-io1-f68.google.com with SMTP id g13so464340ioo.9;
+        Thu, 20 Aug 2020 20:55:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H+ujdoKHStFeKJ1jXdR6XUfewUNSi1zr1kmdQR9ZccE=;
-        b=oqOy4jiyaOBCquToZqd1lzi7DYKYDXqdGVPhSHgvAxNGsaZVNnzLG0wBF6UOCx1KZg
-         unQcG9LS3CaRQip8hsTu+Nle/EpA6kEz5814DgLsXVGI8dZf+BTUnojO7HHU/ZH9IQgS
-         jwJ0Wmzqbzq1ALhAxYOngMIxvJ61ly7l3dUokF5AwDBADrkCAQHUBnakk6bbClxlJPBh
-         U92kI/RJKbox8B9By+5NZwZ+k6/5JCc1gLYqFyVfim7JnwT9bTGbFdI6GNWpYdWQ8r7z
-         vCfbtqjKFUfo3EBilonXOP5zHUzr+Br4sh+Pq3hhuw3xuPQL65TU88I4zLSNgfZcchK/
-         wsOQ==
-X-Gm-Message-State: AOAM533SJkTYWdEbs9GXfX5H4FVxy0b5S8J2KtJKSlD0e/3F0xJaHO8y
-        a/pC7I03t/vutG1H4phmag==
-X-Google-Smtp-Source: ABdhPJyGcdTcGNrWfl7zrdoCxTOnwqbiPBd5WAuEJe+aUiQ1r9uwxw0SWXMbVHDQmShzNH/ZvrMlrw==
-X-Received: by 2002:a92:914a:: with SMTP id t71mr959815ild.298.1597982098265;
-        Thu, 20 Aug 2020 20:54:58 -0700 (PDT)
+        bh=7rh6G+pSUvMo/kfJhXJbE4GkdnlNpr7WklVnmm/bzwU=;
+        b=Gj30bUdrufJJLPp9UXrdObScmNkj5FLWa3ok32GWNYh/4ojOl1pwcKrivpBrK8wNpE
+         gG9GYJXrIT1EL+sM2Om0qLWTsAza0fvtOCjKalrpqEJNkIqtHqZVzOXW/sL0fI6ZXQKE
+         g1fB0QTCffp1EYHx0ygoukNJzv8u/t+ukEymVwrObkmadk0PgC08x5LuwSVY6q0NLS4S
+         +R+sP1u4pBFYxfxdEEvdi7dDJE/8igC0536fz5OR9SRBn+Jpu61nTB71q/p2Ce0IgMt+
+         KbqX1Cvi7CUl/2QXTgpJZ1D9FLA/4Wbh+i7Y6Y/QIHiu4ZBxJDP1Ztnvc8N1//cQFPxc
+         rsXw==
+X-Gm-Message-State: AOAM533fFJQB1LywjrA37OMZKguUzOW6p36rV8Rp8WgbhIMfGbdtqJQd
+        DGOGw8lnfHSD3dhy/lc1CA==
+X-Google-Smtp-Source: ABdhPJxFNP+9p3GGDQpm7EPUPc+wX9H2iPB71LxQvc3q85Wa7WNWwtlDpQjSXqCEbwssrGemQZMHVQ==
+X-Received: by 2002:a05:6638:1a7:: with SMTP id b7mr917900jaq.1.1597982103862;
+        Thu, 20 Aug 2020 20:55:03 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.54.54
+        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.54.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 20:54:57 -0700 (PDT)
+        Thu, 20 Aug 2020 20:55:03 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -72,9 +72,9 @@ Cc:     linux-pci@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v2 07/40] PCI: dwc: tegra: Use pci_ops for root config space accessors
-Date:   Thu, 20 Aug 2020 21:53:47 -0600
-Message-Id: <20200821035420.380495-8-robh@kernel.org>
+Subject: [PATCH v2 08/40] PCI: dwc: meson: Use pci_ops for root config space accessors
+Date:   Thu, 20 Aug 2020 21:53:48 -0600
+Message-Id: <20200821035420.380495-9-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821035420.380495-1-robh@kernel.org>
 References: <20200821035420.380495-1-robh@kernel.org>
@@ -86,98 +86,77 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Now that DWC drivers can setup their own pci_ops for the root and child
-buses, convert the Tegra driver to use the standard pci_ops for root
-bus config accesses.
+buses, convert the Amlogic meson driver to use the standard pci_ops for
+root bus config accesses.
 
+Cc: Yue Wang <yue.wang@Amlogic.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 30 ++++++++++++----------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ drivers/pci/controller/dwc/pci-meson.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 70498689d0c0..b723c9f3ece4 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -568,42 +568,44 @@ static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
- 	return IRQ_HANDLED;
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 4f183b96afbb..f4d822190359 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -383,13 +383,12 @@ static void meson_pcie_enable_interrupts(struct meson_pcie *mp)
+ 		dw_pcie_msi_init(&mp->pci.pp);
  }
  
--static int tegra_pcie_dw_rd_own_conf(struct pcie_port *pp, int where, int size,
--				     u32 *val)
-+static int tegra_pcie_dw_rd_own_conf(struct pci_bus *bus, u32 devfn, int where,
-+				     int size, u32 *val)
+-static int meson_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+-				  u32 *val)
++static int meson_pcie_rd_own_conf(struct pci_bus *bus, u32 devfn,
++				  int where, int size, u32 *val)
  {
 -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--
- 	/*
- 	 * This is an endpoint mode specific register happen to appear even
- 	 * when controller is operating in root port mode and system hangs
- 	 * when it is accessed with link being in ASPM-L1 state.
- 	 * So skip accessing it altogether
- 	 */
--	if (where == PORT_LOGIC_MSIX_DOORBELL) {
-+	if (!PCI_SLOT(devfn) && where == PORT_LOGIC_MSIX_DOORBELL) {
- 		*val = 0x00000000;
- 		return PCIBIOS_SUCCESSFUL;
- 	}
+ 	int ret;
  
--	return dw_pcie_read(pci->dbi_base + where, size, val);
-+	return pci_generic_config_read(bus, devfn, where, size, val);
+-	ret = dw_pcie_read(pci->dbi_base + where, size, val);
++	ret = pci_generic_config_read(bus, devfn, where, size, val);
+ 	if (ret != PCIBIOS_SUCCESSFUL)
+ 		return ret;
+ 
+@@ -410,13 +409,11 @@ static int meson_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+ 	return PCIBIOS_SUCCESSFUL;
  }
  
--static int tegra_pcie_dw_wr_own_conf(struct pcie_port *pp, int where, int size,
--				     u32 val)
-+static int tegra_pcie_dw_wr_own_conf(struct pci_bus *bus, u32 devfn, int where,
-+				     int size, u32 val)
- {
+-static int meson_pcie_wr_own_conf(struct pcie_port *pp, int where,
+-				  int size, u32 val)
+-{
 -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
 -
- 	/*
- 	 * This is an endpoint mode specific register happen to appear even
- 	 * when controller is operating in root port mode and system hangs
- 	 * when it is accessed with link being in ASPM-L1 state.
- 	 * So skip accessing it altogether
- 	 */
--	if (where == PORT_LOGIC_MSIX_DOORBELL)
-+	if (!PCI_SLOT(devfn) && where == PORT_LOGIC_MSIX_DOORBELL)
- 		return PCIBIOS_SUCCESSFUL;
- 
 -	return dw_pcie_write(pci->dbi_base + where, size, val);
-+	return pci_generic_config_write(bus, devfn, where, size, val);
+-}
++static struct pci_ops meson_pci_ops = {
++	.map_bus = dw_pcie_own_conf_map_bus,
++	.read = meson_pcie_rd_own_conf,
++	.write = pci_generic_config_write,
++};
+ 
+ static int meson_pcie_link_up(struct dw_pcie *pci)
+ {
+@@ -463,6 +460,8 @@ static int meson_pcie_host_init(struct pcie_port *pp)
+ 	struct meson_pcie *mp = to_meson_pcie(pci);
+ 	int ret;
+ 
++	pp->bridge->ops = &meson_pci_ops;
++
+ 	ret = meson_pcie_establish_link(mp);
+ 	if (ret)
+ 		return ret;
+@@ -473,8 +472,6 @@ static int meson_pcie_host_init(struct pcie_port *pp)
  }
  
-+static struct pci_ops tegra_pci_ops = {
-+	.map_bus = dw_pcie_own_conf_map_bus,
-+	.read = tegra_pcie_dw_rd_own_conf,
-+	.write = tegra_pcie_dw_wr_own_conf,
-+};
-+
- #if defined(CONFIG_PCIEASPM)
- static void disable_aspm_l11(struct tegra_pcie_dw *pcie)
- {
-@@ -970,6 +972,8 @@ static int tegra_pcie_dw_host_init(struct pcie_port *pp)
- 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
- 	u32 val, tmp, offset, speed;
- 
-+	pp->bridge->ops = &tegra_pci_ops;
-+
- 	tegra_pcie_prepare_host(pp);
- 
- 	if (dw_pcie_wait_for_link(pci)) {
-@@ -1057,8 +1061,6 @@ static const struct dw_pcie_ops tegra_dw_pcie_ops = {
+ static const struct dw_pcie_host_ops meson_pcie_host_ops = {
+-	.rd_own_conf = meson_pcie_rd_own_conf,
+-	.wr_own_conf = meson_pcie_wr_own_conf,
+ 	.host_init = meson_pcie_host_init,
  };
  
- static struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
--	.rd_own_conf = tegra_pcie_dw_rd_own_conf,
--	.wr_own_conf = tegra_pcie_dw_wr_own_conf,
- 	.host_init = tegra_pcie_dw_host_init,
- 	.set_num_vectors = tegra_pcie_set_msi_vec_num,
- };
 -- 
 2.25.1
 
