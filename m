@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69B2924D50E
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 14:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3E8A24D515
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 14:34:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgHUMdU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 08:33:20 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40918 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgHUMdU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 08:33:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h16so1422084oti.7;
-        Fri, 21 Aug 2020 05:33:19 -0700 (PDT)
+        id S1728649AbgHUMeC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 08:34:02 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39323 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbgHUMdu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 08:33:50 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a24so1362531oia.6;
+        Fri, 21 Aug 2020 05:33:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kp04NyE1R8mExtAWoAPf6jDea1fvPhMOmzjx4dT17Rc=;
-        b=Sma8KB5Np6A87uam6rXitqhTvact/3jhcF3w3Dccl+Am8GcObLmJBlc1gOns3h5Zie
-         DQRkAiSgqkDr4K9qgtEetE6ebhwF8kg0RjbjC9VI+9TxFtwdfvZyyxfBtNsg7cptk3CZ
-         xqiv5o4p4nV1UkyNrsQZV2T2jflFslqZy3eNeRhzTdzRDzDmfi0uRNZ9IY5sHCtTGnps
-         lE9UU66YXOfnZ3ShY9/r+aqsSCgO/N/cMHKpuK58AI1JkNfuHJruiJkALDpxA55mXaIH
-         sl1LAOhQ8yLxkYnkq8+zvYHsWqUUefWuy4pXvwam85mtJxZxtOTfcOOUzT48PQy5KC3B
-         1Enw==
-X-Gm-Message-State: AOAM5323rCzlndlzyTPvaABqLJl61z28YnucgZZPwmMeTx/djpwecbv5
-        a6DK/0lyQ10HXZEYYgjiuUby0OM7Ziza5kwObJE=
-X-Google-Smtp-Source: ABdhPJwPyOcdI4JvL4B+MLySyU/i068uTb++p4rqF8/sCos5OiyBd/wdDFD6Xo0DomMvbnAPqsRJ/j/u4/jtduKZTIs=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr1618807ote.107.1598013199083;
- Fri, 21 Aug 2020 05:33:19 -0700 (PDT)
+        bh=FoCf/d6sCYZ/KyyrwIp5Cw6quj7S+sdns+Np6rCMhPg=;
+        b=KLU+J6w1rXFNySHGFk9iXCt9cq6SFcZ76Q1Au513FKBuqxo1EvgtHtS0h23k33X7W2
+         93dkV+wp6Vrv3ymk2gzti05s3Q5wgJeyWTXgmOhDbVByo/xBO4ya6vzZbwJJ+URsz2eY
+         MUJMzkAVoqQrUVbkJALqphX1zWM2oVuyC79hg4RqRxix4qzgVtqbQzrGRUGU5WWRmtS9
+         ttoLP7XyIyjcfDRsxL0zPHphcoCFKA7VW3+alsISX3If+GkqsqTGtEmtO4kzz6eqVeEK
+         jNwiYfTJam15VdS3PiF3hrre+A+ViA6Gmzh8wc/VU61RZ3b7xotDgn6hATYMSPcwaeGE
+         +8Pg==
+X-Gm-Message-State: AOAM532uVDga8AnwTgdxcBobCDwPM6bbbIAA0RDP7jwreB+D2rfkC4+3
+        pgNdQKq5evATBPiA+MzgJVkqR2Az2P9OQBcHGPE=
+X-Google-Smtp-Source: ABdhPJxWQSlxIg5H9r9XwKN6jG7+1E3KJtg09/CU7FmrrF5Uj8lLu2+kQ9TMsGSuMGcCDf5wtGdnObsyKjrnYUnE5xE=
+X-Received: by 2002:aca:b742:: with SMTP id h63mr1498785oif.148.1598013229860;
+ Fri, 21 Aug 2020 05:33:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200814173037.17822-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200814173037.17822-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 14:33:08 +0200
-Message-ID: <CAMuHMdVd8pVCMmGNKv4DH7s-rNAD7K7Y=qTVuwveB1v2tFWi8g@mail.gmail.com>
-Subject: Re: [PATCH 3/5] arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
+Date:   Fri, 21 Aug 2020 14:33:39 +0200
+Message-ID: <CAMuHMdVpZbN41+dNDdC6qGhyb7bjdK=d26T+FRdpypvXjw_0uA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] arm64: dts: renesas: r8a774b1: Add PCIe EP nodes
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -61,7 +61,7 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, Aug 14, 2020 at 7:33 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add PCIe EP nodes to R8A774A1 (RZ/G2M) SoC dtsi.
+> Add PCIe EP nodes to R8A774B1 (RZ/G2N) SoC dtsi.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
