@@ -2,346 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15E2624CA49
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 04:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBD1324CBB0
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:54:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgHUCR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 22:17:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52880 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727977AbgHUCR2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 22:17:28 -0400
-Message-Id: <20200821002949.049867339@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976245;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=UZL8Vrdl0kfkPDF5SaQDsWiCtREqKSzkO7Z4G3k5ULk=;
-        b=l/wu+Pva8knpMeliQg3p05zViowZHU+QrYhimvAjTlzTvj7Rq0o3z0fgDwioZqT5n3RmXm
-        F0aNCytWXBt3Xlz7oezNwVDUjuMreDqNU6oeR2pPLOwNnd9pgXGfQt3QBAF+3GQ8wBXp/c
-        gV8PrEsxwldr4Cmq+FjlkWmPQ6dwED9J9p6AR1ww3KUj2t4wDbNLU+i7YFgCfTSbuyXl2e
-        XPlsK/VEgMFEDIHDRKu23aCsekWuzHSirgeg2lkkswLfA3QKQ5cuDL8yMnocgM1nxYZy4c
-        34+5mV2GLxrkckJysmQbmOMx08+XZIVMbmVkHxO9Iq3pB69jMzKnzkc54L7F8Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976245;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=UZL8Vrdl0kfkPDF5SaQDsWiCtREqKSzkO7Z4G3k5ULk=;
-        b=7kh3fLmij9PvpFN53Wn8ekuPhx6wjhRLqyiDFbeUfbbAIiSuYbaAqZpnLbGxdxX22bkT3C
-        oRRfQnxb9WWfMzDw==
-Date:   Fri, 21 Aug 2020 02:25:02 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Marc Zyngier <maz@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
-References: <20200821002424.119492231@linutronix.de>
+        id S1727084AbgHUDy1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 23:54:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39107 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgHUDy0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:54:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id z17so470442ioi.6;
+        Thu, 20 Aug 2020 20:54:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3xQSyuidDHE000cQW3ruY29YdVzjzemLhdUCUqMHH4g=;
+        b=uoec5P7k+QAy4T9/nm7pq0b8CZje786rS41068pS6CuvKKElqVH0zc86wKhU1rkXSe
+         ge4AYyvkGT10QcwxPl5s4FNn3zXyEh88p3p7pnatrqZhv+8a0fAED8IrnyN0dOuA0dP3
+         FoJu6YDc31iTC92MApZVcmxVDWZMOXpghYkKpthOhc5K6RqEKpd4hPOY76gUymCZH13d
+         ADQ4fUteyv4DoXI3X+A6sOndgAcxHQdQar6paKB5HJNIkWA7rPzYxpLn+Gyxuayc5Eeq
+         2Ug4CDQwa90FUQtT0CiLaNF8vHAlG96DLJDiHRO8Pv0SM6bnnDFX27RUyoJkpf04SbF9
+         Wzxg==
+X-Gm-Message-State: AOAM5328FtueSOGCteuIevaPKX7ePcTf/Z+LVefPGpw5+H6RkW6wmSme
+        yR4WJssPaXKPcUZ+tWasnA==
+X-Google-Smtp-Source: ABdhPJwWDZ2uF1UR52gyVwJrVKI7xgxX5Bug8MFl6x6tEW09K4V+Q0/1o3ijFf216rQPvCw1DGjTMQ==
+X-Received: by 2002:a6b:e70d:: with SMTP id b13mr795565ioh.141.1597982065025;
+        Thu, 20 Aug 2020 20:54:25 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.249])
+        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.54.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 20:54:24 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Yue Wang <yue.wang@Amlogic.com>, Marc Zyngier <maz@kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH v2 00/40] PCI: dwc: Driver clean-ups
+Date:   Thu, 20 Aug 2020 21:53:40 -0600
+Message-Id: <20200821035420.380495-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline; filename=irqchip--Add-IMS-array-driver.patch
-Content-transfer-encoding: 8-bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-A generic IMS irq chip and irq domain implementation for IMS based devices
-which utilize a MSI message store array on chip.
+This is a series of clean-ups for the Designware PCI driver. The series
+initially reworks the config space accessors to use the existing pci_ops
+struct. Then there's removal of various private data that's also present
+in the pci_host_bridge struct. There's also some duplicated common (PCI
+and DWC) register defines which I converted to use the common defines.
+Finally, the initialization for speed/gen, number of lanes, and N_FTS
+are all moved to the common DWC code.
 
-Allows IMS devices with a MSI message store array to reuse this code for
-different array sizes.
+This is compile tested only as I don't have any DWC based h/w, so any
+testing would be helpful. A branch is here[1].
 
-Allocation and freeing of interrupts happens via the generic
-msi_domain_alloc/free_irqs() interface. No special purpose IMS magic
-required as long as the interrupt domain is stored in the underlying device
-struct.
+Rob
 
-Completely untested of course and mostly for illustration and educational
-purpose. This should of course be a modular irq chip, but adding that
-support is left as an exercise for the people who care about this deeply.
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git pci-dw-cleanups
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Megha Dey <megha.dey@intel.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Jacob Pan <jacob.jun.pan@intel.com>
-Cc: Baolu Lu <baolu.lu@intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
----
- drivers/irqchip/Kconfig             |    8 +
- drivers/irqchip/Makefile            |    1 
- drivers/irqchip/irq-ims-msi.c       |  169 ++++++++++++++++++++++++++++++++++++
- include/linux/irqchip/irq-ims-msi.h |   41 ++++++++
- 4 files changed, 219 insertions(+)
+Rob Herring (40):
+  PCI: Allow root and child buses to have different pci_ops
+  PCI: dwc: Use DBI accessors instead of own config accessors
+  PCI: dwc: Allow overriding bridge pci_ops
+  PCI: dwc: Add a default pci_ops.map_bus for root port
+  PCI: dwc: al: Use pci_ops for child config space accessors
+  PCI: dwc: keystone: Use pci_ops for config space accessors
+  PCI: dwc: tegra: Use pci_ops for root config space accessors
+  PCI: dwc: meson: Use pci_ops for root config space accessors
+  PCI: dwc: kirin: Use pci_ops for root config space accessors
+  PCI: dwc: exynos: Use pci_ops for root config space accessors
+  PCI: dwc: histb: Use pci_ops for root config space accessors
+  PCI: dwc: Remove dwc specific config accessor ops
+  PCI: dwc: Use generic config accessors
+  PCI: Also call .add_bus() callback for root bus
+  PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus
+  PCI: dwc: Convert to use pci_host_probe()
+  PCI: dwc: Remove root_bus pointer
+  PCI: dwc: Remove storing of PCI resources
+  PCI: dwc: Simplify config space handling
+  PCI: dwc/keystone: Drop duplicated 'num-viewport'
+  PCI: dwc: Check CONFIG_PCI_MSI inside dw_pcie_msi_init()
+  PCI: dwc/imx6: Remove duplicate define PCIE_LINK_WIDTH_SPEED_CONTROL
+  PCI: dwc: Add a 'num_lanes' field to struct dw_pcie
+  PCI: dwc: Ensure FAST_LINK_MODE is cleared
+  PCI: dwc/meson: Drop the duplicate number of lanes setup
+  PCI: dwc/meson: Drop unnecessary RC config space initialization
+  PCI: dwc/meson: Rework PCI config and DW port logic register accesses
+  PCI: dwc/imx6: Use common PCI register definitions
+  PCI: dwc/qcom: Use common PCI register definitions
+  PCI: dwc: Remove hardcoded PCI_CAP_ID_EXP offset
+  PCI: dwc/tegra: Use common Designware port logic register definitions
+  PCI: dwc: Remove read_dbi2 code
+  PCI: dwc: Make ATU accessors private
+  PCI: dwc: Centralize link gen setting
+  PCI: dwc: Set PORT_LINK_DLL_LINK_EN in common setup code
+  PCI: dwc/intel-gw: Drop unnecessary checking of DT 'device_type'
+    property
+  PCI: dwc/intel-gw: Move getting PCI_CAP_ID_EXP offset to
+    intel_pcie_link_setup()
+  PCI: dwc/intel-gw: Drop unused max_width
+  PCI: dwc: Move N_FTS setup to common setup
+  PCI: dwc: Use DBI accessors
 
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -571,4 +571,12 @@ config LOONGSON_PCH_MSI
- 	help
- 	  Support for the Loongson PCH MSI Controller.
- 
-+config IMS_MSI
-+	bool "IMS Interrupt Message Store MSI controller"
-+	depends on PCI
-+	select DEVICE_MSI
-+	help
-+	  Support for IMS Interrupt Message Store MSI controller
-+	  with IMS slot storage in a slot array
-+
- endmenu
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -111,3 +111,4 @@ obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loo
- obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
- obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
- obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-+obj-$(CONFIG_IMS_MSI)			+= irq-ims-msi.o
---- /dev/null
-+++ b/drivers/irqchip/irq-ims-msi.c
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// (C) Copyright 2020 Thomas Gleixner <tglx@linutronix.de>
-+/*
-+ * Shared interrupt chip and irq domain for Intel IMS devices
-+ */
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/msi.h>
-+#include <linux/irq.h>
-+
-+#include <linux/irqchip/irq-ims-msi.h>
-+
-+struct ims_data {
-+	struct ims_array_info	info;
-+	unsigned long		map[0];
-+};
-+
-+static void ims_mask_irq(struct irq_data *data)
-+{
-+	struct msi_desc *desc = irq_data_get_msi_desc(data);
-+	struct ims_array_slot __iomem *slot = desc->device_msi.priv_iomem;
-+	u32 __iomem *ctrl = &slot->ctrl;
-+
-+	iowrite32(ioread32(ctrl) & ~IMS_VECTOR_CTRL_UNMASK, ctrl);
-+}
-+
-+static void ims_unmask_irq(struct irq_data *data)
-+{
-+	struct msi_desc *desc = irq_data_get_msi_desc(data);
-+	struct ims_array_slot __iomem *slot = desc->device_msi.priv_iomem;
-+	u32 __iomem *ctrl = &slot->ctrl;
-+
-+	iowrite32(ioread32(ctrl) | IMS_VECTOR_CTRL_UNMASK, ctrl);
-+}
-+
-+static void ims_write_msi_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	struct msi_desc *desc = irq_data_get_msi_desc(data);
-+	struct ims_array_slot __iomem *slot = desc->device_msi.priv_iomem;
-+
-+	iowrite32(msg->address_lo, &slot->address_lo);
-+	iowrite32(msg->address_hi, &slot->address_hi);
-+	iowrite32(msg->data, &slot->data);
-+}
-+
-+static const struct irq_chip ims_msi_controller = {
-+	.name			= "IMS",
-+	.irq_mask		= ims_mask_irq,
-+	.irq_unmask		= ims_unmask_irq,
-+	.irq_write_msi_msg	= ims_write_msi_msg,
-+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE,
-+};
-+
-+static void ims_reset_slot(struct ims_array_slot __iomem *slot)
-+{
-+	iowrite32(0, &slot->address_lo);
-+	iowrite32(0, &slot->address_hi);
-+	iowrite32(0, &slot->data);
-+	iowrite32(0, &slot->ctrl);
-+}
-+
-+static void ims_free_msi_store(struct irq_domain *domain, struct device *dev)
-+{
-+	struct msi_domain_info *info = domain->host_data;
-+	struct ims_data *ims = info->data;
-+	struct msi_desc *entry;
-+
-+	for_each_msi_entry(entry, dev) {
-+		if (entry->device_msi.priv_iomem) {
-+			clear_bit(entry->device_msi.hwirq, ims->map);
-+			ims_reset_slot(entry->device_msi.priv_iomem);
-+			entry->device_msi.priv_iomem = NULL;
-+			entry->device_msi.hwirq = 0;
-+		}
-+	}
-+}
-+
-+static int ims_alloc_msi_store(struct irq_domain *domain, struct device *dev,
-+			       int nvec)
-+{
-+	struct msi_domain_info *info = domain->host_data;
-+	struct ims_data *ims = info->data;
-+	struct msi_desc *entry;
-+
-+	for_each_msi_entry(entry, dev) {
-+		unsigned int idx;
-+
-+		idx = find_first_zero_bit(ims->map, ims->info.max_slots);
-+		if (idx >= ims->info.max_slots)
-+			goto fail;
-+		set_bit(idx, ims->map);
-+		entry->device_msi.priv_iomem = &ims->info.slots[idx];
-+		entry->device_msi.hwirq = idx;
-+	}
-+	return 0;
-+
-+fail:
-+	ims_free_msi_store(domain, dev);
-+	return -ENOSPC;
-+}
-+
-+struct ims_domain_template {
-+	struct msi_domain_ops	ops;
-+	struct msi_domain_info	info;
-+};
-+
-+static const struct ims_domain_template ims_domain_template = {
-+	.ops = {
-+		.msi_alloc_store	= ims_alloc_msi_store,
-+		.msi_free_store		= ims_free_msi_store,
-+	},
-+	.info = {
-+		.flags		= MSI_FLAG_USE_DEF_DOM_OPS |
-+				  MSI_FLAG_USE_DEF_CHIP_OPS,
-+		.handler	= handle_edge_irq,
-+		.handler_name	= "edge",
-+	},
-+};
-+
-+struct irq_domain *
-+pci_ims_create_msi_irq_domain(struct pci_dev *pdev,
-+			      struct ims_array_info *ims_info)
-+{
-+	struct ims_domain_template *info;
-+	struct irq_domain *domain;
-+	struct irq_chip *chip;
-+	struct ims_data *data;
-+	unsigned int size;
-+
-+	/* Allocate new domain storage */
-+	info = kmemdup(&ims_domain_template, sizeof(ims_domain_template),
-+		       GFP_KERNEL);
-+	if (!info)
-+		return NULL;
-+	/* Link the ops */
-+	info->info.ops = &info->ops;
-+
-+	/* Allocate ims_info along with the bitmap */
-+	size = sizeof(*data);
-+	size += BITS_TO_LONGS(ims_info->max_slots) * sizeof(unsigned long);
-+	data = kzalloc(size, GFP_KERNEL);
-+	if (!data)
-+		goto err_info;
-+
-+	data->info = *ims_info;
-+	info->info.data = data;
-+
-+	chip = kmemdup(&ims_msi_controller, sizeof(ims_msi_controller),
-+		       GFP_KERNEL);
-+	if (!chip)
-+		goto err_data;
-+	info->info.chip = chip;
-+
-+	domain = pci_subdevice_msi_create_irq_domain(pdev, &info->info);
-+	if (!domain)
-+		goto err_chip;
-+
-+	return domain;
-+
-+err_chip:
-+	kfree(chip);
-+err_data:
-+	kfree(data);
-+err_info:
-+	kfree(info);
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(pci_ims_create_msi_irq_domain);
---- /dev/null
-+++ b/include/linux/irqchip/irq-ims-msi.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* (C) Copyright 2020 Thomas Gleixner <tglx@linutronix.de> */
-+
-+#ifndef _LINUX_IRQCHIP_IRQ_IMS_MSI_H
-+#define _LINUX_IRQCHIP_IRQ_IMS_MSI_H
-+
-+#include <linux/types.h>
-+
-+struct ims_array_slot {
-+	u32	address_lo;
-+	u32	address_hi;
-+	u32	data;
-+	u32	ctrl;
-+};
-+
-+/* Bit to unmask the interrupt in slot->ctrl */
-+#define IMS_VECTOR_CTRL_UNMASK	0x01
-+
-+struct ims_array_info {
-+	struct ims_array_slot	__iomem *slots;
-+	unsigned int		max_slots;
-+};
-+
-+/* Dummy forward declaration for illustration */
-+struct ims_queue_slot;
-+
-+/**
-+ * ims_msi_store - Interrupt Message Store descriptor data
-+ * @array_slot:	Pointer to a on device IMS storage array slot
-+ * @queue_slot:	Pointer to storage embedded in queue data
-+ * @hw_irq:	Index of the slot or queue. Also hardware irq number
-+ */
-+struct ims_msi_store {
-+	union {
-+		struct ims_array_slot __iomem	*array_slot;
-+		struct ims_queue_slot		*queue_slot;
-+	};
-+	unsigned int				hw_irq;
-+};
-+
-+#endif
+ drivers/pci/controller/dwc/pci-dra7xx.c       |  29 +-
+ drivers/pci/controller/dwc/pci-exynos.c       |  45 +--
+ drivers/pci/controller/dwc/pci-imx6.c         |  52 +--
+ drivers/pci/controller/dwc/pci-keystone.c     | 126 ++-----
+ drivers/pci/controller/dwc/pci-meson.c        | 156 ++-------
+ drivers/pci/controller/dwc/pcie-al.c          |  70 +---
+ drivers/pci/controller/dwc/pcie-artpec6.c     |  48 +--
+ .../pci/controller/dwc/pcie-designware-ep.c   |  11 +-
+ .../pci/controller/dwc/pcie-designware-host.c | 319 ++++++------------
+ .../pci/controller/dwc/pcie-designware-plat.c |   4 +-
+ drivers/pci/controller/dwc/pcie-designware.c  | 104 +++---
+ drivers/pci/controller/dwc/pcie-designware.h  |  54 +--
+ drivers/pci/controller/dwc/pcie-histb.c       |  45 +--
+ drivers/pci/controller/dwc/pcie-intel-gw.c    |  65 +---
+ drivers/pci/controller/dwc/pcie-kirin.c       |  43 +--
+ drivers/pci/controller/dwc/pcie-qcom.c        |  33 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c   |  39 +--
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 120 ++-----
+ drivers/pci/controller/dwc/pcie-uniphier.c    |   3 +-
+ drivers/pci/probe.c                           |  14 +-
+ include/linux/pci.h                           |   1 +
+ 21 files changed, 443 insertions(+), 938 deletions(-)
 
+--
+2.25.1
