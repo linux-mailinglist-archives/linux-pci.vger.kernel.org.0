@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4480D24D5FB
+	by mail.lfdr.de (Postfix) with ESMTP id B137D24D5FC
 	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 15:16:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgHUNQZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 09:16:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32938 "EHLO
+        id S1728746AbgHUNQ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 09:16:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728746AbgHUNQQ (ORCPT
+        with ESMTP id S1728750AbgHUNQQ (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 09:16:16 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14CE6C061387
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF26C061388
         for <linux-pci@vger.kernel.org>; Fri, 21 Aug 2020 06:16:13 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l23so1369466edv.11
+Received: by mail-ed1-x542.google.com with SMTP id ba10so1392042edb.3
         for <linux-pci@vger.kernel.org>; Fri, 21 Aug 2020 06:16:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AnnlDaJISLBh3tlC6QY64TitbeK2bzvjOXLypqqoQOw=;
-        b=Evc7JHiQsscTCCzRJuF4RGxVPF/TfJEQoNFtq/F7l4VJCPfkB8ZnzeHE1jSsjrZ5r7
-         5C5idkHzraOBGbOnKZ34LNp9EprEIaOlttQSmNnVriYiMTyEn0rEcuYChBq7/TbDjIa9
-         h9y8+WSyeAHbE/U5TdEhnhnBK3VaWQsOiKiNRvRwvjKBbSoZrDHgc/ZU3yHnRDYGsqwM
-         dcz4chm8cEyq8yr22YRPHjEUeukQaL7QYjLiVubrUsFr+Z3R6l5PdO1A8jIMu+4qOmwq
-         DC8C2F+j/g3CwmANZ24gMXCH2L7IB0mQp2b8fBSq4UKvRyEOgAylfTesVJgJHr38GfK+
-         JKGQ==
+        bh=mFxcuowFu0Jv3evIc1dad6n3ZhAX6nITskxpnaVl5+I=;
+        b=F7qrOUgTT3E74XyC9jWEuKSCWozpJkqtVAUNfrVyQYb7KuFQaRifAbrV29U+QTgdO7
+         svaPN2mULjuJmM9GzglZwFzOSgvsCjum3Skmnma0ZxZOa0TjXvzHG00pItNlS0o+yHHb
+         DHKfdTgv1Vsra0RFLIHnHM3PWZPg1i4t79wJcD/ye7C4kl6emXJwM47EZ2fqK9NjHU8Z
+         7l+LTNCupWNFida4Mq7tKvQSx5gdmvST6bW+kSiDnNAhy1j/RRW6vu0KYRZKH8ouJXsm
+         8/+XKVKeZNzd+4C8Jbsu4oNNebPMyjg8aTlotZFno4GFpdtboKUIpaIYzxudSgt9xQLD
+         ZQhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AnnlDaJISLBh3tlC6QY64TitbeK2bzvjOXLypqqoQOw=;
-        b=LqxzW4oEMI+zwnVUaan/Ufgw5OX8DjWL7TqePmxIH9mE91StDDGb1ySDXSWMq4br5C
-         VpymzQKfFLP7s7mSkrJxO+jBLkOfBmGW64Sox5JFldpHafKKfOiIrZyxycS0RQ4N+ZNj
-         B9KPmijJPyZf9dtWlCuzMDnTw3RMdRbH8TfaQ3jTcvTQI8zSTZVj1i6zWrf+UhvopYdf
-         hH6fPy89ebmK0/YjIptLsMxFXRh1+CNX8VImGWRGqCj6AUW7sr69DRmDGW7svQXiUgfM
-         Gv71Al+QcloaV1QMmrIuetH9jRO+DilJ84FugIJvxqfS+QUZZ7u0SOWYp6Bmk9vnsFgH
-         tqfQ==
-X-Gm-Message-State: AOAM531qJFrLPe8Thn2mkWPbEx76Eu4tkwe4moMzJdfHk0OrcNKvnkfb
-        7F/b5G9Z+q8zGrebrLfe2s/gUA==
-X-Google-Smtp-Source: ABdhPJxLTyEDp1sdq7LgF1huRP9DNgLTxWOLZlImVJP3z0/PYSRni9H4ifVAEYm5/PMqx1CpjBujwg==
-X-Received: by 2002:aa7:c353:: with SMTP id j19mr2827173edr.128.1598015770571;
-        Fri, 21 Aug 2020 06:16:10 -0700 (PDT)
+        bh=mFxcuowFu0Jv3evIc1dad6n3ZhAX6nITskxpnaVl5+I=;
+        b=tWCT16PqVtCn2wM0aHhMbb0EIckJTY1+4/RYk+RsnhhD2aN+8Rk1DLrs2sSGHpkzdB
+         naGXbSFQXWzwWLL5eUL1yTaTmTVekhNhOHxKADiXbfWGwaZVr+MI0n0ea6s1zV4/rEJW
+         oHCdCVgsIKPrwMEBUcPsIBHNYnAb1S3VrJnwXJb1QmlgnFIu2qT+uL41OqEqFJQ5BZ0I
+         22pfeurS/r6mE8zlnTl4p30LWyfbBIc6YG47NfxRFNP9w+z8xcr7hNgFf4fJbNE3+eCI
+         +YH2Ee3jxpJsBA0unSTkXhYEosa1VOZRKy/BEH2vEBIIGl7AYjdRutjsHRqltK3VilaC
+         4Bew==
+X-Gm-Message-State: AOAM531SB7gW4YEFEPllC5WJsiNJqqyug6yUBYJ7Gx5xDFnrT0ckcd5k
+        u3bgkuvC3hXMue0VcwN1yCu9gw==
+X-Google-Smtp-Source: ABdhPJxSuluZjkQxfsXp9THILY+NXbkzKwWS5DVjT4ygD1u7SdXIMGmAG5nqsAUF8rJME9RMD8pSxg==
+X-Received: by 2002:a50:a2e6:: with SMTP id 93mr2650226edm.147.1598015771724;
+        Fri, 21 Aug 2020 06:16:11 -0700 (PDT)
 Received: from localhost.localdomain ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id v4sm1299748eje.39.2020.08.21.06.16.09
+        by smtp.gmail.com with ESMTPSA id v4sm1299748eje.39.2020.08.21.06.16.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 06:16:10 -0700 (PDT)
+        Fri, 21 Aug 2020 06:16:11 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org,
         virtualization@lists.linux-foundation.org,
@@ -56,9 +56,9 @@ Cc:     joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
         sebastien.boeuf@intel.com, eric.auger@redhat.com,
         lorenzo.pieralisi@arm.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v3 3/6] PCI: Add DMA configuration for virtual platforms
-Date:   Fri, 21 Aug 2020 15:15:37 +0200
-Message-Id: <20200821131540.2801801-4-jean-philippe@linaro.org>
+Subject: [PATCH v3 4/6] iommu/virtio: Add topology definitions
+Date:   Fri, 21 Aug 2020 15:15:38 +0200
+Message-Id: <20200821131540.2801801-5-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200821131540.2801801-1-jean-philippe@linaro.org>
 References: <20200821131540.2801801-1-jean-philippe@linaro.org>
@@ -69,52 +69,85 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hardware platforms usually describe the IOMMU topology using either
-device-tree pointers or vendor-specific ACPI tables.  For virtual
-platforms that don't provide a device-tree, the virtio-iommu device
-contains a description of the endpoints it manages.  That information
-allows us to probe endpoints after the IOMMU is probed (possibly as late
-as userspace modprobe), provided it is discovered early enough.
+Add struct definitions for describing endpoints managed by the
+virtio-iommu. When VIRTIO_IOMMU_F_TOPOLOGY is offered, an array of
+virtio_iommu_topo_* structures in config space describes the endpoints,
+identified either by their PCI BDF or their physical MMIO address.
 
-Add a hook to pci_dma_configure(), which returns -EPROBE_DEFER if the
-endpoint is managed by a vIOMMU that will be loaded later, or 0 in any
-other case to avoid disturbing the normal DMA configuration methods.
-When CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS isn't selected, the call to
-virt_dma_configure() is compiled out.
-
-As long as the information is consistent, platforms can provide both a
-device-tree and a built-in topology, and the IOMMU infrastructure is
-able to deal with multiple DMA configuration methods.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/pci/pci-driver.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/uapi/linux/virtio_iommu.h | 44 +++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 449466f71040..dbe9d33606b0 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -19,6 +19,7 @@
- #include <linux/kexec.h>
- #include <linux/of_device.h>
- #include <linux/acpi.h>
-+#include <linux/virt_iommu.h>
- #include "pci.h"
- #include "pcie/portdrv.h"
+diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
+index 237e36a280cb..70cba30644d5 100644
+--- a/include/uapi/linux/virtio_iommu.h
++++ b/include/uapi/linux/virtio_iommu.h
+@@ -16,6 +16,7 @@
+ #define VIRTIO_IOMMU_F_BYPASS			3
+ #define VIRTIO_IOMMU_F_PROBE			4
+ #define VIRTIO_IOMMU_F_MMIO			5
++#define VIRTIO_IOMMU_F_TOPOLOGY			6
  
-@@ -1605,6 +1606,10 @@ static int pci_dma_configure(struct device *dev)
- 	struct device *bridge;
- 	int ret = 0;
+ struct virtio_iommu_range_64 {
+ 	__le64					start;
+@@ -27,6 +28,17 @@ struct virtio_iommu_range_32 {
+ 	__le32					end;
+ };
  
-+	ret = virt_dma_configure(dev);
-+	if (ret)
-+		return ret;
++struct virtio_iommu_topo_config {
++	/* Number of topology description structures */
++	__le16					count;
++	/*
++	 * Offset to the first topology description structure
++	 * (virtio_iommu_topo_*) from the start of the virtio_iommu config
++	 * space. Aligned on 8 bytes.
++	 */
++	__le16					offset;
++};
 +
- 	bridge = pci_get_host_bridge_device(to_pci_dev(dev));
+ struct virtio_iommu_config {
+ 	/* Supported page sizes */
+ 	__le64					page_size_mask;
+@@ -36,6 +48,38 @@ struct virtio_iommu_config {
+ 	struct virtio_iommu_range_32		domain_range;
+ 	/* Probe buffer size */
+ 	__le32					probe_size;
++	struct virtio_iommu_topo_config		topo_config;
++};
++
++#define VIRTIO_IOMMU_TOPO_PCI_RANGE		0x1
++#define VIRTIO_IOMMU_TOPO_MMIO			0x2
++
++struct virtio_iommu_topo_pci_range {
++	/* VIRTIO_IOMMU_TOPO_PCI_RANGE */
++	__u8					type;
++	__u8					reserved;
++	/* Length of this structure */
++	__le16					length;
++	/* First endpoint ID in the range */
++	__le32					endpoint_start;
++	/* PCI domain number */
++	__le16					segment;
++	/* PCI Bus:Device.Function range */
++	__le16					bdf_start;
++	__le16					bdf_end;
++	__le16					padding;
++};
++
++struct virtio_iommu_topo_mmio {
++	/* VIRTIO_IOMMU_TOPO_MMIO */
++	__u8					type;
++	__u8					reserved;
++	/* Length of this structure */
++	__le16					length;
++	/* Endpoint ID */
++	__le32					endpoint;
++	/* Address of the first MMIO region */
++	__le64					address;
+ };
  
- 	if (IS_ENABLED(CONFIG_OF) && bridge->parent &&
+ /* Request types */
 -- 
 2.28.0
 
