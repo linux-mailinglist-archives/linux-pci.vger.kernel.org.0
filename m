@@ -2,134 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 456EE24D23F
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 12:25:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ADA224D49E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 14:05:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgHUKZz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 06:25:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:61106 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbgHUKZy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:25:54 -0400
-IronPort-SDR: rqm6OcpchT18JscF/rqM8n0M0H4HP+N4iuelkHNqhK+jnKWrTDjACQX9e0ORuDnjtBbRCmMmLr
- PcSs5ha7F8+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="152914963"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="152914963"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:25:53 -0700
-IronPort-SDR: hxBfsY4Q2t9YagYR3NYjvG2BQ/xIKJ0OgAAHGkbKbO9YQpueLIJ8aOd7G8JF0UV1tstJYGFOUU
- nFCWNB5D5uZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="335281950"
-Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Aug 2020 03:25:53 -0700
-Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k94F6-0000th-C3; Fri, 21 Aug 2020 10:25:52 +0000
-Date:   Fri, 21 Aug 2020 18:24:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/enumeration] BUILD SUCCESS
- 92ff4b49c2a91b0ffd6a00d4c32f8f792e5336ad
-Message-ID: <5f3fa0fa.R3iUmfJX4FW0jfLt%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727837AbgHUMFC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 08:05:02 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40712 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHUMFA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 08:05:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id u24so1293931oic.7;
+        Fri, 21 Aug 2020 05:04:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P1HeEvz2wI1FOpRCVf2LfgURAoLuEdudBP1iVF0BOkU=;
+        b=SgyFr+usmSXelf51B2NkMUawWpK1exeGDPeyGt80VxsZgiQzVutCIkQpuOF8dCtELh
+         G/5pcxlpkGIrbeVcFg9tYoA9baqMeN0qkOzGVecLYs3cdvMyQTvphmx2/BlUB2BJ8zpc
+         J4HO4VjzwQ7Uu1sSIJUUa8iNRouGkjuH7cmwB8gjkLcZBZHu0a6fPp+HoIaPW4oQc1Kp
+         cX4szgw9ZZ1+MdfXJJ3z7qqU8Ycls6PpQzC6sWmcea+QoaZocDgptBosl4+7ZjBsLz/f
+         +Ftj4MhrVCBTs38Iq723R8jZFoNtVvgtqfGF8QXfWGeYsgNR6A3QGIb8Pkpx6K2+QgXN
+         q7hQ==
+X-Gm-Message-State: AOAM532P9eF/0EgPUpIjQkCJOTbkdCkVtOIWUXUnMu0TOUQ9HqP83gzt
+        kFwdMjXxFtM+cqukELDPaz65qGjuYVPr5pLQG/Dz3Ksa
+X-Google-Smtp-Source: ABdhPJw5Y6tFxNr/+/JFx28hKhjq7S4wmnRiKJapNiD/bD3qDlIgDmcckQH7DDOWMsrwer6Zd17bG01T/JVwo+X+V5Y=
+X-Received: by 2002:aca:adc4:: with SMTP id w187mr1331706oie.153.1598011499077;
+ Fri, 21 Aug 2020 05:04:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200814173037.17822-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200814173037.17822-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 21 Aug 2020 14:04:47 +0200
+Message-ID: <CAMuHMdVHOcPMPM4pWpTgzzDYWhgWnzPthcP5husNNEc_cjC2yA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: pci: rcar-pci-ep: Document r8a774a1 and r8a774b1
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/enumeration
-branch HEAD: 92ff4b49c2a91b0ffd6a00d4c32f8f792e5336ad  PCI: Reduce warnings on possible RW1C corruption
+On Fri, Aug 14, 2020 at 7:32 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document the support for R-Car PCIe EP on R8A774A1 and R8A774B1 SoC
+> devices.
+>
+> Also constify "renesas,rcar-gen3-pcie-ep" so that it can be used as
+> fallback compatible string for R-Car Gen3 and RZ/G2 devices as the
+> PCIe module is identical.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-elapsed time: 722m
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-configs tested: 72
-configs skipped: 3
+Gr{oetje,eeting}s,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+                        Geert
 
-arm                                 defconfig
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                           ip28_defconfig
-arm                            mmp2_defconfig
-h8300                    h8300h-sim_defconfig
-riscv                               defconfig
-x86_64                           allyesconfig
-m68k                       m5275evb_defconfig
-arm                        keystone_defconfig
-s390                             alldefconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a002-20200820
-i386                 randconfig-a004-20200820
-i386                 randconfig-a005-20200820
-i386                 randconfig-a003-20200820
-i386                 randconfig-a006-20200820
-i386                 randconfig-a001-20200820
-x86_64               randconfig-a015-20200820
-x86_64               randconfig-a012-20200820
-x86_64               randconfig-a016-20200820
-x86_64               randconfig-a014-20200820
-x86_64               randconfig-a011-20200820
-x86_64               randconfig-a013-20200820
-i386                 randconfig-a013-20200820
-i386                 randconfig-a012-20200820
-i386                 randconfig-a011-20200820
-i386                 randconfig-a016-20200820
-i386                 randconfig-a014-20200820
-i386                 randconfig-a015-20200820
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
