@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA5824CBC7
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:54:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14FCB24CBCC
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 05:54:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgHUDyu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Aug 2020 23:54:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33959 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727845AbgHUDyp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:54:45 -0400
-Received: by mail-io1-f67.google.com with SMTP id q75so486048iod.1;
-        Thu, 20 Aug 2020 20:54:44 -0700 (PDT)
+        id S1727854AbgHUDyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Aug 2020 23:54:52 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39654 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbgHUDyv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Aug 2020 23:54:51 -0400
+Received: by mail-il1-f194.google.com with SMTP id f12so332444ils.6;
+        Thu, 20 Aug 2020 20:54:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uLOKJsM36RdxJqf/bYT4HXd1cPeYX0IkkHL5f7qh/3s=;
-        b=Hr7x8bSrLCW70qMrrETHvx+C51eeSbcy4m8/FkUzrDVHvuQz5dCHzPfSdPfrP1QQNn
-         pscL5qdahFwYTtp/qTWvq3gqyjbSN9XKHJ1nM9rXE9INItnR30F5Ajx2CxKG3+49Iy+y
-         fGCjgs8+9RX+sabNqjBB91MfKxlrgmZL4oUHjQ8YbVj8SjVU+B+Cinbjgul2o0eHHQww
-         IyBMOxdYuSk55B3gCxX8Ahk+yXvhBxWEwb/c5K88DNxC7zKz3BS4FZD46Thl19PV+sn6
-         3ErMP27ISiGBjvYAV6SPsLjBfIrCY5k0No9dTeuOk7m24T1kmG0ru8dMFP6r2x7F+5i3
-         cmHQ==
-X-Gm-Message-State: AOAM531D12DL2/mIuDQrTwGp8cST5uUX8k36XPxg+RRo2mKOYLn+qWh3
-        4kFIogOq74NMT6SC4iMTjA==
-X-Google-Smtp-Source: ABdhPJyq7iI4neXMHfp35dYxnHywQ9YGqTs7MIdd7KldjmqdJZ+ojUjvq0arWrzNuO2oF13NV46Vpw==
-X-Received: by 2002:a02:7f0f:: with SMTP id r15mr940737jac.46.1597982084039;
-        Thu, 20 Aug 2020 20:54:44 -0700 (PDT)
+        bh=AMrM+qtiSMWCUDEPdNKF+1qvSLxCjHol2qvMYIhg0lM=;
+        b=AcNWZLwkR2qqoySNiha8Ic1wZs7fvSwe77loA8NTu3UoCcQpDMhxXi6MAc8sfSb+uA
+         38fp8vyMqxQ9k8OJTCEeECNDiqTPPrtGmZYZuKgOnrSydrtRSYbzJ8xqt7vGg8scpFZ3
+         1syb1IuZsjeAfAziYu7G5cOQFplnbEySg/i+CDNxke/XznAUXHhSwRRmd0efUwFypKKY
+         NCHIKmXsQIFmjmBv3/wC9AjngL5Wza9AE2yhctV4ykyeFGuGCq3wprhMSinhk6qFy+RZ
+         Xn/9D9y03Rp0OrgyBf4fmcEOQ1FMCShUw2Qgpudz+LE9JIk4jteiQuN+CdZckXAwInT/
+         tC7g==
+X-Gm-Message-State: AOAM531y7q3A4iun79OfdPchu7aSKK2giSoY6/bg24WmJ260blguF/bi
+        1NModGkjXQWK3c7k88wfpQ==
+X-Google-Smtp-Source: ABdhPJwv0XL0OXwwpZMdG6yLDwDy/CWX58TYS7rfLWejUwz7WvjOyk3gAOJ+/9+KkWqavfshCopL3A==
+X-Received: by 2002:a92:b05:: with SMTP id b5mr1005648ilf.14.1597982089434;
+        Thu, 20 Aug 2020 20:54:49 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.54.40
+        by smtp.googlemail.com with ESMTPSA id 79sm413923ilc.9.2020.08.20.20.54.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 20:54:43 -0700 (PDT)
+        Thu, 20 Aug 2020 20:54:48 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -72,9 +72,9 @@ Cc:     linux-pci@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v2 04/40] PCI: dwc: Add a default pci_ops.map_bus for root port
-Date:   Thu, 20 Aug 2020 21:53:44 -0600
-Message-Id: <20200821035420.380495-5-robh@kernel.org>
+Subject: [PATCH v2 05/40] PCI: dwc: al: Use pci_ops for child config space accessors
+Date:   Thu, 20 Aug 2020 21:53:45 -0600
+Message-Id: <20200821035420.380495-6-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821035420.380495-1-robh@kernel.org>
 References: <20200821035420.380495-1-robh@kernel.org>
@@ -85,55 +85,119 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Designware root port config space is memory mapped accesses via the
-DBI space by default. Add a common implementation
-dw_pcie_own_conf_map_bus() for platforms to use.
+Now that DWC drivers can setup their own pci_ops for the root and child
+buses, convert the Amazon driver to use the standard pci_ops for child
+bus config accesses.
 
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: Jonathan Chocron <jonnyc@amazon.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 11 +++++++++++
- drivers/pci/controller/dwc/pcie-designware.h      |  2 ++
- 2 files changed, 13 insertions(+)
+ drivers/pci/controller/dwc/pcie-al.c | 63 ++++++----------------------
+ 1 file changed, 13 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index b626cc7cd43a..e87edce9b8da 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -602,6 +602,17 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 	return dw_pcie_wr_other_conf(pp, bus, devfn, where, size, val);
+diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+index d57d4ee15848..59e33d3a8380 100644
+--- a/drivers/pci/controller/dwc/pcie-al.c
++++ b/drivers/pci/controller/dwc/pcie-al.c
+@@ -217,14 +217,15 @@ static inline void al_pcie_target_bus_set(struct al_pcie *pcie,
+ 				  reg);
  }
  
-+void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn, int where)
-+{
-+	struct pcie_port *pp = bus->sysdata;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	if (PCI_SLOT(devfn) > 0)
-+		return NULL;
-+
-+	return pci->dbi_base + where;
-+}
-+
- static struct pci_ops dw_pcie_ops = {
- 	.read = dw_pcie_rd_conf,
- 	.write = dw_pcie_wr_conf,
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 8b8ea5f3e7af..a9d805b28c2a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -377,6 +377,8 @@ void dw_pcie_setup_rc(struct pcie_port *pp);
- int dw_pcie_host_init(struct pcie_port *pp);
- void dw_pcie_host_deinit(struct pcie_port *pp);
- int dw_pcie_allocate_domains(struct pcie_port *pp);
-+void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
-+				       int where);
- #else
- static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+-static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
+-					   unsigned int busnr,
+-					   unsigned int devfn)
++static void __iomem *al_pcie_conf_addr_map_bus(struct pci_bus *bus,
++					       unsigned int devfn, int where)
  {
++	struct pcie_port *pp = bus->sysdata;
++	struct al_pcie *pcie = to_al_pcie(to_dw_pcie_from_pp(pp));
++	unsigned int busnr = bus->number;
+ 	struct al_pcie_target_bus_cfg *target_bus_cfg = &pcie->target_bus_cfg;
+ 	unsigned int busnr_ecam = busnr & target_bus_cfg->ecam_mask;
+ 	unsigned int busnr_reg = busnr & target_bus_cfg->reg_mask;
+-	struct pcie_port *pp = &pcie->pci->pp;
+ 	void __iomem *pci_base_addr;
+ 
+ 	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
+@@ -240,52 +241,14 @@ static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
+ 				       target_bus_cfg->reg_mask);
+ 	}
+ 
+-	return pci_base_addr;
+-}
+-
+-static int al_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+-				 unsigned int devfn, int where, int size,
+-				 u32 *val)
+-{
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct al_pcie *pcie = to_al_pcie(pci);
+-	unsigned int busnr = bus->number;
+-	void __iomem *pci_addr;
+-	int rc;
+-
+-	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+-
+-	rc = dw_pcie_read(pci_addr + where, size, val);
+-
+-	dev_dbg(pci->dev, "%d-byte config read from %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+-		size, pci_domain_nr(bus), bus->number,
+-		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+-		(pci_addr + where), *val);
+-
+-	return rc;
++	return pci_base_addr + where;
+ }
+ 
+-static int al_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+-				 unsigned int devfn, int where, int size,
+-				 u32 val)
+-{
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct al_pcie *pcie = to_al_pcie(pci);
+-	unsigned int busnr = bus->number;
+-	void __iomem *pci_addr;
+-	int rc;
+-
+-	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+-
+-	rc = dw_pcie_write(pci_addr + where, size, val);
+-
+-	dev_dbg(pci->dev, "%d-byte config write to %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+-		size, pci_domain_nr(bus), bus->number,
+-		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+-		(pci_addr + where), val);
+-
+-	return rc;
+-}
++static struct pci_ops al_child_pci_ops = {
++	.map_bus = al_pcie_conf_addr_map_bus,
++	.read = pci_generic_config_read,
++	.write = pci_generic_config_write,
++};
+ 
+ static void al_pcie_config_prepare(struct al_pcie *pcie)
+ {
+@@ -339,6 +302,8 @@ static int al_pcie_host_init(struct pcie_port *pp)
+ 	struct al_pcie *pcie = to_al_pcie(pci);
+ 	int rc;
+ 
++	pp->bridge->child_ops = &al_child_pci_ops;
++
+ 	rc = al_pcie_rev_id_get(pcie, &pcie->controller_rev_id);
+ 	if (rc)
+ 		return rc;
+@@ -353,8 +318,6 @@ static int al_pcie_host_init(struct pcie_port *pp)
+ }
+ 
+ static const struct dw_pcie_host_ops al_pcie_host_ops = {
+-	.rd_other_conf = al_pcie_rd_other_conf,
+-	.wr_other_conf = al_pcie_wr_other_conf,
+ 	.host_init = al_pcie_host_init,
+ };
+ 
 -- 
 2.25.1
 
