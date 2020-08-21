@@ -2,107 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C26FE24CE6C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 09:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E5AB24D0A4
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 10:40:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgHUHFY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 03:05:24 -0400
-Received: from mx.socionext.com ([202.248.49.38]:41769 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgHUHFX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:05:23 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 21 Aug 2020 16:05:21 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A700A60060;
-        Fri, 21 Aug 2020 16:05:22 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 21 Aug 2020 16:05:22 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 5EB784036B;
-        Fri, 21 Aug 2020 16:05:22 +0900 (JST)
-Received: from [10.212.1.43] (unknown [10.212.1.43])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id BA90C120B93;
-        Fri, 21 Aug 2020 16:05:21 +0900 (JST)
-Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
- get phy
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
- <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
-Date:   Fri, 21 Aug 2020 16:05:21 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1727868AbgHUIkB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 04:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726433AbgHUIkA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 04:40:00 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590F4C061385
+        for <linux-pci@vger.kernel.org>; Fri, 21 Aug 2020 01:40:00 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id m22so1358557eje.10
+        for <linux-pci@vger.kernel.org>; Fri, 21 Aug 2020 01:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XadaanCr4lDO+zLVqWWUMPb1BVlfqUxXq/ClehyNMJE=;
+        b=HRYysz8OrEROQJ+s0ZlS9JhcEJ84ZPeORKAXDPtjU4NIM31gA5GvMBD9MxnqNLhaIC
+         lsGVes1QCLYuP78wbfFbNycx8Surhm2k/xSV85puFaZr8NxnFmO4RGcldl5WYiC5Scag
+         9W3SPqSl1jYgL8OPg7yAk6327TcJU2/TieHHNnlbPYrJz/khiVdz40lijkIySn/ow5cr
+         itMajhJhz7RByWWbXnBD9kyWlfliVib5gPhn0DgtLQBQaxvaaQ4OQmNuLTWmn0Le7/+f
+         0n8RNP6S5LCsVs4kjPremaLB3J9atTJk/9q03GFvHSfidPEAiKEMTqwHh2+qnyj4dCYw
+         My5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XadaanCr4lDO+zLVqWWUMPb1BVlfqUxXq/ClehyNMJE=;
+        b=G1QkgJ4IiW6CE7TOwLGcYhCNRTL6ub/i/l5t77LnbGaJHmkindrjjGfZ5Cz42a+Z6K
+         U9j8jSIfGX1iEHc9+72AEGR1ovpLfEtb2BDGUJ8oslEtrJW2WFulx+omsRPw/5KCZRUz
+         tJELg0e3M92osaQe2MTddlXUIoNnySz7VU+3TDZ6MkdNRZ6nlIEKg4Uo4YewdlPZuMz1
+         EsDnIr5QFdZXgsUt3+o0mcrzJvIkQgYOEHLKwC9xM9MOAAOhYlN0gf93Zn5430RClN1f
+         sLwn7r117uzZJySeRIq6Eq5UstOTtM/PtbGdSFEuiuFW1jbAPPsv5DGm8y59XhKcUjxk
+         1n3Q==
+X-Gm-Message-State: AOAM5318GIqJi+O9qTEXhgDjmM6zNHhqRc6KTDEPSXlBcVocRhO1m9li
+        EzeRCbSm1Z3JoCtIhglBKcJO1Q==
+X-Google-Smtp-Source: ABdhPJzOu67KhPib/7zfI7mgHnrftLzWEt8v5fYXk10FlxSsjIV57STeY43DqysK8UOWTKLL9Quh9g==
+X-Received: by 2002:a17:906:c1c3:: with SMTP id bw3mr1966407ejb.8.1597999198248;
+        Fri, 21 Aug 2020 01:39:58 -0700 (PDT)
+Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id j11sm888155ejx.0.2020.08.21.01.39.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 01:39:57 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 10:39:41 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "Boeuf, Sebastien" <sebastien.boeuf@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>
+Subject: Re: [PATCH v2 1/3] iommu/virtio: Add topology description to
+ virtio-iommu config space
+Message-ID: <20200821083941.GA2312546@myrica>
+References: <20200228172537.377327-1-jean-philippe@linaro.org>
+ <20200228172537.377327-2-jean-philippe@linaro.org>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86D9C9@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D86D9C9@SHSMSX104.ccr.corp.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/08/18 1:39, Rob Herring wrote:
-> On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
-> <hayashi.kunihiko@socionext.com> wrote:
->>
->> Even if phy driver doesn't probe, the error message can't be distinguished
->> from other errors. This displays error message caused by the phy driver
->> explicitly.
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
->> index 93ef608..7c8721e 100644
->> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
->> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
->> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->>                  return PTR_ERR(priv->rst);
->>
->>          priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+Hi,
+
+While preparing the next version I noticed I forgot to send this reply.
+Better late than never I suppose...
+
+On Tue, Apr 21, 2020 at 07:31:12AM +0000, Tian, Kevin wrote:
+> > From: Jean-Philippe Brucker
+> > Sent: Saturday, February 29, 2020 1:26 AM
+> > 
+> > Platforms without device-tree do not currently have a method for
+> > describing the vIOMMU topology. Provide a topology description embedded
+> > into the virtio device.
+[...]
+> > diff --git a/drivers/iommu/virtio-iommu-topology.c b/drivers/iommu/virtio-
+> > iommu-topology.c
+> > new file mode 100644
+> > index 000000000000..2188624ef216
+> > --- /dev/null
+> > +++ b/drivers/iommu/virtio-iommu-topology.c
+> > @@ -0,0 +1,343 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/dma-iommu.h>
+> > +#include <linux/list.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/virt_iommu.h>
+> > +#include <linux/virtio_ids.h>
+> > +#include <linux/virtio_pci.h>
+> > +#include <uapi/linux/virtio_iommu.h>
+> > +
+> > +struct viommu_cap_config {
+> > +	u8 bar;
+> > +	u32 length; /* structure size */
+> > +	u32 offset; /* structure offset within the bar */
+> > +};
+> > +
+> > +union viommu_topo_cfg {
+> > +	__le16					type;
+> > +	struct virtio_iommu_topo_pci_range	pci;
+> > +	struct virtio_iommu_topo_endpoint	ep;
+> > +};
+> > +
+> > +struct viommu_spec {
+> > +	struct device				*dev; /* transport device */
+> > +	struct fwnode_handle			*fwnode;
+> > +	struct iommu_ops			*ops;
+> > +	struct list_head			list;
+> > +	size_t					num_items;
 > 
-> The point of the optional variant vs. devm_phy_get() is whether or not
-> you get an error message. So shouldn't you switch to devm_phy_get
-> instead?
+> Intel DMAR allows an IOMMU to claim INCLUDE_ALL thus avoid listing
+> every endpoint one-by-one. It is especially useful when there is only
+> one IOMMU device in the system. Do you think whether making sense
+> to allow such optimization in this spec?
+
+The DMAR INCLUDE_PCI_ALL is for a single PCI domain, so I think is
+equivalent to having a single virtio_iommu_topo_pci_range structure with
+start=0 and end=0xffff. That only takes 16 bytes of config space and is
+pretty easy to parse, so a special case doesn't seem necessary to me.
+
+If more than one PCI domain is managed by the IOMMU, then INCLUDE_ALL
+isn't sufficient since we need to describe how endpoint IDs are associated
+to domain:RID (one of the domains would have its endpoint IDs = RID +
+0x10000 for example). Furthermore non-PCI devices don't have an implicit
+endpoint ID like the RID.
+
+Thanks,
+Jean
+
+> It doesn't work for ARM since
+> you need ID mapping to find the MSI doorbell. But for architectures
+> where only topology info is required, it makes the enumeration process
+> much simpler.
 > 
->> -       if (IS_ERR(priv->phy))
->> -               return PTR_ERR(priv->phy);
->> +       if (IS_ERR(priv->phy)) {
->> +               ret = PTR_ERR(priv->phy);
->> +               if (ret != -EPROBE_DEFER)
->> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
->> +               return ret;
->> +       }
-
-The 'phys' property is optional, so if there isn't 'phys' in the PCIe node,
-devm_phy_get() returns -ENODEV, and devm_phy_optional_get() returns NULL.
-
-When devm_phy_optional_get() replaces devm_phy_get(),
-condition for displaying an error message changes to:
-
-    (ret != -EPROBE_DEFER && ret != -ENODEV)
-
-This won't be simple, but should it be replaced?
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+> Thanks
+> Kevin
