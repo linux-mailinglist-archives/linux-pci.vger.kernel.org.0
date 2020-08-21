@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B446A24DE11
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 19:26:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 648B424DD77
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 19:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgHURZw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 13:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47626 "EHLO mail.kernel.org"
+        id S1725991AbgHURQN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 13:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727885AbgHUQPN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:13 -0400
+        id S1728088AbgHUQQd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E66021741;
-        Fri, 21 Aug 2020 16:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5084A208DB;
+        Fri, 21 Aug 2020 16:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026513;
+        s=default; t=1598026593;
         bh=xTayRYR+0/7bfA/ll1+zs0Ae21gKdBtoCwtMXuu8Mts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/n9kgGgquyKu31H0Hh6KCxKrR7Nn62AaJc3gCc+zFldX8A0tHxPbBKIVpblSgxdc
-         pY25Goj0je4oi1fztHVxTYt+zZ3L/kp0CKsfWwra6R//Vl470ff4XLKcnK3MjsMl4i
-         q9xblGX7Nk1+FL6/Op2edEcajle2TmWxla3F45kY=
+        b=zSnZvAQN/tekEP1EWGLirpKzzhkSQ70ATb7vdocdxK5ROl6sGpv+KEZJ0s4UpVLv4
+         QJHWTljyKfgwkuOBgxYLt3VBmCUmuy178nafDUV7JFUOCT5LpyCEvIsUPtjaMWU05v
+         tFV98bhH/OrHXmH6ml5w/KvkIJbZymg1v9CVlfIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Qiushi Wu <wu000273@umn.edu>, Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 38/62] PCI: Fix pci_create_slot() reference count leak
-Date:   Fri, 21 Aug 2020 12:13:59 -0400
-Message-Id: <20200821161423.347071-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 37/61] PCI: Fix pci_create_slot() reference count leak
+Date:   Fri, 21 Aug 2020 12:15:21 -0400
+Message-Id: <20200821161545.347622-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
-References: <20200821161423.347071-1-sashal@kernel.org>
+In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
+References: <20200821161545.347622-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
