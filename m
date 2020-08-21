@@ -2,136 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F0C24D188
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 11:32:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1817D24D18D
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 11:32:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgHUJcL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 05:32:11 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57753 "EHLO mga04.intel.com"
+        id S1728516AbgHUJca (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 05:32:30 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49384 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbgHUJcK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:32:10 -0400
-IronPort-SDR: VqVT45ox0kvkQjn9mce2GlLJ3/tHbf23GlUJhIfdATzxo42JTYxxxjth8lm042N8y5dtW1PQ5+
- jzE2AZ7tE08w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="152908701"
+        id S1728512AbgHUJc2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:32:28 -0400
+IronPort-SDR: jG1hCB6skCxBI0tgbgyRFyKXIR92xqWqVPMa5SxcGtNcZ0qbqdNkGIdqI2T1pE8QV8WHczyuRe
+ P+BTpB1sz/Rw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="154766895"
 X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="152908701"
+   d="scan'208";a="154766895"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 02:32:07 -0700
-IronPort-SDR: 4/asOKBASw05GApqtbThskvUN99D8qhkz7JkdAPHkunvQwP/WmX1JGlLmopI6PZFXmgsEiONbF
- /n1v+NDImyGg==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 02:32:28 -0700
+IronPort-SDR: IExlpaOJfoMVIfJA+PSXmIS9rSPVqSGFQE38EdIGbDMSwddRFzAaS0JpIYoVHT44q7aaZA+3YK
+ MScSjOXp1kMw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="327717104"
-Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 02:32:08 -0700
-Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k93P4-0000rW-BC; Fri, 21 Aug 2020 09:32:06 +0000
-Date:   Fri, 21 Aug 2020 17:31:17 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- c7dcf4a66551bb034094437b10b2ed43524a4a7c
-Message-ID: <5f3f9465.9VxmfEfKtS2urrSC%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="401424995"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 21 Aug 2020 02:32:25 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 21 Aug 2020 12:32:24 +0300
+Date:   Fri, 21 Aug 2020 12:32:24 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/PM: Assume ports without DLL Link Active train links
+ in 100 ms
+Message-ID: <20200821093224.GN1375436@lahna.fi.intel.com>
+References: <20200819130625.12778-1-mika.westerberg@linux.intel.com>
+ <20200820081314.l25cjoehbnvbjbrk@wunner.de>
+ <825a566040de2eedc81350cc914dd38dcc3ba4ff.camel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <825a566040de2eedc81350cc914dd38dcc3ba4ff.camel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
-branch HEAD: c7dcf4a66551bb034094437b10b2ed43524a4a7c  PCI: Remove unnecessary header include (asm/setup.h)
+Hi,
 
-elapsed time: 721m
+On Thu, Aug 20, 2020 at 11:36:37AM -0400, Lyude Paul wrote:
+> On Thu, 2020-08-20 at 10:13 +0200, Lukas Wunner wrote:
+> > On Wed, Aug 19, 2020 at 04:06:25PM +0300, Mika Westerberg wrote:
+> > > Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
+> > > at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
+> > > JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
+> > [...]
+> > > +	 * Also do the same for devices that have power management disabled
+> > > +	 * by their driver and are completely power managed through the
+> > > +	 * root port power resource instead. This is a special case for
+> > > +	 * nouveau.
+> > >  	 */
+> > > -	if (!pci_is_pcie(dev)) {
+> > > +	if (!pci_is_pcie(dev) || !child->pm_cap) {
+> > 
+> > It sounds like the above-mentioned Thunderbolt controllers are broken,
+> > not the Nvidia cards, so to me (as an outside observer) it would seem
+> > more logical that a quirk for the former is needed.  The code comment
+> > suggests that nouveau somehow has a problem, but that doesn't seem to
+> > be the case (IIUC).  Also, it's a little ugly to have references to
+> > specific drivers in PCI core code.
+> > 
+> > Maybe this can be fixed with quirks for the Thunderbolt controllers
+> > which set a flag, and that flag causes the 1000 msec wait to be skipped?
+>
+> Sorry, some stuff came up yesterday so I didn't get the time to go through my
+> laptops and test them. I do agree with this though - I'd be worried as well that
+> nouveau might not be the only driver out there that needs this kind of delay
 
-configs tested: 74
-configs skipped: 3
+I actually expect that nouveau is the only one because it is doing some
+PM tricks to get the runtime PM working, which is that it leaves the GPU
+device in D0 and puts the parent root port into D3cold. The BIOS ASL
+code has some assumptions there and I think this 1000 ms delay just
+works that around by luck ;-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+IIRC Bjorn suggested quirking the affected downstream ports when I
+originally sent the patch but I thought we could make this solution more
+generic. Which of course, did not work too well.
 
-arm                                 defconfig
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                           ip28_defconfig
-arm                            mmp2_defconfig
-h8300                    h8300h-sim_defconfig
-riscv                               defconfig
-x86_64                           allyesconfig
-mips                        bcm47xx_defconfig
-powerpc                        cell_defconfig
-m68k                       m5275evb_defconfig
-arm                        keystone_defconfig
-s390                             alldefconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a002-20200820
-i386                 randconfig-a004-20200820
-i386                 randconfig-a005-20200820
-i386                 randconfig-a003-20200820
-i386                 randconfig-a006-20200820
-i386                 randconfig-a001-20200820
-x86_64               randconfig-a015-20200820
-x86_64               randconfig-a012-20200820
-x86_64               randconfig-a016-20200820
-x86_64               randconfig-a014-20200820
-x86_64               randconfig-a011-20200820
-x86_64               randconfig-a013-20200820
-i386                 randconfig-a013-20200820
-i386                 randconfig-a012-20200820
-i386                 randconfig-a011-20200820
-i386                 randconfig-a016-20200820
-i386                 randconfig-a014-20200820
-i386                 randconfig-a015-20200820
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+I can look into the quirk solution instead if this is what people
+prefer.
