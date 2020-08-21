@@ -2,68 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40A7A24E122
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 21:48:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C019E24E1E8
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Aug 2020 22:13:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHUTrs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 15:47:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58382 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgHUTrr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 15:47:47 -0400
+        id S1726433AbgHUUNg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 16:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbgHUUNe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 16:13:34 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2EB4C061573;
+        Fri, 21 Aug 2020 13:13:33 -0700 (PDT)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598039264;
+        s=2020; t=1598040806;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=oc6rWuK4RWluEJBMD17wpMBfxGYcOFdDWSkk5lcadvw=;
-        b=KiXQi33Xg/nd2cc5p/iAKtPJMeJNOzlCIzhWjWEbDdZsQcUjTDcZub6BshDwVTeuzhZGv3
-        zw2QKFIaV6T0xnr0tMl0umwZIX8sVQuHMEUfRQUVCSNH+RS3Ctu3yRElL1RDrH9OSkUBvR
-        Tsr3wMNO6B9xByzMz6gnGKvZsy58iZhaXxtRYkjnJJ3WTiyQxefyan9gZqT9mGBT6u+xX7
-        879KRDH1ZIZQf7iaP+awji6DDAUxA8bYq12w27+m5dPt9dX2xBuAi7ENRI59fAae7fEgGi
-        t8GgtNuJOLOuihUaToMYiDcn5kSYsxXPj3V4PLzYavwP+TAnb34LXNCN2fVjfQ==
+        bh=cd01+IYTmMwy+WorGdOB9Ygq1tYc3Vhe72+j6zoROj8=;
+        b=d3/WygYO8E18Gdtt35+3GOSK0B3ENJI1vQTg+o0EbaalOkbRSoITg4n4AuLfMZq8cQ/Tjx
+        04DGJ7Qmh94/hqzIExQ+bxP9CMHvB+1dkB/qdiSggm+Rl/md+8uLAIQRbC5bO4NgnzEVeN
+        sUvYgVJS09dYJylBYpiOB+ffEPv9LGue3vgRVFipZSjCEaJwlXRa6KZAXcmbt823gaQDCl
+        WktaAHksNbDyeyxn1D3ohdnsWe+5xyv2TTmIpJJ9GfnRCpAvqAGTuyajQR8sS1GtzzvwQ5
+        5OIB58Wsw4LgSk6K3/YEc+gEYgCEKY7vlk0OeKYQOTZRf4xeG6fJMwsn85CRRA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598039264;
+        s=2020e; t=1598040806;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=oc6rWuK4RWluEJBMD17wpMBfxGYcOFdDWSkk5lcadvw=;
-        b=ZNTKZwPc7JAJl8Qd563jtK8cr0w4Fu55mv5EH+kVE+8/1HT5hcM/atj4LWnPcJrRJGhXkM
-        niAVH0dbiv4S6wAA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
-In-Reply-To: <20200821124547.GY1152540@nvidia.com>
-References: <20200821002424.119492231@linutronix.de> <20200821002949.049867339@linutronix.de> <20200821124547.GY1152540@nvidia.com>
-Date:   Fri, 21 Aug 2020 21:47:43 +0200
-Message-ID: <874kovsrvk.fsf@nanos.tec.linutronix.de>
+        bh=cd01+IYTmMwy+WorGdOB9Ygq1tYc3Vhe72+j6zoROj8=;
+        b=TODm4aFRVKSXfRFD/U0SaSllWDlZowJk0CVRFBYDIhwbc0uewEAwlOMiOCq+ZToAR1J9jZ
+        K60i51vccu8STCBg==
+To:     Adam Borowski <kilobyte@angband.pl>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>
+Subject: Re: [PATCH] x86/pci: don't set acpi stuff if !CONFIG_ACPI
+In-Reply-To: <20200820125320.9967-1-kilobyte@angband.pl>
+References: <20200820125320.9967-1-kilobyte@angband.pl>
+Date:   Fri, 21 Aug 2020 22:13:25 +0200
+Message-ID: <87y2m7rc4a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
@@ -71,52 +53,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21 2020 at 09:45, Jason Gunthorpe wrote:
-> On Fri, Aug 21, 2020 at 02:25:02AM +0200, Thomas Gleixner wrote:
->> +static void ims_mask_irq(struct irq_data *data)
->> +{
->> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
->> +	struct ims_array_slot __iomem *slot = desc->device_msi.priv_iomem;
->> +	u32 __iomem *ctrl = &slot->ctrl;
->> +
->> +	iowrite32(ioread32(ctrl) & ~IMS_VECTOR_CTRL_UNMASK, ctrl);
+On Thu, Aug 20 2020 at 14:53, Adam Borowski wrote:
+> Not that x86 without ACPI sees any real use...
 >
-> Just to be clear, this is exactly the sort of operation we can't do
-> with non-MSI interrupts. For a real PCI device to execute this it
-> would have to keep the data on die.
+> Signed-off-by: Adam Borowski <kilobyte@angband.pl>
+> ---
+> Found by randconfig builds.
+>
+>  arch/x86/pci/intel_mid_pci.c | 2 ++
+>  arch/x86/pci/xen.c           | 2 ++
+>  2 files changed, 4 insertions(+)
+>
+> diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
+> index 00c62115f39c..f14a911f0d06 100644
+> --- a/arch/x86/pci/intel_mid_pci.c
+> +++ b/arch/x86/pci/intel_mid_pci.c
+> @@ -299,8 +299,10 @@ int __init intel_mid_pci_init(void)
+>  	pcibios_disable_irq = intel_mid_pci_irq_disable;
+>  	pci_root_ops = intel_mid_pci_ops;
+>  	pci_soc_mode = 1;
+> +#ifdef CONFIG_ACPI
+>  	/* Continue with standard init */
+>  	acpi_noirq_set();
+> +#endif
 
-We means NVIDIA and your new device, right?
+If CONFIG_ACPI=n then acpi_noirq_set() is an empty stub inline. So I'm
+not sure what you are trying to solve here.
 
-So if I understand correctly then the queue memory where the MSI
-descriptor sits is in RAM.
-
-How is that supposed to work if interrupt remapping is disabled?
-
-That means irq migration and proper disabling of an interrupt become an
-interesting exercise. I'm so not looking forward to that.
-
-If interrupt remapping is enabled then both are trivial because then the
-irq chip can delegate everything to the parent chip, i.e. the remapping
-unit.
-
-Can you please explain that a bit more precise?
-
-> I saw the idxd driver was doing something like this, I assume it
-> avoids trouble because it is a fake PCI device integrated with the
-> CPU, not on a real PCI bus?
-
-That's how it is implemented as far as I understood the patches. It's
-device memory therefore iowrite32().
-
-> It is really nice to see irq_domain used properly in x86!
-
-If you ignore the abuse in XEN :)
-
-And to be fair proper and usable (hierarchical) irq domains originate
-from x86 and happened to solve quite a few horrorshows on the ARM side.
-
-Just back then when we converted the original maze, nobody had a good
-idea and the stomach to touch XEN.
+Ah, I see with CONFIG_ACPI=n linux/acpi.h does not include asm/acpi.h so
+the stubs are unreachable. So that needs to be fixed and not papered
+over with #ifdeffery
 
 Thanks,
 
