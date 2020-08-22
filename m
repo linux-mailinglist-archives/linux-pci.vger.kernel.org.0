@@ -2,73 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0BC024E748
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Aug 2020 14:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3D1C24E7CF
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Aug 2020 16:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgHVMDM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Aug 2020 08:03:12 -0400
-Received: from sonic309-19.consmr.mail.sg3.yahoo.com ([106.10.244.82]:42165
-        "EHLO sonic309-19.consmr.mail.sg3.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727952AbgHVMDL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Aug 2020 08:03:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598097786; bh=zDths4VP2+ejYrVeCUlg33xcrCfZn0rVFT01a0bEK/U=; h=Date:From:Reply-To:Subject:References:From:Subject; b=nhMjcHQjHtQWLAkmj2fMf6FuU17kUjb20nGGpIIFZD2k/LPc6BuGdP865a6txMjj1SgQTbB5ajgBuxUj6m+9wpUGHJCzWElKpEU859KFiigg0bz/WmFVIqZKP2GI6MQt2dU2GWDCklfAk/+j4VcSWQoMyHs1OXSqOyLk/wOXLLCJhsDUvIKaHAg32O5ktmJ1JZb3BHzEfOIJbZ7rz+kC0umdj/+JYbTN51LxAekjgb1wChke9gZdpRww4l+8o7NhDTO56Vr3jOTOCPB2BGrHkJhT2EA5/2VHC1Ho6+/g9yXqzbIvHVR51y4NzfBArz4WlkHtGer0aFByB3bqXQmR1g==
-X-YMail-OSG: 3pwm1swVM1mEdL_jJyAEIbtfq0u6icKz0_gm7M4T21fmo96B73kODgl8tEMY6rw
- F5IN7meBEdPvw9tdv9FRq1DXFB74CNY4Ezc51f1pVJeFVKpPr.41OK4eQ.R3sJ4bEuQxCCJPI5tM
- srHxmrWT_lXMBgj2rmAQacqcqt45jtyrNfU5CfVIOT4JJX33lPeLQxpWo_qvbmFBj_3yVYMG4aQ0
- 3ZLA99WPncYktQDztc1FhOceYve3KX_tKUzQ1sfiwNy__P7OAX.NchlF9MNXmA0rY.iy1zdxyx3W
- tZbQkezSgZPmdq2xWM7ihl4RC4VMiA3dvMwfuBibHEZdN9714OQ6tTZCsh4uJS9EGQhWwXpP8rZ_
- O6Iih4lhu_NOpxQr.vkfeblGe8rO1mZyfh66ysBdqA2CFxt3r31L9TVkvORmJluI1nILZ4m5fsS_
- _.FfbZNIBVZBJlxPEMhQr90MOKNX6s0DaQyku5kznBPyvEnfFvd9lMcJuUa3zlSvvX9DVXQxwR0a
- zz8OmKLlIbsQy22uf846YW2jMsm1LhA_2_tS93leA.4EWiYXLKv5v0AtovhEgYEEJm2VoY5m9k5P
- 4PksLpTo1wF4Y8o2P1ezWsBXnb3BOi0HDkci01ZkQXU.4TYWIh0TDQErzTAByCipZmOjIhy_T9Jn
- Fp4swNMMt1alaWeDJo6v5ySVxwbmleBQjGYz2Kg5A5b2pSN9NkU71emrG2ka1Ku1UZstjt5sGR.7
- kdhYybQHG27l2UCPKykHIIyRq0iAbF2OkN.Tvirnp6ZJ5HV7tVSZ2KiScCwswgETNKlOKrXrkvot
- PtiEY3WSqsmrxNOCi5TJv0rqKyloTFDOIXRL9lw1IJZx1LXeyxDvKsfPH5Tohu0JgZCb7FcV.dOa
- VQOThdKfCTBoWQss6oJBYduq1VbzI.n8S4N3H4pqyBAmhqPkp3KR1nAoP_hvXS7x_KMGNoDGFsS1
- KtcqJWwmiiG9FR86rm6c0PqnR9kpT3AunZG2WhdGJzOOa3E1YhyVY0htpxl5sxGIYwGA3zEm96oW
- aYAeCRx2EFLQUZSt1jxAgcuNxiMjLxlfF1ndUHTi15u71beHtv1WyEX1DuFDfhsTL5hD4nEMjb.r
- 3O9qMh.v7aRqoALYy8r8sH7YTdgakJ4ug2fJSLmuBlEwVvJuCUCCxO_VsQEmj1nNKXqGB3eIGYJM
- bpLNFawukzmriI2VUJK1V4uVtkJI7g2P99DHGuuzoqA.l3T_lPDoiPIk8qxZMf62l1on.nehlSkm
- bz8vfm5H0x86p4WekJcWdKR4K.gb1yvDAbfIrDa47YRBZhOItevBsx8G_gSc5mMn4U2yZKe1nYQ6
- lkHdjxE_aE8L19srMMmPRQDEwEikSN_37OPk9WGGdgMvfDoNDI.jTNPAhMu0uND7pIA1zo96hNJ6
- O9PdgzP2QMDEDc9NwQ99qrQuzXsj51C5uLrr5GCC88ClcZtBT2pnvI_szjDTLKOrPFt9OLDHxLPr
- hSNTe2G0QowWdsQ4.ttXIFEp4GSTPhBsH8DtXKGTSXWdFsLml
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.sg3.yahoo.com with HTTP; Sat, 22 Aug 2020 12:03:06 +0000
-Date:   Sat, 22 Aug 2020 12:03:02 +0000 (UTC)
-From:   "Mrs. Kim Hong Yeoh" <kimhongyeoh501@gmail.com>
-Reply-To: kimhongyeoh502@hotmail.com
-Message-ID: <2044411137.3364336.1598097782598@mail.yahoo.com>
-Subject: With Due Respect,
+        id S1728019AbgHVOTO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Aug 2020 10:19:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60122 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbgHVOTO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 22 Aug 2020 10:19:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D6EE5ABE9;
+        Sat, 22 Aug 2020 14:19:40 +0000 (UTC)
+Subject: Re: [patch RFC 00/38] x86, PCI, XEN, genirq ...: Prepare for device
+ MSI
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200821002424.119492231@linutronix.de>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <863e2e57-97a4-5625-4aaf-901092e673b1@suse.com>
+Date:   Sat, 22 Aug 2020 16:19:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200821002424.119492231@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-References: <2044411137.3364336.1598097782598.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16455 YMailNodin Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 21.08.20 02:24, Thomas Gleixner wrote:
+> First of all, sorry for the horrible long Cc list, which was
+> unfortunately unavoidable as this touches the world and some more.
+> 
+> This patch series aims to provide a base to support device MSI (non
+> PCI based) in a halfways architecture independent way.
+> 
+> It's a mixed bag of bug fixes, cleanups and general improvements which
+> are worthwhile independent of the device MSI stuff. Unfortunately this
+> also comes with an evil abuse of the irqdomain system to coerce XEN on
+> x86 into compliance without rewriting XEN from scratch.
+> 
+> As discussed in length in this mail thread:
+> 
+>    https://lore.kernel.org/r/87h7tcgbs2.fsf@nanos.tec.linutronix.de
+> 
+> the initial attempt of piggypacking device MSI support on platform MSI
+> is doomed for various reasons, but creating independent interrupt
+> domains for these upcoming magic PCI subdevices which are not PCI, but
+> might be exposed as PCI devices is not as trivial as it seems.
+> 
+> The initially suggested and evaluated approach of extending platform
+> MSI turned out to be the completely wrong direction and in fact
+> platform MSI should be rewritten on top of device MSI or completely
+> replaced by it.
+> 
+> One of the main issues is that x86 does not support the concept of irq
+> domains associations stored in device::msi_domain and still relies on
+> the arch_*_msi_irqs() fallback implementations which has it's own set
+> of problems as outlined in
+> 
+>    https://lore.kernel.org/r/87bljg7u4f.fsf@nanos.tec.linutronix.de/
+> 
+> in the very same thread.
+> 
+> The main obstacle of storing that pointer is XEN which has it's own
+> historical notiion of handling PCI MSI interupts.
+> 
+> This series tries to address these issues in several steps:
+> 
+>   1) Accidental bug fixes
+> 	iommu/amd: Prevent NULL pointer dereference
+> 
+>   2) Janitoring
+> 	x86/init: Remove unused init ops
+> 
+>   3) Simplification of the x86 specific interrupt allocation mechanism
+> 
+> 	x86/irq: Rename X86_IRQ_ALLOC_TYPE_MSI* to reflect PCI dependency
+> 	x86/irq: Add allocation type for parent domain retrieval
+> 	iommu/vt-d: Consolidate irq domain getter
+> 	iommu/amd: Consolidate irq domain getter
+> 	iommu/irq_remapping: Consolidate irq domain lookup
+> 
+>   4) Consolidation of the X86 specific interrupt allocation mechanism to be as close
+>      as possible to the generic MSI allocation mechanism which allows to get rid
+>      of quite a bunch of x86'isms which are pointless
+> 
+> 	x86/irq: Prepare consolidation of irq_alloc_info
+> 	x86/msi: Consolidate HPET allocation
+> 	x86/ioapic: Consolidate IOAPIC allocation
+> 	x86/irq: Consolidate DMAR irq allocation
+> 	x86/irq: Consolidate UV domain allocation
+> 	PCI: MSI: Rework pci_msi_domain_calc_hwirq()
+> 	x86/msi: Consolidate MSI allocation
+> 	x86/msi: Use generic MSI domain ops
+> 
+>    5) x86 specific cleanups to remove the dependency on arch_*_msi_irqs()
+> 
+> 	x86/irq: Move apic_post_init() invocation to one place
+> 	z86/pci: Reducde #ifdeffery in PCI init code
+> 	x86/irq: Initialize PCI/MSI domain at PCI init time
+> 	irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
+> 	PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
+> 	PCI: MSI: Provide pci_dev_has_special_msi_domain() helper
+> 	x86/xen: Make xen_msi_init() static and rename it to xen_hvm_msi_init()
+> 	x86/xen: Rework MSI teardown
+> 	x86/xen: Consolidate XEN-MSI init
+> 	irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
+> 	x86/xen: Wrap XEN MSI management into irqdomain
+> 	iommm/vt-d: Store irq domain in struct device
+> 	iommm/amd: Store irq domain in struct device
+> 	x86/pci: Set default irq domain in pcibios_add_device()
+> 	PCI/MSI: Allow to disable arch fallbacks
+> 	x86/irq: Cleanup the arch_*_msi_irqs() leftovers
+> 	x86/irq: Make most MSI ops XEN private
+> 
+>      This one is paving the way to device MSI support, but it comes
+>      with an ugly and evil hack. The ability of overriding the default
+>      allocation/free functions of an MSI irq domain is useful in general as
+>      (hopefully) demonstrated with the device MSI POC, but the abuse
+>      in context of XEN is evil. OTOH without enough XENology and without
+>      rewriting XEN from scratch wrapping XEN MSI handling into a pseudo
+>      irq domain is a reasonable step forward for mere mortals with severly
+>      limited XENology. One day the XEN folks might make it a real irq domain.
+>      Perhaps when they have to support the same mess on other architectures.
+>      Hope dies last...
+> 
+>      At least the mechanism to override alloc/free turned out to be useful
+>      for implementing the base infrastructure for device MSI. So it's not a
+>      completely lost case.
+> 
+>    6) X86 specific preparation for device MSI
+> 
+>         x86/irq: Add DEV_MSI allocation type
+>         x86/msi: Let pci_msi_prepare() handle non-PCI MSI
+> 
+>    7) Generic device MSI infrastructure
+> 
+>         platform-msi: Provide default irq_chip:ack
+>         platform-msi: Add device MSI infrastructure
+> 
+>    8) Infrastructure for and a POC of an IMS (Interrupt Message
+>       Storm) irq domain and irqchip implementation
+> 
+>         irqdomain/msi: Provide msi_alloc/free_store() callbacks
+>         irqchip: Add IMS array driver - NOT FOR MERGING
+> 
+> The whole lot is also available from git:
+> 
+>     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git device-msi
+> 
+> This has been tested on Intel/AMD/KVM but lacks testing on:
+> 
+>      - HYPERV (-ENODEV)
+>      - VMD enabled systems (-ENODEV)
+>      - XEN (-ENOCLUE)
+
+Tested to work in Xen dom0. Network is running fine with eth0 MSI
+interrupts being routed through Xen.
+
+You can add my:
+
+Tested-by: Juergen Gross <jgross@suse.com>
 
 
-Dear Sir / Madam,
-
-I am Mrs. Kim Hong Yeoh, Working at MAYBANK (Malaysia) as the Non-Independent Non-Executive Director and Chairman of Maybank. During our last banking Audits we discovered an abandoned account belongs to one of our Foreign Deceased Customer, Late Mr. Wang Jian, The Co-founder and Co-chairman of HNA Group, a Chinese conglomerate with significant real estate ownerships across the U.S., died in an accident while on a business trip in France on Tuesday.
-
-Please go through this link: https://observer.com/2018/07/wang-jian-hna-founder-dies-tragic-fall/
-
-I am writing to request your assistance in transferring the sum of $15.000.000.00 (Fifteen Million United States Dollars) into your account as the Late Mr. Wang Jian Foreign Business Partner, which I am planning to use the fund to invest for public benefit as follows;
-
-1. Establish An Orphanage Home To Help The Orphanages Children.
-2. Build A Hospital To Help The Poor.
-3. Build A Nursing Home For Elderly And Widows People Need Care & Meal Support.
-
-Meanwhile, before I contacted you I have done personal investigation in locating any of Late Mr. Wang Jian relatives who knows about the account, but I came out unsuccessful. However, I took this decision to use this fund in supporting the Orphanages Children, Widows, Less Privileged and Elderly People Need Care & Meal Support, because i don't want this fund to be transfer into our Government Treasury Account as unclaimed fund as the law of my country abiding.
-
-
-I am willing to offer you 30% from the total fund for your support and assistant in transferring the fund into your account. More detailed information will be forwarded to you to break down explaining how the fund will be transferred to you.
-
-Waiting for your positive response.
-best regards
-Mrs. Kim Hong Yeoh
+Juergen
