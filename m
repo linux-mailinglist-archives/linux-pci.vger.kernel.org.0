@@ -2,81 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 103B424E406
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Aug 2020 01:52:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D67C624E412
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Aug 2020 02:10:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgHUXwt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Aug 2020 19:52:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59470 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgHUXwr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 19:52:47 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598053964;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+LZCecR158RlHm3Lfth6ASLtXm3kGC9vvr84iJ8MvX8=;
-        b=xZsKT6+dHTeL/lPigJTJYxz10V5jp4mNkl4ys/Z1+RQa2aOyMCwJ0A9QGvZ+gtLEU2rlOt
-        w9ZkLky8Zf8dQgL59I+NSKflohKRF4aEGsbOV7+0oXvtRe8KnhKhibYsAQsJJfgI7w2XNA
-        zUMuX/W1n1W0geuTAbFGJ1K+Uyutpby/+hG50EyUJqr1aro5r5FdZfRhNZ2nxUDcS4X7g6
-        rfbaQW+/f9sSwjisuSHue5r3wlfGuZFDNHSPtxW6nY3x5d/ivg/fELnDG0tMatQXTlE+VT
-        ORFQYAnqvWTDHElBmHM9mS70rdctzqqQlyWDMHZ9ZV9WoYiV4LNuT+UuNHaA2Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598053964;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+LZCecR158RlHm3Lfth6ASLtXm3kGC9vvr84iJ8MvX8=;
-        b=DVVyWJbpQAVeIGWvbb0PJSl2YfWN/KZCi3QwxtKS4FEVVEGQqao4CMhOsFBZuiWK+UdRPN
-        tXMkbWltoox6BoAw==
-To:     Randy Dunlap <rdunlap@infradead.org>,
+        id S1726783AbgHVAKl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Aug 2020 20:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbgHVAKk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Aug 2020 20:10:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AFEC061573;
+        Fri, 21 Aug 2020 17:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=UV45px4ZIhGAV9MDXqTwix33q6Zo13Yicz1hPoFWUV8=; b=H4j8Sbac/tusrMja9EvJ8Pmj2J
+        GyXQKrojjhnrir0AfsUOmtXM3XG1y18L64SNUf7FnHkHoUi+8J+zBF2bi2gQo0SFJttY/GbLr9E9Q
+        MOZq3Sl68aEdz9VNR27FkZo5IArlFbkILTj/QIJ4qQYiCS1c1thpToK0b2+7H6rusiLQDlCXRwsy3
+        spurNzTvQlkFVrwLAFzuA8rHVh9WmY5w87oGGpI7vPjocb+7Qp1oU/QdO5sM0Z9tFHpM3vJ31DC4k
+        z/u43JsThgw7qKJtV27RdawRcZXB6z6Z6WjpqIprycMnD1reUaya6XpkDLC/iUOB/02yI/16lUfpz
+        mG3dJESw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9H79-0004HB-Cm; Sat, 22 Aug 2020 00:10:31 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     stable <stable@vger.kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Adam Borowski <kilobyte@angband.pl>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <len.brown@intel.com>
-Subject: Re: [PATCH] x86/pci: don't set acpi stuff if !CONFIG_ACPI
-In-Reply-To: <85e70752-8034-ab95-f6b4-018c7086edad@infradead.org>
-References: <20200820125320.9967-1-kilobyte@angband.pl> <87y2m7rc4a.fsf@nanos.tec.linutronix.de> <20200821203232.GA2187@angband.pl> <85e70752-8034-ab95-f6b4-018c7086edad@infradead.org>
-Date:   Sat, 22 Aug 2020 01:52:44 +0200
-Message-ID: <87mu2nr1yr.fsf@nanos.tec.linutronix.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2] x86/pci: fix intel_mid_pci.c build error when ACPI is not
+ enabled
+Message-ID: <ea903917-e51b-4cc9-2680-bc1e36efa026@infradead.org>
+Date:   Fri, 21 Aug 2020 17:10:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21 2020 at 14:19, Randy Dunlap wrote:
-> On 8/21/20 1:32 PM, Adam Borowski wrote:
->> If I understand Randy Dunlap correctly, he already sent a pair of patches
->> that do what you want.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-I replied before reading Randy's reply. Old habit of reading stuff from
-top and not getting biased by other peoples replies before doing so. Is
-most of the time the correct approach, but sometimes it would be better
-to do it the other way round :)
+Fix build error when CONFIG_ACPI is not set/enabled by adding
+the header file <asm/acpi.h> which contains a stub for the function
+in the build error.
 
-> I did, but I sent them to the Xen and PCI maintainers,
-> not the x86 maintainers, but I will happily resend this patch.
-> The Xen patch has already been applied whereas the patch
-> to intel_mid_pci.c is in limbo. :(
->
-> Thomas, do you want me to send it to you/X86 people?
-> (with 2 Reviewed-by: additions)
+../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
+../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
+  acpi_noirq_set();
 
-Sure, but usually Bjorn handles the x86/pci/ stuff.
+Fixes: a912a7584ec3 ("x86/platform/intel-mid: Move PCI initialization to arch_init()")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: stable@vger.kernel.org	# v4.16+
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jesse Barnes <jsbarnes@google.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Jesse Barnes <jsbarnes@google.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+---
+Found in linux-next, but applies to/exists in mainline also.
 
-As I trust you, here is a blind
+v2:
+- add Reviewed-by: and Acked-by: tags
+- drop alternatives
 
-  Acked-by: Thomas Gleixner <tglx@linutronix.de>
+ arch/x86/pci/intel_mid_pci.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-just in case.
+--- linux-next-20200813.orig/arch/x86/pci/intel_mid_pci.c
++++ linux-next-20200813/arch/x86/pci/intel_mid_pci.c
+@@ -33,6 +33,7 @@
+ #include <asm/hw_irq.h>
+ #include <asm/io_apic.h>
+ #include <asm/intel-mid.h>
++#include <asm/acpi.h>
+ 
+ #define PCIE_CAP_OFFSET	0x100
+ 
 
-Thanks,
-
-        tglx
