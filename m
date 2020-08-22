@@ -2,201 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3D1C24E7CF
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Aug 2020 16:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 662D624EA10
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Aug 2020 00:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgHVOTO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Aug 2020 10:19:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60122 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727899AbgHVOTO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 22 Aug 2020 10:19:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D6EE5ABE9;
-        Sat, 22 Aug 2020 14:19:40 +0000 (UTC)
-Subject: Re: [patch RFC 00/38] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200821002424.119492231@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <863e2e57-97a4-5625-4aaf-901092e673b1@suse.com>
-Date:   Sat, 22 Aug 2020 16:19:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200821002424.119492231@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727039AbgHVWUe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Aug 2020 18:20:34 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:35332 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726535AbgHVWUe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Aug 2020 18:20:34 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 351DB30C025;
+        Sat, 22 Aug 2020 15:17:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 351DB30C025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1598134669;
+        bh=UE3OyB8A4aT6f2xa9aoBVeB/WeSuw2wDk5Slp6DChN4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QjOSkyFx/Bo5SsYRp4S8KdoovPrvxELm0640AcgBnECK21w8sMfWvt7av7IIWpakr
+         3QNNFu3pUjwpjQ8hdkuzMF1kHP93U8PQJfBwAIUbc6vdWiRn5fbAh9wQ4plkT1NfbD
+         AeLy4IEm9Xbu+IX3WcnzmN4qgHQgPZr4JrNgLKnk=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 8ACAF14008E;
+        Sat, 22 Aug 2020 15:20:30 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1] PCI: pcie_bus_config can be set at build time
+Date:   Sat, 22 Aug 2020 18:20:20 -0400
+Message-Id: <20200822222021.37166-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21.08.20 02:24, Thomas Gleixner wrote:
-> First of all, sorry for the horrible long Cc list, which was
-> unfortunately unavoidable as this touches the world and some more.
-> 
-> This patch series aims to provide a base to support device MSI (non
-> PCI based) in a halfways architecture independent way.
-> 
-> It's a mixed bag of bug fixes, cleanups and general improvements which
-> are worthwhile independent of the device MSI stuff. Unfortunately this
-> also comes with an evil abuse of the irqdomain system to coerce XEN on
-> x86 into compliance without rewriting XEN from scratch.
-> 
-> As discussed in length in this mail thread:
-> 
->    https://lore.kernel.org/r/87h7tcgbs2.fsf@nanos.tec.linutronix.de
-> 
-> the initial attempt of piggypacking device MSI support on platform MSI
-> is doomed for various reasons, but creating independent interrupt
-> domains for these upcoming magic PCI subdevices which are not PCI, but
-> might be exposed as PCI devices is not as trivial as it seems.
-> 
-> The initially suggested and evaluated approach of extending platform
-> MSI turned out to be the completely wrong direction and in fact
-> platform MSI should be rewritten on top of device MSI or completely
-> replaced by it.
-> 
-> One of the main issues is that x86 does not support the concept of irq
-> domains associations stored in device::msi_domain and still relies on
-> the arch_*_msi_irqs() fallback implementations which has it's own set
-> of problems as outlined in
-> 
->    https://lore.kernel.org/r/87bljg7u4f.fsf@nanos.tec.linutronix.de/
-> 
-> in the very same thread.
-> 
-> The main obstacle of storing that pointer is XEN which has it's own
-> historical notiion of handling PCI MSI interupts.
-> 
-> This series tries to address these issues in several steps:
-> 
->   1) Accidental bug fixes
-> 	iommu/amd: Prevent NULL pointer dereference
-> 
->   2) Janitoring
-> 	x86/init: Remove unused init ops
-> 
->   3) Simplification of the x86 specific interrupt allocation mechanism
-> 
-> 	x86/irq: Rename X86_IRQ_ALLOC_TYPE_MSI* to reflect PCI dependency
-> 	x86/irq: Add allocation type for parent domain retrieval
-> 	iommu/vt-d: Consolidate irq domain getter
-> 	iommu/amd: Consolidate irq domain getter
-> 	iommu/irq_remapping: Consolidate irq domain lookup
-> 
->   4) Consolidation of the X86 specific interrupt allocation mechanism to be as close
->      as possible to the generic MSI allocation mechanism which allows to get rid
->      of quite a bunch of x86'isms which are pointless
-> 
-> 	x86/irq: Prepare consolidation of irq_alloc_info
-> 	x86/msi: Consolidate HPET allocation
-> 	x86/ioapic: Consolidate IOAPIC allocation
-> 	x86/irq: Consolidate DMAR irq allocation
-> 	x86/irq: Consolidate UV domain allocation
-> 	PCI: MSI: Rework pci_msi_domain_calc_hwirq()
-> 	x86/msi: Consolidate MSI allocation
-> 	x86/msi: Use generic MSI domain ops
-> 
->    5) x86 specific cleanups to remove the dependency on arch_*_msi_irqs()
-> 
-> 	x86/irq: Move apic_post_init() invocation to one place
-> 	z86/pci: Reducde #ifdeffery in PCI init code
-> 	x86/irq: Initialize PCI/MSI domain at PCI init time
-> 	irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
-> 	PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
-> 	PCI: MSI: Provide pci_dev_has_special_msi_domain() helper
-> 	x86/xen: Make xen_msi_init() static and rename it to xen_hvm_msi_init()
-> 	x86/xen: Rework MSI teardown
-> 	x86/xen: Consolidate XEN-MSI init
-> 	irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
-> 	x86/xen: Wrap XEN MSI management into irqdomain
-> 	iommm/vt-d: Store irq domain in struct device
-> 	iommm/amd: Store irq domain in struct device
-> 	x86/pci: Set default irq domain in pcibios_add_device()
-> 	PCI/MSI: Allow to disable arch fallbacks
-> 	x86/irq: Cleanup the arch_*_msi_irqs() leftovers
-> 	x86/irq: Make most MSI ops XEN private
-> 
->      This one is paving the way to device MSI support, but it comes
->      with an ugly and evil hack. The ability of overriding the default
->      allocation/free functions of an MSI irq domain is useful in general as
->      (hopefully) demonstrated with the device MSI POC, but the abuse
->      in context of XEN is evil. OTOH without enough XENology and without
->      rewriting XEN from scratch wrapping XEN MSI handling into a pseudo
->      irq domain is a reasonable step forward for mere mortals with severly
->      limited XENology. One day the XEN folks might make it a real irq domain.
->      Perhaps when they have to support the same mess on other architectures.
->      Hope dies last...
-> 
->      At least the mechanism to override alloc/free turned out to be useful
->      for implementing the base infrastructure for device MSI. So it's not a
->      completely lost case.
-> 
->    6) X86 specific preparation for device MSI
-> 
->         x86/irq: Add DEV_MSI allocation type
->         x86/msi: Let pci_msi_prepare() handle non-PCI MSI
-> 
->    7) Generic device MSI infrastructure
-> 
->         platform-msi: Provide default irq_chip:ack
->         platform-msi: Add device MSI infrastructure
-> 
->    8) Infrastructure for and a POC of an IMS (Interrupt Message
->       Storm) irq domain and irqchip implementation
-> 
->         irqdomain/msi: Provide msi_alloc/free_store() callbacks
->         irqchip: Add IMS array driver - NOT FOR MERGING
-> 
-> The whole lot is also available from git:
-> 
->     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git device-msi
-> 
-> This has been tested on Intel/AMD/KVM but lacks testing on:
-> 
->      - HYPERV (-ENODEV)
->      - VMD enabled systems (-ENODEV)
->      - XEN (-ENOCLUE)
+The Kconfig is modified so that the pcie_bus_config setting can be done at
+build time in the same manner as the CONFIG_PCIEASPM_XXXX choice.  The
+pci_bus_config setting may still be overridden by the bootline param.
 
-Tested to work in Xen dom0. Network is running fine with eth0 MSI
-interrupts being routed through Xen.
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+---
+ drivers/pci/Kconfig | 40 ++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c   | 12 ++++++++++++
+ 2 files changed, 52 insertions(+)
 
-You can add my:
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 4bef5c2bae9f..efe69b0d9f7f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -187,6 +187,46 @@ config PCI_HYPERV
+ 	  The PCI device frontend driver allows the kernel to import arbitrary
+ 	  PCI devices from a PCI backend to support PCI driver domains.
+ 
++choice
++	prompt "PCIE default bus config setting"
++	default PCIE_BUS_DEFAULT
++	depends on PCI
++	help
++	  One of the following choices will set the pci_bus_config at
++	  compile time.  This will still be overridden by the appropriate
++	  pci bootline parameter.
++
++config PCIE_BUS_TUNE_OFF
++	bool "Tune Off"
++	depends on PCI
++	help
++	  Use the BIOS defaults; doesn't touch MPS at all.
++
++config PCIE_BUS_DEFAULT
++	bool "Default"
++	depends on PCI
++	help
++	  Ensure MPS matches upstream bridge.
++
++config PCIE_BUS_SAFE
++	bool "Safe"
++	depends on PCI
++	help
++	  Use largest MPS boot-time devices support.
++
++config PCIE_BUS_PERFORMANCE
++	bool "Performance"
++	depends on PCI
++	help
++	  Use MPS and MRRS for best performance.
++
++config PCIE_BUS_PEER2PEER
++	bool "Peer2peer"
++	depends on PCI
++	help
++	  Set MPS = 128 for all devices.
++endchoice
++
+ source "drivers/pci/hotplug/Kconfig"
+ source "drivers/pci/controller/Kconfig"
+ source "drivers/pci/endpoint/Kconfig"
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a458c46d7e39..49b66ba7c874 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -101,7 +101,19 @@ unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
+ #define DEFAULT_HOTPLUG_BUS_SIZE	1
+ unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
+ 
++
++/* PCIE bus config, can be overridden by bootline param */
++#ifdef CONFIG_PCIE_BUS_TUNE_OFF
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_TUNE_OFF;
++#elif defined CONFIG_PCIE_BUS_SAFE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_SAFE;
++#elif defined CONFIG_PCIE_BUS_PERFORMANCE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PERFORMANCE;
++#elif defined CONFIG_PCIE_BUS_PEER2PEER
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PEER2PEER;
++#else
+ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
++#endif
+ 
+ /*
+  * The default CLS is used if arch didn't set CLS explicitly and not
+-- 
+2.17.1
 
-Tested-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
