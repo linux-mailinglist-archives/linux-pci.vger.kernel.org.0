@@ -2,107 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7748E24EC12
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Aug 2020 10:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ECB924EDEA
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Aug 2020 17:32:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725648AbgHWIDM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Aug 2020 04:03:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36746 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgHWIDL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Aug 2020 04:03:11 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598169788;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1r81LXAzLVDLyLks6MQQbnmtJ0OK+dyyaovYHtczdF8=;
-        b=OSUGo4PT4Ot+VGZW7JgEcWsC8MLwYCCnwHNCt3TYiEzvYBVXe45Rvl3FX/Y0isC1ShdQQ3
-        RIh/bv3QSwwzvd8iYJBo7gkkwrPBgPqWBWG0qyIj42/W8ULqyGPqdtcmY9SWXIe6qo1A1Q
-        G8rQ4XqyV5X9tf+kKzjK0R1QN5bjpdFSWtGLnHuCi+FXplbjlm/gIBBAoZuWJKD4qsyf1+
-        E4sJhAD2xn/VQyYp3NoK60i70Z16VK3CVNEGe2YhdqoIM5dCPu+czaZXI3Of9hT7hNOiiq
-        KycdvEqCmdiPmuLVuylio+jeqSn+LdOfVq0686G5ly9H6MwoSrM+c5IPwwJFcQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598169788;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1r81LXAzLVDLyLks6MQQbnmtJ0OK+dyyaovYHtczdF8=;
-        b=tMc6ZKpqYdgSdwXa7ZmkDUuCxCEpdWuXt4VgP89zL1RSX0c8gVXVItieBv1Rh/DCd8vqw0
-        Q7nUMe69k9VLtDAQ==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
-In-Reply-To: <20200822230511.GD1152540@nvidia.com>
-References: <20200821002424.119492231@linutronix.de> <20200821002949.049867339@linutronix.de> <20200821124547.GY1152540@nvidia.com> <874kovsrvk.fsf@nanos.tec.linutronix.de> <20200821201705.GA2811871@nvidia.com> <87pn7jr27z.fsf@nanos.tec.linutronix.de> <20200822005125.GB1152540@nvidia.com> <874kovqx8q.fsf@nanos.tec.linutronix.de> <20200822230511.GD1152540@nvidia.com>
-Date:   Sun, 23 Aug 2020 10:03:07 +0200
-Message-ID: <875z99ssas.fsf@nanos.tec.linutronix.de>
+        id S1727824AbgHWPc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Aug 2020 11:32:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbgHWPc2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 23 Aug 2020 11:32:28 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A7CD206B5;
+        Sun, 23 Aug 2020 15:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598196747;
+        bh=Z6ZPWRlmCAHW1jTvwzP3xfRIxulAioPOnJbhxtTXie8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jRJJUrAWNUG6/ToeybbY5+Zm9YBoUmBTb3xPRl8DpTR/5eUibABGHFx9+tyO8sA1W
+         toktLTkNX2qKqeH6Ih4FD29VPty/AojWiASr436+QMsheofeY+JtAwQqei+KeSd7IX
+         Hlkqhjy9Do+iMJkHBY4GqkSqi0HSerBNHksTX7gk=
+Date:   Sun, 23 Aug 2020 21:02:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, svarbanov@mm-sol.com,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, smuthayy@codeaurora.org,
+        varada@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: Re: [PATCH V2 1/7] dt-bindings: PCI: qcom: Add ipq8074 Gen3 PCIe
+ compatible
+Message-ID: <20200823153222.GS2639@vkoul-mobl>
+References: <1596036607-11877-1-git-send-email-sivaprak@codeaurora.org>
+ <1596036607-11877-2-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596036607-11877-2-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 22 2020 at 20:05, Jason Gunthorpe wrote:
-> On Sat, Aug 22, 2020 at 03:34:45AM +0200, Thomas Gleixner wrote:
-> As a silicon design it might work, but it means existing devices can't
-> be used with this dev_msi. It is also the sort of thing that would
-> need a standard document to have any hope of multiple vendors fitting
-> into it. Eg at PCI-SIG or something.
+On 29-07-20, 21:00, Sivaprakash Murugesan wrote:
+> ipq8074 has two PCIe ports while the support for Gen2 PCIe port is
+> already available add the support for Gen3 binding.
+> 
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 47 ++++++++++++++++++++++
 
-Fair enough.
+The issue is the yaml file is not in linux-phy next.. did we get the
+conversion done?
 
->> If you don't do that then you simply can't write to that space from the
->> CPU and you have to transport this kind information always via command
->> queues.
->
-> Yes, exactly. This is part of the architectural design of the device,
-> has been for a long time. Has positives and negatives.
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index 2eef6d5..e0559dd 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -23,6 +23,7 @@ properties:
+>        - qcom,pcie-ipq8064
+>        - qcom,pcie-ipq8064-v2
+>        - qcom,pcie-ipq8074
+> +      - qcom,pcie-ipq8074-gen3
+>        - qcom,pcie-msm8996
+>        - qcom,pcie-qcs404
+>        - qcom,pcie-sdm845
+> @@ -295,6 +296,52 @@ allOf:
+>         compatible:
+>           contains:
+>             enum:
+> +             - qcom,pcie-ipq8074-gen3
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: sys noc interface clock
+> +           - description: AXI master clock
+> +           - description: AXI secondary clock
+> +           - description: AHB clock
+> +           - description: Auxilary clock
+> +           - description: AXI secondary bridge clock
+> +           - description: PCIe rchng clock
+> +       clock-names:
+> +         items:
+> +           - const: iface
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: ahb
+> +           - const: aux
+> +           - const: axi_bridge
+> +           - const: rchng
+> +       resets:
+> +         items:
+> +           - description: PIPE reset
+> +           - description: PCIe sleep reset
+> +           - description: PCIe sticky reset
+> +           - description: AXI master reset
+> +           - description: AXI secondary reset
+> +           - description: AHB reset
+> +           - description: AXI master sticky reset
+> +           - description: AXI secondary sticky reset
+> +       reset-names:
+> +         items:
+> +           - const: pipe
+> +           - const: sleep
+> +           - const: sticky
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: ahb
+> +           - const: axi_m_sticky
+> +           - const: axi_s_sticky
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+>               - qcom,pcie-msm8996
+>     then:
+>       properties:
+> -- 
+> 2.7.4
 
-As always and it clearly follows the general HW design rule "we can fix
-that in software".
-
->> > I suppose the core code could provide this as a service? Sort of a
->> > varient of the other lazy things above?
->> 
->> Kinda. That needs a lot of thought for the affinity setting stuff
->> because it can be called from contexts which do not allow that. It's
->> solvable though, but I clearly need to stare at the corner cases for a
->> while.
->
-> If possible, this would be ideal, as we could use the dev_msi on a big
-> installed base of existing HW.
-
-I'll have a look, but I'm surely not going to like the outcome.
-
-Thanks,
-
-        tglx
+-- 
+~Vinod
