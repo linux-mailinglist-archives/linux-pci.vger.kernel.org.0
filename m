@@ -2,159 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0F0424EC0F
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Aug 2020 10:01:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7748E24EC12
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Aug 2020 10:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHWIBW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Aug 2020 04:01:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:23443 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728210AbgHWIBS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Aug 2020 04:01:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598169676;
+        id S1725648AbgHWIDM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Aug 2020 04:03:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36746 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbgHWIDL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Aug 2020 04:03:11 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598169788;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=t7dt9e12oNAHcRsrc3EfbIWsF++vZ65l9JEyoJZiO/4=;
-        b=NEFh4pG0CxTc8eg7uY9quo0ePpBHlC+vEsfhFXFC3qqL/2b/UCTCqjEO9uW7VKEtwMM4Ve
-        ueV+ocYXFqE2PZXGVBI0ptADemcmUhn3xp3AJoiH4QiUEICNvugEoMXc0CGjRQOfslTJNv
-        VtOuQjP6O8K46dXjxAcnBdXwLAIWylg=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-MI3YwfNeMPmW7QNEccWwFg-1; Sun, 23 Aug 2020 04:01:12 -0400
-X-MC-Unique: MI3YwfNeMPmW7QNEccWwFg-1
-Received: by mail-qv1-f71.google.com with SMTP id q12so4217381qvm.19
-        for <linux-pci@vger.kernel.org>; Sun, 23 Aug 2020 01:01:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t7dt9e12oNAHcRsrc3EfbIWsF++vZ65l9JEyoJZiO/4=;
-        b=Ug/Ht1FlIMUxpW9mcrzsoPOmZ4IY0O4NAJLWfjkp4Z841kJcPDqkpijdtLQZWpEOP0
-         NF4n2lPuuHQ7iv/fFTTZa5oBzJas/Z1CKKL1wjefi5trCeieCVs8Y+RSjRPUArXkIUCu
-         N77nzrwlXd7qq8i/o/W6G5YW9hYfSAQpvi2rE767pTgueoLnw9rWGLJZNYKvUqRgeV8v
-         qJ06Rk0iHMhzE93UJWRwvQuyoobikf2fqYF5Yj8ncFmwDo21WHVZrCtLCsYUr2jznQ04
-         uO3FzTNcd9LVMveSWpqOVgNy1d6F03MDaQCnkQuZh6za/062yVqIMXi3DbOvEH1aBwK9
-         sHig==
-X-Gm-Message-State: AOAM532WgYOsluEAfOBSCp+8Hj63Xq4S3C1zGsW0bazwA8v6V9zkqkPp
-        n0Wn60wq0HbiJZ1Rez/3fUMFROspme2J++UpxU53Obghw5PKqMx56TZwpu+Zll4VcyGfvqdRB4j
-        gBkhoNQZbItLIJFi0t8D9
-X-Received: by 2002:ac8:6793:: with SMTP id b19mr277838qtp.333.1598169672361;
-        Sun, 23 Aug 2020 01:01:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynvqmEnvj7OcL2GmrCcAhd5Jc5oPt4ODjXZ9u6kWfXxmHZqtSavIhr5H31SSQ2GlRYeHU1wA==
-X-Received: by 2002:ac8:6793:: with SMTP id b19mr277830qtp.333.1598169672000;
-        Sun, 23 Aug 2020 01:01:12 -0700 (PDT)
-Received: from redhat.com (bzq-109-67-40-161.red.bezeqint.net. [109.67.40.161])
-        by smtp.gmail.com with ESMTPSA id p202sm6489989qke.97.2020.08.23.01.01.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 01:01:10 -0700 (PDT)
-Date:   Sun, 23 Aug 2020 04:01:06 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     George Cherian <george.cherian@marvell.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, bhelgaas@google.com, arnd@arndb.de
-Subject: Re: [PATCHv2] PCI: Add pci_iounmap
-Message-ID: <20200823040008-mutt-send-email-mst@kernel.org>
-References: <20200820050306.2015009-1-george.cherian@marvell.com>
- <20200820215549.GA1569713@bjorn-Precision-5520>
+        bh=1r81LXAzLVDLyLks6MQQbnmtJ0OK+dyyaovYHtczdF8=;
+        b=OSUGo4PT4Ot+VGZW7JgEcWsC8MLwYCCnwHNCt3TYiEzvYBVXe45Rvl3FX/Y0isC1ShdQQ3
+        RIh/bv3QSwwzvd8iYJBo7gkkwrPBgPqWBWG0qyIj42/W8ULqyGPqdtcmY9SWXIe6qo1A1Q
+        G8rQ4XqyV5X9tf+kKzjK0R1QN5bjpdFSWtGLnHuCi+FXplbjlm/gIBBAoZuWJKD4qsyf1+
+        E4sJhAD2xn/VQyYp3NoK60i70Z16VK3CVNEGe2YhdqoIM5dCPu+czaZXI3Of9hT7hNOiiq
+        KycdvEqCmdiPmuLVuylio+jeqSn+LdOfVq0686G5ly9H6MwoSrM+c5IPwwJFcQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598169788;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1r81LXAzLVDLyLks6MQQbnmtJ0OK+dyyaovYHtczdF8=;
+        b=tMc6ZKpqYdgSdwXa7ZmkDUuCxCEpdWuXt4VgP89zL1RSX0c8gVXVItieBv1Rh/DCd8vqw0
+        Q7nUMe69k9VLtDAQ==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
+In-Reply-To: <20200822230511.GD1152540@nvidia.com>
+References: <20200821002424.119492231@linutronix.de> <20200821002949.049867339@linutronix.de> <20200821124547.GY1152540@nvidia.com> <874kovsrvk.fsf@nanos.tec.linutronix.de> <20200821201705.GA2811871@nvidia.com> <87pn7jr27z.fsf@nanos.tec.linutronix.de> <20200822005125.GB1152540@nvidia.com> <874kovqx8q.fsf@nanos.tec.linutronix.de> <20200822230511.GD1152540@nvidia.com>
+Date:   Sun, 23 Aug 2020 10:03:07 +0200
+Message-ID: <875z99ssas.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820215549.GA1569713@bjorn-Precision-5520>
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 04:55:49PM -0500, Bjorn Helgaas wrote:
-> [+cc Michael, author of 66eab4df288a ("lib: add GENERIC_PCI_IOMAP")]
-> 
-> On Thu, Aug 20, 2020 at 10:33:06AM +0530, George Cherian wrote:
-> > In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
-> > CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
-> > function. Due to this the managed release variants or even the explicit
-> > pci_iounmap calls doesn't really remove the mappings.
-> > 
-> > This issue is seen on an arm64 based system. arm64 by default selects
-> > only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
-> > 'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
-> > 
-> > Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
-> > would lead to the following error message after long hour tests
-> > 
-> > "allocation failed: out of vmalloc space - use vmalloc=<size> to
-> > increase size."
-> > 
-> > Signed-off-by: George Cherian <george.cherian@marvell.com>
-> > ---
-> > * Changes from v1
-> > 	- Fix the 0-day compilation error.
-> > 	- Mark the lib/iomap pci_iounmap call as weak incase 
-> > 	  if any architecture have there own implementation.
-> > 
-> >  include/asm-generic/io.h |  4 ++++
-> >  lib/pci_iomap.c          | 10 ++++++++++
-> >  2 files changed, 14 insertions(+)
-> > 
-> > diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> > index dabf8cb7203b..5986b37226b7 100644
-> > --- a/include/asm-generic/io.h
-> > +++ b/include/asm-generic/io.h
-> > @@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
-> >  struct pci_dev;
-> >  extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
-> >  
-> > +#ifdef CONFIG_GENERIC_PCI_IOMAP
-> > +extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
-> > +#else
-> >  #ifndef pci_iounmap
-> >  #define pci_iounmap pci_iounmap
-> >  static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
-> >  {
-> >  }
-> >  #endif
-> > +#endif /* CONFIG_GENERIC_PCI_IOMAP */
-> >  #endif /* CONFIG_GENERIC_IOMAP */
-> >  
-> >  /*
-> > diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
-> > index 2d3eb1cb73b8..ecd1eb3f6c25 100644
-> > --- a/lib/pci_iomap.c
-> > +++ b/lib/pci_iomap.c
-> > @@ -134,4 +134,14 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
-> >  	return pci_iomap_wc_range(dev, bar, 0, maxlen);
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_iomap_wc);
-> > +
-> > +#ifndef CONFIG_GENERIC_IOMAP
-> > +#define pci_iounmap pci_iounmap
-> > +void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr);
-> > +void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-> > +{
-> > +	iounmap(addr);
-> > +}
-> > +EXPORT_SYMBOL(pci_iounmap);
-> > +#endif
-> 
-> I completely agree that this looks like a leak that needs to be fixed.
-> 
-> But my head hurts after trying to understand pci_iomap() and
-> pci_iounmap().  I hate to add even more #ifdefs here.  Can't we
-> somehow rationalize this and put pci_iounmap() next to pci_iomap()?
-> 
-> 66eab4df288a ("lib: add GENERIC_PCI_IOMAP") moved pci_iomap() from
-> lib/iomap.c to lib/pci_iomap.c, but left pci_iounmap() in lib/iomap.c.
-> There must be some good reason why they're separated, but I don't know
-> what it is.
+On Sat, Aug 22 2020 at 20:05, Jason Gunthorpe wrote:
+> On Sat, Aug 22, 2020 at 03:34:45AM +0200, Thomas Gleixner wrote:
+> As a silicon design it might work, but it means existing devices can't
+> be used with this dev_msi. It is also the sort of thing that would
+> need a standard document to have any hope of multiple vendors fitting
+> into it. Eg at PCI-SIG or something.
 
-My recollection is vaguely that map code was more or less
-the same across architectures, but unmap was often different,
-so I only moved map into the library.
+Fair enough.
 
-> >  #endif /* CONFIG_PCI */
-> > -- 
-> > 2.25.1
-> > 
+>> If you don't do that then you simply can't write to that space from the
+>> CPU and you have to transport this kind information always via command
+>> queues.
+>
+> Yes, exactly. This is part of the architectural design of the device,
+> has been for a long time. Has positives and negatives.
 
+As always and it clearly follows the general HW design rule "we can fix
+that in software".
+
+>> > I suppose the core code could provide this as a service? Sort of a
+>> > varient of the other lazy things above?
+>> 
+>> Kinda. That needs a lot of thought for the affinity setting stuff
+>> because it can be called from contexts which do not allow that. It's
+>> solvable though, but I clearly need to stare at the corner cases for a
+>> while.
+>
+> If possible, this would be ideal, as we could use the dev_msi on a big
+> installed base of existing HW.
+
+I'll have a look, but I'm surely not going to like the outcome.
+
+Thanks,
+
+        tglx
