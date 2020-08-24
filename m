@@ -2,154 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5508A24FEBB
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 15:21:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D23A824FFBC
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 16:21:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHXNVS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 09:21:18 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:29760 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726475AbgHXNVC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 09:21:02 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ODFZd5017021;
-        Mon, 24 Aug 2020 06:20:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0220; bh=0vJr/7mSUU6cK8vu083hfwJhVAeHoflMOLszU2nLchY=;
- b=LWqXfg3xxrK5D8hArvckfKN5Aj3XKCozOhdSxqSSR1n2h3tgWdylMEetiHpFv8Ec7KT9
- LRcL8n+0UDl3+zwQuSydzps9mr4Uvw3w49w3iPcM7YziuSbobKhVjDDQsJH6xWiQDze+
- R6HSLH0UWbNnDhQ7u95MlUAB9ecF3B/NvtO2PCvwUIlaCkGAK6EUJB+RgFxooH/sF8S6
- LNEK4WQ4+t8x0IXLw/ObuDxAhRYKJhvWuHZrBelzDJyyCbwYIjdK9DPoUEtX8Z4Ode+l
- TRV7tC4E5rQYOgXMFqKpd2oWX+oSULDe314VN6yZ9z09ZAhh3rJ3X2yn8vcdZz2Rh8n1 oQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 3332vmpr7p-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 06:20:54 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 24 Aug
- 2020 06:20:53 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 24 Aug 2020 06:20:53 -0700
-Received: from hyd1584.caveonetworks.com (unknown [10.29.37.82])
-        by maili.marvell.com (Postfix) with ESMTP id 9B7C63F7043;
-        Mon, 24 Aug 2020 06:20:50 -0700 (PDT)
-From:   George Cherian <george.cherian@marvell.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-CC:     <bhelgaas@google.com>, <arnd@arndb.de>, <mst@redhat.com>,
-        George Cherian <george.cherian@marvell.com>
-Subject: [PATCH v3] PCI: Add pci_iounmap
-Date:   Mon, 24 Aug 2020 18:50:46 +0530
-Message-ID: <20200824132046.3114383-1-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.25.1
+        id S1725904AbgHXOVh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 10:21:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44562 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725780AbgHXOVf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 10:21:35 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OE37sh104032;
+        Mon, 24 Aug 2020 10:21:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=1wD5iP9XXFrhZGWRafnNIFyc1TmmQnE+W/MmRp+/g7I=;
+ b=Sp02BRdgU7dAN1klrEDeEIhCPw+EQppk+YPeMU8+kuhi0lLLjjRWBdLF87xnUlzauJuc
+ 4EZPHRypkF3nVpJLxVl0EcMbXgk5yus07RoJC6L+aj5OSmEI/CenjLcM7m3+SrtAV/xO
+ gerMW0tGxRGdyQGU768CuQBsvIw7aPtzvjjtEpTJD1keCuuxTQWt9/DxxtRj7COFJnFx
+ 4ZUpLsmkYlGM3vvU8ljR2tox4svqDT7AukidjQrRbpuVPuN5TEJOFEAzlDts+CLInhJn
+ 3qcCuJfPkVBLiGI/qCc51jgI+yuMXgPsxNBZyN2Tn5xBhC+L3RtubppE7qoBnRKkFb2c QA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334ev4rwn5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 10:21:29 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OE3gdA106661;
+        Mon, 24 Aug 2020 10:21:29 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334ev4rwmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 10:21:29 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OEBoRP024344;
+        Mon, 24 Aug 2020 14:21:28 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02dal.us.ibm.com with ESMTP id 332uttxasb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 14:21:28 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OELNCH28901678
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 14:21:23 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7C41BE051;
+        Mon, 24 Aug 2020 14:21:26 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB26CBE04F;
+        Mon, 24 Aug 2020 14:21:25 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.211.88.114])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Aug 2020 14:21:25 +0000 (GMT)
+Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <1597333243-29483-1-git-send-email-mjrosato@linux.ibm.com>
+ <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
+Message-ID: <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
+Date:   Mon, 24 Aug 2020 10:21:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 phishscore=0 spamscore=0 suspectscore=0
+ clxscore=1015 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240112
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
-CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
-function. Due to this the managed release variants or even the explicit
-pci_iounmap calls doesn't really remove the mappings.
+On 8/13/20 11:40 AM, Matthew Rosato wrote:
+> s390x has the notion of providing VFs to the kernel in a manner
+> where the associated PF is inaccessible other than via firmware.
+> These are not treated as typical VFs and access to them is emulated
+> by underlying firmware which can still access the PF.  After
+> the referened commit however these detached VFs were no longer able
+> to work with vfio-pci as the firmware does not provide emulation of
+> the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
+> these detached VFs so that vfio-pci can allow memory access to
+> them again. >
+> Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
 
-This issue is seen on an arm64 based system. arm64 by default selects
-only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
-'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
+Polite ping - If unhappy with the approach moving in this direction, I 
+have also played around with Alex's prior suggestion of a dev_flags bit 
+that denotes a device that doesn't implement PCI_COMMAND_MEMORY.  Please 
+advise.
 
-Also '66eab4df288a ("lib: add GENERIC_PCI_IOMAP")' moved only  the iomap
-functions to lib/pci_iomap.c. The pci_iounmap() was left in lib/iomap.c
-as different achitectures has its own pci_iounmap implementation.
-For architectures, which doesn't have pci_iounmap implemented, this
-would lead to a potential leak. So provide a generic iounmap function in
-lib/pci_iomap.c.
-
-Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
-would lead to the following error message after long hour tests
-
-"allocation failed: out of vmalloc space - use vmalloc=<size> to
-increase size."
-
-Signed-off-by: George Cherian <george.cherian@marvell.com>
----
-* Changes from v2
-	- Get rid of the #ifdefs around pci_iounmap()
-* Changes from v1
-	- Fix the 0-day compilation error.
-	- Mark the lib/iomap pci_iounmap call as weak incase
-	if any architecture have there own implementation.
- include/asm-generic/io.h        | 4 ++++
- include/asm-generic/iomap.h     | 1 -
- include/asm-generic/pci_iomap.h | 1 +
- lib/pci_iomap.c                 | 6 ++++++
- 4 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index dabf8cb7203b..5986b37226b7 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
- struct pci_dev;
- extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
- 
-+#ifdef CONFIG_GENERIC_PCI_IOMAP
-+extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
-+#else
- #ifndef pci_iounmap
- #define pci_iounmap pci_iounmap
- static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
- {
- }
- #endif
-+#endif /* CONFIG_GENERIC_PCI_IOMAP */
- #endif /* CONFIG_GENERIC_IOMAP */
- 
- /*
-diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
-index 649224664969..68c75e26edbd 100644
---- a/include/asm-generic/iomap.h
-+++ b/include/asm-generic/iomap.h
-@@ -104,7 +104,6 @@ extern void ioport_unmap(void __iomem *);
- #ifdef CONFIG_PCI
- /* Destroy a virtual mapping cookie for a PCI BAR (memory or IO) */
- struct pci_dev;
--extern void pci_iounmap(struct pci_dev *dev, void __iomem *);
- #elif defined(CONFIG_GENERIC_IOMAP)
- struct pci_dev;
- static inline void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-diff --git a/include/asm-generic/pci_iomap.h b/include/asm-generic/pci_iomap.h
-index d4f16dcc2ed7..3684307a6b44 100644
---- a/include/asm-generic/pci_iomap.h
-+++ b/include/asm-generic/pci_iomap.h
-@@ -18,6 +18,7 @@ extern void __iomem *pci_iomap_range(struct pci_dev *dev, int bar,
- extern void __iomem *pci_iomap_wc_range(struct pci_dev *dev, int bar,
- 					unsigned long offset,
- 					unsigned long maxlen);
-+extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
- /* Create a virtual mapping cookie for a port on a given PCI device.
-  * Do not call this directly, it exists to make it easier for architectures
-  * to override */
-diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
-index 2d3eb1cb73b8..e97b73995af7 100644
---- a/lib/pci_iomap.c
-+++ b/lib/pci_iomap.c
-@@ -134,4 +134,10 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- 	return pci_iomap_wc_range(dev, bar, 0, maxlen);
- }
- EXPORT_SYMBOL_GPL(pci_iomap_wc);
-+
-+void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-+{
-+	iounmap(addr);
-+}
-+EXPORT_SYMBOL(pci_iounmap);
- #endif /* CONFIG_PCI */
--- 
-2.25.1
+> ---
+>   arch/s390/pci/pci_bus.c            | 13 +++++++++++++
+>   drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
+>   include/linux/pci.h                |  4 ++++
+>   3 files changed, 21 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+> index 642a993..1b33076 100644
+> --- a/arch/s390/pci/pci_bus.c
+> +++ b/arch/s390/pci/pci_bus.c
+> @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
+>   }
+>   #endif
+>   
+> +void pcibios_bus_add_device(struct pci_dev *pdev)
+> +{
+> +	struct zpci_dev *zdev = to_zpci(pdev);
+> +
+> +	/*
+> +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
+> +	 * detached from its parent PF.  We rely on firmware emulation to
+> +	 * provide underlying PF details.
+> +	 */
+> +	if (zdev->vfn && !zdev->zbus->multifunction)
+> +		pdev->detached_vf = 1;
+> +}
+> +
+>   static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
+>   {
+>   	struct pci_bus *bus;
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index d98843f..98f93d1 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+>   	 * PF SR-IOV capability, there's therefore no need to trigger
+>   	 * faults based on the virtual value.
+>   	 */
+> -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
+> +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);
+>   }
+>   
+>   /*
+> @@ -420,7 +420,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
+>   	u16 cmd;
+>   	int i;
+>   
+> -	if (pdev->is_virtfn)
+> +	if (dev_is_vf(&pdev->dev))
+>   		return;
+>   
+>   	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
+> @@ -521,7 +521,7 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
+>   	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
+>   
+>   	/* Mask in virtual memory enable for SR-IOV devices */
+> -	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
+> +	if ((offset == PCI_COMMAND) && (dev_is_vf(&vdev->pdev->dev))) {
+>   		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+>   		u32 tmp_val = le32_to_cpu(*val);
+>   
+> @@ -1713,7 +1713,7 @@ int vfio_config_init(struct vfio_pci_device *vdev)
+>   	vdev->rbar[5] = le32_to_cpu(*(__le32 *)&vconfig[PCI_BASE_ADDRESS_5]);
+>   	vdev->rbar[6] = le32_to_cpu(*(__le32 *)&vconfig[PCI_ROM_ADDRESS]);
+>   
+> -	if (pdev->is_virtfn) {
+> +	if (dev_is_vf(&pdev->dev)) {
+>   		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
+>   		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
+>   
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8355306..7c062de 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -445,6 +445,7 @@ struct pci_dev {
+>   	unsigned int	is_probed:1;		/* Device probing in progress */
+>   	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
+>   	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
+> +	unsigned int	detached_vf:1;		/* VF without local PF access */
+>   	pci_dev_flags_t dev_flags;
+>   	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+>   
+> @@ -1057,6 +1058,8 @@ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
+>   void pci_sort_breadthfirst(void);
+>   #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
+>   #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
+> +#define dev_is_vf(d) ((dev_is_pci(d) ? (to_pci_dev(d)->is_virtfn || \
+> +					to_pci_dev(d)->detached_vf) : false))
+>   
+>   /* Generic PCI functions exported to card drivers */
+>   
+> @@ -1764,6 +1767,7 @@ static inline struct pci_dev *pci_get_domain_bus_and_slot(int domain,
+>   
+>   #define dev_is_pci(d) (false)
+>   #define dev_is_pf(d) (false)
+> +#define dev_is_vf(d) (false)
+>   static inline bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
+>   { return false; }
+>   static inline int pci_irqd_intx_xlate(struct irq_domain *d,
+> 
 
