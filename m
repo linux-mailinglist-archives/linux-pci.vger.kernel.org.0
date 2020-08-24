@@ -2,75 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5E90250C15
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 01:05:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5877C250C74
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 01:39:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHXXFd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 19:05:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44348 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHXXFa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 19:05:30 -0400
-Received: by mail-io1-f65.google.com with SMTP id v6so10521419iow.11;
-        Mon, 24 Aug 2020 16:05:29 -0700 (PDT)
+        id S1726008AbgHXXjX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 19:39:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35343 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgHXXjW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 19:39:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i10so11667098ljn.2
+        for <linux-pci@vger.kernel.org>; Mon, 24 Aug 2020 16:39:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LnGLggCC6t4eeH6RGHgV+CdMrLeiVTW47t40q2yEbSA=;
-        b=JC0iz9tX0sgRtp88/7Qipt/f8+m74Q/NGi405ucij0kWHk7D0fYijF5R6CCLhcCNZI
-         xv4j104Xzq9+Mxxor9wp2FLNpEGjemMxJz5/RTn6lt0nrXicMoxQgo9LCiWed6v8KPhY
-         gsu4of4eA3mC+s2WKL5tcyc3zf9YqM26e5EZSg+D/Kypx5MlXOYy+OKyzI6Lnb+JfBcr
-         hTKz8exTsf7K+b70GgaBN/gaVlhubZzNV3s/EemlazSAfePbsSqimMQKKnXw+xSZWsJv
-         j8TE+9LRXZPLTM3GpxO3WdprZvyBVK8DizvEJGJ2RG7Yx/QHenOu/x7mDdZW1VHeraIL
-         RoWA==
-X-Gm-Message-State: AOAM532j+u5tfpkyMZRNvprTPxBfeNLOiA7gaMugW4JI+c5K4Js5Vr4h
-        sBUnch/b9RdsgYLqfEmedg==
-X-Google-Smtp-Source: ABdhPJxjW6Z/0DNopQefNMSz2Y33hFI2dXsZobX+uD1VPIebi2iNlXYREKpv0yRibAxo1PsikSR2aA==
-X-Received: by 2002:a02:a04d:: with SMTP id f13mr7825907jah.112.1598310329586;
-        Mon, 24 Aug 2020 16:05:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id x185sm7579268iof.41.2020.08.24.16.05.27
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jPcUh17X29eC3oL3t9ThNk4PiBbxnGl1SnHYNtZdA5E=;
+        b=c+d+ytoX7pwBwYrK+mflsKeWRMX6BwLHu84I0phpjLMZHNf3ldNuxwq0v1CzW3A1Vz
+         maLtfcboidBLumRpX+p0FHwh7Ca36dvoAcO41c2nHfqWFVnLkLcCLTXyX8gjWJsz5a4/
+         s69PIuxYnkwCl8xlZ+++XW4Ris0lBEdYHFmUI+qB46PWX0DiAoEOSxH5/T3ZkTpwKBWZ
+         0+3+/18HWru/SoqBlBRFoFLwTkaKbe2JJIdt4pSJn9wfHw4dSb462AaAkCpB8IKYWiP0
+         RcZ2D+clyX1IvDRcsxgYiPTuPdGAKAY5dwbqghnSAjZsbpVrfimdnDPfC4aRaXS6cZ+w
+         czYg==
+X-Gm-Message-State: AOAM5337kFgoApNAkuTtlcyMZkLtPivx/nmil+XGaP6W/eICtoLHHja6
+        G5NRCQ6CvSe+pzVvxHeUuuA=
+X-Google-Smtp-Source: ABdhPJxE4UWa9bi3EHteV4L0s3sM5qTJcOYLTe8jqlb3xWN26BW2VbrBFu1/WXi4EnHj0LG/lZHd7w==
+X-Received: by 2002:a2e:a489:: with SMTP id h9mr3742482lji.121.1598312360657;
+        Mon, 24 Aug 2020 16:39:20 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id r6sm2492682lji.117.2020.08.24.16.39.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:05:28 -0700 (PDT)
-Received: (nullmailer pid 3499633 invoked by uid 1000);
-        Mon, 24 Aug 2020 23:05:26 -0000
-Date:   Mon, 24 Aug 2020 17:05:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: rcar: Add device tree support for
- r8a7742
-Message-ID: <20200824230526.GA3499580@bogus>
-References: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 24 Aug 2020 16:39:19 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: [PATCH 0/3] PCI: Replace use of snprintf() with scnprintf() in show() functions
+Date:   Mon, 24 Aug 2020 23:39:15 +0000
+Message-Id: <20200824233918.26306-1-kw@linux.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 10 Aug 2020 18:41:55 +0100, Lad Prabhakar wrote:
-> Add support for r8a7742. The Renesas RZ/G1H (R8A7742) PCIe controller
-> is identical to the R-Car Gen2 family.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+Replace use of snprintf() with scnprintf() in order to adhere to the
+rules in Documentation/filesystems/sysfs.txt, as per:
 
-Acked-by: Rob Herring <robh@kernel.org>
+  show() must not use snprintf() when formatting the value to be
+  returned to user space. If you can guarantee that an overflow
+  will never happen you can use sprintf() otherwise you must use
+  scnprintf().
+
+Also resolve the following Coccinelle warnings, for example:
+
+  drivers/pci/p2pdma.c:69:8-16: WARNING: use scnprintf or sprintf
+  drivers/pci/p2pdma.c:78:8-16: WARNING: use scnprintf or sprintf
+  drivers/pci/p2pdma.c:56:8-16: WARNING: use scnprintf or sprintf
+
+The Coccinelle warning was added in commit abfc19ff202d ("coccinelle:
+api: add device_attr_show script").
+
+There is no change to the functionality.
+
+Related:
+  https://patchwork.kernel.org/patch/9946759/#20969333
+  https://lwn.net/Articles/69419
+
+Krzysztof Wilczyński (3):
+  PCI: Replace use of snprintf() with scnprintf() in
+    resource_alignment_show()
+  PCI: sysfs: Replace use of snprintf() with scnprintf() in
+    driver_override_show()
+  PCI/P2PDMA: Replace use of snprintf() with scnprintf() in show()
+    functions
+
+ drivers/pci/p2pdma.c    | 8 ++++----
+ drivers/pci/pci-sysfs.c | 2 +-
+ drivers/pci/pci.c       | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+-- 
+2.28.0
+
