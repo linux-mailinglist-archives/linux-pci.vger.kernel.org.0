@@ -2,156 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAAE624F214
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 07:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8DD524F21E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 07:20:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgHXFJi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 01:09:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44020 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbgHXFJi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Aug 2020 01:09:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 36A65AD71;
-        Mon, 24 Aug 2020 05:10:06 +0000 (UTC)
-Subject: Re: [patch RFC 23/38] x86/xen: Rework MSI teardown
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200821002424.119492231@linutronix.de>
- <20200821002947.575838946@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <c81c2536-2258-19b0-4d77-0de1d2fa88db@suse.com>
-Date:   Mon, 24 Aug 2020 07:09:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1727872AbgHXFUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 01:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHXFUl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 01:20:41 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E78C061573;
+        Sun, 23 Aug 2020 22:20:41 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d19so3997093pgl.10;
+        Sun, 23 Aug 2020 22:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a9FIkUYppAnd6RkZ+nRY1Ky5mZ+w/qdsOn9YUv8jqCk=;
+        b=vcT2u1USQjCJsI84bF5cjPilghWnbfilgNMMkMOXcDM3+2zDyX7Lns15utnFh2rqfP
+         VHaAlDe8TsZVVa++LzJtyzBwXew92XmzyNlNcqbsUnWPhANqxhbh2HpdPKLi/upCu8+5
+         ifADSYRQKXBCs03uXsBnmUjYdjh66TUE/EiEQgFHN7Knt9yygNqd3Jh9RxMzarGzDzrd
+         iumBOYL4vGbiTAcz687oPEHbBouDdyUtKvjzcsaE+c7z4bePcfF1S4oLf1m45Q9bPIRv
+         4HRbS6jv6S50y3knrjSpKpsG+mqRPOn42sLY+ijVnMGByOfiAWQ2JdCnV7zL8Y06pmPw
+         B9Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a9FIkUYppAnd6RkZ+nRY1Ky5mZ+w/qdsOn9YUv8jqCk=;
+        b=uWAh+dMtKrMpuDgTcFTA1M0CaxQs7leQypG6tZcxMkEa5VYH3/bWjsG9NcHkDGL08+
+         OzGp7FT6EhuxfGlr8BSLm8JgYDhq9JbXugblPe5Bib2JarLo306YzTsCjIgIY1sHMady
+         hNfH3ga9GesoUsYSVXsMt2PG6Xz2MuFl9hNQ6mS4cXtUcVN1cdkoAeoXKboVjKCSTu9x
+         9fnvs7mgtL6mzsvfUAhooZ8Y1HhJtpEqF48rR4PyOm0mscU9vH0t24hKJPWyYtnL+aQV
+         iECc9yYISjilFURizExnCzA1knODMKSd7D+/pe5IYe8A5BhPqNs5X4hsoG/6tG7/TEsB
+         P04w==
+X-Gm-Message-State: AOAM533YbpLLJdzIxhhj8+2S909qfZjpbe5F6CPRP/EElA8chbPIPpsC
+        EeUvyC718jt1v3Yqkq5WmMU=
+X-Google-Smtp-Source: ABdhPJwrhBJIL1QKHKD5mrhI0EjX1niAo/OIICj66vRZDhcyJOkkIdWNaYT3wCsw7VuN9syQevZA4A==
+X-Received: by 2002:aa7:9e4e:: with SMTP id z14mr3017901pfq.60.1598246441144;
+        Sun, 23 Aug 2020 22:20:41 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.9])
+        by smtp.gmail.com with ESMTPSA id r134sm9964167pfc.1.2020.08.23.22.20.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Aug 2020 22:20:40 -0700 (PDT)
+From:   Jiang Biao <benbjiang@gmail.com>
+X-Google-Original-From: Jiang Biao <benbjiang@tencent.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiang Biao <benbjiang@tencent.com>,
+        Bin Lai <robinlai@tencent.com>
+Subject: [PATCH] driver/pci: reduce the single block time in pci_read_config
+Date:   Mon, 24 Aug 2020 13:20:25 +0800
+Message-Id: <20200824052025.48362-1-benbjiang@tencent.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20200821002947.575838946@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21.08.20 02:24, Thomas Gleixner wrote:
-> X86 cannot store the irq domain pointer in struct device without breaking
-> XEN because the irq domain pointer takes precedence over arch_*_msi_irqs()
-> fallbacks.
-> 
-> XENs MSI teardown relies on default_teardown_msi_irqs() which invokes
-> arch_teardown_msi_irq(). default_teardown_msi_irqs() is a trivial iterator
-> over the msi entries associated to a device.
-> 
-> Implement this loop in xen_teardown_msi_irqs() to prepare for removal of
-> the fallbacks for X86.
-> 
-> This is a preparatory step to wrap XEN MSI alloc/free into a irq domain
-> which in turn allows to store the irq domain pointer in struct device and
-> to use the irq domain functions directly.
-> 
-> Signed-off-by: Thomas Gleixner<tglx@linutronix.de>
-> ---
->   arch/x86/pci/xen.c |   23 ++++++++++++++++++-----
->   1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> --- a/arch/x86/pci/xen.c
-> +++ b/arch/x86/pci/xen.c
-> @@ -376,20 +376,31 @@ static void xen_initdom_restore_msi_irqs
->   static void xen_teardown_msi_irqs(struct pci_dev *dev)
->   {
->   	struct msi_desc *msidesc;
-> +	int i;
-> +
-> +	for_each_pci_msi_entry(msidesc, dev) {
-> +		if (msidesc->irq) {
-> +			for (i = 0; i < msidesc->nvec_used; i++)
-> +				xen_destroy_irq(msidesc->irq + i);
-> +		}
-> +	}
-> +}
-> +
-> +static void xen_pv_teardown_msi_irqs(struct pci_dev *dev)
-> +{
-> +	struct msi_desc *msidesc = first_pci_msi_entry(dev);
->   
-> -	msidesc = first_pci_msi_entry(dev);
->   	if (msidesc->msi_attrib.is_msix)
->   		xen_pci_frontend_disable_msix(dev);
->   	else
->   		xen_pci_frontend_disable_msi(dev);
->   
-> -	/* Free the IRQ's and the msidesc using the generic code. */
-> -	default_teardown_msi_irqs(dev);
-> +	xen_teardown_msi_irqs(dev);
->   }
->   
->   static void xen_teardown_msi_irq(unsigned int irq)
->   {
-> -	xen_destroy_irq(irq);
-> +	WARN_ON_ONCE(1);
->   }
->   
->   #endif
-> @@ -412,7 +423,7 @@ int __init pci_xen_init(void)
->   #ifdef CONFIG_PCI_MSI
->   	x86_msi.setup_msi_irqs = xen_setup_msi_irqs;
->   	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
-> -	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
-> +	x86_msi.teardown_msi_irqs = xen_pv_teardown_msi_irqs;
->   	pci_msi_ignore_mask = 1;
->   #endif
->   	return 0;
-> @@ -436,6 +447,7 @@ static void __init xen_hvm_msi_init(void
->   	}
->   
->   	x86_msi.setup_msi_irqs = xen_hvm_setup_msi_irqs;
-> +	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
->   	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
->   }
->   #endif
-> @@ -472,6 +484,7 @@ int __init pci_xen_initial_domain(void)
->   #ifdef CONFIG_PCI_MSI
->   	x86_msi.setup_msi_irqs = xen_initdom_setup_msi_irqs;
->   	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
-> +	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
+From: Jiang Biao <benbjiang@tencent.com>
 
-This should be xen_pv_teardown_msi_irqs, as pci_xen_initial_domain() is
-called only for the pv initial domain case today.
+pci_read_config() could block several ms in kernel space, mainly
+caused by the while loop to call pci_user_read_config_dword().
+Singel pci_user_read_config_dword() loop could consume 130us+,
+              |    pci_user_read_config_dword() {
+              |      _raw_spin_lock_irq() {
+! 136.698 us  |        native_queued_spin_lock_slowpath();
+! 137.582 us  |      }
+              |      pci_read() {
+              |        raw_pci_read() {
+              |          pci_conf1_read() {
+  0.230 us    |            _raw_spin_lock_irqsave();
+  0.035 us    |            _raw_spin_unlock_irqrestore();
+  8.476 us    |          }
+  8.790 us    |        }
+  9.091 us    |      }
+! 147.263 us  |    }
+and dozens of the loop could consume ms+.
 
->   	x86_msi.restore_msi_irqs = xen_initdom_restore_msi_irqs;
->   	pci_msi_ignore_mask = 1;
->   #endif
-> 
+If we execute some lspci commands concurrently, ms+ scheduling
+latency could be detected.
 
+Add scheduling chance in the loop to improve the latency.
 
-Juergen
+Reported-by: Bin Lai <robinlai@tencent.com>
+Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+---
+ drivers/pci/pci-sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 6d78df9..3b9f63d 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -708,6 +708,7 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+ 		data[off - init_off + 3] = (val >> 24) & 0xff;
+ 		off += 4;
+ 		size -= 4;
++		cond_resched();
+ 	}
+ 
+ 	if (size >= 2) {
+-- 
+1.8.3.1
+
