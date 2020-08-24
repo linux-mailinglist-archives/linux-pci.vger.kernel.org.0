@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C412250C75
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 01:39:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D276250C76
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 01:39:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbgHXXjY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 19:39:24 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37090 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbgHXXjX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 19:39:23 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w14so11673436ljj.4
-        for <linux-pci@vger.kernel.org>; Mon, 24 Aug 2020 16:39:22 -0700 (PDT)
+        id S1726075AbgHXXjZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 19:39:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36575 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgHXXjY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 19:39:24 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t23so11679906ljc.3
+        for <linux-pci@vger.kernel.org>; Mon, 24 Aug 2020 16:39:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P19COcW9VFSCcSArDZsGWHv7rSgtnEzm72g6mhefLIg=;
-        b=CfsrYYLtcxre1Zdr/+2aC4IgGx+bsMvDrPU5tD1WNBaPN+PtkmAFRW0YfRc2A3eyMj
-         JbsbwDb813+xWwkOo2Qei4w5zwWVFzcIZ8nrMzyZ7d3gUruAllgi9GjMjFtkg10YP/3a
-         8eBdEyLdO0wDRI6RY47IAUu/kYho8TetvRhYNizExn6kRmv1ArXxjruIjK8TipH2Q+xZ
-         zNGSE4hWhycpgbieAZpVJGYlAEj3ISiMLUKWfLhb9ydVhDA+aVx6P6c0fgqLwF/pEYea
-         pulMhn6dErTjkdsw439465Zjmk5itelMd72ronmRiipaELGP6WkaItUgwd2O7QPbc1Qo
-         uQ3A==
-X-Gm-Message-State: AOAM532ltexeqh7fvWhPh+yeqBZdRyV9JbXDlCcTSIjByTtp012uo7g1
-        r3Nn1IlPzpavLiyFCX/2byo=
-X-Google-Smtp-Source: ABdhPJyUiX93v+vHJr4ZoXk3VfOl+tDDBcYBuPajekhZ3bj96obNBfVWjbDdOsgGrNQFeut5+Auy7Q==
-X-Received: by 2002:a2e:8145:: with SMTP id t5mr3407776ljg.398.1598312361611;
-        Mon, 24 Aug 2020 16:39:21 -0700 (PDT)
+        bh=jp4ZW19wcAcbEH/gWJvRffmIis6xins/9BDzCqpNFyE=;
+        b=r3VHseRUU3J2uSgdGKXdNfMVeeX4PMqmXBrudPjX0xVdWP8FLRTi4HY9W68eNuV7Go
+         H7u4QN5a4YZ1DwqRD9zqWu7aLnqd12bMaobH4CEg5DpjZnWmJJUTi4tiaSu0zEVh1iNN
+         O10aoP4ygy2YDwFnAsZaMZUMIg/IFhHumzXwORjGRHSQKwvr6qkNvATuEdnBZsKg9uPk
+         rIiDkA1jk0hGcwfobVr/XyhCBv6qdAPCEJCYDyoTzkmIcnLOEZuRJJRa5alvQ6wWLINR
+         rDWW54DnN8Dq5Zzz6kux45g9Jt0KuL3MMGGjLT7n+2xn8JxjbiBqXu3CcMTb4W06HzHr
+         V/3A==
+X-Gm-Message-State: AOAM530Ct/dRvGSGa7fqZntPioUdiAc8Ot2c8dFsa+0romJXeHpXkQVT
+        zwNObZSGzbQGELLO+D/IaMqjwgW4fqvZKQ==
+X-Google-Smtp-Source: ABdhPJwSWmal8w/tvBd5F9q3kroyfbHD10FxDXo+emrjrsmF0cTS6B+SEPd4CK2ExAx1+8WiyGr/nQ==
+X-Received: by 2002:a2e:3503:: with SMTP id z3mr3394047ljz.336.1598312362583;
+        Mon, 24 Aug 2020 16:39:22 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id r6sm2492682lji.117.2020.08.24.16.39.20
+        by smtp.gmail.com with ESMTPSA id r6sm2492682lji.117.2020.08.24.16.39.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 24 Aug 2020 16:39:21 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org
-Subject: [PATCH 1/3] PCI: Replace use of snprintf() with scnprintf() in resource_alignment_show()
-Date:   Mon, 24 Aug 2020 23:39:16 +0000
-Message-Id: <20200824233918.26306-2-kw@linux.com>
+Subject: [PATCH 2/3] PCI: sysfs: Replace use of snprintf() with scnprintf() in driver_override_show()
+Date:   Mon, 24 Aug 2020 23:39:17 +0000
+Message-Id: <20200824233918.26306-3-kw@linux.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824233918.26306-1-kw@linux.com>
 References: <20200824233918.26306-1-kw@linux.com>
@@ -67,22 +67,22 @@ Related:
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/pci.c | 2 +-
+ drivers/pci/pci-sysfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e39c5499770f..e6c904cbf983 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6350,7 +6350,7 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 6d78df981d41..ed66d387e913 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -574,7 +574,7 @@ static ssize_t driver_override_show(struct device *dev,
+ 	ssize_t len;
  
- 	spin_lock(&resource_alignment_lock);
- 	if (resource_alignment_param)
--		count = snprintf(buf, PAGE_SIZE, "%s", resource_alignment_param);
-+		count = scnprintf(buf, PAGE_SIZE, "%s", resource_alignment_param);
- 	spin_unlock(&resource_alignment_lock);
- 
- 	/*
+ 	device_lock(dev);
+-	len = snprintf(buf, PAGE_SIZE, "%s\n", pdev->driver_override);
++	len = scnprintf(buf, PAGE_SIZE, "%s\n", pdev->driver_override);
+ 	device_unlock(dev);
+ 	return len;
+ }
 -- 
 2.28.0
 
