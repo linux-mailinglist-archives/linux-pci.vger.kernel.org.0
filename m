@@ -2,110 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16AE3250AB8
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 23:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5E90250C15
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 01:05:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHXVV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 17:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgHXVVX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 17:21:23 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AEFC061574;
-        Mon, 24 Aug 2020 14:21:22 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598304080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X6NJ+kPKGl5Nf3jE9xklx6hH03TKpnofr8g96HAw8Ck=;
-        b=Pv4WTzw87H6NCx71gJqPiRampyZmRAAfWJrVk0KJysnfqzFan/ccSk8LSOb7qVVuPkbB8z
-        tGoDrp+2ju8a/cTr5MMPgifcmaB8n9M75wctO+lZ606ZWdfd053SzbNlGzcK9jw30ur2mH
-        TDbLQHXk1Dh9ueKmK3Go6nRfjv8zoHatFiZuH0z15JhWa7zd1dbxSJs0yBdpWRdSBTq9V2
-        X9XEPWc+RvXUBns4bi7L9OdG3sThW5qDimMJb9E+VvYLGZjxixChT1oUzdf/dlLTqSoUaU
-        EspLZ6f4CF2x6Rx5EjvdF4GfJ2iyzgouZQbm5KkIt6/C6cpdCkAuu4GovEYy3Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598304080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X6NJ+kPKGl5Nf3jE9xklx6hH03TKpnofr8g96HAw8Ck=;
-        b=cN6eYBnyeUaRAodJ5n9Kq1Of1A3DDOOMFul6xvKSp6P4/ZL9J+JfpPUvxxWGcEA5BgckeU
-        I2Edk8IuxDhtxSCg==
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
-In-Reply-To: <5caec213-8f56-9f12-34db-a29de8326f95@suse.com>
-References: <20200821002424.119492231@linutronix.de> <20200821002947.667887608@linutronix.de> <5caec213-8f56-9f12-34db-a29de8326f95@suse.com>
-Date:   Mon, 24 Aug 2020 23:21:19 +0200
-Message-ID: <87tuwr68q8.fsf@nanos.tec.linutronix.de>
+        id S1727961AbgHXXFd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 19:05:33 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44348 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgHXXFa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 19:05:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id v6so10521419iow.11;
+        Mon, 24 Aug 2020 16:05:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LnGLggCC6t4eeH6RGHgV+CdMrLeiVTW47t40q2yEbSA=;
+        b=JC0iz9tX0sgRtp88/7Qipt/f8+m74Q/NGi405ucij0kWHk7D0fYijF5R6CCLhcCNZI
+         xv4j104Xzq9+Mxxor9wp2FLNpEGjemMxJz5/RTn6lt0nrXicMoxQgo9LCiWed6v8KPhY
+         gsu4of4eA3mC+s2WKL5tcyc3zf9YqM26e5EZSg+D/Kypx5MlXOYy+OKyzI6Lnb+JfBcr
+         hTKz8exTsf7K+b70GgaBN/gaVlhubZzNV3s/EemlazSAfePbsSqimMQKKnXw+xSZWsJv
+         j8TE+9LRXZPLTM3GpxO3WdprZvyBVK8DizvEJGJ2RG7Yx/QHenOu/x7mDdZW1VHeraIL
+         RoWA==
+X-Gm-Message-State: AOAM532j+u5tfpkyMZRNvprTPxBfeNLOiA7gaMugW4JI+c5K4Js5Vr4h
+        sBUnch/b9RdsgYLqfEmedg==
+X-Google-Smtp-Source: ABdhPJxjW6Z/0DNopQefNMSz2Y33hFI2dXsZobX+uD1VPIebi2iNlXYREKpv0yRibAxo1PsikSR2aA==
+X-Received: by 2002:a02:a04d:: with SMTP id f13mr7825907jah.112.1598310329586;
+        Mon, 24 Aug 2020 16:05:29 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id x185sm7579268iof.41.2020.08.24.16.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 16:05:28 -0700 (PDT)
+Received: (nullmailer pid 3499633 invoked by uid 1000);
+        Mon, 24 Aug 2020 23:05:26 -0000
+Date:   Mon, 24 Aug 2020 17:05:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: rcar: Add device tree support for
+ r8a7742
+Message-ID: <20200824230526.GA3499580@bogus>
+References: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 24 2020 at 06:59, J=C3=BCrgen Gro=C3=9F wrote:
-> On 21.08.20 02:24, Thomas Gleixner wrote:
->> +static __init void xen_setup_pci_msi(void)
->> +{
->> +	if (xen_initial_domain()) {
->> +		x86_msi.setup_msi_irqs =3D xen_initdom_setup_msi_irqs;
->> +		x86_msi.teardown_msi_irqs =3D xen_teardown_msi_irqs;
->> +		x86_msi.restore_msi_irqs =3D xen_initdom_restore_msi_irqs;
->> +		pci_msi_ignore_mask =3D 1;
->
-> This is wrong, as a PVH initial domain shouldn't do the pv settings.
->
-> The "if (xen_initial_domain())" should be inside the pv case, like:
->
-> if (xen_pv_domain()) {
-> 	if (xen_initial_domain()) {
-> 		...
-> 	} else {
-> 		...
-> 	}
-> } else if (xen_hvm_domain()) {
-> 	...
+On Mon, 10 Aug 2020 18:41:55 +0100, Lad Prabhakar wrote:
+> Add support for r8a7742. The Renesas RZ/G1H (R8A7742) PCIe controller
+> is identical to the R-Car Gen2 family.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-I still think it does the right thing depending on the place it is
-called from, but even if so, it's completely unreadable gunk. I'll fix
-that proper.
-
-Thanks,
-
-        tglx
+Acked-by: Rob Herring <robh@kernel.org>
