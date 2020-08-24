@@ -2,127 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7844A24FE84
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 15:05:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5508A24FEBB
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 15:21:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgHXNFr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 09:05:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:26057 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726158AbgHXNFr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:05:47 -0400
-IronPort-SDR: QN4buq9gNgMJ9luGosHs4mPhXFm+nSpM3mRhPfc9i7MVbvqiUvIRKxjIjv3H4jXPH5NlKNmuVI
- S2ilqdr724Gw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="153302899"
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="153302899"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 06:05:00 -0700
-IronPort-SDR: glWWwqLpFaUo/CuOVMUTSluWKXlQFEkR/gwSjhw10bFmVJ+dIY/MC0+LPvGLg1B9IY1DWQJ7lP
- M3Omj83EY+0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="402345797"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 24 Aug 2020 06:04:57 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 24 Aug 2020 16:04:56 +0300
-Date:   Mon, 24 Aug 2020 16:04:56 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, jonathan.derrick@intel.com,
-        Mario.Limonciello@dell.com, Heiner Kallweit <hkallweit1@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200824130456.GJ1375436@lahna.fi.intel.com>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+        id S1726187AbgHXNVS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 09:21:18 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:29760 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726475AbgHXNVC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 09:21:02 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ODFZd5017021;
+        Mon, 24 Aug 2020 06:20:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0220; bh=0vJr/7mSUU6cK8vu083hfwJhVAeHoflMOLszU2nLchY=;
+ b=LWqXfg3xxrK5D8hArvckfKN5Aj3XKCozOhdSxqSSR1n2h3tgWdylMEetiHpFv8Ec7KT9
+ LRcL8n+0UDl3+zwQuSydzps9mr4Uvw3w49w3iPcM7YziuSbobKhVjDDQsJH6xWiQDze+
+ R6HSLH0UWbNnDhQ7u95MlUAB9ecF3B/NvtO2PCvwUIlaCkGAK6EUJB+RgFxooH/sF8S6
+ LNEK4WQ4+t8x0IXLw/ObuDxAhRYKJhvWuHZrBelzDJyyCbwYIjdK9DPoUEtX8Z4Ode+l
+ TRV7tC4E5rQYOgXMFqKpd2oWX+oSULDe314VN6yZ9z09ZAhh3rJ3X2yn8vcdZz2Rh8n1 oQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 3332vmpr7p-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 06:20:54 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 24 Aug
+ 2020 06:20:53 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 24 Aug 2020 06:20:53 -0700
+Received: from hyd1584.caveonetworks.com (unknown [10.29.37.82])
+        by maili.marvell.com (Postfix) with ESMTP id 9B7C63F7043;
+        Mon, 24 Aug 2020 06:20:50 -0700 (PDT)
+From:   George Cherian <george.cherian@marvell.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     <bhelgaas@google.com>, <arnd@arndb.de>, <mst@redhat.com>,
+        George Cherian <george.cherian@marvell.com>
+Subject: [PATCH v3] PCI: Add pci_iounmap
+Date:   Mon, 24 Aug 2020 18:50:46 +0530
+Message-ID: <20200824132046.3114383-1-george.cherian@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821123222.32093-1-kai.heng.feng@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
+CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
+function. Due to this the managed release variants or even the explicit
+pci_iounmap calls doesn't really remove the mappings.
 
-On Fri, Aug 21, 2020 at 08:32:20PM +0800, Kai-Heng Feng wrote:
-> New Intel laptops with VMD cannot reach deeper power saving state,
-> renders very short battery time.
-> 
-> As BIOS may not be able to program the config space for devices under
-> VMD domain, ASPM needs to be programmed manually by software. This is
-> also the case under Windows.
-> 
-> The VMD controller itself is a root complex integrated endpoint that
-> doesn't have ASPM capability, so we can't propagate the ASPM settings to
-> devices under it. Hence, simply apply ASPM_STATE_ALL to the links under
-> VMD domain, unsupported states will be cleared out anyway.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/pci/pcie/aspm.c |  3 ++-
->  drivers/pci/quirks.c    | 11 +++++++++++
->  include/linux/pci.h     |  2 ++
->  3 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 253c30cc1967..dcc002dbca19 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -624,7 +624,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
->  		aspm_calc_l1ss_info(link, &upreg, &dwreg);
->  
->  	/* Save default state */
-> -	link->aspm_default = link->aspm_enabled;
-> +	link->aspm_default = parent->dev_flags & PCI_DEV_FLAGS_ENABLE_ASPM ?
-> +			     ASPM_STATE_ALL : link->aspm_enabled;
->  
->  	/* Setup initial capable state. Will be updated later */
->  	link->aspm_capable = link->aspm_support;
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index bdf9b52567e0..2e2f525bd892 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5632,3 +5632,14 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
->  }
->  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
->  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-> +
-> +/*
-> + * Device [8086:9a09]
-> + * BIOS may not be able to access config space of devices under VMD domain, so
-> + * it relies on software to enable ASPM for links under VMD.
-> + */
-> +static void pci_fixup_enable_aspm(struct pci_dev *pdev)
-> +{
-> +	pdev->dev_flags |= PCI_DEV_FLAGS_ENABLE_ASPM;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a09, pci_fixup_enable_aspm);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 835530605c0d..66a45916c7c6 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -227,6 +227,8 @@ enum pci_dev_flags {
->  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
->  	/* Don't use Relaxed Ordering for TLPs directed at this device */
->  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> +	/* Enable ASPM regardless of how LnkCtl is programmed */
-> +	PCI_DEV_FLAGS_ENABLE_ASPM = (__force pci_dev_flags_t) (1 << 12),
+This issue is seen on an arm64 based system. arm64 by default selects
+only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
+'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
 
-I wonder if instead of dev_flags this should have a bit field in struct
-pci_dev? Not sure which one is prefered actually, both seem to include
-quirks as well ;-)
+Also '66eab4df288a ("lib: add GENERIC_PCI_IOMAP")' moved only  the iomap
+functions to lib/pci_iomap.c. The pci_iounmap() was left in lib/iomap.c
+as different achitectures has its own pci_iounmap implementation.
+For architectures, which doesn't have pci_iounmap implemented, this
+would lead to a potential leak. So provide a generic iounmap function in
+lib/pci_iomap.c.
 
->  };
->  
->  enum pci_irq_reroute_variant {
-> -- 
-> 2.17.1
+Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
+would lead to the following error message after long hour tests
+
+"allocation failed: out of vmalloc space - use vmalloc=<size> to
+increase size."
+
+Signed-off-by: George Cherian <george.cherian@marvell.com>
+---
+* Changes from v2
+	- Get rid of the #ifdefs around pci_iounmap()
+* Changes from v1
+	- Fix the 0-day compilation error.
+	- Mark the lib/iomap pci_iounmap call as weak incase
+	if any architecture have there own implementation.
+ include/asm-generic/io.h        | 4 ++++
+ include/asm-generic/iomap.h     | 1 -
+ include/asm-generic/pci_iomap.h | 1 +
+ lib/pci_iomap.c                 | 6 ++++++
+ 4 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index dabf8cb7203b..5986b37226b7 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
+ struct pci_dev;
+ extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
+ 
++#ifdef CONFIG_GENERIC_PCI_IOMAP
++extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
++#else
+ #ifndef pci_iounmap
+ #define pci_iounmap pci_iounmap
+ static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
+ {
+ }
+ #endif
++#endif /* CONFIG_GENERIC_PCI_IOMAP */
+ #endif /* CONFIG_GENERIC_IOMAP */
+ 
+ /*
+diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
+index 649224664969..68c75e26edbd 100644
+--- a/include/asm-generic/iomap.h
++++ b/include/asm-generic/iomap.h
+@@ -104,7 +104,6 @@ extern void ioport_unmap(void __iomem *);
+ #ifdef CONFIG_PCI
+ /* Destroy a virtual mapping cookie for a PCI BAR (memory or IO) */
+ struct pci_dev;
+-extern void pci_iounmap(struct pci_dev *dev, void __iomem *);
+ #elif defined(CONFIG_GENERIC_IOMAP)
+ struct pci_dev;
+ static inline void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
+diff --git a/include/asm-generic/pci_iomap.h b/include/asm-generic/pci_iomap.h
+index d4f16dcc2ed7..3684307a6b44 100644
+--- a/include/asm-generic/pci_iomap.h
++++ b/include/asm-generic/pci_iomap.h
+@@ -18,6 +18,7 @@ extern void __iomem *pci_iomap_range(struct pci_dev *dev, int bar,
+ extern void __iomem *pci_iomap_wc_range(struct pci_dev *dev, int bar,
+ 					unsigned long offset,
+ 					unsigned long maxlen);
++extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
+ /* Create a virtual mapping cookie for a port on a given PCI device.
+  * Do not call this directly, it exists to make it easier for architectures
+  * to override */
+diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
+index 2d3eb1cb73b8..e97b73995af7 100644
+--- a/lib/pci_iomap.c
++++ b/lib/pci_iomap.c
+@@ -134,4 +134,10 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
+ 	return pci_iomap_wc_range(dev, bar, 0, maxlen);
+ }
+ EXPORT_SYMBOL_GPL(pci_iomap_wc);
++
++void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr)
++{
++	iounmap(addr);
++}
++EXPORT_SYMBOL(pci_iounmap);
+ #endif /* CONFIG_PCI */
+-- 
+2.25.1
+
