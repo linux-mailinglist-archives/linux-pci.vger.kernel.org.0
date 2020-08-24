@@ -2,180 +2,349 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 744E324F279
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 08:21:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECA5724F291
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 08:34:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725770AbgHXGVI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 02:21:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60512 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgHXGVI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Aug 2020 02:21:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C1123AC3F;
-        Mon, 24 Aug 2020 06:21:36 +0000 (UTC)
-Subject: Re: [patch RFC 26/38] x86/xen: Wrap XEN MSI management into irqdomain
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200821002424.119492231@linutronix.de>
- <20200821002947.868727656@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <8860c7bc-67ab-ce64-0340-1458d2483a39@suse.com>
-Date:   Mon, 24 Aug 2020 08:21:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1725946AbgHXGeg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 02:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgHXGee (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 02:34:34 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9E5C061574
+        for <linux-pci@vger.kernel.org>; Sun, 23 Aug 2020 23:34:34 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id g11so2279191ual.2
+        for <linux-pci@vger.kernel.org>; Sun, 23 Aug 2020 23:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=g0O7JTTEG8zhra8Bmg9qzPY8D1AcZ5n76o6w8ixndyc=;
+        b=Nc6vsHNoA7tyvTeoyEk/516QqWonlIVTa5PIghtJCkIBB60ctW7pnM6s1MxqOYQRzj
+         9flK76JLPqsVr6jgcvEENxKMZhBMdpyVoz46hcu7lELf8vbsU+U0P8W6krU52IU0IE7c
+         y8Aizy9JTOnPM7Qf7hTY1hltjtojdKO7qWriIEWDJS5MI2/L0tkV0tBHLQn6IWc+DJzs
+         xESjMdyDNixzBEK8TXDNbQB0+SsO9CSRn4g2tGoDi4VKi138BqetjefnMfS1HwlFE78X
+         XLE4wmIEHeBSmK99rJxKE4oxirb97De0wSCI9XTBfzsXh1KACd+3xTrGw6evmXQdyN0G
+         czAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=g0O7JTTEG8zhra8Bmg9qzPY8D1AcZ5n76o6w8ixndyc=;
+        b=p3FWsniiTV+YzR/9qEct+SxcEp4mvQ5xO/QPqOzzjPLNV7LdjYbQ3jIhSxU1mmdczD
+         lQsu2XonPaM7iUNvYxBKba9r7fDrxffc2YFJ0h7ZUx9lzsvzNwzwB6JyirYovOTDblqV
+         UUI3C+1zb/1u0C1WJDvycHsEAOuN2v1oL3nqO0yz+8ka7Sq2MBTN1xLNLuLocwtC/Idu
+         kaTkH5fq3TvEwSOQ3udcc8fyI4Sj8gU0dcGmEHZtfxzbu+JaxscLCVvwuola/YKN33DA
+         XP8Cl6INEQvZIL9zWdA8+wIxHt/UQtqmbcfom/O+nVew2CefLR4Ii8p1MxYSN2Nw7AdS
+         WwLA==
+X-Gm-Message-State: AOAM53068aJfVmFm3c9g+wow3ETDKrYtZ00i4tMDcMr+j4WoHRCKbjhQ
+        O1ACBmXWF2Y/+b/1lyEMeFLSD08PNiIqAnTMNYGXag==
+X-Google-Smtp-Source: ABdhPJzUK/zzpLyTaZNUq3D08AEPc3DpsY8FmM6IbHqVYAv0DvFNoLUEzWRZ5xuxYKq6Rno77e4i5E7HnKfw3Agv8hI=
+X-Received: by 2002:ab0:3a85:: with SMTP id r5mr1733713uaw.100.1598250873271;
+ Sun, 23 Aug 2020 23:34:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200821002947.868727656@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200716141534.30241-1-ulf.hansson@linaro.org>
+ <CAPDyKFr5WQ1kpFguDe2e8G7t7p_99CFbqwRQFZPCSuMV2eYsMQ@mail.gmail.com> <f4d74498a8c246a595e56b8daa09ece8@realsil.com.cn>
+In-Reply-To: <f4d74498a8c246a595e56b8daa09ece8@realsil.com.cn>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 24 Aug 2020 08:33:57 +0200
+Message-ID: <CAPDyKFqwcQO2E2b4h7kmgHYRBQJAJ5N1RgW3Kk5hR2ccZ34VAA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: core: Initial support for SD express card/host
+To:     =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21.08.20 02:24, Thomas Gleixner wrote:
-> To allow utilizing the irq domain pointer in struct device it is necessary
-> to make XEN/MSI irq domain compatible.
-> 
-> While the right solution would be to truly convert XEN to irq domains, this
-> is an exercise which is not possible for mere mortals with limited XENology.
-> 
-> Provide a plain irqdomain wrapper around XEN. While this is blatant
-> violation of the irqdomain design, it's the only solution for a XEN igorant
-> person to make progress on the issue which triggered this change.
-> 
-> Signed-off-by: Thomas Gleixner<tglx@linutronix.de>
-> Cc:linux-pci@vger.kernel.org
-> Cc:xen-devel@lists.xenproject.org
+On Mon, 24 Aug 2020 at 03:04, =E5=86=AF=E9=94=90 <rui_feng@realsil.com.cn> =
+wrote:
+>
+> Hi Hansson:
+>
+> If this patch will not be changed, I will post a patch for rtsx driver ac=
+cording your patch.
 
-Acked-by: Juergen Gross <jgross@suse.com>
+I don't think there is any change needed, unless you think so.
 
-Looking into https://www.kernel.org/doc/Documentation/IRQ-domain.txt (is
-this still valid?) I believe Xen should be able to use the "No Map"
-approach, as Xen only ever uses software IRQs (at least those are the
-only ones visible to any driver). The (virtualized) hardware interrupts
-are Xen events after all.
+Kind regards
+Uffe
 
-So maybe morphing Xen into supporting irqdomains in a sane way isn't
-that complicated. Maybe I'm missing the main complexities, though.
-
-
-Juergen
-
-> ---
-> Note: This is completely untested, but it compiles so it must be perfect.
-> ---
->   arch/x86/pci/xen.c |   63 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 63 insertions(+)
-> 
-> --- a/arch/x86/pci/xen.c
-> +++ b/arch/x86/pci/xen.c
-> @@ -406,6 +406,63 @@ static void xen_teardown_msi_irq(unsigne
->   	WARN_ON_ONCE(1);
->   }
->   
-> +static int xen_msi_domain_alloc_irqs(struct irq_domain *domain,
-> +				     struct device *dev,  int nvec)
-> +{
-> +	int type;
-> +
-> +	if (WARN_ON_ONCE(!dev_is_pci(dev)))
-> +		return -EINVAL;
-> +
-> +	if (first_msi_entry(dev)->msi_attrib.is_msix)
-> +		type = PCI_CAP_ID_MSIX;
-> +	else
-> +		type = PCI_CAP_ID_MSI;
-> +
-> +	return x86_msi.setup_msi_irqs(to_pci_dev(dev), nvec, type);
-> +}
-> +
-> +static void xen_msi_domain_free_irqs(struct irq_domain *domain,
-> +				     struct device *dev)
-> +{
-> +	if (WARN_ON_ONCE(!dev_is_pci(dev)))
-> +		return;
-> +
-> +	x86_msi.teardown_msi_irqs(to_pci_dev(dev));
-> +}
-> +
-> +static struct msi_domain_ops xen_pci_msi_domain_ops = {
-> +	.domain_alloc_irqs	= xen_msi_domain_alloc_irqs,
-> +	.domain_free_irqs	= xen_msi_domain_free_irqs,
-> +};
-> +
-> +static struct msi_domain_info xen_pci_msi_domain_info = {
-> +	.ops			= &xen_pci_msi_domain_ops,
-> +};
-> +
-> +/*
-> + * This irq domain is a blatant violation of the irq domain design, but
-> + * distangling XEN into real irq domains is not a job for mere mortals with
-> + * limited XENology. But it's the least dangerous way for a mere mortal to
-> + * get rid of the arch_*_msi_irqs() hackery in order to store the irq
-> + * domain pointer in struct device. This irq domain wrappery allows to do
-> + * that without breaking XEN terminally.
-> + */
-> +static __init struct irq_domain *xen_create_pci_msi_domain(void)
-> +{
-> +	struct irq_domain *d = NULL;
-> +	struct fwnode_handle *fn;
-> +
-> +	fn = irq_domain_alloc_named_fwnode("XEN-MSI");
-> +	if (fn)
-> +		d = msi_create_irq_domain(fn, &xen_pci_msi_domain_info, NULL);
-> +
-> +	/* FIXME: No idea how to survive if this fails */
-> +	BUG_ON(!d);
-> +
-> +	return d;
-> +}
-> +
->   static __init void xen_setup_pci_msi(void)
->   {
->   	if (xen_initial_domain()) {
-> @@ -426,6 +483,12 @@ static __init void xen_setup_pci_msi(voi
->   	}
->   
->   	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
-> +
-> +	/*
-> +	 * Override the PCI/MSI irq domain init function. No point
-> +	 * in allocating the native domain and never use it.
-> +	 */
-> +	x86_init.irqs.create_pci_msi_domain = xen_create_pci_msi_domain;
->   }
->   
->   #else /* CONFIG_PCI_MSI */
-> 
-
+>
+> >
+> > Rui,
+> >
+> > On Thu, 16 Jul 2020 at 16:16, Ulf Hansson <ulf.hansson@linaro.org> wrot=
+e:
+> > >
+> > > In the SD specification v7.10 the SD express card has been added. Thi=
+s
+> > > new type of removable SD card, can be managed via a PCIe/NVMe based
+> > > interface, while also allowing backwards compatibility towards the
+> > > legacy SD interface.
+> > >
+> > > To keep the backwards compatibility, it's required to start the
+> > > initialization through the legacy SD interface. If it turns out that
+> > > the mmc host and the SD card, both supports the PCIe/NVMe interface,
+> > > then a switch should be allowed.
+> > >
+> > > Therefore, let's introduce some basic support for this type of SD
+> > > cards to the mmc core. The mmc host, should set MMC_CAP2_SD_EXP if it
+> > > supports this interface and MMC_CAP2_SD_EXP_1_2V, if also 1.2V is
+> > > supported, as to inform the core about it.
+> > >
+> > > To deal with the switch to the PCIe/NVMe interface, the mmc host is
+> > > required to implement a new host ops, ->init_sd_express(). Based on
+> > > the initial communication between the host and the card,
+> > > host->ios.timing is set to either MMC_TIMING_SD_EXP or
+> > > MMC_TIMING_SD_EXP_1_2V, depending on if 1.2V is supported or not. In
+> > > this way, the mmc host can check these values in its ->init_sd_expres=
+s() ops,
+> > to know how to proceed with the handover.
+> > >
+> > > Note that, to manage card insert/removal, the mmc core sticks with
+> > > using the ->get_cd() callback, which means it's the host's
+> > > responsibility to make sure it provides valid data, even if the card
+> > > may be managed by PCIe/NVMe at the moment. As long as the card seems
+> > > to be present, the mmc core keeps the card powered on.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > Cc: Christoph Hellwig <hch@lst.de>
+> > > Cc: Rui Feng <rui_feng@realsil.com.cn>
+> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> >
+> > Rui, did you manage to get some time to look at $subject patch?
+> >
+> > If you need some help to understand what's needed to implement the
+> > corresponding support in drivers/mmc/host/rtsx_pci_sdmmc.c, then please
+> > just ask.
+> >
+> > I think it would make sense to queue changes for rtsx_pci at the same p=
+oint as
+> > the mmc core changes. That's because I don't want to maintain code in t=
+he
+> > mmc core that's left unused.
+> >
+> > Kind regards
+> > Uffe
+> >
+> > > ---
+> > >  drivers/mmc/core/core.c   | 15 ++++++++++--
+> > >  drivers/mmc/core/host.h   |  6 +++++
+> > >  drivers/mmc/core/sd_ops.c | 49
+> > > +++++++++++++++++++++++++++++++++++++--
+> > >  drivers/mmc/core/sd_ops.h |  1 +
+> > >  include/linux/mmc/host.h  |  7 ++++++
+> > >  5 files changed, 74 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c index
+> > > 8ccae6452b9c..6673c0f33cc7 100644
+> > > --- a/drivers/mmc/core/core.c
+> > > +++ b/drivers/mmc/core/core.c
+> > > @@ -2137,8 +2137,12 @@ static int mmc_rescan_try_freq(struct
+> > mmc_host
+> > > *host, unsigned freq)
+> > >
+> > >         mmc_go_idle(host);
+> > >
+> > > -       if (!(host->caps2 & MMC_CAP2_NO_SD))
+> > > -               mmc_send_if_cond(host, host->ocr_avail);
+> > > +       if (!(host->caps2 & MMC_CAP2_NO_SD)) {
+> > > +               if (mmc_send_if_cond_pcie(host, host->ocr_avail))
+> > > +                       goto out;
+> > > +               if (mmc_card_sd_express(host))
+> > > +                       return 0;
+> > > +       }
+> > >
+> > >         /* Order's important: probe SDIO, then SD, then MMC */
+> > >         if (!(host->caps2 & MMC_CAP2_NO_SDIO)) @@ -2153,6 +2157,7
+> > @@
+> > > static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
+> > >                 if (!mmc_attach_mmc(host))
+> > >                         return 0;
+> > >
+> > > +out:
+> > >         mmc_power_off(host);
+> > >         return -EIO;
+> > >  }
+> > > @@ -2280,6 +2285,12 @@ void mmc_rescan(struct work_struct *work)
+> > >                 goto out;
+> > >         }
+> > >
+> > > +       /* If an SD express card is present, then leave it as is. */
+> > > +       if (mmc_card_sd_express(host)) {
+> > > +               mmc_release_host(host);
+> > > +               goto out;
+> > > +       }
+> > > +
+> > >         for (i =3D 0; i < ARRAY_SIZE(freqs); i++) {
+> > >                 unsigned int freq =3D freqs[i];
+> > >                 if (freq > host->f_max) { diff --git
+> > > a/drivers/mmc/core/host.h b/drivers/mmc/core/host.h index
+> > > 5e3b9534ffb2..ba407617ed23 100644
+> > > --- a/drivers/mmc/core/host.h
+> > > +++ b/drivers/mmc/core/host.h
+> > > @@ -77,5 +77,11 @@ static inline bool mmc_card_hs400es(struct
+> > mmc_card *card)
+> > >         return card->host->ios.enhanced_strobe;  }
+> > >
+> > > +static inline bool mmc_card_sd_express(struct mmc_host *host) {
+> > > +       return host->ios.timing =3D=3D MMC_TIMING_SD_EXP ||
+> > > +               host->ios.timing =3D=3D MMC_TIMING_SD_EXP_1_2V; }
+> > > +
+> > >  #endif
+> > >
+> > > diff --git a/drivers/mmc/core/sd_ops.c b/drivers/mmc/core/sd_ops.c
+> > > index 22bf528294b9..d61ff811218c 100644
+> > > --- a/drivers/mmc/core/sd_ops.c
+> > > +++ b/drivers/mmc/core/sd_ops.c
+> > > @@ -158,7 +158,8 @@ int mmc_send_app_op_cond(struct mmc_host *host,
+> > u32 ocr, u32 *rocr)
+> > >         return err;
+> > >  }
+> > >
+> > > -int mmc_send_if_cond(struct mmc_host *host, u32 ocr)
+> > > +static int __mmc_send_if_cond(struct mmc_host *host, u32 ocr, u8
+> > pcie_bits,
+> > > +                             u32 *resp)
+> > >  {
+> > >         struct mmc_command cmd =3D {};
+> > >         int err;
+> > > @@ -171,7 +172,7 @@ int mmc_send_if_cond(struct mmc_host *host, u32
+> > ocr)
+> > >          * SD 1.0 cards.
+> > >          */
+> > >         cmd.opcode =3D SD_SEND_IF_COND;
+> > > -       cmd.arg =3D ((ocr & 0xFF8000) !=3D 0) << 8 | test_pattern;
+> > > +       cmd.arg =3D ((ocr & 0xFF8000) !=3D 0) << 8 | pcie_bits << 8 |
+> > > + test_pattern;
+> > >         cmd.flags =3D MMC_RSP_SPI_R7 | MMC_RSP_R7 |
+> > MMC_CMD_BCR;
+> > >
+> > >         err =3D mmc_wait_for_cmd(host, &cmd, 0); @@ -186,6 +187,50
+> > @@
+> > > int mmc_send_if_cond(struct mmc_host *host, u32 ocr)
+> > >         if (result_pattern !=3D test_pattern)
+> > >                 return -EIO;
+> > >
+> > > +       if (resp)
+> > > +               *resp =3D cmd.resp[0];
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +int mmc_send_if_cond(struct mmc_host *host, u32 ocr) {
+> > > +       return __mmc_send_if_cond(host, ocr, 0, NULL); }
+> > > +
+> > > +int mmc_send_if_cond_pcie(struct mmc_host *host, u32 ocr) {
+> > > +       u32 resp =3D 0;
+> > > +       u8 pcie_bits =3D 0;
+> > > +       int ret;
+> > > +
+> > > +       if (host->caps2 & MMC_CAP2_SD_EXP) {
+> > > +               /* Probe card for SD express support via PCIe. */
+> > > +               pcie_bits =3D 0x10;
+> > > +               if (host->caps2 & MMC_CAP2_SD_EXP_1_2V)
+> > > +                       /* Probe also for 1.2V support. */
+> > > +                       pcie_bits =3D 0x30;
+> > > +       }
+> > > +
+> > > +       ret =3D __mmc_send_if_cond(host, ocr, pcie_bits, &resp);
+> > > +       if (ret)
+> > > +               return 0;
+> > > +
+> > > +       /* Continue with the SD express init, if the card supports it=
+. */
+> > > +       resp &=3D 0x3000;
+> > > +       if (pcie_bits && resp) {
+> > > +               if (resp =3D=3D 0x3000)
+> > > +                       host->ios.timing =3D
+> > MMC_TIMING_SD_EXP_1_2V;
+> > > +               else
+> > > +                       host->ios.timing =3D MMC_TIMING_SD_EXP;
+> > > +
+> > > +               /*
+> > > +                * According to the spec the clock shall also be gate=
+d, but
+> > > +                * let's leave this to the host driver for more flexi=
+bility.
+> > > +                */
+> > > +               return host->ops->init_sd_express(host, &host->ios);
+> > > +       }
+> > > +
+> > >         return 0;
+> > >  }
+> > >
+> > > diff --git a/drivers/mmc/core/sd_ops.h b/drivers/mmc/core/sd_ops.h
+> > > index 2194cabfcfc5..3ba7b3cf4652 100644
+> > > --- a/drivers/mmc/core/sd_ops.h
+> > > +++ b/drivers/mmc/core/sd_ops.h
+> > > @@ -16,6 +16,7 @@ struct mmc_host;
+> > >  int mmc_app_set_bus_width(struct mmc_card *card, int width);  int
+> > > mmc_send_app_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr);  int
+> > > mmc_send_if_cond(struct mmc_host *host, u32 ocr);
+> > > +int mmc_send_if_cond_pcie(struct mmc_host *host, u32 ocr);
+> > >  int mmc_send_relative_addr(struct mmc_host *host, unsigned int *rca)=
+;
+> > > int mmc_app_send_scr(struct mmc_card *card);  int mmc_sd_switch(struc=
+t
+> > > mmc_card *card, int mode, int group, diff --git
+> > > a/include/linux/mmc/host.h b/include/linux/mmc/host.h index
+> > > c5b6e97cb21a..905cddc5e6f3 100644
+> > > --- a/include/linux/mmc/host.h
+> > > +++ b/include/linux/mmc/host.h
+> > > @@ -60,6 +60,8 @@ struct mmc_ios {
+> > >  #define MMC_TIMING_MMC_DDR52   8
+> > >  #define MMC_TIMING_MMC_HS200   9
+> > >  #define MMC_TIMING_MMC_HS400   10
+> > > +#define MMC_TIMING_SD_EXP      11
+> > > +#define MMC_TIMING_SD_EXP_1_2V 12
+> > >
+> > >         unsigned char   signal_voltage;         /* signalling voltage
+> > (1.8V or 3.3V) */
+> > >
+> > > @@ -172,6 +174,9 @@ struct mmc_host_ops {
+> > >          */
+> > >         int     (*multi_io_quirk)(struct mmc_card *card,
+> > >                                   unsigned int direction, int
+> > > blk_size);
+> > > +
+> > > +       /* Initialize an SD express card, mandatory for MMC_CAP2_SD_E=
+XP.
+> > */
+> > > +       int     (*init_sd_express)(struct mmc_host *host, struct
+> > mmc_ios *ios);
+> > >  };
+> > >
+> > >  struct mmc_cqe_ops {
+> > > @@ -357,6 +362,8 @@ struct mmc_host {
+> > >  #define MMC_CAP2_HS200_1_2V_SDR        (1 << 6)        /* can
+> > support */
+> > >  #define MMC_CAP2_HS200         (MMC_CAP2_HS200_1_8V_SDR | \
+> > >                                  MMC_CAP2_HS200_1_2V_SDR)
+> > > +#define MMC_CAP2_SD_EXP                (1 << 7)        /* SD
+> > express via PCIe */
+> > > +#define MMC_CAP2_SD_EXP_1_2V   (1 << 8)        /* SD express 1.2V
+> > */
+> > >  #define MMC_CAP2_CD_ACTIVE_HIGH        (1 << 10)       /*
+> > Card-detect signal active high */
+> > >  #define MMC_CAP2_RO_ACTIVE_HIGH        (1 << 11)       /*
+> > Write-protect signal active high */
+> > >  #define MMC_CAP2_NO_PRESCAN_POWERUP (1 << 14)  /* Don't power
+> > up
+> > > before scan */
+> > > --
+> > > 2.20.1
+> > >
+> >
+> > ------Please consider the environment before printing this e-mail.
