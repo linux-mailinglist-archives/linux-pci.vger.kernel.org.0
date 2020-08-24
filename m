@@ -2,237 +2,299 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D707C2506C1
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 19:43:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0AB4250952
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Aug 2020 21:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgHXRnZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Aug 2020 13:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgHXRnY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 13:43:24 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989FEC061573
-        for <linux-pci@vger.kernel.org>; Mon, 24 Aug 2020 10:43:24 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t11so4584505plr.5
-        for <linux-pci@vger.kernel.org>; Mon, 24 Aug 2020 10:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XQnYboBSOiUFVbrpn6Up5SRW0z7sTQ+dpcpNXbiY/Jc=;
-        b=WkEHSvIR2JlIcxvS6dwEy2wvHFGodjLNJEOSpCafmITNu/Tgp39VDFjRGFWb3HWyYo
-         MA4ZrnSsK7cvKKSdU95mwuXyKBxpohYH6iGF9wZE5q0wOmv1uBBLJiihgCmcz9fLlg+w
-         v2gcx/RVCX7TFaIqOGVPTglYHdNZj/0a/7h5aZZly6Vu1UF4nMTnW4WwgpXRxnUe0V1q
-         hRCmw1uBl9RQOAI7WzXgwLQUq0JW/dWkEsJbA4lR+bxbJ/vVfEuUAu8fl27UZ2t3bMHS
-         bq8l8h4cyKoLOcOHp/A2D1Jq8vZiuS5qZQodv8hrRwd28ny/2wdwgJHv6cCnGsuczdrA
-         cSTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XQnYboBSOiUFVbrpn6Up5SRW0z7sTQ+dpcpNXbiY/Jc=;
-        b=OVQCitwrqciHU6Dqli9LdSgioxkPFFZv06u13nL3yDMJ4KWYzf5XDdET8i2PcFs0Qs
-         UB1s0+WxjOHqSYggjMPFQN3/PCJG0RKpATdjtCcSzntg1r7Bd2UBWKpmgh/QpVG+Bkdf
-         G4W/aUSoJYEvE5E+m6EqtwoGEj9SHbtj+2YL61vV5z6aOLKNkIixxPU+wXfzd9lHG6QG
-         g+hoUUiQLZJuI73Bzc0aZSD5h3S4BcH3iDV/xdSvrwSg/tXPsa7UQahItrrtTLWIo6OC
-         CyOzoKwDb/dJaAoq1PfxKBzG6WxIScKK4R9Q34gU0Zf1AkSAXDuqpaTVtLCRseJv/Cd/
-         kTtg==
-X-Gm-Message-State: AOAM531m7VFH7gf45PG6am9P7IsU0Wc7jSCHa8xMPRbISZldco3Z++OS
-        gzm0wshAVM7g3nj8okM5+jw=
-X-Google-Smtp-Source: ABdhPJyQvYlpSCj+MsaZ74YiA5/vht/qHq2t/g0D9CbA5sS83ApEY+rOQsNlbDk61FI8Qf+qegYJHg==
-X-Received: by 2002:a17:90b:3284:: with SMTP id ks4mr317818pjb.116.1598291004000;
-        Mon, 24 Aug 2020 10:43:24 -0700 (PDT)
-Received: from localhost.localdomain ([124.253.194.149])
-        by smtp.googlemail.com with ESMTPSA id w187sm11939436pfd.87.2020.08.24.10.43.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 10:43:23 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     bjorn@helgaas.com
-Cc:     Puranjay Mohan <puranjay12@gmail.com>, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v1] PCI: Add support for LTR
-Date:   Mon, 24 Aug 2020 23:12:50 +0530
-Message-Id: <20200824174250.5507-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727068AbgHXTa7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Aug 2020 15:30:59 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43084 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726894AbgHXTa6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Aug 2020 15:30:58 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 4B74930C577;
+        Mon, 24 Aug 2020 12:27:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 4B74930C577
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1598297271;
+        bh=JcYX1XXLwOLkiVicEwoW93a8ixGcataZ81gQc4k5YW0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QQSEnqtaAwW+cz46ceVrXdNFPi4GdGFEgKVXXdi09zDtM1+ILbqMduuxSNDkyyHzQ
+         MMUy5WHSnPQPj1xL4pG53i7ckx4FfS87nU0/jmBSwIMoz0kaId9m2Rdb12UWJSSW6j
+         QrWb0WpOOhZq6H9rAVKNC6iPGgcxsxoiZ+geDJFI=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 6754614008D;
+        Mon, 24 Aug 2020 12:30:38 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
+        A10), Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS),
+        Joerg Roedel <jroedel@suse.de>,
+        Julien Grall <julien.grall@arm.com>,
+        linux-acpi@vger.kernel.org (open list:ACPI FOR ARM64 (ACPI/arm64)),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-kernel@vger.kernel.org (open list),
+        linux-media@vger.kernel.org (open list:ALLWINNER A10 CSI DRIVER),
+        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
+        (REMOTEPROC) SUBSYSTEM),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-sh@vger.kernel.org (open list:SUPERH),
+        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
+Date:   Mon, 24 Aug 2020 15:30:13 -0400
+Message-Id: <20200824193036.6033-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a new function pci_ltr_init() which will be called from
-pci_init_capabilities() to initialize every PCIe device's LTR values.
-Add code in probe.c to evaluate LTR _DSM and save the latencies in pci_dev.
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
-v1 - based the patch on v5.9-rc1 so it applies correctly
----
- drivers/pci/pci-acpi.c   | 28 ++++++++++++++++++++++++++++
- drivers/pci/pci.c        | 27 +++++++++++++++++++++++++++
- drivers/pci/pci.h        |  5 +++++
- drivers/pci/probe.c      |  6 ++++++
- include/linux/pci-acpi.h |  1 +
- include/linux/pci.h      |  2 ++
- 6 files changed, 69 insertions(+)
+Patchset Summary:
+  Enhance a PCIe host controller driver.  Because of its unusual design
+  we are foced to change dev->dma_pfn_offset into a more general role
+  allowing multiple offsets.  See the 'v1' notes below for more info.
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index d5869a03f748..c77e47b53751 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -1213,6 +1213,34 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
- 	ACPI_FREE(obj);
- }
- 
-+/* pci_acpi_evaluate_ltr_latency
-+ *
-+ * @dev - the pci_dev to evaluate and save latencies
-+ */
-+void pci_acpi_evaluate_ltr_latency(struct pci_dev *dev)
-+{
-+	union acpi_object *obj, *elements;
-+	struct acpi_device *handle;
-+
-+	handle = ACPI_HANDLE(&dev->dev);
-+	if (!handle)
-+		return;
-+
-+	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 0x2,
-+				DSM_PCI_LTR_MAX_LATENCY, NULL);
-+	if (!obj)
-+		return;
-+
-+	if (obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 4) {
-+		elements = obj->package.elements;
-+		dev->max_snoop_latency = (u16)elements[1].integer.value |
-+				((u16)elements[0].integer.value << PCI_LTR_SCALE_SHIFT);
-+		dev->max_nosnoop_latency = (u16)elements[3].integer.value |
-+				((u16)elements[2].integer.value << PCI_LTR_SCALE_SHIFT);
-+	}
-+	ACPI_FREE(obj);
-+}
-+
- static void pci_acpi_set_external_facing(struct pci_dev *dev)
- {
- 	u8 val;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a458c46d7e39..b5531272b865 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3056,6 +3056,33 @@ void pci_pm_init(struct pci_dev *dev)
- 		dev->imm_ready = 1;
- }
- 
-+/**
-+ * pci_ltr_init - Initialize Latency Tolerance Information of given PCI device
-+ * @dev: PCI device to handle.
-+ */
-+void pci_ltr_init(struct pci_dev *dev)
-+{
-+#ifdef CONFIG_PCIASPM
-+	int ltr;
-+	struct pci_dev *endpoint_dev = dev;
-+	u16 max_snoop_sum = 0;
-+	u16 max_nosnoop_sum = 0;
-+
-+	ltr = pci_find_ext_capability(endpoint_dev, PCI_EXT_CAP_ID_LTR);
-+	if (!ltr)
-+		return;
-+
-+	dev = pci_upstream_bridge(dev);
-+	while (dev) {
-+		max_snoop_sum += dev->max_snoop_latency;
-+		max_nosnoop_sum += dev->max_nosnoop_latency;
-+		dev = pci_upstream_bridge(dev);
-+	}
-+	pci_write_config_word(endpoint_dev, ltr + PCI_LTR_MAX_SNOOP_LAT, max_snoop_sum);
-+	pci_write_config_word(endpoint_dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, max_nosnoop_sum);
-+#endif
-+}
-+
- static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
- {
- 	unsigned long flags = IORESOURCE_PCI_FIXED | IORESOURCE_PCI_EA_BEI;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index fa12f7cbc1a0..ef3d22b82200 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -110,6 +110,7 @@ void pci_free_cap_save_buffers(struct pci_dev *dev);
- bool pci_bridge_d3_possible(struct pci_dev *dev);
- void pci_bridge_d3_update(struct pci_dev *dev);
- void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev);
-+void pci_ltr_init(struct pci_dev *dev);
- 
- static inline void pci_wakeup_event(struct pci_dev *dev)
- {
-@@ -680,11 +681,15 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
- 
- #ifdef CONFIG_ACPI
- int pci_acpi_program_hp_params(struct pci_dev *dev);
-+void pci_acpi_evaluate_ltr_latency(struct pci_dev *dev);
- #else
- static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
- {
- 	return -ENODEV;
- }
-+static inline void pci_acpi_evaluate_ltr_latency(struct pci_dev *dev)
-+{
-+}
- #endif
- 
- #ifdef CONFIG_PCIEASPM
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 03d37128a24f..0257aa615665 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2140,6 +2140,11 @@ static void pci_configure_ltr(struct pci_dev *dev)
- 		dev->ltr_path = 1;
- 	}
- #endif
-+
-+	/*
-+	 * Read latency values from _DSM and save in pci_dev
-+	 */
-+	pci_acpi_evaluate_ltr_latency(dev);
- }
- 
- static void pci_configure_eetlp_prefix(struct pci_dev *dev)
-@@ -2400,6 +2405,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
-+	pci_ltr_init(dev);		/* Latency Tolerance Reporting */
- 
- 	pcie_report_downtraining(dev);
- 
-diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-index 5ba475ca9078..e23236a4ff66 100644
---- a/include/linux/pci-acpi.h
-+++ b/include/linux/pci-acpi.h
-@@ -110,6 +110,7 @@ extern const guid_t pci_acpi_dsm_guid;
- 
- /* _DSM Definitions for PCI */
- #define DSM_PCI_PRESERVE_BOOT_CONFIG		0x05
-+#define DSM_PCI_LTR_MAX_LATENCY			0x06
- #define DSM_PCI_DEVICE_NAME			0x07
- #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
- #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 835530605c0d..9de6b290ed81 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -380,6 +380,8 @@ struct pci_dev {
- 	struct pcie_link_state	*link_state;	/* ASPM link state */
- 	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
- 					   supported from root to here */
-+	u16 max_snoop_latency;		/* LTR Max Snoop latency */
-+	u16 max_nosnoop_latency;	/* LTR Max No Snoop latency */
- #endif
- 	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
- 
+v11:
+  Commit: "device-mapping: Introduce DMA range map, supplanting ..."
+  -- Rebased to latest torvalds, Aug 20, 2020.
+  -- Minor change in of_dma_get_range() to satisfy the kernel's
+     robot tester.
+  -- Use of PFN_DOWN(), PFN_PHYS() instead of explicit shifts (Andy)
+  -- Eliminate extra return in dma_offset_from_xxx_addr() (Andy)
+  -- Change dma_set_offset_range() to correctly handle the case
+     of pre-existing DMA map and zero offset.
+
+v10: 
+  Commit: "device-mapping: Introduce DMA range map, supplanting ..."
+  -- change title of commit; "bus core:" => "device-mapping:"
+  -- instead of allocating the DMA map with devm, use kcalloc
+     and call kfree() during device_release().  (RobH) Also,
+     for three cases that want to use the same DMA map, copy
+     the dma_range_map using a helper function.
+  -- added a missing 'return = 0;' to of_dma_get_range().  (Nicolas)
+  -- removed dma_range_overlaps(); instead return error if there
+     is an existing DMA map. (Christoph).
+  Commit: "PCI: brcmstb: Set additional internal memory DMA ..."
+  -- Changed constant 1 to 1ULL. (Nicolas)
+  Commit: "ata: ahci_brcm: Fix use of BCM7216 reset controller"
+     This commit has been removed from this patchset and will be
+     submitted on its own.
+
+v9:
+  Commit: "device core: Introduce DMA range map, supplanting ..."
+  -- A number of code improvements were implemented as suggested by
+     ChristophH.  Unfortunately, some of these changes reversed the
+     implemented suggestions of other reviewers; for example, the new
+     macros PFN_DMA_ADDR(), DMA_ADDR_PFN() have been pulled.
+
+v8:
+  Commit: "device core: Introduce DMA range map, supplanting ..."
+  -- To satisfy a specific m68 compile configuration, I moved the 'struct
+     bus_dma_region; definition out of #ifdef CONFIG_HAS_DMA and also defined
+     three inline functions for !CONFIG_HAS_DMA (kernel test robot).
+  -- The sunXi drivers -- suc4i_csi, sun6i_csi, cedrus_hw -- set
+     a pfn_offset outside of_dma_configure() but the code offers no 
+     insight on the size of the translation window.  V7 had me using
+     SIZE_MAX as the size.  I have since contacted the sunXi maintainer and
+     he said that using a size of SZ_4G would cover sunXi configurations.
+
+v7:
+  Commit: "device core: Introduce DMA range map, supplanting ..."
+  -- remove second kcalloc/copy in device.c (AndyS)
+  -- use PTR_ERR_OR_ZERO() and PHYS_PFN() (AndyS)
+  -- indentation, sizeof(struct ...) => sizeof(*r) (AndyS)
+  -- add pfn.h definitions: PFN_DMA_ADDR(), DMA_ADDR_PFN() (AndyS)
+  -- Fixed compile error in "sun6i_csi.c" (kernel test robot)
+  Commit "ata: ahci_brcm: Fix use of BCM7216 reset controller"
+  -- correct name of function in the commit msg (SergeiS)
+  
+v6:
+  Commit "device core: Introduce DMA range map":
+  -- of_dma_get_range() now takes a single argument and returns either
+     NULL, a valid map, or an ERR_PTR. (Robin)
+  -- offsets are no longer a PFN value but an actual address. (Robin)
+  -- the bus_dma_region struct stores the range size instead of
+     the cpu_end and pci_end values. (Robin)
+  -- devices that were setting a single offset with no boundaries
+     have been modified to have boundaries; in a few places
+     where this information was unavilable a /* FIXME: ... */
+     comment was added. (Robin)
+  -- dma_attach_offset_range() can be called when an offset
+     map already exists; if it's range is already present
+     nothing is done and success is returned. (Robin)
+  All commits:
+  -- Man name/style/corrections/etc changed (Bjorn)
+  -- rebase to Torvalds master
+
+v5:
+  Commit "device core: Introduce multiple dma pfn offsets"
+  -- in of/address.c: "map_size = 0" => "*map_size = 0"
+  -- use kcalloc instead of kzalloc (AndyS)
+  -- use PHYS_ADDR_MAX instead of "~(phys_addr_t)0"
+  Commit "PCI: brcmstb: Set internal memory viewport sizes"
+  -- now gives error on missing dma-ranges property.
+  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
+  -- removed "Allof:" from brcm,scb-sizes definition (RobH)
+  All Commits:
+  -- indentation style, use max chars 100 (AndyS)
+  -- rebased to torvalds master
+
+v4:
+  Commit "device core: Introduce multiple dma pfn offsets"
+  -- of_dma_get_range() does not take a dev param but instead
+     takes two "out" params: map and map_size.  We do this so
+     that the code that parses dma-ranges is separate from
+     the code that modifies 'dev'.   (Nicolas)
+  -- the separate case of having a single pfn offset has
+     been removed and is now processed by going through the
+     map array. (Nicolas)
+  -- move attach_uniform_dma_pfn_offset() from of/address.c to
+     dma/mapping.c so that it does not depend on CONFIG_OF. (Nicolas)
+  -- devm_kcalloc => devm_kzalloc (DanC)
+  -- add/fix assignment to dev->dma_pfn_offset_map for func
+     attach_uniform_dma_pfn_offset() (DanC, Nicolas)
+  -- s/struct dma_pfn_offset_region/struct bus_dma_region/ (Nicolas)
+  -- s/attach_uniform_dma_pfn_offset/dma_attach_uniform_pfn_offset/
+  -- s/attach_dma_pfn_offset_map/dma_attach_pfn_offset_map/
+  -- More use of PFN_{PHYS,DOWN,UP}. (AndyS)
+  Commit "of: Include a dev param in of_dma_get_range()"
+  -- this commit was sqaushed with "device core: Introduce ..."
+
+v3:
+  Commit "device core: Introduce multiple dma pfn offsets"
+  Commit "arm: dma-mapping: Invoke dma offset func if needed"
+  -- The above two commits have been squashed.  More importantly,
+     the code has been modified so that the functionality for
+     multiple pfn offsets subsumes the use of dev->dma_pfn_offset.
+     In fact, dma_pfn_offset is removed and supplanted by
+     dma_pfn_offset_map, which is a pointer to an array.  The
+     more common case of a uniform offset is now handled as
+     a map with a single entry, while cases requiring multiple
+     pfn offsets use a map with multiple entries.  Code paths
+     that used to do this:
+
+         dev->dma_pfn_offset = mydrivers_pfn_offset;
+
+     have been changed to do this:
+
+         attach_uniform_dma_pfn_offset(dev, pfn_offset);
+
+  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
+  -- Add if/then clause for required props: resets, reset-names (RobH)
+  -- Change compatible list from const to enum (RobH)
+  -- Change list of u32-tuples to u64 (RobH)
+
+  Commit "of: Include a dev param in of_dma_get_range()"
+  -- modify of/unittests.c to add NULL param in of_dma_get_range() call.
+
+  Commit "device core: Add ability to handle multiple dma offsets"
+  -- align comment in device.h (AndyS).
+  -- s/cpu_beg/cpu_start/ and s/dma_beg/dma_start/ in struct
+     dma_pfn_offset_region (AndyS).
+
+v2:
+Commit: "device core: Add ability to handle multiple dma offsets"
+  o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
+  o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
+  o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
+  o dev->dma_pfn_map => dev->dma_pfn_offset_map
+  o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
+  o In device.h: s/const void */const struct dma_pfn_offset_region */
+  o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
+    guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
+  o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
+    dev->dma_pfn_offset_map is copied as well.
+  o Merged two of the DMA commits into one (Christoph).
+
+Commit "arm: dma-mapping: Invoke dma offset func if needed":
+  o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
+
+Other commits' changes:
+  o Removed need for carrying of_id var in priv (Nicolas)
+  o Commit message rewordings (Bjorn)
+  o Commit log messages filled to 75 chars (Bjorn)
+  o devm_reset_control_get_shared())
+    => devm_reset_control_get_optional_shared (Philipp)
+  o Add call to reset_control_assert() in PCIe remove routines (Philipp)
+
+v1:
+This patchset expands the usefulness of the Broadcom Settop Box PCIe
+controller by building upon the PCIe driver used currently by the
+Raspbery Pi.  Other forms of this patchset were submitted by me years
+ago and not accepted; the major sticking point was the code required
+for the DMA remapping needed for the PCIe driver to work [1].
+
+There have been many changes to the DMA and OF subsystems since that
+time, making a cleaner and less intrusive patchset possible.  This
+patchset implements a generalization of "dev->dma_pfn_offset", except
+that instead of a single scalar offset it provides for multiple
+offsets via a function which depends upon the "dma-ranges" property of
+the PCIe host controller.  This is required for proper functionality
+of the BrcmSTB PCIe controller and possibly some other devices.
+
+[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
+
+Jim Quinlan (11):
+  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+  dt-bindings: PCI: Add bindings for more Brcmstb chips
+  PCI: brcmstb: Add bcm7278 register info
+  PCI: brcmstb: Add suspend and resume pm_ops
+  PCI: brcmstb: Add bcm7278 PERST# support
+  PCI: brcmstb: Add control of rescal reset
+  device-mapping: Introduce DMA range map, supplanting dma_pfn_offset
+  PCI: brcmstb: Set additional internal memory DMA viewport sizes
+  PCI: brcmstb: Accommodate MSI for older chips
+  PCI: brcmstb: Set bus max burst size by chip type
+  PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |  56 ++-
+ arch/arm/include/asm/dma-mapping.h            |  10 +-
+ arch/arm/mach-keystone/keystone.c             |  17 +-
+ arch/sh/drivers/pci/pcie-sh7786.c             |   9 +-
+ arch/x86/pci/sta2x11-fixup.c                  |   7 +-
+ drivers/acpi/arm64/iort.c                     |   5 +-
+ drivers/base/core.c                           |   2 +
+ drivers/gpu/drm/sun4i/sun4i_backend.c         |   5 +-
+ drivers/iommu/io-pgtable-arm.c                |   2 +-
+ .../platform/sunxi/sun4i-csi/sun4i_csi.c      |   5 +-
+ .../platform/sunxi/sun6i-csi/sun6i_csi.c      |   4 +-
+ drivers/of/address.c                          |  72 ++-
+ drivers/of/device.c                           |  43 +-
+ drivers/of/of_private.h                       |  10 +-
+ drivers/of/unittest.c                         |  34 +-
+ drivers/pci/controller/Kconfig                |   3 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 409 +++++++++++++++---
+ drivers/remoteproc/remoteproc_core.c          |   8 +-
+ .../staging/media/sunxi/cedrus/cedrus_hw.c    |   7 +-
+ drivers/usb/core/message.c                    |   9 +-
+ drivers/usb/core/usb.c                        |   7 +-
+ include/linux/device.h                        |   4 +-
+ include/linux/dma-direct.h                    |   8 +-
+ include/linux/dma-mapping.h                   |  36 ++
+ kernel/dma/coherent.c                         |  10 +-
+ kernel/dma/mapping.c                          |  66 +++
+ 26 files changed, 668 insertions(+), 180 deletions(-)
+
 -- 
-2.27.0
+2.17.1
 
