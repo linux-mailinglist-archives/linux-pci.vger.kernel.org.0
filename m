@@ -2,179 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B20BA2521EF
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 22:24:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18AFA25220E
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 22:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgHYUYW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Aug 2020 16:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHYUYV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:24:21 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726294AbgHYUnj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Aug 2020 16:43:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37525 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726149AbgHYUnj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Aug 2020 16:43:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598388216;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cxP4EgaB0Xz0w6dYf0l2wcvtIDiO0CRcIDu5KxI9VFs=;
+        b=Q8kQdKE/pN5eSEkRQwvojgjuTp4rmZIYlMapzXpHfQts8kJh5lMoDIXAsv9jJmD8lbAm5o
+        FnnAyNMDqwp4FIVBkZzCNZmEo7HgHnYulAr2P5WRG8af86/r7xu/Tj1WuDmbyVhECvsKAe
+        wkHfE/JuZlnzmiguj4Oa7RNJGpdGjYg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-7wO29EiuOyeMIOLpHIkNRQ-1; Tue, 25 Aug 2020 16:43:34 -0400
+X-MC-Unique: 7wO29EiuOyeMIOLpHIkNRQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A772074D;
-        Tue, 25 Aug 2020 20:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598387060;
-        bh=ySOkd6aDLwyhEWNu5XId2t2Myh+7GbuDeWGuL4FyNs4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E5SctpDfmJVH3GOS41BdxD1KAKCCgLGp5cRY/d4s5Iaw4NV/9UXP/0IZXYISEg/D5
-         7jTqAEVySonTUr8pSMzETXyOu0kEsTuPgpG2nWnP9vXaG+N4MEWZk+TCj7M2xX2ukA
-         qdRiLK425Y+fBMqVUhac3FmUSyR6dzlO73HmofKg=
-Date:   Tue, 25 Aug 2020 15:24:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 34/38] x86/msi: Let pci_msi_prepare() handle non-PCI
- MSI
-Message-ID: <20200825202419.GA1925250@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 175A71DDE0;
+        Tue, 25 Aug 2020 20:43:32 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3723119C58;
+        Tue, 25 Aug 2020 20:43:31 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 14:43:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     bhelgaas@google.com, schnelle@linux.ibm.com, pmorel@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
+Message-ID: <20200825144330.70530629@x1.home>
+In-Reply-To: <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
+References: <1597333243-29483-1-git-send-email-mjrosato@linux.ibm.com>
+        <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
+        <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821002948.664301259@linutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:24:58AM +0200, Thomas Gleixner wrote:
-> Rename it to x86_msi_prepare() and handle the allocation type setup
-> depending on the device type.
+On Mon, 24 Aug 2020 10:21:24 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-I see what you're doing, but the subject reads a little strangely
-("pci_msi_prepare() handling non-PCI" stuff) since it doesn't mention
-the rename.  Maybe not practical or worthwhile to split into a rename
-+ make generic, I dunno.
+> On 8/13/20 11:40 AM, Matthew Rosato wrote:
+> > s390x has the notion of providing VFs to the kernel in a manner
+> > where the associated PF is inaccessible other than via firmware.
+> > These are not treated as typical VFs and access to them is emulated
+> > by underlying firmware which can still access the PF.  After
+> > the referened commit however these detached VFs were no longer able
+> > to work with vfio-pci as the firmware does not provide emulation of
+> > the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
+> > these detached VFs so that vfio-pci can allow memory access to
+> > them again. >
+> > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+> > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>  
+> 
+> Polite ping - If unhappy with the approach moving in this direction, I 
+> have also played around with Alex's prior suggestion of a dev_flags bit 
+> that denotes a device that doesn't implement PCI_COMMAND_MEMORY.  Please 
+> advise.
 
-> Add a new arch_msi_prepare define which will be utilized by the upcoming
-> device MSI support. Define it to NULL if not provided by an architecture in
-> the generic MSI header.
+
+I'm not unhappy with it, but there are quite a number of users of
+is_virtfn and I wonder to what extent we can replace all of them.  For
+instance if the longer term plan would be to consider is_virtfn private
+then I think there are places in vfio-pci where we'd need to test
+(pci_physfn(pdev) != pdev) in order to make sure we're working on the
+topology we expect (see VF token handling).  If we want to consider
+these detached VFs as actual VFs (minus the PF) everywhere in the code,
+rather than a PF that doesn't implement random features as determined
+by the bare metal hypervisor, then this might be the way to go.  The
+former implies that we'd migrate away from is_virtfn to this new
+interface, potentially changing the code path these devices would take
+as that adoption proceeds.  Have you taken a look at other is_virtfn
+use cases to see if any would be strictly undesirable for this class of
+devices?  Otherwise I think Bjorn needs to weigh in since the PCI-core
+change is a central aspect to this proposal.  Thanks,
+
+Alex
+
+
+> > ---
+> >   arch/s390/pci/pci_bus.c            | 13 +++++++++++++
+> >   drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
+> >   include/linux/pci.h                |  4 ++++
+> >   3 files changed, 21 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+> > index 642a993..1b33076 100644
+> > --- a/arch/s390/pci/pci_bus.c
+> > +++ b/arch/s390/pci/pci_bus.c
+> > @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
+> >   }
+> >   #endif
+> >   
+> > +void pcibios_bus_add_device(struct pci_dev *pdev)
+> > +{
+> > +	struct zpci_dev *zdev = to_zpci(pdev);
+> > +
+> > +	/*
+> > +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
+> > +	 * detached from its parent PF.  We rely on firmware emulation to
+> > +	 * provide underlying PF details.
+> > +	 */
+> > +	if (zdev->vfn && !zdev->zbus->multifunction)
+> > +		pdev->detached_vf = 1;
+> > +}
+> > +
+> >   static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
+> >   {
+> >   	struct pci_bus *bus;
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index d98843f..98f93d1 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+> >   	 * PF SR-IOV capability, there's therefore no need to trigger
+> >   	 * faults based on the virtual value.
+> >   	 */
+> > -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
+> > +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);
+> >   }
+> >   
+> >   /*
+> > @@ -420,7 +420,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
+> >   	u16 cmd;
+> >   	int i;
+> >   
+> > -	if (pdev->is_virtfn)
+> > +	if (dev_is_vf(&pdev->dev))
+> >   		return;
+> >   
+> >   	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
+> > @@ -521,7 +521,7 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
+> >   	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
+> >   
+> >   	/* Mask in virtual memory enable for SR-IOV devices */
+> > -	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
+> > +	if ((offset == PCI_COMMAND) && (dev_is_vf(&vdev->pdev->dev))) {
+> >   		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+> >   		u32 tmp_val = le32_to_cpu(*val);
+> >   
+> > @@ -1713,7 +1713,7 @@ int vfio_config_init(struct vfio_pci_device *vdev)
+> >   	vdev->rbar[5] = le32_to_cpu(*(__le32 *)&vconfig[PCI_BASE_ADDRESS_5]);
+> >   	vdev->rbar[6] = le32_to_cpu(*(__le32 *)&vconfig[PCI_ROM_ADDRESS]);
+> >   
+> > -	if (pdev->is_virtfn) {
+> > +	if (dev_is_vf(&pdev->dev)) {
+> >   		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
+> >   		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
+> >   
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 8355306..7c062de 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -445,6 +445,7 @@ struct pci_dev {
+> >   	unsigned int	is_probed:1;		/* Device probing in progress */
+> >   	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
+> >   	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
+> > +	unsigned int	detached_vf:1;		/* VF without local PF access */
+> >   	pci_dev_flags_t dev_flags;
+> >   	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+> >   
+> > @@ -1057,6 +1058,8 @@ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
+> >   void pci_sort_breadthfirst(void);
+> >   #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
+> >   #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
+> > +#define dev_is_vf(d) ((dev_is_pci(d) ? (to_pci_dev(d)->is_virtfn || \
+> > +					to_pci_dev(d)->detached_vf) : false))
+> >   
+> >   /* Generic PCI functions exported to card drivers */
+> >   
+> > @@ -1764,6 +1767,7 @@ static inline struct pci_dev *pci_get_domain_bus_and_slot(int domain,
+> >   
+> >   #define dev_is_pci(d) (false)
+> >   #define dev_is_pf(d) (false)
+> > +#define dev_is_vf(d) (false)
+> >   static inline bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
+> >   { return false; }
+> >   static inline int pci_irqd_intx_xlate(struct irq_domain *d,
+> >   
 > 
-> One arch specific function for MSI support is truly enough.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-hyperv@vger.kernel.org
-> ---
->  arch/x86/include/asm/msi.h          |    4 +++-
->  arch/x86/kernel/apic/msi.c          |   27 ++++++++++++++++++++-------
->  drivers/pci/controller/pci-hyperv.c |    2 +-
->  include/linux/msi.h                 |    4 ++++
->  4 files changed, 28 insertions(+), 9 deletions(-)
-> 
-> --- a/arch/x86/include/asm/msi.h
-> +++ b/arch/x86/include/asm/msi.h
-> @@ -6,7 +6,9 @@
->  
->  typedef struct irq_alloc_info msi_alloc_info_t;
->  
-> -int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-> +int x86_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
->  		    msi_alloc_info_t *arg);
->  
-> +#define arch_msi_prepare		x86_msi_prepare
-> +
->  #endif /* _ASM_X86_MSI_H */
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -182,26 +182,39 @@ static struct irq_chip pci_msi_controlle
->  	.flags			= IRQCHIP_SKIP_SET_WAKE,
->  };
->  
-> -int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-> -		    msi_alloc_info_t *arg)
-> +static void pci_msi_prepare(struct device *dev, msi_alloc_info_t *arg)
->  {
-> -	struct pci_dev *pdev = to_pci_dev(dev);
-> -	struct msi_desc *desc = first_pci_msi_entry(pdev);
-> +	struct msi_desc *desc = first_msi_entry(dev);
->  
-> -	init_irq_alloc_info(arg, NULL);
->  	if (desc->msi_attrib.is_msix) {
->  		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
->  	} else {
->  		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
->  		arg->flags |= X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
->  	}
-> +}
-> +
-> +static void dev_msi_prepare(struct device *dev, msi_alloc_info_t *arg)
-> +{
-> +	arg->type = X86_IRQ_ALLOC_TYPE_DEV_MSI;
-> +}
-> +
-> +int x86_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-> +		    msi_alloc_info_t *arg)
-> +{
-> +	init_irq_alloc_info(arg, NULL);
-> +
-> +	if (dev_is_pci(dev))
-> +		pci_msi_prepare(dev, arg);
-> +	else
-> +		dev_msi_prepare(dev, arg);
->  
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(pci_msi_prepare);
-> +EXPORT_SYMBOL_GPL(x86_msi_prepare);
->  
->  static struct msi_domain_ops pci_msi_domain_ops = {
-> -	.msi_prepare	= pci_msi_prepare,
-> +	.msi_prepare	= x86_msi_prepare,
->  };
->  
->  static struct msi_domain_info pci_msi_domain_info = {
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1532,7 +1532,7 @@ static struct irq_chip hv_msi_irq_chip =
->  };
->  
->  static struct msi_domain_ops hv_msi_ops = {
-> -	.msi_prepare	= pci_msi_prepare,
-> +	.msi_prepare	= arch_msi_prepare,
->  	.msi_free	= hv_msi_free,
->  };
->  
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -430,4 +430,8 @@ static inline struct irq_domain *pci_msi
->  }
->  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
->  
-> +#ifndef arch_msi_prepare
-> +# define arch_msi_prepare	NULL
-> +#endif
-> +
->  #endif /* LINUX_MSI_H */
-> 
+
