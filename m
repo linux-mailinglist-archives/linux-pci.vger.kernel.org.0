@@ -2,101 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8820252341
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 00:03:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CD1725234F
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 00:05:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgHYWDc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Aug 2020 18:03:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHYWDb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Aug 2020 18:03:31 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B6DDC061755;
-        Tue, 25 Aug 2020 15:03:31 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598393009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0OqxJ3l66kPTHUwReqWXl4aiQwAYOml1CtAOOFtsv/I=;
-        b=rJTu5uXpTB1P7KT9UkG/8QM9fLrXGorXoC87ldkXgjkRXx5UAas5uFTUMerUTXL9JlFfzV
-        rN3mZfoDNBV8AFB4vRFBpqUVtR9nGugXHxgcJlZA9lyZ5d2iRKFgP2+zfzE6U60bVSUFwq
-        JoLhqfRIwLjtW2QJXOy7XsedElokgWXmgQLvMAipf+uoAXx8CCMOl+k9j0g1QoHUmXG34r
-        mtlyReJy8es+Aozjv5DjFb2Cq+iiM4U59lGIjrG1/fFCYms18my92/EJtXX6kAE+PpZd7v
-        7ConNiKl15unKahtr/RvxdhuwT8O3LvR9FUpV5Q5QAqhgXFDbooECvOu9qLmBg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598393009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0OqxJ3l66kPTHUwReqWXl4aiQwAYOml1CtAOOFtsv/I=;
-        b=ZiNuzZqVhtmi5VokOZzEDE7yq2WAukGXdvrPoJKZHc1CKcyDYknuCTC8rLaX/mB0MFG9sG
-        hpgpBFzac0BPrGDw==
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 30/38] PCI/MSI: Allow to disable arch fallbacks
-In-Reply-To: <871rjuxv45.fsf@nanos.tec.linutronix.de>
-References: <20200825213501.GA1931388@bjorn-Precision-5520> <871rjuxv45.fsf@nanos.tec.linutronix.de>
-Date:   Wed, 26 Aug 2020 00:03:29 +0200
-Message-ID: <87y2m2wfgu.fsf@nanos.tec.linutronix.de>
+        id S1726673AbgHYWF3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Aug 2020 18:05:29 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39969 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHYWF3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Aug 2020 18:05:29 -0400
+Received: by mail-il1-f195.google.com with SMTP id p18so90502ilm.7;
+        Tue, 25 Aug 2020 15:05:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yr8pBKNlRBBu/zVmrZurbm8nwnQCAlAISsxv0Pfzf/I=;
+        b=r4Sp/zAeiKPw/MRxiQSMziiLH+ZPG7fIazX1ngR0NlypPQlPPY7X0OOlQbq11TMYRL
+         DMb9nrfBVUauF06OkU0QNTvvurGWnLL9r5RIKWbCD/YqhDWo2Vd+t5ynXoK8gEJUy+v+
+         54VIVC47ppcPIAX4hAGT72ZzR21BSEyXu16VZ8tJqZlPTfHmaU3SmiAMOSreD1KpJFhL
+         ks1K3V9SwPb3baz9AdnpNcsANHCF3QeNrnLTej4/rS3TfyG/9PdOA51fuYGtLxvcPI2y
+         aCNgE+u8Qni8LjjIXUgZY9yNYszw8Jjgylc8wG1+dwpauoavx3kWyd9pzU2xF3flN7v/
+         F0/w==
+X-Gm-Message-State: AOAM53031SXNdidfJdwv7V3J3VlVsRQv1WGZAi7t9bRPKMcTRuVHPy/y
+        714Wd6E7lZtrJtWsGOsPxvTYS4M7du7T
+X-Google-Smtp-Source: ABdhPJxOmo+9qg9pF8+1gjfj0EnflJQ6hmc5SfUGFqzzf966Oud70qdfbnoCRy8B38rIr9FQ7Tt2aw==
+X-Received: by 2002:a92:dccd:: with SMTP id b13mr9418297ilr.12.1598393128429;
+        Tue, 25 Aug 2020 15:05:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id h13sm58819iob.33.2020.08.25.15.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 15:05:27 -0700 (PDT)
+Received: (nullmailer pid 1423326 invoked by uid 1000);
+        Tue, 25 Aug 2020 22:05:26 -0000
+Date:   Tue, 25 Aug 2020 16:05:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daire.McNamara@microchip.com
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, david.abdurachmanov@gmail.com
+Subject: Re: [PATCH v15 1/2] dt-bindings: PCI: microchip: Add Microchip
+ PolarFire host binding
+Message-ID: <20200825220526.GA1423268@bogus>
+References: <954a9f86bbfe929bc37653f1e616e8acff8b4bd8.camel@microchip.com>
+ <9228b6315ba92e9e74b3f6484df6f4957ec4faae.camel@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9228b6315ba92e9e74b3f6484df6f4957ec4faae.camel@microchip.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 25 2020 at 23:40, Thomas Gleixner wrote:
-> On Tue, Aug 25 2020 at 16:35, Bjorn Helgaas wrote:
->> On Tue, Aug 25, 2020 at 11:28:30PM +0200, Thomas Gleixner wrote:
->>> 
->>> Or did you just mean that those architectures should select
->>> CONFIG_I_WANT_THE CRUFT instead of opting out on the fully irq domain
->>> based ones?
->>
->> Yes, that was my real question -- can we confine the cruft in the
->> crufty arches?  If not, no big deal.
->
-> Should be doable. Let me try.
+On Wed, 19 Aug 2020 16:32:01 +0000, Daire.McNamara@microchip.com wrote:
+> Add device tree bindings for the Microchip PolarFire PCIe controller
+> when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  .../bindings/pci/microchip,pcie-host.yaml     | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> 
 
-Bah. There is more cruft.
-
-The weak implementation has another way to go sideways via
-msi_controller::setup_irq[s] and msi_controller::teardown_irq
-
-drivers/pci/controller/pci-tegra.c
-drivers/pci/controller/pcie-rcar-host.c
-drivers/pci/controller/pcie-xilinx.c
-
-Groan....
-
+Reviewed-by: Rob Herring <robh@kernel.org>
