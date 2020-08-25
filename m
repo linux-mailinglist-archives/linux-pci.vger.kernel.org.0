@@ -2,41 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66BFD252287
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 23:12:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CFB22522D0
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 23:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHYVL7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Aug 2020 17:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYVL7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Aug 2020 17:11:59 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9D7C061574;
-        Tue, 25 Aug 2020 14:11:58 -0700 (PDT)
+        id S1726374AbgHYV2d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Aug 2020 17:28:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52524 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHYV2c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Aug 2020 17:28:32 -0400
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598389916;
+        s=2020; t=1598390910;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=1frHZHutANeGhNvELKAlZV7ZBIw0Dqsl4tEEvrOnRU4=;
-        b=rQQMWS26Jt5LaZuxdrMUZgNfuNew2mCXTFepS37C35I6xAhJ3rEo9Nx2wJCVYo9FS/Pgcj
-        zMK/jubxjmgOMukHjD1+whg0AyErL8YAwjSJxzS+B1PMq4RdTvHJO6lnQ8zCroL34GT5hw
-        5/rfeY4s2ADMm35tAfb/mXN9dBB+PDzSGhJTbYCAYlaBzlpg8xMguI6MXbjreLqFtXNCau
-        bsIWnmpXS6t/YonQ/7LmA5QV8SpSh4TrFs2TkYIhUy6U4rcc0A8vIF1QUkDGf2mbfLYdBM
-        gsUXIxYqmPwtfL3S4OeTd+L815+ua7i1Gq/tsUgXEKLDUxlqgI3fswjFMqzoNQ==
+        bh=DM8kbYiy7ZvYakB3fMHVSwg1j58bcLwh1sILIYH/AFI=;
+        b=tOoYjJYvUPFZDmOguQPFJDhQeHuqRavvHi/bJrAyTkchveyhC+en4z3ohJa6FmPIHI2vow
+        qc9HQ8/FTpaHEhGVpgURbiV1lVl+XKejxCXJmH2j3Sj2h8nwPHrrK3/Kb6Do9W3PTncSXY
+        TOuqFSROfKTujH662yP4shxjPWBDkywHOauPnwUWRRiR+DHAaP2psLdtuzSJtmNFJD79PB
+        hjeXftohGgS9rC9Xb2dZuw6mNwzd/d9QfmdUvlkZy88Ftt7fM3r9rWu4L7KrgJ8gocSx1K
+        eGa2PZEjfsTIQ/LxJMcJsM3xNXGuHKDY89giMPP0/QzKHuUEf3bJ22fUusSPsg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598389916;
+        s=2020e; t=1598390910;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=1frHZHutANeGhNvELKAlZV7ZBIw0Dqsl4tEEvrOnRU4=;
-        b=hWC9wT9/QuU4/otH2U3KHZ3pSL+StkJoqjJVoH3bzCOAJhuscP4cb126Q52YIHKMSI5RAk
-        NlcAG4imPXq613BA==
+        bh=DM8kbYiy7ZvYakB3fMHVSwg1j58bcLwh1sILIYH/AFI=;
+        b=oQR1S/0DMHh75hr94qI0low3SKHVQ7r24k+kTQlDcy/nGiegnvAQmFWoo65Pv64XBO7xgV
+        AXir3AUyBr42qvBg==
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
         iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Jon Derrick <jonathan.derrick@intel.com>,
@@ -47,7 +45,6 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Steve Wahl <steve.wahl@hpe.com>,
         Dimitri Sivanich <sivanich@hpe.com>,
         Russ Anderson <rja@hpe.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
@@ -64,11 +61,11 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 13/38] PCI: MSI: Rework pci_msi_domain_calc_hwirq()
-In-Reply-To: <20200825200329.GA1923406@bjorn-Precision-5520>
-References: <20200825200329.GA1923406@bjorn-Precision-5520>
-Date:   Tue, 25 Aug 2020 23:11:56 +0200
-Message-ID: <87d03exwf7.fsf@nanos.tec.linutronix.de>
+Subject: Re: [patch RFC 30/38] PCI/MSI: Allow to disable arch fallbacks
+In-Reply-To: <20200825200742.GA1924669@bjorn-Precision-5520>
+References: <20200825200742.GA1924669@bjorn-Precision-5520>
+Date:   Tue, 25 Aug 2020 23:28:30 +0200
+Message-ID: <87a6yixvnl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
@@ -76,41 +73,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 25 2020 at 15:03, Bjorn Helgaas wrote:
-> On Fri, Aug 21, 2020 at 02:24:37AM +0200, Thomas Gleixner wrote:
->> Retrieve the PCI device from the msi descriptor instead of doing so at the
->> call sites.
+On Tue, Aug 25 2020 at 15:07, Bjorn Helgaas wrote:
+>> + * The arch hooks to setup up msi irqs. Default functions are implemented
+>> + * as weak symbols so that they /can/ be overriden by architecture specific
+>> + * code if needed.
+>> + *
+>> + * They can be replaced by stubs with warnings via
+>> + * CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS when the architecture fully
+>> + * utilizes direct irqdomain based setup.
 >
-> I'd like it *better* with "PCI/MSI: " in the subject (to match history
+> Do you expect *all* arches to eventually use direct irqdomain setup?
 
-Duh, yes.
+Ideally that happens some day. We have five left when x86 is converted:
 
-> and other patches in this series) and "MSI" here in the commit log,
-> but nice cleanup and:
->> --- a/arch/x86/kernel/apic/msi.c
->> +++ b/arch/x86/kernel/apic/msi.c
->> @@ -232,7 +232,7 @@ EXPORT_SYMBOL_GPL(pci_msi_prepare);
->>  
->>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
->>  {
->> -	arg->msi_hwirq = pci_msi_domain_calc_hwirq(arg->msi_dev, desc);
->> +	arg->msi_hwirq = pci_msi_domain_calc_hwirq(desc);
->
-> I guess it's safe to assume that "arg->msi_dev ==
-> msi_desc_to_pci_dev(desc)"?  I didn't try to verify that.
+IA64, MIPS, POWERPC, S390, SPARC
 
-It is.
+IA64 is unlikely to be fixed, but might be solved naturally by removal.
 
->> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
->>  {
->> +	struct pci_dev *pdev = msi_desc_to_pci_dev(desc);
->
-> If you named this "struct pci_dev *dev" (not "pdev"), the diff would
-> be a little smaller and it would match other usage in the file.
+For the others I don't know, but it's not on the horizon anytime soon I
+fear.
 
-Ok. I'm always happy to see pdev because that doesn't make me wonder
-which type of dev it is :) But, yeah lets keep it consistent.
+> And in that case, to remove the config option?
+
+Yes, and all the code which depends on it.
+
+> If not, it seems like it'd be nicer to have the burden on the arches
+> that need/want to use arch-specific code instead of on the arches that
+> do things generically.
+
+Right, but they still share the common code there and some of them
+provide only parts of the weak callbacks. I'm not sure whether it's a
+good idea to copy all of this into each affected architecture.
+
+Or did you just mean that those architectures should select
+CONFIG_I_WANT_THE CRUFT instead of opting out on the fully irq domain
+based ones?
 
 Thanks,
 
         tglx
+
+
