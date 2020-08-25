@@ -2,94 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EF04251272
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 08:56:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 126E32513B0
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Aug 2020 09:57:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgHYG4y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Aug 2020 02:56:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgHYG4x (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Aug 2020 02:56:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CD6C061574;
-        Mon, 24 Aug 2020 23:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mP8n04TXgNIN9kqtprAkjh2pKjIiOhhJ0sYIylsGTp0=; b=gNUiHyXXnX6v2kMzN7Nx+HnwhP
-        XbILaOvxU1zWgHNCn8LRTE8fvCmusluHjxJAqNB6Wpe74bz3Jyt+ScrwqhctVFT5jNr05tuNPgKec
-        Dpluy9PEI+ogrwyCDz7R619+Hn/wbgmbI7DgLX2YEC7tTbydKnT9kxLTNmNmRja/X6f8ndeJeE7bv
-        7nFcpt0a41KPSE7FZYzbCjoyM4wcBHxofrh+jD7AbNpVJAwwt2K8uC6E+wIH6KV34W8r+m64bE0/r
-        TWFtG1XWwoZtEH7We+Mmn0ytJLEqNLMGn2Jp2pmNhHjeTnP8J6uNNpnS4LZ2bf4Y3YdObKpck/Eve
-        xGPRJkqQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kASsl-0000qN-0Z; Tue, 25 Aug 2020 06:56:35 +0000
-Date:   Tue, 25 Aug 2020 07:56:34 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kai Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
+        id S1726090AbgHYH5s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Aug 2020 03:57:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47740 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgHYH5q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Aug 2020 03:57:46 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598342264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z7XEOONAx/Y/ZiGBa138zNdJ2aL0ZkJolLF35mYWdkk=;
+        b=JIpR4o0QGi7kK727LCmqEP1DulpXQaBIgflkZBLs5t7Lz8BkKPnpuEKumBjEIUv4Qu2fG/
+        Oir+lSuIqPfxIOiBFQCY78M6YxK5B+THOxc0icLjtAE5JJUVAEoLFxVLAg3uxDsMB1SGXX
+        XnaeD4Z6L/kPkUhTl+94PS6Ks0d2HjckxWbTB9b++Lqlou5zbvd+xX/Hopw1vkn5tYovdo
+        HLgyn2z6ttiQeTALU45iDOFAu5axIGbm6lbmj8cbkv/CZonC9AGBAL/usvMWV2QkosoUW5
+        3RNUmC/gOSqY1Bc8xh5ArbnCykaJkYqCjP/+V1YJalXwg1JSBYvSGRteI38PbA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598342264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z7XEOONAx/Y/ZiGBa138zNdJ2aL0ZkJolLF35mYWdkk=;
+        b=UFHNoPg/zXQ+Xg2Pv56inRA93Orb7eMVMpZPw2ESh1dxXdBikqTGQn7J7IK19znmQQ8GAl
+        YbijH/OnOMKVGqAA==
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        jonathan.derrick@intel.com, Mario.Limonciello@dell.com,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200825065634.GA2691@infradead.org>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
- <20200825062320.GA27116@infradead.org>
- <08080FC7-861B-472A-BD7D-02D33926677F@canonical.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 26/38] x86/xen: Wrap XEN MSI management into irqdomain
+In-Reply-To: <8860c7bc-67ab-ce64-0340-1458d2483a39@suse.com>
+References: <20200821002424.119492231@linutronix.de> <20200821002947.868727656@linutronix.de> <8860c7bc-67ab-ce64-0340-1458d2483a39@suse.com>
+Date:   Tue, 25 Aug 2020 09:57:44 +0200
+Message-ID: <87r1rv5f9j.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08080FC7-861B-472A-BD7D-02D33926677F@canonical.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:39:55PM +0800, Kai Heng Feng wrote:
-> Hi Christoph,
-> 
-> > On Aug 25, 2020, at 2:23 PM, Christoph Hellwig <hch@infradead.org> wrote:
-> > 
-> > On Fri, Aug 21, 2020 at 08:32:20PM +0800, Kai-Heng Feng wrote:
-> >> New Intel laptops with VMD cannot reach deeper power saving state,
-> >> renders very short battery time.
-> > 
-> > So what about just disabling VMD given how bloody pointless it is?
-> > Hasn't anyone learned from the AHCI remapping debacle?
-> > 
-> > I'm really pissed at all this pointless crap intel comes up with just
-> > to make life hard for absolutely no gain.  Is it so hard to just leave
-> > a NVMe device as a standard NVMe device instead of f*^&ing everything
-> > up in the chipset to make OS support a pain and I/O slower than by
-> > doing nothing?
-> 
-> From what I can see from the hardwares at my hand, VMD only enables a PCI domain and PCI bridges behind it.
-> 
-> NVMe works as a regular NVMe under those bridges. No magic remapping happens here.
+On Mon, Aug 24 2020 at 08:21, J=C3=BCrgen Gro=C3=9F wrote:
+> On 21.08.20 02:24, Thomas Gleixner wrote:
+>
+> Looking into https://www.kernel.org/doc/Documentation/IRQ-domain.txt (is
+> this still valid?)
 
-It definitively is less bad than the AHCI remapping, that is for sure.
+It's halfways correct. Emphasis on halfways.
 
-But it still requires:
+> I believe Xen should be able to use the "No Map" approach, as Xen only
+> ever uses software IRQs (at least those are the only ones visible to
+> any driver). The (virtualized) hardware interrupts are Xen events
+> after all.
+>
+> So maybe morphing Xen into supporting irqdomains in a sane way isn't
+> that complicated. Maybe I'm missing the main complexities, though.
 
- - a new OS driver just to mak the PCIe device show up
- - indirections in the irq handling
- - indirections in the DMA handling
- - hacks for ASPSM
- - hacks for X (there were a few more)
+The wrapper domain I did is pretty much that, but with the extra
+functionality required by hierarchical irq domains. So, yes it's
+functionally correct, but it's only utilizing the alloc/free interface
+and not any of the other mechanisms provided by irqdomains. The latter
+should make the overall code simpler but that obviously needs some
+thought.
 
-while adding absolutely no value.  Basically we have to add a large
-chunk of kernel code just to undo silicone/firmware Intel added to their
-platform to make things complicated.  I mean it is their platform and if
-they want a "make things complicated" option that is fine, but it should
-not be on by default.
+Thanks,
+
+        tglx
+
+
+
