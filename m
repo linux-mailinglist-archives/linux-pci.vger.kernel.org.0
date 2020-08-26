@@ -2,155 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B37325356B
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 18:50:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18B072535F8
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 19:26:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgHZQuf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Aug 2020 12:50:35 -0400
-Received: from mga18.intel.com ([134.134.136.126]:23604 "EHLO mga18.intel.com"
+        id S1726853AbgHZR0Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Aug 2020 13:26:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:36965 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgHZQuc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:50:32 -0400
-IronPort-SDR: AeYTCsvcaJ87PfmSNpVKnB4e3+jgzy6QvAK5BVxuG54B/iADXRjtzyHk/GZb8/3S3RKe99SHPU
- LFokhlMa2pbQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144004299"
+        id S1726739AbgHZR0P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:26:15 -0400
+IronPort-SDR: X03etxTlp38VB8MggvimCd20cyvhm+jpnjwEBnpjK3MxcSi0Wf6zthqsDWahhRu+HmgEIWMzrM
+ QHuRMo7hWEvg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="157381172"
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="144004299"
+   d="scan'208";a="157381172"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:50:30 -0700
-IronPort-SDR: O+tRoc/59eCGpVLJON72igRMmtjnFMq9wo28apgxlygz1/37A+zdeFZDDyibhT3bW+C7JSBdFz
- MbToSWPlnzpg==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 10:26:13 -0700
+IronPort-SDR: lYRRwx8zJRH1GF/6F102nz9em3jKRJKNDZG+lyn44hPGCnH7NMhT07s+o3KcU+FwwdBYDGVUb9
+ iphH3VAA8M8w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="444115517"
-Received: from orsmsx606-2.jf.intel.com (HELO ORSMSX606.amr.corp.intel.com) ([10.22.229.86])
-  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 09:50:30 -0700
-Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Aug 2020 09:50:30 -0700
-Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
- orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 26 Aug 2020 09:50:30 -0700
-Received: from [10.212.160.45] (10.212.160.45) by ORSMSX101.amr.corp.intel.com
- (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Aug
- 2020 09:50:29 -0700
-Subject: Re: [patch V2 15/46] x86/irq: Consolidate DMAR irq allocation
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        "Russ Anderson" <rja@hpe.com>, <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200826111628.794979401@linutronix.de>
- <20200826112332.163462706@linutronix.de>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <812d9647-ad2e-95e9-aa99-b54ff7ebc52d@intel.com>
-Date:   Wed, 26 Aug 2020 09:50:27 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+   d="scan'208";a="444126164"
+Received: from yliang6-mobl1.ccr.corp.intel.com (HELO [10.254.84.68]) ([10.254.84.68])
+  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 10:26:12 -0700
+Subject: Re: [PATCH v3 05/10] PCI/AER: Extend AER error handling to RCECs
+To:     Sean V Kelley <sean.v.kelley@intel.com>, bhelgaas@google.com,
+        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
+        ashok.raj@intel.com, tony.luck@intel.com, qiuxu.zhuo@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200812164659.1118946-1-sean.v.kelley@intel.com>
+ <20200812164659.1118946-6-sean.v.kelley@intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <c235b1bb-4a2d-8959-d556-011620d5ae55@linux.intel.com>
+Date:   Wed, 26 Aug 2020 10:26:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200826112332.163462706@linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200812164659.1118946-6-sean.v.kelley@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Originating-IP: [10.212.160.45]
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
 
-On 8/26/2020 4:16 AM, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
->
-> None of the DMAR specific fields are required.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->
+
+On 8/12/20 9:46 AM, Sean V Kelley wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Currently the kernel does not handle AER errors for Root Complex
+> integrated End Points (RCiEPs)[0]. These devices sit on a root bus within
+> the Root Complex (RC). AER handling is performed by a Root Complex Event
+> Collector (RCEC) [1] which is a effectively a type of RCiEP on the same
+> root bus.
+> 
+> For an RCEC (technically not a Bridge), error messages "received" from
+> associated RCiEPs must be enabled for "transmission" in order to cause a
+> System Error via the Root Control register or (when the Advanced Error
+> Reporting Capability is present) reporting via the Root Error Command
+> register and logging in the Root Error Status register and Error Source
+> Identification register.
+> 
+> In addition to the defined OS level handling of the reset flow for the
+> associated RCiEPs of an RCEC, it is possible to also have non-native
+> handling. In that case there is no need to take any actions on the RCEC
+> because the firmware is responsible for them. This is true where APEI [2]
+> is used to report the AER errors via a GHES[v2] HEST entry [3] and
+> relevant AER CPER record [4] and non-native handling is in use.
+> 
+> We effectively end up with two different types of discovery for
+> purposes of handling AER errors:
+> 
+> 1) Normal bus walk - we pass the downstream port above a bus to which
+> the device is attached and it walks everything below that point.
+> 
+> 2) An RCiEP with no visible association with an RCEC as there is no need
+> to walk devices. In that case, the flow is to just call the callbacks for
+> the actual device.
+> 
+> A new walk function pci_walk_dev_affected(), similar to pci_bus_walk(),
+> is provided that takes a pci_dev instead of a bus. If that dev corresponds
+> to a downstream port it will walk the subordinate bus of that downstream
+> port. If the dev does not then it will call the function on that device
+> alone.
+> 
+> [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex
+> Integrated Endpoint Rules.
+> [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling and
+> Logging
+> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface (APEI)
+> [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
+> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 > ---
->   arch/x86/include/asm/hw_irq.h |    6 ------
->   arch/x86/kernel/apic/msi.c    |   10 +++++-----
->   2 files changed, 5 insertions(+), 11 deletions(-)
->
-> --- a/arch/x86/include/asm/hw_irq.h
-> +++ b/arch/x86/include/asm/hw_irq.h
-> @@ -83,12 +83,6 @@ struct irq_alloc_info {
->   			irq_hw_number_t	msi_hwirq;
->   		};
->   #endif
-> -#ifdef	CONFIG_DMAR_TABLE
-> -		struct {
-> -			int		dmar_id;
-> -			void		*dmar_data;
-> -		};
-> -#endif
->   #ifdef	CONFIG_X86_UV
->   		struct {
->   			int		uv_limit;
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -329,15 +329,15 @@ static struct irq_chip dmar_msi_controll
->   static irq_hw_number_t dmar_msi_get_hwirq(struct msi_domain_info *info,
->   					  msi_alloc_info_t *arg)
->   {
-> -	return arg->dmar_id;
-> +	return arg->hwirq;
-
-Shouldn't this return the arg->devid which gets set in dmar_alloc_hwirq?
-
--Megha
-
->   }
->   
->   static int dmar_msi_init(struct irq_domain *domain,
->   			 struct msi_domain_info *info, unsigned int virq,
->   			 irq_hw_number_t hwirq, msi_alloc_info_t *arg)
->   {
-> -	irq_domain_set_info(domain, virq, arg->dmar_id, info->chip, NULL,
-> -			    handle_edge_irq, arg->dmar_data, "edge");
-> +	irq_domain_set_info(domain, virq, arg->devid, info->chip, NULL,
-> +			    handle_edge_irq, arg->data, "edge");
->   
+>   drivers/pci/pcie/err.c | 54 ++++++++++++++++++++++++++++++++++--------
+>   1 file changed, 44 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 14bb8f54723e..f4cfb37c26c1 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -146,38 +146,68 @@ static int report_resume(struct pci_dev *dev, void *data)
 >   	return 0;
 >   }
-> @@ -384,8 +384,8 @@ int dmar_alloc_hwirq(int id, int node, v
 >   
->   	init_irq_alloc_info(&info, NULL);
->   	info.type = X86_IRQ_ALLOC_TYPE_DMAR;
-> -	info.dmar_id = id;
-> -	info.dmar_data = arg;
-> +	info.devid = id;
-> +	info.data = arg;
+> +/**
+> + * pci_walk_dev_affected - walk devices potentially AER affected
+> + * @dev      device which may be an RCEC with associated RCiEPs,
+> + *           an RCiEP associated with an RCEC, or a Port.
+> + * @cb       callback to be called for each device found
+> + * @userdata arbitrary pointer to be passed to callback.
+> + *
+> + * If the device provided is a bridge, walk the subordinate bus,
+> + * including any bridged devices on buses under this bus.
+> + * Call the provided callback on each device found.
+> + *
+> + * If the device provided has no subordinate bus, call the provided
+> + * callback on the device itself.
+> + */
+> +static void pci_walk_dev_affected(struct pci_dev *dev, int (*cb)(struct pci_dev *, void *),
+> +				  void *userdata)
+> +{
+> +	if (dev->subordinate)
+> +		pci_walk_bus(dev->subordinate, cb, userdata);
+> +	else
+> +		cb(dev, userdata);
+> +}
+> +
+>   pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   			enum pci_channel_state state,
+>   			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+>   {
+>   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> -	struct pci_bus *bus;
 >   
->   	return irq_domain_alloc_irqs(domain, 1, node, &info);
->   }
->
->
+>   	/*
+>   	 * Error recovery runs on all subordinates of the first downstream port.
+>   	 * If the downstream port detected the error, it is cleared at the end.
+> +	 * For RCiEPs we should reset just the RCiEP itself.
+>   	 */
+>   	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
+> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
+>   		dev = dev->bus->self;
+> -	bus = dev->subordinate;
+>   
+>   	pci_dbg(dev, "broadcast error_detected message\n");
+>   	if (state == pci_channel_io_frozen) {
+> -		pci_walk_bus(bus, report_frozen_detected, &status);
+> +		pci_walk_dev_affected(dev, report_frozen_detected, &status);
+> +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> +			pci_warn(dev, "link reset not possible for RCiEP\n");
+> +			status = PCI_ERS_RESULT_NONE;
+> +			goto failed;
+reset_link is not applicable for RC_END, but why do you want to fail it?
+> +		}
+> +
+>   		status = reset_link(dev);
+>   		if (status != PCI_ERS_RESULT_RECOVERED) {
+>   			pci_warn(dev, "link reset failed\n");
+>   			goto failed;
+>   		}
+>   	} else {
+> -		pci_walk_bus(bus, report_normal_detected, &status);
+> +		pci_walk_dev_affected(dev, report_normal_detected, &status);
+>   	}
+>   
+>   	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>   		status = PCI_ERS_RESULT_RECOVERED;
+>   		pci_dbg(dev, "broadcast mmio_enabled message\n");
+> -		pci_walk_bus(bus, report_mmio_enabled, &status);
+> +		pci_walk_dev_affected(dev, report_mmio_enabled, &status);
+>   	}
+>   
+>   	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> @@ -188,17 +218,21 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   		 */
+>   		status = PCI_ERS_RESULT_RECOVERED;
+>   		pci_dbg(dev, "broadcast slot_reset message\n");
+> -		pci_walk_bus(bus, report_slot_reset, &status);
+> +		pci_walk_dev_affected(dev, report_slot_reset, &status);
+>   	}
+>   
+>   	if (status != PCI_ERS_RESULT_RECOVERED)
+>   		goto failed;
+>   
+>   	pci_dbg(dev, "broadcast resume message\n");
+> -	pci_walk_bus(bus, report_resume, &status);
+> +	pci_walk_dev_affected(dev, report_resume, &status);
+>   
+> -	pci_aer_clear_device_status(dev);
+> -	pci_aer_clear_nonfatal_status(dev);
+you want to prevent clearing status for RC_END ? Can you explain?
+> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
+> +		pci_aer_clear_device_status(dev);
+> +		pci_aer_clear_nonfatal_status(dev);
+> +	}
+>   	pci_info(dev, "device recovery successful\n");
+>   	return status;
+>   
+> 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
