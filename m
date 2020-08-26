@@ -2,194 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4949A2534AE
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 18:20:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D8225350A
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 18:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgHZQUT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Aug 2020 12:20:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48253 "EHLO mga14.intel.com"
+        id S1726788AbgHZQhd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Aug 2020 12:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbgHZQUS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:20:18 -0400
-IronPort-SDR: Ta5RCl9xbAAOgSPEeLmoGrwSNHmT2sxo6DHxSKQaWJ1TcANn0oJJ5BHdU8Pc39HaPUvi872vZ9
- ZnKOBaDg2uMw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="155586468"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="155586468"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:20:16 -0700
-IronPort-SDR: ljGBez0CmtQf6FL04AiuuPiruyngdoTWumwzs1YukECTXeJI+df3vtw01T9fzH/Co9fd1Ehj6B
- D6RKzfvy4Nng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="444104375"
-Received: from yliang6-mobl1.ccr.corp.intel.com (HELO [10.254.84.68]) ([10.254.84.68])
-  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 09:20:09 -0700
-Subject: Re: [PATCH V2 3/9] PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs
- associated with RCEC
-To:     Sean V Kelley <sean.v.kelley@intel.com>, bhelgaas@google.com,
-        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
-        ashok.raj@intel.com, tony.luck@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
- <20200804194052.193272-4-sean.v.kelley@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <139d4c34-7e5e-8867-a016-4a5bc737b804@linux.intel.com>
-Date:   Wed, 26 Aug 2020 09:20:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726772AbgHZQhd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:37:33 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D666206FA;
+        Wed, 26 Aug 2020 16:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598459852;
+        bh=pBc8gM5KOX/QRk7tf+c7+MrN051X6wSwRL8XjLMwkpA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZFZ8/xASQAxvIcEud6yRT7vUyq4aWJI1IWNLpTVMDlYbIMy6fjnvfBTeXUdx//xYw
+         V2YdkX+e4/z0cYtfxi5MXYXFYyWfVsAecZgNKOVo0AIyKG7Dldiu6GcpX4kvJA4pu6
+         JAGJW1Ier1tVZvfblXe2e3pC60/5zBEt6idCvOl4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kAyQU-006uP9-GY; Wed, 26 Aug 2020 17:37:30 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200804194052.193272-4-sean.v.kelley@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 26 Aug 2020 17:37:30 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/9] fsl-msi: Provide default retrigger callback
+In-Reply-To: <jhj7dtlejxc.mognet@arm.com>
+References: <20200824102317.1038259-1-maz@kernel.org>
+ <20200824102317.1038259-6-maz@kernel.org> <jhj7dtlejxc.mognet@arm.com>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <70107b944534c6a0eeff83e43b05865e@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, gregory.clement@bootlin.com, jason@lakedaemon.net, laurentiu.tudor@nxp.com, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Valentin,
 
+On 2020-08-26 12:16, Valentin Schneider wrote:
+> Hi Marc,
+> 
+> Many thanks for picking this up!
+> Below's the only comment I have, the rest LGTM.
+> 
+> On 24/08/20 11:23, Marc Zyngier wrote:
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/bus/fsl-mc/fsl-mc-msi.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>> 
+>> diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c 
+>> b/drivers/bus/fsl-mc/fsl-mc-msi.c
+>> index 8edadf05cbb7..5306ba7dea3e 100644
+>> --- a/drivers/bus/fsl-mc/fsl-mc-msi.c
+>> +++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+>> @@ -144,6 +144,8 @@ static void fsl_mc_msi_update_chip_ops(struct 
+>> msi_domain_info *info)
+>>        */
+>>       if (!chip->irq_write_msi_msg)
+>>               chip->irq_write_msi_msg = fsl_mc_msi_write_msg;
+>> +	if (!chip->irq_retrigger)
+>> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
+> 
+> AFAICT the closest generic hook we could use here is
+> 
+>   msi_create_irq_domain() -> msi_domain_update_chip_ops()
+> 
+> which happens just below the fsl-specific ops update.
+> 
+> 
+> However, placing a default .irq_retrigger callback in there would 
+> affect any
+> and all MSI domain. IOW that would cover PCI and platform MSIs (covered 
+> by
+> separate patches in this series), but also some x86 ("dmar" & "hpet") 
+> and
+> TI thingies.
+> 
+> I can't tell right now how bad of an idea it is, but I figured I'd 
+> throw
+> this out there.
 
-On 8/4/20 12:40 PM, Sean V Kelley wrote:
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> When an RCEC device signals error(s) to a CPU core, the CPU core
-> needs to walk all the RCiEPs associated with that RCEC to check
-> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
-> associated with the RCEC device.
-I think its better if you merge the usage patch and API
-(pcie_walk_rcec) patch together.
+The problem with this approach is that it requires the resend path to be
+cooperative and actually check for more than the top-level irq_data.
+Otherwise you'd never actually trigger the HW resend if it is below
+the top level.
 
-Did you not get unused function warning with this patch?
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->   drivers/pci/pcie/portdrv.h      |  2 +
->   drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++++
->   2 files changed, 84 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index af7cf237432a..c11d5ecbad76 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -116,6 +116,8 @@ void pcie_port_service_unregister(struct pcie_port_service_driver *new);
->   
->   extern struct bus_type pcie_port_bus_type;
->   int pcie_port_device_register(struct pci_dev *dev);
-> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata);
->   #ifdef CONFIG_PM
->   int pcie_port_device_suspend(struct device *dev);
->   int pcie_port_device_resume_noirq(struct device *dev);
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 5d4a400094fc..daa2dfa83a0b 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -14,6 +14,7 @@
->   #include <linux/pm_runtime.h>
->   #include <linux/string.h>
->   #include <linux/slab.h>
-> +#include <linux/bitops.h>
->   #include <linux/aer.h>
->   
->   #include "../pci.h"
-> @@ -365,6 +366,87 @@ int pcie_port_device_register(struct pci_dev *dev)
->   	return status;
->   }
->   
-> +static int pcie_walk_rciep_devfn(struct pci_bus *pbus, int (*cb)(struct pci_dev *, void *),
-> +				 void *userdata, unsigned long bitmap)
-> +{
-> +	unsigned int dev, fn;
-> +	struct pci_dev *pdev;
-> +	int retval;
-> +
-> +	for_each_set_bit(dev, &bitmap, 32) {
-> +		for (fn = 0; fn < 8; fn++) {
-> +			pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
-> +
-> +			if (!pdev || pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
-> +				continue;
-> +
-> +			retval = cb(pdev, userdata);
-> +			if (retval)
-> +				return retval;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
-> + * @rcec     RCEC whose RCiEP devices should be walked.
-> + * @cb       Callback to be called for each RCiEP device found.
-> + * @userdata Arbitrary pointer to be passed to callback.
-> + *
-> + * Walk the given RCEC. Call the provided callback on each RCiEP device found.
-> + *
-> + * We check the return of @cb each time. If it returns anything
-> + * other than 0, we break out.
-> + */
-> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata)
-> +{
-> +	u32 pos, bitmap, hdr, busn;
-> +	u8 ver, nextbusn, lastbusn;
-> +	struct pci_bus *pbus;
-> +	unsigned int bnr;
-> +
-> +	pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
-> +	if (!pos)
-> +		return;
-> +
-> +	pbus = pci_find_bus(pci_domain_nr(rcec->bus), rcec->bus->number);
-> +	if (!pbus)
-> +		return;
-> +
-> +	pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP, &bitmap);
-> +
-> +	/* Find RCiEP devices on the same bus as the RCEC */
-> +	if (pcie_walk_rciep_devfn(pbus, cb, userdata, (unsigned long)bitmap))
-> +		return;
-> +
-> +	/* Check whether RCEC BUSN register is present */
-> +	pci_read_config_dword(rcec, pos, &hdr);
-> +	ver = PCI_EXT_CAP_VER(hdr);
-> +	if (ver < PCI_RCEC_BUSN_REG_VER)
-> +		return;
-> +
-> +	pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
-> +	nextbusn = PCI_RCEC_BUSN_NEXT(busn);
-> +	lastbusn = PCI_RCEC_BUSN_LAST(busn);
-> +
-> +	/* All RCiEP devices are on the same bus as the RCEC */
-> +	if (nextbusn == 0xff && lastbusn == 0x00)
-> +		return;
-> +
-> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
-> +		pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
-> +		if (!pbus)
-> +			continue;
-> +
-> +		/* Find RCiEP devices on the given bus */
-> +		if (pcie_walk_rciep_devfn(pbus, cb, userdata, 0xffffffff))
-> +			return;
-> +	}
-> +}
-> +
->   #ifdef CONFIG_PM
->   typedef int (*pcie_pm_callback_t)(struct pcie_device *);
->   
-> 
+But I like the idea though. Something like this should do the trick, and
+is admittedly a bug fix:
 
+diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
+index c48ce19a257f..d11c729f9679 100644
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -86,6 +86,18 @@ static int irq_sw_resend(struct irq_desc *desc)
+  }
+  #endif
+
++static int try_retrigger(struct irq_desc *desc)
++{
++#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
++	return irq_chip_retrigger_hierarchy(&desc->irq_data);
++#else
++	if (desc->irq_data.chip->irq_retrigger)
++		return desc->irq_data.chip->irq_retrigger(&desc->irq_data);
++
++	return 0;
++#endif
++}
++
+  /*
+   * IRQ resend
+   *
+@@ -113,8 +125,7 @@ int check_irq_resend(struct irq_desc *desc, bool 
+inject)
+
+  	desc->istate &= ~IRQS_PENDING;
+
+-	if (!desc->irq_data.chip->irq_retrigger ||
+-	    !desc->irq_data.chip->irq_retrigger(&desc->irq_data))
++	if (!try_retrigger(desc))
+  		err = irq_sw_resend(desc);
+
+  	/* If the retrigger was successfull, mark it with the REPLAY bit */
+
+In general, introducing a irq_chip_retrigger_hierarchy() call
+shouldn't be problematic as long as we don't overwrite an existing
+callback.
+
+I'll have a look at respining the series with that in mind.
+
+Thanks,
+
+         M.
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Jazz is not dead. It just smells funny...
