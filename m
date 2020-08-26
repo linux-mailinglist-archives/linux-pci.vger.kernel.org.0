@@ -2,92 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79D58252AC9
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 11:53:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4FAF252CD0
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 13:48:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgHZJxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Aug 2020 05:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbgHZJxS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Aug 2020 05:53:18 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500C5C061574;
-        Wed, 26 Aug 2020 02:53:17 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598435595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mv4TqayOvYT1PZy4IB6XdyAxCqLJFuyrG/iBXdVvDGo=;
-        b=gry5Gqjf5XbHVcJKaDXMPK4boPx5u/IEBob5D9Wn36xeFWifKRFQGrLYl80/EuQiMfzysE
-        R0d4KWtrjVjHsKfDbzzjWDT5squtWA8CAJmXu6ssTTvFAl1Dp0Qb/5Gseu91lYmL0/YUjO
-        NbsGg1x1qsfcwMmq40s6f8QzME/wE8mMh0jkO28671y+OSXzdMJAa+d/pRnJ+IIBJUer6F
-        myfzP6CTQbmP/AgP0sGex0XapaKloSSKztkVFL6Agugb80R0gctiC6HeZ9PqzrabjLNIkQ
-        pAIkMvt8UaWwzx1EMmCW7rVmlO3SHuNH8U5WRqRwrLaG8IAQqyASWZnve1tyYQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598435595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mv4TqayOvYT1PZy4IB6XdyAxCqLJFuyrG/iBXdVvDGo=;
-        b=T18EHlogGsekmXEOkS3bdJRDQU5OgZArZ4psx/80SWGB5Jkvh72YqFLOhYbYkZrSz/1STi
-        ppR6UR793IwPtlAg==
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-hyperv@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 10/38] x86/ioapic: Consolidate IOAPIC allocation
-In-Reply-To: <20200826084019.GA6174@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200821002424.119492231@linutronix.de> <20200821002946.297823391@linutronix.de> <20200826084019.GA6174@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-Date:   Wed, 26 Aug 2020 11:53:15 +0200
-Message-ID: <871rjtwx6c.fsf@nanos.tec.linutronix.de>
+        id S1728717AbgHZLQ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Aug 2020 07:16:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:44394 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728586AbgHZLQx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:16:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2ADE1FB;
+        Wed, 26 Aug 2020 04:16:50 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BE143F71F;
+        Wed, 26 Aug 2020 04:16:49 -0700 (PDT)
+References: <20200824102317.1038259-1-maz@kernel.org> <20200824102317.1038259-6-maz@kernel.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/9] fsl-msi: Provide default retrigger callback
+In-reply-to: <20200824102317.1038259-6-maz@kernel.org>
+Date:   Wed, 26 Aug 2020 12:16:47 +0100
+Message-ID: <jhj7dtlejxc.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 26 2020 at 16:40, Boqun Feng wrote:
-> I hit a compiler error while I was trying to compile this patchset:
+
+Hi Marc,
+
+Many thanks for picking this up!
+Below's the only comment I have, the rest LGTM.
+
+On 24/08/20 11:23, Marc Zyngier wrote:
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-msi.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> arch/x86/kernel/devicetree.c: In function =E2=80=98dt_irqdomain_alloc=E2=
-=80=99:
-> arch/x86/kernel/devicetree.c:232:6: error: =E2=80=98struct irq_alloc_info=
-=E2=80=99 has no member named =E2=80=98ioapic_id=E2=80=99; did you mean =E2=
-=80=98ioapic=E2=80=99?
->   232 |  tmp.ioapic_id =3D mpc_ioapic_id(mp_irqdomain_ioapic_idx(domain));
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-msi.c
+> index 8edadf05cbb7..5306ba7dea3e 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-msi.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+> @@ -144,6 +144,8 @@ static void fsl_mc_msi_update_chip_ops(struct msi_domain_info *info)
+>        */
+>       if (!chip->irq_write_msi_msg)
+>               chip->irq_write_msi_msg = fsl_mc_msi_write_msg;
+> +	if (!chip->irq_retrigger)
+> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
 
-Yeah, noticed myself already and 0day complained as well :)
+AFAICT the closest generic hook we could use here is
 
+  msi_create_irq_domain() -> msi_domain_update_chip_ops()
+
+which happens just below the fsl-specific ops update.
+
+
+However, placing a default .irq_retrigger callback in there would affect any
+and all MSI domain. IOW that would cover PCI and platform MSIs (covered by
+separate patches in this series), but also some x86 ("dmar" & "hpet") and
+TI thingies.
+
+I can't tell right now how bad of an idea it is, but I figured I'd throw
+this out there.
+
+
+>  }
+>
+>  /**
