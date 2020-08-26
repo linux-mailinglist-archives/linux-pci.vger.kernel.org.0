@@ -2,158 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D8225350A
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 18:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B37325356B
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 18:50:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHZQhd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Aug 2020 12:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
+        id S1726767AbgHZQuf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Aug 2020 12:50:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:23604 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbgHZQhd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:37:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D666206FA;
-        Wed, 26 Aug 2020 16:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598459852;
-        bh=pBc8gM5KOX/QRk7tf+c7+MrN051X6wSwRL8XjLMwkpA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZFZ8/xASQAxvIcEud6yRT7vUyq4aWJI1IWNLpTVMDlYbIMy6fjnvfBTeXUdx//xYw
-         V2YdkX+e4/z0cYtfxi5MXYXFYyWfVsAecZgNKOVo0AIyKG7Dldiu6GcpX4kvJA4pu6
-         JAGJW1Ier1tVZvfblXe2e3pC60/5zBEt6idCvOl4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kAyQU-006uP9-GY; Wed, 26 Aug 2020 17:37:30 +0100
+        id S1727943AbgHZQuc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:50:32 -0400
+IronPort-SDR: AeYTCsvcaJ87PfmSNpVKnB4e3+jgzy6QvAK5BVxuG54B/iADXRjtzyHk/GZb8/3S3RKe99SHPU
+ LFokhlMa2pbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144004299"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="144004299"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:50:30 -0700
+IronPort-SDR: O+tRoc/59eCGpVLJON72igRMmtjnFMq9wo28apgxlygz1/37A+zdeFZDDyibhT3bW+C7JSBdFz
+ MbToSWPlnzpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="444115517"
+Received: from orsmsx606-2.jf.intel.com (HELO ORSMSX606.amr.corp.intel.com) ([10.22.229.86])
+  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 09:50:30 -0700
+Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
+ ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Aug 2020 09:50:30 -0700
+Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
+ orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 26 Aug 2020 09:50:30 -0700
+Received: from [10.212.160.45] (10.212.160.45) by ORSMSX101.amr.corp.intel.com
+ (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Aug
+ 2020 09:50:29 -0700
+Subject: Re: [patch V2 15/46] x86/irq: Consolidate DMAR irq allocation
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        "Russ Anderson" <rja@hpe.com>, <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200826111628.794979401@linutronix.de>
+ <20200826112332.163462706@linutronix.de>
+From:   "Dey, Megha" <megha.dey@intel.com>
+Message-ID: <812d9647-ad2e-95e9-aa99-b54ff7ebc52d@intel.com>
+Date:   Wed, 26 Aug 2020 09:50:27 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200826112332.163462706@linutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Aug 2020 17:37:30 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 5/9] fsl-msi: Provide default retrigger callback
-In-Reply-To: <jhj7dtlejxc.mognet@arm.com>
-References: <20200824102317.1038259-1-maz@kernel.org>
- <20200824102317.1038259-6-maz@kernel.org> <jhj7dtlejxc.mognet@arm.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <70107b944534c6a0eeff83e43b05865e@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, gregory.clement@bootlin.com, jason@lakedaemon.net, laurentiu.tudor@nxp.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Language: en-US
+X-Originating-IP: [10.212.160.45]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Valentin,
+Hi Thomas,
 
-On 2020-08-26 12:16, Valentin Schneider wrote:
-> Hi Marc,
-> 
-> Many thanks for picking this up!
-> Below's the only comment I have, the rest LGTM.
-> 
-> On 24/08/20 11:23, Marc Zyngier wrote:
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/bus/fsl-mc/fsl-mc-msi.c | 2 ++
->>  1 file changed, 2 insertions(+)
->> 
->> diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c 
->> b/drivers/bus/fsl-mc/fsl-mc-msi.c
->> index 8edadf05cbb7..5306ba7dea3e 100644
->> --- a/drivers/bus/fsl-mc/fsl-mc-msi.c
->> +++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
->> @@ -144,6 +144,8 @@ static void fsl_mc_msi_update_chip_ops(struct 
->> msi_domain_info *info)
->>        */
->>       if (!chip->irq_write_msi_msg)
->>               chip->irq_write_msi_msg = fsl_mc_msi_write_msg;
->> +	if (!chip->irq_retrigger)
->> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
-> 
-> AFAICT the closest generic hook we could use here is
-> 
->   msi_create_irq_domain() -> msi_domain_update_chip_ops()
-> 
-> which happens just below the fsl-specific ops update.
-> 
-> 
-> However, placing a default .irq_retrigger callback in there would 
-> affect any
-> and all MSI domain. IOW that would cover PCI and platform MSIs (covered 
-> by
-> separate patches in this series), but also some x86 ("dmar" & "hpet") 
-> and
-> TI thingies.
-> 
-> I can't tell right now how bad of an idea it is, but I figured I'd 
-> throw
-> this out there.
+On 8/26/2020 4:16 AM, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+>
+> None of the DMAR specific fields are required.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>
+> ---
+>   arch/x86/include/asm/hw_irq.h |    6 ------
+>   arch/x86/kernel/apic/msi.c    |   10 +++++-----
+>   2 files changed, 5 insertions(+), 11 deletions(-)
+>
+> --- a/arch/x86/include/asm/hw_irq.h
+> +++ b/arch/x86/include/asm/hw_irq.h
+> @@ -83,12 +83,6 @@ struct irq_alloc_info {
+>   			irq_hw_number_t	msi_hwirq;
+>   		};
+>   #endif
+> -#ifdef	CONFIG_DMAR_TABLE
+> -		struct {
+> -			int		dmar_id;
+> -			void		*dmar_data;
+> -		};
+> -#endif
+>   #ifdef	CONFIG_X86_UV
+>   		struct {
+>   			int		uv_limit;
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -329,15 +329,15 @@ static struct irq_chip dmar_msi_controll
+>   static irq_hw_number_t dmar_msi_get_hwirq(struct msi_domain_info *info,
+>   					  msi_alloc_info_t *arg)
+>   {
+> -	return arg->dmar_id;
+> +	return arg->hwirq;
 
-The problem with this approach is that it requires the resend path to be
-cooperative and actually check for more than the top-level irq_data.
-Otherwise you'd never actually trigger the HW resend if it is below
-the top level.
+Shouldn't this return the arg->devid which gets set in dmar_alloc_hwirq?
 
-But I like the idea though. Something like this should do the trick, and
-is admittedly a bug fix:
+-Megha
 
-diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
-index c48ce19a257f..d11c729f9679 100644
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -86,6 +86,18 @@ static int irq_sw_resend(struct irq_desc *desc)
-  }
-  #endif
-
-+static int try_retrigger(struct irq_desc *desc)
-+{
-+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-+	return irq_chip_retrigger_hierarchy(&desc->irq_data);
-+#else
-+	if (desc->irq_data.chip->irq_retrigger)
-+		return desc->irq_data.chip->irq_retrigger(&desc->irq_data);
-+
-+	return 0;
-+#endif
-+}
-+
-  /*
-   * IRQ resend
-   *
-@@ -113,8 +125,7 @@ int check_irq_resend(struct irq_desc *desc, bool 
-inject)
-
-  	desc->istate &= ~IRQS_PENDING;
-
--	if (!desc->irq_data.chip->irq_retrigger ||
--	    !desc->irq_data.chip->irq_retrigger(&desc->irq_data))
-+	if (!try_retrigger(desc))
-  		err = irq_sw_resend(desc);
-
-  	/* If the retrigger was successfull, mark it with the REPLAY bit */
-
-In general, introducing a irq_chip_retrigger_hierarchy() call
-shouldn't be problematic as long as we don't overwrite an existing
-callback.
-
-I'll have a look at respining the series with that in mind.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+>   }
+>   
+>   static int dmar_msi_init(struct irq_domain *domain,
+>   			 struct msi_domain_info *info, unsigned int virq,
+>   			 irq_hw_number_t hwirq, msi_alloc_info_t *arg)
+>   {
+> -	irq_domain_set_info(domain, virq, arg->dmar_id, info->chip, NULL,
+> -			    handle_edge_irq, arg->dmar_data, "edge");
+> +	irq_domain_set_info(domain, virq, arg->devid, info->chip, NULL,
+> +			    handle_edge_irq, arg->data, "edge");
+>   
+>   	return 0;
+>   }
+> @@ -384,8 +384,8 @@ int dmar_alloc_hwirq(int id, int node, v
+>   
+>   	init_irq_alloc_info(&info, NULL);
+>   	info.type = X86_IRQ_ALLOC_TYPE_DMAR;
+> -	info.dmar_id = id;
+> -	info.dmar_data = arg;
+> +	info.devid = id;
+> +	info.data = arg;
+>   
+>   	return irq_domain_alloc_irqs(domain, 1, node, &info);
+>   }
+>
+>
