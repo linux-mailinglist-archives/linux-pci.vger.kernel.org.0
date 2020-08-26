@@ -2,291 +2,298 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFB3B2537A7
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 20:56:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7ECA2537D4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 21:06:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgHZS4C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Aug 2020 14:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbgHZS4A (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Aug 2020 14:56:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6B8C061756
-        for <linux-pci@vger.kernel.org>; Wed, 26 Aug 2020 11:56:00 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g33so1539075pgb.4
-        for <linux-pci@vger.kernel.org>; Wed, 26 Aug 2020 11:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=JWJKSAOuKtu/D3AHg+GKJrz4+nDMNdk0sVj0sJOy520=;
-        b=aROh+Wr6ymo+6XlJaxOmYycsMN9aCBKU3gMUO1XgpABaQ4AYQMKL7M1Cr+4+b7HKZe
-         NxSa0pqkt15wSspQIaJX7fXdcN/gNs/hMbvTRKlJkhQfAK/lhaePj4cEkguvIwh0WIzQ
-         xppJtDqUhvzDJFqU4gUodWsUriunamj5bK0O1WKhNf3J1jaH6N/8Eh8Uo4cS5tG/Zxuz
-         i92espbL8TJ9WVKeTAx5T/sRJGR07qtrPk9VYVZBA5e8APNS/AVyfftnwzIKfxU49o/C
-         g/0OHu+3TJFA2IDbF3zCytnefOgiNraDSgMVOakHkZCUuH1l4TjxxPhsxFQmBBE0lbh6
-         REDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=JWJKSAOuKtu/D3AHg+GKJrz4+nDMNdk0sVj0sJOy520=;
-        b=AScOOf8iOpBHgDBwoEjHN6LWUCZI7BerhQecqIP0YIQNw1cg5gaqGJ8ZHrpyoSxUho
-         v/jWZrfSj2p9f1VD8YSczMjoen98dwpSYIwS7Hds2qcjmNXXNf2yMzd04pAX7hR1qFzb
-         WIH5NZY8KsiXgYDl2xPtbP9d1fIfLYeVjzb/+2F4mZh5YcTWuUAdPAXLVwHHbOD05VW2
-         aw3oMAJYBVc48FWpzLQIOBiDdOwhTyBAVi6wcMaoTwANoqcVDcsqv7pxhjXBN1IJHi+6
-         wJF6igVBkCXNgXPTUxo5NWWpAsbFWpxJe1g5EqncAiQkclRldOkl7T1R721uOykyADYi
-         thEw==
-X-Gm-Message-State: AOAM532uIgmKiiMcpZO+hX3p9gzPuXxuhqRXeveH06baCauC+0oLartm
-        K6YAobI5cnGow2gWoo7ITY86bp9qm8VTwA==
-X-Google-Smtp-Source: ABdhPJyrFh2QXS2NKYpk6YTAmbE13BpLZFCtimpXqJgexgLxG9DRzweuKzpop0Y5uHbeCkJX3Pd9WA==
-X-Received: by 2002:a63:4b63:: with SMTP id k35mr12057868pgl.235.1598468159507;
-        Wed, 26 Aug 2020 11:55:59 -0700 (PDT)
-Received: from arch-ashland-svkelley ([2601:1c0:6a00:1804:88d3:6720:250a:6d10])
-        by smtp.gmail.com with ESMTPSA id b18sm2741353pjq.3.2020.08.26.11.55.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 11:55:58 -0700 (PDT)
-Message-ID: <519210aae580daa5332463d22d22a37d1d398370.camel@intel.com>
-Subject: Re: [PATCH v3 05/10] PCI/AER: Extend AER error handling to RCECs
-From:   sean.v.kelley@intel.com
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>, bhelgaas@google.com,
-        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
-        ashok.raj@intel.com, tony.luck@intel.com, qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 26 Aug 2020 11:55:33 -0700
-In-Reply-To: <c235b1bb-4a2d-8959-d556-011620d5ae55@linux.intel.com>
-References: <20200812164659.1118946-1-sean.v.kelley@intel.com>
-         <20200812164659.1118946-6-sean.v.kelley@intel.com>
-         <c235b1bb-4a2d-8959-d556-011620d5ae55@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726794AbgHZTG1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Aug 2020 15:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbgHZTG0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:06:26 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A6742078A;
+        Wed, 26 Aug 2020 19:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598468785;
+        bh=n9q5XnsmwJPHoti6Hl+rb0l+Xf98BNVH6to1jUHj6yc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=opr9/0FxQBBikjSs9qvLnh5D+/RVVSvWAmLeMrEmhRxfThk2nkWkN0SDGPw6dQQmD
+         LMK1G32Usv7fmG89eb3GzLtVReTAqtth/BnKbqcBmKUq2BonHAo3mES8CWo+9RNEZ8
+         SD25iA8fMN719bNzuBoQEL/K8pjlGDnpAg95Bn/w=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB0kZ-006wum-HX; Wed, 26 Aug 2020 20:06:23 +0100
+Date:   Wed, 26 Aug 2020 20:06:17 +0100
+Message-ID: <87blix2pna.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 29/46] irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
+In-Reply-To: <20200826112333.526797548@linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112333.526797548@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sathya,
-
-On Wed, 2020-08-26 at 10:26 -0700, Kuppuswamy, Sathyanarayanan wrote:
+On Wed, 26 Aug 2020 12:16:57 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> On 8/12/20 9:46 AM, Sean V Kelley wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > Currently the kernel does not handle AER errors for Root Complex
-> > integrated End Points (RCiEPs)[0]. These devices sit on a root bus
-> > within
-> > the Root Complex (RC). AER handling is performed by a Root Complex
-> > Event
-> > Collector (RCEC) [1] which is a effectively a type of RCiEP on the
-> > same
-> > root bus.
-> > 
-> > For an RCEC (technically not a Bridge), error messages "received"
-> > from
-> > associated RCiEPs must be enabled for "transmission" in order to
-> > cause a
-> > System Error via the Root Control register or (when the Advanced
-> > Error
-> > Reporting Capability is present) reporting via the Root Error
-> > Command
-> > register and logging in the Root Error Status register and Error
-> > Source
-> > Identification register.
-> > 
-> > In addition to the defined OS level handling of the reset flow for
-> > the
-> > associated RCiEPs of an RCEC, it is possible to also have non-
-> > native
-> > handling. In that case there is no need to take any actions on the
-> > RCEC
-> > because the firmware is responsible for them. This is true where
-> > APEI [2]
-> > is used to report the AER errors via a GHES[v2] HEST entry [3] and
-> > relevant AER CPER record [4] and non-native handling is in use.
-> > 
-> > We effectively end up with two different types of discovery for
-> > purposes of handling AER errors:
-> > 
-> > 1) Normal bus walk - we pass the downstream port above a bus to
-> > which
-> > the device is attached and it walks everything below that point.
-> > 
-> > 2) An RCiEP with no visible association with an RCEC as there is no
-> > need
-> > to walk devices. In that case, the flow is to just call the
-> > callbacks for
-> > the actual device.
-> > 
-> > A new walk function pci_walk_dev_affected(), similar to
-> > pci_bus_walk(),
-> > is provided that takes a pci_dev instead of a bus. If that dev
-> > corresponds
-> > to a downstream port it will walk the subordinate bus of that
-> > downstream
-> > port. If the dev does not then it will call the function on that
-> > device
-> > alone.
-> > 
-> > [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex
-> > Integrated Endpoint Rules.
-> > [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling
-> > and
-> > Logging
-> > [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface
-> > (APEI)
-> > [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
-> > [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> > ---
-> >   drivers/pci/pcie/err.c | 54 ++++++++++++++++++++++++++++++++++---
-> > -----
-> >   1 file changed, 44 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> > index 14bb8f54723e..f4cfb37c26c1 100644
-> > --- a/drivers/pci/pcie/err.c
-> > +++ b/drivers/pci/pcie/err.c
-> > @@ -146,38 +146,68 @@ static int report_resume(struct pci_dev *dev,
-> > void *data)
-> >   	return 0;
-> >   }
-> >   
-> > +/**
-> > + * pci_walk_dev_affected - walk devices potentially AER affected
-> > + * @dev      device which may be an RCEC with associated RCiEPs,
-> > + *           an RCiEP associated with an RCEC, or a Port.
-> > + * @cb       callback to be called for each device found
-> > + * @userdata arbitrary pointer to be passed to callback.
-> > + *
-> > + * If the device provided is a bridge, walk the subordinate bus,
-> > + * including any bridged devices on buses under this bus.
-> > + * Call the provided callback on each device found.
-> > + *
-> > + * If the device provided has no subordinate bus, call the
-> > provided
-> > + * callback on the device itself.
-> > + */
-> > +static void pci_walk_dev_affected(struct pci_dev *dev, int
-> > (*cb)(struct pci_dev *, void *),
-> > +				  void *userdata)
-> > +{
-> > +	if (dev->subordinate)
-> > +		pci_walk_bus(dev->subordinate, cb, userdata);
-> > +	else
-> > +		cb(dev, userdata);
-> > +}
-> > +
-> >   pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >   			enum pci_channel_state state,
-> >   			pci_ers_result_t (*reset_link)(struct pci_dev
-> > *pdev))
-> >   {
-> >   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> > -	struct pci_bus *bus;
-> >   
-> >   	/*
-> >   	 * Error recovery runs on all subordinates of the first
-> > downstream port.
-> >   	 * If the downstream port detected the error, it is cleared at
-> > the end.
-> > +	 * For RCiEPs we should reset just the RCiEP itself.
-> >   	 */
-> >   	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
-> > +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> > +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
-> > +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
-> >   		dev = dev->bus->self;
-> > -	bus = dev->subordinate;
-> >   
-> >   	pci_dbg(dev, "broadcast error_detected message\n");
-> >   	if (state == pci_channel_io_frozen) {
-> > -		pci_walk_bus(bus, report_frozen_detected, &status);
-> > +		pci_walk_dev_affected(dev, report_frozen_detected,
-> > &status);
-> > +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> > +			pci_warn(dev, "link reset not possible for
-> > RCiEP\n");
-> > +			status = PCI_ERS_RESULT_NONE;
-> > +			goto failed;
-> reset_link is not applicable for RC_END, but why do you want to fail
-> it?
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> To support MSI irq domains which do not fit at all into the regular MSI
+> irqdomain scheme, like the XEN MSI interrupt management for PV/HVM/DOM0,
+> it's necessary to allow to override the alloc/free implementation.
+> 
+> This is a preperatory step to switch X86 away from arch_*_msi_irqs() and
+> store the irq domain pointer right in struct device.
+> 
+> No functional change for existing MSI irq domain users.
+> 
+> Aside of the evil XEN wrapper this is also useful for special MSI domains
+> which need to do extra alloc/free work before/after calling the generic
+> core function. Work like allocating/freeing MSI descriptors, MSI storage
+> space etc.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+>  include/linux/msi.h |   27 ++++++++++++++++++++
+>  kernel/irq/msi.c    |   70 +++++++++++++++++++++++++++++++++++-----------------
+>  2 files changed, 75 insertions(+), 22 deletions(-)
+> 
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -241,6 +241,10 @@ struct msi_domain_info;
+>   * @msi_finish:		Optional callback to finalize the allocation
+>   * @set_desc:		Set the msi descriptor for an interrupt
+>   * @handle_error:	Optional error handler if the allocation fails
+> + * @domain_alloc_irqs:	Optional function to override the default allocation
+> + *			function.
+> + * @domain_free_irqs:	Optional function to override the default free
+> + *			function.
+>   *
+>   * @get_hwirq, @msi_init and @msi_free are callbacks used by
+>   * msi_create_irq_domain() and related interfaces
+> @@ -248,6 +252,22 @@ struct msi_domain_info;
+>   * @msi_check, @msi_prepare, @msi_finish, @set_desc and @handle_error
+>   * are callbacks used by msi_domain_alloc_irqs() and related
+>   * interfaces which are based on msi_desc.
+> + *
+> + * @domain_alloc_irqs, @domain_free_irqs can be used to override the
+> + * default allocation/free functions (__msi_domain_alloc/free_irqs). This
+> + * is initially for a wrapper around XENs seperate MSI universe which can't
+> + * be wrapped into the regular irq domains concepts by mere mortals.  This
+> + * allows to universally use msi_domain_alloc/free_irqs without having to
+> + * special case XEN all over the place.
+> + *
+> + * Contrary to other operations @domain_alloc_irqs and @domain_free_irqs
+> + * are set to the default implementation if NULL and even when
+> + * MSI_FLAG_USE_DEF_DOM_OPS is not set to avoid breaking existing users and
+> + * because these callbacks are obviously mandatory.
+> + *
+> + * This is NOT meant to be abused, but it can be useful to build wrappers
+> + * for specialized MSI irq domains which need extra work before and after
+> + * calling __msi_domain_alloc_irqs()/__msi_domain_free_irqs().
+>   */
+>  struct msi_domain_ops {
+>  	irq_hw_number_t	(*get_hwirq)(struct msi_domain_info *info,
+> @@ -270,6 +290,10 @@ struct msi_domain_ops {
+>  				    struct msi_desc *desc);
+>  	int		(*handle_error)(struct irq_domain *domain,
+>  					struct msi_desc *desc, int error);
+> +	int		(*domain_alloc_irqs)(struct irq_domain *domain,
+> +					     struct device *dev, int nvec);
+> +	void		(*domain_free_irqs)(struct irq_domain *domain,
+> +					    struct device *dev);
+>  };
+>  
+>  /**
+> @@ -327,8 +351,11 @@ int msi_domain_set_affinity(struct irq_d
+>  struct irq_domain *msi_create_irq_domain(struct fwnode_handle *fwnode,
+>  					 struct msi_domain_info *info,
+>  					 struct irq_domain *parent);
+> +int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> +			    int nvec);
+>  int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>  			  int nvec);
+> +void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
+>  void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
+>  struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
+>  
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -229,11 +229,13 @@ static int msi_domain_ops_check(struct i
+>  }
+>  
+>  static struct msi_domain_ops msi_domain_ops_default = {
+> -	.get_hwirq	= msi_domain_ops_get_hwirq,
+> -	.msi_init	= msi_domain_ops_init,
+> -	.msi_check	= msi_domain_ops_check,
+> -	.msi_prepare	= msi_domain_ops_prepare,
+> -	.set_desc	= msi_domain_ops_set_desc,
+> +	.get_hwirq		= msi_domain_ops_get_hwirq,
+> +	.msi_init		= msi_domain_ops_init,
+> +	.msi_check		= msi_domain_ops_check,
+> +	.msi_prepare		= msi_domain_ops_prepare,
+> +	.set_desc		= msi_domain_ops_set_desc,
+> +	.domain_alloc_irqs	= __msi_domain_alloc_irqs,
+> +	.domain_free_irqs	= __msi_domain_free_irqs,
+>  };
+>  
+>  static void msi_domain_update_dom_ops(struct msi_domain_info *info)
+> @@ -245,6 +247,14 @@ static void msi_domain_update_dom_ops(st
+>  		return;
+>  	}
+>  
+> +	if (ops->domain_alloc_irqs == NULL)
+> +		ops->domain_alloc_irqs = msi_domain_ops_default.domain_alloc_irqs;
+> +	if (ops->domain_free_irqs == NULL)
+> +		ops->domain_free_irqs = msi_domain_ops_default.domain_free_irqs;
+> +
+> +	if (!(info->flags & MSI_FLAG_USE_DEF_DOM_OPS))
+> +		return;
+> +
+>  	if (ops->get_hwirq == NULL)
+>  		ops->get_hwirq = msi_domain_ops_default.get_hwirq;
+>  	if (ops->msi_init == NULL)
+> @@ -278,8 +288,7 @@ struct irq_domain *msi_create_irq_domain
+>  {
+>  	struct irq_domain *domain;
+>  
+> -	if (info->flags & MSI_FLAG_USE_DEF_DOM_OPS)
+> -		msi_domain_update_dom_ops(info);
+> +	msi_domain_update_dom_ops(info);
+>  	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
+>  		msi_domain_update_chip_ops(info);
+>  
+> @@ -386,17 +395,8 @@ static bool msi_check_reservation_mode(s
+>  	return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
+>  }
+>  
+> -/**
+> - * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+> - * @domain:	The domain to allocate from
+> - * @dev:	Pointer to device struct of the device for which the interrupts
+> - *		are allocated
+> - * @nvec:	The number of interrupts to allocate
+> - *
+> - * Returns 0 on success or an error code.
+> - */
+> -int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> -			  int nvec)
+> +int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> +			    int nvec)
+>  {
+>  	struct msi_domain_info *info = domain->host_data;
+>  	struct msi_domain_ops *ops = info->ops;
+> @@ -490,12 +490,24 @@ int msi_domain_alloc_irqs(struct irq_dom
+>  }
+>  
+>  /**
+> - * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
+> - * @domain:	The domain to managing the interrupts
+> + * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+> + * @domain:	The domain to allocate from
+>   * @dev:	Pointer to device struct of the device for which the interrupts
+> - *		are free
+> + *		are allocated
+> + * @nvec:	The number of interrupts to allocate
+> + *
+> + * Returns 0 on success or an error code.
+>   */
+> -void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+> +int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> +			  int nvec)
+> +{
+> +	struct msi_domain_info *info = domain->host_data;
+> +	struct msi_domain_ops *ops = info->ops;
 
+Rework leftovers, I imagine.
 
-This patch is incorporated prior to the addition of the dev->rcec link
-for actually handling the RC_END case.  This is the first part before I
-bring in the rest and is the basis also of Jonathan's original work.
+> +
+> +	return ops->domain_alloc_irqs(domain, dev, nvec);
+> +}
+> +
+> +void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+>  {
+>  	struct msi_desc *desc;
+>  
+> @@ -513,6 +525,20 @@ void msi_domain_free_irqs(struct irq_dom
+>  }
+>  
+>  /**
+> + * __msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
 
-See subsequent patches on top of err.c in this v3 series.
+Spurious __.
 
+> + * @domain:	The domain to managing the interrupts
+> + * @dev:	Pointer to device struct of the device for which the interrupts
+> + *		are free
+> + */
+> +void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+> +{
+> +	struct msi_domain_info *info = domain->host_data;
+> +	struct msi_domain_ops *ops = info->ops;
 
-> > +		}
-> > +
-> >   		status = reset_link(dev);
-> >   		if (status != PCI_ERS_RESULT_RECOVERED) {
-> >   			pci_warn(dev, "link reset failed\n");
-> >   			goto failed;
-> >   		}
-> >   	} else {
-> > -		pci_walk_bus(bus, report_normal_detected, &status);
-> > +		pci_walk_dev_affected(dev, report_normal_detected,
-> > &status);
-> >   	}
-> >   
-> >   	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-> >   		status = PCI_ERS_RESULT_RECOVERED;
-> >   		pci_dbg(dev, "broadcast mmio_enabled message\n");
-> > -		pci_walk_bus(bus, report_mmio_enabled, &status);
-> > +		pci_walk_dev_affected(dev, report_mmio_enabled,
-> > &status);
-> >   	}
-> >   
-> >   	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> > @@ -188,17 +218,21 @@ pci_ers_result_t pcie_do_recovery(struct
-> > pci_dev *dev,
-> >   		 */
-> >   		status = PCI_ERS_RESULT_RECOVERED;
-> >   		pci_dbg(dev, "broadcast slot_reset message\n");
-> > -		pci_walk_bus(bus, report_slot_reset, &status);
-> > +		pci_walk_dev_affected(dev, report_slot_reset, &status);
-> >   	}
-> >   
-> >   	if (status != PCI_ERS_RESULT_RECOVERED)
-> >   		goto failed;
-> >   
-> >   	pci_dbg(dev, "broadcast resume message\n");
-> > -	pci_walk_bus(bus, report_resume, &status);
-> > +	pci_walk_dev_affected(dev, report_resume, &status);
-> >   
-> > -	pci_aer_clear_device_status(dev);
-> > -	pci_aer_clear_nonfatal_status(dev);
-> you want to prevent clearing status for RC_END ? Can you explain?
+Same thing?
 
-It's the RC_EC of the associated RC_END which is to be cleared.
-However, in this original patch from Jonathan prior to my subsequent
-addition of dev->rcec it is not possible. The important thing is not to
-attempt to clear the RC_END without the association.
+> +
+> +	return ops->domain_free_irqs(domain, dev);
+> +}
+> +
+> +/**
+>   * msi_get_domain_info - Get the MSI interrupt domain info for @domain
+>   * @domain:	The interrupt domain to retrieve data from
+>   *
 
-See subsequent patches on top of err.c in this v3 series.
+Otherwise looks good to me:
 
-Thanks,
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-Sean
+	M.
 
-> > +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> > +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
-> > +		pci_aer_clear_device_status(dev);
-> > +		pci_aer_clear_nonfatal_status(dev);
-> > +	}
-> >   	pci_info(dev, "device recovery successful\n");
-> >   	return status;
-> >   
-> > 
-
+-- 
+Without deviation from the norm, progress is not possible.
