@@ -2,42 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 259D62539E6
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Aug 2020 23:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F17D253DCF
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 08:34:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHZVnd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Aug 2020 17:43:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34921 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZVnd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:43:33 -0400
-IronPort-SDR: AhWLQ9p7DrUzLrL7YVs59BeQkoynZqH+C6DMeyacO+lMIa+GzvkYbWwrOEe7Z/T/nBR2k4l+4B
- tPNqE5gRC5rQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144149708"
-X-IronPort-AV: E=Sophos;i="5.76,357,1592895600"; 
-   d="scan'208";a="144149708"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 14:43:32 -0700
-IronPort-SDR: OD9JTnBIG8pJs82RcAuk1kcyOG2KRmMTOf5aJfbgxvnxYGM5qj1Olf51blrN/XgKqL1TuqeRP5
- ecFeGk8vkYwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,357,1592895600"; 
-   d="scan'208";a="329367051"
-Received: from irsmsx602.ger.corp.intel.com ([163.33.146.8])
-  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 14:43:30 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- irsmsx602.ger.corp.intel.com (163.33.146.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Aug 2020 22:43:29 +0100
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Wed, 26 Aug 2020 14:43:27 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "hch@infradead.org" <hch@infradead.org>
-CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
+        id S1726123AbgH0GeY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Aug 2020 02:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgH0GeY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Aug 2020 02:34:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21199C061262;
+        Wed, 26 Aug 2020 23:34:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZEAL8yhDmv2NOt8eGkltoZbbAq9aMUTNBk5Kd3S4jBM=; b=P4pIzY3CpH/94U0enuaerI0h69
+        /UQ6n1pRAhhMhmdU08FxcNMwhZsl7SaQTptgvn3rIleLvzXeN78/6B7w62uIi699Fvij7n19iozCa
+        VPK2XhcZgNffEcuNji2JoHLRVvy6qQ3AVK31lf9w4ScqgWUNmCxIboj0ty4y6usPFvgQm4k6UeeAR
+        xvCPPqr0OpAwiFt/xAUGEBqeHiFRYDfpDNCwXNzRy8YwuO1rivio9iFqbjMkDPcG6lTsIO3TEeRn9
+        TxUyPLL2jAw8dzv4Rg82GtWlsjUMDbW3cvHGep8uw3iSRcrEaOpYzP8HuyLT8/XmKAvrY8hr+GZHg
+        XUNC14NA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBBU6-0003d2-QG; Thu, 27 Aug 2020 06:34:06 +0000
+Date:   Thu, 27 Aug 2020 07:34:06 +0100
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
         "kw@linux.com" <kw@linux.com>,
         "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -49,40 +43,27 @@ CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
         "Huffman, Amber" <amber.huffman@intel.com>,
         "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
 Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlI1l4AgAKTLgA=
-Date:   Wed, 26 Aug 2020 21:43:27 +0000
-Message-ID: <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
+Message-ID: <20200827063406.GA13738@infradead.org>
 References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
-         <20200825062320.GA27116@infradead.org>
-In-Reply-To: <20200825062320.GA27116@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.212.222.2]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D8000C6336A84F43B2F822D3244D885C@intel.com>
-Content-Transfer-Encoding: base64
+ <20200825062320.GA27116@infradead.org>
+ <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA4LTI1IGF0IDA2OjIzICswMDAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gT24gRnJpLCBBdWcgMjEsIDIwMjAgYXQgMDg6MzI6MjBQTSArMDgwMCwgS2FpLUhlbmcg
-RmVuZyB3cm90ZToNCj4gPiBOZXcgSW50ZWwgbGFwdG9wcyB3aXRoIFZNRCBjYW5ub3QgcmVhY2gg
-ZGVlcGVyIHBvd2VyIHNhdmluZyBzdGF0ZSwNCj4gPiByZW5kZXJzIHZlcnkgc2hvcnQgYmF0dGVy
-eSB0aW1lLg0KPiANCj4gU28gd2hhdCBhYm91dCBqdXN0IGRpc2FibGluZyBWTUQgZ2l2ZW4gaG93
-IGJsb29keSBwb2ludGxlc3MgaXQgaXM/DQo+IEhhc24ndCBhbnlvbmUgbGVhcm5lZCBmcm9tIHRo
-ZSBBSENJIHJlbWFwcGluZyBkZWJhY2xlPw0KPiANCj4gSSdtIHJlYWxseSBwaXNzZWQgYXQgYWxs
-IHRoaXMgcG9pbnRsZXNzIGNyYXAgaW50ZWwgY29tZXMgdXAgd2l0aCBqdXN0DQo+IHRvIG1ha2Ug
-bGlmZSBoYXJkIGZvciBhYnNvbHV0ZWx5IG5vIGdhaW4uICBJcyBpdCBzbyBoYXJkIHRvIGp1c3Qg
-bGVhdmUNCj4gYSBOVk1lIGRldmljZSBhcyBhIHN0YW5kYXJkIE5WTWUgZGV2aWNlIGluc3RlYWQg
-b2YgZipeJmluZyBldmVyeXRoaW5nDQo+IHVwIGluIHRoZSBjaGlwc2V0IHRvIG1ha2UgT1Mgc3Vw
-cG9ydCBhIHBhaW4gYW5kIEkvTyBzbG93ZXIgdGhhbiBieQ0KPiBkb2luZyBub3RoaW5nPw0KDQoN
-CkZlZWwgZnJlZSB0byByZXZpZXcgbXkgc2V0IHRvIGRpc2FibGUgdGhlIE1TSSByZW1hcHBpbmcg
-d2hpY2ggd2lsbCBtYWtlDQppdCBwZXJmb3JtIGFzIHdlbGwgYXMgZGlyZWN0LWF0dGFjaGVkOg0K
-DQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcGNpL2xpc3QvP3Nl
-cmllcz0zMjU2ODENCg==
+On Wed, Aug 26, 2020 at 09:43:27PM +0000, Derrick, Jonathan wrote:
+> Feel free to review my set to disable the MSI remapping which will make
+> it perform as well as direct-attached:
+> 
+> https://patchwork.kernel.org/project/linux-pci/list/?series=325681
+
+So that then we have to deal with your schemes to make individual
+device direct assignment work in a convoluted way?  Please just give us
+a disable nob for VMD, which solves _all_ these problems without adding
+any.
