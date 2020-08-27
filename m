@@ -2,101 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D85B9254DFA
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 21:05:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66299254E14
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 21:18:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgH0TFT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Aug 2020 15:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgH0TFT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:05:19 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727881AbgH0TR6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Aug 2020 15:17:58 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42628 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727020AbgH0TR5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Aug 2020 15:17:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598555875;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IxPAieUngr9DBwwiu/oaORGN+QbkwF+ahdjNmb5dNbE=;
+        b=JL2pPvejL/9AvDfRq9K3p8AQDNvPEmf/EBoWs0mfLdg7J+DB1+PHU0FUN8HjkNVJS7+gRl
+        jh8GPWqXJ654LTSJlicRHl3c0hvWE6wbu2K3pe87BF2QMSn4+aI2m9EuvlxojPcdLFQU9S
+        0CvJAqm2gnOFMp2czhVQ7/1upaL55tU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-YRCxWWLPN621bX7wXhJMjg-1; Thu, 27 Aug 2020 15:17:53 -0400
+X-MC-Unique: YRCxWWLPN621bX7wXhJMjg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6524E20786;
-        Thu, 27 Aug 2020 19:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598555118;
-        bh=6wi7BZ7sjbl1BjeinCwOI2PqM7WQLe/7Md+KmWzCljw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l1e8/Pmn8ngF+p3T9et0To6f49k4Ql3c2Z74uxj3xtH00LxLMAu5rqZK5lwfRW+63
-         a2oxGdG2gcwUcCa7OKsDv0Sr9kCeSbyeEIuhTR+zmHFvr3YFh8HlUlxsJB+STprPT0
-         uMjl4QF+58ofygnmmXDpFUoANW4vhWh+RNq8ZbG8=
-Date:   Thu, 27 Aug 2020 14:05:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        stable <stable@vger.kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Adam Borowski <kilobyte@angband.pl>
-Subject: Re: [PATCH v2] x86/pci: fix intel_mid_pci.c build error when ACPI is
- not enabled
-Message-ID: <20200827190517.GA2097725@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C53364086;
+        Thu, 27 Aug 2020 19:17:51 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C77B702FF;
+        Thu, 27 Aug 2020 19:17:49 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 13:17:48 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>, bhelgaas@google.com,
+        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
+Message-ID: <20200827131748.46b3f8bc@x1.home>
+In-Reply-To: <20200827183138.GA1929779@bjorn-Precision-5520>
+References: <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
+        <20200827183138.GA1929779@bjorn-Precision-5520>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ea903917-e51b-4cc9-2680-bc1e36efa026@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 05:10:27PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix build error when CONFIG_ACPI is not set/enabled by adding
-> the header file <asm/acpi.h> which contains a stub for the function
-> in the build error.
-> 
-> ../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
-> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
->   acpi_noirq_set();
-> 
-> Fixes: a912a7584ec3 ("x86/platform/intel-mid: Move PCI initialization to arch_init()")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: stable@vger.kernel.org	# v4.16+
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Len Brown <lenb@kernel.org>
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Jesse Barnes <jsbarnes@google.com>
-> Cc: Arjan van de Ven <arjan@linux.intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Jesse Barnes <jsbarnes@google.com>
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+On Thu, 27 Aug 2020 13:31:38 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Applied to pci/misc for v5.10, thanks!
+> Re the subject line, this patch does a lot more than just "introduce a
+> flag"; AFAICT it actually enables important VFIO functionality, e.g.,
+> something like:
+> 
+>   vfio/pci: Enable MMIO access for s390 detached VFs
+> 
+> On Thu, Aug 13, 2020 at 11:40:43AM -0400, Matthew Rosato wrote:
+> > s390x has the notion of providing VFs to the kernel in a manner
+> > where the associated PF is inaccessible other than via firmware.
+> > These are not treated as typical VFs and access to them is emulated
+> > by underlying firmware which can still access the PF.  After
+> > the referened commit however these detached VFs were no longer able
+> > to work with vfio-pci as the firmware does not provide emulation of
+> > the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
+> > these detached VFs so that vfio-pci can allow memory access to
+> > them again.  
+> 
+> Out of curiosity, in what sense is the PF inaccessible?  Is it
+> *impossible* for Linux to access the PF, or is it just not enumerated
+> by clp_list_pci() so Linux doesn't know about it?
+> 
+> VFs do not implement PCI_COMMAND, so I guess "firmware does not
+> provide emulation of PCI_COMMAND_MEMORY" means something like "we
+> can't access the PF so we can't enable/disable PCI_COMMAND_MEMORY"?
+> 
+> s/referened/referenced/
+> 
+> > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+> > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> > ---
+> >  arch/s390/pci/pci_bus.c            | 13 +++++++++++++
+> >  drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
+> >  include/linux/pci.h                |  4 ++++
+> >  3 files changed, 21 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+> > index 642a993..1b33076 100644
+> > --- a/arch/s390/pci/pci_bus.c
+> > +++ b/arch/s390/pci/pci_bus.c
+> > @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
+> >  }
+> >  #endif
+> >  
+> > +void pcibios_bus_add_device(struct pci_dev *pdev)
+> > +{
+> > +	struct zpci_dev *zdev = to_zpci(pdev);
+> > +
+> > +	/*
+> > +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
+> > +	 * detached from its parent PF.  We rely on firmware emulation to
+> > +	 * provide underlying PF details.  
+> 
+> What exactly does "multifunction bus" mean?  I'm familiar with
+> multi-function *devices*, but not multi-function buses.
+> 
+> > +	 */
+> > +	if (zdev->vfn && !zdev->zbus->multifunction)
+> > +		pdev->detached_vf = 1;
+> > +}
+> > +
+> >  static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
+> >  {
+> >  	struct pci_bus *bus;
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index d98843f..98f93d1 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+> >  	 * PF SR-IOV capability, there's therefore no need to trigger
+> >  	 * faults based on the virtual value.
+> >  	 */
+> > -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
+> > +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);  
+> 
+> I'm not super keen on the idea of having two subtly different ways of
+> identifying VFs.  I think that will be confusing.  This seems to be
+> the critical line, so whatever we do here, it will be out of the
+> ordinary and probably deserves a little comment.
+> 
+> If Linux doesn't see the PF, does pci_physfn(VF) return NULL, i.e., is
+> VF->physfn NULL?
 
-We could put it in v5.9, but a912a7584ec3 was merged for v4.16, so
-apparently this has been broken for a long time.
+FWIW, pci_physfn() never returns NULL, it returns the provided pdev if
+is_virtfn is not set.  This proposal wouldn't change that return value.
+AIUI pci_physfn(), the caller needs to test that the returned device is
+different from the provided device if there's really code that wants to
+traverse to the PF.
 
-> ---
-> Found in linux-next, but applies to/exists in mainline also.
-> 
-> v2:
-> - add Reviewed-by: and Acked-by: tags
-> - drop alternatives
-> 
->  arch/x86/pci/intel_mid_pci.c |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> --- linux-next-20200813.orig/arch/x86/pci/intel_mid_pci.c
-> +++ linux-next-20200813/arch/x86/pci/intel_mid_pci.c
-> @@ -33,6 +33,7 @@
->  #include <asm/hw_irq.h>
->  #include <asm/io_apic.h>
->  #include <asm/intel-mid.h>
-> +#include <asm/acpi.h>
->  
->  #define PCIE_CAP_OFFSET	0x100
->  
-> 
+My interpretation of what's happening here is that we're a guest
+running on a bare metal hypervisor (I assume z/VM) and we're assigned a
+VF that appears on this non-multifunction bus, but the hypervisor
+doesn't provide emulation of all of the non-implemented config space
+features of a VF, the memory enable bit being relevant for this fix.
+We're therefore trying to detect this VF nature of the device, which
+gets a bit messy since a VF implies a PF on bare metal.  The PF would
+be owned by the hypervisor and not accessible to us.
+
+An alternative idea we tossed around, that might still be a possibility,
+is using dev_flags to describe the specific missing feature, for
+example something about the command register memory bit being hardwired
+to zero but always enabled (assuming the PF SR-IOV MSE bit is not
+cleared).  Thanks,
+
+Alex
+
