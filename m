@@ -2,95 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B141254B20
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 18:50:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FF16254BA3
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 19:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgH0Qua (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Aug 2020 12:50:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52044 "EHLO
+        id S1726903AbgH0RIw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Aug 2020 13:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbgH0Qu3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Aug 2020 12:50:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D07FC061264;
-        Thu, 27 Aug 2020 09:50:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Suq6RmjK6UVv4ul6GVoPMckCVMrlCWnO71fryQ+CL5U=; b=WJIIbkQPdfo+0fSSyFE/rSQ1PA
-        OueuGza6VrwoIxjP2FjBHxX3+IW0zd6cb/uBG3QsQc1ONLpSV/d1aJR2IIysD8SGNQglrHXvxyKm8
-        CWheUSTkKiIVQBmrZXQAUAkDd8NjYEYrIUv8Qi70dEZmIrG786nQ4FkUfFitvW/f87OgtGMZ4tHuP
-        t7D+bLauDjSHv/ammitLvqjNO48U7YkTe4PKbNG7gLkduUR8sJK5xBNE25/zvuHuXKOi1TEMJb3uR
-        lUf0IyrHRzWmMkS7Rs4DumwxyLhw1H1miz1Ubu2/0rcMrsaHD2LTqqj8WfbGqiNI9JrfJXktrab3W
-        Kq53tmbQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBL6R-0003jz-4m; Thu, 27 Aug 2020 16:50:19 +0000
-Date:   Thu, 27 Aug 2020 17:50:19 +0100
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200827165019.GA13414@infradead.org>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
- <20200825062320.GA27116@infradead.org>
- <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
- <20200827063406.GA13738@infradead.org>
- <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
- <20200827162333.GA6822@infradead.org>
- <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
+        with ESMTP id S1726009AbgH0RIv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Aug 2020 13:08:51 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340C6C061264;
+        Thu, 27 Aug 2020 10:08:50 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id m200so3346716ybf.10;
+        Thu, 27 Aug 2020 10:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mHniHlKDMaeGQOVA7wYMtzU65VERCv+oHJvfRmraXqc=;
+        b=phVYQvV+p1qAm0gsfY1toQgMji8hPquXZHym9pN14Y2rco5aiKlsT1Gx6zVh2XPdIs
+         t2lqa76eF8xs83b9Y54L5hMJo7WCFO2fbUSk+GIfX8iqVvRbExWIpBc7OTj5+vOG4I2P
+         JMlFP6YynzTlq7xlgz3eMXxGGT5QMTkUMER9bFTWUu5AQF/UoGISrTL9tqBcLf6hoJk6
+         37MLl/pmsybfeZDTrQ+3wnhfTSeXIU6+Q51facRmWQ5yyjSZuiQstgngF0UVxzXRP/21
+         X486CABykcDT9yvbgwMMOekgteTdYZM9T9v9hlx2QNelhA/SoEvmBsVsRsEJBl3dLeze
+         +W3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mHniHlKDMaeGQOVA7wYMtzU65VERCv+oHJvfRmraXqc=;
+        b=alMi6JrDldOXZ3waYVZCRbVX+TIlmAaSGPrHojLalKfR934zW216I4mqFloP/oDaAw
+         CVyb/uBXS87QqLLovo1u/LgZJ/LpzrSaoaADqZeAG98QlKLHv0liNPtn0EqpWLWnivt9
+         WIg18GdU0SE4uf/7v24HGHs4mkdypAkp6uAjMYtqQ7ReTmcMOUupuB9W+nLoiDPnVwFc
+         YUBWkQ2IBP9NRDFsvbthaJaWzYd1UmLrfjs1ngNj/bYkijUqLmBUOM3tieq6mU0gmRa3
+         Iud5pvhxqEx3sHG0KQLxUflbQ8ArB4htL4inxkl3egS+GOjRWmFBH6a/OlFi6RCRxI/I
+         CfbA==
+X-Gm-Message-State: AOAM531Vnm4yuLxDzlrZsOhMr0EHfTYVYJjc/0u9ME3rPfTmueBwcTxV
+        tLWhIWd7NBHgezN5GZdIjvJyqMEKa5ZbuanWcsE=
+X-Google-Smtp-Source: ABdhPJynyRKB2vFyMBE3ZSJ4B1YetYq7rZ1URcR+oH1Mlp82FYbmnw++2Z+nCtikyiYgdGx4q742m6zdB4fkuZ+CzIE=
+X-Received: by 2002:a25:8149:: with SMTP id j9mr31275854ybm.214.1598548129529;
+ Thu, 27 Aug 2020 10:08:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 27 Aug 2020 18:08:23 +0100
+Message-ID: <CA+V-a8t9p9U5oeTp-QNmp2uGHMOvXpo+VhRvp5hv5oDEWUh5QA@mail.gmail.com>
+Subject: Re: [PATCH 11/20] dt-bindings: usb: renesas,usbhs: Add r8a774e1 support
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 04:45:53PM +0000, Derrick, Jonathan wrote:
-> Just a few benefits and there are other users with unique use cases:
-> 1. Passthrough of the endpoint to OSes which don't natively support
-> hotplug can enable hotplug for that OS using the guest VMD driver
+Hi Greg,
 
-Or they could just write a hotplug driver, which would be more useful
-than writing a hotplug driver.
+On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Document RZ/G2H (R8A774E1) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/usb/renesas,usbhs.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+Gentle ping.
 
-> 2. Some hypervisors have a limit on the number of devices that can be
-> passed through. VMD endpoint is a single device that expands to many.
-
-Or you just fix the hypervisor.  Never mind that this is so much
-less likely than wanting to pass an individual device or VF to a guest,
-which VMD makes impossible (at least without tons of hacks specifically
-for it).
-
-> 3. Expansion of possible bus numbers beyond 256 by using other
-> segments.
-
-Which we can trivially to with PCI domains.
-
-> 4. Custom RAID LED patterns driven by ledctl
-
-Which you can also do by any other vendor specific way.
-
-> 
-> I'm not trying to market this. Just pointing out that this isn't
-> "bringing zero actual benefits" to many users.
-
-Which of those are a benefit to a Linux user?  Serious, I really don't
-care if Intel wants to sell VMD as a value add to those that have
-a perceived or in rare cases even real need.  Just let Linux opt out
-of it instead of needing special quirks all over.
+Cheers,
+Prabhakar
