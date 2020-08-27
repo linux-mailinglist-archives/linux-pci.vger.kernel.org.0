@@ -2,152 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8DDB254082
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 10:17:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CBDE2542B6
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 11:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgH0IRe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Aug 2020 04:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgH0IRQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:17:16 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86A5D22CAF;
-        Thu, 27 Aug 2020 08:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598516235;
-        bh=f0/TTg7ydrldBCfzfcvkuWCMzTaAgtKPEMau/tanrpk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TmsP/B8ZI27FXcca++ez4/wY7bzEmEEis+Dyck/1ERZwMR0OuB91mKNhtYQsF0Xbx
-         /e0s5LTBumjF95gOBL1dlpZN5H4zC/AJG1WooHCqj6zZkqNGswYFi4R4DmuLUe3yCV
-         JdcXgX7JS8A29KaJ8sw9cYHnN3K3LQoA4KkOn7HI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kBD5t-0074EG-T5; Thu, 27 Aug 2020 09:17:14 +0100
+        id S1726826AbgH0JtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Aug 2020 05:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0JtY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Aug 2020 05:49:24 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF08C061264;
+        Thu, 27 Aug 2020 02:49:24 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id w10so3915221oti.2;
+        Thu, 27 Aug 2020 02:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RuGAUjmXUBGiB092kZEexqQx1sR3+FlOyRMdRS1FNSo=;
+        b=XwGLd+WjrhAl+9Svu7UFMHGyS1zmiL97JSPPCgXMOjttWQ5iefrU8fyu5Sxn39R9ql
+         hbgdlmCqndUKDKCZfzsQKg1xzTQFENsNmzYhNmHfqti+l8joJ9FEK0ckeFyKqKLMaMTp
+         jDJDVn/eM3UPUcCN1hN+sb9VrhAsVTVC8q5SDjotuvsIMEXSgga33jph+PDUjkGPgxih
+         f/RsVDHKI7aS8EtaEs6iZtlpjPDYSYgwLXHrCqwCkgDwfyBmioCqkmiOVufVOS6MVRGl
+         Piz9dIs9bjs1YOe+5aYVIafY7CEC8uToBgtmXd0qG+FgKflsbCGd6wRIjbOfEEUOW+Fk
+         i+Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RuGAUjmXUBGiB092kZEexqQx1sR3+FlOyRMdRS1FNSo=;
+        b=fycuV4SxIoz2Bo8NJInpd5r5XBNE9R5eHePe7Vx5fFUEuFMPs0Zw3Kh2WJPQSVewXY
+         REKEBrn53D2mj+aXPfIQE3JCP1x1qk0c+SIS8eAlwWSWMpap5LlY1fH2NAug/lkTOLH0
+         doetL5GWbdImCIPszkyPail+rEi1j5wYZkMXhT5aZUttCv19O2ydKXiRHRJbh+VGn5vr
+         8xMNns1JpKK8tvTPGnkvev8mJboikbcUDRGuwwxplB+VQOt5kIoNdfYUp6goh6dxhOn+
+         ct01BWhASv9h5FSrbuuJNndbZGnBDay+CTtxlS7C3H1lzU7vbo8KLQPUwvFLhWtLB3uO
+         pbMA==
+X-Gm-Message-State: AOAM530Cnv0lqhKvdThyQGB/YVlAoHlLxUNC8btAXA82FXzdDJrumpFy
+        OGcCciPWWonHQ7U9VaMxfUCyiLm+yGLnToT6RR2jhiIcblM=
+X-Google-Smtp-Source: ABdhPJzBXpF2iMhfDU7FNuj/HS+EcADfmCCx4lF6DzLNmG5sT1kXcFTbnZJhJXqcWeM4ClYU21InYlAhbhB+pYbLk0U=
+X-Received: by 2002:a9d:7e85:: with SMTP id m5mr795514otp.330.1598521763351;
+ Thu, 27 Aug 2020 02:49:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 27 Aug 2020 09:17:13 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 43/46] genirq/msi: Provide and use
- msi_domain_set_default_info_flags()
-In-Reply-To: <20200826112334.889315931@linutronix.de>
-References: <20200826111628.794979401@linutronix.de>
- <20200826112334.889315931@linutronix.de>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <b80607e87e43730133dd9f619c6464dc@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200824052025.48362-1-benbjiang@tencent.com>
+In-Reply-To: <20200824052025.48362-1-benbjiang@tencent.com>
+From:   Jiang Biao <benbjiang@gmail.com>
+Date:   Thu, 27 Aug 2020 17:49:12 +0800
+Message-ID: <CAPJCdBmLeD84kRXWmuPj+-_2kBLmZ8wR-uJ641xShza6E52D0w@mail.gmail.com>
+Subject: Re: [PATCH] driver/pci: reduce the single block time in pci_read_config
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>,
+        Bin Lai <robinlai@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-08-26 12:17, Thomas Gleixner wrote:
-> MSI interrupts have some common flags which should be set not only for
-> PCI/MSI interrupts.
-> 
-> Move the PCI/MSI flag setting into a common function so it can be 
-> reused.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+kindly ping :)
+
+On Mon, 24 Aug 2020 at 13:20, Jiang Biao <benbjiang@gmail.com> wrote:
+>
+> From: Jiang Biao <benbjiang@tencent.com>
+>
+> pci_read_config() could block several ms in kernel space, mainly
+> caused by the while loop to call pci_user_read_config_dword().
+> Singel pci_user_read_config_dword() loop could consume 130us+,
+>               |    pci_user_read_config_dword() {
+>               |      _raw_spin_lock_irq() {
+> ! 136.698 us  |        native_queued_spin_lock_slowpath();
+> ! 137.582 us  |      }
+>               |      pci_read() {
+>               |        raw_pci_read() {
+>               |          pci_conf1_read() {
+>   0.230 us    |            _raw_spin_lock_irqsave();
+>   0.035 us    |            _raw_spin_unlock_irqrestore();
+>   8.476 us    |          }
+>   8.790 us    |        }
+>   9.091 us    |      }
+> ! 147.263 us  |    }
+> and dozens of the loop could consume ms+.
+>
+> If we execute some lspci commands concurrently, ms+ scheduling
+> latency could be detected.
+>
+> Add scheduling chance in the loop to improve the latency.
+>
+> Reported-by: Bin Lai <robinlai@tencent.com>
+> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
 > ---
-> V2: New patch
-> ---
->  drivers/pci/msi.c   |    7 +------
->  include/linux/msi.h |    1 +
->  kernel/irq/msi.c    |   24 ++++++++++++++++++++++++
->  3 files changed, 26 insertions(+), 6 deletions(-)
-> 
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1469,12 +1469,7 @@ struct irq_domain *pci_msi_create_irq_do
->  	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
->  		pci_msi_domain_update_chip_ops(info);
-> 
-> -	info->flags |= MSI_FLAG_ACTIVATE_EARLY;
-> -	if (IS_ENABLED(CONFIG_GENERIC_IRQ_RESERVATION_MODE))
-> -		info->flags |= MSI_FLAG_MUST_REACTIVATE;
-> -
-> -	/* PCI-MSI is oneshot-safe */
-> -	info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
-> +	msi_domain_set_default_info_flags(info);
-> 
->  	domain = msi_create_irq_domain(fwnode, info, parent);
->  	if (!domain)
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -410,6 +410,7 @@ int platform_msi_domain_alloc(struct irq
->  void platform_msi_domain_free(struct irq_domain *domain, unsigned int 
-> virq,
->  			      unsigned int nvec);
->  void *platform_msi_get_host_data(struct irq_domain *domain);
-> +void msi_domain_set_default_info_flags(struct msi_domain_info *info);
->  #endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
-> 
->  #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -70,6 +70,30 @@ void get_cached_msi_msg(unsigned int irq
->  EXPORT_SYMBOL_GPL(get_cached_msi_msg);
-> 
->  #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> +void msi_domain_set_default_info_flags(struct msi_domain_info *info)
-> +{
-> +	/* Required so that a device latches a valid MSI message on startup 
-> */
-> +	info->flags |= MSI_FLAG_ACTIVATE_EARLY;
-
-As far as I remember the story behind this flag (it's been a while),
-it was working around a PCI-specific issue, hence being located in
-the PCI code.
-
-Now, the "program the MSI before enabling it" concept makes sense no 
-matter
-what bus this is on, and I wonder why we are even keeping this flag 
-around.
-Can't we just drop it together with the check in 
-msi_domain_alloc_irqs()?
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+>  drivers/pci/pci-sysfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 6d78df9..3b9f63d 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -708,6 +708,7 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+>                 data[off - init_off + 3] = (val >> 24) & 0xff;
+>                 off += 4;
+>                 size -= 4;
+> +               cond_resched();
+>         }
+>
+>         if (size >= 2) {
+> --
+> 1.8.3.1
+>
