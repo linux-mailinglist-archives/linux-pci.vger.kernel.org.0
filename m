@@ -2,112 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CBDE2542B6
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 11:49:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ABE22545F2
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Aug 2020 15:31:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgH0JtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Aug 2020 05:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
+        id S1728069AbgH0Nax (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Aug 2020 09:30:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0JtY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Aug 2020 05:49:24 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF08C061264;
-        Thu, 27 Aug 2020 02:49:24 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id w10so3915221oti.2;
-        Thu, 27 Aug 2020 02:49:24 -0700 (PDT)
+        with ESMTP id S1728252AbgH0Nal (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Aug 2020 09:30:41 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93099C06123A
+        for <linux-pci@vger.kernel.org>; Thu, 27 Aug 2020 06:30:13 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id d10so4476913wrw.2
+        for <linux-pci@vger.kernel.org>; Thu, 27 Aug 2020 06:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RuGAUjmXUBGiB092kZEexqQx1sR3+FlOyRMdRS1FNSo=;
-        b=XwGLd+WjrhAl+9Svu7UFMHGyS1zmiL97JSPPCgXMOjttWQ5iefrU8fyu5Sxn39R9ql
-         hbgdlmCqndUKDKCZfzsQKg1xzTQFENsNmzYhNmHfqti+l8joJ9FEK0ckeFyKqKLMaMTp
-         jDJDVn/eM3UPUcCN1hN+sb9VrhAsVTVC8q5SDjotuvsIMEXSgga33jph+PDUjkGPgxih
-         f/RsVDHKI7aS8EtaEs6iZtlpjPDYSYgwLXHrCqwCkgDwfyBmioCqkmiOVufVOS6MVRGl
-         Piz9dIs9bjs1YOe+5aYVIafY7CEC8uToBgtmXd0qG+FgKflsbCGd6wRIjbOfEEUOW+Fk
-         i+Hw==
+        bh=p33Zl85F48xSFFwh9Fvb6fYwVy/Jt4DGVFmz86MHbko=;
+        b=CUujgUZRienGvENy9ZeNSE4OLq/gTozkw9vqhnndn3e+Pp27upZYxzcOy348qWT4x6
+         fZ9HzhrGd6ok0/lpV6XJMXIHbIrfSS3H2kc5d+JTd1lletPZjVOkUQ8WZMoDnSSylgRw
+         zOHH0JLxrQJsHR8v5+SGQOGgwwu7dIE6xp9Po=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RuGAUjmXUBGiB092kZEexqQx1sR3+FlOyRMdRS1FNSo=;
-        b=fycuV4SxIoz2Bo8NJInpd5r5XBNE9R5eHePe7Vx5fFUEuFMPs0Zw3Kh2WJPQSVewXY
-         REKEBrn53D2mj+aXPfIQE3JCP1x1qk0c+SIS8eAlwWSWMpap5LlY1fH2NAug/lkTOLH0
-         doetL5GWbdImCIPszkyPail+rEi1j5wYZkMXhT5aZUttCv19O2ydKXiRHRJbh+VGn5vr
-         8xMNns1JpKK8tvTPGnkvev8mJboikbcUDRGuwwxplB+VQOt5kIoNdfYUp6goh6dxhOn+
-         ct01BWhASv9h5FSrbuuJNndbZGnBDay+CTtxlS7C3H1lzU7vbo8KLQPUwvFLhWtLB3uO
-         pbMA==
-X-Gm-Message-State: AOAM530Cnv0lqhKvdThyQGB/YVlAoHlLxUNC8btAXA82FXzdDJrumpFy
-        OGcCciPWWonHQ7U9VaMxfUCyiLm+yGLnToT6RR2jhiIcblM=
-X-Google-Smtp-Source: ABdhPJzBXpF2iMhfDU7FNuj/HS+EcADfmCCx4lF6DzLNmG5sT1kXcFTbnZJhJXqcWeM4ClYU21InYlAhbhB+pYbLk0U=
-X-Received: by 2002:a9d:7e85:: with SMTP id m5mr795514otp.330.1598521763351;
- Thu, 27 Aug 2020 02:49:23 -0700 (PDT)
+        bh=p33Zl85F48xSFFwh9Fvb6fYwVy/Jt4DGVFmz86MHbko=;
+        b=UEQpwTTpHXYts5GSE/A1ck3S/FIlYDswePygNwYo1Yf2tdU/KOecXUH5zlgjmvMC+9
+         /ibTscRYomlXj9XL9sqh8LXiN5ki/hfEuc54k8BSv6YCn9317i2Wgolaf6jDDS4bD7Yx
+         F5+3anVfRr1sWTqQ3a1eAEQhJRKEF3mYhU80UmADC5l/N8eIKfcV2K5yJ9qVFoBVKnzT
+         7qgZz4M2Qk4/Z4jjXWWNY0Lof+4wN1nGD1Ns8e29g5ht9EtK6PBfdYMjg9H9vZ+4zFGO
+         J/677qLFEVPeiEijShkWb2y36Bf4Eep5lO47VLbxQSAo4Ztzs7bcnDHHD6kgU6QrPFW/
+         wgpg==
+X-Gm-Message-State: AOAM530c6tHWKpFnI8+9grT8NVTiSs8UcDGW1PDDikMfJ5P2jpZ2NmHH
+        IdRYQAOi93vBUDPr68pD1ynTmJwzss0/PsNAAp6F+Q==
+X-Google-Smtp-Source: ABdhPJyMtaFishcwtzNCj7DHN/faPMoK+tSF7O0vKJaBGS+gpAIRdF6geUez9pCQeleah1w6P5SJ7nzMgTS0KKpMqRI=
+X-Received: by 2002:adf:bb54:: with SMTP id x20mr19609148wrg.413.1598535011238;
+ Thu, 27 Aug 2020 06:30:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200824052025.48362-1-benbjiang@tencent.com>
-In-Reply-To: <20200824052025.48362-1-benbjiang@tencent.com>
-From:   Jiang Biao <benbjiang@gmail.com>
-Date:   Thu, 27 Aug 2020 17:49:12 +0800
-Message-ID: <CAPJCdBmLeD84kRXWmuPj+-_2kBLmZ8wR-uJ641xShza6E52D0w@mail.gmail.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in pci_read_config
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <b19bc982-a0c4-c6ff-d8f5-650f2b3a83c8@gmail.com> <20200827063517.GA4637@lst.de>
+In-Reply-To: <20200827063517.GA4637@lst.de>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 27 Aug 2020 09:29:59 -0400
+Message-ID: <CA+-6iNy3U9pO0Bykzgvb9n9fcsBi6FiatLdpA1s0HgQNWZ49mg@mail.gmail.com>
+Subject: Re: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Julien Grall <julien.grall@arm.com>,
+        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:ALLWINNER A10 CSI DRIVER" <linux-media@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:SUPERH" <linux-sh@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-kindly ping :)
-
-On Mon, 24 Aug 2020 at 13:20, Jiang Biao <benbjiang@gmail.com> wrote:
+On Thu, Aug 27, 2020 at 2:35 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> From: Jiang Biao <benbjiang@tencent.com>
+> On Tue, Aug 25, 2020 at 10:40:27AM -0700, Florian Fainelli wrote:
+> > Hi,
+> >
+> > On 8/24/2020 12:30 PM, Jim Quinlan wrote:
+> >>
+> >> Patchset Summary:
+> >>    Enhance a PCIe host controller driver.  Because of its unusual design
+> >>    we are foced to change dev->dma_pfn_offset into a more general role
+> >>    allowing multiple offsets.  See the 'v1' notes below for more info.
+> >
+> > We are version 11 and counting, and it is not clear to me whether there is
+> > any chance of getting these patches reviewed and hopefully merged for the
+> > 5.10 merge window.
+> >
+> > There are a lot of different files being touched, so what would be the
+> > ideal way of routing those changes towards inclusion?
 >
-> pci_read_config() could block several ms in kernel space, mainly
-> caused by the while loop to call pci_user_read_config_dword().
-> Singel pci_user_read_config_dword() loop could consume 130us+,
->               |    pci_user_read_config_dword() {
->               |      _raw_spin_lock_irq() {
-> ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> ! 137.582 us  |      }
->               |      pci_read() {
->               |        raw_pci_read() {
->               |          pci_conf1_read() {
->   0.230 us    |            _raw_spin_lock_irqsave();
->   0.035 us    |            _raw_spin_unlock_irqrestore();
->   8.476 us    |          }
->   8.790 us    |        }
->   9.091 us    |      }
-> ! 147.263 us  |    }
-> and dozens of the loop could consume ms+.
->
-> If we execute some lspci commands concurrently, ms+ scheduling
-> latency could be detected.
->
-> Add scheduling chance in the loop to improve the latency.
->
-> Reported-by: Bin Lai <robinlai@tencent.com>
-> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
-> ---
->  drivers/pci/pci-sysfs.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 6d78df9..3b9f63d 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -708,6 +708,7 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
->                 data[off - init_off + 3] = (val >> 24) & 0xff;
->                 off += 4;
->                 size -= 4;
-> +               cond_resched();
->         }
->
->         if (size >= 2) {
-> --
-> 1.8.3.1
->
+> FYI, I offered to take the dma-mapping bits through the dma-mapping tree.
+> I have a bit of a backlog, but plan to review and if Jim is ok with that
+> apply the current version.
+Sounds good to me.
+Thanks, Jim
