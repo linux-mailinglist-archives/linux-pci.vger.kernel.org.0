@@ -2,92 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3CDC255EBD
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 18:26:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FFAD255F1F
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 18:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgH1Q0n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Aug 2020 12:26:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
+        id S1727940AbgH1QuU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Aug 2020 12:50:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbgH1Q0m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:26:42 -0400
+        id S1727820AbgH1Qtd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:49:33 -0400
 Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765D22080C;
-        Fri, 28 Aug 2020 16:26:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E932D20848;
+        Fri, 28 Aug 2020 16:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598632001;
-        bh=4Vnh1C/RoVVBKrT7SjMj6aee4KReTZw02BiPUaRhAQ0=;
+        s=default; t=1598633373;
+        bh=2zi6kKIXNmh0npEoV6BaBE601p2nfEjXutlFE5Te2hg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QVOV/M0eLCw2BVGQp4zvew/mE1Q4RL7hiEsH79cNpyPCxwSZe05WMETsy+9Db+hDj
-         sKvWOaB1vh6jVlK2lN5CmqNofr7zadr76rZ5qfeZphI3NzUxMq7O8ZX0a8uuo4+Hex
-         1gmGg+jCAvGxgygQHK+NpsxfUpiX7u90xwPUIC7M=
-Date:   Fri, 28 Aug 2020 11:26:40 -0500
+        b=SISUVkwbNHoc+gorEB9C8iSxzU/R2hRJ7EWukGp8kPYp6+N2+ibb0YB2DJKeQS7Bm
+         szEqZWii3cEaraFVKqccbamfr7IGmv4flEAu9p/l1XJSjPp/QbO1qeJQ+wZ1tiy0EW
+         ydsx8CEM3FgI+WzjcmiqUAwq31e2K2eFHk+m7GvU=
+Date:   Fri, 28 Aug 2020 11:49:31 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Subject: Re: [PATCH 1/2] i2c: i801: Fix runtime PM
-Message-ID: <20200828162640.GA2160001@bjorn-Precision-5520>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     mj@ucw.cz, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] lspci: Decode 10-Bit Tag Requester Enable
+Message-ID: <20200828164931.GA2161257@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20180627212340.GA161569@bhelgaas-glaptop.roam.corp.google.com>
+In-Reply-To: <1596266480-52789-1-git-send-email-liudongdong3@huawei.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Vaibhav]
-
-On Wed, Jun 27, 2018 at 04:23:40PM -0500, Bjorn Helgaas wrote:
-> [+cc Rafael, linux-pm, linux-kernel]
+On Sat, Aug 01, 2020 at 03:21:20PM +0800, Dongdong Liu wrote:
+> Decode 10-Bit Tag Requester Enable bit in Device Control 2 Register.
 > 
-> On Wed, Jun 27, 2018 at 10:15:50PM +0200, Jean Delvare wrote:
-> > Hi Jarkko,
-> > 
-> > On Tue, 26 Jun 2018 17:39:12 +0300, Jarkko Nikula wrote:
-> > > Commit 9c8088c7988 ("i2c: i801: Don't restore config registers on
-> > > runtime PM") nullified the runtime PM suspend/resume callback pointers
-> > > while keeping the runtime PM enabled. This causes that device stays in
-> > > D0 power state and sysfs /sys/bus/pci/devices/.../power/runtime_status
-> > > shows "error" when runtime PM framework attempts to autosuspend the
-> > > device.
-> > > 
-> > > This is due PCI bus runtime PM which checks for driver runtime PM
-> > > callbacks and returns with -ENOSYS if they are not set. Fix this by
-> > > having a shared dummy runtime PM callback that returns with success.
-> > > 
-> > > Fixes: a9c8088c7988 ("i2c: i801: Don't restore config registers on runtime PM")
-> > 
-> > I don't want to sound like I'm trying to decline all responsibility for
-> > a regression I caused, but frankly, if just using SIMPLE_DEV_PM_OPS()
-> > breaks runtime PM, then it's the PM model which is broken, not the
-> > i2c-i801 driver.
-> > 
-> > I will boldly claim that the PCI bus runtime code is simply wrong in
-> > returning -ENOSYS in the absence of runtime PM callbacks, and it should
-> > be changed to return 0 instead. Or whoever receives that -ENOSYS should
-> > not treat it as an error - whatever makes more sense.
-> > 
-> > Having to add dummy functions in every PCI driver that doesn't need to
-> > do anything special for runtime PM sounds plain stupid. It should be
-> > pretty obvious that a whole lot of drivers are going to use
-> > SIMPLE_DEV_PM_OPS() because it exists and seems to do what they want,
-> > and all of them will be bugged because the PCI core is doing something
-> > silly and unexpected.
-> > 
-> > So please let's fix it at the PCI subsystem core level. Adding Bjorn
-> > and the linux-pci list to Cc.
+> Sample output changes:
 > 
-> Thanks Jean.  What you describe does sound broken.  I think the PM
-> guys (cc'd) will have a better idea of how to deal with this.
+>   - DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled, ARIFwd-
+>   + DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- 10BitTagReq- OBFF Disabled, ARIFwd-
+> 
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> ---
+>  lib/header.h | 1 +
+>  ls-caps.c    | 3 ++-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/header.h b/lib/header.h
+> index 472816e..eaf6517 100644
+> --- a/lib/header.h
+> +++ b/lib/header.h
+> @@ -898,6 +898,7 @@
+>  #define  PCI_EXP_DEVCAP2_64BIT_ATOMICOP_COMP	0x0100	/* 64bit AtomicOp Completer Supported */
+>  #define  PCI_EXP_DEVCAP2_128BIT_CAS_COMP	0x0200	/* 128bit CAS Completer Supported */
+>  #define  PCI_EXP_DEV2_LTR		0x0400	/* LTR enabled */
+> +#define  PCI_EXP_DEV2_10BIT_TAG_REQ	0x1000 /* 10 Bit Tag Requester enabled */
 
-Did we ever get anywhere with this?  It seems like the thread petered
-out.
+Looks OK to me (but I don't maintain lspci, of course).
+
+And we have a bit of a mess in the names here.  There are a bunch of
+"PCI_EXP_DEV2_*" names that would be "PCI_EXP_DEVCTL2_*" if they
+followed the convention.  You didn't start that trend, so I'm just
+pointing it out in case you or Martin want to clean it up.  When I add
+names I try to use the same name between the Linux kernel source [1]
+and lspci.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/pci_regs.h#n651
+
+>  #define  PCI_EXP_DEV2_OBFF(x)		(((x) >> 13) & 3) /* OBFF enabled */
+>  #define PCI_EXP_DEVSTA2			0x2a	/* Device Status */
+>  #define PCI_EXP_LNKCAP2			0x2c	/* Link Capabilities */
+> diff --git a/ls-caps.c b/ls-caps.c
+> index a09b0cf..d17cbad 100644
+> --- a/ls-caps.c
+> +++ b/ls-caps.c
+> @@ -1134,10 +1134,11 @@ static void cap_express_dev2(struct device *d, int where, int type)
+>      }
+>  
+>    w = get_conf_word(d, where + PCI_EXP_DEVCTL2);
+> -  printf("\t\tDevCtl2: Completion Timeout: %s, TimeoutDis%c LTR%c OBFF %s,",
+> +  printf("\t\tDevCtl2: Completion Timeout: %s, TimeoutDis%c LTR%c 10BitTagReq%c OBFF %s,",
+>  	cap_express_dev2_timeout_value(PCI_EXP_DEV2_TIMEOUT_VALUE(w)),
+>  	FLAG(w, PCI_EXP_DEV2_TIMEOUT_DIS),
+>  	FLAG(w, PCI_EXP_DEV2_LTR),
+> +	FLAG(w, PCI_EXP_DEV2_10BIT_TAG_REQ),
+>  	cap_express_devctl2_obff(PCI_EXP_DEV2_OBFF(w)));
+>    if (type == PCI_EXP_TYPE_ROOT_PORT || type == PCI_EXP_TYPE_DOWNSTREAM)
+>      printf(" ARIFwd%c\n", FLAG(w, PCI_EXP_DEV2_ARI));
+> -- 
+> 1.9.1
+> 
