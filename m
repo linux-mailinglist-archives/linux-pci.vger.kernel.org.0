@@ -2,337 +2,264 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D22425572A
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 11:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51E64255727
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 11:09:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgH1JK3 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 28 Aug 2020 05:10:29 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2704 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728555AbgH1JK0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:10:26 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id BD1A9668571B3AFB272E;
-        Fri, 28 Aug 2020 10:10:19 +0100 (IST)
-Received: from localhost (10.52.127.106) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 28 Aug
- 2020 10:10:19 +0100
-Date:   Fri, 28 Aug 2020 10:08:43 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>, <linux-pci@vger.kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        "Michal Simek" <michal.simek@xilinx.com>,
-        <linux-rockchip@lists.infradead.org>,
-        "Zhou Wang" <wangzhou1@hisilicon.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] PCI: Unify ECAM constants in native PCI Express drivers
-Message-ID: <20200828100843.0000474e@Huawei.com>
-In-Reply-To: <20200827224938.977757-1-kw@linux.com>
-References: <20200827224938.977757-1-kw@linux.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1728016AbgH1JJw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Aug 2020 05:09:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63162 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbgH1JJt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Aug 2020 05:09:49 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S92X7x068328;
+        Fri, 28 Aug 2020 05:09:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ATQvFScQRjrC7BAxyv5YWvYgki7m0886xDTKTk2ya3s=;
+ b=DLbcwwkgk57xgbBOJYcGAx+c7xzkYolAD2B44ujNbMCoViSOtAl889mHFkGnthKnZd85
+ j91AYaHx1BXblhSKNL1vje/Dqsm+5hVSuS52ROZ06id/Co23nfqImbVlqt6YO65Fy0Sf
+ iv9ec03k7MZtquitCmqHLrIPuXk2o7CrWhoEksiaKK4fYgINgxf+s5Z4MWUC8i7VAnw3
+ traYHbUw7FW6qmS8xGztBqREbzISGFqUtZlNgiiMratHD+oJt8dVUGcgGybRwFMBEr/Z
+ I8IJKq5QgqKyJY02qAgSsvM5FWC67VhJBVoW/j3h48z8leWdc/qwU3EEkdRr9QtcLBkE fg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 336wka2gum-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 05:09:43 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07S94Sd4076782;
+        Fri, 28 Aug 2020 05:09:42 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 336wka2gtn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 05:09:42 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07S96s6e027602;
+        Fri, 28 Aug 2020 09:09:40 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 336buh0ygt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 09:09:40 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07S99bZo33489354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Aug 2020 09:09:37 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 023AFAE057;
+        Fri, 28 Aug 2020 09:09:37 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FA9AAE056;
+        Fri, 28 Aug 2020 09:09:36 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.164.95])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Aug 2020 09:09:36 +0000 (GMT)
+Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>, bhelgaas@google.com,
+        pmorel@linux.ibm.com, mpe@ellerman.id.au, oohall@gmail.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20200827203335.GA2101829@bjorn-Precision-5520>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <babde252-4909-9d3b-e5dc-bae4e6a20cd1@linux.ibm.com>
+Date:   Fri, 28 Aug 2020 11:09:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.127.106]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200827203335.GA2101829@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-28_05:2020-08-28,2020-08-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 mlxscore=0 clxscore=1011
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008280066
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 27 Aug 2020 22:49:38 +0000
-Krzysztof Wilczyński <kw@linux.com> wrote:
+On 8/27/20 10:33 PM, Bjorn Helgaas wrote:
+> On Thu, Aug 27, 2020 at 01:17:48PM -0600, Alex Williamson wrote:
+>> On Thu, 27 Aug 2020 13:31:38 -0500
+>> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>>> Re the subject line, this patch does a lot more than just "introduce a
+>>> flag"; AFAICT it actually enables important VFIO functionality, e.g.,
+>>> something like:
+>>>
+>>>   vfio/pci: Enable MMIO access for s390 detached VFs
+>>>
+>>> On Thu, Aug 13, 2020 at 11:40:43AM -0400, Matthew Rosato wrote:
+>>>> s390x has the notion of providing VFs to the kernel in a manner
+>>>> where the associated PF is inaccessible other than via firmware.
+>>>> These are not treated as typical VFs and access to them is emulated
+>>>> by underlying firmware which can still access the PF.  After
+>>>> the referened commit however these detached VFs were no longer able
+>>>> to work with vfio-pci as the firmware does not provide emulation of
+>>>> the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
+>>>> these detached VFs so that vfio-pci can allow memory access to
+>>>> them again.  
+>>>
+>>> Out of curiosity, in what sense is the PF inaccessible?  Is it
+>>> *impossible* for Linux to access the PF, or is it just not enumerated
+>>> by clp_list_pci() so Linux doesn't know about it?
 
-> Unify ECAM-related constants into a single set of standard constants
-> defining memory address shift values for the byte-level address that can
-> be used when accessing the PCI Express Configuration Space, and then
-> move native PCI Express controller drivers to use newly introduced
-> definitions retiring any driver-specific ones.
+If it is possible to access the PF that would be a very severe bug in
+the machine level hypervisor partition isolation.
+Note also that POWER has a very similar setup.
+Also even if we have access to the PF, we do get some hypervisor
+involvement (pdev->no_vf_scan).
+Remind you all OSs on IBM Z are _always_ running under a machine
+level hypervisor in logical partitions (with partitioned
+memory, no paging).
+
+>>>
+>>> VFs do not implement PCI_COMMAND, so I guess "firmware does not
+>>> provide emulation of PCI_COMMAND_MEMORY" means something like "we
+>>> can't access the PF so we can't enable/disable PCI_COMMAND_MEMORY"?
+>>>
+>>> s/referened/referenced/
+>>>
+>>>> Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+>>>> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+>>>> ---
+>>>>  arch/s390/pci/pci_bus.c            | 13 +++++++++++++
+>>>>  drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
+>>>>  include/linux/pci.h                |  4 ++++
+>>>>  3 files changed, 21 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+>>>> index 642a993..1b33076 100644
+>>>> --- a/arch/s390/pci/pci_bus.c
+>>>> +++ b/arch/s390/pci/pci_bus.c
+>>>> @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
+>>>>  }
+>>>>  #endif
+>>>>  
+>>>> +void pcibios_bus_add_device(struct pci_dev *pdev)
+>>>> +{
+>>>> +	struct zpci_dev *zdev = to_zpci(pdev);
+>>>> +
+>>>> +	/*
+>>>> +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
+>>>> +	 * detached from its parent PF.  We rely on firmware emulation to
+>>>> +	 * provide underlying PF details.  
+>>>
+>>> What exactly does "multifunction bus" mean?  I'm familiar with
+>>> multi-function *devices*, but not multi-function buses.
+
+Yes this is a bit of an IBM Z quirk, up until v5.8-rc1
+IBM Z Linux only knew isolated PCI functions that would get
+a PCI ID of the form <uid>:00:00.0 where the domain
+is a value (called UID) that can be determined by the machine administrator.
+
+Now for some multi-function devices one really needs to have some of the physical
+PCI information known to the device driver/in the PCI ID.
+Still we need to stay compatible to the old scheme and also
+somehow deal with the fact that the domain value (UID)
+is set per function.
+So now for each physical multi-function device we create a zbus
+that gets assigned all functions belonging to that physical
+device and we use the UID of the function with devfn == 0
+as the domain. Resulting in PCI IDs of the form:
+<uid>:00:<device>.<function>
+Now zbus->multifunction basically says if there is more
+than one function on that zbus which is equivalent to saying
+that the zbus represents a multi-function device.
+
+>>>
+>>>> +	 */
+>>>> +	if (zdev->vfn && !zdev->zbus->multifunction)
+>>>> +		pdev->detached_vf = 1;
+>>>> +}
+
+Note that as of v5.9-rc2 setting pdev->detached_vf would move
+into zpci_bus_setup_virtfn() and it will be obvious that
+whenever zdev->vfn != 0 (i.e. it really is a VF according to
+the platform) we either link the VF with the parent
+PF or set pdev->detached_vf. It's just that this version was
+sent before that code landed upstream.
+
+
+>>>> +
+>>>>  static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
+>>>>  {
+>>>>  	struct pci_bus *bus;
+>>>> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+>>>> index d98843f..98f93d1 100644
+>>>> --- a/drivers/vfio/pci/vfio_pci_config.c
+>>>> +++ b/drivers/vfio/pci/vfio_pci_config.c
+>>>> @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+>>>>  	 * PF SR-IOV capability, there's therefore no need to trigger
+>>>>  	 * faults based on the virtual value.
+>>>>  	 */
+>>>> -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
+>>>> +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);  
+>>>
+>>> I'm not super keen on the idea of having two subtly different ways of
+>>> identifying VFs.  I think that will be confusing.  This seems to be
+>>> the critical line, so whatever we do here, it will be out of the
+>>> ordinary and probably deserves a little comment.
+>>>
+>>> If Linux doesn't see the PF, does pci_physfn(VF) return NULL, i.e., is
+>>> VF->physfn NULL?
+
+No and yes, as Matthew already set pci_physfn(vf) never return NULL
+because it returns the pdev itself if is_virtfn is 0.
+That said we can easily make Linux have
+
+ pdev->is_virtfn = 1, pdev->physfn = NULL
+
+and in fact it was the first thing I suggested because I feel like
+it is indeed the most logical way to encode "detached VF" and AFAIU there
+is already some code (ex: in powerpc, eeh_debugfs_break_device())
+that assumes this to be the case. However there is also
+code that assumes that pdev->is_virtfn implies pdev->physfn != NULL
+including in vfio so this requires checking all pdev->is_virtfn/pci_physfn()
+uses and of course a clear upstream decision.
+
+>>
+>> FWIW, pci_physfn() never returns NULL, it returns the provided pdev if
+>> is_virtfn is not set.  This proposal wouldn't change that return value.
+>> AIUI pci_physfn(), the caller needs to test that the returned device is
+>> different from the provided device if there's really code that wants to
+>> traverse to the PF.
 > 
-> The ECAM ("Enhanced Configuration Access Mechanism") is defined by the
-> PCI Express specification (see PCI Base Specification, Revision 5.0,
-> Version 1.0, Section 7.2.2, p. 676), thus most hardware should implement
-> it the same way.  Most of the native PCI Express controller drivers
-> define their ECAM-related constants, many of these could be shared, or
-> use open-coded values when setting the .bus_shift field of the struct
-> pci_ecam_ops.
+> Oh, so this VF has is_virtfn==0.  That seems weird.  There are lots of
+> other ways that a VF is different: Vendor/Device IDs are 0xffff, BARs
+> are zeroes, etc.
 > 
-> All of the newly added constants should remove ambiguity and reduce the
-> number of open-coded values, and also correlate more strongly with the
-> descriptions in the aforementioned specification (see Table 7-1
-> "Enhanced Configuration Address Mapping", p. 677).
+> It sounds like you're sweeping those under the rug by avoiding the
+> normal enumeration path (e.g., you don't have to size the BARs), but
+> if it actually is a VF, it seems like there might be fewer surprises
+> if we treat it as one.
 > 
-> There is no change to functionality.
+> Why don't you just set is_virtfn=1 since it *is* a VF, and then deal
+> with the special cases where you want to touch the PF?
 > 
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-
-Seems sensible and looks good to me.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Might potentially be worth tidying up the masks as well?
-Or potentially drop them given I suspect that there are no cases
-in which the mask is actually doing anything...
-
-Jonathan
-
-
-> ---
->  drivers/pci/controller/dwc/pcie-al.c      | 8 ++++----
->  drivers/pci/controller/dwc/pcie-hisi.c    | 4 ++--
->  drivers/pci/controller/pci-host-generic.c | 2 +-
->  drivers/pci/controller/pci-thunder-ecam.c | 2 +-
->  drivers/pci/controller/pcie-rockchip.h    | 7 ++++---
->  drivers/pci/controller/pcie-tango.c       | 2 +-
->  drivers/pci/controller/pcie-xilinx-nwl.c  | 7 +++----
->  drivers/pci/controller/pcie-xilinx.c      | 9 +++------
->  drivers/pci/ecam.c                        | 4 ++--
->  include/linux/pci-ecam.h                  | 8 ++++++++
->  10 files changed, 29 insertions(+), 24 deletions(-)
+> Bjorn
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-> index d57d4ee15848..57165cb0ef02 100644
-> --- a/drivers/pci/controller/dwc/pcie-al.c
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -76,7 +76,7 @@ static int al_pcie_init(struct pci_config_window *cfg)
->  }
->  
->  const struct pci_ecam_ops al_pcie_ops = {
-> -	.bus_shift    = 20,
-> +	.bus_shift    = PCIE_ECAM_BUS_SHIFT,
->  	.init         =  al_pcie_init,
->  	.pci_ops      = {
->  		.map_bus    = al_pcie_map_bus,
-> @@ -138,7 +138,7 @@ struct al_pcie {
->  	struct al_pcie_target_bus_cfg target_bus_cfg;
->  };
->  
-> -#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
-> +#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << PCIE_ECAM_FUN_SHIFT)
->  
->  #define to_al_pcie(x)		dev_get_drvdata((x)->dev)
->  
-> @@ -228,7 +228,7 @@ static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
->  	void __iomem *pci_base_addr;
->  
->  	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
-> -					 (busnr_ecam << 20) +
-> +					 (busnr_ecam << PCIE_ECAM_BUS_SHIFT) +
->  					 PCIE_ECAM_DEVFN(devfn));
->  
->  	if (busnr_reg != target_bus_cfg->reg_val) {
-> @@ -300,7 +300,7 @@ static void al_pcie_config_prepare(struct al_pcie *pcie)
->  
->  	target_bus_cfg = &pcie->target_bus_cfg;
->  
-> -	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
-> +	ecam_bus_mask = (pcie->ecam_size >> PCIE_ECAM_BUS_SHIFT) - 1;
->  	if (ecam_bus_mask > 255) {
->  		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
->  		ecam_bus_mask = 255;
-> diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
-> index 5ca86796d43a..b7afbf1d4bd9 100644
-> --- a/drivers/pci/controller/dwc/pcie-hisi.c
-> +++ b/drivers/pci/controller/dwc/pcie-hisi.c
-> @@ -100,7 +100,7 @@ static int hisi_pcie_init(struct pci_config_window *cfg)
->  }
->  
->  const struct pci_ecam_ops hisi_pcie_ops = {
-> -	.bus_shift    = 20,
-> +	.bus_shift    = PCIE_ECAM_BUS_SHIFT,
->  	.init         =  hisi_pcie_init,
->  	.pci_ops      = {
->  		.map_bus    = hisi_pcie_map_bus,
-> @@ -135,7 +135,7 @@ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
->  }
->  
->  static const struct pci_ecam_ops hisi_pcie_platform_ops = {
-> -	.bus_shift    = 20,
-> +	.bus_shift    = PCIE_ECAM_BUS_SHIFT,
->  	.init         =  hisi_pcie_platform_init,
->  	.pci_ops      = {
->  		.map_bus    = hisi_pcie_map_bus,
-> diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
-> index b51977abfdf1..c1c69b11615f 100644
-> --- a/drivers/pci/controller/pci-host-generic.c
-> +++ b/drivers/pci/controller/pci-host-generic.c
-> @@ -49,7 +49,7 @@ static void __iomem *pci_dw_ecam_map_bus(struct pci_bus *bus,
->  }
->  
->  static const struct pci_ecam_ops pci_dw_ecam_bus_ops = {
-> -	.bus_shift	= 20,
-> +	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
->  	.pci_ops	= {
->  		.map_bus	= pci_dw_ecam_map_bus,
->  		.read		= pci_generic_config_read,
-> diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
-> index 7e8835fee5f7..22ed7e995b39 100644
-> --- a/drivers/pci/controller/pci-thunder-ecam.c
-> +++ b/drivers/pci/controller/pci-thunder-ecam.c
-> @@ -346,7 +346,7 @@ static int thunder_ecam_config_write(struct pci_bus *bus, unsigned int devfn,
->  }
->  
->  const struct pci_ecam_ops pci_thunder_ecam_ops = {
-> -	.bus_shift	= 20,
-> +	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
->  	.pci_ops	= {
->  		.map_bus        = pci_ecam_map_bus,
->  		.read           = thunder_ecam_config_read,
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index c7d0178fc8c2..50f425e03e8f 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -13,6 +13,7 @@
->  
->  #include <linux/kernel.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  
->  /*
->   * The upper 16 bits of PCIE_CLIENT_CONFIG are a write mask for the lower 16
-> @@ -178,9 +179,9 @@
->  #define MIN_AXI_ADDR_BITS_PASSED		8
->  #define PCIE_RC_SEND_PME_OFF			0x11960
->  #define ROCKCHIP_VENDOR_ID			0x1d87
-> -#define PCIE_ECAM_BUS(x)			(((x) & 0xff) << 20)
-> -#define PCIE_ECAM_DEV(x)			(((x) & 0x1f) << 15)
-> -#define PCIE_ECAM_FUNC(x)			(((x) & 0x7) << 12)
-> +#define PCIE_ECAM_BUS(x)			(((x) & 0xff) << PCIE_ECAM_BUS_SHIFT)
-> +#define PCIE_ECAM_DEV(x)			(((x) & 0x1f) << PCIE_ECAM_DEV_SHIFT)
-> +#define PCIE_ECAM_FUNC(x)			(((x) & 0x7) << PCIE_ECAM_FUN_SHIFT)
->  #define PCIE_ECAM_REG(x)			(((x) & 0xfff) << 0)
->  #define PCIE_ECAM_ADDR(bus, dev, func, reg) \
->  	  (PCIE_ECAM_BUS(bus) | PCIE_ECAM_DEV(dev) | \
-> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-> index d093a8ce4bb1..8f0d695afbde 100644
-> --- a/drivers/pci/controller/pcie-tango.c
-> +++ b/drivers/pci/controller/pcie-tango.c
-> @@ -208,7 +208,7 @@ static int smp8759_config_write(struct pci_bus *bus, unsigned int devfn,
->  }
->  
->  static const struct pci_ecam_ops smp8759_ecam_ops = {
-> -	.bus_shift	= 20,
-> +	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
->  	.pci_ops	= {
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= smp8759_config_read,
-> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> index f3cf7d61924f..8f628b66a0d7 100644
-> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> @@ -18,6 +18,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/of_irq.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  #include <linux/platform_device.h>
->  #include <linux/irqchip/chained_irq.h>
->  
-> @@ -124,8 +125,6 @@
->  #define E_ECAM_CR_ENABLE		BIT(0)
->  #define E_ECAM_SIZE_LOC			GENMASK(20, 16)
->  #define E_ECAM_SIZE_SHIFT		16
-> -#define ECAM_BUS_LOC_SHIFT		20
-> -#define ECAM_DEV_LOC_SHIFT		12
->  #define NWL_ECAM_VALUE_DEFAULT		12
->  
->  #define CFG_DMA_REG_BAR			GENMASK(2, 0)
-> @@ -245,8 +244,8 @@ static void __iomem *nwl_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
->  	if (!nwl_pcie_valid_device(bus, devfn))
->  		return NULL;
->  
-> -	relbus = (bus->number << ECAM_BUS_LOC_SHIFT) |
-> -			(devfn << ECAM_DEV_LOC_SHIFT);
-> +	relbus = (bus->number << PCIE_ECAM_BUS_SHIFT) |
-> +			(devfn << PCIE_ECAM_FUN_SHIFT);
->  
->  	return pcie->ecam_base + relbus + where;
->  }
-> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-> index 8523be61bba5..7e9fdaccd132 100644
-> --- a/drivers/pci/controller/pcie-xilinx.c
-> +++ b/drivers/pci/controller/pcie-xilinx.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/of_irq.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  #include <linux/platform_device.h>
->  
->  #include "../pci.h"
-> @@ -86,10 +87,6 @@
->  /* Phy Status/Control Register definitions */
->  #define XILINX_PCIE_REG_PSCR_LNKUP	BIT(11)
->  
-> -/* ECAM definitions */
-> -#define ECAM_BUS_NUM_SHIFT		20
-> -#define ECAM_DEV_NUM_SHIFT		12
-> -
->  /* Number of MSI IRQs */
->  #define XILINX_NUM_MSI_IRQS		128
->  
-> @@ -188,8 +185,8 @@ static void __iomem *xilinx_pcie_map_bus(struct pci_bus *bus,
->  	if (!xilinx_pcie_valid_device(bus, devfn))
->  		return NULL;
->  
-> -	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-> -		 (devfn << ECAM_DEV_NUM_SHIFT);
-> +	relbus = (bus->number << PCIE_ECAM_BUS_SHIFT) |
-> +		 (devfn << PCIE_ECAM_FUN_SHIFT);
->  
->  	return port->reg_base + relbus + where;
->  }
-> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-> index 8f065a42fc1a..ffd010290084 100644
-> --- a/drivers/pci/ecam.c
-> +++ b/drivers/pci/ecam.c
-> @@ -149,7 +149,7 @@ EXPORT_SYMBOL_GPL(pci_ecam_map_bus);
->  
->  /* ECAM ops */
->  const struct pci_ecam_ops pci_generic_ecam_ops = {
-> -	.bus_shift	= 20,
-> +	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
->  	.pci_ops	= {
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read,
-> @@ -161,7 +161,7 @@ EXPORT_SYMBOL_GPL(pci_generic_ecam_ops);
->  #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
->  /* ECAM ops for 32-bit access only (non-compliant) */
->  const struct pci_ecam_ops pci_32b_ops = {
-> -	.bus_shift	= 20,
-> +	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
->  	.pci_ops	= {
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read32,
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 1af5cb02ef7f..58a5d5e2e831 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -9,6 +9,14 @@
->  #include <linux/kernel.h>
->  #include <linux/platform_device.h>
->  
-> +/*
-> + * Memory address shift values for the byte-level address that
-> + * can be used when accessing the PCI Express Configuration Space.
-> + */
-> +#define PCIE_ECAM_FUN_SHIFT	12	/* Function Number */
-> +#define PCIE_ECAM_DEV_SHIFT	15	/* Device Number */
-> +#define PCIE_ECAM_BUS_SHIFT	20	/* Bus Number */
-> +
->  /*
->   * struct to hold pci ops and bus shift of the config window
->   * for a PCI controller.
 
-
+As we are always running under at least a machine level hypervisor
+we're somewhat in the same situation as e.g. a KVM guest in
+that the VFs we see have some emulation that makes them act more like
+normal PCI functions. It just so happens that the machine level hypervisor
+does not emulate the PCI_COMMAND_MEMORY, it does emulate BARs and Vendor/Device IDs
+though.
+So is_virtfn is 0 for some VF for the same reason it is 0 on KVM/ESXi/HyperV/Jailhouse…
+guests on other architectures.
+Note that the BAR and Vendor/Device ID emulation
+exists also for the VFs created through /sys/…/sriov_numvfs that
+do have pdev->is_virtfn set to 1 and yes that means some of the emulation
+is not strictly necessary for us (e.g. Vendor/Device ID) but
+keeps things the same as on other architectures.
+Think of it, if any of the other hypervisors also
+don't implement PCI_COMMAND_MEMORY second level guest PCI pass-through
+would be broken for the same reason.
