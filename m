@@ -2,214 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C752554E2
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 09:09:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A9EE2555B2
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 09:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgH1HJQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Aug 2020 03:09:16 -0400
-Received: from mga09.intel.com ([134.134.136.24]:36516 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgH1HJO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:09:14 -0400
-IronPort-SDR: r82jLOr9wxZcRRTcAQHFeftLYq5auV6CVTUIBOTfXMNQgIZB9oPQwGb36G64JCdlBFdxY4+F3r
- CIdyyUTE/uEA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="157648525"
-X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
-   d="scan'208";a="157648525"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 00:09:12 -0700
-IronPort-SDR: /oScRW9T94IOaLtIgYI9O+Tx9+wSBDeNJGEQxXgZEInl1QqORT/sdk5hFzA7mWU1ULwQvPgtgq
- xTBymufxEXbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
-   d="scan'208";a="300133009"
-Received: from lkp-server01.sh.intel.com (HELO 4f455964fc6c) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 28 Aug 2020 00:09:11 -0700
-Received: from kbuild by 4f455964fc6c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kBYVb-0002Y8-2K; Fri, 28 Aug 2020 07:09:11 +0000
-Date:   Fri, 28 Aug 2020 15:08:18 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- bbb0111b37f1d9345d46883650e92141cbaf9b1a
-Message-ID: <5f48ad62.VehYFKKpWEi35BYd%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728556AbgH1Hwg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Aug 2020 03:52:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbgH1Hwg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Aug 2020 03:52:36 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D0AC061264;
+        Fri, 28 Aug 2020 00:52:35 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id e14so52432ybf.4;
+        Fri, 28 Aug 2020 00:52:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=03SA6QLBtK3IQ4zuCDRLpEPFR1JjLUS7ypF2jRpTUus=;
+        b=Ce1e8K/caM4JvW4I6IlYWAdAdDrcDJjdidgiSSw3u1U2l7HQ3a2kOmczvvbkYGVOq4
+         erB9J73UZGJvV7XHy/RkrrCUhQw7V1lydp0AdbQo+pNvzOBgNLswc2RgdPqsMF58aheA
+         9Lrv0ex7Uj91QMqENp5Yv4cuToIFPSGWs2lkiKSxnpsSTe7Eq5ZlVjBnVhNFGFh4cIr2
+         jpoD9oU/YgAXieicPCZprdmCdMY/V0jc1YbWHaplTsQgOGXc03HEMZkGKzhEBMjjUyat
+         1huT8whAgyVZhNrXbK4bevxXwjsD6gaR28Big84Mi8vP/bi7JfPYO85puDNU0UBxCGih
+         WPdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=03SA6QLBtK3IQ4zuCDRLpEPFR1JjLUS7ypF2jRpTUus=;
+        b=EX4UI+f/S84rGP2WHMLxM04koDaErZ9EPWQ5qOUoJclQtR2QI0O5Q//jDGUd6nqcnS
+         V1gJGij/1W0ILzC8lwwYZvKQhxBrSpHG5TOdXb93Aeo8RnLenRphVgVQQ/iDAnS4Q7dO
+         ZyQW+qCWl/n1l7r5/83xDdn4HYF83xAh/gVkTesWaaLP3xo97H+otrQIZn8BI3f3pvZD
+         8WI16IcR7knuyNBT2YKoVqdqYOOGiEr9ZChfkbTlkJmK0FUvja2mmmz42rVhoJ+IIuZp
+         5XlCvQx6Q7eZt57nk6hhy7wtYPGRQF4qmRa2qfJlIKw601eF+mF7vCslyMPe8sq59XA3
+         i1rw==
+X-Gm-Message-State: AOAM533xsc1R/mFDOL702DqBJ59U3h2gmJkARR833VqNC7Wifg1I9O3H
+        BmrOAtYSEtPpa/igou+OzMr0YIavOypV8x70Ios=
+X-Google-Smtp-Source: ABdhPJxKaH3Rnxdft6nzQd34AAzAxueOyLTpZiz6Sebv+w7rBi0ECVdDr/vmwjJ5qeTeRA2GnUZW3Taq1UeJFdtPzj4=
+X-Received: by 2002:a25:2f4d:: with SMTP id v74mr720966ybv.401.1598601154899;
+ Fri, 28 Aug 2020 00:52:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8t-HHWeo4zwnTuyZHnhc8u_aXqt_KZHr1trnXQB15Jj6A@mail.gmail.com> <TY2PR01MB36923A0548AAE7E0249042AFD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY2PR01MB36923A0548AAE7E0249042AFD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 28 Aug 2020 08:52:08 +0100
+Message-ID: <CA+V-a8v5sFVGVxNKDXvg8w=FeZnGdyV8q9deBuAaVMsx0bDcwg@mail.gmail.com>
+Subject: Re: [PATCH 08/20] dt-bindings: usb: usb-xhci: Document r8a774e1 support
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
-branch HEAD: bbb0111b37f1d9345d46883650e92141cbaf9b1a  x86/PCI: Fix intel_mid_pci.c build error when ACPI is not enabled
+Hi Shimoda-san
 
-elapsed time: 724m
+On Fri, Aug 28, 2020 at 2:11 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>
+> Hi Lad-san,
+>
+> > From: Lad, Prabhakar, Sent: Friday, August 28, 2020 2:15 AM
+> >
+> > Hi Greg,
+> >
+> > On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > >
+> > > Document r8a774e1 xhci support. The driver will use the fallback
+> > > compatible string "renesas,rcar-gen3-xhci", therefore no driver
+> > > change is needed.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > Gentle ping.
+>
+> Thank you for the ping. However, since the latest kernel has renesas,usb-xhci.yaml,
+> would you fix the patch?
+>
+Thank you for pointing out, I have now posted a v2 [1] now. (I missed
+out Geert's comment earlier for this patch)
 
-configs tested: 152
-configs skipped: 16
+[1] https://patchwork.kernel.org/patch/11742289/
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                ecovec24-romimage_defconfig
-arm                      pxa255-idp_defconfig
-mips                           ip32_defconfig
-sh                           se7721_defconfig
-sparc                               defconfig
-mips                         bigsur_defconfig
-sh                   sh7770_generic_defconfig
-arm                          iop32x_defconfig
-c6x                              alldefconfig
-arm                          pxa168_defconfig
-sh                            shmin_defconfig
-arm                         s3c2410_defconfig
-m68k                        m5272c3_defconfig
-sh                            migor_defconfig
-arm                        multi_v7_defconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                      ep88xc_defconfig
-powerpc                      pmac32_defconfig
-arm                            zeus_defconfig
-arm                       aspeed_g4_defconfig
-mips                           xway_defconfig
-mips                     loongson1c_defconfig
-mips                            gpr_defconfig
-sparc64                          alldefconfig
-powerpc                mpc7448_hpc2_defconfig
-sh                        sh7763rdp_defconfig
-arm                         orion5x_defconfig
-arm                            qcom_defconfig
-mips                  maltasmvp_eva_defconfig
-nios2                            allyesconfig
-arc                            hsdk_defconfig
-powerpc                     pseries_defconfig
-arc                           tb10x_defconfig
-sh                        sh7757lcr_defconfig
-mips                      maltaaprp_defconfig
-arm                    vt8500_v6_v7_defconfig
-arc                              allyesconfig
-sh                             sh03_defconfig
-arm                         mv78xx0_defconfig
-m68k                       m5275evb_defconfig
-mips                       rbtx49xx_defconfig
-arm                        neponset_defconfig
-sh                     magicpanelr2_defconfig
-nios2                               defconfig
-arc                                 defconfig
-mips                             allyesconfig
-mips                    maltaup_xpa_defconfig
-sh                             shx3_defconfig
-arm                            u300_defconfig
-arm                       mainstone_defconfig
-m68k                             allmodconfig
-c6x                         dsk6455_defconfig
-powerpc                     powernv_defconfig
-mips                          rb532_defconfig
-ia64                         bigsur_defconfig
-arm                        multi_v5_defconfig
-sh                         ecovec24_defconfig
-sh                          sdk7780_defconfig
-arc                              alldefconfig
-arm                  colibri_pxa270_defconfig
-mips                       lemote2f_defconfig
-sh                         apsh4a3a_defconfig
-mips                           rs90_defconfig
-sparc64                             defconfig
-mips                      pistachio_defconfig
-c6x                        evmc6678_defconfig
-arc                    vdk_hs38_smp_defconfig
-sh                        apsh4ad0a_defconfig
-powerpc                      pasemi_defconfig
-sh                           se7712_defconfig
-arm                           omap1_defconfig
-arm                         at91_dt_defconfig
-sh                          kfr2r09_defconfig
-arm                          pcm027_defconfig
-powerpc                      ppc6xx_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a003-20200827
-x86_64               randconfig-a002-20200827
-x86_64               randconfig-a001-20200827
-x86_64               randconfig-a005-20200827
-x86_64               randconfig-a006-20200827
-x86_64               randconfig-a004-20200827
-i386                 randconfig-a002-20200827
-i386                 randconfig-a004-20200827
-i386                 randconfig-a003-20200827
-i386                 randconfig-a005-20200827
-i386                 randconfig-a006-20200827
-i386                 randconfig-a001-20200827
-i386                 randconfig-a002-20200828
-i386                 randconfig-a005-20200828
-i386                 randconfig-a003-20200828
-i386                 randconfig-a004-20200828
-i386                 randconfig-a001-20200828
-i386                 randconfig-a006-20200828
-x86_64               randconfig-a015-20200828
-x86_64               randconfig-a012-20200828
-x86_64               randconfig-a016-20200828
-x86_64               randconfig-a014-20200828
-x86_64               randconfig-a011-20200828
-x86_64               randconfig-a013-20200828
-i386                 randconfig-a013-20200827
-i386                 randconfig-a012-20200827
-i386                 randconfig-a011-20200827
-i386                 randconfig-a016-20200827
-i386                 randconfig-a015-20200827
-i386                 randconfig-a014-20200827
-i386                 randconfig-a013-20200828
-i386                 randconfig-a012-20200828
-i386                 randconfig-a011-20200828
-i386                 randconfig-a016-20200828
-i386                 randconfig-a014-20200828
-i386                 randconfig-a015-20200828
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Cheers,
+Prabhakar
