@@ -2,74 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C87425579B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 11:28:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C221E255800
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Aug 2020 11:50:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgH1J2j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Aug 2020 05:28:39 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52700 "EHLO huawei.com"
+        id S1728532AbgH1JuM convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 28 Aug 2020 05:50:12 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2708 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728016AbgH1J2h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:28:37 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 33BACF005785721D2BAA;
-        Fri, 28 Aug 2020 17:28:34 +0800 (CST)
-Received: from [10.174.185.226] (10.174.185.226) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 28 Aug 2020 17:28:23 +0800
-Subject: Re: [PATCH v7 18/24] iommu/arm-smmu-v3: Add support for Hardware
- Translation Table Update
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        id S1728218AbgH1JuM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:50:12 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id F3FFD3C63C4F4B09F077;
+        Fri, 28 Aug 2020 10:50:09 +0100 (IST)
+Received: from localhost (10.52.127.106) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 28 Aug
+ 2020 10:50:05 +0100
+Date:   Fri, 28 Aug 2020 10:48:30 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Atish Patra <atish.patra@wdc.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Zong Li <zong.li@sifive.com>,
+        <linux-riscv@lists.infradead.org>, Will Deacon <will@kernel.org>,
+        <linux-arch@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
+        Steven Price <steven.price@arm.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <fenghua.yu@intel.com>, <kevin.tian@intel.com>,
-        <jacob.jun.pan@linux.intel.com>, <jgg@ziepe.ca>,
-        <catalin.marinas@arm.com>, <joro@8bytes.org>,
-        <robin.murphy@arm.com>, <hch@infradead.org>,
-        <zhangfei.gao@linaro.org>, <Jonathan.Cameron@huawei.com>,
-        <felix.kuehling@amd.com>, <xuzaibo@huawei.com>, <will@kernel.org>,
-        <christian.koenig@amd.com>, <baolu.lu@linux.intel.com>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-19-jean-philippe@linaro.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <472fdcf6-f306-60bc-5813-4ad421ee03f2@huawei.com>
-Date:   Fri, 28 Aug 2020 17:28:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Nick Hu <nickhu@andestech.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [RFC/RFT PATCH 3/6] arm64, numa: Move pcibus_to_node definition
+ to generic numa code
+Message-ID: <20200828104830.000007bf@Huawei.com>
+In-Reply-To: <20200814214725.28818-4-atish.patra@wdc.com>
+References: <20200814214725.28818-1-atish.patra@wdc.com>
+        <20200814214725.28818-4-atish.patra@wdc.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20200519175502.2504091-19-jean-philippe@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.185.226]
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.127.106]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/5/20 1:54, Jean-Philippe Brucker wrote:
-> @@ -4454,6 +4470,12 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
->   			smmu->features |= ARM_SMMU_FEAT_E2H;
->   	}
->   
-> +	if (reg & (IDR0_HA | IDR0_HD)) {
-> +		smmu->features |= ARM_SMMU_FEAT_HA;
-> +		if (reg & IDR0_HD)
-> +			smmu->features |= ARM_SMMU_FEAT_HD;
-> +	}
+On Fri, 14 Aug 2020 14:47:22 -0700
+Atish Patra <atish.patra@wdc.com> wrote:
+
+> pcibus_to_node is used only when numa is enabled and does not depend
+> on ISA. Thus, it can be moved the generic numa implementation.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+
+From a more general unification point of view, there seem to
+be two ways architectures implement this.
+Either
+
+bus->sysdata.node
+
+Or as here.
+There are weird other options, but let us ignore those :)
+
+That is going to take a bit of unwinding should we
+want to take this unification further and perhaps we want to think
+about doing this in pci generic code rather than here?
+
+Perhaps this is one we are better keeping architecture specific for
+now?
+
++CC Bjorn and Linux-pci
+
+
+> ---
+>  arch/arm64/kernel/pci.c  | 10 ----------
+>  drivers/base/arch_numa.c | 11 +++++++++++
+>  2 files changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index 1006ed2d7c60..07c122946c11 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -54,16 +54,6 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
+>  	return b->ops->write(b, devfn, reg, len, val);
+>  }
+>  
+> -#ifdef CONFIG_NUMA
+> -
+> -int pcibus_to_node(struct pci_bus *bus)
+> -{
+> -	return dev_to_node(&bus->dev);
+> -}
+> -EXPORT_SYMBOL(pcibus_to_node);
+> -
+> -#endif
+> -
+>  #ifdef CONFIG_ACPI
+>  
+>  struct acpi_pci_generic_root_info {
+> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+> index 83341c807240..4ab1b20a615d 100644
+> --- a/drivers/base/arch_numa.c
+> +++ b/drivers/base/arch_numa.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/memblock.h>
+>  #include <linux/module.h>
+> +#include <linux/pci.h>
+>  #include <linux/of.h>
+>  
+>  #ifdef CONFIG_ARM64
+> @@ -60,6 +61,16 @@ EXPORT_SYMBOL(cpumask_of_node);
+>  
+>  #endif
+>  
+> +#ifdef CONFIG_PCI
 > +
+> +int pcibus_to_node(struct pci_bus *bus)
+> +{
+> +	return dev_to_node(&bus->dev);
+> +}
+> +EXPORT_SYMBOL(pcibus_to_node);
+> +
+> +#endif
+> +
+>  static void numa_update_cpu(unsigned int cpu, bool remove)
+>  {
+>  	int nid = cpu_to_node(cpu);
 
-nitpick:
 
-As per the IORT spec (DEN0049D, 3.1.1.2 SMMUv3 node, Table 10), the
-"HTTU Override" flag of the SMMUv3 node can override the value in
-SMMU_IDR0.HTTU. You may want to check this bit before selecting the
-{HA,HD} features and shout if there is a mismatch between firmware and
-the SMMU implementation. Just like how ARM_SMMU_FEAT_COHERENCY is
-selected.
-
-
-Thanks,
-Zenghui
