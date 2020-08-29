@@ -2,195 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E12D2563EE
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Aug 2020 03:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28797256416
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Aug 2020 04:03:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgH2BMS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Aug 2020 21:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgH2BMN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Aug 2020 21:12:13 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953FEC061232
-        for <linux-pci@vger.kernel.org>; Fri, 28 Aug 2020 18:12:12 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h15so690007wrt.12
-        for <linux-pci@vger.kernel.org>; Fri, 28 Aug 2020 18:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=39XN9yo1hBG3Se1gfQYF3vziZZPdblGeQ4oQR1sH/O8=;
-        b=UgCNc6zV3jHlrg/Fv8Pd/IrqWUk206ZSYfkd1Atuw6CbnwlSWhIo20Ev2bp0NzbxNE
-         5+Oqahty8CR5kwHAXEbFaKD1X/femDV4haD3dBHW5mwpqzOGgAoCxqHujgVFfx1UHLfQ
-         DbN1P+h/aae5Xy6kl9NPJkMdJU0rMyidTucdU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=39XN9yo1hBG3Se1gfQYF3vziZZPdblGeQ4oQR1sH/O8=;
-        b=X8p7X4knEpa2EvfibNLO3gpnavQ51XA0Cry09dLBY24coK0LsnlLgRQ7u6VIukE7tb
-         ae8MohAchopueTqkC+UGH8FW5lGJkWLqSrpzkR+pilDP9UzUFzmJHx+ouemcRyEv/w7t
-         9oHhllZIqLwSYRinFjIv+1bI0Kr9yhJ/pEd8uuGqBKcOeYk+f7BNp/hvsWN2vlyLhITf
-         wUvbwQRwAG9UkNH+g4EYjhlc6nuUzxmad92eH32DI4Q3xwIOL/GEo1NfrdH/Yzt7124j
-         WWhw453PLc0iTSpY15tmavlM5joOJCLYOL29IfGDhaZB4fTwGDaaFREvj345Anohaau+
-         yIPw==
-X-Gm-Message-State: AOAM531M/bhy+zNALOOHGlaTq4E0zV5/y5dnXa/We27aK4CknW/jH9vP
-        nEc/hYsek5jHd5d4wpnIcOaUZO/xVg8G2BnhySE4
-X-Google-Smtp-Source: ABdhPJzw5EtgUVJ3RG403SG6FcBlDty/Ese8S3VaJefPy33FqMxh5pEHcZSuvxcoiYJMWxt5uOMYBnTEwf6FImhkxMA=
-X-Received: by 2002:adf:e411:: with SMTP id g17mr1444394wrm.77.1598663531166;
- Fri, 28 Aug 2020 18:12:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200828104830.000007bf@Huawei.com> <20200828161523.GA2158345@bjorn-Precision-5520>
-In-Reply-To: <20200828161523.GA2158345@bjorn-Precision-5520>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 28 Aug 2020 18:11:50 -0700
-Message-ID: <CAOnJCULtHzQKJNE4OO_U2NMaW6pX38Pw7dLywGc9og1BuuAYNQ@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH 3/6] arm64, numa: Move pcibus_to_node definition
- to generic numa code
+        id S1726418AbgH2CDz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Aug 2020 22:03:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10340 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726395AbgH2CDy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Aug 2020 22:03:54 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1DF10736A7399FD57229;
+        Sat, 29 Aug 2020 10:03:48 +0800 (CST)
+Received: from [127.0.0.1] (10.67.103.235) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Sat, 29 Aug 2020
+ 10:03:45 +0800
+Subject: Re: [PATCH] lspci: Decode 10-Bit Tag Requester Enable
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
-        Steven Price <steven.price@arm.com>, linux-pci@vger.kernel.org,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200828164931.GA2161257@bjorn-Precision-5520>
+CC:     <mj@ucw.cz>, <linux-pci@vger.kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <e83a7f8d-8eed-b222-4f21-7333876330b7@huawei.com>
+Date:   Sat, 29 Aug 2020 10:03:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <20200828164931.GA2161257@bjorn-Precision-5520>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.235]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 9:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Aug 28, 2020 at 10:48:30AM +0100, Jonathan Cameron wrote:
-> > On Fri, 14 Aug 2020 14:47:22 -0700
-> > Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> > > pcibus_to_node is used only when numa is enabled and does not depend
-> > > on ISA. Thus, it can be moved the generic numa implementation.
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> >
-> > From a more general unification point of view, there seem to
-> > be two ways architectures implement this.
-> > Either
-> >
-> > bus->sysdata.node
-> >
-> > Or as here.
-> > There are weird other options, but let us ignore those :)
-> >
-> > That is going to take a bit of unwinding should we
-> > want to take this unification further and perhaps we want to think
-> > about doing this in pci generic code rather than here?
-> >
-> > Perhaps this is one we are better keeping architecture specific for
-> > now?
-> >
-> > +CC Bjorn and Linux-pci
-> >
-> >
-> > > ---
-> > >  arch/arm64/kernel/pci.c  | 10 ----------
-> > >  drivers/base/arch_numa.c | 11 +++++++++++
-> > >  2 files changed, 11 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> > > index 1006ed2d7c60..07c122946c11 100644
-> > > --- a/arch/arm64/kernel/pci.c
-> > > +++ b/arch/arm64/kernel/pci.c
-> > > @@ -54,16 +54,6 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
-> > >     return b->ops->write(b, devfn, reg, len, val);
-> > >  }
-> > >
-> > > -#ifdef CONFIG_NUMA
-> > > -
-> > > -int pcibus_to_node(struct pci_bus *bus)
-> > > -{
-> > > -   return dev_to_node(&bus->dev);
-> > > -}
-> > > -EXPORT_SYMBOL(pcibus_to_node);
-> > > -
-> > > -#endif
-> > > -
-> > >  #ifdef CONFIG_ACPI
-> > >
-> > >  struct acpi_pci_generic_root_info {
-> > > diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
-> > > index 83341c807240..4ab1b20a615d 100644
-> > > --- a/drivers/base/arch_numa.c
-> > > +++ b/drivers/base/arch_numa.c
-> > > @@ -11,6 +11,7 @@
-> > >  #include <linux/acpi.h>
-> > >  #include <linux/memblock.h>
-> > >  #include <linux/module.h>
-> > > +#include <linux/pci.h>
-> > >  #include <linux/of.h>
-> > >
-> > >  #ifdef CONFIG_ARM64
-> > > @@ -60,6 +61,16 @@ EXPORT_SYMBOL(cpumask_of_node);
-> > >
-> > >  #endif
-> > >
-> > > +#ifdef CONFIG_PCI
-> > > +
-> > > +int pcibus_to_node(struct pci_bus *bus)
-> > > +{
-> > > +   return dev_to_node(&bus->dev);
-> > > +}
-> > > +EXPORT_SYMBOL(pcibus_to_node);
-> > > +
-> > > +#endif
->
-> I certainly agree that this should not be arch-specific, but I'm not
-> really in favor of adding this PCI gunk in drivers/base.
->
-> I think we can do better (eventually) by getting rid of
-> pcibus_to_node() completely.  It's not used very much except by
-> cpumask_of_pcibus(), which itself is hardly used at all.
->
-I am a bit confused here. A quick grep suggested that pcibus_to_node()
-is also called from generic pci probe,
-controller and few drivers(block, infiniband) as well. Maybe I am
-missing something here ?
+Hi Bjorn
 
-We can move the pcibus_to_node to arch specific code for now if that's
-what is preferred.
-
-> > >  static void numa_update_cpu(unsigned int cpu, bool remove)
-> > >  {
-> > >     int nid = cpu_to_node(cpu);
-> >
-> >
+Many thanks for your review.
+On 2020/8/29 0:49, Bjorn Helgaas wrote:
+> On Sat, Aug 01, 2020 at 03:21:20PM +0800, Dongdong Liu wrote:
+>> Decode 10-Bit Tag Requester Enable bit in Device Control 2 Register.
+>>
+>> Sample output changes:
+>>
+>>   - DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled, ARIFwd-
+>>   + DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- 10BitTagReq- OBFF Disabled, ARIFwd-
+>>
+>> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+>> ---
+>>  lib/header.h | 1 +
+>>  ls-caps.c    | 3 ++-
+>>  2 files changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/lib/header.h b/lib/header.h
+>> index 472816e..eaf6517 100644
+>> --- a/lib/header.h
+>> +++ b/lib/header.h
+>> @@ -898,6 +898,7 @@
+>>  #define  PCI_EXP_DEVCAP2_64BIT_ATOMICOP_COMP	0x0100	/* 64bit AtomicOp Completer Supported */
+>>  #define  PCI_EXP_DEVCAP2_128BIT_CAS_COMP	0x0200	/* 128bit CAS Completer Supported */
+>>  #define  PCI_EXP_DEV2_LTR		0x0400	/* LTR enabled */
+>> +#define  PCI_EXP_DEV2_10BIT_TAG_REQ	0x1000 /* 10 Bit Tag Requester enabled */
 >
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Looks OK to me (but I don't maintain lspci, of course).
+>
+> And we have a bit of a mess in the names here.  There are a bunch of
+> "PCI_EXP_DEV2_*" names that would be "PCI_EXP_DEVCTL2_*" if they
+> followed the convention.  You didn't start that trend, so I'm just
+> pointing it out in case you or Martin want to clean it up.  When I add
+> names I try to use the same name between the Linux kernel source [1]
+> and lspci.
 
+Will do in next patch.
 
+Thanks,
+Dongdong
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/pci_regs.h#n651
+>
+>>  #define  PCI_EXP_DEV2_OBFF(x)		(((x) >> 13) & 3) /* OBFF enabled */
+>>  #define PCI_EXP_DEVSTA2			0x2a	/* Device Status */
+>>  #define PCI_EXP_LNKCAP2			0x2c	/* Link Capabilities */
+>> diff --git a/ls-caps.c b/ls-caps.c
+>> index a09b0cf..d17cbad 100644
+>> --- a/ls-caps.c
+>> +++ b/ls-caps.c
+>> @@ -1134,10 +1134,11 @@ static void cap_express_dev2(struct device *d, int where, int type)
+>>      }
+>>
+>>    w = get_conf_word(d, where + PCI_EXP_DEVCTL2);
+>> -  printf("\t\tDevCtl2: Completion Timeout: %s, TimeoutDis%c LTR%c OBFF %s,",
+>> +  printf("\t\tDevCtl2: Completion Timeout: %s, TimeoutDis%c LTR%c 10BitTagReq%c OBFF %s,",
+>>  	cap_express_dev2_timeout_value(PCI_EXP_DEV2_TIMEOUT_VALUE(w)),
+>>  	FLAG(w, PCI_EXP_DEV2_TIMEOUT_DIS),
+>>  	FLAG(w, PCI_EXP_DEV2_LTR),
+>> +	FLAG(w, PCI_EXP_DEV2_10BIT_TAG_REQ),
+>>  	cap_express_devctl2_obff(PCI_EXP_DEV2_OBFF(w)));
+>>    if (type == PCI_EXP_TYPE_ROOT_PORT || type == PCI_EXP_TYPE_DOWNSTREAM)
+>>      printf(" ARIFwd%c\n", FLAG(w, PCI_EXP_DEV2_ARI));
+>> --
+>> 1.9.1
+>>
+>
+> .
+>
 
---
-Regards,
-Atish
