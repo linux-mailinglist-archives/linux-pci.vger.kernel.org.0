@@ -2,67 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29028256417
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Aug 2020 04:05:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E99125658A
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Aug 2020 09:08:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgH2CFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Aug 2020 22:05:51 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59020 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726392AbgH2CFu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Aug 2020 22:05:50 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9FE8A17D0484826F4B3E;
-        Sat, 29 Aug 2020 10:05:47 +0800 (CST)
-Received: from [127.0.0.1] (10.67.103.235) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Sat, 29 Aug 2020
- 10:05:43 +0800
-Subject: Re: [PATCH] lspci: Decode 10-Bit Tag Requester Enable
-To:     =?UTF-8?Q?Martin_Mare=c5=a1?= <mj@ucw.cz>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <1596266480-52789-1-git-send-email-liudongdong3@huawei.com>
- <20200828164931.GA2161257@bjorn-Precision-5520>
- <mj+md-20200828.205604.86207.nikam@ucw.cz>
-CC:     <linux-pci@vger.kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <aba15183-0c97-0acb-7d42-e8a455cbc1fd@huawei.com>
-Date:   Sat, 29 Aug 2020 10:05:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726083AbgH2HI2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Aug 2020 03:08:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgH2HI1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Aug 2020 03:08:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC435C061236
+        for <linux-pci@vger.kernel.org>; Sat, 29 Aug 2020 00:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QB//6Se/PwN6GvSv/9WDlotukz26aOQelOfBoaCGjo4=; b=lPlY+5e2PJc55L35Wm1SGoULrK
+        9Ww4X6h4/xmTgOZixAoHkmNEpE38/Rk9+gOKJRCZSqtZ91ZNLS1T7hf2SH2k5kCQyK4ChoOFzqg5h
+        XdqmY+NKXsEqn7+Iu6fy9akagWPM0pnvrFwKfnsjVvde9KRCnYgqG9N+8xJrDvKNZtm2jRHECznO4
+        EHSJqSut8lz+dLPaahPy+XYAS3tFccxryqRgRAOwKbfpucu/Cig+064vx+89UzkYpvK0mA26TfqSV
+        42R2YveR6schhNzUJhGO5r0s3XrT908VW9+QdkQfxFRe7pNXghJfCGqYQ6V4g7PCOscSu109mVzzh
+        8WaEEg5g==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBuyO-0000xk-DN; Sat, 29 Aug 2020 07:08:24 +0000
+Date:   Sat, 29 Aug 2020 08:08:24 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1] PCI/P2PDMA: Use DMA ops setter instead of direct
+ assignment
+Message-ID: <20200829070824.GA2526@infradead.org>
+References: <20200828111157.7639-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <mj+md-20200828.205604.86207.nikam@ucw.cz>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.103.235]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828111157.7639-1-andriy.shevchenko@linux.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Martin, Bjorn
+On Fri, Aug 28, 2020 at 02:11:57PM +0300, Andy Shevchenko wrote:
+> Use DMA ops setter instead of direct assignment. Even we know that
+> this module doesn't perform access to the dma_ops member of struct device,
+> it's better to use setter to avoid potential problems in the future.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 2020/8/29 4:56, Martin Mareš wrote:
-> Hello!
->
->> And we have a bit of a mess in the names here.  There are a bunch of
->> "PCI_EXP_DEV2_*" names that would be "PCI_EXP_DEVCTL2_*" if they
->> followed the convention.  You didn't start that trend, so I'm just
->> pointing it out in case you or Martin want to clean it up.  When I add
->> names I try to use the same name between the Linux kernel source [1]
->> and lspci.
->
-> Yes, could you please clean it up?
->
-> Otherwise it's OK.
->
-> 					Martin
-
-Will do in next patch.
-
-Thanks,
-Dongdong.
->
-> .
->
-
+As mentioned in reply to the intel-iommu patch: I plan to remove these
+accessors soon.
