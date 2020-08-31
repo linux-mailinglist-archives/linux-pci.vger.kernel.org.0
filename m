@@ -2,206 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55BDB25768B
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Aug 2020 11:31:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B48E257A5E
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Aug 2020 15:27:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgHaJbw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Aug 2020 05:31:52 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4518 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgHaJbw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:31:52 -0400
-IronPort-SDR: 8kcdCnD+ZikQ9YJIbebsp06Vk6xeyYLzDb+t8s2wQTK/1Q/S0tIdBO5t8B8GWAEA7sJxuhZXDv
- zoEpYRiGjX1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="156939453"
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="156939453"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 02:31:51 -0700
-IronPort-SDR: 5awQIconP4xVJd1GDs5C7bZNL8aVxcVSaNk5PHA0/n7R3ytOx0IHAU63WFngPn8R20vdd2nqPM
- NLJaIN2Mptyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="445644041"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 31 Aug 2020 02:31:49 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2F9EE16D; Mon, 31 Aug 2020 12:31:47 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Add a quirk to skip 1000 ms default link activation delay on some devices
-Date:   Mon, 31 Aug 2020 12:31:47 +0300
-Message-Id: <20200831093147.36775-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+        id S1727786AbgHaN1h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Aug 2020 09:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgHaN0v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Aug 2020 09:26:51 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4748AC0619CA
+        for <linux-pci@vger.kernel.org>; Mon, 31 Aug 2020 06:26:22 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w14so6688000ljj.4
+        for <linux-pci@vger.kernel.org>; Mon, 31 Aug 2020 06:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
+        b=HyW5/n2KU8W3FGefd/FUm/bl6fINTQmZ8owzYdBGhP5oyAu9pJQPQCMOdYEDNFegUA
+         if9VN+pra3iBgWNYJjHcBV7T99CY2GFOcHOVU+3vJ7r2Hvzgah2ZCqHTq6bk4iv0uilM
+         xQiEPrdMcYz9cIZL++pevJSb5RdixTZAk95pbnwmQ3/GOLv8xUS1vQ8t141F6N8CgROI
+         mubb31iIEGHTmIRsfQchZCL6N1v85LnpPi/V/jmyUdodp49jy+hBMBGM/QhsUL+AVu8e
+         3Cg9SzlMyigtpwqPqg6kcnc+pElD0XMp/EB9mY9MxbJL6EWXLnnT1YiTj0+V+0DhoQI2
+         wJdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
+        b=fiqmOSiGqhTV+HbRDrg4d3fuBn7MqoVDf+C4vk7vQt5J5WJBuJkVFNrUufT8it8E7v
+         1neyQ1ffWZ/hAfgL7qDnS30crvW2DciwptQDn2nUumsh8eS5ElV7ECg+W53RunQ6nKQz
+         YtPjTGf2Wr8xQu/zTDgdeH4jI7VighZE/hstg+r/AMl5dEvYmwyoY6b8pxS2uhIiYeDT
+         A6itXDhnOuTAmIHdAfl+VqFcx2AtMbFqiOPQdzFA6yIkVLhoTNBMuWPeouul14d9bmGO
+         vUTmp+55Qmql7bb+GTPxUhynX7nP+/MpdrUU2MmP1D1sucApx0JtzsOdj3N8WjGkhbmQ
+         BDnA==
+X-Gm-Message-State: AOAM533UuMA+fNqOLknRTFXaFtkUSlDAf1jP1HzV5/YB0hZYT74fsMT1
+        QGRPa1VFXrW9XVJtyJRX1QKIPwGVeVfLvB5O1IM=
+X-Google-Smtp-Source: ABdhPJxEvvXnVfErpjDwHOkyCqRTciyX/SNwRaUYVOHmxIQS6MbFpht1V2v8jY7chkhk3ZxIDw/BvL8uxGOjXPjCGG8=
+X-Received: by 2002:a2e:9c86:: with SMTP id x6mr662832lji.346.1598880379026;
+ Mon, 31 Aug 2020 06:26:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Reply-To: marie_avis12@yahoo.com
+Received: by 2002:a2e:9817:0:0:0:0:0 with HTTP; Mon, 31 Aug 2020 06:26:18
+ -0700 (PDT)
+From:   Miss Maris Avis <marie.avis11@gmail.com>
+Date:   Mon, 31 Aug 2020 13:26:18 +0000
+X-Google-Sender-Auth: ENkN_TdcXF5NiFOWAHQrklZpWrk
+Message-ID: <CADTVshNj9Ztqm75AkbunLeeRTsk07qB5LsiKLoagvmiH7TvYgQ@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kai-Heng Feng reported that it takes a long time (> 1 s) to resume
-Thunderbolt-connected devices from both runtime suspend and system sleep
-(s2idle).
+My Dear,
 
-This was because some Downstream Ports that support > 5 GT/s do not also
-support Data Link Layer Link Active reporting.  Per PCIe r5.0 sec 6.6.1:
+My name is Miss Marie Avis the only daughter of Mr. Gabriel Avis, my
+Father was dealing in Cocoa and Timber in this country before his
+death,  It is my pleasure to contact you for a business venture which
+I intend to establish in your country. Though I have not met with you
+before but I believe one has to risk confiding before you can succeed
+sometimes in life.
 
-  With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
-  software must wait a minimum of 100 ms after Link training completes
-  before sending a Configuration Request to the device immediately below
-  that Port. Software can determine when Link training completes by
-  polling the Data Link Layer Link Active bit or by setting up an
-  associated interrupt (see Section 6.7.3.3).
+I can confide in you for my brighter future since you are a human
+being like me. There is this huge amount of Ten Million five hundred
+thousand United States dollars. ($10.500.000.00) which my late Father
+kept for me in a suspense account with one of the bank here in Abidjan
+Cote d'Ivoire before he was assassinated by unknown persons, Now I
+have decided to invest these money in your country or anywhere safe
+enough for me.
 
-Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting,
-but at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and
-Intel JHL7540 Thunderbolt 3 Bridge [8086:15e7, 8086:15ea, 8086:15ef] do
-not.
+I want you to help me claim this fund from the bank and have it
+transfer into your personal account in your country for investment
+purposes in your country in these areas:
 
-This adds a quirk for these devices that skips the the 1000 ms default
-link activation delay.
+1). Telecommunication
+2). The transport Industry
+3). Five Star Hotel
+4). Tourism
+5). Real Estate
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
-Link: https://lore.kernel.org/r/20200514133043.27429-1-mika.westerberg@linux.intel.com
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
-Hi all,
+If you can be of assistance to me I will be pleased to offer you 20%
+of the total fund.
 
-The previous version of the patch can be found below:
+I await your soonest response.
 
-  https://www.spinics.net/lists/linux-pci/msg97860.html
-
-This version adds a quirk instead covering the two devices Kai-Heng Feng
-reported. I added Titan Ridge DD and 2C because I think they are affected
-as well.
-
-Since the PCI IDs of these devices are now used in two places, I moved them
-from TBT driver to pci_ids.h.
-
-@Kai-Heng, if you still have access to this hardware, it would be great if
-you could try this out.
-
- drivers/pci/pci.c         |  2 ++
- drivers/pci/quirks.c      | 23 +++++++++++++++++++++++
- drivers/thunderbolt/nhi.h |  4 ----
- include/linux/pci.h       |  5 +++++
- include/linux/pci_ids.h   |  4 ++++
- 5 files changed, 34 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e39c5499770f..16b61def1d46 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4674,6 +4674,8 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 	 * case, we wait for 1000 ms + any delay requested by the caller.
- 	 */
- 	if (!pdev->link_active_reporting) {
-+		if (active && pdev->skip_default_link_activation_delay)
-+			timeout = 0;
- 		msleep(timeout + delay);
- 		return true;
- 	}
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 2a589b6d6ed8..9269abb6455d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3621,6 +3621,29 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_PORT_RIDGE,
- 			quirk_thunderbolt_hotplug_msi);
- 
-+/*
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=206837
-+ *
-+ * Non-hotplug PCIe downstream ports of these devices do not support active
-+ * link reporting but they are known to train the link within 100ms.
-+ */
-+static void quirk_skip_default_link_activation_delay(struct pci_dev *pdev)
-+{
-+	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM &&
-+	    !pdev->link_active_reporting && !pdev->is_hotplug_bridge) {
-+		pci_dbg(pdev, "skipping 1000 ms default link activation delay\n");
-+		pdev->skip_default_link_activation_delay = true;
-+	}
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE,
-+			quirk_skip_default_link_activation_delay);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE,
-+			quirk_skip_default_link_activation_delay);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE,
-+			quirk_skip_default_link_activation_delay);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE,
-+			quirk_skip_default_link_activation_delay);
-+
- #ifdef CONFIG_ACPI
- /*
-  * Apple: Shutdown Cactus Ridge Thunderbolt controller.
-diff --git a/drivers/thunderbolt/nhi.h b/drivers/thunderbolt/nhi.h
-index 80162e4b013f..c023091f6b4e 100644
---- a/drivers/thunderbolt/nhi.h
-+++ b/drivers/thunderbolt/nhi.h
-@@ -58,7 +58,6 @@ extern const struct tb_nhi_ops icl_nhi_ops;
- #define PCI_DEVICE_ID_INTEL_WIN_RIDGE_2C_NHI            0x157d
- #define PCI_DEVICE_ID_INTEL_WIN_RIDGE_2C_BRIDGE         0x157e
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_NHI		0x15bf
--#define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE	0x15c0
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_NHI	0x15d2
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_BRIDGE	0x15d3
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_NHI	0x15d9
-@@ -66,11 +65,8 @@ extern const struct tb_nhi_ops icl_nhi_ops;
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_USBONLY_NHI	0x15dc
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_USBONLY_NHI	0x15dd
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_USBONLY_NHI	0x15de
--#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE	0x15e7
- #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI		0x15e8
--#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE	0x15ea
- #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI		0x15eb
--#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE	0x15ef
- #define PCI_DEVICE_ID_INTEL_ICL_NHI1			0x8a0d
- #define PCI_DEVICE_ID_INTEL_ICL_NHI0			0x8a17
- #define PCI_DEVICE_ID_INTEL_TGL_NHI0			0x9a1b
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 835530605c0d..c44ee4337a2a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -444,6 +444,11 @@ struct pci_dev {
- 	unsigned int	non_compliant_bars:1;	/* Broken BARs; ignore them */
- 	unsigned int	is_probed:1;		/* Device probing in progress */
- 	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
-+	/*
-+	 * Skip default 1000 ms wait on ports that do not support active
-+	 * link reporting (link_active_reporting == 0).
-+	 */
-+	unsigned int	skip_default_link_activation_delay:1;
- 	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
- 	pci_dev_flags_t dev_flags;
- 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1ab1e24bcbce..315b555b3444 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2711,6 +2711,10 @@
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_2C_BRIDGE  0x1576
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI     0x1577
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE  0x1578
-+#define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE  0x15c0
-+#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE   0x15e7
-+#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE   0x15ea
-+#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE   0x15ef
- #define PCI_DEVICE_ID_INTEL_80960_RP	0x1960
- #define PCI_DEVICE_ID_INTEL_QAT_C3XXX	0x19e2
- #define PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF	0x19e3
--- 
-2.28.0
-
+Respectfully yours,
+Miss Marie Evis
+Tel: +225597438528
