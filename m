@@ -2,561 +2,752 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAC432586FE
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Sep 2020 06:41:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB6B8258701
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Sep 2020 06:43:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgIAEk6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Sep 2020 00:40:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47438 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgIAEk5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Sep 2020 00:40:57 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0814egN8084924;
-        Mon, 31 Aug 2020 23:40:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598935242;
-        bh=ZPc+kCEY9KNjFpofORuVv0eLueeotIy+5gFYG818yuQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ldBJbNRgABSQjoHGEBc98T3mIuZAn88kxQXRySknfosOnN4kylICE9oCX2q0NHSZc
-         w2dTPrI2Ld9k8HYV3skyQfsgaKZJM5JCt004S0tYCWNnTokF6w+avUzAESOSJ8CL/r
-         CJGuVw/faRkSDwr1d1lv8TC2wiVKAB1dzbbUBMKU=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0814egYU114208;
-        Mon, 31 Aug 2020 23:40:42 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 31
- Aug 2020 23:40:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 31 Aug 2020 23:40:42 -0500
-Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0814eZHT040813;
-        Mon, 31 Aug 2020 23:40:36 -0500
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
- <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
- <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
- <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
- <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
- <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
- <b2178e1d-2f5c-e8a3-72fb-70f2f8d6aa45@redhat.com>
- <45a8a97c-2061-13ee-5da8-9877a4a3b8aa@ti.com>
- <20200715171509.GA3185776@xps15>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <ac339fb0-14e0-d3d2-ea42-c9a5b1bd8b17@ti.com>
-Date:   Tue, 1 Sep 2020 10:10:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726237AbgIAEn6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Sep 2020 00:43:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18118 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgIAEnz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Sep 2020 00:43:55 -0400
+IronPort-SDR: uRK5QVEPBySYKCdXv2XKA+Z3NWdQFU+FLourGLvwq434CRYAF5iXEO0qaIHBGtd48O4yfqDKPI
+ ICnFJ3JRNY9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="144848632"
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="gz'50?scan'50,208,50";a="144848632"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 21:43:32 -0700
+IronPort-SDR: 2zr/oaGrzbZ460Cs9YH8Tf0aMR6rOKpvOaaE2FBgejakMUZmsg2fG8TJ1fLUVCaOvnyNAHGz+7
+ yX5eO7c9ifHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="gz'50?scan'50,208,50";a="283288733"
+Received: from lkp-server02.sh.intel.com (HELO 713faec3b0e5) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 31 Aug 2020 21:43:28 -0700
+Received: from kbuild by 713faec3b0e5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kCy8m-0000Xh-8i; Tue, 01 Sep 2020 04:43:28 +0000
+Date:   Tue, 1 Sep 2020 12:43:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     ricky_wu@realtek.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+        bhelgaas@google.com, rui_feng@realsil.com.cn,
+        vailbhavgupta40@gamail.com, linux-pci@vger.kernel.org,
+        puranjay12@gmail.com, linux-kernel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org
+Subject: Re: [PATCH] misc: rtsx: add power saving function and bios guide
+ options
+Message-ID: <202009011249.laj7KAJq%lkp@intel.com>
+References: <20200901023421.32341-1-ricky_wu@realtek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200715171509.GA3185776@xps15>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/mixed; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <20200901023421.32341-1-ricky_wu@realtek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mathieu,
 
-On 15/07/20 10:45 pm, Mathieu Poirier wrote:
-> Hey Kishon,
-> 
-> On Wed, Jul 08, 2020 at 06:43:45PM +0530, Kishon Vijay Abraham I wrote:
->> Hi Jason,
->>
->> On 7/8/2020 4:52 PM, Jason Wang wrote:
->>>
->>> On 2020/7/7 下午10:45, Kishon Vijay Abraham I wrote:
->>>> Hi Jason,
->>>>
->>>> On 7/7/2020 3:17 PM, Jason Wang wrote:
->>>>> On 2020/7/6 下午5:32, Kishon Vijay Abraham I wrote:
->>>>>> Hi Jason,
->>>>>>
->>>>>> On 7/3/2020 12:46 PM, Jason Wang wrote:
->>>>>>> On 2020/7/2 下午9:35, Kishon Vijay Abraham I wrote:
->>>>>>>> Hi Jason,
->>>>>>>>
->>>>>>>> On 7/2/2020 3:40 PM, Jason Wang wrote:
->>>>>>>>> On 2020/7/2 下午5:51, Michael S. Tsirkin wrote:
->>>>>>>>>> On Thu, Jul 02, 2020 at 01:51:21PM +0530, Kishon Vijay Abraham I wrote:
->>>>>>>>>>> This series enhances Linux Vhost support to enable SoC-to-SoC
->>>>>>>>>>> communication over MMIO. This series enables rpmsg communication between
->>>>>>>>>>> two SoCs using both PCIe RC<->EP and HOST1-NTB-HOST2
->>>>>>>>>>>
->>>>>>>>>>> 1) Modify vhost to use standard Linux driver model
->>>>>>>>>>> 2) Add support in vring to access virtqueue over MMIO
->>>>>>>>>>> 3) Add vhost client driver for rpmsg
->>>>>>>>>>> 4) Add PCIe RC driver (uses virtio) and PCIe EP driver (uses vhost) for
->>>>>>>>>>>         rpmsg communication between two SoCs connected to each other
->>>>>>>>>>> 5) Add NTB Virtio driver and NTB Vhost driver for rpmsg communication
->>>>>>>>>>>         between two SoCs connected via NTB
->>>>>>>>>>> 6) Add configfs to configure the components
->>>>>>>>>>>
->>>>>>>>>>> UseCase1 :
->>>>>>>>>>>
->>>>>>>>>>>       VHOST RPMSG                     VIRTIO RPMSG
->>>>>>>>>>>            +                               +
->>>>>>>>>>>            |                               |
->>>>>>>>>>>            |                               |
->>>>>>>>>>>            |                               |
->>>>>>>>>>>            |                               |
->>>>>>>>>>> +-----v------+                 +------v-------+
->>>>>>>>>>> |   Linux    |                 |     Linux    |
->>>>>>>>>>> |  Endpoint  |                 | Root Complex |
->>>>>>>>>>> |            <----------------->              |
->>>>>>>>>>> |            |                 |              |
->>>>>>>>>>> |    SOC1    |                 |     SOC2     |
->>>>>>>>>>> +------------+                 +--------------+
->>>>>>>>>>>
->>>>>>>>>>> UseCase 2:
->>>>>>>>>>>
->>>>>>>>>>>           VHOST RPMSG                                      VIRTIO RPMSG
->>>>>>>>>>>                +                                                 +
->>>>>>>>>>>                |                                                 |
->>>>>>>>>>>                |                                                 |
->>>>>>>>>>>                |                                                 |
->>>>>>>>>>>                |                                                 |
->>>>>>>>>>>         +------v------+                                   +------v------+
->>>>>>>>>>>         |             |                                   |             |
->>>>>>>>>>>         |    HOST1    |                                   |    HOST2    |
->>>>>>>>>>>         |             |                                   |             |
->>>>>>>>>>>         +------^------+                                   +------^------+
->>>>>>>>>>>                |                                                 |
->>>>>>>>>>>                |                                                 |
->>>>>>>>>>> +---------------------------------------------------------------------+
->>>>>>>>>>> |  +------v------+                                   +------v------+  |
->>>>>>>>>>> |  |             |                                   |             |  |
->>>>>>>>>>> |  |     EP      |                                   |     EP      |  |
->>>>>>>>>>> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
->>>>>>>>>>> |  |             <----------------------------------->             |  |
->>>>>>>>>>> |  |             |                                   |             |  |
->>>>>>>>>>> |  |             |                                   |             |  |
->>>>>>>>>>> |  |             |  SoC With Multiple EP Instances   |             |  |
->>>>>>>>>>> |  |             |  (Configured using NTB Function)  |             |  |
->>>>>>>>>>> |  +-------------+                                   +-------------+  |
->>>>>>>>>>> +---------------------------------------------------------------------+
->>>>>>>>>>>
->>>>>>>>>>> Software Layering:
->>>>>>>>>>>
->>>>>>>>>>> The high-level SW layering should look something like below. This series
->>>>>>>>>>> adds support only for RPMSG VHOST, however something similar should be
->>>>>>>>>>> done for net and scsi. With that any vhost device (PCI, NTB, Platform
->>>>>>>>>>> device, user) can use any of the vhost client driver.
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>          +----------------+  +-----------+  +------------+  +----------+
->>>>>>>>>>>          |  RPMSG VHOST   |  | NET VHOST |  | SCSI VHOST |  |    X     |
->>>>>>>>>>>          +-------^--------+  +-----^-----+  +-----^------+  +----^-----+
->>>>>>>>>>>                  |                 |              |              |
->>>>>>>>>>>                  |                 |              |              |
->>>>>>>>>>>                  |                 |              |              |
->>>>>>>>>>> +-----------v-----------------v--------------v--------------v----------+
->>>>>>>>>>> |                            VHOST CORE                                |
->>>>>>>>>>> +--------^---------------^--------------------^------------------^-----+
->>>>>>>>>>>               |               |                    |                  |
->>>>>>>>>>>               |               |                    |                  |
->>>>>>>>>>>               |               |                    |                  |
->>>>>>>>>>> +--------v-------+  +----v------+  +----------v----------+  +----v-----+
->>>>>>>>>>> |  PCI EPF VHOST |  | NTB VHOST |  |PLATFORM DEVICE VHOST|  |    X     |
->>>>>>>>>>> +----------------+  +-----------+  +---------------------+  +----------+
->>>>>>>>>>>
->>>>>>>>>>> This was initially proposed here [1]
->>>>>>>>>>>
->>>>>>>>>>> [1] ->
->>>>>>>>>>> https://lore.kernel.org/r/2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com
->>>>>>>>>> I find this very interesting. A huge patchset so will take a bit
->>>>>>>>>> to review, but I certainly plan to do that. Thanks!
->>>>>>>>> Yes, it would be better if there's a git branch for us to have a look.
->>>>>>>> I've pushed the branch
->>>>>>>> https://github.com/kishon/linux-wip.git vhost_rpmsg_pci_ntb_rfc
->>>>>>> Thanks
->>>>>>>
->>>>>>>
->>>>>>>>> Btw, I'm not sure I get the big picture, but I vaguely feel some of the
->>>>>>>>> work is
->>>>>>>>> duplicated with vDPA (e.g the epf transport or vhost bus).
->>>>>>>> This is about connecting two different HW systems both running Linux and
->>>>>>>> doesn't necessarily involve virtualization.
->>>>>>> Right, this is something similar to VOP
->>>>>>> (Documentation/misc-devices/mic/mic_overview.rst). The different is the
->>>>>>> hardware I guess and VOP use userspace application to implement the device.
->>>>>> I'd also like to point out, this series tries to have communication between
->>>>>> two
->>>>>> SoCs in vendor agnostic way. Since this series solves for 2 usecases (PCIe
->>>>>> RC<->EP and NTB), for the NTB case it directly plugs into NTB framework and
->>>>>> any
->>>>>> of the HW in NTB below should be able to use a virtio-vhost communication
->>>>>>
->>>>>> #ls drivers/ntb/hw/
->>>>>> amd  epf  idt  intel  mscc
->>>>>>
->>>>>> And similarly for the PCIe RC<->EP communication, this adds a generic endpoint
->>>>>> function driver and hence any SoC that supports configurable PCIe endpoint can
->>>>>> use virtio-vhost communication
->>>>>>
->>>>>> # ls drivers/pci/controller/dwc/*ep*
->>>>>> drivers/pci/controller/dwc/pcie-designware-ep.c
->>>>>> drivers/pci/controller/dwc/pcie-uniphier-ep.c
->>>>>> drivers/pci/controller/dwc/pci-layerscape-ep.c
->>>>>
->>>>> Thanks for those backgrounds.
->>>>>
->>>>>
->>>>>>>>      So there is no guest or host as in
->>>>>>>> virtualization but two entirely different systems connected via PCIe cable,
->>>>>>>> one
->>>>>>>> acting as guest and one as host. So one system will provide virtio
->>>>>>>> functionality reserving memory for virtqueues and the other provides vhost
->>>>>>>> functionality providing a way to access the virtqueues in virtio memory.
->>>>>>>> One is
->>>>>>>> source and the other is sink and there is no intermediate entity. (vhost was
->>>>>>>> probably intermediate entity in virtualization?)
->>>>>>> (Not a native English speaker) but "vhost" could introduce some confusion for
->>>>>>> me since it was use for implementing virtio backend for userspace drivers. I
->>>>>>> guess "vringh" could be better.
->>>>>> Initially I had named this vringh but later decided to choose vhost instead of
->>>>>> vringh. vhost is still a virtio backend (not necessarily userspace) though it
->>>>>> now resides in an entirely different system. Whatever virtio is for a frontend
->>>>>> system, vhost can be that for a backend system. vring can be for accessing
->>>>>> virtqueue and can be used either in frontend or backend.
->>>>>
->>>>> Ok.
->>>>>
->>>>>
->>>>>>>>> Have you considered to implement these through vDPA?
->>>>>>>> IIUC vDPA only provides an interface to userspace and an in-kernel rpmsg
->>>>>>>> driver
->>>>>>>> or vhost net driver is not provided.
->>>>>>>>
->>>>>>>> The HW connection looks something like https://pasteboard.co/JfMVVHC.jpg
->>>>>>>> (usecase2 above),
->>>>>>> I see.
->>>>>>>
->>>>>>>
->>>>>>>>      all the boards run Linux. The middle board provides NTB
->>>>>>>> functionality and board on either side provides virtio/vhost
->>>>>>>> functionality and
->>>>>>>> transfer data using rpmsg.
->>>>>>> So I wonder whether it's worthwhile for a new bus. Can we use the existed
->>>>>>> virtio-bus/drivers? It might work as, except for the epf transport, we can
->>>>>>> introduce a epf "vhost" transport driver.
->>>>>> IMHO we'll need two buses one for frontend and other for backend because the
->>>>>> two components can then co-operate/interact with each other to provide a
->>>>>> functionality. Though both will seemingly provide similar callbacks, they are
->>>>>> both provide symmetrical or complimentary funcitonality and need not be
->>>>>> same or
->>>>>> identical.
->>>>>>
->>>>>> Having the same bus can also create sequencing issues.
->>>>>>
->>>>>> If you look at virtio_dev_probe() of virtio_bus
->>>>>>
->>>>>> device_features = dev->config->get_features(dev);
->>>>>>
->>>>>> Now if we use same bus for both front-end and back-end, both will try to
->>>>>> get_features when there has been no set_features. Ideally vhost device should
->>>>>> be initialized first with the set of features it supports. Vhost and virtio
->>>>>> should use "status" and "features" complimentarily and not identically.
->>>>>
->>>>> Yes, but there's no need for doing status/features passthrough in epf vhost
->>>>> drivers.b
->>>>>
->>>>>
->>>>>> virtio device (or frontend) cannot be initialized before vhost device (or
->>>>>> backend) gets initialized with data such as features. Similarly vhost
->>>>>> (backend)
->>>>>> cannot access virqueues or buffers before virtio (frontend) sets
->>>>>> VIRTIO_CONFIG_S_DRIVER_OK whereas that requirement is not there for virtio as
->>>>>> the physical memory for virtqueues are created by virtio (frontend).
->>>>>
->>>>> epf vhost drivers need to implement two devices: vhost(vringh) device and
->>>>> virtio device (which is a mediated device). The vhost(vringh) device is doing
->>>>> feature negotiation with the virtio device via RC/EP or NTB. The virtio device
->>>>> is doing feature negotiation with local virtio drivers. If there're feature
->>>>> mismatch, epf vhost drivers and do mediation between them.
->>>> Here epf vhost should be initialized with a set of features for it to negotiate
->>>> either as vhost device or virtio device no? Where should the initial feature
->>>> set for epf vhost come from?
->>>
->>>
->>> I think it can work as:
->>>
->>> 1) Having an initial features (hard coded in the code) set X in epf vhost
->>> 2) Using this X for both virtio device and vhost(vringh) device
->>> 3) local virtio driver will negotiate with virtio device with feature set Y
->>> 4) remote virtio driver will negotiate with vringh device with feature set Z
->>> 5) mediate between feature Y and feature Z since both Y and Z are a subset of X
->>>
->>>
->>
->> okay. I'm also thinking if we could have configfs for configuring this. Anyways
->> we could find different approaches of configuring this.
->>>>>
->>>>>>> It will have virtqueues but only used for the communication between itself
->>>>>>> and
->>>>>>> uppter virtio driver. And it will have vringh queues which will be probe by
->>>>>>> virtio epf transport drivers. And it needs to do datacopy between
->>>>>>> virtqueue and
->>>>>>> vringh queues.
->>>>>>>
->>>>>>> It works like:
->>>>>>>
->>>>>>> virtio drivers <- virtqueue/virtio-bus -> epf vhost drivers <- vringh
->>>>>>> queue/epf>
->>>>>>>
->>>>>>> The advantages is that there's no need for writing new buses and drivers.
->>>>>> I think this will work however there is an addtional copy between vringh queue
->>>>>> and virtqueue,
->>>>>
->>>>> I think not? E.g in use case 1), if we stick to virtio bus, we will have:
->>>>>
->>>>> virtio-rpmsg (EP) <- virtio ring(1) -> epf vhost driver (EP) <- virtio ring(2)
->>>>> -> virtio pci (RC) <-> virtio rpmsg (RC)
->>>> IIUC epf vhost driver (EP) will access virtio ring(2) using vringh?
->>>
->>>
->>> Yes.
->>>
->>>
->>>> And virtio
->>>> ring(2) is created by virtio pci (RC).
->>>
->>>
->>> Yes.
->>>
->>>
->>>>> What epf vhost driver did is to read from virtio ring(1) about the buffer len
->>>>> and addr and them DMA to Linux(RC)?
->>>> okay, I made some optimization here where vhost-rpmsg using a helper writes a
->>>> buffer from rpmsg's upper layer directly to remote Linux (RC) as against here
->>>> were it has to be first written to virtio ring (1).
->>>>
->>>> Thinking how this would look for NTB
->>>> virtio-rpmsg (HOST1) <- virtio ring(1) -> NTB(HOST1) <-> NTB(HOST2)  <- virtio
->>>> ring(2) -> virtio-rpmsg (HOST2)
->>>>
->>>> Here the NTB(HOST1) will access the virtio ring(2) using vringh?
->>>
->>>
->>> Yes, I think so it needs to use vring to access virtio ring (1) as well.
->>
->> NTB(HOST1) and virtio ring(1) will be in the same system. So it doesn't have to
->> use vring. virtio ring(1) is by the virtio device the NTB(HOST1) creates.
->>>
->>>
->>>>
->>>> Do you also think this will work seamlessly with virtio_net.c, virtio_blk.c?
->>>
->>>
->>> Yes.
->>
->> okay, I haven't looked at this but the backend of virtio_blk should access an
->> actual storage device no?
->>>
->>>
->>>>
->>>> I'd like to get clarity on two things in the approach you suggested, one is
->>>> features (since epf vhost should ideally be transparent to any virtio driver)
->>>
->>>
->>> We can have have an array of pre-defined features indexed by virtio device id
->>> in the code.
->>>
->>>
->>>> and the other is how certain inputs to virtio device such as number of buffers
->>>> be determined.
->>>
->>>
->>> We can start from hard coded the value like 256, or introduce some API for user
->>> to change the value.
->>>
->>>
->>>>
->>>> Thanks again for your suggestions!
->>>
->>>
->>> You're welcome.
->>>
->>> Note that I just want to check whether or not we can reuse the virtio
->>> bus/driver. It's something similar to what you proposed in Software Layering
->>> but we just replace "vhost core" with "virtio bus" and move the vhost core
->>> below epf/ntb/platform transport.
->>
->> Got it. My initial design was based on my understanding of your comments [1].
->>
->> I'll try to create something based on your proposed design here.
-> 
-> Based on the above conversation it seems like I should wait for another revision
-> of this set before reviewing the RPMSG part.  Please confirm that my
-> understanding is correct.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Right, there are multiple parts in this series that has to be aligned. 
-I'd still think irrespective of the approach something like Address 
-Service Notification support might have to be supported by rpmsg.
+Hi,
 
-Thanks
-Kishon
-> 
-> Thanks,
-> Mathieu
-> 
->>
->> Regards
->> Kishon
->>
->> [1] ->
->> https://lore.kernel.org/linux-pci/59982499-0fc1-2e39-9ff9-993fb4dd7dcc@redhat.com/
->>>
->>> Thanks
->>>
->>>
->>>>
->>>> Regards
->>>> Kishon
->>>>
->>>>>
->>>>>> in some cases adds latency because of forwarding interrupts
->>>>>> between vhost and virtio driver, vhost drivers providing features (which means
->>>>>> it has to be aware of which virtio driver will be connected).
->>>>>> virtio drivers (front end) generally access the buffers from it's local memory
->>>>>> but when in backend it can access over MMIO (like PCI EPF or NTB) or
->>>>>> userspace.
->>>>>>> Does this make sense?
->>>>>> Two copies in my opinion is an issue but lets get others opinions as well.
->>>>>
->>>>> Sure.
->>>>>
->>>>>
->>>>>> Thanks for your suggestions!
->>>>>
->>>>> You're welcome.
->>>>>
->>>>> Thanks
->>>>>
->>>>>
->>>>>> Regards
->>>>>> Kishon
->>>>>>
->>>>>>> Thanks
->>>>>>>
->>>>>>>
->>>>>>>> Thanks
->>>>>>>> Kishon
->>>>>>>>
->>>>>>>>> Thanks
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>>> Kishon Vijay Abraham I (22):
->>>>>>>>>>>        vhost: Make _feature_ bits a property of vhost device
->>>>>>>>>>>        vhost: Introduce standard Linux driver model in VHOST
->>>>>>>>>>>        vhost: Add ops for the VHOST driver to configure VHOST device
->>>>>>>>>>>        vringh: Add helpers to access vring in MMIO
->>>>>>>>>>>        vhost: Add MMIO helpers for operations on vhost virtqueue
->>>>>>>>>>>        vhost: Introduce configfs entry for configuring VHOST
->>>>>>>>>>>        virtio_pci: Use request_threaded_irq() instead of request_irq()
->>>>>>>>>>>        rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when
->>>>>>>>>>>          reading messages
->>>>>>>>>>>        rpmsg: Introduce configfs entry for configuring rpmsg
->>>>>>>>>>>        rpmsg: virtio_rpmsg_bus: Add Address Service Notification support
->>>>>>>>>>>        rpmsg: virtio_rpmsg_bus: Move generic rpmsg structure to
->>>>>>>>>>>          rpmsg_internal.h
->>>>>>>>>>>        virtio: Add ops to allocate and free buffer
->>>>>>>>>>>        rpmsg: virtio_rpmsg_bus: Use virtio_alloc_buffer() and
->>>>>>>>>>>          virtio_free_buffer()
->>>>>>>>>>>        rpmsg: Add VHOST based remote processor messaging bus
->>>>>>>>>>>        samples/rpmsg: Setup delayed work to send message
->>>>>>>>>>>        samples/rpmsg: Wait for address to be bound to rpdev for sending
->>>>>>>>>>>          message
->>>>>>>>>>>        rpmsg.txt: Add Documentation to configure rpmsg using configfs
->>>>>>>>>>>        virtio_pci: Add VIRTIO driver for VHOST on Configurable PCIe
->>>>>>>>>>> Endpoint
->>>>>>>>>>>          device
->>>>>>>>>>>        PCI: endpoint: Add EP function driver to provide VHOST interface
->>>>>>>>>>>        NTB: Add a new NTB client driver to implement VIRTIO functionality
->>>>>>>>>>>        NTB: Add a new NTB client driver to implement VHOST functionality
->>>>>>>>>>>        NTB: Describe the ntb_virtio and ntb_vhost client in the
->>>>>>>>>>> documentation
->>>>>>>>>>>
->>>>>>>>>>>       Documentation/driver-api/ntb.rst              |   11 +
->>>>>>>>>>>       Documentation/rpmsg.txt                       |   56 +
->>>>>>>>>>>       drivers/ntb/Kconfig                           |   18 +
->>>>>>>>>>>       drivers/ntb/Makefile                          |    2 +
->>>>>>>>>>>       drivers/ntb/ntb_vhost.c                       |  776 +++++++++++
->>>>>>>>>>>       drivers/ntb/ntb_virtio.c                      |  853 ++++++++++++
->>>>>>>>>>>       drivers/ntb/ntb_virtio.h                      |   56 +
->>>>>>>>>>>       drivers/pci/endpoint/functions/Kconfig        |   11 +
->>>>>>>>>>>       drivers/pci/endpoint/functions/Makefile       |    1 +
->>>>>>>>>>>       .../pci/endpoint/functions/pci-epf-vhost.c    | 1144
->>>>>>>>>>> ++++++++++++++++
->>>>>>>>>>>       drivers/rpmsg/Kconfig                         |   10 +
->>>>>>>>>>>       drivers/rpmsg/Makefile                        |    3 +-
->>>>>>>>>>>       drivers/rpmsg/rpmsg_cfs.c                     |  394 ++++++
->>>>>>>>>>>       drivers/rpmsg/rpmsg_core.c                    |    7 +
->>>>>>>>>>>       drivers/rpmsg/rpmsg_internal.h                |  136 ++
->>>>>>>>>>>       drivers/rpmsg/vhost_rpmsg_bus.c               | 1151
->>>>>>>>>>> +++++++++++++++++
->>>>>>>>>>>       drivers/rpmsg/virtio_rpmsg_bus.c              |  184 ++-
->>>>>>>>>>>       drivers/vhost/Kconfig                         |    1 +
->>>>>>>>>>>       drivers/vhost/Makefile                        |    2 +-
->>>>>>>>>>>       drivers/vhost/net.c                           |   10 +-
->>>>>>>>>>>       drivers/vhost/scsi.c                          |   24 +-
->>>>>>>>>>>       drivers/vhost/test.c                          |   17 +-
->>>>>>>>>>>       drivers/vhost/vdpa.c                          |    2 +-
->>>>>>>>>>>       drivers/vhost/vhost.c                         |  730 ++++++++++-
->>>>>>>>>>>       drivers/vhost/vhost_cfs.c                     |  341 +++++
->>>>>>>>>>>       drivers/vhost/vringh.c                        |  332 +++++
->>>>>>>>>>>       drivers/vhost/vsock.c                         |   20 +-
->>>>>>>>>>>       drivers/virtio/Kconfig                        |    9 +
->>>>>>>>>>>       drivers/virtio/Makefile                       |    1 +
->>>>>>>>>>>       drivers/virtio/virtio_pci_common.c            |   25 +-
->>>>>>>>>>>       drivers/virtio/virtio_pci_epf.c               |  670 ++++++++++
->>>>>>>>>>>       include/linux/mod_devicetable.h               |    6 +
->>>>>>>>>>>       include/linux/rpmsg.h                         |    6 +
->>>>>>>>>>>       {drivers/vhost => include/linux}/vhost.h      |  132 +-
->>>>>>>>>>>       include/linux/virtio.h                        |    3 +
->>>>>>>>>>>       include/linux/virtio_config.h                 |   42 +
->>>>>>>>>>>       include/linux/vringh.h                        |   46 +
->>>>>>>>>>>       samples/rpmsg/rpmsg_client_sample.c           |   32 +-
->>>>>>>>>>>       tools/virtio/virtio_test.c                    |    2 +-
->>>>>>>>>>>       39 files changed, 7083 insertions(+), 183 deletions(-)
->>>>>>>>>>>       create mode 100644 drivers/ntb/ntb_vhost.c
->>>>>>>>>>>       create mode 100644 drivers/ntb/ntb_virtio.c
->>>>>>>>>>>       create mode 100644 drivers/ntb/ntb_virtio.h
->>>>>>>>>>>       create mode 100644 drivers/pci/endpoint/functions/pci-epf-vhost.c
->>>>>>>>>>>       create mode 100644 drivers/rpmsg/rpmsg_cfs.c
->>>>>>>>>>>       create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
->>>>>>>>>>>       create mode 100644 drivers/vhost/vhost_cfs.c
->>>>>>>>>>>       create mode 100644 drivers/virtio/virtio_pci_epf.c
->>>>>>>>>>>       rename {drivers/vhost => include/linux}/vhost.h (66%)
->>>>>>>>>>>
->>>>>>>>>>> -- 
->>>>>>>>>>> 2.17.1
->>>>>>>>>>>
->>>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on char-misc/char-misc-testing]
+[also build test WARNING on soc/for-next linus/master v5.9-rc3 next-20200828]
+[cannot apply to linux/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/ricky_wu-realtek-com/misc-rtsx-add-power-saving-function-and-bios-guide-options/20200901-103534
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git dd5597245d35cfbb0890b8a868028aa1d2018701
+config: ia64-randconfig-r005-20200831 (attached as .config)
+compiler: ia64-linux-gcc (GCC) 9.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=ia64 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/ia64/include/asm/pgtable.h:154,
+                    from include/linux/pgtable.h:6,
+                    from arch/ia64/include/asm/uaccess.h:40,
+                    from include/linux/uaccess.h:9,
+                    from arch/ia64/include/asm/sections.h:11,
+                    from include/linux/interrupt.h:20,
+                    from include/linux/pci.h:38,
+                    from include/linux/rtsx_pci.h:14,
+                    from drivers/misc/cardreader/rts5249.c:12:
+   arch/ia64/include/asm/mmu_context.h: In function 'reload_context':
+   arch/ia64/include/asm/mmu_context.h:137:41: warning: variable 'old_rr4' set but not used [-Wunused-but-set-variable]
+     137 |  unsigned long rr0, rr1, rr2, rr3, rr4, old_rr4;
+         |                                         ^~~~~~~
+   drivers/misc/cardreader/rts5249.c: In function 'rts52xa_save_content_from_efuse':
+>> drivers/misc/cardreader/rts5249.c:157:14: warning: variable 'cv' set but not used [-Wunused-but-set-variable]
+     157 |  u8 cnt, sv, cv;
+         |              ^~
+
+# https://github.com/0day-ci/linux/commit/7f37b141bf20205913d0efbf1bca25e323489b6b
+git remote add linux-review https://github.com/0day-ci/linux
+git fetch --no-tags linux-review ricky_wu-realtek-com/misc-rtsx-add-power-saving-function-and-bios-guide-options/20200901-103534
+git checkout 7f37b141bf20205913d0efbf1bca25e323489b6b
+vim +/cv +157 drivers/misc/cardreader/rts5249.c
+
+   154	
+   155	static void rts52xa_save_content_from_efuse(struct rtsx_pcr *pcr)
+   156	{
+ > 157		u8 cnt, sv, cv;
+   158		u8 j = 0;
+   159		u8 tmp;
+   160		u8 val;
+   161		int i;
+   162	
+   163		rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
+   164					REG_EFUSE_BYPASS | REG_EFUSE_POR, REG_EFUSE_POR);
+   165		udelay(1);
+   166	
+   167		pcr_dbg(pcr, "Enable efuse por!");
+   168		pcr_dbg(pcr, "save efuse to autoload");
+   169	
+   170		rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD, REG_EFUSE_ADD_MASK, 0x00);
+   171		rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
+   172					REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
+   173		/* Wait transfer end */
+   174		for (j = 0; j < 1024; j++) {
+   175			rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
+   176			if ((tmp & 0x80) == 0)
+   177				break;
+   178		}
+   179		rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
+   180		cnt = val & 0x0F;
+   181		sv = val & 0x10;
+   182		cv = val & 0x20;
+   183	
+   184		if (sv) {
+   185			for (i = 0; i < 4; i++) {
+   186				rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
+   187					REG_EFUSE_ADD_MASK, 0x04 + i);
+   188				rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
+   189					REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
+   190				/* Wait transfer end */
+   191				for (j = 0; j < 1024; j++) {
+   192					rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
+   193					if ((tmp & 0x80) == 0)
+   194						break;
+   195				}
+   196				rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
+   197				rtsx_pci_write_register(pcr, 0xFF04 + i, 0xFF, val);
+   198			}
+   199		} else {
+   200			rtsx_pci_write_register(pcr, 0xFF04, 0xFF, (u8)PCI_VID(pcr));
+   201			rtsx_pci_write_register(pcr, 0xFF05, 0xFF, (u8)(PCI_VID(pcr) >> 8));
+   202			rtsx_pci_write_register(pcr, 0xFF06, 0xFF, (u8)PCI_PID(pcr));
+   203			rtsx_pci_write_register(pcr, 0xFF07, 0xFF, (u8)(PCI_PID(pcr) >> 8));
+   204		}
+   205	
+   206		for (i = 0; i < cnt * 4; i++) {
+   207			if (sv)
+   208				rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
+   209					REG_EFUSE_ADD_MASK, 0x08 + i);
+   210			else
+   211				rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
+   212					REG_EFUSE_ADD_MASK, 0x04 + i);
+   213			rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
+   214					REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
+   215			/* Wait transfer end */
+   216			for (j = 0; j < 1024; j++) {
+   217				rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
+   218				if ((tmp & 0x80) == 0)
+   219					break;
+   220			}
+   221			rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
+   222			rtsx_pci_write_register(pcr, 0xFF08 + i, 0xFF, val);
+   223		}
+   224		rtsx_pci_write_register(pcr, 0xFF00, 0xFF, (cnt & 0x7F) | 0x80);
+   225		rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
+   226			REG_EFUSE_BYPASS | REG_EFUSE_POR, REG_EFUSE_BYPASS);
+   227		pcr_dbg(pcr, "Disable efuse por!");
+   228	}
+   229	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+1wEA
+
+--LZvS9be/3tNcYl/X--
