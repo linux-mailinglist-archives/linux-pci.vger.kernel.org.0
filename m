@@ -2,77 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D466C258F85
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Sep 2020 15:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DCDF259AF6
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Sep 2020 18:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgIANu0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Sep 2020 09:50:26 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35572 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728064AbgIANav (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:30:51 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3C02F361D37743339AAB;
-        Tue,  1 Sep 2020 21:28:54 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.211) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
- 21:28:48 +0800
-Subject: Re: [PATCH v3] PCI: Add pci_iounmap
-To:     George Cherian <george.cherian@marvell.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-CC:     <kbuild-all@lists.01.org>, <bhelgaas@google.com>, <arnd@arndb.de>,
-        <mst@redhat.com>
-References: <20200824132046.3114383-1-george.cherian@marvell.com>
- <202008250903.G0uQ5UZk%lkp@intel.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <13af6d70-7de4-e86f-5db0-f42159c5b4a5@huawei.com>
-Date:   Tue, 1 Sep 2020 21:28:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1729713AbgIAQz6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Sep 2020 12:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729994AbgIAQzl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Sep 2020 12:55:41 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47727C061246
+        for <linux-pci@vger.kernel.org>; Tue,  1 Sep 2020 09:55:39 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id 4so453716ooh.11
+        for <linux-pci@vger.kernel.org>; Tue, 01 Sep 2020 09:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v9975+hMWELTbAGvjMd+ItUOvowUKdGImeITiNZKzKE=;
+        b=o9lKL0BVvMWm1tgl9Is1duPG5UGxdnIw9uldI8xPl0uGpZA7catKjJrRgBEAZJ0kbq
+         m8OyAcQNAUHJJfw3kqhHlMddaLDwROFECYORDdwHm6W5cfivp+a9zNpn96v3HYUYlGkg
+         jQjw/3QtxH5+nxI9pfta4wg+mkkVdPSzhFJjEhrs3DFHKpKw+3c7PqQ8xR1xnrLkhUzT
+         Iuz5E6sFg7WjtaL9eBPRFLX7jtfdcOVNM83CJV4S2YSX38bqb6sxMse1As3kv26EQBWK
+         KSm3PZHlpGKIRmh/8ovguVfzz4Jfy3bagDaSf/eDiUM+ptjv9PXx88/gXF/jEmk5/7u/
+         W1Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v9975+hMWELTbAGvjMd+ItUOvowUKdGImeITiNZKzKE=;
+        b=gIDVnhIOGp8AeMSIEpf6EE3+uffmymd5m2NPOmiDv7Zz/XiVJvbFtsEso2j1TcflVY
+         OVPrB/tUCWsJr+aLJ9ZwenBIVrKS8tBuxbY0A49N+Z5/TKIX7sUvkAQGjknUCACg11cI
+         aNFoXlFtKQjTz7GSkh7tiCYtzEGfAvt6bibZ9ud4ji13KY/DxyAaixxLAG6+kfPhva+P
+         lpXzSiSC3ITnacqDeP6MM4nG95oBupI+h76iGK4FcU5KXz5hzWKZkt2qwAJTiw89MBSD
+         6Me5ofj25Gzb93lXohYBqIHcmJtRAydmOzPZJMZNWb0pHf5X3atkgjD5w27nhAZ/P8mH
+         Xb9g==
+X-Gm-Message-State: AOAM532yPtWtA1ACJEcua4ZWl3DZkZWg+jD+ft8qBuqpBHkFVNHA6nNb
+        JxXIKgsGqqdBfViXjEgxhnpteA==
+X-Google-Smtp-Source: ABdhPJxXRLmSKBcnBlceznNDbZ4sBA5PnARmg8Fs8AUVLHlcApULxzxJqLOenz9NbmlqafxciiOaaw==
+X-Received: by 2002:a05:6820:384:: with SMTP id r4mr2009979ooj.62.1598979338069;
+        Tue, 01 Sep 2020 09:55:38 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id 35sm273166oth.21.2020.09.01.09.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 09:55:37 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 11:55:34 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>, stable@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Make sure PCIe is reset before init for rev
+ 2.1.0
+Message-ID: <20200901165534.GA3715@yoga>
+References: <20200901124955.137-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <202008250903.G0uQ5UZk%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.174.176.211]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901124955.137-1-ansuelsmth@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue 01 Sep 07:49 CDT 2020, Ansuel Smith wrote:
 
-On 2020/8/25 9:25, kernel test robot wrote:
-> Hi George,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on linux/master linus/master asm-generic/master v5.9-rc2 next-20200824]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
->
-> url:    https://github.com/0day-ci/linux/commits/George-Cherian/PCI-Add-pci_iounmap/20200824-212149
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-> config: powerpc-allyesconfig (attached as .config)
-> compiler: powerpc64-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=powerpc
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->     powerpc64-linux-ld: lib/pci_iomap.o: in function `__crc_pci_iounmap':
->>> (.rodata+0x10): multiple definition of `__crc_pci_iounmap'; lib/iomap.o:(.rodata+0x68): first defined here
-EXPORT_SYMBOL(pci_iounmap) in lib/iomap.c need be removed.
+> Qsdk U-Boot can incorrectly leave the PCIe interface in an undefined
+> state if bootm command is used instead of bootipq. This is caused by the
+> not deinit of PCIe when bootm is called. Reset the PCIe before init
+> anyway to fix this U-Boot bug.
+> 
+
+Looks sensible.
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+> Cc: stable@vger.kernel.org # v4.19+
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
+>  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 3aac77a295ba..82336bbaf8dc 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -302,6 +302,9 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+>  	reset_control_assert(res->por_reset);
+>  	reset_control_assert(res->ext_reset);
+>  	reset_control_assert(res->phy_reset);
+> +
+> +	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +
+>  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+>  }
+>  
+> @@ -314,6 +317,16 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	u32 val;
+>  	int ret;
+>  
+> +	/* reset the PCIe interface as uboot can leave it undefined state */
+> +	reset_control_assert(res->pci_reset);
+> +	reset_control_assert(res->axi_reset);
+> +	reset_control_assert(res->ahb_reset);
+> +	reset_control_assert(res->por_reset);
+> +	reset_control_assert(res->ext_reset);
+> +	reset_control_assert(res->phy_reset);
+> +
+> +	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +
+>  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+>  	if (ret < 0) {
+>  		dev_err(dev, "cannot enable regulators\n");
+> -- 
+> 2.27.0
+> 
