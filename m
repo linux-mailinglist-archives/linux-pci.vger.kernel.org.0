@@ -2,79 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 863ED259EEF
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Sep 2020 21:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06FF625A1DE
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 01:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgIATFx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Sep 2020 15:05:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbgIATFx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:05:53 -0400
-Received: from localhost (113.sub-72-107-119.myvzw.com [72.107.119.113])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE6C207D3;
-        Tue,  1 Sep 2020 19:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598987152;
-        bh=ugHGtD4AymiHx3XQBknlMEY/bDkqvJrRiG4TdIz97Mo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cFHdz4uWRDM7HfOxJA5sJf12PUiNHh6uqbXfULFrdcSok7Z8gn3xsX8cC7gkMlteI
-         UTYtHYDoXjgoII59try2aqmBJVsjtJ3xpz7oZ4GLF1RSCizh8u2XymOwTAAKUIkAqr
-         jW+D+/5OSIi+jqhA552JE4stZ6cjKQLzIH9gNPZg=
-Date:   Tue, 1 Sep 2020 14:05:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: Replace use of snprintf() with scnprintf() in
- show() functions
-Message-ID: <20200901190551.GA197986@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200824233918.26306-1-kw@linux.com>
+        id S1726091AbgIAXXR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Sep 2020 19:23:17 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:52830 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgIAXXQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Sep 2020 19:23:16 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 081NMtMT027356
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 1 Sep 2020 18:22:58 -0500
+Message-ID: <658051b1ba6533fef92648eba08dfdf240af7a18.camel@kernel.crashing.org>
+Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Clint Sbisa <csbisa@amazon.com>
+Cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 02 Sep 2020 09:22:53 +1000
+In-Reply-To: <20200901183702.GA196025@bjorn-Precision-5520>
+References: <20200901183702.GA196025@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 11:39:15PM +0000, Krzysztof Wilczyński wrote:
-> Replace use of snprintf() with scnprintf() in order to adhere to the
-> rules in Documentation/filesystems/sysfs.txt, as per:
+On Tue, 2020-09-01 at 13:37 -0500, Bjorn Helgaas wrote:
+> On Mon, Aug 31, 2020 at 03:18:27PM +0000, Clint Sbisa wrote:
+> > Using write-combine is crucial for performance of PCI devices where
+> > significant amounts of transactions go over PCI BARs.
+> > 
+> > arm64 supports write-combine PCI mappings, so the appropriate
+> > define
+> > has been added which will expose write-combine mappings under sysfs
+> > for prefetchable PCI resources.
+> > 
+> > Signed-off-by: Clint Sbisa <csbisa@amazon.com>
 > 
->   show() must not use snprintf() when formatting the value to be
->   returned to user space. If you can guarantee that an overflow
->   will never happen you can use sprintf() otherwise you must use
->   scnprintf().
-> 
-> Also resolve the following Coccinelle warnings, for example:
-> 
->   drivers/pci/p2pdma.c:69:8-16: WARNING: use scnprintf or sprintf
->   drivers/pci/p2pdma.c:78:8-16: WARNING: use scnprintf or sprintf
->   drivers/pci/p2pdma.c:56:8-16: WARNING: use scnprintf or sprintf
-> 
-> The Coccinelle warning was added in commit abfc19ff202d ("coccinelle:
-> api: add device_attr_show script").
-> 
-> There is no change to the functionality.
-> 
-> Related:
->   https://patchwork.kernel.org/patch/9946759/#20969333
->   https://lwn.net/Articles/69419
-> 
-> Krzysztof Wilczyński (3):
->   PCI: Replace use of snprintf() with scnprintf() in
->     resource_alignment_show()
->   PCI: sysfs: Replace use of snprintf() with scnprintf() in
->     driver_override_show()
->   PCI/P2PDMA: Replace use of snprintf() with scnprintf() in show()
->     functions
-> 
->  drivers/pci/p2pdma.c    | 8 ++++----
->  drivers/pci/pci-sysfs.c | 2 +-
->  drivers/pci/pci.c       | 2 +-
->  3 files changed, 6 insertions(+), 6 deletions(-)
+> Fine with me, I assume Will or Catalin will apply this.
 
-Squashed together and applied to pci/misc for v5.10, thanks!
+Haha ! Client had sent it to them originally and I told him to resend
+it to linux-pci, yourself and Lorenzo :-)
+
+So the confusion is on me.
+
+Will, Catalin, it's all yours. You should have the original patch in
+your mbox already, otherwise:
+
+https://patchwork.kernel.org/patch/11729875/
+
+Cheers,
+Ben.
+
+
