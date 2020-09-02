@@ -2,114 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AB8325B339
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 19:54:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6643D25B3F6
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 20:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgIBRy6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Sep 2020 13:54:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:43784 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIBRy6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:54:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EC43D6E;
-        Wed,  2 Sep 2020 10:54:56 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D2CB3F66F;
-        Wed,  2 Sep 2020 10:54:50 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 18:54:45 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>, benh@kernel.crashing.org,
-        linux-arm-kernel@lists.infradead.org, will@kernel.org
-Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
-Message-ID: <20200902175445.GA31706@e121166-lin.cambridge.arm.com>
-References: <20200831151827.pumm2p54fyj7fz5s@amazon.com>
- <20200902113207.GA27676@e121166-lin.cambridge.arm.com>
- <20200902142922.xc4x6m33unkzewuh@amazon.com>
- <20200902164702.GA30611@e121166-lin.cambridge.arm.com>
- <20200902172156.GD16673@gaia>
+        id S1727944AbgIBSml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Sep 2020 14:42:41 -0400
+Received: from mail-bn8nam12on2061.outbound.protection.outlook.com ([40.107.237.61]:44544
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726821AbgIBSmk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Sep 2020 14:42:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N6OQTgF7xlhq0xRGiYXgQEyeodYABp8HHvQo7CUSXGpPA3/t/ZjeeagZfzmfmDMtATTBJ65l5yHEclt6RuaxM2cFZIsB2ff6ivmp12uOMqUezIidgHTuRHmgv/+E3VRXom/+aA50kP4lqTS4X5WZq6+63bIsPerpagTWbDVAnIPrsICMPSN2ISJTPXSfQr2wbXlQ0fMWKKZ+BnR9hOi7RkHBRdPv+O7pkfixo1ycMR2P2/qHUYrb2CIExTknGEaJrNWsjLHQSKxOP4f4ifY2GNgrDd5/ZXSxpdMzCi16ftTMFYM510QAPaaO1yQh8m683TCdgmmSfKX/O1nqOAn1KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EEq8BsLpjSmQdREee45OvrsAE/IfaZQkxmehI6ZK/uA=;
+ b=jOrpkAs37CiMBkOe2PBsf+8dZQhrDFzcZU+Tau8oI3RpbGuhdNwRPSCcbEtqzOYWPtIh1yxoiZ2jaXm2Dk08rDTAkgp/thx+TUDjn60PtxbevXkbywt0V3erq8F1HNDgrg26I9Qa31IjiYfRvpoTGbfPNf6WvCRCNVyJimu0w+jP9J78g3mawyVjn4c5FTRlJJUJvxd+01UeRmjm8t6gvfnJe/nee4PVfU/pF5RElNWit0b1bxxPJ5v/pjGHKkF87Igmufv5YtWF1idW+O9rYgRItfxwVTrXXrVhwh634A6ioSF4QsGE5eAkIm/KQAFaOMbA7dD/fnRUHKxSDeM8Xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EEq8BsLpjSmQdREee45OvrsAE/IfaZQkxmehI6ZK/uA=;
+ b=IDnsXWyBDsmlO/Qhnz8xsQ9SXvwgbNkLCcdhqU9JWQxbdA2rDConLS1CPkFMEvuB0Szq4TeD8wabqOeulthizJGyNXyT0Idf4zavtc83l/0P/wSTa/wXTnBPQ8vVUQMklraQYCNwu/F7p4umoAXtCk+IMODPlzGXaRWpsVsXO0g=
+Received: from BN6PR06CA0012.namprd06.prod.outlook.com (2603:10b6:404:10b::22)
+ by BYAPR12MB3637.namprd12.prod.outlook.com (2603:10b6:a03:da::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Wed, 2 Sep
+ 2020 18:42:37 +0000
+Received: from BN8NAM11FT047.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:10b:cafe::c6) by BN6PR06CA0012.outlook.office365.com
+ (2603:10b6:404:10b::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend
+ Transport; Wed, 2 Sep 2020 18:42:37 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; lists.freedesktop.org; dkim=none (message not signed)
+ header.d=none;lists.freedesktop.org; dmarc=permerror action=none
+ header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ BN8NAM11FT047.mail.protection.outlook.com (10.13.177.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 18:42:36 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 2 Sep 2020
+ 13:42:36 -0500
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 2 Sep 2020
+ 13:42:36 -0500
+Received: from agrodzovsky-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1979.3
+ via Frontend Transport; Wed, 2 Sep 2020 13:42:35 -0500
+From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+To:     <amd-gfx@lists.freedesktop.org>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>
+CC:     <alexander.deucher@amd.com>, <nirmodas@amd.com>,
+        <Dennis.Li@amd.com>, <christian.koenig@amd.com>,
+        <luben.tuikov@amd.com>, <bhelgaas@google.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Subject: [PATCH v4 0/8] Implement PCI Error Recovery on Navi12
+Date:   Wed, 2 Sep 2020 14:42:02 -0400
+Message-ID: <1599072130-10043-1-git-send-email-andrey.grodzovsky@amd.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902172156.GD16673@gaia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 985e993c-bb25-44bd-9c36-08d84f6ff687
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3637:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB36379FFAD8A03C805166CAE5EA2F0@BYAPR12MB3637.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:813;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r+kcD54r1T6QFRhtFzZLaUj7lYWFZ9/BNp11U6ueEZ3eLR1+aMj+MiSSJA78m6FsAFAW2jrKH0jL7umV2FEnPb7gbYfmcTYHqLnAuP0mouFpUj7s4Dl30n+KAwJmxgI6QghTZWxR9YFa1O6xHbJC9Z7D4uXYyhIbnp/DIQGLmOuHC3tTDkYjw9aLSMDskTxbV2slw9SiWrKeQE+L8TmGaoRtbezJQmboIfIDcCaZTRF6QgPXqquAJGPyQoUqvQKkl1n0QLdf/DLrsHAjk/liK8KH59dvAP6H4RalZnbwAk59PwqaE05w/OzpefggJK8np0u33oa/N5rxApviDheO+DytrOVnDX6+YeklQZzo7BtJr2lldQWXl1oUkwprXrorklDzmaU5lxBnFjvfxcpadvxh9LitmCxzSq5uMSngME7IIDTBOlQw560D2RFfez8SVuKo4PgYg5ougl/bwgR7IZct4rjB9WCNwiUKCMRL4EY=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB01.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(39860400002)(396003)(376002)(346002)(46966005)(316002)(478600001)(47076004)(110136005)(82740400003)(36756003)(5660300002)(356005)(81166007)(83380400001)(8936002)(54906003)(8676002)(82310400003)(426003)(86362001)(70586007)(70206006)(966005)(336012)(6666004)(186003)(7696005)(44832011)(2616005)(26005)(4326008)(2906002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 18:42:36.8552
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 985e993c-bb25-44bd-9c36-08d84f6ff687
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT047.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3637
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 06:21:57PM +0100, Catalin Marinas wrote:
-> On Wed, Sep 02, 2020 at 05:47:02PM +0100, Lorenzo Pieralisi wrote:
-> > On Wed, Sep 02, 2020 at 02:29:22PM +0000, Clint Sbisa wrote:
-> > > On Wed, Sep 02, 2020 at 12:32:07PM +0100, Lorenzo Pieralisi wrote:
-> > > > On Mon, Aug 31, 2020 at 03:18:27PM +0000, Clint Sbisa wrote:
-> > > > > arm64 supports write-combine PCI mappings, so the appropriate define
-> > > > > has been added which will expose write-combine mappings under sysfs
-> > > > > for prefetchable PCI resources.
-> > > > >
-> > > > > Signed-off-by: Clint Sbisa <csbisa@amazon.com>
-> > > > > ---
-> > > > >  arch/arm64/include/asm/pci.h | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-> > > > > index 70b323cf8300..b33ca260e3c9 100644
-> > > > > --- a/arch/arm64/include/asm/pci.h
-> > > > > +++ b/arch/arm64/include/asm/pci.h
-> > > > > @@ -17,6 +17,7 @@
-> > > > >  #define pcibios_assign_all_busses() \
-> > > > >       (pci_has_flag(PCI_REASSIGN_ALL_BUS))
-> > > > >
-> > > > > +#define arch_can_pci_mmap_wc() 1
-> > > > 
-> > > > I am not comfortable with this blanket enable. Some existing drivers,
-> > > > eg:
-> > > > 
-> > > > drivers/infiniband/hw/mlx5
-> > > > 
-> > > > use this macro to detect WC capability which again, it is x86 specific,
-> > > > on arm64 it means nothing and can have consequences on the driver
-> > > > operations.
-> > > 
-> > > If that driver is fixed to check what it actually wants to check, would that
-> > > address your concern about the blanket enable? I don't see any other references
-> > > to this in kernel drivers and I think the documentation at
-> > > `filesystems/sysfs-pci.rst` outlines it pretty explicitly:
-> > > 
-> > >   Platforms which support write-combining maps of PCI resources must define
-> > >   arch_can_pci_mmap_wc() which shall evaluate to non-zero at runtime when
-> > >   write-combining is permitted.
-> > 
-> > That's exactly the problem. I am asking you: what does "write-combining
-> > maps of PCI resources" mean ?
-> > 
-> > I understand we do want weak ordering for prefetchable BAR mappings
-> > but my worry is that by exposing the resources as WC to user space
-> > we are giving user space the impression that those mappings mirror
-> > x86 WC mappings behaviour that is not true on ARM64.
-> 
-> Would Device_GRE be close to the x86 WC better? It won't allow unaligned
-> accesses and that can be problematic for the user. OTOH, it doesn't
-> speculate reads, so it's safer from the hardware perspective.
+Many PCI bus controllers are able to detect a variety of hardware PCI errors on the bus, 
+such as parity errors on the data and address buses,  A typical action taken is to disconnect 
+the affected device, halting all I/O to it. Typically, a reconnection mechanism is also offered, 
+so that the affected PCI device(s) are reset and put back into working condition. 
+In our case the reconnection mechanism is facilitated by kernel Downstream Port Containment (DPC) 
+driver which will intercept the PCIe error, remove (isolate) the faulting device after which it 
+will call into PCIe recovery code of the PCI core. 
+This code will call hooks which are implemented in this patchset where the error is 
+first reported at which point we block the GPU scheduler, next DPC resets the 
+PCI link which generates HW interrupt which is intercepted by SMU/PSP who 
+start executing mode1 reset of the ASIC, next step is slot reset hook is called 
+at which point we wait for ASIC reset to complete, restore PCI config space and run 
+HW suspend/resume sequence to resinit the ASIC. 
+Last hook called is resume normal operation at which point we will restart the GPU scheduler.
 
-Thanks Catalin for chiming in, it may yes but I need to figure out
-the precise semantics of WC on x86 first.
+More info on PCIe error handling and DPC are here:
+https://www.kernel.org/doc/html/latest/PCI/pci-error-recovery.html
+https://patchwork.kernel.org/patch/8945681/
 
-Actually *if* I read x86 specs correctly WC mappings allow speculative
-reads, which then would shift the issue on the PCI specs that allow
-marking read side effects BARs as prefetchable; in other words if
-an endpoint is designed with a prefetchable BAR that has read side
-effects this is already an issue on x86 in the current kernel.
+v4:Rebase to 5.9 kernel and revert PCI error recovery core commit which breaks the feature.
 
-There is that, plus the usage of arch_can_pci_mmap_wc() in mellanox
-drivers which I suspect it is yet another interpretation of x86 write
-combine - I don't know what happens if we let arch_can_pci_mmap_wc() == 1
-on both normalNC or deviceGRE mappings for pgprot_writecombine.
+Andrey Grodzovsky (8):
+  drm/amdgpu: Avoid accessing HW when suspending SW state
+  drm/amdgpu: Block all job scheduling activity during DPC recovery
+  drm/amdgpu: Fix SMU error failure
+  drm/amdgpu: Fix consecutive DPC recovery failures.
+  drm/amdgpu: Trim amdgpu_pci_slot_reset by reusing code.
+  drm/amdgpu: Disable DPC for XGMI for now.
+  drm/amdgpu: Minor checkpatch fix
+  Revert "PCI/ERR: Update error status after reset_link()"
 
-I think it is worth getting to the bottom of this before applying
-this patch.
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h        |   6 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 247 +++++++++++++++++++++--------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c    |   6 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c    |   6 +
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c     |  18 ++-
+ drivers/gpu/drm/amd/amdgpu/nv.c            |   4 +-
+ drivers/gpu/drm/amd/amdgpu/soc15.c         |   4 +-
+ drivers/gpu/drm/amd/pm/swsmu/smu_cmn.c     |   3 +
+ drivers/pci/pcie/err.c                     |   3 +-
+ 10 files changed, 222 insertions(+), 79 deletions(-)
 
-Thanks,
-Lorenzo
+-- 
+2.7.4
+
