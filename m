@@ -2,99 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25CF325AA5F
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 13:32:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18E7525AB21
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 14:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgIBLcP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Sep 2020 07:32:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:36158 "EHLO foss.arm.com"
+        id S1726177AbgIBM3E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Sep 2020 08:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgIBLcP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:32:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1AC2101E;
-        Wed,  2 Sep 2020 04:32:13 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E9C83F66F;
-        Wed,  2 Sep 2020 04:32:12 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 12:32:07 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Clint Sbisa <csbisa@amazon.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        benh@kernel.crashing.org
-Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
-Message-ID: <20200902113207.GA27676@e121166-lin.cambridge.arm.com>
-References: <20200831151827.pumm2p54fyj7fz5s@amazon.com>
+        id S1726140AbgIBM3D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Sep 2020 08:29:03 -0400
+Received: from localhost (47.sub-72-107-117.myvzw.com [72.107.117.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87F62083B;
+        Wed,  2 Sep 2020 12:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599049743;
+        bh=/5zITwQgLMel5YXHYupTFIKYxnlLuiBxHFfhEAM0zfA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BbTPZSuwNhYPSzyKeYXdR2ks3rMVlCPg6Y1GA8H9h86rRYg1Vih7Csu9U/nxJ/lYC
+         TENC8nhd0UiDYOX5RrIeDcOjt57ddMQ+FYTxqkf2fUW99aQdEFMgwbJVe0J9blyW14
+         V7HlRBi6yEcXCoiDy/37tUpos8rsamYLRKdgQMyQ=
+Date:   Wed, 2 Sep 2020 07:29:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rui_feng@realsil.com.cn" <rui_feng@realsil.com.cn>,
+        "vailbhavgupta40@gamail.com" <vailbhavgupta40@gamail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "puranjay12@gmail.com" <puranjay12@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] misc: rtsx: add power saving function and bios guide
+ options
+Message-ID: <20200902122901.GA241240@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200831151827.pumm2p54fyj7fz5s@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <c64d07b5269a4830932d639baec6eab4@realtek.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 03:18:27PM +0000, Clint Sbisa wrote:
-> Using write-combine is crucial for performance of PCI devices where
-> significant amounts of transactions go over PCI BARs.
-
-Write-combine is an x86ism that means nothing on ARM64 platforms
-so this should be rewritten to say what you actually mean, namely,
-you want to allow prefetchable resources to be mapped with
-"write combine" semantics (which means normal non-cacheable
-memory on arm64) through proc/sysfs.
-
-This is an outright can of worms and the PCI specs don't help in this
-respect, since we may end up mapping resources that have read
-side-effects with normal NC mappings (ie that's what "write combine" is
-in arm64 - pgprot_writecombine() and that's speculative memory).
-
-I am referring to "Additional Guidance on the Prefetchable Bit
-in Memory Space BARs" in the PCI specifications - it does not make
-any sense and must be removed because people use it to design
-endpoints.
-
-True - this is a problem even in kernel drivers but at least there
-the ioremap_ semantics is in the driver and can be vetted.
-
-This patch would make it user space ABI so I am a little nervous
-about merging this code TBH.
-
-> arm64 supports write-combine PCI mappings, so the appropriate define
-> has been added which will expose write-combine mappings under sysfs
-> for prefetchable PCI resources.
+> > > From: Ricky Wu <ricky_wu@realtek.com>
+> > >
+> > > Added rts5227 rts5249 rts5260 rts5228 power saving functions,
+> > > added BIOS guide MMC funciton and U_d3_en register support and
+> > > fixed rts5260 driving parameter
+> > 
+> > This should be split into small logical pieces.  I can't really tell
+> > what those would be, but just based on the commit message, it could
+> > be:
+> > 
+> >   1) Add rts5227 rts5249 rts5260 rts5228 power saving functions
+> > 
+> >   2) Add BIOS guide MMC function and U_d3_en register support
+> > 
+> >   3) Fix rts5260 driving parameter
+> > 
+> > s/funciton/function/
+> > 
+> > It looks like 1) *might* be just this:
+> > 
+> >   rts*_force_power_down()
+> >   {
+> >     ...
+> >     rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, D3_DELINK_MODE_EN,
+> > 			    D3_DELINK_MODE_EN);
+> > 
+> > That should be a single patch by itself so it's obvious that it's
+> > doing the same thing to several drivers.
 > 
-> Signed-off-by: Clint Sbisa <csbisa@amazon.com>
-> ---
->  arch/arm64/include/asm/pci.h | 1 +
->  1 file changed, 1 insertion(+)
+> Ok, I will have a extra patch for all xx_force_power_down()
+
+Great, thanks!
+
+> > Explain what "BIOS guide MMC function" means.  Mention the name of the
+> > function this adds so we can connect the patch with the commit log.
+> > 
 > 
-> diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-> index 70b323cf8300..b33ca260e3c9 100644
-> --- a/arch/arm64/include/asm/pci.h
-> +++ b/arch/arm64/include/asm/pci.h
-> @@ -17,6 +17,7 @@
->  #define pcibios_assign_all_busses() \
->  	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
->  
-> +#define arch_can_pci_mmap_wc() 1
+> "BIOS guide MMC function" means, via BIOS setting to know MMC card
+> support or not 
 
-I am not comfortable with this blanket enable. Some existing drivers,
-eg:
+It will be helpful if this is in a patch by itself.
 
-drivers/infiniband/hw/mlx5
+As far as I know, there's no actual BIOS *call* here, so you must be
+looking at some setting in the *device* itself, on the assumption that
+it was done by the BIOS?
 
-use this macro to detect WC capability which again, it is x86 specific,
-on arm64 it means nothing and can have consequences on the driver
-operations.
+That sounds like it could become a problem if the device is ever reset
+or put in a low-power state.  For resets, and possibly even a
+low-power state, BIOS won't be involved, so the setting will be lost,
+and the device may work differently after the reset than it did
+before.  That sounds undesirable.
 
-Thanks,
-Lorenzo
-
->  #define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
->  
->  extern int isa_dma_bridge_buggy;
-> -- 
-> 2.23.3
+> > Explain what "U_d3_en" is; that doesn't even appear in the patch.
 > 
+> I am going to remove U_d3_en from patch description, this mean
+> D3_DELINK_MODE_EN register 
+
+OK.  Given the size of the patch, I think the commit log is too short
+to describe what's going on.  More details would be helpful.
+
+Bjorn
