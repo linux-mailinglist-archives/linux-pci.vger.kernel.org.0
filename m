@@ -2,123 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C41725B31E
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 19:45:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AB8325B339
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 19:54:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIBRpJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Sep 2020 13:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        id S1726247AbgIBRy6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Sep 2020 13:54:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:43784 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgIBRpI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:45:08 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 039052071B;
-        Wed,  2 Sep 2020 17:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599068708;
-        bh=RQZtL4W3u8ZFDrsxWq4Ue3tBbr4nUr6JJ8sRx70VO9A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pUZDNf+XmtjX9At928xAss9mWj/SKPVKJ8s/EDlXREeZfdTuuDQC88Qrq2T+TyQPt
-         6KvnFE0zjihu+FhC1xswiwTyHlszEYw2GugQQ9vwa60vm8/O+UOpARv++nCP26z9NW
-         hmsSGfsFrAdE8w0SA7Do6ce2fCf1fk9HW3rxm49c=
-Received: by pali.im (Postfix)
-        id 02C807BF; Wed,  2 Sep 2020 19:45:05 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 19:45:05 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
- return codes to errno
-Message-ID: <20200902174505.wuflkak6dv57jxw6@pali>
-References: <20200902144344.16684-1-pali@kernel.org>
- <20200902144344.16684-2-pali@kernel.org>
- <20200902161328.GE3050651@lunn.ch>
- <20200902165652.cvb74kgxx5uejpta@pali>
- <20200902170010.GF3050651@lunn.ch>
- <20200902170525.ksovu7ah3wbotkim@pali>
- <20200902172029.GG3050651@lunn.ch>
+        id S1726293AbgIBRy6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:54:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EC43D6E;
+        Wed,  2 Sep 2020 10:54:56 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D2CB3F66F;
+        Wed,  2 Sep 2020 10:54:50 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 18:54:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>, benh@kernel.crashing.org,
+        linux-arm-kernel@lists.infradead.org, will@kernel.org
+Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
+Message-ID: <20200902175445.GA31706@e121166-lin.cambridge.arm.com>
+References: <20200831151827.pumm2p54fyj7fz5s@amazon.com>
+ <20200902113207.GA27676@e121166-lin.cambridge.arm.com>
+ <20200902142922.xc4x6m33unkzewuh@amazon.com>
+ <20200902164702.GA30611@e121166-lin.cambridge.arm.com>
+ <20200902172156.GD16673@gaia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200902172029.GG3050651@lunn.ch>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200902172156.GD16673@gaia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 02 September 2020 19:20:29 Andrew Lunn wrote:
-> On Wed, Sep 02, 2020 at 07:05:25PM +0200, Pali Rohár wrote:
-> > On Wednesday 02 September 2020 19:00:10 Andrew Lunn wrote:
-> > > > > > +	switch (ret) {
-> > > > > > +	case SMCCC_RET_SUCCESS:
-> > > > > > +		return 0;
-> > > > > > +	case SMCCC_RET_NOT_SUPPORTED:
-> > > > > > +		return -EOPNOTSUPP;
-> > > > > > +	default:
-> > > > > > +		return -EINVAL;
-> > > > > > +	}
-> > > > > >  }
-> > > > > 
-> > > > > Hi Pali
-> > > > > 
-> > > > > Maybe this should be a global helper translating SMCCC_RET_* into a
-> > > > > standard errno value?
-> > > > > 
-> > > > > 	 Andrew
+On Wed, Sep 02, 2020 at 06:21:57PM +0100, Catalin Marinas wrote:
+> On Wed, Sep 02, 2020 at 05:47:02PM +0100, Lorenzo Pieralisi wrote:
+> > On Wed, Sep 02, 2020 at 02:29:22PM +0000, Clint Sbisa wrote:
+> > > On Wed, Sep 02, 2020 at 12:32:07PM +0100, Lorenzo Pieralisi wrote:
+> > > > On Mon, Aug 31, 2020 at 03:18:27PM +0000, Clint Sbisa wrote:
+> > > > > arm64 supports write-combine PCI mappings, so the appropriate define
+> > > > > has been added which will expose write-combine mappings under sysfs
+> > > > > for prefetchable PCI resources.
+> > > > >
+> > > > > Signed-off-by: Clint Sbisa <csbisa@amazon.com>
+> > > > > ---
+> > > > >  arch/arm64/include/asm/pci.h | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
+> > > > > index 70b323cf8300..b33ca260e3c9 100644
+> > > > > --- a/arch/arm64/include/asm/pci.h
+> > > > > +++ b/arch/arm64/include/asm/pci.h
+> > > > > @@ -17,6 +17,7 @@
+> > > > >  #define pcibios_assign_all_busses() \
+> > > > >       (pci_has_flag(PCI_REASSIGN_ALL_BUS))
+> > > > >
+> > > > > +#define arch_can_pci_mmap_wc() 1
 > > > > 
-> > > > Hello Andrew!
+> > > > I am not comfortable with this blanket enable. Some existing drivers,
+> > > > eg:
 > > > > 
-> > > > Well, I'm not sure if some standard global helper is the correct way for
-> > > > marvell comphy handler. It returns 0 for success and -1 on error when
-> > > > handler is not supported.
+> > > > drivers/infiniband/hw/mlx5
+> > > > 
+> > > > use this macro to detect WC capability which again, it is x86 specific,
+> > > > on arm64 it means nothing and can have consequences on the driver
+> > > > operations.
 > > > 
-> > > No, i was meaning just 
+> > > If that driver is fixed to check what it actually wants to check, would that
+> > > address your concern about the blanket enable? I don't see any other references
+> > > to this in kernel drivers and I think the documentation at
+> > > `filesystems/sysfs-pci.rst` outlines it pretty explicitly:
 > > > 
-> > > switch (ret) {
-> > > case SMCCC_RET_SUCCESS:
-> > > 	return 0;
-> > > case SMCCC_RET_NOT_SUPPORTED:
-> > > 	return -EOPNOTSUPP;
-> > > default:
-> > > 	return -EINVAL;
-> > > }
+> > >   Platforms which support write-combining maps of PCI resources must define
+> > >   arch_can_pci_mmap_wc() which shall evaluate to non-zero at runtime when
+> > >   write-combining is permitted.
 > > 
-> > But this is not a complete generic helper. There are more generic SMCC
-> > return codes and generic helper should define and translate all of them.
+> > That's exactly the problem. I am asking you: what does "write-combining
+> > maps of PCI resources" mean ?
+> > 
+> > I understand we do want weak ordering for prefetchable BAR mappings
+> > but my worry is that by exposing the resources as WC to user space
+> > we are giving user space the impression that those mappings mirror
+> > x86 WC mappings behaviour that is not true on ARM64.
 > 
-> /*
->  * Return codes defined in ARM DEN 0070A
->  * ARM DEN 0070A is now merged/consolidated into ARM DEN 0028 C
->  */
-> #define SMCCC_RET_SUCCESS			0
-> #define SMCCC_RET_NOT_SUPPORTED			-1
-> #define SMCCC_RET_NOT_REQUIRED			-2
-> #define SMCCC_RET_INVALID_PARAMETER		-3
+> Would Device_GRE be close to the x86 WC better? It won't allow unaligned
+> accesses and that can be problematic for the user. OTOH, it doesn't
+> speculate reads, so it's safer from the hardware perspective.
 
-Routines can use also other custom return codes. These are IIRC just
-standard defined.
+Thanks Catalin for chiming in, it may yes but I need to figure out
+the precise semantics of WC on x86 first.
 
-> I only see problems with SMCCC_RET_NOT_REQUIRED and what value to use
-> for it. Do you have any idea what is actually means? A parameter was
-> passed which was not required? Or that the call itself is not
-> required? Looking at the uses of it currently in the kernel, it does
-> not seem to be an actual error. So maybe just return 0?
+Actually *if* I read x86 specs correctly WC mappings allow speculative
+reads, which then would shift the issue on the PCI specs that allow
+marking read side effects BARs as prefetchable; in other words if
+an endpoint is designed with a prefetchable BAR that has read side
+effects this is already an issue on x86 in the current kernel.
 
-I'm not sure. That is why I wrote that larger discussion about generic
-helper is needed. There are for sure people who understand SMC better
-and have deep insight.
+There is that, plus the usage of arch_can_pci_mmap_wc() in mellanox
+drivers which I suspect it is yet another interpretation of x86 write
+combine - I don't know what happens if we let arch_can_pci_mmap_wc() == 1
+on both normalNC or deviceGRE mappings for pgprot_writecombine.
 
-For Marvell comphy we cannot use return code -2 as success like 0.
+I think it is worth getting to the bottom of this before applying
+this patch.
+
+Thanks,
+Lorenzo
