@@ -2,86 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5621B25AD8E
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 16:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0EA725B12B
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 18:16:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgIBOor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Sep 2020 10:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59260 "EHLO mail.kernel.org"
+        id S1727825AbgIBQPz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Sep 2020 12:15:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38396 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgIBOo2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:44:28 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE1EA207D3;
-        Wed,  2 Sep 2020 14:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599057849;
-        bh=RQyeMBvVYEEripIxkiwgkQx2PRZzYyZmQJQeA0zGmCg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFBlBkylysDA5Gjy5urP0SICWfH8AVxqvI6GX+AXUDd8IpE4KejLBKAn26gGLIQ1F
-         NDmaCMReKZJM83VcSFXdS86Ww0BNsVQNvJ43si+T2k2UxS7umuaXERW+Sr+hIfKqMS
-         KKSHClVO8CLCUchMTXOkXxKwspeB13acPmhCah5w=
-Received: by pali.im (Postfix)
-        id 16C4CF3C; Wed,  2 Sep 2020 16:44:07 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1727943AbgIBQNk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:13:40 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kDVO4-00Cud1-AA; Wed, 02 Sep 2020 18:13:28 +0200
+Date:   Wed, 2 Sep 2020 18:13:28 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] PCI: aardvark: Fix initialization with old Marvell's Arm Trusted Firmware
-Date:   Wed,  2 Sep 2020 16:43:44 +0200
-Message-Id: <20200902144344.16684-3-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200902144344.16684-1-pali@kernel.org>
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
+ return codes to errno
+Message-ID: <20200902161328.GE3050651@lunn.ch>
 References: <20200902144344.16684-1-pali@kernel.org>
+ <20200902144344.16684-2-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902144344.16684-2-pali@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Old ATF automatically power on pcie phy and does not provide SMC call for
-phy power on functionality which leads to aardvark initialization failure:
+On Wed, Sep 02, 2020 at 04:43:43PM +0200, Pali Roh·r wrote:
+> Driver ->power_on and ->power_off callbacks leaks internal SMCC firmware
+> return codes to phy caller. This patch converts SMCC error codes to
+> standard linux errno codes. Include file linux/arm-smccc.h already provides
+> defines for SMCC error codes, so use them instead of custom driver defines.
+> Note that return value is signed 32bit, but stored in unsigned long type
+> with zero padding.
+> 
+> Signed-off-by: Pali Roh·r <pali@kernel.org>
+> ---
+>  drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 14 +++++++++++---
+>  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 14 +++++++++++---
+>  2 files changed, 22 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> index 1a138be8bd6a..810f25a47632 100644
+> --- a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> +++ b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> @@ -26,7 +26,6 @@
+>  #define COMPHY_SIP_POWER_ON			0x82000001
+>  #define COMPHY_SIP_POWER_OFF			0x82000002
+>  #define COMPHY_SIP_PLL_LOCK			0x82000003
+> -#define COMPHY_FW_NOT_SUPPORTED			(-1)
+>  
+>  #define COMPHY_FW_MODE_SATA			0x1
+>  #define COMPHY_FW_MODE_SGMII			0x2
+> @@ -112,10 +111,19 @@ static int mvebu_a3700_comphy_smc(unsigned long function, unsigned long lane,
+>  				  unsigned long mode)
+>  {
+>  	struct arm_smccc_res res;
+> +	s32 ret;
+>  
+>  	arm_smccc_smc(function, lane, mode, 0, 0, 0, 0, 0, &res);
+> +	ret = res.a0;
+>  
+> -	return res.a0;
 
-[    0.330134] mvebu-a3700-comphy d0018300.phy: unsupported SMC call, try updating your firmware
-[    0.338846] phy phy-d0018300.phy.1: phy poweron failed --> -95
-[    0.344753] advk-pcie d0070000.pcie: Failed to initialize PHY (-95)
-[    0.351160] advk-pcie: probe of d0070000.pcie failed with error -95
+> +	switch (ret) {
+> +	case SMCCC_RET_SUCCESS:
+> +		return 0;
+> +	case SMCCC_RET_NOT_SUPPORTED:
+> +		return -EOPNOTSUPP;
+> +	default:
+> +		return -EINVAL;
+> +	}
+>  }
 
-This patch fixes above failure by ignoring 'not supported' error in
-aardvark driver. In this case it is expected that phy is already power on.
+Hi Pali
 
-Signed-off-by: Pali Roh√°r <pali@kernel.org>
-Fixes: 366697018c9a ("PCI: aardvark: Add PHY support")
----
- drivers/pci/controller/pci-aardvark.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Maybe this should be a global helper translating SMCCC_RET_* into a
+standard errno value?
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index c5d1bb3d52e4..e1a80c35c73d 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -1108,7 +1108,9 @@ static int advk_pcie_enable_phy(struct advk_pcie *pcie)
- 	}
- 
- 	ret = phy_power_on(pcie->phy);
--	if (ret) {
-+	if (ret == -EOPNOTSUPP) {
-+		dev_warn(&pcie->pdev->dev, "PHY unsupported by firmware\n");
-+	} else if (ret) {
- 		phy_exit(pcie->phy);
- 		return ret;
- 	}
--- 
-2.20.1
-
+	 Andrew
