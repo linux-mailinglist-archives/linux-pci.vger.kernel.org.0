@@ -2,135 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBBB425A7D9
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 10:34:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A85825A7E6
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 10:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgIBIe0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Sep 2020 04:34:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10792 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbgIBIe0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:34:26 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0DAF42C11693830390BC;
-        Wed,  2 Sep 2020 16:34:24 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.211) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
- 16:34:18 +0800
-Subject: Re: [PATCH v3] PCI: Add pci_iounmap
-To:     George Cherian <gcherian@marvell.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "mst@redhat.com" <mst@redhat.com>
-References: <BYAPR18MB2679AAA983C2AF3CD399ABD8C52E0@BYAPR18MB2679.namprd18.prod.outlook.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <5aff44b1-a293-3ab1-a102-9e1ad8229431@huawei.com>
-Date:   Wed, 2 Sep 2020 16:34:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726144AbgIBIlc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Sep 2020 04:41:32 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36760 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBIlb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Sep 2020 04:41:31 -0400
+Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+         client-signature RSA-PSS (1024 bits) client-digest SHA256)
+        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
+        by jabberwock.ucw.cz (Postfix) with ESMTPS id 454F91C0B7F
+        for <linux-pci@vger.kernel.org>; Wed,  2 Sep 2020 10:41:29 +0200 (CEST)
+Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
+        id 7AC951A0491; Wed,  2 Sep 2020 10:41:28 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 10:41:28 +0200
+From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] pciutils: Add decode support for RCECs
+Message-ID: <mj+md-20200902.084105.48579.albireo@ucw.cz>
+References: <20200624223940.240463-1-sean.v.kelley@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR18MB2679AAA983C2AF3CD399ABD8C52E0@BYAPR18MB2679.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.174.176.211]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624223940.240463-1-sean.v.kelley@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spamd-Bar: /
+X-Spam-Status: No, score=-0.80
+X-Spamd-Result: default: False [-0.80 / 15.00];
+         ARC_NA(0.00)[];
+         BAYES_HAM(-3.00)[99.99%];
+         FROM_HAS_DN(0.00)[];
+         RCPT_COUNT_THREE(0.00)[3];
+         TO_DN_SOME(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         SENDER_REP_HAM(0.00)[asn: 51744(0.20), country: CZ(-0.00), ip: 91.219.245.20(-0.49)];
+         DMARC_NA(0.00)[ucw.cz];
+         AUTH_NA(1.00)[];
+         HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
+         TO_MATCH_ENVRCPT_SOME(0.00)[];
+         HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
+         NEURAL_HAM(-0.00)[-0.271];
+         R_SPF_NA(0.00)[no SPF record];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         R_DKIM_NA(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
+         MID_RHS_MATCH_FROM(0.00)[];
+         TAGGED_FROM(0.00)[f-020920,linux-pci=vger.kernel.org]
+X-Rspamd-Queue-Id: 454F91C0B7F
+Authentication-Results: jabberwock.ucw.cz;
+        dkim=none;
+        dmarc=none;
+        spf=none (jabberwock.ucw.cz: domain of mj@ucw.cz has no SPF policy when checking 91.219.245.20) smtp.mailfrom=mj@ucw.cz
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hello!
 
-On 2020/9/2 2:05, George Cherian wrote:
-> Hi Yang,
->
->> -----Original Message-----
->> From: Yang Yingliang <yangyingliang@huawei.com>
->> Sent: Tuesday, September 1, 2020 6:59 PM
->> To: George Cherian <gcherian@marvell.com>; linux-kernel@vger.kernel.org;
->> linux-arch@vger.kernel.org; linux-pci@vger.kernel.org
->> Cc: kbuild-all@lists.01.org; bhelgaas@google.com; arnd@arndb.de;
->> mst@redhat.com
->> Subject: Re: [PATCH v3] PCI: Add pci_iounmap
->>
->>
->>
->>
->> On 2020/8/25 9:25, kernel test robot wrote:
->>> Hi George,
->>>
->>> I love your patch! Yet something to improve:
->>>
->>> [auto build test ERROR on pci/next]
->>> [also build test ERROR on linux/master linus/master asm-generic/master
->>> v5.9-rc2 next-20200824] [If your patch is applied to the wrong git tree,
->> kindly drop us a note.
->>> And when submitting patch, we suggest to use '--base' as documented in
->>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git-
->> 2Dscm.com_doc
->>> s_git-2Dformat-2Dpatch&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7di
->> rkF6u2D3eSIS0cA8FeYpzRkkMzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIV
->> WLSWfG61
->>> NWTWG5LI&s=ycW6SZOVRuKAm3YwdhyAuSh22oPuengSMVuv-
->> EwaUew&e= ]
->>> url:    https://urldefense.proofpoint.com/v2/url?u=https-
->> 3A__github.com_0day-2Dci_linux_commits_George-2DCherian_PCI-2DAdd-
->> 2Dpci-5Fiounmap_20200824-2D212149&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
->> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=6c
->> UOYHeDOBZ0HaFc2z-vaDgDmbIK4LCBRt9kNkn1sto&e=
->>> base:   https://urldefense.proofpoint.com/v2/url?u=https-
->> 3A__git.kernel.org_pub_scm_linux_kernel_git_helgaas_pci.git&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
->> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=h-
->> TMyLlEdAwew-u52q4dgWBUMgm0ys-xKzvOO86e1Lw&e=  next
->>> config: powerpc-allyesconfig (attached as .config)
->>> compiler: powerpc64-linux-gcc (GCC) 9.3.0 reproduce (this is a W=1
->>> build):
->>>           wget https://urldefense.proofpoint.com/v2/url?u=https-
->> 3A__raw.githubusercontent.com_intel_lkp-
->> 2Dtests_master_sbin_make.cross&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
->> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=az
->> QcL0MQmPpr9UfvyBSSdQiu1UbjJgFrzNJOtcZ_--E&e=  -O ~/bin/make.cross
->>>           chmod +x ~/bin/make.cross
->>>           # save the attached .config to linux build tree
->>>           COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0
->>> make.cross ARCH=powerpc
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>>
->>> All errors (new ones prefixed by >>):
->>>
->>>      powerpc64-linux-ld: lib/pci_iomap.o: in function `__crc_pci_iounmap':
->>>>> (.rodata+0x10): multiple definition of `__crc_pci_iounmap';
->>>>> lib/iomap.o:(.rodata+0x68): first defined here
->> EXPORT_SYMBOL(pci_iounmap) in lib/iomap.c need be removed.
-> I really don't think that is the way to fix this. I have also seen your other patch
-> in which iomap being moved out of lib/iomap.c to header file.
->
-> There was a reason for moving iomap and its variants to a lib since most of
-> the arch's implementation of map was similar. Whereas the unmap had multiple
-> implementation per arch's. So, the lib/iomap never implemented the generic unmap.
->
-> I see either of the following solution.
-> a. Have an arm64 specific implementation for the unmap function.
-> Or
-> b. something on the lines of v2[1], which accommodates all the arch's but has the #ifdef
-> for which Bjorn raised his concerns.
-I think 'a' may be better, and I have already make a patch, I can send 
-it after testing.
->
-> Bjorn, any comments?
->
-> Regards
-> -George
->
-> [1] - https://lkml.org/lkml/2020/8/20/28
+> Root Complex Event Collectors provide support for terminating error
+> and PME messages from RCiEPs.  This patch provides basic decoding for
+> the lspci RCEC Endpoint Association Extended Capability. See PCIe 5.0-1,
+> sec 7.9.10 for further details.
 
+Applied.
+
+Thanks and sorry for the delay.
+
+				Have a nice fortnight
+-- 
+Martin `MJ' Mareš                        <mj@ucw.cz>   http://mj.ucw.cz/
+United Computer Wizards, Prague, Czech Republic, Europe, Earth, Universe
+A Bash poem: time for echo in canyon; do echo $echo $echo; done
