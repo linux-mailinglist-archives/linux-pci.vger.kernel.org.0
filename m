@@ -2,146 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D225D25B407
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 20:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11FAC25B42C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Sep 2020 21:00:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgIBSm5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Sep 2020 14:42:57 -0400
-Received: from mail-dm6nam11on2061.outbound.protection.outlook.com ([40.107.223.61]:13793
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727892AbgIBSmu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:42:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CIkrceLF6uYZDJHE1pmV2INznDQPdUGl4PfhXUlql7C0ZXVDyOlP1cz0ruxG1ugqHU2nS0mLe4kFQT9uhCq2RD1ThZVWVGPCEz9J727Zlrki1mWID9kbM2oLDQqyDyTQPoFkHuAKqfgBt0C+0mWOBu1I+2RqJ72HboP5t37kqGufL8h6hls2Z1RJaLXPd4msc9nSPp9QKNAOAzAB1955/IcB0ceEu+tS5joPnqmPx/WTBhL5asYDNgn1ZLjfKBy1U5uH7U5A9viY8KmjECFxb4fsVsNGZhYwZal9qJ1zyKtaEhWsk0Bz+9T24+ZogQgyJHcrBO/Q8y+Wi2Fsoj7GIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJV4StwxjrA8+KEYn/IH7f8OM5j02zigaNJpG0c1ah0=;
- b=Gh4MgO77e/pMM/9/+AsghT892T57MXXXs8T+9wGS/KCE4bcQJ+lF3CaNUOdnmBBf5MHZAEIocdu3sQdydc4IX4bDi5pYw0XGjYC6Y+bF+T+Pio2U7JMGDlaAuODpVMONnelzIq3uOKgcx3tw9KQ2zKx1koPSvbnUtPy72jWtNPNnJtojS9PDn33sCr+xS3H0FYi3tRF8acCMdYNFrQxxb3+Evg8Uf1lEcXQ0xloZY1WSHc+2ER2JjHTvy4de+AxJdPuSpWkWuKm+zHVDYnuWgf8LLmVC1CbSkEiLgRzg/RO6oNnxQOwW12Uq84q0x5PkW8qrGPsVqHeDozsQ45tXmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJV4StwxjrA8+KEYn/IH7f8OM5j02zigaNJpG0c1ah0=;
- b=aY5sRjCNV+4mUO3FhRkFYSBlun1eCaJzzfCQNoI8p+u+Lc9DzcUgNbyhzUuDmCZnNvvzEAx6U495qbBzBxKnn1DRZ5sWyjPCzZ94tr98z0MfiNC0ZTjcb+TKNjCdLUdoU5hlk3yTMA2c4brZ7I0/bFi2G0EAJu9yIVJL1qGafIw=
-Received: from BN0PR02CA0029.namprd02.prod.outlook.com (2603:10b6:408:e4::34)
- by BN6PR1201MB0049.namprd12.prod.outlook.com (2603:10b6:405:57::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Wed, 2 Sep
- 2020 18:42:47 +0000
-Received: from BN8NAM11FT015.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:e4:cafe::82) by BN0PR02CA0029.outlook.office365.com
- (2603:10b6:408:e4::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend
- Transport; Wed, 2 Sep 2020 18:42:47 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; lists.freedesktop.org; dkim=none (message not signed)
- header.d=none;lists.freedesktop.org; dmarc=permerror action=none
- header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- BN8NAM11FT015.mail.protection.outlook.com (10.13.176.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 18:42:47 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 2 Sep 2020
- 13:42:47 -0500
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 2 Sep 2020
- 13:42:47 -0500
-Received: from agrodzovsky-All-Series.amd.com (10.180.168.240) by
- SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1979.3
- via Frontend Transport; Wed, 2 Sep 2020 13:42:46 -0500
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-To:     <amd-gfx@lists.freedesktop.org>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>
-CC:     <alexander.deucher@amd.com>, <nirmodas@amd.com>,
-        <Dennis.Li@amd.com>, <christian.koenig@amd.com>,
-        <luben.tuikov@amd.com>, <bhelgaas@google.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Subject: [PATCH v4 8/8] Revert "PCI/ERR: Update error status after reset_link()"
-Date:   Wed, 2 Sep 2020 14:42:10 -0400
-Message-ID: <1599072130-10043-9-git-send-email-andrey.grodzovsky@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599072130-10043-1-git-send-email-andrey.grodzovsky@amd.com>
-References: <1599072130-10043-1-git-send-email-andrey.grodzovsky@amd.com>
+        id S1726567AbgIBTAE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Sep 2020 15:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbgIBTAE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:00:04 -0400
+Received: from localhost (47.sub-72-107-117.myvzw.com [72.107.117.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FA58208C7;
+        Wed,  2 Sep 2020 19:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599073203;
+        bh=m7dab6zgYPsBP10ZzjOLqWiJXikP+vtrxyKVWAUKSzw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IMG1STsFQZ86rslUzvSvPWR68C/6MnVb8PoDM7TPcxfjN83ri7YqR7uODaoGYabJS
+         Ve4z+bByFXF1BT8/9SUYsoQW9Xo0B9YRUmfzaVNu2IWvqoUMu+QrTQ6ARPsWS4Wkhb
+         v9MRbQlUPt/YkDRKCpKmoiBrl2pt4LoZOQ2WPcww=
+Date:   Wed, 2 Sep 2020 14:00:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, qiuxu.zhuo@intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] PCI/RCEC: Add pcie_walk_rcec() to walk
+ associated RCiEPs
+Message-ID: <20200902190000.GA204399@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 63a0b4a7-a2d5-46d2-4879-08d84f6ffcf4
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB0049:
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB0049E833AF907192519574A0EA2F0@BN6PR1201MB0049.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:551;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 33EFhpCAhjMN3JqhU69Htc8u7UfKvIbSF07C++M+XX1xNAtrz7XrNdDTgP+qCC+GiMbmSjk7buj8qkbyjzApRbS8RX9v0jixY0N77OYAb9m1PMzkc/YUXkeUitCP2DGYRxq2ydosTEPiPrTyEbSRF5t3uE/8KldMwXAImqb8x0zyIehV8S5CY2iBfNK8tFc/3HJCOPXOJ7y/jOQVnnfMHiRGSkFdwX20HwI12ThFfTh4/eF0EhGzW631a334mViz8G5h9k7pJ8zn7XizgmSWg8FRyoxKSeVfOk4ruVTD2eNuACqptyyhEqaOiFgqtYcsFnXS+JmkSEaBWD/wsQ/U1i2P5YXtX4qsosCFNfFP4TzxUZVvRL/V77eGKfcDQFzKBLwEJAR4Hy0IUNw79iMoPQ==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB01.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(39860400002)(396003)(46966005)(7696005)(8676002)(70586007)(426003)(86362001)(8936002)(26005)(36756003)(110136005)(82310400003)(82740400003)(15650500001)(2906002)(47076004)(81166007)(356005)(5660300002)(478600001)(2616005)(4326008)(70206006)(316002)(44832011)(336012)(6666004)(54906003)(83380400001)(186003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 18:42:47.6337
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63a0b4a7-a2d5-46d2-4879-08d84f6ffcf4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT015.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812164659.1118946-5-sean.v.kelley@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This reverts commit 6d2c89441571ea534d6240f7724f518936c44f8d.
+On Wed, Aug 12, 2020 at 09:46:53AM -0700, Sean V Kelley wrote:
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> 
+> When an RCEC device signals error(s) to a CPU core, the CPU core
+> needs to walk all the RCiEPs associated with that RCEC to check
+> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+> associated with the RCEC device.
+> 
+> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/pci/pci.h       |  4 +++
+>  drivers/pci/pcie/rcec.c | 76 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 80 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index bd25e6047b54..8bd7528d6977 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -473,9 +473,13 @@ static inline void pci_dpc_init(struct pci_dev *pdev) {}
+>  #ifdef CONFIG_PCIEPORTBUS
+>  void pci_rcec_init(struct pci_dev *dev);
+>  void pci_rcec_exit(struct pci_dev *dev);
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata);
+>  #else
+>  static inline void pci_rcec_init(struct pci_dev *dev) {}
+>  static inline void pci_rcec_exit(struct pci_dev *dev) {}
+> +static inline void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +				  void *userdata) {}
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_ATS
+> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+> index 519ae086ff41..405f92fcdf7f 100644
+> --- a/drivers/pci/pcie/rcec.c
+> +++ b/drivers/pci/pcie/rcec.c
+> @@ -17,6 +17,82 @@
+>  
+>  #include "../pci.h"
+>  
+> +static int pcie_walk_rciep_devfn(struct pci_bus *bus, int (*cb)(struct pci_dev *, void *),
+> +				 void *userdata, const unsigned long bitmap)
+> +{
+> +	unsigned int devn, fn;
+> +	struct pci_dev *dev;
+> +	int retval;
+> +
+> +	for_each_set_bit(devn, &bitmap, 32) {
+> +		for (fn = 0; fn < 8; fn++) {
+> +			dev = pci_get_slot(bus, PCI_DEVFN(devn, fn));
 
-In the code bellow
+Wow, this is a lot of churning to call pci_get_slot() 256 times per
+bus for the "associated bus numbers" case where we pass a bitmap of
+0xffffffff.  They didn't really make it easy for software when they
+added the next/last bus number thing.
 
-                pci_walk_bus(bus, report_frozen_detected, &status);
--               if (reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
-+               status = reset_link(dev, service);
+Just thinking out loud here.  What if we could set dev->rcec during
+enumeration, and then use that to build pcie_walk_rcec()?
 
-status returned from report_frozen_detected is unconditionally masked
-by status returned from reset_link which is wrong.
+  bool rcec_assoc_rciep(rcec, rciep)
+  {
+    if (rcec->bus == rciep->bus)
+      return (rcec->bitmap contains rciep->devfn);
 
-This breaks error recovery implementation for AMDGPU driver
-by masking PCI_ERS_RESULT_NEED_RESET returned from amdgpu_pci_error_detected
-and hence skiping slot reset callback which is necessary for proper
-ASIC recovery. Effectively no other callback besides resume callback will
-be called after link reset the way it is implemented now regardless of what
-value error_detected callback returns.
+    return (rcec->next/last contains rciep->bus);
+  }
 
-In general step 6.1.4 describing link reset unlike the other steps is not well defined
-in what are the  expected return values and the appropriate next steps as
-it is for other stpes.
+  link_rcec(dev, data)
+  {
+    struct pci_dev *rcec = data;
 
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
----
- drivers/pci/pcie/err.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+    if ((dev is RCiEP) && rcec_assoc_rciep(rcec, dev))
+      dev->rcec = rcec;
+  }
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index c543f41..81dd719 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -165,8 +165,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	pci_dbg(dev, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bus(bus, report_frozen_detected, &status);
--		status = reset_link(dev);
--		if (status != PCI_ERS_RESULT_RECOVERED) {
-+		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
- 			pci_warn(dev, "link reset failed\n");
- 			goto failed;
- 		}
--- 
-2.7.4
+  find_rcec(dev, data)
+  {
+    struct pci_dev *rciep = data;
 
+    if ((dev is RCEC) && rcec_assoc_rciep(dev, rciep))
+      rciep->rcec = dev;
+  }
+
+  pci_setup_device
+    ...
+      if (dev is RCEC) {
+	pci_rcec_init(dev)		# cache bitmap, next/last bus #
+	pci_walk_bus(root_bus, link_rcec, dev); # link any RCiEP already found
+      }
+      if (dev is RCiEP) {
+	pci_walk_bus(root_bus, find_rcec, dev); # link any RCEC already found
+      }
+
+Now we should have a valid dev->rcec for everything we've enumerated.
+
+  struct walk_rcec_data {
+    struct pci_dev *rcec;
+    ... user_callback;
+    void *user_data;
+  };
+
+  pcie_rcec_helper(dev, callback, data)
+  {
+    struct walk_rcec_data *rcec_data = data;
+
+    if (dev->rcec == rcec_data->rcec)
+      rcec_data->user_callback(dev, rcec_data->user_data);
+  }
+
+  pcie_walk_rcec(rcec, callback, data)
+  {
+    struct walk_rcec_data rcec_data;
+    ...
+    rcec_data.rcec = rcec;
+    rcec_data.user_callback = callback;
+    rcec_data.user_data = data;
+    pci_walk_bus(root_bus, pcie_rcec_helper, &rcec_data);
+  }
+
+I hate having to walk the bus so many times, but I do like the fact
+that in the runtime path (pcie_walk_rcec()) we don't have to do 256
+pci_get_slot() calls per bus, almost all of which are going to fail.
+
+> +			if (!dev)
+> +				continue;
+> +
+> +			if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END) {
+> +				pci_dev_put(dev);
+> +				continue;
+> +			}
+> +
+> +			retval = cb(dev, userdata);
+> +			pci_dev_put(dev);
+> +			if (retval)
+> +				return retval;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
+> + * @rcec     RCEC whose RCiEP devices should be walked.
+> + * @cb       Callback to be called for each RCiEP device found.
+> + * @userdata Arbitrary pointer to be passed to callback.
+> + *
+> + * Walk the given RCEC. Call the provided callback on each RCiEP device found.
+> + *
+> + * We check the return of @cb each time. If it returns anything
+> + * other than 0, we break out.
+> + */
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata)
+> +{
+> +	u8 nextbusn, lastbusn;
+> +	struct pci_bus *bus;
+> +	unsigned int bnr;
+> +
+> +	if (!rcec->rcec_cap)
+> +		return;
+> +
+> +	/* Find RCiEP devices on the same bus as the RCEC */
+> +	if (pcie_walk_rciep_devfn(rcec->bus, cb, userdata, rcec->rcec_ext->bitmap))
+> +		return;
+> +
+> +	/* Check whether RCEC BUSN register is present */
+> +	if (rcec->rcec_ext->ver < PCI_RCEC_BUSN_REG_VER)
+> +		return;
+> +
+> +	nextbusn = rcec->rcec_ext->nextbusn;
+> +	lastbusn = rcec->rcec_ext->lastbusn;
+> +
+> +	/* All RCiEP devices are on the same bus as the RCEC */
+> +	if (nextbusn == 0xff && lastbusn == 0x00)
+> +		return;
+> +
+> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
+
+I think we also need to skip the RCEC bus here, don't we?  7.9.10.3
+says the Associated Bus Numbers register does not indicate association
+between an EC and any Function on the same bus number as the EC
+itself.  Something like this:
+
+  if (bnr == rcec->bus->number)
+    continue;
+
+> +		bus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
+> +		if (!bus)
+> +			continue;
+> +
+> +		/* Find RCiEP devices on the given bus */
+> +		if (pcie_walk_rciep_devfn(bus, cb, userdata, 0xffffffff))
+> +			return;
+> +	}
+> +}
+> +
+>  void pci_rcec_init(struct pci_dev *dev)
+>  {
+>  	u32 rcec, hdr, busn;
+> -- 
+> 2.28.0
+> 
