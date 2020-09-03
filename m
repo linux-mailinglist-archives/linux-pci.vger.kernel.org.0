@@ -2,99 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5368025C010
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 13:21:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F6C425C11A
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 14:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgICLVo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 07:21:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:59190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgICLPg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:15:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F1AE101E;
-        Thu,  3 Sep 2020 04:08:48 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F5013F66F;
-        Thu,  3 Sep 2020 04:08:46 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 12:08:44 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, will@kernel.org,
-        catalin.marinas@arm.com
-Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
-Message-ID: <20200903110844.GB11284@e121166-lin.cambridge.arm.com>
-References: <20200831151827.pumm2p54fyj7fz5s@amazon.com>
- <20200902113207.GA27676@e121166-lin.cambridge.arm.com>
- <20200902142922.xc4x6m33unkzewuh@amazon.com>
- <20200902164702.GA30611@e121166-lin.cambridge.arm.com>
- <edae1eeb0da578d941cfa5ad550eb0a0eda5f98e.camel@kernel.crashing.org>
+        id S1728856AbgICMgn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 08:36:43 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2747 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728828AbgICMgk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:36:40 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 71392CDCF9CFF0BA78E7;
+        Thu,  3 Sep 2020 13:34:52 +0100 (IST)
+Received: from localhost (10.52.126.121) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 3 Sep 2020
+ 13:34:51 +0100
+Date:   Thu, 3 Sep 2020 13:33:18 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <martin@geanix.com>,
+        Ingo Molnar <mingo@redhat.com>, <linux-ia64@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Song Bao Hua <song.bao.hua@hisilicon.com>
+Subject: Re: [PATCH v3 0/6]  ACPI: Only create NUMA nodes from entries in
+ SRAT or SRAT emulation.
+Message-ID: <20200903133318.000017f5@Huawei.com>
+In-Reply-To: <20200818142430.1156547-1-Jonathan.Cameron@huawei.com>
+References: <20200818142430.1156547-1-Jonathan.Cameron@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <edae1eeb0da578d941cfa5ad550eb0a0eda5f98e.camel@kernel.crashing.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.126.121]
+X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 09:07:00AM +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2020-09-02 at 17:47 +0100, Lorenzo Pieralisi wrote:
-> > Yes I do and I expressed them.
-> > 
-> > The first concern is the WC ambiguity on non-x86 systems, it looks
-> > like write combinining means everything and nothing at the same time
-> > on != x86 arches.
-> > 
-> > On x86 prefetchable BAR == WC mapping (still conditional on arch
-> > features ie PAT, not a blanket enable). On ARM64 WC mapping currently
-> > corresponds to normal NC memory and the PCIe specs allow read
-> > side-effects BAR to be marked as prefetchable, I need to force PCI
-> > sig
-> > to remove the section I mentioned from the specifications because
-> > there
-> > is NO way it can be detected if a prefetchable BAR maps to read
-> > side-effects memory.
+
+On Tue, 18 Aug 2020 22:24:24 +0800
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+
+> This is a trivial rebase and resend of V2 now the merge window has closed.
 > 
-> Im not sure I understand your sentence. It's been a long accepted rule
-> in PCI land that "prefetchable" BARs means "no side effects" and in
-> fact allows much more than just prefetching :-)
-
-I am referring to the nefarious:
-
-"Additional Guidance on the Prefetchable Bit in Memory Space BARs"
-
-I read it 100 times and I still have no idea how it can be implemented,
-it sorts of acknowledges that read side-effects memory can be marked
-as a prefetchable BAR *if* the system meets some criteria.
-
-As if endpoint designers knew the system where their endpoint is
-plugged into (+ bit (3) in a BAR is read-only).
-
-I think that that implementation note must be removed from the
-specifications - if anyone dares to follow it this whole
-WC resource mapping can trigger trouble.
-
-Good news is that it would be trouble for all arches :)
-
-> > A kernel device driver would (hopefully) know, sysfs code that just
-> > checks the prefetchable attribute and exports resource_WC does not.
-> >
-> > As I mentioned, if the mapping is done in a device specific driver it
-> > can be vetted and there are not many drivers mapping BARs as
-> > ioremap_wc().
+> Here, I will use the term Proximity Domains for the ACPI description and
+> NUMA Nodes for the in kernel representation.
 > 
-> It's been what other architectures have been doing for mroe than a
-> decade without significant issues... I don't think you should worry too
-> much about this.
+> ACPI 6.3 included a clarification that only Static Resource Allocation
+> Structures in SRAT may define the existence of proximity domains
+> (sec 5.2.16). This clarification closed a possible interpretation that
+> other parts of ACPI (e.g. DSDT _PXM, NFIT etc) could define new proximity
+> domains that were not also mentioned in SRAT structures.
+> 
+> In practice the kernel has never allowed this alternative interpretation as
+> such nodes are only partially initialized. This is architecture specific
+> but to take an example, on x86 alloc_node_data has not been called.
+> Any use of them for node specific allocation, will result in a crash as the
+> infrastructure to fallback to a node with memory is not setup.
+> 
+> We ran into a problem when enabling _PXM handling for PCI devices and found
+> there were boards out there advertising devices in proximity domains that
+> didn't exist [2].
+> 
+> The fix suggested in this series is to replace instances that should not
+> 'create' new nodes with pxm_to_node.  This function needs a some additional
+> hardening against invalid inputs to make sure it is safe for use in these
+> new callers.
+> 
+> Patch 1 Hardens pxm_to_node() against numa_off, and pxm entry being too large.
+> 
+> Patch 2-4 change the various callers not related to SRAT entries so that they
+> set this parameter to false, so do not attempt to initialize a new NUMA node
+> if the relevant one does not already exist.
+> 
+> Patch 5 is a function rename to reflect change in functionality of
+> acpi_map_pxm_to_online_node() as it no longer creates a new map, but just does a
+> lookup of existing maps.
+> 
+> Patch 6 covers the one place we do not allow the full flexibility defined
+> in the ACPI spec.  For SRAT GIC Interrupt Translation Service (ITS) Affinity
+> Structures, on ARM64, the driver currently makes an additional pass of SRAT
+> later in the boot than the one used to identify NUMA domains.
+> Note, this currently means that an ITS placed in a proximity domain that is
+> not defined by another SRAT structure will result in the a crash.
+> 
+> To avoid this crash with minimal changes we do not create new NUMA nodes based
+> on this particular entry type.  Any current platform trying to do this will not
+> boot, so this is an improvement, if perhaps not a perfect solution.
+> 
+> [1] Note in ACPI Specification 6.3 5.2.16 System Resource Affinity Table (SRAT)
+> [2] https://patchwork.kernel.org/patch/10597777/
 
-Minus what I wrote above, I agree with you. I'd still be able to
-understand what this patch changes in the mellanox driver HW
-handling though - not sure what they expect from arch_can_pci_mmap_wc()
-returning 1.
+Looking for input from ARM (Lorenzo?), X86(not sure) and ACPI(Rafael?) people
+on this set. As it also touches NFIT handling perhaps someone who focuses on
+that as well. Please feel free to CC additional people who might be interested.
+
+I'm fairly confident that it should be uncontroversial (famous last words)
+and it closes down a problem that lead to issues with seemingly obvious
+changes in the past. (The whole PCI _PXM issue on some threadripper platforms).
+
+Thanks to Bjorn, Hanjun and Barry for feedback on earlier revisions.
 
 Thanks,
-Lorenzo
+
+Jonathan
+
+> 
+> Thanks to Bjorn Helgaas for review of v1 and Barry Song for internal reviews that
+> lead to a slightly different approach for this v2.
+> 
+> Changes since v2.
+> * Trivial rebase to v5.9-rc1
+> * Collect up tags.
+> 
+> Changes since v1.
+> * Use pxm_to_node for what was previously the path using acpi_map_pxm_to_node
+>   with create==false. (Barry)
+> * Broke patch up into an initial noop stage followed by patches (Bjorn)
+>   to update each type of case in which partial creation of NUMA nodes is prevented.
+> * Added patch 5 to rename function to reflect change of functionality.
+> * Updated descriptions (now mostly in individual patches) inline with Bjorn's comments.
+> 
+> Jonathan Cameron (6):
+>   ACPI: Add out of bounds and numa_off protections to pxm_to_node
+>   ACPI: Do not create new NUMA domains from ACPI static tables that are
+>     not SRAT
+>   ACPI: Remove side effect of partly creating a node in
+>     acpi_map_pxm_to_online_node
+>   ACPI: Rename acpi_map_pxm_to_online_node to pxm_to_online_node
+>   ACPI: Remove side effect of partly creating a node in acpi_get_node
+>   irq-chip/gic-v3-its: Fix crash if ITS is in a proximity domain without
+>     processor or memory
+> 
+>  drivers/acpi/arm64/iort.c        |  2 +-
+>  drivers/acpi/nfit/core.c         |  6 ++----
+>  drivers/acpi/numa/hmat.c         |  4 ++--
+>  drivers/acpi/numa/srat.c         |  4 ++--
+>  drivers/iommu/intel/dmar.c       |  2 +-
+>  drivers/irqchip/irq-gic-v3-its.c |  7 ++++++-
+>  include/linux/acpi.h             | 15 +++++++--------
+>  7 files changed, 21 insertions(+), 19 deletions(-)
+> 
+
+
