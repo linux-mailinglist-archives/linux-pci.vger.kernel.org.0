@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7AA925CD2C
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 00:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2C2D25CD39
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 00:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgICWJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 18:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
+        id S1728134AbgICWMA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 18:12:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729393AbgICWJC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 18:09:02 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E485C061247
-        for <linux-pci@vger.kernel.org>; Thu,  3 Sep 2020 15:09:01 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w186so3206016pgb.8
-        for <linux-pci@vger.kernel.org>; Thu, 03 Sep 2020 15:09:01 -0700 (PDT)
+        with ESMTP id S1727065AbgICWL5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 18:11:57 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74BFC061244
+        for <linux-pci@vger.kernel.org>; Thu,  3 Sep 2020 15:11:56 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id c142so3445148pfb.7
+        for <linux-pci@vger.kernel.org>; Thu, 03 Sep 2020 15:11:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=1TFkAeGi9KR3Vg+6dLLM1QKXoNn5coQYzJIjZ0tVjI0=;
-        b=RMbQl2aWLhRmRg/xlWTquty6EAETDxVrOPrJsvxj3D3ziQggwm1LR9Z+7lvF/RBSAh
-         rdDSpm9JIeEpDa886F9HHLV4dstrmldnU0gSRqvqiZwoQrPW2lTBh5oU/X/4TrS8pCra
-         DV/jID9deoswwRtNn+Jy77/ci1g1OxqByrPxs=
+        bh=5FkC7ZydcYZ7OvnDcVYU3cxvw/A+RLXuwzidT1u3ktE=;
+        b=IGPy3Ev8EutCuQb4lwsTx1VAvqIeOIRFD7wLuyvXGTSAxwz8hL6v0K8f8IQ9Y+H11S
+         fKbqKBL1KVGfL9CLfKWhp972pCQiDMPENIKcZYhRYuBh/NJ5d1xhg8qEzMWhJmjTO78y
+         hpDI1nGkw9U2lPKfWpYJ5VKAyDFTBSuj0ip0o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1TFkAeGi9KR3Vg+6dLLM1QKXoNn5coQYzJIjZ0tVjI0=;
-        b=sAXHWX30bc7+T8sfMHEkKyqQSbTF7ApwUgQXuvloPLFs5qQ7gA9fj99Wk//n1aBhye
-         re80PWq1BuIpgcj0vmUIKfWkVJocwEkdED2uEB70oYXYgekk4tdlu0qBC4i1PiXOq8Qv
-         mNIemZHaS3nGDOkomTNkznR3ODT45qIVPCGTeJYvyPzo7Ceg1HoxzNzdAANsX2VeYVyF
-         H0ynEUsYjBtBpimsHY49t3Xa/Sj5utgmtXAVbyC7lzTDD0GA/BIFFPvIxrNdTQM//M/s
-         CSkQr5sDDONcGOPfz7C1qWYKB+Jm1anmIC6kBGZ5sOHBh0qA2hhPOL5L/kgnvPJiodE3
-         JWIA==
-X-Gm-Message-State: AOAM5309V1rADHl6EDMEM6pQf3WeS4Dwdbm50kZDnH25dyX9anX2BxYX
-        9a5sNJFNup37NIZA0MYK0YhK4Q==
-X-Google-Smtp-Source: ABdhPJxtv6qZk8AFQNSEBhXOHhLxWmSvOpKmtDAl4TWDKr3eiSBk8TPdIQLGddmagxPcGUhPAwGmGg==
-X-Received: by 2002:aa7:925a:: with SMTP id 26mr5953492pfp.6.1599170941115;
-        Thu, 03 Sep 2020 15:09:01 -0700 (PDT)
+        bh=5FkC7ZydcYZ7OvnDcVYU3cxvw/A+RLXuwzidT1u3ktE=;
+        b=X4pb/JHRuD5JDdXcB3y2auxipP35fq8ERB6C0UWwJ0shVU4COpXimNCk8SyGJL3O5U
+         Xspgae7wUTYHbt05kNmpPoeNRE5xnSKVNTssU1qLtDWVZl9sJYNYIBJFm5aMLrn9digT
+         wwZJ74doVsJ5C1uqmv8rM1EvLnN0FOlb7KJUH9BkJaUaS4f1cb6GVJCS0WgqnSudzJqF
+         TtMz3ZdTgOiXKEn0P9eLmz6MUGrGRXSsiL3UAkIONkQ9RgAufex4EVeYqF+BvOneSsBt
+         Pf4O9smpfJc7TlEt3791tJKJp7iNP2ksg2zhQokf+fmkVnISYy/CQg5mXKtJ1aKQxeFn
+         WPGQ==
+X-Gm-Message-State: AOAM531xhslFT8s8ZA7tE6MmkpWSsdjiKP2tN+MacNyr+pCNRZz8e/T+
+        9jPEbueePu7p/CF4vbBL51DFWg==
+X-Google-Smtp-Source: ABdhPJxNUt7QAkJJr6DVIatL2r/ZHjflOqWAAtFiZXIMzyxOBsAVSA+Y4d6vSRQM4txHS5CM9PwpZQ==
+X-Received: by 2002:a17:902:d702:: with SMTP id w2mr6057532ply.53.1599171116270;
+        Thu, 03 Sep 2020 15:11:56 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t11sm4160655pfe.165.2020.09.03.15.08.59
+        by smtp.gmail.com with ESMTPSA id a6sm3721602pgt.70.2020.09.03.15.11.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:09:00 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 15:08:59 -0700
+        Thu, 03 Sep 2020 15:11:55 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 15:11:54 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
@@ -59,79 +59,33 @@ Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         x86@kernel.org
-Subject: Re: [PATCH v2 09/28] kbuild: add support for Clang LTO
-Message-ID: <202009031504.07098D6F8@keescook>
+Subject: Re: [PATCH v2 10/28] kbuild: lto: fix module versioning
+Message-ID: <202009031510.32523E45EC@keescook>
 References: <20200624203200.78870-1-samitolvanen@google.com>
  <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-10-samitolvanen@google.com>
+ <20200903203053.3411268-11-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903203053.3411268-10-samitolvanen@google.com>
+In-Reply-To: <20200903203053.3411268-11-samitolvanen@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:30:34PM -0700, Sami Tolvanen wrote:
-> This change adds build system support for Clang's Link Time
-> Optimization (LTO). With -flto, instead of ELF object files, Clang
-> produces LLVM bitcode, which is compiled into native code at link
-> time, allowing the final binary to be optimized globally. For more
-> details, see:
-> 
->   https://llvm.org/docs/LinkTimeOptimization.html
-> 
-> The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
-> which defaults to LTO being disabled. To use LTO, the architecture
-> must select ARCH_SUPPORTS_LTO_CLANG and support:
-> 
->   - compiling with Clang,
->   - compiling inline assembly with Clang's integrated assembler,
->   - and linking with LLD.
-> 
-> While using full LTO results in the best runtime performance, the
-> compilation is not scalable in time or memory. CONFIG_THINLTO
-> enables ThinLTO, which allows parallel optimization and faster
-> incremental builds. ThinLTO is used by default if the architecture
-> also selects ARCH_SUPPORTS_THINLTO:
-> 
->   https://clang.llvm.org/docs/ThinLTO.html
-> 
-> To enable LTO, LLVM tools must be used to handle bitcode files. The
-> easiest way is to pass the LLVM=1 option to make:
-> 
->   $ make LLVM=1 defconfig
->   $ scripts/config -e LTO_CLANG
->   $ make LLVM=1
-> 
-> Alternatively, at least the following LLVM tools must be used:
-> 
->   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
-> 
-> To prepare for LTO support with other compilers, common parts are
-> gated behind the CONFIG_LTO option, and LTO can be disabled for
-> specific files by filtering out CC_FLAGS_LTO.
-> 
-> Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
-> follow-up patches.
+On Thu, Sep 03, 2020 at 01:30:35PM -0700, Sami Tolvanen wrote:
+> With CONFIG_MODVERSIONS, version information is linked into each
+> compilation unit that exports symbols. With LTO, we cannot use this
+> method as all C code is compiled into LLVM bitcode instead. This
+> change collects symbol versions into .symversions files and merges
+> them in link-vmlinux.sh where they are all linked into vmlinux.o at
+> the same time.
 > 
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-I remain crazy excited about being able to use this in upstream. :)
-
-The only suggestion I have here, if it might help with clarity, would be
-to remove DISABLE_LTO globally as a separate patch, since it's entirely
-unused in the kernel right now. This series removes it as it goes, which
-I think is fine, but it might cause some reviewers to ponder "what's
-this DISABLE_LTO thing? Don't we need that?" without realizing currently
-unused in the kernel.
-
-I'm glad to see the general CONFIG_LTO, as I think it should be easy for
-GCC LTO support to get added when someone steps up to do it. The bulk of
-the changed needed to support GCC LTO are part of this series already,
-since the build problems involving non-ELF .o files and init ordering
-are shared by Clang and GCC AFAICT.
+The only thought I have here is I wonder if this change could be made
+universally instead of gating on LTO? (i.e. is it noticeably slower to
+do it this way under non-LTO?)
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
