@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A5A725CAAD
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 22:34:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2834125CA8F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 22:33:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgICUed (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 16:34:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35502 "EHLO
+        id S1729636AbgICUdp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 16:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729088AbgICUdI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 16:33:08 -0400
+        with ESMTP id S1729614AbgICUdL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 16:33:11 -0400
 Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4AFBC061A16
-        for <linux-pci@vger.kernel.org>; Thu,  3 Sep 2020 13:31:50 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id y2so2512380qvs.14
-        for <linux-pci@vger.kernel.org>; Thu, 03 Sep 2020 13:31:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF96C061A1A
+        for <linux-pci@vger.kernel.org>; Thu,  3 Sep 2020 13:31:52 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id dj20so2474688qvb.23
+        for <linux-pci@vger.kernel.org>; Thu, 03 Sep 2020 13:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=z1oE9Ahlo6q+kOr1oYLTleDll+XTtOFOU5n4tP72oXo=;
-        b=dhsXYaepDU3UMSsdIoiJQCPA2falNwv2qZU1/VdJQ1hXkiAnSpUZqf+Rk3qRL2tZAA
-         RATqeMGpf2kMmoAJHONhUjAMV6PegNyYkc3QJaAVEVEcLCjBrBqX09ABdO5+mQ95+DDw
-         f25F2G9jXfYk/9EQ2j5jmaiLccx+nM/z6pbas3dlrRF8URH6MyCoC/KP1gno65LWfHKJ
-         Q6D2TJQFYwBZAepJLd9Yd28lqGFx1HWGm1ZuFChTdMhn1NuMfjTAvQ+mpiiVULLpvd2L
-         Y9xqDVxLlVJb9OyiDxJrlsR9W0TKzMvmJcMqoguuNEejgNuP+L5/S3K+uSCWznAoXPfA
-         ElDw==
+        bh=KoA5zv+DpjEyp13/YuX/m1kwH/JJTx3lL+cQSxNvvDE=;
+        b=iQRyuXb7DQREhbTivVeYcDoSGjtob7g8M5KS5z8R2T1nBf9Gx0F/IaqPMtn2bzwhh2
+         DvvxcFNLC0B9wSIyz6SplW6mCPM1aenF7xoo1ziClwMNK+NKE53qTfAePUKqHL2UJnkB
+         FLm0++eFSfi/lPj6VdPdxbPF95syaHvlo+Sk6yuM88i2IZzlSpgq1yQGQxsjz99mcX7p
+         m9V6emvEp6fvuUTr1uX1VsgenOsyFKN9dFgrfxlx04zsYAMmRAr9kaydPt8YWI7OzTUw
+         /xEzK08P+0B0NFU8v2bS7pcwz8uTLGPrj4WfYV2c9K1P9hISKsyvAPYFID29+oNZ0pwD
+         RY9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=z1oE9Ahlo6q+kOr1oYLTleDll+XTtOFOU5n4tP72oXo=;
-        b=Zqtsva56RfLRnAYtIjC+nnyqBnrk9hNqqTp8TXsKrn8DtWM+2JmoQkbWdX/Ura8pS4
-         kQZaodT/3BHVgypv7LWOek1R020r6plWtMtwZQz93BdnBKQyoaJLTh/Fj5qK/6n9VPBJ
-         WkMUizbZVjcDbrH8jEXlc30G+J2W4Wo1frsO024o7axMdOiclpWMQdTqCxE0hIDZ86Bb
-         R8MG+mrkRRG4o41/g2UDv/+PQQpiJFdeDQ5bI70XNRjNzETbPtVpp1BQ1W85Q2JrfYjB
-         B/PEKEF9O7/twsL9xt2Ab/qsx8GsWO+poxrs4QwwW48UdHkHRKNJwKHeiJWgtkzJgEos
-         bgZQ==
-X-Gm-Message-State: AOAM532bi30bWgRlL00gTG1LgMKcgNM5A5IJbps72/oGLJQ2m6IUNQtN
-        RiOTYj03riid5hswe1xDgKeIh9zMieStqAmDH64=
-X-Google-Smtp-Source: ABdhPJyEGMuftj1qYs6R/OZbYPrPPMiyM+BRAtuMsdOJHhZ0hVrBwsv0OgWjQWUGye1drGkS4UUiW2tD7l2OoeX093w=
+        bh=KoA5zv+DpjEyp13/YuX/m1kwH/JJTx3lL+cQSxNvvDE=;
+        b=MMud5wX6qXJPB7JBEO4qCCjC+Gm5ihsksUMeIgDMtte+zYz8RWnuqtag8tkgB+UzAs
+         J2kEN1FHCRGTWoVULuGaycT9Lk5U9mvB7ik8lLtwubMQhTW5/PqWx/J8QtTgtKS4EMA1
+         d7wT2fnD0gulGm8aqcKwSFsugHHeS+ElV2loUZKHSOW9fqVVC1TBNeRGwvkNW0epY+b2
+         qeMZF6t3Jjs+ApBKnmWUpG5ZKowD6rf4mT/Fvlmjvt7fx7hfwwk91QiiYBy/IBvM9UCY
+         mlrHBJjV/NB8edHLIo/Z7ghVP7SnTlOh6DqMYiv54M2bzFlUI3V13p8njQD2mxD9cbJI
+         hDYQ==
+X-Gm-Message-State: AOAM5335x0fxajlpCVDhbEuTIEq+vtVvg2WZ0oIPQ3Z8u/hadi9O3BLf
+        2mM9Xdw84eYSVC8YXB27Pry5lLovkEJ7Erzqlec=
+X-Google-Smtp-Source: ABdhPJx+z0p9xaedPgPNzeY/Rz32SVtx7k9bWUtWq2o8BTU/tO7RQ+3N5loCDPVr3FxVA9GPo0ZEtNIss1cCzuNBmj0=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a0c:d803:: with SMTP id
- h3mr3575787qvj.0.1599165109962; Thu, 03 Sep 2020 13:31:49 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 13:30:51 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6214:1105:: with SMTP id
+ e5mr3719981qvs.11.1599165111812; Thu, 03 Sep 2020 13:31:51 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:52 -0700
 In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
-Message-Id: <20200903203053.3411268-27-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-28-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v2 26/28] x86, vdso: disable LTO only for vDSO
+Subject: [PATCH v2 27/28] x86, relocs: Ignore L4_PAGE_OFFSET relocations
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -71,46 +71,26 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove the undefined DISABLE_LTO flag from the vDSO, and filter out
-CC_FLAGS_LTO flags instead where needed. Note that while we could use
-Clang's LTO for the 64-bit vDSO, it won't add noticeable benefit for
-the small amount of C code.
+L4_PAGE_OFFSET is a constant value, so don't warn about absolute
+relocations.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/entry/vdso/Makefile | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/tools/relocs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 215376d975a2..9b742f21d2db 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -9,8 +9,6 @@ ARCH_REL_TYPE_ABS := R_X86_64_JUMP_SLOT|R_X86_64_GLOB_DAT|R_X86_64_RELATIVE|
- ARCH_REL_TYPE_ABS += R_386_GLOB_DAT|R_386_JMP_SLOT|R_386_RELATIVE
- include $(srctree)/lib/vdso/Makefile
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index ce7188cbdae5..8f3bf34840ce 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -47,6 +47,7 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
+ 	[S_ABS] =
+ 	"^(xen_irq_disable_direct_reloc$|"
+ 	"xen_save_fl_direct_reloc$|"
++	"L4_PAGE_OFFSET|"
+ 	"VDSO|"
+ 	"__crc_)",
  
--KBUILD_CFLAGS += $(DISABLE_LTO)
--
- # Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
-@@ -92,7 +90,7 @@ ifneq ($(RETPOLINE_VDSO_CFLAGS),)
- endif
- endif
- 
--$(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
-+$(vobjs): KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
- 
- #
- # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
-@@ -150,6 +148,7 @@ KBUILD_CFLAGS_32 := $(filter-out -fno-pic,$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out -mfentry,$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS_32))
-+KBUILD_CFLAGS_32 := $(filter-out $(CC_FLAGS_LTO),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 += -m32 -msoft-float -mregparm=0 -fpic
- KBUILD_CFLAGS_32 += -fno-stack-protector
- KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
