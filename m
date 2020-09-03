@@ -2,130 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D957B25CD43
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 00:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6282B25CD5C
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 00:19:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgICWM0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 18:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgICWMX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:12:23 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502C020DD4;
-        Thu,  3 Sep 2020 22:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599171142;
-        bh=kWp2jy1cl38XtJEa2J7tj4Dfu/Rm93sjy3IsxSOhjdk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=q95uRIFMtQEFAq7kDesYZrFOttACnICmuo00MquGyIFu+v88cWsaya/Xhuh3DH+GX
-         lL7ZKPFBCMZkEcqsE4w2LVKmxHoz7Osz4yY4DYQIxVp5JImc0QUCuqlkdPWisfWele
-         uw1HB/bIxj3wrcIHp/vxB2i4ReLaDLwVuHmZCmQY=
-Received: by mail-ot1-f44.google.com with SMTP id g10so4150831otq.9;
-        Thu, 03 Sep 2020 15:12:22 -0700 (PDT)
-X-Gm-Message-State: AOAM533GR0M+5JyA8xDJBeucKIqlBmbpySW67xSMgfQeDSj91HB3SVts
-        7fpjJgbcI4zEckZjNCLxkjgGnq/NkOu+NqOmYg==
-X-Google-Smtp-Source: ABdhPJz61ghK3HLBNa4m7HkLBA3p58WrqZyuBgtMUBvuBzBFvzHhgwPpfLk6CFGDI1jTJPNvgjpxjr8y+wdNBfWxRPM=
-X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr3111655otp.107.1599171141596;
- Thu, 03 Sep 2020 15:12:21 -0700 (PDT)
+        id S1729036AbgICWTt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 18:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbgICWTr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 18:19:47 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C46C061246
+        for <linux-pci@vger.kernel.org>; Thu,  3 Sep 2020 15:19:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u13so3245412pgh.1
+        for <linux-pci@vger.kernel.org>; Thu, 03 Sep 2020 15:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MWNxdRC9o4O5cBaQMtBrWZaTyq9NHomAWBLJ5BXZ/Cg=;
+        b=jxDHCE4PSws5lQZxdXVDEjhRQTdgtlSfRbx8rYkpCfQICEnOWSuKZ7dWjeNOju7dHs
+         JEdGW0U96wxe5VP81V1HIKryHZ+2sUEbGwgPTUa5Or2pgLw9K4kqUUj39f1wAlZHuNJ6
+         G7nevfW8wKYTznCuyu42z91ddeu7fJXntaESc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MWNxdRC9o4O5cBaQMtBrWZaTyq9NHomAWBLJ5BXZ/Cg=;
+        b=hgPnp1rs3uKgWzO7ssi7ZUmt08adqXIio2GDVhoQLG9+x6CTUMFnIstLLFBKPVnm4L
+         VOAfgWnEmF092ipvjIiVNS9KB7DoSie9NvybXwH5ytFP8+JnpZCs/JJlV/GISQZbG3SV
+         7en7ltamwiIja5tgjs8LCiuYopgRjHOQ43WXXrEqCJEQNGUXt9wa0KUehBMyEtQOHZ79
+         8LjxVKsHBZuD2BPfHWyimnLUB5GZrlw4S5zTv7H4XCDfO3REDYf7g8BLJx7C073I+kkq
+         5xQ3k6kTnf1SfWpSxRW0twGLV5AQgOUOjH9rCXyiSMWtdcHhKashAjNQM6XVpPr4eS85
+         XS+Q==
+X-Gm-Message-State: AOAM5328YaK5DkDWG3HBz7FA8U59RHk/lrGcG8FYs1Q9Qx4V6X/aF8Iv
+        hlsvyCKuQ/ZDD7T6ImxE+mi7Nw==
+X-Google-Smtp-Source: ABdhPJyiQdJtuSv4chDGmJRkFDeKEEXRJWc13sRcliVwROf2KadwLW6WYWrupCYc5UO95rWT0iVSnQ==
+X-Received: by 2002:a05:6a00:14ce:: with SMTP id w14mr5536446pfu.119.1599171585674;
+        Thu, 03 Sep 2020 15:19:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c1sm4139792pfi.136.2020.09.03.15.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 15:19:44 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 15:19:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 11/28] kbuild: lto: postpone objtool
+Message-ID: <202009031513.B558594FB9@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-12-samitolvanen@google.com>
 MIME-Version: 1.0
-References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1596795922-705-6-git-send-email-hayashi.kunihiko@socionext.com>
- <CAL_Jsq+nGtrBpzNKU9+1cHYkuQ3KBHpgwZRQfDKKUMJVSx_b1A@mail.gmail.com> <ab0f7338-045c-8565-134b-757769c9235f@socionext.com>
-In-Reply-To: <ab0f7338-045c-8565-134b-757769c9235f@socionext.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 3 Sep 2020 16:12:10 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+HnaosmJgekrS-DynGvNR742m00vLN1yCiZ4YBf3T2-Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+HnaosmJgekrS-DynGvNR742m00vLN1yCiZ4YBf3T2-Q@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] PCI: uniphier: Add iATU register support
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-12-samitolvanen@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 1:05 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> On 2020/08/18 1:48, Rob Herring wrote:
-> > On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
-> > <hayashi.kunihiko@socionext.com> wrote:
-> >>
-> >> This gets iATU register area from reg property. In Synopsys DWC version
-> >> 4.80 or later, since iATU register area is separated from core register
-> >> area, this area is necessary to get from DT independently.
-> >>
-> >> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> >> ---
-> >>   drivers/pci/controller/dwc/pcie-uniphier.c | 5 +++++
-> >>   1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> index 55a7166..93ef608 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> @@ -471,6 +471,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
-> >>          if (IS_ERR(priv->pci.dbi_base))
-> >>                  return PTR_ERR(priv->pci.dbi_base);
-> >>
-> >> +       priv->pci.atu_base =
-> >> +               devm_platform_ioremap_resource_byname(pdev, "atu");
-> >> +       if (IS_ERR(priv->pci.atu_base))
-> >> +               priv->pci.atu_base = NULL;
-> >
-> > Keystone has the same 'atu' resource setup. Please move its code to
-> > the DW core and use that.
->
-> There are some platforms that pci.atu_base is set by other way.
-> The 'atu' code shouldn't be conflicted with the following existing code.
+On Thu, Sep 03, 2020 at 01:30:36PM -0700, Sami Tolvanen wrote:
+> With LTO, LLVM bitcode won't be compiled into native code until
+> modpost_link, or modfinal for modules. This change postpones calls
+> to objtool until after these steps.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-No, it's not a conflict but needless duplication.
+For a "fail fast" style of building, it makes sense to have objtool run
+as early as possible, so it makes sense to keep the current behavior in
+non-LTO mode. I do wonder, though, if there is a real benefit to having
+"fail fast" case. I imagine a lot of automated builds are using
+--keep-going with make, and actually waiting until the end to do the
+validation means more code will get build-tested before objtool rejects
+the results. *shrug*
 
->    drivers/pci/controller/dwc/pci-keystone.c:              atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
->    drivers/pci/controller/dwc/pci-keystone.c:              pci->atu_base = atu_base;
->    drivers/pci/controller/dwc/pcie-designware.c:                   pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
->    drivers/pci/controller/dwc/pcie-intel-gw.c:     pci->atu_base = pci->dbi_base + data->pcie_atu_offset;
+> ---
+>  arch/Kconfig              |  2 +-
+>  scripts/Makefile.build    |  2 ++
+>  scripts/Makefile.modfinal | 24 ++++++++++++++++++++++--
+>  scripts/link-vmlinux.sh   | 23 ++++++++++++++++++++++-
+>  4 files changed, 47 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 71392e4a8900..7a418907e686 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -599,7 +599,7 @@ config LTO_CLANG
+>  	depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
+>  	depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
+>  	depends on ARCH_SUPPORTS_LTO_CLANG
+> -	depends on !FTRACE_MCOUNT_RECORD
+> +	depends on HAVE_OBJTOOL_MCOUNT || !(X86_64 && DYNAMIC_FTRACE)
+>  	depends on !KASAN
+>  	depends on !GCOV_KERNEL
+>  	select LTO
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index c348e6d6b436..b8f1f0d65a73 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -218,6 +218,7 @@ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),
+>  endif # USE_RECORDMCOUNT
+>  
+>  ifdef CONFIG_STACK_VALIDATION
+> +ifndef CONFIG_LTO_CLANG
+>  ifneq ($(SKIP_STACK_VALIDATION),1)
+>  
+>  __objtool_obj := $(objtree)/tools/objtool/objtool
+> @@ -253,6 +254,7 @@ objtool_obj = $(if $(patsubst y%,, \
+>  	$(__objtool_obj))
+>  
+>  endif # SKIP_STACK_VALIDATION
+> +endif # CONFIG_LTO_CLANG
+>  endif # CONFIG_STACK_VALIDATION
+>  
+>  # Rebuild all objects when objtool changes, or is enabled/disabled.
+> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+> index 1005b147abd0..909bd509edb4 100644
+> --- a/scripts/Makefile.modfinal
+> +++ b/scripts/Makefile.modfinal
+> @@ -34,10 +34,30 @@ ifdef CONFIG_LTO_CLANG
+>  # With CONFIG_LTO_CLANG, reuse the object file we compiled for modpost to
+>  # avoid a second slow LTO link
+>  prelink-ext := .lto
+> -endif
+> +
+> +# ELF processing was skipped earlier because we didn't have native code,
+> +# so let's now process the prelinked binary before we link the module.
+> +
+> +ifdef CONFIG_STACK_VALIDATION
+> +ifneq ($(SKIP_STACK_VALIDATION),1)
+> +cmd_ld_ko_o +=								\
+> +	$(objtree)/tools/objtool/objtool				\
+> +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
+> +		--module						\
+> +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
+> +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
+> +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
+> +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
+> +		$(if $(USE_OBJTOOL_MCOUNT),--mcount,)			\
+> +		$(@:.ko=$(prelink-ext).o);
+> +
+> +endif # SKIP_STACK_VALIDATION
+> +endif # CONFIG_STACK_VALIDATION
 
-This one should have had an 'atu' region in DT.
+I wonder if objtool_args could be reused here instead of having two
+places to keep in sync? It looks like that might mean moving things
+around a bit before this patch, since I can't quite see if
+Makefile.build's variables are visible to Makefile.modfinal?
 
->    drivers/pci/controller/dwc/pcie-tegra194.c:     pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+> +
+> +endif # CONFIG_LTO_CLANG
+>  
+>  quiet_cmd_ld_ko_o = LD [M]  $@
+> -      cmd_ld_ko_o =                                                     \
+> +      cmd_ld_ko_o +=                                                     \
+>  	$(LD) -r $(KBUILD_LDFLAGS)					\
+>  		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
+>  		$(addprefix -T , $(KBUILD_LDS_MODULE))			\
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index 3e99a19b9195..a352a5ad9ef7 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -93,8 +93,29 @@ objtool_link()
+>  {
+>  	local objtoolopt;
+>  
+> +	if [ "${CONFIG_LTO_CLANG} ${CONFIG_STACK_VALIDATION}" = "y y" ]; then
+> +		# Don't perform vmlinux validation unless explicitly requested,
+> +		# but run objtool on vmlinux.o now that we have an object file.
+> +		if [ -n "${CONFIG_UNWINDER_ORC}" ]; then
+> +			objtoolopt="orc generate"
+> +		else
+> +			objtoolopt="check"
+> +		fi
+> +
+> +		if [ -n ${USE_OBJTOOL_MCOUNT} ]; then
+> +			objtoolopt="${objtoolopt} --mcount"
+> +		fi
+> +	fi
+> +
+>  	if [ -n "${CONFIG_VMLINUX_VALIDATION}" ]; then
+> -		objtoolopt="check --vmlinux"
+> +		if [ -z "${objtoolopt}" ]; then
+> +			objtoolopt="check --vmlinux"
+> +		else
+> +			objtoolopt="${objtoolopt} --vmlinux"
+> +		fi
+> +	fi
+> +
+> +	if [ -n "${objtoolopt}" ]; then
+>  		if [ -z "${CONFIG_FRAME_POINTER}" ]; then
+>  			objtoolopt="${objtoolopt} --no-fp"
+>  		fi
+> -- 
+> 2.28.0.402.g5ffc5be6b7-goog
+> 
 
-Unfortunately, a different name was used. That is the mess which is
-the DW PCI controller.
-
->
-> So I'm not sure where to move the code in the DW core.
-> Is there any idea?
-
-You just need this and then remove the keystone code:
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-b/drivers/pci/controller/dwc/pcie-designware.c
-index b723e0cc41fb..680084467447 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -556,6 +556,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
-                                       dw_pcie_iatu_unroll_enabled(pci))) {
-                pci->iatu_unroll_enabled = true;
-                if (!pci->atu_base)
-+                       pci->atu_base =
-devm_platform_ioremap_resource_byname(pdev, "atu");
-+               if (IS_ERR(pci->atu_base))
-                        pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
-        }
-        dev_dbg(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
+-- 
+Kees Cook
