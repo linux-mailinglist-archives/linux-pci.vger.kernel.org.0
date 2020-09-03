@@ -2,112 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79DA825CA9D
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 22:34:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A59D25CC89
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 23:44:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgICUeR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 16:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35492 "EHLO
+        id S1726397AbgICVou (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 17:44:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729623AbgICUdO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 16:33:14 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94FEC061A1D
-        for <linux-pci@vger.kernel.org>; Thu,  3 Sep 2020 13:31:54 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id k74so3981995ybf.23
-        for <linux-pci@vger.kernel.org>; Thu, 03 Sep 2020 13:31:54 -0700 (PDT)
+        with ESMTP id S1728491AbgICVop (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 17:44:45 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C5BC061247
+        for <linux-pci@vger.kernel.org>; Thu,  3 Sep 2020 14:44:44 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e33so3186198pgm.0
+        for <linux-pci@vger.kernel.org>; Thu, 03 Sep 2020 14:44:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=3m31rwYywYePbNZAmvKakEWxPdLPkgQobcut8O2cWG8=;
-        b=VrQ+aR64rJWvhe7qjvWHs3a3oZWcccWruofQtzpu1HjveXL8xoPtaOlTNWbvDUD61B
-         CoQzytJVd31K/jZ98Hg6Rczs0j7T787BLqQ5rqWRSzjudgYpVfrS9u0CsEHLtYnV1HXj
-         NBkXfjSc2/VDWHrHbvNxyyimbc/ENPMtS0Y4BlD1srNMrvDB6zxF7/e4JTm8bBAhExmj
-         LBbYZBX5JZqg1Vi4vTQXgFJ8/sXigHGqY1/Ls2EwD9Mkv+uzMqNXG3LvVwSRu3v/TI6m
-         0G3wr9PaIys5H7yv+q5Zpneul8N+hYLXyyZ0Ns0Se+O9j2y9H4vAevWAkkxVlU5oauch
-         vreg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wkni4eXx9E7Yx63VN0+vnviLhaoHNM+yB8xZjp7w5hM=;
+        b=O5o59mUdRprA27/bBNjMETG5FChmb/k7jW6G/CEqPxqkNExuhCDFNEGkwkwsAAOk9B
+         S/ND1TkN2Kb21Yt+dermQ1eJzMamhppfZcA/5BLAHvK0xooF6lH1S7/GgEK+o+mFn5sC
+         Q+9Q6xNOHekU+wFfZY8e2e5GVn6y3TV0ytjI0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=3m31rwYywYePbNZAmvKakEWxPdLPkgQobcut8O2cWG8=;
-        b=JVzIwoArX1FyzWGh/G/fwOzWF2IUYSUA+89WbWrk3+Ogm0ZCK1p1rRpJliNjv1Me4K
-         s2SKPEvdTo+zseslxJ5RfAS5MSVu9IH0TtWrORjD9tu46EYijTutGNXxOCxs7XjKgkOh
-         RBxK+r0I59jcfTTKQUf3spW7g9NgxBzr7IwhJiZZaSG6S5BYNN9ulEyrlmhM9BqtIFY3
-         FRUKjKe1XjTm2CIfPp6XM+Z45aPUuqk6qqL+PXaztNPcD8k+pKFtsgxISCthCriX/+T8
-         9TPn+J0s856X55q5NU6Fi3kNPWcFg/srLoibOQibfwBXXDq+GUTEBmTG9ezmJQ4ZAQOZ
-         WoUA==
-X-Gm-Message-State: AOAM531T3drx2taYdzan6tJ5B9bAtw+A3/fIx+8/ae1wuyIn3gKeScq6
-        VnAQRqOdgx25HV/3iGHpM7Tua99+2GQf2J/w9Lg=
-X-Google-Smtp-Source: ABdhPJzAEZ6HmlaoXFTkGyE0iiWNV3l9gW+re2enIfjvIje5wJCTs+Cu5Q/oOeRF8HT4Mmvs4O3RMcG4QddEnv8aRg0=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a25:2006:: with SMTP id
- g6mr5905482ybg.143.1599165114037; Thu, 03 Sep 2020 13:31:54 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 13:30:53 -0700
-In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
-Message-Id: <20200903203053.3411268-29-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v2 28/28] x86, build: allow LTO_CLANG and THINLTO to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wkni4eXx9E7Yx63VN0+vnviLhaoHNM+yB8xZjp7w5hM=;
+        b=slVsFp9pykmLXF2o0i/3jILahDxmTpf1a+EmiYos8Q+JiXg+fhQmbOsQKTaFSQv5oe
+         jvIvegFoqYEPF2rkrjvl0DUx9W89TWu90OM+8mwuV6El9f609nyE6MzdcwfqM4VPktgY
+         q2EP4gzGpeJmLWLDCLwBncsFrLBU44/TbKPeArdn6yTFKR2/r6/5uCGviu1iF0Nn1UjT
+         QZOeOjc+dtrPHkG4pyUBkMCW4iQ1kOcknbgT4f0RS7SZgYvwS20D3PPVtkfJ6UNPVMgy
+         rbharyQF2NFTiSQVJ8+MmNJyA1sd5mfI4iH6tYALMMYpK69EwnG6S98JLP0eWrdDQrYQ
+         GNVw==
+X-Gm-Message-State: AOAM53179/0EPFZTcqMmugYadLSoauQDMHft8BLuCgWkztKtJqFTgbPJ
+        jH7cirHBYpXOGmn2b3NoaUqPwg==
+X-Google-Smtp-Source: ABdhPJzAv2fIwHx5fjsh6FyQ4DUXacQqnpd1HrcO3mYGfEva7Q9zQka0PVlCAE3Ap8Ww7DWt19mfFg==
+X-Received: by 2002:a62:1809:: with SMTP id 9mr5726960pfy.217.1599169483379;
+        Thu, 03 Sep 2020 14:44:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d77sm4259177pfd.121.2020.09.03.14.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 14:44:42 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 14:44:41 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         clang-built-linux@googlegroups.com,
         kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        x86@kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v2 01/28] x86/boot/compressed: Disable relocation
+ relaxation
+Message-ID: <202009031444.F2ECA89E@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-2-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-2-samitolvanen@google.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Allow CONFIG_LTO_CLANG and CONFIG_THINLTO to be enabled.
+On Thu, Sep 03, 2020 at 01:30:26PM -0700, Sami Tolvanen wrote:
+> From: Arvind Sankar <nivedita@alum.mit.edu>
+> 
+> The x86-64 psABI [0] specifies special relocation types
+> (R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
+> Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
+> can take advantage of for optimization (relaxation) at link time. This
+> is supported by LLD and binutils versions 2.26 onwards.
+> 
+> The compressed kernel is position-independent code, however, when using
+> LLD or binutils versions before 2.27, it must be linked without the -pie
+> option. In this case, the linker may optimize certain instructions into
+> a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
+> 
+> This potential issue has been present with LLD and binutils-2.26 for a
+> long time, but it has never manifested itself before now:
+> - LLD and binutils-2.26 only relax
+> 	movq	foo@GOTPCREL(%rip), %reg
+>   to
+> 	leaq	foo(%rip), %reg
+>   which is still position-independent, rather than
+> 	mov	$foo, %reg
+>   which is permitted by the psABI when -pie is not enabled.
+> - gcc happens to only generate GOTPCREL relocations on mov instructions.
+> - clang does generate GOTPCREL relocations on non-mov instructions, but
+>   when building the compressed kernel, it uses its integrated assembler
+>   (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
+>   which has so far defaulted to not generating the GOTPCRELX
+>   relocations.
+> 
+> Nick Desaulniers reports [1,2]:
+>   A recent change [3] to a default value of configuration variable
+>   (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+>   integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+>   relocations. LLD will relax instructions with these relocations based
+>   on whether the image is being linked as position independent or not.
+>   When not, then LLD will relax these instructions to use absolute
+>   addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
+>   Clang and linked with LLD to fail to boot.
+> 
+> Patch series [4] is a solution to allow the compressed kernel to be
+> linked with -pie unconditionally, but even if merged is unlikely to be
+> backported. As a simple solution that can be applied to stable as well,
+> prevent the assembler from generating the relaxed relocation types using
+> the -mrelax-relocations=no option. For ease of backporting, do this
+> unconditionally.
+> 
+> [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
+> [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
+> [2] https://github.com/ClangBuiltLinux/linux/issues/1121
+> [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
+> [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
+> 
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/x86/Kconfig  | 2 ++
- arch/x86/Makefile | 5 +++++
- 2 files changed, 7 insertions(+)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 6de2e5c0bdba..0a49008c2363 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -92,6 +92,8 @@ config X86
- 	select ARCH_SUPPORTS_ACPI
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
-+	select ARCH_SUPPORTS_LTO_CLANG		if X86_64
-+	select ARCH_SUPPORTS_THINLTO		if X86_64
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 4346ffb2e39f..49e3b8674eb5 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -173,6 +173,11 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
- 	KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
- endif
- 
-+ifdef CONFIG_LTO_CLANG
-+KBUILD_LDFLAGS	+= -plugin-opt=-code-model=kernel \
-+		   -plugin-opt=-stack-alignment=$(if $(CONFIG_X86_32),4,8)
-+endif
-+
- # Workaround for a gcc prelease that unfortunately was shipped in a suse release
- KBUILD_CFLAGS += -Wno-sign-compare
- #
 -- 
-2.28.0.402.g5ffc5be6b7-goog
-
+Kees Cook
