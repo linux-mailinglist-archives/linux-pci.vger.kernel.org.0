@@ -2,113 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D17A725CD6F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 00:25:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5DE225CD71
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 00:26:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgICWZr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 18:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgICWZq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:25:46 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACBE820897;
-        Thu,  3 Sep 2020 22:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599171945;
-        bh=UIAXSve0SRrcUd0B8D3XS6dXgn/vQBkLbJ8pkN798Co=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qluRU6tE3yEoLU2P/PGujeCsrKHYEEuTTVUhauwotQKC7B9OoafcrZW39TyQ+RWuU
-         AOBoW9Eo44laSXkfHd3e6+DkRHt1Hu8KHa4U+OZiPVTYjSbeSWkfXmMuCDJEepbSRJ
-         qccqng13joImKSahk+j3VAVuPZWx1O5WrcMQfqtk=
-Received: by mail-oi1-f173.google.com with SMTP id 3so4765417oih.0;
-        Thu, 03 Sep 2020 15:25:45 -0700 (PDT)
-X-Gm-Message-State: AOAM530a2GkD2fS6KFhiNQVGHp3iCAWAI4y5ws74NCVzpiQTpxa8eEuD
-        LJfzLpJwfHSXX8d2klYoFG0UqAbgOW+msB0+Bw==
-X-Google-Smtp-Source: ABdhPJwrVduZhw2vlihPd2/Z7wXfAVL2xOnsNA6Q5zcbi6DAiVrLsMvntTI9GWRi9G26Rm5JgVmKH/NsVP5BMycbvEE=
-X-Received: by 2002:aca:1711:: with SMTP id j17mr3621820oii.152.1599171945008;
- Thu, 03 Sep 2020 15:25:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
- <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com> <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
-In-Reply-To: <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 3 Sep 2020 16:25:33 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
-Message-ID: <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
-Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
- get phy
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
+        id S1727804AbgICW0v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 18:26:51 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:54290 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728127AbgICW0v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 18:26:51 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 083MQOD4014891
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 3 Sep 2020 17:26:28 -0500
+Message-ID: <56d2f113acef3055d3bf771fa6cd7c976fc6da65.camel@kernel.crashing.org>
+Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, will@kernel.org,
+        catalin.marinas@arm.com
+Date:   Fri, 04 Sep 2020 08:26:23 +1000
+In-Reply-To: <20200903110844.GB11284@e121166-lin.cambridge.arm.com>
+References: <20200831151827.pumm2p54fyj7fz5s@amazon.com>
+         <20200902113207.GA27676@e121166-lin.cambridge.arm.com>
+         <20200902142922.xc4x6m33unkzewuh@amazon.com>
+         <20200902164702.GA30611@e121166-lin.cambridge.arm.com>
+         <edae1eeb0da578d941cfa5ad550eb0a0eda5f98e.camel@kernel.crashing.org>
+         <20200903110844.GB11284@e121166-lin.cambridge.arm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 1:05 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> On 2020/08/18 1:39, Rob Herring wrote:
-> > On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
-> > <hayashi.kunihiko@socionext.com> wrote:
-> >>
-> >> Even if phy driver doesn't probe, the error message can't be distinguished
-> >> from other errors. This displays error message caused by the phy driver
-> >> explicitly.
-> >>
-> >> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> >> ---
-> >>   drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
-> >>   1 file changed, 6 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> index 93ef608..7c8721e 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
-> >>                  return PTR_ERR(priv->rst);
-> >>
-> >>          priv->phy = devm_phy_optional_get(dev, "pcie-phy");
-> >
-> > The point of the optional variant vs. devm_phy_get() is whether or not
-> > you get an error message. So shouldn't you switch to devm_phy_get
-> > instead?
-> >
-> >> -       if (IS_ERR(priv->phy))
-> >> -               return PTR_ERR(priv->phy);
-> >> +       if (IS_ERR(priv->phy)) {
-> >> +               ret = PTR_ERR(priv->phy);
-> >> +               if (ret != -EPROBE_DEFER)
-> >> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
-> >> +               return ret;
-> >> +       }
->
-> The 'phys' property is optional, so if there isn't 'phys' in the PCIe node,
-> devm_phy_get() returns -ENODEV, and devm_phy_optional_get() returns NULL.
->
-> When devm_phy_optional_get() replaces devm_phy_get(),
-> condition for displaying an error message changes to:
->
->     (ret != -EPROBE_DEFER && ret != -ENODEV)
->
-> This won't be simple, but should it be replaced?
+On Thu, 2020-09-03 at 12:08 +0100, Lorenzo Pieralisi wrote:
+> "Additional Guidance on the Prefetchable Bit in Memory Space BARs"
+> 
+> I read it 100 times and I still have no idea how it can be
+> implemented,
+> it sorts of acknowledges that read side-effects memory can be marked
+> as a prefetchable BAR *if* the system meets some criteria.
+> 
+> As if endpoint designers knew the system where their endpoint is
+> plugged into (+ bit (3) in a BAR is read-only).
+> 
+> I think that that implementation note must be removed from the
+> specifications - if anyone dares to follow it this whole
+> WC resource mapping can trigger trouble.
 
-Nevermind. I was thinking we had some error prints for the optional
-vs. non-optional variants.
+Ah that one ! Yes you are right its completely broken.
 
-Rob
+This part of the spec aims at working around the fact that bridges only
+have 64-bit prefetchable windows, so anything non-pref has to go below
+a 32-bit bridge window (effectively making most 64-bit non-pref BARs a
+pointless waste of silicon).
+
+The right fix of course would have been to create a new type of bridge
+window. But PCI...
+
+If you're going to mess around with the SIG, I would suggest that a
+better approach short of the above would be to allow system software to
+put 64-bit non-pref BARs below bridge pref windows on PCIe (provided
+the various otehr restrictions in that note are honored such as bridges
+not prefetching) and leave it at that. (Unless they already do
+somewhere else, I forgot ...).
+
+This should be sufficient to address the space concern without killing
+the meaning of the prefetchable bit.
+
+As for enabling the _wc files in sysfs, well, you need some serious
+priviledge to be able to access them, so I don't see a big issue 
+allowing them to exist when "prefetchable" is set regardless of that
+rule. The Mellanox case might be different.
+
+Cheers,
+Ben.
+
