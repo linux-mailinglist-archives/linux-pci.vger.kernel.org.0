@@ -2,117 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8F3325C6FB
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 18:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E6D525C71E
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 18:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgICQfV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 12:35:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45216 "EHLO mga12.intel.com"
+        id S1728358AbgICQlU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 12:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgICQfV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:35:21 -0400
-IronPort-SDR: zJ7A4drycomACfX8t+3H0QGwvmbHvmN8ENE1T/eCp1ACLow9IR3Wpqk0LlCk9+wQ5KEsilcL4v
- SDswZI3eDxYQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="137134895"
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="137134895"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 09:35:21 -0700
-IronPort-SDR: fpm2EUkci2oTbjGtopGBquDwwKng+PMe+foZPSI3HK+bv08KmruAxr7wF/55ACFaKSLBoUxQVH
- vLRGOXY9BheA==
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="503124720"
-Received: from araj-mobl1.jf.intel.com ([10.254.124.120])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 09:35:18 -0700
-Date:   Thu, 3 Sep 2020 09:35:16 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-Message-ID: <20200903163516.GA23129@araj-mobl1.jf.intel.com>
-References: <20200826111628.794979401@linutronix.de>
+        id S1728085AbgICQlU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:41:20 -0400
+Received: from localhost (55.sub-174-234-138.myvzw.com [174.234.138.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7EBF206A5;
+        Thu,  3 Sep 2020 16:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599151279;
+        bh=3KX20nfc0qP69OxAQSYdNpjTUWYh1Rv29qTyzvJYDL0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KZxkOU9JUDbmO+/OsJ3lmIQLP6hIK33UDQ99BF9SD8/2BjE64nCL39abZUgtv6vbM
+         4Jh+wGAdtLOxyIASaZKwqOHV7HkBiesmlVCRJTL0+lA5k6ZM7x6DgaI6keks35TUKj
+         nyhreDGJhc+G1U4mxvSMdwOYdD6eBKOIQgVmRG+w=
+Date:   Thu, 3 Sep 2020 11:41:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
+        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
+Message-ID: <20200903164117.GA312152@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200826111628.794979401@linutronix.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <1599075996-9826-2-git-send-email-mjrosato@linux.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:
+> Per the PCIe spec, VFs cannot implement the MSE bit
+> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
+> Use a dev_flags bit to signify this requirement.
 
-Thanks a ton for jumping in helping on straightening it for IMS!!!
+This approach seems sensible to me, but
 
+  - This is confusing because while the spec does not use "MSE" to
+    refer to the Command Register "Memory Space Enable" bit
+    (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
+    "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
+    course, you're not talking about that here.  Maybe something like
+    this?
 
-On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
-> This is the second version of providing a base to support device MSI (non
-> PCI based) and on top of that support for IMS (Interrupt Message Storm)
+      For VFs, the Memory Space Enable bit in the Command Register is
+      hard-wired to 0.
 
-s/Storm/Store
+      Add a dev_flags bit to signify devices where the Command
+      Register Memory Space Enable bit does not control the device's
+      response to MMIO accesses.
 
-maybe pun intended :-)
+  - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
+    plan to *use* this, but I'd rather use a term that describes the
+    hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".
 
-> based devices in a halfways architecture independent way.
+  - How do we decide whether to use dev_flags vs a bitfield like
+    dev->is_virtfn?  The latter seems simpler unless there's a reason
+    to use dev_flags.  If there's a reason, maybe we could add a
+    comment at pci_dev_flags for future reference.
 
-You mean "halfways" because the message addr and data follow guidelines
-per arch (x86 or such), but the location of the storage isn't dictated
-by architecture? or did you have something else in mind? 
+  - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
+    that's what I use for consistency.
 
+> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> ---
+>  drivers/pci/iov.c   | 1 +
+>  include/linux/pci.h | 2 ++
+>  2 files changed, 3 insertions(+)
 > 
-> The first version can be found here:
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index b37e08c..2bec77c 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  	virtfn->device = iov->vf_device;
+>  	virtfn->is_virtfn = 1;
+>  	virtfn->physfn = pci_dev_get(dev);
+> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
+>  
+>  	if (id == 0)
+>  		pci_read_vf_config_common(virtfn);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8355306..9316cce 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -227,6 +227,8 @@ enum pci_dev_flags {
+>  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+>  	/* Don't use Relaxed Ordering for TLPs directed at this device */
+>  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
+> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
+>  };
+>  
+>  enum pci_irq_reroute_variant {
+> -- 
+> 1.8.3.1
 > 
->     https://lore.kernel.org/r/20200821002424.119492231@linutronix.de
-> 
-
-[snip]
-
-> 
-> Changes vs. V1:
-> 
->    - Addressed various review comments and addressed the 0day fallout.
->      - Corrected the XEN logic (Jürgen)
->      - Make the arch fallback in PCI/MSI opt-in not opt-out (Bjorn)
-> 
->    - Fixed the compose MSI message inconsistency
-> 
->    - Ensure that the necessary flags are set for device SMI
-
-is that supposed to be MSI? 
-
-Cheers,
-Ashok
