@@ -2,179 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D7D125C7D5
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 19:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0958C25C883
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Sep 2020 20:11:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgICRKP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Sep 2020 13:10:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40140 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726327AbgICRKP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Sep 2020 13:10:15 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083H1lKL138973;
-        Thu, 3 Sep 2020 13:10:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=++7FG1vvQy4IQVZV74Hxz4Q2iO5xLzsWU+5iC8BgQ/I=;
- b=ccrlz93xGaSI0r82viEIaGk3v5n6gPRGSSws8DK5mKCbN3V6GWDFi0Pveb/7oJ5MVmK1
- DYdiiJb4Jw2aNjPTbO++Q2vJvVPFC8y+bwOmIrNj1GK0gFCsygmU7R6pNlL1m30SQFl9
- 4M9qmKS1SUWXDWx2Olloa1mrt1dIewZL2OGloV8R0p0a5pfXVypXuNxtkst/Rvkd9rp7
- 9jBUCAzEEWm95czZOk1F5/3NYDpsh1+aXMB+by4Bi8KBt5l2AyKAt0Ewc/V4QZnGNh8G
- qQUuYKHXgTjI9o0xU6uof75NiwsFMH5xTmL4EmfU8epqz4BRmXjqg8Hk6hCqu5XRYI9p rQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b3dx2h2r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 13:10:08 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083H2bnW145734;
-        Thu, 3 Sep 2020 13:10:07 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b3dx2h1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 13:10:07 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083H7VBO017133;
-        Thu, 3 Sep 2020 17:10:05 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02wdc.us.ibm.com with ESMTP id 337ena19uj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 17:10:05 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083HA1wp26739064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Sep 2020 17:10:01 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8499E13604F;
-        Thu,  3 Sep 2020 17:10:04 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6ED36136065;
-        Thu,  3 Sep 2020 17:10:03 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.163.10.164])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Sep 2020 17:10:03 +0000 (GMT)
-Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20200903164117.GA312152@bjorn-Precision-5520>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Message-ID: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
-Date:   Thu, 3 Sep 2020 13:10:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1728555AbgICSLg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Sep 2020 14:11:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgICSLZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:11:25 -0400
+Received: from localhost (55.sub-174-234-138.myvzw.com [174.234.138.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E17A20716;
+        Thu,  3 Sep 2020 18:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599156684;
+        bh=9OQ6/l82T1f7wosSp1Pg7MtoE6PYah+luXycZs6L/OM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KLjXtvFZMcMfcu3r4VRJUp0fWh0EnayfDlHlwFTOgpfVICGogs1eWfgbqX39Yr78h
+         qaSRdtUZtGWLxe1afF4vOdEtYpkW/83mRW5wc74yt8XYBcH3eYH1Mzpfo0D3NZL6mg
+         aSikEVDrBjGCWdsB5Bl6/i71zWElSP1w2F7QosbA=
+Date:   Thu, 3 Sep 2020 13:11:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add a quirk to skip 1000 ms default link activation
+ delay on some devices
+Message-ID: <20200903181122.GA313490@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200903164117.GA312152@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-03_10:2020-09-03,2020-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 suspectscore=0
- spamscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009030155
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831093147.36775-1-mika.westerberg@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
-> On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:
->> Per the PCIe spec, VFs cannot implement the MSE bit
->> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
->> Use a dev_flags bit to signify this requirement.
+On Mon, Aug 31, 2020 at 12:31:47PM +0300, Mika Westerberg wrote:
+> Kai-Heng Feng reported that it takes a long time (> 1 s) to resume
+> Thunderbolt-connected devices from both runtime suspend and system sleep
+> (s2idle).
 > 
-> This approach seems sensible to me, but
+> This was because some Downstream Ports that support > 5 GT/s do not also
+> support Data Link Layer Link Active reporting.  Per PCIe r5.0 sec 6.6.1:
 > 
->    - This is confusing because while the spec does not use "MSE" to
->      refer to the Command Register "Memory Space Enable" bit
->      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
->      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
->      course, you're not talking about that here.  Maybe something like
->      this?
+>   With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
+>   software must wait a minimum of 100 ms after Link training completes
+>   before sending a Configuration Request to the device immediately below
+>   that Port. Software can determine when Link training completes by
+>   polling the Data Link Layer Link Active bit or by setting up an
+>   associated interrupt (see Section 6.7.3.3).
 > 
->        For VFs, the Memory Space Enable bit in the Command Register is
->        hard-wired to 0.
+> Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting,
+> but at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and
+> Intel JHL7540 Thunderbolt 3 Bridge [8086:15e7, 8086:15ea, 8086:15ef] do
+> not.
+
+Is there any erratum about this?  I'm just hoping to avoid the
+maintenance hassle of adding new devices to the quirk.  If Intel
+acknowledges this as a defect and has a plan to fix it, that would
+help a lot.  If they *don't* think it's a defect, then maybe they have
+a hint about how we should handle this generically.
+
+> This adds a quirk for these devices that skips the the 1000 ms default
+> link activation delay.
 > 
->        Add a dev_flags bit to signify devices where the Command
->        Register Memory Space Enable bit does not control the device's
->        response to MMIO accesses.
-
-Will do.  I'll change the usage of the MSE acronym in the other patches 
-as well.
-
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
+> Link: https://lore.kernel.org/r/20200514133043.27429-1-mika.westerberg@linux.intel.com
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+> Hi all,
 > 
->    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
->      plan to *use* this, but I'd rather use a term that describes the
->      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".
-
-Sure, I will change.
-
+> The previous version of the patch can be found below:
 > 
->    - How do we decide whether to use dev_flags vs a bitfield like
->      dev->is_virtfn?  The latter seems simpler unless there's a reason
->      to use dev_flags.  If there's a reason, maybe we could add a
->      comment at pci_dev_flags for future reference.
+>   https://www.spinics.net/lists/linux-pci/msg97860.html
 > 
-
-Something like:
-
-/*
-  * Device does not implement PCI_COMMAND_MEMORY - this is true for any
-  * device marked is_virtfn, but is also true for any VF passed-through
-  * a lower-level hypervisor where emulation of the Memory Space Enable
-  * bit was not provided.
-  */
-PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
-
-?
-
->    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
->      that's what I use for consistency.
-
-Sure, will do.  I'll roll up a new version once I have feedback from 
-Alex on the vfio changes.
-
+> This version adds a quirk instead covering the two devices Kai-Heng Feng
+> reported. I added Titan Ridge DD and 2C because I think they are affected
+> as well.
 > 
->> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->> ---
->>   drivers/pci/iov.c   | 1 +
->>   include/linux/pci.h | 2 ++
->>   2 files changed, 3 insertions(+)
->>
->> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
->> index b37e08c..2bec77c 100644
->> --- a/drivers/pci/iov.c
->> +++ b/drivers/pci/iov.c
->> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->>   	virtfn->device = iov->vf_device;
->>   	virtfn->is_virtfn = 1;
->>   	virtfn->physfn = pci_dev_get(dev);
->> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
->>   
->>   	if (id == 0)
->>   		pci_read_vf_config_common(virtfn);
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 8355306..9316cce 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -227,6 +227,8 @@ enum pci_dev_flags {
->>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
->>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
->>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
->> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
->> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
->>   };
->>   
->>   enum pci_irq_reroute_variant {
->> -- 
->> 1.8.3.1
->>
-
+> Since the PCI IDs of these devices are now used in two places, I moved them
+> from TBT driver to pci_ids.h.
+> 
+> @Kai-Heng, if you still have access to this hardware, it would be great if
+> you could try this out.
+> 
+>  drivers/pci/pci.c         |  2 ++
+>  drivers/pci/quirks.c      | 23 +++++++++++++++++++++++
+>  drivers/thunderbolt/nhi.h |  4 ----
+>  include/linux/pci.h       |  5 +++++
+>  include/linux/pci_ids.h   |  4 ++++
+>  5 files changed, 34 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e39c5499770f..16b61def1d46 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4674,6 +4674,8 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+>  	 * case, we wait for 1000 ms + any delay requested by the caller.
+>  	 */
+>  	if (!pdev->link_active_reporting) {
+> +		if (active && pdev->skip_default_link_activation_delay)
+> +			timeout = 0;
+>  		msleep(timeout + delay);
+>  		return true;
+>  	}
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 2a589b6d6ed8..9269abb6455d 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3621,6 +3621,29 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_PORT_RIDGE,
+>  			quirk_thunderbolt_hotplug_msi);
+>  
+> +/*
+> + * https://bugzilla.kernel.org/show_bug.cgi?id=206837
+> + *
+> + * Non-hotplug PCIe downstream ports of these devices do not support active
+> + * link reporting but they are known to train the link within 100ms.
+> + */
+> +static void quirk_skip_default_link_activation_delay(struct pci_dev *pdev)
+> +{
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM &&
+> +	    !pdev->link_active_reporting && !pdev->is_hotplug_bridge) {
+> +		pci_dbg(pdev, "skipping 1000 ms default link activation delay\n");
+> +		pdev->skip_default_link_activation_delay = true;
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE,
+> +			quirk_skip_default_link_activation_delay);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE,
+> +			quirk_skip_default_link_activation_delay);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE,
+> +			quirk_skip_default_link_activation_delay);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE,
+> +			quirk_skip_default_link_activation_delay);
+> +
+>  #ifdef CONFIG_ACPI
+>  /*
+>   * Apple: Shutdown Cactus Ridge Thunderbolt controller.
+> diff --git a/drivers/thunderbolt/nhi.h b/drivers/thunderbolt/nhi.h
+> index 80162e4b013f..c023091f6b4e 100644
+> --- a/drivers/thunderbolt/nhi.h
+> +++ b/drivers/thunderbolt/nhi.h
+> @@ -58,7 +58,6 @@ extern const struct tb_nhi_ops icl_nhi_ops;
+>  #define PCI_DEVICE_ID_INTEL_WIN_RIDGE_2C_NHI            0x157d
+>  #define PCI_DEVICE_ID_INTEL_WIN_RIDGE_2C_BRIDGE         0x157e
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_NHI		0x15bf
+> -#define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE	0x15c0
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_NHI	0x15d2
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_BRIDGE	0x15d3
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_NHI	0x15d9
+> @@ -66,11 +65,8 @@ extern const struct tb_nhi_ops icl_nhi_ops;
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_USBONLY_NHI	0x15dc
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_USBONLY_NHI	0x15dd
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_USBONLY_NHI	0x15de
+> -#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE	0x15e7
+>  #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI		0x15e8
+> -#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE	0x15ea
+>  #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI		0x15eb
+> -#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE	0x15ef
+>  #define PCI_DEVICE_ID_INTEL_ICL_NHI1			0x8a0d
+>  #define PCI_DEVICE_ID_INTEL_ICL_NHI0			0x8a17
+>  #define PCI_DEVICE_ID_INTEL_TGL_NHI0			0x9a1b
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 835530605c0d..c44ee4337a2a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -444,6 +444,11 @@ struct pci_dev {
+>  	unsigned int	non_compliant_bars:1;	/* Broken BARs; ignore them */
+>  	unsigned int	is_probed:1;		/* Device probing in progress */
+>  	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
+> +	/*
+> +	 * Skip default 1000 ms wait on ports that do not support active
+> +	 * link reporting (link_active_reporting == 0).
+> +	 */
+> +	unsigned int	skip_default_link_activation_delay:1;
+>  	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
+>  	pci_dev_flags_t dev_flags;
+>  	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 1ab1e24bcbce..315b555b3444 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2711,6 +2711,10 @@
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_2C_BRIDGE  0x1576
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI     0x1577
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE  0x1578
+> +#define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE  0x15c0
+> +#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE   0x15e7
+> +#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE   0x15ea
+> +#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE   0x15ef
+>  #define PCI_DEVICE_ID_INTEL_80960_RP	0x1960
+>  #define PCI_DEVICE_ID_INTEL_QAT_C3XXX	0x19e2
+>  #define PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF	0x19e3
+> -- 
+> 2.28.0
+> 
