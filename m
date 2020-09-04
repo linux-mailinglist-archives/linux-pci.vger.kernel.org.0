@@ -2,90 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 036A725E095
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 19:13:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E942125E1A7
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 20:55:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgIDRNo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 13:13:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:46046 "EHLO mga17.intel.com"
+        id S1726277AbgIDSzL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 14:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgIDRNo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:13:44 -0400
-IronPort-SDR: iWYUxgCEQRG6+jCPbjuPj+omLA7gMMW8e88e6ZIUBQRUxZoYTWUo2LVXoq1VbDmhPhhT2CUW94
- a/Vo4u39YbYw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="137840887"
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="137840887"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 10:13:32 -0700
-IronPort-SDR: 8ic/UQ8nHq0W1toGxtslaSOFbB8wLYPYYZ4Jgjn5IrhbS8Ir1sUbXL64NOqoPKATzWdehYMY/N
- RzylmbOkf7yQ==
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="478575139"
-Received: from jderrick-mobl.amr.corp.intel.com ([10.252.142.77])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 10:13:32 -0700
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH] PCI: vmd: Add AHCI to fast interrupt list
-Date:   Fri,  4 Sep 2020 11:13:25 -0600
-Message-Id: <20200904171325.64959-1-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 2.25.4
+        id S1726221AbgIDSzK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Sep 2020 14:55:10 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C483206B7
+        for <linux-pci@vger.kernel.org>; Fri,  4 Sep 2020 18:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599245710;
+        bh=i8O7u3HqWp1gqN3thqoJWvEdSlSh2vSIHRzh1/oKX9E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Gu1EuGsloz83y8fKjLqPKOCQXpdTwXOUeUElDOYQsiZLPeh6z3Wo9qD+9zDH2S6nG
+         1zs6DclhjZl95Cy59mYbUQQ1WblJ7KoZYNPDp0kn9bwouSv7HP+MWurRzUyiCkVXhy
+         mu5Ruic7aFFN3R2YqtxznIsgpEGJF7NiH3c0sdaE=
+Received: by mail-oi1-f181.google.com with SMTP id w16so7483950oia.2
+        for <linux-pci@vger.kernel.org>; Fri, 04 Sep 2020 11:55:10 -0700 (PDT)
+X-Gm-Message-State: AOAM533NTGVs2D+xTBajJ7NUmms88no/xxRT0cq5uiVbHTBxTzAc31Kr
+        6x8+mfalca7FiDlvrZ6YLOqB8XwEzAYQZpP32w==
+X-Google-Smtp-Source: ABdhPJxuIOuSQjWModMalFgqxXPB0QIQz9a2SuXzhvdHMYgV5RX3YmToPpqoM9Zo/G9j8nH7clnd7ou5pkNLCHDBHSg=
+X-Received: by 2002:aca:4cc7:: with SMTP id z190mr6328397oia.147.1599245709496;
+ Fri, 04 Sep 2020 11:55:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200904140904.944-1-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20200904140904.944-1-lorenzo.pieralisi@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 4 Sep 2020 12:54:58 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+CcY-50NgwyF9Mh2uvgLF_rd0pfjyo=v=X0JAGJcs++A@mail.gmail.com>
+Message-ID: <CAL_Jsq+CcY-50NgwyF9Mh2uvgLF_rd0pfjyo=v=X0JAGJcs++A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rockchip: Fix bus checks in rockchip_pcie_valid_device()
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some platforms have an AHCI controller behind VMD. These platforms are
-working correctly except for a case when the AHCI MSI is programmed with
-VMD IRQ vector 0 (0xfee00000). When programmed with any other interrupt
-(0xfeeNN000), the MSI is routed correctly and is handled by VMD. Placing
-the AHCI MSI(s) in the fast-interrupt allow list solves the issue.
+On Fri, Sep 4, 2020 at 8:09 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> The root bus checks rework in:
+>
+> commit d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus")
+>
+> caused a regression whereby in rockchip_pcie_valid_device() if
+> the bus parameter is the root bus and the dev value == 0 the
+> function should return 1 (ie true) without checking if the
+> bus->parent pointer is a root bus because that triggers a NULL
+> pointer dereference.
+>
+> Fix this by streamlining the root bus detection.
+>
+> Fixes: d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus")
+> Reported-by: Samuel Dionne-Riel <samuel@dionne-riel.com>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+>  drivers/pci/controller/pcie-rockchip-host.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
 
-This also requires that VMD allocate more than one MSI/X vector and
-changes the minimum MSI/X vectors allocated to two.
+Even better than my broken version.
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
----
- drivers/pci/controller/vmd.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index f69ef8c89f72..d9c72613082a 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -202,15 +202,13 @@ static struct vmd_irq_list *vmd_next_irq(struct vmd_dev *vmd, struct msi_desc *d
- 	int i, best = 1;
- 	unsigned long flags;
- 
--	if (vmd->msix_count == 1)
--		return &vmd->irqs[0];
--
- 	/*
--	 * White list for fast-interrupt handlers. All others will share the
-+	 * Allow list for fast-interrupt handlers. All others will share the
- 	 * "slow" interrupt vector.
- 	 */
- 	switch (msi_desc_to_pci_dev(desc)->class) {
- 	case PCI_CLASS_STORAGE_EXPRESS:
-+	case PCI_CLASS_STORAGE_SATA_AHCI:
- 		break;
- 	default:
- 		return &vmd->irqs[0];
-@@ -657,7 +655,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (vmd->msix_count < 0)
- 		return -ENODEV;
- 
--	vmd->msix_count = pci_alloc_irq_vectors(dev, 1, vmd->msix_count,
-+	vmd->msix_count = pci_alloc_irq_vectors(dev, 2, vmd->msix_count,
- 					PCI_IRQ_MSIX);
- 	if (vmd->msix_count < 0)
- 		return vmd->msix_count;
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
