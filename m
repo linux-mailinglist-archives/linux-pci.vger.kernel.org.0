@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0BA925D548
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 11:41:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC51825D54E
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 11:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgIDJlL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 05:41:11 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:44435 "EHLO
+        id S1729835AbgIDJmn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 05:42:43 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:44586 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDJlL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 05:41:11 -0400
+        with ESMTP id S1726171AbgIDJmm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 05:42:42 -0400
 Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0849enUC3015902, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb05.realtek.com.tw[172.21.6.98])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0849enUC3015902
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0849gPGE1016157, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0849gPGE1016157
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 4 Sep 2020 17:40:49 +0800
+        Fri, 4 Sep 2020 17:42:26 +0800
 Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 4 Sep 2020 17:40:49 +0800
+ 15.1.2044.4; Fri, 4 Sep 2020 17:42:25 +0800
 Received: from localhost (172.22.88.222) by RTEXMB01.realtek.com.tw
  (172.21.6.94) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Fri, 4 Sep 2020
- 17:40:49 +0800
+ 17:42:25 +0800
 From:   <ricky_wu@realtek.com>
 To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
         <ricky_wu@realtek.com>, <bhelgaas@google.com>,
-        <ulf.hansson@linaro.org>, <rui_feng@realsil.com>,
+        <ulf.hansson@linaro.org>, <rui_feng@realsil.com.cn>,
         <linux-kernel@vger.kernel.org>, <puranjay12@gmail.com>,
         <linux-pci@vger.kernel.org>, <vailbhavgupta40@gmail.com>
 Subject: [PATCH v4 1/2] misc: rtsx: Fix power down flow
-Date:   Fri, 4 Sep 2020 17:40:42 +0800
-Message-ID: <20200904094043.27461-1-ricky_wu@realtek.com>
+Date:   Fri, 4 Sep 2020 17:42:19 +0800
+Message-ID: <20200904094220.27533-1-ricky_wu@realtek.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
