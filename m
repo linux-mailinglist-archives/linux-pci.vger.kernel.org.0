@@ -2,29 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2893A25DF24
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 18:06:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB28E25DFB7
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 18:22:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgIDQGv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 12:06:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53797 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726385AbgIDQFv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 12:05:51 -0400
+        id S1726184AbgIDQW2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 12:22:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29164 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727058AbgIDQW2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 12:22:28 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-368-UQ4FL6l0OySj3rA8dqd6Og-1; Fri, 04 Sep 2020 12:05:46 -0400
-X-MC-Unique: UQ4FL6l0OySj3rA8dqd6Og-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-491-HoCgFCb8OrCFEH8Fj3YbhQ-1; Fri, 04 Sep 2020 12:22:22 -0400
+X-MC-Unique: HoCgFCb8OrCFEH8Fj3YbhQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29D141005E7C;
-        Fri,  4 Sep 2020 16:05:43 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55E8D189E60A;
+        Fri,  4 Sep 2020 16:22:20 +0000 (UTC)
 Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8070B10013BD;
-        Fri,  4 Sep 2020 16:05:37 +0000 (UTC)
-Subject: Re: [PATCH v3 5/6] iommu/virtio: Support topology description in
- config space
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 91E247E165;
+        Fri,  4 Sep 2020 16:22:14 +0000 (UTC)
+Subject: Re: [PATCH v3 2/6] iommu/virtio: Add topology helpers
 To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
         iommu@lists.linux-foundation.org,
         virtualization@lists.linux-foundation.org,
@@ -33,18 +32,18 @@ Cc:     joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
         jasowang@redhat.com, kevin.tian@intel.com,
         sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
 References: <20200821131540.2801801-1-jean-philippe@linaro.org>
- <20200821131540.2801801-6-jean-philippe@linaro.org>
+ <20200821131540.2801801-3-jean-philippe@linaro.org>
 From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <a52f8a2e-3453-eadf-9761-fd92a20c20f5@redhat.com>
-Date:   Fri, 4 Sep 2020 18:05:35 +0200
+Message-ID: <21fce247-4c1c-b7a8-bcac-4d7b649eaeca@redhat.com>
+Date:   Fri, 4 Sep 2020 18:22:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200821131540.2801801-6-jean-philippe@linaro.org>
+In-Reply-To: <20200821131540.2801801-3-jean-philippe@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -53,321 +52,374 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Hi Jean,
 
 On 8/21/20 3:15 PM, Jean-Philippe Brucker wrote:
-> Platforms without device-tree nor ACPI can provide a topology
-> description embedded into the virtio config space. Parse it.
+> To support topology description from ACPI and from the builtin
+> description, add helpers to keep track of I/O topology descriptors.
 > 
-> Use PCI FIXUP to probe the config space early, because we need to
-> discover the topology before any DMA configuration takes place, and the
-> virtio driver may be loaded much later. Since we discover the topology
-> description when probing the PCI hierarchy, the virtual IOMMU cannot
-> manage other platform devices discovered earlier.
+> To ease re-use of the helpers by other drivers and future ACPI
+> extensions, use the "virt_" prefix rather than "virtio_" when naming
+> structs and functions.
 > 
 > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > ---
->  drivers/iommu/Kconfig           |  12 ++
->  drivers/iommu/virtio/Makefile   |   1 +
->  drivers/iommu/virtio/topology.c | 259 ++++++++++++++++++++++++++++++++
->  3 files changed, 272 insertions(+)
->  create mode 100644 drivers/iommu/virtio/topology.c
+>  drivers/iommu/Kconfig                   |   3 +
+>  drivers/iommu/virtio/Makefile           |   1 +
+>  drivers/iommu/virtio/topology-helpers.h |  50 ++++++
+>  include/linux/virt_iommu.h              |  15 ++
+>  drivers/iommu/virtio/topology-helpers.c | 196 ++++++++++++++++++++++++
+>  drivers/iommu/virtio/virtio-iommu.c     |   4 +
+>  MAINTAINERS                             |   1 +
+>  7 files changed, 270 insertions(+)
+>  create mode 100644 drivers/iommu/virtio/topology-helpers.h
+>  create mode 100644 include/linux/virt_iommu.h
+>  create mode 100644 drivers/iommu/virtio/topology-helpers.c
 > 
 > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index e29ae50f7100..98d28fdbc19a 100644
+> index bef5d75e306b..e29ae50f7100 100644
 > --- a/drivers/iommu/Kconfig
 > +++ b/drivers/iommu/Kconfig
-> @@ -394,4 +394,16 @@ config VIRTIO_IOMMU
->  config VIRTIO_IOMMU_TOPOLOGY_HELPERS
->  	bool
+> @@ -391,4 +391,7 @@ config VIRTIO_IOMMU
 >  
-> +config VIRTIO_IOMMU_TOPOLOGY
-> +	bool "Handle topology properties from the virtio-iommu"
-> +	depends on VIRTIO_IOMMU
-> +	depends on PCI
-> +	default y
-> +	select VIRTIO_IOMMU_TOPOLOGY_HELPERS
-> +	help
-> +	  Enable early probing of virtio-iommu devices to detect the built-in
-> +	  topology description.
-> +
-> +	  Say Y here if you intend to run this kernel as a guest.
+>  	  Say Y here if you intend to run this kernel as a guest.
+>  
+> +config VIRTIO_IOMMU_TOPOLOGY_HELPERS
+> +	bool
 > +
 >  endif # IOMMU_SUPPORT
 > diff --git a/drivers/iommu/virtio/Makefile b/drivers/iommu/virtio/Makefile
-> index b42ad47eac7e..1eda8ca1cbbf 100644
+> index 279368fcc074..b42ad47eac7e 100644
 > --- a/drivers/iommu/virtio/Makefile
 > +++ b/drivers/iommu/virtio/Makefile
-> @@ -1,3 +1,4 @@
+> @@ -1,2 +1,3 @@
 >  # SPDX-License-Identifier: GPL-2.0
 >  obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
-> +obj-$(CONFIG_VIRTIO_IOMMU_TOPOLOGY) += topology.o
->  obj-$(CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS) += topology-helpers.o
-> diff --git a/drivers/iommu/virtio/topology.c b/drivers/iommu/virtio/topology.c
+> +obj-$(CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS) += topology-helpers.o
+> diff --git a/drivers/iommu/virtio/topology-helpers.h b/drivers/iommu/virtio/topology-helpers.h
 > new file mode 100644
-> index 000000000000..4923eec618b9
+> index 000000000000..436ca6a900c5
 > --- /dev/null
-> +++ b/drivers/iommu/virtio/topology.c
-> @@ -0,0 +1,259 @@
+> +++ b/drivers/iommu/virtio/topology-helpers.h
+> @@ -0,0 +1,50 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef TOPOLOGY_HELPERS_H_
+> +#define TOPOLOGY_HELPERS_H_
+> +
+> +#ifdef CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS
+> +
+> +/* Identify a device node in the topology */
+> +struct virt_topo_dev_id {
+> +	unsigned int			type;
+> +#define VIRT_TOPO_DEV_TYPE_PCI		1
+> +#define VIRT_TOPO_DEV_TYPE_MMIO		2
+> +	union {
+> +		/* PCI endpoint or range */
+> +		struct {
+> +			u16		segment;
+> +			u16		bdf_start;
+> +			u16		bdf_end;
+> +		};
+> +		/* MMIO region */
+> +		u64			base;
+> +	};
+> +};
+> +
+> +/* Specification of an IOMMU */
+> +struct virt_topo_iommu {
+> +	struct virt_topo_dev_id		dev_id;
+> +	struct device			*dev; /* transport device */
+> +	struct fwnode_handle		*fwnode;
+> +	struct iommu_ops		*ops;
+> +	struct list_head		list;
+> +};
+> +
+> +/* Specification of an endpoint */
+> +struct virt_topo_endpoint {
+> +	struct virt_topo_dev_id		dev_id;
+> +	u32				endpoint_id;
+> +	struct virt_topo_iommu		*viommu;
+> +	struct list_head		list;
+> +};
+> +
+> +void virt_topo_add_endpoint(struct virt_topo_endpoint *ep);
+> +void virt_topo_add_iommu(struct virt_topo_iommu *viommu);
+> +
+> +void virt_topo_set_iommu_ops(struct device *dev, struct iommu_ops *ops);
+> +
+> +#else /* !CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS */
+> +static inline void virt_topo_set_iommu_ops(struct device *dev, struct iommu_ops *ops)
+> +{ }
+> +#endif /* !CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS */
+> +#endif /* TOPOLOGY_HELPERS_H_ */
+> diff --git a/include/linux/virt_iommu.h b/include/linux/virt_iommu.h
+> new file mode 100644
+> index 000000000000..17d2bd4732e0
+> --- /dev/null
+> +++ b/include/linux/virt_iommu.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef VIRT_IOMMU_H_
+> +#define VIRT_IOMMU_H_
+> +
+> +#ifdef CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS
+> +int virt_dma_configure(struct device *dev);
+> +
+> +#else /* !CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS */
+> +static inline int virt_dma_configure(struct device *dev)
+> +{
+> +	/* Don't disturb the normal DMA configuration methods */
+> +	return 0;
+> +}
+> +#endif /* !CONFIG_VIRTIO_IOMMU_TOPOLOGY_HELPERS */
+> +#endif /* VIRT_IOMMU_H_ */
+> diff --git a/drivers/iommu/virtio/topology-helpers.c b/drivers/iommu/virtio/topology-helpers.c
+> new file mode 100644
+> index 000000000000..8815e3a5d431
+> --- /dev/null
+> +++ b/drivers/iommu/virtio/topology-helpers.c
+> @@ -0,0 +1,196 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 > +
-> +#include <linux/io-64-nonatomic-hi-lo.h>
-> +#include <linux/iopoll.h>
+> +#include <linux/dma-iommu.h>
 > +#include <linux/list.h>
 > +#include <linux/pci.h>
-> +#include <linux/virtio_ids.h>
-> +#include <linux/virtio_pci.h>
-> +#include <uapi/linux/virtio_config.h>
-> +#include <uapi/linux/virtio_iommu.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/virt_iommu.h>
 > +
 > +#include "topology-helpers.h"
 > +
-> +struct viommu_cap_config {
-> +	u8 bar;
-> +	u32 length; /* structure size */
-> +	u32 offset; /* structure offset within the bar */
-> +};
+> +static LIST_HEAD(viommus);
+> +static LIST_HEAD(pci_endpoints);
+> +static LIST_HEAD(mmio_endpoints);
+> +static DEFINE_MUTEX(viommus_lock);
 > +
-> +struct viommu_topo_header {
-> +	u8 type;
-> +	u8 reserved;
-> +	u16 length;
-> +};
-> +
-> +static struct virt_topo_endpoint *
-> +viommu_parse_node(void __iomem *buf, size_t len)
+> +static bool virt_topo_device_match(struct device *dev,
+> +				   struct virt_topo_dev_id *id)
 > +{
-> +	int ret = -EINVAL;
-> +	union {
-> +		struct viommu_topo_header hdr;
-> +		struct virtio_iommu_topo_pci_range pci;
-> +		struct virtio_iommu_topo_mmio mmio;
-> +	} __iomem *cfg = buf;
-> +	struct virt_topo_endpoint *spec;
+> +	if (id->type == VIRT_TOPO_DEV_TYPE_PCI && dev_is_pci(dev)) {
+> +		struct pci_dev *pdev = to_pci_dev(dev);
+> +		u16 dev_id = pci_dev_id(pdev);
 > +
-> +	spec = kzalloc(sizeof(*spec), GFP_KERNEL);
-> +	if (!spec)
-> +		return ERR_PTR(-ENOMEM);
+> +		return pci_domain_nr(pdev->bus) == id->segment &&
+> +			dev_id >= id->bdf_start &&
+> +			dev_id <= id->bdf_end;
+> +	} else if (id->type == VIRT_TOPO_DEV_TYPE_MMIO &&
+> +		   dev_is_platform(dev)) {
+> +		struct platform_device *plat_dev = to_platform_device(dev);
+> +		struct resource *mem;
 > +
-> +	switch (ioread8(&cfg->hdr.type)) {
-> +	case VIRTIO_IOMMU_TOPO_PCI_RANGE:
-> +		if (len < sizeof(cfg->pci))
-> +			goto err_free;
-> +
-> +		spec->dev_id.type = VIRT_TOPO_DEV_TYPE_PCI;
-> +		spec->dev_id.segment = ioread16(&cfg->pci.segment);
-> +		spec->dev_id.bdf_start = ioread16(&cfg->pci.bdf_start);
-> +		spec->dev_id.bdf_end = ioread16(&cfg->pci.bdf_end);
-> +		spec->endpoint_id = ioread32(&cfg->pci.endpoint_start);
-> +		break;
-> +	case VIRTIO_IOMMU_TOPO_MMIO:
-> +		if (len < sizeof(cfg->mmio))
-> +			goto err_free;
-> +
-> +		spec->dev_id.type = VIRT_TOPO_DEV_TYPE_MMIO;
-> +		spec->dev_id.base = ioread64(&cfg->mmio.address);
-> +		spec->endpoint_id = ioread32(&cfg->mmio.endpoint);
-> +		break;
-> +	default:
-> +		pr_warn("unhandled format 0x%x\n", ioread8(&cfg->hdr.type));
-> +		ret = 0;
-> +		goto err_free;
+> +		mem = platform_get_resource(plat_dev, IORESOURCE_MEM, 0);
+> +		if (!mem)
+> +			return false;
+> +		return mem->start == id->base;
 > +	}
-> +	return spec;
-> +
-> +err_free:
-> +	kfree(spec);
-> +	return ERR_PTR(ret);
+> +	return false;
 > +}
 > +
-> +static int viommu_parse_topology(struct device *dev,
-> +				 struct virtio_iommu_config __iomem *cfg,
-> +				 size_t max_len)
+> +static const struct iommu_ops *virt_iommu_setup(struct device *dev)
 > +{
+> +	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> +	struct virt_topo_iommu *viommu = NULL;
+> +	struct virt_topo_endpoint *ep;
+> +	struct pci_dev *pci_dev = NULL;
+> +	u32 epid;
 > +	int ret;
-> +	u16 len;
-> +	size_t i;
-> +	LIST_HEAD(endpoints);
-> +	size_t offset, count;
-> +	struct virt_topo_iommu *viommu;
-> +	struct virt_topo_endpoint *ep, *next;
-> +	struct viommu_topo_header __iomem *cur;
 > +
-> +	offset = ioread16(&cfg->topo_config.offset);
-> +	count = ioread16(&cfg->topo_config.count);
-> +	if (!offset || !count)
-> +		return 0;
+> +	/* Already translated? */
+> +	if (fwspec && fwspec->ops)
+> +		return NULL;
 > +
-> +	viommu = kzalloc(sizeof(*viommu), GFP_KERNEL);
+> +	mutex_lock(&viommus_lock);
+> +	if (dev_is_pci(dev)) {
+> +		pci_dev = to_pci_dev(dev);
+> +		list_for_each_entry(ep, &pci_endpoints, list) {
+> +			if (virt_topo_device_match(dev, &ep->dev_id)) {
+> +				epid = pci_dev_id(pci_dev) -
+> +					ep->dev_id.bdf_start +
+> +					ep->endpoint_id;
+> +				viommu = ep->viommu;
+> +				break;
+> +			}
+> +		}
+> +	} else if (dev_is_platform(dev)) {
+> +		list_for_each_entry(ep, &mmio_endpoints, list) {
+> +			if (virt_topo_device_match(dev, &ep->dev_id)) {
+> +				epid = ep->endpoint_id;
+> +				viommu = ep->viommu;
+> +				break;
+> +			}
+> +		}
+> +	}
+> +	mutex_unlock(&viommus_lock);
 > +	if (!viommu)
-> +		return -ENOMEM;
+> +		return NULL;
 > +
-> +	viommu->dev = dev;
-> +
-> +	for (i = 0; i < count; i++, offset += len) {
-> +		if (offset + sizeof(*cur) > max_len) {
-> +			ret = -EOVERFLOW;
-> +			goto err_free;
-> +		}
-> +
-> +		cur = (void __iomem *)cfg + offset;
-> +		len = ioread16(&cur->length);
-> +		if (offset + len > max_len) {
-> +			ret = -EOVERFLOW;
-> +			goto err_free;
-> +		}
-> +
-> +		ep = viommu_parse_node((void __iomem *)cur, len);
-> +		if (!ep) {
-> +			continue;
-> +		} else if (IS_ERR(ep)) {
-> +			ret = PTR_ERR(ep);
-> +			goto err_free;
-> +		}
-> +
-> +		ep->viommu = viommu;
-> +		list_add(&ep->list, &endpoints);
-> +	}
-> +
-> +	list_for_each_entry_safe(ep, next, &endpoints, list)
-> +		/* Moves ep to the helpers list */
-> +		virt_topo_add_endpoint(ep);
-> +	virt_topo_add_iommu(viommu);
-> +
-> +	return 0;
-> +err_free:
-> +	list_for_each_entry_safe(ep, next, &endpoints, list)
-> +		kfree(ep);
-> +	kfree(viommu);
-> +	return ret;
-> +}
-> +
-> +#define VPCI_FIELD(field) offsetof(struct virtio_pci_cap, field)
-> +
-> +static inline int viommu_pci_find_capability(struct pci_dev *dev, u8 cfg_type,
-> +					     struct viommu_cap_config *cap)
-not sure the inline is useful here
-> +{
-> +	int pos;
-> +	u8 bar;
-> +
-> +	for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
-> +	     pos > 0;
-> +	     pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
-> +		u8 type;
-> +
-> +		pci_read_config_byte(dev, pos + VPCI_FIELD(cfg_type), &type);
-> +		if (type != cfg_type)
-> +			continue;
-> +
-> +		pci_read_config_byte(dev, pos + VPCI_FIELD(bar), &bar);
-> +
-> +		/* Ignore structures with reserved BAR values */
-> +		if (type != VIRTIO_PCI_CAP_PCI_CFG && bar > 0x5)
-> +			continue;
-> +
-> +		cap->bar = bar;
-> +		pci_read_config_dword(dev, pos + VPCI_FIELD(length),
-> +				      &cap->length);
-> +		pci_read_config_dword(dev, pos + VPCI_FIELD(offset),
-> +				      &cap->offset);
-> +
-> +		return pos;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int viommu_pci_reset(struct virtio_pci_common_cfg __iomem *cfg)
-> +{
-> +	u8 status;
-> +	ktime_t timeout = ktime_add_ms(ktime_get(), 100);
-> +
-> +	iowrite8(0, &cfg->device_status);
-> +	while ((status = ioread8(&cfg->device_status)) != 0 &&
-> +	       ktime_before(ktime_get(), timeout))
-> +		msleep(1);
-> +
-> +	return status ? -ETIMEDOUT : 0;
-> +}
-> +
-> +static void viommu_pci_parse_topology(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +	u32 features;
-> +	void __iomem *regs, *common_regs;
-> +	struct viommu_cap_config cap = {0};
-> +	struct virtio_pci_common_cfg __iomem *common_cfg;
+> +	/* We're not translating ourselves. */
+> +	if (virt_topo_device_match(dev, &viommu->dev_id) ||
+> +	    dev == viommu->dev)
+> +		return NULL;
 > +
 > +	/*
-> +	 * The virtio infrastructure might not be loaded at this point. We need
-> +	 * to access the BARs ourselves.
+> +	 * If we found a PCI range managed by the viommu, we're the one that has
+> +	 * to request ACS.
 > +	 */
-> +	ret = viommu_pci_find_capability(dev, VIRTIO_PCI_CAP_COMMON_CFG, &cap);
-> +	if (!ret) {
-> +		pci_warn(dev, "common capability not found\n");
-> +		return;
-> +	}
+> +	if (pci_dev)
+> +		pci_request_acs();
 > +
-> +	if (pci_enable_device_mem(dev))
-> +		return;
+> +	if (!viommu->ops)
+> +		return ERR_PTR(-EPROBE_DEFER);
 > +
-> +	common_regs = pci_iomap(dev, cap.bar, 0);
-> +	if (!common_regs)
-> +		return;
-> +
-> +	common_cfg = common_regs + cap.offset;
-> +
-> +	/* Perform the init sequence before we can read the config */
-> +	ret = viommu_pci_reset(common_cfg);
-> +	if (ret < 0) {
-> +		pci_warn(dev, "unable to reset device\n");
-> +		goto out_unmap_common;
-> +	}
-> +
-> +	iowrite8(VIRTIO_CONFIG_S_ACKNOWLEDGE, &common_cfg->device_status);
-> +	iowrite8(VIRTIO_CONFIG_S_ACKNOWLEDGE | VIRTIO_CONFIG_S_DRIVER,
-> +		 &common_cfg->device_status);
-> +
-> +	/* Find out if the device supports topology description */
-> +	iowrite32(0, &common_cfg->device_feature_select);
-> +	features = ioread32(&common_cfg->device_feature);
-> +
-> +	if (!(features & BIT(VIRTIO_IOMMU_F_TOPOLOGY))) {
-> +		pci_dbg(dev, "device doesn't have topology description");
-> +		goto out_reset;
-> +	}
-> +
-> +	ret = viommu_pci_find_capability(dev, VIRTIO_PCI_CAP_DEVICE_CFG, &cap);
-> +	if (!ret) {
-> +		pci_warn(dev, "device config capability not found\n");
-> +		goto out_reset;
-> +	}
-> +
-> +	regs = pci_iomap(dev, cap.bar, 0);
-> +	if (!regs)
-> +		goto out_reset;
-> +
-> +	pci_info(dev, "parsing virtio-iommu topology\n");
-> +	ret = viommu_parse_topology(&dev->dev, regs + cap.offset,
-> +				    pci_resource_len(dev, 0) - cap.offset);
+> +	ret = iommu_fwspec_init(dev, viommu->fwnode, viommu->ops);
 > +	if (ret)
-> +		pci_warn(dev, "failed to parse topology: %d\n", ret);
+> +		return ERR_PTR(ret);
 > +
-> +	pci_iounmap(dev, regs);
-> +out_reset:
-> +	ret = viommu_pci_reset(common_cfg);
-> +	if (ret)
-> +		pci_warn(dev, "unable to reset device\n");
-> +out_unmap_common:
-> +	pci_iounmap(dev, common_regs);
+> +	iommu_fwspec_add_ids(dev, &epid, 1);
+> +
+> +	return viommu->ops;
 > +}
 > +
-> +/*
-> + * Catch a PCI virtio-iommu implementation early to get the topology description
-> + * before we start probing other endpoints.
+> +/**
+> + * virt_topo_add_endpoint - Register endpoint specification
+> + * @ep: the endpoint specification
 > + */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT_QUMRANET, 0x1040 + VIRTIO_ID_IOMMU,
-> +			viommu_pci_parse_topology);
+> +void virt_topo_add_endpoint(struct virt_topo_endpoint *ep)
+> +{
+> +	mutex_lock(&viommus_lock);
+> +	list_add(&ep->list,
+> +		 ep->dev_id.type == VIRT_TOPO_DEV_TYPE_MMIO ?
+> +		 &mmio_endpoints : &pci_endpoints);
+> +	mutex_unlock(&viommus_lock);
+> +}
+> +
+> +/**
+> + * virt_topo_add_iommu - Register IOMMU specification
+> + * @viommu: the IOMMU specification
+> + */
+> +void virt_topo_add_iommu(struct virt_topo_iommu *viommu)
+> +{
+> +	mutex_lock(&viommus_lock);
+> +	list_add(&viommu->list, &viommus);
+> +	mutex_unlock(&viommus_lock);
+> +}
+> +
+> +/**
+> + * virt_dma_configure - Configure DMA of virtualized devices
+> + * @dev: the endpoint
+> + *
+> + * Setup the DMA and IOMMU ops of a virtual device, for platforms without DT or
+> + * ACPI.
+> + *
+> + * Return: -EPROBE_DEFER if the device is managed by an IOMMU that hasn't been
+> + *   probed yet, 0 otherwise
+> + */
+> +int virt_dma_configure(struct device *dev)
+> +{
+> +	const struct iommu_ops *iommu_ops;
+> +
+> +	iommu_ops = virt_iommu_setup(dev);
+> +	if (IS_ERR_OR_NULL(iommu_ops)) {
+> +		int ret = PTR_ERR(iommu_ops);
+> +
+> +		if (ret == -EPROBE_DEFER || ret == 0)
+> +			return ret;
+> +		dev_err(dev, "error %d while setting up virt IOMMU\n", ret);
+> +		return 0;
+why do we return 0 here?
+> +	}
+> +
+> +	/*
+> +	 * If we have reason to believe the IOMMU driver missed the initial
+> +	 * add_device callback for dev, replay it to get things in order.
+> +	 */
+> +	if (dev->bus && !device_iommu_mapped(dev))
+> +		iommu_probe_device(dev);
+> +
+> +	/* Assume coherent, as well as full 64-bit addresses. */
+> +#ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
+> +	arch_setup_dma_ops(dev, 0, ~0ULL, iommu_ops, true);
+> +#else
+> +	iommu_setup_dma_ops(dev, 0, ~0ULL);
+> +#endif
+> +	return 0;
+> +}
+> +
+> +/**
+> + * virt_topo_set_iommu_ops - Set the IOMMU ops of a virtual IOMMU device
+> + * @dev: the IOMMU device (transport)
+> + * @ops: the new IOMMU ops or NULL
+> + *
+> + * Setup the iommu_ops associated to an IOMMU, once the driver is loaded
+> + * and the device probed.
+> + */
+> +void virt_topo_set_iommu_ops(struct device *dev, struct iommu_ops *ops)
+> +{
+> +	struct virt_topo_iommu *viommu;
+> +
+> +	mutex_lock(&viommus_lock);
+> +	list_for_each_entry(viommu, &viommus, list) {
+> +		/*
+> +		 * In case the topology driver didn't have a dev handle when
+> +		 * registering the topology, add it now.
+> +		 */
+> +		if (!viommu->dev &&
+> +		    virt_topo_device_match(dev, &viommu->dev_id))
+> +			viommu->dev = dev;
+> +
+> +		if (viommu->dev == dev) {
+> +			viommu->ops = ops;
+> +			viommu->fwnode = ops ? dev->fwnode : NULL;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&viommus_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(virt_topo_set_iommu_ops);
+> diff --git a/drivers/iommu/virtio/virtio-iommu.c b/drivers/iommu/virtio/virtio-iommu.c
+> index b4da396cce60..b371d15f837f 100644
+> --- a/drivers/iommu/virtio/virtio-iommu.c
+> +++ b/drivers/iommu/virtio/virtio-iommu.c
+> @@ -25,6 +25,8 @@
+>  
+>  #include <uapi/linux/virtio_iommu.h>
+>  
+> +#include "topology-helpers.h"
+> +
+>  #define MSI_IOVA_BASE			0x8000000
+>  #define MSI_IOVA_LENGTH			0x100000
+>  
+> @@ -1065,6 +1067,7 @@ static int viommu_probe(struct virtio_device *vdev)
+>  	if (ret)
+>  		goto err_free_vqs;
+>  
+> +	virt_topo_set_iommu_ops(dev->parent, &viommu_ops);
+>  	iommu_device_set_ops(&viommu->iommu, &viommu_ops);
+>  	iommu_device_set_fwnode(&viommu->iommu, parent_dev->fwnode);
+>  
+> @@ -1111,6 +1114,7 @@ static void viommu_remove(struct virtio_device *vdev)
+>  {
+>  	struct viommu_dev *viommu = vdev->priv;
+>  
+> +	virt_topo_set_iommu_ops(vdev->dev.parent, NULL);
+>  	iommu_device_sysfs_remove(&viommu->iommu);
+>  	iommu_device_unregister(&viommu->iommu);
+>  
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3602b223c9b2..8fd53c22a0ab 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18452,6 +18452,7 @@ M:	Jean-Philippe Brucker <jean-philippe@linaro.org>
+>  L:	virtualization@lists.linux-foundation.org
+>  S:	Maintained
+>  F:	drivers/iommu/virtio/
+> +F:	include/linux/virt_iommu.h
+>  F:	include/uapi/linux/virtio_iommu.h
+>  
+>  VIRTIO MEM DRIVER
 > 
+Besides
+
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks
 
 Eric
 
