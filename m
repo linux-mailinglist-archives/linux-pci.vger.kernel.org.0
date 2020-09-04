@@ -2,38 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA4F25DDBF
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 17:30:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82D4025DDC1
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 17:31:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgIDPaH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 11:30:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25369 "EHLO
+        id S1726259AbgIDPbF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 11:31:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37210 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725984AbgIDPaG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 11:30:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599233404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wRdDsTplpUOo4libxw8O1Q2NtW0tDZkh0RhwSXPBuqI=;
-        b=h4uK8vB8r2OBiuDcGNgnsUsFeRV13e9MUfm807ZZpZuYsmMeeW30wOvxXVuQe4+0BI+Q0S
-        zvrwoGSLsnCUCsRbb/x6oUIFset/78qhDgvUbSDY2WW0PUMRS1Z3fCHNVaGGfP2VtxfPbc
-        1FYeD+8iYGfgBTdcdqIz5oGXo6uxqKM=
+        with ESMTP id S1725984AbgIDPbE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 11:31:04 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-16-ubmidy7jMGOZc6NNGDjlUQ-1; Fri, 04 Sep 2020 11:30:00 -0400
-X-MC-Unique: ubmidy7jMGOZc6NNGDjlUQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-158-nYjy5zslPtSMcl84myYsjQ-1; Fri, 04 Sep 2020 11:30:59 -0400
+X-MC-Unique: nYjy5zslPtSMcl84myYsjQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C90A01029D25;
-        Fri,  4 Sep 2020 15:29:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CF3A100748B;
+        Fri,  4 Sep 2020 15:30:57 +0000 (UTC)
 Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECD235C1D0;
-        Fri,  4 Sep 2020 15:29:55 +0000 (UTC)
-Subject: Re: [PATCH v3 1/6] iommu/virtio: Move to drivers/iommu/virtio/
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 552DB7093C;
+        Fri,  4 Sep 2020 15:30:49 +0000 (UTC)
+Subject: Re: [PATCH v3 4/6] iommu/virtio: Add topology definitions
 To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
         iommu@lists.linux-foundation.org,
         virtualization@lists.linux-foundation.org,
@@ -42,18 +32,18 @@ Cc:     joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
         jasowang@redhat.com, kevin.tian@intel.com,
         sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
 References: <20200821131540.2801801-1-jean-philippe@linaro.org>
- <20200821131540.2801801-2-jean-philippe@linaro.org>
+ <20200821131540.2801801-5-jean-philippe@linaro.org>
 From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <894aa803-644b-b6f2-2a28-73c388430ac6@redhat.com>
-Date:   Fri, 4 Sep 2020 17:29:54 +0200
+Message-ID: <a9f99946-cdfc-a0f5-b742-2b89a6bd9569@redhat.com>
+Date:   Fri, 4 Sep 2020 17:30:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200821131540.2801801-2-jean-philippe@linaro.org>
+In-Reply-To: <20200821131540.2801801-5-jean-philippe@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -62,67 +52,90 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Hi Jean,
 
 On 8/21/20 3:15 PM, Jean-Philippe Brucker wrote:
-> Before adding new files to the virtio-iommu driver, move it to its own
-> subfolder, similarly to other IOMMU drivers.
+> Add struct definitions for describing endpoints managed by the
+> virtio-iommu. When VIRTIO_IOMMU_F_TOPOLOGY is offered, an array of
+> virtio_iommu_topo_* structures in config space describes the endpoints,
+> identified either by their PCI BDF or their physical MMIO address.
 > 
 > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->  drivers/iommu/Makefile                    | 3 +--
->  drivers/iommu/virtio/Makefile             | 2 ++
->  drivers/iommu/{ => virtio}/virtio-iommu.c | 0
->  MAINTAINERS                               | 2 +-
->  4 files changed, 4 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/iommu/virtio/Makefile
->  rename drivers/iommu/{ => virtio}/virtio-iommu.c (100%)
-> 
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 11f1771104f3..fc7523042512 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-y += amd/ intel/ arm/
-> +obj-y += amd/ intel/ arm/ virtio/
->  obj-$(CONFIG_IOMMU_API) += iommu.o
->  obj-$(CONFIG_IOMMU_API) += iommu-traces.o
->  obj-$(CONFIG_IOMMU_API) += iommu-sysfs.o
-> @@ -26,4 +26,3 @@ obj-$(CONFIG_EXYNOS_IOMMU) += exynos-iommu.o
->  obj-$(CONFIG_FSL_PAMU) += fsl_pamu.o fsl_pamu_domain.o
->  obj-$(CONFIG_S390_IOMMU) += s390-iommu.o
->  obj-$(CONFIG_HYPERV_IOMMU) += hyperv-iommu.o
-> -obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
-> diff --git a/drivers/iommu/virtio/Makefile b/drivers/iommu/virtio/Makefile
-> new file mode 100644
-> index 000000000000..279368fcc074
-> --- /dev/null
-> +++ b/drivers/iommu/virtio/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
-> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio/virtio-iommu.c
-> similarity index 100%
-> rename from drivers/iommu/virtio-iommu.c
-> rename to drivers/iommu/virtio/virtio-iommu.c
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index deaafb617361..3602b223c9b2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18451,7 +18451,7 @@ VIRTIO IOMMU DRIVER
->  M:	Jean-Philippe Brucker <jean-philippe@linaro.org>
->  L:	virtualization@lists.linux-foundation.org
->  S:	Maintained
-> -F:	drivers/iommu/virtio-iommu.c
-> +F:	drivers/iommu/virtio/
->  F:	include/uapi/linux/virtio_iommu.h
-not related to this patch but you may add an entry for
-Documentation/devicetree/bindings/virtio/iommu.txt
-
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
 Thanks
 
 Eric
+
+> ---
+>  include/uapi/linux/virtio_iommu.h | 44 +++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
+> index 237e36a280cb..70cba30644d5 100644
+> --- a/include/uapi/linux/virtio_iommu.h
+> +++ b/include/uapi/linux/virtio_iommu.h
+> @@ -16,6 +16,7 @@
+>  #define VIRTIO_IOMMU_F_BYPASS			3
+>  #define VIRTIO_IOMMU_F_PROBE			4
+>  #define VIRTIO_IOMMU_F_MMIO			5
+> +#define VIRTIO_IOMMU_F_TOPOLOGY			6
 >  
->  VIRTIO MEM DRIVER
+>  struct virtio_iommu_range_64 {
+>  	__le64					start;
+> @@ -27,6 +28,17 @@ struct virtio_iommu_range_32 {
+>  	__le32					end;
+>  };
+>  
+> +struct virtio_iommu_topo_config {
+> +	/* Number of topology description structures */
+> +	__le16					count;
+> +	/*
+> +	 * Offset to the first topology description structure
+> +	 * (virtio_iommu_topo_*) from the start of the virtio_iommu config
+> +	 * space. Aligned on 8 bytes.
+> +	 */
+> +	__le16					offset;
+> +};
+> +
+>  struct virtio_iommu_config {
+>  	/* Supported page sizes */
+>  	__le64					page_size_mask;
+> @@ -36,6 +48,38 @@ struct virtio_iommu_config {
+>  	struct virtio_iommu_range_32		domain_range;
+>  	/* Probe buffer size */
+>  	__le32					probe_size;
+> +	struct virtio_iommu_topo_config		topo_config;
+> +};
+> +
+> +#define VIRTIO_IOMMU_TOPO_PCI_RANGE		0x1
+> +#define VIRTIO_IOMMU_TOPO_MMIO			0x2
+> +
+> +struct virtio_iommu_topo_pci_range {
+> +	/* VIRTIO_IOMMU_TOPO_PCI_RANGE */
+> +	__u8					type;
+> +	__u8					reserved;
+> +	/* Length of this structure */
+> +	__le16					length;
+> +	/* First endpoint ID in the range */
+> +	__le32					endpoint_start;
+> +	/* PCI domain number */
+> +	__le16					segment;
+> +	/* PCI Bus:Device.Function range */
+> +	__le16					bdf_start;
+> +	__le16					bdf_end;
+> +	__le16					padding;
+> +};
+> +
+> +struct virtio_iommu_topo_mmio {
+> +	/* VIRTIO_IOMMU_TOPO_MMIO */
+> +	__u8					type;
+> +	__u8					reserved;
+> +	/* Length of this structure */
+> +	__le16					length;
+> +	/* Endpoint ID */
+> +	__le32					endpoint;
+> +	/* Address of the first MMIO region */
+> +	__le64					address;
+>  };
+>  
+>  /* Request types */
 > 
 
