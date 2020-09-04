@@ -2,30 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BC8725DB87
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 16:25:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29FF425DB9F
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 16:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgIDOZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 10:25:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:51340 "EHLO foss.arm.com"
+        id S1730730AbgIDO1W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 10:27:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:51478 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730536AbgIDOVt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:21:49 -0400
+        id S1730474AbgIDO1R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:27:17 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF5EB1045;
-        Fri,  4 Sep 2020 07:21:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AD1C1045;
+        Fri,  4 Sep 2020 07:27:17 -0700 (PDT)
 Received: from red-moon.arm.com (unknown [10.57.6.237])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C2E33F71F;
-        Fri,  4 Sep 2020 07:21:42 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1252B3F71F;
+        Fri,  4 Sep 2020 07:27:15 -0700 (PDT)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] PCI: mvebu: Remove useless msi_controller allocation/initialization
-Date:   Fri,  4 Sep 2020 15:21:32 +0100
-Message-Id: <20200904142132.6054-1-lorenzo.pieralisi@arm.com>
+Subject: [PATCH] PCI: xilinx-cpm: Remove leftover bridge initialization
+Date:   Fri,  4 Sep 2020 15:27:10 +0100
+Message-Id: <20200904142710.8018-1-lorenzo.pieralisi@arm.com>
 X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -34,49 +33,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The mvebu host controller driver allocates an msi_controller structure
-without assigning its methods.
-
-This means that the PCI IRQ MSI layer ignores it and that after all it
-should not really be needed.
+Some fields in the host bridge structure are now initialized
+by default in the PCI/OF core functions therefore their
+initialization in the host controller driver is superfluous.
 
 Remove it.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Rob Herring <robh@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- drivers/pci/controller/pci-mvebu.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/pci/controller/pcie-xilinx-cpm.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index c39978b750ec..eee82838f4ba 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -12,7 +12,6 @@
- #include <linux/gpio.h>
- #include <linux/init.h>
- #include <linux/mbus.h>
--#include <linux/msi.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
- #include <linux/of_address.h>
-@@ -70,7 +69,6 @@ struct mvebu_pcie_port;
- struct mvebu_pcie {
- 	struct platform_device *pdev;
- 	struct mvebu_pcie_port *ports;
--	struct msi_controller *msi;
- 	struct resource io;
- 	struct resource realio;
- 	struct resource mem;
-@@ -1127,7 +1125,6 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
- 	bridge->sysdata = pcie;
- 	bridge->ops = &mvebu_pcie_ops;
- 	bridge->align_resource = mvebu_pcie_align_resource;
--	bridge->msi = pcie->msi;
+diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+index f3082de44e8a..f92e0152e65e 100644
+--- a/drivers/pci/controller/pcie-xilinx-cpm.c
++++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+@@ -572,12 +572,8 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+ 		goto err_setup_irq;
+ 	}
  
- 	return mvebu_pci_host_probe(bridge);
- }
+-	bridge->dev.parent = dev;
+ 	bridge->sysdata = port->cfg;
+-	bridge->busnr = port->cfg->busr.start;
+ 	bridge->ops = (struct pci_ops *)&pci_generic_ecam_ops.pci_ops;
+-	bridge->map_irq = of_irq_parse_and_map_pci;
+-	bridge->swizzle_irq = pci_common_swizzle;
+ 
+ 	err = pci_host_probe(bridge);
+ 	if (err < 0)
 -- 
 2.26.1
 
