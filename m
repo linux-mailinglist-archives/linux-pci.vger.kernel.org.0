@@ -2,140 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82D4025DDC1
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 17:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D141825DE4B
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 17:48:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgIDPbF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 11:31:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37210 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725984AbgIDPbE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 11:31:04 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-nYjy5zslPtSMcl84myYsjQ-1; Fri, 04 Sep 2020 11:30:59 -0400
-X-MC-Unique: nYjy5zslPtSMcl84myYsjQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727882AbgIDPsr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 11:48:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727877AbgIDPso (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:48:44 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CF3A100748B;
-        Fri,  4 Sep 2020 15:30:57 +0000 (UTC)
-Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 552DB7093C;
-        Fri,  4 Sep 2020 15:30:49 +0000 (UTC)
-Subject: Re: [PATCH v3 4/6] iommu/virtio: Add topology definitions
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org
-Cc:     joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
-        jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
-References: <20200821131540.2801801-1-jean-philippe@linaro.org>
- <20200821131540.2801801-5-jean-philippe@linaro.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <a9f99946-cdfc-a0f5-b742-2b89a6bd9569@redhat.com>
-Date:   Fri, 4 Sep 2020 17:30:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200821131540.2801801-5-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        by mail.kernel.org (Postfix) with ESMTPSA id 615A3206E7;
+        Fri,  4 Sep 2020 15:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599234523;
+        bh=vCpPDFBI/YTj3r0gZ1Lk+JMh06anXpHdDelgk/Yroqs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hblZpg2RnolUwCmaVnfkcv5nnfC5YRQi4H9Ze3Ui/uhjJPtpTJh2aNSU+BOVck5sc
+         U/fNvP/qOcuRApyEZEUD357dQuODreuxbxdIHcZDEuKG3RHfAQjH+ZadT0PzhyPUfo
+         5gL3OzvsTXG3GrIDp79qT6DXJrIEETiTjgnBqwrs=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kEDxB-009DDO-MC; Fri, 04 Sep 2020 16:48:41 +0100
+Date:   Fri, 04 Sep 2020 16:48:35 +0100
+Message-ID: <87ft7xr19o.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Convert to MSI domains
+In-Reply-To: <20200904105613.444945-1-thierry.reding@gmail.com>
+References: <20200904105613.444945-1-thierry.reding@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: thierry.reding@gmail.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jonathanh@nvidia.com, jgg@nvidia.com, tglx@linutronix.de, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean,
+Hi Thierry,
 
-On 8/21/20 3:15 PM, Jean-Philippe Brucker wrote:
-> Add struct definitions for describing endpoints managed by the
-> virtio-iommu. When VIRTIO_IOMMU_F_TOPOLOGY is offered, an array of
-> virtio_iommu_topo_* structures in config space describes the endpoints,
-> identified either by their PCI BDF or their physical MMIO address.
+On Fri, 04 Sep 2020 11:56:13 +0100,
+Thierry Reding <thierry.reding@gmail.com> wrote:
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
-
+> From: Marc Zyngier <maz@kernel.org>
+> 
+> In anticipation of the removal of the msi_controller structure, convert
+> the Tegra host controller driver to MSI domains.
+> 
+> We end-up with the usual two domain structure, the top one being a
+> generic PCI/MSI domain, the bottom one being Tegra-specific and handling
+> the actual HW interrupt allocation.
+> 
+> While at it, convert the normal interrupt handler to a chained handler,
+> handle the controller's MSI IRQ edge triggered, support multiple MSIs
+> per device and use the AFI_MSI_EN_VEC* registers to provide MSI masking.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> [treding@nvidia.com: fix, clean up and address TODOs from Marc's draft]
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  include/uapi/linux/virtio_iommu.h | 44 +++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+> This is basically Marc's patch from here:
 > 
-> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-> index 237e36a280cb..70cba30644d5 100644
-> --- a/include/uapi/linux/virtio_iommu.h
-> +++ b/include/uapi/linux/virtio_iommu.h
-> @@ -16,6 +16,7 @@
->  #define VIRTIO_IOMMU_F_BYPASS			3
->  #define VIRTIO_IOMMU_F_PROBE			4
->  #define VIRTIO_IOMMU_F_MMIO			5
-> +#define VIRTIO_IOMMU_F_TOPOLOGY			6
->  
->  struct virtio_iommu_range_64 {
->  	__le64					start;
-> @@ -27,6 +28,17 @@ struct virtio_iommu_range_32 {
->  	__le32					end;
->  };
->  
-> +struct virtio_iommu_topo_config {
-> +	/* Number of topology description structures */
-> +	__le16					count;
-> +	/*
-> +	 * Offset to the first topology description structure
-> +	 * (virtio_iommu_topo_*) from the start of the virtio_iommu config
-> +	 * space. Aligned on 8 bytes.
-> +	 */
-> +	__le16					offset;
-> +};
-> +
->  struct virtio_iommu_config {
->  	/* Supported page sizes */
->  	__le64					page_size_mask;
-> @@ -36,6 +48,38 @@ struct virtio_iommu_config {
->  	struct virtio_iommu_range_32		domain_range;
->  	/* Probe buffer size */
->  	__le32					probe_size;
-> +	struct virtio_iommu_topo_config		topo_config;
-> +};
-> +
-> +#define VIRTIO_IOMMU_TOPO_PCI_RANGE		0x1
-> +#define VIRTIO_IOMMU_TOPO_MMIO			0x2
-> +
-> +struct virtio_iommu_topo_pci_range {
-> +	/* VIRTIO_IOMMU_TOPO_PCI_RANGE */
-> +	__u8					type;
-> +	__u8					reserved;
-> +	/* Length of this structure */
-> +	__le16					length;
-> +	/* First endpoint ID in the range */
-> +	__le32					endpoint_start;
-> +	/* PCI domain number */
-> +	__le16					segment;
-> +	/* PCI Bus:Device.Function range */
-> +	__le16					bdf_start;
-> +	__le16					bdf_end;
-> +	__le16					padding;
-> +};
-> +
-> +struct virtio_iommu_topo_mmio {
-> +	/* VIRTIO_IOMMU_TOPO_MMIO */
-> +	__u8					type;
-> +	__u8					reserved;
-> +	/* Length of this structure */
-> +	__le16					length;
-> +	/* Endpoint ID */
-> +	__le32					endpoint;
-> +	/* Address of the first MMIO region */
-> +	__le64					address;
->  };
->  
->  /* Request types */
+>   https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/tegra-msi&id=8ba6858f07a7554d4e56a6d5103cd914dcf23af0
 > 
+> That didn't work as-is, but it was pretty easy to get it to build and
+> run properly. Once I had that I went through Marc's list of TODOs and
+> addressed them, which was also not very difficult.
+> 
+> I haven't done any extensive testing, but I can boot fine over NFS with
+> a PCI Ethernet card. Given how fundamental this is, I would expect that
+> to be a good enough test.
+> 
+> Marc, I've kept your authorship on this. There are substantial changes
+> from your version, but you had laid out the plan for all these changes,
+> so it seemed fair. However, let me know if you're not comfortable with
+> taking responsibility for any potential bugs I've introduced.
 
+Thanks a lot for picking this up at short notice. Definitely happy
+with you preserving the authorship, though I wouldn't object if you
+did it the other way around.
+
+> I had originally considered sending this out as a series with more
+> intermediate steps, but it turns out most of the TODO's that Marc had
+> listed are related, so this could've been at maximum two or three
+> patches. That didn't seem worth splitting up for. I think most of this
+> work is still all related to the MSI domain conversion, so it makes
+> sense to keep it in one patch.
+> 
+>  drivers/pci/controller/pci-tegra.c | 316 +++++++++++++++--------------
+>  1 file changed, 165 insertions(+), 151 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index c1d34353c29b..f7f92718ce40 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+
+[...]
+
+> +static void tegra_msi_irq_mask(struct irq_data *d)
+> +{
+> +	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
+> +	struct tegra_pcie *pcie = msi_to_pcie(msi);
+> +	unsigned int index = d->hwirq / 32;
+> +	u32 value;
+> +
+> +	value = afi_readl(pcie, AFI_MSI_EN_VEC(index));
+> +	value &= ~BIT(d->hwirq % 32);
+> +	afi_writel(pcie, value, AFI_MSI_EN_VEC(index));
+
+You need some extra locking here, as this register looks shared with
+another 31 MSIs. Same for the unmask.
+
+[...]
+
+> +static int tegra_allocate_domains(struct tegra_msi *msi)
+>  {
+> -	irq_set_chip_and_handler(irq, &tegra_msi_irq_chip, handle_simple_irq);
+> -	irq_set_chip_data(irq, domain->host_data);
+> +	struct tegra_pcie *pcie = container_of(msi, struct tegra_pcie, msi);
+> +	struct fwnode_handle *fwnode = of_node_to_fwnode(pcie->dev->of_node);
+> +	struct irq_domain *parent;
+>  
+> -	tegra_cpuidle_pcie_irqs_in_use();
+> +	msi->top.name = "Tegra PCIe MSI";
+> +	msi->top.irq_ack = tegra_msi_top_irq_ack;
+> +	msi->top.irq_mask = tegra_msi_top_irq_mask;
+> +	msi->top.irq_unmask = tegra_msi_top_irq_unmask;
+> +
+> +	msi->info.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_PCI_MSIX;
+> +	msi->info.chip = &msi->top;
+> +
+> +	msi->bottom.name = "Tegra MSI";
+> +	msi->bottom.irq_ack = tegra_msi_irq_ack;
+> +	msi->bottom.irq_mask = tegra_msi_irq_mask;
+> +	msi->bottom.irq_unmask = tegra_msi_irq_unmask;
+> +	msi->bottom.irq_set_affinity = tegra_msi_set_affinity;
+> +	msi->bottom.irq_compose_msi_msg = tegra_compose_msi_msg;
+
+It's not obvious to me why these irq_chip and msi_domain_info are
+dynamically allocated, given that they only contain static data, which
+should be common across PCIe controllers.
+
+Am I missing something here?
+
+The reason I'm being picky about it is that I'm trying to get to a
+point where we can make most struct irq_chip to be const and thus
+marked read-only (PM is getting in the way at the moment).
+
+The rest looks good to me, and only the above locking issue is a real
+showstopper.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
