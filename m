@@ -2,255 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1365725D2E1
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 09:52:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7777725D303
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 09:53:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgIDHwn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 03:52:43 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57058 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729965AbgIDHwm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 03:52:42 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0847qU68065991;
-        Fri, 4 Sep 2020 02:52:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599205950;
-        bh=94TXcOdDL8wb076LMtmQPWLg/sQvPhi/Wpb3J68VtqI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=I4nd6X/cMa50b6PHfSUKfB/hFUBBNc3B6RKgw1ujg8XBsGcLElY1hiEzUc5hsa0p/
-         e/VwScs1i20cU5bSh2cStsvutVs9uiW5zhdcJnlsW0U0y29naIJnNxVvUCAIO/bp2v
-         WeKUPKrXCRFQRU4RhwZIStLacVPaj+diSsuX786E=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0847qUaI027390
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Sep 2020 02:52:30 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 4 Sep
- 2020 02:52:30 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 4 Sep 2020 02:52:30 -0500
-Received: from a0393678-ssd.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0847osNI058796;
-        Fri, 4 Sep 2020 02:52:25 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 17/17] Documentation: PCI: Add userguide for PCI endpoint NTB function
-Date:   Fri, 4 Sep 2020 13:20:52 +0530
-Message-ID: <20200904075052.8911-18-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904075052.8911-1-kishon@ti.com>
-References: <20200904075052.8911-1-kishon@ti.com>
+        id S1729751AbgIDHxz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 03:53:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgIDHxv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 03:53:51 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F33C061244;
+        Fri,  4 Sep 2020 00:53:50 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id c10so5083189otm.13;
+        Fri, 04 Sep 2020 00:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ocqyzNbaVOZzIdeNzDcK80VX4YtlWAaQQv8brVA+uok=;
+        b=Nq2T1guwkVW6AjrlGB9fPWghdM0XIdzmNU+vWvRDonxY/2F48APQtj4A9ML40oPSWE
+         gNy8jSSGdU/uh49Nuan13e7J01chRakHa4cvFV++kD5GeMvnRK1PDFvkGNc11TFwom7Y
+         X9gk1f6AN8nHnX/8jO+ovjwlYDnt3SAXJthIpS7uYfZmc8twAz/gjOTHw685POv0Jv7t
+         oLDono45aa0F3e/AIav+77dHNgpenH801GxKxi70IabKBrJOGTmp5Z8C8a62JfBwA/NG
+         vIKTVveaTADqVm296iwl2bKAzCQxo7MrtbLxsNRjrVkJS+tWusn1LVp3UFBKfFzXbACg
+         fq5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ocqyzNbaVOZzIdeNzDcK80VX4YtlWAaQQv8brVA+uok=;
+        b=G1PcEh8H+WISVvAMdLiHzWhvnSeAGaZlXYMrgwHtgMsqLyIAW+wgkKwRH8yga+CS95
+         EoaT7jGWW4q1r2aPqHvgCrh6GUCJV1IpZYzAIfE9LRrzgabc2i7cH0h++lZtwq6F+47z
+         WsVF2c/LQVxDsRSGdhwEpnL2oOkGUnjVxdwcJgGuS8x/ozqAKlHEMSnlj+9JUUjIJ8Ka
+         32ycPtelzTAvwkP6UZOEDQzO+UuxEeZhcYIts5KTtaLy/5oXGSc1vQzYEp+VS+RZfFT7
+         Lj3DFBVNyKJQ+IbCyPSy+UzH2tmM0WEdC91RmtznkQM4WqY0X/tZdlT5Ek4UBm33IEDG
+         dMpA==
+X-Gm-Message-State: AOAM533qTAy1WlRxZUmIKqUKJDs/QfDpp9NCc3rSGS1M5rG5iyMyUddn
+        vrBd8MdLut7qm1fr5FtG5JUciVh8UvkKU8e5fnQ=
+X-Google-Smtp-Source: ABdhPJx8Fu6Q8WDEpmADLpI04M/+EN/6EVFvaEQovvgjSVbHG1rjYRSusAY1dEH9lP0YugsHKl4rs5v2AOHao6YXKcg=
+X-Received: by 2002:a9d:7656:: with SMTP id o22mr4302332otl.109.1599206029992;
+ Fri, 04 Sep 2020 00:53:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
+In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 4 Sep 2020 09:53:38 +0200
+Message-ID: <CA+icZUW_=L5n4gAPV_sL+TaLJ0SMZOWHSNOpWD9M3fSLDCv_kw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add documentation to help users use pci-epf-ntb function driver and
-existing host side NTB infrastructure for NTB functionality.
+On Thu, Sep 3, 2020 at 10:30 PM 'Sami Tolvanen' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> This patch series adds support for building x86_64 and arm64 kernels
+> with Clang's Link Time Optimization (LTO).
+>
+> In addition to performance, the primary motivation for LTO is
+> to allow Clang's Control-Flow Integrity (CFI) to be used in the
+> kernel. Google has shipped millions of Pixel devices running three
+> major kernel versions with LTO+CFI since 2018.
+>
+> Most of the patches are build system changes for handling LLVM
+> bitcode, which Clang produces with LTO instead of ELF object files,
+> postponing ELF processing until a later stage, and ensuring initcall
+> ordering.
+>
+> Note that patches 1-4 are not directly related to LTO, but are
+> needed to compile LTO kernels with ToT Clang, so I'm including them
+> in the series for your convenience:
+>
+>  - Patches 1-3 are required for building the kernel with ToT Clang,
+>    and IAS, and patch 4 is needed to build allmodconfig with LTO.
+>
+>  - Patches 3-4 are already in linux-next, but not yet in 5.9-rc.
+>
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/PCI/endpoint/index.rst         |   1 +
- Documentation/PCI/endpoint/pci-ntb-howto.rst | 160 +++++++++++++++++++
- 2 files changed, 161 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
+I jumped to Sami's clang-cfi Git tree which includes clang-lto v2.
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index 9cb6e5f3c4d5..38ea1f604b6d 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -12,6 +12,7 @@ PCI Endpoint Framework
-    pci-test-function
-    pci-test-howto
-    pci-ntb-function
-+   pci-ntb-howto
- 
-    function/binding/pci-test
-    function/binding/pci-ntb
-diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-new file mode 100644
-index 000000000000..2fbb0a051c3b
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-@@ -0,0 +1,160 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================
-+PCI NTB EPF User Guide
-+======================
-+
-+:Author: Kishon Vijay Abraham I <kishon@ti.com>
-+
-+This document is a guide to help users use pci-epf-ntb function driver
-+and ntb_hw_epf host driver for NTB functionality. The list of steps to
-+be followed in the host side and EP side is given below. For the hardware
-+configuration and internals of NTB using configurable endpoints see
-+Documentation/PCI/endpoint/pci-ntb-function.rst
-+
-+Endpoint Device
-+===============
-+
-+Endpoint Controller Devices
-+---------------------------
-+
-+For implementing NTB functionality atleast two endpoint controller devices
-+are required.
-+To find the list of endpoint controller devices in the system::
-+
-+        # ls /sys/class/pci_epc/
-+          2900000.pcie-ep  2910000.pcie-ep
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+	# ls /sys/kernel/config/pci_ep/controllers
-+	  2900000.pcie-ep  2910000.pcie-ep
-+
-+
-+Endpoint Function Drivers
-+-------------------------
-+
-+To find the list of endpoint function drivers in the system::
-+
-+	# ls /sys/bus/pci-epf/drivers
-+	  pci_epf_ntb   pci_epf_ntb
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+	# ls /sys/kernel/config/pci_ep/functions
-+	  pci_epf_ntb   pci_epf_ntb
-+
-+
-+Creating pci-epf-ntb Device
-+----------------------------
-+
-+PCI endpoint function device can be created using the configfs. To create
-+pci-epf-ntb device, the following commands can be used::
-+
-+	# mount -t configfs none /sys/kernel/config
-+	# cd /sys/kernel/config/pci_ep/
-+	# mkdir functions/pci_epf_ntb/func1
-+
-+The "mkdir func1" above creates the pci-epf-ntb function device that will
-+be probed by pci_epf_ntb driver.
-+
-+The PCI endpoint framework populates the directory with the following
-+configurable fields::
-+
-+	# ls functions/pci_epf_ntb/func1
-+          baseclass_code    deviceid          msi_interrupts    pci-epf-ntb.0
-+          progif_code       secondary         subsys_id         vendorid
-+          cache_line_size   interrupt_pin     msix_interrupts   primary
-+          revid             subclass_code     subsys_vendor_id
-+
-+The PCI endpoint function driver populates these entries with default values
-+when the device is bound to the driver. The pci-epf-ntb driver populates
-+vendorid with 0xffff and interrupt_pin with 0x0001::
-+
-+	# cat functions/pci_epf_ntb/func1/vendorid
-+	  0xffff
-+	# cat functions/pci_epf_ntb/func1/interrupt_pin
-+	  0x0001
-+
-+
-+Configuring pci-epf-ntb Device
-+-------------------------------
-+
-+The user can configure the pci-epf-ntb device using configfs entry. In order
-+to change the vendorid and the deviceid, the following
-+commands can be used::
-+
-+	# echo 0x104c > functions/pci_epf_ntb/func1/vendorid
-+	# echo 0xb00d > functions/pci_epf_ntb/func1/deviceid
-+
-+In-order to configure NTB specific attributes, a new sub-directory to func1
-+should be created::
-+
-+	# mkdir functions/pci_epf_ntb/func1/pci_epf_ntb.0/
-+
-+The NTB function driver will populate this directory with various attributes
-+that can be configured by the user::
-+
-+	# ls functions/pci_epf_ntb/func1/pci_epf_ntb.0/
-+          db_count    mw1         mw2         mw3         mw4         num_mws
-+          spad_count
-+
-+A sample configuration for NTB function is given below::
-+
-+	# echo 4 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/db_count
-+	# echo 128 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/spad_count
-+	# echo 2 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/num_mws
-+	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw1
-+	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw2
-+
-+Binding pci-epf-ntb Device to EP Controller
-+--------------------------------------------
-+
-+NTB function device should be attached to two PCIe endpoint controllers
-+connected to the two hosts. Use the 'primary' and 'secondary' entries
-+inside NTB function device to attach one PCIe endpoint controller to
-+primary interface and the other PCIe endpoint controller to the secondary
-+interface. ::
-+
-+        # ln -s controllers/2900000.pcie-ep/ functions/pci-epf-ntb/func1/primary
-+        # ln -s controllers/2910000.pcie-ep/ functions/pci-epf-ntb/func1/secondary
-+
-+Once the above step is completed, both the PCI endpoint controllers is ready to
-+establish a link with the host.
-+
-+
-+Start the Link
-+--------------
-+
-+In order for the endpoint device to establish a link with the host, the _start_
-+field should be populated with '1'. For NTB, both the PCIe endpoint controllers
-+should establish link with the host::
-+
-+        #echo 1 > controllers/2900000.pcie-ep/start
-+        #echo 1 > controllers/2910000.pcie-ep/start
-+
-+
-+RootComplex Device
-+==================
-+
-+lspci Output
-+------------
-+
-+Note that the devices listed here correspond to the value populated in 1.4
-+above::
-+
-+        # lspci
-+        0000:00:00.0 PCI bridge: Texas Instruments Device b00d
-+        0000:01:00.0 RAM memory: Texas Instruments Device b00d
-+
-+
-+Using ntb_hw_epf Device
-+-----------------------
-+
-+The host side software follows the standard NTB software architecture in Linux.
-+All the existing client side NTB utilities like NTB Transport Client and NTB
-+Netdev, NTB Ping Pong Test Client and NTB Tool Test Clientcan be used with NTB
-+function device.
-+
-+For more information on NTB see
-+Documentation/driver-api/ntb.rst
--- 
-2.17.1
+My LLVM toolchain is version 11.0.0.0-rc2+ more precisely git
+97ac9e82002d6b12831ca2c78f739cca65a4fa05.
 
+If this is OK, feel free to add my...
+
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+
+- Sedat -
+
+[1] https://github.com/samitolvanen/linux/commits/clang-cfi
+
+> ---
+> Changes in v2:
+>
+>   - Fixed -Wmissing-prototypes warnings with W=1.
+>
+>   - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
+>     scrubbing to make distclean.
+>
+>   - Added a comment about Clang >=11 being required.
+>
+>   - Added a patch to disable LTO for the arm64 KVM nVHE code.
+>
+>   - Disabled objtool's noinstr validation with LTO unless enabled.
+>
+>   - Included Peter's proposed objtool mcount patch in the series
+>     and replaced recordmcount with the objtool pass to avoid
+>     whitelisting relocations that are not calls.
+>
+>   - Updated several commit messages with better explanations.
+>
+>
+> Arvind Sankar (2):
+>   x86/boot/compressed: Disable relocation relaxation
+>   x86/asm: Replace __force_order with memory clobber
+>
+> Luca Stefani (1):
+>   RAS/CEC: Fix cec_init() prototype
+>
+> Nick Desaulniers (1):
+>   lib/string.c: implement stpcpy
+>
+> Peter Zijlstra (1):
+>   objtool: Add a pass for generating __mcount_loc
+>
+> Sami Tolvanen (23):
+>   objtool: Don't autodetect vmlinux.o
+>   kbuild: add support for objtool mcount
+>   x86, build: use objtool mcount
+>   kbuild: add support for Clang LTO
+>   kbuild: lto: fix module versioning
+>   kbuild: lto: postpone objtool
+>   kbuild: lto: limit inlining
+>   kbuild: lto: merge module sections
+>   kbuild: lto: remove duplicate dependencies from .mod files
+>   init: lto: ensure initcall ordering
+>   init: lto: fix PREL32 relocations
+>   PCI: Fix PREL32 relocations for LTO
+>   modpost: lto: strip .lto from module names
+>   scripts/mod: disable LTO for empty.c
+>   efi/libstub: disable LTO
+>   drivers/misc/lkdtm: disable LTO for rodata.o
+>   arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
+>   arm64: vdso: disable LTO
+>   KVM: arm64: disable LTO for the nVHE directory
+>   arm64: allow LTO_CLANG and THINLTO to be selected
+>   x86, vdso: disable LTO only for vDSO
+>   x86, relocs: Ignore L4_PAGE_OFFSET relocations
+>   x86, build: allow LTO_CLANG and THINLTO to be selected
+>
+>  .gitignore                            |   1 +
+>  Makefile                              |  65 ++++++-
+>  arch/Kconfig                          |  67 +++++++
+>  arch/arm64/Kconfig                    |   2 +
+>  arch/arm64/Makefile                   |   1 +
+>  arch/arm64/kernel/vdso/Makefile       |   4 +-
+>  arch/arm64/kvm/hyp/nvhe/Makefile      |   4 +-
+>  arch/x86/Kconfig                      |   3 +
+>  arch/x86/Makefile                     |   5 +
+>  arch/x86/boot/compressed/Makefile     |   2 +
+>  arch/x86/boot/compressed/pgtable_64.c |   9 -
+>  arch/x86/entry/vdso/Makefile          |   5 +-
+>  arch/x86/include/asm/special_insns.h  |  28 +--
+>  arch/x86/kernel/cpu/common.c          |   4 +-
+>  arch/x86/tools/relocs.c               |   1 +
+>  drivers/firmware/efi/libstub/Makefile |   2 +
+>  drivers/misc/lkdtm/Makefile           |   1 +
+>  drivers/ras/cec.c                     |   9 +-
+>  include/asm-generic/vmlinux.lds.h     |  11 +-
+>  include/linux/init.h                  |  79 +++++++-
+>  include/linux/pci.h                   |  19 +-
+>  kernel/trace/Kconfig                  |   5 +
+>  lib/string.c                          |  24 +++
+>  scripts/Makefile.build                |  55 +++++-
+>  scripts/Makefile.lib                  |   6 +-
+>  scripts/Makefile.modfinal             |  31 ++-
+>  scripts/Makefile.modpost              |  26 ++-
+>  scripts/generate_initcall_order.pl    | 270 ++++++++++++++++++++++++++
+>  scripts/link-vmlinux.sh               |  94 ++++++++-
+>  scripts/mod/Makefile                  |   1 +
+>  scripts/mod/modpost.c                 |  16 +-
+>  scripts/mod/modpost.h                 |   9 +
+>  scripts/mod/sumversion.c              |   6 +-
+>  scripts/module-lto.lds                |  26 +++
+>  tools/objtool/builtin-check.c         |  13 +-
+>  tools/objtool/builtin.h               |   2 +-
+>  tools/objtool/check.c                 |  83 ++++++++
+>  tools/objtool/check.h                 |   1 +
+>  tools/objtool/objtool.h               |   1 +
+>  39 files changed, 883 insertions(+), 108 deletions(-)
+>  create mode 100755 scripts/generate_initcall_order.pl
+>  create mode 100644 scripts/module-lto.lds
+>
+>
+> base-commit: e28f0104343d0c132fa37f479870c9e43355fee4
+> --
+> 2.28.0.402.g5ffc5be6b7-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200903203053.3411268-1-samitolvanen%40google.com.
