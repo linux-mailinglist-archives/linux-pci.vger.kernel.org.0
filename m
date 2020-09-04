@@ -2,80 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E942125E1A7
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 20:55:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D59C425E1AA
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 20:56:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgIDSzL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 14:55:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgIDSzK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:55:10 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C483206B7
-        for <linux-pci@vger.kernel.org>; Fri,  4 Sep 2020 18:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599245710;
-        bh=i8O7u3HqWp1gqN3thqoJWvEdSlSh2vSIHRzh1/oKX9E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gu1EuGsloz83y8fKjLqPKOCQXpdTwXOUeUElDOYQsiZLPeh6z3Wo9qD+9zDH2S6nG
-         1zs6DclhjZl95Cy59mYbUQQ1WblJ7KoZYNPDp0kn9bwouSv7HP+MWurRzUyiCkVXhy
-         mu5Ruic7aFFN3R2YqtxznIsgpEGJF7NiH3c0sdaE=
-Received: by mail-oi1-f181.google.com with SMTP id w16so7483950oia.2
-        for <linux-pci@vger.kernel.org>; Fri, 04 Sep 2020 11:55:10 -0700 (PDT)
-X-Gm-Message-State: AOAM533NTGVs2D+xTBajJ7NUmms88no/xxRT0cq5uiVbHTBxTzAc31Kr
-        6x8+mfalca7FiDlvrZ6YLOqB8XwEzAYQZpP32w==
-X-Google-Smtp-Source: ABdhPJxuIOuSQjWModMalFgqxXPB0QIQz9a2SuXzhvdHMYgV5RX3YmToPpqoM9Zo/G9j8nH7clnd7ou5pkNLCHDBHSg=
-X-Received: by 2002:aca:4cc7:: with SMTP id z190mr6328397oia.147.1599245709496;
- Fri, 04 Sep 2020 11:55:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200904140904.944-1-lorenzo.pieralisi@arm.com>
-In-Reply-To: <20200904140904.944-1-lorenzo.pieralisi@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 4 Sep 2020 12:54:58 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+CcY-50NgwyF9Mh2uvgLF_rd0pfjyo=v=X0JAGJcs++A@mail.gmail.com>
-Message-ID: <CAL_Jsq+CcY-50NgwyF9Mh2uvgLF_rd0pfjyo=v=X0JAGJcs++A@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rockchip: Fix bus checks in rockchip_pcie_valid_device()
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        id S1726133AbgIDS4h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 14:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgIDS4g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Sep 2020 14:56:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7E0C061244;
+        Fri,  4 Sep 2020 11:56:33 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a65so7131972wme.5;
+        Fri, 04 Sep 2020 11:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PqnchSBC4ce9kD+elBEN3iqVRw/a6f6MQUzRH1fFwtc=;
+        b=tZZZMzrjjEL8v+mR735j/8/ps2TQQj/jEZVZZF2cGYWEuzCLOrEy6OTfbK+3sG1g8A
+         tY/mhZsOCxVPODmH+fwIEZ2D0wfOcX/UOkU7iJi3JamsPR7X1lMH7WlovmjRlGCd5zgJ
+         8YRW0eQrPu5uG86NQtQB5lIZa0+ryFcV9B/PwiT5ByHmi3c5u1lG3HZYC8T5HpylVszO
+         G8UixO8Zfk33vhZVFUwraq2kpWnJPCI5/NDIWe7wHcFUs/uP67GPvK/jovKr1LwJmfrB
+         Vdc2Xd9ThJMOqlFrzDXLBLmi3kKm2RXIRma2dtKP7y1LtoWQITgJSQuzU604AgErMVRq
+         T8Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PqnchSBC4ce9kD+elBEN3iqVRw/a6f6MQUzRH1fFwtc=;
+        b=tSX5NxbwxUfLQ0OgH+cZuiKKlpPxVfpXryyX4pMx2PwxUXtNePkuoj5sNGc1ICbljK
+         BfRUqIDmUvFkCymqvXUA/WNHcVFK0y/r3DVz4UlZGKYf34CNX0GsWzKPhxmNjQUyNRVz
+         BReyM0nS9Lj9FRUfLJnK2VhWJjn/nFmgA+l8Amn/ctw3d8MhifGIqeMQpJwJ4pMUZkub
+         YEcUw2bCojGRPvu9N1ptDLDwcrI9UnxSwBOhrjAbztl1Ts8XscjKVNgC6ru721mT54d8
+         W2doQBA6okgvlVlvv9823MSMBv+xUL0qDKi3/krzEsQUjha2cr26kPvDKgnrE4LTH0ER
+         nfLA==
+X-Gm-Message-State: AOAM532Oz/3fhB8RH1a91f5DwS6CFTTshDWsBEOY4grHA9basPX47kds
+        bvZDeRRMVUdZUWH9wHZuBuI=
+X-Google-Smtp-Source: ABdhPJxgM6f1WE13230F3a3T6BDFrVbbjErwvzWA8pwo99jUWDoEmKbIR1ZxSXjqXBh7FSk5TW3onQ==
+X-Received: by 2002:a1c:5605:: with SMTP id k5mr3663106wmb.142.1599245791497;
+        Fri, 04 Sep 2020 11:56:31 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id b76sm12892229wme.45.2020.09.04.11.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 11:56:30 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: keystone: Enable compile-testing on !ARM
+Date:   Fri,  4 Sep 2020 19:56:09 +0100
+Message-Id: <20200904185609.171636-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 8:09 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> The root bus checks rework in:
->
-> commit d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus")
->
-> caused a regression whereby in rockchip_pcie_valid_device() if
-> the bus parameter is the root bus and the dev value == 0 the
-> function should return 1 (ie true) without checking if the
-> bus->parent pointer is a root bus because that triggers a NULL
-> pointer dereference.
->
-> Fix this by streamlining the root bus detection.
->
-> Fixes: d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus")
-> Reported-by: Samuel Dionne-Riel <samuel@dionne-riel.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
->  drivers/pci/controller/pcie-rockchip-host.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
+Currently the Keystone driver can only be compile-tested on ARM, but
+this restriction seems unnecessary. Get rid of it to increase test
+coverage.
 
-Even better than my broken version.
+Build-tested on x86 with allyesconfig.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/pci/controller/dwc/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 044a3761c44f..ca36691314ed 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -107,7 +107,7 @@ config PCI_KEYSTONE
+ 
+ config PCI_KEYSTONE_HOST
+ 	bool "PCI Keystone Host Mode"
+-	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
++	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 	select PCI_KEYSTONE
+@@ -119,7 +119,7 @@ config PCI_KEYSTONE_HOST
+ 
+ config PCI_KEYSTONE_EP
+ 	bool "PCI Keystone Endpoint Mode"
+-	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
++	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW_EP
+ 	select PCI_KEYSTONE
+-- 
+2.28.0
+
