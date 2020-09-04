@@ -2,44 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4A9D25E1C3
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 21:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EE5825E1CA
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Sep 2020 21:13:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgIDTK1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Sep 2020 15:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37104 "EHLO mail.kernel.org"
+        id S1726277AbgIDTNT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Sep 2020 15:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgIDTKZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:10:25 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        id S1726265AbgIDTNT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:13:19 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A633206A5
-        for <linux-pci@vger.kernel.org>; Fri,  4 Sep 2020 19:10:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6051C206B8
+        for <linux-pci@vger.kernel.org>; Fri,  4 Sep 2020 19:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599246625;
-        bh=dIWllhVPFVZN0hZPo+9KiCvcHa/Wi3vfqifSVwdjWUg=;
+        s=default; t=1599246798;
+        bh=Owwwx48zTzwVWjpDFG1//g/fUyXBMElpSOw7p1Gqe4Y=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FJprIROwkNk5iCnmGTBuoRgg+tfcW/6M3F4YT72iq3sHnmjFHbt7/MTAxFtLjIHIk
-         vgqRcmVmRywsMilm9GKM5gslzAshzgH+l7inXtsHdD2UU1pkWgkBnRQBP2ti8rYnFS
-         46lEzHrTYNJvm6jNy7M+dr0Cu/3upjiGkhoNIIbw=
-Received: by mail-ot1-f53.google.com with SMTP id m12so3871518otr.0
-        for <linux-pci@vger.kernel.org>; Fri, 04 Sep 2020 12:10:25 -0700 (PDT)
-X-Gm-Message-State: AOAM531qxEvHW/IuYs5hdfr39YDcU2p8av7P6sjWYWl+Dui/tUDXWfzz
-        mPEoTBpl2fj9v2ydMVxcDtXLFiFkn5eIJzDLng==
-X-Google-Smtp-Source: ABdhPJzFANIN+WjBp2TV3P9GQVXx/JdiADo5E8VZ7HBs3g0WF0ZFtUe6F7lI/8/lg91zPOCBTfy0Zig/qP2CL1u84wU=
-X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr6196355otp.107.1599246624935;
- Fri, 04 Sep 2020 12:10:24 -0700 (PDT)
+        b=Wn27XH3gIgmSq9IMeE8Ucrd9cJrFESt3hd22/xnCh4Zo4F9as5t4xYYbg3XuRa/j7
+         /UC11kryEp00OTvQSkebPxRriVpb1O40YG1bTB54fOtJ63Uwext8YxhJdoas7A0Kwz
+         Ni81YvV3iIgThkkLYH5lRSELJLcxbgT3BCPNvLsY=
+Received: by mail-oi1-f171.google.com with SMTP id z22so7542930oid.1
+        for <linux-pci@vger.kernel.org>; Fri, 04 Sep 2020 12:13:18 -0700 (PDT)
+X-Gm-Message-State: AOAM532ka1GGiKgmNz8FLiAkX6K0ta34yJ7pVnC5fi9AM/07gYRVEl+s
+        JUstVOINHm3REp1FBV9HUnQoB60iy7LE2m155Q==
+X-Google-Smtp-Source: ABdhPJy+JiQUwTXGopw5b11cb1ZulrGsW0e7T32qeHh+SdXQ0a84uBOfd6SaL+JHbRTV3bruFzYNSqYmsLqE6n9VxXw=
+X-Received: by 2002:aca:1711:: with SMTP id j17mr6370474oii.152.1599246797728;
+ Fri, 04 Sep 2020 12:13:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904142710.8018-1-lorenzo.pieralisi@arm.com>
-In-Reply-To: <20200904142710.8018-1-lorenzo.pieralisi@arm.com>
+References: <20200904142132.6054-1-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20200904142132.6054-1-lorenzo.pieralisi@arm.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 4 Sep 2020 13:10:13 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+m7OXWwhvsdE+Yuaj60_M3BaLWD8f6fJB7wXQE7+V1Lg@mail.gmail.com>
-Message-ID: <CAL_Jsq+m7OXWwhvsdE+Yuaj60_M3BaLWD8f6fJB7wXQE7+V1Lg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: xilinx-cpm: Remove leftover bridge initialization
+Date:   Fri, 4 Sep 2020 13:13:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKVXsKZkR09uNOnWtO2sSZXBUF=PHk-_zhYbC6EfN7Z_w@mail.gmail.com>
+Message-ID: <CAL_JsqKVXsKZkR09uNOnWtO2sSZXBUF=PHk-_zhYbC6EfN7Z_w@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mvebu: Remove useless msi_controller allocation/initialization
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     PCI <linux-pci@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -48,19 +49,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 8:27 AM Lorenzo Pieralisi
+On Fri, Sep 4, 2020 at 8:21 AM Lorenzo Pieralisi
 <lorenzo.pieralisi@arm.com> wrote:
 >
-> Some fields in the host bridge structure are now initialized
-> by default in the PCI/OF core functions therefore their
-> initialization in the host controller driver is superfluous.
+> The mvebu host controller driver allocates an msi_controller structure
+> without assigning its methods.
+
+It's only allocating a pointer, not an actual msi_controller struct. Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+>
+> This means that the PCI IRQ MSI layer ignores it and that after all it
+> should not really be needed.
 >
 > Remove it.
 >
 > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 > Cc: Rob Herring <robh@kernel.org>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 > ---
->  drivers/pci/controller/pcie-xilinx-cpm.c | 4 ----
->  1 file changed, 4 deletions(-)
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+>  drivers/pci/controller/pci-mvebu.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index c39978b750ec..eee82838f4ba 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -12,7 +12,6 @@
+>  #include <linux/gpio.h>
+>  #include <linux/init.h>
+>  #include <linux/mbus.h>
+> -#include <linux/msi.h>
+>  #include <linux/slab.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+> @@ -70,7 +69,6 @@ struct mvebu_pcie_port;
+>  struct mvebu_pcie {
+>         struct platform_device *pdev;
+>         struct mvebu_pcie_port *ports;
+> -       struct msi_controller *msi;
+>         struct resource io;
+>         struct resource realio;
+>         struct resource mem;
+> @@ -1127,7 +1125,6 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+>         bridge->sysdata = pcie;
+>         bridge->ops = &mvebu_pcie_ops;
+>         bridge->align_resource = mvebu_pcie_align_resource;
+> -       bridge->msi = pcie->msi;
+>
+>         return mvebu_pci_host_probe(bridge);
+>  }
+> --
+> 2.26.1
+>
