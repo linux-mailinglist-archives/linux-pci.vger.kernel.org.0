@@ -2,209 +2,335 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F59E260502
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 21:05:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5C2B26050C
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 21:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgIGTFF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 15:05:05 -0400
-Received: from mail-eopbgr750103.outbound.protection.outlook.com ([40.107.75.103]:30592
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729211AbgIGTFE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Sep 2020 15:05:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P3fp6sRXcG4eR0rpa1ZPys3G7ULTIERaowyul92Mt3DRvmuzboozHVYDGuKB3C2L/tiha79UiVPLB8SBZbpjFagjdlvtJm1HVlznHm8t7PpdptW0/WZAIPosBtlRWaLONRMdo5X2fKY+OB1lt2SYjlewI/1gVvPxh92BWdvF4XUIIfVLLDSGa+A9qkU7hJKSU5Dlj6nD4h/pTL+KQasUVwx2NjDmh6On6awTJl46fdg/mW9nUS7tyZBYA1RPBIrzOgoYNqFpF72YkInqGc1u9c4+H7fonhA7YJxMuWtikaTNQuVfhYcRNxl0kLOaFbYzB1VwH/JE+B7KgEz8w9/aoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C9v4ihdx9HdEJXcqa0c3VBi7xcsKnofMlCqpq9HAnW4=;
- b=PCvnXgnzzhU59NbjlarWwxkKvFADdLwyarns38JXaZFfxU7hYT8JUOpgpQzK4m4VvR/7oSNqYb1zsMznUbU6Wv1uS6ci+3L57FQz5Naa30Efu1w3cj7an87haxSW4L58B6DJK8ATS1TvoY0t4ugK/pF8DAJc8QEtx6cieGKTAFc3fEnFEAR0PbihZnKPdGbd9k/8iPgpFgYGp1FR7+OL+RWsyZ8HZOQA5LuzzsujizTHPZKdfb8tD5rSkw3R34fUbokwCoDG6tPdr0Cnf0yOpGe1tAicwXIdbHhaZfR2Z/soHRPuwJJT7iiLz3na0HLh/Scut+I34o2LsxetRw7olA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C9v4ihdx9HdEJXcqa0c3VBi7xcsKnofMlCqpq9HAnW4=;
- b=PqRGBUgebWgFNEBL4CkRfcbNWo3quVVZWuh9cQ5p1VZqjFlnSybcbr/ug/UNMrdOyMCRIzu4ujfSuOu8QnehgiWxmvirrD37SD3zJFjOG45R0qBzBl73KKK+4un4s5MItDMNtqZ6FIVoI/KahY23i4ab481wLYDvFs4SoAJZ3hk=
-Received: from MWHPR21MB0864.namprd21.prod.outlook.com (2603:10b6:300:77::18)
- by MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.3; Mon, 7 Sep
- 2020 19:05:00 +0000
-Received: from MWHPR21MB0864.namprd21.prod.outlook.com
- ([fe80::a97c:96d2:350c:6fcc]) by MWHPR21MB0864.namprd21.prod.outlook.com
- ([fe80::a97c:96d2:350c:6fcc%14]) with mapi id 15.20.3391.004; Mon, 7 Sep 2020
- 19:05:00 +0000
-From:   Jake Oshins <jakeo@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Topic: [PATCH] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Index: AQHWgzAAK+v+0d2+K0aELsOGS7GgA6ldjLHA
-Date:   Mon, 7 Sep 2020 19:04:59 +0000
-Message-ID: <MWHPR21MB086421741C0B3B542D22B967AB280@MWHPR21MB0864.namprd21.prod.outlook.com>
-References: <20200905025450.45528-1-decui@microsoft.com>
-In-Reply-To: <20200905025450.45528-1-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=94e24c3c-36bf-4023-bc58-5e8ed30619e3;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-07T19:03:12Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [73.97.159.225]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f0e30ee1-0d08-48ea-38ff-08d85360eb44
-x-ms-traffictypediagnostic: MWHPR21MB1593:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB1593011897D5941B4933202AAB280@MWHPR21MB1593.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RFc1l46Pv7cDD2NOekVSfMPRKsSrbGsXyChvzpo2heOclxYSZDL9gk9SOMx2j6f3EqWClJ8aZ8tnl5bqgQgsUXBIIiU9NhU1YRYCZyLkfxvAYhofu/CuiqcpDIp55fhS65KYPrCLd3tnpcRMm7quB8ASriE/mpHelyVBgpIOvYVbJwY0aBEYHIHntwRCNn++Sw1KllX1oi/7R9XfYgYEi2nsTsZuy4TFTfhNPo69rO8aQVhvrP1dlplGM8SnRORsLLL/EAMQ/h/yz3/wn7fRgynFvp8/+DnaaHaZBg/1N9Dmtk7Ba3h7D0GIbQEnSuWnjO/o+z70sXjJDAUxY46OGRksGfMabmHceL2xN/cgsgHsGtzZCsELA06eRsFVdqQX6M7B8bwOxR8L8AQXEz38dfHT7OkmhIKgF1DSfOEtnrg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB0864.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(5660300002)(478600001)(9686003)(33656002)(52536014)(10290500003)(86362001)(66556008)(66446008)(8936002)(82950400001)(82960400001)(55016002)(76116006)(64756008)(8676002)(66946007)(66476007)(71200400001)(83380400001)(316002)(110136005)(8990500004)(53546011)(6506007)(6636002)(186003)(7696005)(26005)(2906002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: oWqimmZvUD5Mn9+SSw5DxFe6OW6OF/6JuBWyhiNkCoA5OCbbZS1WhCbciQEJIM33rQRyTZn5qRPMxGCtX5dFzXqmEUjJtUzAp5AghY2MLlaa0VPH19k5WQpHtWajMd8BbbCeRilwE+q8tEjovPUsy+iyKcuplofk5yy0vMxfjNNaxZGLCY9T8Q4OkIy3gOFlAHGDxYvXATUCPp8c0wbo6qwWNoFqBPUtSJU7tIZiFeOxJhTWHbtEDqAT8KMncyk/FhPxewtNJnQET2QO8ypYZibBdAL4jkMYsfd4Idv09sIMA5eDGXxp3maGFKppPmOZSpvU/MJi7fQy3kYdMOltSRJr5Hphsi99YTQZh2Ud0UlpcIYKzfQiDVvSFi7DHdm+3ba7JGH/0T9wK3V3MkQeJmbt0rycOGJR95n+3+c+Rs5inUEkidVAmzKnKp445cZKaF2tFsYaIMKFB34dqedHZYjATYhIim+ZoOVCoOhNrMlXhNCOyG0Ewvuxv3y5BrRMOS6A2OibuCmhVx1hnETmVRctxtRSCApykJXPqN3lALUiVY/b/qKW7UeMTtBDJD9vTi5jWUULIUbLQ24byEvbm7BbVeMc8HCSLlfsH7jbjYMfuLXb9wmegEwYSJ/XwrbSHFTlAzLbcUbFW1TdeCI27g==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1729434AbgIGTOb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 15:14:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21059 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728872AbgIGTO0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Sep 2020 15:14:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599506062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DAeJ+GP8ux6l+694W8tUaBiiTYKGjRipvc1FLm4AMJ8=;
+        b=CY1W4zwZD+QiQ4iJd92GB1LuZWXYBmijHEU34mTQ0/ECvjkC2ERz+CG8aLWHcp9/xvrWsi
+        OwRzccOno3VTGk8HDKJ1oRdYkWF3oIE539P0M7JTML6hocMhVGrJIaxzIJI5DXcbSZqvxN
+        LB6uWtLh1lFWBTxH+97xUTBuEq38Lt8=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-324-ItoupPw9MIeutwAZJV8NgA-1; Mon, 07 Sep 2020 15:14:16 -0400
+X-MC-Unique: ItoupPw9MIeutwAZJV8NgA-1
+Received: by mail-qt1-f200.google.com with SMTP id b54so7760153qtk.17
+        for <linux-pci@vger.kernel.org>; Mon, 07 Sep 2020 12:14:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DAeJ+GP8ux6l+694W8tUaBiiTYKGjRipvc1FLm4AMJ8=;
+        b=YQOTAAHZxvbvArQL+KXzHcc1nwun/D+MzSMK55IFRMYwrjyGvgLZPoKbWbZbV3ZUXi
+         KzLILxFL6WIOSxJkuu9c1G820SP1iipa8UyxL5DtydDOmuNFMatpG9mU+6ideVQiIizO
+         +MjMXEiG/7MbnvO8gfloBjUo6FC7LfuYhaaq3+8Nmp0Hq6XDWGRkYNSuWR/HupwuT4g7
+         dXO67JdeDw9wzwTJGRmq88kx0c1z3eQnmX9WsT+5V2Mes/kqEU8HuAZAtDDiHQKtJmgM
+         rf0VemHdo2VVFjy400aacgGsOPgeKad6QYQSYGenWnpyLN7Jnz/KDMGC0ByP0N1VX8i1
+         +Vcg==
+X-Gm-Message-State: AOAM533ayRgvElBtsNlxgvN43Vu2ctC9JeyzNu8WRNJDe80/tXWsWxcq
+        1nVGLIob4aZGjR/vL7zsFgnMVQAZfrDjSI+Jk3s/zSZkuoOhM9WfGQ6D3EON3NwKFUQM0igXtUi
+        WmP4orx9JLCmCzmImFSzeB+xiznhf9P86ZPnK
+X-Received: by 2002:ac8:7506:: with SMTP id u6mr19335076qtq.130.1599506055119;
+        Mon, 07 Sep 2020 12:14:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwI9h/8ZgpEZ2Pq0NZ5bFYBMRkxrKJ4WkO2YK1Y+X1waFmBlZwkaCobH3oz8VNE0wbsuDI4dC/OQHeunZB5DR8=
+X-Received: by 2002:ac8:7506:: with SMTP id u6mr19335044qtq.130.1599506054672;
+ Mon, 07 Sep 2020 12:14:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB0864.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0e30ee1-0d08-48ea-38ff-08d85360eb44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 19:04:59.9748
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Jh9Ijfy7aPeWyzckPQT+59idNyUbxzmUvAiiawLZirFHPq2TQou/D5B6Wh8ldFebx1GnTEI4sc+WJtNfjQXAbC/YM3ZyhYJ6B+FgUp42fQ0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB1593
+References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
+ <20191004123947.11087-2-mika.westerberg@linux.intel.com> <20200808202202.GA12007@merlins.org>
+ <20200906181852.GC13955@merlins.org>
+In-Reply-To: <20200906181852.GC13955@merlins.org>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Mon, 7 Sep 2020 21:14:03 +0200
+Message-ID: <CACO55tsodfUGVUjFw9=smFOhp_oXP8zWY_9+vL+iiPZhKJdtyg@mail.gmail.com>
+Subject: Re: [Nouveau] pcieport 0000:00:01.0: PME: Spurious native interrupt
+ (nvidia with nouveau and thunderbolt on thinkpad P73)
+To:     Marc MERLIN <marc_nouveau@merlins.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Andree <matthias.andree@gmx.de>,
+        Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> -----Original Message-----
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Friday, September 4, 2020 7:55 PM
-> To: wei.liu@kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> lorenzo.pieralisi@arm.com; bhelgaas@google.com; linux-hyperv@vger.kernel.=
-org;
-> linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Michael Kelley
-> <mikelley@microsoft.com>
-> Cc: Dexuan Cui <decui@microsoft.com>; Jake Oshins <jakeo@microsoft.com>
-> Subject: [PATCH] PCI: hv: Fix hibernation in case interrupts are not re-c=
-reated
->=20
-> Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X registers,=
- and we
-> must use hv_compose_msi_msg() to ask Hyper-V to create the IOMMU Interrup=
-t
-> Remapping Table Entries. This is not an issue for a lot of PCI device dri=
-vers (e.g.
-> NVMe driver, Mellanox NIC drivers), which destroy and re-create the inter=
-rupts
-> across hibernation, so
-> hv_compose_msi_msg() is called automatically. However, some other PCI dev=
-ice
-> drivers (e.g. the Nvidia driver) may not destroy and re-create the interr=
-upts across
-> hibernation, so hv_pci_resume() has to call hv_compose_msi_msg(), otherwi=
-se the
-> PCI device drivers can no longer receive MSI/MSI-X interrupts after hiber=
-nation.
->=20
-> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> Cc: Jake Oshins <jakeo@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index fc4c3a15e570..abefff9a20e1 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
->  	pbus =3D pdev->bus;
->  	hbus =3D container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
->=20
-> +	if (hbus->state =3D=3D hv_pcibus_removing) {
-> +		/*
-> +		 * During hibernatin, when a CPU is offlined, the kernel tries
-> +		 * to move the interrupt to the remaining CPUs that haven't
-> +		 * been offlined yet. In this case, the below hv_do_hypercall()
-> +		 * always fails since the vmbus channel has been closed, so we
-> +		 * should not call the hypercall, but we still need
-> +		 * pci_msi_unmask_irq() to reset the mask bit in desc->masked:
-> +		 * see cpu_disable_common() -> fixup_irqs() ->
-> +		 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-> +		 */
-> +		pci_msi_unmask_irq(data);
-> +		return;
-> +	}
-> +
->  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
->=20
->  	params =3D &hbus->retarget_msi_interrupt_params;
-> @@ -3372,6 +3387,33 @@ static int hv_pci_suspend(struct hv_device *hdev)
->  	return 0;
->  }
->=20
-> +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg) {
-> +	struct msi_desc *entry;
-> +	struct irq_data *irq_data;
-> +
-> +	for_each_pci_msi_entry(entry, pdev) {
-> +		irq_data =3D irq_get_irq_data(entry->irq);
-> +		if (WARN_ON_ONCE(!irq_data))
-> +			return -EINVAL;
-> +
-> +		hv_compose_msi_msg(irq_data, &entry->msg);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Upon resume, pci_restore_msi_state() -> ... ->
-> +__pci_write_msi_msg()
-> + * re-writes the MSI/MSI-X registers, but since Hyper-V doesn't trap
-> +and
-> + * emulate the accesses, we have to call hv_compose_msi_msg() to ask
-> + * Hyper-V to re-create the IOMMU Interrupt Remapping Table Entries.
-> + */
-> +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus) {
-> +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL); }
-> +
->  static int hv_pci_resume(struct hv_device *hdev)  {
->  	struct hv_pcibus_device *hbus =3D hv_get_drvdata(hdev); @@ -3405,6
-> +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
->=20
->  	prepopulate_bars(hbus);
->=20
-> +	hv_pci_restore_msi_state(hbus);
-> +
->  	hbus->state =3D hv_pcibus_installed;
->  	return 0;
->  out:
-> --
-> 2.19.1
+On Sun, Sep 6, 2020 at 8:52 PM Marc MERLIN <marc_nouveau@merlins.org> wrote:
+>
+> Ok, I have an update to this problem. I added the nouveau list because
+> I can't quite tell if the issue is:
+> - the PCIe changes that went in 5.6 I think (or 5.5?), referenced below
+>
+> - a new issue with thunderbold on thinkpad P73, that seems to be
+>   triggered if I have a USB-C yubikey in the port. With 5.7, my issues
+>   went away if I removed the USB key during boot, showing an interaction
+>   between nouveau and thunderbolt
+>
+> - changes in the nouveau driver. Mika told me the PCIe regression
+>   "pcieport 0000:00:01.0: PME: Spurious native interrupt!" is supposed
+>   to be fixed in 5.8, but I still get a 4mn hang or so during boot and
+>   with 5.8, removing the USB key, didn't help make the boot faster
+>
 
-Reviewed-by: Jake Oshins (jakeo@microsoft.com)
+that's the root port the GPU is attached to, no? I saw that message on
+the Thinkpad P1G2 when runtime resuming the Nvidia GPU, but it does
+seem to come from the root port.
+
+> I don't otherwise use the nvidia chip I so wish I didn't have, I only
+> use intel graphics on that laptop, but I must apparently use the nouveau
+> driver to manage the nouveau chip so that it's turned off and not
+> burning 60W doing nothing.
+>
+
+Well, you'd also need it when attaching external displays.
+
+> lspci is in the quoted message below, I won't copy it here again, but
+> here's the nvidia bit:
+> 01:00.0 VGA compatible controller: NVIDIA Corporation TU104GLM [Quadro RTX 4000 Mobile / Max-Q] (rev a1)
+> 01:00.1 Audio device: NVIDIA Corporation TU104 HD Audio Controller (rev a1)
+> 01:00.2 USB controller: NVIDIA Corporation TU104 USB 3.1 Host Controller (rev a1)
+> 01:00.3 Serial bus controller [0c80]: NVIDIA Corporation TU104 USB Type-C UCSI Controller (rev a1)
+>
+> Here are 5 boots, 4 on 5.8.5:
+>
+> dmesg.1_hang_but_no_warning.txt https://pastebin.com/Y5NaH08n
+> Boot hung for quite a while, but no clear output
+>
+> dmesg.2_pme_spurious.txt https://pastebin.com/dX19aCpj
+> [    8.185808] nvidia-gpu 0000:01:00.3: runtime IRQ mapping not provided by arch
+> [    8.185989] nvidia-gpu 0000:01:00.3: enabling device (0000 -> 0002)
+> [    8.188986] nvidia-gpu 0000:01:00.3: enabling bus mastering
+> [   11.936507] nvidia-gpu 0000:01:00.3: PME# enabled
+> [   11.975985] nvidia-gpu 0000:01:00.3: PME# disabled
+> [   11.976011] pcieport 0000:00:01.0: PME: Spurious native interrupt!
+>
+> dmesg.3_usb_key_yanked.txt https://pastebin.com/m7QLnCZt
+> I yanked the USB key during boot, that seemed to help unlock things with
+> 5.7, but did not with 5.8. It's hung on a loop of:
+> [   11.262854] nvidia-gpu 0000:01:00.3: saving config space at offset 0x0 (reading 0x1ad910de)
+> [   11.262863] nvidia-gpu 0000:01:00.3: saving config space at offset 0x4 (reading 0x100406)
+> [   11.262869] nvidia-gpu 0000:01:00.3: saving config space at offset 0x8 (reading 0xc8000a1)
+> [   11.262874] nvidia-gpu 0000:01:00.3: saving config space at offset 0xc (reading 0x800000)
+> [   11.262880] nvidia-gpu 0000:01:00.3: saving config space at offset 0x10 (reading 0xce054000)
+> [   11.262885] nvidia-gpu 0000:01:00.3: saving config space at offset 0x14 (reading 0x0)
+> [   11.262890] nvidia-gpu 0000:01:00.3: saving config space at offset 0x18 (reading 0x0)
+> [   11.262895] nvidia-gpu 0000:01:00.3: saving config space at offset 0x1c (reading 0x0)
+> [   11.262900] nvidia-gpu 0000:01:00.3: saving config space at offset 0x20 (reading 0x0)
+> [   11.262906] nvidia-gpu 0000:01:00.3: saving config space at offset 0x24 (reading 0x0)
+> [   11.262911] nvidia-gpu 0000:01:00.3: saving config space at offset 0x28 (reading 0x0)
+> [   11.262916] nvidia-gpu 0000:01:00.3: saving config space at offset 0x2c (reading 0x229b17aa)
+> [   11.262921] nvidia-gpu 0000:01:00.3: saving config space at offset 0x30 (reading 0x0)
+> [   11.262926] nvidia-gpu 0000:01:00.3: saving config space at offset 0x34 (reading 0x68)
+> [   11.262931] nvidia-gpu 0000:01:00.3: saving config space at offset 0x38 (reading 0x0)
+> [   11.262937] nvidia-gpu 0000:01:00.3: saving config space at offset 0x3c (reading 0x4ff)
+> [   11.262985] nvidia-gpu 0000:01:00.3: PME# enabled
+> [   11.303060] nvidia-gpu 0000:01:00.3: PME# disabled
+>
+
+mhh, interesting. I heard some random comments that the Nvidia
+USB-C/UCSI driver is a bit broken and can cause various issues. Mind
+blacklisting i2c-nvidia-gpu and typec_nvidia (and verify they don't
+get loaded) and see if that helps?
+
+> dmesg.4_5.5_boot_fine.txt https://pastebin.com/WXgQTUYP
+> reference boot with 4.5, it works fine, no issues
+>
+> dmesg.5_no_key_still_hang.txt https://pastebin.com/kcT8Ras0
+> unfortunately, booting without the USB-C key in thunderbolt, did not
+> allow this boot to be faster, it looks different though:
+> [    6.723454] pcieport 0000:00:01.0: runtime IRQ mapping not provided by arch
+> [    6.723598] pcieport 0000:00:01.0: PME: Signaling with IRQ 122
+> [    6.724011] pcieport 0000:00:01.0: saving config space at offset 0x0 (reading 0x19018086)
+> [    6.724016] pcieport 0000:00:01.0: saving config space at offset 0x4 (reading 0x100407)
+> [    6.724021] pcieport 0000:00:01.0: saving config space at offset 0x8 (reading 0x604000d)
+> [    6.724025] pcieport 0000:00:01.0: saving config space at offset 0xc (reading 0x810000)
+> [    6.724029] pcieport 0000:00:01.0: saving config space at offset 0x10 (reading 0x0)
+> [    6.724033] pcieport 0000:00:01.0: saving config space at offset 0x14 (reading 0x0)
+> [    6.724037] pcieport 0000:00:01.0: saving config space at offset 0x18 (reading 0x10100)
+> [    6.724041] pcieport 0000:00:01.0: saving config space at offset 0x1c (reading 0x20002020)
+> [    6.724046] pcieport 0000:00:01.0: saving config space at offset 0x20 (reading 0xce00cd00)
+> [    6.724050] pcieport 0000:00:01.0: saving config space at offset 0x24 (reading 0xb1f1a001)
+> [    6.724054] pcieport 0000:00:01.0: saving config space at offset 0x28 (reading 0x0)
+> [    6.724058] pcieport 0000:00:01.0: saving config space at offset 0x2c (reading 0x0)
+> [    6.724062] pcieport 0000:00:01.0: saving config space at offset 0x30 (reading 0x0)
+> [    6.724066] pcieport 0000:00:01.0: saving config space at offset 0x34 (reading 0x88)
+> [    6.724070] pcieport 0000:00:01.0: saving config space at offset 0x38 (reading 0x0)
+> [    6.724074] pcieport 0000:00:01.0: saving config space at offset 0x3c (reading 0x201ff)
+> [    6.724129] pcieport 0000:00:1b.0: runtime IRQ mapping not provided by arch
+> [    6.724650] pcieport 0000:00:1b.0: PME: Signaling with IRQ 123
+> [    6.725021] pcieport 0000:00:1b.0: saving config space at offset 0x0 (reading 0xa3408086)
+> [    6.725026] pcieport 0000:00:1b.0: saving config space at offset 0x4 (reading 0x100407)
+> [    6.725031] pcieport 0000:00:1b.0: saving config space at offset 0x8 (reading 0x60400f0)
+> [    6.725035] pcieport 0000:00:1b.0: saving config space at offset 0xc (reading 0x810000)
+> [    6.725040] pcieport 0000:00:1b.0: saving config space at offset 0x10 (reading 0x0)
+> [    6.725044] pcieport 0000:00:1b.0: saving config space at offset 0x14 (reading 0x0)
+> [    6.725049] pcieport 0000:00:1b.0: saving config space at offset 0x18 (reading 0x20200)
+> [    6.725053] pcieport 0000:00:1b.0: saving config space at offset 0x1c (reading 0x200000f0)
+> [    6.725058] pcieport 0000:00:1b.0: saving config space at offset 0x20 (reading 0xce30ce30)
+> [    6.725062] pcieport 0000:00:1b.0: saving config space at offset 0x24 (reading 0x1fff1)
+> [    6.725067] pcieport 0000:00:1b.0: saving config space at offset 0x28 (reading 0x0)
+> [    6.725071] pcieport 0000:00:1b.0: saving config space at offset 0x2c (reading 0x0)
+> [    6.725075] pcieport 0000:00:1b.0: saving config space at offset 0x30 (reading 0x0)
+> [    6.725080] pcieport 0000:00:1b.0: saving config space at offset 0x34 (reading 0x40)
+> [    6.725084] pcieport 0000:00:1b.0: saving config space at offset 0x38 (reading 0x0)
+> [    6.725089] pcieport 0000:00:1b.0: saving config space at offset 0x3c (reading 0x201ff)
+> [    6.725154] pcieport 0000:00:1c.0: runtime IRQ mapping not provided by arch
+> [    6.725284] pcieport 0000:00:1c.0: PME: Signaling with IRQ 124
+> [    6.725580] pcieport 0000:00:1c.0: pciehp: Slot #0 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+> [    6.726086] pci_bus 0000:04: dev 00, created physical slot 0
+>
+> Any idea what's going on?
+>
+> Thanks,
+> Marc
+>
+> On Sat, Aug 08, 2020 at 01:22:02PM -0700, Marc MERLIN wrote:
+> > On Fri, Oct 04, 2019 at 03:39:46PM +0300, Mika Westerberg wrote:
+> > > This is otherwise similar to pcie_wait_for_link() but allows passing
+> > > custom activation delay in milliseconds.
+> > >
+> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > ---
+> > >  drivers/pci/pci.c | 21 ++++++++++++++++++---
+> > >  1 file changed, 18 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index e7982af9a5d8..bfd92e018925 100644
+> >
+> > Hi Mika,
+> >
+> > So, I have a thinkpad P73 with thunderbolt, and while I don't boot
+> > often, my last boots have been unreliable at best (was only able to boot
+> > 5.7 once, and 5.8 did not succeed either).
+> >
+> > 5.6 was working for a while, but couldn't boot it either this morning,
+> > so I had to go back to 5.5. This does not mean 5.5 does not have the
+> > problem, just that it booted this morning, while 5.6 didn't when I
+> > tried.
+> > Once the kernel is booted, the problem does not seem to occur much, or
+> > at all.
+> >
+> > Basically, I'm getting the same thing than this person with a P53 (which
+> > is a mostly identical lenovo thinkpad, to mine)
+> > kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
+> > kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
+> > kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
+> > kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
+> > kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
+> > https://bbs.archlinux.org/viewtopic.php?id=250658
+> >
+> > The kernel boots eventually, but it takes minutes, and everything is so
+> > super slow, that I just can't reasonably use the machine.
+> >
+> > This shows similar issues with 5.3, 5.4.
+> > https://forum.proxmox.com/threads/pme-spurious-native-interrupt-kernel-meldungen.62850/
+> >
+> > Another report here with 5.6:
+> > https://bugzilla.redhat.com/show_bug.cgi?id=1831899
+> >
+> > My current kernel is running your patch above, and I haven't done a lot
+> > of research yet to confirm whether going back to a kernel before it was
+> > merged, fixes the problem. Unfortunately the problem is not consistent,
+> > so it makes things harder to test/debug, especially on my main laptop
+> > that I do all my work on :)
+> >
+> > I noticed this older patch of yours:
+> > http://patchwork.ozlabs.org/project/linux-pci/patch/0113014581dbe2d1f938813f1783905bd81b79db.1560079442.git.lukas@wunner.de/
+> > This patch is not in my kernel, is it worth adding?
+> >
+> > Can I get you more info to help debug this?
+> >
+> > If that helps:
+> > sauron:/usr/src/linux-5.7.11-amd64-preempt-sysrq-20190816/drivers/pci# lspci
+> > 00:00.0 Host bridge: Intel Corporation Device 3e20 (rev 0d)
+> > 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) (rev 0d)
+> > 00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 630 (Mobile) (rev 02)
+> > 00:04.0 Signal processing controller: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem (rev 0d)
+> > 00:08.0 System peripheral: Intel Corporation Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th/8th Gen Core Processor Gaussian Mixture Model
+> > 00:12.0 Signal processing controller: Intel Corporation Cannon Lake PCH Thermal Controller (rev 10)
+> > 00:14.0 USB controller: Intel Corporation Cannon Lake PCH USB 3.1 xHCI Host Controller (rev 10)
+> > 00:14.2 RAM memory: Intel Corporation Cannon Lake PCH Shared SRAM (rev 10)
+> > 00:15.0 Serial bus controller [0c80]: Intel Corporation Cannon Lake PCH Serial IO I2C Controller #0 (rev 10)
+> > 00:15.1 Serial bus controller [0c80]: Intel Corporation Cannon Lake PCH Serial IO I2C Controller #1 (rev 10)
+> > 00:16.0 Communication controller: Intel Corporation Cannon Lake PCH HECI Controller (rev 10)
+> > 00:17.0 SATA controller: Intel Corporation Cannon Lake Mobile PCH SATA AHCI Controller (rev 10)
+> > 00:1b.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root Port #17 (rev f0)
+> > 00:1c.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root Port #1 (rev f0)
+> > 00:1c.5 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root Port #6 (rev f0)
+> > 00:1c.7 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root Port #8 (rev f0)
+> > 00:1e.0 Communication controller: Intel Corporation Cannon Lake PCH Serial IO UART Host Controller (rev 10)
+> > 00:1f.0 ISA bridge: Intel Corporation Cannon Lake LPC Controller (rev 10)
+> > 00:1f.3 Audio device: Intel Corporation Cannon Lake PCH cAVS (rev 10)
+> > 00:1f.4 SMBus: Intel Corporation Cannon Lake PCH SMBus Controller (rev 10)
+> > 00:1f.5 Serial bus controller [0c80]: Intel Corporation Cannon Lake PCH SPI Controller (rev 10)
+> > 00:1f.6 Ethernet controller: Intel Corporation Ethernet Connection (7) I219-LM (rev 10)
+> > 01:00.0 VGA compatible controller: NVIDIA Corporation TU104GLM [Quadro RTX 4000 Mobile / Max-Q] (rev a1)
+> > 01:00.1 Audio device: NVIDIA Corporation TU104 HD Audio Controller (rev a1)
+> > 01:00.2 USB controller: NVIDIA Corporation TU104 USB 3.1 Host Controller (rev a1)
+> > 01:00.3 Serial bus controller [0c80]: NVIDIA Corporation TU104 USB Type-C UCSI Controller (rev a1)
+> > 02:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983
+> > 04:00.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] (rev 06)
+> > 05:00.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] (rev 06)
+> > 05:01.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] (rev 06)
+> > 05:02.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] (rev 06)
+> > 05:04.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] (rev 06)
+> > 06:00.0 System peripheral: Intel Corporation JHL7540 Thunderbolt 3 NHI [Titan Ridge 4C 2018] (rev 06)
+> > 2c:00.0 USB controller: Intel Corporation JHL7540 Thunderbolt 3 USB Controller [Titan Ridge 4C 2018] (rev 06)
+> > 52:00.0 Network controller: Intel Corporation Wi-Fi 6 AX200 (rev 1a)
+> > 54:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader (rev 01)
+> >
+> >
+> > sauron:/usr/src/linux-5.7.11-amd64-preempt-sysrq-20190816/drivers/pci# lsusb -t
+> > /:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 10000M
+> > /:  Bus 05.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 480M
+> > /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 10000M
+> > /:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 480M
+> > /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/10p, 10000M
+> > /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/16p, 480M
+> >     |__ Port 2: Dev 2, If 0, Class=Human Interface Device, Driver=usbhid, 12M
+> >     |__ Port 8: Dev 3, If 3, Class=Video, Driver=uvcvideo, 480M
+> >     |__ Port 8: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
+> >     |__ Port 8: Dev 3, If 2, Class=Video, Driver=uvcvideo, 480M
+> >     |__ Port 8: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
+> >     |__ Port 9: Dev 4, If 0, Class=Vendor Specific Class, Driver=, 12M
+> >     |__ Port 14: Dev 6, If 0, Class=Wireless, Driver=btusb, 12M
+> >     |__ Port 14: Dev 6, If 1, Class=Wireless, Driver=btusb, 12M
+> >
+> > Thanks,
+> > Marc
+> > --
+> > "A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+> >
+> > Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
+>
+> --
+> "A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+>
+> Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
+>
 
