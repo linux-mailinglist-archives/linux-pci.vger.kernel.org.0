@@ -2,86 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 438EE25F210
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 05:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 108FF25F2A9
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 07:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgIGDaI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Sep 2020 23:30:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10776 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726318AbgIGDaH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 6 Sep 2020 23:30:07 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 57BD27BAAAD434CF8B0E;
-        Mon,  7 Sep 2020 11:30:05 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.33) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
- 11:30:02 +0800
-Subject: Re: [PATCH] PCI/ACPI: Suppress missing MCFG message
-To:     Jeremy Linton <jeremy.linton@arm.com>, <linux-acpi@vger.kernel.org>
-CC:     <tn@semihalf.com>, <bhelgaas@google.com>,
-        <lorenzo.pieralisi@arm.com>, <steven.price@arm.com>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <sudeep.holla@arm.com>,
-        <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20200904170829.431900-1-jeremy.linton@arm.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <f0c815a0-91f0-aaa6-0f1c-843400a83fd8@huawei.com>
-Date:   Mon, 7 Sep 2020 11:30:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200904170829.431900-1-jeremy.linton@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.33]
-X-CFilter-Loop: Reflected
+        id S1726721AbgIGFqA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 01:46:00 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:44056 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbgIGFqA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Sep 2020 01:46:00 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5BE101A0FB4;
+        Mon,  7 Sep 2020 07:45:58 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1DA351A0FCC;
+        Mon,  7 Sep 2020 07:45:53 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5B770402CA;
+        Mon,  7 Sep 2020 07:45:46 +0200 (CEST)
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        robh+dt@kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com,
+        lorenzo.pieralisi@arm.com, gustavo.pimentel@synopsys.com
+Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCH 0/7] PCI: layerscape: Add power management support
+Date:   Mon,  7 Sep 2020 13:37:54 +0800
+Message-Id: <20200907053801.22149-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jeremy,
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-On 2020/9/5 1:08, Jeremy Linton wrote:
-> MCFG is an optional ACPI table. Given there are machines
-> without PCI(e) (or it is hidden) we have been receiving
-> queries/complaints about what this message means given
-> its being presented as an error.
-> 
-> Lets only print an error if something is wrong with the
-> the given table/etc. The ACPI table list printed at boot
-> will continue to provide a way to detect when the table
-> is missing.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->   drivers/acpi/pci_mcfg.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index 54b36b7ad47d..0bc8c012f157 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -279,6 +279,6 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
->   void __init pci_mmcfg_late_init(void)
->   {
->   	int err = acpi_table_parse(ACPI_SIG_MCFG, pci_mcfg_parse);
+This patch series is to add PCIe power management support for NXP
+Layerscape platfroms.
 
-acpi_table_parse() will return errno -ENODEV and -EINVAL, and only
-returns -EINVAL if the table id or the handler is NULL, which is
-impossible here.
+Hou Zhiqiang (7):
+  PCI: dwc: Fix a bug of the case dw_pci->ops is NULL
+  PCI: layerscape: Change to use the DWC common link-up check function
+  dt-bindings: pci: layerscape-pci: Add a optional property big-endian
+  arm64: dts: layerscape: Add big-endian property for PCIe nodes
+  dt-bindings: pci: layerscape-pci: Update the description of SCFG
+    property
+  dts: arm64: ls1043a: Add SCFG phandle for PCIe nodes
+  PCI: layerscape: Add power management support
 
-> -	if (err)
-> +	if (err && err != -ENODEV)
+ .../bindings/pci/layerscape-pci.txt           |   6 +-
+ .../arm64/boot/dts/freescale/fsl-ls1012a.dtsi |   1 +
+ .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   6 +
+ .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   3 +
+ drivers/pci/controller/dwc/pci-layerscape.c   | 473 ++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.c  |  12 +-
+ drivers/pci/controller/dwc/pcie-designware.h  |   1 +
+ 7 files changed, 388 insertions(+), 114 deletions(-)
 
-So the error message below will never be printed, I would
-prefer update the pr_err() to pr_dbg() for optional ACPI
-table.
-
->   		pr_err("Failed to parse MCFG (%d)\n", err);
->   }
-
-Thanks
-Hanjun
+-- 
+2.17.1
 
