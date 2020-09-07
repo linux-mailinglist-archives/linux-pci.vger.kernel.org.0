@@ -2,144 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A28E425FD0C
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 17:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E807425FDCB
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 17:58:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbgIGP1l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 11:27:41 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:22974 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730072AbgIGP1G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Sep 2020 11:27:06 -0400
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 087FQVpa001816;
-        Tue, 8 Sep 2020 00:26:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 087FQVpa001816
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599492392;
-        bh=IR6uGigyFtGDGIA+2OM5ZSYgDCjCsPA/08OP3wwPpmI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HF6kxwrZWb/RyvWw0lecR13yfGnI7g+SVYuZ3GDrpLhjeQQBDFe3oweHMbptemm66
-         SshCNN/29Q2UvC9TLvqIwjxGc087kf+LNwwYemZ9X8N179UEkHP+whZYbBQFKBslQI
-         QLRVSs1kmDEgwP5nA60GQLqD2M/mdvIvnBM0aTB/FKDPseKBNZcIq2a2D/0zPSmgKn
-         AEmqSmPA7h2X4LFcI6QPvPonC70Ag3cB7mKCBtL8/C97R4MKbM4UHwkDKT0yrD5ghL
-         Zfzv833opPYiVtdnMgBuia+Ds748+7ZOS+r2vFL3fF0+vwlBvikfS9mHMkE8AAJya3
-         YQxpECBRYEZSg==
-X-Nifty-SrcIP: [209.85.210.173]
-Received: by mail-pf1-f173.google.com with SMTP id c196so3310350pfc.0;
-        Mon, 07 Sep 2020 08:26:32 -0700 (PDT)
-X-Gm-Message-State: AOAM531MQ94vq0bcadHaJu4h2pPF2hphNSNWiiobu5yZjv8EZaE3aG5O
-        IChk22lQWldIeRKUdl3bBFeMVCfULHqrTixZCzY=
-X-Google-Smtp-Source: ABdhPJzWMpKJKkob3tKKbsRMggvPdqUmZIz53kyp4B311hdgI26YjoFRx5atEqEpQRhRX5rjh34sk2xeMQI+Eblelz8=
-X-Received: by 2002:a62:e116:: with SMTP id q22mr9587524pfh.179.1599492391141;
- Mon, 07 Sep 2020 08:26:31 -0700 (PDT)
+        id S1730260AbgIGP6A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 11:58:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:37630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730002AbgIGOuH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:50:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94E4E31B;
+        Mon,  7 Sep 2020 07:38:25 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E88153F73C;
+        Mon,  7 Sep 2020 07:38:23 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 15:38:21 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     hongxing.zhu@nxp.com, l.stach@pengutronix.de, robh@kernel.org,
+        bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2] PCI: imx6: Do not output error message when
+ devm_clk_get() failed with -EPROBE_DEFER
+Message-ID: <20200907143821.GD9474@e121166-lin.cambridge.arm.com>
+References: <1597109364-4739-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com> <20200903203053.3411268-14-samitolvanen@google.com>
-In-Reply-To: <20200903203053.3411268-14-samitolvanen@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 8 Sep 2020 00:25:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
-Message-ID: <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
-Subject: Re: [PATCH v2 13/28] kbuild: lto: merge module sections
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597109364-4739-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> LLD always splits sections with LTO, which increases module sizes. This
-> change adds a linker script that merges the split sections in the final
-> module.
->
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Tue, Aug 11, 2020 at 09:29:24AM +0800, Anson Huang wrote:
+> When devm_clk_get() returns -EPROBE_DEFER, i.MX6 PCI driver should
+> NOT print error message, use dev_err_probe() to handle it.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Makefile               |  2 ++
->  scripts/module-lto.lds | 26 ++++++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644 scripts/module-lto.lds
->
-> diff --git a/Makefile b/Makefile
-> index c69e07bd506a..bb82a4323f1d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -921,6 +921,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
->  # Limit inlining across translation units to reduce binary size
->  LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
->  KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
-> +
-> +KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
->  endif
->
->  ifdef CONFIG_LTO
-> diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
-> new file mode 100644
-> index 000000000000..cbb11dc3639a
-> --- /dev/null
-> +++ b/scripts/module-lto.lds
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
-> + * -ffunction-sections, which increases the size of the final module.
-> + * Merge the split sections in the final binary.
-> + */
-> +SECTIONS {
-> +       __patchable_function_entries : { *(__patchable_function_entries) }
-> +
-> +       .bss : {
-> +               *(.bss .bss.[0-9a-zA-Z_]*)
-> +               *(.bss..L*)
-> +       }
-> +
-> +       .data : {
-> +               *(.data .data.[0-9a-zA-Z_]*)
-> +               *(.data..L*)
-> +       }
-> +
-> +       .rodata : {
-> +               *(.rodata .rodata.[0-9a-zA-Z_]*)
-> +               *(.rodata..L*)
-> +       }
-> +
-> +       .text : { *(.text .text.[0-9a-zA-Z_]*) }
-> +}
-> --
-> 2.28.0.402.g5ffc5be6b7-goog
->
+>  drivers/pci/controller/dwc/pci-imx6.c | 35 +++++++++++++++--------------------
+>  1 file changed, 15 insertions(+), 20 deletions(-)
 
+Applied to pci/imx6, thanks.
 
-After I apply https://patchwork.kernel.org/patch/11757323/,
-is it possible to do like this ?
+Lorenzo
 
-
-#ifdef CONFIG_LTO
-SECTIONS {
-     ...
-};
-#endif
-
-in scripts/module.lds.S
-
-
--- 
-Best Regards
-Masahiro Yamada
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 90df28c..e6d6116 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1073,38 +1073,33 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  
+>  	/* Fetch clocks */
+>  	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
+> -	if (IS_ERR(imx6_pcie->pcie_phy)) {
+> -		dev_err(dev, "pcie_phy clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_phy);
+> -	}
+> +	if (IS_ERR(imx6_pcie->pcie_phy))
+> +		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_phy),
+> +				     "pcie_phy clock source missing or invalid\n");
+>  
+>  	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
+> -	if (IS_ERR(imx6_pcie->pcie_bus)) {
+> -		dev_err(dev, "pcie_bus clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_bus);
+> -	}
+> +	if (IS_ERR(imx6_pcie->pcie_bus))
+> +		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_bus),
+> +				     "pcie_bus clock source missing or invalid\n");
+>  
+>  	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
+> -	if (IS_ERR(imx6_pcie->pcie)) {
+> -		dev_err(dev, "pcie clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie);
+> -	}
+> +	if (IS_ERR(imx6_pcie->pcie))
+> +		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie),
+> +				     "pcie clock source missing or invalid\n");
+>  
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX6SX:
+>  		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
+>  							   "pcie_inbound_axi");
+> -		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
+> -			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+> -			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
+> -		}
+> +		if (IS_ERR(imx6_pcie->pcie_inbound_axi))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_inbound_axi),
+> +					     "pcie_inbound_axi clock missing or invalid\n");
+>  		break;
+>  	case IMX8MQ:
+>  		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+> -		if (IS_ERR(imx6_pcie->pcie_aux)) {
+> -			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+> -			return PTR_ERR(imx6_pcie->pcie_aux);
+> -		}
+> +		if (IS_ERR(imx6_pcie->pcie_aux))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
+> +					     "pcie_aux clock source missing or invalid\n");
+>  		/* fall through */
+>  	case IMX7D:
+>  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+> -- 
+> 2.7.4
+> 
