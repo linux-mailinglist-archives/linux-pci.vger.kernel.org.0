@@ -2,94 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 298F525F930
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 13:19:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8455D25F935
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 13:20:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgIGLTX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 07:19:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:33046 "EHLO foss.arm.com"
+        id S1728780AbgIGLUq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 07:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbgIGLRz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:17:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C99461045;
-        Mon,  7 Sep 2020 04:02:13 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E3693F66E;
-        Mon,  7 Sep 2020 04:02:12 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 12:02:07 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>, stable@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh@kernel.org>,
+        id S1728703AbgIGLUg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:20:36 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B3912168B;
+        Mon,  7 Sep 2020 11:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599477055;
+        bh=pbOfow5vag3gTuUiXJsk3w65QeSK1YC8q7mI90YISaE=;
+        h=From:To:Subject:Date:From;
+        b=bMxpYFbxNuEgXRkoI/DHctwkDSX4T1RoL1Jx1VOaH4rAinH1A0TIJQRqiUFQ08cwW
+         o/WMvMhAG2mU6HZyM/IYwZummkFl0ujE/jFeCaHLJ6rr0oJ0TdIbqQgMN9cKB+jy0I
+         uEHy7dsQAfPmCUuKj19b9hDoDXdX7Pon44hEbTkY=
+Received: by pali.im (Postfix)
+        id 151BA814; Mon,  7 Sep 2020 13:10:53 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Make sure PCIe is reset before init for rev
- 2.1.0
-Message-ID: <20200907110207.GA7573@e121166-lin.cambridge.arm.com>
-References: <20200901124955.137-1-ansuelsmth@gmail.com>
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Xogium <contact@xogium.me>, marek.behun@nic.cz
+Subject: [PATCH v3 0/5] PCIe aardvark controller improvements
+Date:   Mon,  7 Sep 2020 13:10:33 +0200
+Message-Id: <20200907111038.5811-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901124955.137-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 02:49:54PM +0200, Ansuel Smith wrote:
-> Qsdk U-Boot can incorrectly leave the PCIe interface in an undefined
-> state if bootm command is used instead of bootipq. This is caused by the
-> not deinit of PCIe when bootm is called. Reset the PCIe before init
-> anyway to fix this U-Boot bug.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-> Cc: stable@vger.kernel.org # v4.19+
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+Hi,
 
-Applied to pci/qcom, thanks.
+we have some more improvements for PCIe aardvark controller (Armada 3720
+SOC - EspressoBIN and Turris MOX).
 
-Lorenzo
+The main improvement is that with these patches the driver can be compiled
+as a module, and can be reloaded at runtime.
 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 3aac77a295ba..82336bbaf8dc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -302,6 +302,9 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
->  	reset_control_assert(res->por_reset);
->  	reset_control_assert(res->ext_reset);
->  	reset_control_assert(res->phy_reset);
-> +
-> +	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
->  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
->  }
->  
-> @@ -314,6 +317,16 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	u32 val;
->  	int ret;
->  
-> +	/* reset the PCIe interface as uboot can leave it undefined state */
-> +	reset_control_assert(res->pci_reset);
-> +	reset_control_assert(res->axi_reset);
-> +	reset_control_assert(res->ahb_reset);
-> +	reset_control_assert(res->por_reset);
-> +	reset_control_assert(res->ext_reset);
-> +	reset_control_assert(res->phy_reset);
-> +
-> +	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
->  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
->  	if (ret < 0) {
->  		dev_err(dev, "cannot enable regulators\n");
-> -- 
-> 2.27.0
-> 
+Marek & Pali
+
+
+Changes in V3:
+* Rebased on top of the v5.9-rc1 release
+
+Changes in V2 for patch 4/5:
+* Protect pci_stop_root_bus() and pci_remove_root_bus() function calls by
+  pci_lock_rescan_remove() and pci_unlock_rescan_remove()
+
+Pali Rohár (5):
+  PCI: aardvark: Fix compilation on s390
+  PCI: aardvark: Check for errors from pci_bridge_emul_init() call
+  PCI: pci-bridge-emul: Export API functions
+  PCI: aardvark: Implement driver 'remove' function and allow to build
+    it as module
+  PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
+
+ drivers/pci/controller/Kconfig        |   2 +-
+ drivers/pci/controller/pci-aardvark.c | 104 ++++++++++++++++----------
+ drivers/pci/pci-bridge-emul.c         |   4 +
+ 3 files changed, 71 insertions(+), 39 deletions(-)
+
+-- 
+2.20.1
+
