@@ -2,138 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C569525F936
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 13:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2078C25F958
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 13:25:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgIGLUu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 07:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
+        id S1729005AbgIGLZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 07:25:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:33210 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgIGLUg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:20:36 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69FAF2176B;
-        Mon,  7 Sep 2020 11:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599477064;
-        bh=Sp+B9glHEiQL9X5ESJUoG443QwUdRzr0XJbD8+1OOWI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=wH7FszL4wDQpZXuWAP4ZftBal/8epDpNckFZFwQjEGu7A2aLrC7ykI1tEixDrrMz2
-         R+mNr3RQpNrFFoIATWWqFPkOrCFwz/PlQZOy7y+smPo0v+Bv6uoDRxb0BbpRQNd0/Y
-         cWGnGQFF5KoRuEZ001UFvQ7+O5eH3PsA4KWsUNOk=
-Received: by pali.im (Postfix)
-        id B15D5814; Mon,  7 Sep 2020 13:11:02 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
+        id S1728999AbgIGLZ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:25:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E7B11D4;
+        Mon,  7 Sep 2020 04:25:23 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86AD33F66E;
+        Mon,  7 Sep 2020 04:25:21 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 12:25:19 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>, marek.behun@nic.cz
-Subject: [PATCH v3 4/5] PCI: aardvark: Implement driver 'remove' function and allow to build it as module
-Date:   Mon,  7 Sep 2020 13:10:37 +0200
-Message-Id: <20200907111038.5811-5-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907111038.5811-1-pali@kernel.org>
-References: <20200907111038.5811-1-pali@kernel.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 0/3] Add PCIe EP to RZ/G2H
+Message-ID: <20200907112519.GB7573@e121166-lin.cambridge.arm.com>
+References: <20200904103851.3946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904103851.3946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Providing driver's 'remove' function allows kernel to bind and unbind devices
-from aardvark driver. It also allows to build aardvark driver as a module.
+On Fri, Sep 04, 2020 at 11:38:48AM +0100, Lad Prabhakar wrote:
+> Hi All,
+> 
+> This patch series adds PCIe EP support to R8A774E1 SoC.
+> 
+> patch 2/3 applies on top of [1] and patch 3/3 is dependent
+> on series [2].
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
+>     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
+> [2] https://patchwork.kernel.org/project/linux-pci/list/
+>     ?series=332849&submitter=&state=&q=&archive=&delegate=
+> 
+> Cheers,
+> Prabhakar
+> 
+> 
+> Lad Prabhakar (3):
+>   dt-bindings: pci: rcar-pci-ep: Document r8a774e1
+>   arm64: dts: renesas: r8a774e1: Add PCIe EP nodes
+>   misc: pci_endpoint_test: Add Device ID for RZ/G2H PCIe controller
+> 
+>  .../devicetree/bindings/pci/rcar-pci-ep.yaml  |  1 +
+>  arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 38 +++++++++++++++++++
+>  drivers/misc/pci_endpoint_test.c              |  2 +
+>  3 files changed, 41 insertions(+)
 
-Compiling aardvark as a module simplifies development and debugging of
-this driver as it can be reloaded at runtime without the need to reboot
-to new kernel.
+Took patches (1) and (3) in pci/rcar, thanks.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <marek.behun@nic.cz>
----
- drivers/pci/controller/Kconfig        |  2 +-
- drivers/pci/controller/pci-aardvark.c | 27 ++++++++++++++++++++++++---
- 2 files changed, 25 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index f18c3725ef80..a7aa22512a92 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -12,7 +12,7 @@ config PCI_MVEBU
- 	select PCI_BRIDGE_EMUL
- 
- config PCI_AARDVARK
--	bool "Aardvark PCIe controller"
-+	tristate "Aardvark PCIe controller"
- 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 2e2e2a2ff51d..b16822e344ab 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -14,6 +14,7 @@
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/phy/phy.h>
-@@ -1121,6 +1122,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 
- 	pcie = pci_host_bridge_priv(bridge);
- 	pcie->pdev = pdev;
-+	platform_set_drvdata(pdev, pcie);
- 
- 	pcie->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pcie->base))
-@@ -1198,18 +1200,37 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int advk_pcie_remove(struct platform_device *pdev)
-+{
-+	struct advk_pcie *pcie = platform_get_drvdata(pdev);
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-+
-+	pci_lock_rescan_remove();
-+	pci_stop_root_bus(bridge->bus);
-+	pci_remove_root_bus(bridge->bus);
-+	pci_unlock_rescan_remove();
-+
-+	advk_pcie_remove_msi_irq_domain(pcie);
-+	advk_pcie_remove_irq_domain(pcie);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id advk_pcie_of_match_table[] = {
- 	{ .compatible = "marvell,armada-3700-pcie", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, advk_pcie_of_match_table);
- 
- static struct platform_driver advk_pcie_driver = {
- 	.driver = {
- 		.name = "advk-pcie",
- 		.of_match_table = advk_pcie_of_match_table,
--		/* Driver unloading/unbinding currently not supported */
--		.suppress_bind_attrs = true,
- 	},
- 	.probe = advk_pcie_probe,
-+	.remove = advk_pcie_remove,
- };
--builtin_platform_driver(advk_pcie_driver);
-+module_platform_driver(advk_pcie_driver);
-+
-+MODULE_DESCRIPTION("Aardvark PCIe controller");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
-
+Lorenzo
