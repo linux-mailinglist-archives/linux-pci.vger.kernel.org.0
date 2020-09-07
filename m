@@ -2,162 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5943725F6DD
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 11:50:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5082125F757
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 12:08:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgIGJuX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 05:50:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:59148 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgIGJuT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:50:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6198930E;
-        Mon,  7 Sep 2020 02:50:18 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1303E3F66E;
-        Mon,  7 Sep 2020 02:50:16 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 10:50:14 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: no need to check return value of
- debugfs_create functions
-Message-ID: <20200907095014.GE6428@e121166-lin.cambridge.arm.com>
-References: <20200818133739.463193-1-gregkh@linuxfoundation.org>
+        id S1728580AbgIGKIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 06:08:25 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:59352 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728317AbgIGKHp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Sep 2020 06:07:45 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 087A7NPR0026756, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 087A7NPR0026756
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 7 Sep 2020 18:07:23 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2044.4; Mon, 7 Sep 2020 18:07:23 +0800
+Received: from localhost (172.22.88.222) by RTEXMB01.realtek.com.tw
+ (172.21.6.94) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Mon, 7 Sep 2020
+ 18:07:23 +0800
+From:   <ricky_wu@realtek.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <ricky_wu@realtek.com>, <bhelgaas@google.com>,
+        <ulf.hansson@linaro.org>, <rui_feng@realsil.com.cn>,
+        <linux-kernel@vger.kernel.org>, <puranjay12@gmail.com>,
+        <linux-pci@vger.kernel.org>, <vailbhavgupta40@gamail.com>
+Subject: [PATCH v5 1/2] misc: rtsx: Fix power down flow
+Date:   Mon, 7 Sep 2020 18:07:18 +0800
+Message-ID: <20200907100718.7672-1-ricky_wu@realtek.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818133739.463193-1-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [172.22.88.222]
+X-ClientProxiedBy: RTEXMB04.realtek.com.tw (172.21.6.97) To
+ RTEXMB01.realtek.com.tw (172.21.6.94)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 03:37:39PM +0200, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
-> 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Vidya Sagar <vidyas@nvidia.com>
-> Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 20 +++++------------
->  drivers/pci/controller/pci-tegra.c         | 25 +++++-----------------
->  2 files changed, 10 insertions(+), 35 deletions(-)
+From: Ricky Wu <ricky_wu@realtek.com>
 
-Applied to pci/tegra, thanks.
+Fix and sort out rtsx driver power down flow
 
-Lorenzo
+Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+---
+ drivers/misc/cardreader/rts5227.c  | 15 ---------------
+ drivers/misc/cardreader/rts5228.c  |  5 ++---
+ drivers/misc/cardreader/rts5249.c  | 17 -----------------
+ drivers/misc/cardreader/rts5260.c  | 16 ----------------
+ drivers/misc/cardreader/rtsx_pcr.c | 16 ++++++++++++++++
+ 5 files changed, 18 insertions(+), 51 deletions(-)
 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 70498689d0c0..87f8dd63df0a 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -699,23 +699,16 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
->  	dw_pcie_writel_dbi(pci, PORT_LOGIC_ACK_F_ASPM_CTRL, val);
->  }
->  
-> -static int init_debugfs(struct tegra_pcie_dw *pcie)
-> +static void init_debugfs(struct tegra_pcie_dw *pcie)
->  {
-> -	struct dentry *d;
-> -
-> -	d = debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt",
-> -					pcie->debugfs, aspm_state_cnt);
-> -	if (IS_ERR_OR_NULL(d))
-> -		dev_err(pcie->dev,
-> -			"Failed to create debugfs file \"aspm_state_cnt\"\n");
-> -
-> -	return 0;
-> +	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
-> +				    aspm_state_cnt);
->  }
->  #else
->  static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { return; }
->  static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { return; }
->  static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { return; }
-> -static inline int init_debugfs(struct tegra_pcie_dw *pcie) { return 0; }
-> +static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
->  #endif
->  
->  static void tegra_pcie_enable_system_interrupts(struct pcie_port *pp)
-> @@ -1641,10 +1634,7 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->  	}
->  
->  	pcie->debugfs = debugfs_create_dir(name, NULL);
-> -	if (!pcie->debugfs)
-> -		dev_err(dev, "Failed to create debugfs\n");
-> -	else
-> -		init_debugfs(pcie);
-> +	init_debugfs(pcie);
->  
->  	return ret;
->  
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index c1d34353c29b..e1a6f9db36f7 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2601,24 +2601,12 @@ static void tegra_pcie_debugfs_exit(struct tegra_pcie *pcie)
->  	pcie->debugfs = NULL;
->  }
->  
-> -static int tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
-> +static void tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
->  {
-> -	struct dentry *file;
-> -
->  	pcie->debugfs = debugfs_create_dir("pcie", NULL);
-> -	if (!pcie->debugfs)
-> -		return -ENOMEM;
-> -
-> -	file = debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs,
-> -				   pcie, &tegra_pcie_ports_ops);
-> -	if (!file)
-> -		goto remove;
-> -
-> -	return 0;
->  
-> -remove:
-> -	tegra_pcie_debugfs_exit(pcie);
-> -	return -ENOMEM;
-> +	debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs, pcie,
-> +			    &tegra_pcie_ports_ops);
->  }
->  
->  static int tegra_pcie_probe(struct platform_device *pdev)
-> @@ -2672,11 +2660,8 @@ static int tegra_pcie_probe(struct platform_device *pdev)
->  		goto pm_runtime_put;
->  	}
->  
-> -	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
-> -		err = tegra_pcie_debugfs_init(pcie);
-> -		if (err < 0)
-> -			dev_err(dev, "failed to setup debugfs: %d\n", err);
-> -	}
-> +	if (IS_ENABLED(CONFIG_DEBUG_FS))
-> +		tegra_pcie_debugfs_init(pcie);
->  
->  	return 0;
->  
-> -- 
-> 2.28.0
-> 
+diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+index f5f392ddf3d6..747391e3fb5d 100644
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -77,19 +77,6 @@ static void rts5227_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+ }
+ 
+-static void rts5227_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+-{
+-	/* Set relink_time to 0 */
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
+-
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x10);
+-
+-	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
+-}
+-
+ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
+ {
+ 	u16 cap;
+@@ -239,7 +226,6 @@ static const struct pcr_ops rts5227_pcr_ops = {
+ 	.switch_output_voltage = rts5227_switch_output_voltage,
+ 	.cd_deglitch = NULL,
+ 	.conv_clk_and_div_n = NULL,
+-	.force_power_down = rts5227_force_power_down,
+ };
+ 
+ /* SD Pull Control Enable:
+@@ -389,7 +375,6 @@ static const struct pcr_ops rts522a_pcr_ops = {
+ 	.switch_output_voltage = rts522a_switch_output_voltage,
+ 	.cd_deglitch = NULL,
+ 	.conv_clk_and_div_n = NULL,
+-	.force_power_down = rts5227_force_power_down,
+ };
+ 
+ void rts522a_init_params(struct rtsx_pcr *pcr)
+diff --git a/drivers/misc/cardreader/rts5228.c b/drivers/misc/cardreader/rts5228.c
+index 28feab1449ab..781a86def59a 100644
+--- a/drivers/misc/cardreader/rts5228.c
++++ b/drivers/misc/cardreader/rts5228.c
+@@ -99,9 +99,8 @@ static void rts5228_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+ 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
+ 				RELINK_TIME_MASK, 0);
+ 
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+-					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
++	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
++			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+ 
+ 	rtsx_pci_write_register(pcr, FPDCTL,
+ 		SSC_POWER_DOWN, SSC_POWER_DOWN);
+diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+index 941b3d77f1e9..719aa2d61919 100644
+--- a/drivers/misc/cardreader/rts5249.c
++++ b/drivers/misc/cardreader/rts5249.c
+@@ -78,20 +78,6 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+ }
+ 
+-static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+-{
+-	/* Set relink_time to 0 */
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
+-
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+-			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+-
+-	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
+-}
+-
+ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
+ {
+ 	struct pci_dev *pdev = pcr->pci;
+@@ -360,7 +346,6 @@ static const struct pcr_ops rts5249_pcr_ops = {
+ 	.card_power_on = rtsx_base_card_power_on,
+ 	.card_power_off = rtsx_base_card_power_off,
+ 	.switch_output_voltage = rtsx_base_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ };
+ 
+ /* SD Pull Control Enable:
+@@ -585,7 +570,6 @@ static const struct pcr_ops rts524a_pcr_ops = {
+ 	.card_power_on = rtsx_base_card_power_on,
+ 	.card_power_off = rtsx_base_card_power_off,
+ 	.switch_output_voltage = rtsx_base_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ 	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
+ };
+ 
+@@ -700,7 +684,6 @@ static const struct pcr_ops rts525a_pcr_ops = {
+ 	.card_power_on = rts525a_card_power_on,
+ 	.card_power_off = rtsx_base_card_power_off,
+ 	.switch_output_voltage = rts525a_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ 	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
+ };
+ 
+diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+index b9f66b1384a6..897cfee350e7 100644
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -87,21 +87,6 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+ }
+ 
+-static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+-{
+-	/* Set relink_time to 0 */
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, MASK_8_BIT_DEF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, MASK_8_BIT_DEF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
+-				RELINK_TIME_MASK, 0);
+-
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+-					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+-
+-	rtsx_pci_write_register(pcr, FPDCTL, ALL_POWER_DOWN, ALL_POWER_DOWN);
+-}
+-
+ static int rtsx_base_enable_auto_blink(struct rtsx_pcr *pcr)
+ {
+ 	return rtsx_pci_write_register(pcr, OLT_LED_CTL,
+@@ -620,7 +605,6 @@ static const struct pcr_ops rts5260_pcr_ops = {
+ 	.card_power_on = rts5260_card_power_on,
+ 	.card_power_off = rts5260_card_power_off,
+ 	.switch_output_voltage = rts5260_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ 	.stop_cmd = rts5260_stop_cmd,
+ 	.set_l1off_cfg_sub_d0 = rts5260_set_l1off_cfg_sub_d0,
+ 	.enable_ocp = rts5260_enable_ocp,
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+index 37ccc67f4914..3f84b898bd9c 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -1096,6 +1096,20 @@ static void rtsx_pci_idle_work(struct work_struct *work)
+ 	mutex_unlock(&pcr->pcr_mutex);
+ }
+ 
++static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
++{
++	/* Set relink_time to 0 */
++	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, MASK_8_BIT_DEF, 0);
++	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, MASK_8_BIT_DEF, 0);
++	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
++			RELINK_TIME_MASK, 0);
++
++	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
++			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
++
++	rtsx_pci_write_register(pcr, FPDCTL, ALL_POWER_DOWN, ALL_POWER_DOWN);
++}
++
+ static void __maybe_unused rtsx_pci_power_off(struct rtsx_pcr *pcr, u8 pm_state)
+ {
+ 	if (pcr->ops->turn_off_led)
+@@ -1109,6 +1123,8 @@ static void __maybe_unused rtsx_pci_power_off(struct rtsx_pcr *pcr, u8 pm_state)
+ 
+ 	if (pcr->ops->force_power_down)
+ 		pcr->ops->force_power_down(pcr, pm_state);
++	else
++		rtsx_base_force_power_down(pcr, pm_state);
+ }
+ 
+ void rtsx_pci_enable_ocp(struct rtsx_pcr *pcr)
+-- 
+2.17.1
+
