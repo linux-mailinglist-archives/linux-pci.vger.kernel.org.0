@@ -2,92 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42D6B25FE71
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 18:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25C2F25FF64
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 18:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgIGQQk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 12:16:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:40042 "EHLO foss.arm.com"
+        id S1729884AbgIGQbT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 12:31:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:37068 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729973AbgIGQQg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:16:36 -0400
+        id S1729831AbgIGOYS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:24:18 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2845831B;
-        Mon,  7 Sep 2020 09:16:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B64751045;
+        Mon,  7 Sep 2020 07:24:17 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DBE93F68F;
-        Mon,  7 Sep 2020 09:16:27 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 17:16:25 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F00903F73C;
+        Mon,  7 Sep 2020 07:24:15 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 15:24:13 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc:     ray.jui@broadcom.com, helgaas@kernel.org, sbranden@broadcom.com,
-        f.fainelli@gmail.com, robh@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] PCI: iproc: Set affinity mask on MSI interrupts
-Message-ID: <20200907161625.GB10272@e121166-lin.cambridge.arm.com>
-References: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH v2][next] PCI: imx6: Use fallthrough pseudo-keyword
+Message-ID: <20200907142413.GB9474@e121166-lin.cambridge.arm.com>
+References: <20200722031903.GA3711@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+In-Reply-To: <20200722031903.GA3711@embeddedor>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:52:40PM +1200, Mark Tomlinson wrote:
-> The core interrupt code expects the irq_set_affinity call to update the
-> effective affinity for the interrupt. This was not being done, so update
-> iproc_msi_irq_set_affinity() to do so.
+On Tue, Jul 21, 2020 at 10:19:03PM -0500, Gustavo A. R. Silva wrote:
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
 > 
-> Fixes: 3bc2b2348835 ("PCI: iproc: Add iProc PCIe MSI support")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> changes in v2:
->  - Patch 1/2 Added Fixes tag
->  - Patch 2/2 Replace original change with change suggested by Bjorn
->    Helgaas.
+> Changes in v2:
+>  - Update URL. Use proper URL to Linux v5.7 documentation.
 > 
-> changes in v3:
->  - Use bitfield rather than bool to save memory.
-> 
->  drivers/pci/controller/pcie-iproc-msi.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+>  drivers/pci/controller/dwc/pci-imx6.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Applied to pci/qcom, thanks.
+Applied to pci/imx6, thanks.
 
 Lorenzo
 
-> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-> index 3176ad3ab0e5..908475d27e0e 100644
-> --- a/drivers/pci/controller/pcie-iproc-msi.c
-> +++ b/drivers/pci/controller/pcie-iproc-msi.c
-> @@ -209,15 +209,20 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
->  	struct iproc_msi *msi = irq_data_get_irq_chip_data(data);
->  	int target_cpu = cpumask_first(mask);
->  	int curr_cpu;
-> +	int ret;
->  
->  	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
->  	if (curr_cpu == target_cpu)
-> -		return IRQ_SET_MASK_OK_DONE;
-> +		ret = IRQ_SET_MASK_OK_DONE;
-> +	else {
-> +		/* steer MSI to the target CPU */
-> +		data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
-> +		ret = IRQ_SET_MASK_OK;
-> +	}
->  
-> -	/* steer MSI to the target CPU */
-> -	data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
-> +	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
->  
-> -	return IRQ_SET_MASK_OK;
-> +	return ret;
->  }
->  
->  static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 8f08ae53f53e..6c78903b49be 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -439,7 +439,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
+>  		break;
+> -	case IMX6QP:		/* FALLTHROUGH */
+> +	case IMX6QP:
+>  	case IMX6Q:
+>  		/* power up core phy and enable ref clock */
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> @@ -642,7 +642,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
+>  				   IMX6SX_GPR12_PCIE_RX_EQ_2);
+> -		/* FALLTHROUGH */
+> +		fallthrough;
+>  	default:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
+> @@ -1107,7 +1107,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+>  			return PTR_ERR(imx6_pcie->pcie_aux);
+>  		}
+> -		/* fall through */
+> +		fallthrough;
+>  	case IMX7D:
+>  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+>  			imx6_pcie->controller_id = 1;
 > -- 
-> 2.28.0
+> 2.27.0
 > 
