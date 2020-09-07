@@ -2,111 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1507726019C
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 19:10:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D834260290
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 19:29:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbgIGRKP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 13:10:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:41654 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730662AbgIGRKL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:10:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B1BB31B;
-        Mon,  7 Sep 2020 10:10:11 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39C633F66E;
-        Mon,  7 Sep 2020 10:10:09 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 18:10:06 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        alan.mikhak@sifive.com, kishon@ti.com,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: Re: [PATCH 0/2] PCI: dwc: Add support to handle prefetchable memory
- separately
-Message-ID: <20200907171006.GD10272@e121166-lin.cambridge.arm.com>
-References: <20200602100940.10575-1-vidyas@nvidia.com>
- <DM5PR12MB127675E8C053755CB82A54BCDA8B0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <389018aa-79c8-4a1e-5379-8b8e42939859@nvidia.com>
- <dd32f413-aa1c-b2e6-d76f-9d2897a8cfad@nvidia.com>
+        id S1729517AbgIGR3i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 13:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729574AbgIGR3a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Sep 2020 13:29:30 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70F1C061573
+        for <linux-pci@vger.kernel.org>; Mon,  7 Sep 2020 10:29:29 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 16so3823787qkf.4
+        for <linux-pci@vger.kernel.org>; Mon, 07 Sep 2020 10:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dionne-riel-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=O3kwXj89Yh9dEdlh52K/qRxoxl+rESWZenHBVCslYH8=;
+        b=jrwGfytVrcuygqGHIER9iz2wPV/g6TUHZ6ZHbWFNgrYNCzV7n075KCgcuqM87ufZNp
+         gu+r7Ec5zpTtx3JtnTPx11Oal010u4mKgrt5l7aWarknkPffdhRksqsB6VG0TKA1zowF
+         VFv28I0TVj5md2YV8nLqXkq6JVcUJgtxnTbfO/AbRaIzNllC3HRk8jfnvOTA0jMlWa2q
+         O3GAokfHCL6209TmrnbODA2KdumhvzkPYHYYnqFcsEWNi+2fjZKxHDW4u6raQvRFYpL7
+         Z/p3+vJA/Qpc/0kvOcBZosaQzZ6JsShzVH5y7Wk3W69ZueOsYCUypPWns/LB2DzeNFOG
+         7jPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=O3kwXj89Yh9dEdlh52K/qRxoxl+rESWZenHBVCslYH8=;
+        b=iJ3AbWvx3gNtZrLF1eDddvuctsjGooWsUzf88DL+jz1e9VjEKOnhB0k86vkXGmrgKT
+         06SnakF1zZojVQActRta8joxzkjSz60qBT/3shQFtiT6LFLpc6cgRc0y2SjxoYxo8XRi
+         0KNrZjqo0XH2KZzDiUDsGudVj48su4OnicR5MquCwh2sLzESJg7X1qShz41ef53lp1UD
+         sIGbRALfgGDkCCLmHPb7y2qYwpZZB//T1Z/pqmqOShQuBNIJUpQpPmyqAlNl6uYOsTRh
+         yNSnzr8Wo+LakIftgrE6mBRF74IfEsnIxnHWvBkDaU/aVpxY755hSGnlSkUyFvFrudmk
+         X1CQ==
+X-Gm-Message-State: AOAM532Eqnnvp8kME1dxaudyDJ37FGo0E3rcekqg8O827b8NITYewebA
+        nD6bV/Z1zx/5aSXVBrl34lBpPw==
+X-Google-Smtp-Source: ABdhPJw33XS5uaiOB/0gMwFN0ZG5DEyUAcgxGf6NM84ZW49PWTXHcRhsszMplWr32J5FujnTlCrTYA==
+X-Received: by 2002:ae9:f306:: with SMTP id p6mr18636285qkg.104.1599499769017;
+        Mon, 07 Sep 2020 10:29:29 -0700 (PDT)
+Received: from DUFFMAN (135-23-195-85.cpe.pppoe.ca. [135.23.195.85])
+        by smtp.gmail.com with ESMTPSA id y1sm11793217qti.40.2020.09.07.10.29.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 10:29:28 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 13:29:26 -0400
+From:   Samuel Dionne-Riel <samuel@dionne-riel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: rockchip: Fix bus checks in
+ rockchip_pcie_valid_device()
+Message-ID: <20200907132926.27d0da14@DUFFMAN>
+In-Reply-To: <20200907102016.GH6428@e121166-lin.cambridge.arm.com>
+References: <20200904140904.944-1-lorenzo.pieralisi@arm.com>
+        <20200907102016.GH6428@e121166-lin.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd32f413-aa1c-b2e6-d76f-9d2897a8cfad@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 10:05:06AM +0530, Vidya Sagar wrote:
-> 
-> 
-> On 18-Jun-20 12:26 AM, Vidya Sagar wrote:
-> > 
-> > 
-> > On 02-Jun-20 10:37 PM, Gustavo Pimentel wrote:
-> > > External email: Use caution opening links or attachments
-> > > 
-> > > 
-> > > On Tue, Jun 2, 2020 at 11:9:38, Vidya Sagar <vidyas@nvidia.com> wrote:
-> > > 
-> > > > In this patch series,
-> > > > Patch-1
-> > > > adds required infrastructure to deal with prefetchable memory region
-> > > > information coming from 'ranges' property of the respective
-> > > > device-tree node
-> > > > separately from non-prefetchable memory region information.
-> > > > Patch-2
-> > > > Adds support to use ATU region-3 for establishing the mapping
-> > > > between CPU
-> > > > addresses and PCIe bus addresses.
-> > > > It also changes the logic to determine whether mapping is
-> > > > required or not by
-> > > > checking both CPU address and PCIe bus address for both prefetchable and
-> > > > non-prefetchable regions. If the addresses are same, then, it is
-> > > > understood
-> > > > that 1:1 mapping is in place and there is no need to setup ATU mapping
-> > > > whereas if the addresses are not the same, then, there is a need
-> > > > to setup ATU
-> > > > mapping. This is certainly true for Tegra194 and what I heard
-> > > > from our HW
-> > > > engineers is that it should generally be true for any DWC based
-> > > > implementation
-> > > > also.
-> > > > Hence, I request Synopsys folks (Jingoo Han & Gustavo Pimentel
-> > > > ??) to confirm
-> > > > the same so that this particular patch won't cause any
-> > > > regressions for other
-> > > > DWC based platforms.
-> > > 
-> > > Hi Vidya,
-> > > 
-> > > Unfortunately due to the COVID-19 lockdown, I can't access my development
-> > > prototype setup to test your patch.
-> > > It might take some while until I get the possibility to get access to it
-> > > again.
-> > Hi Gustavo,
-> > Did you find time to check this?
-> > Adding Kishon and Alan as well to take a look at this and verify on
-> > their platforms if possible.
-> Hi Kishon and Alan, did you find time to verify this on your respective
-> platforms?
+On Mon, 7 Sep 2020 11:20:16 +0100
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 
-Yes please. I would like to merge this code, in preparation for that
-to happen mind rebasing the series against my pci/dwc branch with
-Rob's suggested changes implemented ?
+> On Fri, Sep 04, 2020 at 03:09:04PM +0100, Lorenzo Pieralisi wrote:
+> > The root bus checks rework in:
+> > 
+> > commit d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check
+> > if bus is root bus")
+> > 
+> > caused a regression whereby in rockchip_pcie_valid_device() if
+> > the bus parameter is the root bus and the dev value == 0 the
+> > function should return 1 (ie true) without checking if the
+> > bus->parent pointer is a root bus because that triggers a NULL
+> > pointer dereference.
+> > 
+> > Fix this by streamlining the root bus detection.
+> > 
+> > Fixes: d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check
+> > if bus is root bus") Reported-by: Samuel Dionne-Riel
+> > <samuel@dionne-riel.com> Signed-off-by: Lorenzo Pieralisi
+> > <lorenzo.pieralisi@arm.com> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Shawn Lin <shawn.lin@rock-chips.com>
+> > ---
+> >  drivers/pci/controller/pcie-rockchip-host.c | 11 ++++-------
+> >  1 file changed, 4 insertions(+), 7 deletions(-)  
+> 
+> Hi Samuel,
+> 
+> I would kindly ask you please to test it since I changed the code,
+> I need your Tested-by before asking Bjorn to merge it.
+> 
 
-Thanks a lot,
-Lorenzo
+Hi,
+
+I'm sorry, I had tested it, but didn't reply back as it worked. Not
+being familiar with the customs of the mailing list.
+
+Again, just in case, verified to work and fix the issue on top of
+v5.9-rc3.
+
+-- 
+Samuel Dionne-Riel
