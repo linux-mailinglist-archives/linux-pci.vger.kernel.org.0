@@ -2,52 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A85CF2603E9
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 19:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E9332603DF
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Sep 2020 19:56:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgIGR4i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Sep 2020 13:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
+        id S1728815AbgIGLWB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Sep 2020 07:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728718AbgIGLUg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:20:36 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1728807AbgIGLV6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:21:58 -0400
+Received: from gaia (unknown [46.69.195.48])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DA321897;
-        Mon,  7 Sep 2020 11:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599477122;
-        bh=6U/80e8LU1mpbByyTzXd7oS7WNrnFSM+UR2OTMqH9Os=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gMqaSWACidOn/yIZG1LPPhO3EUHqjHUNcaHORo4DMtaI6qS5v1jVnsNCTy4QMqt/O
-         uD1uFtTsC25Y8mGDAlYePB48l4+egQr9PH2H98LUQCnN7kNqekVBJeY1i9+fB6zU50
-         WlOSKSAE0zBhUuYvxkYhPGBb1X1nwXG0Rz5kjfAk=
-Received: by pali.im (Postfix)
-        id 0E907814; Mon,  7 Sep 2020 13:12:00 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 13:11:59 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>, marek.behun@nic.cz
-Subject: Re: [PATCH v2 0/5] PCIe aardvark controller improvements
-Message-ID: <20200907111159.p4jlpcen5urf22vq@pali>
-References: <20200804115747.7078-1-pali@kernel.org>
- <20200907094032.GD6428@e121166-lin.cambridge.arm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 834A0206D4;
+        Mon,  7 Sep 2020 11:21:21 +0000 (UTC)
+Date:   Mon, 7 Sep 2020 12:21:19 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     George Cherian <gcherian@marvell.com>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Subject: Re: [PATCH] arm64: PCI: fix memleak when calling pci_iomap/unmap()
+Message-ID: <20200907112118.GD26513@gaia>
+References: <20200907104546.GC26513@gaia>
+ <BYAPR18MB267959E6FE4BEF38D0A4611EC5280@BYAPR18MB2679.namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200907094032.GD6428@e121166-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <BYAPR18MB267959E6FE4BEF38D0A4611EC5280@BYAPR18MB2679.namprd18.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 07 September 2020 10:40:32 Lorenzo Pieralisi wrote:
-> can you rebase it on top of v5.9-rc1 and resend, thanks.
++ Lorenzo
 
-Done!
+On Mon, Sep 07, 2020 at 10:51:21AM +0000, George Cherian wrote:
+> Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Sat, Sep 05, 2020 at 10:48:11AM +0800, Yang Yingliang wrote:
+> > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c index
+> > > 1006ed2d7c604..ddfa1c53def48 100644
+> > > --- a/arch/arm64/kernel/pci.c
+> > > +++ b/arch/arm64/kernel/pci.c
+> > > @@ -217,4 +217,9 @@ void pcibios_remove_bus(struct pci_bus *bus)
+> > >  	acpi_pci_remove_bus(bus);
+> > >  }
+> > >
+> > > +void pci_iounmap(struct pci_dev *dev, void __iomem *addr) {
+> > > +	iounmap(addr);
+> > > +}
+> > > +EXPORT_SYMBOL(pci_iounmap);
+> > 
+> > So, what's wrong with the generic pci_iounmap() implementation?
+> > Shouldn't it call iounmap() already?
+> 
+> Since ARM64 selects CONFIG_GENERIC_PCI_IOMAP and not
+> CONFIG_GENERIC_IOMAP,  the pci_iounmap function is reduced to a NULL
+> function. Due to this, even the managed release variants or even the explicit
+> pci_iounmap calls doesn't really remove the mappings leading to leak.
+
+Ah, I missed the fact that pci_iounmap() depends on a different
+config option.
+
+> https://lkml.org/lkml/2020/8/20/28
+
+So is this going to be fixed in the generic code? That would be my
+preference.
+
+A problem with the iounmap() in the proposed patch is that the region
+may have been an I/O port, so we could end up unmapping the I/O space.
+
+-- 
+Catalin
