@@ -2,201 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBA5F2621C1
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 23:16:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 752B82621CA
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 23:17:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgIHVQR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 17:16:17 -0400
-Received: from mail-co1nam11on2092.outbound.protection.outlook.com ([40.107.220.92]:1888
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726683AbgIHVQP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:16:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d6QNtugjehCLTHeyYaZqGNA5I8QU+2S8STmObxuFtDMVU8nudMcfncime4VvYigkwoelIeuzsIPeHzUH64IJPAWeA+5z7zYrNePdjm5TFH9HKPMprZY6cKiv2ZqVzopYExxTLS+OY2hnSEnw8oZogJlLr5w2RmP68VG9++C64rjbs3gl3Zbs6kDtsA86PHwhsaucIczcDulLyDywLS758cA9celYjzvxWWtcOdz/Uz2iPocWR/V3hJYGGN393VmOuDlUHh5qmhQgWBHbPyddZjdl/AFiUSRnAyEM/PP/E5xFuG58RbsHqAmSeYTC+x6cr+lKi08NstKpvVNXgfBGYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vQATI4cmhC0onqvrW/Xy+h+jj50FAJ0/ZqPEW+2fuLU=;
- b=TlPVphIdz3L/EuKg3qHt2uj5YhOoPTzvuwOHLRtcMkmQSJKxAoZHoK0Ta/yoXTOm7Qw2vhFmNovbMKXdkyGHpwRRgwy+rupIT1qwkBDEctuHrLFyqSjpxJPU5SvwHHpTrvItBum8Vav9VgYRiItePT7AhjxD7UmXcXQmsTEawiMRTRyyVGdkh7WB8IlzCyc8p112k8aAWtNQkR6QsrdTDGL7lc6MNnNoCiEEwqRYWGkEJPSdVRz8cneZHhTEfxysAtV+RGS/3334E+lJEVs8C8TFcQNWXcfHoUjV/UC5xREj2peOAPXtQVf9HJ0YEueXcAn5A7giypQ4Q96rtI+sZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vQATI4cmhC0onqvrW/Xy+h+jj50FAJ0/ZqPEW+2fuLU=;
- b=budQ1p10UmXR73M5Npp9Buu7YWSjXS58czbX87g5f3pdc2R6vqPc3JiHAiXr7yz5nP0cG/FsFavky0sxqtptI+tGtBcr4TU7Y0v/TcL2nGptpYGwTqOsq7c7U3TSwIPG8BVSsUbp9XlGwfWI3FmMyCcdM0viK+v2x28Q8IDxpyM=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1002.namprd21.prod.outlook.com (2603:10b6:302:4::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.3; Tue, 8 Sep
- 2020 21:16:09 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1%5]) with mapi id 15.20.3391.004; Tue, 8 Sep 2020
- 21:16:09 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Jake Oshins <jakeo@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Topic: [PATCH] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Index: AQHWgzAAQgytpURzi0G46BH/yzzFMqlfQ83g
-Date:   Tue, 8 Sep 2020 21:16:09 +0000
-Message-ID: <MW2PR2101MB10525ED3B3B67E619861FB97D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200905025450.45528-1-decui@microsoft.com>
-In-Reply-To: <20200905025450.45528-1-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-08T21:16:08Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=04fdfc6d-c53a-476d-93bc-cf289a0243f3;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 611dbfd3-aff7-42fe-73c9-08d8543c686c
-x-ms-traffictypediagnostic: MW2PR2101MB1002:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB1002894E8EEDF2B1AD684789D7290@MW2PR2101MB1002.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: izQeJ4K7X9BDifysnrjALiRLl3oswH1PK0x+6gtFgOFFZjX2pghIQXH4HPmGVYbfsVEXJo06e/1YhgWCGsixIQYrbMHJbsp0M1eGu0jbBlB759hwFZbwxjBhbfgxKxALFZDcrmve8iJbN+q5fCMI0jwaxWjIKvt/qdEox36dqxuEa3CDncEu4hJq6vQY1WjroPBR7evSSqSz+ncjZKgHh2bjzeJaMbkD8o14LDGA/0COkPrwgTX75uQL1a95LIijZt8Pbr4F5KOCM4nh4U2ltdi5h7zyzCwjbju6Vp39cB9dO7c3qGliMYunB/z3shj2ZyfdMrdf/1XNyBTH2ndXwsxPCdGIGPMH6EZoa/Rmlx1ap7bzfBlk0L3jJAhyFDQHOM7iEk5lnXRfosA6ktOsQWI++U8jk2wGOfOHsMgH6Og=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(107886003)(478600001)(10290500003)(82950400001)(82960400001)(7696005)(9686003)(8990500004)(2906002)(71200400001)(316002)(4326008)(5660300002)(66446008)(64756008)(66556008)(66476007)(76116006)(66946007)(52536014)(110136005)(55016002)(33656002)(86362001)(8936002)(186003)(26005)(6506007)(83380400001)(8676002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: txnXOYtFcFV+RIJJMZWPtErMBOCkdYtTgn2p+UjjAeKML6YXGAdC7e83uukTpxxVR4Zzr8AamMa/eJQdhA1Ebko0Do960fJXklNxnUf1CCqBF5c1j6lb9OQTZl0YpCBeEDSTJLNq7iKXhI2KkNbzeboVKaFkuVANbNN/ZVWLSPJsu4FX4TyJQFRAyZpp/H0+6hxO+EhEyev5zKSHkgWve6my2/PGQuqfgRlTnB2Tpz1lXp/jHQmtsWc/aYlY083NxT+fs9uMMm9d+wPYx21TjZNaeDigDnlUi8kqT5CneB+0CXSP3NzX3fU1qlZpjyGB6DTodyNGdJXM+/JCnWqI3Nuy5m0Sq79n83aux1Daby34YUI37PF0VfLsRJtyzWdkEOtfp3T0dwDCC2uzrZr6+klh6DJ2NcucOeGwzmcM+cQ8Obti9V91c83AEpziyZiugcUMMTOa+/j3dm93vTl4R6qLxXHXQrKn2yVF2FCd781zKRXQIOpkV4fxKlgKHBAjaj9YEd6Dn65Lh4NwHNnfv3MTQUS6qnOxfFC0Kw0mXTq7ffJbH8Q1lgrRBzJediOpBTMfD0M5Oq2L+xk7R264L+AAu6zKEkAA4EgVWXdG0pMKERFzBvaL/GuyQHjrcAl6c5cTu6Dbz6uar8L/4e32DQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1730093AbgIHVQw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 17:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728954AbgIHVQr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 17:16:47 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63D9C061756
+        for <linux-pci@vger.kernel.org>; Tue,  8 Sep 2020 14:16:46 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id jw11so247384pjb.0
+        for <linux-pci@vger.kernel.org>; Tue, 08 Sep 2020 14:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2efFs7I/aVceVr/UA1FiVN+0BylwZxjeaszZFFD+TI8=;
+        b=sITCjv2Gw9n5L/AbRCZ60B2tM96FOIAmZJP0xe2pWojsuA5XzhXqrZIsezZXCVNKFJ
+         oTkLfrCwO3b29MBCWYBtrLpvexnpWu8O5O9PQPbfZcg2StDIQ5hvVUVYZF2KMkZQM3jA
+         Y0n9t1cvTsIau5HLXC3w1BW386YBX5etGcBDupIed7NhVvmW3Sze/9BeRrY+3eebmC54
+         A3rg+0Q2or5ANiemPjDYOHk9RJ87YkzEsypOP9ODMDA2xV0LR5EzXHAisx/02MWDtifr
+         c59B02GuTqOPM7NTMhmOA+z/kS+V8qF7KI7GgYITYiOU1zTcJV35HGMVQ8GGwXhyPLWc
+         L4uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2efFs7I/aVceVr/UA1FiVN+0BylwZxjeaszZFFD+TI8=;
+        b=CQ+xV1bGmA3ajzdHdw2dm/vIJq6uhNacyh7wL3UNyQJc2EZkHTW7S6m7BPDAhyAPpf
+         INQFT0CQSnIfB2Ke5oaEVf8kKhWBAMVrcaQXhqhj2d/PT52B4e0dXwBcdJGXYXW0R8jn
+         crDgnhBm05rTc6FBQCp4nJ+GS8wlsTFvCgpGiQd0K4RhBT6f1Igt8xuqhq1nxqIswzm0
+         pvVJL7h3YchWHdkYPDpSs/SuE3lN9TEjO42LAaN5ZCpNp7A+cgZ+bLiTUtmUEJER3Zsj
+         geTQO7AFLcViv0SC1/oH7Jt3NMfjNGIXKFy3G5GRCMUACjfe81EPKHy5i8jrcJK/gNpC
+         GbZg==
+X-Gm-Message-State: AOAM533s9Z3P+AZZNhTFuuH2BfZV1p49PB/WYP9gyKa4TZ7qcjzEb0jm
+        5UqJa6/PEsPyRCG8SeVjQ40HNQ==
+X-Google-Smtp-Source: ABdhPJyWG8mI3H/BsY+oT/o/ksZJ0zCieLkhk5hIgmn2bkbuRWqCNofmO6IoZa9/Ax5C5W1FdW8cWQ==
+X-Received: by 2002:a17:90a:f486:: with SMTP id bx6mr641742pjb.130.1599599806032;
+        Tue, 08 Sep 2020 14:16:46 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id 137sm315259pfu.149.2020.09.08.14.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 14:16:45 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 14:16:38 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 15/28] init: lto: ensure initcall ordering
+Message-ID: <20200908211638.GC1060586@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-16-samitolvanen@google.com>
+ <202009031532.CD2A5F372D@keescook>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 611dbfd3-aff7-42fe-73c9-08d8543c686c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 21:16:09.8105
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yEM6cYq3yRMWIvr4qVcc7CMBAzqdea5Y6kIC82oLzmvbEVsEnhcl1fqnffpbMk1wubAC0Tc4i39jOi0H9QqyFTawZ/lszHQeSkEWULJKHoI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1002
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202009031532.CD2A5F372D@keescook>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Friday, September 4, 2020 7:55=
- PM
->=20
-> Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X registers,
-> and we must use hv_compose_msi_msg() to ask Hyper-V to create the IOMMU
-> Interrupt Remapping Table Entries. This is not an issue for a lot of
-> PCI device drivers (e.g. NVMe driver, Mellanox NIC drivers), which
-> destroy and re-create the interrupts across hibernation, so
-> hv_compose_msi_msg() is called automatically. However, some other PCI
-> device drivers (e.g. the Nvidia driver) may not destroy and re-create
-> the interrupts across hibernation, so hv_pci_resume() has to call
-> hv_compose_msi_msg(), otherwise the PCI device drivers can no longer
-> receive MSI/MSI-X interrupts after hibernation.
->=20
-> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> Cc: Jake Oshins <jakeo@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index fc4c3a15e570..abefff9a20e1 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
->  	pbus =3D pdev->bus;
->  	hbus =3D container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
->=20
-> +	if (hbus->state =3D=3D hv_pcibus_removing) {
-> +		/*
-> +		 * During hibernatin, when a CPU is offlined, the kernel tries
+On Thu, Sep 03, 2020 at 03:40:31PM -0700, Kees Cook wrote:
+> On Thu, Sep 03, 2020 at 01:30:40PM -0700, Sami Tolvanen wrote:
+> > With LTO, the compiler doesn't necessarily obey the link order for
+> > initcalls, and initcall variables need globally unique names to avoid
+> > collisions at link time.
+> > 
+> > This change exports __KBUILD_MODNAME and adds the initcall_id() macro,
+> > which uses it together with __COUNTER__ and __LINE__ to help ensure
+> > these variables have unique names, and moves each variable to its own
+> > section when LTO is enabled, so the correct order can be specified using
+> > a linker script.
+> > 
+> > The generate_initcall_ordering.pl script uses nm to find initcalls from
+> > the object files passed to the linker, and generates a linker script
+> > that specifies the intended order. With LTO, the script is called in
+> > link-vmlinux.sh.
+> 
+> I think I asked before about this being made unconditional, but the hit
+> on final link time was noticeable. Am I remembering that right? If so,
+> sure, let's keep it separate.
 
-s/hiberatin/hibernation/
+Yes, it was noticeable when compiling on systems with fewer CPU cores,
+so I would prefer to keep it separate.
 
-> +		 * to move the interrupt to the remaining CPUs that haven't
-> +		 * been offlined yet. In this case, the below hv_do_hypercall()
-> +		 * always fails since the vmbus channel has been closed, so we
-> +		 * should not call the hypercall, but we still need
-> +		 * pci_msi_unmask_irq() to reset the mask bit in desc->masked:
-> +		 * see cpu_disable_common() -> fixup_irqs() ->
-> +		 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-> +		 */
-> +		pci_msi_unmask_irq(data);
-> +		return;
-> +	}
-> +
->  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
->=20
->  	params =3D &hbus->retarget_msi_interrupt_params;
-> @@ -3372,6 +3387,33 @@ static int hv_pci_suspend(struct hv_device *hdev)
->  	return 0;
->  }
->=20
-> +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
-> +{
-> +	struct msi_desc *entry;
-> +	struct irq_data *irq_data;
-> +
-> +	for_each_pci_msi_entry(entry, pdev) {
-> +		irq_data =3D irq_get_irq_data(entry->irq);
-> +		if (WARN_ON_ONCE(!irq_data))
-> +			return -EINVAL;
-> +
-> +		hv_compose_msi_msg(irq_data, &entry->msg);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
-> + * re-writes the MSI/MSI-X registers, but since Hyper-V doesn't trap and
-> + * emulate the accesses, we have to call hv_compose_msi_msg() to ask
-> + * Hyper-V to re-create the IOMMU Interrupt Remapping Table Entries.
-> + */
-> +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
-> +{
-> +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
-> +}
-> +
->  static int hv_pci_resume(struct hv_device *hdev)
->  {
->  	struct hv_pcibus_device *hbus =3D hv_get_drvdata(hdev);
-> @@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
->=20
->  	prepopulate_bars(hbus);
->=20
-> +	hv_pci_restore_msi_state(hbus);
-> +
->  	hbus->state =3D hv_pcibus_installed;
->  	return 0;
->  out:
-> --
-> 2.19.1
+> > +## forks a child to process each file passed in the command line and collects
+> > +## the results
+> > +sub process_files {
+> > +	my $index = 0;
+> > +	my $njobs = get_online_processors();
+> > +	my $select = IO::Select->new();
+> > +
+> > +	while (my $file = shift(@ARGV)) {
+> > +		# fork a child process and read it's stdout
+> > +		my $pid = open(my $fh, '-|');
+> 
+> /me makes noises about make -jN and the jobserver and not using all
+> processors on a machine if we were asked nicely not to.
+> 
+> I wrote a jobserver aware tool for the documentation builds, but it's in
+> python (scripts/jobserver-exec). Instead of reinventing that wheel (and
+> in Perl), we could:
+> 
+> 1) ignore this problem and assume anyone using LTO is fine with using all CPUs
+> 
+> 2) implement a jobserver-aware Perl script to do this
+> 
+> 3) make Python a build dependency of CONFIG_LTO and re-use scripts/jobserver-exec
 
+I'm fine with any of these options, although I'm not sure why anyone
+would want to compile an LTO kernel without using all the available
+cores... :)
+
+Using jobserver-exec seems like the easiest option if we want to limit
+the number of cores used here. Any preferences?
+
+> >  # If CONFIG_LTO_CLANG is selected, collect generated symbol versions into
+> >  # .tmp_symversions.lds
+> >  gen_symversions()
+> > @@ -74,6 +84,9 @@ modpost_link()
+> >  		--end-group"
+> >  
+> >  	if [ -n "${CONFIG_LTO_CLANG}" ]; then
+> > +		gen_initcalls
+> > +		lds="-T .tmp_initcalls.lds"
+> 
+> Oh, I think lds should be explicitly a "local" at the start of this
+> function, perhaps back in the symversions patch that touches this?
+
+It's already local, that part is just not visible in this patch.
+
+Sami
