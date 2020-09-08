@@ -2,79 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 168B226151A
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 18:44:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32CBD2614B2
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 18:33:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbgIHQoc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 12:44:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:53340 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731773AbgIHQoU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:44:20 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 026F868B02; Tue,  8 Sep 2020 14:20:45 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 14:20:45 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Julien Grall <julien.grall@arm.com>,
-        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:ALLWINNER A10 CSI DRIVER" <linux-media@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
-Message-ID: <20200908122045.GA31727@lst.de>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com> <b19bc982-a0c4-c6ff-d8f5-650f2b3a83c8@gmail.com> <20200827063517.GA4637@lst.de> <CA+-6iNy3U9pO0Bykzgvb9n9fcsBi6FiatLdpA1s0HgQNWZ49mg@mail.gmail.com> <20200907091649.GA6428@e121166-lin.cambridge.arm.com> <CA+-6iNzoz3pM2pJksXogeuou6wB9W-59rN-amCLERFLuY5zLMg@mail.gmail.com> <00e49acb-c659-de10-3e87-76bfd82e4a76@gmail.com> <20200908104226.GB22909@e121166-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908104226.GB22909@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1731912AbgIHQdU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 12:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731884AbgIHQc4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 12:32:56 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6647C061755
+        for <linux-pci@vger.kernel.org>; Tue,  8 Sep 2020 09:32:56 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id l126so4376156pfd.5
+        for <linux-pci@vger.kernel.org>; Tue, 08 Sep 2020 09:32:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=D+6OKvAnkUtzzW2cGDkKOGH7rrKsaKBarDqPQyHhqbY=;
+        b=BdIE51BMbD2vJPVe5LWf9jcMVph9ArF3q5hwypOuhEoStuB4LfOeegz+pdZT9WDnvZ
+         cU/VWPGrrEhR6rSHH8usFXpyne27RVDIe99CaJmtzJgMELgiHBZKACItfGUg35zziM3Y
+         mO9ONKxuAfaqEDw88bCqSZOJEHamIcH0lVx0U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=D+6OKvAnkUtzzW2cGDkKOGH7rrKsaKBarDqPQyHhqbY=;
+        b=WEYpwfMy3ugG84UP+wW19RNrlnpgbjcZ7AOAIAFOWP/jvKKlylFRoIlSHnxKvrmdHF
+         PTJTEySqbX/PHLddz8iQCGgHUSZZdsdjF4bGLmNzQGDUH9NXcng0ICoLhkDYWUVnMGHX
+         gn0t1wVryv/iqigIWJjIWnVkHEI4Xi0ugEQS+oj+AzZOcm3LPNsEmH21NtRrNf+kBtKg
+         MoOLHbDn1Gm0XDaDWyfioicB4GGyi4I6f+ov+o2TIRNURafVAfFYzjz5tkCSprZhqrLm
+         ejwLlZ2gM2N2ToThnZvqgZAYHFfbLc4yzYleIRkFiGL6DXE9CTLS2pxSSBJiVaPYEh6I
+         OMqQ==
+X-Gm-Message-State: AOAM530Th4Qly3f/xyJ5beMGyYqi576ogSmXvR6gjvFEkLtx5l6E1BoR
+        dijCGjHRplo2IaIKxjK3Y+xZwTCD6anpihuf+O3tGGY6q6tB5imMVAT171a/KOwoCgu/TPn/IXa
+        TSXCq07dVjk8BGX+9Ta+0Z/lTG7dP22BGT7a4HbQSi8Fe1YDqX98wlWHIb6wL3fw1M7OznmwrBh
+        /unntJ
+X-Google-Smtp-Source: ABdhPJy/MwLs61JfBGoh37V+yP2UwAlE3gV9saHhDANE/meQtBZQtzbPVViRwvgkDgq95jo5/4KEow==
+X-Received: by 2002:a63:d216:: with SMTP id a22mr11107158pgg.339.1599582775184;
+        Tue, 08 Sep 2020 09:32:55 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id b24sm15079186pjp.22.2020.09.08.09.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 09:32:54 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RESEND PATCH v1] PCI: pcie_bus_config can be set at build time
+Date:   Tue,  8 Sep 2020 12:32:48 -0400
+Message-Id: <20200908163248.14330-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 11:42:26AM +0100, Lorenzo Pieralisi wrote:
-> > Maybe we can parallelize the PCIe driver review while the DMA changes
-> > are being worked on in Christoph's branch. Lorenzo, are you fine with
-> > the PCIe changes proper?
-> 
-> I will have a look - the main contentious point was about the DMA
-> changes - if Christoph is happy with them I am OK with them
-> too - I hope there is not anything controversial in the host
-> bridge driver itself but I will look into it.
+The Kconfig is modified so that the pcie_bus_config setting can be done at
+build time in the same manner as the CONFIG_PCIEASPM_XXXX choice.  The
+pci_bus_config setting may still be overridden by the bootline param.
 
-I'm pretty happy with the overall shape.  Now we just need to squeeze
-out the regressions..
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+---
+ drivers/pci/Kconfig | 40 ++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c   | 12 ++++++++++++
+ 2 files changed, 52 insertions(+)
+
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 4bef5c2bae9f..efe69b0d9f7f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -187,6 +187,46 @@ config PCI_HYPERV
+ 	  The PCI device frontend driver allows the kernel to import arbitrary
+ 	  PCI devices from a PCI backend to support PCI driver domains.
+ 
++choice
++	prompt "PCIE default bus config setting"
++	default PCIE_BUS_DEFAULT
++	depends on PCI
++	help
++	  One of the following choices will set the pci_bus_config at
++	  compile time.  This will still be overridden by the appropriate
++	  pci bootline parameter.
++
++config PCIE_BUS_TUNE_OFF
++	bool "Tune Off"
++	depends on PCI
++	help
++	  Use the BIOS defaults; doesn't touch MPS at all.
++
++config PCIE_BUS_DEFAULT
++	bool "Default"
++	depends on PCI
++	help
++	  Ensure MPS matches upstream bridge.
++
++config PCIE_BUS_SAFE
++	bool "Safe"
++	depends on PCI
++	help
++	  Use largest MPS boot-time devices support.
++
++config PCIE_BUS_PERFORMANCE
++	bool "Performance"
++	depends on PCI
++	help
++	  Use MPS and MRRS for best performance.
++
++config PCIE_BUS_PEER2PEER
++	bool "Peer2peer"
++	depends on PCI
++	help
++	  Set MPS = 128 for all devices.
++endchoice
++
+ source "drivers/pci/hotplug/Kconfig"
+ source "drivers/pci/controller/Kconfig"
+ source "drivers/pci/endpoint/Kconfig"
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e39c5499770f..dfb52ed4a931 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -101,7 +101,19 @@ unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
+ #define DEFAULT_HOTPLUG_BUS_SIZE	1
+ unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
+ 
++
++/* PCIE bus config, can be overridden by bootline param */
++#ifdef CONFIG_PCIE_BUS_TUNE_OFF
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_TUNE_OFF;
++#elif defined CONFIG_PCIE_BUS_SAFE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_SAFE;
++#elif defined CONFIG_PCIE_BUS_PERFORMANCE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PERFORMANCE;
++#elif defined CONFIG_PCIE_BUS_PEER2PEER
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PEER2PEER;
++#else
+ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
++#endif
+ 
+ /*
+  * The default CLS is used if arch didn't set CLS explicitly and not
+-- 
+2.17.1
+
