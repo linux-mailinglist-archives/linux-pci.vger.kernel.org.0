@@ -2,283 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84FE12620FB
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 22:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC48526218D
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 22:56:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgIHUVh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 16:21:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37472 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729037AbgIHUVf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 16:21:35 -0400
-Received: by mail-io1-f66.google.com with SMTP id y13so763487iow.4;
-        Tue, 08 Sep 2020 13:21:35 -0700 (PDT)
+        id S1729824AbgIHU42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 16:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgIHU4V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 16:56:21 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9345C061756
+        for <linux-pci@vger.kernel.org>; Tue,  8 Sep 2020 13:56:20 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a9so221196pjg.1
+        for <linux-pci@vger.kernel.org>; Tue, 08 Sep 2020 13:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+1kwkhnnjfbD1n3YicFbQyeenHuldLrryzBMnu30RTk=;
+        b=kqiVfXTqdvpE+D8HME82Bm/99OYWSZDGK7Oq76UCHFIRCcsokRD7oz4xAQHKlHR74v
+         8jFd7Rm7VgphQioMxWqT6sB7WDRfEhiq+5dlPJB+VwsYe0Gws+0LJm6D9zwG/r15KK4j
+         cuzPLvDpOo+kNSRVML9vt8TFZj2LIN0dx3+GMt+v/gfQiWWDTGc/5e1sfumXGI2CjeI6
+         Wy++ioGxrd4TyZOe6AhKrFK49Dd0klSTZ4EyeBc8yeTCbAl+4UnrnXBHPmJZk+pzkRBq
+         MO/Socm9d6L4MR4DbsbQU9qRVnfcNKA/i/3XI/d16ytiFjJKk9h0Y3hAMCxgdwcJ4siN
+         gBjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=mm/0h/U4Hk8WZoslYbu06tgoMG60luGtcEO7empM/LM=;
-        b=HsoPU5zE+Y5aOvmSofhpBotS2gTlBoUIcsoCACkVH3xnGG8YlErKoF1j15hTAOJtYY
-         ooxrOBIS7fsZoqpvr57fRFMWg5149Sb50SL4VCkW2m9C9dAUXGBP4CwXN/RLX8LpnUof
-         jRZDFphnImygR1IBHnEMvEPZ2IrjoMxWzlF/M/DVzQ6DqtwPKrp9UgWe2Nsl2633X8qJ
-         BFmLeY2fIWV+EWXwLBSMcrkBBZq3H2MYhn/Idm6ItCEqmtlUbrh+VYRODwS+62spEwpc
-         /eohNJf3OrqxDYoA/aVdGKzmgS5oksPQ9Gu4v4E/hZ6XpLH2bKU1YVOe/GKTc/eE1HNO
-         033Q==
-X-Gm-Message-State: AOAM530Xcw8NtUGPWVQYDNxTIN3ANH35mo/KTSE8jjRmtfDnjdOoMRfG
-        OlWSVKAFlYTmFvxO3KrrEg==
-X-Google-Smtp-Source: ABdhPJzUbzrN+RY+vhi1RmrWGIbRcEKWdSSpIQ2B/z7XSscUwOM2o8va4ubaqnTUUjSxZudsonpogg==
-X-Received: by 2002:a5e:820d:: with SMTP id l13mr566194iom.3.1599596494661;
-        Tue, 08 Sep 2020 13:21:34 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id c12sm143227ilm.17.2020.09.08.13.21.32
+        bh=+1kwkhnnjfbD1n3YicFbQyeenHuldLrryzBMnu30RTk=;
+        b=E0vvXD+4tDuDPBnlMGcl0DobdkwJqScgNSPy8+0/cR55oXdZflgrQpx/fpn+SWX8sm
+         OpIJKaZyUvAzzbSh4mll23lDvuSAIH2S0DwTXPP8YnIsopUYVVLMZeGWtP6ZPrKdjSyc
+         E8kf9hAV9cRciMw+VOUGH6U1HI80GJ8BJvtMFTqpcdyDwYZEuXe9gczFOcyDbyMXUsK/
+         VprSiwfT4IeBb9t0zhJtjNMGottqLvMivdkh/pncpmwQGtDbKhT9WtYSE9xwUnOw15dp
+         bnM6dui8ogsjNwNk8KDh3wHF0+FNKrnGyp8K/6Jea1WmfRfHlh05AfVzm5bdlNd3KiFF
+         J+qw==
+X-Gm-Message-State: AOAM530ztx/bU8b32IRxJcyXR2sbTqGB1ENfOPT7v4TptNcE2bL4Q4bA
+        KG0Dm80lD4w19aBrQnrnaEpfzw==
+X-Google-Smtp-Source: ABdhPJwmdCJZLAUsrl/QW5wKuUZMBwlVdVl2VXP+Jk7zMzVi2ljr8t2PHAqCINz0HMBlae3lzorpYw==
+X-Received: by 2002:a17:90b:3444:: with SMTP id lj4mr574843pjb.78.1599598579801;
+        Tue, 08 Sep 2020 13:56:19 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id e14sm187682pgu.47.2020.09.08.13.56.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 13:21:34 -0700 (PDT)
-Received: (nullmailer pid 843613 invoked by uid 1000);
-        Tue, 08 Sep 2020 20:21:31 -0000
-Date:   Tue, 8 Sep 2020 14:21:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jianjun Wang <jianjun.wang@mediatek.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        davem@davemloft.net, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sj Huang <sj.huang@mediatek.com>
-Subject: Re: [v1,1/3] dt-bindings: Add YAML schemas for Gen3 PCIe controller
-Message-ID: <20200908202131.GB795070@bogus>
-References: <20200907120852.12090-1-jianjun.wang@mediatek.com>
- <20200907120852.12090-2-jianjun.wang@mediatek.com>
+        Tue, 08 Sep 2020 13:56:19 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:56:12 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 11/28] kbuild: lto: postpone objtool
+Message-ID: <20200908205612.GA1060586@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-12-samitolvanen@google.com>
+ <202009031513.B558594FB9@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200907120852.12090-2-jianjun.wang@mediatek.com>
+In-Reply-To: <202009031513.B558594FB9@keescook>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 08:08:50PM +0800, Jianjun Wang wrote:
-> Add YAML schemas documentation for Gen3 PCIe controller on
-> MediaTek SoCs.
-
-dt-bindings: PCI: mediatek: ... for the subject.
-
+On Thu, Sep 03, 2020 at 03:19:43PM -0700, Kees Cook wrote:
+> On Thu, Sep 03, 2020 at 01:30:36PM -0700, Sami Tolvanen wrote:
+> > With LTO, LLVM bitcode won't be compiled into native code until
+> > modpost_link, or modfinal for modules. This change postpones calls
+> > to objtool until after these steps.
+> > 
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 > 
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> ---
->  .../bindings/pci/mediatek-pcie-gen3.yaml      | 158 ++++++++++++++++++
->  1 file changed, 158 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> For a "fail fast" style of building, it makes sense to have objtool run
+> as early as possible, so it makes sense to keep the current behavior in
+> non-LTO mode. I do wonder, though, if there is a real benefit to having
+> "fail fast" case. I imagine a lot of automated builds are using
+> --keep-going with make, and actually waiting until the end to do the
+> validation means more code will get build-tested before objtool rejects
+> the results. *shrug*
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> new file mode 100644
-> index 000000000000..108d29259c05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> @@ -0,0 +1,158 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/mediatek-pcie-gen3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Gen3 PCIe controller on MediaTek SoCs
-> +
-> +maintainers:
-> +  - Jianjun Wang <jianjun.wang@mediatek.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: mediatek,gen3-pcie
-> +      - const: mediatek,mt8192-pcie
-> +
+> > ---
+> >  arch/Kconfig              |  2 +-
+> >  scripts/Makefile.build    |  2 ++
+> >  scripts/Makefile.modfinal | 24 ++++++++++++++++++++++--
+> >  scripts/link-vmlinux.sh   | 23 ++++++++++++++++++++++-
+> >  4 files changed, 47 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index 71392e4a8900..7a418907e686 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -599,7 +599,7 @@ config LTO_CLANG
+> >  	depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
+> >  	depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
+> >  	depends on ARCH_SUPPORTS_LTO_CLANG
+> > -	depends on !FTRACE_MCOUNT_RECORD
+> > +	depends on HAVE_OBJTOOL_MCOUNT || !(X86_64 && DYNAMIC_FTRACE)
+> >  	depends on !KASAN
+> >  	depends on !GCOV_KERNEL
+> >  	select LTO
+> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> > index c348e6d6b436..b8f1f0d65a73 100644
+> > --- a/scripts/Makefile.build
+> > +++ b/scripts/Makefile.build
+> > @@ -218,6 +218,7 @@ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),
+> >  endif # USE_RECORDMCOUNT
+> >  
+> >  ifdef CONFIG_STACK_VALIDATION
+> > +ifndef CONFIG_LTO_CLANG
+> >  ifneq ($(SKIP_STACK_VALIDATION),1)
+> >  
+> >  __objtool_obj := $(objtree)/tools/objtool/objtool
+> > @@ -253,6 +254,7 @@ objtool_obj = $(if $(patsubst y%,, \
+> >  	$(__objtool_obj))
+> >  
+> >  endif # SKIP_STACK_VALIDATION
+> > +endif # CONFIG_LTO_CLANG
+> >  endif # CONFIG_STACK_VALIDATION
+> >  
+> >  # Rebuild all objects when objtool changes, or is enabled/disabled.
+> > diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+> > index 1005b147abd0..909bd509edb4 100644
+> > --- a/scripts/Makefile.modfinal
+> > +++ b/scripts/Makefile.modfinal
+> > @@ -34,10 +34,30 @@ ifdef CONFIG_LTO_CLANG
+> >  # With CONFIG_LTO_CLANG, reuse the object file we compiled for modpost to
+> >  # avoid a second slow LTO link
+> >  prelink-ext := .lto
+> > -endif
+> > +
+> > +# ELF processing was skipped earlier because we didn't have native code,
+> > +# so let's now process the prelinked binary before we link the module.
+> > +
+> > +ifdef CONFIG_STACK_VALIDATION
+> > +ifneq ($(SKIP_STACK_VALIDATION),1)
+> > +cmd_ld_ko_o +=								\
+> > +	$(objtree)/tools/objtool/objtool				\
+> > +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
+> > +		--module						\
+> > +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
+> > +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
+> > +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
+> > +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
+> > +		$(if $(USE_OBJTOOL_MCOUNT),--mcount,)			\
+> > +		$(@:.ko=$(prelink-ext).o);
+> > +
+> > +endif # SKIP_STACK_VALIDATION
+> > +endif # CONFIG_STACK_VALIDATION
+> 
+> I wonder if objtool_args could be reused here instead of having two
+> places to keep in sync? It looks like that might mean moving things
+> around a bit before this patch, since I can't quite see if
+> Makefile.build's variables are visible to Makefile.modfinal?
 
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
+It doesn't look like they are. I suppose we could move objtool_args to
+Makefile.lib. Masahiro, any thoughts?
 
-Can drop these 3. Already in pci-bus.yaml.
-
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-
-Just 'maxItems: 1'. The description doesn't add any value.
-
-> +
-> +  reg-names:
-> +    items:
-> +      - const: pcie-mac
-
-Don't really need a name here.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  ranges:
-> +    minItems: 1
-> +    maxItems: 8
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    anyOf:
-> +      - const: mac-rst
-> +      - const: phy-rst
-
-Doesn't the PHY's reset belong in the PHY node?
-
-> +
-> +  clocks:
-> +    maxItems: 5
-> +
-> +  assigned-clocks:
-> +    maxItems: 1
-> +
-> +  assigned-clock-parents:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie-phy
-
-Not really a useful name and there's only one. Please drop.
-
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-
-Can drop these.
-
-> +
-> +  legacy-interrupt-controller:
-
-Just 'interrupt-controller'
-
-And don't copy the same bug of using 'of_get_next_child'. You should get 
-the child node by name.
-
-> +    description: Interrupt controller node for handling legacy PCI interrupts.
-> +    type: object
-> +    properties:
-> +      "#address-cells":
-> +        const: 0
-> +      "#interrupt-cells":
-> +        const: 1
-> +      interrupt-controller: true
-> +
-> +    required:
-> +      - "#address-cells"
-> +      - "#interrupt-cells"
-> +      - interrupt-controller
-
-       additionalProperties: false
-
-> +
-> +required:
-> +  - compatible
-
-> +  - device_type
-> +  - "#address-cells"
-> +  - "#size-cells"
-
-Don't need these, pci-bus.yaml already requires them.
-
-> +  - reg
-> +  - reg-names
-> +  - bus-range
-
-If the range is 0-0xff, then this isn't really required.
-
-> +  - interrupts
-> +  - ranges
-> +  - clocks
-> +  - '#interrupt-cells'
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +  - legacy-interrupt-controller
-> +
-> +additionalProperties: false
-
-unevaluatedProperties: false
-
-(Should be used when including a ref (pci-bus.yaml).)
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie: pcie@11230000 {
-> +            compatible = "mediatek,mt8192-pcie";
-> +            device_type = "pci";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            reg = <0x00 0x11230000 0x00 0x4000>;
-> +            reg-names = "pcie-mac";
-> +            interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH 0>;
-> +            bus-range = <0x00 0xff>;
-> +            ranges = <0x82000000 0x00 0x12000000 0x00 0x12000000 0x00 0x1000000>;
-> +            clocks = <&infracfg 40>,
-> +                     <&infracfg 43>,
-> +                     <&infracfg 97>,
-> +                     <&infracfg 99>,
-> +                     <&infracfg 111>;
-> +            assigned-clocks = <&topckgen 50>;
-> +            assigned-clock-parents = <&topckgen 91>;
-> +
-> +            phys = <&pciephy>;
-> +            phy-names = "pcie-phy";
-> +            resets = <&infracfg_rst 0>;
-> +            reset-names = "phy-rst";
-> +
-> +            #interrupt-cells = <1>;
-> +            interrupt-map-mask = <0 0 0 0x7>;
-> +            interrupt-map = <0 0 0 1 &pcie_intc 0>,
-> +                            <0 0 0 2 &pcie_intc 1>,
-> +                            <0 0 0 3 &pcie_intc 2>,
-> +                            <0 0 0 4 &pcie_intc 3>;
-> +            pcie_intc: legacy-interrupt-controller {
-> +                      #address-cells = <0>;
-> +                      #interrupt-cells = <1>;
-> +                      interrupt-controller;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.25.1
+Sami
