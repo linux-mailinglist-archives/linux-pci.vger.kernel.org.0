@@ -2,220 +2,359 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1354260BA3
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 09:15:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 420B2260C82
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 09:53:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgIHHPm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 03:15:42 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52365 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgIHHPk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 03:15:40 -0400
-Received: by mail-pj1-f67.google.com with SMTP id o16so7823423pjr.2
-        for <linux-pci@vger.kernel.org>; Tue, 08 Sep 2020 00:15:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=pF7LJm4igw3vSPPjUsIFM75bV/lP8f54v33iBjNAELA=;
-        b=iCDx/ONtvs2boCZedsTgDgKjrUAfE8NsF3TGGVILcUajauu2wIi3tI+qOlVVnfsoN0
-         ykMgyyrdVvMiP4bwT7aR8qW1NxxPdzTjHB4uicM/w40KD0KN7XRADW3rIvRitabBrjwu
-         TNZBg1zLrWmt1F7GDC/TK/NSo6qwT2IxTMpTaxFz8TOe/inN2ekEbubGD653zj1IzfCD
-         v0STuvr/XhuEUYXSg7l3kGLDKyJSzuupxb6AEp7ck9qGA7c6cWsqGAv68mWUkg4NeZe0
-         D0EPPoYCTapYwcqmOB8cXevwrbWcW6toW9Lq0hfNgoDyfLAGTHH2KpTCZo8H6CCzXnJ1
-         4UsA==
-X-Gm-Message-State: AOAM531sUJsORvEb/lbnjTYleNG0jUuNz5XfpxqcnIYODfkeDuCnG6oG
-        s5h/bNOGeA8KpaTBlxl0YmU=
-X-Google-Smtp-Source: ABdhPJzMkavKnlRApkMuDIy3eqaHJ88gXV7yp0i9Uu/c2eBAHW3rJWYdzOMm7sC2ILUX6wbBEHSQ6g==
-X-Received: by 2002:a17:90a:ead5:: with SMTP id ev21mr2548877pjb.188.1599549339300;
-        Tue, 08 Sep 2020 00:15:39 -0700 (PDT)
-Received: from [10.101.46.193] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id 64sm10175122pgi.90.2020.09.08.00.15.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 00:15:37 -0700 (PDT)
-Subject: Re: [PATCH] PCI: vmd: Add AHCI to fast interrupt list
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-References: <20200904171325.64959-1-jonathan.derrick@intel.com>
-From:   You-Sheng Yang <vicamo.yang@canonical.com>
-Autocrypt: addr=vicamo.yang@canonical.com; keydata=
- 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
- suzL+d2CSm1cCUYQeOxX/7MpmAIm
-Message-ID: <9602475e-3b20-b070-8f66-52ec5600d9eb@canonical.com>
-Date:   Tue, 8 Sep 2020 15:15:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200904171325.64959-1-jonathan.derrick@intel.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="cHDfpmd2nk7i6Okdz5mNw8rcQg9UW7DDw"
+        id S1729597AbgIHHxe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 03:53:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24972 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729626AbgIHHxa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:53:30 -0400
+IronPort-SDR: 0YjoJs1hM9DwdiruAnPIvwo0WlEpJGiLNxpX8KGbpUJ3fcCfOzchnB9OBoOeDDWWYCg7s2LTUF
+ 6gehLUXyB5dg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="242904894"
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="242904894"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 00:53:28 -0700
+IronPort-SDR: BuFM1i5Y5AkbylUyRAM+bpBZfIGnMaYUAyO3gG00kQKKYBasWA45z0GI4xmsjLj4+SSm9G2t+4
+ pNI/MXoVKXKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="479917057"
+Received: from shskylake.sh.intel.com ([10.239.48.137])
+  by orsmga005.jf.intel.com with ESMTP; 08 Sep 2020 00:53:21 -0700
+From:   Ethan Zhao <haifeng.zhao@intel.com>
+To:     axboe@kernel.dk, bhelgaas@google.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, mcgrof@kernel.org,
+        ShanshanX.Zhang@intel.com, pei.p.jia@intel.com,
+        Ethan Zhao <Haifeng.Zhao@intel.com>
+Subject: [PATCH] Revert "block: revert back to synchronous request_queue removal"
+Date:   Tue,  8 Sep 2020 03:50:48 -0400
+Message-Id: <20200908075047.5140-1-haifeng.zhao@intel.com>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---cHDfpmd2nk7i6Okdz5mNw8rcQg9UW7DDw
-Content-Type: multipart/mixed; boundary="LlhYiN1DjHqcGkEjPUZAWKIGhaLvTmlK9"
+From: Ethan Zhao <Haifeng.Zhao@intel.com>
 
---LlhYiN1DjHqcGkEjPUZAWKIGhaLvTmlK9
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+'commit e8c7d14ac6c3 ("block: revert back to synchronous request_queue
+removal")' introduced panic issue to NVMe hotplug as following(hit
+after just 2 times NVMe SSD hotplug under stable 5.9-RC2):
 
-On 2020-09-05 01:13, Jon Derrick wrote:
-> Some platforms have an AHCI controller behind VMD. These platforms are
-> working correctly except for a case when the AHCI MSI is programmed wit=
-h
-> VMD IRQ vector 0 (0xfee00000). When programmed with any other interrupt=
+BUG: sleeping function called from invalid context at block/genhd.c:1563
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/30
+INFO: lockdep is turned off.
+CPU: 30 PID: 0 Comm: swapper/30 Tainted: G S      W         5.9.0-RC2 #3
+Hardware name: Intel Corporation xxxxxxxx
+Call Trace:
+<IRQ>
+dump_stack+0x9d/0xe0
+___might_sleep.cold.79+0x17f/0x1af
+disk_release+0x26/0x200
+device_release+0x6d/0x1c0
+kobject_put+0x14d/0x430
+hd_struct_free+0xfb/0x260
+percpu_ref_switch_to_atomic_rcu+0x3d1/0x580
+? rcu_nocb_unlock_irqrestore+0xb6/0xf0
+? trace_hardirqs_on+0x20/0x1b5
+? rcu_do_batch+0x3ff/0xb50
+rcu_do_batch+0x47c/0xb50
+? rcu_accelerate_cbs+0xa9/0x740
+? rcu_spawn_one_nocb_kthread+0x3d0/0x3d0
+rcu_core+0x945/0xd90
+? __do_softirq+0x182/0xac0
+__do_softirq+0x1ca/0xac0
+asm_call_on_stack+0xf/0x20
+</IRQ>
+do_softirq_own_stack+0x7f/0x90
+irq_exit_rcu+0x1e3/0x230
+sysvec_apic_timer_interrupt+0x48/0xb0
+asm_sysvec_apic_timer_interrupt+0x12/0x20
+RIP: 0010:cpuidle_enter_state+0x116/0xe90
+Code: 00 31 ff e8 ac c8 a4 fe 80 7c 24 10 00 74 12 9c 58 f6 c4 02
+ 0f 85 7e 08 00 00 31 ff e8 43 ca be fe e8 ae a3 d5 fe fb 45 85 ed
+ <0f> 88 4e 05 00 00 4d 63 f5 49 83 fe 09 0f 87 29 0b 00 00 4b 8d 04
+RSP: 0018:ff110001040dfd78 EFLAGS: 00000206
+RAX: 0000000000000007 RBX: ffd1fff7b1a01e00 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000000040000000 RDI: ffffffffb7c5c0f2
+RBP: ffffffffb9a416a0 R08: 0000000000000000 R09: 0000000000000000
+R10: ff110001040d0007 R11: ffe21c002081a000 R12: 0000000000000003
+R13: 0000000000000003 R14: 0000000000000138
+... ...
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+PGD 0
+Oops: 0010 [#1] SMP KASAN NOPTI
+CPU: 30 PID: 500 Comm: irq/124-pciehp Tainted: G S  W  5.9.0-RC2 #3
+Hardware name: Intel Corporation xxxxxxxx
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ff110007d5ba75e8 EFLAGS: 00010096
+RAX: 0000000000000000 RBX: ff110001040d0000 RCX: ff110007d5ba7668
+RDX: 0000000000000009 RSI: ff110001040d0000 RDI: ff110008119f59c0
+RBP: ff110008119f59c0 R08: fffffbfff73f7b4d R09: fffffbfff73f7b4d
+R10: ffffffffb9fbda67 R11: fffffbfff73f7b4c R12: 0000000000000000
+R13: ff110007d5ba7668 R14: ff110001040d0000 R15: ff110008119f59c0
+FS:  0000000000000000(0000) GS:ff11000811800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000007cea16002 CR4: 0000000000771ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ttwu_do_activate+0xd3/0x160
+try_to_wake_up+0x652/0x1850
+? migrate_swap_stop+0xad0/0xad0
+? lock_contended+0xd70/0xd70
+? rcu_read_unlock+0x50/0x50
+? rcu_do_batch+0x3ff/0xb50
+swake_up_locked+0x85/0x1c0
+complete+0x4d/0x70
+rcu_do_batch+0x47c/0xb50
+? rcu_spawn_one_nocb_kthread+0x3d0/0x3d0
+rcu_core+0x945/0xd90
+? __do_softirq+0x182/0xac0
+__do_softirq+0x1ca/0xac0
+irq_exit_rcu+0x1e3/0x230
+sysvec_apic_timer_interrupt+0x48/0xb0
+asm_sysvec_apic_timer_interrupt+0x12/0x20
+RIP: 0010:_raw_spin_unlock_irqrestore+0x40/0x50
+Code: e8 35 ad 36 fe 48 89 ef e8 cd ce 37 fe f6 c7 02 75 11 53 9d
+ e8 91 1f 5c fe 65 ff 0d ba af c2 47 5b 5d c3 e8 d2 22 5c fe 53 9d
+ <eb> ed 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 53
+RSP: 0018:ff110007d5ba79d0 EFLAGS: 00000293
+RAX: 0000000000000007 RBX: 0000000000000293 RCX: ffffffffb67710d4
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffffb83f41ce
+RBP: ffffffffbb77e740 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffbb77e743 R11: fffffbfff76efce8 R12: 000000000000198e
+R13: ff11001031d7a0b0 R14: ffffffffbb77e740 R15: ffffffffbb77e788
+? do_raw_spin_unlock+0x54/0x230
+? _raw_spin_unlock_irqrestore+0x3e/0x50
+dma_debug_device_change+0x150/0x5e0
+notifier_call_chain+0x90/0x160
+__blocking_notifier_call_chain+0x6d/0xa0
+device_release_driver_internal+0x37d/0x490
+pci_stop_bus_device+0x123/0x190
+pci_stop_and_remove_bus_device+0xe/0x20
+pciehp_unconfigure_device+0x17e/0x330
+? pciehp_configure_device+0x3e0/0x3e0
+? trace_hardirqs_on+0x20/0x1b5
+pciehp_disable_slot+0x101/0x360
+? pme_is_native.cold.2+0x29/0x29
+pciehp_handle_presence_or_link_change+0x1ac/0xee0
+? pciehp_handle_disable_request+0x110/0x110
+pciehp_ist.cold.11+0x39/0x54
+? pciehp_set_indicators+0x190/0x190
+? alloc_desc+0x510/0xa30
+? irq_set_affinity_notifier+0x380/0x380
+? pciehp_set_indicators+0x190/0x190
+? irq_thread+0x137/0x420
+irq_thread_fn+0x86/0x150
+irq_thread+0x21f/0x420
+? irq_forced_thread_fn+0x170/0x170
+? irq_thread_check_affinity+0x210/0x210
+? __kthread_parkme+0x52/0x1a0
+? lockdep_hardirqs_on_prepare+0x33e/0x4e0
+? _raw_spin_unlock_irqrestore+0x3e/0x50
+? trace_hardirqs_on+0x20/0x1b5
+? wake_threads_waitq+0x40/0x40
+? __kthread_parkme+0xd1/0x1a0
+? irq_thread_check_affinity+0x210/0x210
+kthread+0x36a/0x430
+? kthread_create_worker_on_cpu+0xc0/0xc0
+ret_from_fork+0x1f/0x30
+... ...
+CR2: 0000000000000000
+---[ end trace cedc4047ef91d2ec ]---
 
-> (0xfeeNN000), the MSI is routed correctly and is handled by VMD. Placin=
-g
-> the AHCI MSI(s) in the fast-interrupt allow list solves the issue.
->=20
-> This also requires that VMD allocate more than one MSI/X vector and
-> changes the minimum MSI/X vectors allocated to two.
->=20
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Seems scheduling happened within hardware interrupt context, after
+reverted this patch, stable 5.9-RC4 build was tested with more than 20
+times NVMe SSD hotplug, no panic found.
 
-Verified two platforms with such configuration. Thank you.
+This reverts commit e8c7d14ac6c37c173ec606907d38802b00302988.
 
-You-Sheng Yang
+Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
+Signed-off-by: Ethan Zhao <Haifeng.Zhao@intel.com>
+---
+ block/blk-core.c       |  8 --------
+ block/blk-sysfs.c      | 43 +++++++++++++++++++++---------------------
+ block/genhd.c          | 17 -----------------
+ include/linux/blkdev.h |  2 ++
+ 4 files changed, 23 insertions(+), 47 deletions(-)
 
-> ---
->  drivers/pci/controller/vmd.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.=
-c
-> index f69ef8c89f72..d9c72613082a 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -202,15 +202,13 @@ static struct vmd_irq_list *vmd_next_irq(struct v=
-md_dev *vmd, struct msi_desc *d
->  	int i, best =3D 1;
->  	unsigned long flags;
-> =20
-> -	if (vmd->msix_count =3D=3D 1)
-> -		return &vmd->irqs[0];
-> -
->  	/*
-> -	 * White list for fast-interrupt handlers. All others will share the
-> +	 * Allow list for fast-interrupt handlers. All others will share the
->  	 * "slow" interrupt vector.
->  	 */
->  	switch (msi_desc_to_pci_dev(desc)->class) {
->  	case PCI_CLASS_STORAGE_EXPRESS:
-> +	case PCI_CLASS_STORAGE_SATA_AHCI:
->  		break;
->  	default:
->  		return &vmd->irqs[0];
-> @@ -657,7 +655,7 @@ static int vmd_probe(struct pci_dev *dev, const str=
-uct pci_device_id *id)
->  	if (vmd->msix_count < 0)
->  		return -ENODEV;
-> =20
-> -	vmd->msix_count =3D pci_alloc_irq_vectors(dev, 1, vmd->msix_count,
-> +	vmd->msix_count =3D pci_alloc_irq_vectors(dev, 2, vmd->msix_count,
->  					PCI_IRQ_MSIX);
->  	if (vmd->msix_count < 0)
->  		return vmd->msix_count;
->=20
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 10c08ac50697..1b18a0ef5db1 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -325,9 +325,6 @@ EXPORT_SYMBOL_GPL(blk_clear_pm_only);
+  *
+  * Decrements the refcount of the request_queue kobject. When this reaches 0
+  * we'll have blk_release_queue() called.
+- *
+- * Context: Any context, but the last reference must not be dropped from
+- *          atomic context.
+  */
+ void blk_put_queue(struct request_queue *q)
+ {
+@@ -360,14 +357,9 @@ EXPORT_SYMBOL_GPL(blk_set_queue_dying);
+  *
+  * Mark @q DYING, drain all pending requests, mark @q DEAD, destroy and
+  * put it.  All future requests will be failed immediately with -ENODEV.
+- *
+- * Context: can sleep
+  */
+ void blk_cleanup_queue(struct request_queue *q)
+ {
+-	/* cannot be called from atomic context */
+-	might_sleep();
+-
+ 	WARN_ON_ONCE(blk_queue_registered(q));
+ 
+ 	/* mark @q DYING, no new request or merges will be allowed afterwards */
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 7dda709f3ccb..eb347cbe0f93 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -901,32 +901,22 @@ static void blk_exit_queue(struct request_queue *q)
+ 	bdi_put(q->backing_dev_info);
+ }
+ 
++
+ /**
+- * blk_release_queue - releases all allocated resources of the request_queue
+- * @kobj: pointer to a kobject, whose container is a request_queue
+- *
+- * This function releases all allocated resources of the request queue.
+- *
+- * The struct request_queue refcount is incremented with blk_get_queue() and
+- * decremented with blk_put_queue(). Once the refcount reaches 0 this function
+- * is called.
+- *
+- * For drivers that have a request_queue on a gendisk and added with
+- * __device_add_disk() the refcount to request_queue will reach 0 with
+- * the last put_disk() called by the driver. For drivers which don't use
+- * __device_add_disk() this happens with blk_cleanup_queue().
++ * __blk_release_queue - release a request queue
++ * @work: pointer to the release_work member of the request queue to be released
+  *
+- * Drivers exist which depend on the release of the request_queue to be
+- * synchronous, it should not be deferred.
+- *
+- * Context: can sleep
++ * Description:
++ *     This function is called when a block device is being unregistered. The
++ *     process of releasing a request queue starts with blk_cleanup_queue, which
++ *     set the appropriate flags and then calls blk_put_queue, that decrements
++ *     the reference counter of the request queue. Once the reference counter
++ *     of the request queue reaches zero, blk_release_queue is called to release
++ *     all allocated resources of the request queue.
+  */
+-static void blk_release_queue(struct kobject *kobj)
++static void __blk_release_queue(struct work_struct *work)
+ {
+-	struct request_queue *q =
+-		container_of(kobj, struct request_queue, kobj);
+-
+-	might_sleep();
++	struct request_queue *q = container_of(work, typeof(*q), release_work);
+ 
+ 	if (test_bit(QUEUE_FLAG_POLL_STATS, &q->queue_flags))
+ 		blk_stat_remove_callback(q, q->poll_cb);
+@@ -958,6 +948,15 @@ static void blk_release_queue(struct kobject *kobj)
+ 	call_rcu(&q->rcu_head, blk_free_queue_rcu);
+ }
+ 
++static void blk_release_queue(struct kobject *kobj)
++{
++	struct request_queue *q =
++		container_of(kobj, struct request_queue, kobj);
++
++	INIT_WORK(&q->release_work, __blk_release_queue);
++	schedule_work(&q->release_work);
++}
++
+ static const struct sysfs_ops queue_sysfs_ops = {
+ 	.show	= queue_attr_show,
+ 	.store	= queue_attr_store,
+diff --git a/block/genhd.c b/block/genhd.c
+index 99c64641c314..7e2edf388c8a 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -887,19 +887,12 @@ static void invalidate_partition(struct gendisk *disk, int partno)
+  * The final removal of the struct gendisk happens when its refcount reaches 0
+  * with put_disk(), which should be called after del_gendisk(), if
+  * __device_add_disk() was used.
+- *
+- * Drivers exist which depend on the release of the gendisk to be synchronous,
+- * it should not be deferred.
+- *
+- * Context: can sleep
+  */
+ void del_gendisk(struct gendisk *disk)
+ {
+ 	struct disk_part_iter piter;
+ 	struct hd_struct *part;
+ 
+-	might_sleep();
+-
+ 	blk_integrity_del(disk);
+ 	disk_del_events(disk);
+ 
+@@ -1553,15 +1546,11 @@ int disk_expand_part_tbl(struct gendisk *disk, int partno)
+  * drivers we also call blk_put_queue() for them, and we expect the
+  * request_queue refcount to reach 0 at this point, and so the request_queue
+  * will also be freed prior to the disk.
+- *
+- * Context: can sleep
+  */
+ static void disk_release(struct device *dev)
+ {
+ 	struct gendisk *disk = dev_to_disk(dev);
+ 
+-	might_sleep();
+-
+ 	blk_free_devt(dev->devt);
+ 	disk_release_events(disk);
+ 	kfree(disk->random);
+@@ -1806,9 +1795,6 @@ EXPORT_SYMBOL(get_disk_and_module);
+  *
+  * This decrements the refcount for the struct gendisk. When this reaches 0
+  * we'll have disk_release() called.
+- *
+- * Context: Any context, but the last reference must not be dropped from
+- *          atomic context.
+  */
+ void put_disk(struct gendisk *disk)
+ {
+@@ -1823,9 +1809,6 @@ EXPORT_SYMBOL(put_disk);
+  *
+  * This is a counterpart of get_disk_and_module() and thus also of
+  * get_gendisk().
+- *
+- * Context: Any context, but the last reference must not be dropped from
+- *          atomic context.
+  */
+ void put_disk_and_module(struct gendisk *disk)
+ {
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index bb5636cc17b9..59fe9de342e0 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -583,6 +583,8 @@ struct request_queue {
+ 
+ 	size_t			cmd_size;
+ 
++	struct work_struct	release_work;
++
+ #define BLK_MAX_WRITE_HINTS	5
+ 	u64			write_hints[BLK_MAX_WRITE_HINTS];
+ };
+-- 
+2.18.4
 
-
---LlhYiN1DjHqcGkEjPUZAWKIGhaLvTmlK9--
-
---cHDfpmd2nk7i6Okdz5mNw8rcQg9UW7DDw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEVhtdp+wXuXuqVL95S6BJ+2O0nE8FAl9XL5cACgkQS6BJ+2O0
-nE9W0AgAnH4Og9QgoS4mKTvhl0kj91bGMr9TjrvgUL3LAbbjzNRVr2KpVxE9VcN2
-y8OodntKVDfY4cc/9OvqUL9QPg9oZhxVXPIpMZk4H0qD+H3SUSZxA7PymIt7kgio
-HauDOxhlisLM0O277qgl8tK3fyst4g4N90MGoSCjKyhdXge4NXE8VeIbTlsUeEf4
-3aJUvnh950KfpWROQ9/E1T95nqiDeRBLf4ELuQ+59X92wNpHkBLZeAdjBhxoJGR8
-FB5M5qPKFF0gJmghJPc+y2fDIlN27IdyiScW29XsNeY9qowLEmLcFiDn75TekERT
-8HmCtWRoMp/zvz3JeZlQP9p/8M8+6A==
-=vaob
------END PGP SIGNATURE-----
-
---cHDfpmd2nk7i6Okdz5mNw8rcQg9UW7DDw--
