@@ -2,86 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E619B261CDF
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 21:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8406A261E32
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 21:48:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732201AbgIHT1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 15:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbgIHT1o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:27:44 -0400
-Received: from localhost (35.sub-72-107-115.myvzw.com [72.107.115.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 536B52078B;
-        Tue,  8 Sep 2020 19:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599593263;
-        bh=P32hrheM3XHI3hTzptMJ7G2yosA8KkleDbFzT5mxRX0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ESpLf9qQ48q6G0oYZK0DDSxnAToFh8X+OLSi3TXK319kaqsGFStN2BElD1KojPhuh
-         POzL3Ry4hoAitBnLT11VgU8pHxTX/BzCj+72EVjRXki4Tfci2NuCXMjEE1Tyj4vDkV
-         ZQTXd1Ouvmsamzfw0DAWvM0OfoUOX0K4yATha7XA=
-Date:   Tue, 8 Sep 2020 14:27:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        id S1731238AbgIHTsw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 15:48:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50287 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730740AbgIHPuu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 11:50:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id e17so17791326wme.0;
+        Tue, 08 Sep 2020 08:49:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g+fF122O7R17ki64qXX6rnyePilfcGBCv1/ck2Kz2cE=;
+        b=ad4pUF5ULr5K0KjVE1Kx6P0NsWd7bJBcL4cOUyoDQNfsc4ozdCZMRLTXOUBjt3Ax9x
+         XLVeStAxxGF7GIXuKDfgeP4AUnTQhaoW70ajXSEXxxQwfVpkhR3Ais5kTCNiHtZn+VDR
+         nQfIhNiWXzIxo7uoy6R8vxuFOoGlBu9eJDod2qDLtWrT2VJOQcZjb5fTQPGkyHWlwxIq
+         lxAbXA8yYMbnN+HzIaSnXKQsh8ilVzv4AkI1E9y6FO89IZG5FWEPSjvkSAgB8IDb/Rf8
+         SGYBmM2uiYPIbIuc877/Sbam8jeajc6RrZ1wfnpG86KFw5hBQaxYqHLHlhdQbtlzgzPB
+         hYuw==
+X-Gm-Message-State: AOAM5313oI5xCIshn4fI7g0F9qiWQ7ZZoAe3sfLmO8vwBcxGY81r8Eal
+        Y3GN+u554xZ1iM2NVXZ09+viqyjj8pbwOg==
+X-Google-Smtp-Source: ABdhPJw43xrSDZbM980Q1wyWmczcPUCg8AtgaZXw5a+lncrCANbP6dkN49Y+7fuL7XSHkRq9MvMZ7w==
+X-Received: by 2002:a1c:678a:: with SMTP id b132mr4764047wmc.10.1599572190886;
+        Tue, 08 Sep 2020 06:36:30 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v128sm31250006wme.2.2020.09.08.06.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 06:36:30 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:36:29 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pci: rcar-pci-ep: Document r8a774e1
-Message-ID: <20200908192742.GA615450@bjorn-Precision-5520>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 18/46] x86/msi: Consolidate MSI allocation
+Message-ID: <20200908133628.ekh2jbasjf6bxa5z@liuwe-devbox-debian-v2>
+References: <20200826111628.794979401@linutronix.de>
+ <20200826112332.466405395@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908192600.GA615209@bjorn-Precision-5520>
+In-Reply-To: <20200826112332.466405395@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 02:26:01PM -0500, Bjorn Helgaas wrote:
-> On Fri, Sep 04, 2020 at 11:38:49AM +0100, Lad Prabhakar wrote:
-> > Document the support for R-Car PCIe EP on R8A774E1 SoC device.
-> > 
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> > index 70c45f72ab20..a059c96c294b 100644
-> > --- a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> > @@ -18,6 +18,7 @@ properties:
-> >            - renesas,r8a774a1-pcie-ep     # RZ/G2M
-> >            - renesas,r8a774b1-pcie-ep     # RZ/G2N
-> >            - renesas,r8a774c0-pcie-ep     # RZ/G2E
-> > +          - renesas,r8a774e1-pcie-ep     # RZ/G2H
-> 
-> This is on Lorenzo's pci/rcar branch and headed to -next.
-> 
-> There's a similar older commit on that branch, 2de82ec86674
-> ("dt-bindings: pci: rcar-pci-ep: Document r8a774a1 and r8a774b1") that
-> came with a companion that added device IDs to pci_endpoint_test.c:
-> cfb824ddd1c0 ("misc: pci_endpoint_test: Add Device ID for RZ/G2M and
-> RZ/G2N PCIe controllers").
-> 
-> Is there, or should there be a similar device ID patch for
-> renesas,r8a774e1-pcie-ep?
+On Wed, Aug 26, 2020 at 01:16:46PM +0200, Thomas Gleixner wrote:
+[...]
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1534,7 +1534,7 @@ static struct irq_chip hv_msi_irq_chip =
+>  static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+>  						   msi_alloc_info_t *arg)
+>  {
+> -	return arg->msi_hwirq;
+> +	return arg->hwirq;
+>  }
 
-Sheesh, sorry, could have saved all of us a little time if I'd
-scrolled up to see the next patch, a63c5f3db07d ("misc:
-pci_endpoint_test: Add Device ID for RZ/G2H PCIe controller") 
+Acked-by: Wei Liu <wei.liu@kernel.org>
