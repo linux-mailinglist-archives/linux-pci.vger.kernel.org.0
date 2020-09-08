@@ -2,128 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43D06261029
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 12:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1599026124E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 16:05:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbgIHKmu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 06:42:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:51840 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728971AbgIHKmi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:42:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE88931B;
-        Tue,  8 Sep 2020 03:42:32 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AEF13F66E;
-        Tue,  8 Sep 2020 03:42:28 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 11:42:26 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>, Felipe Balbi <balbi@kernel.org>,
+        id S1729753AbgIHOEb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 10:04:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51341 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729635AbgIHN6e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 09:58:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w2so17380309wmi.1;
+        Tue, 08 Sep 2020 06:50:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L+q7scp9xjjgch+ap+Le4uzp4lwNvS0O3pZwHfl5AC4=;
+        b=aOu8A6hyp/iXMXXlOXTdEIN5Ds/WAgE2y0p6rAvUxZt/M29OQ/oMxixcVHXyvIcA6b
+         8e0KRwIu5g+rF8yS6Ohtm/ECOQNCplV4YJSHJ0DWMTR+JK1amL5m+rdxTwAEsyzZE0jU
+         S79fu0yYvHYxYt/Al5t1fWsXyo4lhZFYn60W4CEcMEexZi2QxUizOzzfr0UWQcf0KQAn
+         BqwfekN+OxjoYqJ7cF3a/JaDmsqotvXDXqtB2a2NaaQNTVSavOtpplF1/VTJNBPczDyu
+         QvTX17DaSme1vYR1qRXi2+9IPO4Xxz2df8wMCE+maVehXn50FJLlrbB4mX8JWtekIB8z
+         k51Q==
+X-Gm-Message-State: AOAM530ffjxbY5SEaiJyZBnh/md0KbOpW2ziQjSSlLcYVcOXtuK/uQO5
+        KP0P/T1wns1Y+TAldcMUmf+zolzPReh+HA==
+X-Google-Smtp-Source: ABdhPJzYi9ehfaPBVSXymEhhuH1GTRlLQTD8B0hsU4d7EUccdQ6mwISG5Qg1ixAsK4hgy2OnnuC5uw==
+X-Received: by 2002:a7b:c2aa:: with SMTP id c10mr4463133wmk.86.1599572119661;
+        Tue, 08 Sep 2020 06:35:19 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id p18sm14414596wrx.47.2020.09.08.06.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 06:35:18 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:35:17 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Julien Grall <julien.grall@arm.com>,
-        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:ALLWINNER A10 CSI DRIVER" <linux-media@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
-Message-ID: <20200908104226.GB22909@e121166-lin.cambridge.arm.com>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <b19bc982-a0c4-c6ff-d8f5-650f2b3a83c8@gmail.com>
- <20200827063517.GA4637@lst.de>
- <CA+-6iNy3U9pO0Bykzgvb9n9fcsBi6FiatLdpA1s0HgQNWZ49mg@mail.gmail.com>
- <20200907091649.GA6428@e121166-lin.cambridge.arm.com>
- <CA+-6iNzoz3pM2pJksXogeuou6wB9W-59rN-amCLERFLuY5zLMg@mail.gmail.com>
- <00e49acb-c659-de10-3e87-76bfd82e4a76@gmail.com>
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 14/46] x86/ioapic: Consolidate IOAPIC allocation
+Message-ID: <20200908133517.nrqweaycr2erqscd@liuwe-devbox-debian-v2>
+References: <20200826111628.794979401@linutronix.de>
+ <20200826112332.054367732@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00e49acb-c659-de10-3e87-76bfd82e4a76@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200826112332.054367732@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 11:29:06AM -0700, Florian Fainelli wrote:
-> 
-> 
-> On 9/7/2020 10:43 AM, Jim Quinlan wrote:
-> > On Mon, Sep 7, 2020 at 5:16 AM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> > > 
-> > > On Thu, Aug 27, 2020 at 09:29:59AM -0400, Jim Quinlan wrote:
-> > > > On Thu, Aug 27, 2020 at 2:35 AM Christoph Hellwig <hch@lst.de> wrote:
-> > > > > 
-> > > > > On Tue, Aug 25, 2020 at 10:40:27AM -0700, Florian Fainelli wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > On 8/24/2020 12:30 PM, Jim Quinlan wrote:
-> > > > > > > 
-> > > > > > > Patchset Summary:
-> > > > > > >     Enhance a PCIe host controller driver.  Because of its unusual design
-> > > > > > >     we are foced to change dev->dma_pfn_offset into a more general role
-> > > > > > >     allowing multiple offsets.  See the 'v1' notes below for more info.
-> > > > > > 
-> > > > > > We are version 11 and counting, and it is not clear to me whether there is
-> > > > > > any chance of getting these patches reviewed and hopefully merged for the
-> > > > > > 5.10 merge window.
-> > > > > > 
-> > > > > > There are a lot of different files being touched, so what would be the
-> > > > > > ideal way of routing those changes towards inclusion?
-> > > > > 
-> > > > > FYI, I offered to take the dma-mapping bits through the dma-mapping tree.
-> > > > > I have a bit of a backlog, but plan to review and if Jim is ok with that
-> > > > > apply the current version.
-> > > > Sounds good to me.
-> > > 
-> > > Hi Jim,
-> > > 
-> > > is the dependency now solved ? Should we review/take this series as
-> > > is for v5.10 through the PCI tree ?
-> > Hello Lorenzo,
-> > 
-> > We are still working out a regression with the DMA offset commit on
-> > the RaspberryPi.  Nicolas has found the root cause and we are now
-> > devising a solution.
-> 
-> Maybe we can parallelize the PCIe driver review while the DMA changes
-> are being worked on in Christoph's branch. Lorenzo, are you fine with
-> the PCIe changes proper?
+On Wed, Aug 26, 2020 at 01:16:42PM +0200, Thomas Gleixner wrote:
+...
+> --- a/drivers/iommu/hyperv-iommu.c
+> +++ b/drivers/iommu/hyperv-iommu.c
+> @@ -101,7 +101,7 @@ static int hyperv_irq_remapping_alloc(st
+>  	 * in the chip_data and hyperv_irq_remapping_activate()/hyperv_ir_set_
+>  	 * affinity() set vector and dest_apicid directly into IO-APIC entry.
+>  	 */
+> -	irq_data->chip_data = info->ioapic_entry;
+> +	irq_data->chip_data = info->ioapic.entry;
 
-I will have a look - the main contentious point was about the DMA
-changes - if Christoph is happy with them I am OK with them
-too - I hope there is not anything controversial in the host
-bridge driver itself but I will look into it.
+Not sure if it is required for such a trivial change but here you go:
 
-Lorenzo
+Acked-by: Wei Liu <wei.liu@kernel.org>
