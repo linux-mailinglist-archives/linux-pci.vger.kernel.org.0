@@ -2,187 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3696C2617F6
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 19:46:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C13E8261754
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 19:31:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgIHRqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 13:46:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
+        id S1731734AbgIHRbZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 13:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731627AbgIHQOE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 12:14:04 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BE2C0619C8;
-        Tue,  8 Sep 2020 06:47:33 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id v196so11009161pfc.1;
-        Tue, 08 Sep 2020 06:47:33 -0700 (PDT)
+        with ESMTP id S1731928AbgIHRao (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 13:30:44 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47BA4C061573
+        for <linux-pci@vger.kernel.org>; Tue,  8 Sep 2020 10:30:44 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 5so46551pgl.4
+        for <linux-pci@vger.kernel.org>; Tue, 08 Sep 2020 10:30:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vEeD+VXX6EgpEyq5WLEylmJlyUmYwirw1P8EEbyTNrY=;
-        b=r82UMhrLbpyXvGsztYdIMwyANMsMOnh9WOmNANg6xvVgEMHshZh1z14/pZlH7936IU
-         4Oc84VjWekOJ50FpBe0J7BcBWV6ihIlmbIv0Ex+rK7IjOSxjSIDjpcoUfsnC3Ao5p1Xj
-         ZQzqAVbspeMlpuc6r734YmovnwDvTwKoYZUX3mfeRDQmGALWATTKJvX2cZwMBZbjlO2/
-         +q8joZACetc/zrCG6f5Vp7ZRB2Tq579sBFMhy5BjXB5oBVmlG6rPa5LCTCYIbm9z9ldP
-         zQwWnrlVdiYiiAV7p3Q+xsuVfxdEtqy11pG1RLYqqxp9ssAuuSZITxNbsCvTZnMG00lf
-         v+zQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/5WUqOjLHPAdLAI0MKh9zhuMyV7IC1nlysZjintZ/W0=;
+        b=AzIN32ulFSn0Cg8a7U6pqoMQp2nPeaRLHJAx4wWGA8CJaevtEmegxP/Z/uIxm/mEpu
+         QVOrS/Ir/CxKvGymkWaSrXUyeKbbg65sx4q09ssmoAXIt6bm8jV1LH45TsyB5/QvO6Qe
+         pSg9MqH9AVTpVpXvwoaCFmKjx/m6VIWugbAKBCS/XL0KnFFDPP0JrCP80TKO4jQk1l8S
+         wZd7N9m2+fYup3wy0GHLd7qSFjvCk9cqS0RN9Ik5g/nfu3wKrjCUUWhivmYZDrkqWnnn
+         OxFDZvlGFT0EA/qrpHwZR1QXKjTo0BlWMq5+aAWrCKqvUbyJyaxDNVHcgxbFAvzgGEAS
+         e78g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vEeD+VXX6EgpEyq5WLEylmJlyUmYwirw1P8EEbyTNrY=;
-        b=R8b8I7+ko+DaH9ywCYfkpoX38Rj5To3sMTu1z5eeDwwQ8NYiN1UQVz5GmoGtyh2bNm
-         zkvzfhCgzpEqbsQE34kmNknfBYcOSeG8CTPlmynp3dqI6O4FuvoAw6ZI7ehb+TOZ0zsQ
-         tA9j6MOCC739Ji/4Z6ORVwSwxtOZB4q788MZJaIs8AOnbPEZTABwTkfRjac9vOSw3i5N
-         +jIJ8oEfspwQzxvsgGcEWJA71EYkA5jxGbXLv0Rgi8YynPouCKOipjvHZew77JarDdn/
-         tw6AViwzVq70x75vksGqJkBBU7SYuMotRNi1LxI2TVNiYNONKo+WK0yA/n2zUZI1Wb6n
-         kvhA==
-X-Gm-Message-State: AOAM530AnJW4fXxhNOlOChxrJU3E4ajPtfHmqNMYumZ+0WiA5MffnnHn
-        GD88WBWLboZR2aiorKXxA30=
-X-Google-Smtp-Source: ABdhPJwt4o4+fGyToCCVKG7lxfm6Tn0a7dmXZbQQQLwAYHAH/f2ikEdxWWZcWu3nfJDDMKeYaza5gA==
-X-Received: by 2002:a17:902:b088:: with SMTP id p8mr23464081plr.86.1599572853387;
-        Tue, 08 Sep 2020 06:47:33 -0700 (PDT)
-Received: from sh05419pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j35sm14852313pgi.91.2020.09.08.06.47.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Sep 2020 06:47:32 -0700 (PDT)
-From:   Hongtao Wu <wuht06@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Billows Wu <billows.wu@unisoc.com>
-Subject: [PATCH v2 1/2] dt-bindings: PCI: sprd: Document Unisoc PCIe RC host controller
-Date:   Tue,  8 Sep 2020 21:47:20 +0800
-Message-Id: <1599572841-2652-2-git-send-email-wuht06@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599572841-2652-1-git-send-email-wuht06@gmail.com>
-References: <1599572841-2652-1-git-send-email-wuht06@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/5WUqOjLHPAdLAI0MKh9zhuMyV7IC1nlysZjintZ/W0=;
+        b=lT/RKVTbi73hODmv1NWSH1X5KOe+DVNJ21/D9MrvqJV+/j6K7wlV2sGYG6fHMG8UJN
+         gcVp6eLcTMBL9o+hgalgl9pyJTAgp1+0kYtLIujxaHdG+ndO7sT/lfCBLdIaX/51z2kD
+         oLX6m6Cnvhk8BMCGHjbapu+/MsO3fkRnJbSes+MLlHcC4Z65K/OP3umYTl/WPrqgPBaT
+         YQDNMYpxqAEMOJFZrVZ5h+gXO7OSqkaTN27RW9oVHQWEtYEvM8G7JUVGCl/6TRIDTo/n
+         cFwmxOkXBDoVjovJRuCDAD6wOfgxb9XxYzDoaG+FYpN4VmxJqh3lwsp2x9CVtSJNqI1+
+         YBaA==
+X-Gm-Message-State: AOAM531yMcgd/XEEkeo/WOHXN1nsNpjlfL24zsQ8gzAXrtsq54pSx77R
+        XQ+i0LNr6PTcQ6UJmauz8JMdjg==
+X-Google-Smtp-Source: ABdhPJzOBlE39s5MhGzUGu96iQjHpMxBRxzAFujrD+zw10TmjrKYdMPOuT7bZ60x6uln4rayX4+T8w==
+X-Received: by 2002:a63:ca0c:: with SMTP id n12mr18009749pgi.209.1599586243396;
+        Tue, 08 Sep 2020 10:30:43 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id w185sm60365pfc.36.2020.09.08.10.30.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 10:30:42 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 10:30:36 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 09/28] kbuild: add support for Clang LTO
+Message-ID: <20200908173036.GD2743468@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-10-samitolvanen@google.com>
+ <CAK7LNAR7SbBPz06s5Gf2d+zry+Px1=jcUrC9c=_zQiCJLttY3A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAR7SbBPz06s5Gf2d+zry+Px1=jcUrC9c=_zQiCJLttY3A@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Billows Wu <billows.wu@unisoc.com>
+On Tue, Sep 08, 2020 at 12:30:14AM +0900, Masahiro Yamada wrote:
+> On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > This change adds build system support for Clang's Link Time
+> > Optimization (LTO). With -flto, instead of ELF object files, Clang
+> > produces LLVM bitcode, which is compiled into native code at link
+> > time, allowing the final binary to be optimized globally. For more
+> > details, see:
+> >
+> >   https://llvm.org/docs/LinkTimeOptimization.html
+> >
+> > The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
+> > which defaults to LTO being disabled. To use LTO, the architecture
+> > must select ARCH_SUPPORTS_LTO_CLANG and support:
+> >
+> >   - compiling with Clang,
+> >   - compiling inline assembly with Clang's integrated assembler,
+> >   - and linking with LLD.
+> >
+> > While using full LTO results in the best runtime performance, the
+> > compilation is not scalable in time or memory. CONFIG_THINLTO
+> > enables ThinLTO, which allows parallel optimization and faster
+> > incremental builds. ThinLTO is used by default if the architecture
+> > also selects ARCH_SUPPORTS_THINLTO:
+> >
+> >   https://clang.llvm.org/docs/ThinLTO.html
+> >
+> > To enable LTO, LLVM tools must be used to handle bitcode files. The
+> > easiest way is to pass the LLVM=1 option to make:
+> >
+> >   $ make LLVM=1 defconfig
+> >   $ scripts/config -e LTO_CLANG
+> >   $ make LLVM=1
+> >
+> > Alternatively, at least the following LLVM tools must be used:
+> >
+> >   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
+> >
+> > To prepare for LTO support with other compilers, common parts are
+> > gated behind the CONFIG_LTO option, and LTO can be disabled for
+> > specific files by filtering out CC_FLAGS_LTO.
+> >
+> > Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
+> > follow-up patches.
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  Makefile                          | 18 +++++++-
+> >  arch/Kconfig                      | 68 +++++++++++++++++++++++++++++++
+> >  include/asm-generic/vmlinux.lds.h | 11 +++--
+> >  scripts/Makefile.build            |  9 +++-
+> >  scripts/Makefile.modfinal         |  9 +++-
+> >  scripts/Makefile.modpost          | 24 ++++++++++-
+> >  scripts/link-vmlinux.sh           | 32 +++++++++++----
+> >  7 files changed, 154 insertions(+), 17 deletions(-)
+> 
+> 
+> 
+> >  #define TEXT_MAIN .text
+> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> > index 6ecf30c70ced..a5f4b5d407e6 100644
+> > --- a/scripts/Makefile.build
+> > +++ b/scripts/Makefile.build
+> > @@ -111,7 +111,7 @@ endif
+> >  # ---------------------------------------------------------------------------
+> >
+> >  quiet_cmd_cc_s_c = CC $(quiet_modtag)  $@
+> > -      cmd_cc_s_c = $(CC) $(filter-out $(DEBUG_CFLAGS), $(c_flags)) $(DISABLE_LTO) -fverbose-asm -S -o $@ $<
+> > +      cmd_cc_s_c = $(CC) $(filter-out $(DEBUG_CFLAGS) $(CC_FLAGS_LTO), $(c_flags)) -fverbose-asm -S -o $@ $<
+> >
+> >  $(obj)/%.s: $(src)/%.c FORCE
+> >         $(call if_changed_dep,cc_s_c)
+> > @@ -428,8 +428,15 @@ $(obj)/lib.a: $(lib-y) FORCE
+> >  # Do not replace $(filter %.o,^) with $(real-prereqs). When a single object
+> >  # module is turned into a multi object module, $^ will contain header file
+> >  # dependencies recorded in the .*.cmd file.
+> > +ifdef CONFIG_LTO_CLANG
+> > +quiet_cmd_link_multi-m = AR [M]  $@
+> > +cmd_link_multi-m =                                             \
+> > +       rm -f $@;                                               \
+> > +       $(AR) rcsTP$(KBUILD_ARFLAGS) $@ $(filter %.o,$^)
+> 
+> 
+> KBUILD_ARFLAGS no longer exists in the mainline.
+> (commit 13dc8c029cabf52ba95f60c56eb104d4d95d5889)
 
-This series adds PCIe bindings for Unisoc SoCs.
-This controller is based on Designware PCIe IP.
+Thanks, I'll drop this in the next version.
 
-Signed-off-by: Billows Wu <billows.wu@unisoc.com>
----
- .../devicetree/bindings/pci/sprd-pcie.yaml         | 101 +++++++++++++++++++++
- 1 file changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+> > +ifdef CONFIG_LTO_CLANG
+> > +# With CONFIG_LTO_CLANG, .o files might be LLVM bitcode,
+> 
+> or, .o files might be even thin archives.
 
-diff --git a/Documentation/devicetree/bindings/pci/sprd-pcie.yaml b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
-new file mode 100644
-index 0000000..40c2408
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/sprd-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SoC PCIe Host Controller Device Tree Bindings
-+
-+maintainers:
-+  - Billows Wu <billows.wu@unisoc.com>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: sprd,pcie-rc
-+
-+  reg:
-+    minItems: 2
-+    items:
-+      - description: Controller control and status registers.
-+      - description: PCIe configuration registers.
-+
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: config
-+
-+  ranges:
-+    maxItems: 2
-+
-+  num-lanes:
-+    maximum: 1
-+    description: Number of lanes to use for this port.
-+
-+  interrupts:
-+    minItems: 1
-+    description: Builtin MSI controller and PCIe host controller.
-+
-+  interrupt-names:
-+    items:
-+      - const: msi
-+
-+  sprd-pcie-poweron-syscons:
-+    minItems: 1
-+    description: Global register.
-+      The first value is the phandle to the global registers required to
-+      confige PCIe phy, clock and so on.
-+      The second value is the global register type which indicates whether it
-+      is a set/clear register or not.
-+      The third value is the time to delay after the global register is set or
-+      cleared.
-+      The fourth value is the global register address.
-+      The fifth value is the the mask value that the global register must
-+      be operate.
-+      The sixth value is the value that will be set to the global register.
-+      Note that Some Unisoc global registers have not been upstreamed.
-+      The global register and its mask can't be found in linux kernel,
-+      so we use an offset address and a number to instead them.
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - num-lanes
-+  - ranges
-+  - interrupts
-+  - interrupt-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    ipa {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie0: pcie@2b100000 {
-+            compatible = "sprd,pcie-rc";
-+            reg = <0x0 0x2b100000 0x0 0x2000>,
-+                  <0x2 0x00000000 0x0 0x2000>;
-+            reg-names = "dbi", "config";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            device_type = "pci";
-+            ranges = <0x01000000 0x0 0x00000000 0x2 0x00002000 0x0 0x00010000>,
-+                     <0x03000000 0x0 0x10000000 0x2 0x10000000 0x1 0xefffffff>;
-+            num-lanes = <1>;
-+            interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "msi";
-+
-+            sprd,pcie-poweron-syscons =
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x40 0x40>,
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x20 0x20>;
-+            sprd,pcie-poweroff-syscons =
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x20 0x0>,
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x40 0x0>;
-+        };
-+    };
---
-2.7.4
+Right, and with LTO the thin archive might also point to a mix of bitcode
+and ELF to further complicate things.
 
+> For example,
+> 
+> $ file net/ipv6/netfilter/nf_defrag_ipv6.o
+> net/ipv6/netfilter/nf_defrag_ipv6.o: thin archive with 6 symbol entries
+> 
+> 
+> Now we have 3 possibilities for .o files:
+> 
+>   - ELF  (real .o)
+>   - LLVM bitcode (.bc)
+>   - Thin archive (.a)
+> 
+> 
+> Let me discuss how to proceed with this...
+
+Did you have something in mind to make this cleaner?
+
+Sami
