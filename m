@@ -2,93 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8406A261E32
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 21:48:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76F18261EDE
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Sep 2020 21:56:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbgIHTsw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Sep 2020 15:48:52 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50287 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730740AbgIHPuu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 11:50:50 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e17so17791326wme.0;
-        Tue, 08 Sep 2020 08:49:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g+fF122O7R17ki64qXX6rnyePilfcGBCv1/ck2Kz2cE=;
-        b=ad4pUF5ULr5K0KjVE1Kx6P0NsWd7bJBcL4cOUyoDQNfsc4ozdCZMRLTXOUBjt3Ax9x
-         XLVeStAxxGF7GIXuKDfgeP4AUnTQhaoW70ajXSEXxxQwfVpkhR3Ais5kTCNiHtZn+VDR
-         nQfIhNiWXzIxo7uoy6R8vxuFOoGlBu9eJDod2qDLtWrT2VJOQcZjb5fTQPGkyHWlwxIq
-         lxAbXA8yYMbnN+HzIaSnXKQsh8ilVzv4AkI1E9y6FO89IZG5FWEPSjvkSAgB8IDb/Rf8
-         SGYBmM2uiYPIbIuc877/Sbam8jeajc6RrZ1wfnpG86KFw5hBQaxYqHLHlhdQbtlzgzPB
-         hYuw==
-X-Gm-Message-State: AOAM5313oI5xCIshn4fI7g0F9qiWQ7ZZoAe3sfLmO8vwBcxGY81r8Eal
-        Y3GN+u554xZ1iM2NVXZ09+viqyjj8pbwOg==
-X-Google-Smtp-Source: ABdhPJw43xrSDZbM980Q1wyWmczcPUCg8AtgaZXw5a+lncrCANbP6dkN49Y+7fuL7XSHkRq9MvMZ7w==
-X-Received: by 2002:a1c:678a:: with SMTP id b132mr4764047wmc.10.1599572190886;
-        Tue, 08 Sep 2020 06:36:30 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id v128sm31250006wme.2.2020.09.08.06.36.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 06:36:30 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 13:36:29 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 18/46] x86/msi: Consolidate MSI allocation
-Message-ID: <20200908133628.ekh2jbasjf6bxa5z@liuwe-devbox-debian-v2>
-References: <20200826111628.794979401@linutronix.de>
- <20200826112332.466405395@linutronix.de>
+        id S1730592AbgIHT4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Sep 2020 15:56:39 -0400
+Received: from sonic312-23.consmr.mail.ne1.yahoo.com ([66.163.191.204]:33830
+        "EHLO sonic312-23.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730571AbgIHPgl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Sep 2020 11:36:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1599579362; bh=+NKq2YP/4c3bLm2HmGhxa/KCZOXr0NIUKHs/ECuC0yk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=EKp+CQ3zQWfqGZVUnnCaeDn0wDmXHGVetzVvKss5io36j+WF4jUgL5V0w1HzJsYsiiJiqDJZe6Tw/Ez27V7NDM9py01C55dCIAfLGSD50YzshDPBONVRUxA0WN9T0FZpblvbsXV64zI0XNJMeMUJiNgG5wBtRWXqcK9kVUL0WpxGpKBqJcFRF/akfkWinR1MXco7bnBXeEIrq5ZV+W1pojfmBsraPf/A1Jtm3XEjyxdddepmbyZ7O/hGYLpQPy0y45oGj0uZBf8hXJT8pnBNYDU833Kb9jl7Jmv33P5eAI8rUXhe9V+8gm0rWvoprjtYgxQugr9bUKsV+aOhBvqj6g==
+X-YMail-OSG: rBrRa.8VM1mdmCSKiBDTLQTtVqZk7Jka1DhhoJf.eq9fkvIrtHPhyFYtMH6H88u
+ qe6774ZtFyV1Bzf3sIxZv7Nsg.T7_qTKGJK.4SVT9clpD2TUdcq0B_dkZHhgD2G3_GSRal0pGMaP
+ 7Zp77.3VmiEF6XSvUtevXrxOAq_n6hPLXYaF9FkIj2Dnq0SwilH6ol_yszTphjRXuxTa7hRZlRIv
+ vQ_r2YQvbsTgQOd8Mla_O9bV3_BPUiKqD7KjZnwlG6Yy8iecutxEOYTRUyLJsV8YyM62_UxrzMOW
+ 5bwEnhqjdXBmKRdp7ZljQuKpMY82qLiCy7hWVBmKvBa_neApiXOwR6_B4ho7uib22vq4khlQJlKL
+ 3Q4X1n2FbQxp1LLh0Wz7X_1MXel1UiRaIQNFmLUVkE9JLjgCMGTBp2k4IC3n6GdDiPTXfzM9ZAdF
+ 60MUG99vWhoHk1YrHIHVTM2h2E4_cJ7pFRt_cl0SBueoZt6yIVMJt0zSuVPTWufS__3ZYigiu73y
+ yWykA54.uH_PNfcL5rrHUZrEuwHtNDehU.QoBfl.Bb1C2_Wx_RwCNZY8FI_v0.vw58lsqdAlDiiM
+ CWl96tLAnmHK2UDCnK1cjW3Z7TGRqT00OXjtekZWWXpMweiwx_UT.1HgV0.QdVz424WFLw37UJRJ
+ wOqqJCHLKgyeLmAF0PcAnuaxzVvuVSqZIxioPWUzjMTon9QAulNagh_QUPrtDjp.rpPhe7K8DLAv
+ 4Ql3t4ZgE2n5ij3F1qve0qq0fQSrfLOrK6oHw85IiHiFtPrjTdvSlX0euPXFmPedJq85qerqnEZP
+ eLB71LIrO3FndfCqBMgHbvNRC7BPbAsDDP4p0G7BFxT7UiRsbf.48JIOdk4TIGpmQQx5Nwb.KnlY
+ f5I1eBZzuTvmtCcWEt6k1tg1lybKhvJ8jBe1B8w4NDHIRKYq1znvee8XyvimbWeCMcl5kg7PRwWl
+ 4W_uSjU1aBXUhrf.iZ2fgu561oSDCsj7hyxUiavkhc_mtovIxgVQAM7rylWTmAVDnD5zaSDGUPbH
+ qYL_JXT4uaJ52pIss4ZG5glkIYiJul2ZmOXDN77KAiFZSRygflXdbk4JVyHU7Eyi_h.A.rpjkF1R
+ XUD843RAxSZTqFXmhwP0znun2jejnX2.gzo2meyxBFoeNJUn_9ObAn9a.FXR448inUyrYE0TK.VL
+ suKU267hmzr12ggfdmeVhjLdrb1oeYUwWKRro7u4CqMiaOHxp.urQjbrialDRqziAboxkX09yjgt
+ p4Kt5jxHdiBowGuPkZ4YjhwbsoSmE5Y7svwJn__WwqgXtZs3TIkMp.cdDlmv2tgoha66HH75Nl.1
+ 4OX3H07ecLxJZm4teJ3Mlqw_sjPIAOl1iFnaSBQo8GKstHFad139IyNXBPLIIbV7EAWzpgDg6I4T
+ JE_G8OxeqAMSrmQp6heyUaNqC1uu2D04p2U0lig.nciYurrb.eg--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Tue, 8 Sep 2020 15:36:02 +0000
+Date:   Tue, 8 Sep 2020 15:24:58 +0000 (UTC)
+From:   "Mrs. Mina A. Brunel" <mrsminaaaliyahbrunel@gmail.com>
+Reply-To: mrsminaabrunel@myself.com
+Message-ID: <379109045.4372814.1599578698765@mail.yahoo.com>
+Subject: My Dear in the lord
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826112332.466405395@linutronix.de>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <379109045.4372814.1599578698765.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16565 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 01:16:46PM +0200, Thomas Gleixner wrote:
-[...]
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1534,7 +1534,7 @@ static struct irq_chip hv_msi_irq_chip =
->  static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
->  						   msi_alloc_info_t *arg)
->  {
-> -	return arg->msi_hwirq;
-> +	return arg->hwirq;
->  }
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+
+My Dear in the lord
+
+
+My name is Mrs. Mina A. Brunel I am a Norway Citizen who is living in Burki=
+na Faso, I am married to Mr. Brunel Patrice, a politician who owns a small =
+gold company in Burkina Faso; He died of Leprosy and Radesyge, in the year =
+February 2010, During his lifetime he deposited the sum of =E2=82=AC 8.5 Mi=
+llion Euro) Eight million, Five hundred thousand Euros in a bank in Ouagado=
+ugou the capital city of Burkina Faso in West Africa. The money was from th=
+e sale of his company and death benefits payment and entitlements of my dec=
+eased husband by his company.
+
+I am sending you this message with heavy tears in my eyes and great sorrow =
+in my heart, and also praying that it will reach you in good health because=
+ I am not in good health, I sleep every night without knowing if I may be a=
+live to see the next day. I am suffering from long time cancer and presentl=
+y I am partially suffering from Leprosy, which has become difficult for me =
+to move around. I was married to my late husband for more than 6 years with=
+out having a child and my doctor confided that I have less chance to live, =
+having to know when the cup of death will come, I decided to contact you to=
+ claim the fund since I don't have any relation I grew up from an orphanage=
+ home.
+
+I have decided to donate this money for the support of helping Motherless b=
+abies/Less privileged/Widows and churches also to build the house of God be=
+cause I am dying and diagnosed with cancer for about 3 years ago. I have de=
+cided to donate from what I have inherited from my late husband to you for =
+the good work of Almighty God; I will be going in for an operation surgery =
+soon.
+
+Now I want you to stand as my next of kin to claim the funds for charity pu=
+rposes. Because of this money remains unclaimed after my death, the bank ex=
+ecutives or the government will take the money as unclaimed fund and maybe =
+use it for selfishness and worthless ventures, I need a very honest person =
+who can claim this money and use it for Charity works, for orphanages, wido=
+ws and also build schools and churches for less privilege that will be name=
+d after my late husband and my name.
+
+I need your urgent answer to know if you will be able to execute this proje=
+ct, and I will give you more information on how the fund will be transferre=
+d to your bank account or online banking.
+
+Thanks
+Mrs. Mina A. Brunel
