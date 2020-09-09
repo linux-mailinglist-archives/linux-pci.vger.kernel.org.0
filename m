@@ -2,130 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9385A262AA4
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 10:42:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F8A6262AA9
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 10:43:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgIIImT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 04:42:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28300 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728350AbgIIImL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 04:42:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599640929;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DtMgeTKjCn17clYv2JEnI3ffDcOPCVRLd/V3CjCE3+4=;
-        b=bHjGmcvqF0tE71baoI3XsazFtb7Y1uRgSepgFwfvZVBUz2TXHY8Z/uH6eebU85ovLLOVAz
-        8Nqr+bGQj37LIpdfjuv1znQF6+mxZvW2ANflJEEkIPlnQsSYLPWcy89D/Y/TxGeQPqjGSH
-        KjlZ03LQQkKXOnZ+4HXNy1MWu3PbLgY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-_Ya4rfJ9P0yaQlRETl-ZPw-1; Wed, 09 Sep 2020 04:42:06 -0400
-X-MC-Unique: _Ya4rfJ9P0yaQlRETl-ZPw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D592981F02E;
-        Wed,  9 Sep 2020 08:42:03 +0000 (UTC)
-Received: from [10.72.12.24] (ovpn-12-24.pek2.redhat.com [10.72.12.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D6F760C15;
-        Wed,  9 Sep 2020 08:41:46 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
- <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
- <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
- <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
- <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
- <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
- <b2178e1d-2f5c-e8a3-72fb-70f2f8d6aa45@redhat.com>
- <45a8a97c-2061-13ee-5da8-9877a4a3b8aa@ti.com>
- <c8739d7f-e12e-f6a2-7018-9eeaf6feb054@redhat.com>
- <20200828123409.4cd2a812.cohuck@redhat.com>
- <ac8f7e4f-9f46-919a-f5c2-89b07794f0ab@ti.com>
- <9cd58cd1-0041-3d98-baf7-6e5bc2e7e317@redhat.com>
- <20200908183701.60b93441.cohuck@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d6e4be52-78d8-546c-20a4-23bdaea68ba5@redhat.com>
-Date:   Wed, 9 Sep 2020 16:41:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725877AbgIIInm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 04:43:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59809 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgIIInm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:43:42 -0400
+IronPort-SDR: utuDa/MbfqpHhe0D6NB60rdf61ZkDeMG37idf+yG57/1cOvVc9d/PedL9SeeKmrEgXyNsdNVnl
+ NCXNVM6n7eeA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="146008371"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="146008371"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 01:43:41 -0700
+IronPort-SDR: VVDlR80Um9SfoHd6E/KV01mfL5QF/qJE21RoIFEtotgRpqVIUBQMwFILYegoLkuB3tRM8GXXrQ
+ jNV5PMPWE8jw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="480380580"
+Received: from lkp-server01.sh.intel.com (HELO 12ff3cf3f2e9) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 09 Sep 2020 01:43:40 -0700
+Received: from kbuild by 12ff3cf3f2e9 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kFvhb-00007f-Tc; Wed, 09 Sep 2020 08:43:39 +0000
+Date:   Wed, 09 Sep 2020 16:43:01 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 763801810fc56cc77a6539ad7a1afb5b5a3b569e
+Message-ID: <5f589595.68UljwGSoSCwO791%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200908183701.60b93441.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 763801810fc56cc77a6539ad7a1afb5b5a3b569e  Merge branch 'remotes/lorenzo/pci/vmd'
 
-On 2020/9/9 上午12:37, Cornelia Huck wrote:
->> Then you need something that is functional equivalent to virtio PCI
->> which is actually the concept of vDPA (e.g vDPA provides alternatives if
->> the queue_sel is hard in the EP implementation).
-> It seems I really need to read up on vDPA more... do you have a pointer
-> for diving into this alternatives aspect?
+elapsed time: 723m
 
+configs tested: 117
+configs skipped: 7
 
-See vpda_config_ops in include/linux/vdpa.h
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Especially this part:
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                             allyesconfig
+c6x                        evmc6678_defconfig
+arm                        vexpress_defconfig
+c6x                        evmc6472_defconfig
+mips                           ip28_defconfig
+mips                          malta_defconfig
+powerpc                       holly_defconfig
+arm                        mvebu_v7_defconfig
+arc                     nsimosci_hs_defconfig
+arm                            zeus_defconfig
+sh                           se7705_defconfig
+riscv                    nommu_k210_defconfig
+arm                       spear13xx_defconfig
+powerpc                         wii_defconfig
+arm                           h5000_defconfig
+openrisc                    or1ksim_defconfig
+mips                      maltaaprp_defconfig
+mips                          rm200_defconfig
+powerpc                          alldefconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                   rts7751r2dplus_defconfig
+nios2                         3c120_defconfig
+arm                       aspeed_g5_defconfig
+mips                           rs90_defconfig
+arc                        vdk_hs38_defconfig
+m68k                        m5307c3_defconfig
+sh                           se7712_defconfig
+arm                        multi_v5_defconfig
+powerpc                     skiroot_defconfig
+mips                malta_kvm_guest_defconfig
+arm                        magician_defconfig
+arm                         assabet_defconfig
+m68k                            mac_defconfig
+xtensa                       common_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a004-20200907
+i386                 randconfig-a005-20200907
+i386                 randconfig-a006-20200907
+i386                 randconfig-a002-20200907
+i386                 randconfig-a003-20200907
+i386                 randconfig-a001-20200907
+i386                 randconfig-a016-20200907
+i386                 randconfig-a015-20200907
+i386                 randconfig-a011-20200907
+i386                 randconfig-a013-20200907
+i386                 randconfig-a014-20200907
+i386                 randconfig-a012-20200907
+i386                 randconfig-a016-20200908
+i386                 randconfig-a015-20200908
+i386                 randconfig-a011-20200908
+i386                 randconfig-a013-20200908
+i386                 randconfig-a014-20200908
+i386                 randconfig-a012-20200908
+i386                 randconfig-a016-20200909
+i386                 randconfig-a015-20200909
+i386                 randconfig-a011-20200909
+i386                 randconfig-a013-20200909
+i386                 randconfig-a014-20200909
+i386                 randconfig-a012-20200909
+x86_64               randconfig-a006-20200907
+x86_64               randconfig-a004-20200907
+x86_64               randconfig-a003-20200907
+x86_64               randconfig-a005-20200907
+x86_64               randconfig-a001-20200907
+x86_64               randconfig-a002-20200907
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-     int (*set_vq_address)(struct vdpa_device *vdev,
-                   u16 idx, u64 desc_area, u64 driver_area,
-                   u64 device_area);
+clang tested configs:
+x86_64               randconfig-a013-20200909
+x86_64               randconfig-a016-20200909
+x86_64               randconfig-a011-20200909
+x86_64               randconfig-a012-20200909
+x86_64               randconfig-a015-20200909
+x86_64               randconfig-a014-20200909
 
-This means for the devices (e.g endpoint device) that is hard to 
-implement virtio-pci layout, it can use any other register layout or 
-vendor specific way to configure the virtqueue.
-
-
->
->>> "Virtio Over NTB" should anyways be a new transport.
->>>> Does that make any sense?
->>> yeah, in the approach I used the initial features are hard-coded in
->>> vhost-rpmsg (inherent to the rpmsg) but when we have to use adapter
->>> layer (vhost only for accessing virtio ring and use virtio drivers on
->>> both front end and backend), based on the functionality (e.g, rpmsg),
->>> the vhost should be configured with features (to be presented to the
->>> virtio) and that's why additional layer or APIs will be required.
->> A question here, if we go with vhost bus approach, does it mean the
->> virtio device can only be implemented in EP's userspace?
-> Can we maybe implement an alternative bus as well that would allow us
-> to support different virtio device implementations (in addition to the
-> vhost bus + userspace combination)?
-
-
-That should be fine, but I'm not quite sure that implementing the device 
-in kerne (kthread) is the good approach.
-
-Thanks
-
-
->
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
