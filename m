@@ -2,144 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FF14262821
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 09:11:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9385A262AA4
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 10:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgIIHKs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 03:10:48 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:48150 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbgIIHKl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 03:10:41 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0897AKaD4024324, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb05.realtek.com.tw[172.21.6.98])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0897AKaD4024324
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 9 Sep 2020 15:10:20 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 9 Sep 2020 15:10:20 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2044.4; Wed, 9 Sep 2020 15:10:19 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::3d72:efbe:f42a:2926]) by
- RTEXMB01.realtek.com.tw ([fe80::3d72:efbe:f42a:2926%13]) with mapi id
- 15.01.2044.004; Wed, 9 Sep 2020 15:10:19 +0800
-From:   =?big5?B?p2Sp/rzhIFJpY2t5?= <ricky_wu@realtek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "rui_feng@realsil.com.cn" <rui_feng@realsil.com.cn>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "puranjay12@gmail.com" <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "vailbhavgupta40@gamail.com" <vailbhavgupta40@gamail.com>
-Subject: RE: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix driving parameter
-Thread-Topic: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix
- driving parameter
-Thread-Index: AQHWhP62uKuuQJQ5k0+R6Z2U1e37UKlezqwAgAES/lA=
-Date:   Wed, 9 Sep 2020 07:10:19 +0000
-Message-ID: <a5abd0d6029646ff8faae61cc4a4dd55@realtek.com>
-References: <20200907100731.7722-1-ricky_wu@realtek.com>
- <20200908222834.GA646416@bjorn-Precision-5520>
-In-Reply-To: <20200908222834.GA646416@bjorn-Precision-5520>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.88.99]
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+        id S1728458AbgIIImT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 04:42:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28300 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728350AbgIIImL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 04:42:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599640929;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DtMgeTKjCn17clYv2JEnI3ffDcOPCVRLd/V3CjCE3+4=;
+        b=bHjGmcvqF0tE71baoI3XsazFtb7Y1uRgSepgFwfvZVBUz2TXHY8Z/uH6eebU85ovLLOVAz
+        8Nqr+bGQj37LIpdfjuv1znQF6+mxZvW2ANflJEEkIPlnQsSYLPWcy89D/Y/TxGeQPqjGSH
+        KjlZ03LQQkKXOnZ+4HXNy1MWu3PbLgY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-_Ya4rfJ9P0yaQlRETl-ZPw-1; Wed, 09 Sep 2020 04:42:06 -0400
+X-MC-Unique: _Ya4rfJ9P0yaQlRETl-ZPw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D592981F02E;
+        Wed,  9 Sep 2020 08:42:03 +0000 (UTC)
+Received: from [10.72.12.24] (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D6F760C15;
+        Wed,  9 Sep 2020 08:41:46 +0000 (UTC)
+Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
+ communication
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20200702082143.25259-1-kishon@ti.com>
+ <20200702055026-mutt-send-email-mst@kernel.org>
+ <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
+ <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
+ <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
+ <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
+ <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
+ <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
+ <b2178e1d-2f5c-e8a3-72fb-70f2f8d6aa45@redhat.com>
+ <45a8a97c-2061-13ee-5da8-9877a4a3b8aa@ti.com>
+ <c8739d7f-e12e-f6a2-7018-9eeaf6feb054@redhat.com>
+ <20200828123409.4cd2a812.cohuck@redhat.com>
+ <ac8f7e4f-9f46-919a-f5c2-89b07794f0ab@ti.com>
+ <9cd58cd1-0041-3d98-baf7-6e5bc2e7e317@redhat.com>
+ <20200908183701.60b93441.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d6e4be52-78d8-546c-20a4-23bdaea68ba5@redhat.com>
+Date:   Wed, 9 Sep 2020 16:41:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200908183701.60b93441.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWls
-dG86aGVsZ2Fhc0BrZXJuZWwub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAwOSwg
-MjAyMCA2OjI5IEFNDQo+IFRvOiCnZKn+vOEgUmlja3kNCj4gQ2M6IGFybmRAYXJuZGIuZGU7IGdy
-ZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiB1bGYuaGFu
-c3NvbkBsaW5hcm8ub3JnOyBydWlfZmVuZ0ByZWFsc2lsLmNvbS5jbjsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsNCj4gcHVyYW5qYXkxMkBnbWFpbC5jb207IGxpbnV4LXBjaUB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IHZhaWxiaGF2Z3VwdGE0MEBnYW1haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggdjUgMi8yXSBtaXNjOiBydHN4OiBBZGQgcG93ZXIgc2F2aW5nIGZ1bmN0aW9ucyBhbmQg
-Zml4IGRyaXZpbmcNCj4gcGFyYW1ldGVyDQo+IA0KPiBPbiBNb24sIFNlcCAwNywgMjAyMCBhdCAw
-NjowNzozMVBNICswODAwLCByaWNreV93dUByZWFsdGVrLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBS
-aWNreSBXdSA8cmlja3lfd3VAcmVhbHRlay5jb20+DQo+ID4NCj4gPiB2NDoNCj4gPiBzcGxpdCBw
-b3dlciBkb3duIGZsb3cgYW5kIHBvd2VyIHNhdmluZyBmdW5jdGlvbiB0byB0d28gcGF0Y2gNCj4g
-Pg0KPiA+IHY1Og0KPiA+IGZpeCB1cCBtb2RpZmllZCBjaGFuZ2UgdW5kZXIgdGhlIC0tLSBsaW5l
-DQo+IA0KPiBIZWhlLCB0aGlzIGNhbWUgb3V0ICphYm92ZSogdGhlICItLS0iIGxpbmUgOikNCj4g
-DQo+ID4gQWRkIHJ0czUyMmEgTDEgc3ViLXN0YXRlIHN1cHBvcnQNCj4gPiBTYXZlIG1vcmUgcG93
-ZXIgb24gcnRzNTIyNyBydHM1MjQ5IHJ0czUyNWEgcnRzNTI2MA0KPiA+IEZpeCBydHM1MjYwIGRy
-aXZpbmcgcGFyYW1ldGVyDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSaWNreSBXdSA8cmlja3lf
-d3VAcmVhbHRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0
-czUyMjcuYyAgfCAxMTIgKysrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICBkcml2ZXJzL21pc2Mv
-Y2FyZHJlYWRlci9ydHM1MjQ5LmMgIHwgMTQ1DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KystDQo+ID4gIGRyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0czUyNjAuYyAgfCAgMjggKysrLS0t
-DQo+ID4gIGRyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0c3hfcGNyLmggfCAgMTcgKysrKw0KPiA+
-ICA0IGZpbGVzIGNoYW5nZWQsIDI4MyBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvY2FyZHJlYWRlci9ydHM1MjI3LmMNCj4g
-Yi9kcml2ZXJzL21pc2MvY2FyZHJlYWRlci9ydHM1MjI3LmMNCj4gPiBpbmRleCA3NDczOTFlM2Zi
-NWQuLjg4NTkwMTE2NzJjYiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21pc2MvY2FyZHJlYWRl
-ci9ydHM1MjI3LmMNCj4gPiArKysgYi9kcml2ZXJzL21pc2MvY2FyZHJlYWRlci9ydHM1MjI3LmMN
-Cj4gPiBAQCAtNzIsMTUgKzcyLDgwIEBAIHN0YXRpYyB2b2lkIHJ0czUyMjdfZmV0Y2hfdmVuZG9y
-X3NldHRpbmdzKHN0cnVjdA0KPiBydHN4X3BjciAqcGNyKQ0KPiA+DQo+ID4gIAlwY2lfcmVhZF9j
-b25maWdfZHdvcmQocGRldiwgUENSX1NFVFRJTkdfUkVHMiwgJnJlZyk7DQo+ID4gIAlwY3JfZGJn
-KHBjciwgIkNmZyAweCV4OiAweCV4XG4iLCBQQ1JfU0VUVElOR19SRUcyLCByZWcpOw0KPiA+ICsJ
-aWYgKHJ0c3hfY2hlY2tfbW1jX3N1cHBvcnQocmVnKSkNCj4gPiArCQlwY3ItPmV4dHJhX2NhcHMg
-fD0gRVhUUkFfQ0FQU19OT19NTUM7DQo+ID4gIAlwY3ItPnNkMzBfZHJpdmVfc2VsXzN2MyA9IHJ0
-c3hfcmVnX3RvX3NkMzBfZHJpdmVfc2VsXzN2MyhyZWcpOw0KPiA+ICAJaWYgKHJ0c3hfcmVnX2No
-ZWNrX3JldmVyc2Vfc29ja2V0KHJlZykpDQo+ID4gIAkJcGNyLT5mbGFncyB8PSBQQ1JfUkVWRVJT
-RV9TT0NLRVQ7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgdm9pZCBydHM1MjI3X2luaXRfZnJv
-bV9jZmcoc3RydWN0IHJ0c3hfcGNyICpwY3IpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBwY2lfZGV2
-ICpwZGV2ID0gcGNyLT5wY2k7DQo+ID4gKwlpbnQgbDFzczsNCj4gPiArCXUzMiBsdmFsOw0KPiA+
-ICsJc3RydWN0IHJ0c3hfY3Jfb3B0aW9uICpvcHRpb24gPSAmcGNyLT5vcHRpb247DQo+ID4gKw0K
-PiA+ICsJbDFzcyA9IHBjaV9maW5kX2V4dF9jYXBhYmlsaXR5KHBkZXYsIFBDSV9FWFRfQ0FQX0lE
-X0wxU1MpOw0KPiA+ICsJaWYgKCFsMXNzKQ0KPiA+ICsJCXJldHVybjsNCj4gPiArDQo+ID4gKwlw
-Y2lfcmVhZF9jb25maWdfZHdvcmQocGRldiwgbDFzcyArIFBDSV9MMVNTX0NUTDEsICZsdmFsKTsN
-Cj4gDQo+IFRoaXMgbG9va3MgYSBsaXR0bGUgcHJvYmxlbWF0aWMuICBQQ0lfTDFTU19DVEwxIGlz
-IGFuIGFyY2hpdGVjdGVkDQo+IHJlZ2lzdGVyIGluIHRoZSBBU1BNIEwxIFBNIFN1YnN0YXRlcyBj
-YXBhYmlsaXR5LCBhbmQgaXRzIHZhbHVlIG1heQ0KPiBjaGFuZ2UgYXQgcnVudGltZSBiZWNhdXNl
-IGRyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIG1hbmFnZXMgaXQuDQo+IA0KPiBJdCBsb29rcyBsaWtl
-IHRoZSBjb2RlIGJlbG93IGRvZXMgZGV2aWNlLXNwZWNpZmljIGNvbmZpZ3VyYXRpb24gYmFzZWQN
-Cj4gb24gdGhlIGN1cnJlbnQgUENJX0wxU1NfQ1RMMSB2YWx1ZS4gIEJ1dCB3aGF0IGhhcHBlbnMg
-aWYgYXNwbS5jDQo+IGNoYW5nZXMgUENJX0wxU1NfQ1RMMSBsYXRlcj8NCj4gDQoNCldlIGFyZSBn
-b2luZyB0byBtYWtlIHN1cmUgYW5kIHNldCB0aGUgYmVzdCBjb25maWd1cmF0aW9uIG9uIHRoZSBj
-dXJyZW50IHRpbWUsIA0KaWYgaG9zdCBjaGFuZ2UgdGhlIGNhcGFiaWxpdHkgbGF0ZXIsIGl0IGRv
-ZXNuJ3QgYWZmZWN0IGZ1bmN0aW9uLCBvbmx5IGFmZmVjdCBhIGxpdHRsZSBwb3dlciBzYXZpbmcg
-ICANCg0KPiA+ICsJaWYgKENIS19QQ0lfUElEKHBjciwgMHg1MjJBKSkgew0KPiA+ICsJCWlmICgw
-ID09IChsdmFsICYgMHgwRikpDQo+ID4gKwkJCXJ0c3hfcGNpX2VuYWJsZV9vb2JzX3BvbGxpbmco
-cGNyKTsNCj4gPiArCQllbHNlDQo+ID4gKwkJCXJ0c3hfcGNpX2Rpc2FibGVfb29ic19wb2xsaW5n
-KHBjcik7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKGx2YWwgJiBQQ0lfTDFTU19DVEwxX0FT
-UE1fTDFfMSkNCj4gPiArCQlydHN4X3NldF9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMV9FTik7DQo+
-ID4gKwllbHNlDQo+ID4gKwkJcnRzeF9jbGVhcl9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMV9FTik7
-DQo+ID4gKw0KPiA+ICsJaWYgKGx2YWwgJiBQQ0lfTDFTU19DVEwxX0FTUE1fTDFfMikNCj4gPiAr
-CQlydHN4X3NldF9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMl9FTik7DQo+ID4gKwllbHNlDQo+ID4g
-KwkJcnRzeF9jbGVhcl9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMl9FTik7DQo+ID4gKw0KPiA+ICsJ
-aWYgKGx2YWwgJiBQQ0lfTDFTU19DVEwxX1BDSVBNX0wxXzEpDQo+ID4gKwkJcnRzeF9zZXRfZGV2
-X2ZsYWcocGNyLCBQTV9MMV8xX0VOKTsNCj4gPiArCWVsc2UNCj4gPiArCQlydHN4X2NsZWFyX2Rl
-dl9mbGFnKHBjciwgUE1fTDFfMV9FTik7DQo+ID4gKw0KPiA+ICsJaWYgKGx2YWwgJiBQQ0lfTDFT
-U19DVEwxX1BDSVBNX0wxXzIpDQo+ID4gKwkJcnRzeF9zZXRfZGV2X2ZsYWcocGNyLCBQTV9MMV8y
-X0VOKTsNCj4gPiArCWVsc2UNCj4gPiArCQlydHN4X2NsZWFyX2Rldl9mbGFnKHBjciwgUE1fTDFf
-Ml9FTik7DQo+ID4gKw0KPiA+ICsJaWYgKG9wdGlvbi0+bHRyX2VuKSB7DQo+ID4gKwkJdTE2IHZh
-bDsNCj4gPiArDQo+ID4gKwkJcGNpZV9jYXBhYmlsaXR5X3JlYWRfd29yZChwY3ItPnBjaSwgUENJ
-X0VYUF9ERVZDVEwyLCAmdmFsKTsNCj4gDQo+IFNhbWUgdGhpbmcgaGVyZS4gIEkgZG9uJ3QgdGhp
-bmsgdGhlIFBDSSBjb3JlIGN1cnJlbnRseSBjaGFuZ2VzDQo+IFBDSV9FWFBfREVWQ1RMMiBhZnRl
-ciBib290LCBidXQgaXQncyBub3QgYSBnb29kIGlkZWEgdG8gYXNzdW1lIGl0J3MNCj4gZ29pbmcg
-dG8gYmUgY29uc3RhbnQuDQo+IA0KDQpUaGUgc2FtZSByZXBseQ0KDQo+ID4gKwkJaWYgKHZhbCAm
-IFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pIHsNCj4gPiArCQkJb3B0aW9uLT5sdHJfZW5hYmxlZCA9
-IHRydWU7DQo+ID4gKwkJCW9wdGlvbi0+bHRyX2FjdGl2ZSA9IHRydWU7DQo+ID4gKwkJCXJ0c3hf
-c2V0X2x0cl9sYXRlbmN5KHBjciwgb3B0aW9uLT5sdHJfYWN0aXZlX2xhdGVuY3kpOw0KPiA+ICsJ
-CX0gZWxzZSB7DQo+ID4gKwkJCW9wdGlvbi0+bHRyX2VuYWJsZWQgPSBmYWxzZTsNCj4gPiArCQl9
-DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKHJ0c3hfY2hlY2tfZGV2X2ZsYWcocGNyLCBBU1BN
-X0wxXzFfRU4gfCBBU1BNX0wxXzJfRU4NCj4gPiArCQkJCXwgUE1fTDFfMV9FTiB8IFBNX0wxXzJf
-RU4pKQ0KPiA+ICsJCW9wdGlvbi0+Zm9yY2VfY2xrcmVxXzAgPSBmYWxzZTsNCj4gPiArCWVsc2UN
-Cj4gPiArCQlvcHRpb24tPmZvcmNlX2Nsa3JlcV8wID0gdHJ1ZTsNCj4gPiArDQo+ID4gK30NCj4g
-DQo+IC0tLS0tLVBsZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5n
-IHRoaXMgZS1tYWlsLg0K
+
+On 2020/9/9 上午12:37, Cornelia Huck wrote:
+>> Then you need something that is functional equivalent to virtio PCI
+>> which is actually the concept of vDPA (e.g vDPA provides alternatives if
+>> the queue_sel is hard in the EP implementation).
+> It seems I really need to read up on vDPA more... do you have a pointer
+> for diving into this alternatives aspect?
+
+
+See vpda_config_ops in include/linux/vdpa.h
+
+Especially this part:
+
+     int (*set_vq_address)(struct vdpa_device *vdev,
+                   u16 idx, u64 desc_area, u64 driver_area,
+                   u64 device_area);
+
+This means for the devices (e.g endpoint device) that is hard to 
+implement virtio-pci layout, it can use any other register layout or 
+vendor specific way to configure the virtqueue.
+
+
+>
+>>> "Virtio Over NTB" should anyways be a new transport.
+>>>> Does that make any sense?
+>>> yeah, in the approach I used the initial features are hard-coded in
+>>> vhost-rpmsg (inherent to the rpmsg) but when we have to use adapter
+>>> layer (vhost only for accessing virtio ring and use virtio drivers on
+>>> both front end and backend), based on the functionality (e.g, rpmsg),
+>>> the vhost should be configured with features (to be presented to the
+>>> virtio) and that's why additional layer or APIs will be required.
+>> A question here, if we go with vhost bus approach, does it mean the
+>> virtio device can only be implemented in EP's userspace?
+> Can we maybe implement an alternative bus as well that would allow us
+> to support different virtio device implementations (in addition to the
+> vhost bus + userspace combination)?
+
+
+That should be fine, but I'm not quite sure that implementing the device 
+in kerne (kthread) is the good approach.
+
+Thanks
+
+
+>
+
