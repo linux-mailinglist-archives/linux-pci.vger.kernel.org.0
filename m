@@ -2,156 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4382263680
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 21:14:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 422C9263743
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 22:24:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgIITOS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 15:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIITOR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:14:17 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD9421D43
-        for <linux-pci@vger.kernel.org>; Wed,  9 Sep 2020 19:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599678856;
-        bh=TePhmGky6jkSs6zzIefPjKAq0/m8+cyB4RTLI2u/9/g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RFkuy/k0LMkKjGOJCSwyNJF/fglZpvjoD/5GYIa1FvD/DNSwOFRSQ+LAvCAi+L2Rm
-         xW4s4omdLaHauWXmjgH1tYrmmNhl3CvB20WCg7MhoYNuslmhtwLwZBDkh79zWXUAr1
-         uj6i+FFdC67E9xCtd3S/zrNV8gbOIKbg/tNMkD50=
-Received: by mail-oi1-f177.google.com with SMTP id c13so3473442oiy.6
-        for <linux-pci@vger.kernel.org>; Wed, 09 Sep 2020 12:14:16 -0700 (PDT)
-X-Gm-Message-State: AOAM532FMHFgvnIX89Co7Tve4FgdWRP7AcNwf+5ixxNsNOL/SYZABEQc
-        CrT5bLJZOi2spALvWfJi9KxeTiV7otvpMnvPVw==
-X-Google-Smtp-Source: ABdhPJwV+m7G+wRLnYK8h+UogMc3R8itkZwsHel5jNtZyKuZkGJC3We6KUGLIt0ARo8GgSndj7E3kOYGEByjo00f3+M=
-X-Received: by 2002:aca:1711:: with SMTP id j17mr1646279oii.152.1599678855483;
- Wed, 09 Sep 2020 12:14:15 -0700 (PDT)
+        id S1726414AbgIIUYV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 16:24:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58108 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIIUYQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 16:24:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089KO0bS120929;
+        Wed, 9 Sep 2020 20:24:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=fuLAuhbpfmFs/3j/V19/yC2IatnQWH1x+Opbcu/Itxg=;
+ b=BLGPrA5BY1+YVwPSmuOVfbHOwiwt55XUKiImOJVkJVzsv7pKDNImhy+gxwMoYbagEJ7h
+ 808e3KcCMwliSK5gVb1ANZ2S1jgANswM2wdtICwJUWPropJch6Zk7zARpSLJhFBpuQ48
+ cVrzaQc5gRYS2h6px9JPx5K/RPVs6Zj810hvmB1gO/JKJrcwCVg1pZyeQDwTBU9rfk6m
+ Ttmvnl7PYGwUmWT/oX6y8O8nEk52S+EMXR+hjpF/P+QnQc0CV+Yiq73oM5YDDhtklkRY
+ IWPgPgZ4qxlI61chxB8sNOIvL9e5mezZvee6LIeOBZERWZk6x7rEECm+fyl4ZBUkE9s3 Ig== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33c3an428n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 09 Sep 2020 20:24:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089KJclV132477;
+        Wed, 9 Sep 2020 20:23:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 33dacm1g0h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Sep 2020 20:23:59 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 089KNp2n028951;
+        Wed, 9 Sep 2020 20:23:51 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Sep 2020 13:23:50 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 68A046A0109; Wed,  9 Sep 2020 16:25:10 -0400 (EDT)
+Date:   Wed, 9 Sep 2020 16:25:10 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, x86@kernel.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 1/3] swiotlb: Use %pa to print phys_addr_t variables
+Message-ID: <20200909202510.GA16663@char.us.oracle.com>
+References: <20200902173105.38293-1-andriy.shevchenko@linux.intel.com>
+ <CAOMZO5CMBer5VBWz0ruUUtVM9V4p0bYaTnV_bJnrORzug2=0Aw@mail.gmail.com>
+ <20200909155913.GF1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200908100231.GA22909@e121166-lin.cambridge.arm.com> <20200908220843.GA643026@bjorn-Precision-5520>
-In-Reply-To: <20200908220843.GA643026@bjorn-Precision-5520>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 9 Sep 2020 13:14:04 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK3OKVx_1OXz_xbspW8JJQpxh5j_CcYrOUo=DmETu6Ftg@mail.gmail.com>
-Message-ID: <CAL_JsqK3OKVx_1OXz_xbspW8JJQpxh5j_CcYrOUo=DmETu6Ftg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rockchip: Fix bus checks in rockchip_pcie_valid_device()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Samuel Dionne-Riel <samuel@dionne-riel.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909155913.GF1891694@smile.fi.intel.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 suspectscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090181
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090182
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 4:08 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Sep 08, 2020 at 11:02:31AM +0100, Lorenzo Pieralisi wrote:
-> > On Fri, Sep 04, 2020 at 03:09:04PM +0100, Lorenzo Pieralisi wrote:
-> > > The root bus checks rework in:
+On Wed, Sep 09, 2020 at 06:59:13PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 02, 2020 at 11:02:46PM -0300, Fabio Estevam wrote:
+> > On Wed, Sep 2, 2020 at 2:31 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
 > > >
-> > > commit d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus")
+> > > There is an extension to a %p to print phys_addr_t type of variables.
+> > > Use it here.
 > > >
-> > > caused a regression whereby in rockchip_pcie_valid_device() if
-> > > the bus parameter is the root bus and the dev value == 0 the
-> > > function should return 1 (ie true) without checking if the
-> > > bus->parent pointer is a root bus because that triggers a NULL
-> > > pointer dereference.
-> > >
-> > > Fix this by streamlining the root bus detection.
-> > >
-> > > Fixes: d84c572de1a3 ("PCI: rockchip: Use pci_is_root_bus() to check if bus is root bus")
-> > > Reported-by: Samuel Dionne-Riel <samuel@dionne-riel.com>
-> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Rob Herring <robh@kernel.org>
-> > > Cc: Shawn Lin <shawn.lin@rock-chips.com>
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > > > ---
-> > >  drivers/pci/controller/pcie-rockchip-host.c | 11 ++++-------
-> > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> >
-> > Hi Bjorn,
-> >
-> > this is a fix for a patch we merged in the last merge window, can
-> > we send it for one of the upcoming -rcX please ?
->
-> Sure.  I added Samuel's tested-by and put this on for-linus for v5.9.
->
-> But is there any chance we can figure out a way to make all these
-> "valid_device" functions look more similar?  They're a real potpourri
-> of styles:
+> > > v2: dropped bytes replacement (Fabio)
+> > 
+> > Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> 
+> Thanks!
+> 
+> Guys, can this series be applied?
 
-I'm definitely trying to head in that direction, but trying to make
-the all the copy-n-paste the same is an exercise in frustration.
-Really, we need to factor out the copy-n-paste.
-
-I expect now (in the DWC cleanup series) that we can support different
-ops for root and child buses, we can refactor these a bit. For
-Rockchip in particular, it looks like it is actually a Cadence
-controller, so I'd like to get the Cadence driver working on Rockchip
-and we can remove this one. Interestingly, the Cadence driver has no
-such 'Do not read more than one device on the bus directly attached to
-RC's downstream side.' check, so I suspect that's not really needed.
-Though it could also be the same issue as the Neoverse N1 quirk. I
-need to get a different Rockchip board because it seems PCIe doesn't
-work on the Rock960c I have.
-
->   - Most return bool, a couple return int.
->
->   - Some take PCI_SLOT(devfn); others take devfn.
->
->   - Some reject "devfn > 0", others reject only "dev > 0".  Maybe this
->     is a real difference, I dunno.
-
-If not just poor naming, it's just limited testing I'd guess. Or the
-root bridge is always a single function? I imagine lots of these Arm
-drivers are never tested with more than a handful of single devices
-(most h/w is a single soldered device or M2 slot). There were numerous
-cases I found where only 0 for root bus number would have worked.
-Those should be fixed now.
-
-Given filtering out root bus 'dev > 0' is fairly common, I'm wondering
-if it should just be a bridge feature/quirk flag that the PCI core
-could handle.
-
->   - A few do unusual things that *look* like pci_is_root_bus():
->       bus->primary == to_pci_host_bridge(bus->bridge)->busnr
->       bus->number == cfg->busr.start
->       bus->number == pcie->root_bus_nr
-
-I think I've cleaned-up most of these. At least how we check for root
-bus is consistent.
-
-The checks with bus->primary are the oddballs which I don't really understand.
-
->   - Some check for a negated condition first ("!pci_is_root_bus()"),
->     i.e., I always prefer something like this:
->
->       if (pci_is_root_bus(bus))
->         return devfn == 0;
->
->       return pcie_link_up();
->
->     over this (from nwl_pcie_valid_device()):
->
->       if (!pci_is_root_bus(bus)) {
->         if (!pcie_link_up())
->           return false;
->       } else if (devfn > 0)
->         return false;
->
->       return true;
->
->   - About half check whether the link is up.
-
-I think we agree that's a pointless, racy check. Happy to go rip those
-out. Of course, the testing probably won't happen until a -rc1. :(
-
-Rob
+Sure.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
