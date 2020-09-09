@@ -2,211 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 863BD263997
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 03:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 553FA263A3D
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 04:24:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgIJB6Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 21:58:25 -0400
-Received: from condef-04.nifty.com ([202.248.20.69]:52990 "EHLO
-        condef-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgIJBf3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 21:35:29 -0400
-Received: from conssluserg-04.nifty.com ([10.126.8.83])by condef-04.nifty.com with ESMTP id 08A1J0mu023902;
-        Thu, 10 Sep 2020 10:19:00 +0900
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 08A1IhTb013561;
-        Thu, 10 Sep 2020 10:18:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 08A1IhTb013561
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599700724;
-        bh=x2qUAAqVWiePSrCzfI1IEP4eafAB9yee8r8ckQho/u8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WGjr5LVsquWsgfjbUw8zsVNV+eA8G4HhcuX7mJ53BwE1QXEJLWsiBBR8lguwcOerT
-         d71o9nfLv7ija30NHqQedE2CfJD68H7zHtYLQdmNLNYavfgBOdGEVAam0QzLlPx5Q2
-         6EJvPCcYrNNyDZNKB0TNqWiS2LuxTF6IL0ttSnkDcBELKjgx7TEBTYnWbGAc/tZbYZ
-         ZMn59+M37cpTDQVmqeXbYfFIZ/VUmlVU6FP4rP8nFvJoOjs3HFc/LbGKo4YdWIQOK6
-         KSbHxjj2F61Imz4LpNo5mWBjeXerF0bjYZRmNxbsHsNpkA4wxyCBw0p6bFOn5d+i5j
-         eYvVVaetEFYKg==
-X-Nifty-SrcIP: [209.85.215.169]
-Received: by mail-pg1-f169.google.com with SMTP id g29so3356898pgl.2;
-        Wed, 09 Sep 2020 18:18:43 -0700 (PDT)
-X-Gm-Message-State: AOAM530F73TwB0Fmzr4rQbsyBv8w417djTI0Bd+yBGyIznSW6IwvbMEQ
-        aqn88/qrsnbMbTZ6JBfWJ29DykE++eZe+uEIKeE=
-X-Google-Smtp-Source: ABdhPJw3+uiV59rG6EDJ8QWqM7TRK95TtkCpF/iAWICblIOjIFopt/zBNTTyCv+Bm880c1rm+ZI8WQaujb2+mHAsSEI=
-X-Received: by 2002:a63:f546:: with SMTP id e6mr2466312pgk.7.1599700722672;
- Wed, 09 Sep 2020 18:18:42 -0700 (PDT)
+        id S1730684AbgIJCYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 22:24:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32603 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730668AbgIJCId (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 22:08:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599703711;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9lUmVHlRg0jPhlantuCk3hiT6WHd/nIzITZFw+wGi90=;
+        b=LTtp8Ud1EekyMH0PGpMWJGlJTqAkF1SWn5bqK+soxWpH8E28oQQw6KsoNE4qWWuIzw+piU
+        alvnxuk2w3B56i2Fcv9NFVUaQ13Yi0XViNnK/zM+fIs1Up1YmBhgrxbW5nk1DFzwKg5iWo
+        IA8oLbyx0dTfhqcjcxzc7d1Y58w4ZO4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-PdjO5lmxOoqImIc6M2pBzA-1; Wed, 09 Sep 2020 19:07:52 -0400
+X-MC-Unique: PdjO5lmxOoqImIc6M2pBzA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97082801F98;
+        Wed,  9 Sep 2020 23:07:50 +0000 (UTC)
+Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 209F57EED4;
+        Wed,  9 Sep 2020 23:07:48 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 17:07:46 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
+Message-ID: <20200909170746.2286b83a@w520.home>
+In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
+References: <20200903164117.GA312152@bjorn-Precision-5520>
+        <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com> <CAK7LNASDUkyJMDD0a5K_HT=1q5NEc6dcN4=FUb330yK0BCKcTw@mail.gmail.com>
- <20200908234643.GF1060586@google.com>
-In-Reply-To: <20200908234643.GF1060586@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 10 Sep 2020 10:18:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
-Message-ID: <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 8:46 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> On Sun, Sep 06, 2020 at 09:24:38AM +0900, Masahiro Yamada wrote:
-> > On Fri, Sep 4, 2020 at 5:30 AM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > >
-> > > This patch series adds support for building x86_64 and arm64 kernels
-> > > with Clang's Link Time Optimization (LTO).
-> > >
-> > > In addition to performance, the primary motivation for LTO is
-> > > to allow Clang's Control-Flow Integrity (CFI) to be used in the
-> > > kernel. Google has shipped millions of Pixel devices running three
-> > > major kernel versions with LTO+CFI since 2018.
-> > >
-> > > Most of the patches are build system changes for handling LLVM
-> > > bitcode, which Clang produces with LTO instead of ELF object files,
-> > > postponing ELF processing until a later stage, and ensuring initcall
-> > > ordering.
-> > >
-> > > Note that patches 1-4 are not directly related to LTO, but are
-> > > needed to compile LTO kernels with ToT Clang, so I'm including them
-> > > in the series for your convenience:
-> > >
-> > >  - Patches 1-3 are required for building the kernel with ToT Clang,
-> > >    and IAS, and patch 4 is needed to build allmodconfig with LTO.
-> > >
-> > >  - Patches 3-4 are already in linux-next, but not yet in 5.9-rc.
-> > >
-> >
-> >
-> > I still do not understand how this patch set works.
-> > (only me?)
-> >
-> > Please let me ask fundamental questions.
-> >
-> >
-> >
-> > I applied this series on top of Linus' tree,
-> > and compiled for ARCH=arm64.
-> >
-> > I compared the kernel size with/without LTO.
-> >
-> >
-> >
-> > [1] No LTO  (arm64 defconfig, CONFIG_LTO_NONE)
-> >
-> > $ llvm-size   vmlinux
-> >    text    data     bss     dec     hex filename
-> > 15848692 10099449 493060 26441201 19375f1 vmlinux
-> >
-> >
-> >
-> > [2] Clang LTO  (arm64 defconfig + CONFIG_LTO_CLANG)
-> >
-> > $ llvm-size   vmlinux
-> >    text    data     bss     dec     hex filename
-> > 15906864 10197445 490804 26595113 195cf29 vmlinux
-> >
-> >
-> > I compared the size of raw binary, arch/arm64/boot/Image.
-> > Its size increased too.
-> >
-> >
-> >
-> > So, in my experiment, enabling CONFIG_LTO_CLANG
-> > increases the kernel size.
-> > Is this correct?
->
-> Yes. LTO does produce larger binaries, mostly due to function
-> inlining between translation units, I believe. The compiler people
-> can probably give you a more detailed answer here. Without -mllvm
-> -import-instr-limit, the binaries would be even larger.
->
-> > One more thing, could you teach me
-> > how Clang LTO optimizes the code against
-> > relocatable objects?
-> >
-> >
-> >
-> > When I learned Clang LTO first, I read this document:
-> > https://llvm.org/docs/LinkTimeOptimization.html
-> >
-> > It is easy to confirm the final executable
-> > does not contain foo2, foo3...
-> >
-> >
-> >
-> > In contrast to userspace programs,
-> > kernel modules are basically relocatable objects.
-> >
-> > Does Clang drop unused symbols from relocatable objects?
-> > If so, how?
->
-> I don't think the compiler can legally drop global symbols from
-> relocatable objects, but it can rename and possibly even drop static
-> functions.
+On Thu, 3 Sep 2020 13:10:02 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
+> On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
+> > On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:  
+> >> Per the PCIe spec, VFs cannot implement the MSE bit
+> >> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
+> >> Use a dev_flags bit to signify this requirement.  
+> > 
+> > This approach seems sensible to me, but
+> > 
+> >    - This is confusing because while the spec does not use "MSE" to
+> >      refer to the Command Register "Memory Space Enable" bit
+> >      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
+> >      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
+> >      course, you're not talking about that here.  Maybe something like
+> >      this?
+> > 
+> >        For VFs, the Memory Space Enable bit in the Command Register is
+> >        hard-wired to 0.
+> > 
+> >        Add a dev_flags bit to signify devices where the Command
+> >        Register Memory Space Enable bit does not control the device's
+> >        response to MMIO accesses.  
+> 
+> Will do.  I'll change the usage of the MSE acronym in the other patches 
+> as well.
+> 
+> > 
+> >    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
+> >      plan to *use* this, but I'd rather use a term that describes the
+> >      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".  
+> 
+> Sure, I will change.
+> 
+> > 
+> >    - How do we decide whether to use dev_flags vs a bitfield like
+> >      dev->is_virtfn?  The latter seems simpler unless there's a reason
+> >      to use dev_flags.  If there's a reason, maybe we could add a
+> >      comment at pci_dev_flags for future reference.
+> >   
+> 
+> Something like:
+> 
+> /*
+>   * Device does not implement PCI_COMMAND_MEMORY - this is true for any
+>   * device marked is_virtfn, but is also true for any VF passed-through
+>   * a lower-level hypervisor where emulation of the Memory Space Enable
+>   * bit was not provided.
+>   */
+> PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
+> 
+> ?
+> 
+> >    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
+> >      that's what I use for consistency.  
+> 
+> Sure, will do.  I'll roll up a new version once I have feedback from 
+> Alex on the vfio changes.
 
-Compilers can drop static functions without LTO.
-Rather, it is a compiler warning
-(-Wunused-function), so the code should be cleaned up.
+The usage of MSE threw me a bit too, as Bjorn notes that's specific to
+the SR-IOV capability.  I think this also uncovers a latent bug in our
+calling of vfio_bar_restore(), it really doesn't do a good job of
+determining whether an enable bit is implemented, regardless of whether
+it's a VF or the device simply doesn't use that address space.  For
+example I imagine you could reproduce triggering a reset recovery on
+s390 by trying to write the VF command register to 1 with setpci from a
+guest (since you won't have is_virtfn to bail out of the recovery
+function).  I think we'll still need this dev_flag to differentiate
+unimplmented and enabled versus simply unimplemented to resolve that
+though, so the change looks ok to me. Thanks,
 
+Alex
 
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>   drivers/pci/iov.c   | 1 +
+> >>   include/linux/pci.h | 2 ++
+> >>   2 files changed, 3 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> >> index b37e08c..2bec77c 100644
+> >> --- a/drivers/pci/iov.c
+> >> +++ b/drivers/pci/iov.c
+> >> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> >>   	virtfn->device = iov->vf_device;
+> >>   	virtfn->is_virtfn = 1;
+> >>   	virtfn->physfn = pci_dev_get(dev);
+> >> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
+> >>   
+> >>   	if (id == 0)
+> >>   		pci_read_vf_config_common(virtfn);
+> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >> index 8355306..9316cce 100644
+> >> --- a/include/linux/pci.h
+> >> +++ b/include/linux/pci.h
+> >> @@ -227,6 +227,8 @@ enum pci_dev_flags {
+> >>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+> >>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
+> >>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+> >> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
+> >> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
+> >>   };
+> >>   
+> >>   enum pci_irq_reroute_variant {
+> >> -- 
+> >> 1.8.3.1
+> >>  
+> 
 
-> This is why we need global wrappers for initcalls, for
-> example, to have stable symbol names.
->
-> Sami
-
-
-
-At first, I thought the motivation of LTO
-was to remove unused global symbols, and
-to perform further optimization.
-
-
-It is true for userspace programs.
-In fact, the example of
-https://llvm.org/docs/LinkTimeOptimization.html
-produces a smaller binary.
-
-
-In contrast, this patch set produces a bigger kernel
-because LTO cannot remove any unused symbol.
-
-So, I do not understand what the benefit is.
-
-
-Is inlining beneficial?
-I am not sure.
-
-
-Documentation/process/coding-style.rst
-"15) The inline disease"
-mentions that inlining is not always
-a good thing.
-
-
-As a whole, I still do not understand
-the motivation of this patch set.
-
-
--- 
-Best Regards
-Masahiro Yamada
