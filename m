@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50D50262C6E
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 11:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5C00262C6C
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 11:48:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgIIJsr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 05:48:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
+        id S1729005AbgIIJst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 05:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgIIJsn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 05:48:43 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2FBC061573;
-        Wed,  9 Sep 2020 02:48:43 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id l126so1688579pfd.5;
-        Wed, 09 Sep 2020 02:48:43 -0700 (PDT)
+        with ESMTP id S1727975AbgIIJsr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 05:48:47 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15426C061573;
+        Wed,  9 Sep 2020 02:48:47 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id u3so1078287pjr.3;
+        Wed, 09 Sep 2020 02:48:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xBeT7ji1PTrfYSg3T1f+pJVuPViXQCdYbmPK9A6+WZA=;
-        b=CILdFy79tfNXqFWAOKTl9VdLO5sdkrT0a1HwM1dJcwVYrIJTgRVoI37Gp1RZfxdoK0
-         esNIOxh7dajZgzVOqJ8CGR/Q1ud4t6RJa5osiPkVOcePHocxe6WnVyQz4KPQefL/8lAg
-         86rF+S9C2dVICakUtmLIqjQr0He67moTXmRfU82DIkCx489XeVGiD4pUY8PMPQU6aouz
-         oJ04uf7unh/EBzK9GghcMFg+8636Ns541O77CYe7PKzQzamsjgBNyQIBdfiktpxkUqdH
-         NpN37ovC9aHBalCfQCM70yOE5xJfUiKaA2VuvmTm6VtHxe+zhuL/pHUTyDOP/bQzRBBo
-         VMhw==
+        bh=qQLOx4lboBJj/WJQbW/iAO3Ytg7264C/ffuMfUy96Ug=;
+        b=nn80wmq4XXx2zmLnRo1OM2NtkreT2HFfuQdZYu7hnC9A4VUT9kSMWYzzlv2F2tE2Np
+         1f5vFqQUspTJH+ZDhQ43Mw0RsnZGnngB14uAy6BkQR46teV/o7yIU5XPO23wV3sibHP8
+         5cEzQIzRy/5M0bsWS1lmYKwlvtS0XjEebrLqNpbZxmeRNz1leRkdPR1nBFnTaQQrPNZJ
+         57/ZjoLsz1XBfG2LUumNx2zeIomWZJLsA0HdSpK5R49MwGg7EXX9TxlkpFmYdKLzGG7H
+         F5g0FEQma2hTeZQhQc1niXtSVMhNnFgO0qfHGOs+gPK5CLIC0HscQ0WkG9MTDWACmC4G
+         uWWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xBeT7ji1PTrfYSg3T1f+pJVuPViXQCdYbmPK9A6+WZA=;
-        b=N4dirCHcR9eegViP9A6SIQT1Oc7feM5cxrqc8RACGQvWl9z8JFdOx/bCsG6EaHUFS3
-         vS2iJxApqwFUr+bA3yp5Qoxb8Hx8SGvkXxG/7O2Ae+Fuob0Z0tG2wjq1HVvRQV9IUrgx
-         an0khvBY2pvlQ+as1Bx1W0nTIEyj5Orp+is4x7g3gTDSYuS0is4Y+mQLu5pYo3LYwmiR
-         npYiSKIAL30wcaP5TFukqHg15O70fVLf+/iikfO4ZMEUtl7sA6AMbEsWHsQaLgyaclFB
-         RiGu2UvlAzz6jMGPm4DiMTV+5SU2GFN0pW/Cdg1WWggDT5e2UIklXr1cZGceDjSoekp2
-         g4OQ==
-X-Gm-Message-State: AOAM531/yqMkirvMs2bKudFJWyW+YMD6j6+svqYFIMAHxYTXbFooGgjv
-        hnpNuofzHUo4//VZt1473Jc=
-X-Google-Smtp-Source: ABdhPJyj9MzbBmD2hmVjGmXz8Rfa/6KQDI6aV4UJpLizxPHoc5LwELi27icfrEYC4YNxvebiwlT+6Q==
-X-Received: by 2002:a62:93:0:b029:13e:d13d:a085 with SMTP id 141-20020a6200930000b029013ed13da085mr177527pfa.28.1599644923208;
-        Wed, 09 Sep 2020 02:48:43 -0700 (PDT)
+        bh=qQLOx4lboBJj/WJQbW/iAO3Ytg7264C/ffuMfUy96Ug=;
+        b=Sub5ft/0mt7DFYtcP80EOoJbrb45wyhQMe0kd8CAGU7Ct6K59rp70enYGv0y/Xm/KZ
+         86X6U61uI2cz5g72Qp/DKEqRHuTezkM95Y8K0EhJE/f/0hyRMKK9DY+Fr0oZ/0cO94rO
+         3ImSnMhexlgHjKFit4cxPD8nSmYefnQp0JMAfqvvXxFVZ7/bVkjzrTJNxAcSm7creoJI
+         cET2aL6xRaso+rbAbg6h9DcT2KIIBXN1PebSBGfemfM0NDEyeqecVlwmFwcMwm8k3KE4
+         ojD2OsLGoBzUHH7bE+gIAI5hzm6MDxsh8HMlWq8aAuGLE8M/Dqu+1qpP+bAAhPjUp1DU
+         TfZw==
+X-Gm-Message-State: AOAM532/CG3PcDq6dgdNa97bwTl3r3BjO9Heis5iNxyVSJCQb1ruV9re
+        A94GJwmvN22HGewT+QYRf4rJSWJtpmA=
+X-Google-Smtp-Source: ABdhPJxwMoBIZW/bbrMMaspHgiEXXqjo8MpvZEzK8Pwlq1eG4XN0Nz6oflJS9ThBBIS5pF+W02fkpg==
+X-Received: by 2002:a17:90b:3105:: with SMTP id gc5mr85211pjb.225.1599644926585;
+        Wed, 09 Sep 2020 02:48:46 -0700 (PDT)
 Received: from sh05419pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id u14sm2224149pfc.203.2020.09.09.02.48.40
+        by smtp.gmail.com with ESMTPSA id u14sm2224149pfc.203.2020.09.09.02.48.43
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Sep 2020 02:48:42 -0700 (PDT)
+        Wed, 09 Sep 2020 02:48:46 -0700 (PDT)
 From:   Hongtao Wu <wuht06@gmail.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>
@@ -54,9 +54,9 @@ Cc:     Orson Zhai <orsonzhai@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Hongtao Wu <billows.wu@unisoc.com>
-Subject: [PATCH v3 1/2] dt-bindings: PCI: sprd: Document Unisoc PCIe RC host controller
-Date:   Wed,  9 Sep 2020 17:48:31 +0800
-Message-Id: <1599644912-29245-2-git-send-email-wuht06@gmail.com>
+Subject: [PATCH v3 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe controller
+Date:   Wed,  9 Sep 2020 17:48:32 +0800
+Message-Id: <1599644912-29245-3-git-send-email-wuht06@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599644912-29245-1-git-send-email-wuht06@gmail.com>
 References: <1599644912-29245-1-git-send-email-wuht06@gmail.com>
@@ -67,122 +67,288 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hongtao Wu <billows.wu@unisoc.com>
 
-This series adds PCIe bindings for Unisoc SoCs.
+This series adds PCIe controller driver for Unisoc SoCs.
 This controller is based on DesignWare PCIe IP.
 
 Signed-off-by: Hongtao Wu <billows.wu@unisoc.com>
 ---
- .../devicetree/bindings/pci/sprd-pcie.yaml         | 101 +++++++++++++++++++++
- 1 file changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+ drivers/pci/controller/dwc/Kconfig     |  13 ++
+ drivers/pci/controller/dwc/Makefile    |   1 +
+ drivers/pci/controller/dwc/pcie-sprd.c | 231 +++++++++++++++++++++++++++++++++
+ 3 files changed, 245 insertions(+)
+ create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
 
-diff --git a/Documentation/devicetree/bindings/pci/sprd-pcie.yaml b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 044a376..0553010 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -311,4 +311,17 @@ config PCIE_AL
+ 	  required only for DT-based platforms. ACPI platforms with the
+ 	  Annapurna Labs PCIe controller don't need to enable this.
+
++
++config PCIE_SPRD
++	tristate "Unisoc PCIe controller - Host Mode"
++	depends on ARCH_SPRD || COMPILE_TEST
++	depends on PCI_MSI_IRQ_DOMAIN
++	select PCIE_DW_HOST
++	help
++	  Unisoc PCIe controller uses the DesignWare core. It can be configured
++	  as an Endpoint (EP) or a Root complex (RC). In order to enable host
++	  mode (the controller works as RC), PCIE_SPRD must be selected.
++	  Say Y or M here if you want to PCIe RC controller support on Unisoc
++	  SoCs.
++
+ endmenu
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index a751553..eb546e9 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
+ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
++obj-$(CONFIG_PCIE_SPRD) += pcie-sprd.o
+
+ # The following drivers are for devices that use the generic ACPI
+ # pci_root.c driver but don't support standard ECAM config access.
+diff --git a/drivers/pci/controller/dwc/pcie-sprd.c b/drivers/pci/controller/dwc/pcie-sprd.c
 new file mode 100644
-index 0000000..c52edfb
+index 0000000..cec4f34
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/sprd-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pci/controller/dwc/pcie-sprd.c
+@@ -0,0 +1,231 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PCIe host controller driver for Unisoc SoCs
++ *
++ * Copyright (C) 2020 Unisoc, Inc.
++ *
++ * Author: Hongtao Wu <Billows.Wu@unisoc.com>
++ */
 +
-+title: SoC PCIe Host Controller Device Tree Bindings
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Hongtao Wu <billows.wu@unisoc.com>
++#include "pcie-designware.h"
 +
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
++#define NUM_OF_ARGS 5
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: sprd,pcie-rc
++struct sprd_pcie {
++	struct dw_pcie pci;
++};
 +
-+  reg:
-+    minItems: 2
-+    items:
-+      - description: Controller control and status registers.
-+      - description: PCIe configuration registers.
++static int sprd_pcie_syscon_setting(struct platform_device *pdev, char *env)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int i, count, err;
++	u32 type, delay, reg, mask, val, tmp_val;
++	struct of_phandle_args out_args;
++	struct regmap *iomap;
++	struct device *dev = &pdev->dev;
 +
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: config
++	if (!of_find_property(np, env, NULL)) {
++		dev_info(dev, "There isn't property %s in dts\n", env);
++		return 0;
++	}
 +
-+  ranges:
-+    maxItems: 2
++	count = of_property_count_elems_of_size(np, env,
++					(NUM_OF_ARGS + 1) * sizeof(u32));
++	dev_info(dev, "Property (%s) reg count is %d :\n", env, count);
 +
-+  num-lanes:
-+    maximum: 1
-+    description: Number of lanes to use for this port.
++	for (i = 0; i < count; i++) {
++		err = of_parse_phandle_with_fixed_args(np, env, NUM_OF_ARGS,
++						       i, &out_args);
++		if (err < 0)
++			return err;
 +
-+  interrupts:
-+    minItems: 1
-+    description: Builtin MSI controller and PCIe host controller.
++		type = out_args.args[0];
++		delay = out_args.args[1];
++		reg = out_args.args[2];
++		mask = out_args.args[3];
++		val = out_args.args[4];
 +
-+  interrupt-names:
-+    items:
-+      - const: msi
++		iomap = syscon_node_to_regmap(out_args.np);
 +
-+  sprd-pcie-poweron-syscons:
-+    minItems: 1
-+    description: Global register.
-+      The first value is the phandle to the global registers required to
-+      confige PCIe phy, clock and so on.
-+      The second value is the global register type which indicates whether it
-+      is a set/clear register or not.
-+      The third value is the time to delay after the global register is set or
-+      cleared.
-+      The fourth value is the global register address.
-+      The fifth value is the the mask value that the global register must
-+      be operate.
-+      The sixth value is the value that will be set to the global register.
-+      Note that Some Unisoc global registers have not been upstreamed.
-+      The global register and its mask can't be found in linux kernel,
-+      so we use an offset address and a number to instead them.
++		switch (type) {
++		case 0:
++			regmap_update_bits(iomap, reg, mask, val);
++			break;
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - num-lanes
-+  - ranges
-+  - interrupts
-+  - interrupt-names
++		case 1:
++			regmap_read(iomap, reg, &tmp_val);
++			tmp_val &= (~mask);
++			tmp_val |= (val & mask);
++			regmap_write(iomap, reg, tmp_val);
++			break;
++		default:
++			break;
++		}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
++		if (delay)
++			usleep_range(delay, delay + 10);
 +
-+    ipa {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++		regmap_read(iomap, reg, &tmp_val);
++		dev_dbg(dev,
++			"%2d:reg[0x%8x] mask[0x%8x] val[0x%8x] result[0x%8x]\n",
++			i, reg, mask, val, tmp_val);
++	}
 +
-+        pcie0: pcie@2b100000 {
-+            compatible = "sprd,pcie-rc";
-+            reg = <0x0 0x2b100000 0x0 0x2000>,
-+                  <0x2 0x00000000 0x0 0x2000>;
-+            reg-names = "dbi", "config";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            device_type = "pci";
-+            ranges = <0x01000000 0x0 0x00000000 0x2 0x00002000 0x0 0x00010000>,
-+                     <0x03000000 0x0 0x10000000 0x2 0x10000000 0x1 0xefffffff>;
-+            num-lanes = <1>;
-+            interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "msi";
++	return i;
++}
 +
-+            sprd,pcie-poweron-syscons =
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x40 0x40>,
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x20 0x20>;
-+            sprd,pcie-poweroff-syscons =
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x20 0x0>,
-+                <&ap_ipa_ahb_regs 0 0 0x0000 0x40 0x0>;
-+        };
-+    };
++static int sprd_pcie_perst_assert(struct platform_device *pdev)
++{
++	return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-assert");
++}
++
++static int sprd_pcie_perst_deassert(struct platform_device *pdev)
++{
++	return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-deassert");
++}
++
++static int sprd_pcie_power_on(struct platform_device *pdev)
++{
++	int ret;
++	struct device *dev = &pdev->dev;
++
++	ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweron-syscons");
++	if (ret < 0)
++		dev_err(dev,
++			"failed to set pcie poweroff syscons, return %d\n",
++			ret);
++
++	sprd_pcie_perst_deassert(pdev);
++
++	return ret;
++}
++
++static int sprd_pcie_power_off(struct platform_device *pdev)
++{
++	int ret;
++	struct device *dev = &pdev->dev;
++
++	sprd_pcie_perst_assert(pdev);
++
++	ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweroff-syscons");
++	if (ret < 0)
++		dev_err(dev,
++			"failed to set pcie poweroff syscons, return %d\n",
++			ret);
++
++	return ret;
++}
++
++static int sprd_pcie_host_init(struct pcie_port *pp)
++{
++	int ret;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++
++	dw_pcie_setup_rc(pp);
++	dw_pcie_msi_init(pp);
++
++	ret = dw_pcie_wait_for_link(pci);
++	if (ret)
++		dev_err(pci->dev, "pcie ep may has not been powered on yet\n");
++
++	return ret;
++}
++
++static const struct dw_pcie_host_ops sprd_pcie_host_ops = {
++	.host_init = sprd_pcie_host_init,
++};
++
++static int sprd_add_pcie_port(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct sprd_pcie *ctrl = platform_get_drvdata(pdev);
++	struct dw_pcie *pci = &ctrl->pci;
++	struct pcie_port *pp = &pci->pp;
++
++	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
++	if (IS_ERR(pci->dbi_base)) {
++		dev_err(dev, "failed to get rc dbi base\n");
++		return PTR_ERR(pci->dbi_base);
++	}
++
++	pp->ops = &sprd_pcie_host_ops;
++
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
++		if (pp->msi_irq < 0) {
++			dev_err(dev, "failed to get msi, return %d\n",
++				pp->msi_irq);
++			return pp->msi_irq;
++		}
++	}
++
++	return dw_pcie_host_init(pp);
++}
++
++static int sprd_pcie_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct sprd_pcie *ctrl;
++	struct dw_pcie *pci;
++	int ret;
++
++	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
++	if (!ctrl)
++		return -ENOMEM;
++
++	pci = &ctrl->pci;
++	pci->dev = dev;
++
++	platform_set_drvdata(pdev, ctrl);
++
++	ret = sprd_pcie_power_on(pdev);
++	if (ret < 0) {
++		dev_err(dev, "failed to get pcie poweron syscons, return %d\n",
++			ret);
++		goto err_power_off;
++	}
++
++	ret = sprd_add_pcie_port(pdev);
++	if (ret) {
++		dev_warn(dev, "failed to initialize RC controller\n");
++		return ret;
++	}
++
++	return 0;
++
++err_power_off:
++	sprd_pcie_power_off(pdev);
++
++	return ret;
++}
++
++static const struct of_device_id sprd_pcie_of_match[] = {
++	{
++		.compatible = "sprd,pcie-rc",
++	},
++	{},
++};
++
++static struct platform_driver sprd_pcie_driver = {
++	.probe = sprd_pcie_probe,
++	.driver = {
++		.name = "sprd-pcie",
++		.of_match_table = sprd_pcie_of_match,
++	},
++};
++
++module_platform_driver(sprd_pcie_driver);
++
++MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
++MODULE_LICENSE("GPL v2");
 --
 2.7.4
 
