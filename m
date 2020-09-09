@@ -2,201 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA9D263400
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 19:13:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFA102634C4
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 19:38:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbgIIRMC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 13:12:02 -0400
-Received: from mga06.intel.com ([134.134.136.31]:21863 "EHLO mga06.intel.com"
+        id S1728443AbgIIRiC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 13:38:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:45962 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbgIIPcj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:32:39 -0400
-IronPort-SDR: ely5vO4QadqE3HXRJmmrrBCkehEdn+bKEEi3BCCC9gShvIBVgbCSpUSxyYQnU+etvErdPbHurm
- acvye/RhaMlg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="219905492"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="219905492"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 08:13:15 -0700
-IronPort-SDR: IuEnGuAzJv0C6oRVLNxl+IkyIcO3DVCYUVXQa+Io5XkgjDr4Ya/nsPVUKCT8AtkyDPSim7m8Ax
- F6JM139C1dJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="449231885"
-Received: from lkp-server01.sh.intel.com (HELO 12ff3cf3f2e9) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 09 Sep 2020 08:13:14 -0700
-Received: from kbuild by 12ff3cf3f2e9 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kG1mb-0000Tp-RS; Wed, 09 Sep 2020 15:13:13 +0000
-Date:   Wed, 09 Sep 2020 23:12:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- e338eecf3fe79054e8a31b8c39a1234b5acfdabe
-Message-ID: <5f58f0e2.masS6cavl8YXivMU%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727856AbgIIRh5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:37:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D80F0101E;
+        Wed,  9 Sep 2020 10:37:56 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A28B23F68F;
+        Wed,  9 Sep 2020 10:37:55 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 18:37:49 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     George Cherian <gcherian@marvell.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>
+Subject: Re: [PATCH] arm64: PCI: fix memleak when calling pci_iomap/unmap()
+Message-ID: <20200909173749.GA11781@e121166-lin.cambridge.arm.com>
+References: <20200907104546.GC26513@gaia>
+ <BYAPR18MB267959E6FE4BEF38D0A4611EC5280@BYAPR18MB2679.namprd18.prod.outlook.com>
+ <20200907112118.GD26513@gaia>
+ <20200909113613.GB6384@e121166-lin.cambridge.arm.com>
+ <20200909135400.GB13047@gaia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200909135400.GB13047@gaia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
-branch HEAD: e338eecf3fe79054e8a31b8c39a1234b5acfdabe  PCI: rockchip: Fix bus checks in rockchip_pcie_valid_device()
+On Wed, Sep 09, 2020 at 02:54:01PM +0100, Catalin Marinas wrote:
+> On Wed, Sep 09, 2020 at 12:36:13PM +0100, Lorenzo Pieralisi wrote:
+> > On Mon, Sep 07, 2020 at 12:21:19PM +0100, Catalin Marinas wrote:
+> > > On Mon, Sep 07, 2020 at 10:51:21AM +0000, George Cherian wrote:
+> > > > Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > > On Sat, Sep 05, 2020 at 10:48:11AM +0800, Yang Yingliang wrote:
+> > > > > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c index
+> > > > > > 1006ed2d7c604..ddfa1c53def48 100644
+> > > > > > --- a/arch/arm64/kernel/pci.c
+> > > > > > +++ b/arch/arm64/kernel/pci.c
+> > > > > > @@ -217,4 +217,9 @@ void pcibios_remove_bus(struct pci_bus *bus)
+> > > > > >  	acpi_pci_remove_bus(bus);
+> > > > > >  }
+> > > > > >
+> > > > > > +void pci_iounmap(struct pci_dev *dev, void __iomem *addr) {
+> > > > > > +	iounmap(addr);
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL(pci_iounmap);
+> > > > > 
+> > > > > So, what's wrong with the generic pci_iounmap() implementation?
+> > > > > Shouldn't it call iounmap() already?
+> > > > 
+> > > > Since ARM64 selects CONFIG_GENERIC_PCI_IOMAP and not
+> > > > CONFIG_GENERIC_IOMAP,  the pci_iounmap function is reduced to a NULL
+> > > > function. Due to this, even the managed release variants or even the explicit
+> > > > pci_iounmap calls doesn't really remove the mappings leading to leak.
+> > > 
+> > > Ah, I missed the fact that pci_iounmap() depends on a different
+> > > config option.
+> > > 
+> > > > https://lkml.org/lkml/2020/8/20/28
+> > > 
+> > > So is this going to be fixed in the generic code? That would be my
+> > > preference.
+> > > 
+> > > A problem with the iounmap() in the proposed patch is that the region
+> > > may have been an I/O port, so we could end up unmapping the I/O space.
+> > 
+> > It boils down to finding a way to match a VA to a BAR resource so that
+> > we can mirror on pci_iounmap() what's done in pci_iomap_range() (ie
+> > check BAR resource flags to define how/if to unmap them), that would do
+> > as a generic pci_iounmap() implementation.
+> 
+> In the !CONFIG_GENERIC_IOMAP case (arm64), for IORESOURCE_IO,
+> pci_iomap_range() calls __pci_ioport_map() which, with the default
+> ioport_map(), it ends up with a simple PCI_IOBASE + (port &
+> IO_SPACE_LIMIT).
+> 
+> pci_iounmap() could check whether the pointer is in the PCI_IOBASE -
+> PCI_IOBASE+IO_SPACE_LIMIT range before calling ioremap(), unless the
+> arch code re-defined ioport_map. Something like below (not even
+> compiled):
 
-elapsed time: 723m
+I gave it some thought - with the current state of affairs (which is not
+ideal - this *_IOMAP stuff is ways too complex) it is likely to be the
+safest/only way we can have this in generic code, short of implementing
+what I mentioned (but that implies keeping track of BAR VA mappings)
+or cleaning up this nest of defines.
 
-configs tested: 136
-configs skipped: 14
+Lorenzo
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                     mpc5200_defconfig
-sh                   sh7724_generic_defconfig
-arm                          simpad_defconfig
-c6x                              allyesconfig
-arm                         shannon_defconfig
-sh                          rsk7269_defconfig
-sh                             sh03_defconfig
-arm                            lart_defconfig
-parisc                generic-32bit_defconfig
-mips                           ci20_defconfig
-i386                             allyesconfig
-c6x                        evmc6678_defconfig
-arm                        vexpress_defconfig
-c6x                        evmc6472_defconfig
-m68k                       m5475evb_defconfig
-mips                     decstation_defconfig
-h8300                    h8300h-sim_defconfig
-arm                            zeus_defconfig
-sh                           se7705_defconfig
-riscv                    nommu_k210_defconfig
-arm                       spear13xx_defconfig
-nds32                            alldefconfig
-sh                          kfr2r09_defconfig
-arm                        spear6xx_defconfig
-mips                           xway_defconfig
-ia64                          tiger_defconfig
-mips                        nlm_xlp_defconfig
-mips                         tb0287_defconfig
-riscv                            alldefconfig
-m68k                         amcore_defconfig
-arm                           h5000_defconfig
-sh                          lboxre2_defconfig
-sh                   secureedge5410_defconfig
-um                            kunit_defconfig
-sh                                  defconfig
-arm                              zx_defconfig
-arm                  colibri_pxa270_defconfig
-arm                          pxa168_defconfig
-mips                        workpad_defconfig
-m68k                            mac_defconfig
-arc                        nsimosci_defconfig
-mips                         bigsur_defconfig
-mips                      loongson3_defconfig
-m68k                                defconfig
-s390                                defconfig
-mips                          rm200_defconfig
-powerpc                          alldefconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                   rts7751r2dplus_defconfig
-sh                          rsk7264_defconfig
-c6x                         dsk6455_defconfig
-arm                        mini2440_defconfig
-mips                         rt305x_defconfig
-arm                         s3c2410_defconfig
-m68k                        stmark2_defconfig
-arm                         hackkit_defconfig
-nds32                               defconfig
-arm                      tct_hammer_defconfig
-sh                           se7721_defconfig
-powerpc                           allnoconfig
-powerpc                  mpc885_ads_defconfig
-mips                           ip28_defconfig
-sh                         apsh4a3a_defconfig
-xtensa                generic_kc705_defconfig
-sparc                               defconfig
-arm                         s5pv210_defconfig
-h8300                               defconfig
-mips                malta_kvm_guest_defconfig
-arm                        magician_defconfig
-arm                         assabet_defconfig
-xtensa                       common_defconfig
-powerpc                          allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a004-20200909
-x86_64               randconfig-a006-20200909
-x86_64               randconfig-a003-20200909
-x86_64               randconfig-a001-20200909
-x86_64               randconfig-a005-20200909
-x86_64               randconfig-a002-20200909
-i386                 randconfig-a004-20200909
-i386                 randconfig-a005-20200909
-i386                 randconfig-a006-20200909
-i386                 randconfig-a002-20200909
-i386                 randconfig-a001-20200909
-i386                 randconfig-a003-20200909
-i386                 randconfig-a016-20200909
-i386                 randconfig-a015-20200909
-i386                 randconfig-a011-20200909
-i386                 randconfig-a013-20200909
-i386                 randconfig-a014-20200909
-i386                 randconfig-a012-20200909
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a013-20200909
-x86_64               randconfig-a016-20200909
-x86_64               randconfig-a011-20200909
-x86_64               randconfig-a012-20200909
-x86_64               randconfig-a015-20200909
-x86_64               randconfig-a014-20200909
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+> index dabf8cb7203b..fada420c9cd6 100644
+> --- a/include/asm-generic/io.h
+> +++ b/include/asm-generic/io.h
+> @@ -919,6 +919,11 @@ extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
+>  #define pci_iounmap pci_iounmap
+>  static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
+>  {
+> +#ifndef ARCH_HAS_IOPORT_MAP
+> +	if (p >= PCI_IOBASE && p < PCI_IOBASE + IO_SPACE_LIMIT)
+> +		return;
+> +	iounmap(p);
+> +#endif
+>  }
+>  #endif
+>  #endif /* CONFIG_GENERIC_IOMAP */
+> @@ -1009,7 +1014,9 @@ static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
+>  
+>  #ifdef CONFIG_HAS_IOPORT_MAP
+>  #ifndef CONFIG_GENERIC_IOMAP
+> -#ifndef ioport_map
+> +#ifdef ioport_map
+> +#define ARCH_HAS_IOPORT_MAP
+> +#else
+>  #define ioport_map ioport_map
+>  static inline void __iomem *ioport_map(unsigned long port, unsigned int nr)
+>  {
+> 
+> -- 
+> Catalin
