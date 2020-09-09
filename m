@@ -2,63 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2A45263379
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 19:04:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60CEE26343E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Sep 2020 19:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgIIPpU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 11:45:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11325 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730450AbgIIPpS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:45:18 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 83E9722A8BAE0B106767;
-        Wed,  9 Sep 2020 21:42:51 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:42:44 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] PCI: dwc: unexport dw_pcie_link_set_max_speed
-Date:   Wed, 9 Sep 2020 21:42:34 +0800
-Message-ID: <20200909134234.31204-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1728611AbgIIRR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 13:17:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33803 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730127AbgIIP2B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 11:28:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599665239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=gAOxADskf6N6kLtooyF1uApbBx1RmVCuz5XULPdPjeA=;
+        b=PYtIlYC3XJYn0R2rA9+IISZfB5Y4kHVf+suT1xN7QgfDtPJJfWNF60gkx3LK8iXl1aywbH
+        4Q4Lol1eZ54P0addlA8omtenvdG7MraBIto0tzlLA/VHFTT4xpFfvJprp5+LngQlnPbP5+
+        AxKbYwX2yu/bHBO2Q9gMqZGQO6oZng4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-211-18YBVbHtMxS_2Zr8MQBqVA-1; Wed, 09 Sep 2020 11:09:05 -0400
+X-MC-Unique: 18YBVbHtMxS_2Zr8MQBqVA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 080818030A2;
+        Wed,  9 Sep 2020 15:09:03 +0000 (UTC)
+Received: from wsfd-advnetlab06.anl.lab.eng.bos.redhat.com (wsfd-advnetlab06.anl.lab.eng.bos.redhat.com [10.19.107.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5CCE019C4F;
+        Wed,  9 Sep 2020 15:09:01 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, frederic@kernel.org,
+        mtosatti@redhat.com, sassmann@redhat.com,
+        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
+        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
+        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
+        thomas.lendacky@amd.com, jerinj@marvell.com,
+        mathias.nyman@intel.com, jiri@nvidia.com
+Subject: [RFC] [PATCH v1 0/3] isolation: limit msix vectors based on housekeeping CPUs
+Date:   Wed,  9 Sep 2020 11:08:15 -0400
+Message-Id: <20200909150818.313699-1-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This function has been made static, which causes warning:
+This is a follow-up posting for "[v1] i40e: limit the msix vectors based on
+housekeeping CPUs" [1] (It took longer than expected for me to get back to
+this).
 
-WARNING: modpost: "dw_pcie_link_set_max_speed" [vmlinux] is a static EXPORT_SYMBOL_GPL
 
-Fixes: 3af45d34d30c ("PCI: dwc: Centralize link gen setting")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/pci/controller/dwc/pcie-designware.c | 1 -
- 1 file changed, 1 deletion(-)
+Issue
+=====
+With the current implementation device drivers while creating their MSIX
+vectors only takes num_online_cpus() into consideration which works quite well
+for a non-RT environment, but in an RT environment that has a large number of
+isolated CPUs and a very few housekeeping CPUs this could lead to a problem.
+The problem will be triggered when something like tuned will try to move all
+the IRQs from isolated CPUs to the limited number of housekeeping CPUs to
+prevent interruptions for a latency sensitive workload that will be runing on
+the isolated CPUs. This failure is caused because of the per CPU vector
+limitation.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 4d105efb5722..3c3a4d1dbc0b 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -508,7 +508,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
- 	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
- 
- }
--EXPORT_SYMBOL_GPL(dw_pcie_link_set_max_speed);
- 
- static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
- {
+
+Proposed Fix
+============
+In this patch-set, the following changes are proposed:
+- A generic API num_housekeeping_cpus() which is meant to return the available
+  housekeeping CPUs in an environment with isolated CPUs and all online CPUs
+  otherwise.
+- i40e: Specifically for the i40e driver the num_online_cpus() used in 
+  i40e_init_msix() to calculate numbers msix vectors is replaced with the above
+  defined API. This is done to restrict the number of msix vectors for i40e in
+  RT environments.
+- pci_alloc_irq_vector(): With the help of num_housekeeping_cpus() the max_vecs
+  passed in pci_alloc_irq_vector() is restricted only to the available
+  housekeeping CPUs only in an environment that has isolated CPUs. However, if
+  the min_vecs exceeds the num_housekeeping_cpus(), no change is made to make
+  sure that a device initialization is not prevented due to lack of
+  housekeeping CPUs.
+
+
+
+Reproducing the Issue
+=====================
+I have triggered this issue on a setup that had a total of 72 cores among which
+68 were isolated and only 4 were left for housekeeping tasks. I was using
+tuned's realtime-virtual-host profile to configure the system. In this
+scenario, Tuned reported the error message 'Failed to set SMP affinity of IRQ
+xxx to '00000040,00000010,00000005': [Errno 28] No space left on the device'
+for several IRQs in tuned.log due to the per CPU vector limit.
+
+
+Testing
+=======
+Functionality:
+- To test that the issue is resolved with i40e change I added a tracepoint
+  in i40e_init_msix() to find the number of CPUs derived for vector creation
+  with and without tuned's realtime-virtual-host profile. As per expectation
+  with the profile applied I was only getting the number of housekeeping CPUs
+  and all available CPUs without it.
+
+Performance:
+- To analyze the performance impact I have targetted the change introduced in 
+  pci_alloc_irq_vectors() and compared the results against a vanilla kernel
+  (5.9.0-rc3) results.
+
+  Setup Information:
+  + I had a couple of 24-core machines connected back to back via a couple of
+    mlx5 NICs and I analyzed the average bitrate for server-client TCP and UDP
+    transmission via iperf. 
+  + To minimize the Bitrate variation of iperf TCP and UDP stream test I have
+    applied the tuned's network-throughput profile and disabled HT.
+ Test Information:
+  + For the environment that had no isolated CPUs:
+    I have tested with single stream and 24 streams (same as that of online
+    CPUs).
+  + For the environment that had 20 isolated CPUs:
+    I have tested with single stream, 4 streams (same as that the number of
+    housekeeping) and 24 streams (same as that of online CPUs).
+
+ Results:
+  # UDP Stream Test:
+    + There was no degradation observed in UDP stream tests in both
+      environments. (With isolated CPUs and without isolated CPUs after the
+      introduction of the patches).
+  # TCP Stream Test - No isolated CPUs:
+    + No noticeable degradation was observed.
+  # TCP Stream Test - With isolated CPUs:
+    + Multiple Stream (4)  - Average degradation of around 5-6%
+    + Multiple Stream (24) - Average degradation of around 2-3%
+    + Single Stream        - Even on a vanilla kernel the Bitrate observed for
+                             a TCP single stream test seem to vary
+                             significantly across different runs (eg. the %
+                             variation between the best and the worst case on
+                             a vanilla kernel was around 8-10%). A similar
+                             variation was observed with the kernel that
+                             included my patches. No additional degradation
+                             was observed.
+
+Since the change specifically for pci_alloc_irq_vectors is going to impact
+several drivers I have posted this patch-set as RFC. I would be happy to
+perform more testing based on any suggestions or incorporate any comments to
+ensure that the change is not breaking anything.
+
+[1] https://lore.kernel.org/patchwork/patch/1256308/ 
+
+Nitesh Narayan Lal (3):
+  sched/isolation: API to get num of hosekeeping CPUs
+  i40e: limit msix vectors based on housekeeping CPUs
+  PCI: Limit pci_alloc_irq_vectors as per housekeeping CPUs
+
+ drivers/net/ethernet/intel/i40e/i40e_main.c |  3 ++-
+ include/linux/pci.h                         | 16 ++++++++++++++
+ include/linux/sched/isolation.h             |  7 +++++++
+ kernel/sched/isolation.c                    | 23 +++++++++++++++++++++
+ 4 files changed, 48 insertions(+), 1 deletion(-)
+
 -- 
-2.17.1
+2.27.0
+
 
 
