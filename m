@@ -2,72 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A7DE264F1D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 21:35:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F295D264F68
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 21:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgIJTe6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 15:34:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
+        id S1727940AbgIJTln (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 15:41:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgIJTev (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:34:51 -0400
+        id S1726848AbgIJTlj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:41:39 -0400
 Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D115221D81;
-        Thu, 10 Sep 2020 19:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 442A721556;
+        Thu, 10 Sep 2020 19:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599766491;
-        bh=ksxkD7CoWHBWoeooRpLgc48k96/HNdsGMEUrhw4P95M=;
+        s=default; t=1599766899;
+        bh=xVKQeh6vK/bSUtAb8QmMQzYllSypqGLdxdvE0zPLxSU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fyJDTrWKH893FaVVt1OBSFJ9f8hlkqYHqiIOG2oJfs84qz/Op1sf/oMRThvCTHSaU
-         hYzRyv2nHZ5cGHRz2s1hRK7BZ+s5xapIW//Kjf3VgsTE07q+fETLVHkAY9n8H69ZmW
-         l2pLX2AP6MuZ7hv25meQ8h6oN9ScbwIh5otsCAR4=
-Date:   Thu, 10 Sep 2020 14:34:49 -0500
+        b=cv+Tr1pNNaxP2eOUGtBsg7HrYjYKSN2v7JvR6yNY5z7cMXtbl9CCyZJKDi6BZl4eb
+         jKIfC7kah7XB2mcYTWUlU7AXuxJzQaxUgP+gmvu7KW9x0vBn8Xg01KQnA+5QkY+8L4
+         B1pH9L/kzJQUVLSeqKTyzh3q3g7hhGfqaUNaQ8vE=
+Date:   Thu, 10 Sep 2020 14:41:38 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: dwc: unexport dw_pcie_link_set_max_speed
-Message-ID: <20200910193449.GA807725@bjorn-Precision-5520>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [RFC PATCH] PCI/portdrv: No need to call pci_disable_device()
+ during shutdown
+Message-ID: <20200910194138.GA808043@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200909134234.31204-1-yuehaibing@huawei.com>
+In-Reply-To: <1599294806-13889-1-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 09:42:34PM +0800, YueHaibing wrote:
-> This function has been made static, which causes warning:
-> 
-> WARNING: modpost: "dw_pcie_link_set_max_speed" [vmlinux] is a static EXPORT_SYMBOL_GPL
-> 
-> Fixes: 3af45d34d30c ("PCI: dwc: Centralize link gen setting")
+On Sat, Sep 05, 2020 at 04:33:26PM +0800, Tiezhu Yang wrote:
+> After commit 745be2e700cd ("PCIe: portdrv: call pci_disable_device
+> during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
+> services during shutdown"), it also calls pci_disable_device() during
+> shutdown, this seems unnecessary, so just remove it.
 
-This commit is still on Lorenzo's pci/dwc branch, so he should be able
-to squash this fix in.
+I would like to get rid of the portdrv completely by folding its
+functionality into the PCI core itself, so there would be no portdrv
+probe or remove.
 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Does this solve a problem?  If not, I'm inclined to just leave it
+as-is for now.  But if it fixes something, we should do the fix, of
+course.
+
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  drivers/pci/controller/dwc/pcie-designware.c | 1 -
->  1 file changed, 1 deletion(-)
+>  drivers/pci/pcie/portdrv_core.c |  1 -
+>  drivers/pci/pcie/portdrv_pci.c  | 14 +++++++++++++-
+>  2 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 4d105efb5722..3c3a4d1dbc0b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -508,7 +508,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
->  	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
->  
->  }
-> -EXPORT_SYMBOL_GPL(dw_pcie_link_set_max_speed);
->  
->  static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 50a9522..1991aca 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
 >  {
+>  	device_for_each_child(&dev->dev, NULL, remove_iter);
+>  	pci_free_irq_vectors(dev);
+> -	pci_disable_device(dev);
+>  }
+>  
+>  /**
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index 3a3ce40..cab37a8 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -143,6 +143,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>  	}
+>  
+>  	pcie_port_device_remove(dev);
+> +	pci_disable_device(dev);
+> +}
+> +
+> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+> +{
+> +	if (pci_bridge_d3_possible(dev)) {
+> +		pm_runtime_forbid(&dev->dev);
+> +		pm_runtime_get_noresume(&dev->dev);
+> +		pm_runtime_dont_use_autosuspend(&dev->dev);
+> +	}
+> +
+> +	pcie_port_device_remove(dev);
+>  }
+>  
+>  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
+> @@ -211,7 +223,7 @@ static struct pci_driver pcie_portdriver = {
+>  
+>  	.probe		= pcie_portdrv_probe,
+>  	.remove		= pcie_portdrv_remove,
+> -	.shutdown	= pcie_portdrv_remove,
+> +	.shutdown	= pcie_portdrv_shutdown,
+>  
+>  	.err_handler	= &pcie_portdrv_err_handler,
+>  
 > -- 
-> 2.17.1
-> 
+> 2.1.0
 > 
