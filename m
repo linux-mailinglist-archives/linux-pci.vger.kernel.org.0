@@ -2,92 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A20A2646E5
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 15:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A5BD264938
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 17:59:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgIJNZd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 09:25:33 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:55801 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730718AbgIJNY5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 09:24:57 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id C54E4280009D3;
-        Thu, 10 Sep 2020 15:24:40 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 8BFEA13C405; Thu, 10 Sep 2020 15:24:40 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 15:24:40 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Myron Stowe <mstowe@redhat.com>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        klimov.linux@gmail.com
-Subject: Re: PCIe hot-plug issue: Failed to check link status
-Message-ID: <20200910132440.GA1661@wunner.de>
-References: <20200908085726.54509090@zim>
+        id S1731241AbgIJP7E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 11:59:04 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:44489 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731529AbgIJP5P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 11:57:15 -0400
+Received: by mail-il1-f195.google.com with SMTP id h11so6095177ilj.11;
+        Thu, 10 Sep 2020 08:56:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=75EPNsIBYVup6AIGiJwzSdSJw0NGHqRELWm5o6mzFMs=;
+        b=OFDjh6hXcTEHijVpQPKY2/5EJ9quxQApX6oyZHIpX8M2xXFg+f+Z7HwXbjiexxblCb
+         6LNbcVaev6A3zSUmi42nhcqgTr7D/DVyfOH5FWibGfMNKVlXNO00LwZlv10eNdBW/gvv
+         lHJBcMZs+GRUToF14HtoW0tQzNXTQHryrO9b2XMNlccxSBxXrDsz3ozBzB+zMVvVHdHV
+         wmp5I5dZOe1gV03HNErhwQaCwjp+nHeDB/KaV5XvpMW690SCCgPCb6dpxIy/giNWQZxI
+         fyz1twZJpg6Pq7X6k/P9pfKV+sqidHiMqk8PjIjqqzX09rSsT5iIg3tqIlHxomkWiC0c
+         M4fg==
+X-Gm-Message-State: AOAM530QzhnanBZRfYCj/+zKcYWquXqhlzcfDRvJzXT95yhaQK4D8OCL
+        JXRZ1T2+GprIJvDHIQVeMiTNnwkeAToe
+X-Google-Smtp-Source: ABdhPJy4YBC4Og5nCPNZgXln9mIj11eNmiP8UC9Zd2pwLdDntsNRTIUnoo41piAt35aUn1jJdSewgA==
+X-Received: by 2002:a92:7984:: with SMTP id u126mr7266050ilc.139.1599753398667;
+        Thu, 10 Sep 2020 08:56:38 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id s17sm1301374ilb.24.2020.09.10.08.56.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 08:56:38 -0700 (PDT)
+Received: (nullmailer pid 439332 invoked by uid 1000);
+        Thu, 10 Sep 2020 15:56:37 -0000
+Date:   Thu, 10 Sep 2020 09:56:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
+Message-ID: <20200910155637.GA423872@bogus>
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <20200824193036.6033-5-james.quinlan@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908085726.54509090@zim>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200824193036.6033-5-james.quinlan@broadcom.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 08:57:26AM -0600, Myron Stowe wrote:
-> On a system with a Mellanox Technologies MT27800 Family [ConnectX-5]
-> NIC controller containing a power button, hot-plug fails to function
-> properly.
-[...]
-> https://bugzilla.kernel.org/show_bug.cgi?id=209113
+On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+> and resume.  Now the PCIe driver may do so as well.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index c2b3d2946a36..3d588ab7a6dd 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+>  	brcm_pcie_bridge_sw_init_set(pcie, 1);
+>  }
+>  
+> +static int brcm_pcie_suspend(struct device *dev)
+> +{
+> +	struct brcm_pcie *pcie = dev_get_drvdata(dev);
+> +
+> +	brcm_pcie_turn_off(pcie);
+> +	clk_disable_unprepare(pcie->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int brcm_pcie_resume(struct device *dev)
+> +{
+> +	struct brcm_pcie *pcie = dev_get_drvdata(dev);
+> +	void __iomem *base;
+> +	u32 tmp;
+> +	int ret;
+> +
+> +	base = pcie->base;
+> +	clk_prepare_enable(pcie->clk);
+> +
+> +	/* Take bridge out of reset so we can access the SERDES reg */
+> +	brcm_pcie_bridge_sw_init_set(pcie, 0);
+> +
+> +	/* SERDES_IDDQ = 0 */
+> +	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> +	u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
+> +	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> +
+> +	/* wait for serdes to be stable */
+> +	udelay(100);
 
-Thanks for the report.
+Really needs to be a spinloop?
 
-So in the dmesg output you've provided, the card is already inserted
-when the machine boots.  At 233 seconds, the Attention Button is pressed
-twice within 200 msec (the second press cancels the first).  At 235 sec,
-the button is pressed again and after 5 sec the slot is brought down.
-So far so good.
+> +
+> +	ret = brcm_pcie_setup(pcie);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (pcie->msi)
+> +		brcm_msi_set_regs(pcie->msi);
+> +
+> +	return 0;
+> +}
+> +
+>  static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+>  {
+>  	brcm_msi_remove(pcie);
+> @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  
+>  MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+>  
+> +static const struct dev_pm_ops brcm_pcie_pm_ops = {
+> +	.suspend_noirq = brcm_pcie_suspend,
+> +	.resume_noirq = brcm_pcie_resume,
 
-At 291 sec the button is pressed but bringup of the slot fails.
-What happens here is, pciehp notices that upon the button press,
-a card is already present in the slot.  So for convenience,
-instead of waiting the full 5 sec, it attempts to bring up the slot
-immediately.  That fails because Data Link Layer Link Active isn't
-set within 1 sec.
+Why do you need interrupts disabled? There's 39 cases of .suspend_noirq 
+and 1352 of .suspend in the tree.
 
-The difference to v4.18 is that back then, pciehp waited the full
-5 sec before bringing up the slot.
+Is doing a clk unprepare even safe in .suspend_noirq? IIRC, 
+prepare/unprepare can sleep.
 
-Per PCIe r4.0 sec 6.7.1.8:
-
-    After turning power on, software must wait for a Data Link Layer
-    State Changed event, as described in Section 6.7.3.3.
-
-And per sec 6.7.3.3:
-
-    The Data Link Layer State Changed event must occur within 1 second
-    of the event that initiates the hot-insertion. If a power controller
-    is supported, the time out interval is measured from when software
-    initiated a write to the Slot Control register to turn on the power.
-    [...] Software is allowed to time out on a hot add operation if the
-    Data Link Layer State Changed event does not occur within 1 second.
-
-So we adhere to the spec regarding the timeout between enabling power
-and waiting for DLLLA.  We do not exactly adhere to the spec regarding
-the 5 sec delay between button press and acting on it.  But I can't
-really imagine that's the problem.
-
-As a shot in the dark, could you amend pcie_wait_for_link_delay()
-in drivers/pci/pci.c and increase the "timeout = 1000" a little?
-Maybe more than 1 sec is necessary in this case between enabling
-power and timing out for lack of a link?
-
-The v4.18 output you've provided in the bugzilla is incomplete and
-lacks time stamps.  Could you provide it in full?
-
-Thanks,
-
-Lukas
+> +};
+> +
+>  static struct platform_driver brcm_pcie_driver = {
+>  	.probe = brcm_pcie_probe,
+>  	.remove = brcm_pcie_remove,
+>  	.driver = {
+>  		.name = "brcm-pcie",
+>  		.of_match_table = brcm_pcie_match,
+> +		.pm = &brcm_pcie_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(brcm_pcie_driver);
+> -- 
+> 2.17.1
+> 
