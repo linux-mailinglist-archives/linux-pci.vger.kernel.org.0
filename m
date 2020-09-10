@@ -2,98 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D5B5263D0F
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 08:14:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5906263F1A
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 09:54:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgIJGOe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 02:14:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:23963 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726647AbgIJGOc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 02:14:32 -0400
-X-UUID: 92366f52c11c49ec8411eb9da262c7df-20200910
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=xloUjBE6OF+ENLRHth9hL5fNUGfyOv8h8Vtqb+yulXk=;
-        b=nTfkAeXkYYvzFy0uVMmVgpJ6yeJqDAgad8mtu/eppQ4AH3uDiSnxGTifiskLsMbBrPTaCzkdSpsVk6Z4vEEjrKYzTACl/RdrkBPpYmWDdoXWQCeeNeH4YvTwg6H0XWyOQ//5HGKlFr+SVrDld5u4PQoSOObfiq9nPSBF7gWvGH8=;
-X-UUID: 92366f52c11c49ec8411eb9da262c7df-20200910
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 552507246; Thu, 10 Sep 2020 14:14:27 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 10 Sep 2020 14:14:24 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 10 Sep 2020 14:14:24 +0800
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726989AbgIJHx6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 03:53:58 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:37933 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730180AbgIJHxp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 03:53:45 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2D75F580430;
+        Thu, 10 Sep 2020 03:53:44 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 10 Sep 2020 03:53:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=4IwUSWnhrsr8imxfyk4VF7uLol/
+        6Va9L4vcVGrq/KUg=; b=DpeInDNAleYGgRXYx5yZL9OHtS5DeNQcN2Gg0do++SH
+        YSMmizLhTlgbIzCCwaj45lba97oInLSBoC6AM+6WQWjQ1TmCDYqt07Mc3PpHmGVA
+        VgqCogEuSPN7Rt8IpT1Kly4QyyGlvulQZ0R8/MIhZWxwclIhIWi7Rl6zGA4OJYxg
+        BCh3npgBVQM6Rg5KNjmQHx9tJcSUXP9EvBi2AulzSfn6rvIsvd1/SbhJyoD4a7Zf
+        Prt9485zxgfMob9e4ivtEOn6BGnKvsDWUQCTSqMjUSoKIf8htP96RlQsa5m/zwVN
+        3lGi46OxtSJpzKQoiZ9ZnOfuHrCCxT5BYTBVXsUb4bg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4IwUSW
+        nhrsr8imxfyk4VF7uLol/6Va9L4vcVGrq/KUg=; b=eVUq/LdLkUmCzqUDe5XjHQ
+        6gQaMja5JKFL9P9rWSs6PvHNXbHt4Mhyk4bUxnldBp/HUyCRVPR/p2fse6aLXfuL
+        p2FwfdgB45G4oWXpGcza34nuXlS66nvkahnM8uzTtSYJDiDbp2V8bB4TOG2/4jhX
+        h99ut2OUengbFRdqwvQSGakPaub230xTJCKFZaVYsWuFB58LHQ5Hx354UZh0dYVw
+        PCo3EB4GKBH9Xop2bbTsvLGZ3eHmkSY7iCXIHw62TmeG/DEAMtqRfUyHQF/b77/p
+        jM4PInh8wwP50Dj5r/NjPhp6NRMzEBwaPR+KMImvvyZi0uW66CTCdq1rQRKeZtwA
+        ==
+X-ME-Sender: <xms:httZX2bEkdb-6xbpM0Gy3unGo1mEokpb2i4nwc1asaSi0EsUNYRRNw>
+    <xme:httZX5ZfghwWmJCGxGZkMtskcUnPoh3-9owhrrTtvkUVoZYyCe_oApefsaJUFkTjq
+    wrXeHGxcGhhhA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehiedguddvfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuhe
+    ejgfffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeek
+    fedrkeeirdejgedrieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:httZXw_PC2-hN3lbCWXZPNhoI7ya91a6T95ugFHV-s2JEndE3J8W-A>
+    <xmx:httZX4oPxgyUOuJjTMKBYzSiseIs1alu69_7qFSnbpL6IndtEfbiLg>
+    <xmx:httZXxpexp38l6Jtr_EOif9jZQf7-0VYCOQddV7wetbhUkTk3goDNA>
+    <xmx:iNtZX8AUUp7WbntFrnfozKyPES4R0GmgBnTEqST-zruj-BkHlu38bw>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 291DA3280065;
+        Thu, 10 Sep 2020 03:53:42 -0400 (EDT)
+Date:   Thu, 10 Sep 2020 09:53:51 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>
-Subject: [PATCH v5 4/4] ARM: dts: mediatek: Modified MT7629 PCIe node
-Date:   Thu, 10 Sep 2020 14:11:15 +0800
-Message-ID: <20200910061115.909-5-chuanjia.liu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200910061115.909-1-chuanjia.liu@mediatek.com>
-References: <20200910061115.909-1-chuanjia.liu@mediatek.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/3] dma-mapping: introduce DMA range map, supplanting
+ dma_pfn_offset
+Message-ID: <20200910075351.GA1092435@kroah.com>
+References: <20200910054038.324517-1-hch@lst.de>
+ <20200910054038.324517-4-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 06F033A27D6FEFF1385F1BA824970B003F89F257B2FE2FFDC1AA77B79BE1042B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910054038.324517-4-hch@lst.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-UmVtb3ZlIHVudXNlZCBwcm9wZXJ0eSBhbmQgYWRkIHBjaWVjZmcgbm9kZS4NCg0KQWNrZWQtYnk6
-IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IENodWFu
-amlhIExpdSA8Y2h1YW5qaWEubGl1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL210NzYyOS1yZmIuZHRzIHwgIDMgKystDQogYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0
-c2kgICAgfCAyMyArKysrKysrKysrKysrLS0tLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgMTUg
-aW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9tdDc2MjktcmZiLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyOS1yZmIuZHRz
-DQppbmRleCA5OTgwYzEwYzZlMjkuLmViNTM2Y2JlYmQ5YiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL210NzYyOS1yZmIuZHRzDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9tdDc2Mjkt
-cmZiLmR0cw0KQEAgLTE0MCw5ICsxNDAsMTAgQEANCiAJfTsNCiB9Ow0KIA0KLSZwY2llIHsNCism
-cGNpZTEgew0KIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KIAlwaW5jdHJsLTAgPSA8JnBj
-aWVfcGlucz47DQorCXN0YXR1cyA9ICJva2F5IjsNCiB9Ow0KIA0KICZwY2llcGh5MSB7DQpkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0c2kgYi9hcmNoL2FybS9ib290L2R0
-cy9tdDc2MjkuZHRzaQ0KaW5kZXggNWNiYjNkMjQ0Yzc1Li45NDU2NzMwN2I4NDIgMTAwNjQ0DQot
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9tdDc2MjkuZHRzaQ0KKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvbXQ3NjI5LmR0c2kNCkBAIC0zNjAsMTYgKzM2MCwyMSBAQA0KIAkJCSNyZXNldC1jZWxscyA9
-IDwxPjsNCiAJCX07DQogDQotCQlwY2llOiBwY2llQDFhMTQwMDAwIHsNCisJCXBjaWVjZmc6IHBj
-aWVjZmdAMWExNDAwMDAgew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NjI5LXBjaWVj
-ZmciLCAic3lzY29uIjsNCisJCQlyZWcgPSA8MHgxYTE0MDAwMCAweDEwMDA+Ow0KKwkJfTsNCisN
-CisJCXBjaWUxOiBwY2llQDFhMTQ1MDAwIHsNCiAJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
-NzYyOS1wY2llIjsNCiAJCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KLQkJCXJlZyA9IDwweDFhMTQw
-MDAwIDB4MTAwMD4sDQotCQkJICAgICAgPDB4MWExNDUwMDAgMHgxMDAwPjsNCi0JCQlyZWctbmFt
-ZXMgPSAic3Vic3lzIiwicG9ydDEiOw0KKwkJCXJlZyA9IDwweDFhMTQ1MDAwIDB4MTAwMD47DQor
-CQkJcmVnLW5hbWVzID0gInBvcnQxIjsNCisJCQltZWRpYXRlayxwY2llLWNmZyA9IDwmcGNpZWNm
-Zz47DQogCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQogCQkJI3NpemUtY2VsbHMgPSA8Mj47DQot
-CQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE3NiBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KLQkJCQkg
-ICAgIDxHSUNfU1BJIDIyOSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KKwkJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSAyMjkgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCisJCQlpbnRlcnJ1cHQtbmFtZXMgPSAi
-cGNpZV9pcnEiOw0KIAkJCWNsb2NrcyA9IDwmcGNpZXN5cyBDTEtfUENJRV9QMV9NQUNfRU4+LA0K
-IAkJCQkgPCZwY2llc3lzIENMS19QQ0lFX1AwX0FIQl9FTj4sDQogCQkJCSA8JnBjaWVzeXMgQ0xL
-X1BDSUVfUDFfQVVYX0VOPiwNCkBAIC0zOTAsMjEgKzM5NSwxOSBAQA0KIAkJCXBvd2VyLWRvbWFp
-bnMgPSA8JnNjcHN5cyBNVDc2MjJfUE9XRVJfRE9NQUlOX0hJRjA+Ow0KIAkJCWJ1cy1yYW5nZSA9
-IDwweDAwIDB4ZmY+Ow0KIAkJCXJhbmdlcyA9IDwweDgyMDAwMDAwIDAgMHgyMDAwMDAwMCAweDIw
-MDAwMDAwIDAgMHgxMDAwMDAwMD47DQorCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiANCi0JCQlw
-Y2llMTogcGNpZUAxLDAgew0KLQkJCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KKwkJCXNsb3QxOiBw
-Y2llQDEsMCB7DQogCQkJCXJlZyA9IDwweDA4MDAgMCAwIDAgMD47DQogCQkJCSNhZGRyZXNzLWNl
-bGxzID0gPDM+Ow0KIAkJCQkjc2l6ZS1jZWxscyA9IDwyPjsNCiAJCQkJI2ludGVycnVwdC1jZWxs
-cyA9IDwxPjsNCiAJCQkJcmFuZ2VzOw0KLQkJCQludW0tbGFuZXMgPSA8MT47DQogCQkJCWludGVy
-cnVwdC1tYXAtbWFzayA9IDwwIDAgMCA3PjsNCiAJCQkJaW50ZXJydXB0LW1hcCA9IDwwIDAgMCAx
-ICZwY2llX2ludGMxIDA+LA0KIAkJCQkJCTwwIDAgMCAyICZwY2llX2ludGMxIDE+LA0KIAkJCQkJ
-CTwwIDAgMCAzICZwY2llX2ludGMxIDI+LA0KIAkJCQkJCTwwIDAgMCA0ICZwY2llX2ludGMxIDM+
-Ow0KLQ0KIAkJCQlwY2llX2ludGMxOiBpbnRlcnJ1cHQtY29udHJvbGxlciB7DQogCQkJCQlpbnRl
-cnJ1cHQtY29udHJvbGxlcjsNCiAJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDA+Ow0KLS0gDQoyLjE4
-LjANCg==
+On Thu, Sep 10, 2020 at 07:40:38AM +0200, Christoph Hellwig wrote:
+> From: Jim Quinlan <james.quinlan@broadcom.com>
+> 
+> The new field 'dma_range_map' in struct device is used to facilitate the
+> use of single or multiple offsets between mapping regions of cpu addrs and
+> dma addrs.  It subsumes the role of "dev->dma_pfn_offset" which was only
+> capable of holding a single uniform offset and had no region bounds
+> checking.
+> 
+> The function of_dma_get_range() has been modified so that it takes a single
+> argument -- the device node -- and returns a map, NULL, or an error code.
+> The map is an array that holds the information regarding the DMA regions.
+> Each range entry contains the address offset, the cpu_start address, the
+> dma_start address, and the size of the region.
+> 
+> of_dma_configure() is the typical manner to set range offsets but there are
+> a number of ad hoc assignments to "dev->dma_pfn_offset" in the kernel
+> driver code.  These cases now invoke the function
+> dma_attach_offset_range(dev, cpu_addr, dma_addr, size).
 
+So if an error happens, we don't do anything?
+
+ice_init(dev->dev);
+> diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+> index 6197938dcc2d8f..935ee98e049f65 100644
+> --- a/drivers/usb/core/message.c
+> +++ b/drivers/usb/core/message.c
+> @@ -1956,10 +1956,11 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
+>  		intf->dev.groups = usb_interface_groups;
+>  		/*
+>  		 * Please refer to usb_alloc_dev() to see why we set
+> -		 * dma_mask and dma_pfn_offset.
+> +		 * dma_mask and dma_range_map.
+>  		 */
+>  		intf->dev.dma_mask = dev->dev.dma_mask;
+> -		intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
+> +		if (dma_direct_copy_range_map(&intf->dev, &dev->dev))
+> +			dev_err(&dev->dev, "failed to copy DMA map\n");
+
+We tell the user, but then just keep on running?  Is there anything that
+we can do here?
+
+If not, why not have dma_direct_copy_range_map() print out the error?
+
+thanks,
+
+greg k-h
