@@ -2,187 +2,272 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F7C264B77
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 19:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 767EB264C49
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 20:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725807AbgIJRjJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 13:39:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
+        id S1725974AbgIJSHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 14:07:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:41680 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbgIJRiL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:38:11 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6861B206A1;
-        Thu, 10 Sep 2020 17:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599759490;
-        bh=wirOhMrKlm4G/NzCV37qJEm6kwJQ042CHK5V4SSeCZU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zxlCCK0rGyMV8ypDJyD1tkzQbiSvWrnBaodEvAqatfCOCzCtRiJy4JzB4J0ptpyh3
-         THPpFpYirqSfT6jt8FHBpsPzF1u09HKLzj4Ma/TGldVy6Ahbtv85Q8G5MVijxCI/Z4
-         hNIvUv8z5cBHamwkgYZi7chChE55WQxZN6XkojdA=
-Date:   Thu, 10 Sep 2020 12:38:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "refactormyself@gmail.com" <refactormyself@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200910173809.GA797818@bjorn-Precision-5520>
+        id S1726301AbgIJSCr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:02:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55A17106F;
+        Thu, 10 Sep 2020 11:02:31 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6FEF3F66E;
+        Thu, 10 Sep 2020 11:02:27 -0700 (PDT)
+Subject: Re: [PATCH 1/3] ARM/dma-mapping: move various helpers from
+ dma-mapping.h to dma-direct.h
+To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-sh@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200910054038.324517-1-hch@lst.de>
+ <20200910054038.324517-2-hch@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <42497691-ec93-1e93-d3e5-e841eaf8247a@arm.com>
+Date:   Thu, 10 Sep 2020 19:02:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b7513ff64315d7a1c2529d34cd78b51ce3c3605.camel@intel.com>
+In-Reply-To: <20200910054038.324517-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 04:33:39PM +0000, Derrick, Jonathan wrote:
-> On Wed, 2020-09-09 at 20:55 -0500, Bjorn Helgaas wrote:
-> > On Fri, Aug 21, 2020 at 08:32:20PM +0800, Kai-Heng Feng wrote:
-> > > New Intel laptops with VMD cannot reach deeper power saving state,
-> > > renders very short battery time.
-> > > 
-> > > As BIOS may not be able to program the config space for devices under
-> > > VMD domain, ASPM needs to be programmed manually by software. This is
-> > > also the case under Windows.
-> > > 
-> > > The VMD controller itself is a root complex integrated endpoint that
-> > > doesn't have ASPM capability, so we can't propagate the ASPM settings to
-> > > devices under it. Hence, simply apply ASPM_STATE_ALL to the links under
-> > > VMD domain, unsupported states will be cleared out anyway.
-> > > 
-> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > ---
-> > >  drivers/pci/pcie/aspm.c |  3 ++-
-> > >  drivers/pci/quirks.c    | 11 +++++++++++
-> > >  include/linux/pci.h     |  2 ++
-> > >  3 files changed, 15 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > index 253c30cc1967..dcc002dbca19 100644
-> > > --- a/drivers/pci/pcie/aspm.c
-> > > +++ b/drivers/pci/pcie/aspm.c
-> > > @@ -624,7 +624,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
-> > >  		aspm_calc_l1ss_info(link, &upreg, &dwreg);
-> > >  
-> > >  	/* Save default state */
-> > > -	link->aspm_default = link->aspm_enabled;
-> > > +	link->aspm_default = parent->dev_flags & PCI_DEV_FLAGS_ENABLE_ASPM ?
-> > > +			     ASPM_STATE_ALL : link->aspm_enabled;
-> > 
-> > This function is ridiculously complicated already, and I really don't
-> > want to make it worse.
-> > 
-> > What exactly is the PCIe topology here?  Apparently the VMD controller
-> > is a Root Complex Integrated Endpoint, so it's a Type 0 (non-bridge)
-> > device.  And it has no Link, hence no Link Capabilities or Control and
-> > hence no ASPM-related bits.  Right?
->
-> That's correct. VMD is the Type 0 device providing config/mmio
-> apertures to another segment and MSI/X remapping. No link and no ASPM
-> related bits.
-> 
-> Hierarchy is usually something like:
-> 
-> Segment 0           | VMD segment
-> Root Complex -> VMD | Type 0 (RP/Bridge; physical slot) - Type 1
->                     | Type 0 (RP/Bridge; physical slot) - Type 1
-> 
-> > 
-> > And the devices under the VMD controller?  I guess they are regular
-> > PCIe Endpoints, Switch Ports, etc?  Obviously there's a Link involved
-> > somewhere.  Does the VMD controller have some magic, non-architected
-> > Port on the downstream side?
->
-> Correct: Type 0 and Type 1 devices, and any number of Switch ports as
-> it's usually pinned out to physical slot.
-> 
-> > Does this patch enable ASPM on this magic Link between VMD and the
-> > next device?  Configuring ASPM correctly requires knowledge and knobs
-> > from both ends of the Link, and apparently we don't have those for the
-> > VMD end.
->
-> VMD itself doesn't have the link to it's domain. It's really just the
-> config/mmio aperture and MSI/X remapper. The PCIe link is between the
-> Type 0 and Type 1 devices on the VMD domain. So fortunately the VMD
-> itself is not the upstream part of the link.
-> 
-> > Or is it for Links deeper in the hierarchy?  I assume those should
-> > just work already, although there might be issues with latency
-> > computation, etc., because we may not be able to account for the part
-> > of the path above VMD.
->
-> That's correct. This is for the links within the domain itself, such as
-> between a type 0 and NVMe device.
+On 2020-09-10 06:40, Christoph Hellwig wrote:
+> Move the helpers to translate to and from direct mapping DMA addresses
+> to dma-direct.h.  This not only is the most logical place, but the new
+> placement also avoids dependency loops with pending commits.
 
-OK, great.  So IIUC, below the VMD, there is a Root Port, and the Root
-Port has a link to some Endpoint or Switch, e.g., an NVMe device.  And
-we just want to enable ASPM on that link.
+For the straightforward move as it should be,
 
-That should not be a special case; we should be able to make this so
-it Just Works.  Based on this patch, I guess the reason it doesn't
-work is because link->aspm_enabled for that link isn't set correctly.
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-So is this just a consequence of us depending on the initial Link
-Control value from BIOS?  That seems like something we shouldn't
-really depend on.
+However I do wonder how much of this could be cleaned up further...
 
-> > I want aspm.c to eventually get out of the business of managing struct
-> > pcie_link_state.  I think it should manage *device* state for each end
-> > of the link.  Maybe that's a path forward, e.g., if we cache the Link
-> > Capabilities during enumeration, quirks could modify that directly,
-> > and aspm.c could just consume that cached information.  I think Saheed
-> > (cc'd) is already working on patches in this direction.
-> > 
-> > I'm still not sure how this works if VMD is the upstream end of a
-> > Link, though.
-> > 
-> > >  	/* Setup initial capable state. Will be updated later */
-> > >  	link->aspm_capable = link->aspm_support;
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index bdf9b52567e0..2e2f525bd892 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -5632,3 +5632,14 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
-> > >  }
-> > >  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
-> > >  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-> > > +
-> > > +/*
-> > > + * Device [8086:9a09]
-> > > + * BIOS may not be able to access config space of devices under VMD domain, so
-> > > + * it relies on software to enable ASPM for links under VMD.
-> > > + */
-> > > +static void pci_fixup_enable_aspm(struct pci_dev *pdev)
-> > > +{
-> > > +	pdev->dev_flags |= PCI_DEV_FLAGS_ENABLE_ASPM;
-> > > +}
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a09, pci_fixup_enable_aspm);
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index 835530605c0d..66a45916c7c6 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -227,6 +227,8 @@ enum pci_dev_flags {
-> > >  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
-> > >  	/* Don't use Relaxed Ordering for TLPs directed at this device */
-> > >  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> > > +	/* Enable ASPM regardless of how LnkCtl is programmed */
-> > > +	PCI_DEV_FLAGS_ENABLE_ASPM = (__force pci_dev_flags_t) (1 << 12),
-> > >  };
-> > >  
-> > >  enum pci_irq_reroute_variant {
-> > > -- 
-> > > 2.17.1
-> > > 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/arm/common/dmabounce.c        |  2 +-
+>   arch/arm/include/asm/dma-direct.h  | 70 ++++++++++++++++++++++++++++++
+>   arch/arm/include/asm/dma-mapping.h | 70 ------------------------------
+>   3 files changed, 71 insertions(+), 71 deletions(-)
+> 
+> diff --git a/arch/arm/common/dmabounce.c b/arch/arm/common/dmabounce.c
+> index f4b719bde76367..d3e00ea9208834 100644
+> --- a/arch/arm/common/dmabounce.c
+> +++ b/arch/arm/common/dmabounce.c
+> @@ -24,7 +24,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/page-flags.h>
+>   #include <linux/device.h>
+> -#include <linux/dma-mapping.h>
+> +#include <linux/dma-direct.h>
+>   #include <linux/dmapool.h>
+>   #include <linux/list.h>
+>   #include <linux/scatterlist.h>
+> diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-direct.h
+> index 7c3001a6a775bf..de0f4ff9279615 100644
+> --- a/arch/arm/include/asm/dma-direct.h
+> +++ b/arch/arm/include/asm/dma-direct.h
+> @@ -2,6 +2,76 @@
+>   #ifndef ASM_ARM_DMA_DIRECT_H
+>   #define ASM_ARM_DMA_DIRECT_H 1
+>   
+> +#include <asm/memory.h>
+> +
+> +#ifdef __arch_page_to_dma
+> +#error Please update to __arch_pfn_to_dma
+> +#endif
+
+This must be long, long dead by now.
+
+> +
+> +/*
+> + * dma_to_pfn/pfn_to_dma/dma_to_virt/virt_to_dma are architecture private
+> + * functions used internally by the DMA-mapping API to provide DMA
+> + * addresses. They must not be used by drivers.
+> + */
+> +#ifndef __arch_pfn_to_dma
+> +static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> +{
+> +	if (dev)
+> +		pfn -= dev->dma_pfn_offset;
+> +	return (dma_addr_t)__pfn_to_bus(pfn);
+> +}
+> +
+> +static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> +{
+> +	unsigned long pfn = __bus_to_pfn(addr);
+> +
+> +	if (dev)
+> +		pfn += dev->dma_pfn_offset;
+> +
+> +	return pfn;
+> +}
+
+These are only overridden for OMAP1510, and it looks like it wouldn't 
+take much for the platform code or ohci-omap driver to set up a generic 
+DMA offset for the relevant device.
+
+> +
+> +static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> +{
+> +	if (dev) {
+> +		unsigned long pfn = dma_to_pfn(dev, addr);
+> +
+> +		return phys_to_virt(__pfn_to_phys(pfn));
+> +	}
+> +
+> +	return (void *)__bus_to_virt((unsigned long)addr);
+> +}
+
+This appears entirely unused.
+
+> +
+> +static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> +{
+> +	if (dev)
+> +		return pfn_to_dma(dev, virt_to_pfn(addr));
+> +
+> +	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+> +}
+
+And this is only used for some debug prints in dmabounce.
+
+Similarly the __bus_to_*()/__*_to_bus() calls themselves only appear 
+significant to mach-footbridge any more, and could probably also be 
+evolved into regular DMA offsets now that all API calls must have a 
+non-NULL device. I think I might come back and take a closer look at all 
+this at some point in future... :)
+
+Robin.
+
+> +
+> +#else
+> +static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> +{
+> +	return __arch_pfn_to_dma(dev, pfn);
+> +}
+> +
+> +static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> +{
+> +	return __arch_dma_to_pfn(dev, addr);
+> +}
+> +
+> +static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> +{
+> +	return __arch_dma_to_virt(dev, addr);
+> +}
+> +
+> +static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> +{
+> +	return __arch_virt_to_dma(dev, addr);
+> +}
+> +#endif
+> +
+>   static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+>   {
+>   	unsigned int offset = paddr & ~PAGE_MASK;
+> diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+> index bdd80ddbca3451..0a1a536368c3a4 100644
+> --- a/arch/arm/include/asm/dma-mapping.h
+> +++ b/arch/arm/include/asm/dma-mapping.h
+> @@ -8,8 +8,6 @@
+>   #include <linux/scatterlist.h>
+>   #include <linux/dma-debug.h>
+>   
+> -#include <asm/memory.h>
+> -
+>   #include <xen/xen.h>
+>   #include <asm/xen/hypervisor.h>
+>   
+> @@ -23,74 +21,6 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+>   	return NULL;
+>   }
+>   
+> -#ifdef __arch_page_to_dma
+> -#error Please update to __arch_pfn_to_dma
+> -#endif
+> -
+> -/*
+> - * dma_to_pfn/pfn_to_dma/dma_to_virt/virt_to_dma are architecture private
+> - * functions used internally by the DMA-mapping API to provide DMA
+> - * addresses. They must not be used by drivers.
+> - */
+> -#ifndef __arch_pfn_to_dma
+> -static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> -{
+> -	if (dev)
+> -		pfn -= dev->dma_pfn_offset;
+> -	return (dma_addr_t)__pfn_to_bus(pfn);
+> -}
+> -
+> -static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> -{
+> -	unsigned long pfn = __bus_to_pfn(addr);
+> -
+> -	if (dev)
+> -		pfn += dev->dma_pfn_offset;
+> -
+> -	return pfn;
+> -}
+> -
+> -static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> -{
+> -	if (dev) {
+> -		unsigned long pfn = dma_to_pfn(dev, addr);
+> -
+> -		return phys_to_virt(__pfn_to_phys(pfn));
+> -	}
+> -
+> -	return (void *)__bus_to_virt((unsigned long)addr);
+> -}
+> -
+> -static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> -{
+> -	if (dev)
+> -		return pfn_to_dma(dev, virt_to_pfn(addr));
+> -
+> -	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+> -}
+> -
+> -#else
+> -static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> -{
+> -	return __arch_pfn_to_dma(dev, pfn);
+> -}
+> -
+> -static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> -{
+> -	return __arch_dma_to_pfn(dev, addr);
+> -}
+> -
+> -static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> -{
+> -	return __arch_dma_to_virt(dev, addr);
+> -}
+> -
+> -static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> -{
+> -	return __arch_virt_to_dma(dev, addr);
+> -}
+> -#endif
+> -
+>   /**
+>    * arm_dma_alloc - allocate consistent memory for DMA
+>    * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
+> 
