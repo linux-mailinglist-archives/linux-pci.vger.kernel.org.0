@@ -2,166 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 553FA263A3D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 04:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55425263A1E
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 04:21:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbgIJCYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Sep 2020 22:24:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32603 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730668AbgIJCId (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 22:08:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599703711;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9lUmVHlRg0jPhlantuCk3hiT6WHd/nIzITZFw+wGi90=;
-        b=LTtp8Ud1EekyMH0PGpMWJGlJTqAkF1SWn5bqK+soxWpH8E28oQQw6KsoNE4qWWuIzw+piU
-        alvnxuk2w3B56i2Fcv9NFVUaQ13Yi0XViNnK/zM+fIs1Up1YmBhgrxbW5nk1DFzwKg5iWo
-        IA8oLbyx0dTfhqcjcxzc7d1Y58w4ZO4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-PdjO5lmxOoqImIc6M2pBzA-1; Wed, 09 Sep 2020 19:07:52 -0400
-X-MC-Unique: PdjO5lmxOoqImIc6M2pBzA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97082801F98;
-        Wed,  9 Sep 2020 23:07:50 +0000 (UTC)
-Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 209F57EED4;
-        Wed,  9 Sep 2020 23:07:48 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 17:07:46 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
-Message-ID: <20200909170746.2286b83a@w520.home>
-In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
-References: <20200903164117.GA312152@bjorn-Precision-5520>
-        <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
+        id S1730309AbgIJCUy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Sep 2020 22:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730521AbgIJCSv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Sep 2020 22:18:51 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339CDC06179B;
+        Wed,  9 Sep 2020 19:18:34 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id n2so4493637oij.1;
+        Wed, 09 Sep 2020 19:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oOk59Y9agev+P1pRd+FxE/mXDXASrAFWiJH4a1Tl+Zw=;
+        b=AZyRw62QIBBWqODqgus8QIlDN9ibQ7DqITmcyT1IhPcNEonrlcxsqhKKDp8Ak7WyJj
+         rB/O10IRiA8Hu2uF7zkMR/gTloOBd3ArSRLEnZWOxbM5HvZKROv281KCgRRCK8E1U8+/
+         EnH4Ltms45F4lU3oeU3utrA763/BcUK7OM4BsZ0/6i/ra3vl2MTrh/c2zcL8HraOgp8+
+         AkKRju51Kr/fWnIRVPtDkLhI9RFc6JnO6fembZvQH8X9Xqs8AZgnj2F6vYzH42q9+IAD
+         EIqb+H6j2VTi181/k82+ylN0/UuwaBCLoEMDhT8nqpNkiLTe13hE7lIadoIQG75RsgyB
+         d1fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oOk59Y9agev+P1pRd+FxE/mXDXASrAFWiJH4a1Tl+Zw=;
+        b=n0PakEsG9HQ2u9vaMxhzCFsFY5g6p6mpX7jPnY9r8V+j2ti7FRm09v6VxLFh1jN58Y
+         vEFYWI9+GAllZ78UtUW/VpoujOsW0uQRmWqlM5U7jRlLo70ad+QZ+WSlsqBarbEQEJrU
+         xNFXE+C8U9DdOl9y6JG1Xxkt9bCf/y0S3us3AVcLkYPE1e1hW5cob4mPJSoPSDta4FUv
+         9l+tPQRDeFo8nZPrtOgGzw+X2Vru1W9q8qoUqRHs7iHjtWTxTVA6kV8fO1zrElYVaaWd
+         2RMHrSvoWHvhd8wX5nSwTr/YwWKyPqWkgMFU6HRPrldsKkQ9pJwVHEcHaGIytz4wIh7t
+         fmSg==
+X-Gm-Message-State: AOAM533jdegbRjy5i/QMYbMGp/WS8oP2vnjgY4jYQE1nMz+V9F2nK5Gh
+        aWlpvI9t1gm/TEjWLT8gwfg0AREqrlbxitMepuP11f01
+X-Google-Smtp-Source: ABdhPJwpsA7xA/pdpr3ILoTVp47C6lLv9rrw4dQ9G6VM5XmEXEcVZC0d3lzZK9HRNJmv413CJZyiiSGNfWvBaOMtIX8=
+X-Received: by 2002:a05:6808:3d6:: with SMTP id o22mr2296687oie.150.1599704313667;
+ Wed, 09 Sep 2020 19:18:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <CAPJCdB=HzNJp36tjD0=-R-cs4+8=xhxAfmR-tZ2DkpcyiugH-g@mail.gmail.com>
+ <20200910015950.GA748330@bjorn-Precision-5520>
+In-Reply-To: <20200910015950.GA748330@bjorn-Precision-5520>
+From:   Jiang Biao <benbjiang@gmail.com>
+Date:   Thu, 10 Sep 2020 10:18:22 +0800
+Message-ID: <CAPJCdB=3hjZiC4P3G9T0G5XFnkxRvfpx_+3Qj5AQESAG-kpbEw@mail.gmail.com>
+Subject: Re: [PATCH] driver/pci: reduce the single block time in pci_read_config
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>,
+        Bin Lai <robinlai@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Sep 2020 13:10:02 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+Hi,
 
-> On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
-> > On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:  
-> >> Per the PCIe spec, VFs cannot implement the MSE bit
-> >> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
-> >> Use a dev_flags bit to signify this requirement.  
-> > 
-> > This approach seems sensible to me, but
-> > 
-> >    - This is confusing because while the spec does not use "MSE" to
-> >      refer to the Command Register "Memory Space Enable" bit
-> >      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
-> >      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
-> >      course, you're not talking about that here.  Maybe something like
-> >      this?
-> > 
-> >        For VFs, the Memory Space Enable bit in the Command Register is
-> >        hard-wired to 0.
-> > 
-> >        Add a dev_flags bit to signify devices where the Command
-> >        Register Memory Space Enable bit does not control the device's
-> >        response to MMIO accesses.  
-> 
-> Will do.  I'll change the usage of the MSE acronym in the other patches 
-> as well.
-> 
-> > 
-> >    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
-> >      plan to *use* this, but I'd rather use a term that describes the
-> >      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".  
-> 
-> Sure, I will change.
-> 
-> > 
-> >    - How do we decide whether to use dev_flags vs a bitfield like
-> >      dev->is_virtfn?  The latter seems simpler unless there's a reason
-> >      to use dev_flags.  If there's a reason, maybe we could add a
-> >      comment at pci_dev_flags for future reference.
-> >   
-> 
-> Something like:
-> 
-> /*
->   * Device does not implement PCI_COMMAND_MEMORY - this is true for any
->   * device marked is_virtfn, but is also true for any VF passed-through
->   * a lower-level hypervisor where emulation of the Memory Space Enable
->   * bit was not provided.
->   */
-> PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
-> 
-> ?
-> 
-> >    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
-> >      that's what I use for consistency.  
-> 
-> Sure, will do.  I'll roll up a new version once I have feedback from 
-> Alex on the vfio changes.
+On Thu, 10 Sep 2020 at 09:59, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Sep 10, 2020 at 09:54:02AM +0800, Jiang Biao wrote:
+> > Hi,
+> >
+> > On Thu, 10 Sep 2020 at 09:25, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
+> > > > From: Jiang Biao <benbjiang@tencent.com>
+> > > >
+> > > > pci_read_config() could block several ms in kernel space, mainly
+> > > > caused by the while loop to call pci_user_read_config_dword().
+> > > > Singel pci_user_read_config_dword() loop could consume 130us+,
+> > > >               |    pci_user_read_config_dword() {
+> > > >               |      _raw_spin_lock_irq() {
+> > > > ! 136.698 us  |        native_queued_spin_lock_slowpath();
+> > > > ! 137.582 us  |      }
+> > > >               |      pci_read() {
+> > > >               |        raw_pci_read() {
+> > > >               |          pci_conf1_read() {
+> > > >   0.230 us    |            _raw_spin_lock_irqsave();
+> > > >   0.035 us    |            _raw_spin_unlock_irqrestore();
+> > > >   8.476 us    |          }
+> > > >   8.790 us    |        }
+> > > >   9.091 us    |      }
+> > > > ! 147.263 us  |    }
+> > > > and dozens of the loop could consume ms+.
+> > > >
+> > > > If we execute some lspci commands concurrently, ms+ scheduling
+> > > > latency could be detected.
+> > > >
+> > > > Add scheduling chance in the loop to improve the latency.
+> > >
+> > > Thanks for the patch, this makes a lot of sense.
+> > >
+> > > Shouldn't we do the same in pci_write_config()?
+> > Yes, IMHO, that could be helpful too.
+>
+> If it's feasible, it would be nice to actually verify that it makes a
+> difference.  I know config writes should be faster than reads, but
+> they're certainly not as fast as a CPU can pump out data, so there
+> must be *some* mechanism that slows the CPU down.
+We did catch 5ms+ latency caused by pci_read_config() triggered by
+concurrent lspcis, and latency disappeared after this patch.
+For pci_write_config path, we have not met the case actually.:)
+I'll have some tries to verify that, and would send another patch if verified.
 
-The usage of MSE threw me a bit too, as Bjorn notes that's specific to
-the SR-IOV capability.  I think this also uncovers a latent bug in our
-calling of vfio_bar_restore(), it really doesn't do a good job of
-determining whether an enable bit is implemented, regardless of whether
-it's a VF or the device simply doesn't use that address space.  For
-example I imagine you could reproduce triggering a reset recovery on
-s390 by trying to write the VF command register to 1 with setpci from a
-guest (since you won't have is_virtfn to bail out of the recovery
-function).  I think we'll still need this dev_flag to differentiate
-unimplmented and enabled versus simply unimplemented to resolve that
-though, so the change looks ok to me. Thanks,
-
-Alex
-
-> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> >> ---
-> >>   drivers/pci/iov.c   | 1 +
-> >>   include/linux/pci.h | 2 ++
-> >>   2 files changed, 3 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> >> index b37e08c..2bec77c 100644
-> >> --- a/drivers/pci/iov.c
-> >> +++ b/drivers/pci/iov.c
-> >> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> >>   	virtfn->device = iov->vf_device;
-> >>   	virtfn->is_virtfn = 1;
-> >>   	virtfn->physfn = pci_dev_get(dev);
-> >> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
-> >>   
-> >>   	if (id == 0)
-> >>   		pci_read_vf_config_common(virtfn);
-> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> >> index 8355306..9316cce 100644
-> >> --- a/include/linux/pci.h
-> >> +++ b/include/linux/pci.h
-> >> @@ -227,6 +227,8 @@ enum pci_dev_flags {
-> >>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
-> >>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
-> >>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> >> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
-> >> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
-> >>   };
-> >>   
-> >>   enum pci_irq_reroute_variant {
-> >> -- 
-> >> 1.8.3.1
-> >>  
-> 
-
+Thx.
+Regards,
+Jiang
