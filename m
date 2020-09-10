@@ -2,157 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 644CB26501B
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 22:04:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E683E26507F
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 22:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgIJUCN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 16:02:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37496 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730839AbgIJPAo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 11:00:44 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AEoV17193541;
-        Thu, 10 Sep 2020 11:00:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=jqNGQIciDmR7JgvUza3J1lCUoceHki+R182Zm5QX6MA=;
- b=YGQerkI2TvXvCw1fpi9YBvNSSA4Pk34gdLImR//e7JVdlMsCESG0qNoGG/Lb4ccHwbqV
- 17B0WPHU9P+ZUqjJJ18fH47QWT59WuD6D516SpTdLmNk7PGljvva/VMOHHoanfxd5Dgv
- n52y4hHBXZSmM5/7vI7lu2fOKbFT6rArCUCInuUr6I/9gThG1owBneqiJNtGqczkohXE
- 9G2rVw4Bf1M5m5uTvtxMupLD4v72LenTwp7yNhavEZMeumaI+HmxdsEnit6bwX4nn0Co
- zV30YEhM0mzmRZIvI8XmRZGnA92m2K1lvKKSB3oIxYSfj9+15uQgNaIuGHK6AkEsDVAJ gw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33fp8wg7w6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 11:00:10 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AEp9mm195235;
-        Thu, 10 Sep 2020 11:00:09 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33fp8wg7vd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 11:00:09 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AEqaYY018164;
-        Thu, 10 Sep 2020 15:00:08 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02dal.us.ibm.com with ESMTP id 33c2a9t8h6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 15:00:08 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AF02jo30802286
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 15:00:02 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41B1178069;
-        Thu, 10 Sep 2020 15:00:07 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED40778063;
-        Thu, 10 Sep 2020 15:00:05 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.211.91.207])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 15:00:05 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, bhelgaas@google.com
-Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v5 3/3] vfio/pci: Decouple PCI_COMMAND_MEMORY bit checks from is_virtfn
-Date:   Thu, 10 Sep 2020 10:59:57 -0400
-Message-Id: <1599749997-30489-4-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
-References: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 phishscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 lowpriorityscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100130
+        id S1725912AbgIJUUM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 16:20:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726535AbgIJUO3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:14:29 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA09F20731;
+        Thu, 10 Sep 2020 20:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599768868;
+        bh=BFqDyP5nEW82WHz5zECSjV0Z4J+2DigOXprkJRT9vk4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pzWGWYQD7+aTbR6VTE1ehwR4qDS9+8aB/jMzZJb/1j03gwWGbX9rAo5/0t+e1jMUH
+         BcHOpAGXiOU0in/3V84CImrOViaL5VfKeeD/EBW1h5iIa41b4gy0aPiUyIMFCsYEHw
+         bXcTma9xyLdfjf6YnuhtjooGH8kVDS9nm6g7YrLo=
+Date:   Thu, 10 Sep 2020 15:14:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v8 2/5] ACPI/PCI: Ignore _OSC negotiation result if
+ pcie_ports_native is set.
+Message-ID: <20200910201426.GA809535@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba80aa1cab7d244730c5abd48f3036bf527578cc.1595649348.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-While it is true that devices with is_virtfn=1 will have a Memory Space
-Enable bit that is hard-wired to 0, this is not the only case where we
-see this behavior -- For example some bare-metal hypervisors lack
-Memory Space Enable bit emulation for devices not setting is_virtfn
-(s390). Fix this by instead checking for the newly-added
-no_command_memory bit which directly denotes the need for
-PCI_COMMAND_MEMORY emulation in vfio.
+On Fri, Jul 24, 2020 at 08:58:53PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> pcie_ports_native is set only if user requests native handling
+> of PCIe capabilities via pcie_port_setup command line option.
+> User input takes precedence over _OSC based control negotiation
+> result. So consider the _OSC negotiated result only if
+> pcie_ports_native is unset.
+> 
+> Also, since struct pci_host_bridge ->native_* members caches the
+> ownership status of various PCIe capabilities, use them instead
+> of distributed checks for pcie_ports_native.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/acpi/pci_root.c           | 61 ++++++++++++++++++++++++++-----
+>  drivers/pci/hotplug/pciehp_core.c |  2 +-
+>  drivers/pci/pci-acpi.c            |  3 --
+>  drivers/pci/pcie/aer.c            |  2 +-
+>  drivers/pci/pcie/portdrv_core.c   |  9 ++---
+>  5 files changed, 56 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index f90e841c59f5..f8981d4e044d 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -145,6 +145,17 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
+>  	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
+>  };
+>  
+> +static char *get_osc_desc(u32 bit)
+> +{
+> +	int i = 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pci_osc_control_bit); i++)
+> +		if (bit == pci_osc_control_bit[i].bit)
+> +			return pci_osc_control_bit[i].desc;
+> +
+> +	return NULL;
+> +}
+> +
+>  static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
+>  			    struct pci_osc_bit_struct *table, int size)
+>  {
+> @@ -914,18 +925,48 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  		goto out_release_info;
+>  
+>  	host_bridge = to_pci_host_bridge(bus->bridge);
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+> -		host_bridge->native_pcie_hotplug = 0;
+> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL)) {
+> +		if (!pcie_ports_native)
+> +			host_bridge->native_pcie_hotplug = 0;
+> +		else
+> +			dev_warn(&bus->dev, "OS overrides %s firmware control",
+> +			get_osc_desc(OSC_PCI_EXPRESS_NATIVE_HP_CONTROL));
 
-Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
----
- drivers/vfio/pci/vfio_pci_config.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+There's got to be a way to write this more concisely.  Maybe something
+like this?
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index d98843f..5076d01 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
- 	 * PF SR-IOV capability, there's therefore no need to trigger
- 	 * faults based on the virtual value.
- 	 */
--	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-+	return pdev->no_command_memory || (cmd & PCI_COMMAND_MEMORY);
- }
- 
- /*
-@@ -520,8 +520,8 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
- 
- 	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
- 
--	/* Mask in virtual memory enable for SR-IOV devices */
--	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
-+	/* Mask in virtual memory enable */
-+	if (offset == PCI_COMMAND && vdev->pdev->no_command_memory) {
- 		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
- 		u32 tmp_val = le32_to_cpu(*val);
- 
-@@ -589,9 +589,11 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
- 		 * shows it disabled (phys_mem/io, then the device has
- 		 * undergone some kind of backdoor reset and needs to be
- 		 * restored before we allow it to enable the bars.
--		 * SR-IOV devices will trigger this, but we catch them later
-+		 * SR-IOV devices will trigger this - for mem enable let's
-+		 * catch this now and for io enable it will be caught later
- 		 */
--		if ((new_mem && virt_mem && !phys_mem) ||
-+		if ((new_mem && virt_mem && !phys_mem &&
-+		     !pdev->no_command_memory) ||
- 		    (new_io && virt_io && !phys_io) ||
- 		    vfio_need_bar_restore(vdev))
- 			vfio_bar_restore(vdev);
-@@ -1734,12 +1736,14 @@ int vfio_config_init(struct vfio_pci_device *vdev)
- 				 vconfig[PCI_INTERRUPT_PIN]);
- 
- 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
--
-+	}
-+	if (pdev->no_command_memory) {
- 		/*
--		 * VFs do no implement the memory enable bit of the COMMAND
--		 * register therefore we'll not have it set in our initial
--		 * copy of config space after pci_enable_device().  For
--		 * consistency with PFs, set the virtual enable bit here.
-+		 * VFs and devices that set pdev->no_command_memory do not
-+		 * implement the memory enable bit of the COMMAND register
-+		 * therefore we'll not have it set in our initial copy of
-+		 * config space after pci_enable_device().  For consistency
-+		 * with PFs, set the virtual enable bit here.
- 		 */
- 		*(__le16 *)&vconfig[PCI_COMMAND] |=
- 					cpu_to_le16(PCI_COMMAND_MEMORY);
--- 
-1.8.3.1
+  #define OSC_OWNER(ctrl, bit, flag) \
+    if (!(ctrl & bit)) \
+      flag = 0;
 
+  if (pcie_ports_native)
+    decode_osc_control(root, "OS forcibly taking over", ~0);
+  else {
+    ctrl = root->osc_control_set;
+    OSC_OWNER(ctrl, OSC_PCI_EXPRESS_AER_CONTROL, host_bridge->native_aer);
+    OSC_OWNER(ctrl, OSC_PCI_EXPRESS_PME_CONTROL, host_bridge->native_pme);
+    ...
+  }
+
+> +	}
+> +
+>  	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+>  		host_bridge->native_shpc_hotplug = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
+> -		host_bridge->native_aer = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
+> -		host_bridge->native_pme = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+> -		host_bridge->native_ltr = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> -		host_bridge->native_dpc = 0;
+> +
+> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL)) {
+> +		if (!pcie_ports_native)
+> +			host_bridge->native_aer = 0;
+> +		else
+> +			dev_warn(&bus->dev, "OS overrides %s firmware control",
+> +			get_osc_desc(OSC_PCI_EXPRESS_AER_CONTROL));
+> +	}
+> +
+> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL)) {
+> +		if (!pcie_ports_native)
+> +			host_bridge->native_pme = 0;
+> +		else
+> +			dev_warn(&bus->dev, "OS overrides %s firmware control",
+> +			get_osc_desc(OSC_PCI_EXPRESS_PME_CONTROL));
+> +	}
+> +
+> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL)) {
+> +		if (!pcie_ports_native)
+> +			host_bridge->native_ltr = 0;
+> +		else
+> +			dev_warn(&bus->dev, "OS overrides %s firmware control",
+> +			get_osc_desc(OSC_PCI_EXPRESS_LTR_CONTROL));
+> +	}
+> +
+> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL)) {
+> +		if (!pcie_ports_native)
+> +			host_bridge->native_dpc = 0;
+> +		else
+> +			dev_warn(&bus->dev, "OS overrides %s firmware control",
+> +			get_osc_desc(OSC_PCI_EXPRESS_DPC_CONTROL));
+> +	}
+>  
+>  	/*
+>  	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index bf779f291f15..5fc999bf6f1b 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -255,7 +255,7 @@ static bool pme_is_native(struct pcie_device *dev)
+>  	const struct pci_host_bridge *host;
+>  
+>  	host = pci_find_host_bridge(dev->port->bus);
+> -	return pcie_ports_native || host->native_pme;
+> +	return host->native_pme;
+
+I love this part!
+
+>  }
+>  
+>  static void pciehp_disable_interrupt(struct pcie_device *dev)
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 7224b1e5f2a8..e09589571a9d 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -800,9 +800,6 @@ bool pciehp_is_native(struct pci_dev *bridge)
+>  	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
+>  		return false;
+>  
+> -	if (pcie_ports_native)
+> -		return true;
+> -
+>  	host = pci_find_host_bridge(bridge->bus);
+>  	return host->native_pcie_hotplug;
+>  }
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 3acf56683915..d663bd9c7257 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -219,7 +219,7 @@ int pcie_aer_is_native(struct pci_dev *dev)
+>  	if (!dev->aer_cap)
+>  		return 0;
+>  
+> -	return pcie_ports_native || host->native_aer;
+> +	return host->native_aer;
+>  }
+>  
+>  int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 50a9522ab07d..ccd5e0ce5605 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -208,8 +208,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>  	int services = 0;
+>  
+> -	if (dev->is_hotplug_bridge &&
+> -	    (pcie_ports_native || host->native_pcie_hotplug)) {
+> +	if (dev->is_hotplug_bridge && host->native_pcie_hotplug) {
+>  		services |= PCIE_PORT_SERVICE_HP;
+>  
+>  		/*
+> @@ -221,8 +220,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	}
+>  
+>  #ifdef CONFIG_PCIEAER
+> -	if (dev->aer_cap && pci_aer_available() &&
+> -	    (pcie_ports_native || host->native_aer)) {
+> +	if (dev->aer_cap && pci_aer_available() && host->native_aer) {
+>  		services |= PCIE_PORT_SERVICE_AER;
+>  
+>  		/*
+> @@ -238,8 +236,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	 * Event Collectors can also generate PMEs, but we don't handle
+>  	 * those yet.
+>  	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+> -	    (pcie_ports_native || host->native_pme)) {
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT && host->native_pme) {
+>  		services |= PCIE_PORT_SERVICE_PME;
+>  
+>  		/*
+> -- 
+> 2.17.1
+> 
