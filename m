@@ -2,234 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B36EB264964
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 18:11:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CE3D2649AD
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 18:26:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgIJQLt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 12:11:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45743 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgIJQJJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 12:09:09 -0400
-Received: by mail-io1-f67.google.com with SMTP id u126so7643315iod.12;
-        Thu, 10 Sep 2020 09:09:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zc8GA9vTTSJxVHMRNbdfsfSw3v5NMHWSVWa3ZEF82EA=;
-        b=jdZPajd90q+C4bbbPn0SIpkL3oS6b1vB7PaphENit6lKgI2vgPBFdolK+Gj+T7jc3+
-         DCUIpZq23Ys5q1XHrsYjGYAAJvBMQTSGht0GBftyC+dSknTJ4iepRwt1oYvajJbBjYN2
-         JxmTya55bM73sXNhw9v+5kfxGlZaf8oIOY4F1COcdcK/VxmZX/oAO6HhCBaq+1T0gtQJ
-         InnWvIAVh29E1Oh4kFNyFD7bZNkB77ehZcUKrN0xCFcRf7Sydd+ItHFtrpb+bup7dH2j
-         Qnw5kWD+NM5PLLLPVcbbZRe1K1AmDnu1d/9mCtQl8wAM5bef4KxIgCM/LH+qNioevVe6
-         3ilA==
-X-Gm-Message-State: AOAM531IQRBTBlzjL2QzbQbqiaSy/G7oqouu+XI4AMTCpFlYNwztnBLE
-        JXcFh01x7vxHQLPGibc3ww==
-X-Google-Smtp-Source: ABdhPJwBzF9QDhz4zxfnBRc0JUca9uTxeJNx1KXRji3nNnPQRTLRmpi0RvbR/wzoxOKSqky6i5NlkA==
-X-Received: by 2002:a6b:f301:: with SMTP id m1mr7776065ioh.162.1599754147737;
-        Thu, 10 Sep 2020 09:09:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id l2sm3269509ilk.19.2020.09.10.09.09.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 09:09:07 -0700 (PDT)
-Received: (nullmailer pid 455740 invoked by uid 1000);
-        Thu, 10 Sep 2020 16:09:06 -0000
-Date:   Thu, 10 Sep 2020 10:09:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726828AbgIJQ0T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 12:26:19 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:56935 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbgIJQWV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 12:22:21 -0400
+X-Greylist: delayed 523 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Sep 2020 12:21:22 EDT
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DEEB75804EB;
+        Thu, 10 Sep 2020 12:12:17 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 10 Sep 2020 12:12:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=ddCQbhjVBkl6UT3ElTu0s85KbX9
+        mRPCmsqjShRybr0o=; b=Vi/OvJeyKtEzr5Sj5JBFj8NJeJJrOTzt/N+lIK9fixb
+        u92kkSmR6AhNp3L9kacYP5yBtepWESQBjeqqV0Di4ONy3ZzUVRahN8j9whCQnMjp
+        HvKr+iv6572tLVTmqsZ+8Dq2mzw1tpGvZQA3ELum28+KTrBr331a10p5fEN2FKSa
+        3LPxaF1Bn2gxhfV2sP6sWSHEXRat5YuVNuoihMdyNOJwhADbYNBNRE5zxfMKO+KR
+        Mhw5OhrOMfOUf+HJBIUeYFd0Wh6A1y9ti90YgxTg1GkiOXyqEmyH4It8DQwDOImG
+        FiTHMVLmScf7n7HxyRF5TuAeemY7D6vsy0rvgP6rsYg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ddCQbh
+        jVBkl6UT3ElTu0s85KbX9mRPCmsqjShRybr0o=; b=XrDuY3hH3udTKgGXtmg53n
+        UHaVNYgKGc1EYk5uXkCQeQHadZ4IKNRUJeFomJVkkd5JJ3aJ+2/K9yU/ftkLmZRw
+        y/JKF34dPhOWW/xIfeSjqO9/5Rh+jB1COLpUmudzESzJg8k+yawjgTvok7VIJZwB
+        LP/eKkqibbuvf1MNKe0KnVjRyIWNE0MgDGu7TLYESpD8ZDDiDuJzUVLgYWp6j3ti
+        bSR1B2CvXaE0joEuOVzE2/yA/EPQenxEF0hZWWwvofHqjue70UufyWvWf5K4VA/f
+        ypxu7n1Ifllw6P2vTLA4jLWi6EQbeK/7p+0aOlhdw2KzN92wA9EW/F9NdW6bzTAA
+        ==
+X-ME-Sender: <xms:YFBaX9Kxld07E3KCj3VKRTDJcaG98PAIPsyt_rMmnVD_i4XaYx9WGg>
+    <xme:YFBaX5J-DSg5ojj5Dx81fvsHdEI8cscYaMOonv-3llSKauaKQlbuD4cj8Hvzy76Q4
+    cUBddGldPvyJg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
+    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
+    rdekiedrjeegrdeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:YFBaX1tobm8DWJZJ1nxeLKSLS2kZGZ8C-QdquIIFBQHJgGMDpRNBXw>
+    <xmx:YFBaX-aciwbr1RNJ-s6HnWDzBfYIfLD4yw-a6dTi0Y1XH8lg1fLxuA>
+    <xmx:YFBaX0Y2tIxe2nuzU3IHZU4zgd85FGy2ALAMCm_nDcVYtCCrE_2-iQ>
+    <xmx:YVBaX6xWH2rheFB58DBBXf9XZmPQn4LKAF_bXQTCSDi6cgPDmH-hZg>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 371383280066;
+        Thu, 10 Sep 2020 12:12:16 -0400 (EDT)
+Date:   Thu, 10 Sep 2020 18:12:24 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 06/11] PCI: brcmstb: Add control of rescal reset
-Message-ID: <20200910160906.GA449597@bogus>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <20200824193036.6033-7-james.quinlan@broadcom.com>
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/3] dma-mapping: introduce DMA range map, supplanting
+ dma_pfn_offset
+Message-ID: <20200910161224.GB1158578@kroah.com>
+References: <20200910054038.324517-1-hch@lst.de>
+ <20200910054038.324517-4-hch@lst.de>
+ <20200910075351.GA1092435@kroah.com>
+ <20200910091351.GA25883@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824193036.6033-7-james.quinlan@broadcom.com>
+In-Reply-To: <20200910091351.GA25883@lst.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:30:19PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
+On Thu, Sep 10, 2020 at 11:13:51AM +0200, Christoph Hellwig wrote:
+> On Thu, Sep 10, 2020 at 09:53:51AM +0200, Greg KH wrote:
+> > >  		/*
+> > >  		 * Please refer to usb_alloc_dev() to see why we set
+> > > -		 * dma_mask and dma_pfn_offset.
+> > > +		 * dma_mask and dma_range_map.
+> > >  		 */
+> > >  		intf->dev.dma_mask = dev->dev.dma_mask;
+> > > -		intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
+> > > +		if (dma_direct_copy_range_map(&intf->dev, &dev->dev))
+> > > +			dev_err(&dev->dev, "failed to copy DMA map\n");
+> > 
+> > We tell the user, but then just keep on running?  Is there anything that
+> > we can do here?
+> > 
+> > If not, why not have dma_direct_copy_range_map() print out the error?
 > 
-> Some STB chips have a special purpose reset controller named RESCAL (reset
-> calibration).  The PCIe HW can now control RESCAL to start and stop its
-> operation.  On probe(), the RESCAL is deasserted and the driver goes
-> through the sequence of setting registers and reading status in order to
-> start the internal PHY that is required for the PCIe.
+> At least for USB I'm pretty sure this isn't required at all.  I've been
+> running with the patch below on my desktop for two days now trying all
+> the usb toys I have (in addition to grepping for obvious abuses in
+> the drivers).  remoteproc is a different story, but the DMA handling
+> seems there is sketchy to start with..
 > 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 82 ++++++++++++++++++++++++++-
->  1 file changed, 81 insertions(+), 1 deletion(-)
+> >From 8bae3e6833f2ca431dcfcbc8f9cced7d5e972a01 Mon Sep 17 00:00:00 2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Wed, 9 Sep 2020 08:28:59 +0200
+> Subject: usb: don't inherity DMA properties for USB devices
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index acf2239b0251..041b8d109563 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -23,6 +23,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/pci.h>
->  #include <linux/printk.h>
-> +#include <linux/reset.h>
->  #include <linux/sizes.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> @@ -158,6 +159,16 @@
->  #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
->  #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
->  
-> +/* Rescal registers */
-> +#define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS			0x3
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK		0x4
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT	0x2
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK		0x2
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT		0x1
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK		0x1
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT		0x0
-> +
->  enum {
->  	RGR1_SW_INIT_1,
->  	EXT_CFG_INDEX,
-> @@ -247,6 +258,7 @@ struct brcm_pcie {
->  	const int		*reg_offsets;
->  	const int		*reg_field_info;
->  	enum pcie_type		type;
-> +	struct reset_control	*rescal;
->  };
->  
->  /*
-> @@ -965,6 +977,47 @@ static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
->  		dev_err(pcie->dev, "failed to enter low-power link state\n");
->  }
->  
-> +static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
-> +{
-> +	static const u32 shifts[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT,};
-> +	static const u32 masks[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK,};
-> +	const int beg = start ? 0 : PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS - 1;
-> +	const int end = start ? PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS : -1;
-> +	u32 tmp, combined_mask = 0;
-> +	u32 val = !!start;
-> +	void __iomem *base = pcie->base;
-> +	int i;
-> +
-> +	for (i = beg; i != end; start ? i++ : i--) {
-> +		tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> +		tmp = (tmp & ~masks[i]) | ((val << shifts[i]) & masks[i]);
-> +		writel(tmp, base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> +		usleep_range(50, 200);
-> +		combined_mask |= masks[i];
-> +	}
-> +
-> +	tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> +	val = start ? combined_mask : 0;
-> +
-> +	return (tmp & combined_mask) == val ? 0 : -EIO;
-> +}
-> +
-> +static inline int brcm_phy_start(struct brcm_pcie *pcie)
-> +{
-> +	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-> +}
-> +
-> +static inline int brcm_phy_stop(struct brcm_pcie *pcie)
-> +{
-> +	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-> +}
-> +
->  static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
->  {
->  	void __iomem *base = pcie->base;
-> @@ -992,11 +1045,15 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
->  static int brcm_pcie_suspend(struct device *dev)
->  {
->  	struct brcm_pcie *pcie = dev_get_drvdata(dev);
-> +	int ret;
->  
->  	brcm_pcie_turn_off(pcie);
-> +	ret = brcm_phy_stop(pcie);
-> +	if (ret)
-> +		dev_err(pcie->dev, "failed to stop phy\n");
->  	clk_disable_unprepare(pcie->clk);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int brcm_pcie_resume(struct device *dev)
-> @@ -1009,6 +1066,12 @@ static int brcm_pcie_resume(struct device *dev)
->  	base = pcie->base;
->  	clk_prepare_enable(pcie->clk);
->  
-> +	ret = brcm_phy_start(pcie);
-> +	if (ret) {
-> +		dev_err(pcie->dev, "failed to start phy\n");
-> +		return ret;
-> +	}
-> +
->  	/* Take bridge out of reset so we can access the SERDES reg */
->  	brcm_pcie_bridge_sw_init_set(pcie, 0);
->  
-> @@ -1034,6 +1097,9 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->  {
->  	brcm_msi_remove(pcie);
->  	brcm_pcie_turn_off(pcie);
-> +	if (brcm_phy_stop(pcie))
-> +		dev_err(pcie->dev, "failed to stop phy\n");
-> +	reset_control_assert(pcie->rescal);
->  	clk_disable_unprepare(pcie->clk);
->  }
->  
-> @@ -1112,6 +1178,20 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev, "could not enable clock\n");
->  		return ret;
->  	}
-> +	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-> +	if (IS_ERR(pcie->rescal))
-> +		return PTR_ERR(pcie->rescal);
-> +
-> +	ret = reset_control_deassert(pcie->rescal);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-> +
-> +	ret = brcm_phy_start(pcie);
-> +	if (ret) {
-> +		dev_err(pcie->dev, "failed to start phy\n");
-
-4 calls to brcm_phy_cntl() and 4 error prints. Move the error print to 
-brcm_phy_cntl.
-
-> +		reset_control_assert(pcie->rescal);
-> +		return ret;
-> +	}
->  
->  	ret = brcm_pcie_setup(pcie);
->  	if (ret)
-> -- 
-> 2.17.1
+> As the comment in usb_alloc_dev correctly states, drivers can't use
+> the DMA API on usb device, and at least calling dma_set_mask on them
+> is highly dangerous.  Unlike what the comment states upper level drivers
+> also can't really use the presence of a dma mask to check for DMA
+> support, as the dma_mask is set by default for most busses.
 > 
+> Remove the copying over of DMA information, and remove the now unused
+> dma_direct_copy_range_map export.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/usb/core/message.c |  7 -------
+>  drivers/usb/core/usb.c     | 13 -------------
+>  kernel/dma/direct.c        |  1 -
+>  3 files changed, 21 deletions(-)
+> 
+> diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+> index 935ee98e049f65..9e45732dc1d1d1 100644
+> --- a/drivers/usb/core/message.c
+> +++ b/drivers/usb/core/message.c
+> @@ -1954,13 +1954,6 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
+>  		intf->dev.bus = &usb_bus_type;
+>  		intf->dev.type = &usb_if_device_type;
+>  		intf->dev.groups = usb_interface_groups;
+> -		/*
+> -		 * Please refer to usb_alloc_dev() to see why we set
+> -		 * dma_mask and dma_range_map.
+> -		 */
+> -		intf->dev.dma_mask = dev->dev.dma_mask;
+> -		if (dma_direct_copy_range_map(&intf->dev, &dev->dev))
+> -			dev_err(&dev->dev, "failed to copy DMA map\n");
+>  		INIT_WORK(&intf->reset_ws, __usb_queue_reset_device);
+>  		intf->minor = -1;
+>  		device_initialize(&intf->dev);
+> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+> index 23d451f6894d70..9b4ac4415f1a47 100644
+> --- a/drivers/usb/core/usb.c
+> +++ b/drivers/usb/core/usb.c
+> @@ -599,19 +599,6 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
+>  	dev->dev.bus = &usb_bus_type;
+>  	dev->dev.type = &usb_device_type;
+>  	dev->dev.groups = usb_device_groups;
+> -	/*
+> -	 * Fake a dma_mask/offset for the USB device:
+> -	 * We cannot really use the dma-mapping API (dma_alloc_* and
+> -	 * dma_map_*) for USB devices but instead need to use
+> -	 * usb_alloc_coherent and pass data in 'urb's, but some subsystems
+> -	 * manually look into the mask/offset pair to determine whether
+> -	 * they need bounce buffers.
+> -	 * Note: calling dma_set_mask() on a USB device would set the
+> -	 * mask for the entire HCD, so don't do that.
+> -	 */
+> -	dev->dev.dma_mask = bus->sysdev->dma_mask;
+> -	if (dma_direct_copy_range_map(&dev->dev, bus->sysdev))
+> -		dev_err(&dev->dev, "failed to copy DMA map\n");
+>  	set_dev_node(&dev->dev, dev_to_node(bus->sysdev));
+>  	dev->state = USB_STATE_ATTACHED;
+>  	dev->lpm_disable_count = 1;
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index fc815f7375e282..3af257571a3b42 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -552,4 +552,3 @@ int dma_direct_copy_range_map(struct device *to, struct device *from)
+>  	to->dma_range_map = new_map;
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(dma_direct_copy_range_map);
+
+If you think this is safe to do, great, but for some reason I thought
+host controllers wanted this information, and that the scsi layer was
+the offending layer that also wanted this type of thing.  But it's been
+a really long time so I don't remember for sure, sorry.
+
+thanks,
+
+greg k-h
