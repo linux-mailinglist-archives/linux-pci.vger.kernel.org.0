@@ -2,168 +2,261 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87DFF2649E6
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 18:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4AFD264A35
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 18:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgIJQe0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 12:34:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26773 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726966AbgIJQeB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:34:01 -0400
-IronPort-SDR: ouUstQj+VuVgsiwEkqLXhO7yTqZyQDRuJmtqQgDsVhVeo9X3EC6Voywa/7pSRcM8c1G4LbscCF
- BRyIlbpVwBBg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="222775235"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="222775235"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 09:33:43 -0700
-IronPort-SDR: q/E56XbZOgmdGC0LLjuxAu4XtgducAuZR1EhCilxQohyu2sQLCR5OF0aw7FZkJb/kEqbUCZz0X
- 7PmGbybfHnxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="304935202"
-Received: from irsmsx601.ger.corp.intel.com ([163.33.146.7])
-  by orsmga006.jf.intel.com with ESMTP; 10 Sep 2020 09:33:41 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- irsmsx601.ger.corp.intel.com (163.33.146.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 10 Sep 2020 17:33:40 +0100
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Thu, 10 Sep 2020 09:33:39 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "refactormyself@gmail.com" <refactormyself@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlhsPgAgAD1HQA=
-Date:   Thu, 10 Sep 2020 16:33:39 +0000
-Message-ID: <5b7513ff64315d7a1c2529d34cd78b51ce3c3605.camel@intel.com>
-References: <20200910015558.GA746864@bjorn-Precision-5520>
-In-Reply-To: <20200910015558.GA746864@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.213.168.175]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <80079870F7FF5D489D3F2F8D8C947861@intel.com>
-Content-Transfer-Encoding: base64
+        id S1726776AbgIJQr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 12:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgIJQmp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 12:42:45 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B3BC061796
+        for <linux-pci@vger.kernel.org>; Thu, 10 Sep 2020 09:42:44 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y15so758895wmi.0
+        for <linux-pci@vger.kernel.org>; Thu, 10 Sep 2020 09:42:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GvgbVfIZqihDSRIr1P4MSPZ94jsrKZCQ/F5fxysr01I=;
+        b=TyICq94e6vxoZvEgnvm8SlIehSyYzjGupKav4lb+Pxcok42/rR29CaJsm7jZed8wjV
+         VcAv2SU6ofqly993m3jDXEk0C+O3H07Etf7gaC64szFw+cNBM0HVU6HG/dU9MLJbTu/k
+         uRnYclDANSacP6879/r2nJayBIVdkxcgORPPA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GvgbVfIZqihDSRIr1P4MSPZ94jsrKZCQ/F5fxysr01I=;
+        b=jnYoQgn7No8k61Bf2O8huEa1pnkLxbYALfR80yLmsAYwWS6bpd+JuuK2zl3iHSNWlg
+         P9DmFwzxqoLPyIsPwbPUvYXU1ngkUGV27rFm6G6rv1LmqJecXclyqeLrIFjYQiWRI1cS
+         ahAk76hFVixCi6hTuPiCSk+WqSQKyoMTQ6Hj0ze61c4A4piJ0LmSknIdCbfxOBbGcacg
+         PNcxQoKJm8q+1uEl7dcAS9nVeUvJcDUbwDz6xvqPUujNaa2dX0d5DC9qy804n4r6PaC5
+         IoaP36fEc3vQolfmph6+aWQVlHUo23gxawRIOxzpwh4yZsz0Z8MDfL+6pYcGpUCrZ8TO
+         CGYQ==
+X-Gm-Message-State: AOAM532x8/TAleCXuOpK3Xg9FRWbbS0td9vjsWd9A/zBBCEGkUFn9nrt
+        +nZhWXTLruLXT7Swuy7zqccjFtaTd+hzlAlfz160DQ==
+X-Google-Smtp-Source: ABdhPJx5ThJye94JSHiFtZNh0ZQ4aNsRIwOmoYGG2F1UkWonsVmJjeDLByWdS5LZQSLHRuMfqoGw32CjqMUUGfBcWTs=
+X-Received: by 2002:a05:600c:2:: with SMTP id g2mr891329wmc.85.1599756162505;
+ Thu, 10 Sep 2020 09:42:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <20200824193036.6033-5-james.quinlan@broadcom.com> <20200910155637.GA423872@bogus>
+In-Reply-To: <20200910155637.GA423872@bogus>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 10 Sep 2020 12:42:30 -0400
+Message-ID: <CA+-6iNy9g8fhJvd7SOKtc-SZcL8_gLLN1HEs-W8fe-=q6n430A@mail.gmail.com>
+Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000d18b2e05aef8415c"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQmpvcm4NCg0KT24gV2VkLCAyMDIwLTA5LTA5IGF0IDIwOjU1IC0wNTAwLCBCam9ybiBIZWxn
-YWFzIHdyb3RlOg0KPiBbK2NjIFNhaGVlZF0NCj4gDQo+IE9uIEZyaSwgQXVnIDIxLCAyMDIwIGF0
-IDA4OjMyOjIwUE0gKzA4MDAsIEthaS1IZW5nIEZlbmcgd3JvdGU6DQo+ID4gTmV3IEludGVsIGxh
-cHRvcHMgd2l0aCBWTUQgY2Fubm90IHJlYWNoIGRlZXBlciBwb3dlciBzYXZpbmcgc3RhdGUsDQo+
-ID4gcmVuZGVycyB2ZXJ5IHNob3J0IGJhdHRlcnkgdGltZS4NCj4gPiANCj4gPiBBcyBCSU9TIG1h
-eSBub3QgYmUgYWJsZSB0byBwcm9ncmFtIHRoZSBjb25maWcgc3BhY2UgZm9yIGRldmljZXMgdW5k
-ZXINCj4gPiBWTUQgZG9tYWluLCBBU1BNIG5lZWRzIHRvIGJlIHByb2dyYW1tZWQgbWFudWFsbHkg
-Ynkgc29mdHdhcmUuIFRoaXMgaXMNCj4gPiBhbHNvIHRoZSBjYXNlIHVuZGVyIFdpbmRvd3MuDQo+
-ID4gDQo+ID4gVGhlIFZNRCBjb250cm9sbGVyIGl0c2VsZiBpcyBhIHJvb3QgY29tcGxleCBpbnRl
-Z3JhdGVkIGVuZHBvaW50IHRoYXQNCj4gPiBkb2Vzbid0IGhhdmUgQVNQTSBjYXBhYmlsaXR5LCBz
-byB3ZSBjYW4ndCBwcm9wYWdhdGUgdGhlIEFTUE0gc2V0dGluZ3MgdG8NCj4gPiBkZXZpY2VzIHVu
-ZGVyIGl0LiBIZW5jZSwgc2ltcGx5IGFwcGx5IEFTUE1fU1RBVEVfQUxMIHRvIHRoZSBsaW5rcyB1
-bmRlcg0KPiA+IFZNRCBkb21haW4sIHVuc3VwcG9ydGVkIHN0YXRlcyB3aWxsIGJlIGNsZWFyZWQg
-b3V0IGFueXdheS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBLYWktSGVuZyBGZW5nIDxrYWku
-aGVuZy5mZW5nQGNhbm9uaWNhbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNpL3BjaWUv
-YXNwbS5jIHwgIDMgKystDQo+ID4gIGRyaXZlcnMvcGNpL3F1aXJrcy5jICAgIHwgMTEgKysrKysr
-KysrKysNCj4gPiAgaW5jbHVkZS9saW51eC9wY2kuaCAgICAgfCAgMiArKw0KPiA+ICAzIGZpbGVz
-IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMgYi9kcml2ZXJzL3BjaS9wY2llL2FzcG0u
-Yw0KPiA+IGluZGV4IDI1M2MzMGNjMTk2Ny4uZGNjMDAyZGJjYTE5IDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvcGNpZS9hc3Bt
-LmMNCj4gPiBAQCAtNjI0LDcgKzYyNCw4IEBAIHN0YXRpYyB2b2lkIHBjaWVfYXNwbV9jYXBfaW5p
-dChzdHJ1Y3QgcGNpZV9saW5rX3N0YXRlICpsaW5rLCBpbnQgYmxhY2tsaXN0KQ0KPiA+ICAJCWFz
-cG1fY2FsY19sMXNzX2luZm8obGluaywgJnVwcmVnLCAmZHdyZWcpOw0KPiA+ICANCj4gPiAgCS8q
-IFNhdmUgZGVmYXVsdCBzdGF0ZSAqLw0KPiA+IC0JbGluay0+YXNwbV9kZWZhdWx0ID0gbGluay0+
-YXNwbV9lbmFibGVkOw0KPiA+ICsJbGluay0+YXNwbV9kZWZhdWx0ID0gcGFyZW50LT5kZXZfZmxh
-Z3MgJiBQQ0lfREVWX0ZMQUdTX0VOQUJMRV9BU1BNID8NCj4gPiArCQkJICAgICBBU1BNX1NUQVRF
-X0FMTCA6IGxpbmstPmFzcG1fZW5hYmxlZDsNCj4gDQo+IFRoaXMgZnVuY3Rpb24gaXMgcmlkaWN1
-bG91c2x5IGNvbXBsaWNhdGVkIGFscmVhZHksIGFuZCBJIHJlYWxseSBkb24ndA0KPiB3YW50IHRv
-IG1ha2UgaXQgd29yc2UuDQo+IA0KPiBXaGF0IGV4YWN0bHkgaXMgdGhlIFBDSWUgdG9wb2xvZ3kg
-aGVyZT8gIEFwcGFyZW50bHkgdGhlIFZNRCBjb250cm9sbGVyDQo+IGlzIGEgUm9vdCBDb21wbGV4
-IEludGVncmF0ZWQgRW5kcG9pbnQsIHNvIGl0J3MgYSBUeXBlIDAgKG5vbi1icmlkZ2UpDQo+IGRl
-dmljZS4gIEFuZCBpdCBoYXMgbm8gTGluaywgaGVuY2Ugbm8gTGluayBDYXBhYmlsaXRpZXMgb3Ig
-Q29udHJvbCBhbmQNCj4gaGVuY2Ugbm8gQVNQTS1yZWxhdGVkIGJpdHMuICBSaWdodD8NClRoYXQn
-cyBjb3JyZWN0LiBWTUQgaXMgdGhlIFR5cGUgMCBkZXZpY2UgcHJvdmlkaW5nIGNvbmZpZy9tbWlv
-DQphcGVydHVyZXMgdG8gYW5vdGhlciBzZWdtZW50IGFuZCBNU0kvWCByZW1hcHBpbmcuIE5vIGxp
-bmsgYW5kIG5vIEFTUE0NCnJlbGF0ZWQgYml0cy4NCg0KSGllcmFyY2h5IGlzIHVzdWFsbHkgc29t
-ZXRoaW5nIGxpa2U6DQoNClNlZ21lbnQgMCAgICAgICAgICAgfCBWTUQgc2VnbWVudA0KUm9vdCBD
-b21wbGV4IC0+IFZNRCB8IFR5cGUgMCAoUlAvQnJpZGdlOyBwaHlzaWNhbCBzbG90KSAtIFR5cGUg
-MQ0KICAgICAgICAgICAgICAgICAgICB8IFR5cGUgMCAoUlAvQnJpZGdlOyBwaHlzaWNhbCBzbG90
-KSAtIFR5cGUgMQ0KDQo+IA0KPiBBbmQgdGhlIGRldmljZXMgdW5kZXIgdGhlIFZNRCBjb250cm9s
-bGVyPyAgSSBndWVzcyB0aGV5IGFyZSByZWd1bGFyDQo+IFBDSWUgRW5kcG9pbnRzLCBTd2l0Y2gg
-UG9ydHMsIGV0Yz8gIE9idmlvdXNseSB0aGVyZSdzIGEgTGluayBpbnZvbHZlZA0KPiBzb21ld2hl
-cmUuICBEb2VzIHRoZSBWTUQgY29udHJvbGxlciBoYXZlIHNvbWUgbWFnaWMsIG5vbi1hcmNoaXRl
-Y3RlZA0KPiBQb3J0IG9uIHRoZSBkb3duc3RyZWFtIHNpZGU/DQpDb3JyZWN0OiBUeXBlIDAgYW5k
-IFR5cGUgMSBkZXZpY2VzLCBhbmQgYW55IG51bWJlciBvZiBTd2l0Y2ggcG9ydHMgYXMNCml0J3Mg
-dXN1YWxseSBwaW5uZWQgb3V0IHRvIHBoeXNpY2FsIHNsb3QuDQoNCg0KPiANCj4gRG9lcyB0aGlz
-IHBhdGNoIGVuYWJsZSBBU1BNIG9uIHRoaXMgbWFnaWMgTGluayBiZXR3ZWVuIFZNRCBhbmQgdGhl
-DQo+IG5leHQgZGV2aWNlPyAgQ29uZmlndXJpbmcgQVNQTSBjb3JyZWN0bHkgcmVxdWlyZXMga25v
-d2xlZGdlIGFuZCBrbm9icw0KPiBmcm9tIGJvdGggZW5kcyBvZiB0aGUgTGluaywgYW5kIGFwcGFy
-ZW50bHkgd2UgZG9uJ3QgaGF2ZSB0aG9zZSBmb3IgdGhlDQo+IFZNRCBlbmQuDQpWTUQgaXRzZWxm
-IGRvZXNuJ3QgaGF2ZSB0aGUgbGluayB0byBpdCdzIGRvbWFpbi4gSXQncyByZWFsbHkganVzdCB0
-aGUNCmNvbmZpZy9tbWlvIGFwZXJ0dXJlIGFuZCBNU0kvWCByZW1hcHBlci4gVGhlIFBDSWUgbGlu
-ayBpcyBiZXR3ZWVuIHRoZQ0KVHlwZSAwIGFuZCBUeXBlIDEgZGV2aWNlcyBvbiB0aGUgVk1EIGRv
-bWFpbi4gU28gZm9ydHVuYXRlbHkgdGhlIFZNRA0KaXRzZWxmIGlzIG5vdCB0aGUgdXBzdHJlYW0g
-cGFydCBvZiB0aGUgbGluay4NCg0KPiANCj4gT3IgaXMgaXQgZm9yIExpbmtzIGRlZXBlciBpbiB0
-aGUgaGllcmFyY2h5PyAgSSBhc3N1bWUgdGhvc2Ugc2hvdWxkDQo+IGp1c3Qgd29yayBhbHJlYWR5
-LCBhbHRob3VnaCB0aGVyZSBtaWdodCBiZSBpc3N1ZXMgd2l0aCBsYXRlbmN5DQo+IGNvbXB1dGF0
-aW9uLCBldGMuLCBiZWNhdXNlIHdlIG1heSBub3QgYmUgYWJsZSB0byBhY2NvdW50IGZvciB0aGUg
-cGFydA0KPiBvZiB0aGUgcGF0aCBhYm92ZSBWTUQuDQpUaGF0J3MgY29ycmVjdC4gVGhpcyBpcyBm
-b3IgdGhlIGxpbmtzIHdpdGhpbiB0aGUgZG9tYWluIGl0c2VsZiwgc3VjaCBhcw0KYmV0d2VlbiBh
-IHR5cGUgMCBhbmQgTlZNZSBkZXZpY2UuDQoNCj4gDQo+IEkgd2FudCBhc3BtLmMgdG8gZXZlbnR1
-YWxseSBnZXQgb3V0IG9mIHRoZSBidXNpbmVzcyBvZiBtYW5hZ2luZyBzdHJ1Y3QNCj4gcGNpZV9s
-aW5rX3N0YXRlLiAgSSB0aGluayBpdCBzaG91bGQgbWFuYWdlICpkZXZpY2UqIHN0YXRlIGZvciBl
-YWNoIGVuZA0KPiBvZiB0aGUgbGluay4gIE1heWJlIHRoYXQncyBhIHBhdGggZm9yd2FyZCwgZS5n
-LiwgaWYgd2UgY2FjaGUgdGhlIExpbmsNCj4gQ2FwYWJpbGl0aWVzIGR1cmluZyBlbnVtZXJhdGlv
-biwgcXVpcmtzIGNvdWxkIG1vZGlmeSB0aGF0IGRpcmVjdGx5LA0KPiBhbmQgYXNwbS5jIGNvdWxk
-IGp1c3QgY29uc3VtZSB0aGF0IGNhY2hlZCBpbmZvcm1hdGlvbi4gIEkgdGhpbmsgU2FoZWVkDQo+
-IChjYydkKSBpcyBhbHJlYWR5IHdvcmtpbmcgb24gcGF0Y2hlcyBpbiB0aGlzIGRpcmVjdGlvbi4N
-Cj4gDQo+IEknbSBzdGlsbCBub3Qgc3VyZSBob3cgdGhpcyB3b3JrcyBpZiBWTUQgaXMgdGhlIHVw
-c3RyZWFtIGVuZCBvZiBhDQo+IExpbmssIHRob3VnaC4NCj4gDQo+ID4gIAkvKiBTZXR1cCBpbml0
-aWFsIGNhcGFibGUgc3RhdGUuIFdpbGwgYmUgdXBkYXRlZCBsYXRlciAqLw0KPiA+ICAJbGluay0+
-YXNwbV9jYXBhYmxlID0gbGluay0+YXNwbV9zdXBwb3J0Ow0KPiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQo+ID4gaW5kZXggYmRmOWI1
-MjU2N2UwLi4yZTJmNTI1YmQ4OTIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvcXVpcmtz
-LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+IEBAIC01NjMyLDMgKzU2MzIs
-MTQgQEAgc3RhdGljIHZvaWQgYXBleF9wY2lfZml4dXBfY2xhc3Moc3RydWN0IHBjaV9kZXYgKnBk
-ZXYpDQo+ID4gIH0NCj4gPiAgREVDTEFSRV9QQ0lfRklYVVBfQ0xBU1NfSEVBREVSKDB4MWFjMSwg
-MHgwODlhLA0KPiA+ICAJCQkgICAgICAgUENJX0NMQVNTX05PVF9ERUZJTkVELCA4LCBhcGV4X3Bj
-aV9maXh1cF9jbGFzcyk7DQo+ID4gKw0KPiA+ICsvKg0KPiA+ICsgKiBEZXZpY2UgWzgwODY6OWEw
-OV0NCj4gPiArICogQklPUyBtYXkgbm90IGJlIGFibGUgdG8gYWNjZXNzIGNvbmZpZyBzcGFjZSBv
-ZiBkZXZpY2VzIHVuZGVyIFZNRCBkb21haW4sIHNvDQo+ID4gKyAqIGl0IHJlbGllcyBvbiBzb2Z0
-d2FyZSB0byBlbmFibGUgQVNQTSBmb3IgbGlua3MgdW5kZXIgVk1ELg0KPiA+ICsgKi8NCj4gPiAr
-c3RhdGljIHZvaWQgcGNpX2ZpeHVwX2VuYWJsZV9hc3BtKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQ0K
-PiA+ICt7DQo+ID4gKwlwZGV2LT5kZXZfZmxhZ3MgfD0gUENJX0RFVl9GTEFHU19FTkFCTEVfQVNQ
-TTsNCj4gPiArfQ0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9J
-TlRFTCwgMHg5YTA5LCBwY2lfZml4dXBfZW5hYmxlX2FzcG0pOw0KPiA+IGRpZmYgLS1naXQgYS9p
-bmNsdWRlL2xpbnV4L3BjaS5oIGIvaW5jbHVkZS9saW51eC9wY2kuaA0KPiA+IGluZGV4IDgzNTUz
-MDYwNWMwZC4uNjZhNDU5MTZjN2M2IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvcGNp
-LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3BjaS5oDQo+ID4gQEAgLTIyNyw2ICsyMjcsOCBA
-QCBlbnVtIHBjaV9kZXZfZmxhZ3Mgew0KPiA+ICAJUENJX0RFVl9GTEFHU19OT19GTFJfUkVTRVQg
-PSAoX19mb3JjZSBwY2lfZGV2X2ZsYWdzX3QpICgxIDw8IDEwKSwNCj4gPiAgCS8qIERvbid0IHVz
-ZSBSZWxheGVkIE9yZGVyaW5nIGZvciBUTFBzIGRpcmVjdGVkIGF0IHRoaXMgZGV2aWNlICovDQo+
-ID4gIAlQQ0lfREVWX0ZMQUdTX05PX1JFTEFYRURfT1JERVJJTkcgPSAoX19mb3JjZSBwY2lfZGV2
-X2ZsYWdzX3QpICgxIDw8IDExKSwNCj4gPiArCS8qIEVuYWJsZSBBU1BNIHJlZ2FyZGxlc3Mgb2Yg
-aG93IExua0N0bCBpcyBwcm9ncmFtbWVkICovDQo+ID4gKwlQQ0lfREVWX0ZMQUdTX0VOQUJMRV9B
-U1BNID0gKF9fZm9yY2UgcGNpX2Rldl9mbGFnc190KSAoMSA8PCAxMiksDQo+ID4gIH07DQo+ID4g
-IA0KPiA+ICBlbnVtIHBjaV9pcnFfcmVyb3V0ZV92YXJpYW50IHsNCj4gPiAtLSANCj4gPiAyLjE3
-LjENCj4gPiANCg==
+--000000000000d18b2e05aef8415c
+Content-Type: text/plain; charset="UTF-8"
+
+On Thu, Sep 10, 2020 at 11:56 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+> > and resume.  Now the PCIe driver may do so as well.
+> >
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index c2b3d2946a36..3d588ab7a6dd 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+> >       brcm_pcie_bridge_sw_init_set(pcie, 1);
+> >  }
+> >
+> > +static int brcm_pcie_suspend(struct device *dev)
+> > +{
+> > +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
+> > +
+> > +     brcm_pcie_turn_off(pcie);
+> > +     clk_disable_unprepare(pcie->clk);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int brcm_pcie_resume(struct device *dev)
+> > +{
+> > +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
+> > +     void __iomem *base;
+> > +     u32 tmp;
+> > +     int ret;
+> > +
+> > +     base = pcie->base;
+> > +     clk_prepare_enable(pcie->clk);
+> > +
+> > +     /* Take bridge out of reset so we can access the SERDES reg */
+> > +     brcm_pcie_bridge_sw_init_set(pcie, 0);
+> > +
+> > +     /* SERDES_IDDQ = 0 */
+> > +     tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> > +     u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
+> > +     writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> > +
+> > +     /* wait for serdes to be stable */
+> > +     udelay(100);
+>
+> Really needs to be a spinloop?
+>
+> > +
+> > +     ret = brcm_pcie_setup(pcie);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (pcie->msi)
+> > +             brcm_msi_set_regs(pcie->msi);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+> >  {
+> >       brcm_msi_remove(pcie);
+> > @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >
+> >  MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+> >
+> > +static const struct dev_pm_ops brcm_pcie_pm_ops = {
+> > +     .suspend_noirq = brcm_pcie_suspend,
+> > +     .resume_noirq = brcm_pcie_resume,
+>
+> Why do you need interrupts disabled? There's 39 cases of .suspend_noirq
+> and 1352 of .suspend in the tree.
+
+I will test switching this to  suspend_late/resume_early.
+
+Thanks,
+Jim Quinlan
+Broadcom STB
+>
+> Is doing a clk unprepare even safe in .suspend_noirq? IIRC,
+> prepare/unprepare can sleep.
+>
+> > +};
+> > +
+> >  static struct platform_driver brcm_pcie_driver = {
+> >       .probe = brcm_pcie_probe,
+> >       .remove = brcm_pcie_remove,
+> >       .driver = {
+> >               .name = "brcm-pcie",
+> >               .of_match_table = brcm_pcie_match,
+> > +             .pm = &brcm_pcie_pm_ops,
+> >       },
+> >  };
+> >  module_platform_driver(brcm_pcie_driver);
+> > --
+> > 2.17.1
+> >
+
+--000000000000d18b2e05aef8415c
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOxPm7sNHsn0TVdPryi9+T2d8fVC/kUmuEdTYP/Hdu4W4b4T9BcW57fInYrmaJ+uotS6X59rAgMB
+AAGjggHRMIIBzTAOBgNVHQ8BAf8EBAMCBaAwgZ4GCCsGAQUFBwEBBIGRMIGOME0GCCsGAQUFBzAC
+hkFodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3BlcnNvbmFsc2lnbjJzaGEy
+ZzNvY3NwLmNydDA9BggrBgEFBQcwAYYxaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL2dzcGVy
+c29uYWxzaWduMnNoYTJnMzBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYm
+aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBEBgNVHR8E
+PTA7MDmgN6A1hjNodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzcGVyc29uYWxzaWduMnNoYTJn
+My5jcmwwJQYDVR0RBB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYI
+KwYBBQUHAwQwHwYDVR0jBBgwFoAUaXKCYjFnlUSFd5GAxAQ2SZ17C2EwHQYDVR0OBBYEFNYm4GDl
+4WOt3laB3gNKFfYyaM8bMA0GCSqGSIb3DQEBCwUAA4IBAQBD+XYEgpG/OqeRgXAgDF8sa+lQ/00T
+wCP/3nBzwZPblTyThtDE/iaL/YZ5rdwqXwdCnSFh9cMhd/bnA+Eqw89clgTixvz9MdL9Vuo8LACI
+VpHO+sxZ2Cu3bO5lpK+UVCyr21y1zumOICsOuu4MJA5mtkpzBXQiA7b/ogjGxG+5iNjt9FAMX4JP
+V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
+lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
+5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
+di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEICraw6itsuHn
+6lhHt6WdHF4uuSAGCqUTWtcYUa1y3m66MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMDkxMDE2NDI0MlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQA13+DB1ZzkhmZot0HlDhVSWLnzWjmR
+X46KbyZIuXExNnTBl8o57ULJ/lCH4wsrZD63JiJewhep69ueF2em0YifCu/S2SN/ymCHK7dfMwBN
+X/kgothX3iKIMwoinKodpZItFCyKzyXGWS2JndVFtUnYTNZt1UrN4gJJQMLSRzVHz/aC59npQUdX
+Bt/Zt48cmWT37QmA3HorsZvG7c4FX8g0V0IMbJ3EPkIUwWgTKvknGtX3V7mVBqgkYs9s9oLDki2Y
+uojIWa8v0PPMkWiOhahK6spzaTNwvOmsr5/Kc2S8uEk0gIAQVrZVoJImAoDFwJMm+MD11d1nhvBL
+H07Cs6Jr
+--000000000000d18b2e05aef8415c--
