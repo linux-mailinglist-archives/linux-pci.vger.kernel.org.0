@@ -2,158 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77FF5264E8F
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 21:19:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1DB3264EA3
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 21:22:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgIJTSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 15:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43904 "EHLO mail.kernel.org"
+        id S1725933AbgIJTWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 15:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgIJTRv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:17:51 -0400
+        id S1725951AbgIJTUK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:20:10 -0400
 Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE877214F1;
-        Thu, 10 Sep 2020 19:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE1FC21556;
+        Thu, 10 Sep 2020 19:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599765462;
-        bh=mCK9lYBNZqSn4KSAm3WuF8IQaNvd1jqOlTKFBZbL4L0=;
+        s=default; t=1599765607;
+        bh=3KYl1yh6UH9e2txt61rbdqNLAG/ky1vH2dapRjYUp4s=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vFg3UGl7sW9LPijHXHUL4vz/4VrdD8lFwQsBPEeUE0rb65k+7taHWFdym6lxxLku7
-         qWkjO15KlkV/G1nqxCsr+cKt1OePexPt9Ckf8T9wQzj/lmXkHr+5guqRxIWC9kJBqu
-         o/b3mBtIka+bHp7l6yTgntYDI0Ytwq012pTiTFIo=
-Date:   Thu, 10 Sep 2020 14:17:40 -0500
+        b=JKXYo0sT8/sLfscnORirIvdmqCWgT3iYNxMUaxH96Ykng6B6G1dOULJivj4dTegLE
+         rccxJSPv3NhDE009t3G7/Prv5t6DtQjIy3497kVimlTcFJM2sTEd1b//trJQKhPOE2
+         ymERC2eTmFpMpX1eJrkCamj42lYI142Dp1mAD1A8=
+Date:   Thu, 10 Sep 2020 14:20:05 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "refactormyself@gmail.com" <refactormyself@gmail.com>,
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200910191740.GA806068@bjorn-Precision-5520>
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+Message-ID: <20200910192005.GA806683@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0f902d555deb423ef1c79835b23c917be2633162.camel@intel.com>
+In-Reply-To: <fb964c3b-9619-2df3-8661-da90d58a297d@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 06:52:48PM +0000, Derrick, Jonathan wrote:
-> On Thu, 2020-09-10 at 12:38 -0500, Bjorn Helgaas wrote:
-> > On Thu, Sep 10, 2020 at 04:33:39PM +0000, Derrick, Jonathan wrote:
-> > > On Wed, 2020-09-09 at 20:55 -0500, Bjorn Helgaas wrote:
-> > > > On Fri, Aug 21, 2020 at 08:32:20PM +0800, Kai-Heng Feng wrote:
-> > > > > New Intel laptops with VMD cannot reach deeper power saving state,
-> > > > > renders very short battery time.
+On Thu, Sep 10, 2020 at 11:50:07AM -0700, Florian Fainelli wrote:
+> On 9/10/2020 11:46 AM, Bjorn Helgaas wrote:
+> > On Thu, Sep 10, 2020 at 08:21:06AM -0600, Rob Herring wrote:
+> > > On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > 
+> > > > [+cc Mark, Florian, Rob, Scott]
+> > > > 
+> > > > On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+> > > > > Do not use printk in raw_spinlocks,
+> > > > > it will cause BUG: Invalid wait context.
 > > > > > 
-> > > > > As BIOS may not be able to program the config space for devices under
-> > > > > VMD domain, ASPM needs to be programmed manually by software. This is
-> > > > > also the case under Windows.
+> > > > > The trace reported by lockdep follows.
 > > > > > 
-> > > > > The VMD controller itself is a root complex integrated endpoint that
-> > > > > doesn't have ASPM capability, so we can't propagate the ASPM settings to
-> > > > > devices under it. Hence, simply apply ASPM_STATE_ALL to the links under
-> > > > > VMD domain, unsupported states will be cleared out anyway.
+> > > > > [    2.986113] =============================
+> > > > > [    2.986115] [ BUG: Invalid wait context ]
+> > > > > [    2.986116] 5.8.0-rc1+ #11 Not tainted
+> > > > > [    2.986118] -----------------------------
+> > > > > [    2.986120] swapper/0/1 is trying to lock:
+> > > > > [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+> > > > > [    2.986130] other info that might help us debug this:
+> > > > > [    2.986132] context-{5:5}
+> > > > > [    2.986134] 3 locks held by swapper/0/1:
+> > > > > [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+> > > > > [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+> > > > > [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+> > > > > [    2.986161] stack backtrace:
+> > > > > [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+> > > > > [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+> > > > > [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+> > > > > [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+> > > > > [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+> > > > > [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+> > > > > [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+> > > > > [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+> > > > > [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+> > > > > [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+> > > > > [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+> > > > > [    2.986245]         ...
+> > > > > [    2.986250] Call Trace:
+> > > > > [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+> > > > > [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+> > > > > [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+> > > > > [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+> > > > > [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+> > > > > [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+> > > > > [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+> > > > > [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+> > > > > [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+> > > > > [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+> > > > > [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+> > > > > [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+> > > > > [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+> > > > > [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+> > > > > [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+> > > > > [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+> > > > > [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+> > > > > [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+> > > > > [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+> > > > > [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+> > > > > [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+> > > > > [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+> > > > > [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+> > > > > [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+> > > > > [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+> > > > > [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+> > > > > [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+> > > > > [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+> > > > > [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
 > > > > > 
-> > > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > > > Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
 > > > > > ---
-> > > > >  drivers/pci/pcie/aspm.c |  3 ++-
-> > > > >  drivers/pci/quirks.c    | 11 +++++++++++
-> > > > >  include/linux/pci.h     |  2 ++
-> > > > >  3 files changed, 15 insertions(+), 1 deletion(-)
+> > > > >   drivers/pci/access.c | 3 ---
+> > > > >   1 file changed, 3 deletions(-)
 > > > > > 
-> > > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > > > index 253c30cc1967..dcc002dbca19 100644
-> > > > > --- a/drivers/pci/pcie/aspm.c
-> > > > > +++ b/drivers/pci/pcie/aspm.c
-> > > > > @@ -624,7 +624,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
-> > > > >  		aspm_calc_l1ss_info(link, &upreg, &dwreg);
-> > > > >  
-> > > > >  	/* Save default state */
-> > > > > -	link->aspm_default = link->aspm_enabled;
-> > > > > +	link->aspm_default = parent->dev_flags & PCI_DEV_FLAGS_ENABLE_ASPM ?
-> > > > > +			     ASPM_STATE_ALL : link->aspm_enabled;
+> > > > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > > > > index 79c4a2e..b3fc164 100644
+> > > > > --- a/drivers/pci/access.c
+> > > > > +++ b/drivers/pci/access.c
+> > > > > @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+> > > > >         * write happen to have any RW1C (write-one-to-clear) bits set, we
+> > > > >         * just inadvertently cleared something we shouldn't have.
+> > > > >         */
+> > > > > -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> > > > > -                          size, pci_domain_nr(bus), bus->number,
+> > > > > -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
 > > > > 
-> > > > This function is ridiculously complicated already, and I really don't
-> > > > want to make it worse.
+> > > > We just changed this printk (see [1]), but I think we still have this
+> > > > lockdep problem even after Mark's change.  So I guess we need another
+> > > > think about this.
 > > > > 
-> > > > What exactly is the PCIe topology here?  Apparently the VMD controller
-> > > > is a Root Complex Integrated Endpoint, so it's a Type 0 (non-bridge)
-> > > > device.  And it has no Link, hence no Link Capabilities or Control and
-> > > > hence no ASPM-related bits.  Right?
+> > > > Maybe we can print something when registering pci_ops that use
+> > > > pci_generic_config_write32()?
 > > > 
-> > > That's correct. VMD is the Type 0 device providing config/mmio
-> > > apertures to another segment and MSI/X remapping. No link and no ASPM
-> > > related bits.
+> > > That was my suggestion, but as Mark pointed out that doesn't work if
+> > > pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
 > > > 
-> > > Hierarchy is usually something like:
-> > > 
-> > > Segment 0           | VMD segment
-> > > Root Complex -> VMD | Type 0 (RP/Bridge; physical slot) - Type 1
-> > >                     | Type 0 (RP/Bridge; physical slot) - Type 1
-> > > 
-> > > > And the devices under the VMD controller?  I guess they are regular
-> > > > PCIe Endpoints, Switch Ports, etc?  Obviously there's a Link involved
-> > > > somewhere.  Does the VMD controller have some magic, non-architected
-> > > > Port on the downstream side?
-> > > 
-> > > Correct: Type 0 and Type 1 devices, and any number of Switch ports as
-> > > it's usually pinned out to physical slot.
-> > > 
-> > > > Does this patch enable ASPM on this magic Link between VMD and the
-> > > > next device?  Configuring ASPM correctly requires knowledge and knobs
-> > > > from both ends of the Link, and apparently we don't have those for the
-> > > > VMD end.
-> > > 
-> > > VMD itself doesn't have the link to it's domain. It's really just the
-> > > config/mmio aperture and MSI/X remapper. The PCIe link is between the
-> > > Type 0 and Type 1 devices on the VMD domain. So fortunately the VMD
-> > > itself is not the upstream part of the link.
-> > > 
-> > > > Or is it for Links deeper in the hierarchy?  I assume those should
-> > > > just work already, although there might be issues with latency
-> > > > computation, etc., because we may not be able to account for the part
-> > > > of the path above VMD.
-> > > 
-> > > That's correct. This is for the links within the domain itself, such as
-> > > between a type 0 and NVMe device.
+> > > Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+> > > writes to a bridge going to cause problems? For xgene, interestingly,
+> > > with DT _write32 is needed, but for ACPI it is not (only _read32). I
+> > > think xgene is practically dead though a few people still have
+> > > systems, but likely xgene with DT is really dead. The ECAM case was
+> > > for QCom server which is also pretty much dead. SA1100 nano-engine is
+> > > really old and something only a few people have at most (Russell
+> > > King). So ignoring all those, we're left with just loongson and iproc.
+> > > Maybe just remove the warning?
 > > 
-> > OK, great.  So IIUC, below the VMD, there is a Root Port, and the Root
-> > Port has a link to some Endpoint or Switch, e.g., an NVMe device.  And
-> > we just want to enable ASPM on that link.
-> > 
-> > That should not be a special case; we should be able to make this so
-> > it Just Works.  Based on this patch, I guess the reason it doesn't
-> > work is because link->aspm_enabled for that link isn't set correctly.
-> > 
-> > So is this just a consequence of us depending on the initial Link
-> > Control value from BIOS?  That seems like something we shouldn't
-> > really depend on.
-> > 
-> That's the crux. There's always pcie_aspm=force.
-> Something I've wondered is if there is a way we could 'discover' if the
-> link is ASPM safe?
+> > Sigh, removing it sounds like the best option.
+> 
+> Given that we have to go by a list of drivers, how about we add another
+> pci_bus_flags_t flag to indicate 32-bit configuration space accessors are
+> used and key off that bit to issue the warning?
 
-Sure.  Link Capabilities is supposed to tell us that.  If aspm.c
-depends on the BIOS settings, I think that's a design mistake.
+I think that's basically what Mark's patch does: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/enumeration&id=92ff4b49c2a9
 
-But what CONFIG_PCIEASPM_* setting are you using?  The default
-is CONFIG_PCIEASPM_DEFAULT, which literally means "Use the BIOS
-defaults".  If you're using that, and BIOS doesn't enable ASPM below
-VMD, I guess aspm.c will leave it disabled, and that seems like it
-would be the expected behavior.
-
-Does "pcie_aspm=force" really help you?  I don't see any uses of it
-that should apply to your situation.
-
-Bjorn
+But of course we still have to deal with the lockdep problem.
