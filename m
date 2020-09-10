@@ -2,174 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6204E264FCA
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 21:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F41B26503C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 22:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgIJTvl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 15:51:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:18236 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgIJTv2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:51:28 -0400
-IronPort-SDR: qkLun57HLNNqi+/Anvgm9rXJyXHlrP37wHqMzXBf8gnFSInCpY0/2sI5ik0WjyIuQyJ+fr2RiB
- GnAnUyN65a1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="158663666"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="158663666"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 12:51:11 -0700
-IronPort-SDR: KshZsNOabrW+bjPtQiFlN35QYRd5Su/C13BRCGbDmWmo/+w1KoX7lWUQz4D0a0tdZtxg04nMzz
- GeAvUpAhgmFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="334285838"
-Received: from irsmsx601.ger.corp.intel.com ([163.33.146.7])
-  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 12:51:08 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- irsmsx601.ger.corp.intel.com (163.33.146.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 10 Sep 2020 20:51:07 +0100
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Thu, 10 Sep 2020 12:51:06 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "refactormyself@gmail.com" <refactormyself@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlhsPgAgAD1HQCAABIhgIAAFHcAgAAHVwCAAAk+gA==
-Date:   Thu, 10 Sep 2020 19:51:05 +0000
-Message-ID: <4db0fbba635cd1ff5a3c1529d3c7fa08d0729756.camel@intel.com>
-References: <20200910191740.GA806068@bjorn-Precision-5520>
-In-Reply-To: <20200910191740.GA806068@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.213.168.175]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5C36C56CDB11DC4188DCEC7C1C697AEC@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1726997AbgIJUIk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 16:08:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730859AbgIJPAn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 11:00:43 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AEi4YI192630;
+        Thu, 10 Sep 2020 11:00:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=5VXKsHTc2YlCV3PXBFCbmF1hTMHTSBXPxb9CKodxcuc=;
+ b=lJm0/tYKVnLWLps2+W6cAz1a9vrIWBEiP+kwk1q2U+Ibr3tK9hHfmZoMaZ7sHL4AOzFG
+ U8MF73hxTxtHjYbp0vBLEb92NkHzmKnOhS/u21GYrVf3OdLrsa7h7TQHZKyALnhekAjo
+ nKXwusdMDgbyylGqJ1WSDugrkjpm2fcrQ+t0h8aSm/92l+ZV3JK/cliqzGPxJ4jZlzMZ
+ da2I0XmeJAYCxvHw+l7r2ceDyk78W3+gRRTLx1nHTrEG94Euogl/XhE/by94e7BT5SNn
+ 48fbqOVVb7A3D2xgiKi3CzcaUtJ8k2udWAmivgmg0FDa3PkDt/Z/Kpfc5gNYS1a2gcgF zA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fnyv0wgf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 11:00:07 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AEq17J025485;
+        Thu, 10 Sep 2020 11:00:07 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fnyv0wew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 11:00:06 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AEqMb2000343;
+        Thu, 10 Sep 2020 15:00:06 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 33c2a9jbjd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 15:00:05 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AF00At32702764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 15:00:00 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 984DF7806E;
+        Thu, 10 Sep 2020 15:00:02 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0909778064;
+        Thu, 10 Sep 2020 15:00:00 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.211.91.207])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 15:00:00 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v5 0/3] vfio/pci: Restore MMIO access for s390 detached VFs
+Date:   Thu, 10 Sep 2020 10:59:54 -0400
+Message-Id: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 mlxlogscore=864 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100130
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA5LTEwIGF0IDE0OjE3IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBUaHUsIFNlcCAxMCwgMjAyMCBhdCAwNjo1Mjo0OFBNICswMDAwLCBEZXJyaWNrLCBKb25h
-dGhhbiB3cm90ZToNCj4gPiBPbiBUaHUsIDIwMjAtMDktMTAgYXQgMTI6MzggLTA1MDAsIEJqb3Ju
-IEhlbGdhYXMgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIFNlcCAxMCwgMjAyMCBhdCAwNDozMzozOVBN
-ICswMDAwLCBEZXJyaWNrLCBKb25hdGhhbiB3cm90ZToNCj4gPiA+ID4gT24gV2VkLCAyMDIwLTA5
-LTA5IGF0IDIwOjU1IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0KPiA+ID4gPiA+IE9uIEZy
-aSwgQXVnIDIxLCAyMDIwIGF0IDA4OjMyOjIwUE0gKzA4MDAsIEthaS1IZW5nIEZlbmcgd3JvdGU6
-DQo+ID4gPiA+ID4gPiBOZXcgSW50ZWwgbGFwdG9wcyB3aXRoIFZNRCBjYW5ub3QgcmVhY2ggZGVl
-cGVyIHBvd2VyIHNhdmluZyBzdGF0ZSwNCj4gPiA+ID4gPiA+IHJlbmRlcnMgdmVyeSBzaG9ydCBi
-YXR0ZXJ5IHRpbWUuDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEFzIEJJT1MgbWF5IG5vdCBi
-ZSBhYmxlIHRvIHByb2dyYW0gdGhlIGNvbmZpZyBzcGFjZSBmb3IgZGV2aWNlcyB1bmRlcg0KPiA+
-ID4gPiA+ID4gVk1EIGRvbWFpbiwgQVNQTSBuZWVkcyB0byBiZSBwcm9ncmFtbWVkIG1hbnVhbGx5
-IGJ5IHNvZnR3YXJlLiBUaGlzIGlzDQo+ID4gPiA+ID4gPiBhbHNvIHRoZSBjYXNlIHVuZGVyIFdp
-bmRvd3MuDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IFRoZSBWTUQgY29udHJvbGxlciBpdHNl
-bGYgaXMgYSByb290IGNvbXBsZXggaW50ZWdyYXRlZCBlbmRwb2ludCB0aGF0DQo+ID4gPiA+ID4g
-PiBkb2Vzbid0IGhhdmUgQVNQTSBjYXBhYmlsaXR5LCBzbyB3ZSBjYW4ndCBwcm9wYWdhdGUgdGhl
-IEFTUE0gc2V0dGluZ3MgdG8NCj4gPiA+ID4gPiA+IGRldmljZXMgdW5kZXIgaXQuIEhlbmNlLCBz
-aW1wbHkgYXBwbHkgQVNQTV9TVEFURV9BTEwgdG8gdGhlIGxpbmtzIHVuZGVyDQo+ID4gPiA+ID4g
-PiBWTUQgZG9tYWluLCB1bnN1cHBvcnRlZCBzdGF0ZXMgd2lsbCBiZSBjbGVhcmVkIG91dCBhbnl3
-YXkuDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEthaS1IZW5nIEZl
-bmcgPGthaS5oZW5nLmZlbmdAY2Fub25pY2FsLmNvbT4NCj4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4g
-PiA+ID4gIGRyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIHwgIDMgKystDQo+ID4gPiA+ID4gPiAgZHJp
-dmVycy9wY2kvcXVpcmtzLmMgICAgfCAxMSArKysrKysrKysrKw0KPiA+ID4gPiA+ID4gIGluY2x1
-ZGUvbGludXgvcGNpLmggICAgIHwgIDIgKysNCj4gPiA+ID4gPiA+ICAzIGZpbGVzIGNoYW5nZWQs
-IDE1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIGIvZHJpdmVycy9wY2kvcGNp
-ZS9hc3BtLmMNCj4gPiA+ID4gPiA+IGluZGV4IDI1M2MzMGNjMTk2Ny4uZGNjMDAyZGJjYTE5IDEw
-MDY0NA0KPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMNCj4gPiA+ID4g
-PiA+ICsrKyBiL2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jDQo+ID4gPiA+ID4gPiBAQCAtNjI0LDcg
-KzYyNCw4IEBAIHN0YXRpYyB2b2lkIHBjaWVfYXNwbV9jYXBfaW5pdChzdHJ1Y3QgcGNpZV9saW5r
-X3N0YXRlICpsaW5rLCBpbnQgYmxhY2tsaXN0KQ0KPiA+ID4gPiA+ID4gIAkJYXNwbV9jYWxjX2wx
-c3NfaW5mbyhsaW5rLCAmdXByZWcsICZkd3JlZyk7DQo+ID4gPiA+ID4gPiAgDQo+ID4gPiA+ID4g
-PiAgCS8qIFNhdmUgZGVmYXVsdCBzdGF0ZSAqLw0KPiA+ID4gPiA+ID4gLQlsaW5rLT5hc3BtX2Rl
-ZmF1bHQgPSBsaW5rLT5hc3BtX2VuYWJsZWQ7DQo+ID4gPiA+ID4gPiArCWxpbmstPmFzcG1fZGVm
-YXVsdCA9IHBhcmVudC0+ZGV2X2ZsYWdzICYgUENJX0RFVl9GTEFHU19FTkFCTEVfQVNQTSA/DQo+
-ID4gPiA+ID4gPiArCQkJICAgICBBU1BNX1NUQVRFX0FMTCA6IGxpbmstPmFzcG1fZW5hYmxlZDsN
-Cj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUaGlzIGZ1bmN0aW9uIGlzIHJpZGljdWxvdXNseSBjb21w
-bGljYXRlZCBhbHJlYWR5LCBhbmQgSSByZWFsbHkgZG9uJ3QNCj4gPiA+ID4gPiB3YW50IHRvIG1h
-a2UgaXQgd29yc2UuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gV2hhdCBleGFjdGx5IGlzIHRoZSBQ
-Q0llIHRvcG9sb2d5IGhlcmU/ICBBcHBhcmVudGx5IHRoZSBWTUQgY29udHJvbGxlcg0KPiA+ID4g
-PiA+IGlzIGEgUm9vdCBDb21wbGV4IEludGVncmF0ZWQgRW5kcG9pbnQsIHNvIGl0J3MgYSBUeXBl
-IDAgKG5vbi1icmlkZ2UpDQo+ID4gPiA+ID4gZGV2aWNlLiAgQW5kIGl0IGhhcyBubyBMaW5rLCBo
-ZW5jZSBubyBMaW5rIENhcGFiaWxpdGllcyBvciBDb250cm9sIGFuZA0KPiA+ID4gPiA+IGhlbmNl
-IG5vIEFTUE0tcmVsYXRlZCBiaXRzLiAgUmlnaHQ/DQo+ID4gPiA+IA0KPiA+ID4gPiBUaGF0J3Mg
-Y29ycmVjdC4gVk1EIGlzIHRoZSBUeXBlIDAgZGV2aWNlIHByb3ZpZGluZyBjb25maWcvbW1pbw0K
-PiA+ID4gPiBhcGVydHVyZXMgdG8gYW5vdGhlciBzZWdtZW50IGFuZCBNU0kvWCByZW1hcHBpbmcu
-IE5vIGxpbmsgYW5kIG5vIEFTUE0NCj4gPiA+ID4gcmVsYXRlZCBiaXRzLg0KPiA+ID4gPiANCj4g
-PiA+ID4gSGllcmFyY2h5IGlzIHVzdWFsbHkgc29tZXRoaW5nIGxpa2U6DQo+ID4gPiA+IA0KPiA+
-ID4gPiBTZWdtZW50IDAgICAgICAgICAgIHwgVk1EIHNlZ21lbnQNCj4gPiA+ID4gUm9vdCBDb21w
-bGV4IC0+IFZNRCB8IFR5cGUgMCAoUlAvQnJpZGdlOyBwaHlzaWNhbCBzbG90KSAtIFR5cGUgMQ0K
-PiA+ID4gPiAgICAgICAgICAgICAgICAgICAgIHwgVHlwZSAwIChSUC9CcmlkZ2U7IHBoeXNpY2Fs
-IHNsb3QpIC0gVHlwZSAxDQo+ID4gPiA+IA0KPiA+ID4gPiA+IEFuZCB0aGUgZGV2aWNlcyB1bmRl
-ciB0aGUgVk1EIGNvbnRyb2xsZXI/ICBJIGd1ZXNzIHRoZXkgYXJlIHJlZ3VsYXINCj4gPiA+ID4g
-PiBQQ0llIEVuZHBvaW50cywgU3dpdGNoIFBvcnRzLCBldGM/ICBPYnZpb3VzbHkgdGhlcmUncyBh
-IExpbmsgaW52b2x2ZWQNCj4gPiA+ID4gPiBzb21ld2hlcmUuICBEb2VzIHRoZSBWTUQgY29udHJv
-bGxlciBoYXZlIHNvbWUgbWFnaWMsIG5vbi1hcmNoaXRlY3RlZA0KPiA+ID4gPiA+IFBvcnQgb24g
-dGhlIGRvd25zdHJlYW0gc2lkZT8NCj4gPiA+ID4gDQo+ID4gPiA+IENvcnJlY3Q6IFR5cGUgMCBh
-bmQgVHlwZSAxIGRldmljZXMsIGFuZCBhbnkgbnVtYmVyIG9mIFN3aXRjaCBwb3J0cyBhcw0KPiA+
-ID4gPiBpdCdzIHVzdWFsbHkgcGlubmVkIG91dCB0byBwaHlzaWNhbCBzbG90Lg0KPiA+ID4gPiAN
-Cj4gPiA+ID4gPiBEb2VzIHRoaXMgcGF0Y2ggZW5hYmxlIEFTUE0gb24gdGhpcyBtYWdpYyBMaW5r
-IGJldHdlZW4gVk1EIGFuZCB0aGUNCj4gPiA+ID4gPiBuZXh0IGRldmljZT8gIENvbmZpZ3VyaW5n
-IEFTUE0gY29ycmVjdGx5IHJlcXVpcmVzIGtub3dsZWRnZSBhbmQga25vYnMNCj4gPiA+ID4gPiBm
-cm9tIGJvdGggZW5kcyBvZiB0aGUgTGluaywgYW5kIGFwcGFyZW50bHkgd2UgZG9uJ3QgaGF2ZSB0
-aG9zZSBmb3IgdGhlDQo+ID4gPiA+ID4gVk1EIGVuZC4NCj4gPiA+ID4gDQo+ID4gPiA+IFZNRCBp
-dHNlbGYgZG9lc24ndCBoYXZlIHRoZSBsaW5rIHRvIGl0J3MgZG9tYWluLiBJdCdzIHJlYWxseSBq
-dXN0IHRoZQ0KPiA+ID4gPiBjb25maWcvbW1pbyBhcGVydHVyZSBhbmQgTVNJL1ggcmVtYXBwZXIu
-IFRoZSBQQ0llIGxpbmsgaXMgYmV0d2VlbiB0aGUNCj4gPiA+ID4gVHlwZSAwIGFuZCBUeXBlIDEg
-ZGV2aWNlcyBvbiB0aGUgVk1EIGRvbWFpbi4gU28gZm9ydHVuYXRlbHkgdGhlIFZNRA0KPiA+ID4g
-PiBpdHNlbGYgaXMgbm90IHRoZSB1cHN0cmVhbSBwYXJ0IG9mIHRoZSBsaW5rLg0KPiA+ID4gPiAN
-Cj4gPiA+ID4gPiBPciBpcyBpdCBmb3IgTGlua3MgZGVlcGVyIGluIHRoZSBoaWVyYXJjaHk/ICBJ
-IGFzc3VtZSB0aG9zZSBzaG91bGQNCj4gPiA+ID4gPiBqdXN0IHdvcmsgYWxyZWFkeSwgYWx0aG91
-Z2ggdGhlcmUgbWlnaHQgYmUgaXNzdWVzIHdpdGggbGF0ZW5jeQ0KPiA+ID4gPiA+IGNvbXB1dGF0
-aW9uLCBldGMuLCBiZWNhdXNlIHdlIG1heSBub3QgYmUgYWJsZSB0byBhY2NvdW50IGZvciB0aGUg
-cGFydA0KPiA+ID4gPiA+IG9mIHRoZSBwYXRoIGFib3ZlIFZNRC4NCj4gPiA+ID4gDQo+ID4gPiA+
-IFRoYXQncyBjb3JyZWN0LiBUaGlzIGlzIGZvciB0aGUgbGlua3Mgd2l0aGluIHRoZSBkb21haW4g
-aXRzZWxmLCBzdWNoIGFzDQo+ID4gPiA+IGJldHdlZW4gYSB0eXBlIDAgYW5kIE5WTWUgZGV2aWNl
-Lg0KPiA+ID4gDQo+ID4gPiBPSywgZ3JlYXQuICBTbyBJSVVDLCBiZWxvdyB0aGUgVk1ELCB0aGVy
-ZSBpcyBhIFJvb3QgUG9ydCwgYW5kIHRoZSBSb290DQo+ID4gPiBQb3J0IGhhcyBhIGxpbmsgdG8g
-c29tZSBFbmRwb2ludCBvciBTd2l0Y2gsIGUuZy4sIGFuIE5WTWUgZGV2aWNlLiAgQW5kDQo+ID4g
-PiB3ZSBqdXN0IHdhbnQgdG8gZW5hYmxlIEFTUE0gb24gdGhhdCBsaW5rLg0KPiA+ID4gDQo+ID4g
-PiBUaGF0IHNob3VsZCBub3QgYmUgYSBzcGVjaWFsIGNhc2U7IHdlIHNob3VsZCBiZSBhYmxlIHRv
-IG1ha2UgdGhpcyBzbw0KPiA+ID4gaXQgSnVzdCBXb3Jrcy4gIEJhc2VkIG9uIHRoaXMgcGF0Y2gs
-IEkgZ3Vlc3MgdGhlIHJlYXNvbiBpdCBkb2Vzbid0DQo+ID4gPiB3b3JrIGlzIGJlY2F1c2UgbGlu
-ay0+YXNwbV9lbmFibGVkIGZvciB0aGF0IGxpbmsgaXNuJ3Qgc2V0IGNvcnJlY3RseS4NCj4gPiA+
-IA0KPiA+ID4gU28gaXMgdGhpcyBqdXN0IGEgY29uc2VxdWVuY2Ugb2YgdXMgZGVwZW5kaW5nIG9u
-IHRoZSBpbml0aWFsIExpbmsNCj4gPiA+IENvbnRyb2wgdmFsdWUgZnJvbSBCSU9TPyAgVGhhdCBz
-ZWVtcyBsaWtlIHNvbWV0aGluZyB3ZSBzaG91bGRuJ3QNCj4gPiA+IHJlYWxseSBkZXBlbmQgb24u
-DQpTZWVtcyBsaWtlIGEgZ29vZCBpZGVhLCB0aGF0IGl0IHNob3VsZCBpbnN0ZWFkIGJlIHF1aXJr
-ZWQgaWYgQVNQTSBpcw0KZm91bmQgdW51c2FibGUgb24gYSBsaW5rLiBUaG91Z2ggSSdtIG5vdCBh
-d2FyZSBvZiBob3cgbWFueSBwbGF0Zm9ybXMNCndvdWxkIHJlcXVpcmUgYSBxdWlyay4uDQoNCj4g
-PiA+IA0KPiA+IFRoYXQncyB0aGUgY3J1eC4gVGhlcmUncyBhbHdheXMgcGNpZV9hc3BtPWZvcmNl
-Lg0KPiA+IFNvbWV0aGluZyBJJ3ZlIHdvbmRlcmVkIGlzIGlmIHRoZXJlIGlzIGEgd2F5IHdlIGNv
-dWxkICdkaXNjb3ZlcicgaWYgdGhlDQo+ID4gbGluayBpcyBBU1BNIHNhZmU/DQo+IA0KPiBTdXJl
-LiAgTGluayBDYXBhYmlsaXRpZXMgaXMgc3VwcG9zZWQgdG8gdGVsbCB1cyB0aGF0LiAgSWYgYXNw
-bS5jDQo+IGRlcGVuZHMgb24gdGhlIEJJT1Mgc2V0dGluZ3MsIEkgdGhpbmsgdGhhdCdzIGEgZGVz
-aWduIG1pc3Rha2UuDQo+IA0KPiBCdXQgd2hhdCBDT05GSUdfUENJRUFTUE1fKiBzZXR0aW5nIGFy
-ZSB5b3UgdXNpbmc/ICBUaGUgZGVmYXVsdA0KPiBpcyBDT05GSUdfUENJRUFTUE1fREVGQVVMVCwg
-d2hpY2ggbGl0ZXJhbGx5IG1lYW5zICJVc2UgdGhlIEJJT1MNCj4gZGVmYXVsdHMiLiAgSWYgeW91
-J3JlIHVzaW5nIHRoYXQsIGFuZCBCSU9TIGRvZXNuJ3QgZW5hYmxlIEFTUE0gYmVsb3cNCj4gVk1E
-LCBJIGd1ZXNzIGFzcG0uYyB3aWxsIGxlYXZlIGl0IGRpc2FibGVkLCBhbmQgdGhhdCBzZWVtcyBs
-aWtlIGl0DQo+IHdvdWxkIGJlIHRoZSBleHBlY3RlZCBiZWhhdmlvci4NCj4gDQo+IERvZXMgInBj
-aWVfYXNwbT1mb3JjZSIgcmVhbGx5IGhlbHAgeW91PyAgSSBkb24ndCBzZWUgYW55IHVzZXMgb2Yg
-aXQNCj4gdGhhdCBzaG91bGQgYXBwbHkgdG8geW91ciBzaXR1YXRpb24uDQo+IA0KPiBCam9ybg0K
-DQpObyB5b3UncmUgcmlnaHQuIEkgZG9uJ3QgdGhpbmsgd2UgbmVlZCBwY2llX2FzcG09Zm9yY2Us
-IGp1c3QgdGhlIHBvbGljeQ0KY29uZmlndXJhdGlvbi4NCg==
+Changes from v4:
+- Switch from dev_flags to a bitfield
+- Scrubbed improper use of MSE acronym
+- Restored the fixes tag to patch 3 (but the other 2 patches are
+  now pre-reqs -- cc stable 5.8?) 
+
+Since commit abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO
+access on disabled memory") VFIO now rejects guest MMIO access when the
+PCI_COMMAND_MEMORY bit is OFF.  This is however not the case for VFs
+(fixed in commit ebfa440ce38b ("vfio/pci: Fix SR-IOV VF handling with
+MMIO blocking")).  Furthermore, on s390 where we always run with at
+least a bare-metal hypervisor (LPAR) PCI_COMMAND_MEMORY, unlike Device/
+Vendor IDs and BARs, is not emulated when VFs are passed-through to the
+OS independently.
+
+Based upon Bjorn's most recent comment [1], I investigated the notion of
+setting is_virtfn=1 for VFs passed-through to Linux and not linked to a
+parent PF (referred to as a 'detached VF' in my prior post).  However,
+we rapidly run into issues on how to treat an is_virtfn device with no
+linked PF. Further complicating the issue is when you consider the guest
+kernel has a passed-through VF but has CONFIG_PCI_IOV=n as in many 
+locations is_virtfn checking is ifdef'd out altogether and the device is
+assumed to be an independent PCI function.
+
+The decision made by VFIO whether to require or emulate a PCI feature 
+(in this case PCI_COMMAND_MEMORY) is based upon the knowledge it has 
+about the device, including implicit expectations of what/is not
+emulated below VFIO. (ex: is it safe to read vendor/id from config
+space?) -- Our firmware layer attempts similar behavior by emulating
+things such as vendor/id/BAR access - without these an unlinked VF would
+not be usable. But what is or is not emulated by the layer below may be
+different based upon which entity is providing the emulation (vfio,
+LPAR, some other hypervisor)
+
+So, the proposal here aims to fix the immediate issue of s390
+pass-through VFs becoming suddenly unusable by vfio by using a new 
+bit to identify a VF feature that we know is hardwired to 0 for any
+VF (PCI_COMMAND_MEMORY) and de-coupling the need for emulating
+PCI_COMMAND_MEMORY from the is_virtfn flag. The exact scope of is_virtfn
+and physfn for bare-metal vs guest scenarios and identifying what
+features are / are not emulated by the lower-level hypervisors is a much
+bigger discussion independent of this limited proposal.
+
+[1]: https://marc.info/?l=linux-pci&m=159856041930022&w=2
+
+
+
+Matthew Rosato (3):
+  PCI/IOV: Mark VFs as not implementing PCI_COMMAND_MEMORY
+  s390/pci: Mark all VFs as not implementing PCI_COMMAND_MEMORY
+  vfio/pci: Decouple PCI_COMMAND_MEMORY bit checks from is_virtfn
+
+ arch/s390/pci/pci_bus.c            |  5 +++--
+ drivers/pci/iov.c                  |  1 +
+ drivers/vfio/pci/vfio_pci_config.c | 24 ++++++++++++++----------
+ include/linux/pci.h                |  1 +
+ 4 files changed, 19 insertions(+), 12 deletions(-)
+
+-- 
+1.8.3.1
+
