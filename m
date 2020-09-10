@@ -2,119 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A0C0264CF1
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 20:30:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4FA4264D9C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Sep 2020 20:46:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgIJSac (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 14:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgIJS3m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 14:29:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D225DC061573
-        for <linux-pci@vger.kernel.org>; Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id s2so435366pjr.4
-        for <linux-pci@vger.kernel.org>; Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wjAWuNbVBoEPyXn+QBzLMnCnG3b1YEYkoDZS6EgQpPI=;
-        b=UCp+FppW+25RCEWuidrdmD2H7oNwJWAPscXMA2ljdT7Hwfc6emJQQRXJKlonqRXwCr
-         ZNZwT1diexj1oIPFx0vZRCKp8ePiBMfI0fNJK+PDlwitnt2/pXVXXfcmv7xMHDx85MGD
-         jjgpGgVOnGdOdetQ71hUdu1jBGb560fU84u+I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wjAWuNbVBoEPyXn+QBzLMnCnG3b1YEYkoDZS6EgQpPI=;
-        b=mWgLvu+mX/kyRWMe1pje6BFONEiTYJsxyPiqUoEvQhK4G7aE0zmlBX6o5NphBe0RsR
-         pvj7TfwdqZegzibp5sH8EKE1acKm8yrmmsi7XP3Mcbk+ohesfn1nt9dDCZeIPHfYmaZp
-         +vf0CUrdua0foUjVF51OweJnXHEO1e9pXEeI4T8OJtFlZAv4iVN2NRCMXERXJKQUSHJZ
-         O/QMR7MyG/6xngX61EWbLsspySkj+uARGzXci+YSghuXfzX9JkOayM7sIuReL/qyU8C5
-         laN+P8Ak2zQlUCFukVGf27olJK+J9nycbtK6vJQmsw9N1sTPFKexGHRkTVQWvEjsPfFd
-         Q4tg==
-X-Gm-Message-State: AOAM5311CHK9HaH2yPcSj0itdxwKLrRfB4SGAX+clsRrS4sF8CP5OLGd
-        4cjdAVlMnmFIgtsGNJ7nXYekTA==
-X-Google-Smtp-Source: ABdhPJwQHia5IxoItB0v8TFyFBQYaMjt9d9oEodKfnuR8Fqxq3O6+WSooIjqvBiG9AzcqTroMIMGDQ==
-X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr1229702pjb.42.1599762580221;
-        Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z9sm6606733pfk.118.2020.09.10.11.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:29:39 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 11:29:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>, peterz@infradead.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v2 05/28] objtool: Add a pass for generating __mcount_loc
-Message-ID: <202009101127.28B4414D2A@keescook>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-6-samitolvanen@google.com>
- <202009031450.31C71DB@keescook>
- <CABCJKueF1RbpOKHsA8yS_yMujzHi8dzAVz8APwpMJyMTTGhmDA@mail.gmail.com>
- <20200904093104.GH1362448@hirez.programming.kicks-ass.net>
+        id S1726898AbgIJSqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 14:46:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727776AbgIJSqa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:46:30 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F7E20855;
+        Thu, 10 Sep 2020 18:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599763589;
+        bh=QTmKODHpSxd1w6L2B8OTcSIquNN9NgWDbu2etqTLGqI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ffqBtVelkI2tCPaUzIc0G4cqiDiK3G2mcNf7CoNfmP8xKoq0gvQy4kTvTXeM0L79/
+         xLt/jBcmvjwt4VBsDAgq69zzWGNInteuJX983OCeJaE/FfvbH0XPgKnBMIFM/CTt/v
+         0oNDUAB8ui/MQulryQHq6wbQFsmNRZLepDuI/VKo=
+Date:   Thu, 10 Sep 2020 13:46:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+Message-ID: <20200910184627.GA804924@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904093104.GH1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <CAL_JsqKVn+e-eX+=kkSXxdwAmJUahrTdhuBKfVCXVZ8bQJ5MUw@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 11:31:04AM +0200, peterz@infradead.org wrote:
-> On Thu, Sep 03, 2020 at 03:03:30PM -0700, Sami Tolvanen wrote:
-> > On Thu, Sep 3, 2020 at 2:51 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Sep 10, 2020 at 08:21:06AM -0600, Rob Herring wrote:
+> On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Mark, Florian, Rob, Scott]
+> >
+> > On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+> > > Do not use printk in raw_spinlocks,
+> > > it will cause BUG: Invalid wait context.
 > > >
-> > > On Thu, Sep 03, 2020 at 01:30:30PM -0700, Sami Tolvanen wrote:
-> > > > From: Peter Zijlstra <peterz@infradead.org>
-> > > >
-> > > > Add the --mcount option for generating __mcount_loc sections
-> > > > needed for dynamic ftrace. Using this pass requires the kernel to
-> > > > be compiled with -mfentry and CC_USING_NOP_MCOUNT to be defined
-> > > > in Makefile.
-> > > >
-> > > > Link: https://lore.kernel.org/lkml/20200625200235.GQ4781@hirez.programming.kicks-ass.net/
-> > > > Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> > > The trace reported by lockdep follows.
 > > >
-> > > Hmm, I'm not sure why this hasn't gotten picked up yet. Is this expected
-> > > to go through -tip or something else?
-> > 
-> > Note that I picked up this patch from Peter's original email, to which
-> > I included a link in the commit message, but it wasn't officially
-> > submitted as a patch. However, the previous discussion seems to have
-> > died, so I included the patch in this series, as it cleanly solves the
-> > problem of whitelisting non-call references to __fentry__. I was
-> > hoping for Peter and Steven to comment on how they prefer to proceed
-> > here.
+> > > [    2.986113] =============================
+> > > [    2.986115] [ BUG: Invalid wait context ]
+> > > [    2.986116] 5.8.0-rc1+ #11 Not tainted
+> > > [    2.986118] -----------------------------
+> > > [    2.986120] swapper/0/1 is trying to lock:
+> > > [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+> > > [    2.986130] other info that might help us debug this:
+> > > [    2.986132] context-{5:5}
+> > > [    2.986134] 3 locks held by swapper/0/1:
+> > > [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+> > > [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+> > > [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+> > > [    2.986161] stack backtrace:
+> > > [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+> > > [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+> > > [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+> > > [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+> > > [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+> > > [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+> > > [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+> > > [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+> > > [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+> > > [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+> > > [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+> > > [    2.986245]         ...
+> > > [    2.986250] Call Trace:
+> > > [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+> > > [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+> > > [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+> > > [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+> > > [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+> > > [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+> > > [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+> > > [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+> > > [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+> > > [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+> > > [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+> > > [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+> > > [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+> > > [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+> > > [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+> > > [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+> > > [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+> > > [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+> > > [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+> > > [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+> > > [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+> > > [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+> > > [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+> > > [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+> > > [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+> > > [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+> > > [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+> > > [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+> > > [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+> > >
+> > > Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+> > > ---
+> > >  drivers/pci/access.c | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > > index 79c4a2e..b3fc164 100644
+> > > --- a/drivers/pci/access.c
+> > > +++ b/drivers/pci/access.c
+> > > @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+> > >        * write happen to have any RW1C (write-one-to-clear) bits set, we
+> > >        * just inadvertently cleared something we shouldn't have.
+> > >        */
+> > > -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> > > -                          size, pci_domain_nr(bus), bus->number,
+> > > -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> >
+> > We just changed this printk (see [1]), but I think we still have this
+> > lockdep problem even after Mark's change.  So I guess we need another
+> > think about this.
+> >
+> > Maybe we can print something when registering pci_ops that use
+> > pci_generic_config_write32()?
 > 
-> Right; so I'm obviously fine with this patch and I suppose I can pick it
-> (and the next) into tip/objtool/core, provided Steve is okay with this
-> approach.
+> That was my suggestion, but as Mark pointed out that doesn't work if
+> pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
+> 
+> Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+> writes to a bridge going to cause problems? For xgene, interestingly,
+> with DT _write32 is needed, but for ACPI it is not (only _read32). I
+> think xgene is practically dead though a few people still have
+> systems, but likely xgene with DT is really dead. The ECAM case was
+> for QCom server which is also pretty much dead. SA1100 nano-engine is
+> really old and something only a few people have at most (Russell
+> King). So ignoring all those, we're left with just loongson and iproc.
+> Maybe just remove the warning?
 
-Hello Steven-of-the-future-after-4000-emails![1] ;)
-
-Getting your Ack on this would be very welcome, and would unblock a
-portion of this series.
-
-Thanks! :)
-
-[1] https://twitter.com/srostedt/status/1303697650592755712
-
--- 
-Kees Cook
+Sigh, removing it sounds like the best option.
