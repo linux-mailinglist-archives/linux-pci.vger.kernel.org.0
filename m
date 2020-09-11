@@ -2,218 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDC39265C92
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 11:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 240F3265D00
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 11:52:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725730AbgIKJeD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Sep 2020 05:34:03 -0400
-Received: from mx.socionext.com ([202.248.49.38]:30101 "EHLO mx.socionext.com"
+        id S1725777AbgIKJv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Sep 2020 05:51:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:58466 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgIKJdw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:33:52 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 11 Sep 2020 18:33:50 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id BA5C71800EE;
-        Fri, 11 Sep 2020 18:33:50 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 11 Sep 2020 18:33:50 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 5E7AD1A0507;
-        Fri, 11 Sep 2020 18:33:50 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v7 3/3] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
-Date:   Fri, 11 Sep 2020 18:33:34 +0900
-Message-Id: <1599816814-16515-4-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1725554AbgIKJvz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:51:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 783B8106F;
+        Fri, 11 Sep 2020 02:51:54 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41E733F68F;
+        Fri, 11 Sep 2020 02:51:53 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 10:51:47 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     George Cherian <gcherian@marvell.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>
+Subject: Re: [PATCH] arm64: PCI: fix memleak when calling pci_iomap/unmap()
+Message-ID: <20200911095147.GA5900@e121166-lin.cambridge.arm.com>
+References: <20200907104546.GC26513@gaia>
+ <BYAPR18MB267959E6FE4BEF38D0A4611EC5280@BYAPR18MB2679.namprd18.prod.outlook.com>
+ <20200907112118.GD26513@gaia>
+ <20200909113613.GB6384@e121166-lin.cambridge.arm.com>
+ <20200909135400.GB13047@gaia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909135400.GB13047@gaia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch adds misc interrupt handler to detect and invoke PME/AER event.
+On Wed, Sep 09, 2020 at 02:54:01PM +0100, Catalin Marinas wrote:
+> On Wed, Sep 09, 2020 at 12:36:13PM +0100, Lorenzo Pieralisi wrote:
+> > On Mon, Sep 07, 2020 at 12:21:19PM +0100, Catalin Marinas wrote:
+> > > On Mon, Sep 07, 2020 at 10:51:21AM +0000, George Cherian wrote:
+> > > > Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > > On Sat, Sep 05, 2020 at 10:48:11AM +0800, Yang Yingliang wrote:
+> > > > > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c index
+> > > > > > 1006ed2d7c604..ddfa1c53def48 100644
+> > > > > > --- a/arch/arm64/kernel/pci.c
+> > > > > > +++ b/arch/arm64/kernel/pci.c
+> > > > > > @@ -217,4 +217,9 @@ void pcibios_remove_bus(struct pci_bus *bus)
+> > > > > >  	acpi_pci_remove_bus(bus);
+> > > > > >  }
+> > > > > >
+> > > > > > +void pci_iounmap(struct pci_dev *dev, void __iomem *addr) {
+> > > > > > +	iounmap(addr);
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL(pci_iounmap);
+> > > > > 
+> > > > > So, what's wrong with the generic pci_iounmap() implementation?
+> > > > > Shouldn't it call iounmap() already?
+> > > > 
+> > > > Since ARM64 selects CONFIG_GENERIC_PCI_IOMAP and not
+> > > > CONFIG_GENERIC_IOMAP,  the pci_iounmap function is reduced to a NULL
+> > > > function. Due to this, even the managed release variants or even the explicit
+> > > > pci_iounmap calls doesn't really remove the mappings leading to leak.
+> > > 
+> > > Ah, I missed the fact that pci_iounmap() depends on a different
+> > > config option.
+> > > 
+> > > > https://lkml.org/lkml/2020/8/20/28
+> > > 
+> > > So is this going to be fixed in the generic code? That would be my
+> > > preference.
+> > > 
+> > > A problem with the iounmap() in the proposed patch is that the region
+> > > may have been an I/O port, so we could end up unmapping the I/O space.
+> > 
+> > It boils down to finding a way to match a VA to a BAR resource so that
+> > we can mirror on pci_iounmap() what's done in pci_iomap_range() (ie
+> > check BAR resource flags to define how/if to unmap them), that would do
+> > as a generic pci_iounmap() implementation.
+> 
+> In the !CONFIG_GENERIC_IOMAP case (arm64), for IORESOURCE_IO,
+> pci_iomap_range() calls __pci_ioport_map() which, with the default
+> ioport_map(), it ends up with a simple PCI_IOBASE + (port &
+> IO_SPACE_LIMIT).
+> 
+> pci_iounmap() could check whether the pointer is in the PCI_IOBASE -
+> PCI_IOBASE+IO_SPACE_LIMIT range before calling ioremap(), unless the
+> arch code re-defined ioport_map. Something like below (not even
+> compiled):
 
-In UniPhier PCIe controller, PME/AER signals are assigned to the same
-signal as MSI by the internal logic. These signals should be detected by
-the internal register, however, DWC MSI handler can't handle these signals.
+For everyone's information, I shall post a fix when I manage to
+make the kbuild bot happy on all arches.
 
-DWC MSI handler calls .msi_host_isr() callback function, that detects
-PME/AER signals with the internal register and invokes the interrupt
-with PME/AER vIRQ numbers.
+Lorenzo
 
-These vIRQ numbers is obtained from portdrv in uniphier_add_pcie_port()
-function.
-
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/controller/dwc/pcie-uniphier.c | 77 +++++++++++++++++++++++++-----
- 1 file changed, 66 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index 4817626..237537a 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -21,6 +21,7 @@
- #include <linux/reset.h>
- 
- #include "pcie-designware.h"
-+#include "../../pcie/portdrv.h"
- 
- #define PCL_PINCTRL0			0x002c
- #define PCL_PERST_PLDN_REGEN		BIT(12)
-@@ -44,7 +45,9 @@
- #define PCL_SYS_AUX_PWR_DET		BIT(8)
- 
- #define PCL_RCV_INT			0x8108
-+#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
- #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
-+#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
- #define PCL_CFG_BW_MGT_STATUS		BIT(4)
- #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
- #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
-@@ -68,6 +71,8 @@ struct uniphier_pcie_priv {
- 	struct reset_control *rst;
- 	struct phy *phy;
- 	struct irq_domain *legacy_irq_domain;
-+	int aer_irq;
-+	int pme_irq;
- };
- 
- #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
-@@ -167,7 +172,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
- 
- static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
- {
--	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
-+	u32 val;
-+
-+	val = PCL_RCV_INT_ALL_ENABLE;
-+	if (pci_msi_enabled())
-+		val |= PCL_RCV_INT_ALL_INT_MASK;
-+	else
-+		val |= PCL_RCV_INT_ALL_MSI_MASK;
-+
-+	writel(val, priv->base + PCL_RCV_INT);
- 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
- }
- 
-@@ -231,28 +244,52 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
- 	.map = uniphier_pcie_intx_map,
- };
- 
--static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
- {
--	struct pcie_port *pp = irq_desc_get_handler_data(desc);
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
--	unsigned long reg;
--	u32 val, bit, virq;
-+	u32 val;
- 
--	/* INT for debug */
- 	val = readl(priv->base + PCL_RCV_INT);
- 
- 	if (val & PCL_CFG_BW_MGT_STATUS)
- 		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
-+
- 	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
- 		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
--	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
--		dev_dbg(pci->dev, "Root Error\n");
--	if (val & PCL_CFG_PME_MSI_STATUS)
--		dev_dbg(pci->dev, "PME Interrupt\n");
-+
-+	if (is_msi) {
-+		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
-+			dev_dbg(pci->dev, "Root Error Status\n");
-+			if (priv->aer_irq)
-+				generic_handle_irq(priv->aer_irq);
-+		}
-+
-+		if (val & PCL_CFG_PME_MSI_STATUS) {
-+			dev_dbg(pci->dev, "PME Interrupt\n");
-+			if (priv->pme_irq)
-+				generic_handle_irq(priv->pme_irq);
-+		}
-+	}
- 
- 	writel(val, priv->base + PCL_RCV_INT);
-+}
-+
-+static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
-+{
-+	uniphier_pcie_misc_isr(pp, true);
-+}
-+
-+static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+{
-+	struct pcie_port *pp = irq_desc_get_handler_data(desc);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long reg;
-+	u32 val, bit, virq;
-+
-+	uniphier_pcie_misc_isr(pp, false);
- 
- 	/* INTx */
- 	chained_irq_enter(chip, desc);
-@@ -329,6 +366,7 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
- 
- static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
- 	.host_init = uniphier_pcie_host_init,
-+	.msi_host_isr = uniphier_pcie_msi_host_isr,
- };
- 
- static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
-@@ -337,6 +375,7 @@ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
- 	struct dw_pcie *pci = &priv->pci;
- 	struct pcie_port *pp = &pci->pp;
- 	struct device *dev = &pdev->dev;
-+	struct pci_dev *pcidev;
- 	int ret;
- 
- 	pp->ops = &uniphier_pcie_host_ops;
-@@ -353,6 +392,22 @@ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
- 		return ret;
- 	}
- 
-+	/* irq for PME */
-+	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
-+		priv->pme_irq =
-+			pcie_port_service_get_irq(pcidev, PCIE_PORT_SERVICE_PME);
-+		if (priv->pme_irq)
-+			break;
-+	}
-+
-+	/* irq for AER */
-+	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
-+		priv->aer_irq =
-+			pcie_port_service_get_irq(pcidev, PCIE_PORT_SERVICE_AER);
-+		if (priv->aer_irq)
-+			break;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.7.4
-
+> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+> index dabf8cb7203b..fada420c9cd6 100644
+> --- a/include/asm-generic/io.h
+> +++ b/include/asm-generic/io.h
+> @@ -919,6 +919,11 @@ extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
+>  #define pci_iounmap pci_iounmap
+>  static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
+>  {
+> +#ifndef ARCH_HAS_IOPORT_MAP
+> +	if (p >= PCI_IOBASE && p < PCI_IOBASE + IO_SPACE_LIMIT)
+> +		return;
+> +	iounmap(p);
+> +#endif
+>  }
+>  #endif
+>  #endif /* CONFIG_GENERIC_IOMAP */
+> @@ -1009,7 +1014,9 @@ static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
+>  
+>  #ifdef CONFIG_HAS_IOPORT_MAP
+>  #ifndef CONFIG_GENERIC_IOMAP
+> -#ifndef ioport_map
+> +#ifdef ioport_map
+> +#define ARCH_HAS_IOPORT_MAP
+> +#else
+>  #define ioport_map ioport_map
+>  static inline void __iomem *ioport_map(unsigned long port, unsigned int nr)
+>  {
+> 
+> -- 
+> Catalin
