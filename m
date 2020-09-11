@@ -2,111 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3611B26561C
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 02:39:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23CC32656C2
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 03:55:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725290AbgIKAjs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Sep 2020 20:39:48 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:33210 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgIKAjs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Sep 2020 20:39:48 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 08B0dHsf000993
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 10 Sep 2020 19:39:21 -0500
-Message-ID: <3110e00a1f4df7b7359ba4f2b7f86a35aa47405e.camel@kernel.crashing.org>
-Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, will@kernel.org,
-        catalin.marinas@arm.com, Leon Romanovsky <leon@kernel.org>
-Date:   Fri, 11 Sep 2020 10:39:16 +1000
-In-Reply-To: <20200910232938.GJ904879@nvidia.com>
-References: <20200902142922.xc4x6m33unkzewuh@amazon.com>
-         <20200902164702.GA30611@e121166-lin.cambridge.arm.com>
-         <edae1eeb0da578d941cfa5ad550eb0a0eda5f98e.camel@kernel.crashing.org>
-         <20200903110844.GB11284@e121166-lin.cambridge.arm.com>
-         <28d333afc73bd854390f8c39691a735040ba5b39.camel@kernel.crashing.org>
-         <20200910094600.GA22840@e121166-lin.cambridge.arm.com>
-         <20200910123758.GC904879@nvidia.com>
-         <20200910151721.GA25809@e121166-lin.cambridge.arm.com>
-         <20200910171033.GG904879@nvidia.com>
-         <44acc22377958a57c738f5139c5b5df2841c2544.camel@kernel.crashing.org>
-         <20200910232938.GJ904879@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
+        id S1725298AbgIKBy6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Sep 2020 21:54:58 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34130 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725294AbgIKBy5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Sep 2020 21:54:57 -0400
+Received: from [10.130.0.155] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxeMXg2Fpf1moUAA--.4782S3;
+        Fri, 11 Sep 2020 09:54:41 +0800 (CST)
+Subject: Re: [RFC PATCH] PCI/portdrv: No need to call pci_disable_device()
+ during shutdown
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20200910202106.GA811000@bjorn-Precision-5520>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <b8f0d64d-8a29-aa4f-c764-397e87527600@loongson.cn>
+Date:   Fri, 11 Sep 2020 09:54:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <20200910202106.GA811000@bjorn-Precision-5520>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxeMXg2Fpf1moUAA--.4782S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFWkXFy7KF4fAF17ZF48Crg_yoW5Ww1kpF
+        WUGanIkFy0qry7Xr4ayFyUZFyYqFsFyry09r1xGw47ursFvr1kJFW3JF1Y9r95XrWkWFy7
+        Jr97JFyfuFZ5JFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+        WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+        Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
+        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
+        zVAYIcxG8wCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
+        73UjIFyTuYvjfUOgAwDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2020-09-10 at 20:29 -0300, Jason Gunthorpe wrote:
-> > Probably, at least on powerpc you will as well, that's the only way to
-> > get write combine.
-> 
-> If I remove the PROT_READ in the user space mmap will it block it?
+On 09/11/2020 04:21 AM, Bjorn Helgaas wrote:
+> [+cc Huacai]
+>
+> On Thu, Sep 10, 2020 at 02:41:39PM -0500, Bjorn Helgaas wrote:
+>> On Sat, Sep 05, 2020 at 04:33:26PM +0800, Tiezhu Yang wrote:
+>>> After commit 745be2e700cd ("PCIe: portdrv: call pci_disable_device
+>>> during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
+>>> services during shutdown"), it also calls pci_disable_device() during
+>>> shutdown, this seems unnecessary, so just remove it.
+>> I would like to get rid of the portdrv completely by folding its
+>> functionality into the PCI core itself, so there would be no portdrv
+>> probe or remove.
+>>
+>> Does this solve a problem?
 
-No. powerpc at least doesn't have write-only mappings.
+Yes, sometimes it can not shutdown or reboot normally with 
+pci_disable_device().
 
-> Read TLPs are not harmful but I suspect they would cause an
-> undesirable random performance anomaly.
-
-I suspect in practice you wont get them esp. if the code has barriers
-but ... it's allowed by the architecture.
-
-> > > Does it/could it "combine writes"?
-> > 
-> > I assume so for ARM, definitely for powerpc.
-> 
-> Various IBM PPC chips I know work, we do test that.
-> 
-> > > > That's why I looped you in - that's what worries me about
-> > > > "enabling"
-> > > > arch_can_pci_mmap_wc() on arm64. If we enable it and we have perf
-> > > > regressions that's not OK.
-> > > > 
-> > > > Or we *can* enable arch_can_pci_mmap_wc() but force the mellanox
-> > > > driver (or more broadly all drivers following this message push
-> > > > semantics) to use "something else" for WC detection.
-> > > 
-> > > arch_can_pci_mmap_wc() really only controls the sysfs resource file
-> > > and it seems very unclear who in userspace uses that these days.
-> > 
-> > dpdk under some circumstances afaik.
-> 
-> And something gross for DMA then? Not sure dpdk is useful without
-> DMA. Why not use CONFIG_VFIO_NOIOMMU for such a non-secure thing?
-
-Clint, can you elaborate on the use case ?
-
-> > > vfio is now the right way to do that stuff. I don't see an obvious
-> > > way to get WC memory in VFIO though...
-> > 
-> > Which would be a performance issue on a number of things I suppose...
-> 
-> Almost nothing uses pci_iomap_wc(), so I'd be surpried if userspace
-> DPDK was an important user when an in-kernel driver for the same HW
-> doesn't use it?
-
-Hard to know how uses those files out there but I don't like arm not
-providing what pretty much all relevant archs do provide since the
-semantics afaik aren't that different.
-
-Yes, "write combine" isn't a good name.... The goal is to get WC but it
-comes with the whole package on several archs. We don't even have a
-reasonnable definition of the semantics of readl/writel on a WC mapping
-(hint: on powerpc the barriers in them will prevent WC even on a WC
-mapping) nor of what barriers might work  and how on such a mapping.
-
-I tried a while ago and ... ugh.
-
-Cheers,
-Ben.
+>> If not, I'm inclined to just leave it
+>> as-is for now.  But if it fixes something, we should do the fix, of
+>> course.
+> This looks awfully similar to [1], so I guess we *do* need to do
+> something here.  I'll respond there since it has more details.
+>
+> [1] https://lore.kernel.org/r/1596268180-9114-1-git-send-email-chenhc@lemote.com
+>
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> ---
+>>>   drivers/pci/pcie/portdrv_core.c |  1 -
+>>>   drivers/pci/pcie/portdrv_pci.c  | 14 +++++++++++++-
+>>>   2 files changed, 13 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+>>> index 50a9522..1991aca 100644
+>>> --- a/drivers/pci/pcie/portdrv_core.c
+>>> +++ b/drivers/pci/pcie/portdrv_core.c
+>>> @@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
+>>>   {
+>>>   	device_for_each_child(&dev->dev, NULL, remove_iter);
+>>>   	pci_free_irq_vectors(dev);
+>>> -	pci_disable_device(dev);
+>>>   }
+>>>   
+>>>   /**
+>>> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+>>> index 3a3ce40..cab37a8 100644
+>>> --- a/drivers/pci/pcie/portdrv_pci.c
+>>> +++ b/drivers/pci/pcie/portdrv_pci.c
+>>> @@ -143,6 +143,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>>>   	}
+>>>   
+>>>   	pcie_port_device_remove(dev);
+>>> +	pci_disable_device(dev);
+>>> +}
+>>> +
+>>> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+>>> +{
+>>> +	if (pci_bridge_d3_possible(dev)) {
+>>> +		pm_runtime_forbid(&dev->dev);
+>>> +		pm_runtime_get_noresume(&dev->dev);
+>>> +		pm_runtime_dont_use_autosuspend(&dev->dev);
+>>> +	}
+>>> +
+>>> +	pcie_port_device_remove(dev);
+>>>   }
+>>>   
+>>>   static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
+>>> @@ -211,7 +223,7 @@ static struct pci_driver pcie_portdriver = {
+>>>   
+>>>   	.probe		= pcie_portdrv_probe,
+>>>   	.remove		= pcie_portdrv_remove,
+>>> -	.shutdown	= pcie_portdrv_remove,
+>>> +	.shutdown	= pcie_portdrv_shutdown,
+>>>   
+>>>   	.err_handler	= &pcie_portdrv_err_handler,
+>>>   
+>>> -- 
+>>> 2.1.0
+>>>
 
