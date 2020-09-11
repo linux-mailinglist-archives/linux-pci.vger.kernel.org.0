@@ -2,352 +2,280 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D720826762B
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Sep 2020 00:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81FCB267676
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Sep 2020 01:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725870AbgIKWua (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Sep 2020 18:50:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37130 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbgIKWu2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Sep 2020 18:50:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id y13so12778944iow.4;
-        Fri, 11 Sep 2020 15:50:26 -0700 (PDT)
+        id S1725880AbgIKXQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Sep 2020 19:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbgIKXQH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Sep 2020 19:16:07 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD3DC061757
+        for <linux-pci@vger.kernel.org>; Fri, 11 Sep 2020 16:16:07 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id v15so7598036pgh.6
+        for <linux-pci@vger.kernel.org>; Fri, 11 Sep 2020 16:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zJRunWZTz5mT2mX6pknfWLOXDlKwI3diMMXxkFcYofQ=;
+        b=HZ89aGDm9VVQd5dkS9mj4yohPfMr+KO6evJg76I9VceCPQrD3OR6CNGFt0Cn524ZAb
+         kRBFr8fdeHcT3EayNmF2c1ywStN88PmjJmUvx9ZkHHn1/Zv/2xVJwlKHBZF/VLXevuIF
+         5FPHq0h5nY4ybFnMHDoQTUjcOCbN5EiGb1oOf2dahZ7citdegCnJ1w2ig3tKx3s4FRMk
+         tz+Mj/USUQ0k/EmID1W3lkeODsJQU1H5x6bb/yDMQx/zFp2p1wW0wa6NU9cLKhStsIo6
+         L7ZpMlCO7Hjwf1lsGxDQl0Ezim2iulbGJNJO5MMRzZpwvAlsxAF7K8VKFlDlxu/tJGWe
+         QSWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X7iH2gL3TGegBIDLIKlWXcEbx8NEf9M8ur9gTzrs3rc=;
-        b=Tgpzd6xGczKMf7nhdbi+lbpqnD03goI4CjTBrS9XG9fhLT2gdUvrQm4k1Dc8HKvNg6
-         AK167CdXDfxjEi4HKW3qlJn0wW5WFzsf8NcqtPa7EuJoT9P2fcW1ci0FDXWYkgUGbEhn
-         uBXPFvuL3Ni+xr4qoX6J8CSR/3VAtWSWifnt2hmB+hARSltljWtriZepsZn2ou3CLtxC
-         x1Eg2EU7f/PRYUpwpcNFX8YJjS7KG457jPdHxdD9lPb5hqHoF4q7JRaG62wdI7Cq9Tj+
-         i0XUi5DDbnECKt+b/7Dt8iOBLhCpo7OVEDcyE1rLRHPZz/B9JuFJ3I+U97+UXGe3837T
-         SFXA==
-X-Gm-Message-State: AOAM5318Fff6sZVpqUeMRUWihqdXp3wbOssIQF26zQOxd6iKAzetq7/z
-        AdQ+hjgx1yj+uhleQ8BGgg==
-X-Google-Smtp-Source: ABdhPJyLgpUwEqdBoCEc1Uj+Z/n0aBHakYt3NgITVkM42PZL4627E/gOVbzkvk3u8Qh9QBXlEaZBkA==
-X-Received: by 2002:a6b:da16:: with SMTP id x22mr3487643iob.33.1599864625891;
-        Fri, 11 Sep 2020 15:50:25 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t10sm1900423iog.49.2020.09.11.15.50.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 15:50:25 -0700 (PDT)
-Received: (nullmailer pid 2966093 invoked by uid 1000);
-        Fri, 11 Sep 2020 22:50:24 -0000
-Date:   Fri, 11 Sep 2020 16:50:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        yong.wu@mediatek.com, Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: pci: mediatek: Modified the Device
- tree bindings
-Message-ID: <20200911225024.GB2960430@bogus>
-References: <20200910061115.909-1-chuanjia.liu@mediatek.com>
- <20200910061115.909-2-chuanjia.liu@mediatek.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zJRunWZTz5mT2mX6pknfWLOXDlKwI3diMMXxkFcYofQ=;
+        b=iA8NkWVkNGT2Zr9FudYpTu898dMbXlQLlymqD2ZkgzNyfmXqkZWJYFjv4K9WF/9EEz
+         QN8J+cSeO9SGxdhoCCbpyauSYIwBWkqRqs2VLAdoGdNCHwu3wJO114VWRoKGhiAfrOt9
+         MYlhwsqnmuZ1FfJs7NlpmkfpvOxxE4hjeXF1w4iywgdvc5MOXZUt4Hwx/W2ijtnFxkQQ
+         SLU5Ma0L9fiDDLK0Tr04vsiy51E/boXe1bk5IbaiNzN4HBPYz2ntC7n63kMI8pOWw9mF
+         +q7vf6ZwccwIjjW8FcDC2Wchods5kKyzeO+Q5hyeeQHPdbvP3uuGtx5LfIEI6fNNhfBY
+         XjNw==
+X-Gm-Message-State: AOAM530EYDdSKiLNqzT5NL1sxFD3GfTIzhBd13KO4grAX6VMunJnhZrg
+        6ahil4aZOpGB2iCfuWdcnlXP/w==
+X-Google-Smtp-Source: ABdhPJw/eSEQcc0h4iHQQ5YgmO2y2XkwCrCTMwknxKhR5oLn/4DxYLpIAH8xcig3bYfQyg4k4KspXg==
+X-Received: by 2002:aa7:800c:: with SMTP id j12mr3997297pfi.130.1599866166465;
+        Fri, 11 Sep 2020 16:16:06 -0700 (PDT)
+Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id f4sm3022078pfj.147.2020.09.11.16.16.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Sep 2020 16:16:05 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, sathyanarayanan.kuppuswamy@linux.intel.com,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] PCI/RCEC: Add pcie_walk_rcec() to walk
+ associated RCiEPs
+Date:   Fri, 11 Sep 2020 16:16:03 -0700
+X-Mailer: MailMate (1.13.2r5673)
+Message-ID: <44BE3112-64C2-4A64-B9A6-6DD466DC594D@intel.com>
+In-Reply-To: <20200905022308.GA379055@bjorn-Precision-5520>
+References: <20200905022308.GA379055@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910061115.909-2-chuanjia.liu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 02:11:12PM +0800, Chuanjia Liu wrote:
-> Split the PCIe node and add pciecfg node to fix MSI issue.
-> 
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
-> ---
->  .../bindings/pci/mediatek-pcie-cfg.yaml       |  38 +++++
->  .../devicetree/bindings/pci/mediatek-pcie.txt | 144 +++++++++++-------
->  2 files changed, 129 insertions(+), 53 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
-> new file mode 100644
-> index 000000000000..4d2835ab4858
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/mediatek-pcie-cfg.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Mediatek PCIECFG controller
-> +
-> +maintainers:
-> +  - Chuanjia Liu <chuanjia.liu@mediatek.com>
-> +  - Jianjun Wang <jianjun.wang@mediatek.com>
-> +
-> +description: |
-> +  The MediaTek PCIECFG controller controls some feature about
-> +  LTSSM, ASPM and so on.
-> +
-> +properties:
-> +  compatible:
-> +      items:
-> +        - enum:
-> +            - mediatek,mt7622-pciecfg
-> +            - mediatek,mt7629-pciecfg
-> +        - const: syscon
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    pciecfg: pciecfg@1a140000 {
-> +        compatible = "mediatek,mt7622-pciecfg", "syscon";
-> +        reg = <0 0x1a140000 0 0x1000>;
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> index 7468d666763a..31e261933685 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> @@ -8,7 +8,7 @@ Required properties:
->  	"mediatek,mt7623-pcie"
->  	"mediatek,mt7629-pcie"
->  - device_type: Must be "pci"
-> -- reg: Base addresses and lengths of the PCIe subsys and root ports.
-> +- reg: Base addresses and lengths of the root ports.
->  - reg-names: Names of the above areas to use during resource lookup.
->  - #address-cells: Address representation for root ports (must be 3)
->  - #size-cells: Size representation for root ports (must be 2)
-> @@ -19,10 +19,10 @@ Required properties:
->     - sys_ckN :transaction layer and data link layer clock
->    Required entries for MT2701/MT7623:
->     - free_ck :for reference clock of PCIe subsys
-> -  Required entries for MT2712/MT7622:
-> +  Required entries for MT2712/MT7622/MT7629:
->     - ahb_ckN :AHB slave interface operating clock for CSR access and RC
->  	      initiated MMIO access
-> -  Required entries for MT7622:
-> +  Required entries for MT7622/MT7629:
->     - axi_ckN :application layer MMIO channel operating clock
->     - aux_ckN :pe2_mac_bridge and pe2_mac_core operating clock when
->  	      pcie_mac_ck/pcie_pipe_ck is turned off
-> @@ -47,10 +47,13 @@ Required properties for MT7623/MT2701:
->  - reset-names: Must be "pcie-rst0", "pcie-rst1", "pcie-rstN".. based on the
->    number of root ports.
->  
-> -Required properties for MT2712/MT7622:
-> +Required properties for MT2712/MT7622/MT7629:
->  -interrupts: A list of interrupt outputs of the controller, must have one
->  	     entry for each PCIe port
->  
-> +Required properties for MT7622/MT7629:
-> +- mediatek,pcie-subsys: Should be a phandle of the pciecfg node.
-> +
+On 4 Sep 2020, at 19:23, Bjorn Helgaas wrote:
 
-You don't need this. You can search for the node by compatible.
+> On Fri, Sep 04, 2020 at 10:18:30PM +0000, Kelley, Sean V wrote:
+>> Hi Bjorn,
+>>
+>> Quick question below...
+>>
+>> On Wed, 2020-09-02 at 14:55 -0700, Sean V Kelley wrote:
+>>> Hi Bjorn,
+>>>
+>>> On Wed, 2020-09-02 at 14:00 -0500, Bjorn Helgaas wrote:
+>>>> On Wed, Aug 12, 2020 at 09:46:53AM -0700, Sean V Kelley wrote:
+>>>>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>>>>
+>>>>> When an RCEC device signals error(s) to a CPU core, the CPU core
+>>>>> needs to walk all the RCiEPs associated with that RCEC to check
+>>>>> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+>>>>> associated with the RCEC device.
+>>>>>
+>>>>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+>>>>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>>>>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>>> ---
+>>>>>  drivers/pci/pci.h       |  4 +++
+>>>>>  drivers/pci/pcie/rcec.c | 76
+>>>>> +++++++++++++++++++++++++++++++++++++++++
+>>>>>  2 files changed, 80 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>>>> index bd25e6047b54..8bd7528d6977 100644
+>>>>> --- a/drivers/pci/pci.h
+>>>>> +++ b/drivers/pci/pci.h
+>>>>> @@ -473,9 +473,13 @@ static inline void pci_dpc_init(struct
+>>>>> pci_dev
+>>>>> *pdev) {}
+>>>>>  #ifdef CONFIG_PCIEPORTBUS
+>>>>>  void pci_rcec_init(struct pci_dev *dev);
+>>>>>  void pci_rcec_exit(struct pci_dev *dev);
+>>>>> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct
+>>>>> pci_dev
+>>>>> *, void *),
+>>>>> +		    void *userdata);
+>>>>>  #else
+>>>>>  static inline void pci_rcec_init(struct pci_dev *dev) {}
+>>>>>  static inline void pci_rcec_exit(struct pci_dev *dev) {}
+>>>>> +static inline void pcie_walk_rcec(struct pci_dev *rcec, int
+>>>>> (*cb)(struct pci_dev *, void *),
+>>>>> +				  void *userdata) {}
+>>>>>  #endif
+>>>>>
+>>>>>  #ifdef CONFIG_PCI_ATS
+>>>>> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+>>>>> index 519ae086ff41..405f92fcdf7f 100644
+>>>>> --- a/drivers/pci/pcie/rcec.c
+>>>>> +++ b/drivers/pci/pcie/rcec.c
+>>>>> @@ -17,6 +17,82 @@
+>>>>>
+>>>>>  #include "../pci.h"
+>>>>>
+>>>>> +static int pcie_walk_rciep_devfn(struct pci_bus *bus, int
+>>>>> (*cb)(struct pci_dev *, void *),
+>>>>> +				 void *userdata, const unsigned long
+>>>>> bitmap)
+>>>>> +{
+>>>>> +	unsigned int devn, fn;
+>>>>> +	struct pci_dev *dev;
+>>>>> +	int retval;
+>>>>> +
+>>>>> +	for_each_set_bit(devn, &bitmap, 32) {
+>>>>> +		for (fn = 0; fn < 8; fn++) {
+>>>>> +			dev = pci_get_slot(bus, PCI_DEVFN(devn, fn));
+>>>>
+>>>> Wow, this is a lot of churning to call pci_get_slot() 256 times per
+>>>> bus for the "associated bus numbers" case where we pass a bitmap of
+>>>> 0xffffffff.  They didn't really make it easy for software when they
+>>>> added the next/last bus number thing.
+>>>>
+>>>> Just thinking out loud here.  What if we could set dev->rcec during
+>>>> enumeration, and then use that to build pcie_walk_rcec()?
+>>>
+>>> I think follow what you are doing.
+>>>
+>>> As we enumerate an RCEC, use the time to discover RCiEPs and
+>>> associate
+>>> each RCiEP's dev->rcec. Although BIOS already set the bitmap for 
+>>> this
+>>> specific RCEC, it's more efficient to simply discover the devices
+>>> through the bus walk and verify each one found against the bitmap.
+>>>
+>>> Further, while we can be certain that an RCiEP found with a matching
+>>> device no. in a bitmap for an associated RCEC is correct, we cannot
+>>> be
+>>> certain that any RCiEP found on another bus range is correct unless
+>>> we
+>>> verify the bus is within that next/last bus range.
+>>>
+>>> Finally, that's where find_rcec() callback for rcec_assoc_rciep()
+>>> does
+>>> double duty by also checking on the "on-a-separate-bus" case 
+>>> captured
+>>> potentially by find_rcec() during an RCiEP's bus walk.
+>>>
+>>>
+>>>>   bool rcec_assoc_rciep(rcec, rciep)
+>>>>   {
+>>>>     if (rcec->bus == rciep->bus)
+>>>>       return (rcec->bitmap contains rciep->devfn);
+>>>>
+>>>>     return (rcec->next/last contains rciep->bus);
+>>>>   }
+>>>>
+>>>>   link_rcec(dev, data)
+>>>>   {
+>>>>     struct pci_dev *rcec = data;
+>>>>
+>>>>     if ((dev is RCiEP) && rcec_assoc_rciep(rcec, dev))
+>>>>       dev->rcec = rcec;
+>>>>   }
+>>>>
+>>>>   find_rcec(dev, data)
+>>>>   {
+>>>>     struct pci_dev *rciep = data;
+>>>>
+>>>>     if ((dev is RCEC) && rcec_assoc_rciep(dev, rciep))
+>>>>       rciep->rcec = dev;
+>>>>   }
+>>>>
+>>>>   pci_setup_device
+>>>>     ...
+>>
+>> I just noticed your use of pci_setup_device(). Are you suggesting
+>> moving the call to pci_rcec_init() out of pci_init_capabilities() and
+>> move it into pci_setup_device()?  If so, would pci_rcec_exit() still
+>> remain in pci_release_capabilities()?
+>>
+>> I'm just wondering if it could just remain in 
+>> pci_init_capabilities().
+>
+> Yeah, I didn't mean in pci_setup_device() specifically, just somewhere
+> in the callchain of pci_setup_device().  But you're right, it probably
+> would make more sense in pci_init_capabilities(), so I *should* have
+> said pci_scan_single_device() to be a little less specific.
+>
+> Bjorn
 
-Plus it doesn't match the example.
+I’ve done some experimenting with this approach, and I think there may 
+be a problem of just walking the busses during enumeration 
+pci_init_capabilities(). One problem is where one has an RCEC on a root 
+bus: 6a(00.4) and an RCiEP on another root bus: 6b(00.0).  They will 
+never find each other in this approach through a normal pci_bus_walk() 
+call using their respective root_bus.
 
->  In addition, the device tree node must have sub-nodes describing each
->  PCIe port interface, having the following mandatory properties:
->  
-> @@ -143,56 +146,73 @@ Examples for MT7623:
->  
->  Examples for MT2712:
->  
-> -	pcie: pcie@11700000 {
-> +	pcie1: pcie@112ff000 {
->  		compatible = "mediatek,mt2712-pcie";
->  		device_type = "pci";
-> -		reg = <0 0x11700000 0 0x1000>,
-> -		      <0 0x112ff000 0 0x1000>;
-> -		reg-names = "port0", "port1";
-> +		reg = <0 0x112ff000 0 0x1000>;
-> +		reg-names = "port1";
->  		#address-cells = <3>;
->  		#size-cells = <2>;
-> -		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
-> -			 <&topckgen CLK_TOP_PE2_MAC_P1_SEL>,
-> -			 <&pericfg CLK_PERI_PCIE0>,
-> +		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "pcie_irq";
-> +		clocks = <&topckgen CLK_TOP_PE2_MAC_P1_SEL>,
->  			 <&pericfg CLK_PERI_PCIE1>;
-> -		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1";
-> -		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>;
-> -		phy-names = "pcie-phy0", "pcie-phy1";
-> +		clock-names = "sys_ck1", "ahb_ck1";
-> +		phys = <&u3port1 PHY_TYPE_PCIE>;
-> +		phy-names = "pcie-phy1";
->  		bus-range = <0x00 0xff>;
-> -		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
-> +		ranges = <0x82000000 0 0x11400000  0x0 0x11400000  0 0x300000>;
-> +		status = "disabled";
->  
-> -		pcie0: pcie@0,0 {
-> -			reg = <0x0000 0 0 0 0>;
-> +		slot1: pcie@1,0 {
-> +			reg = <0x0800 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
->  			#interrupt-cells = <1>;
->  			ranges;
->  			interrupt-map-mask = <0 0 0 7>;
-> -			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-> -					<0 0 0 2 &pcie_intc0 1>,
-> -					<0 0 0 3 &pcie_intc0 2>,
-> -					<0 0 0 4 &pcie_intc0 3>;
-> -			pcie_intc0: interrupt-controller {
-> +			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-> +					<0 0 0 2 &pcie_intc1 1>,
-> +					<0 0 0 3 &pcie_intc1 2>,
-> +					<0 0 0 4 &pcie_intc1 3>;
-> +			pcie_intc1: interrupt-controller {
->  				interrupt-controller;
->  				#address-cells = <0>;
->  				#interrupt-cells = <1>;
->  			};
->  		};
-> +	};
->  
-> -		pcie1: pcie@1,0 {
-> -			reg = <0x0800 0 0 0 0>;
-> +	pcie0: pcie@11700000 {
-> +		compatible = "mediatek,mt2712-pcie";
-> +		device_type = "pci";
-> +		reg = <0 0x11700000 0 0x1000>;
-> +		reg-names = "port0";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "pcie_irq";
-> +		clocks = <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
-> +			 <&pericfg CLK_PERI_PCIE0>;
-> +		clock-names = "sys_ck0", "ahb_ck0";
-> +		phys = <&u3port0 PHY_TYPE_PCIE>;
-> +		phy-names = "pcie-phy0";
-> +		bus-range = <0x00 0xff>;
-> +		ranges = <0x82000000 0 0x20000000 0x0 0x20000000 0 0x10000000>;
-> +		status = "disabled";
-> +
-> +		slot0: pcie@0,0 {
-> +			reg = <0x0000 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
->  			#interrupt-cells = <1>;
->  			ranges;
->  			interrupt-map-mask = <0 0 0 7>;
-> -			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-> -					<0 0 0 2 &pcie_intc1 1>,
-> -					<0 0 0 3 &pcie_intc1 2>,
-> -					<0 0 0 4 &pcie_intc1 3>;
-> -			pcie_intc1: interrupt-controller {
-> +			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-> +					<0 0 0 2 &pcie_intc0 1>,
-> +					<0 0 0 3 &pcie_intc0 2>,
-> +					<0 0 0 4 &pcie_intc0 3>;
-> +			pcie_intc0: interrupt-controller {
->  				interrupt-controller;
->  				#address-cells = <0>;
->  				#interrupt-cells = <1>;
-> @@ -202,39 +222,31 @@ Examples for MT2712:
->  
->  Examples for MT7622:
->  
-> -	pcie: pcie@1a140000 {
-> +	pcie0: pcie@1a143000 {
->  		compatible = "mediatek,mt7622-pcie";
->  		device_type = "pci";
-> -		reg = <0 0x1a140000 0 0x1000>,
-> -		      <0 0x1a143000 0 0x1000>,
-> -		      <0 0x1a145000 0 0x1000>;
-> -		reg-names = "subsys", "port0", "port1";
-> +		reg = <0 0x1a143000 0 0x1000>;
-> +		reg-names = "port0";
-> +		mediatek,pcie-cfg = <&pciecfg>;
->  		#address-cells = <3>;
->  		#size-cells = <2>;
-> -		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>,
-> -			     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "pcie_irq";
->  		clocks = <&pciesys CLK_PCIE_P0_MAC_EN>,
-> -			 <&pciesys CLK_PCIE_P1_MAC_EN>,
->  			 <&pciesys CLK_PCIE_P0_AHB_EN>,
-> -			 <&pciesys CLK_PCIE_P1_AHB_EN>,
->  			 <&pciesys CLK_PCIE_P0_AUX_EN>,
-> -			 <&pciesys CLK_PCIE_P1_AUX_EN>,
->  			 <&pciesys CLK_PCIE_P0_AXI_EN>,
-> -			 <&pciesys CLK_PCIE_P1_AXI_EN>,
->  			 <&pciesys CLK_PCIE_P0_OBFF_EN>,
-> -			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
-> -			 <&pciesys CLK_PCIE_P0_PIPE_EN>,
-> -			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
-> -		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1",
-> -			      "aux_ck0", "aux_ck1", "axi_ck0", "axi_ck1",
-> -			      "obff_ck0", "obff_ck1", "pipe_ck0", "pipe_ck1";
-> -		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>;
-> -		phy-names = "pcie-phy0", "pcie-phy1";
-> +			 <&pciesys CLK_PCIE_P0_PIPE_EN>;
-> +		clock-names = "sys_ck0", "ahb_ck0", "aux_ck0",
-> +			      "axi_ck0", "obff_ck0", "pipe_ck0";
-> +
->  		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
->  		bus-range = <0x00 0xff>;
-> -		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
-> +		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x8000000>;
-> +		status = "disabled";
->  
-> -		pcie0: pcie@0,0 {
-> +		slot0: pcie@0,0 {
->  			reg = <0x0000 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> @@ -251,8 +263,34 @@ Examples for MT7622:
->  				#interrupt-cells = <1>;
->  			};
->  		};
-> +	};
-> +
-> +	pcie1: pcie@1a145000 {
-> +		compatible = "mediatek,mt7622-pcie";
-> +		device_type = "pci";
-> +		reg = <0 0x1a145000 0 0x1000>;
-> +		reg-names = "port1";
-> +		mediatek,pcie-cfg = <&pciecfg>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "pcie_irq";
-> +		clocks = <&pciesys CLK_PCIE_P1_MAC_EN>,
-> +			 /* designer has connect RC1 with p0_ahb clock */
-> +			 <&pciesys CLK_PCIE_P0_AHB_EN>,
-> +			 <&pciesys CLK_PCIE_P1_AUX_EN>,
-> +			 <&pciesys CLK_PCIE_P1_AXI_EN>,
-> +			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
-> +			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
-> +		clock-names = "sys_ck1", "ahb_ck1", "aux_ck1",
-> +			      "axi_ck1", "obff_ck1", "pipe_ck1";
-> +
-> +		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
-> +		bus-range = <0x00 0xff>;
-> +		ranges = <0x82000000 0 0x28000000  0x0 0x28000000  0 0x8000000>;
-> +		status = "disabled";
->  
-> -		pcie1: pcie@1,0 {
-> +		slot1: pcie@1,0 {
->  			reg = <0x0800 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> -- 
-> 2.18.0
+>  +-[0000:6b]-+-00.0
+>  |           +-00.1
+>  |           +-00.2
+>  |           \-00.3
+>  +-[0000:6a]-+-00.0
+>  |           +-00.1
+>  |           +-00.2
+>  |           \-00.4
+
+While having a lot of slot calls per bus is unfortunate, unless I’m 
+mistaken you would have to walk every peer root_bus with your RCiEP in 
+this example until you hit on the right RCEC, unless of course you have 
+a bitmap associated RCEC on dev->bus.
+
+Conversely, if you are enumerating the above RCEC at 6a(00.4) and you 
+attempt to link_rcec() through calls to pci_walk_bus(), the walk will 
+still be limited to 6a and below; never encountering 6b(00.0).  So you 
+would then need an additional walk for each of the associated bus 
+ranges, excluding the same bus as the RCEC.
+
+pci_init_capabilities()
+…
+pci_init_rcec() // Cached
+
+if (RCEC)
+  Walk the dev->bus for bitmap associated RCiEP
+  Walk all associated bus ranges for RCiEP
+
+else if (RCiEP)
+  Walk the dev->bus for bitmap associated RCEC
+  Walk all peer root_bus for RCEC, confirm if own dev->bus falls within 
+discovered RCEC associated ranges
+
+The other problem here is temporal. I’m wondering if we may be trying 
+to find associated devices at the pci_init_capabilities() stage prior to 
+them being fully enumerated, i.e., RCEC has not been cached but we are 
+searching with a future associated RCiEP.  So one could encounter a race 
+condition where one is checking on an RCiEP whose associated RCEC has 
+not been enumerated yet.
+
+So let’s say one throws out RCiEP entirely and just relies upon RCEC 
+to find the associations because one knows that an encountered RCEC (in 
+pci_init_capabilities()) has already been cached. In that case you end 
+up with the original implementation being done with this patch series…
+
+if (RCEC)
+  Walk the dev->bus for bitmap associated RCiEP
+  Walk all associated bus ranges for RCiEP
+
+Perhaps I’ve muddled some things here but it doesn’t look like the 
+twain will meet unless I cover multiple peer root_bus and even then you 
+may have an issue because the devices don’t yet fully exist from the 
+perspective of the OS.
+
+Thanks,
+
+Sean
