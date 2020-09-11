@@ -2,79 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F212A26590E
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 08:03:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 074D5265949
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 08:25:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725616AbgIKGDW convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 11 Sep 2020 02:03:22 -0400
-Received: from mail.flex.co.jp ([211.8.82.123]:49456 "EHLO www.flex.co.jp"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725554AbgIKGDV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Sep 2020 02:03:21 -0400
-Received: from live.com.mx ([103.89.89.225])
-        (authenticated bits=0)
-        by www.flex.co.jp (MTA) with ESMTP id 0898ndw1009386
-        for <linux-pci@vger.kernel.org>; Wed, 9 Sep 2020 17:49:55 +0900
-Reply-To: powerinthewords@yahoo.co.jp
-From:   piyin.crhe@live.com.mx
-To:     linux-pci@vger.kernel.org
-Subject: =?utf-8?Q?=5BSpam=5D?=
- We are still waiting for your email...
-Date:   09 Sep 2020 01:49:53 -0700
-Message-ID: <20200909014953.0EB59086A84AAE7D@live.com.mx>
+        id S1725613AbgIKGZR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Sep 2020 02:25:17 -0400
+Received: from verein.lst.de ([213.95.11.211]:35640 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgIKGZQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Sep 2020 02:25:16 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9D35867373; Fri, 11 Sep 2020 08:25:12 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 08:25:12 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-sh@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] ARM/dma-mapping: move various helpers from
+ dma-mapping.h to dma-direct.h
+Message-ID: <20200911062512.GC21597@lst.de>
+References: <20200910054038.324517-1-hch@lst.de> <20200910054038.324517-2-hch@lst.de> <42497691-ec93-1e93-d3e5-e841eaf8247a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-SpamInfo: FortiGuard-AntiSpam ip, connection black ip 103.89.89.225
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42497691-ec93-1e93-d3e5-e841eaf8247a@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Beneficiary,
+On Thu, Sep 10, 2020 at 07:02:23PM +0100, Robin Murphy wrote:
+> On 2020-09-10 06:40, Christoph Hellwig wrote:
+>> Move the helpers to translate to and from direct mapping DMA addresses
+>> to dma-direct.h.  This not only is the most logical place, but the new
+>> placement also avoids dependency loops with pending commits.
+>
+> For the straightforward move as it should be,
+>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>
+> However I do wonder how much of this could be cleaned up further...
+>> +
+>> +#ifdef __arch_page_to_dma
+>> +#error Please update to __arch_pfn_to_dma
+>> +#endif
+>
+> This must be long, long dead by now.
 
-We wish to inform you that a power of attorney was forwarded to 
-our office  by two gentlemen regarding your unclaimed fund of $56 
-Million Dollar. One of them is an American citizen named Mr. 
-Robert Porter and the other is Mr. Wilhelm Berg a Swedish 
-citizen.We have be waiting for you to contact us since last year.
+Yeah.  I had a patch to remove this which lead me into the rabbit
+hole your described later.  A few patches in I decided to give up
+and just do the trivial move.  But it probably makes sense to pick
+up at least the two trivial dead code removal patches..
 
-The document claims these gentlemen to be your authorized 
-representatives, and the power of attorney states that you are 
-already deceased.  It further states that your death was due to 
-lung cancer, with your date of death being January 27th, 2020.
+>> +static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+>> +{
+>> +	unsigned long pfn = __bus_to_pfn(addr);
+>> +
+>> +	if (dev)
+>> +		pfn += dev->dma_pfn_offset;
+>> +
+>> +	return pfn;
+>> +}
+>
+> These are only overridden for OMAP1510, and it looks like it wouldn't take 
+> much for the platform code or ohci-omap driver to set up a generic DMA 
+> offset for the relevant device.
 
-They have now submitted a new account to replace the receiving 
-account that was in the original claim of funds. These funds have 
-remained unclaimed for quite some time and the need for 
-resolution is pressing. Below is the new account they have 
-submitted.
+I sent a ping to the omap maintainers earlier this week to ask for that :)
 
-Account Name's :  Robert Porter /Wilhelm Berg
-Account: 5007-29 438 66
-IBAN-nr: SE4150000000050072943866
-Bic-kod: ESSESESS
-Skandinaviska Enskilda Banken. (SEB :)
-SWEDEN .
+>> +static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+>> +{
+>> +	if (dev)
+>> +		return pfn_to_dma(dev, virt_to_pfn(addr));
+>> +
+>> +	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+>> +}
+>
+> And this is only used for some debug prints in dmabounce.
+>
+> Similarly the __bus_to_*()/__*_to_bus() calls themselves only appear 
+> significant to mach-footbridge any more, and could probably also be evolved 
+> into regular DMA offsets now that all API calls must have a non-NULL 
+> device. I think I might come back and take a closer look at all this at 
+> some point in future... :)
 
-In the event that you are in fact still alive, we ask that you 
-confirm your existence by responding to this email. You are to 
-view this as a matter requiring immediate attention and response. 
-We have 48 hr monitoring of all activities within Federal Reserve 
-Bank.On this regard,you will be directed to any of our office 
-center that you will go in person to sign the final papers,
-because we have our payment center in Europe,Asia,America and 
-Canada.You will go to any of the office that you will be directed 
-to with the copy of the documents of your fund.
-
-We have contacted the bank in the Sweden asking them to wait for 
-further directives from Federal Reserve Bank, prior to 
-authorizing any withdrawals in any form.  Our request is based 
-entirely on our attempt to verify that you are in fact deceased, 
-before money is wrongly disbursed.
-
-Your in Service,
-
-Robert Steven Kaplan
-2200 N Pearl St, Dallas, TX 75201, United States
+Yes,  pretty much all of this should eventually go away.  I just don't
+want to bock the ranges work on all kinds of random arm cleanups..
