@@ -2,99 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E95DE265D68
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 12:09:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1EEA265D6B
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Sep 2020 12:10:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgIKKJp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Sep 2020 06:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41020 "EHLO
+        id S1725848AbgIKKKO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Sep 2020 06:10:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgIKKJl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Sep 2020 06:09:41 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376E6C061573
-        for <linux-pci@vger.kernel.org>; Fri, 11 Sep 2020 03:09:41 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x123so6946785pfc.7
-        for <linux-pci@vger.kernel.org>; Fri, 11 Sep 2020 03:09:41 -0700 (PDT)
+        with ESMTP id S1725810AbgIKKKM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Sep 2020 06:10:12 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8342C061573
+        for <linux-pci@vger.kernel.org>; Fri, 11 Sep 2020 03:10:12 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m5so6292020pgj.9
+        for <linux-pci@vger.kernel.org>; Fri, 11 Sep 2020 03:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=FcvpBmr8Z+8Tm8UV5OexJQFxmZi0SdfMHn6zncSMmF0=;
-        b=UJpd7AM0KqI1M7Gy6GTTClwpeTIL1skcd4nGQdcPNmdLfQIknijAN4+2Sl3gdoueXb
-         hldHFtKBXH2XvSXcCzc+LOPGGGNcvJ8ILmrF4Wl8ZmvX+C7kFta+1/NSTuUKXG7Lj9uh
-         rUTX7GdolQEWx21aroJ/R53pcnrbDw5nNHPqIWDUlPYhUT6kcGFHltoPkZo2uvT1HDSM
-         ZrEoD+6wmTZUgu1hTKNVzAYF6V5yR1jRC5BpnoEOaV04Q3qVM/TUL2T2lIE0aAhmcOIo
-         IjkawEEIKI00GxGD6Ed+ZBPy6TV8uVPXV1IOBoppGllmXl/HB43FsZ3hun6wluWswEeO
-         TU6g==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=hPzTv5PUyGLkSW8UuDMFR+2RpNiuulU2ieyTRUk4mis=;
+        b=bn2mA6YmBJrZ6b99UWkrHSDusKUyorix+rxCD6fpOvgkIu7iLxuzAionKqz3grNi76
+         YxP5IX83GGeTtlkbruGgkeTG8BihF1LV+Trhgwjww8gkh8w+4yzjVeNk9chp8J2/QZ7m
+         Jyd8tQQV1amxqnHrNFTnxuXXS8Pp4Cb2HiKkh91NPOJ4jBjYu751ipQd8T8nsemZM0gu
+         oZ5+e/3DC63ypvC9Q8T3fWQZd8/o9GR3zKRtvBBQ4SGWRcRRy4bGP0AZhFTzYQgvrFiB
+         JH/ONdkEN7zJsv1tiM+R6aQgUYoH3HhM+z9+9wlQzZCIQMjIUC9gZTwnP8f4VNRMvlch
+         9asQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=FcvpBmr8Z+8Tm8UV5OexJQFxmZi0SdfMHn6zncSMmF0=;
-        b=XRYSE9WvG888KTsLGplCrQ1qg3oNa25e1mQ4GyKF97Xhc7aMFvnsGgjl9PO7YpiTDU
-         WAF4mHfbjpi9FYIULbAZZmPAhQEYMF49UaXWz/0WDY6mO2O6l7c6xBqmIJfvpD6E2ZLY
-         dq5LaO7pENdab2kQ8KiCix6cA4/ZPTk4FEKcojl3apHL6qSKNKKH9jF0+plXJ5u54JTO
-         1NwVaFh2AL6A4ESeYSfClNoM1AYgvGlcZzothqr08n1tnzcGmuVLa3xcSXjcIOdCmg86
-         CIi5+I8XCZRV2eZB4SUEhbUuZFniQSCo+Mh7XkoAgEldMVMy/bm2JUsqe7tEx+P2R99F
-         XSwA==
-X-Gm-Message-State: AOAM530O5Y4Arja7BywIUOZaJ32uBJ7KiezrX4Mo8w4qV2G8hF4Wxv6h
-        DZrQnPq9co07qsCNPQ2dlDk=
-X-Google-Smtp-Source: ABdhPJz1AO/W9rmbXnIn5gb12BPr79G6RnJLebpbod+imemPVoqIMdG/yXtb4Z/OLHtpOu0nxUOAQg==
-X-Received: by 2002:a63:7b16:: with SMTP id w22mr1110906pgc.17.1599818980801;
-        Fri, 11 Sep 2020 03:09:40 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references;
+        bh=hPzTv5PUyGLkSW8UuDMFR+2RpNiuulU2ieyTRUk4mis=;
+        b=JPyOKbMjuj8kLJvastutiO/fqbPAq3q8V2bGoaliNsdZMlWialMCY7ntJt/zYNhONX
+         xpnQ1SSR2uM5JE9Hzwjx65nFp8X7WHwApTU2cFdqIsDTvacoqkk4cKh9tu8y+jPZoIE5
+         gidG/0cLIh391Z3RX0R+TwhNGotW/yHCGWHHqG5mhOZfYpBYzXZaTba/3gF8x+5HE7KE
+         i5q+/kf6Mt3ol+FgOQXY9Z7krZ2HjxbNcknwDLN7q6QdhiTEVn7dN81ker4oHRNQGVp4
+         gh1GIxVQvrObS+h/j/dGlumbW0VUhRXzeBrDM1aTQ4DtlZa/NbbhEVo4WNemGlSbsbgE
+         WENA==
+X-Gm-Message-State: AOAM530bIFA5xfI+WJ1W2OKzwiboyatRKbf+08jcD8TUitPh9uSK94bW
+        6Q4ZPh6eScDjk0Ifp34IVgU=
+X-Google-Smtp-Source: ABdhPJw2oObVlk+gCEpO5YoiX9ZD4bFKHF46cwsectJp6mg/xUg+2D7/qVX6sHF76NglNFO3/36hzQ==
+X-Received: by 2002:a63:500e:: with SMTP id e14mr1171432pgb.36.1599819012305;
+        Fri, 11 Sep 2020 03:10:12 -0700 (PDT)
 Received: from software.domain.org ([45.77.13.216])
-        by smtp.gmail.com with ESMTPSA id t24sm1883387pfq.37.2020.09.11.03.09.37
+        by smtp.gmail.com with ESMTPSA id t24sm1883387pfq.37.2020.09.11.03.10.08
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Sep 2020 03:09:40 -0700 (PDT)
+        Fri, 11 Sep 2020 03:10:11 -0700 (PDT)
 From:   Huacai Chen <chenhc@lemote.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Alex Deucher <alexander.deucher@amd.com>,
         linux-pci@vger.kernel.org, Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>
-Subject: [PATCH 1/2] PCI/portdrv: Remove the .remove() method in pcie_portdriver
-Date:   Fri, 11 Sep 2020 18:09:36 +0800
-Message-Id: <1599818977-25425-1-git-send-email-chenhc@lemote.com>
+        Huacai Chen <chenhc@lemote.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH 2/2] PCI/portdrv: Don't disable pci device during shutdown
+Date:   Fri, 11 Sep 2020 18:09:37 +0800
+Message-Id: <1599818977-25425-2-git-send-email-chenhc@lemote.com>
 X-Mailer: git-send-email 2.7.0
+In-Reply-To: <1599818977-25425-1-git-send-email-chenhc@lemote.com>
+References: <1599818977-25425-1-git-send-email-chenhc@lemote.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As Bjorn Helgaas said, portdrv can only be built statically (not as a
-module), so the .remove() method in pcie_portdriver is useless. So just
-remove it.
+Don't call pci_disable_device() in pcie_port_device_remove() during the
+portdrv's shutdown. This can avoid some poweroff/reboot failures.
 
-BTW, rename pcie_portdrv_remove() to pcie_portdrv_shutdown() since it
-is only used by the .shutdown() method now.
+The poweroff/reboot failures can easily reproduce on Loongson platforms.
+I think this is not a Loongson-specific problem, instead, is a problem
+related to some specific PCI hosts. On some x86 platforms, radeon/amdgpu
+devices can cause the same problem, and commit faefba95c9e8ca3a523831c2e
+("drm/amdgpu: just suspend the hw on pci shutdown") can resolve it.
+
+Radeon driver is more difficult than amdgpu due to its confusing symbol
+names, and I have maintained an out-of-tree patch for a long time [1].
+Recently, we found more and more devices can cause the same problem, and
+it is very difficult to modify all problematic drivers as radeon/amdgpu
+does. So, I think modify the PCIe port driver is a simple and effective
+way.
+
+[1] https://github.com/chenhuacai/linux/commit/6612f9c1fc290d42a14618ce9a7d03014d8ebb1a
 
 Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/pci/pcie/portdrv_pci.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/pci/pcie/portdrv_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 3a3ce40..4e0af0f 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -134,7 +134,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
- 	return 0;
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 50a9522..1991aca 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
+ {
+ 	device_for_each_child(&dev->dev, NULL, remove_iter);
+ 	pci_free_irq_vectors(dev);
+-	pci_disable_device(dev);
  }
  
--static void pcie_portdrv_remove(struct pci_dev *dev)
-+static void pcie_portdrv_shutdown(struct pci_dev *dev)
- {
- 	if (pci_bridge_d3_possible(dev)) {
- 		pm_runtime_forbid(&dev->dev);
-@@ -210,8 +210,7 @@ static struct pci_driver pcie_portdriver = {
- 	.id_table	= &port_pci_ids[0],
- 
- 	.probe		= pcie_portdrv_probe,
--	.remove		= pcie_portdrv_remove,
--	.shutdown	= pcie_portdrv_remove,
-+	.shutdown	= pcie_portdrv_shutdown,
- 
- 	.err_handler	= &pcie_portdrv_err_handler,
- 
+ /**
 -- 
 2.7.0
 
