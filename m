@@ -2,96 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E8026794C
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Sep 2020 11:55:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE08267B55
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Sep 2020 18:12:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgILJzq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Sep 2020 05:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgILJzh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Sep 2020 05:55:37 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B24C061573
-        for <linux-pci@vger.kernel.org>; Sat, 12 Sep 2020 02:55:36 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u21so14511526ljl.6
-        for <linux-pci@vger.kernel.org>; Sat, 12 Sep 2020 02:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=aMesFhmVbR+c4p4QwbnBuM8cm0iXxSZWs2VaPWAL9Qw=;
-        b=lfvwSD7ocqHRSCYJ1kDu5al2gO+VyP49Qi5mInxhURMBWCSGAuczA0sIPdwk486F57
-         dOMz6IWZ0pGEaxZl0uCOteJUK3PgP1AY7OhzJceomj/nFdPdxHE84yj7Kz6RWVx96j0x
-         K/Z4EOYWxlQR0t+DO5xo5JOqpB+rVBXJE54Mv6S4YNrQ4u0sRed2Q9qcm64rHhuVzOZs
-         E/mgcIvEnE44kbmrLY9OEfm9r3qddCz782N8Vx+G4AJV6INRaT57PPoRIxwDkWUe0Cbc
-         s+kWJTzVhJSoAafd1p9UYXU2tWjkT5+fUvWbJ+IoShb2SGqS3odfVDS/2GaNLxlVc9Me
-         kkdg==
+        id S1725878AbgILQMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Sep 2020 12:12:23 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24517 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725846AbgILQMR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Sep 2020 12:12:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599927135;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=OnLO4ADFj7Z7o5P1yfw7tWD6Tiz1740E30zuroEwIIM=;
+        b=WPR2hSzbCn2pHF5qRtNI3munksa9bPEm7sGs6Pg8dtfRDC/QHENE4OFP1G6dun8KgWQmk0
+        iAYOmfsebiM3choAShrM5M0EZtr7PGMy20oulcDQ6kM52TD8UxMAe0iWHoHC0+jxFRIGcy
+        ssJaQeeeK0M8xjuYWgoEqQG75wFNJjA=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-283-YN5izzMuPxu1P417g8_Yww-1; Sat, 12 Sep 2020 12:12:13 -0400
+X-MC-Unique: YN5izzMuPxu1P417g8_Yww-1
+Received: by mail-qv1-f69.google.com with SMTP id z12so7174867qvp.11
+        for <linux-pci@vger.kernel.org>; Sat, 12 Sep 2020 09:12:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=aMesFhmVbR+c4p4QwbnBuM8cm0iXxSZWs2VaPWAL9Qw=;
-        b=kxhrne+UzptKtLp/f3k00lFbzcAW4PZiYLxKHTyAGWHl78vxg29AtK5Tljegks26RU
-         NbVJUr7Fq16DcB0nXkKXWJtDh00tMbgwLVm/ncrWl2czrUXntotN1Vuf+aBmm2D0/wxR
-         BYUS9EEsffAxkNaKxgqQmsoMeLo85IFXHw9JfdYr/X6S5rYloYPEElgQEnb0OVRDYHhn
-         h+wmoTH0CBXLsCLRLoAHoPJvCiTkiFJfLO2gv6rPuUlmYD84D1mtl2QZNjZUs0SZM27W
-         wyIe2Il0oQwq9D1E4g0VPbLGBEwoU8ab8/O6viBfjKdn03MLroZS2U1hfcTfzoHD/1Ho
-         T1Sw==
-X-Gm-Message-State: AOAM531eZDxc6NPRW4Sa6RWZlrwuN/2Hm8zy/MAj8K9sgkg6RGnbKoUp
-        nrkUq75N6NQA83Hy87I5jYzMvLAQ2Dq741xyToE=
-X-Google-Smtp-Source: ABdhPJzUJQf95z5M4D1mNyNsdG/czkj97Nm6S4SYFB6mH/em4jdHDTiD9+OxtaDOhVpE3XjbpYzICK44gRAzTZoey/s=
-X-Received: by 2002:a2e:b5a8:: with SMTP id f8mr1987604ljn.246.1599904535057;
- Sat, 12 Sep 2020 02:55:35 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:ab3:390:0:0:0:0:0 with HTTP; Sat, 12 Sep 2020 02:55:34 -0700 (PDT)
-Reply-To: azizdake0@gmail.com
-From:   Aziz Dake <paulowilliams17@gmail.com>
-Date:   Sat, 12 Sep 2020 02:55:34 -0700
-Message-ID: <CAAWuHsU-DXvHgRMpsXjq_OzBqSnw_hd_MK-VdgSbaBBTAigVjg@mail.gmail.com>
-Subject: Re: PROPOSAL DETAILS.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OnLO4ADFj7Z7o5P1yfw7tWD6Tiz1740E30zuroEwIIM=;
+        b=LLPObo7vr64ZFOSI9XZfF0arTFCoCn3o7zT6Fa0apzIENqdzXSWHHphbRr0EqnImwH
+         glitxzywTpSiiqvQCErC0r2EEeygcEh4Ay0QjyBWZUevqVj4GQRgWQfcsLYWr95aEGhY
+         9lnJ1U9kS7dRE1eQrLP8Xz/U0IM225sIOTdX9wIfmYOtjK/+8NcF7Fyk8QKJjZOY7sFr
+         YizLilHUa4Yb3LFt5d5guXmsLar4v6RlVARm3p+cfs2+NhlbA+6jOHpra1NOsMQv8cu0
+         e+MqNcoOXQePdY5FvPv9Mf07ZrCgQZOMbe+gfzk6ZBBXmetRZtdJ5rEYHqbYO67CmaMF
+         Yalw==
+X-Gm-Message-State: AOAM530cCYtgra1LmHzJAXuqbLgaHkRWu/W5KvMEvMAmgctIoc9MyKVH
+        Kvl0tNBxRLEzg8bKLY9FQR7XLrcOmoT/XN82EXGuMQPAeQ/90svOCEv1yLmwjHpFd1WFRWdds6Q
+        0NTaAFSTbY9Uia0pEm6qo
+X-Received: by 2002:a37:a495:: with SMTP id n143mr6285703qke.394.1599927133318;
+        Sat, 12 Sep 2020 09:12:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyP+4lH+ouC+KfulEQPisuyxi+7vR480dD2LFSfHaIQiCkElD7umePVZ+w6VEUe/W6iJgbyBQ==
+X-Received: by 2002:a37:a495:: with SMTP id n143mr6285675qke.394.1599927133032;
+        Sat, 12 Sep 2020 09:12:13 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id m138sm7642421qke.99.2020.09.12.09.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Sep 2020 09:12:12 -0700 (PDT)
+From:   trix@redhat.com
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] PCI: dwc: do not export a static symbol
+Date:   Sat, 12 Sep 2020 09:12:06 -0700
+Message-Id: <20200912161206.15848-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greetings,
+From: Tom Rix <trix@redhat.com>
 
-My name is Mr.Aziz Mohammed, the account manager in charge of audit
-Foreign Remittance Unit, bank  in Burkina Faso, It is true that we
-have not meet each other in person, but I strongly believe in trust
-and friendship in every business. As I am contacting you independently
-of my investigation and no one is informed of this communication. My
-reason for contacting you is to transfer an abandoned sum of
-$10.5million Dollars  immediately to your private account. The money
-has been here in our Bank lying dormant for years now without anybody
-coming for the claim of it.
+Building produces this warning
+WARNING: modpost: "dw_pcie_link_set_max_speed"
+  [vmlinux] is a static EXPORT_SYMBOL_GPL
 
-The funds belong to our deceased Customer Mrs.Shannel Lake who
-perished along with her family since 9 years ago The Banking laws here
-does not allow such money to stay more than 10 years, that is the
-reason why I need your Cooperation in transferring the money to your
-bank account so that we can use it to secure the future of our both
-families because I don't want the money to be recalled to the bank
-treasury as unclaimed fund.
+dw_pcie_link_set_max_speed() has a static storage-class
+specifier so it should not be exported.
 
-By indicating your interest I will send you the full details on how
-the business will be executed. Please keep this proposal as a top
-secret and delete if you are not interested. My position as the chief
-auditor in this bank guarantees the successful execution of this
-(deal) transaction.
+Fixes: 3af45d34d30c ("PCI: dwc: Centralize link gen setting")
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-1)your full name.....
-2) sex.....
-3) age.....
-4) country.....
-5)passport or photo.....
-6)occupation.....
-7) personal Mobile number.....
-8)Home &office address.....
-9) Your marital status........
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 4d105efb5722..3c3a4d1dbc0b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -508,7 +508,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+ 	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
+ 
+ }
+-EXPORT_SYMBOL_GPL(dw_pcie_link_set_max_speed);
+ 
+ static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+ {
+-- 
+2.18.1
 
-Thanks.
-
-Mr.Aziz Mohammed.
