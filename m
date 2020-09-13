@@ -2,118 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1484267DBE
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Sep 2020 06:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34518267DFE
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Sep 2020 07:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725894AbgIME1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Sep 2020 00:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgIME1U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Sep 2020 00:27:20 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F08C061573;
-        Sat, 12 Sep 2020 21:27:20 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id x19so13995038oix.3;
-        Sat, 12 Sep 2020 21:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eOQk3xXdtW33zXCs+KFbhvBQfCJkZslsCotpgafvdOU=;
-        b=FuVL2uRbGAJjafaeSJMnHdvLXqH/n0Kc4u1aarjXA5W1Rm6v1rvWYEbq+F5QUch2tS
-         uJPTjiOXoeDNz4aUVXgsl1uqinE2Du4gUcOsnd6kQbWbphtCfr/cLPUvIxQ82aY9T5rS
-         pTFCBZBSa7BxLl4HXKt2X/Hz3Cl8RIgz5yZD6ntuL3dTx/LgkKLQcjR+qanuR1u9vLaR
-         AJxZ5XHwYdRp8i215/+lwBeXGNl/ijvWOZ8HoOGj0VguzIDBnso42WE7mzqphuVwyxVG
-         R4uVMud0EQNzUL9dsUYe9UVr0o24uumxsU46QdG0CcSNvrYgHqRkYNtakKn6mechSA7f
-         wQtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eOQk3xXdtW33zXCs+KFbhvBQfCJkZslsCotpgafvdOU=;
-        b=RSpd7xK7o5RH8JSkvC6Yv8ggtET2Tr4Y/omwYXXTesmTWxpMXm4ur0fUhlpY4pe0/4
-         vZwq5KoD/jOgNZEkgTmm56gxQHQYw+fZct/ku92spFgNZPUGdFL3z5KfaMQvwr0AMtrD
-         FTTrYveNFMYHa2ZJ+hmSK8fNdDFiolUKdkX0BBg2+9phuPvJPrjnf8B+RQxPkGHu/exR
-         Xjq5bPGDj2ta5Dkpzcbl/2FiVHgVj1BQmGFHYr/x1n5lt8cYQ1lk/63B8IaQ7yJjx3fc
-         KwFTgSUAhcphR1o6+iQnmPJ8wtG6sJ7ONC+xE31GEFMKE+9IC9yvJ2xaUyoltA2LH1dL
-         bvXw==
-X-Gm-Message-State: AOAM532Lg7bafsWKTe0s8mphOvKjEHedSWAyQzAbeCtSOP3Hxvwjm6ga
-        iXyoga+qXzH0AtI17Fw6AFpV7PMv9xlulZCbfIQ=
-X-Google-Smtp-Source: ABdhPJxWhktkLLA3tbhKQU7RIOG156DdWop2W6za+3JfRX5Mg1TlmFG3CzQnL5GtEBPT3I8EcK5U8pAGNHK2NytcH8A=
-X-Received: by 2002:aca:aa84:: with SMTP id t126mr5500928oie.5.1599971239961;
- Sat, 12 Sep 2020 21:27:19 -0700 (PDT)
+        id S1725897AbgIMFBe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Sep 2020 01:01:34 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:35751 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgIMFBc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Sep 2020 01:01:32 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id E36F22800B3E0;
+        Sun, 13 Sep 2020 07:01:29 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 94B9A1DEA2; Sun, 13 Sep 2020 07:01:29 +0200 (CEST)
+Date:   Sun, 13 Sep 2020 07:01:29 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Huacai Chen <chenhc@lemote.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        linux-pci@vger.kernel.org, Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH 1/2] PCI/portdrv: Remove the .remove() method in
+ pcie_portdriver
+Message-ID: <20200913050129.GA10736@wunner.de>
+References: <1599818977-25425-1-git-send-email-chenhc@lemote.com>
 MIME-Version: 1.0
-References: <CAPJCdB=HzNJp36tjD0=-R-cs4+8=xhxAfmR-tZ2DkpcyiugH-g@mail.gmail.com>
- <20200910015950.GA748330@bjorn-Precision-5520>
-In-Reply-To: <20200910015950.GA748330@bjorn-Precision-5520>
-From:   Jiang Biao <benbjiang@gmail.com>
-Date:   Sun, 13 Sep 2020 12:27:09 +0800
-Message-ID: <CAPJCdBngxwYdc-CEfSabTAdAXCdnG424Qa2BS47+xcV2wDvJCA@mail.gmail.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in pci_read_config
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599818977-25425-1-git-send-email-chenhc@lemote.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn
+On Fri, Sep 11, 2020 at 06:09:36PM +0800, Huacai Chen wrote:
+> As Bjorn Helgaas said, portdrv can only be built statically (not as a
+> module), so the .remove() method in pcie_portdriver is useless. So just
+> remove it.
 
-On Thu, 10 Sep 2020 at 09:59, Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Sep 10, 2020 at 09:54:02AM +0800, Jiang Biao wrote:
-> > Hi,
-> >
-> > On Thu, 10 Sep 2020 at 09:25, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
-> > > > From: Jiang Biao <benbjiang@tencent.com>
-> > > >
-> > > > pci_read_config() could block several ms in kernel space, mainly
-> > > > caused by the while loop to call pci_user_read_config_dword().
-> > > > Singel pci_user_read_config_dword() loop could consume 130us+,
-> > > >               |    pci_user_read_config_dword() {
-> > > >               |      _raw_spin_lock_irq() {
-> > > > ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> > > > ! 137.582 us  |      }
-> > > >               |      pci_read() {
-> > > >               |        raw_pci_read() {
-> > > >               |          pci_conf1_read() {
-> > > >   0.230 us    |            _raw_spin_lock_irqsave();
-> > > >   0.035 us    |            _raw_spin_unlock_irqrestore();
-> > > >   8.476 us    |          }
-> > > >   8.790 us    |        }
-> > > >   9.091 us    |      }
-> > > > ! 147.263 us  |    }
-> > > > and dozens of the loop could consume ms+.
-> > > >
-> > > > If we execute some lspci commands concurrently, ms+ scheduling
-> > > > latency could be detected.
-> > > >
-> > > > Add scheduling chance in the loop to improve the latency.
-> > >
-> > > Thanks for the patch, this makes a lot of sense.
-> > >
-> > > Shouldn't we do the same in pci_write_config()?
-> > Yes, IMHO, that could be helpful too.
->
-> If it's feasible, it would be nice to actually verify that it makes a
-> difference.  I know config writes should be faster than reads, but
-> they're certainly not as fast as a CPU can pump out data, so there
-> must be *some* mechanism that slows the CPU down.
->
-> Bjorn
-We failed to build a test case to produce the latency by setpci command,
-AFAIU, setpci could be much less frequently realistically used than lspci.
-So, the latency from pci_write_config() path could not be verified for now,
-could we apply this patch alone to erase the verified latency introduced
-by pci_read_config() path? :)
+No, PCIe switches (containing upstream and downstream PCIe ports)
+can be hot-plugged and hot-removed at runtime.  Every Thunderbolt
+device contains a PCIe switch and is hot-pluggable.  We do want to
+clean up a hot-removed PCIe port properly.
 
-Thanks a lot.
-Regards,
-Jiang
+Thanks,
+
+Lukas
+
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -134,7 +134,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	return 0;
+>  }
+>  
+> -static void pcie_portdrv_remove(struct pci_dev *dev)
+> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+>  {
+>  	if (pci_bridge_d3_possible(dev)) {
+>  		pm_runtime_forbid(&dev->dev);
+> @@ -210,8 +210,7 @@ static struct pci_driver pcie_portdriver = {
+>  	.id_table	= &port_pci_ids[0],
+>  
+>  	.probe		= pcie_portdrv_probe,
+> -	.remove		= pcie_portdrv_remove,
+> -	.shutdown	= pcie_portdrv_remove,
+> +	.shutdown	= pcie_portdrv_shutdown,
+>  
+>  	.err_handler	= &pcie_portdrv_err_handler,
