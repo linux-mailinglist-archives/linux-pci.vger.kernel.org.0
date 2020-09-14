@@ -2,205 +2,282 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0B89268FF2
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 17:30:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C0B9269027
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 17:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgINPan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 11:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbgINPaZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 11:30:25 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1775C06174A;
-        Mon, 14 Sep 2020 08:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JfMZv0yawZLzoee4iW7gor0d+MQ6VM9jOAxK8EtyRRE=; b=TI6/jI7eATsIMKNaZ4Xbe+SKNO
-        21iornDb5W6OaNM9RaOPUYC+XfcpCLO7pAeBCdpEomDmq4FXl4vHcXjpVBTovyeoxFQaVO7Jm/epC
-        Ek+NQq+o0wpG+LW6A/AdPftonjOCYSbQY02jQ8x40IFFyUT3WjC/JF/B+W45+VM0mZ3M44tlU/prm
-        qg2pjMLrpDhS8ukOeYKUWeUu0AqJJXLIAiNXi5/wgPI+tP28dce9nHR1dntlQACMuxX0hDj4T/44T
-        SykrDhK/JRfuLPyutt80AzkDN5bv/SMtY0dGZkxkUM3/jN7/wxUztLTio1uFAKsW3zz6+tNx2dUTQ
-        9kdxxb7Q==;
-Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=u3832b3a9db3152.ant.amazon.com)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kHqQt-0001Tw-NN; Mon, 14 Sep 2020 15:30:20 +0000
-Message-ID: <bc5ba52bb0c123d0ed038e5dce9474f27ac2f750.camel@infradead.org>
-Subject: Re: [PATCH] MAINTAINERS: make linux-mediatek list remarks consistent
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 14 Sep 2020 16:30:16 +0100
-In-Reply-To: <alpine.DEB.2.21.2009141717470.17999@felia>
-References: <20200914053110.23286-1-lukas.bulwahn@gmail.com>
-         <f6bc41d3-5ce4-b9ea-e2bb-e0cee4de3179@gmail.com>
-         <alpine.DEB.2.21.2009141208200.17999@felia>
-         <9c5aaa15-bdd8-ae4f-0642-092566ab08ba@gmail.com>
-         <alpine.DEB.2.21.2009141552570.17999@felia>
-         <7da64c0975c345f1f45034410c9ed7d509ba9831.camel@infradead.org>
-         <alpine.DEB.2.21.2009141615020.17999@felia>
-         <f511570405799df421397ff65847e927745dad08.camel@infradead.org>
-         <alpine.DEB.2.21.2009141717470.17999@felia>
-Content-Type: multipart/signed; micalg="sha-256";
-        protocol="application/x-pkcs7-signature";
-        boundary="=-8puGEqhBqvWrC5IAq9zC"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
+        id S1725978AbgINPiT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 11:38:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55578 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgINPhs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 11:37:48 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08EFbStm060262;
+        Mon, 14 Sep 2020 10:37:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1600097848;
+        bh=IscYVn9/1Ngh3jqm3W1TxrrkC1/VilWwlvxLwV2qJkA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ptoiWDcMI/O6OyCAG9i/k/5+FBmUV4OLB8bxb6cUjvik3ezsX+LtCJsHiQVqKgyRa
+         1Bkn6603SDu0m0TXQzfB2G/L/OkVzMzc4qL+vy6KHmLG1YEBqnxzDb5xDUBW7qXSqp
+         g3tqqaIJ164mcYpkQfvLN4oJ7rH6WShykKXFk4O0=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08EFbSXi080492;
+        Mon, 14 Sep 2020 10:37:28 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 14
+ Sep 2020 10:36:14 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 14 Sep 2020 10:36:14 -0500
+Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08EFa8FJ102628;
+        Mon, 14 Sep 2020 10:36:09 -0500
+Subject: Re: [PATCH v3 17/17] Documentation: PCI: Add userguide for PCI
+ endpoint NTB function
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-ntb@googlegroups.com>
+References: <20200904075052.8911-1-kishon@ti.com>
+ <20200904075052.8911-18-kishon@ti.com>
+ <f16f5a90-13c1-bfc6-ad83-1c6becbf1629@infradead.org>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c06d2a12-6533-361e-a0c8-9faa62abd8f0@ti.com>
+Date:   Mon, 14 Sep 2020 21:06:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <f16f5a90-13c1-bfc6-ad83-1c6becbf1629@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Randy,
 
---=-8puGEqhBqvWrC5IAq9zC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 06/09/20 3:38 am, Randy Dunlap wrote:
+> On 9/4/20 12:50 AM, Kishon Vijay Abraham I wrote:
+>> Add documentation to help users use pci-epf-ntb function driver and
+>> existing host side NTB infrastructure for NTB functionality.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  Documentation/PCI/endpoint/index.rst         |   1 +
+>>  Documentation/PCI/endpoint/pci-ntb-howto.rst | 160 +++++++++++++++++++
+>>  2 files changed, 161 insertions(+)
+>>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
+> 
+> Hi,
+> There are a few edits below:
 
-On Mon, 2020-09-14 at 17:23 +0200, Lukas Bulwahn wrote:
-> >  # /usr/lib/mailman/bin/config_list -o- linux-mediatek | grep -B5 ^gene=
-ric_nonmember_action
-> > # legal values are:
-> > #    0 =3D "Accept"
-> > #    1 =3D "Hold"
-> > #    2 =3D "Reject"
-> > #    3 =3D "Discard"
-> > generic_nonmember_action =3D 0
->
-> David, I guess if you have access to the ground truth on=20
-> lists.infradead.org, maybe you can dump the actual setting for all those=
-=20
-> lists?
+Thanks for reviewing. I'll fix and post a new revision.
 
-ath10k:generic_nonmember_action =3D 0
-ath11k:generic_nonmember_action =3D 0
-b43-dev:generic_nonmember_action =3D 0
-kexec:generic_nonmember_action =3D 0
-libertas-dev:generic_nonmember_action =3D 0
-linux-afs:generic_nonmember_action =3D 0
-linux-amlogic:generic_nonmember_action =3D 0
-linux-arm-kernel:generic_nonmember_action =3D 0
-linux-geode:generic_nonmember_action =3D 1
-linux-i3c:generic_nonmember_action =3D 1
-linux-mediatek:generic_nonmember_action =3D 0
-linux-mtd:generic_nonmember_action =3D 0
-linux-nvme:generic_nonmember_action =3D 0
-linux-parport:generic_nonmember_action =3D 1
-linux-realtek-soc:generic_nonmember_action =3D 1
-linux-riscv:generic_nonmember_action =3D 0
-linux-rockchip:generic_nonmember_action =3D 0
-linux-rpi-kernel:generic_nonmember_action =3D 0
-linux-snps-arc:generic_nonmember_action =3D 0
-linux-um:generic_nonmember_action =3D 0
-linux-unisoc:generic_nonmember_action =3D 1
-wcn36xx:generic_nonmember_action =3D 0
+Thanks
+Kishon
 
---=-8puGEqhBqvWrC5IAq9zC
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAw
-OTE0MTUzMDE2WjAvBgkqhkiG9w0BCQQxIgQguwmuSGoU/pCQ//OTjKqxRpP8CquABSsK19TRoV8i
-cTcwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAJFS98Is8qpmbZaSvakQxnUya5vE8gd/FX+eZHbyBZ1IxGRUfy16HWPcTP6wmYnm
-9bcofWvMQn4lK9fhpE0CjEci73ndlWzt0quAipdckwkmPplRLlW3F5MPFUBudQXWTaBNCvse/Sjo
-aNbNQ92QyNdW6mi1WM4BUTYeGYU1HNwzila5NlNFQ7/J8hu89YX13TcblSJFFbAVKj9ziyiKkrgp
-3EnxvMHdP7lo76I0ZxrcUjlEzgzD83Eot1sUeiu9+j32EOETa2hgf+zvcAArzLvKl8trxoCurEo1
-rX7xWU97TKNhg2YMLo9YpQIubxUJffSmbaR51m5nzLRMzUaQZG4AAAAAAAA=
-
-
---=-8puGEqhBqvWrC5IAq9zC--
-
+> 
+> 
+>> diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
+>> new file mode 100644
+>> index 000000000000..2fbb0a051c3b
+>> --- /dev/null
+>> +++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
+>> @@ -0,0 +1,160 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +======================
+>> +PCI NTB EPF User Guide
+>> +======================
+>> +
+>> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+>> +
+>> +This document is a guide to help users use pci-epf-ntb function driver
+>> +and ntb_hw_epf host driver for NTB functionality. The list of steps to
+>> +be followed in the host side and EP side is given below. For the hardware
+>> +configuration and internals of NTB using configurable endpoints see
+>> +Documentation/PCI/endpoint/pci-ntb-function.rst
+>> +
+>> +Endpoint Device
+>> +===============
+>> +
+>> +Endpoint Controller Devices
+>> +---------------------------
+>> +
+>> +For implementing NTB functionality atleast two endpoint controller devices
+> 
+>                                       at least
+> 
+>> +are required.
+>> +To find the list of endpoint controller devices in the system::
+>> +
+>> +        # ls /sys/class/pci_epc/
+>> +          2900000.pcie-ep  2910000.pcie-ep
+>> +
+>> +If PCI_ENDPOINT_CONFIGFS is enabled::
+>> +
+>> +	# ls /sys/kernel/config/pci_ep/controllers
+>> +	  2900000.pcie-ep  2910000.pcie-ep
+>> +
+>> +
+>> +Endpoint Function Drivers
+>> +-------------------------
+>> +
+>> +To find the list of endpoint function drivers in the system::
+>> +
+>> +	# ls /sys/bus/pci-epf/drivers
+>> +	  pci_epf_ntb   pci_epf_ntb
+>> +
+>> +If PCI_ENDPOINT_CONFIGFS is enabled::
+>> +
+>> +	# ls /sys/kernel/config/pci_ep/functions
+>> +	  pci_epf_ntb   pci_epf_ntb
+>> +
+>> +
+>> +Creating pci-epf-ntb Device
+>> +----------------------------
+>> +
+>> +PCI endpoint function device can be created using the configfs. To create
+>> +pci-epf-ntb device, the following commands can be used::
+>> +
+>> +	# mount -t configfs none /sys/kernel/config
+>> +	# cd /sys/kernel/config/pci_ep/
+>> +	# mkdir functions/pci_epf_ntb/func1
+>> +
+>> +The "mkdir func1" above creates the pci-epf-ntb function device that will
+>> +be probed by pci_epf_ntb driver.
+>> +
+>> +The PCI endpoint framework populates the directory with the following
+>> +configurable fields::
+>> +
+>> +	# ls functions/pci_epf_ntb/func1
+>> +          baseclass_code    deviceid          msi_interrupts    pci-epf-ntb.0
+>> +          progif_code       secondary         subsys_id         vendorid
+>> +          cache_line_size   interrupt_pin     msix_interrupts   primary
+>> +          revid             subclass_code     subsys_vendor_id
+>> +
+>> +The PCI endpoint function driver populates these entries with default values
+>> +when the device is bound to the driver. The pci-epf-ntb driver populates
+>> +vendorid with 0xffff and interrupt_pin with 0x0001::
+>> +
+>> +	# cat functions/pci_epf_ntb/func1/vendorid
+>> +	  0xffff
+>> +	# cat functions/pci_epf_ntb/func1/interrupt_pin
+>> +	  0x0001
+>> +
+>> +
+>> +Configuring pci-epf-ntb Device
+>> +-------------------------------
+>> +
+>> +The user can configure the pci-epf-ntb device using configfs entry. In order
+> 
+>                                                  using its configfs entry.
+> 
+>> +to change the vendorid and the deviceid, the following
+>> +commands can be used::
+>> +
+>> +	# echo 0x104c > functions/pci_epf_ntb/func1/vendorid
+>> +	# echo 0xb00d > functions/pci_epf_ntb/func1/deviceid
+>> +
+>> +In-order to configure NTB specific attributes, a new sub-directory to func1
+> 
+>    In order
+> 
+>> +should be created::
+>> +
+>> +	# mkdir functions/pci_epf_ntb/func1/pci_epf_ntb.0/
+>> +
+>> +The NTB function driver will populate this directory with various attributes
+>> +that can be configured by the user::
+>> +
+>> +	# ls functions/pci_epf_ntb/func1/pci_epf_ntb.0/
+>> +          db_count    mw1         mw2         mw3         mw4         num_mws
+>> +          spad_count
+>> +
+>> +A sample configuration for NTB function is given below::
+>> +
+>> +	# echo 4 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/db_count
+>> +	# echo 128 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/spad_count
+>> +	# echo 2 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/num_mws
+>> +	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw1
+>> +	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw2
+>> +
+>> +Binding pci-epf-ntb Device to EP Controller
+>> +--------------------------------------------
+>> +
+>> +NTB function device should be attached to two PCIe endpoint controllers
+>> +connected to the two hosts. Use the 'primary' and 'secondary' entries
+>> +inside NTB function device to attach one PCIe endpoint controller to
+>> +primary interface and the other PCIe endpoint controller to the secondary
+>> +interface. ::
+>> +
+>> +        # ln -s controllers/2900000.pcie-ep/ functions/pci-epf-ntb/func1/primary
+>> +        # ln -s controllers/2910000.pcie-ep/ functions/pci-epf-ntb/func1/secondary
+>> +
+>> +Once the above step is completed, both the PCI endpoint controllers is ready to
+> 
+>                                                                        are ready
+> 
+>> +establish a link with the host.
+>> +
+>> +
+>> +Start the Link
+>> +--------------
+>> +
+>> +In order for the endpoint device to establish a link with the host, the _start_
+>> +field should be populated with '1'. For NTB, both the PCIe endpoint controllers
+>> +should establish link with the host::
+>> +
+>> +        #echo 1 > controllers/2900000.pcie-ep/start
+>> +        #echo 1 > controllers/2910000.pcie-ep/start
+>> +
+>> +
+>> +RootComplex Device
+>> +==================
+>> +
+>> +lspci Output
+>> +------------
+>> +
+>> +Note that the devices listed here correspond to the value populated in 1.4
+> 
+> Can you use a section name (or reference) here instead of "1.4"?  I can't see 1.4
+> when reading with an editor.
+> 
+>> +above::
+>> +
+>> +        # lspci
+>> +        0000:00:00.0 PCI bridge: Texas Instruments Device b00d
+>> +        0000:01:00.0 RAM memory: Texas Instruments Device b00d
+>> +
+>> +
+>> +Using ntb_hw_epf Device
+>> +-----------------------
+>> +
+>> +The host side software follows the standard NTB software architecture in Linux.
+>> +All the existing client side NTB utilities like NTB Transport Client and NTB
+>> +Netdev, NTB Ping Pong Test Client and NTB Tool Test Clientcan be used with NTB
+> 
+>                                                        Client can be
+> 
+>> +function device.
+>> +
+>> +For more information on NTB see
+>> +Documentation/driver-api/ntb.rst
+> 
+> 
+> thanks.
+> 
