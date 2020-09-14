@@ -2,157 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D97326876E
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 10:46:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B3726879D
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 10:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgINIqB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 04:46:01 -0400
-Received: from smtpbgbr2.qq.com ([54.207.22.56]:56333 "EHLO smtpbgbr2.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbgINIp7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Sep 2020 04:45:59 -0400
-X-QQ-GoodBg: 0
-X-QQ-SSF: 00100000000000F0
-X-QQ-FEAT: +52Xi0nxjsSJEKHnFE2/nj+oEaKsxFWw1maWrGwBNyzHU6ifkL5Y5fKvh2ytn
-        w9/RGnQCmLsaaHKYDQQHNflzLDHBfX+tHeGk5wXdc5DVDXdUdFApqB2IGBeVdEXHOj6q3P5
-        7cb7O9MlYOIjFf4fTSJxTvaoD6ob6536cZkppxam0AZ810MQp24YGMeEU06i7YJTUxE6z/m
-        q0pGP6LUrCV2YwNP7htzRb36/QizzMdVqMDO2A1jmhNMrpv4rvydizKqtKWLnmIeWpD/q5u
-        qRWfIZZUkJTaqd6OMuV6A7+Mw7PQaJw4bUAuzuPwKPWylhxW53Rh7QJu4RB+U3K/LfgJUtg
-        C7g87uPFzWKdp5s+NqTlP/vSIv+wg==
-X-QQ-BUSINESS-ORIGIN: 2
-X-Originating-IP: 222.92.48.120
-X-QQ-STYLE: 
-X-QQ-mid: logic508t1600073142t775655
-From:   "=?utf-8?B?6ZmI5Y2O5omN?=" <chenhc@lemote.com>
-To:     "=?utf-8?B?VGllemh1IFlhbmc=?=" <yangtiezhu@loongson.cn>,
-        "=?utf-8?B?Qmpvcm4gSGVsZ2Fhcw==?=" <bhelgaas@google.com>
-Cc:     "=?utf-8?B?bGludXgtcGNp?=" <linux-pci@vger.kernel.org>,
-        "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>,
-        "=?utf-8?B?UmFmYWVsIEouIFd5c29ja2k=?=" <rafael.j.wysocki@intel.com>,
-        "=?utf-8?B?S29uc3RhbnRpbiBLaGxlYm5pa292?=" <khlebnikov@openvz.org>,
-        "=?utf-8?B?S2hhbGlkIEF6aXo=?=" <khalid.aziz@oracle.com>,
-        "=?utf-8?B?Vml2ZWsgR295YWw=?=" <vgoyal@redhat.com>,
-        "=?utf-8?B?THVrYXMgV3VubmVy?=" <lukas@wunner.de>,
-        "=?utf-8?B?T2xpdmVyIE8nSGFsbG9yYW4=?=" <oohall@gmail.com>,
-        "=?utf-8?B?SmlheHVuIFlhbmc=?=" <jiaxun.yang@flygoat.com>,
-        "=?utf-8?B?WHVlZmVuZyBMaQ==?=" <lixuefeng@loongson.cn>
-Subject: Re:[RFC PATCH v3] PCI/portdrv: Only disable Bus Master on kexec reboot and connected PCI devices
-Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: base64
-Date:   Mon, 14 Sep 2020 16:45:42 +0800
-X-Priority: 3
-Message-ID: <tencent_39F3D56E0E67327D239C8067@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <1600070215-3901-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1600070215-3901-1-git-send-email-yangtiezhu@loongson.cn>
-X-QQ-ReplyHash: 1976346135
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-        by smtp.qq.com (ESMTP) with SMTP
-        id ; Mon, 14 Sep 2020 16:45:44 +0800 (CST)
-Feedback-ID: logic:lemote.com:qybgforeign:qybgforeign6
-X-QQ-Bgrelay: 1
+        id S1726141AbgINIxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 04:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgINIxG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 04:53:06 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46699C06174A;
+        Mon, 14 Sep 2020 01:53:06 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id a8so16013243ilk.1;
+        Mon, 14 Sep 2020 01:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=T5blx8lW5RBmUkqia/MfWKUSWxCaOKkHJt1n0OFhjb8=;
+        b=pwI5R544nBDLeZrf6ZYom+3nqKZgTTUGq8yhfwTuop2RItzV7BCkgpCPzFmX8awAT+
+         +0EHNdBtbADpmqOGDynxt7TCygd8ZhfzYCr4NF938i/Xzv0ImsSrkQm3G3MKjyBBZ+3b
+         5uAAvG6GgMq4GOXKmD1M3ezGpGjDeVIyPjABU04YL+kmsKoNp1hPtUBxs3cZAoyeN/hp
+         pv9fe3jfXYiFLYYvQVy8ZiAnFtnIL+IeD8mcYVRMU0P3mEw8FOddf1YE4Gg6UbUlL8tp
+         6vyr4qCNQSmsErj9nQUuv1FrPKlvTXf/bguL//rktufNqeJUUehMSaIPHCTAvK5GolNe
+         Jjgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=T5blx8lW5RBmUkqia/MfWKUSWxCaOKkHJt1n0OFhjb8=;
+        b=czmvVaT1BC8o3rRwSO33FNY0b2/XU3itFfmMfWjbZJw8WR5aanVPxwwe9eWHwx1Z8F
+         3M6+/4iy7PdKVGv5/j7S94vtHPtlnCTu4o29glzCYAxaFj+2K4f4UhlRGeDNyzoaTgSL
+         eP/hR4iw9+lf+QfLLaLThEqHR1JIv56QqDE6jGgg1A5Pi588nfFKx7YwK92pgtbOZvSk
+         Ryr7GDrEbhGpqbFlx+GVu8z/R20DJ+tF3mh9fO7kijS7VnB33VjIQ6F1fuUjO+Mvcv1G
+         bTBw6vjLuLC6t8gBcG44Q7GHV7oFEmt0CTy3ckLLIsebyISLj4v6b8t+yZkHeCrjz2H4
+         o7Kg==
+X-Gm-Message-State: AOAM532Kub4birqnkB87EfaNLW1zmznsvAlrogkwdMcFm7ODK/441j3t
+        PrtnvXBM5HhHrByuMXJVfUZQWAfSOaUnOZ5VanigmZbB6gzNBQ==
+X-Google-Smtp-Source: ABdhPJw+T5Ark5LxMUndS6SNu7VCFUXc/F2RHXVoAHsK1bYmraQeU5sa2ysv043ZtuHZwITikGt33SyhopnruDg1xz0=
+X-Received: by 2002:a05:6e02:13ae:: with SMTP id h14mr1587717ilo.208.1600073582860;
+ Mon, 14 Sep 2020 01:53:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <1600070215-3901-1-git-send-email-yangtiezhu@loongson.cn> <tencent_13F0F91E196BCF3F0E458509@qq.com>
+In-Reply-To: <tencent_13F0F91E196BCF3F0E458509@qq.com>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Mon, 14 Sep 2020 16:52:51 +0800
+Message-ID: <CAAhV-H4ogJYcK9E9hQ663dGcJn4GjWZUSp47xgzTtjAZ-nrybA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3] PCI/portdrv: Only disable Bus Master on kexec
+ reboot and connected PCI devices
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Konstantin Khlebnikov <khlebnikov@openvz.org>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        zhouyanjie <zhouyanjie@wanyeetech.com>, git <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGksIFRpZXpodSwNCg0KSG93IGRvIHlvdSB0ZXN0IGtleGVjPyBrZXhlYyAtZSBvciBzeXN0
-ZW1jdGwga2V4ZWM/IE9yIGJvdGg/DQoNCkh1YWNhaQ0KDQrpmYjljY7miY3msZ/oi4/oiKrl
-pKnpvpnmoqbkv6Hmga/mioDmnK/mnInpmZDlhazlj7gv56CU5Y+R5Lit5b+DL+i9r+S7tumD
-qCAgIC0tLS0tLS0tLS0tLS0tLS0tLSBPcmlnaW5hbCAtLS0tLS0tLS0tLS0tLS0tLS1Gcm9t
-OiAgIlRpZXpodSBZYW5nIjx5YW5ndGllemh1QGxvb25nc29uLmNuPjtEYXRlOiAgTW9uLCBT
-ZXAgMTQsIDIwMjAgMDM6NTcgUE1UbzogICJCam9ybiBIZWxnYWFzIjxiaGVsZ2Fhc0Bnb29n
-bGUuY29tPjsgQ2M6ICAibGludXgtcGNpIjxsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsg
-ImxpbnV4LWtlcm5lbCI8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47ICJSYWZhZWwg
-Si4gV3lzb2NraSI8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+OyAiS29uc3RhbnRpbiBL
-aGxlYm5pa292IjxraGxlYm5pa292QG9wZW52ei5vcmc+OyAiS2hhbGlkIEF6aXoiPGtoYWxp
-ZC5heml6QG9yYWNsZS5jb20+OyAiVml2ZWsgR295YWwiPHZnb3lhbEByZWRoYXQuY29tPjsg
-Ikx1a2FzIFd1bm5lciI8bHVrYXNAd3VubmVyLmRlPjsgIk9saXZlciBPJ0hhbGxvcmFuIjxv
-b2hhbGxAZ21haWwuY29tPjsgIkh1YWNhaSBDaGVuIjxjaGVuaGNAbGVtb3RlLmNvbT47ICJK
-aWF4dW4gWWFuZyI8amlheHVuLnlhbmdAZmx5Z29hdC5jb20+OyAiWHVlZmVuZyBMaSI8bGl4
-dWVmZW5nQGxvb25nc29uLmNuPjsgU3ViamVjdDogIFtSRkMgUEFUQ0ggdjNdIFBDSS9wb3J0
-ZHJ2OiBPbmx5IGRpc2FibGUgQnVzIE1hc3RlciBvbiBrZXhlYyByZWJvb3QgYW5kIGNvbm5l
-Y3RlZCBQQ0kgZGV2aWNlcyBBZnRlciBjb21taXQgNzQ1YmUyZTcwMGNkICgiUENJZTogcG9y
-dGRydjogY2FsbCBwY2lfZGlzYWJsZV9kZXZpY2UNCmR1cmluZyByZW1vdmUiKSBhbmQgY29t
-bWl0IGNjMjdiNzM1YWQzYSAoIlBDSS9wb3J0ZHJ2OiBUdXJuIG9mZiBQQ0llDQpzZXJ2aWNl
-cyBkdXJpbmcgc2h1dGRvd24iKSwgaXQgYWxzbyBjYWxscyBwY2lfZGlzYWJsZV9kZXZpY2Uo
-KSBkdXJpbmcNCnNodXRkb3duLCB0aGlzIGxlYWRzIHRvIHNodXRkb3duIG9yIHJlYm9vdCBm
-YWlsdXJlIG9jY2FzaW9uYWxseSBkdWUgdG8NCmNsZWFyIFBDSV9DT01NQU5EX01BU1RFUiBv
-biB0aGUgZGV2aWNlIGluIGRvX3BjaV9kaXNhYmxlX2RldmljZSgpLg0KDQpkcml2ZXJzL3Bj
-aS9wY2kuYw0Kc3RhdGljIHZvaWQgZG9fcGNpX2Rpc2FibGVfZGV2aWNlKHN0cnVjdCBwY2lf
-ZGV2ICpkZXYpDQp7DQogICAgICAgIHUxNiBwY2lfY29tbWFuZDsNCg0KICAgICAgICBwY2lf
-cmVhZF9jb25maWdfd29yZChkZXYsIFBDSV9DT01NQU5ELCAmcGNpX2NvbW1hbmQpOw0KICAg
-ICAgICBpZiAocGNpX2NvbW1hbmQgJiBQQ0lfQ09NTUFORF9NQVNURVIpIHsNCiAgICAgICAg
-ICAgICAgICBwY2lfY29tbWFuZCAmPSB+UENJX0NPTU1BTkRfTUFTVEVSOw0KICAgICAgICAg
-ICAgICAgIHBjaV93cml0ZV9jb25maWdfd29yZChkZXYsIFBDSV9DT01NQU5ELCBwY2lfY29t
-bWFuZCk7DQogICAgICAgIH0NCg0KICAgICAgICBwY2liaW9zX2Rpc2FibGVfZGV2aWNlKGRl
-dik7DQp9DQoNCldoZW4gcmVtb3ZlICJwY2lfY29tbWFuZCAmPSB+UENJX0NPTU1BTkRfTUFT
-VEVSOyIsIGl0IGNhbiB3b3JrIHdlbGwgd2hlbg0Kc2h1dGRvd24gb3IgcmVib290Lg0KDQpB
-cyBPbGl2ZXIgTydIYWxsb3JhbiBzYWlkLCBubyBuZWVkIHRvIGNhbGwgcGNpX2Rpc2FibGVf
-ZGV2aWNlKCkgd2hlbg0KYWN0dWFsbHkgc2h1dHRpbmcgZG93biwgYnV0IHdlIHNob3VsZCBj
-YWxsIHBjaV9kaXNhYmxlX2RldmljZSgpIGJlZm9yZQ0KaGFuZGluZyBvdmVyIHRvIHRoZSBu
-ZXcga2VybmVsIG9uIGtleGVjIHJlYm9vdCwgc28gd2UgY2FuIGRvIHNvbWUNCmNvbmRpdGlv
-biBjaGVja3Mgd2hpY2ggYXJlIGFscmVhZHkgZXhlY3V0ZWQgYWZ0ZXJ3YXJkcyBieSB0aGUg
-ZnVuY3Rpb24NCnBjaV9kZXZpY2Vfc2h1dGRvd24oKSwgdGhpcyBpcyBkb25lIGJ5IGNvbW1p
-dCA0ZmM5YmJmOThmZDYgKCJQQ0k6IERpc2FibGUNCkJ1cyBNYXN0ZXIgb25seSBvbiBrZXhl
-YyByZWJvb3QiKSBhbmQgY29tbWl0IDZlMGVkYTNjMzg5OCAoIlBDSTogRG9uJ3QgdHJ5DQp0
-byBkaXNhYmxlIEJ1cyBNYXN0ZXIgb24gZGlzY29ubmVjdGVkIFBDSSBkZXZpY2VzIikuDQoN
-CmRyaXZlcnMvcGNpL3BjaS1kcml2ZXIuYw0Kc3RhdGljIHZvaWQgcGNpX2RldmljZV9zaHV0
-ZG93bihzdHJ1Y3QgZGV2aWNlICpkZXYpDQp7DQogLi4uDQogICAgICAgIGlmIChkcnYgJiYg
-ZHJ2LT5zaHV0ZG93bikNCiAgICAgICAgICAgICAgICBkcnYtPnNodXRkb3duKHBjaV9kZXYp
-Ow0KDQogICAgICAgIC8qDQogICAgICAgICAqIElmIHRoaXMgaXMgYSBrZXhlYyByZWJvb3Qs
-IHR1cm4gb2ZmIEJ1cyBNYXN0ZXIgYml0IG9uIHRoZQ0KICAgICAgICAgKiBkZXZpY2UgdG8g
-dGVsbCBpdCB0byBub3QgY29udGludWUgdG8gZG8gRE1BLiBEb24ndCB0b3VjaA0KICAgICAg
-ICAgKiBkZXZpY2VzIGluIEQzY29sZCBvciB1bmtub3duIHN0YXRlcy4NCiAgICAgICAgICog
-SWYgaXQgaXMgbm90IGEga2V4ZWMgcmVib290LCBmaXJtd2FyZSB3aWxsIGhpdCB0aGUgUENJ
-DQogICAgICAgICAqIGRldmljZXMgd2l0aCBiaWcgaGFtbWVyIGFuZCBzdG9wIHRoZWlyIERN
-QSBhbnkgd2F5Lg0KICAgICAgICAgKi8NCiAgICAgICAgaWYgKGtleGVjX2luX3Byb2dyZXNz
-ICYmIChwY2lfZGV2LT5jdXJyZW50X3N0YXRlIDw9IFBDSV9EM2hvdCkpDQogICAgICAgICAg
-ICAgICAgcGNpX2NsZWFyX21hc3RlcihwY2lfZGV2KTsNCn0NCg0KWyAgIDM2LjE1OTQ0Nl0g
-Q2FsbCBUcmFjZToNClsgICAzNi4yNDE2ODhdIFs8ZmZmZmZmZmY4MDIxMTQzND5dIHNob3df
-c3RhY2srMHg5Yy8weDEzMA0KWyAgIDM2LjMyNjYxOV0gWzxmZmZmZmZmZjgwNjYxYjcwPl0g
-ZHVtcF9zdGFjaysweGIwLzB4ZjANClsgICAzNi40MTA0MDNdIFs8ZmZmZmZmZmY4MDZhODI0
-MD5dIHBjaWVfcG9ydGRydl9zaHV0ZG93bisweDE4LzB4NzgNClsgICAzNi40OTUzMDJdIFs8
-ZmZmZmZmZmY4MDY5YzZiND5dIHBjaV9kZXZpY2Vfc2h1dGRvd24rMHg0NC8weDkwDQpbICAg
-MzYuNTgwMDI3XSBbPGZmZmZmZmZmODA3YWFjOTA+XSBkZXZpY2Vfc2h1dGRvd24rMHgxMzAv
-MHgyOTANClsgICAzNi42NjQ0ODZdIFs8ZmZmZmZmZmY4MDI2NTQ0OD5dIGtlcm5lbF9wb3dl
-cl9vZmYrMHgzOC8weDgwDQpbICAgMzYuNzQ4MjcyXSBbPGZmZmZmZmZmODAyNjU2MzQ+XSBf
-X2RvX3N5c19yZWJvb3QrMHgxYTQvMHgyNTgNClsgICAzNi44MzE5ODVdIFs8ZmZmZmZmZmY4
-MDIxOGI5MD5dIHN5c2NhbGxfY29tbW9uKzB4MzQvMHg1OA0KDQpTaWduZWQtb2ZmLWJ5OiBU
-aWV6aHUgWWFuZyA8eWFuZ3RpZXpodUBsb29uZ3Nvbi5jbj4NCi0tLQ0KIGRyaXZlcnMvcGNp
-L3BjaWUvcG9ydGRydl9jb3JlLmMgfCAgMSAtDQogZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2
-X3BjaS5jICB8IDE0ICsrKysrKysrKysrKystDQogMiBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
-cGNpZS9wb3J0ZHJ2X2NvcmUuYyBiL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9jb3JlLmMN
-CmluZGV4IDUwYTk1MjIuLjE5OTFhY2EgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BjaS9wY2ll
-L3BvcnRkcnZfY29yZS5jDQorKysgYi9kcml2ZXJzL3BjaS9wY2llL3BvcnRkcnZfY29yZS5j
-DQpAQCAtNDkxLDcgKzQ5MSw2IEBAIHZvaWQgcGNpZV9wb3J0X2RldmljZV9yZW1vdmUoc3Ry
-dWN0IHBjaV9kZXYgKmRldikNCiB7DQogCWRldmljZV9mb3JfZWFjaF9jaGlsZCgmZGV2LT5k
-ZXYsIE5VTEwsIHJlbW92ZV9pdGVyKTsNCiAJcGNpX2ZyZWVfaXJxX3ZlY3RvcnMoZGV2KTsN
-Ci0JcGNpX2Rpc2FibGVfZGV2aWNlKGRldik7DQogfQ0KIA0KIC8qKg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9wY2kuYyBiL2RyaXZlcnMvcGNpL3BjaWUvcG9y
-dGRydl9wY2kuYw0KaW5kZXggM2EzY2U0MC4uY2FiMzdhOCAxMDA2NDQNCi0tLSBhL2RyaXZl
-cnMvcGNpL3BjaWUvcG9ydGRydl9wY2kuYw0KKysrIGIvZHJpdmVycy9wY2kvcGNpZS9wb3J0
-ZHJ2X3BjaS5jDQpAQCAtMTQzLDYgKzE0MywxOCBAQCBzdGF0aWMgdm9pZCBwY2llX3BvcnRk
-cnZfcmVtb3ZlKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQogCX0NCiANCiAJcGNpZV9wb3J0X2Rl
-dmljZV9yZW1vdmUoZGV2KTsNCisJcGNpX2Rpc2FibGVfZGV2aWNlKGRldik7DQorfQ0KKw0K
-K3N0YXRpYyB2b2lkIHBjaWVfcG9ydGRydl9zaHV0ZG93bihzdHJ1Y3QgcGNpX2RldiAqZGV2
-KQ0KK3sNCisJaWYgKHBjaV9icmlkZ2VfZDNfcG9zc2libGUoZGV2KSkgew0KKwkJcG1fcnVu
-dGltZV9mb3JiaWQoJmRldi0+ZGV2KTsNCisJCXBtX3J1bnRpbWVfZ2V0X25vcmVzdW1lKCZk
-ZXYtPmRldik7DQorCQlwbV9ydW50aW1lX2RvbnRfdXNlX2F1dG9zdXNwZW5kKCZkZXYtPmRl
-dik7DQorCX0NCisNCisJcGNpZV9wb3J0X2RldmljZV9yZW1vdmUoZGV2KTsNCiB9DQogDQog
-c3RhdGljIHBjaV9lcnNfcmVzdWx0X3QgcGNpZV9wb3J0ZHJ2X2Vycm9yX2RldGVjdGVkKHN0
-cnVjdCBwY2lfZGV2ICpkZXYsDQpAQCAtMjExLDcgKzIyMyw3IEBAIHN0YXRpYyBzdHJ1Y3Qg
-cGNpX2RyaXZlciBwY2llX3BvcnRkcml2ZXIgPSB7DQogDQogCS5wcm9iZQkJPSBwY2llX3Bv
-cnRkcnZfcHJvYmUsDQogCS5yZW1vdmUJCT0gcGNpZV9wb3J0ZHJ2X3JlbW92ZSwNCi0JLnNo
-dXRkb3duCT0gcGNpZV9wb3J0ZHJ2X3JlbW92ZSwNCisJLnNodXRkb3duCT0gcGNpZV9wb3J0
-ZHJ2X3NodXRkb3duLA0KIA0KIAkuZXJyX2hhbmRsZXIJPSAmcGNpZV9wb3J0ZHJ2X2Vycl9o
-YW5kbGVyLA0KIA0KLS0gDQoyLjEuMA==
+Hi, Tiezhu,
 
+How do you test kexec? kexec -e or systemctl kexec? Or both?
+P.S., Please also CC my gmail (chenhuacai@gmail.com) since lemote.com
+has some communication problems.
 
+Huacai
 
+>
+> =E9=99=88=E5=8D=8E=E6=89=8D=E6=B1=9F=E8=8B=8F=E8=88=AA=E5=A4=A9=E9=BE=99=
+=E6=A2=A6=E4=BF=A1=E6=81=AF=E6=8A=80=E6=9C=AF=E6=9C=89=E9=99=90=E5=85=AC=E5=
+=8F=B8/=E7=A0=94=E5=8F=91=E4=B8=AD=E5=BF=83/=E8=BD=AF=E4=BB=B6=E9=83=A8   -=
+----------------- Original ------------------From:  "Tiezhu Yang"<yangtiezh=
+u@loongson.cn>;Date:  Mon, Sep 14, 2020 03:57 PMTo:  "Bjorn Helgaas"<bhelga=
+as@google.com>; Cc:  "linux-pci"<linux-pci@vger.kernel.org>; "linux-kernel"=
+<linux-kernel@vger.kernel.org>; "Rafael J. Wysocki"<rafael.j.wysocki@intel.=
+com>; "Konstantin Khlebnikov"<khlebnikov@openvz.org>; "Khalid Aziz"<khalid.=
+aziz@oracle.com>; "Vivek Goyal"<vgoyal@redhat.com>; "Lukas Wunner"<lukas@wu=
+nner.de>; "Oliver O'Halloran"<oohall@gmail.com>; "Huacai Chen"<chenhc@lemot=
+e.com>; "Jiaxun Yang"<jiaxun.yang@flygoat.com>; "Xuefeng Li"<lixuefeng@loon=
+gson.cn>; Subject:  [RFC PATCH v3] PCI/portdrv: Only disable Bus Master on =
+kexec reboot and connected PCI devices After commit 745be2e700cd ("PCIe: po=
+rtdrv: call pci_disable_device
+> during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
+> services during shutdown"), it also calls pci_disable_device() during
+> shutdown, this leads to shutdown or reboot failure occasionally due to
+> clear PCI_COMMAND_MASTER on the device in do_pci_disable_device().
+>
+> drivers/pci/pci.c
+> static void do_pci_disable_device(struct pci_dev *dev)
+> {
+>         u16 pci_command;
+>
+>         pci_read_config_word(dev, PCI_COMMAND, &pci_command);
+>         if (pci_command & PCI_COMMAND_MASTER) {
+>                 pci_command &=3D ~PCI_COMMAND_MASTER;
+>                 pci_write_config_word(dev, PCI_COMMAND, pci_command);
+>         }
+>
+>         pcibios_disable_device(dev);
+> }
+>
+> When remove "pci_command &=3D ~PCI_COMMAND_MASTER;", it can work well whe=
+n
+> shutdown or reboot.
+>
+> As Oliver O'Halloran said, no need to call pci_disable_device() when
+> actually shutting down, but we should call pci_disable_device() before
+> handing over to the new kernel on kexec reboot, so we can do some
+> condition checks which are already executed afterwards by the function
+> pci_device_shutdown(), this is done by commit 4fc9bbf98fd6 ("PCI: Disable
+> Bus Master only on kexec reboot") and commit 6e0eda3c3898 ("PCI: Don't tr=
+y
+> to disable Bus Master on disconnected PCI devices").
+>
+> drivers/pci/pci-driver.c
+> static void pci_device_shutdown(struct device *dev)
+> {
+>  ...
+>         if (drv && drv->shutdown)
+>                 drv->shutdown(pci_dev);
+>
+>         /*
+>          * If this is a kexec reboot, turn off Bus Master bit on the
+>          * device to tell it to not continue to do DMA. Don't touch
+>          * devices in D3cold or unknown states.
+>          * If it is not a kexec reboot, firmware will hit the PCI
+>          * devices with big hammer and stop their DMA any way.
+>          */
+>         if (kexec_in_progress && (pci_dev->current_state <=3D PCI_D3hot))
+>                 pci_clear_master(pci_dev);
+> }
+>
+> [   36.159446] Call Trace:
+> [   36.241688] [<ffffffff80211434>] show_stack+0x9c/0x130
+> [   36.326619] [<ffffffff80661b70>] dump_stack+0xb0/0xf0
+> [   36.410403] [<ffffffff806a8240>] pcie_portdrv_shutdown+0x18/0x78
+> [   36.495302] [<ffffffff8069c6b4>] pci_device_shutdown+0x44/0x90
+> [   36.580027] [<ffffffff807aac90>] device_shutdown+0x130/0x290
+> [   36.664486] [<ffffffff80265448>] kernel_power_off+0x38/0x80
+> [   36.748272] [<ffffffff80265634>] __do_sys_reboot+0x1a4/0x258
+> [   36.831985] [<ffffffff80218b90>] syscall_common+0x34/0x58
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  drivers/pci/pcie/portdrv_core.c |  1 -
+>  drivers/pci/pcie/portdrv_pci.c  | 14 +++++++++++++-
+>  2 files changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_c=
+ore.c
+> index 50a9522..1991aca 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
+>  {
+>         device_for_each_child(&dev->dev, NULL, remove_iter);
+>         pci_free_irq_vectors(dev);
+> -       pci_disable_device(dev);
+>  }
+>
+>  /**
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pc=
+i.c
+> index 3a3ce40..cab37a8 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -143,6 +143,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>         }
+>
+>         pcie_port_device_remove(dev);
+> +       pci_disable_device(dev);
+> +}
+> +
+> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+> +{
+> +       if (pci_bridge_d3_possible(dev)) {
+> +               pm_runtime_forbid(&dev->dev);
+> +               pm_runtime_get_noresume(&dev->dev);
+> +               pm_runtime_dont_use_autosuspend(&dev->dev);
+> +       }
+> +
+> +       pcie_port_device_remove(dev);
+>  }
+>
+>  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
+> @@ -211,7 +223,7 @@ static struct pci_driver pcie_portdriver =3D {
+>
+>         .probe          =3D pcie_portdrv_probe,
+>         .remove         =3D pcie_portdrv_remove,
+> -       .shutdown       =3D pcie_portdrv_remove,
+> +       .shutdown       =3D pcie_portdrv_shutdown,
+>
+>         .err_handler    =3D &pcie_portdrv_err_handler,
+>
+> --
+> 2.1.0
