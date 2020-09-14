@@ -2,137 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20019269614
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 22:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B7852696BB
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 22:34:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgINUJK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 16:09:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40237 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725978AbgINUJJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 16:09:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600114147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5FNGxLw414IlgmqLwQ0FdJNXlkKOR5HmcdZlQQAZx0A=;
-        b=ZkBRHspxQ5HTqccs0ojS0rPcUxAPbtIhNLhHwXIWw7xh6bDARIZZZvWcLy9CnQj9ZKcptR
-        Tzz1WbC9Yec6M/lxZoAp4TeRImt9s7/erP25lZytOSW2ioKsYf5DUPUkBOvq5lvOiGYbGj
-        ldjah0ZuDCq4ocij1z9BdvpOjk+6LDs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-ZtfOeI4BNh2U3JbulCR8dw-1; Mon, 14 Sep 2020 16:09:05 -0400
-X-MC-Unique: ZtfOeI4BNh2U3JbulCR8dw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5537B1017DC3;
-        Mon, 14 Sep 2020 20:09:01 +0000 (UTC)
-Received: from zim (ovpn-112-96.phx2.redhat.com [10.3.112.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 04A895D994;
-        Mon, 14 Sep 2020 20:09:00 +0000 (UTC)
-Date:   Mon, 14 Sep 2020 14:08:59 -0600
-From:   Myron Stowe <mstowe@redhat.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        klimov.linux@gmail.com
-Subject: Re: PCIe hot-plug issue: Failed to check link status
-Message-ID: <20200914140859.3fb0db2b@zim>
-In-Reply-To: <20200910132440.GA1661@wunner.de>
-References: <20200908085726.54509090@zim>
-        <20200910132440.GA1661@wunner.de>
+        id S1725920AbgINUeR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 16:34:17 -0400
+Received: from mail-dm6nam11on2047.outbound.protection.outlook.com ([40.107.223.47]:13249
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726212AbgINUeG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Sep 2020 16:34:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CNvi6ApD6bNNmehKExQaxdsvmEqDH2D3JS6upkqxdkcEk5DTscXEPZADF1QUfx0sIALoajvUG4oAYP3VLTNdoSG11GxBpZmF6EpxgBDgfPsAXjPhk9yf5ZtXfuugRD9PCRVB1ESvluaYLFOKDss/aLU+b10H0TtgcPwx4R35Ius2SD45VsAlrv+4ZiUHgUCacflVoZ67zDxmZ3f/0SGoj7dZtK2CUpWeQk8nQG+dn2Sf149p8vgjNQlcRrNnrd5KguCHM29XbYhyDX1cMLd92c6O9/b5gHYVqUJRvrBF+Mlzde3erNuecUclO9cfCsfl6Rld/GJqOPXCHSnY0phd0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=976VPVqbDQVwlTh/T2FBaShp5C+a9/tD1N/10lqGLYE=;
+ b=Au/xHUWWn7TuF4l0n9ajLjFNYzr1/k5yyBF3uTqa8Xcrg6VYlkadfUxyAK2ZTur2O5/KcUI+7mzNXzfjb3xWKyR/wBQaZG66gSG5Yd/N4jmBzTOBibzxleGcfxDWJt5AxIXueNzFg+oHFytxxSBBH+vuwK8SoxZidVixSFR18nFjSrAmThKJJXybMleyi9w3M9siHh7xMZOCUkbivb1jvbRJmEgDcX8qqdzRyxjbogiDW0oRP28KiPEQKB36AMIx6MH3u8Xsv4ZAeaX7oFgztycCKl7ou9hxxdJo7+MSLHL/mUEW1+GUfV/i9BqAnMq4yC7579Q4GbGg34LuUgGcww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=976VPVqbDQVwlTh/T2FBaShp5C+a9/tD1N/10lqGLYE=;
+ b=PMzFxkMfGU+SU4wx6geyA+BPzUm8IEqf6UPn8QaCuuC8XN20fbQG7VkdBGNg8vRW6Zse6ITYYitN1VvP/oWu5UMMcJC+amoGFJsZCF34RqhBHNi1epsKJLHjHZMrH7jiUJAMybPM/yD0kmiXUGHv55lg/3ZeQS1utjPSjpWi5rw=
+Received: from MN2PR12MB4488.namprd12.prod.outlook.com (2603:10b6:208:24e::19)
+ by MN2PR12MB4078.namprd12.prod.outlook.com (2603:10b6:208:1de::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Mon, 14 Sep
+ 2020 20:34:03 +0000
+Received: from MN2PR12MB4488.namprd12.prod.outlook.com
+ ([fe80::889d:3c2f:a794:67fb]) by MN2PR12MB4488.namprd12.prod.outlook.com
+ ([fe80::889d:3c2f:a794:67fb%6]) with mapi id 15.20.3370.019; Mon, 14 Sep 2020
+ 20:34:03 +0000
+From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>
+CC:     Huacai Chen <chenhc@lemote.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: RE: [PATCH 1/2] PCI/portdrv: Remove the .remove() method in
+ pcie_portdriver
+Thread-Topic: [PATCH 1/2] PCI/portdrv: Remove the .remove() method in
+ pcie_portdriver
+Thread-Index: AQHWiYr0b6bHeTGyH0aeDQg7BoeWJalmteqAgAHib/A=
+Date:   Mon, 14 Sep 2020 20:34:03 +0000
+Message-ID: <MN2PR12MB44881AF114C47613285A083BF7230@MN2PR12MB4488.namprd12.prod.outlook.com>
+References: <20200913050129.GA10736@wunner.de>
+ <20200913154235.GA1188391@bjorn-Precision-5520>
+In-Reply-To: <20200913154235.GA1188391@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Enabled=true;
+ MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SetDate=2020-09-14T20:33:56Z;
+ MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Method=Privileged;
+ MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Name=Public_0;
+ MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ActionId=9246b23b-3468-4912-bef4-000000d02ae9;
+ MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ContentBits=1
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_enabled: true
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_setdate: 2020-09-14T20:33:50Z
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_method: Standard
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_name: Internal Use Only -
+ Unrestricted
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_actionid: d2bf12e0-b1fa-43af-9b5a-000005d1ca49
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_contentbits: 0
+msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_enabled: true
+msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_setdate: 2020-09-14T20:33:58Z
+msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_method: Privileged
+msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_name: Public_0
+msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_actionid: c80bf86c-561b-46c5-9226-00000c3e07cb
+msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_contentbits: 0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
+x-originating-ip: [71.219.66.138]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 09a0f8b9-970f-4993-3b6c-08d858ed8506
+x-ms-traffictypediagnostic: MN2PR12MB4078:
+x-microsoft-antispam-prvs: <MN2PR12MB40784DCCC634B64C49D2C139F7230@MN2PR12MB4078.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KEY+MuSlegksWzpsTP0zUcooqQuOgUuMqIBpg7NPfDbjmRQlVe5bkdVyS2X9gCFOoKWIQFM7EKhuDHufkkap83kx/a3CDG9eUHVOBBtd2K/FSWoopduoj+Nsu3nUZTDzuPA7AkkzaWao3doL0PDQaKVW65CfwDmh6F/V9b2REP5/96auvleY9DNrf1oD/4+KB1Z35xRPZh/6lT0OoHZLs7S7dYPnx6ZvXhhPHn9egpUr3zpV9HtMJyUxc1YREvMwyvMsbnVmNxjfhOC7qYYsEDb47pXXEqpJEl7sityj0jhoVLM6QDas4ZL6NeN/1y0UHfFuZr0795ezRHmBEtSeUch8n4/nD7Me3pWYdTVeKpc1ZZVpmCtZxJXELiEuYevn
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4488.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(376002)(396003)(39860400002)(136003)(316002)(6506007)(9686003)(55016002)(33656002)(64756008)(66556008)(66476007)(8936002)(53546011)(26005)(66946007)(66446008)(86362001)(2906002)(5660300002)(76116006)(8676002)(54906003)(4326008)(83380400001)(186003)(110136005)(71200400001)(478600001)(52536014)(7696005)(142923001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: vnGqFnHMTkxXh5jiYu/jlUdA8ykOXjh242TniSwaCdZnYNlzK8wABuwDTHSgDc2ZVpxiR/1Xf4hn1haKN9WkxmqmPUNyFDOE9M3EwC99f5ZUSt0qWjgYjkHV1JnIYQtYED6wsCbyz/b5JNns6udulL27O8jqMitVzE6VBh2AHir3Iiz2pEFKmvgvLBOXCrnAmH53vvh3qIcF1rrLJutoqs575KYCW1ZCfS6ZHspHwLVWZOK23sqVNPIZJZ2beJ1uXQ3u3JJkmtx5kobGfyCDeuxzT0bhFLxhqkbK3DdUV+pOkCkGuS2jXoTuHZ59FtL3Fhz9EIncVm3YoYhqb2dScflHTP1O4RHs0MBZ3upiQu43rCPFDD1PFNSMA+EOa2KPumnNHl/wYdudM+AG0dIq8+9+PvXqoPujZG9jBNIjOjprGh4Zx4GJpEBW5qnMRV7lAm5ZzXTr/nwP2sOwxsc4KbLrppvwTxwZ+PQptU17HiHh32Krgzma2fGJCWpn6QlCtAgWhYnqDFmS6aYm7IP7kkDYqTX6XsylIHcS0o2EApR6RxqPwk+Scyou4ZumUyS5O1q75SLPzeH38KOD2l/i/fkrZgJGkhGl0rvuOZmpfX2kDBXQAm0ateUrHrVhfxw8XLaCiNVIfvgh9cl/+jwIbw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4488.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09a0f8b9-970f-4993-3b6c-08d858ed8506
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Sep 2020 20:34:03.3812
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +boap6SP4Gms2jau3vs/B9iUBV5vqvH590t3sm50C+BcK7N+tp8K4bU3b6xUD0EHmTrmRDsnRsRrkH5vsit+uQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4078
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 10 Sep 2020 15:24:40 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+[AMD Public Use]
 
-> On Tue, Sep 08, 2020 at 08:57:26AM -0600, Myron Stowe wrote:
-> > On a system with a Mellanox Technologies MT27800 Family [ConnectX-5]
-> > NIC controller containing a power button, hot-plug fails to function
-> > properly.  
-> [...]
-> > https://bugzilla.kernel.org/show_bug.cgi?id=209113  
-> 
-> Thanks for the report.
-> 
-> So in the dmesg output you've provided, the card is already inserted
-> when the machine boots.  At 233 seconds, the Attention Button is
-> pressed twice within 200 msec (the second press cancels the first).
-> At 235 sec, the button is pressed again and after 5 sec the slot is
-> brought down. So far so good.
-> 
-> At 291 sec the button is pressed but bringup of the slot fails.
-> What happens here is, pciehp notices that upon the button press,
-> a card is already present in the slot.  So for convenience,
-> instead of waiting the full 5 sec, it attempts to bring up the slot
-> immediately.  That fails because Data Link Layer Link Active isn't
-> set within 1 sec.
-> 
-> The difference to v4.18 is that back then, pciehp waited the full
-> 5 sec before bringing up the slot.
-> 
-> Per PCIe r4.0 sec 6.7.1.8:
-> 
->     After turning power on, software must wait for a Data Link Layer
->     State Changed event, as described in Section 6.7.3.3.
-> 
-> And per sec 6.7.3.3:
-> 
->     The Data Link Layer State Changed event must occur within 1 second
->     of the event that initiates the hot-insertion. If a power
-> controller is supported, the time out interval is measured from when
-> software initiated a write to the Slot Control register to turn on
-> the power. [...] Software is allowed to time out on a hot add
-> operation if the Data Link Layer State Changed event does not occur
-> within 1 second.
-> 
-> So we adhere to the spec regarding the timeout between enabling power
-> and waiting for DLLLA.  We do not exactly adhere to the spec regarding
-> the 5 sec delay between button press and acting on it.  But I can't
-> really imagine that's the problem.
-> 
-> As a shot in the dark, could you amend pcie_wait_for_link_delay()
-> in drivers/pci/pci.c and increase the "timeout = 1000" a little?
-> Maybe more than 1 sec is necessary in this case between enabling
-> power and timing out for lack of a link?
-> 
-> The v4.18 output you've provided in the bugzilla is incomplete and
-> lacks time stamps.  Could you provide it in full?
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Sunday, September 13, 2020 11:43 AM
+> To: Lukas Wunner <lukas@wunner.de>
+> Cc: Huacai Chen <chenhc@lemote.com>; Bjorn Helgaas
+> <bhelgaas@google.com>; Deucher, Alexander
+> <Alexander.Deucher@amd.com>; linux-pci@vger.kernel.org; Huacai Chen
+> <chenhuacai@gmail.com>; Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Subject: Re: [PATCH 1/2] PCI/portdrv: Remove the .remove() method in
+> pcie_portdriver
+>=20
+> On Sun, Sep 13, 2020 at 07:01:29AM +0200, Lukas Wunner wrote:
+> > On Fri, Sep 11, 2020 at 06:09:36PM +0800, Huacai Chen wrote:
+> > > As Bjorn Helgaas said, portdrv can only be built statically (not as
+> > > a module), so the .remove() method in pcie_portdriver is useless. So
+> > > just remove it.
+> >
+> > No, PCIe switches (containing upstream and downstream PCIe ports) can
+> > be hot-plugged and hot-removed at runtime.  Every Thunderbolt device
+> > contains a PCIe switch and is hot-pluggable.  We do want to clean up a
+> > hot-removed PCIe port properly.
+>=20
+> Right, sorry, I was thinking only of driver unbinding, not of device remo=
+val.
+> Sorry to have wasted your time.
+>=20
 
-Hi Lukas,
+FWIW, our newer GPUs have both upstream and downstream ports that are part =
+of the device.
 
-I got back a full 'dmesg' log, with the hot-plug event included, from
-the earlier, working scenario, kernel.  It's attached to the BZ as
-"dmesg log of v3.10+ showing successful hot-plug event".  Note the
-v3.10 basis as I was incorrect before in thinking the working case was
-from a v4.18 basis. For this case, the hot-plug event starts 113
-seconds in.
+Slightly off topic, but does the current pm code handle these cases correct=
+ly?  ACPI related power handling doesn't seem to work correctly for these d=
+evices in laptops where the GPU power control is handled by ACPI.
 
-As for your "shot in the dark", the reporters doubled the timeout value
-in pcie_wait_for_link_delay() and had positive results.  The 'dmesg'
-log from that testing is also attached to the BZ as "dmesg log of
-v5.8.8 with increased timeout".  So it looks as if this specific
-controller is not adhering to the Data Link Layer State Changed event
-within the specified time.
+Alex
 
-
-There was an earlier attachment of a couple of 'dmesg' logs that you
-can ignore (i.e., dmesg with timestamp for RHEL...).
-
-Myron
-
-> 
-> Thanks,
-> 
-> Lukas
-> 
-
+> > > --- a/drivers/pci/pcie/portdrv_pci.c
+> > > +++ b/drivers/pci/pcie/portdrv_pci.c
+> > > @@ -134,7 +134,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev=
+,
+> > >  	return 0;
+> > >  }
+> > >
+> > > -static void pcie_portdrv_remove(struct pci_dev *dev)
+> > > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+> > >  {
+> > >  	if (pci_bridge_d3_possible(dev)) {
+> > >  		pm_runtime_forbid(&dev->dev);
+> > > @@ -210,8 +210,7 @@ static struct pci_driver pcie_portdriver =3D {
+> > >  	.id_table	=3D &port_pci_ids[0],
+> > >
+> > >  	.probe		=3D pcie_portdrv_probe,
+> > > -	.remove		=3D pcie_portdrv_remove,
+> > > -	.shutdown	=3D pcie_portdrv_remove,
+> > > +	.shutdown	=3D pcie_portdrv_shutdown,
+> > >
+> > >  	.err_handler	=3D &pcie_portdrv_err_handler,
