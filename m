@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84320268648
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 09:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95E1E268658
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 09:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgINHmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 03:42:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
+        id S1726050AbgINHoq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 03:44:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgINHme (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 03:42:34 -0400
+        with ESMTP id S1725968AbgINHop (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 03:44:45 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D799C06174A;
-        Mon, 14 Sep 2020 00:42:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8974CC06174A;
+        Mon, 14 Sep 2020 00:44:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=BxxgQYY1DeDYvu2hSRXigNNS2r5IsjvTJ3A6Bx2A/Zo=; b=UvzohcGwH9IAMzK+iFi8fPvVpN
-        Ugc7HyRNr4ugQtk9X0wrPT3RmML8tFeDIKWF0wYp+g49xrWM2aVooJ3t33UH5epcYm1RpWBIIYiny
-        CQOcPWiQWI4tvaRjTJk9QXLI2dcNv7ueNYcKg3AhbHm0eQuHcWuGLKKj0+NhIYY+MtZt3JyVphhRS
-        kaJsn5XAPvmj0hctoxhWmYvBrtQvhY0ASaSWXJjLxqj+IaepwCkCU42rZLkbbDfrsj/tf13h2D6wP
-        z+Y6sLMfBvELNPurRfQzY1+7hgBkcQSHeBPYtXHfKonSb5Ad69+ubjnWDYZuXL3N7L50tZM/nzeBK
-        LCJ1VMLQ==;
+        bh=rZz7WEucbLzmcSBpKZVSsyybm+o08I+OYE053DvRjjM=; b=t4keXE5TDnxAHF6g8hogs4VgZL
+        ULo2k/B8+ruC5jsQr27s/sQblW82iX+G9AIpOhhy6JQY5XjSgIU2JThFVtAqqJOprPd9Y1mcTxzFJ
+        7xexc8gEJwRKQ68VQSDLyUs1lCl/V0ZwaUXP7JJpJhCHRS7vhIr1gvV2PwcjkInHgO6yQUAvm/Qi0
+        L9HoU2awqpjY9vMbIUOhixXqveqkDZy0oProfsCjI+Yzty2QtJxZmUDWg4i0FDGXer1pmo6yH1+6/
+        sda/7CKX4v4tUq/CEuOgohNyWCKUA6LPDJuza3QFbgZSg55jsHqgvpUvIsbRnDSKiqAu4+j++J2ey
+        YPPprpGA==;
 Received: from 089144214092.atnat0023.highway.a1.net ([89.144.214.92] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kHj87-0000M1-D1; Mon, 14 Sep 2020 07:42:27 +0000
+        id 1kHjAE-0000Rh-Gw; Mon, 14 Sep 2020 07:44:38 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     iommu@lists.linux-foundation.org,
         Russell King <linux@armlinux.org.uk>,
@@ -44,9 +44,9 @@ Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 3/6] ARM/dma-mapping: move various helpers from dma-mapping.h to dma-direct.h
-Date:   Mon, 14 Sep 2020 09:33:40 +0200
-Message-Id: <20200914073343.1579578-4-hch@lst.de>
+Subject: [PATCH 4/6] ARM/keystone: move the DMA offset handling under ifdef CONFIG_ARM_LPAE
+Date:   Mon, 14 Sep 2020 09:33:41 +0200
+Message-Id: <20200914073343.1579578-5-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200914073343.1579578-1-hch@lst.de>
 References: <20200914073343.1579578-1-hch@lst.de>
@@ -58,160 +58,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Move the helpers to translate to and from direct mapping DMA addresses
-to dma-direct.h.  This not only is the most logical place, but the new
-placement also avoids dependency loops with pending commits.
+The DMA offset notifier can only be used if PHYS_OFFSET is at least
+KEYSTONE_HIGH_PHYS_START, which can't be represented by a 32-bit
+phys_addr_t.  Currently the code compiles fine despite that, a pending
+change to the DMA offset handling would create a compiler warning for
+this case.  Add an ifdef to not compile the code except for LPAE
+configs.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 ---
- arch/arm/common/dmabounce.c        |  2 +-
- arch/arm/include/asm/dma-direct.h  | 50 ++++++++++++++++++++++++++++++
- arch/arm/include/asm/dma-mapping.h | 50 ------------------------------
- 3 files changed, 51 insertions(+), 51 deletions(-)
+ arch/arm/mach-keystone/keystone.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/common/dmabounce.c b/arch/arm/common/dmabounce.c
-index f4b719bde76367..d3e00ea9208834 100644
---- a/arch/arm/common/dmabounce.c
-+++ b/arch/arm/common/dmabounce.c
-@@ -24,7 +24,7 @@
- #include <linux/slab.h>
- #include <linux/page-flags.h>
- #include <linux/device.h>
--#include <linux/dma-mapping.h>
-+#include <linux/dma-direct.h>
- #include <linux/dmapool.h>
- #include <linux/list.h>
- #include <linux/scatterlist.h>
-diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-direct.h
-index bca0de56753439..fbcf4367b5cb1a 100644
---- a/arch/arm/include/asm/dma-direct.h
-+++ b/arch/arm/include/asm/dma-direct.h
-@@ -2,6 +2,56 @@
- #ifndef ASM_ARM_DMA_DIRECT_H
- #define ASM_ARM_DMA_DIRECT_H 1
+diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+index 638808c4e12247..dcd031ba84c2e0 100644
+--- a/arch/arm/mach-keystone/keystone.c
++++ b/arch/arm/mach-keystone/keystone.c
+@@ -24,6 +24,7 @@
  
-+#include <asm/memory.h>
-+
-+/*
-+ * dma_to_pfn/pfn_to_dma/virt_to_dma are architecture private
-+ * functions used internally by the DMA-mapping API to provide DMA
-+ * addresses. They must not be used by drivers.
-+ */
-+#ifndef __arch_pfn_to_dma
-+static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
-+{
-+	if (dev)
-+		pfn -= dev->dma_pfn_offset;
-+	return (dma_addr_t)__pfn_to_bus(pfn);
-+}
-+
-+static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
-+{
-+	unsigned long pfn = __bus_to_pfn(addr);
-+
-+	if (dev)
-+		pfn += dev->dma_pfn_offset;
-+
-+	return pfn;
-+}
-+
-+static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
-+{
-+	if (dev)
-+		return pfn_to_dma(dev, virt_to_pfn(addr));
-+
-+	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
-+}
-+
-+#else
-+static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
-+{
-+	return __arch_pfn_to_dma(dev, pfn);
-+}
-+
-+static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
-+{
-+	return __arch_dma_to_pfn(dev, addr);
-+}
-+
-+static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
-+{
-+	return __arch_virt_to_dma(dev, addr);
-+}
-+#endif
-+
- static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ #include "keystone.h"
+ 
++#ifdef CONFIG_ARM_LPAE
+ static unsigned long keystone_dma_pfn_offset __read_mostly;
+ 
+ static int keystone_platform_notifier(struct notifier_block *nb,
+@@ -48,14 +49,17 @@ static int keystone_platform_notifier(struct notifier_block *nb,
+ static struct notifier_block platform_nb = {
+ 	.notifier_call = keystone_platform_notifier,
+ };
++#endif /* CONFIG_ARM_LPAE */
+ 
+ static void __init keystone_init(void)
  {
- 	unsigned int offset = paddr & ~PAGE_MASK;
-diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
-index cf2535fb8891f5..0a1a536368c3a4 100644
---- a/arch/arm/include/asm/dma-mapping.h
-+++ b/arch/arm/include/asm/dma-mapping.h
-@@ -8,8 +8,6 @@
- #include <linux/scatterlist.h>
- #include <linux/dma-debug.h>
- 
--#include <asm/memory.h>
--
- #include <xen/xen.h>
- #include <asm/xen/hypervisor.h>
- 
-@@ -23,54 +21,6 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
- 	return NULL;
++#ifdef CONFIG_ARM_LPAE
+ 	if (PHYS_OFFSET >= KEYSTONE_HIGH_PHYS_START) {
+ 		keystone_dma_pfn_offset = PFN_DOWN(KEYSTONE_HIGH_PHYS_START -
+ 						   KEYSTONE_LOW_PHYS_START);
+ 		bus_register_notifier(&platform_bus_type, &platform_nb);
+ 	}
++#endif
+ 	keystone_pm_runtime_init();
  }
  
--/*
-- * dma_to_pfn/pfn_to_dma/virt_to_dma are architecture private
-- * functions used internally by the DMA-mapping API to provide DMA
-- * addresses. They must not be used by drivers.
-- */
--#ifndef __arch_pfn_to_dma
--static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
--{
--	if (dev)
--		pfn -= dev->dma_pfn_offset;
--	return (dma_addr_t)__pfn_to_bus(pfn);
--}
--
--static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
--{
--	unsigned long pfn = __bus_to_pfn(addr);
--
--	if (dev)
--		pfn += dev->dma_pfn_offset;
--
--	return pfn;
--}
--
--static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
--{
--	if (dev)
--		return pfn_to_dma(dev, virt_to_pfn(addr));
--
--	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
--}
--
--#else
--static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
--{
--	return __arch_pfn_to_dma(dev, pfn);
--}
--
--static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
--{
--	return __arch_dma_to_pfn(dev, addr);
--}
--
--static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
--{
--	return __arch_virt_to_dma(dev, addr);
--}
--#endif
--
- /**
-  * arm_dma_alloc - allocate consistent memory for DMA
-  * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
 -- 
 2.28.0
 
