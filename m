@@ -2,115 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BCD3268AF6
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 14:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25745268B0E
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 14:34:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgINM3b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 08:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgINM1y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 08:27:54 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F83EC061D7D
-        for <linux-pci@vger.kernel.org>; Mon, 14 Sep 2020 05:18:18 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id c196so12623485pfc.0
-        for <linux-pci@vger.kernel.org>; Mon, 14 Sep 2020 05:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gxYQz48aGorfvze6exW0FuIKKJvVhs5z+cRnEenJUaY=;
-        b=mkE+WMpXzlD7S7AxYcwjturJjiQtfkPUVJWXXrR6kHs8LUX1egXKBTVej9VvaP1pDk
-         QS11Jz6fFwsL90GH8Hf+XymEWSUrsNKAOJpSXvZQKV2qEfB9MJ8H/9LWoAoy8H6iGNR0
-         WfWGlx7m+Toh6DzWUgtEV7eeyEXw+Os/KzKtd4LrzEIPmLV66xgdGLFOcAgkyzeHgIaE
-         XnHYCYfI92XDrt3Cc5qrt1JlsXmJI8bhfZ7/IJtdDoJ5unE5Joc54EKrIRmwD5pqenK2
-         Rns1+PSdo7PJt+AeHM/+b5LddInC/lx73Z/+3ghn4ac7lY+J8ctv+Ct4HBjH5JQdiyq+
-         8pFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gxYQz48aGorfvze6exW0FuIKKJvVhs5z+cRnEenJUaY=;
-        b=UKUEctToDht7VU+5b+utX8gCYxIN9C0gCuTdiay4xfLw3YBpSLuscpkIq/oz+nrPxT
-         /iQmhYEstv2h7MG2wiGORByTiv02pIOhBpTUKU77NAAno29a5yxRhy7+FHWV84corY2n
-         gLt0fJSLZ3dam4K1hf5jO+kyyxAiTM3Yx37VTeLljMGyEtFSZf7dDZQkl61wqAjc7GZ6
-         1VPVrunn28LmscKaM8amg+cTF8h5tAiaT7+uGOpsk2Z2N9UNHeK2T+MSGnbQYGHpfHRo
-         7sPaxPNx4s+4/JgaxJeLPQDhdzPN13qxXupw8WNsxEmtztpq2ZY7qtiGFlu+NwYHT6iB
-         WvvA==
-X-Gm-Message-State: AOAM532RHs0AncMI0j+pNJz4qAIMzpD3DESSbHvdz83ASlxFLmGvcbYm
-        yCJPxiJtm2B3Q1dXIazeuI+/1h7uVp8RUa8FjJc=
-X-Google-Smtp-Source: ABdhPJwbRCC02NTkwAbiF6yvCVBmVuoTSqRwEeEGP7JWNetvp+t8rm+zNVVMWVkGiXIFif2I4sIZEzpCNvuR8cHNUSg=
-X-Received: by 2002:a62:7ecb:0:b029:13e:d13d:a04c with SMTP id
- z194-20020a627ecb0000b029013ed13da04cmr12679157pfc.18.1600085897657; Mon, 14
- Sep 2020 05:18:17 -0700 (PDT)
+        id S1726375AbgINMcl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 14 Sep 2020 08:32:41 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2816 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726498AbgINMcQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Sep 2020 08:32:16 -0400
+Received: from lhreml713-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 71917FA49058FFD59948;
+        Mon, 14 Sep 2020 13:13:45 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml713-chm.china.huawei.com (10.201.108.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 14 Sep 2020 13:13:45 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Mon, 14 Sep 2020 13:13:45 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Shiju Jose <shiju.jose@huawei.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+CC:     Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v15 0/2] ACPI / APEI: Add support to notify the vendor
+        specific HW errors
+Thread-Topic: [PATCH v15 0/2] ACPI / APEI: Add support to notify the vendor
+        specific HW errors
+Thread-Index: AQHWge9vw3KZA5696kitxl2toth2IaloGvNg
+Date:   Mon, 14 Sep 2020 12:13:45 +0000
+Message-ID: <cb811df3c4cc4f349c4a8da251592904@huawei.com>
+References: <20200903123456.1823-1-shiju.jose@huawei.com>
+In-Reply-To: <20200903123456.1823-1-shiju.jose@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.25.227]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:60d1:0:0:0:0 with HTTP; Mon, 14 Sep 2020 05:18:17
- -0700 (PDT)
-Reply-To: mrsmegwilliam6@gmail.com
-From:   Ms Mary Mcniff <diplomaticstoragecourier@gmail.com>
-Date:   Mon, 14 Sep 2020 05:18:17 -0700
-Message-ID: <CAD72A3Mkg1ea=3Ph9KtUQaQeZ7619dJSt6h7=k4DkN-W3X-8FQ@mail.gmail.com>
-Subject: Your Respond ASAP
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-From Chief Compliance Officer, Citigroup Inc CITIBANK
-388 Greenwich St, New York, 10013, United States United.
-PAYMENT CODE: FRB010
-Swift: PTBLBXXX
-==============================================
+Hello,
 
-Attention: Beneficiary,
+Can you help to merge this series?
 
-We write to inform you that Series of meetings have been held over the
-past 2 weeks with the Secretary General of United Nations,U.S
-Department of State and Dubai Union Organization this ended last
-week.And parcel is under our custody right now, It will deliver to you
-within 24 hours once you clear the charges which will cost you
-according to the BANKERS COURIER SERVICES that wish to deliver your
-ATM CARD card to
-you immediately.
+Thanks,
+Shiju
 
-However, it is the pleasure of this office to inform you that your ATM
-CARD number; is 29741733 and it has been approved and upgraded in your
-favor .you call me for the pin code numbers. The ATM CARD value is us
-$10.5 Million only.
-
-Kindly contact the paying bank for the claim of your ATM visa card
-payment fund $10,500,000.00 through the below contact information;
-
-Contact Person:Mr Williams S Young
-Director of Financial Controller
-Bank Name: CITIBANK
-Bank address; 388 Greenwich St,
-New York City,10013, United States
-Email:mrsmegwilliam6@gmail.com
-
-Reconfirm the following information?
-
-(1)Your Full Name=============
-(2)Mobile Phone Number======
-(3)Current Home Address==== ====
-(4)Fax Number================
-(5)Passport/Drivers license ======
-
-Endeavor to keep me posted once you contacted the officer in charge
-through the above mentioned information.
-
-Your timely response is highly appreciated.To this end, you are
-required to forward your payment information as follows to enable us
-load your fund into the card with your information and deliver it to
-your door step. as the BANKERS COURIER SERVICES are in charge of the
-delivery services to your destination.
-
-Yours truly;
-
-Ms Mary Mcniff.
-Chief Compliance Officer, Citigroup Inc
-FEDERAL RESERVE SYSTEM.
-Email: marymcniff7@gmail.com.
+>-----Original Message-----
+>From: Linuxarm [mailto:linuxarm-bounces@huawei.com] On Behalf Of Shiju
+>Jose
+>Sent: 03 September 2020 13:35
+>To: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; helgaas@kernel.org;
+>bp@alien8.de; james.morse@arm.com; lorenzo.pieralisi@arm.com;
+>robh@kernel.org; lenb@kernel.org; tony.luck@intel.com;
+>dan.carpenter@oracle.com; andriy.shevchenko@linux.intel.com
+>Cc: Linuxarm <linuxarm@huawei.com>
+>Subject: [PATCH v15 0/2] ACPI / APEI: Add support to notify the vendor
+>specific HW errors
+>
+>CPER records describing a firmware-first error are identified by GUID.
+>The ghes driver currently logs, but ignores any unknown CPER records.
+>This prevents describing errors that can't be represented by a standard entry,
+>that would otherwise allow a driver to recover from an error.
+>The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of version 2.8).
+>
+>patch set
+>1. add the notifier chain for these non-standard/vendor-records
+>   in the ghes driver.
+>
+>2. add the driver to handle HiSilicon HIP PCIe controller's errors.
+>
+>Changes:
+>
+>V15:
+>1. Change in the HIP PCIe error handling driver
+>   for a comment by Andy Shevchenko.
+>   Removed "depends on ACPI" as it already depends on
+>   it through ACPI_APEI_GHES.
+>
+>V14:
+>1. Add patch[1] posted by James to the series.
+>
+>2. Following changes made for Bjorn's comments,
+>2.1 Deleted stub code from ghes.h
+>2.2 Made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES.
+>
+>V13:
+>1. Following changes in the HIP PCIe error handling driver.
+>1.1 Add Bjorn's acked-by.
+>1.2. Address the comments and macros order Bjorn mentioned.
+>     Fix the words in the commit.
+>
+>V12:
+>1. Changed the Signed-off-by tag to Co-developed-by tag in the patch
+>   "ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records"
+>
+>V11:
+>1. Following modifications made by James Morse in the APEI patch
+>   for the vendor error record.
+>   - Removed kfifo and ghes_gdata_pool. Expanded commit message.
+>
+>2. Changes in the HIP PCIe error handling driver
+>   for the comments by Andy Shevchenko.
+>
+>V10:
+>1. Changes for Bjorn's comments on HIP PCIe error handler driver
+>   and APEI patch.
+>
+>2. Changes in the HIP PCIe error handler driver
+>   for the feedbacks by Andy Shevchenko.
+>
+>V9:
+>1. Fixed 2 improvements suggested by the kbuild test robot.
+>1.1 Change ghes_gdata_pool_init() as static function.
+>1.2. Removed using buffer to store the error data for
+>     logging in the hisi_pcie_handle_error()
+>
+>V8:
+>1. Removed reporting the standard errors through the interface
+>   because of the conflict with the recent patches in the
+>   memory error handling path.
+>2. Fix comments by Dan Carpenter.
+>
+>V7:
+>1. Add changes in the APEI driver suggested by Borislav Petkov, for
+>   queuing up all the non-fatal HW errors to the work queue and
+>   notify the registered kernel drivers from the bottom half using
+>   blocking notifier, common interface for both standard and
+>   vendor-spcific errors.
+>2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+>   by Bjorn Helgaas.
+>
+>V6:
+>1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+>
+>V5:
+>1. Fix comments from James Morse.
+>1.1 Changed the notification method to use the atomic_notifier_chain.
+>1.2 Add the error handled status for the user space.
+>
+>V4:
+>1. Fix for the following smatch warning in the PCIe error driver,
+>   reported by kbuild test robot<lkp@intel.com>:
+>   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+>   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+>	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+>
+>V3:
+>1. Fix the comments from Bjorn Helgaas.
+>
+>V2:
+>1. Changes in the HiSilicon PCIe controller's error handling driver
+>   for the comments from Bjorn Helgaas.
+>
+>2. Changes in the APEI interface to support reporting the vendor error
+>   for module with multiple devices, but use the same section type.
+>   In the error handler will use socket id/sub module id etc to distinguish
+>   the device.
+>
+>V1:
+>1. Fix comments from James Morse.
+>
+>2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+>   which is an application of the above interface.
+>
+>Shiju Jose (1):
+>  ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
+>
+>Yicong Yang (1):
+>  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+>
+> drivers/acpi/apei/ghes.c                 |  63 +++++
+> drivers/pci/controller/Kconfig           |   7 +
+> drivers/pci/controller/Makefile          |   1 +
+> drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
+> include/acpi/ghes.h                      |  18 ++
+> 5 files changed, 416 insertions(+)
+> create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+>
+>--
+>2.17.1
+>
+>
+>_______________________________________________
+>Linuxarm mailing list
+>Linuxarm@huawei.com
+>http://hulk.huawei.com/mailman/listinfo/linuxarm
