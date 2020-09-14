@@ -2,90 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4494026891E
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 12:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99157268927
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 12:20:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgINKTl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 06:19:41 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:11951 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726354AbgINKTj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 06:19:39 -0400
-X-UUID: 8070a8dc389a49bd8b984d19dcc73aaf-20200914
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=UFFhIqTpIhOC8ywBiZxNU/Fzmn0uEHIkBJSLINsLE0Q=;
-        b=FScmXuDbVALdHyYP9WfqZFQx8KVyk5Iu8aIKVexmokooEG+ltCHNeKASUGS04jCjFUuopg4fHds1JO0VKfZ9CS5ROpyIirl99n+9uDLeZhXOVI3WxbiYJ5zNuhiR51+Tv9OUjd/A5T2k97OfSdmoai99UzTovgJCOCZ0SPY40Ac=;
-X-UUID: 8070a8dc389a49bd8b984d19dcc73aaf-20200914
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1558188983; Mon, 14 Sep 2020 18:19:32 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n2.mediatek.inc
- (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 14 Sep
- 2020 18:19:28 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 14 Sep 2020 18:19:24 +0800
-Message-ID: <1600078643.2521.25.camel@mhfsdcap03>
-Subject: Re: [v2,2/3] PCI: mediatek: Add new generation controller support
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1726443AbgINKUh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 06:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgINKU3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 06:20:29 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD73BC06174A;
+        Mon, 14 Sep 2020 03:20:28 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id n22so17025879edt.4;
+        Mon, 14 Sep 2020 03:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=RoEDgYihJB01PzODFzv542pnHyd2X+jx2GeNGs8P7lM=;
+        b=Cjbbsi1oaU+n4Sw3Yn6dcLNg/l1FbrB3FTZTu0iKHy7rzjjM+/0r10+OCfugIUo7ut
+         lB1iq5C51oGl6OQXI+BblM0EN/71Cl2RmETQIlZdO6EblNqB28jY74qYWCxWBrT3tWA1
+         8I3dJKkX6fjz5AKlY8WeDDuSNUWREPrCqkqgRH51KfkvA8L4yzy92rwEqdQUNo4Tmc8H
+         5vY4LfiakvXqUp2z/gPpMiXv6h6CKbiNGJBcd3uTMLtDFn4GkWtQcKz2qB+bjdu1k8B4
+         xyJ6Aiqm42wFZNdIXsRmXLHCbCWat2aCGI7RJ5ka+frSkn+k2Mzv8+6WD09ujdRpduZ/
+         ZjCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=RoEDgYihJB01PzODFzv542pnHyd2X+jx2GeNGs8P7lM=;
+        b=A+Vp7eifjpA/lRbAUS3Xg4NjqVk/uUNvezKOSTfuJ5EYma8G91GIo36DtEF7NvPbmp
+         WDntl3KTUGzLnxsNQxI49Q54u6OdOMknMa9qpjGzVxvCwCbpFFkWCfCBdpGtp1BXSD96
+         MkqtJtOWjNvso2w2q7eMqoxm1uYX6iN6+vHkTuDlNI4iLzYUtld9pDZfERCEBwuy9vuz
+         nUYJYi0BkjQlvb/Yi81tsmYHLgYwePOfvGsdQYuXpu86LRfcsutEv/JK0y2vMIK2G9mo
+         HmWKi0RqqhrJChxISYsW0Lsrx5OLXSIbmKAgHaRVpT6eN/BiQXo/c/gHWiFt22GrgPo4
+         4ioQ==
+X-Gm-Message-State: AOAM5321w0+y7f4AdUGbdlf9msg7B6+1k9nDtjt+uAvD0SxMLKj/ouwL
+        ce5TaIcKO2UUNgS2lWbHECE=
+X-Google-Smtp-Source: ABdhPJxkCsOJ3JKr74kFh0H+el/JjP4ICfMvMDw8NI5RaCiYgalOH6Eo1PpTETvsUheo14HIp3yeHg==
+X-Received: by 2002:aa7:c2d6:: with SMTP id m22mr16222884edp.311.1600078827259;
+        Mon, 14 Sep 2020 03:20:27 -0700 (PDT)
+Received: from felia ([2001:16b8:2ddc:3000:7936:d9d0:986e:cca5])
+        by smtp.gmail.com with ESMTPSA id b6sm8993603eds.46.2020.09.14.03.20.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2020 03:20:26 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Mon, 14 Sep 2020 12:20:24 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         Ryder Lee <ryder.lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-        <davem@davemloft.net>, <linux-pci@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>
-Date:   Mon, 14 Sep 2020 18:17:23 +0800
-In-Reply-To: <1ac4ba40a031169b968e3084c132579db921033c.camel@pengutronix.de>
-References: <20200910034536.30860-1-jianjun.wang@mediatek.com>
-         <20200910034536.30860-3-jianjun.wang@mediatek.com>
-         <1ac4ba40a031169b968e3084c132579db921033c.camel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: make linux-mediatek list remarks
+ consistent
+In-Reply-To: <f6bc41d3-5ce4-b9ea-e2bb-e0cee4de3179@gmail.com>
+Message-ID: <alpine.DEB.2.21.2009141208200.17999@felia>
+References: <20200914053110.23286-1-lukas.bulwahn@gmail.com> <f6bc41d3-5ce4-b9ea-e2bb-e0cee4de3179@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 89BC645EE2B99813BCD4031077703FE9AC259110623EE3A7D12DBB813A2C08D72000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA5LTExIGF0IDE2OjMzICswMjAwLCBQaGlsaXBwIFphYmVsIHdyb3RlOg0K
-PiBIaSBKaWFuanVuLA0KPiANCj4gT24gVGh1LCAyMDIwLTA5LTEwIGF0IDExOjQ1ICswODAwLCBK
-aWFuanVuIFdhbmcgd3JvdGU6DQo+ID4gTWVkaWFUZWsncyBQQ0llIGhvc3QgY29udHJvbGxlciBo
-YXMgdGhyZWUgZ2VuZXJhdGlvbiBIV3MsIHRoZSBuZXcNCj4gPiBnZW5lcmF0aW9uIEhXIGlzIGFu
-IGluZGl2aWR1YWwgYnJpZGdlLCBpdCBzdXBvb3J0cyBHZW4zIHNwZWVkIGFuZA0KPiA+IHVwIHRv
-IDI1NiBNU0kgaW50ZXJydXB0IG51bWJlcnMgZm9yIG11bHRpLWZ1bmN0aW9uIGRldmljZXMuDQo+
-ID4gDQo+ID4gQWRkIHN1cHBvcnQgZm9yIG5ldyBHZW4zIGNvbnRyb2xsZXIgd2hpY2ggY2FuIGJl
-IGZvdW5kIG9uIE1UODE5Mi4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBKaWFuanVuIFdhbmcg
-PGppYW5qdW4ud2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gQWNrZWQtYnk6IFJ5ZGVyIExlZSA8cnlk
-ZXIubGVlQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9LY29uZmlnICAgICAgICAgICAgICB8ICAgMTQgKw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9s
-bGVyL01ha2VmaWxlICAgICAgICAgICAgIHwgICAgMSArDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvcGNpZS1tZWRpYXRlay1nZW4zLmMgfCAxMDc2ICsrKysrKysrKysrKysrKysrKysNCj4g
-PiAgMyBmaWxlcyBjaGFuZ2VkLCAxMDkxIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay1nZW4zLmMNCj4gPiAN
-Cj4gWy4uLl0NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1l
-ZGlhdGVrLWdlbjMuYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay1nZW4z
-LmMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZjhj
-OGJkZjg4ZDMzDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvcGNpZS1tZWRpYXRlay1nZW4zLmMNCj4gWy4uLl0NCj4gPiArc3RhdGljIGludCBtdGtf
-cGNpZV9wb3dlcl91cChzdHJ1Y3QgbXRrX3BjaWVfcG9ydCAqcG9ydCkNCj4gPiArew0KPiA+ICsJ
-c3RydWN0IGRldmljZSAqZGV2ID0gcG9ydC0+ZGV2Ow0KPiA+ICsJaW50IGVycjsNCj4gPiArDQo+
-ID4gKwlwb3J0LT5waHlfcmVzZXQgPSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0X29wdGlvbmFsKGRl
-diwgInBoeS1yc3QiKTsNCj4gDQo+IFBsZWFzZSB1c2UgZGV2bV9yZXNldF9jb250cm9sX2dldF9v
-cHRpb25hbF9leGNsdXNpdmUoKSBpbnN0ZWFkLg0KPiANCj4gPiArCWlmIChQVFJfRVJSKHBvcnQt
-PnBoeV9yZXNldCkgPT0gLUVQUk9CRV9ERUZFUikNCj4gPiArCQlyZXR1cm4gUFRSX0VSUihwb3J0
-LT5waHlfcmVzZXQpOw0KPiANCj4gVGhpcyBzaG91bGQgYmUNCj4gDQo+IAlpZiAoSVNfRVJSKHBv
-cnQtPnBoeV9yZXNldCkpDQo+IAkJcmV0dXJuIFBUUl9FUlIocG9ydC0+cGh5X3Jlc2V0KTsNCj4g
-DQo+IHRoZXJlIGlzIG5vIHJlYXNvbiB0byBjb250aW51ZSBpZiB0aGlzIHRocm93cyAtRU5PTUVN
-LCBmb3IgZXhhbXBsZS4NCj4gDQo+IHJlZ2FyZHMNCj4gUGhpbGlwcA0KDQpUaGFua3MgZm9yIHlv
-dXIgcmV2aWV3LCBJIHdpbGwgZml4IGl0IGluIHRoZSBuZXh0IHZlcnNpb24uDQoNCg==
 
+
+On Mon, 14 Sep 2020, Matthias Brugger wrote:
+
+> 
+> 
+> On 14/09/2020 07:31, Lukas Bulwahn wrote:
+> > Commit 637cfacae96f ("PCI: mediatek: Add MediaTek PCIe host controller
+> > support") does not mention that linux-mediatek@lists.infradead.org is
+> > moderated for non-subscribers, but the other eight entries for
+> > linux-mediatek@lists.infradead.org do.
+> > 
+> > Adjust this entry to be consistent with all others.
+> > 
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> 
+> Maybe rephrase the commit message to something like:
+> "Mark linux-mediatek@lists.infraded.org as moderated for the MediaTek PCIe
+> host controller entry, as the list actually is moderated."
+> 
+> Anyway:
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> 
+> > ---
+> > applies cleanly on v5.9-rc5 and next-20200911
+> > 
+> > Ryder, please ack.
+> > 
+> > Bjorn, Matthias, please pick this minor non-urgent clean-up patch.
+> > 
+> > This patch submission will also show me if linux-mediatek is moderated or
+> > not. I have not subscribed to linux-mediatek and if it shows up quickly in
+> > the archive, the list is probably not moderated; and if it takes longer, it
+> > is moderated, and hence, validating the patch.
+> 
+> I can affirm the list is moderated :)
+>
+
+Hmm, do we mean the same "moderation" here?
+
+I believe a mailing list with the remark "moderated for non-subscribers" 
+means that a mail from an address that has not subscribed to the mailing 
+list is put on hold and needs to be manually permitted to be seen on the 
+mailing list.
+
+Matthias, is that also your understanding of "moderated for 
+non-subscribers" for your Reviewed-by tag?
+
+I am not subscribed to linux-mediatek. When I sent an email to the list, 
+it showed up really seconds later in the lore.kernel.org of the 
+linux-mediatek public-inbox repository. So, either it was delivered 
+quickly as it is not moderated or my check with lore.kernel.org is wrong, 
+e.g., mails show up in the lore.kernel.org archive, even they were not
+yet permitted on the actual list.
+
+
+Lukas
