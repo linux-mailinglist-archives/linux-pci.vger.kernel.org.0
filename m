@@ -2,209 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23B3726879D
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 10:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E92E026883D
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 11:25:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgINIxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 04:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42126 "EHLO
+        id S1726210AbgINJZm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 05:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgINIxG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 04:53:06 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46699C06174A;
-        Mon, 14 Sep 2020 01:53:06 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id a8so16013243ilk.1;
-        Mon, 14 Sep 2020 01:53:06 -0700 (PDT)
+        with ESMTP id S1726123AbgINJZk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 05:25:40 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4EDC06174A;
+        Mon, 14 Sep 2020 02:25:40 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c18so17865743wrm.9;
+        Mon, 14 Sep 2020 02:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T5blx8lW5RBmUkqia/MfWKUSWxCaOKkHJt1n0OFhjb8=;
-        b=pwI5R544nBDLeZrf6ZYom+3nqKZgTTUGq8yhfwTuop2RItzV7BCkgpCPzFmX8awAT+
-         +0EHNdBtbADpmqOGDynxt7TCygd8ZhfzYCr4NF938i/Xzv0ImsSrkQm3G3MKjyBBZ+3b
-         5uAAvG6GgMq4GOXKmD1M3ezGpGjDeVIyPjABU04YL+kmsKoNp1hPtUBxs3cZAoyeN/hp
-         pv9fe3jfXYiFLYYvQVy8ZiAnFtnIL+IeD8mcYVRMU0P3mEw8FOddf1YE4Gg6UbUlL8tp
-         6vyr4qCNQSmsErj9nQUuv1FrPKlvTXf/bguL//rktufNqeJUUehMSaIPHCTAvK5GolNe
-         Jjgw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1dIPQoWyftPmIiGZ7bnGzVMHwKLifufczvlCSX3EG1w=;
+        b=jw0rY+eY22uu18XCKudon3U6qaDho8rSQASPXbM1kk+uiI/Ym5Vp9eYIxzx8KX+QAT
+         SMqS4LqpAm1a+bqfONdmKttchrdKwbUELxMvuObXuxSmNxn3onhYhAfAlUlR+3XNBFGv
+         cDkJ2Hb0WwEQaEIfFUHFZMq3TPY8FI4La+beet5Tu51LRrcgVKZOLJf5VN+o8J8fuM6E
+         TkXvcCe+SfIzu2VaVVUn+OJDr499M08gFdPwJgKnKcJU7zDtsyM0LvjVlxWo2fgbAiHM
+         gx39WMCroNvj3O4xZZ1ShVyqPrw8Ko1HV0ryCiaAJ72XRoBk6jrxH7ZZzMu022Avlsy4
+         J38A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T5blx8lW5RBmUkqia/MfWKUSWxCaOKkHJt1n0OFhjb8=;
-        b=czmvVaT1BC8o3rRwSO33FNY0b2/XU3itFfmMfWjbZJw8WR5aanVPxwwe9eWHwx1Z8F
-         3M6+/4iy7PdKVGv5/j7S94vtHPtlnCTu4o29glzCYAxaFj+2K4f4UhlRGeDNyzoaTgSL
-         eP/hR4iw9+lf+QfLLaLThEqHR1JIv56QqDE6jGgg1A5Pi588nfFKx7YwK92pgtbOZvSk
-         Ryr7GDrEbhGpqbFlx+GVu8z/R20DJ+tF3mh9fO7kijS7VnB33VjIQ6F1fuUjO+Mvcv1G
-         bTBw6vjLuLC6t8gBcG44Q7GHV7oFEmt0CTy3ckLLIsebyISLj4v6b8t+yZkHeCrjz2H4
-         o7Kg==
-X-Gm-Message-State: AOAM532Kub4birqnkB87EfaNLW1zmznsvAlrogkwdMcFm7ODK/441j3t
-        PrtnvXBM5HhHrByuMXJVfUZQWAfSOaUnOZ5VanigmZbB6gzNBQ==
-X-Google-Smtp-Source: ABdhPJw+T5Ark5LxMUndS6SNu7VCFUXc/F2RHXVoAHsK1bYmraQeU5sa2ysv043ZtuHZwITikGt33SyhopnruDg1xz0=
-X-Received: by 2002:a05:6e02:13ae:: with SMTP id h14mr1587717ilo.208.1600073582860;
- Mon, 14 Sep 2020 01:53:02 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1dIPQoWyftPmIiGZ7bnGzVMHwKLifufczvlCSX3EG1w=;
+        b=tg+Oy4C0OzKr8qlt9VAwgg3Ft1vM+XrsuBIucILYTccQG3AzBrVoVCZuzfxzs5VDL0
+         wLW9gvp1MKIDV/Wd0bbq3dIdjfwaG9WSsHjGh0wBN+IZQNOYINbf5FzS+t/QPOFR7wtf
+         6qxpQcRLm+EiXL9famUAyBVXWCqCFZgJNuThLG8y0BIryO90CsZftAEcmSa/C2YycWNr
+         dgFMvWdXwWoOymiDQEAnkJ7WYQQtOT6R7C7eCagZkJSEuRwREudFGZ1R5KFSsXb8zLkd
+         5l9iSm6/DK60IOqfo+ymcciZx4VqP/5FobKZDBxKK5qw8mQRN6rwlZfX/FYbIp0X21qj
+         S5Yw==
+X-Gm-Message-State: AOAM533CWLJVQ6r5jEeV+kKIwnZ8sswdpDtoxhDQqMhLaHr2VKH477KS
+        wGn0izkEq8RHrTHLFks6k4YllyWBWAqo6g==
+X-Google-Smtp-Source: ABdhPJzp1mmUX8nlci/vOl0gLyKDPoBLlS4rVJjGZY5jj/3T55L4YK892bTlqiJPPr47dPxF7D7ubA==
+X-Received: by 2002:adf:f78c:: with SMTP id q12mr15217468wrp.6.1600075538591;
+        Mon, 14 Sep 2020 02:25:38 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.201])
+        by smtp.gmail.com with ESMTPSA id x24sm19633590wrd.53.2020.09.14.02.25.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Sep 2020 02:25:38 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: make linux-mediatek list remarks consistent
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Cc:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200914053110.23286-1-lukas.bulwahn@gmail.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <f6bc41d3-5ce4-b9ea-e2bb-e0cee4de3179@gmail.com>
+Date:   Mon, 14 Sep 2020 11:25:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <1600070215-3901-1-git-send-email-yangtiezhu@loongson.cn> <tencent_13F0F91E196BCF3F0E458509@qq.com>
-In-Reply-To: <tencent_13F0F91E196BCF3F0E458509@qq.com>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Mon, 14 Sep 2020 16:52:51 +0800
-Message-ID: <CAAhV-H4ogJYcK9E9hQ663dGcJn4GjWZUSp47xgzTtjAZ-nrybA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3] PCI/portdrv: Only disable Bus Master on kexec
- reboot and connected PCI devices
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@openvz.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        zhouyanjie <zhouyanjie@wanyeetech.com>, git <git@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200914053110.23286-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Tiezhu,
 
-How do you test kexec? kexec -e or systemctl kexec? Or both?
-P.S., Please also CC my gmail (chenhuacai@gmail.com) since lemote.com
-has some communication problems.
 
-Huacai
+On 14/09/2020 07:31, Lukas Bulwahn wrote:
+> Commit 637cfacae96f ("PCI: mediatek: Add MediaTek PCIe host controller
+> support") does not mention that linux-mediatek@lists.infradead.org is
+> moderated for non-subscribers, but the other eight entries for
+> linux-mediatek@lists.infradead.org do.
+> 
+> Adjust this entry to be consistent with all others.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
->
-> =E9=99=88=E5=8D=8E=E6=89=8D=E6=B1=9F=E8=8B=8F=E8=88=AA=E5=A4=A9=E9=BE=99=
-=E6=A2=A6=E4=BF=A1=E6=81=AF=E6=8A=80=E6=9C=AF=E6=9C=89=E9=99=90=E5=85=AC=E5=
-=8F=B8/=E7=A0=94=E5=8F=91=E4=B8=AD=E5=BF=83/=E8=BD=AF=E4=BB=B6=E9=83=A8   -=
------------------ Original ------------------From:  "Tiezhu Yang"<yangtiezh=
-u@loongson.cn>;Date:  Mon, Sep 14, 2020 03:57 PMTo:  "Bjorn Helgaas"<bhelga=
-as@google.com>; Cc:  "linux-pci"<linux-pci@vger.kernel.org>; "linux-kernel"=
-<linux-kernel@vger.kernel.org>; "Rafael J. Wysocki"<rafael.j.wysocki@intel.=
-com>; "Konstantin Khlebnikov"<khlebnikov@openvz.org>; "Khalid Aziz"<khalid.=
-aziz@oracle.com>; "Vivek Goyal"<vgoyal@redhat.com>; "Lukas Wunner"<lukas@wu=
-nner.de>; "Oliver O'Halloran"<oohall@gmail.com>; "Huacai Chen"<chenhc@lemot=
-e.com>; "Jiaxun Yang"<jiaxun.yang@flygoat.com>; "Xuefeng Li"<lixuefeng@loon=
-gson.cn>; Subject:  [RFC PATCH v3] PCI/portdrv: Only disable Bus Master on =
-kexec reboot and connected PCI devices After commit 745be2e700cd ("PCIe: po=
-rtdrv: call pci_disable_device
-> during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
-> services during shutdown"), it also calls pci_disable_device() during
-> shutdown, this leads to shutdown or reboot failure occasionally due to
-> clear PCI_COMMAND_MASTER on the device in do_pci_disable_device().
->
-> drivers/pci/pci.c
-> static void do_pci_disable_device(struct pci_dev *dev)
-> {
->         u16 pci_command;
->
->         pci_read_config_word(dev, PCI_COMMAND, &pci_command);
->         if (pci_command & PCI_COMMAND_MASTER) {
->                 pci_command &=3D ~PCI_COMMAND_MASTER;
->                 pci_write_config_word(dev, PCI_COMMAND, pci_command);
->         }
->
->         pcibios_disable_device(dev);
-> }
->
-> When remove "pci_command &=3D ~PCI_COMMAND_MASTER;", it can work well whe=
-n
-> shutdown or reboot.
->
-> As Oliver O'Halloran said, no need to call pci_disable_device() when
-> actually shutting down, but we should call pci_disable_device() before
-> handing over to the new kernel on kexec reboot, so we can do some
-> condition checks which are already executed afterwards by the function
-> pci_device_shutdown(), this is done by commit 4fc9bbf98fd6 ("PCI: Disable
-> Bus Master only on kexec reboot") and commit 6e0eda3c3898 ("PCI: Don't tr=
-y
-> to disable Bus Master on disconnected PCI devices").
->
-> drivers/pci/pci-driver.c
-> static void pci_device_shutdown(struct device *dev)
-> {
->  ...
->         if (drv && drv->shutdown)
->                 drv->shutdown(pci_dev);
->
->         /*
->          * If this is a kexec reboot, turn off Bus Master bit on the
->          * device to tell it to not continue to do DMA. Don't touch
->          * devices in D3cold or unknown states.
->          * If it is not a kexec reboot, firmware will hit the PCI
->          * devices with big hammer and stop their DMA any way.
->          */
->         if (kexec_in_progress && (pci_dev->current_state <=3D PCI_D3hot))
->                 pci_clear_master(pci_dev);
-> }
->
-> [   36.159446] Call Trace:
-> [   36.241688] [<ffffffff80211434>] show_stack+0x9c/0x130
-> [   36.326619] [<ffffffff80661b70>] dump_stack+0xb0/0xf0
-> [   36.410403] [<ffffffff806a8240>] pcie_portdrv_shutdown+0x18/0x78
-> [   36.495302] [<ffffffff8069c6b4>] pci_device_shutdown+0x44/0x90
-> [   36.580027] [<ffffffff807aac90>] device_shutdown+0x130/0x290
-> [   36.664486] [<ffffffff80265448>] kernel_power_off+0x38/0x80
-> [   36.748272] [<ffffffff80265634>] __do_sys_reboot+0x1a4/0x258
-> [   36.831985] [<ffffffff80218b90>] syscall_common+0x34/0x58
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Maybe rephrase the commit message to something like:
+"Mark linux-mediatek@lists.infraded.org as moderated for the MediaTek PCIe host 
+controller entry, as the list actually is moderated."
+
+Anyway:
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
 > ---
->  drivers/pci/pcie/portdrv_core.c |  1 -
->  drivers/pci/pcie/portdrv_pci.c  | 14 +++++++++++++-
->  2 files changed, 13 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_c=
-ore.c
-> index 50a9522..1991aca 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
->  {
->         device_for_each_child(&dev->dev, NULL, remove_iter);
->         pci_free_irq_vectors(dev);
-> -       pci_disable_device(dev);
->  }
->
->  /**
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pc=
-i.c
-> index 3a3ce40..cab37a8 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -143,6 +143,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
->         }
->
->         pcie_port_device_remove(dev);
-> +       pci_disable_device(dev);
-> +}
-> +
-> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> +{
-> +       if (pci_bridge_d3_possible(dev)) {
-> +               pm_runtime_forbid(&dev->dev);
-> +               pm_runtime_get_noresume(&dev->dev);
-> +               pm_runtime_dont_use_autosuspend(&dev->dev);
-> +       }
-> +
-> +       pcie_port_device_remove(dev);
->  }
->
->  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
-> @@ -211,7 +223,7 @@ static struct pci_driver pcie_portdriver =3D {
->
->         .probe          =3D pcie_portdrv_probe,
->         .remove         =3D pcie_portdrv_remove,
-> -       .shutdown       =3D pcie_portdrv_remove,
-> +       .shutdown       =3D pcie_portdrv_shutdown,
->
->         .err_handler    =3D &pcie_portdrv_err_handler,
->
-> --
-> 2.1.0
+> applies cleanly on v5.9-rc5 and next-20200911
+> 
+> Ryder, please ack.
+> 
+> Bjorn, Matthias, please pick this minor non-urgent clean-up patch.
+> 
+> This patch submission will also show me if linux-mediatek is moderated or
+> not. I have not subscribed to linux-mediatek and if it shows up quickly in
+> the archive, the list is probably not moderated; and if it takes longer, it
+> is moderated, and hence, validating the patch.
+
+I can affirm the list is moderated :)
+
+> 
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5e6e36542c62..83c83d7ef2a5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13485,7 +13485,7 @@ F:	drivers/pci/controller/dwc/pcie-histb.c
+>   PCIE DRIVER FOR MEDIATEK
+>   M:	Ryder Lee <ryder.lee@mediatek.com>
+>   L:	linux-pci@vger.kernel.org
+> -L:	linux-mediatek@lists.infradead.org
+> +L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
+>   S:	Supported
+>   F:	Documentation/devicetree/bindings/pci/mediatek*
+>   F:	drivers/pci/controller/*mediatek*
+> 
