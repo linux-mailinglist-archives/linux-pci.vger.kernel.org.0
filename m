@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54F42268640
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 09:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84320268648
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Sep 2020 09:42:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgINHkZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 03:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59162 "EHLO
+        id S1726007AbgINHmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 03:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbgINHkY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 03:40:24 -0400
+        with ESMTP id S1725997AbgINHme (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 03:42:34 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D23A5C06174A;
-        Mon, 14 Sep 2020 00:40:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D799C06174A;
+        Mon, 14 Sep 2020 00:42:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=m2uI/54b6zhcK5JH2Qkk+DNhltSMOgJF9o6JCspd/6M=; b=V9WRKrWMbS/Pw5aOnQOrYjrdVI
-        ZbvSca4rQofspafvq5fqw7JXd5Alt/v7rsNdTXCZuY41+QJPockPjspbkuctRZgBXGxqJuKWxEn4O
-        Ad/mMESvpm6ndMm7D+bJOh1j44XyiCz5nFHdE4r1X2e3kPuqp3ps2fiQIx4r8dOLOgC0oBa6pcQ3D
-        3smyizrG3e4oGEmRhzG1djOB0eHWYcjkINxaKZaK7CRXaPGyDu8fvsPRJYtUyo8eImRwq0uofrb0M
-        A6iW3pGZDYLiNQGRBD1uMqEGXXzUZ5kR7YhMUkpxeIbCiL8LywRq72ebHPHto7OwcercW2QuyJWA4
-        pK0DXiUQ==;
+        bh=BxxgQYY1DeDYvu2hSRXigNNS2r5IsjvTJ3A6Bx2A/Zo=; b=UvzohcGwH9IAMzK+iFi8fPvVpN
+        Ugc7HyRNr4ugQtk9X0wrPT3RmML8tFeDIKWF0wYp+g49xrWM2aVooJ3t33UH5epcYm1RpWBIIYiny
+        CQOcPWiQWI4tvaRjTJk9QXLI2dcNv7ueNYcKg3AhbHm0eQuHcWuGLKKj0+NhIYY+MtZt3JyVphhRS
+        kaJsn5XAPvmj0hctoxhWmYvBrtQvhY0ASaSWXJjLxqj+IaepwCkCU42rZLkbbDfrsj/tf13h2D6wP
+        z+Y6sLMfBvELNPurRfQzY1+7hgBkcQSHeBPYtXHfKonSb5Ad69+ubjnWDYZuXL3N7L50tZM/nzeBK
+        LCJ1VMLQ==;
 Received: from 089144214092.atnat0023.highway.a1.net ([89.144.214.92] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kHj60-0000Ds-AY; Mon, 14 Sep 2020 07:40:16 +0000
+        id 1kHj87-0000M1-D1; Mon, 14 Sep 2020 07:42:27 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     iommu@lists.linux-foundation.org,
         Russell King <linux@armlinux.org.uk>,
@@ -44,9 +44,9 @@ Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/6] ARM/dma-mapping: remove dma_to_virt
-Date:   Mon, 14 Sep 2020 09:33:39 +0200
-Message-Id: <20200914073343.1579578-3-hch@lst.de>
+Subject: [PATCH 3/6] ARM/dma-mapping: move various helpers from dma-mapping.h to dma-direct.h
+Date:   Mon, 14 Sep 2020 09:33:40 +0200
+Message-Id: <20200914073343.1579578-4-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200914073343.1579578-1-hch@lst.de>
 References: <20200914073343.1579578-1-hch@lst.de>
@@ -58,72 +58,160 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-dma_to_virt is entirely unused, remove it.
+Move the helpers to translate to and from direct mapping DMA addresses
+to dma-direct.h.  This not only is the most logical place, but the new
+placement also avoids dependency loops with pending commits.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 ---
- arch/arm/include/asm/dma-mapping.h        | 18 +-----------------
- arch/arm/mach-omap1/include/mach/memory.h |  4 ----
- 2 files changed, 1 insertion(+), 21 deletions(-)
+ arch/arm/common/dmabounce.c        |  2 +-
+ arch/arm/include/asm/dma-direct.h  | 50 ++++++++++++++++++++++++++++++
+ arch/arm/include/asm/dma-mapping.h | 50 ------------------------------
+ 3 files changed, 51 insertions(+), 51 deletions(-)
 
+diff --git a/arch/arm/common/dmabounce.c b/arch/arm/common/dmabounce.c
+index f4b719bde76367..d3e00ea9208834 100644
+--- a/arch/arm/common/dmabounce.c
++++ b/arch/arm/common/dmabounce.c
+@@ -24,7 +24,7 @@
+ #include <linux/slab.h>
+ #include <linux/page-flags.h>
+ #include <linux/device.h>
+-#include <linux/dma-mapping.h>
++#include <linux/dma-direct.h>
+ #include <linux/dmapool.h>
+ #include <linux/list.h>
+ #include <linux/scatterlist.h>
+diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-direct.h
+index bca0de56753439..fbcf4367b5cb1a 100644
+--- a/arch/arm/include/asm/dma-direct.h
++++ b/arch/arm/include/asm/dma-direct.h
+@@ -2,6 +2,56 @@
+ #ifndef ASM_ARM_DMA_DIRECT_H
+ #define ASM_ARM_DMA_DIRECT_H 1
+ 
++#include <asm/memory.h>
++
++/*
++ * dma_to_pfn/pfn_to_dma/virt_to_dma are architecture private
++ * functions used internally by the DMA-mapping API to provide DMA
++ * addresses. They must not be used by drivers.
++ */
++#ifndef __arch_pfn_to_dma
++static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
++{
++	if (dev)
++		pfn -= dev->dma_pfn_offset;
++	return (dma_addr_t)__pfn_to_bus(pfn);
++}
++
++static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
++{
++	unsigned long pfn = __bus_to_pfn(addr);
++
++	if (dev)
++		pfn += dev->dma_pfn_offset;
++
++	return pfn;
++}
++
++static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
++{
++	if (dev)
++		return pfn_to_dma(dev, virt_to_pfn(addr));
++
++	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
++}
++
++#else
++static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
++{
++	return __arch_pfn_to_dma(dev, pfn);
++}
++
++static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
++{
++	return __arch_dma_to_pfn(dev, addr);
++}
++
++static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
++{
++	return __arch_virt_to_dma(dev, addr);
++}
++#endif
++
+ static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	unsigned int offset = paddr & ~PAGE_MASK;
 diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
-index 70d95677656044..cf2535fb8891f5 100644
+index cf2535fb8891f5..0a1a536368c3a4 100644
 --- a/arch/arm/include/asm/dma-mapping.h
 +++ b/arch/arm/include/asm/dma-mapping.h
-@@ -24,7 +24,7 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+@@ -8,8 +8,6 @@
+ #include <linux/scatterlist.h>
+ #include <linux/dma-debug.h>
+ 
+-#include <asm/memory.h>
+-
+ #include <xen/xen.h>
+ #include <asm/xen/hypervisor.h>
+ 
+@@ -23,54 +21,6 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+ 	return NULL;
  }
  
- /*
-- * dma_to_pfn/pfn_to_dma/dma_to_virt/virt_to_dma are architecture private
-+ * dma_to_pfn/pfn_to_dma/virt_to_dma are architecture private
-  * functions used internally by the DMA-mapping API to provide DMA
-  * addresses. They must not be used by drivers.
-  */
-@@ -46,17 +46,6 @@ static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
- 	return pfn;
- }
- 
--static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+-/*
+- * dma_to_pfn/pfn_to_dma/virt_to_dma are architecture private
+- * functions used internally by the DMA-mapping API to provide DMA
+- * addresses. They must not be used by drivers.
+- */
+-#ifndef __arch_pfn_to_dma
+-static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
 -{
--	if (dev) {
--		unsigned long pfn = dma_to_pfn(dev, addr);
--
--		return phys_to_virt(__pfn_to_phys(pfn));
--	}
--
--	return (void *)__bus_to_virt((unsigned long)addr);
+-	if (dev)
+-		pfn -= dev->dma_pfn_offset;
+-	return (dma_addr_t)__pfn_to_bus(pfn);
 -}
 -
- static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
- {
- 	if (dev)
-@@ -76,11 +65,6 @@ static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
- 	return __arch_dma_to_pfn(dev, addr);
- }
- 
--static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+-static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
 -{
--	return __arch_dma_to_virt(dev, addr);
+-	unsigned long pfn = __bus_to_pfn(addr);
+-
+-	if (dev)
+-		pfn += dev->dma_pfn_offset;
+-
+-	return pfn;
 -}
 -
- static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
- {
- 	return __arch_virt_to_dma(dev, addr);
-diff --git a/arch/arm/mach-omap1/include/mach/memory.h b/arch/arm/mach-omap1/include/mach/memory.h
-index 1142560e0078f5..e43697c3297bf2 100644
---- a/arch/arm/mach-omap1/include/mach/memory.h
-+++ b/arch/arm/mach-omap1/include/mach/memory.h
-@@ -41,10 +41,6 @@
- 	   __phys_to_pfn(__dma);				\
- 	})
- 
--#define __arch_dma_to_virt(dev, addr)	({ (void *) (is_lbus_device(dev) ? \
--						lbus_to_virt(addr) : \
--						__phys_to_virt(addr)); })
+-static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+-{
+-	if (dev)
+-		return pfn_to_dma(dev, virt_to_pfn(addr));
 -
- #define __arch_virt_to_dma(dev, addr)	({ unsigned long __addr = (unsigned long)(addr); \
- 					   (dma_addr_t) (is_lbus_device(dev) ? \
- 						virt_to_lbus(__addr) : \
+-	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+-}
+-
+-#else
+-static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+-{
+-	return __arch_pfn_to_dma(dev, pfn);
+-}
+-
+-static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+-{
+-	return __arch_dma_to_pfn(dev, addr);
+-}
+-
+-static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+-{
+-	return __arch_virt_to_dma(dev, addr);
+-}
+-#endif
+-
+ /**
+  * arm_dma_alloc - allocate consistent memory for DMA
+  * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
 -- 
 2.28.0
 
