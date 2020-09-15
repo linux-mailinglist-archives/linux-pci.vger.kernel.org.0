@@ -2,133 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5418326A119
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 10:42:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AECC26A1D1
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 11:13:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgIOImF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Sep 2020 04:42:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbgIOIl7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 04:41:59 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE4B5C06174A;
-        Tue, 15 Sep 2020 01:41:58 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w2so2514111wmi.1;
-        Tue, 15 Sep 2020 01:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mWxyaW6253KQoFu0UHMqhP8AMPbDHxMp498wfuHOKQs=;
-        b=saOqAbectSltZwthpuw0WtmRLXNslq/6YA27xlyKH+Ylqo/uY6YiGQhcX5SylY598U
-         /4pxJWKWaFw3E16XlejBDo9W7PkY7tFbRw18KcFD9PmJ3Xt4Zm7sS8CXDAddd9JRmQZu
-         +KzPkW6YysKzbKlSB0tygqQY5IdFqBKsaYrZwCaNgqXMkAE43NqCWl6fKy3/GI2DwYBK
-         otwIGXfzLFKdY6fNDul1WeGmGb+VXJWn+xfX+j8KU58hd9xe1uzWxBkxOissd7CRzYbz
-         XETlbz4gt+x+Bncp6QksrENLbE/Ni2xAGMHPVdnKZPUI7JhPEDd9Tsx3viieTQ+mGDua
-         B8Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mWxyaW6253KQoFu0UHMqhP8AMPbDHxMp498wfuHOKQs=;
-        b=i4pf0lygxghF9BewKIvAZHt1IDuBpdy+trtrCvKx0mxA/v7p7nXMqKpUkoWbLE9VBh
-         EPNZjHNaJTr6LrJMMZQVQv6/Wok7Y/4h7TakpWhxtrBRpX83WNzzULbmdkyq13It9idh
-         Mrw3UUnwhlj8M5IitAx0ylliQ8obEyvrADN4FIoOhTtDCBfva5EPQnHVS6cMUhWVSoR/
-         7rtOD13mhbitl1er+QVYKPWIcRj9kvzE0uQRK1ymFLh79/JNnFchhOLqPgdk+3GTcsJO
-         DybwNnHc2m4F4ge8Sc6uo2PZNDk8ZwwcCwasR4sW/fYlrKxczWDFj3qIQ9UjYEHFMYHR
-         7k7g==
-X-Gm-Message-State: AOAM532VE5a6nr0NTnsx3qZY0y45rA2hz0tXOoiOvRe3rmfq2D73DksB
-        mZEocYHu2BupFGPlepf9QeDgNowigPCY1w==
-X-Google-Smtp-Source: ABdhPJw7fbniVY5pujFTy+9h14GxGq4rfw+vU0pN0UCtS1Q/6Sb6mViWzSz+ImsOlxBwh6Dn15tWTw==
-X-Received: by 2002:a7b:ca56:: with SMTP id m22mr3340434wml.12.1600159316177;
-        Tue, 15 Sep 2020 01:41:56 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.201])
-        by smtp.gmail.com with ESMTPSA id k8sm23349010wma.16.2020.09.15.01.41.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Sep 2020 01:41:55 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: make linux-mediatek list remarks consistent
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200914053110.23286-1-lukas.bulwahn@gmail.com>
- <f6bc41d3-5ce4-b9ea-e2bb-e0cee4de3179@gmail.com>
- <alpine.DEB.2.21.2009141208200.17999@felia>
- <9c5aaa15-bdd8-ae4f-0642-092566ab08ba@gmail.com>
- <alpine.DEB.2.21.2009141552570.17999@felia>
- <7da64c0975c345f1f45034410c9ed7d509ba9831.camel@infradead.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <14193442-3b41-29f2-4380-e2cbcc00e5d4@gmail.com>
-Date:   Tue, 15 Sep 2020 10:41:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726357AbgIOJNS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Sep 2020 05:13:18 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:41977 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgIOJNB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 05:13:01 -0400
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CB43822708;
+        Tue, 15 Sep 2020 11:12:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1600161175;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2P5NgU0B9AjWYC5q+V3Ti4erlurb01RNNs/ekO5kyz4=;
+        b=Gmmwa8SaNq1wBjgmtbx23XQ4Aq+GkGLeJlA4UeC3ZaWzH1qGxK9dFUBOmbF1lddi3yip+W
+        4Hv+k+gC8x+sDVQnS5zAzIdZMndJFqFUt7ClVJhvzrUOwTpCo9s/8/hFo9w+Azsq37lK5o
+        ArWMyV0/CqU5KBo6YGZcLMw2FgrRGas=
+From:   Michael Walle <michael@walle.cc>
+To:     robh@kernel.org
+Cc:     agross@kernel.org, bhelgaas@google.com, bjorn.andersson@linaro.org,
+        eswara.kota@linux.intel.com, festevam@gmail.com,
+        gustavo.pimentel@synopsys.com, hayashi.kunihiko@socionext.com,
+        hongxing.zhu@nxp.com, jbrunet@baylibre.com,
+        jesper.nilsson@axis.com, jingoohan1@gmail.com,
+        jonathanh@nvidia.com, jonnyc@amazon.com, kernel@pengutronix.de,
+        kgene@kernel.org, khilman@baylibre.com, kishon@ti.com,
+        krzk@kernel.org, l.stach@pengutronix.de,
+        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-imx@nxp.com,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, m-karicheri2@ti.com,
+        martin.blumenstingl@googlemail.com, maz@kernel.org,
+        narmstrong@baylibre.com, pratyush.anand@gmail.com,
+        s.hauer@pengutronix.de, shawn.guo@linaro.org, shawnguo@kernel.org,
+        songxiaowei@hisilicon.com, svarbanov@mm-sol.com,
+        thierry.reding@gmail.com, wangbinghui@hisilicon.com,
+        yamada.masahiro@socionext.com, yue.wang@Amlogic.com,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 00/40] PCI: dwc: Driver clean-ups
+Date:   Tue, 15 Sep 2020 11:12:18 +0200
+Message-Id: <20200915091218.28737-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200821035420.380495-1-robh@kernel.org>
+References: <20200821035420.380495-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <7da64c0975c345f1f45034410c9ed7d509ba9831.camel@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Rob,
 
+> This is a series of clean-ups for the Designware PCI driver. The series
+> initially reworks the config space accessors to use the existing pci_ops
+> struct. Then there's removal of various private data that's also present
+> in the pci_host_bridge struct. There's also some duplicated common (PCI
+> and DWC) register defines which I converted to use the common defines.
+> Finally, the initialization for speed/gen, number of lanes, and N_FTS
+> are all moved to the common DWC code.
 
-On 14/09/2020 16:12, David Woodhouse wrote:
-> On Mon, 2020-09-14 at 16:01 +0200, Lukas Bulwahn wrote:
->>>> I am not subscribed to linux-mediatek. When I sent an email to the list,
->>>> it showed up really seconds later in the lore.kernel.org of the
->>>> linux-mediatek public-inbox repository. So, either it was delivered
->>>> quickly as it is not moderated or my check with lore.kernel.org is wrong,
->>>> e.g., mails show up in the lore.kernel.org archive, even they were not
->>>> yet permitted on the actual list.
->>>>
->>>
->>> I'm the moderator and I get requests to moderate emails. I suppose I added you
->>> to the accepted list because of earlier emails you send.
->>>
->>
->> Okay, I see. I did send some clean-up patch in the past, but I completely
->> forgot that, but my mailbox did not forget. So, now it is clear to me why
->> that mail showed up so quickly.
->>
->> Thanks for the explanation.
-> 
-> AFAICT the linux-mediatek list isn't configured to automatically
-> moderate messages from non-subscribers. Its generic_nonmember_action
-> setting is 'Accept'. That is the default setting for lists on
-> infradead.org and I strongly encourage list maintainers to leave it
-> that way.
+> This is compile tested only as I don't have any DWC based h/w, so any
+> testing would be helpful. A branch is here[1].
 
-Ok, thanks for clarification. I never bothered too much with all the 
-configuration option of the list. :|
+I've noticed that with the latest linux-next, my board doesn't boot
+anymore. I've traced it back to this series. There is a similar
+board in kernelci [1,2] where you can have a look at the backtrace.
 
-> 
-> Lukas, I don't see your address in the allowlist either.
+I've bisected this to the following patch:
+  PCI: dwc: Use generic config accessors
 
-I tried to find that in the web interface, but wasn't able to find the list.
+I'm pretty much lost here. It seems that the kernel tries to read from
+an invalid/unmapped memory address.
 
-Regards,
-Matthias
+[1] https://kernelci.org/test/plan/id/5f5f4992d1c53777a0a6092d/
+[2] https://storage.kernelci.org/next/master/next-20200914/arm64/defconfig/gcc-8/lab-nxp/baseline-fsl-ls1028a-rdb.txt
 
-> 
-> There are other reasons why some messages get might trapped for
-> moderation — the message size, number of recipients, spam score, etc.
-> 
-> The mere fact that *some* messages are moderated does not mean that the
-> list is "moderated for non-subscribers" in the sense that the
-> MAINTAINERS file lists.
-> 
->> Bjorn, with that confirmation and Reviewed-by from Matthias, could you
->> please pick this patch?
-> 
-> I think we should be fixing the ones that *do* say it's moderated for
-> non-subscribers, not the one that correctly didn't :)
-> 
+-michael
