@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCCF2269AFC
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 03:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C969269B28
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 03:30:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgIOBTs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 21:19:48 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41324 "EHLO
+        id S1726073AbgIOBaf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 21:30:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38508 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgIOBTr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 21:19:47 -0400
-Received: by mail-io1-f68.google.com with SMTP id z13so2255394iom.8;
-        Mon, 14 Sep 2020 18:19:46 -0700 (PDT)
+        with ESMTP id S1726057AbgIOBad (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 21:30:33 -0400
+Received: by mail-io1-f68.google.com with SMTP id h4so2297656ioe.5;
+        Mon, 14 Sep 2020 18:30:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=U/KfCPDjFCIAzOKsECXjfLg/rGaPwkyiJrML0T5nV+4=;
-        b=isSzZg6gHGsxrZRByc2g/MVra+O6gassuUqF9Ad6hMSmZecRn8s/H6zBklKmmvnT50
-         OY1KjT6Vltn83fFf9P7X+5u23oku387/7EzHD2RNjxYnU/YJsaQaqfFucB2y3U7lCdp8
-         kVHuO1Yr82lby/lLgmSHmMHFm49VxVwm3UMN18xVkUGm9qZyGXzagD65CrlqyPc2Wk3/
-         zVVLsE8j64z4LPdyH9S/t3URJRaLV9AA37FZ3aOEtBRSIUc+iD/yoQPHvkbJdGENPQv3
-         NrkF2GvenQ8B3yQIsobFAQqYA9DzUradJNADs3cCQ4oWHkr5NYX0KuAf+zlkvMJtY8b9
-         AQGw==
-X-Gm-Message-State: AOAM53120wzftyNzb6gnujfJZEUPqxPd5A2xpmzPCDeMMP9yeOymmNDo
-        q5pClPUFJ+X1SphR4YFyf8kw06eq0Z9S
-X-Google-Smtp-Source: ABdhPJzsMeo/xrJbwQkYxVif/skFCUSOvRRXThWyYMapAtRXXwil0Nb0ZYEq1vdIf9GrfCCo8bNRaw==
-X-Received: by 2002:a02:6995:: with SMTP id e143mr15232305jac.78.1600132786287;
-        Mon, 14 Sep 2020 18:19:46 -0700 (PDT)
+        bh=eHXVshEfAL6AyRFt7xSU/3kJiHLIn+w2Axi1RBiOh7g=;
+        b=ZgxPL4mQA5t0jUGFFs7kj2TvgJ7ikEUndZ868P0dIAsePaS9r9/mZNjXkEopjARptw
+         r+LJ31qsEHUzj4ll85FUqqfeQIOnRtQtG4LIDsY32MFMR88gU9kIKBn1rkKTozjvgBJ0
+         lvaBz+sKu02vLcjtYDDw2JsI36GVrFpows22WMYW1Xyuyp3abZ7zjiAAN+SAKLNc6ayP
+         sK9caPbRpEGjZkiWgnk5jsZJaaqOw5pWU4QSan/9hoCoZuYYzbRpQDvU807hQm1b+nqw
+         tyRVloFu0Oz1ij/gGpmFtBRuith/XyBl2FEIKGDzKQ/EXVtmLUEKp9Wy8ZXUBYMEFQvt
+         EqHw==
+X-Gm-Message-State: AOAM533+pZk7Gwh5VbMZf+zVXng9LRlVpfbOnW8xbZAJMvYnwx2FtjON
+        qVWO5vXZNOIxVbQJOYYnmxAoRL+Y2+yW
+X-Google-Smtp-Source: ABdhPJwuNCo6pgRyHbjOZeCd6CR7YqNHKpv6OMo+rmnS50sygQehBSppwko29dOUOCNO89GEoS6BGA==
+X-Received: by 2002:a6b:6d07:: with SMTP id a7mr13089251iod.82.1600133432387;
+        Mon, 14 Sep 2020 18:30:32 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id i14sm8106717ilb.28.2020.09.14.18.19.45
+        by smtp.gmail.com with ESMTPSA id v24sm6871096ioh.21.2020.09.14.18.30.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2020 18:19:45 -0700 (PDT)
-Received: (nullmailer pid 650334 invoked by uid 1000);
-        Tue, 15 Sep 2020 01:19:44 -0000
-Date:   Mon, 14 Sep 2020 19:19:44 -0600
+        Mon, 14 Sep 2020 18:30:31 -0700 (PDT)
+Received: (nullmailer pid 667196 invoked by uid 1000);
+        Tue, 15 Sep 2020 01:30:28 -0000
+Date:   Mon, 14 Sep 2020 19:30:28 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
@@ -43,38 +43,523 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         shawnguo@kernel.org, leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
         gustavo.pimentel@synopsys.com, minghuan.Lian@nxp.com,
         mingkai.hu@nxp.com, roy.zang@nxp.com
-Subject: Re: [PATCH 2/7] PCI: layerscape: Change to use the DWC common
- link-up check function
-Message-ID: <20200915011944.GB640859@bogus>
+Subject: Re: [PATCH 7/7] PCI: layerscape: Add power management support
+Message-ID: <20200915013028.GC640859@bogus>
 References: <20200907053801.22149-1-Zhiqiang.Hou@nxp.com>
- <20200907053801.22149-3-Zhiqiang.Hou@nxp.com>
+ <20200907053801.22149-8-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200907053801.22149-3-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20200907053801.22149-8-Zhiqiang.Hou@nxp.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 01:37:56PM +0800, Zhiqiang Hou wrote:
+On Mon, Sep 07, 2020 at 01:38:01PM +0800, Zhiqiang Hou wrote:
 > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> The current Layerscape PCIe driver directly uses the physical layer
-> LTSSM code to check the link-up state, which treats the > L0 states
-> as link-up. This is not correct, since there is not explicit map
-> between link-up state and LTSSM. So this patch changes to use the
-> DWC common link-up check function.
+> Add PME_Turn_Off/PME_TO_Ack handshake sequence, and finally
+> put the PCIe controller into D3 state after the L2/L3 ready
+> state transition process completion.
 > 
 > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
->  drivers/pci/controller/dwc/pci-layerscape.c | 141 ++------------------
->  1 file changed, 10 insertions(+), 131 deletions(-)
+>  drivers/pci/controller/dwc/pci-layerscape.c  | 384 ++++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.h |   1 +
+>  2 files changed, 383 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index be404c16bcbe..ca9ea07f77c1 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -3,13 +3,16 @@
+>   * PCIe host controller driver for Freescale Layerscape SoCs
+>   *
+>   * Copyright (C) 2014 Freescale Semiconductor.
+> + * Copyright 2020 NXP
+>   *
+>   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
+>   */
+>  
+> +#include <linux/delay.h>
+>  #include <linux/kernel.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/init.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/of_irq.h>
+> @@ -27,17 +30,66 @@
+>  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
+>  #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
+>  
+> +#define PCIE_PM_SCR		0x44
+> +#define PCIE_PM_SCR_PMEPS_D0	0x0
+> +#define PCIE_PM_SCR_PMEPS_D3	0x3
+> +
+> +#define PCIE_LNKCTL		0x80  /* PCIe link ctrl Register */
 
-IIRC, the common function uses a debug register. I've been wondering do 
-the common PCIe config space registers not work on DWC? If you have an 
-answer, that would be great for some potential additional cleanups.
+Use the common defines.
 
-Either way,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> +
+> +/* PF Message Command Register */
+> +#define LS_PCIE_PF_MCR		0x2c
+> +#define PF_MCR_PTOMR		BIT(0)
+> +#define PF_MCR_EXL2S		BIT(1)
+> +
+> +/* LS1021A PEXn PM Write Control Register */
+> +#define SCFG_PEXPMWRCR(idx)	(0x5c + (idx) * 0x64)
+> +#define PMXMTTURNOFF		BIT(31)
+> +#define SCFG_PEXSFTRSTCR	0x190
+> +#define PEXSR(idx)		BIT(idx)
+> +
+> +/* LS1043A PEX PME control register */
+> +#define SCFG_PEXPMECR		0x144
+> +#define PEXPME(idx)		BIT(31 - (idx) * 4)
+> +
+> +/* LS1043A PEX LUT debug register */
+> +#define LS_PCIE_LDBG	0x7fc
+> +#define LDBG_SR		BIT(30)
+> +#define LDBG_WE		BIT(31)
+> +
+>  #define PCIE_IATU_NUM		6
+>  
+> +#define LS_PCIE_IS_L2(v)	\
+> +	(((v) & PORT_LOGIC_LTSSM_STATE_MASK) == PORT_LOGIC_LTSSM_STATE_L2)
+> +
+> +struct ls_pcie;
+> +
+> +struct ls_pcie_host_pm_ops {
+> +	int (*pm_init)(struct ls_pcie *pcie);
+> +	void (*send_turn_off_message)(struct ls_pcie *pcie);
+> +	void (*exit_from_l2)(struct ls_pcie *pcie);
+> +};
+> +
+>  struct ls_pcie_drvdata {
+> +	const u32 pf_off;
+> +	const u32 lut_off;
+>  	const struct dw_pcie_host_ops *ops;
+> +	const struct ls_pcie_host_pm_ops *pm_ops;
+>  };
+>  
+>  struct ls_pcie {
+>  	struct dw_pcie *pci;
+>  	const struct ls_pcie_drvdata *drvdata;
+> +	void __iomem *pf_base;
+> +	void __iomem *lut_base;
+> +	bool big_endian;
+> +	bool ep_presence;
+> +	bool pm_support;
+> +	struct regmap *scfg;
+> +	int index;
+>  };
+>  
+> +#define ls_pcie_lut_readl_addr(addr)	ls_pcie_lut_readl(pcie, addr)
+> +#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
+>  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
+> @@ -86,6 +138,208 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
+>  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
+>  }
+>  
+> +static u32 ls_pcie_lut_readl(struct ls_pcie *pcie, u32 off)
+> +{
+> +	if (pcie->big_endian)
+> +		return ioread32be(pcie->lut_base + off);
+> +
+> +	return ioread32(pcie->lut_base + off);
+> +}
+> +
+> +static void ls_pcie_lut_writel(struct ls_pcie *pcie, u32 off, u32 val)
+> +{
+> +	if (pcie->big_endian)
+> +		return iowrite32be(val, pcie->lut_base + off);
+> +
+> +	return iowrite32(val, pcie->lut_base + off);
+> +
+> +}
+> +
+> +static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
+> +{
+> +	if (pcie->big_endian)
+> +		return ioread32be(pcie->pf_base + off);
+> +
+> +	return ioread32(pcie->pf_base + off);
+> +}
+> +
+> +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
+> +{
+> +	if (pcie->big_endian)
+> +		return iowrite32be(val, pcie->pf_base + off);
+> +
+> +	return iowrite32(val, pcie->pf_base + off);
+> +
+> +}
+> +
+> +static void ls_pcie_send_turnoff_msg(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val |= PF_MCR_PTOMR;
+> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +
+> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +				 val, !(val & PF_MCR_PTOMR), 100, 10000);
+> +	if (ret)
+> +		dev_info(pcie->pci->dev, "poll turn off message timeout\n");
+> +}
+> +
+> +static void ls1021a_pcie_send_turnoff_msg(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	if (!pcie->scfg) {
+> +		dev_dbg(pcie->pci->dev, "SYSCFG is NULL\n");
+> +		return;
+> +	}
+> +
+> +	/* Send Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> +	val |= PMXMTTURNOFF;
+> +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> +
+> +	mdelay(10);
+> +
+> +	/* Clear Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> +	val &= ~PMXMTTURNOFF;
+> +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> +}
+> +
+> +static void ls1043a_pcie_send_turnoff_msg(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	if (!pcie->scfg) {
+> +		dev_dbg(pcie->pci->dev, "SYSCFG is NULL\n");
+> +		return;
+> +	}
+> +
+> +	/* Send Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMECR, &val);
+> +	val |= PEXPME(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXPMECR, val);
+> +
+> +	mdelay(10);
+> +
+> +	/* Clear Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMECR, &val);
+> +	val &= ~PEXPME(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXPMECR, val);
+> +}
+> +
+> +static void ls_pcie_exit_from_l2(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val |= PF_MCR_EXL2S;
+> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +
+> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +				 val, !(val & PF_MCR_EXL2S), 100, 10000);
+> +	if (ret)
+> +		dev_info(pcie->pci->dev, "poll exit L2 state timeout\n");
+> +}
+> +
+> +static void ls_pcie_retrain_link(struct ls_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	u32 val;
+> +
+> +	val = dw_pcie_readw_dbi(pci, PCIE_LNKCTL);
+> +	val |= PCI_EXP_LNKCTL_RL;
+> +	dw_pcie_writew_dbi(pci, PCIE_LNKCTL, val);
+> +}
+> +
+> +static void ls1021a_pcie_exit_from_l2(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> +	val |= PEXSR(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> +
+> +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> +	val &= ~PEXSR(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> +
+> +	mdelay(1);
+> +
+> +	ls_pcie_retrain_link(pcie);
+> +}
+> +static void ls1043a_pcie_exit_from_l2(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val |= LDBG_WE;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val |= LDBG_SR;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val &= ~LDBG_SR;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val &= ~LDBG_WE;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	mdelay(1);
+> +
+> +	ls_pcie_retrain_link(pcie);
+> +}
+> +
+> +static int ls1021a_pcie_pm_init(struct ls_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->pci->dev;
+> +	u32 index[2];
+> +	int ret;
+> +
+> +	pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						     "fsl,pcie-scfg");
+> +	if (IS_ERR(pcie->scfg)) {
+> +		ret = PTR_ERR(pcie->scfg);
+> +		dev_err(dev, "No syscfg phandle specified\n");
+> +		pcie->scfg = NULL;
+> +		return ret;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(dev->of_node, "fsl,pcie-scfg",
+> +					 index, 2);
+> +	if (ret) {
+> +		pcie->scfg = NULL;
+> +		return ret;
+> +	}
+> +
+> +	pcie->index = index[1];
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls_pcie_pm_init(struct ls_pcie *pcie)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void ls_pcie_set_dstate(struct ls_pcie *pcie, u32 dstate)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	u32 val;
+> +
+> +	val = dw_pcie_readw_dbi(pci, PCIE_PM_SCR);
+> +	val &= ~PCI_PM_CTRL_STATE_MASK;
+> +	val |= dstate;
+> +	dw_pcie_writew_dbi(pci, PCIE_PM_SCR, val);
+> +}
+> +
+>  static int ls_pcie_host_init(struct pcie_port *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -133,20 +387,52 @@ static int ls_pcie_msi_host_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> +static struct ls_pcie_host_pm_ops ls1021a_pcie_host_pm_ops = {
+> +	.pm_init = &ls1021a_pcie_pm_init,
+> +	.send_turn_off_message = &ls1021a_pcie_send_turnoff_msg,
+> +	.exit_from_l2 = &ls1021a_pcie_exit_from_l2,
+> +};
+> +
+> +static struct ls_pcie_host_pm_ops ls1043a_pcie_host_pm_ops = {
+> +	.pm_init = &ls1021a_pcie_pm_init,
+> +	.send_turn_off_message = &ls1043a_pcie_send_turnoff_msg,
+> +	.exit_from_l2 = &ls1043a_pcie_exit_from_l2,
+> +};
+> +
+> +static struct ls_pcie_host_pm_ops ls_pcie_host_pm_ops = {
+> +	.pm_init = &ls_pcie_pm_init,
+> +	.send_turn_off_message = &ls_pcie_send_turnoff_msg,
+> +	.exit_from_l2 = &ls_pcie_exit_from_l2,
+> +};
+> +
+>  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+>  	.host_init = ls_pcie_host_init,
+>  	.msi_host_init = ls_pcie_msi_host_init,
+>  };
+>  
+> +static const struct ls_pcie_drvdata ls1021a_drvdata = {
+> +	.ops = &ls_pcie_host_ops,
+> +	.pm_ops = &ls1021a_pcie_host_pm_ops,
+> +};
+> +
+> +static const struct ls_pcie_drvdata ls1043a_drvdata = {
+> +	.ops = &ls_pcie_host_ops,
+> +	.lut_off = 0x10000,
+> +	.pm_ops = &ls1043a_pcie_host_pm_ops,
+> +};
+> +
+>  static const struct ls_pcie_drvdata layerscape_drvdata = {
+>  	.ops = &ls_pcie_host_ops,
+> +	.lut_off = 0x80000,
+> +	.pf_off = 0xc0000,
+> +	.pm_ops = &ls_pcie_host_pm_ops,
+>  };
+>  
+>  static const struct of_device_id ls_pcie_of_match[] = {
+>  	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
+> -	{ .compatible = "fsl,ls1021a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
+>  	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
+> -	{ .compatible = "fsl,ls1043a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043a_drvdata },
+>  	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
+>  	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
+>  	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
+> @@ -170,6 +456,15 @@ static int __init ls_add_pcie_port(struct ls_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> +	if (dw_pcie_link_up(pci)) {
+> +		dev_dbg(pci->dev, "Endpoint is present\n");
+> +		pcie->ep_presence = true;
+> +	}
+> +
+> +	if (pcie->drvdata->pm_ops && pcie->drvdata->pm_ops->pm_init &&
+> +	    !pcie->drvdata->pm_ops->pm_init(pcie))
+> +		pcie->pm_support = true;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -200,6 +495,14 @@ static int __init ls_pcie_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> +	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
+> +
+> +	if (pcie->drvdata->lut_off)
+> +		pcie->lut_base = pci->dbi_base + pcie->drvdata->lut_off;
+> +
+> +	if (pcie->drvdata->pf_off)
+> +		pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
+> +
+>  	if (!ls_pcie_is_bridge(pcie))
+>  		return -ENODEV;
+>  
+> @@ -212,11 +515,88 @@ static int __init ls_pcie_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static bool ls_pcie_pm_check(struct ls_pcie *pcie)
+> +{
+> +	if (!pcie->ep_presence) {
+> +		dev_dbg(pcie->pci->dev, "Endpoint isn't present\n");
+> +		return false;
+> +	}
+> +
+> +	if (!pcie->pm_support)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int ls_pcie_suspend_noirq(struct device *dev)
+
+Why is noirq variant needed? Most drivers don't need this.
+
+> +{
+> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> +	struct dw_pcie *pci = pcie->pci;
+> +	u32 val;
+> +	int ret;
+> +
+> +	if (!ls_pcie_pm_check(pcie))
+> +		return 0;
+> +
+> +	pcie->drvdata->pm_ops->send_turn_off_message(pcie);
+> +
+> +	/* 10ms timeout to check L2 ready */
+> +	ret = readl_poll_timeout(pci->dbi_base + PCIE_PORT_DEBUG0,
+> +				 val, LS_PCIE_IS_L2(val), 100, 10000);
+> +	if (ret) {
+> +		dev_err(dev, "PCIe link enter L2 timeout! ltssm = 0x%x\n", val);
+> +		return ret;
+> +	}
+> +
+> +	ls_pcie_set_dstate(pcie, PCIE_PM_SCR_PMEPS_D3);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls_pcie_resume_noirq(struct device *dev)
+> +{
+> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> +	struct dw_pcie *pci = pcie->pci;
+> +	int ret;
+> +
+> +	if (!ls_pcie_pm_check(pcie))
+> +		return 0;
+> +
+> +	ls_pcie_set_dstate(pcie, PCIE_PM_SCR_PMEPS_D0);
+> +
+> +	pcie->drvdata->pm_ops->exit_from_l2(pcie);
+> +
+> +	/* delay 10ms to access EP */
+> +	mdelay(10);
+> +
+> +	ret = ls_pcie_host_init(&pci->pp);
+> +	if (ret) {
+> +		dev_err(dev, "ls_pcie_host_init failed! ret = 0x%x\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = dw_pcie_wait_for_link(pci);
+> +	if (ret) {
+> +		dev_err(dev, "wait link up timeout! ret = 0x%x\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +static const struct dev_pm_ops ls_pcie_pm_ops = {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq,
+> +				      ls_pcie_resume_noirq)
+> +};
+> +
+>  static struct platform_driver ls_pcie_driver = {
+>  	.driver = {
+>  		.name = "layerscape-pcie",
+>  		.of_match_table = ls_pcie_of_match,
+>  		.suppress_bind_attrs = true,
+> +		.pm = &ls_pcie_pm_ops,
+>  	},
+>  };
+>  builtin_platform_driver_probe(ls_pcie_driver, ls_pcie_probe);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index f911760dcc69..1f2fd03d1eba 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -46,6 +46,7 @@
+>  #define PCIE_PORT_DEBUG0		0x728
+>  #define PORT_LOGIC_LTSSM_STATE_MASK	0x1f
+>  #define PORT_LOGIC_LTSSM_STATE_L0	0x11
+> +#define PORT_LOGIC_LTSSM_STATE_L2	0x15
+>  #define PCIE_PORT_DEBUG1		0x72C
+>  #define PCIE_PORT_DEBUG1_LINK_UP		BIT(4)
+>  #define PCIE_PORT_DEBUG1_LINK_IN_TRAINING	BIT(29)
+> -- 
+> 2.17.1
+> 
