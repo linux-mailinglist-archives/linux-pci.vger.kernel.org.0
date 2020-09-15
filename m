@@ -2,91 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33DDF2699A3
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 01:26:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2606F269AEE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 03:16:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgINX0c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Sep 2020 19:26:32 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:36784 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbgINX0b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 19:26:31 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 08ENPwuf006195
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 14 Sep 2020 18:26:01 -0500
-Message-ID: <2b539df4c9ec703458e46da2fc879ee3b310b31c.camel@kernel.crashing.org>
-Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Clint Sbisa <csbisa@amazon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, will@kernel.org,
-        catalin.marinas@arm.com, Leon Romanovsky <leon@kernel.org>
-Date:   Tue, 15 Sep 2020 09:25:57 +1000
-In-Reply-To: <20200914225740.GP904879@nvidia.com>
-References: <20200910171033.GG904879@nvidia.com>
-         <44acc22377958a57c738f5139c5b5df2841c2544.camel@kernel.crashing.org>
-         <20200910232938.GJ904879@nvidia.com>
-         <3110e00a1f4df7b7359ba4f2b7f86a35aa47405e.camel@kernel.crashing.org>
-         <20200911214225.hml2wbbq2rofn4re@amazon.com>
-         <20200914141726.GA904879@nvidia.com>
-         <20200914142406.k44zrnp2wdsandsp@amazon.com>
-         <20200914143819.GC904879@nvidia.com>
-         <375c478593945a416f3180c3773bcb5240d2e36c.camel@kernel.crashing.org>
-         <1d6f2ceb8d3538c906a1fdb8cd3d4c74ccffa42e.camel@kernel.crashing.org>
-         <20200914225740.GP904879@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726024AbgIOBQc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Sep 2020 21:16:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38214 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgIOBQa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Sep 2020 21:16:30 -0400
+Received: by mail-io1-f66.google.com with SMTP id h4so2270009ioe.5;
+        Mon, 14 Sep 2020 18:16:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Kbg1eHGtOQnYQ+M/Y2pvYX5z74YhXGuuRyeYjR/TpSM=;
+        b=Qhq+Yonnpg5hgFuxsybXIg/yuZXj6IYvVOauycvhcMvQPWdXIfen6NNjlOdDvGGFyr
+         H9XYlzQx7d7DRSBs0t6oSXvYJG/JhGPiwnm4lCMtKlwtcwjQV0xy3AYdNsQiKkcM90tL
+         9kDeuYdAGwe4SZchVX14mg5HoffiG2ePJbxZhiBStLl90HRJJmYUHiG5n7138THg9ig3
+         GGMD4mWSPsxbir0RaU5ZFKfVX4MYmLUZ97oPAe6tah8wmrKGjlaxJI68GtppRqzBAKgn
+         8h1V/iFcQ/y1a2nEQQzwT/6CiwVsWQAM9QtxJFRpzyswL+CNCm5cc75s/e7bMOC7V2En
+         FEKw==
+X-Gm-Message-State: AOAM5310vIAI60MBh+wFtn65y748LufiopPrhb15e6ITxI7AnBmQk72H
+        r2Otfx+YE8/7NMrxbnZ/ep6IOcnw50Ug
+X-Google-Smtp-Source: ABdhPJzqNhRuky/yaaH0einwgyUJv5TnN63uuqMrcij/bT0VGW6Pej9sVoCe1aQ3eG7ZLHN59UMLuw==
+X-Received: by 2002:a6b:c953:: with SMTP id z80mr13381128iof.178.1600132589539;
+        Mon, 14 Sep 2020 18:16:29 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id d23sm6861698ioh.22.2020.09.14.18.16.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2020 18:16:28 -0700 (PDT)
+Received: (nullmailer pid 645148 invoked by uid 1000);
+        Tue, 15 Sep 2020 01:16:25 -0000
+Date:   Mon, 14 Sep 2020 19:16:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
+        gustavo.pimentel@synopsys.com, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com
+Subject: Re: [PATCH 1/7] PCI: dwc: Fix a bug of the case dw_pci->ops is NULL
+Message-ID: <20200915011625.GA640859@bogus>
+References: <20200907053801.22149-1-Zhiqiang.Hou@nxp.com>
+ <20200907053801.22149-2-Zhiqiang.Hou@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907053801.22149-2-Zhiqiang.Hou@nxp.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2020-09-14 at 19:57 -0300, Jason Gunthorpe wrote:
-> On Tue, Sep 15, 2020 at 08:00:27AM +1000, Benjamin Herrenschmidt wrote:
-> > On Tue, 2020-09-15 at 07:42 +1000, Benjamin Herrenschmidt wrote:
-> > > 
-> > > > which is back to my original question, how do you do DMA using
-> > > > /sys/xx/resources? Why not use VFIO like everything else?
-> > > 
-> > > Note: All this doesnt' change the fact that sys/xx/resources_wc
-> > > exists
-> > > for other archs and I see no reasons so far not to have it on ARM...
-> > 
-> > Also... it looks like VFIO also doesn't provide a way to do WC yet
-> > unfortunately :-(
+On Mon, Sep 07, 2020 at 01:37:55PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Yes, but if the driving reason for this patch is because a VFIO user
-> like EFA DPDK is trying to work around VFIO limitations, then I'd say
-> the VFIO mmap should be amended, and not so much worring about sysfs.
+> The dw_pci->ops may be a NULL, and fix it by adding one more check.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-I don't think the two are exclusive.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-> While there is no reason for ARM to not show the sysfs, it really
-> should never be used. Modern kernels in secure boot don't even show
-> it, for instance.
+Note that this may conflict with my 40 patch clean-up series.
 
-It's useful for random things, I've used it quite a bit in a previous
-life for things like in-lab hw testing etc...  There's tooling out
-there, esp. in the more 'embedded' side of thing that uses this, I
-don't see a good reason not to provide the same level of functionality.
-
-So Lorenzo, imho, we should merge the patch.
-
-As for fixing VFIO, definitely something to revive. The main contention
-point was which "interface" to use to request write combine.
-
-Let's restart that conversation with the appropriate folks, the last I
-remember, the question was to figure out what interface to provide
-userspace for the functionality.
-
-Clint, do you want to drive this as well ?
-
-Cheers,
-Ben.
-
+Rob
