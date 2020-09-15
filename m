@@ -2,250 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1635926A8EE
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 17:37:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 160FC26AA37
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 19:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgIOPhW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Sep 2020 11:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbgIOP2O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Sep 2020 11:28:14 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1661E20731;
-        Tue, 15 Sep 2020 15:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600183693;
-        bh=cOjc0BpQPkQ73HeS+RZJ5skgebhu1THccarIr00qFPI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AkFBr9qbpjh35YapJNXKIU7orVSj2SHx0hZcTHt5EC7TLFskkeBdZozI4nsTbW+j1
-         qXd3tWYSgCJ/m5NCyOEKDqPwVjY0c5Vh+QeZgf9kQno+WUc52O471hGpFbC2uekbua
-         fUvFYDNyI7JLQetmmtSkJjZVtQd/x+tDbQKea2SU=
-Date:   Tue, 15 Sep 2020 10:28:11 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>
-Cc:     "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "rui_feng@realsil.com.cn" <rui_feng@realsil.com.cn>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "puranjay12@gmail.com" <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "vailbhavgupta40@gmail.com" <vailbhavgupta40@gmail.com>
-Subject: Re: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix
- driving parameter
-Message-ID: <20200915152811.GA1383952@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        id S1727716AbgIORBn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Sep 2020 13:01:43 -0400
+Received: from mx0a-00273201.pphosted.com ([208.84.65.16]:28004 "EHLO
+        mx0a-00273201.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727772AbgIOQsq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 12:48:46 -0400
+Received: from pps.filterd (m0108159.ppops.net [127.0.0.1])
+        by mx0a-00273201.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08FF7lhG012243;
+        Tue, 15 Sep 2020 08:11:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=from : to : cc :
+ subject : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=PPS1017; bh=EQ1PUCd468s9N5hDytrz+WwPO90IdG6swHnW6o2/CzM=;
+ b=ewYhLz+Y8GTILmZ2TDg2vuQQSFRM5XV6C483UL/YgTCK1n0iob59kGxG52ce6iLEvGFP
+ GjEqP34X0yx4zQBtZvf9bZn2P4fY6enhsItz5L+BQih0kbYEVdaG3qWedXZfEu4u7HV6
+ deaBO+myb9LNGuzg+p2TdySIhECNEFeWtHwgIt43SG4aa3qcDzAzDIZ3X6231HtONKVU
+ 8AT9+4Mgo4et6iOR0X1Ogg+2MGNVLNANrFTt8N9YABl693/GR95n+MmOqcyXb7PcVPsI
+ Z258wxAqw4JrC1KVhWLBm6agxgsIH4GJWU8tOhcWNjrM6ebTXDDcZoSrimgsOLul2p0l 0Q== 
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2172.outbound.protection.outlook.com [104.47.55.172])
+        by mx0a-00273201.pphosted.com with ESMTP id 33gv9wvvkb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Sep 2020 08:11:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QRoUJL1vou2CB++uAa+YmhaSv0FwzqmzjQ6xnef6gXioeGx/jDm3XHkrdtT61kj7U6T4HS+2WSPjsuxudW4cnOVerdKBq8SYKJHrGQJGgLWbaJvJnHAy3+1bEqga2D2S3/2W62Fq2n+BNiCnJWh1nAvd/Edd+yP65biWKRUlxYNnq/BQ5V6WT2NzPToo1EfFd3Hm49G5QYA4fVoP+Cb+VH0gUHEmpAloDmXfsemJAVhSBhdYSaazsZN2OvI1RR/2+wJR6iPqInzqhhJdkLUL6Dytd9plLDzmoLXrHcXUhl008/HAF6sErT/wVtNucX0O5LVYYMU0Pb6/+3nwLGpVUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EQ1PUCd468s9N5hDytrz+WwPO90IdG6swHnW6o2/CzM=;
+ b=fnH9/x9AiIkeTOQk279goMGKxCdAApJu4H0EWGP/TdbEVwDynELBU0xSqPJmwLDwbwPLuF8LMVaKj55NaVJAKm+LcAwGnRS8OwiWRV6dLowmwEBUnUyhn3byGEh4iHSF/IPNnvyz9kg9gZGB4CCOV0wLLrT0f3QU0PWZNZYkaBuRLIJPQBk9rVvG4ds9/jIP+NlAhL41ON1BaShIjpiXTiNPbqdQLk2jNAt9fau7Lcqx309YRswj1Hor2SIKIWl51EimOwKp9B1n3PoUcScqIibLGP/bqMe8BhwoAfda7Vz8ywFRbv/fsmAZLgXjh9RVaJPRMSSEItEWBkw1wQ7iMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=juniper.net; dmarc=pass action=none header.from=juniper.net;
+ dkim=pass header.d=juniper.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EQ1PUCd468s9N5hDytrz+WwPO90IdG6swHnW6o2/CzM=;
+ b=UusYriY9pwHwJF2AVeLbQpgRm52WZ1h2lu05TMPiXg1n/cOu1iTg7nw9kJaZ+4TnnI7piCpAtOgitLiILm35+t6z4mLmxBh9xcVFVEN9q194z86dzEyUqsFfKtuOiST18C2oc9t5Os2C4PduBs9k17ZdCHBXp4XiM2+m/i0QbYo=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=juniper.net;
+Received: from BYAPR05MB5592.namprd05.prod.outlook.com (2603:10b6:a03:19::16)
+ by BYAPR05MB4678.namprd05.prod.outlook.com (2603:10b6:a03:41::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.9; Tue, 15 Sep
+ 2020 15:11:32 +0000
+Received: from BYAPR05MB5592.namprd05.prod.outlook.com
+ ([fe80::e4a2:9674:56bb:b13f]) by BYAPR05MB5592.namprd05.prod.outlook.com
+ ([fe80::e4a2:9674:56bb:b13f%7]) with mapi id 15.20.3391.009; Tue, 15 Sep 2020
+ 15:11:32 +0000
+From:   Ming Qiao <mqiao@juniper.net>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ming Qiao <mqiao@juniper.net>, Debjit Ghosh <dghosh@juniper.net>,
+        Santhanakrishnan Balraj <sbalraj@juniper.net>,
+        Rajat Jain <rajatja@google.com>
+Subject: [PATCH 1/3] PCI: Add quirks for Juniper FPGAs to set class code
+Date:   Tue, 15 Sep 2020 08:11:01 -0700
+Message-Id: <20200915151103.7086-1-mqiao@juniper.net>
+X-Mailer: git-send-email 2.10.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4a677365e7a64699b16ae0b25eca1041@realtek.com>
+X-ClientProxiedBy: BL0PR02CA0086.namprd02.prod.outlook.com
+ (2603:10b6:208:51::27) To BYAPR05MB5592.namprd05.prod.outlook.com
+ (2603:10b6:a03:19::16)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from qnc-ubm16-mqiao.juniper.net (66.129.224.68) by BL0PR02CA0086.namprd02.prod.outlook.com (2603:10b6:208:51::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3370.16 via Frontend Transport; Tue, 15 Sep 2020 15:11:30 +0000
+X-Mailer: git-send-email 2.10.0
+X-Originating-IP: [66.129.224.68]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a408994d-85a9-4da4-bc81-08d85989a121
+X-MS-TrafficTypeDiagnostic: BYAPR05MB4678:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR05MB467890932C4FD3B5E6CD3734AF200@BYAPR05MB4678.namprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OLb2LY6aEJzx0YkyxcilSjVL9OdgWDkS9cGHOTFzjsf/sQ3yr3Cmc8hHbecautdIzs4Sb8HL9+CYMN22epblygF6KUWRFe7UOS60z9Z99XUVRJBR21Ozh59ueMSf5GKBD4LxAptjy9MDL5Tm1ijiWEg58gZpvzhCX8vRwz/frXtZFSdKAAq4vaDoFzde2w2FO8v7rCV+gCI5wlLspUE0GPt5djMVQqbbDmlzwEaO4aE5Aryjm8G9BiHDEQDEVQNW5vBmoEVzUzLOacZWyEfgQZPE5z6lb6N1SReE/E/PiC+/slp81/VJ0xkwdpSY8PGKVO8DO4NT3uCJDnzh7TykC9XcN/SwkbL7ASsZw9tGT7U2Ar1Vv5726IR1SxOeRYBK
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB5592.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(39860400002)(376002)(346002)(316002)(6666004)(66556008)(86362001)(5660300002)(1076003)(66476007)(66946007)(16526019)(36756003)(186003)(6486002)(54906003)(4326008)(956004)(2616005)(8936002)(26005)(8676002)(52116002)(478600001)(83380400001)(2906002)(7696005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: neuMjaOUHH682qg+Mj7Nrhri4vKE7guUOZGdwq6osra2ds0Wg+daRrtGkhcWgE2ErJgWDmej7mVdmEBK2pbmCBgE/E4Qw60Il7Q474mQs480eIA3RjArnOvYM5aj9Q7cDVGarBMA0+e5hpEJ/cr2yy86+QUWvXoPqx5YrWVxgdMR4VT897aRUvR/6u35xxQEo7wMI8m8Wfv2kX4RIHoRT6sQgZ3fisoi0joejdrzb07moaDlgwV1ji7LqJLTvh0YQz0/E4Utxc0OHYY86G69Y82HAX/aWYiN4d5EjGH7X3SWALPaKEMDLQnNhv80FJjdxbK9HV6LwfvgEeZuB28EGbpl8M94Fm/I6qMmfLjx8WWh4063/WGgoGUohGA4+D5iApdo9z3V+P9wTUxEV2p0MCsNZttnjHyf0Qnco1djd4J7CYhh5+cvP2w/E3UYhZt2vs1RyHsgqGChF/e6hBmx5xa5GGUmQeNK6/mM9bcjz25S/xxGAqpl6ANhIK+5vRW2XC2Lx5p+FBE9q8z1m2TsgSa3XAR41h7Itz2P0VS1bQOc3ovvxr/DDYIoZVFGPpLUG3fnS00RZgQOBM0+XtfYisNoq/qOq7Myj4O2ZqTFIP2YK6AbHNPO64FYw/w8Xqi649Xutxr3uKr033aHNugSAw==
+X-OriginatorOrg: juniper.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: a408994d-85a9-4da4-bc81-08d85989a121
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR05MB5592.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2020 15:11:32.3978
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bea78b3c-4cdb-4130-854a-1d193232e5f4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CcbLGrM/4Jn8bKm+YouVFb5lz8A5dn6eCV7vTbaI5sRua0Fy1j2hoLHlQH4qKFa3XglGGyHHrUAtxW4pDrDdAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4678
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-15_11:2020-09-15,2020-09-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam score=0 mlxscore=0
+ bulkscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 clxscore=1011 mlxlogscore=928
+ adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009150127
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 08:24:50AM +0000, 吳昊澄 Ricky wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> > Sent: Friday, September 11, 2020 10:56 PM
-> > To: 吳昊澄 Ricky
-> > Cc: arnd@arndb.de; gregkh@linuxfoundation.org; bhelgaas@google.com;
-> > ulf.hansson@linaro.org; rui_feng@realsil.com.cn; linux-kernel@vger.kernel.org;
-> > puranjay12@gmail.com; linux-pci@vger.kernel.org;
-> > vailbhavgupta40@gamail.com
-> > Subject: Re: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix driving
-> > parameter
-> > 
-> > On Fri, Sep 11, 2020 at 08:18:22AM +0000, 吳昊澄 Ricky wrote:
-> > > > -----Original Message-----
-> > > > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> > > > Sent: Thursday, September 10, 2020 1:44 AM
-> > > > To: 吳昊澄 Ricky
-> > > > Cc: arnd@arndb.de; gregkh@linuxfoundation.org; bhelgaas@google.com;
-> > > > ulf.hansson@linaro.org; rui_feng@realsil.com.cn;
-> > linux-kernel@vger.kernel.org;
-> > > > puranjay12@gmail.com; linux-pci@vger.kernel.org;
-> > > > vailbhavgupta40@gamail.com
-> > > > Subject: Re: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix
-> > driving
-> > > > parameter
-> > > >
-> > > > On Wed, Sep 09, 2020 at 07:10:19AM +0000, 吳昊澄 Ricky wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> > > > > > Sent: Wednesday, September 09, 2020 6:29 AM
-> > > > > > To: 吳昊澄 Ricky
-> > > > > > Cc: arnd@arndb.de; gregkh@linuxfoundation.org;
-> > bhelgaas@google.com;
-> > > > > > ulf.hansson@linaro.org; rui_feng@realsil.com.cn;
-> > > > linux-kernel@vger.kernel.org;
-> > > > > > puranjay12@gmail.com; linux-pci@vger.kernel.org;
-> > > > > > vailbhavgupta40@gamail.com
-> > > > > > Subject: Re: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix
-> > > > driving
-> > > > > > parameter
-> > > > > >
-> > > > > > On Mon, Sep 07, 2020 at 06:07:31PM +0800, ricky_wu@realtek.com
-> > wrote:
-> > > > > > > From: Ricky Wu <ricky_wu@realtek.com>
-> > > > > > >
-> > > > > > > v4:
-> > > > > > > split power down flow and power saving function to two patch
-> > > > > > >
-> > > > > > > v5:
-> > > > > > > fix up modified change under the --- line
-> > > > > >
-> > > > > > Hehe, this came out *above* the "---" line :)
-> > > > > >
-> > > > > > > Add rts522a L1 sub-state support
-> > > > > > > Save more power on rts5227 rts5249 rts525a rts5260
-> > > > > > > Fix rts5260 driving parameter
-> > > > > > >
-> > > > > > > Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
-> > > > > > > ---
-> > > > > > >  drivers/misc/cardreader/rts5227.c  | 112 +++++++++++++++++++++-
-> > > > > > >  drivers/misc/cardreader/rts5249.c  | 145
-> > > > > > ++++++++++++++++++++++++++++-
-> > > > > > >  drivers/misc/cardreader/rts5260.c  |  28 +++---
-> > > > > > >  drivers/misc/cardreader/rtsx_pcr.h |  17 ++++
-> > > > > > >  4 files changed, 283 insertions(+), 19 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/misc/cardreader/rts5227.c
-> > > > > > b/drivers/misc/cardreader/rts5227.c
-> > > > > > > index 747391e3fb5d..8859011672cb 100644
-> > > > > > > --- a/drivers/misc/cardreader/rts5227.c
-> > > > > > > +++ b/drivers/misc/cardreader/rts5227.c
-> > > > > > > @@ -72,15 +72,80 @@ static void
-> > rts5227_fetch_vendor_settings(struct
-> > > > > > rtsx_pcr *pcr)
-> > > > > > >
-> > > > > > >  	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
-> > > > > > >  	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
-> > > > > > > +	if (rtsx_check_mmc_support(reg))
-> > > > > > > +		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
-> > > > > > >  	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
-> > > > > > >  	if (rtsx_reg_check_reverse_socket(reg))
-> > > > > > >  		pcr->flags |= PCR_REVERSE_SOCKET;
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +static void rts5227_init_from_cfg(struct rtsx_pcr *pcr)
-> > > > > > > +{
-> > > > > > > +	struct pci_dev *pdev = pcr->pci;
-> > > > > > > +	int l1ss;
-> > > > > > > +	u32 lval;
-> > > > > > > +	struct rtsx_cr_option *option = &pcr->option;
-> > > > > > > +
-> > > > > > > +	l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
-> > > > > > > +	if (!l1ss)
-> > > > > > > +		return;
-> > > > > > > +
-> > > > > > > +	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
-> > > > > >
-> > > > > > This looks a little problematic.  PCI_L1SS_CTL1 is an architected
-> > > > > > register in the ASPM L1 PM Substates capability, and its value may
-> > > > > > change at runtime because drivers/pci/pcie/aspm.c manages it.
-> > > > > >
-> > > > > > It looks like the code below does device-specific configuration based
-> > > > > > on the current PCI_L1SS_CTL1 value.  But what happens if aspm.c
-> > > > > > changes PCI_L1SS_CTL1 later?
-> > > > >
-> > > > > We are going to make sure and set the best configuration on the
-> > > > > current time, if host change the capability later, it doesn't affect
-> > > > > function, only affect a little power saving
-> > > >
-> > > > Why don't you unconditionally do the following?
-> > > >
-> > > >   rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
-> > > >   rtsx_set_dev_flag(pcr, ASPM_L1_2_EN);
-> > > >   rtsx_set_dev_flag(pcr, PM_L1_1_EN);
-> > > >   rtsx_set_dev_flag(pcr, PM_L1_2_EN);
-> > >
-> > > Our power saving function have 2 different flow L1 and L1substate,
-> > > so we need to check it for which flow we are going to
-> > > Detail to see below reply
-> > >
-> > > > Let's assume the generic code in aspm.c has cleared all these bits:
-> > > >
-> > > >   PCI_L1SS_CTL1_ASPM_L1_1
-> > > >   PCI_L1SS_CTL1_ASPM_L1_2
-> > > >   PCI_L1SS_CTL1_PCIPM_L1_1
-> > > >   PCI_L1SS_CTL1_PCIPM_L1_2
-> > > >
-> > > > in the L1 PM Substates capability.
-> > > >
-> > > > I think you are saying that if you *also* clear ASPM_L1_1_EN,
-> > > > ASPM_L1_2_EN, PM_L1_1_EN, and PM_L1_2_EN in your device-specific
-> > > > registers, it uses less power than if you set those device-specific
-> > > > bits.  Right?
-> > > >
-> > > > And moreover, I think you're saying that if aspm.c subsequently *sets*
-> > > > some of those bits in the L1 PM Substates capability, those substates
-> > > > *work* even though the device-specific ASPM_L1_1_EN, ASPM_L1_2_EN,
-> > > > PM_L1_1_EN, and PM_L1_2_EN bits are not set.  Right?
-> > > >
-> > > > I do not feel good about this as a general strategy.  I think we
-> > > > should program the device so the behavior is completely predictable,
-> > > > regardless of the generic enable bits happened to be set at
-> > > > probe-time.
-> > > >
-> > > > The current approach means that if we enable L1 substates after the
-> > > > driver probe, the device is configured differently than if we enabled
-> > > > L1 substates before probe.  That's not a reliable way to operate it.
-> > >
-> > > Talk about our power saving function
-> > > a) basic L1 power saving
-> > > b) advance L1 power saving
-> > > c) advance L1 substate power saving
-> > 
-> > I have no idea what the difference between "basic L1 power saving" and
-> > "advance L1 power saving" is, so I assume those are device-specific
-> > things.  If not, please use the same terminology as the PCIe spec.
-> > 
-> > > at initial, we check pci port support L1 subs or not, if not we are
-> > > going to b) otherwise going to c).
-> > 
-> > You're not checking whether the port *supports* L1 substates.  You
-> > would look at PCI_L1SS_CAP to learn that.  You're looking at
-> > PCI_L1SS_CTL1, which tells you whether L1 substates are *enabled*.
-> > 
-> > > Assume aspm.c change bit of L1 PM Substates capability after our
-> > > driver probe, we are going to a)
-> > >
-> > > So far we did not see any platform change L1 PM Substates capability
-> > > after our driver probe.
-> > 
-> > You should expect that aspm.c will change bits in the L1 PM *control*
-> > register (PCI_L1SS_CTL1) after probe.
-> > 
-> > You might not actually see it change, depending on how you tested, but
-> > you cannot rely on PCI_L1SS_CTL1 being constant.  It may change based
-> > on power/performance tradeoffs, e.g., whether the system is plugged
-> > into AC power, whether it's idle, etc.
-> > 
-> 
-> Our ASPM function is a HW solution follow the PCIe SPEC. don’t worry
-> about crash the system If HOST change our device config space
-> setting at run time our HW will do the corresponding things which
-> follows the SPEC.  At initial time we set these parameter just good
-> for more power saving
+Some of the Juniper FPGAs do not report correct PCI class ID, which
+would confuse kernel APIs accessing the specific class of devices.
+Change them to PCI_CLASS_SYSTEM_OTHER << 8.
 
-OK.  It would be better if your hardware would notice the
-PCI_L1SS_CTL1 change and set its own device-specific power-saving
-parameters.  The drivers would be simpler, and the device behavior
-would be more consistent.
+Also introduce Juniper vendor ID to be used in the quirks.
+    
+Signed-off-by: Debjit Ghosh <dghosh@juniper.net>
+Signed-off-by: Santhanakrishnan Balraj <sbalraj@juniper.net>
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Signed-off-by: Ming Qiao <mqiao@juniper.net>
+---
+ drivers/pci/quirks.c    | 25 +++++++++++++++++++++++++
+ include/linux/pci_ids.h |  2 ++
+ 2 files changed, 27 insertions(+)
 
-Drivers *writing* to standard PCI config things (64-byte config header
-or Capabilities like PCIe, PM, ASPM, L1 Substates) is a definite
-problem because the PCI core owns those and writes from drivers need
-to be mediated somehow.  AFAICT your drivers don't write to these
-things.
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 2a589b6..61344d2 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5632,3 +5632,28 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+ 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
++
++/*
++ * PCI class reported by some Juniper FPGAs is not correct.
++ * Change it to SYSTEM.
++ */
++static void quirk_jnx_fpga(struct pci_dev *dev)
++{
++	if (!dmi_match(DMI_BOARD_VENDOR, "Juniper Networks Inc."))
++		return;
++
++	dev->class = PCI_CLASS_SYSTEM_OTHER << 8;
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x0004, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x006A, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x006B, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x006C, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x006E, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x0079, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x0083, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x0071, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x00A7, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x00A8, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x00A9, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x00AA, quirk_jnx_fpga);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_XILINX, 0x0505, quirk_jnx_fpga);
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 1ab1e24..bfbf8f1 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1859,6 +1859,8 @@
+ #define PCI_VENDOR_ID_ESDGMBH		0x12fe
+ #define PCI_DEVICE_ID_ESDGMBH_CPCIASIO4 0x0111
+ 
++#define PCI_VENDOR_ID_JUNIPER		0X1304
++
+ #define PCI_VENDOR_ID_CB		0x1307	/* Measurement Computing */
+ 
+ #define PCI_VENDOR_ID_SIIG		0x131f
+-- 
+2.10.0
 
-Drivers *reading* these things (as your drivers do) shouldn't cause
-problems, but it does violate the interface abstractions that the PCI
-core should provide.
-
-Bjorn
