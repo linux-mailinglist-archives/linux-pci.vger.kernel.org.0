@@ -2,360 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BCF326AC67
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 20:45:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3481426AC69
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Sep 2020 20:45:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgIORbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Sep 2020 13:31:40 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46779 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727733AbgIORbI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 13:31:08 -0400
-Received: by mail-io1-f66.google.com with SMTP id g7so4942291iov.13;
-        Tue, 15 Sep 2020 10:31:06 -0700 (PDT)
+        id S1727875AbgIOSop (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Sep 2020 14:44:45 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44175 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbgIORcE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 13:32:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 185so4741933oie.11;
+        Tue, 15 Sep 2020 10:32:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2me8Sk20DKG9OBMVJhmDkF6GKPWBfCEhKi/ChgbtDhA=;
-        b=P5e02evvs+CdjbgH8KUTrVDVzaNnanNZmjSemZSAWQU1Ez1gQqCOYw5EFDxZAZImYC
-         dd3unybCyIPIbCLCHR0cKTxTA2kUH1vdU1UA+0VFs78AswPq1LZGnRzlYjqqS+JZRN2B
-         2+4h3LG3LrJJlF8frSjRre7mhBsUu3RnFGsl6OE7gHFBhWmw2GxJPPzCAWF2hmekqLU4
-         1b3SQDY/f6eQwP8GdOKi+dCn6RwywEk87X9361f/A6Svp6J5EUHIrQDZMM+8DWfDgGeo
-         S4o59gM2cVqth+01ZVEQWVApjsopwbP5M8ejrYz4ki22zq/O71d5taqrNO9oJQmqyrbv
-         bF9g==
-X-Gm-Message-State: AOAM53048PIOXHUlABQopDkwbd7TVPryvy3kHTE4JPe+nZcWJX+vQhET
-        nx1P4UzUtdWv3vj1CF6z/A==
-X-Google-Smtp-Source: ABdhPJz+kEke6dlOHEDrD8eDVwsMil2jdFSu8qRnpU4nlE1pv9/RepGSKH9WcVMCuvSmtzk77+JCfw==
-X-Received: by 2002:a05:6638:ec5:: with SMTP id q5mr18815399jas.13.1600191066394;
-        Tue, 15 Sep 2020 10:31:06 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id s1sm3334523iln.22.2020.09.15.10.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2020 10:31:03 -0700 (PDT)
-Received: (nullmailer pid 2172175 invoked by uid 1000);
-        Tue, 15 Sep 2020 17:31:01 -0000
-Date:   Tue, 15 Sep 2020 11:31:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hongtao Wu <wuht06@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hongtao Wu <billows.wu@unisoc.com>
-Subject: Re: [PATCH v3 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe
- controller
-Message-ID: <20200915173101.GB2146778@bogus>
-References: <1599644912-29245-1-git-send-email-wuht06@gmail.com>
- <1599644912-29245-3-git-send-email-wuht06@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+/XiBF8iZP+AWOwyZnXfgNr6RvYoHK7GCXr5wRTdkK8=;
+        b=F7pliRDsbV1Ht5lA55SSKx3/ELLHkLRIvdC5Bnr+Sp0cEi5gIhGPocfbzQe86DkEbI
+         HOihB1n14bsuXFn3aXK8ab9tmi8h9HAtNSMrzXrO19lF5t6MQEYz30Bz6P83LD0weUZt
+         Q3wnAgdxB3zHMls33sJ6z/goi86WBdY/fGWr13B1KbxK+Xq+xDaSLXXt/92cNJDyeoTI
+         cS6WLCQ4FZ44RAhvNtm8XqBhZQ8cCUMdhuxIDQs9C+ayCHbVdtpSDoCeprieHOcUTN7Y
+         DW/S6VczTUjggWSFC4fLRZiLSYyhMYePXRSa4Iz/03fIMxdSUdNJmX6D3dK9S7nnOyMO
+         /X6A==
+X-Gm-Message-State: AOAM533tsrFj5er/p0ZBTC2vJ2Wp40+HWZIR6vOIOv9CKwVzOl5VZJcV
+        OVET1+2palp8pB/yp88MWiyT004L5+fbrnBVRdo=
+X-Google-Smtp-Source: ABdhPJwzc9vJzPGZruY9Z8VQjGvlZ9an53QxdpepM7ebrnv70yooUs5Q1ZjR0JMVHAKxG61KEthn2Sx6ZKglak3nzRU=
+X-Received: by 2002:aca:df84:: with SMTP id w126mr365251oig.103.1600191122649;
+ Tue, 15 Sep 2020 10:32:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599644912-29245-3-git-send-email-wuht06@gmail.com>
+References: <20200903123456.1823-1-shiju.jose@huawei.com> <cb811df3c4cc4f349c4a8da251592904@huawei.com>
+In-Reply-To: <cb811df3c4cc4f349c4a8da251592904@huawei.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 15 Sep 2020 19:31:50 +0200
+Message-ID: <CAJZ5v0goduHVhXdOjDu6WBnD8eBYzRWAD1PO8KjabpyiHuJ1qw@mail.gmail.com>
+Subject: Re: [PATCH v15 0/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>, Linuxarm <linuxarm@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 05:48:32PM +0800, Hongtao Wu wrote:
-> From: Hongtao Wu <billows.wu@unisoc.com>
-> 
-> This series adds PCIe controller driver for Unisoc SoCs.
-> This controller is based on DesignWare PCIe IP.
-> 
-> Signed-off-by: Hongtao Wu <billows.wu@unisoc.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig     |  13 ++
->  drivers/pci/controller/dwc/Makefile    |   1 +
->  drivers/pci/controller/dwc/pcie-sprd.c | 231 +++++++++++++++++++++++++++++++++
->  3 files changed, 245 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 044a376..0553010 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -311,4 +311,17 @@ config PCIE_AL
->  	  required only for DT-based platforms. ACPI platforms with the
->  	  Annapurna Labs PCIe controller don't need to enable this.
-> 
-> +
-> +config PCIE_SPRD
-> +	tristate "Unisoc PCIe controller - Host Mode"
-> +	depends on ARCH_SPRD || COMPILE_TEST
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Unisoc PCIe controller uses the DesignWare core. It can be configured
-> +	  as an Endpoint (EP) or a Root complex (RC). In order to enable host
-> +	  mode (the controller works as RC), PCIE_SPRD must be selected.
-> +	  Say Y or M here if you want to PCIe RC controller support on Unisoc
-> +	  SoCs.
-> +
->  endmenu
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index a751553..eb546e9 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
->  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-> +obj-$(CONFIG_PCIE_SPRD) += pcie-sprd.o
-> 
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-sprd.c b/drivers/pci/controller/dwc/pcie-sprd.c
-> new file mode 100644
-> index 0000000..cec4f34
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-sprd.c
-> @@ -0,0 +1,231 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Unisoc SoCs
-> + *
-> + * Copyright (C) 2020 Unisoc, Inc.
-> + *
-> + * Author: Hongtao Wu <Billows.Wu@unisoc.com>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +#define NUM_OF_ARGS 5
-> +
-> +struct sprd_pcie {
-> +	struct dw_pcie pci;
-> +};
-> +
-> +static int sprd_pcie_syscon_setting(struct platform_device *pdev, char *env)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int i, count, err;
-> +	u32 type, delay, reg, mask, val, tmp_val;
-> +	struct of_phandle_args out_args;
-> +	struct regmap *iomap;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	if (!of_find_property(np, env, NULL)) {
-> +		dev_info(dev, "There isn't property %s in dts\n", env);
-> +		return 0;
-> +	}
-> +
-> +	count = of_property_count_elems_of_size(np, env,
-> +					(NUM_OF_ARGS + 1) * sizeof(u32));
-> +	dev_info(dev, "Property (%s) reg count is %d :\n", env, count);
-> +
-> +	for (i = 0; i < count; i++) {
-> +		err = of_parse_phandle_with_fixed_args(np, env, NUM_OF_ARGS,
-> +						       i, &out_args);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		type = out_args.args[0];
-> +		delay = out_args.args[1];
-> +		reg = out_args.args[2];
-> +		mask = out_args.args[3];
-> +		val = out_args.args[4];
-> +
-> +		iomap = syscon_node_to_regmap(out_args.np);
-> +
-> +		switch (type) {
-> +		case 0:
-> +			regmap_update_bits(iomap, reg, mask, val);
-> +			break;
-> +
-> +		case 1:
-> +			regmap_read(iomap, reg, &tmp_val);
-> +			tmp_val &= (~mask);
-> +			tmp_val |= (val & mask);
-> +			regmap_write(iomap, reg, tmp_val);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +
-> +		if (delay)
-> +			usleep_range(delay, delay + 10);
-> +
-> +		regmap_read(iomap, reg, &tmp_val);
-> +		dev_dbg(dev,
-> +			"%2d:reg[0x%8x] mask[0x%8x] val[0x%8x] result[0x%8x]\n",
-> +			i, reg, mask, val, tmp_val);
-> +	}
-> +
-> +	return i;
-> +}
-> +
-> +static int sprd_pcie_perst_assert(struct platform_device *pdev)
-> +{
-> +	return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-assert");
+On Mon, Sep 14, 2020 at 2:34 PM Shiju Jose <shiju.jose@huawei.com> wrote:
+>
+> Hello,
+>
+> Can you help to merge this series?
 
-Not documented. This should probably use the reset binding.
+Do you want this series to go in through the ACPI tree?
 
-> +}
-> +
-> +static int sprd_pcie_perst_deassert(struct platform_device *pdev)
-> +{
-> +	return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-deassert");
-> +}
-> +
-> +static int sprd_pcie_power_on(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweron-syscons");
-> +	if (ret < 0)
-> +		dev_err(dev,
-> +			"failed to set pcie poweroff syscons, return %d\n",
-> +			ret);
-> +
-> +	sprd_pcie_perst_deassert(pdev);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sprd_pcie_power_off(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	sprd_pcie_perst_assert(pdev);
-> +
-> +	ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweroff-syscons");
-> +	if (ret < 0)
-> +		dev_err(dev,
-> +			"failed to set pcie poweroff syscons, return %d\n",
-> +			ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sprd_pcie_host_init(struct pcie_port *pp)
-> +{
-> +	int ret;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +
-> +	dw_pcie_setup_rc(pp);
-> +	dw_pcie_msi_init(pp);
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret)
-> +		dev_err(pci->dev, "pcie ep may has not been powered on yet\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct dw_pcie_host_ops sprd_pcie_host_ops = {
-> +	.host_init = sprd_pcie_host_init,
-> +};
-> +
-> +static int sprd_add_pcie_port(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct sprd_pcie *ctrl = platform_get_drvdata(pdev);
-> +	struct dw_pcie *pci = &ctrl->pci;
-> +	struct pcie_port *pp = &pci->pp;
-> +
-> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
-> +	if (IS_ERR(pci->dbi_base)) {
-> +		dev_err(dev, "failed to get rc dbi base\n");
-> +		return PTR_ERR(pci->dbi_base);
-> +	}
-> +
-> +	pp->ops = &sprd_pcie_host_ops;
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-
-I don't think this check is needed. The DW core won't setup the MSI if 
-not enabled, so doesn't matter if msi_irq is initialized.
-
-> +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> +		if (pp->msi_irq < 0) {
-> +			dev_err(dev, "failed to get msi, return %d\n",
-> +				pp->msi_irq);
-
-No need to print an error, the core does this.
-
-> +			return pp->msi_irq;
-> +		}
-> +	}
-> +
-> +	return dw_pcie_host_init(pp);
-> +}
-> +
-> +static int sprd_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct sprd_pcie *ctrl;
-> +	struct dw_pcie *pci;
-> +	int ret;
-> +
-> +	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
-> +	if (!ctrl)
-> +		return -ENOMEM;
-> +
-> +	pci = &ctrl->pci;
-> +	pci->dev = dev;
-> +
-> +	platform_set_drvdata(pdev, ctrl);
-> +
-> +	ret = sprd_pcie_power_on(pdev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to get pcie poweron syscons, return %d\n",
-> +			ret);
-> +		goto err_power_off;
-> +	}
-> +
-> +	ret = sprd_add_pcie_port(pdev);
-> +	if (ret) {
-> +		dev_warn(dev, "failed to initialize RC controller\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_power_off:
-> +	sprd_pcie_power_off(pdev);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id sprd_pcie_of_match[] = {
-> +	{
-> +		.compatible = "sprd,pcie-rc",
-> +	},
-> +	{},
-> +};
-> +
-> +static struct platform_driver sprd_pcie_driver = {
-> +	.probe = sprd_pcie_probe,
-
-You need a .remove hook.
-
-> +	.driver = {
-> +		.name = "sprd-pcie",
-> +		.of_match_table = sprd_pcie_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(sprd_pcie_driver);
-> +
-> +MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.7.4
-> 
+> >-----Original Message-----
+> >From: Linuxarm [mailto:linuxarm-bounces@huawei.com] On Behalf Of Shiju
+> >Jose
+> >Sent: 03 September 2020 13:35
+> >To: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> >kernel@vger.kernel.org; rjw@rjwysocki.net; helgaas@kernel.org;
+> >bp@alien8.de; james.morse@arm.com; lorenzo.pieralisi@arm.com;
+> >robh@kernel.org; lenb@kernel.org; tony.luck@intel.com;
+> >dan.carpenter@oracle.com; andriy.shevchenko@linux.intel.com
+> >Cc: Linuxarm <linuxarm@huawei.com>
+> >Subject: [PATCH v15 0/2] ACPI / APEI: Add support to notify the vendor
+> >specific HW errors
+> >
+> >CPER records describing a firmware-first error are identified by GUID.
+> >The ghes driver currently logs, but ignores any unknown CPER records.
+> >This prevents describing errors that can't be represented by a standard entry,
+> >that would otherwise allow a driver to recover from an error.
+> >The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of version 2.8).
+> >
+> >patch set
+> >1. add the notifier chain for these non-standard/vendor-records
+> >   in the ghes driver.
+> >
+> >2. add the driver to handle HiSilicon HIP PCIe controller's errors.
+> >
+> >Changes:
+> >
+> >V15:
+> >1. Change in the HIP PCIe error handling driver
+> >   for a comment by Andy Shevchenko.
+> >   Removed "depends on ACPI" as it already depends on
+> >   it through ACPI_APEI_GHES.
+> >
+> >V14:
+> >1. Add patch[1] posted by James to the series.
+> >
+> >2. Following changes made for Bjorn's comments,
+> >2.1 Deleted stub code from ghes.h
+> >2.2 Made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES.
+> >
+> >V13:
+> >1. Following changes in the HIP PCIe error handling driver.
+> >1.1 Add Bjorn's acked-by.
+> >1.2. Address the comments and macros order Bjorn mentioned.
+> >     Fix the words in the commit.
+> >
+> >V12:
+> >1. Changed the Signed-off-by tag to Co-developed-by tag in the patch
+> >   "ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records"
+> >
+> >V11:
+> >1. Following modifications made by James Morse in the APEI patch
+> >   for the vendor error record.
+> >   - Removed kfifo and ghes_gdata_pool. Expanded commit message.
+> >
+> >2. Changes in the HIP PCIe error handling driver
+> >   for the comments by Andy Shevchenko.
+> >
+> >V10:
+> >1. Changes for Bjorn's comments on HIP PCIe error handler driver
+> >   and APEI patch.
+> >
+> >2. Changes in the HIP PCIe error handler driver
+> >   for the feedbacks by Andy Shevchenko.
+> >
+> >V9:
+> >1. Fixed 2 improvements suggested by the kbuild test robot.
+> >1.1 Change ghes_gdata_pool_init() as static function.
+> >1.2. Removed using buffer to store the error data for
+> >     logging in the hisi_pcie_handle_error()
+> >
+> >V8:
+> >1. Removed reporting the standard errors through the interface
+> >   because of the conflict with the recent patches in the
+> >   memory error handling path.
+> >2. Fix comments by Dan Carpenter.
+> >
+> >V7:
+> >1. Add changes in the APEI driver suggested by Borislav Petkov, for
+> >   queuing up all the non-fatal HW errors to the work queue and
+> >   notify the registered kernel drivers from the bottom half using
+> >   blocking notifier, common interface for both standard and
+> >   vendor-spcific errors.
+> >2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+> >   by Bjorn Helgaas.
+> >
+> >V6:
+> >1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+> >
+> >V5:
+> >1. Fix comments from James Morse.
+> >1.1 Changed the notification method to use the atomic_notifier_chain.
+> >1.2 Add the error handled status for the user space.
+> >
+> >V4:
+> >1. Fix for the following smatch warning in the PCIe error driver,
+> >   reported by kbuild test robot<lkp@intel.com>:
+> >   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+> >   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+> >       ^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+> >
+> >V3:
+> >1. Fix the comments from Bjorn Helgaas.
+> >
+> >V2:
+> >1. Changes in the HiSilicon PCIe controller's error handling driver
+> >   for the comments from Bjorn Helgaas.
+> >
+> >2. Changes in the APEI interface to support reporting the vendor error
+> >   for module with multiple devices, but use the same section type.
+> >   In the error handler will use socket id/sub module id etc to distinguish
+> >   the device.
+> >
+> >V1:
+> >1. Fix comments from James Morse.
+> >
+> >2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+> >   which is an application of the above interface.
+> >
+> >Shiju Jose (1):
+> >  ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
+> >
+> >Yicong Yang (1):
+> >  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+> >
+> > drivers/acpi/apei/ghes.c                 |  63 +++++
+> > drivers/pci/controller/Kconfig           |   7 +
+> > drivers/pci/controller/Makefile          |   1 +
+> > drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
+> > include/acpi/ghes.h                      |  18 ++
+> > 5 files changed, 416 insertions(+)
+> > create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+> >
+> >--
+> >2.17.1
+> >
+> >
+> >_______________________________________________
+> >Linuxarm mailing list
+> >Linuxarm@huawei.com
+> >http://hulk.huawei.com/mailman/listinfo/linuxarm
