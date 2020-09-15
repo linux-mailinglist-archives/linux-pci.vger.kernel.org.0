@@ -2,181 +2,428 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FBF926B11D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 00:25:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4432C26B162
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 00:30:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgIOWZB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Sep 2020 18:25:01 -0400
-Received: from mx0a-00273201.pphosted.com ([208.84.65.16]:60704 "EHLO
-        mx0a-00273201.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727565AbgIOQWn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 12:22:43 -0400
-Received: from pps.filterd (m0108158.ppops.net [127.0.0.1])
-        by mx0a-00273201.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08FF7AGi010564;
-        Tue, 15 Sep 2020 08:12:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=PPS1017;
- bh=pKRQ7lERDxus16oHsM5Fuq9fR6ddWRdNjQx0Lc3U1kc=;
- b=m5s00040m8GUJAE+z9fWvv78QCnq4ER9hrmXe7NmMiEL0WpjvNdtDuXFM0nHOACO5vbj
- Tnijo+vTGsDzAYjgWiiNHWNPWZTbl71HbSBBbbFhvQAcYJFQw1uYLZaFYMIwGoXA+6U4
- ySt9an/K228mtTHZA+y8UHNfCGOFSJ94vlUVM4i4gMa08DqNw1mrNpcWt2W3UYGnHVZx
- nsO+JKQlLkhTD/4t/85lCNhRqc4WTY/uOtzwD/63/GmReM8CKKDekQpEZW0A06luln4/
- suw3UQ7uk9CnHwrllIHMKS9L6JwMcGxeWD2xfq/8J9On6yXKrIisRMD32fPpcu1LPYQU 8g== 
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2050.outbound.protection.outlook.com [104.47.37.50])
-        by mx0a-00273201.pphosted.com with ESMTP id 33gt1rn0sa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Sep 2020 08:12:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CaYTSkl8YAtHvccjuNqxLuAYOZqk7xxDlngOKpPwYmk4x9SfIw7/HuJCFL89msRcAg0iWsvlSDkVSgKxZIpLckDE+WZPH4S5HWB3yKKJSdawRxjgEf8y/PpOLC1NoHRbfuxBWdxvZ4L8rUoUsKeSN1K4VKNo1JPv4od2eFvJhTisLQwThIvZ9paAhTp08/+wdwGzmdf0ZcUpba/CVzINWAgLNx/Pkuoz8rGBWLFmMFAY9y6qX8R32ObPO4sEwdnDR3IjW/uRqQrhTlUxNWI9lZzuYw4gCzHMaXaj2v+iSJ1YuwZoG6DGxIxedpSC2G6/UA3kdGPDaW5xOpTQApX8RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pKRQ7lERDxus16oHsM5Fuq9fR6ddWRdNjQx0Lc3U1kc=;
- b=nV8cA2ExiiJGT3nQ5x1qW1sRBNhfWN/PE7Ch5DaTeUBMeu/ff/JbUyz6WMXQxC5mmsalnMOBBQJfH579f1fPQKcWJggaTy20pPQJUf65ED/OvLMw+MDpaE276eGRfnuH7dSMv+ZzPhoVLbhR3VLIsqbqEAP0IjaGvj97VFa9S6r5FwHcocIhW5WnQyjd/3sIShsVIb+nUAKu0HK1ord3ejJUbeEsCH3qHRChJoOoVrCD1ILw9DRto5oQbUBRiSslXS3jB6c7SdyO2rwj8AzkIbfnk0iO0stJO9OZMUT0HIBRtaLJL4fp4vpZtFqTLYtLh8c0rKAyWxP644Oc38rwXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=juniper.net; dmarc=pass action=none header.from=juniper.net;
- dkim=pass header.d=juniper.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pKRQ7lERDxus16oHsM5Fuq9fR6ddWRdNjQx0Lc3U1kc=;
- b=WJaEODXKtqyjgvdk3mW9mt7Mw45+EUZfQyeilVGSjU6zazciZkNXk00YdDTuBTW/Arlgb23ZPed/nbSP+UH6S5KxvTvUjZzpCYZXV4tctg2SxCxIFNF5v+Ak+YTWla98JvVjHsd5S5bq73WZI1iVux0jZHVAuuglbS6YduajM+4=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=juniper.net;
-Received: from BYAPR05MB5592.namprd05.prod.outlook.com (2603:10b6:a03:19::16)
- by BYAPR05MB5589.namprd05.prod.outlook.com (2603:10b6:a03:1e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.9; Tue, 15 Sep
- 2020 15:12:02 +0000
-Received: from BYAPR05MB5592.namprd05.prod.outlook.com
- ([fe80::e4a2:9674:56bb:b13f]) by BYAPR05MB5592.namprd05.prod.outlook.com
- ([fe80::e4a2:9674:56bb:b13f%7]) with mapi id 15.20.3391.009; Tue, 15 Sep 2020
- 15:12:02 +0000
-From:   Ming Qiao <mqiao@juniper.net>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ming Qiao <mqiao@juniper.net>, Rajat Jain <rajatja@google.com>
-Subject: [PATCH 3/3] PCI: Add quirks for Juniper ASICs to fix PCIe gen
-Date:   Tue, 15 Sep 2020 08:11:03 -0700
-Message-Id: <20200915151103.7086-3-mqiao@juniper.net>
-X-Mailer: git-send-email 2.10.0
-In-Reply-To: <20200915151103.7086-1-mqiao@juniper.net>
-References: <20200915151103.7086-1-mqiao@juniper.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL0PR02CA0086.namprd02.prod.outlook.com
- (2603:10b6:208:51::27) To BYAPR05MB5592.namprd05.prod.outlook.com
- (2603:10b6:a03:19::16)
+        id S1727543AbgIOW3s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Sep 2020 18:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbgIOQSX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 12:18:23 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1FFC0611BE
+        for <linux-pci@vger.kernel.org>; Tue, 15 Sep 2020 09:09:22 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id c196so2246317pfc.0
+        for <linux-pci@vger.kernel.org>; Tue, 15 Sep 2020 09:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wjhqFyCWOT33QC2Pg59px5MF1aIBBbM4prMwgUfNSdg=;
+        b=e1LhnYGFe4C/n4Gd0p8r8pat9lj+xzRWYdCQHjydVxGv5R8pAJgOpCeB5/U33bZoOr
+         LlaveisNmwAGBUOVpquxQ7j3006zorELJjtM2Z2J6kQykXHtBFyaJdOmxjCMr06bGWa2
+         OigzVgkOsQVpui/goHXn9B37O/wy6iM5Z9UoIpg3+r85t8wnPX/Cvh1hJh/FZIlkR1lq
+         Ya0KCcBe4KCv9f/TlJKWhgNYp9lR+ugpmvV2WuHmRwSMPuHq29x9tmul0uNBALJw/X+G
+         H21Wv2QTrkS6holulAdC5mrDGZrZjotEebdIxHTa967n51cSr8mLZ3gUrhQ1NsJqsewo
+         d0oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wjhqFyCWOT33QC2Pg59px5MF1aIBBbM4prMwgUfNSdg=;
+        b=CYv98hWp1BuHEOHjILLFRtmzy30JvUJTYkF/7KVFwilybVRAcH6gEAjZygttc4Lktz
+         nDcPBPzyIX5toZsXcYXgenfg0Iw2uaQsBSl3lhYUr2OJ7Hi2ivlivMO+x/VfybhyW4a2
+         mdKsMiYTUr6sOfouWw63ca7/sne7kKppgiNAVv8FW8oCAkPFxX80QDkjFmZA4GuV84Zr
+         nmxHmPbMtIW1reb7HwymZXHgJctJAigLO+hBeHg4G5+U5lQQJJxP4VNDS45nQ+rot5Y4
+         m7BUw/0mGdPp5vK1/3n7oooEiDw4/8d37kd5Bloy4D8aeuAO7BfqM38u4HADtgqngMOk
+         XlqQ==
+X-Gm-Message-State: AOAM532CYR81iK8Oc/hOfpdZJ4pGinjv8tJXRP9lrrfW29ojsnMP3DIb
+        rwbPTyek9kEjCIHFFAVae3ihKw==
+X-Google-Smtp-Source: ABdhPJy3l2UNZNYHQ1i0Y8KYjUnpaVq9OMGTgGBWBX7y/gy79eQ2Mw8NiufEMEl7Mncv/GNfjdc63A==
+X-Received: by 2002:a62:ed06:0:b029:142:2501:35de with SMTP id u6-20020a62ed060000b0290142250135demr2640159pfh.62.1600186161629;
+        Tue, 15 Sep 2020 09:09:21 -0700 (PDT)
+Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id y4sm14022623pfq.215.2020.09.15.09.09.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Sep 2020 09:09:20 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, sathyanarayanan.kuppuswamy@linux.intel.com,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] PCI/RCEC: Add pcie_walk_rcec() to walk
+ associated RCiEPs
+Date:   Tue, 15 Sep 2020 09:09:20 -0700
+X-Mailer: MailMate (1.13.2r5673)
+Message-ID: <5BC1F7E6-64B8-4564-97A3-49C914CA926D@intel.com>
+In-Reply-To: <7B04CA9A-7332-4001-963B-E56642044F5D@intel.com>
+References: <20200912005013.GA912147@bjorn-Precision-5520>
+ <7B04CA9A-7332-4001-963B-E56642044F5D@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from qnc-ubm16-mqiao.juniper.net (66.129.224.68) by BL0PR02CA0086.namprd02.prod.outlook.com (2603:10b6:208:51::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3370.16 via Frontend Transport; Tue, 15 Sep 2020 15:12:00 +0000
-X-Mailer: git-send-email 2.10.0
-X-Originating-IP: [66.129.224.68]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ae4727c0-8340-4145-d4a9-08d85989b2a4
-X-MS-TrafficTypeDiagnostic: BYAPR05MB5589:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR05MB5589FCFE7C82814A8E45E35AAF200@BYAPR05MB5589.namprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZKsJMe94nvO4/OXB4Oiq17VvM0Ub/2XPiAmUcyq6RDSFvEx+mmWTeswNHyNd7HLdhd78cCU5IeXrSJZ6PhZPDR58IZ7y2Dj33AgAcBkd+MQWwnGklCBbJyb9Zr8lWPnJ5xeOuKH0bySK4RalSxxlaUGBpU1Itq81tHoGrZXUcJDJRBN/m2919qVc1mw3hC/Abhz7zcJyU/a5E0k8dfIC7f4Edb7G1/cuOJFXTM/dHT7WBfOoOoB8MSrgJFw0SVBLwQJti0VJYoLBFGGq2VRSe/OLl4IA4bqagAtVSTVrb7H07qFvyTH5WXPTFhDxo6lh6XQHMkD9vm92w6aoXo4u0N2WB+NfRJfpXhPc6nw4AKZRNUv6+xdUHhvvFQzhb+aF
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB5592.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(52116002)(478600001)(7696005)(54906003)(316002)(6486002)(26005)(186003)(4326008)(2616005)(956004)(16526019)(1076003)(86362001)(8676002)(2906002)(36756003)(66556008)(66476007)(66946007)(5660300002)(8936002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: zhWcqFa1IhSciujgQPMKEkEcfZl17Noi3DHtAOaT+YNPwiiY4EBXBo+XChguH8QRME+0VJYzUsDLvYDldAi1TKIrlWZdIC3DEbJrErxGG8R5hgALJKM8n2J6Oq3FpsBhayL5IjbxkihUtiG3BrjpiiQKkesk7Xnn0bZ5h9//X/l+nqVa7aEmSmK1CKjkysT8k+WD/CFf9hA8u2T3BVn5nzpjgkP7CZDdvERzoboWw7h81bmko7JydqxAwaLWMKWytCy6h/kfOlCzTXQsxWTuUc9VwgLwLMXCUFk/ME40vqBPDapnnltmio9ECUQoRwjy2b/bgzbeSwcn0KaOSXoY48pfA77ejo76HQn6pmu0rQ4JVFvhgVa82JoqpWqsP4s7118IuSJv6z/hsVI46i5+QR8fOdWoB6S5idcbWSPJp5aVaDk6KwyNALhZ4eurwmO+RwnCR5DX3kO1LEWqFHVQBsnTlmyJlYbsFbZuoKwr3ppyGIQQqfCyPi/mF81oahnf/bxTHY0EcRf/ADymxLA4oN2CY02CVHOfUPpHe/NyRjNW//+H0+XImLnNaS0edxZ5Fw1XGylrVTPI/YxWrn4OmVI4SgJ6Ir0QjvwRfrb0KXz1Ggaj9r0XNX7gVq10z+y0Mf3Y6ula9xe369dN7DyE2A==
-X-OriginatorOrg: juniper.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae4727c0-8340-4145-d4a9-08d85989b2a4
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR05MB5592.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2020 15:12:01.9131
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bea78b3c-4cdb-4130-854a-1d193232e5f4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oZtaROUCsQ3pB79c0z4u7PZG3n4Mlgpz2aK+9x4njOD8dSOzsGpEun9QMINeFqBH12GcG5pB+UPZ8hZVCIhhjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5589
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-15_11:2020-09-15,2020-09-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam score=0 malwarescore=0
- adultscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999 clxscore=1015
- spamscore=0 suspectscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009150127
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some of the Juniper ASICs report incorrect PCIe gen type for the PCIe
-link to the root port. Make the root port to ignore these fields.
-        
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Signed-off-by: Ming Qiao <mqiao@juniper.net>
----
- drivers/pci/quirks.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+On 14 Sep 2020, at 9:55, Sean V Kelley wrote:
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 04dd490..0a28a09 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5658,6 +5658,45 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x00A9, quirk_jnx_fpga);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x00AA, quirk_jnx_fpga);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_XILINX, 0x0505, quirk_jnx_fpga);
- 
-+static struct dmi_system_id jnx_asic_pci_bug_affected_platforms[] = {
-+	{
-+	.ident = "Juniper Networks PTX MLC Card",
-+	.matches = {
-+		DMI_MATCH(DMI_BOARD_VENDOR, "Juniper Networks Inc."),
-+		DMI_MATCH(DMI_BOARD_NAME, "0C0A")
-+		},
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(dmi, jnx_asic_pci_bug_affected_platforms);
-+
-+#define INTEL_DEBUG_REG		0x8F8
-+#define INTEL_DEBUG_REG_IGNORE_GEN	BIT(3)
-+
-+/*
-+ * Some Juniper ASICs have an issue where they report incorrect gen type
-+ * (Gen-1 / Gen-2) for the PCIe link to the root port.
-+ * This workaround needs to be applied to each Intel root port which connects
-+ * to such juniper ASIC. It causes the root port to ignore the incorrect
-+ * fields.
-+ */
-+static void fixup_jnx_intel_root_port(struct pci_dev *dev)
-+{
-+	struct pci_dev *root;
-+	u32 tmp32;
-+	int ret;
-+
-+	root = pcie_find_root_port(dev);
-+	if (!root || root->vendor != PCI_VENDOR_ID_INTEL)
-+		return;
-+
-+	ret = pci_read_config_dword(root, INTEL_DEBUG_REG, &tmp32);
-+	tmp32 |= INTEL_DEBUG_REG_IGNORE_GEN;
-+	ret |= pci_write_config_dword(root, INTEL_DEBUG_REG, tmp32);
-+	if (ret)
-+		dev_err(&root->dev, "Failed on root port quirk. CONFIG_PCI_MMCONFIG not selected?\n");
-+}
-+
- /*
-  * PCI class reported by some Juniper ASICs is not correct.
-  * Change it to NETWORK.
-@@ -5665,6 +5704,9 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_XILINX, 0x0505, quirk_jnx_fpga);
- static void quirk_jnx_asic(struct pci_dev *dev)
- {
- 	dev->class = PCI_CLASS_NETWORK_OTHER << 8;
-+
-+	if (dmi_check_system(jnx_asic_pci_bug_affected_platforms))
-+		fixup_jnx_intel_root_port(dev)
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x003C, quirk_jnx_asic);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_JUNIPER, 0x003D, quirk_jnx_asic);
--- 
-2.10.0
+> On 11 Sep 2020, at 17:50, Bjorn Helgaas wrote:
+>
+>> On Fri, Sep 11, 2020 at 04:16:03PM -0700, Sean V Kelley wrote:
+>>> On 4 Sep 2020, at 19:23, Bjorn Helgaas wrote:
+>>>> On Fri, Sep 04, 2020 at 10:18:30PM +0000, Kelley, Sean V wrote:
+>>>>> Hi Bjorn,
+>>>>>
+>>>>> Quick question below...
+>>>>>
+>>>>> On Wed, 2020-09-02 at 14:55 -0700, Sean V Kelley wrote:
+>>>>>> Hi Bjorn,
+>>>>>>
+>>>>>> On Wed, 2020-09-02 at 14:00 -0500, Bjorn Helgaas wrote:
+>>>>>>> On Wed, Aug 12, 2020 at 09:46:53AM -0700, Sean V Kelley wrote:
+>>>>>>>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>>>>>>>
+>>>>>>>> When an RCEC device signals error(s) to a CPU core, the CPU 
+>>>>>>>> core
+>>>>>>>> needs to walk all the RCiEPs associated with that RCEC to check
+>>>>>>>> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+>>>>>>>> associated with the RCEC device.
+>>>>>>>>
+>>>>>>>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+>>>>>>>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>>>>>>>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>>>>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>>>>>> ---
+>>>>>>>>  drivers/pci/pci.h       |  4 +++
+>>>>>>>>  drivers/pci/pcie/rcec.c | 76
+>>>>>>>> +++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>  2 files changed, 80 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>>>>>>> index bd25e6047b54..8bd7528d6977 100644
+>>>>>>>> --- a/drivers/pci/pci.h
+>>>>>>>> +++ b/drivers/pci/pci.h
+>>>>>>>> @@ -473,9 +473,13 @@ static inline void pci_dpc_init(struct
+>>>>>>>> pci_dev
+>>>>>>>> *pdev) {}
+>>>>>>>>  #ifdef CONFIG_PCIEPORTBUS
+>>>>>>>>  void pci_rcec_init(struct pci_dev *dev);
+>>>>>>>>  void pci_rcec_exit(struct pci_dev *dev);
+>>>>>>>> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct
+>>>>>>>> pci_dev
+>>>>>>>> *, void *),
+>>>>>>>> +		    void *userdata);
+>>>>>>>>  #else
+>>>>>>>>  static inline void pci_rcec_init(struct pci_dev *dev) {}
+>>>>>>>>  static inline void pci_rcec_exit(struct pci_dev *dev) {}
+>>>>>>>> +static inline void pcie_walk_rcec(struct pci_dev *rcec, int
+>>>>>>>> (*cb)(struct pci_dev *, void *),
+>>>>>>>> +				  void *userdata) {}
+>>>>>>>>  #endif
+>>>>>>>>
+>>>>>>>>  #ifdef CONFIG_PCI_ATS
+>>>>>>>> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+>>>>>>>> index 519ae086ff41..405f92fcdf7f 100644
+>>>>>>>> --- a/drivers/pci/pcie/rcec.c
+>>>>>>>> +++ b/drivers/pci/pcie/rcec.c
+>>>>>>>> @@ -17,6 +17,82 @@
+>>>>>>>>
+>>>>>>>>  #include "../pci.h"
+>>>>>>>>
+>>>>>>>> +static int pcie_walk_rciep_devfn(struct pci_bus *bus, int
+>>>>>>>> (*cb)(struct pci_dev *, void *),
+>>>>>>>> +				 void *userdata, const unsigned long
+>>>>>>>> bitmap)
+>>>>>>>> +{
+>>>>>>>> +	unsigned int devn, fn;
+>>>>>>>> +	struct pci_dev *dev;
+>>>>>>>> +	int retval;
+>>>>>>>> +
+>>>>>>>> +	for_each_set_bit(devn, &bitmap, 32) {
+>>>>>>>> +		for (fn = 0; fn < 8; fn++) {
+>>>>>>>> +			dev = pci_get_slot(bus, PCI_DEVFN(devn, fn));
+>>>>>>>
+>>>>>>> Wow, this is a lot of churning to call pci_get_slot() 256 times 
+>>>>>>> per
+>>>>>>> bus for the "associated bus numbers" case where we pass a bitmap 
+>>>>>>> of
+>>>>>>> 0xffffffff.  They didn't really make it easy for software when 
+>>>>>>> they
+>>>>>>> added the next/last bus number thing.
+>>>>>>>
+>>>>>>> Just thinking out loud here.  What if we could set dev->rcec 
+>>>>>>> during
+>>>>>>> enumeration, and then use that to build pcie_walk_rcec()?
+>>>>>>
+>>>>>> I think follow what you are doing.
+>>>>>>
+>>>>>> As we enumerate an RCEC, use the time to discover RCiEPs and
+>>>>>> associate
+>>>>>> each RCiEP's dev->rcec. Although BIOS already set the bitmap for
+>>>>>> this
+>>>>>> specific RCEC, it's more efficient to simply discover the devices
+>>>>>> through the bus walk and verify each one found against the 
+>>>>>> bitmap.
+>>>>>>
+>>>>>> Further, while we can be certain that an RCiEP found with a 
+>>>>>> matching
+>>>>>> device no. in a bitmap for an associated RCEC is correct, we 
+>>>>>> cannot
+>>>>>> be
+>>>>>> certain that any RCiEP found on another bus range is correct 
+>>>>>> unless
+>>>>>> we
+>>>>>> verify the bus is within that next/last bus range.
+>>>>>>
+>>>>>> Finally, that's where find_rcec() callback for rcec_assoc_rciep()
+>>>>>> does
+>>>>>> double duty by also checking on the "on-a-separate-bus" case
+>>>>>> captured
+>>>>>> potentially by find_rcec() during an RCiEP's bus walk.
+>>>>>>
+>>>>>>
+>>>>>>>   bool rcec_assoc_rciep(rcec, rciep)
+>>>>>>>   {
+>>>>>>>     if (rcec->bus == rciep->bus)
+>>>>>>>       return (rcec->bitmap contains rciep->devfn);
+>>>>>>>
+>>>>>>>     return (rcec->next/last contains rciep->bus);
+>>>>>>>   }
+>>>>>>>
+>>>>>>>   link_rcec(dev, data)
+>>>>>>>   {
+>>>>>>>     struct pci_dev *rcec = data;
+>>>>>>>
+>>>>>>>     if ((dev is RCiEP) && rcec_assoc_rciep(rcec, dev))
+>>>>>>>       dev->rcec = rcec;
+>>>>>>>   }
+>>>>>>>
+>>>>>>>   find_rcec(dev, data)
+>>>>>>>   {
+>>>>>>>     struct pci_dev *rciep = data;
+>>>>>>>
+>>>>>>>     if ((dev is RCEC) && rcec_assoc_rciep(dev, rciep))
+>>>>>>>       rciep->rcec = dev;
+>>>>>>>   }
+>>>>>>>
+>>>>>>>   pci_setup_device
+>>>>>>>     ...
+>>>>>
+>>>>> I just noticed your use of pci_setup_device(). Are you suggesting
+>>>>> moving the call to pci_rcec_init() out of pci_init_capabilities() 
+>>>>> and
+>>>>> move it into pci_setup_device()?  If so, would pci_rcec_exit() 
+>>>>> still
+>>>>> remain in pci_release_capabilities()?
+>>>>>
+>>>>> I'm just wondering if it could just remain in
+>>>>> pci_init_capabilities().
+>>>>
+>>>> Yeah, I didn't mean in pci_setup_device() specifically, just 
+>>>> somewhere
+>>>> in the callchain of pci_setup_device().  But you're right, it 
+>>>> probably
+>>>> would make more sense in pci_init_capabilities(), so I *should* 
+>>>> have
+>>>> said pci_scan_single_device() to be a little less specific.
+>>>
+>>> I’ve done some experimenting with this approach, and I think there 
+>>> may be a
+>>> problem of just walking the busses during enumeration
+>>> pci_init_capabilities(). One problem is where one has an RCEC on a 
+>>> root bus:
+>>> 6a(00.4) and an RCiEP on another root bus: 6b(00.0).  They will 
+>>> never find
+>>> each other in this approach through a normal pci_bus_walk() call 
+>>> using their
+>>> respective root_bus.
+>>>
+>>>>  +-[0000:6b]-+-00.0
+>>>>  |           +-00.1
+>>>>  |           +-00.2
+>>>>  |           \-00.3
+>>>>  +-[0000:6a]-+-00.0
+>>>>  |           +-00.1
+>>>>  |           +-00.2
+>>>>  |           \-00.4
+>>
+>> Wow, is that even allowed?
+>>
+>> There's no bridge from 0000:6a to 0000:6b, so we will not scan 
+>> 0000:6b
+>> unless we find a host bridge with _CRS where 6b is the first bus
+>> number below the bridge.  I think that means this would have to be
+>> described in ACPI as two separate root bridges:
+>>
+>>   ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 6a])
+>>   ACPI: PCI Root Bridge [PCI1] (domain 0000 [bus 6b])
+>
+> Otherwise, the RCEC Associated Endpoint Extended Capabilities would 
+> have to have explicitly mentioned a bridge?
+>
+>>
+>> I *guess* maybe it's allowed by the PCIe spec to have an RCEC and
+>> associated RCiEPs on separate root buses?  It seems awfully strange
+>> and not in character for PCIe, but I guess I can't point to language
+>> that prohibits it.
+>
+> Yes, it should be possible.
+>
+>>
+>>> While having a lot of slot calls per bus is unfortunate, unless 
+>>> I’m mistaken
+>>> you would have to walk every peer root_bus with your RCiEP in this 
+>>> example
+>>> until you hit on the right RCEC, unless of course you have a bitmap
+>>> associated RCEC on dev->bus.
+>>
+>> I really despise pci_find_bus(), pci_get_slot(), and related
+>> functions, but maybe they can't be avoided.
+>>
+>> I briefly hoped we could forget about connecting them at
+>> enumeration-time and just build a list of RCECs in the host bridge.
+>> Then when we handle an event for an RCiEP, we could search the list 
+>> to
+>> find the right RCEC (and potentially cache it then).  But I don't
+>> think that would work either, because in the example above, they will
+>> be under different host bridges.  I guess we could maybe have a 
+>> global
+>> (or maybe per-domain) list of RCECs.
+>
+> Right, we could just have a list and only need to search the list when 
+> we need to handle an event.
+>
+>>
+>>> Conversely, if you are enumerating the above RCEC at 6a(00.4) and 
+>>> you
+>>> attempt to link_rcec() through calls to pci_walk_bus(), the walk 
+>>> will still
+>>> be limited to 6a and below; never encountering 6b(00.0).  So you 
+>>> would then
+>>> need an additional walk for each of the associated bus ranges, 
+>>> excluding the
+>>> same bus as the RCEC.
+>>>
+>>> pci_init_capabilities()
+>>> …
+>>> pci_init_rcec() // Cached
+>>>
+>>> if (RCEC)
+>>>  Walk the dev->bus for bitmap associated RCiEP
+>>>  Walk all associated bus ranges for RCiEP
+>>>
+>>> else if (RCiEP)
+>>>  Walk the dev->bus for bitmap associated RCEC
+>>>  Walk all peer root_bus for RCEC, confirm if own dev->bus falls 
+>>> within
+>>> discovered RCEC associated ranges
+>>>
+>>> The other problem here is temporal. I’m wondering if we may be 
+>>> trying to
+>>> find associated devices at the pci_init_capabilities() stage prior 
+>>> to them
+>>> being fully enumerated, i.e., RCEC has not been cached but we are 
+>>> searching
+>>> with a future associated RCiEP.  So one could encounter a race 
+>>> condition
+>>> where one is checking on an RCiEP whose associated RCEC has not been
+>>> enumerated yet.
+>>
+>> Maybe I'm misunderstanding this problem, but I think my idea would
+>> handle this: If we find the RCEC first, we cache its info and do
+>> nothing else.  When we subsequently discover an RCiEP, we walk the
+>> tree, find the RCEC, and connect them.
+>>
+>> If we find an RCiEP first, we do nothing.  When we subsequently
+>> discover an RCEC, we walk the tree, find any associated RCiEPs, and
+>> connect them.
+>
+>
+> Your approach makes sense. In retrospect, I don’t think there can be 
+> a race condition here because of the fallback from one RCEC to the 
+> other when they enumerate. You have two chances of finding the 
+> relationship.
+>
+>>
+>> The discovery can happen in different orders based on the
+>> bus/device/function numbers, but it's not really a race because
+>> enumeration is single-threaded.  But if we're talking about two
+>> separate host bridges (PNP0A03 devices), we *should* allow them to be
+>> enumerated in parallel, even though we don't do that today.
+>>
+>> I think this RCEC association design is really kind of problematic.
+>>
+>> We don't really *need* the association until some RCiEP event (PME,
+>> error, etc) occurs, so it's reasonable to defer making the RCEC
+>> connection until then.  But it seems like things should be designed 
+>> so
+>> we're guaranteed to enumerate the RCEC before the RCiEPs.  Otherwise,
+>> we don't really know when we can enable RCiEP events.  If we discover
+>> an RCiEP first, enable error reporting, and an error occurs before we
+>> find the RCEC, we're in a bit of a pickle.
+>
+> So we could have a global list (RCiEP or RCEC) in which we wait to 
+> identify the associations only when we need to respond to events. Or 
+> in your original suggestion we could walk the RCEC bus ranges in 
+> addition to its root_bus.
+>
+> i.e., We bus walk an enumerating RCEC with link_rcec() callback for 
+> not only the root_bus but each bus number in the associated ranges if 
+> the extended cap exists.
+>
+> RCiEPs will simply continue to invoke their callback via find_rcec() 
+> and only check on their own bus for the encountered RCEC’s 
+> associated bitmap case.
 
+Walking the bus with an RCEC as it is probed in the portdrv_pci.c can be 
+done with both its own bus (bitmap) and with supported associated bus 
+ranges.  In that walk I’m able to find all the associated endpoints 
+via both bitmap on own bus and the bus ranges. No pci_get_slot() is 
+needed as per your original suggestion.
+
+The suggsted approach to the rcec_helper() seems to imply that we either 
+walk it again or have cached all the associated RCiEP.  When we do the 
+walk above, we are merely, finding the RCiEPs and linking them to the 
+RCEC’s structure. There is no caching done of a list of RCiEPs per 
+RCEC.
+
+i.e., in aer.c : set_downstream_devices_error_reporting() wants to 
+enable each associated RCiEP via pcie_walk_rcec().
+
+Looking into changes to the pice_walk_rcec()
+
+Sean
+
+>
+>
+> Sean
+>
+>>
+>>> So let’s say one throws out RCiEP entirely and just relies upon 
+>>> RCEC to find
+>>> the associations because one knows that an encountered RCEC (in
+>>> pci_init_capabilities()) has already been cached. In that case you 
+>>> end up
+>>> with the original implementation being done with this patch 
+>>> series…
+>>>
+>>> if (RCEC)
+>>>  Walk the dev->bus for bitmap associated RCiEP
+>>>  Walk all associated bus ranges for RCiEP
+>>>
+>>> Perhaps I’ve muddled some things here but it doesn’t look like 
+>>> the twain
+>>> will meet unless I cover multiple peer root_bus and even then you 
+>>> may have
+>>> an issue because the devices don’t yet fully exist from the 
+>>> perspective of
+>>> the OS.
+>>>
+>>> Thanks,
+>>>
+>>> Sean
