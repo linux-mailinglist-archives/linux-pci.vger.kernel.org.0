@@ -2,302 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D170A26B01D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 00:01:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD98626B031
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 00:04:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgIOWBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Sep 2020 18:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
+        id S1728050AbgIOWEW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Sep 2020 18:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgIOWBB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Sep 2020 18:01:01 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727708AbgIOWDM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Sep 2020 18:03:12 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DEE02064B;
-        Tue, 15 Sep 2020 22:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B62E121974;
+        Tue, 15 Sep 2020 22:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600207259;
-        bh=RbHtH2BobjBBMOqbL+tss/LJHSaHhgqhPH96FK9FpQ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=0lN9w93GQw8yg+ctH6B42Oy55OhVRSqiPLGvPevM8n4f2IwYsSkI6AI3RGJbJKZ6s
-         wMuUaNKcK1fqtSdpI4CcL9LEOD+Mye4tYHfsso3GhY/TNXiB1ZRJQnEGR1y717RHZl
-         clpCXGl2eG18l4DKwCQU1Y2SqBVHSv5qdQkAmPIE=
-Date:   Tue, 15 Sep 2020 17:00:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Puranjay Mohan <puranjay12@gmail.com>
-Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] PCI: Add support for LTR
-Message-ID: <20200915220057.GA1429658@bjorn-Precision-5520>
+        s=default; t=1600207391;
+        bh=6zE0t0oBSXBMiJpCVysJvWDi1OuIiOE0z/RDPqK5QEo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nNCs3AKsNhyvwcxJiuYiwuCZk8aJhCrWu2hHimpp/80ZVp0COd9LLbRvKE7dYfj9M
+         UORNn/A+ChZMXAgv8WUY92cLPIDrP1OUaIAq8koeKyYALz8L3fH6X5tH8exC0BtO4g
+         z6E2UHuTiI3HCcJiuVDfh+u+2xN/iP4Lh+BzdNkg=
+Received: by mail-ot1-f53.google.com with SMTP id w25so4761987otk.8;
+        Tue, 15 Sep 2020 15:03:11 -0700 (PDT)
+X-Gm-Message-State: AOAM531NQIIxLzhVLM+Klo3Lx2z7QE5n1nnjONnDPwOguca9waIswJfS
+        P05c7x7FHnG6Ool8ckXG//iLxvI+/IWdRMWzFQ==
+X-Google-Smtp-Source: ABdhPJyEQLpI+Is0tXGd/BZAER5EHEJNoezWAKvaE8B6IPjEqoZXnEMY3dBYYK0F9I37uCwuUgkTqRhbfRj/m0u6ldo=
+X-Received: by 2002:a9d:6ada:: with SMTP id m26mr560428otq.192.1600207390980;
+ Tue, 15 Sep 2020 15:03:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200825180131.17672-1-puranjay12@gmail.com>
+References: <20200821035420.380495-1-robh@kernel.org> <20200915091218.28737-1-michael@walle.cc>
+In-Reply-To: <20200915091218.28737-1-michael@walle.cc>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 15 Sep 2020 16:02:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLHBPduSjs1L3R2vbsLygJNDzajt4XThAkRG0DEu-GnAA@mail.gmail.com>
+Message-ID: <CAL_JsqLHBPduSjs1L3R2vbsLygJNDzajt4XThAkRG0DEu-GnAA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/40] PCI: dwc: Driver clean-ups
+To:     Michael Walle <michael@walle.cc>
+Cc:     "Gross, Andy" <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-arm-kernel@axis.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Song Xiaowei <songxiaowei@hisilicon.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wangbinghui <wangbinghui@hisilicon.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Yue Wang <yue.wang@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:31:31PM +0530, Puranjay Mohan wrote:
-> Add a new function pci_ltr_init() which will be called from
-> pci_init_capabilities() to initialize every PCIe device's LTR values.
-> Add code in probe.c to evaluate LTR _DSM and save the latencies in pci_dev.
-> 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> ---
-> v2 - add an #ifdefin pci-acpi.c to fix the bug reported by test bot.
-> v1 - based the patch on v5.9-rc1 so it applies correctly.
-> ---
->  drivers/pci/pci-acpi.c   | 30 ++++++++++++++++++++++++++++++
->  drivers/pci/pci.c        | 27 +++++++++++++++++++++++++++
->  drivers/pci/pci.h        |  5 +++++
->  drivers/pci/probe.c      |  6 ++++++
->  include/linux/pci-acpi.h |  1 +
->  include/linux/pci.h      |  2 ++
->  6 files changed, 71 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index d5869a03f748..af8297040c38 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1213,6 +1213,36 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
->  	ACPI_FREE(obj);
->  }
->  
-> +/* pci_acpi_evaluate_ltr_latency
-> + *
-> + * @dev - the pci_dev to evaluate and save latencies
-> + */
-> +void pci_acpi_evaluate_ltr_latency(struct pci_dev *dev)
-> +{
-> +#ifdef CONFIG_PCIASPM
-> +	union acpi_object *obj, *elements;
-> +	struct acpi_device *handle;
+On Tue, Sep 15, 2020 at 3:12 AM Michael Walle <michael@walle.cc> wrote:
+>
+> Hi Rob,
+>
+> > This is a series of clean-ups for the Designware PCI driver. The series
+> > initially reworks the config space accessors to use the existing pci_ops
+> > struct. Then there's removal of various private data that's also present
+> > in the pci_host_bridge struct. There's also some duplicated common (PCI
+> > and DWC) register defines which I converted to use the common defines.
+> > Finally, the initialization for speed/gen, number of lanes, and N_FTS
+> > are all moved to the common DWC code.
+>
+> > This is compile tested only as I don't have any DWC based h/w, so any
+> > testing would be helpful. A branch is here[1].
+>
+> I've noticed that with the latest linux-next, my board doesn't boot
+> anymore. I've traced it back to this series. There is a similar
+> board in kernelci [1,2] where you can have a look at the backtrace.
+>
+> I've bisected this to the following patch:
+>   PCI: dwc: Use generic config accessors
 
-Nit: sort declarations in order of use: handle, obj, etc.
+That's helpful.
 
-> +
-> +	handle = ACPI_HANDLE(&dev->dev);
-> +	if (!handle)
-> +		return;
-> +
-> +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 0x2,
-> +				DSM_PCI_LTR_MAX_LATENCY, NULL);
-> +	if (!obj)
-> +		return;
+> I'm pretty much lost here. It seems that the kernel tries to read from
+> an invalid/unmapped memory address.
+>
+> [1] https://kernelci.org/test/plan/id/5f5f4992d1c53777a0a6092d/
+> [2] https://storage.kernelci.org/next/master/next-20200914/arm64/defconfig/gcc-8/lab-nxp/baseline-fsl-ls1028a-rdb.txt
 
-Sorry for the delay in responding.  Coincidentally, part of the reason
-is that I've been consumed with some PCI Firmware spec updates related
-to _DSM, which actually happens to affect this code.
+Thanks for the pointers. I was wondering if kernelci had any boards with DWC.
 
-_DSM is defined in the public ACPI spec; see ACPI v6.3, sec 9.1.1.
-One problem with this interface is that it does not define any
-standard return type or value, so there is no way to tell from the
-return value whether the function is implemented.  That means I don't
-think it's safe to rely on "!obj" meaning "DSM_PCI_LTR_MAX_LATENCY
-isn't implemented".  Similarly, I don't think it's safe to assume
-"obj" means it *is* implemented.
+Can you try this? The link up check seemed unnecessary as it is racy.
+What happens if the link goes down right after checking? That's the
+only thing in the change that sticks out.
 
-We have lots of places in the kernel that do this wrong.  One that
-does it *right* is acpi_dpc_port_get().  Short story: we need to call
-acpi_check_dsm() first before calling acpi_evaluate_dsm().
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 317ff512f8df..afee1a0e8883 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -441,6 +441,9 @@ static void __iomem
+*dw_pcie_other_conf_map_bus(struct pci_bus *bus,
+        struct pcie_port *pp = bus->sysdata;
+        struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
 
-There's an ongoing discussion about what *revision* we should use.
-For now I think the right thing is to use 2 as you did, since that's
-the first revision where DSM_PCI_LTR_MAX_LATENCY is defined.  I would
-use "2" (decimal) like the other uses in the file, though.
-
-> +	if (obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 4) {
-> +		elements = obj->package.elements;
-> +		dev->max_snoop_latency = (u16)elements[1].integer.value |
-> +				((u16)elements[0].integer.value << PCI_LTR_SCALE_SHIFT);
-> +		dev->max_nosnoop_latency = (u16)elements[3].integer.value |
-> +				((u16)elements[2].integer.value << PCI_LTR_SCALE_SHIFT);
-> +	}
-> +	ACPI_FREE(obj);
-> +#endif
-> +}
-> +
->  static void pci_acpi_set_external_facing(struct pci_dev *dev)
->  {
->  	u8 val;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a458c46d7e39..b5531272b865 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3056,6 +3056,33 @@ void pci_pm_init(struct pci_dev *dev)
->  		dev->imm_ready = 1;
->  }
->  
-> +/**
-> + * pci_ltr_init - Initialize Latency Tolerance Information of given PCI device
-> + * @dev: PCI device to handle.
-> + */
-> +void pci_ltr_init(struct pci_dev *dev)
-> +{
-> +#ifdef CONFIG_PCIASPM
-> +	int ltr;
-> +	struct pci_dev *endpoint_dev = dev;
-
-Nit: sort the declarations in order of use, i.e., endpoint_dev, ltr, ...
-
-> +	u16 max_snoop_sum = 0;
-> +	u16 max_nosnoop_sum = 0;
-> +
-> +	ltr = pci_find_ext_capability(endpoint_dev, PCI_EXT_CAP_ID_LTR);
-> +	if (!ltr)
-> +		return;
-> +
-> +	dev = pci_upstream_bridge(dev);
-> +	while (dev) {
-> +		max_snoop_sum += dev->max_snoop_latency;
-> +		max_nosnoop_sum += dev->max_nosnoop_latency;
-
-dev->max_snoop_latency and dev->max_nosnoop_latency are not simple
-scalars, are they?  Aren't they 3 bits of scale and 10 bits of value?
-I don't think adding these is as easy as "+=" except in the simple
-case when the scale is "000", i.e., "use the 10 bits of value as-is".
-
-I think we have to decode scale * latency for each device in the path,
-add all those up, then re-encode using the appropriate scale for the
-config write below.
-
-> +		dev = pci_upstream_bridge(dev);
-> +	}
-> +	pci_write_config_word(endpoint_dev, ltr + PCI_LTR_MAX_SNOOP_LAT, max_snoop_sum);
-> +	pci_write_config_word(endpoint_dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, max_nosnoop_sum);
-
-I think we definitely need to do this, but we need to be careful about
-updating things here, since I suspect mistakes will cause
-hard-to-debug problems.  PCIe r5.0, sec 6.18, says:
-
-  Setting the value and scale fields to all 0’s indicates that the
-  device will be impacted by any delay and that the best possible
-  service is requested.
-
-If I understand that correctly, larger values for these registers
-indicate that the device can tolerate more latency, so we want to err
-on the side of setting these fields too low rather than too high.
-
-So I think maybe we should read the current values first.  If the
-value we computed is the same, we can just skip the write.
-
-What should we do if the value we computed is *larger* than the
-current value?  Hot-added devices will power up with zeroes here, so I
-think we probably should log a note (pci_info()) and do the write.  If
-we don't do the write and we enable ASPM, LTR, and L1 Substates, the
-zeroes mean the device will be requesting the best possible service,
-so we won't use the L1.2 substate as much as we should, resulting in
-more power consumption than necessary.
-
-If we read something non-zero, it probably means firmware has already
-configured this.  If we computed something larger, we should probably
-still log a message, but maybe skip the write.  My thinking is that
-this may be a firmware bug, and fixing it could reduce power usage.
-If we do the write, we risk breaking something that used to work.
-
-If the value we computed is *smaller* than the current value, I think
-we should log a note just to show that we're changing something, and
-we *should* do the write, because writing a smaller value should
-always be safe.
-
-The log messages should include both the current value and the new
-value we computed (decoded so they're easy to read and compare).
-
-> +#endif
-> +}
-> +
->  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
->  {
->  	unsigned long flags = IORESOURCE_PCI_FIXED | IORESOURCE_PCI_EA_BEI;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index fa12f7cbc1a0..ef3d22b82200 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -110,6 +110,7 @@ void pci_free_cap_save_buffers(struct pci_dev *dev);
->  bool pci_bridge_d3_possible(struct pci_dev *dev);
->  void pci_bridge_d3_update(struct pci_dev *dev);
->  void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev);
-> +void pci_ltr_init(struct pci_dev *dev);
->  
->  static inline void pci_wakeup_event(struct pci_dev *dev)
->  {
-> @@ -680,11 +681,15 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
->  
->  #ifdef CONFIG_ACPI
->  int pci_acpi_program_hp_params(struct pci_dev *dev);
-> +void pci_acpi_evaluate_ltr_latency(struct pci_dev *dev);
->  #else
->  static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
->  {
->  	return -ENODEV;
->  }
-> +static inline void pci_acpi_evaluate_ltr_latency(struct pci_dev *dev)
-> +{
-> +}
-
-Nit: all on one line as in rest of this file:
-
-  static inline void pci_acpi_evaluate_ltr_latency(struct pci_dev *dev) { }
-
->  #endif
->  
->  #ifdef CONFIG_PCIEASPM
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 03d37128a24f..0257aa615665 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2140,6 +2140,11 @@ static void pci_configure_ltr(struct pci_dev *dev)
->  		dev->ltr_path = 1;
->  	}
->  #endif
-> +
-> +	/*
-> +	 * Read latency values from _DSM and save in pci_dev
-> +	 */
-> +	pci_acpi_evaluate_ltr_latency(dev);
->  }
->  
->  static void pci_configure_eetlp_prefix(struct pci_dev *dev)
-> @@ -2400,6 +2405,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->  	pci_ptm_init(dev);		/* Precision Time Measurement */
->  	pci_aer_init(dev);		/* Advanced Error Reporting */
->  	pci_dpc_init(dev);		/* Downstream Port Containment */
-> +	pci_ltr_init(dev);		/* Latency Tolerance Reporting */
->  
->  	pcie_report_downtraining(dev);
->  
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 5ba475ca9078..e23236a4ff66 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -110,6 +110,7 @@ extern const guid_t pci_acpi_dsm_guid;
->  
->  /* _DSM Definitions for PCI */
->  #define DSM_PCI_PRESERVE_BOOT_CONFIG		0x05
-> +#define DSM_PCI_LTR_MAX_LATENCY			0x06
->  #define DSM_PCI_DEVICE_NAME			0x07
->  #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
->  #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 835530605c0d..9de6b290ed81 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -380,6 +380,8 @@ struct pci_dev {
->  	struct pcie_link_state	*link_state;	/* ASPM link state */
->  	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
->  					   supported from root to here */
-> +	u16 max_snoop_latency;		/* LTR Max Snoop latency */
-> +	u16 max_nosnoop_latency;	/* LTR Max No Snoop latency */
-
-Nit: "Max No-Snoop" to match spec usage.
-
->  #endif
->  	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
->  
-> -- 
-> 2.27.0
-> 
++       if (!dw_pcie_link_up(pci))
++               return NULL;
++
+        busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+                 PCIE_ATU_FUNC(PCI_FUNC(devfn));
