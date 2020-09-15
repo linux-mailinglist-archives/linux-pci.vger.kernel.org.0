@@ -2,140 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD98626B031
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 00:04:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1444726B0B3
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 00:17:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgIOWEW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Sep 2020 18:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52466 "EHLO mail.kernel.org"
+        id S1727711AbgIOWRq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Sep 2020 18:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727708AbgIOWDM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Sep 2020 18:03:12 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728001AbgIOWRc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Sep 2020 18:17:32 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62E121974;
-        Tue, 15 Sep 2020 22:03:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01AC420732;
+        Tue, 15 Sep 2020 22:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600207391;
-        bh=6zE0t0oBSXBMiJpCVysJvWDi1OuIiOE0z/RDPqK5QEo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nNCs3AKsNhyvwcxJiuYiwuCZk8aJhCrWu2hHimpp/80ZVp0COd9LLbRvKE7dYfj9M
-         UORNn/A+ChZMXAgv8WUY92cLPIDrP1OUaIAq8koeKyYALz8L3fH6X5tH8exC0BtO4g
-         z6E2UHuTiI3HCcJiuVDfh+u+2xN/iP4Lh+BzdNkg=
-Received: by mail-ot1-f53.google.com with SMTP id w25so4761987otk.8;
-        Tue, 15 Sep 2020 15:03:11 -0700 (PDT)
-X-Gm-Message-State: AOAM531NQIIxLzhVLM+Klo3Lx2z7QE5n1nnjONnDPwOguca9waIswJfS
-        P05c7x7FHnG6Ool8ckXG//iLxvI+/IWdRMWzFQ==
-X-Google-Smtp-Source: ABdhPJyEQLpI+Is0tXGd/BZAER5EHEJNoezWAKvaE8B6IPjEqoZXnEMY3dBYYK0F9I37uCwuUgkTqRhbfRj/m0u6ldo=
-X-Received: by 2002:a9d:6ada:: with SMTP id m26mr560428otq.192.1600207390980;
- Tue, 15 Sep 2020 15:03:10 -0700 (PDT)
+        s=default; t=1600208243;
+        bh=TiL/JMlMqT49tuRdge+1NxOAcYMYi4Y5lNoE7DePQAo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NU3iPv9OYHXounV/bCT5Jp7m75pCoNe7psbtLwsC5bY0zE0OKc+28Dvruz40Znyws
+         w7q+VWk1b0g6rYA9qjdunlqvjX9ykSDdx5/QyRX9neT37sHck45XVpUM/tNjaVZwH6
+         ve1JnB5oCpMi8gSNJuNat3hHV+kgjbcoMsgIwAkE=
+Date:   Tue, 15 Sep 2020 17:17:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v8 1/5] PCI: Conditionally initialize host bridge
+ native_* members
+Message-ID: <20200915221721.GA1437311@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200821035420.380495-1-robh@kernel.org> <20200915091218.28737-1-michael@walle.cc>
-In-Reply-To: <20200915091218.28737-1-michael@walle.cc>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 15 Sep 2020 16:02:59 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLHBPduSjs1L3R2vbsLygJNDzajt4XThAkRG0DEu-GnAA@mail.gmail.com>
-Message-ID: <CAL_JsqLHBPduSjs1L3R2vbsLygJNDzajt4XThAkRG0DEu-GnAA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/40] PCI: dwc: Driver clean-ups
-To:     Michael Walle <michael@walle.cc>
-Cc:     "Gross, Andy" <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel@axis.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Song Xiaowei <songxiaowei@hisilicon.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wangbinghui <wangbinghui@hisilicon.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Yue Wang <yue.wang@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8e9c26fb-97e9-4bda-e374-7c6bea9077eb@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 3:12 AM Michael Walle <michael@walle.cc> wrote:
->
-> Hi Rob,
->
-> > This is a series of clean-ups for the Designware PCI driver. The series
-> > initially reworks the config space accessors to use the existing pci_ops
-> > struct. Then there's removal of various private data that's also present
-> > in the pci_host_bridge struct. There's also some duplicated common (PCI
-> > and DWC) register defines which I converted to use the common defines.
-> > Finally, the initialization for speed/gen, number of lanes, and N_FTS
-> > are all moved to the common DWC code.
->
-> > This is compile tested only as I don't have any DWC based h/w, so any
-> > testing would be helpful. A branch is here[1].
->
-> I've noticed that with the latest linux-next, my board doesn't boot
-> anymore. I've traced it back to this series. There is a similar
-> board in kernelci [1,2] where you can have a look at the backtrace.
->
-> I've bisected this to the following patch:
->   PCI: dwc: Use generic config accessors
+On Sun, Sep 13, 2020 at 01:49:26PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> On 9/10/20 2:00 PM, Kuppuswamy, Sathyanarayanan wrote:
+> > On 9/10/20 12:49 PM, Bjorn Helgaas wrote:
+> > > On Fri, Jul 24, 2020 at 08:58:52PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > 
+> > > > If CONFIG_PCIEPORTBUS is not enabled in kernel then initialing
+> > > > struct pci_host_bridge PCIe specific native_* members to "1" is
+> > > > incorrect. So protect the PCIe specific member initialization
+> > > > with CONFIG_PCIEPORTBUS.
+> > > 
+> > > s/initialing/initializing/
+> > will fix it in next version.
+> > > 
+> > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > ---
+> > > >   drivers/pci/probe.c | 4 +++-
+> > > >   1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > > index 2f66988cea25..a94b97564ceb 100644
+> > > > --- a/drivers/pci/probe.c
+> > > > +++ b/drivers/pci/probe.c
+> > > > @@ -588,12 +588,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+> > > >        * may implement its own AER handling and use _OSC to prevent the
+> > > >        * OS from interfering.
+> > > >        */
+> > > > +#ifdef CONFIG_PCIEPORTBUS
+> > > >       bridge->native_aer = 1;
+> > > >       bridge->native_pcie_hotplug = 1;
+> > > > -    bridge->native_shpc_hotplug = 1;
+> > > >       bridge->native_pme = 1;
+> > > >       bridge->native_ltr = 1;
+> > > 
+> > > native_ltr isn't dependent on PCIEPORTBUS either, is it?  It's only
+> > > used for ASPM.
+> > Agreed. I was confused due to a comment in include/linux/pci.h
+> > 
+> >   unsigned int    native_ltr:1;           /* OS may use PCIe LTR */
 
-That's helpful.
+> Currently there is no code dependency between LTR and CONFIG_PCIEPORTBUS.
+> 
+> But I am wondering whether its correct to move LTR code under
+> CONFIG_PCIEPORTBUS?. As per PCIe spec v5.0 sec 7.8.2, LTR is a
+> optional PCIe extended capability. So why is not moved under
+> drivers/pci/pcie/*. What is the criteria for code to be placed under
+> drivers/pci/pcie/*
 
-> I'm pretty much lost here. It seems that the kernel tries to read from
-> an invalid/unmapped memory address.
->
-> [1] https://kernelci.org/test/plan/id/5f5f4992d1c53777a0a6092d/
-> [2] https://storage.kernelci.org/next/master/next-20200914/arm64/defconfig/gcc-8/lab-nxp/baseline-fsl-ls1028a-rdb.txt
+Some folks think drivers/pci/pcie/ should not exist, and I tend to
+agree, but it's a fair bit of churn to remove it.  We do have quite a
+bit of PCIe extended capability support in drivers/pci -- ats.c,
+iov.c, vc.c.
 
-Thanks for the pointers. I was wondering if kernelci had any boards with DWC.
+There's no need to move LTR under CONFIG_PCIEPORTBUS because
+CONFIG_PCIEPORTBUS enables portdrv, and AFAIK there's nothing
+LTR-related that relies on portdrv.
 
-Can you try this? The link up check seemed unnecessary as it is racy.
-What happens if the link goes down right after checking? That's the
-only thing in the change that sticks out.
+The stuff currently in drivers/pci/pcie is mostly just portdrv and
+services that depend on it.  aspm.c and ptm.c are exceptions and
+really should be in drivers/pci.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
-b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 317ff512f8df..afee1a0e8883 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -441,6 +441,9 @@ static void __iomem
-*dw_pcie_other_conf_map_bus(struct pci_bus *bus,
-        struct pcie_port *pp = bus->sysdata;
-        struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-
-+       if (!dw_pcie_link_up(pci))
-+               return NULL;
-+
-        busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
-                 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+> > > >       bridge->native_dpc = 1;
+> > > > +#endif
+> > > > +    bridge->native_shpc_hotplug = 1;
+> > > >       device_initialize(&bridge->dev);
+> > > >   }
+> > > > -- 
+> > > > 2.17.1
+> > > > 
+> > 
+> 
+> -- 
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
