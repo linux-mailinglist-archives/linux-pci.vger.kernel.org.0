@@ -2,119 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D2C726CC31
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:40:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38E6826CCA9
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgIPUk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 16:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
+        id S1726701AbgIPUr4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 16:47:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbgIPRFm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Sep 2020 13:05:42 -0400
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        id S1726697AbgIPRBR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Sep 2020 13:01:17 -0400
+Received: from gaia (unknown [46.69.195.48])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 122B620731;
-        Wed, 16 Sep 2020 16:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600275366;
-        bh=JZn7jl83lNE5bzNJDZn1/gldMHkDPgWZGzZpS962Up8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=xODPVpEu4xL+5KyHse9gke9V6IKkl5QzO5r0OKUYNHwVYmEEo/Q3UQGDjcPOk58pB
-         jefneoej000eFtsElcudZcsrXpdmlV7mtZSe1Olbg1b99MrPaL8wsu9h+JVP1Ej1gQ
-         W1K1gIsk/JSXsPWv9hG1/NTjt6ackZlqc+qKRCMs=
-Date:   Wed, 16 Sep 2020 11:56:05 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiang Biao <benbjiang@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in
- pci_read_config
-Message-ID: <20200916165605.GA1554766@bjorn-Precision-5520>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BD39223EA;
+        Wed, 16 Sep 2020 17:01:02 +0000 (UTC)
+Date:   Wed, 16 Sep 2020 18:00:59 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
+Message-ID: <20200916170058.GD3122@gaia>
+References: <1d6f2ceb8d3538c906a1fdb8cd3d4c74ccffa42e.camel@kernel.crashing.org>
+ <20200914225740.GP904879@nvidia.com>
+ <2b539df4c9ec703458e46da2fc879ee3b310b31c.camel@kernel.crashing.org>
+ <20200915101831.GA2616@e121166-lin.cambridge.arm.com>
+ <20200915110511.GQ904879@nvidia.com>
+ <bcb95faafa72734478b942084a9d24a61ae9887f.camel@kernel.crashing.org>
+ <20200915234006.GI1573713@nvidia.com>
+ <20200916083315.GC27496@willie-the-truck>
+ <20200916084851.GA3122@gaia>
+ <20200916141502.GB20770@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPJCdBngxwYdc-CEfSabTAdAXCdnG424Qa2BS47+xcV2wDvJCA@mail.gmail.com>
+In-Reply-To: <20200916141502.GB20770@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 13, 2020 at 12:27:09PM +0800, Jiang Biao wrote:
-> On Thu, 10 Sep 2020 at 09:59, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Sep 10, 2020 at 09:54:02AM +0800, Jiang Biao wrote:
-> > > On Thu, 10 Sep 2020 at 09:25, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
-> > > > > From: Jiang Biao <benbjiang@tencent.com>
-> > > > >
-> > > > > pci_read_config() could block several ms in kernel space, mainly
-> > > > > caused by the while loop to call pci_user_read_config_dword().
-> > > > > Singel pci_user_read_config_dword() loop could consume 130us+,
-> > > > >               |    pci_user_read_config_dword() {
-> > > > >               |      _raw_spin_lock_irq() {
-> > > > > ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> > > > > ! 137.582 us  |      }
-> > > > >               |      pci_read() {
-> > > > >               |        raw_pci_read() {
-> > > > >               |          pci_conf1_read() {
-> > > > >   0.230 us    |            _raw_spin_lock_irqsave();
-> > > > >   0.035 us    |            _raw_spin_unlock_irqrestore();
-> > > > >   8.476 us    |          }
-> > > > >   8.790 us    |        }
-> > > > >   9.091 us    |      }
-> > > > > ! 147.263 us  |    }
-> > > > > and dozens of the loop could consume ms+.
-> > > > >
-> > > > > If we execute some lspci commands concurrently, ms+ scheduling
-> > > > > latency could be detected.
-> > > > >
-> > > > > Add scheduling chance in the loop to improve the latency.
-> > > >
-> > > > Thanks for the patch, this makes a lot of sense.
-> > > >
-> > > > Shouldn't we do the same in pci_write_config()?
-> > >
-> > > Yes, IMHO, that could be helpful too.
-> >
-> > If it's feasible, it would be nice to actually verify that it makes a
-> > difference.  I know config writes should be faster than reads, but
-> > they're certainly not as fast as a CPU can pump out data, so there
-> > must be *some* mechanism that slows the CPU down.
-> >
-> We failed to build a test case to produce the latency by setpci command,
-> AFAIU, setpci could be much less frequently realistically used than lspci.
-> So, the latency from pci_write_config() path could not be verified for now,
-> could we apply this patch alone to erase the verified latency introduced
-> by pci_read_config() path? :)
+On Wed, Sep 16, 2020 at 03:15:02PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, Sep 16, 2020 at 09:48:52AM +0100, Catalin Marinas wrote:
+> > On Wed, Sep 16, 2020 at 09:33:16AM +0100, Will Deacon wrote:
+> > > On Tue, Sep 15, 2020 at 08:40:06PM -0300, Jason Gunthorpe wrote:
+> > > > On Wed, Sep 16, 2020 at 09:17:38AM +1000, Benjamin Herrenschmidt wrote:
+> > > > > With the patch, those device will now use MT_DEVICE_NC.
+> > > > 
+> > > > Which doesn't do WC at all on some ARM implementations.
+> > > 
+> > > Is that just TX2? I remember that thing being weird where GRE performed
+> > > better than NC, but I thought that was a one off (and the thing is dead).
+> > 
+> > I recall something along these lines. Hopefully ARM updated the guidance
+> > to licensees.
+> > 
+> > > NC is more permissive than GRE, so I think that's the right one to use; i.e.
+> > > we go for the fewest number of restrictions on the hardware. If somebody
+> > > screws up the uarch, that's up to them.
+> > 
+> > I agree, Normal NC is better as long as the BAR can tolerate read
+> > side-effects.
+> 
+> That we don't know but if a prefetchable BAR can't tolerate read
+> side effects this would be already a problem on eg x86 - that's
+> the best we can hope for given the current PCI specs.
+> 
+> +1 on normal NC. The only open point is whether we should make
+> arch_can_pci_mmap_wc() return false on platforms like TX2.
 
-Thanks for trying!  I'll apply the patch as-is.  I'd like to include a
-note in the commit log about the user-visible effect of this.  I
-looked through recent similar commits:
+I lost track in this thread whether it matters. TX2 would need Device
+GRE for optimal performance but the kernel doesn't currently provide it
+anyway. We could expose a new memory type, aligned_wc ;).
 
-  928da37a229f ("RDMA/umem: Add a schedule point in ib_umem_get()")
-  47aaabdedf36 ("fanotify: Avoid softlockups when reading many events")
-  9f47eb5461aa ("fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls")
-  0a3b3c253a1e ("mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls")
-  b7e3debdd040 ("mm/memory_hotplug.c: fix false softlockup during pfn range removal")
-  d35bd764e689 ("dm writecache: add cond_resched to loop in persistent_memory_claim()")
-  da97f2d56bbd ("mm: call cond_resched() from deferred_init_memmap()")
-  ab8b65be1831 ("KVM: PPC: Book3S: Fix some RCU-list locks")
-  48c963e31bc6 ("KVM: arm/arm64: Release kvm->mmu_lock in loop to prevent starvation")
-  e84fe99b68ce ("mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()")
-  4005f5c3c9d0 ("wireguard: send/receive: cond_resched() when processing worker ringbuffers")
-  3fd44c86711f ("io_uring: use cond_resched() in io_ring_ctx_wait_and_kill()")
-  7979457b1d3a ("net: bridge: vlan: Add a schedule point during VLAN processing")
-  2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
-  1edaa447d958 ("dm writecache: add cond_resched to avoid CPU hangs")
-  ce9a4186f9ac ("macvlan: add cond_resched() during multicast processing")
-  7be1b9b8e9d1 ("drm/mm: Break long searches in fragmented address spaces")
-  bb699a793110 ("drm/i915/gem: Break up long lists of object reclaim")
-  9424ef56e13a ("ext4: add cond_resched() to __ext4_find_entry()")
-
-and many of them mention softlockups, RCU CPU stall warnings, or
-watchdogs triggering.  Are you seeing one of those, or are you
-measuring latency some other way?
-
-Bjorn
+-- 
+Catalin
