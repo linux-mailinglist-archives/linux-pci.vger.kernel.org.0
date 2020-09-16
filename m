@@ -2,102 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E71326CD02
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:52:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1641C26CCDA
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgIPUwZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 16:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgIPQy4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 12:54:56 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4ACC014B55
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 06:20:44 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id l126so3965869pfd.5
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 06:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SlRt7rB4mW/iayDYnKOqfS2OFUlf7qeJNI2l7CVFG2Q=;
-        b=G1FhARCk63c6iPMnPAWQAM+DtyHV4xw6CAA4tru7QJDWs6+BFxO4IRR9c2+1P/xiQU
-         6GOF588WmUXXT8NSEPNyOYIdCHgWVEJ8lv3BXgTqeyLPrqq3VbkwNIxMb2eVtnRSZgBT
-         AJTPZTBxmJicJM+DeCpKwG9RqQu+ak89sN8Pa2w0K8WC9BpEWN6I0C3vdjxIMgnnl2rY
-         wjs9ZGnJVgVhdRhaPRbgIsvmuE+LI8Mjb2m3qoEDsiVNfE2PxQb42/JapQ1isqcXTcAQ
-         xW1Xbr7bhY1HHbbCU3obFz13vi7AvCJU+eJjAd3QT5sZc27ofHuijp+y4xfp2zVkuAO8
-         8QKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=SlRt7rB4mW/iayDYnKOqfS2OFUlf7qeJNI2l7CVFG2Q=;
-        b=ERlp4OS5+HVI6a3/BsU+70LgF149jy57ez/WlZtOv0Ku7rQ+rr+pXIa+eL8cNz4ZLj
-         ZXsnmuBiONmSIcIvbAuSE+3aqsWsLjcMnWeXFFhnEDfS3dlvRU9hgm8fdzgaVkFjJeB6
-         oPaZW2dywzQKXjfFewEJR/TQ7aSILYah5gB2VoSePU3GBxsUJC/+i5AfAgi4s2LYnBPP
-         lg2SRNQfRG0hdslT5SYpQuvw8IY4aEkoDVZ2V8OIQRYG71Spf7PGbEvD6rXJo0vDCYAm
-         n1o3JiQk014WfE495t7PwObHY/vF3JWlNSZ6eor4f0DiHW3J9eBItWrBfIkP8vUiKI6s
-         6mZQ==
-X-Gm-Message-State: AOAM530AO7+ei1+e1zfZvYu4oqWGCsUuCAUdKMBBUnO7jTu9oPQbTcbZ
-        DJy+XfvkZMZ+NdSIw6vFcu02
-X-Google-Smtp-Source: ABdhPJwsG95VpZSqBcV3Pwm6AuVbbi4NnUSh1kO/w9kUI5DaP3pH2VWt8YQjRdKtkRmlf0M9uAGO7g==
-X-Received: by 2002:a63:d242:: with SMTP id t2mr18945938pgi.47.1600262443656;
-        Wed, 16 Sep 2020 06:20:43 -0700 (PDT)
-Received: from localhost.localdomain ([103.59.133.81])
-        by smtp.googlemail.com with ESMTPSA id e123sm17615726pfh.167.2020.09.16.06.20.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 06:20:43 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        vkoul@kernel.org, robh@kernel.org
-Cc:     svarbanov@mm-sol.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgautam@codeaurora.org, devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jonathan Marek <jonathan@marek.ca>
-Subject: [PATCH 5/5] pci: controller: dwc: qcom: Harcode PCIe config SID
-Date:   Wed, 16 Sep 2020 18:50:00 +0530
-Message-Id: <20200916132000.1850-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200916132000.1850-1-manivannan.sadhasivam@linaro.org>
-References: <20200916132000.1850-1-manivannan.sadhasivam@linaro.org>
+        id S1726638AbgIPUuP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 16:50:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:33976 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726552AbgIPQ4A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Sep 2020 12:56:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B8E91509;
+        Wed, 16 Sep 2020 07:15:06 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E951A3F68F;
+        Wed, 16 Sep 2020 07:15:04 -0700 (PDT)
+Date:   Wed, 16 Sep 2020 15:15:02 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
+Message-ID: <20200916141502.GB20770@e121166-lin.cambridge.arm.com>
+References: <375c478593945a416f3180c3773bcb5240d2e36c.camel@kernel.crashing.org>
+ <1d6f2ceb8d3538c906a1fdb8cd3d4c74ccffa42e.camel@kernel.crashing.org>
+ <20200914225740.GP904879@nvidia.com>
+ <2b539df4c9ec703458e46da2fc879ee3b310b31c.camel@kernel.crashing.org>
+ <20200915101831.GA2616@e121166-lin.cambridge.arm.com>
+ <20200915110511.GQ904879@nvidia.com>
+ <bcb95faafa72734478b942084a9d24a61ae9887f.camel@kernel.crashing.org>
+ <20200915234006.GI1573713@nvidia.com>
+ <20200916083315.GC27496@willie-the-truck>
+ <20200916084851.GA3122@gaia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200916084851.GA3122@gaia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hardcode the PCIe config SID table value. This is needed to avoid random
-MHI failure observed during reboot on SM8250.
+On Wed, Sep 16, 2020 at 09:48:52AM +0100, Catalin Marinas wrote:
+> On Wed, Sep 16, 2020 at 09:33:16AM +0100, Will Deacon wrote:
+> > On Tue, Sep 15, 2020 at 08:40:06PM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Sep 16, 2020 at 09:17:38AM +1000, Benjamin Herrenschmidt wrote:
+> > > > On Tue, 2020-09-15 at 08:05 -0300, Jason Gunthorpe wrote:
+> > > > > > To sum it up:
+> > > > > > 
+> > > > > > (1) RDMA drivers need a new mapping function/attribute to define their
+> > > > > >      message push model. Actually the message model is not necessarily related
+> > > > > >      to write combining a la x86, so we should probably come up with a better
+> > > > > >      and consistent naming. Enabling this patchset may trigger performance
+> > > > > >      regressions on mellanox drivers on arm64 - this ought to be
+> > > > > >      addressed.
+> > > > > 
+> > > > > It is pretty clear now that the certain ARM chips that don't do write
+> > > > > combining with pgprot_writecombine will performance regress if they
+> > > > > are running a certain uncommon Mellanox configuration. I suspect these
+> > > > > deployments are all running the out of tree patch for DEVICE_GRE
+> > > > > though.
+> > > > 
+> > > > I'm not sure I understand...
+> > > > 
+> > > > Today those ARM chips will not use pgprot_writecombine (at least not
+> > > > using that code path, they might still use it as the result of the
+> > > > other path in the driver that can enable it). 
+> > > 
+> > > Not quite, upstream kernel will never use WC on those
+> > > devices. DEVICE_GRE is not supported in upstream,
+> > > arch_can_pci_mmap_wc() is always false and the WC tester will always
+> > > fail.
+> > > 
+> > > > With the patch, those device will now use MT_DEVICE_NC.
+> > > 
+> > > Which doesn't do WC at all on some ARM implementations.
+> > 
+> > Is that just TX2? I remember that thing being weird where GRE performed
+> > better than NC, but I thought that was a one off (and the thing is dead).
+> 
+> I recall something along these lines. Hopefully ARM updated the guidance
+> to licensees.
+> 
+> > NC is more permissive than GRE, so I think that's the right one to use; i.e.
+> > we go for the fewest number of restrictions on the hardware. If somebody
+> > screws up the uarch, that's up to them.
+> 
+> I agree, Normal NC is better as long as the BAR can tolerate read
+> side-effects.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-[mani: stripped out unnecessary settings and ported for upstream]
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 4 ++++
- 1 file changed, 4 insertions(+)
+That we don't know but if a prefetchable BAR can't tolerate read
+side effects this would be already a problem on eg x86 - that's
+the best we can hope for given the current PCI specs.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index ca8ad354e09d..50748016ce96 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -57,6 +57,7 @@
- #define PCIE20_PARF_SID_OFFSET			0x234
- #define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
- #define PCIE20_PARF_DEVICE_TYPE			0x1000
-+#define PCIE20_PARF_BDF_TO_SID_TABLE_N		0x2000
- 
- #define PCIE20_ELBI_SYS_CTRL			0x04
- #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
-@@ -1290,6 +1291,9 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 	if (ret)
- 		goto err;
- 
-+	writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N);
-+	writel(0x01000100, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N + 0x054);
-+
- 	return 0;
- err:
- 	qcom_ep_reset_assert(pcie);
--- 
-2.17.1
++1 on normal NC. The only open point is whether we should make
+arch_can_pci_mmap_wc() return false on platforms like TX2.
 
+Thanks,
+Lorenzo
