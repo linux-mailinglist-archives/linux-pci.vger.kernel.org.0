@@ -2,91 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4573026CE17
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 23:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A70CA26CDA4
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 23:03:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgIPVJc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 17:09:32 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44348 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgIPPzc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 11:55:32 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08GBlfvq027172;
-        Wed, 16 Sep 2020 06:47:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1600256861;
-        bh=3AGiro3FnSBmxJs2uBGM1pA1oOZ6S/GI8y/Cm28nbw4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IfP1zphgUN6Zw2XJNKhMMVG/ylE5qbF4CVR+eQjef20EE7290yM6Ev4B5FFBMsmUF
-         rfNfsVNlbINmL9HkKfqTMRzWqWK2vxDVPch5F2rlPfFI1NZ3OrWXYFNS8daLeRbE2a
-         bTE2BrjGT8jdqaBADcJk3RiseeaORT6KKSxI2z5w=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08GBlfhS000950
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Sep 2020 06:47:41 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 16
- Sep 2020 06:47:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 16 Sep 2020 06:47:41 -0500
-Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08GBlXSA024715;
-        Wed, 16 Sep 2020 06:47:34 -0500
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Jason Wang <jasowang@redhat.com>, Cornelia Huck <cohuck@redhat.com>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
- <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
- <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
- <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
- <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
- <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
- <b2178e1d-2f5c-e8a3-72fb-70f2f8d6aa45@redhat.com>
- <45a8a97c-2061-13ee-5da8-9877a4a3b8aa@ti.com>
- <c8739d7f-e12e-f6a2-7018-9eeaf6feb054@redhat.com>
- <20200828123409.4cd2a812.cohuck@redhat.com>
- <ac8f7e4f-9f46-919a-f5c2-89b07794f0ab@ti.com>
- <9cd58cd1-0041-3d98-baf7-6e5bc2e7e317@redhat.com>
- <edf25301-93c0-4ba6-aa85-5f04137d0906@ti.com>
- <5733dbfc-76c1-45dc-6dce-ef5449eacc73@redhat.com>
- <181ae83d-edeb-9406-27cc-1195fe29ae95@ti.com>
- <ee0aa81d-064b-d7a7-86bb-79a3f4d3dd11@redhat.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <67924594-c70e-390e-ce2e-dda41a94ada1@ti.com>
-Date:   Wed, 16 Sep 2020 17:17:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726563AbgIPVCg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 17:02:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:33468 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgIPQPR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Sep 2020 12:15:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66F0114F6;
+        Wed, 16 Sep 2020 07:09:22 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30EEB3F68F;
+        Wed, 16 Sep 2020 07:09:21 -0700 (PDT)
+Date:   Wed, 16 Sep 2020 15:09:14 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, will@kernel.org,
+        catalin.marinas@arm.com, Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
+Message-ID: <20200916140914.GA20770@e121166-lin.cambridge.arm.com>
+References: <375c478593945a416f3180c3773bcb5240d2e36c.camel@kernel.crashing.org>
+ <1d6f2ceb8d3538c906a1fdb8cd3d4c74ccffa42e.camel@kernel.crashing.org>
+ <20200914225740.GP904879@nvidia.com>
+ <2b539df4c9ec703458e46da2fc879ee3b310b31c.camel@kernel.crashing.org>
+ <20200915101831.GA2616@e121166-lin.cambridge.arm.com>
+ <20200915110511.GQ904879@nvidia.com>
+ <bcb95faafa72734478b942084a9d24a61ae9887f.camel@kernel.crashing.org>
+ <20200915234006.GI1573713@nvidia.com>
+ <701012f288231d0d0733bf1c2c8fdbd9caa074fd.camel@kernel.crashing.org>
+ <20200916121226.GN1573713@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <ee0aa81d-064b-d7a7-86bb-79a3f4d3dd11@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200916121226.GN1573713@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Sep 16, 2020 at 09:12:26AM -0300, Jason Gunthorpe wrote:
 
+[...]
+
+> > You mean the driver uses a different path to the HW which ahs that
+> > overhead, not that MMIOs have that overhead right ?
+> 
+> The different path has overhead of doing extra useless MMIOs because
+> they don't combine
+
+For my own information, this is IB user space driver code, correct ? It
+tries to mmap buffer as WC and if it succeeds write into it in an
+optimized fashion (that is just pure overhead on platforms where normal
+NC memory - ie WC on arm64 - does not do what the _architecture_ defines
+it should).
+
+Lorenzo
