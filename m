@@ -2,136 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DE7A26CB0F
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:21:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96CD526CB00
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:21:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgIPUVt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 16:21:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:34472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbgIPRaR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Sep 2020 13:30:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C6281FB;
-        Wed, 16 Sep 2020 03:30:52 -0700 (PDT)
-Received: from red-moon.arm.com (unknown [10.57.6.237])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EE3B3F718;
-        Wed, 16 Sep 2020 03:30:51 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
+        id S1727180AbgIPUPr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 16:15:47 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36201 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbgIPRb0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 13:31:26 -0400
+Received: by mail-io1-f65.google.com with SMTP id d190so9196145iof.3;
+        Wed, 16 Sep 2020 10:31:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hRfR+j/sNQ41ZakQMoWnaCWXgTz86aIdAqvmzFe7k6U=;
+        b=Pl/9emcwe2Gq/XqcPgJBcuiBmmm8IpohY6+crb6MMgl6zkhc3w/NY724CbpStYMAPh
+         xFS1yiifMaP8R3Kzlpn3e9zMCI0CKd9qcKg6mKJMr1MI+sM2K+rBuGkFWn2dcpEP0dbm
+         vzw81fhr2iMDoWDXQVwypJKJqXTUnbVjMVS04scOV6y/wUhV3Q/T9+idmEGHvAZQcYkD
+         j+uUsvFeENCtTZhs6BC/frWOKHmJ7hEa2Q+Xt7n3M/e2bIw4acmuzuegRQaQP3/LJ+8B
+         +30QTARQK8UPj3dUUDjXnKSpUS44KxWxIkP75abqSrfyXHHjrUvb7SvaRfLPGfQx62WY
+         cNOw==
+X-Gm-Message-State: AOAM533ZXZTcLCZPTbXjcciwZbV65+aJnEmZC+1Nk4H154jARGFcMAow
+        FEJr1gMjGivVDRLIEGqhFp3dqlrL4mdk
+X-Google-Smtp-Source: ABdhPJw861X0s+rWKu+n7ODsTpzYArU/ffDgC8RCudwa/a457zJcb/q+UMAaqhqvZkgl16raeuGE0A==
+X-Received: by 2002:a05:6e02:e4e:: with SMTP id l14mr20856786ilk.10.1600269976645;
+        Wed, 16 Sep 2020 08:26:16 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id z26sm11180566ilf.60.2020.09.16.08.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2020 08:26:15 -0700 (PDT)
+Received: (nullmailer pid 3997242 invoked by uid 1000);
+        Wed, 16 Sep 2020 15:26:14 -0000
+Date:   Wed, 16 Sep 2020 09:26:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jim Quinlan <jquinlan@broadcom.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v2] ARM/PCI: Remove unused fields from struct hw_pci
-Date:   Wed, 16 Sep 2020 11:30:45 +0100
-Message-Id: <20200916103045.28651-1-lorenzo.pieralisi@arm.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200904141607.4066-1-lorenzo.pieralisi@arm.com>
-References: <20200904141607.4066-1-lorenzo.pieralisi@arm.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 06/10] PCI: brcmstb: Add control of rescal reset
+Message-ID: <20200916152614.GA3995498@bogus>
+References: <20200911175232.19016-1-james.quinlan@broadcom.com>
+ <20200911175232.19016-7-james.quinlan@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911175232.19016-7-james.quinlan@broadcom.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The msi_ctrl, io_optional and align_resource fields in struct hw_pci are
-currently unused by arm/mach PCI host controller drivers and we won't
-be adding any new users.
+On Fri, Sep 11, 2020 at 01:52:26PM -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> Some STB chips have a special purpose reset controller named RESCAL (reset
+> calibration).  The PCIe HW can now control RESCAL to start and stop its
+> operation.  On probe(), the RESCAL is deasserted and the driver goes
+> through the sequence of setting registers and reading status in order to
+> start the internal PHY that is required for the PCIe.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 69 ++++++++++++++++++++++++++-
+>  1 file changed, 68 insertions(+), 1 deletion(-)
 
-Remove them and related code.
-
-Link: https://lore.kernel.org/r/20200904141607.4066-1-lorenzo.pieralisi@arm.com
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
----
-v1->v2
-
-- Removed io_optional and align_resource fields as well
-
-[v1] https://lore.kernel.org/linux-pci/20200904141607.4066-1-lorenzo.pieralisi@arm.com
-
- arch/arm/include/asm/mach/pci.h |  7 -------
- arch/arm/kernel/bios32.c        | 16 ++--------------
- 2 files changed, 2 insertions(+), 21 deletions(-)
-
-diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/mach/pci.h
-index 83d340702680..ea9bd08895b7 100644
---- a/arch/arm/include/asm/mach/pci.h
-+++ b/arch/arm/include/asm/mach/pci.h
-@@ -17,10 +17,8 @@ struct pci_host_bridge;
- struct device;
- 
- struct hw_pci {
--	struct msi_controller *msi_ctrl;
- 	struct pci_ops	*ops;
- 	int		nr_controllers;
--	unsigned int	io_optional:1;
- 	void		**private_data;
- 	int		(*setup)(int nr, struct pci_sys_data *);
- 	int		(*scan)(int nr, struct pci_host_bridge *);
-@@ -28,11 +26,6 @@ struct hw_pci {
- 	void		(*postinit)(void);
- 	u8		(*swizzle)(struct pci_dev *dev, u8 *pin);
- 	int		(*map_irq)(const struct pci_dev *dev, u8 slot, u8 pin);
--	resource_size_t (*align_resource)(struct pci_dev *dev,
--					  const struct resource *res,
--					  resource_size_t start,
--					  resource_size_t size,
--					  resource_size_t align);
- };
- 
- /*
-diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-index eecec16aa708..e7ef2b5bea9c 100644
---- a/arch/arm/kernel/bios32.c
-+++ b/arch/arm/kernel/bios32.c
-@@ -394,8 +394,7 @@ static int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- 	return irq;
- }
- 
--static int pcibios_init_resource(int busnr, struct pci_sys_data *sys,
--				 int io_optional)
-+static int pcibios_init_resource(int busnr, struct pci_sys_data *sys)
- {
- 	int ret;
- 	struct resource_entry *window;
-@@ -405,14 +404,6 @@ static int pcibios_init_resource(int busnr, struct pci_sys_data *sys,
- 			 &iomem_resource, sys->mem_offset);
- 	}
- 
--	/*
--	 * If a platform says I/O port support is optional, we don't add
--	 * the default I/O space.  The platform is responsible for adding
--	 * any I/O space it needs.
--	 */
--	if (io_optional)
--		return 0;
--
- 	resource_list_for_each_entry(window, &sys->resources)
- 		if (resource_type(window->res) == IORESOURCE_IO)
- 			return 0;
-@@ -462,7 +453,7 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
- 
- 		if (ret > 0) {
- 
--			ret = pcibios_init_resource(nr, sys, hw->io_optional);
-+			ret = pcibios_init_resource(nr, sys);
- 			if (ret)  {
- 				pci_free_host_bridge(bridge);
- 				break;
-@@ -480,9 +471,6 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
- 				bridge->sysdata = sys;
- 				bridge->busnr = sys->busnr;
- 				bridge->ops = hw->ops;
--				bridge->msi = hw->msi_ctrl;
--				bridge->align_resource =
--						hw->align_resource;
- 
- 				ret = pci_scan_root_bus_bridge(bridge);
- 			}
--- 
-2.26.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
