@@ -2,66 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8BE626CF3C
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 01:06:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B170B26CFF6
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 02:30:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgIPXG6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 19:06:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgIPXG5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Sep 2020 19:06:57 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 287F722205;
-        Wed, 16 Sep 2020 23:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600297616;
-        bh=mVtA+yZ5H+wUI0uplWeAykbiC3OpBkIU+KtUDYfIycQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Y6e7CCllPoIo507T4PvUGnaTmzSWrsDg7ZtNc8Q5fYNND7fAjAM8OQY6RwvuQUT6u
-         v13ri8BWmMkQDzfXXZnh45z4Rxfn+sRvrPBm7vW7WaM6XDaEtZC4B9qRRqzEAT/Gww
-         EUb5XIzReTmxlf+8X3WLFTwtBJQLyioA/Cd9USvk=
-Date:   Wed, 16 Sep 2020 18:06:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-Cc:     "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, sathyanarayanan.kuppuswamy@linux.intel.com,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] PCI/RCEC: Add pcie_walk_rcec() to walk
- associated RCiEPs
-Message-ID: <20200916230654.GA1595243@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5BC1F7E6-64B8-4564-97A3-49C914CA926D@intel.com>
+        id S1726011AbgIQAa0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 20:30:26 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:41098 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgIQAaZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 20:30:25 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Wed, 16 Sep 2020 20:30:23 EDT
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 08GNxT6I030187
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 16 Sep 2020 18:59:32 -0500
+Message-ID: <28082ccc715a9fba349ae6052d5c917ae02d40fa.camel@kernel.crashing.org>
+Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, will@kernel.org,
+        catalin.marinas@arm.com, Leon Romanovsky <leon@kernel.org>
+Date:   Thu, 17 Sep 2020 09:59:28 +1000
+In-Reply-To: <20200916121226.GN1573713@nvidia.com>
+References: <20200914143819.GC904879@nvidia.com>
+         <375c478593945a416f3180c3773bcb5240d2e36c.camel@kernel.crashing.org>
+         <1d6f2ceb8d3538c906a1fdb8cd3d4c74ccffa42e.camel@kernel.crashing.org>
+         <20200914225740.GP904879@nvidia.com>
+         <2b539df4c9ec703458e46da2fc879ee3b310b31c.camel@kernel.crashing.org>
+         <20200915101831.GA2616@e121166-lin.cambridge.arm.com>
+         <20200915110511.GQ904879@nvidia.com>
+         <bcb95faafa72734478b942084a9d24a61ae9887f.camel@kernel.crashing.org>
+         <20200915234006.GI1573713@nvidia.com>
+         <701012f288231d0d0733bf1c2c8fdbd9caa074fd.camel@kernel.crashing.org>
+         <20200916121226.GN1573713@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 09:09:20AM -0700, Sean V Kelley wrote:
+On Wed, 2020-09-16 at 09:12 -0300, Jason Gunthorpe wrote:
+> > Also we could make this a variable rather than a constant and
+> > choose
+> > a more appropriate set of flags at boot time....
+> 
+> It is a function, so it could check the CPU ID for the known broken
+> devices and block them.
 
-> Walking the bus with an RCEC as it is probed in the portdrv_pci.c can be
-> done with both its own bus (bitmap) and with supported associated bus
-> ranges.  In that walk I’m able to find all the associated endpoints via both
-> bitmap on own bus and the bus ranges. No pci_get_slot() is needed as per
-> your original suggestion.
+Sure, I meant in the abstract way. It's not a hot path so it doesnt
+have to be a static key.
 
-OK.  That seems OK for now.
+> > > > Why would that be a regression ? 
+> > > 
+> > > Using the WC submission flow when it doesn't work costs something
+> > > like
+> > > 10% performance vs using the non-WC flow.
+> > 
+> > You mean the driver uses a different path to the HW which ahs that
+> > overhead, not that MMIOs have that overhead right ?
+> 
+> The different path has overhead of doing extra useless MMIOs because
+> they don't combine
 
-> The suggsted approach to the rcec_helper() seems to imply that we either
-> walk it again or have cached all the associated RCiEP.  When we do the walk
-> above, we are merely, finding the RCiEPs and linking them to the RCEC’s
-> structure. There is no caching done of a list of RCiEPs per RCEC.
+I see. This might have to end up being a TX2 specific hack until the
+end of times...
 
-pcie_portdrv_init() is a device_initcall, so it should be called after
-we enumerate all the PCI devices (at least those present at boot).  So
-you don't have to worry about finding an RCiEP before its associated
-RCEC -- we should have found them *all* by the time we get to
-pcie_portdrv_probe().
+Cheers,
+Ben.
 
-Bjorn
+
