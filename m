@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32E4A26CD00
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:52:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E71326CD02
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 22:52:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgIPUwY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 16:52:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55282 "EHLO
+        id S1726370AbgIPUwZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 16:52:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgIPQy4 (ORCPT
+        with ESMTP id S1726528AbgIPQy4 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 12:54:56 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947F4C014B50
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 06:20:39 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d13so3892030pgl.6
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 06:20:39 -0700 (PDT)
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4ACC014B55
+        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 06:20:44 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id l126so3965869pfd.5
+        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 06:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fzh3CCoDGDGxlJkIFINWNZPt3A03jNDSiJwS6iizMo8=;
-        b=RCEplKr8uDjcljvZ75VbCIa+p/+u4kUxxw6sEcyQ+2NGKEsEH+ntw6DyCxLRdB5zVm
-         sjDa9nnEwtj6aa9p2J2s2XiTnDIyxinKebyl4P6pWm85dT1HDyWQVe1IBnAw0KMvW4F4
-         rn4HhM2kq7gXCcI9Oj6X0RDLz7cfY3uuYpzGqyQc4L5qaL5bEwqROAnl7nu4vXWVNkfn
-         3Floefia3Tb7VSEzeUSabjkovoL6og9b4ZPeXnzW8VLdZNibtfm7EQN1GHiSyo32F34x
-         TthB5zLph8KkJyo7boKf4Ys6LSD7wJPgxlmkGlGfu417DfcTKgHDv8j8sl84OHEQC8i/
-         /ZTA==
+        bh=SlRt7rB4mW/iayDYnKOqfS2OFUlf7qeJNI2l7CVFG2Q=;
+        b=G1FhARCk63c6iPMnPAWQAM+DtyHV4xw6CAA4tru7QJDWs6+BFxO4IRR9c2+1P/xiQU
+         6GOF588WmUXXT8NSEPNyOYIdCHgWVEJ8lv3BXgTqeyLPrqq3VbkwNIxMb2eVtnRSZgBT
+         AJTPZTBxmJicJM+DeCpKwG9RqQu+ak89sN8Pa2w0K8WC9BpEWN6I0C3vdjxIMgnnl2rY
+         wjs9ZGnJVgVhdRhaPRbgIsvmuE+LI8Mjb2m3qoEDsiVNfE2PxQb42/JapQ1isqcXTcAQ
+         xW1Xbr7bhY1HHbbCU3obFz13vi7AvCJU+eJjAd3QT5sZc27ofHuijp+y4xfp2zVkuAO8
+         8QKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fzh3CCoDGDGxlJkIFINWNZPt3A03jNDSiJwS6iizMo8=;
-        b=E1LQUd8T5Eb7olzbr07P2UwOmzUra6/Vno1YsH8PF8c5jdUEMV5sv7E4RsW5lcj8sA
-         y8xAABcMs/f5AHPS2YUn8dsl1bZaEBvjFaFrjutNKMU8kZUJeHU/c0YP5sJtP5/emW3q
-         8Irwqd1cD4e+NERV0CNWF3kmYl1I+RWDSKh61/YTccijr3ae4P9emhPdMMi1nuzP9Go5
-         Li6i29JS+qhjF2PZIEwAYoMvhoxOczLo1ENmfEWeZ/Idy63Ix2bRmzV84+JPNBn6yjRn
-         RmuPyBe27QJ5KIxKTXrdFUhdhGLmUBTxYV2E+DJQoj6furh4S3EJo/uzp9KX1Z0Ta/nj
-         5rag==
-X-Gm-Message-State: AOAM530lFDyjMef+uku0jv3rzB2SqnUA+UC2qsnxy88zCO6xrGAvBwU+
-        y+JYA9qpmbbnMwsXGDOaQICh
-X-Google-Smtp-Source: ABdhPJwQ0usWP+6ckIvXgjvXplFm4b8ypNnW3E3eT7izCSuUzjz6qpcS3c+maK/Sdj6ujQr7IT/LwQ==
-X-Received: by 2002:a63:e144:: with SMTP id h4mr18900959pgk.161.1600262439051;
-        Wed, 16 Sep 2020 06:20:39 -0700 (PDT)
+        bh=SlRt7rB4mW/iayDYnKOqfS2OFUlf7qeJNI2l7CVFG2Q=;
+        b=ERlp4OS5+HVI6a3/BsU+70LgF149jy57ez/WlZtOv0Ku7rQ+rr+pXIa+eL8cNz4ZLj
+         ZXsnmuBiONmSIcIvbAuSE+3aqsWsLjcMnWeXFFhnEDfS3dlvRU9hgm8fdzgaVkFjJeB6
+         oPaZW2dywzQKXjfFewEJR/TQ7aSILYah5gB2VoSePU3GBxsUJC/+i5AfAgi4s2LYnBPP
+         lg2SRNQfRG0hdslT5SYpQuvw8IY4aEkoDVZ2V8OIQRYG71Spf7PGbEvD6rXJo0vDCYAm
+         n1o3JiQk014WfE495t7PwObHY/vF3JWlNSZ6eor4f0DiHW3J9eBItWrBfIkP8vUiKI6s
+         6mZQ==
+X-Gm-Message-State: AOAM530AO7+ei1+e1zfZvYu4oqWGCsUuCAUdKMBBUnO7jTu9oPQbTcbZ
+        DJy+XfvkZMZ+NdSIw6vFcu02
+X-Google-Smtp-Source: ABdhPJwsG95VpZSqBcV3Pwm6AuVbbi4NnUSh1kO/w9kUI5DaP3pH2VWt8YQjRdKtkRmlf0M9uAGO7g==
+X-Received: by 2002:a63:d242:: with SMTP id t2mr18945938pgi.47.1600262443656;
+        Wed, 16 Sep 2020 06:20:43 -0700 (PDT)
 Received: from localhost.localdomain ([103.59.133.81])
-        by smtp.googlemail.com with ESMTPSA id e123sm17615726pfh.167.2020.09.16.06.20.34
+        by smtp.googlemail.com with ESMTPSA id e123sm17615726pfh.167.2020.09.16.06.20.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 06:20:38 -0700 (PDT)
+        Wed, 16 Sep 2020 06:20:43 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
         vkoul@kernel.org, robh@kernel.org
@@ -53,10 +53,11 @@ Cc:     svarbanov@mm-sol.com, bhelgaas@google.com,
         lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         mgautam@codeaurora.org, devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 4/5] pci: controller: dwc: qcom: Add PCIe support for SM8250 SoC
-Date:   Wed, 16 Sep 2020 18:49:59 +0530
-Message-Id: <20200916132000.1850-5-manivannan.sadhasivam@linaro.org>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jonathan Marek <jonathan@marek.ca>
+Subject: [PATCH 5/5] pci: controller: dwc: qcom: Harcode PCIe config SID
+Date:   Wed, 16 Sep 2020 18:50:00 +0530
+Message-Id: <20200916132000.1850-6-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200916132000.1850-1-manivannan.sadhasivam@linaro.org>
 References: <20200916132000.1850-1-manivannan.sadhasivam@linaro.org>
@@ -65,47 +66,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCIe IP on SM8250 SoC is similar to the one used on SDM845. Hence
-the support is added reusing the 2.7.0 ops. Only difference is the need
-of ATU base, which will be fetched opionally if provided by DT/ACPI.
+Hardcode the PCIe config SID table value. This is needed to avoid random
+MHI failure observed during reboot on SM8250.
 
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+[mani: stripped out unnecessary settings and ported for upstream]
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 3aac77a295ba..ca8ad354e09d 100644
+index ca8ad354e09d..50748016ce96 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1370,6 +1370,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	struct pcie_port *pp;
- 	struct dw_pcie *pci;
- 	struct qcom_pcie *pcie;
-+	void __iomem *atu_base;
- 	int ret;
+@@ -57,6 +57,7 @@
+ #define PCIE20_PARF_SID_OFFSET			0x234
+ #define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
+ #define PCIE20_PARF_DEVICE_TYPE			0x1000
++#define PCIE20_PARF_BDF_TO_SID_TABLE_N		0x2000
  
- 	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-@@ -1422,6 +1423,11 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_pm_runtime_put;
- 	}
+ #define PCIE20_ELBI_SYS_CTRL			0x04
+ #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
+@@ -1290,6 +1291,9 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+ 	if (ret)
+ 		goto err;
  
-+	/* Get the optional ATU region if provided */
-+	atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
-+	if (!IS_ERR(atu_base))
-+		pci->atu_base = atu_base;
++	writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N);
++	writel(0x01000100, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N + 0x054);
 +
- 	pcie->phy = devm_phy_optional_get(dev, "pciephy");
- 	if (IS_ERR(pcie->phy)) {
- 		ret = PTR_ERR(pcie->phy);
-@@ -1476,6 +1482,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
- 	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
-+	{ .compatible = "qcom,pcie-sm8250", .data = &ops_2_7_0 },
- 	{ }
- };
- 
+ 	return 0;
+ err:
+ 	qcom_ep_reset_assert(pcie);
 -- 
 2.17.1
 
