@@ -2,72 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E29126B682
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 02:06:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74D9A26BA26
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 04:29:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgIPAGf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Sep 2020 20:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgIOO2m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Sep 2020 10:28:42 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8BCC061223;
-        Tue, 15 Sep 2020 07:15:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VAFP2+lHvsV1SPJ5crPA3cULhiQoRhi403/H/7JF2+8=; b=QR2hMiotY714HixEB18KO4UMkA
-        dsT/mYwU5lOtboVpU9HPkIUwXQl1fjqq2TkMtIp/eolnn0tdunOBGHvtS2J+tqZECpTXEZYXP9qo+
-        dv4cJ2UfqvDb7FW3A1dKdum8o+v4hovMfAcqknVms0cyPD1S6VhFKHeHHqifn124i0TEPhEO1GVWj
-        jEZnfquFDd97jHMreoDhubWvfLR1Zp3VEXbi06WxXW6OempRGF5ubBTujfEiVJWQL7/WzBHe36+8r
-        mnN+YhqrYxB//1UNxJQtxXjIxF5R0i2hBqTumFxM4cNGpLUWEdjLVPMb8ZpQRq86LV4btHypzNp5o
-        OSs+c7Gw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kIBjQ-00051X-Ac; Tue, 15 Sep 2020 14:14:52 +0000
-Date:   Tue, 15 Sep 2020 15:14:52 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, linux-pci@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1726509AbgIPC26 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Sep 2020 22:28:58 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12717 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726402AbgIPC2A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Sep 2020 22:28:00 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6181BEED522A6A6B5DFE;
+        Wed, 16 Sep 2020 10:27:58 +0800 (CST)
+Received: from huawei.com (10.175.113.32) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 16 Sep 2020
+ 10:27:50 +0800
+From:   Liu Shixin <liushixin2@huawei.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        George Cherian <george.cherian@marvell.com>,
-        Yang Yingliang <yangyingliang@huawei.com>
-Subject: Re: [PATCH 1/2] sparc32: Move ioremap/iounmap declaration before
- asm-generic/io.h include
-Message-ID: <20200915141452.GA19202@infradead.org>
-References: <20200915093203.16934-1-lorenzo.pieralisi@arm.com>
- <20200915093203.16934-2-lorenzo.pieralisi@arm.com>
+        Jonathan Hunter <jonathanh@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Liu Shixin <liushixin2@huawei.com>
+Subject: [PATCH -next] PCI: tegra: convert to use DEFINE_SEQ_ATTRIBUTE macro
+Date:   Wed, 16 Sep 2020 10:50:25 +0800
+Message-ID: <20200916025025.3992783-1-liushixin2@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200915093203.16934-2-lorenzo.pieralisi@arm.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.32]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> diff --git a/arch/sparc/include/asm/io_32.h b/arch/sparc/include/asm/io_32.h
-> index 9a52d9506f80..042201c79ad1 100644
-> --- a/arch/sparc/include/asm/io_32.h
-> +++ b/arch/sparc/include/asm/io_32.h
-> @@ -11,6 +11,16 @@
->  #define memcpy_fromio(d,s,sz) _memcpy_fromio(d,s,sz)
->  #define memcpy_toio(d,s,sz)   _memcpy_toio(d,s,sz)
->  
-> +#ifdef __KERNEL__
-> +
-> +/*
-> + * Bus number may be embedded in the higher bits of the physical address.
-> + * This is why we have no bus number argument to ioremap().
-> + */
-> +void __iomem *ioremap(phys_addr_t offset, size_t size);
-> +void iounmap(volatile void __iomem *addr);
-> +#endif
+Use DEFINE_SEQ_ATTRIBUTE macro to simplify the code.
 
-No need for an __KERNEL__ in non-uapi headers.
+Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+---
+ drivers/pci/controller/pci-tegra.c | 28 +++-------------------------
+ 1 file changed, 3 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index c1d34353c29b..556c30a718f0 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2564,36 +2564,14 @@ static int tegra_pcie_ports_seq_show(struct seq_file *s, void *v)
+ 	return 0;
+ }
+ 
+-static const struct seq_operations tegra_pcie_ports_seq_ops = {
++static const struct seq_operations tegra_pcie_ports_sops = {
+ 	.start = tegra_pcie_ports_seq_start,
+ 	.next = tegra_pcie_ports_seq_next,
+ 	.stop = tegra_pcie_ports_seq_stop,
+ 	.show = tegra_pcie_ports_seq_show,
+ };
+ 
+-static int tegra_pcie_ports_open(struct inode *inode, struct file *file)
+-{
+-	struct tegra_pcie *pcie = inode->i_private;
+-	struct seq_file *s;
+-	int err;
+-
+-	err = seq_open(file, &tegra_pcie_ports_seq_ops);
+-	if (err)
+-		return err;
+-
+-	s = file->private_data;
+-	s->private = pcie;
+-
+-	return 0;
+-}
+-
+-static const struct file_operations tegra_pcie_ports_ops = {
+-	.owner = THIS_MODULE,
+-	.open = tegra_pcie_ports_open,
+-	.read = seq_read,
+-	.llseek = seq_lseek,
+-	.release = seq_release,
+-};
++DEFINE_SEQ_ATTRIBUTE(tegra_pcie_ports);
+ 
+ static void tegra_pcie_debugfs_exit(struct tegra_pcie *pcie)
+ {
+@@ -2610,7 +2588,7 @@ static int tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
+ 		return -ENOMEM;
+ 
+ 	file = debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs,
+-				   pcie, &tegra_pcie_ports_ops);
++				   pcie, &tegra_pcie_ports_fops);
+ 	if (!file)
+ 		goto remove;
+ 
+-- 
+2.25.1
+
