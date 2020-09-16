@@ -2,398 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74D3E26C43E
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 17:33:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 006F226C492
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 17:50:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgIPPct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 11:32:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43102 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgIPPc1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 11:32:27 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08GBlfvq027172;
-        Wed, 16 Sep 2020 06:47:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1600256861;
-        bh=3AGiro3FnSBmxJs2uBGM1pA1oOZ6S/GI8y/Cm28nbw4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IfP1zphgUN6Zw2XJNKhMMVG/ylE5qbF4CVR+eQjef20EE7290yM6Ev4B5FFBMsmUF
-         rfNfsVNlbINmL9HkKfqTMRzWqWK2vxDVPch5F2rlPfFI1NZ3OrWXYFNS8daLeRbE2a
-         bTE2BrjGT8jdqaBADcJk3RiseeaORT6KKSxI2z5w=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08GBlfhS000950
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Sep 2020 06:47:41 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 16
- Sep 2020 06:47:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 16 Sep 2020 06:47:41 -0500
-Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08GBlXSA024715;
-        Wed, 16 Sep 2020 06:47:34 -0500
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Jason Wang <jasowang@redhat.com>, Cornelia Huck <cohuck@redhat.com>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
- <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
- <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
- <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
- <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
- <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
- <b2178e1d-2f5c-e8a3-72fb-70f2f8d6aa45@redhat.com>
- <45a8a97c-2061-13ee-5da8-9877a4a3b8aa@ti.com>
- <c8739d7f-e12e-f6a2-7018-9eeaf6feb054@redhat.com>
- <20200828123409.4cd2a812.cohuck@redhat.com>
- <ac8f7e4f-9f46-919a-f5c2-89b07794f0ab@ti.com>
- <9cd58cd1-0041-3d98-baf7-6e5bc2e7e317@redhat.com>
- <edf25301-93c0-4ba6-aa85-5f04137d0906@ti.com>
- <5733dbfc-76c1-45dc-6dce-ef5449eacc73@redhat.com>
- <181ae83d-edeb-9406-27cc-1195fe29ae95@ti.com>
- <ee0aa81d-064b-d7a7-86bb-79a3f4d3dd11@redhat.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <67924594-c70e-390e-ce2e-dda41a94ada1@ti.com>
-Date:   Wed, 16 Sep 2020 17:17:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <ee0aa81d-064b-d7a7-86bb-79a3f4d3dd11@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        id S1726216AbgIPPt4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 11:49:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgIPP2w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 11:28:52 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600EBC0D941E
+        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 07:57:23 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s65so4075607pgb.0
+        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 07:57:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1TSfIb+9nEGymAXENVB32Gqgkiq6Iqv2arI35qHeZsk=;
+        b=OLoB4C7h1DikhgIivS9jigb9YlKSdbUXwM7AldL9RhmoIiQPxRH87gaPabZkloDzov
+         xZ7Gh6SsJgOb7lFiimjD6ZQ2hj7ci+2OGLL6bwk3X4Lwdl7q8ifxYDtfe772hRBxcYj6
+         hvN4nCarBEzV5EUODBKtHrDl/kic7s2mLqSmc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1TSfIb+9nEGymAXENVB32Gqgkiq6Iqv2arI35qHeZsk=;
+        b=Mgqr6jQRv48ORo4cSFM1XyLSJ57d2YEKlFrKVpGwfKuVWzWfRcK2T1DWAiBvbJPzn4
+         W49vHNYkha3Qqe75GUJ8BWl+QLYq3c4DxA8tNsefTlT4NT/MlYeEmBIPCm5689/HohUL
+         vUTHo7RfysUs89dKtvM+n8Cqi8cMS8yb2fb3DOHvLUkULhY5xHQi1XBHOOROHYtsmM1b
+         ophqJKgstx20LPBhP7FBiJslPVm20DGEVAD3SJ9t+qezzag1VmFaRzPr1qTKngUgoutE
+         ik1nsZE1qXBM3HchwvriTziNCOZlNZsyWEGL1JyW4M+QYW0prJF38MllvX4a9Zka0nmq
+         P9sg==
+X-Gm-Message-State: AOAM530i/L/7c/TcPN8ltG4ovh0QWTEVOezWApYiKelZBtBgn5GVTnf4
+        /Q22YsaPOmRzKnCEnqC6oh3zuPGA5Ame1WuAcsOdZ23lJTnW89B7KgY6kzLcL1a/5/izdsCNxNl
+        myBCakH6dd0cNIcCYunnXqb36u5K77cus7qOEF5WMingMndkBj6msYsC/lxmx+ZKUiOwl/feZE0
+        ixnEKg
+X-Google-Smtp-Source: ABdhPJzVoJCA0kVsCeGDrnF32JOO8S9adPAMD2CdwD6daoENwUYMRsPia2ORxJKTMiS6juXzlgGb/w==
+X-Received: by 2002:a63:de0a:: with SMTP id f10mr18568738pgg.88.1600268242007;
+        Wed, 16 Sep 2020 07:57:22 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id 82sm15070257pgd.6.2020.09.16.07.57.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2020 07:57:21 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com
+Cc:     linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 0/1] PCI: pcie_bus_config can be set at build time
+Date:   Wed, 16 Sep 2020 10:57:05 -0400
+Message-Id: <20200916145707.33313-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="00000000000026cd9605af6f7cd2"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jason,
+--00000000000026cd9605af6f7cd2
 
-On 16/09/20 8:40 am, Jason Wang wrote:
-> 
-> On 2020/9/15 下午11:47, Kishon Vijay Abraham I wrote:
->> Hi Jason,
->>
->> On 15/09/20 1:48 pm, Jason Wang wrote:
->>> Hi Kishon:
->>>
->>> On 2020/9/14 下午3:23, Kishon Vijay Abraham I wrote:
->>>>> Then you need something that is functional equivalent to virtio PCI
->>>>> which is actually the concept of vDPA (e.g vDPA provides
->>>>> alternatives if
->>>>> the queue_sel is hard in the EP implementation).
->>>> Okay, I just tried to compare the 'struct vdpa_config_ops' and 'struct
->>>> vhost_config_ops' ( introduced in [RFC PATCH 03/22] vhost: Add ops for
->>>> the VHOST driver to configure VHOST device).
->>>>
->>>> struct vdpa_config_ops {
->>>>      /* Virtqueue ops */
->>>>      int (*set_vq_address)(struct vdpa_device *vdev,
->>>>                    u16 idx, u64 desc_area, u64 driver_area,
->>>>                    u64 device_area);
->>>>      void (*set_vq_num)(struct vdpa_device *vdev, u16 idx, u32 num);
->>>>      void (*kick_vq)(struct vdpa_device *vdev, u16 idx);
->>>>      void (*set_vq_cb)(struct vdpa_device *vdev, u16 idx,
->>>>                struct vdpa_callback *cb);
->>>>      void (*set_vq_ready)(struct vdpa_device *vdev, u16 idx, bool
->>>> ready);
->>>>      bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
->>>>      int (*set_vq_state)(struct vdpa_device *vdev, u16 idx,
->>>>                  const struct vdpa_vq_state *state);
->>>>      int (*get_vq_state)(struct vdpa_device *vdev, u16 idx,
->>>>                  struct vdpa_vq_state *state);
->>>>      struct vdpa_notification_area
->>>>      (*get_vq_notification)(struct vdpa_device *vdev, u16 idx);
->>>>      /* vq irq is not expected to be changed once DRIVER_OK is set */
->>>>      int (*get_vq_irq)(struct vdpa_device *vdv, u16 idx);
->>>>
->>>>      /* Device ops */
->>>>      u32 (*get_vq_align)(struct vdpa_device *vdev);
->>>>      u64 (*get_features)(struct vdpa_device *vdev);
->>>>      int (*set_features)(struct vdpa_device *vdev, u64 features);
->>>>      void (*set_config_cb)(struct vdpa_device *vdev,
->>>>                    struct vdpa_callback *cb);
->>>>      u16 (*get_vq_num_max)(struct vdpa_device *vdev);
->>>>      u32 (*get_device_id)(struct vdpa_device *vdev);
->>>>      u32 (*get_vendor_id)(struct vdpa_device *vdev);
->>>>      u8 (*get_status)(struct vdpa_device *vdev);
->>>>      void (*set_status)(struct vdpa_device *vdev, u8 status);
->>>>      void (*get_config)(struct vdpa_device *vdev, unsigned int offset,
->>>>                 void *buf, unsigned int len);
->>>>      void (*set_config)(struct vdpa_device *vdev, unsigned int offset,
->>>>                 const void *buf, unsigned int len);
->>>>      u32 (*get_generation)(struct vdpa_device *vdev);
->>>>
->>>>      /* DMA ops */
->>>>      int (*set_map)(struct vdpa_device *vdev, struct vhost_iotlb
->>>> *iotlb);
->>>>      int (*dma_map)(struct vdpa_device *vdev, u64 iova, u64 size,
->>>>                 u64 pa, u32 perm);
->>>>      int (*dma_unmap)(struct vdpa_device *vdev, u64 iova, u64 size);
->>>>
->>>>      /* Free device resources */
->>>>      void (*free)(struct vdpa_device *vdev);
->>>> };
->>>>
->>>> +struct vhost_config_ops {
->>>> +    int (*create_vqs)(struct vhost_dev *vdev, unsigned int nvqs,
->>>> +              unsigned int num_bufs, struct vhost_virtqueue *vqs[],
->>>> +              vhost_vq_callback_t *callbacks[],
->>>> +              const char * const names[]);
->>>> +    void (*del_vqs)(struct vhost_dev *vdev);
->>>> +    int (*write)(struct vhost_dev *vdev, u64 vhost_dst, void *src,
->>>> int len);
->>>> +    int (*read)(struct vhost_dev *vdev, void *dst, u64 vhost_src, int
->>>> len);
->>>> +    int (*set_features)(struct vhost_dev *vdev, u64 device_features);
->>>> +    int (*set_status)(struct vhost_dev *vdev, u8 status);
->>>> +    u8 (*get_status)(struct vhost_dev *vdev);
->>>> +};
->>>> +
->>>> struct virtio_config_ops
->>>> I think there's some overlap here and some of the ops tries to do the
->>>> same thing.
->>>>
->>>> I think it differs in (*set_vq_address)() and (*create_vqs)().
->>>> [create_vqs() introduced in struct vhost_config_ops provides
->>>> complimentary functionality to (*find_vqs)() in struct
->>>> virtio_config_ops. It seemingly encapsulates the functionality of
->>>> (*set_vq_address)(), (*set_vq_num)(), (*set_vq_cb)(),..].
->>>>
->>>> Back to the difference between (*set_vq_address)() and (*create_vqs)(),
->>>> set_vq_address() directly provides the virtqueue address to the vdpa
->>>> device but create_vqs() only provides the parameters of the virtqueue
->>>> (like the number of virtqueues, number of buffers) but does not
->>>> directly
->>>> provide the address. IMO the backend client drivers (like net or vhost)
->>>> shouldn't/cannot by itself know how to access the vring created on
->>>> virtio front-end. The vdpa device/vhost device should have logic for
->>>> that. That will help the client drivers to work with different types of
->>>> vdpa device/vhost device and can access the vring created by virtio
->>>> irrespective of whether the vring can be accessed via mmio or kernel
->>>> space or user space.
->>>>
->>>> I think vdpa always works with client drivers in userspace and
->>>> providing
->>>> userspace address for vring.
->>>
->>> Sorry for being unclear. What I meant is not replacing vDPA with the
->>> vhost(bus) you proposed but the possibility of replacing virtio-pci-epf
->>> with vDPA in:
->> Okay, so the virtio back-end still use vhost and front end should use
->> vDPA. I see. So the host side PCI driver for EPF should populate
->> vdpa_config_ops and invoke vdpa_register_device().
-> 
-> 
-> Yes.
-> 
-> 
->>> My question is basically for the part of virtio_pci_epf_send_command(),
->>> so it looks to me you have a vendor specific API to replace the
->>> virtio-pci layout of the BAR:
->> Even when we use vDPA, we have to use some sort of
->> virtio_pci_epf_send_command() to communicate with virtio backend right?
-> 
-> 
-> Right.
-> 
-> 
->>
->> Right, the layout is slightly different from the standard layout.
->>
->> This is the layout
->> struct epf_vhost_reg_queue {
->>          u8 cmd;
->>          u8 cmd_status;
->>          u16 status;
->>          u16 num_buffers;
->>          u16 msix_vector;
->>          u64 queue_addr;
-> 
-> 
-> What's the meaning of queue_addr here?
+v2: Add more description text in the new Kconfig settings (Bjorn).
 
-Using queue_addr, the virtio front-end communicates the address of the
-allocated memory for virtqueue to the virtio back-end.
-> 
-> Does not mean the device expects a contiguous memory for avail/desc/used
-> ring?
+v1: Original
 
-It's contiguous memory. Isn't this similar to other virtio transport
-(both PCI legacy and modern interface)?.
-> 
-> 
->> } __packed;
->>
->> struct epf_vhost_reg {
->>          u64 host_features;
->>          u64 guest_features;
->>          u16 msix_config;
->>          u16 num_queues;
->>          u8 device_status;
->>          u8 config_generation;
->>          u32 isr;
->>          u8 cmd;
->>          u8 cmd_status;
->>          struct epf_vhost_reg_queue vq[MAX_VQS];
->> } __packed;
->>>
->>> +static int virtio_pci_epf_send_command(struct virtio_pci_device
->>> *vp_dev,
->>> +                       u32 command)
->>> +{
->>> +    struct virtio_pci_epf *pci_epf;
->>> +    void __iomem *ioaddr;
->>> +    ktime_t timeout;
->>> +    bool timedout;
->>> +    int ret = 0;
->>> +    u8 status;
->>> +
->>> +    pci_epf = to_virtio_pci_epf(vp_dev);
->>> +    ioaddr = vp_dev->ioaddr;
->>> +
->>> +    mutex_lock(&pci_epf->lock);
->>> +    writeb(command, ioaddr + HOST_CMD);
->>> +    timeout = ktime_add_ms(ktime_get(), COMMAND_TIMEOUT);
->>> +    while (1) {
->>> +        timedout = ktime_after(ktime_get(), timeout);
->>> +        status = readb(ioaddr + HOST_CMD_STATUS);
->>> +
->>>
->>> Several questions:
->>>
->>> - It's not clear to me how the synchronization is done between the RC
->>> and EP. E.g how and when the value of HOST_CMD_STATUS can be changed.
->> The HOST_CMD (commands sent to the EP) is serialized by using mutex.
->> Once the EP reads the command, it resets the value in HOST_CMD. So
->> HOST_CMD is less likely an issue.
-> 
-> 
-> Here's my understanding of the protocol:
-> 
-> 1) RC write to HOST_CMD
-> 2) RC wait for HOST_CMD_STATUS to be HOST_CMD_STATUS_OKAY
+Jim Quinlan (1):
+  PCI: pcie_bus_config can be set at build time
 
-That's right!
-> 
-> It looks to me what EP should do is
-> 
-> 1) EP reset HOST_CMD after reading new command
+ drivers/pci/Kconfig | 56 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c   | 12 ++++++++++
+ 2 files changed, 68 insertions(+)
 
-That's right! It does.
-> 
-> And it looks to me EP should also reset HOST_CMD_STATUS here?
+-- 
+2.17.1
 
-yeah, that would require RC to send another command to reset the status.
-Didn't see it required in the normal scenario but good to add this.
-> 
-> (I thought there should be patch to handle stuffs like this but I didn't
-> find it in this series)
 
-This is added in [RFC PATCH 19/22] PCI: endpoint: Add EP function driver
-to provide VHOST interface
+--00000000000026cd9605af6f7cd2
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-pci_epf_vhost_cmd_handler() gets commands from RC using "reg->cmd;". On
-the EP side, it is local memory access (mapped to BAR memory exposed to
-the host) and hence accessed using structure member access.
-> 
-> 
->>
->> A sufficiently large time is given for the EP to complete it's operation
->> (1 Sec) where the EP provides the status in HOST_CMD_STATUS. After it
->> expires, HOST_CMD_STATUS_NONE is written to HOST_CMD_STATUS. There could
->> be case where EP updates HOST_CMD_STATUS after RC writes
->> HOST_CMD_STATUS_NONE, but by then HOST has already detected this as
->> failure and error-ed out.
->>  
->>> If you still want to introduce a new transport, a virtio spec patch
->>> would be helpful for us to understand the device API.
->> Okay, that should be on https://github.com/oasis-tcs/virtio-spec.git?
-> 
-> 
-> Yes.
-> 
-> 
->>> - You have you vendor specific layout (according to
->>> virtio_pci_epb_table()), so I guess you it's better to have a vendor
->>> specific vDPA driver instead
->> Okay, with vDPA, we are free to define our own layouts.
-> 
-> 
-> Right, but vDPA have other requirements. E.g it requires the device have
-> the ability to save/restore the state (e.g the last_avail_idx).
-> 
-> So it actually depends on what you want. If you don't care about
-> userspace drivers and want to have a standard transport, you can still
-> go virtio.
-
-okay.
-> 
-> 
->>> - The advantage of vendor specific vDPA driver is that it can 1) have
->>> less codes 2) support userspace drivers through vhost-vDPA (instead of
->>> inventing new APIs since we can't use vfio-pci here).
->> I see there's an additional level of indirection from virtio to vDPA and
->> probably no need for spec update but don't exactly see how it'll reduce
->> code.
-> 
-> 
-> AFAIK you don't need to implement your own setup_vq and del_vq.
-> 
-There should still be some entity that allocates memory for virtqueues
-and then communicate this address to the backend.
-
-Maybe I have to look this further.
-> 
->>
->> For 2, Isn't vhost-vdpa supposed to run on virtio backend?
-> 
-> 
-> Not currently, vDPA is a superset of virtio (e.g it support virtqueue
-> state save/restore). This it should be possible in the future probably.
-> 
-> 
->>
->>  From a high level, I think I should be able to use vDPA for
->> virtio_pci_epf.c. Would you also suggest using vDPA for ntb_virtio.c?
->> ([RFC PATCH 20/22] NTB: Add a new NTB client driver to implement VIRTIO
->> functionality).
-> 
-> 
-> I think it's your call. If you want
-> 
-> 1) a well-defined standard virtio transport
-> 2) willing to finalize d and maintain the spec
-> 3) doesn't care about userspace drivers
-
-IIUC, we can use vDPA (virtio_vdpa.c) but still don't need userspace
-drivers right?
-> 
-> You can go with virtio, otherwise vDPA.
-
-Okay, let me see. Thanks for your inputs.
-
-Best Regards,
-Kishon
+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
+mOxPm7sNHsn0TVdPryi9+T2d8fVC/kUmuEdTYP/Hdu4W4b4T9BcW57fInYrmaJ+uotS6X59rAgMB
+AAGjggHRMIIBzTAOBgNVHQ8BAf8EBAMCBaAwgZ4GCCsGAQUFBwEBBIGRMIGOME0GCCsGAQUFBzAC
+hkFodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3BlcnNvbmFsc2lnbjJzaGEy
+ZzNvY3NwLmNydDA9BggrBgEFBQcwAYYxaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL2dzcGVy
+c29uYWxzaWduMnNoYTJnMzBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYm
+aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBEBgNVHR8E
+PTA7MDmgN6A1hjNodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzcGVyc29uYWxzaWduMnNoYTJn
+My5jcmwwJQYDVR0RBB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYI
+KwYBBQUHAwQwHwYDVR0jBBgwFoAUaXKCYjFnlUSFd5GAxAQ2SZ17C2EwHQYDVR0OBBYEFNYm4GDl
+4WOt3laB3gNKFfYyaM8bMA0GCSqGSIb3DQEBCwUAA4IBAQBD+XYEgpG/OqeRgXAgDF8sa+lQ/00T
+wCP/3nBzwZPblTyThtDE/iaL/YZ5rdwqXwdCnSFh9cMhd/bnA+Eqw89clgTixvz9MdL9Vuo8LACI
+VpHO+sxZ2Cu3bO5lpK+UVCyr21y1zumOICsOuu4MJA5mtkpzBXQiA7b/ogjGxG+5iNjt9FAMX4JP
+V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
+lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
+5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
+di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIEbVJ6ES+J5E
+P6A59/JWBpTs201Z7DZw/fRaoXY+STGxMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMDkxNjE0NTcyMlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBRDV6GNvxO2va+VP70F7C7WK229Vxq
+63VshfzyleaX+w+afusCctYf10s884FAujE/lyf9yhM5h0dpSwGuB/qrX0ZWlbY0PmdyHiDPtr8v
+Hc12tV/KAJOvZP5FUHCgMYRsXLmmug/x9PMatc7E0IKkcMFakqdBikquBDna95hlzxufmlim//E4
+sKBEurw1P2L/r9iEW8GY0PO5EmbsFuimRcfufRVtMSPnhbl9ZHCpmffD9YACn3mrhnsrB3LfGIRt
+r23VHPFf8fL3wfYdVuDm9XdNwAXud/V1wtcT4UCj1GVoFvWMMFx+yB1c86P1emoU+P4YV/Qy7eue
+zcPMrN68
+--00000000000026cd9605af6f7cd2--
