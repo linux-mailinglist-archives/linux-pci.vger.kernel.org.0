@@ -2,86 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69C3D26C7AF
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 20:33:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0C9A26C98E
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Sep 2020 21:12:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgIPSdR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 14:33:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39600 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728020AbgIPSby (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 14:31:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id n14so4484509pff.6;
-        Wed, 16 Sep 2020 11:31:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6G5lOpVUlHWWGXIZ1jolJG0Sb394B1bYevllH8NK7Gc=;
-        b=N7Lc1NaJ8R7N6Y0VeN7vYBYr9KF16GgweSK+M2/iLBAdN0meYXlNTqfLMwvfTg0+Sk
-         Bbm9qkMuZS/SLl2TX0pJfBRIDLjDeQrnFjWPjq7ULPMzEoIQ/Dn0VAd8ZZmjihAVoETE
-         j7dWSEdx6g72B2s+Qc1RryNvVivm7xIB27rK8ZCPXZpvVCQoCwiZd7WoLXb8UwKufNGZ
-         SBJwgLfk+wtPdyhiJfULutPx9Cm4EY9YWmoR2vDRqMySSQoF3BWFTl21+VA1AZ0+t5Ne
-         NIgWTl+fD0V89WQHtgVoEKLFmJOR8VCI3TIYmT2MCym48lNKNfKcZd28iiaFv+yDaYTm
-         1C0g==
-X-Gm-Message-State: AOAM533BvBKBf/BO9+Y89ytUhg1C6pxCbVvFS0qbBxSfUsK/4ue1k4kf
-        dhE/UPSLFtLtBWAY1kTDsyXKWHYF5H75
-X-Google-Smtp-Source: ABdhPJzSoz+rtnLXZQoJdrYYoga5TX85PXPw9tY0/1eRJt6R8LO9wd1xaTDTXuLVykA3Ex3b8PSz4Q==
-X-Received: by 2002:a92:8e42:: with SMTP id k2mr6234382ilh.175.1600269881838;
-        Wed, 16 Sep 2020 08:24:41 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id o15sm10747097ilc.41.2020.09.16.08.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 08:24:40 -0700 (PDT)
-Received: (nullmailer pid 3994603 invoked by uid 1000);
-        Wed, 16 Sep 2020 15:24:38 -0000
-Date:   Wed, 16 Sep 2020 09:24:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Jim Quinlan <jquinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 05/10] PCI: brcmstb: Add bcm7278 PERST# support
-Message-ID: <20200916152438.GA3991893@bogus>
-References: <20200911175232.19016-1-james.quinlan@broadcom.com>
- <20200911175232.19016-6-james.quinlan@broadcom.com>
+        id S1726510AbgIPTMw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 15:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727311AbgIPRka (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Sep 2020 13:40:30 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F547206DC;
+        Wed, 16 Sep 2020 14:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600266462;
+        bh=xf7C1Nf+dJFmvaQcodvUwIxkZ93oC4yDDRg3Ab6MZsg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c4uFbMhTwi4BHj/2LpLqjR+WYtOsZzNWHmwdfZRh4ar5zF7i8hG5HAXnHypm+y0xD
+         TgTeq65DXiA+Oa3yijkvFwSp8K+bmWhPfx56pnAbXX+hI7YNF4T5Xb1cs8gXfXkNWG
+         ZXM/f3uqsjK9oHAhPridS5xYLtvrLlGemAjMrRkI=
+Date:   Wed, 16 Sep 2020 16:28:16 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "rui_feng@realsil.com.cn" <rui_feng@realsil.com.cn>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "puranjay12@gmail.com" <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "vailbhavgupta40@gmail.com" <vailbhavgupta40@gmail.com>
+Subject: Re: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix
+ driving parameter
+Message-ID: <20200916142816.GA2979962@kroah.com>
+References: <20200916123020.GA2796266@kroah.com>
+ <20200916133226.GA1535437@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200911175232.19016-6-james.quinlan@broadcom.com>
+In-Reply-To: <20200916133226.GA1535437@bjorn-Precision-5520>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 01:52:25PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
+On Wed, Sep 16, 2020 at 08:32:26AM -0500, Bjorn Helgaas wrote:
+> > So is it ok to take this patch now, or does it need to be changed any?
 > 
-> The PERST# bit was moved to a different register in 7278-type STB chips.
-> In addition, the polarity of the bit was also changed; for other chips
-> writing a 1 specified assert; for 7278-type chips, writing a 0 specifies
-> assert.  Of course, PERST# is a PCIe asserted-low signal.
+> Yes, it's OK with me if you take this patch.
 > 
-> While we are here, also change the bridge_sw_init_set() functions so like
-> the perst_set() functions they are chip specific and we no longer rely on
-> data wrt chip specific field mask and shift values.
+> The ASPM hardware feature is designed to work without any driver
+> support.  It does need to be configured, which involves both the
+> device and the upstream bridge, so it should be done by the BIOS or
+> the PCI core.  There are a few drivers (amdgpu, radeon, hfi1, e1000e,
+> iwlegacy, ath10k, ath9k, mt76, rtlwifi, rtw88, and these rts
+> cardreader drivers) that do it themselves, incorrectly.
 > 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 97 +++++++++++++++++++--------
->  1 file changed, 69 insertions(+), 28 deletions(-)
+> But this particular patch only *reads* the ASPM control registers,
+> without writing them, so it shouldn't make anything worse.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ok, thanks for the review, now queued up.
+
+greg k-h
