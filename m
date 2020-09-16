@@ -2,121 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DC7426CF0D
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 00:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8C9C26CF16
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 00:49:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgIPWpu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 18:45:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgIPWpr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 18:45:47 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533A4C061788
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 15:45:47 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id o8so126253otl.4
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 15:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mSPBN6R1sa+s+aXjb7bLc56lTmvRIEa3Tj0pNL1DtAs=;
-        b=Xyr66PPEDJ2lFdT1dZgEBP7yEoadnPkYbN2OeOWbUjE051q2HkIHFh2DY8Z0MZe6rR
-         Z+xXrgXrQtkqVs2JUo039Lstewge9fiTWYW3zFy0c5ynnVisMotuE2fCxMSskz/ON0wt
-         jfeV+IRhzMyXg0ckLRz/r2ChSXRhtwsCsjLxwIqYgEk1XnckrTTd7/RnTsFIfVi+qwJZ
-         S+LOSriDUUu7yzbGXYFQ55l/Q0+zvAvA63NoEMDTjYoqJmqu+Axhdg7HEz9ujJ1Mbt+k
-         ef9N+MmkdeybRs4009fkUu3460b0XWVVnC4udkVC/IUhIcOJDHf0b9WIl9FBOTMSM4+9
-         LxmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mSPBN6R1sa+s+aXjb7bLc56lTmvRIEa3Tj0pNL1DtAs=;
-        b=mn8BrWX65Tso9wB3U4Ih803wU+TSwNIDgg4QTqvylE8KJBNv6vq+vGYbsoiN9Xhopo
-         hlfi0CiXTP+cNROhghxrTXyFxFnYY0H8/TyskJZhGe+yk2nh7ZzOSnfYA4e5/KFmrESw
-         chHw0JNfV7Gv3eeVJPGlJiygmnugCEVMmqOK7x2bTHIo6M0kqqaYmYd7+A/vmLp+wfWg
-         vG0vHpC3F3/q0wjPhYe0JA0x5G0Sy2avzNTHnmC96I+3CXFPI2UbSTemrrpHvPZyaO9W
-         rhUXEzCJke6jLEGMCeHZYfVg9DnGt8I0RaSugjuhKxQxAseV/Ap/L+1p07RFZCQCePpX
-         qwJw==
-X-Gm-Message-State: AOAM533w29nugUAzCeaRlKf/w+FrkZ/CYdabRLNMlxFBxXXQM732XjVY
-        4MfReWL4SMMyy+gZfobauK3eZw==
-X-Google-Smtp-Source: ABdhPJxm0s45AtmEZVAKj5PYYYbpECFzxiWfua7H6FDMJJAeMl76CZ0dlEyNMoQn+qRQtUFYQhiRng==
-X-Received: by 2002:a9d:6219:: with SMTP id g25mr18071407otj.58.1600296346467;
-        Wed, 16 Sep 2020 15:45:46 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:7cad:6eff:fec8:37e4])
-        by smtp.gmail.com with ESMTPSA id c34sm9253888otb.69.2020.09.16.15.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 15:45:45 -0700 (PDT)
-Date:   Wed, 16 Sep 2020 17:45:41 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     agross@kernel.org, kishon@ti.com, vkoul@kernel.org,
-        robh@kernel.org, svarbanov@mm-sol.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgautam@codeaurora.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: phy: qcom,qmp: Document SM8250 PCIe PHY
- bindings
-Message-ID: <20200916224541.GF1893@yoga>
-References: <20200916132000.1850-1-manivannan.sadhasivam@linaro.org>
- <20200916132000.1850-2-manivannan.sadhasivam@linaro.org>
+        id S1726708AbgIPWtp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 18:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgIPWto (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Sep 2020 18:49:44 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8D5521D7D;
+        Wed, 16 Sep 2020 22:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600296584;
+        bh=RtnALUsgvrvWQLqClUZrqNctB+3lZ1evOkvlS2taoeU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=crGCSZ641vZjegrvb8M2mpC05dKgMtjPNTQfnLXJoDAF2BZATSoOlh+NZMlpYc351
+         J2z1uKB5ICQimkGVWDYnECXGdfHFTerm4HQgwdJihxCJFl53CP/OxwqHjGUVtyoEs5
+         HaL0DRKgE4heTkaqA7d3qQCFBVUv7kwJR/7cg4Q8=
+Date:   Wed, 16 Sep 2020 17:49:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, sathyanarayanan.kuppuswamy@linux.intel.com,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] PCI/RCEC: Add pcie_walk_rcec() to walk
+ associated RCiEPs
+Message-ID: <20200916224942.GA1594177@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200916132000.1850-2-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7B04CA9A-7332-4001-963B-E56642044F5D@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed 16 Sep 08:19 CDT 2020, Manivannan Sadhasivam wrote:
+On Mon, Sep 14, 2020 at 09:55:53AM -0700, Sean V Kelley wrote:
+> On 11 Sep 2020, at 17:50, Bjorn Helgaas wrote:
+> > On Fri, Sep 11, 2020 at 04:16:03PM -0700, Sean V Kelley wrote:
 
-> Document the DT bindings of below PCIe PHY versions used on SM8250:
+> > > I’ve done some experimenting with this approach, and I think
+> > > there may be a problem of just walking the busses during
+> > > enumeration pci_init_capabilities(). One problem is where one
+> > > has an RCEC on a root bus: 6a(00.4) and an RCiEP on another root
+> > > bus: 6b(00.0).  They will never find each other in this approach
+> > > through a normal pci_bus_walk() call using their respective
+> > > root_bus.
+> > > 
+> > > >  +-[0000:6b]-+-00.0
+> > > >  |           +-00.1
+> > > >  |           +-00.2
+> > > >  |           \-00.3
+> > > >  +-[0000:6a]-+-00.0
+> > > >  |           +-00.1
+> > > >  |           +-00.2
+> > > >  |           \-00.4
+> > 
+> > Wow, is that even allowed?
+> > 
+> > There's no bridge from 0000:6a to 0000:6b, so we will not scan 0000:6b
+> > unless we find a host bridge with _CRS where 6b is the first bus
+> > number below the bridge.  I think that means this would have to be
+> > described in ACPI as two separate root bridges:
+> > 
+> >   ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 6a])
+> >   ACPI: PCI Root Bridge [PCI1] (domain 0000 [bus 6b])
 > 
-> QMP GEN3x1 PHY - 1 lane
-> QMP GEN3x2 PHY - 2 lanes
-> QMP Modem PHY - 2 lanes
+> Otherwise, the RCEC Associated Endpoint Extended Capabilities would have to
+> have explicitly mentioned a bridge?
 
-How about something like "Add the three PCIe PHYs found in SM8250 to the
-QMP binding"?
+I just meant that the enumeration algorithm starts with a PNP0A03
+device and searches the root bus from its _CRS, descending under any
+bridges it finds.  There's no PCI-to-PCI bridge from 6a to 6b (if
+there *were* such a bridge, 6b would not be a root bridge).
 
+> > I *guess* maybe it's allowed by the PCIe spec to have an RCEC and
+> > associated RCiEPs on separate root buses?  It seems awfully strange
+> > and not in character for PCIe, but I guess I can't point to language
+> > that prohibits it.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> index 185cdea9cf81..69b67f79075c 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> @@ -31,6 +31,9 @@ properties:
->        - qcom,sdm845-qmp-usb3-uni-phy
->        - qcom,sm8150-qmp-ufs-phy
->        - qcom,sm8250-qmp-ufs-phy
-> +      - qcom,qcom,sm8250-qmp-gen3x1-pcie-phy
-> +      - qcom,qcom,sm8250-qmp-gen3x2-pcie-phy
-> +      - qcom,qcom,sm8250-qmp-modem-pcie-phy
+> Yes, it should be possible.
 
-One "qcom," should be enough.
-
->  
->    reg:
->      items:
-> @@ -259,6 +262,8 @@ allOf:
->              enum:
->                - qcom,sdm845-qhp-pcie-phy
->                - qcom,sdm845-qmp-pcie-phy
-> +              - qcom,sm8250-qhp-pcie-phy
-> +              - qcom,sm8250-qmp-pcie-phy
-
-Adjust these.
-
-Regards,
-Bjorn
-
->      then:
->        properties:
->          clocks:
-> -- 
-> 2.17.1
-> 
+Ugh :)
