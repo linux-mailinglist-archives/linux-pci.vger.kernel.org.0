@@ -2,76 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84D7826E1D4
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 19:09:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7133A26E229
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 19:20:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgIQRJs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Sep 2020 13:09:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgIQRJh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Sep 2020 13:09:37 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68CB2221EC;
-        Thu, 17 Sep 2020 17:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600362576;
-        bh=nciZRCdNYJT5LRSin2ZAx5m8XyoA9EAOhiwakEqj6jQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SyiIfpHuIoW9U8P/nV2+0jm0bcVB6Hze+sQfLOfLnkLaijZwE9rxcNcykSSJazMY3
-         DLBGkjGNT7matV4WJxZ/nbNtbVuAXSE7fbQJTPhE50BXB9jJHwE9CbkTUGZnwMr7pj
-         h4y9H/qTr5CLR/UWtwFLkgmTJ1bOCCGpu9WZs8WU=
-Date:   Thu, 17 Sep 2020 12:09:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Clint Sbisa <csbisa@amazon.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jiri Kosina <trivial@kernel.org>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        David Woodhouse <dwmw@amazon.co.uk>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Trivial comment fixup for PCI mmap ifdefs
-Message-ID: <20200917170935.GA1710267@bjorn-Precision-5520>
+        id S1726460AbgIQRT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Sep 2020 13:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbgIQRTj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Sep 2020 13:19:39 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A89C061756;
+        Thu, 17 Sep 2020 10:19:24 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id r9so3091216ioa.2;
+        Thu, 17 Sep 2020 10:19:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CTx4SmzLTM9R4VIN+7JIqONJ9j1anOACjhRKh3TuGxY=;
+        b=NlrhQuY65CItYgVlKVrPYv/5crqW3ibCPMk9LN9mZtLDYC2iLLp/ETU5vCCGuErIjE
+         h4qWU0VLhRjQkqk1xSCZH2asba2SaNDkmFD4XttCbTy6eWVNuyRnmCIb9xscUb36id8v
+         MLsqGzk+7tnaveXKoLtKxPCaOPKBB53kpbYCcoiRfkIjtO8hahzl/SJZy9H3sWlBVYdY
+         CSxqbEFjDnEELiGL1KiqaHvZ/NyLS7Z0puxlVCqeXYDtKuZTgDs04ofRzeaH3lTvP0vC
+         bxY6mEr7nACVyzICjHlTGa7VTtd3PDKHJi/nhLM6M1lrkMWwHm5GSJFmugzlPnbqqwdM
+         iRCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CTx4SmzLTM9R4VIN+7JIqONJ9j1anOACjhRKh3TuGxY=;
+        b=ZPWB9nBEFHevL7fk2xu+THmlyq0/BcArg6AiHJCRF0AlHObGIp+vwCeu3Qd98gBjC2
+         Qwl0677jyB3KXVLu16c41QcJ/bF3fqJflHJvXFKwcZxBTu8p5p2eQvbvp99esfcnODJ6
+         +sVxdLBTEWUyyCNd5lWQLM5XkhPDX5j8tB6Zd0bKsU+G/OTwg+qe7WC/+tfqN7n30Rat
+         YuQed9fvJd7tTjnN+DnpJCaARIBY/oLOouyrUbsKC9L4SVUHwIq848x/8gVH4U6JijYM
+         Nr9caN98mV141+ueq3jLEgwSn4rAT4WvGfB9B2+lURDyAZE+7RDC7azG04CP4KNd0lAD
+         HzVg==
+X-Gm-Message-State: AOAM533+z1AnboCDgFfv+lReIW9bPjlpmXHfb8X7q8TLVjCmzRW+L/ba
+        GEtYKg0UjjIVDmZIEpwKCZzHyDe0ik0Cmw2Fs5UlS5mVbYk=
+X-Google-Smtp-Source: ABdhPJxEY+mHc6gjE46QOlMBUYdnQ3inoVgBHX0mg3UwNm23n6R5Yz3een21dvdSmgbc+3nYVeB0wUL4vk5Q2HVMZsY=
+X-Received: by 2002:a05:6638:1448:: with SMTP id l8mr27177276jad.83.1600363163802;
+ Thu, 17 Sep 2020 10:19:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821155121.nzxjeeoze4h5pone@amazon.com>
+References: <20200917071042.1909191-1-liushixin2@huawei.com> <20200917165143.GA1707439@bjorn-Precision-5520>
+In-Reply-To: <20200917165143.GA1707439@bjorn-Precision-5520>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 17 Sep 2020 10:19:13 -0700
+Message-ID: <CAKgT0Uf=TmW0SKWROPcwAOdoaXvLn3t6_ynUtPVoH64bnCRTww@mail.gmail.com>
+Subject: Re: [PATCH -next] PCI/IOV: use module_pci_driver to simplify the code
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Liu Shixin <liushixin2@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:51:21PM +0000, Clint Sbisa wrote:
-> The else/endif comments for pci_{create,remove}_resource_files were
-> not updated in commit f719582435afe9c7985206e42d804ea6aa315d33 ("PCI:
-> Add pci_mmap_resource_range() and use it for ARM64").
-> 
-> Signed-off-by: Clint Sbisa <csbisa@amazon.com>
+On Thu, Sep 17, 2020 at 9:56 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Alexander]
+>
+> On Thu, Sep 17, 2020 at 03:10:42PM +0800, Liu Shixin wrote:
+> > Use the module_pci_driver() macro to make the code simpler
+> > by eliminating module_init and module_exit calls.
+> >
+> > Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+>
+> Applied to pci/misc for v5.10, thanks!
 
-Applied to pci/misc for v5.10, thanks!
+The code below seems pretty straight forward.
 
-> ---
->  drivers/pci/pci-sysfs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 6d78df981d41..cfc67b208616 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1196,10 +1196,10 @@ static int pci_create_resource_files(struct pci_dev *pdev)
->  	}
->  	return 0;
->  }
-> -#else /* !HAVE_PCI_MMAP */
-> +#else /* ! (defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)) */
->  int __weak pci_create_resource_files(struct pci_dev *dev) { return 0; }
->  void __weak pci_remove_resource_files(struct pci_dev *dev) { return; }
-> -#endif /* HAVE_PCI_MMAP */
-> +#endif /* defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE) */
->  
->  /**
->   * pci_write_rom - used to enable access to the PCI ROM display
-> -- 
-> 2.23.3
-> 
+Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+> > ---
+> >  drivers/pci/pci-pf-stub.c | 14 +-------------
+> >  1 file changed, 1 insertion(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-pf-stub.c b/drivers/pci/pci-pf-stub.c
+> > index a0b2bd6c918a..45855a5e9fca 100644
+> > --- a/drivers/pci/pci-pf-stub.c
+> > +++ b/drivers/pci/pci-pf-stub.c
+> > @@ -37,18 +37,6 @@ static struct pci_driver pf_stub_driver = {
+> >       .probe                  = pci_pf_stub_probe,
+> >       .sriov_configure        = pci_sriov_configure_simple,
+> >  };
+> > -
+> > -static int __init pci_pf_stub_init(void)
+> > -{
+> > -     return pci_register_driver(&pf_stub_driver);
+> > -}
+> > -
+> > -static void __exit pci_pf_stub_exit(void)
+> > -{
+> > -     pci_unregister_driver(&pf_stub_driver);
+> > -}
+> > -
+> > -module_init(pci_pf_stub_init);
+> > -module_exit(pci_pf_stub_exit);
+> > +module_pci_driver(pf_stub_driver);
+> >
+> >  MODULE_LICENSE("GPL");
+> > --
+> > 2.25.1
+> >
