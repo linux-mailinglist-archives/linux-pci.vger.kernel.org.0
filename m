@@ -2,131 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6E6D26D02B
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 02:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D6AC26D0DC
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 03:52:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgIQAsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Sep 2020 20:48:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgIQAsA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 20:48:00 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4420AC06178C
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 17:39:42 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id n61so303352ota.10
-        for <linux-pci@vger.kernel.org>; Wed, 16 Sep 2020 17:39:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qnQdbtqxCDTIqKqOna77dN+ZLQyEkOzOK58YwCfa3H0=;
-        b=XBAadIW9bVAGcIfHj9raEdIjBWaRKYLD5ma49V74gb5amE/rxRwD89ELv8aJK5GhCF
-         g1V25+4dqH1vN3CXRDMj0Cp2+YXyDxcXTFX3mum5Mws9Tdj6d9KpshqpiQfJoW87E12v
-         iy2hdSvA4fm0U+tImJWAFOwoE04Qt1KzTZXbkGLU4IuttxOh0fp9voDy4ewqGNVrYqIO
-         6Zx26upjeuOiz1MaDt9bS1g/oR3eRrp5DYc24ayXEJI904gH/TBAsy5YsaZLDqKOMkDA
-         ACHMb3MYiUK8xyn5/jcZbEZ5UYahXAWyu5UWRg33iZUp1JgnSiTl1gp90GDwEhUpPnXa
-         gzsw==
+        id S1726047AbgIQBwt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Sep 2020 21:52:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43526 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgIQBws (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Sep 2020 21:52:48 -0400
+Received: by mail-io1-f68.google.com with SMTP id z25so402132iol.10;
+        Wed, 16 Sep 2020 18:52:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qnQdbtqxCDTIqKqOna77dN+ZLQyEkOzOK58YwCfa3H0=;
-        b=j1UWiwyq7BTYPSYey4Yf7QZ+gsrg6yX44nMKsEVkdRIu6MPYWVZqbZN9BC/KPYppWq
-         kDnQ7SZTh1HPDXSGTTdGG+bQTSTl5+VE+F+QJwFjSIYVvPjtwccp829HCSpiAHuXvpIq
-         Kv9mAT17gwsJSq/i56l98OPhRpFw9fk/mc3j4cIjZUckZ7+gzLgX84h3tkPSFp3Oq2O1
-         pKUWt9kA/vEaJH8W/WMgoR97p6HKdJ1+oXCFMye46a+G9GuRXiRm3aqlDcKP/F6DNnCu
-         9Fz03WJA9rR28hxOrKute++zoZmTM3rS1mB/6bsheWJsb4XER/IBGm+avDwKOppXBUAK
-         pLeg==
-X-Gm-Message-State: AOAM533yj6bpsb5LIeN2CQrKzxcBEWwGmcfzgyAhrxOStOHFeaxWGcku
-        KtHKKWyg7ddK4FllEIC8a3ifwA==
-X-Google-Smtp-Source: ABdhPJzYgxc/qCjtDcdsd3TwLr0HUaOJpA8OKmX8Hc2wBd9RfexwmyUmEf463C3CLCZQpPADunp2YQ==
-X-Received: by 2002:a9d:335:: with SMTP id 50mr3923676otv.90.1600303181463;
-        Wed, 16 Sep 2020 17:39:41 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:7cad:6eff:fec8:37e4])
-        by smtp.gmail.com with ESMTPSA id u2sm10507631oig.48.2020.09.16.17.39.39
+        bh=Eeo2RxIy09U3tisfj7sBhkZOIk4q9g2XE/z4whZwqUA=;
+        b=VKvawtrbKeud7wt2MBz0dL6srq13WxBpvOIwvUwOTd2f6K5I0BKkvafGXVke8vqAfa
+         egu0zDRneKT7+0ZY0jpDdVGUCWZIMOjUdSXXnFDM4JQL3SAciTSwWYRh6P/RmfgyLo9+
+         IiAcfkKIqFgfvA/RvskKs/kfvnL7lHSdzXcc4K+tGkbJaD2LpOD/ttNK1DHW6WWHOhu1
+         5+IhAp7I5NCEQ8x6WUfbCXJuKllaALMpbjImkL64mdXCrLsGDzBucBQlsyN2NNNKefpK
+         0fvv7q6QF010Z/nwbo5Sxzj7kx5WFVzoa7WerTNvCu/5uvOGPB9D4yvA3m9DrswLJSbX
+         7FuQ==
+X-Gm-Message-State: AOAM532chYa9Ya0NE6gL56i6cyofcgnTKJFTGvCYH5QJ4S+gnqCjshfK
+        w9Da6ULV6pStO7bmZreKYg==
+X-Google-Smtp-Source: ABdhPJwY6xr3vb1swKAQ5WvmeGwOnOBoBbtymdMSqkRnDHosXTbREj7fm0gsF54+Ft9qfMhdo+0Ahg==
+X-Received: by 2002:a6b:e206:: with SMTP id z6mr21772899ioc.208.1600307568030;
+        Wed, 16 Sep 2020 18:52:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id w70sm11885701ilk.87.2020.09.16.18.52.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 17:39:40 -0700 (PDT)
-Date:   Wed, 16 Sep 2020 19:39:37 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     agross@kernel.org, kishon@ti.com, vkoul@kernel.org,
-        robh@kernel.org, svarbanov@mm-sol.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgautam@codeaurora.org, devicetree@vger.kernel.org,
-        Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH 5/5] pci: controller: dwc: qcom: Harcode PCIe config SID
-Message-ID: <20200917003937.GI1893@yoga>
-References: <20200916132000.1850-1-manivannan.sadhasivam@linaro.org>
- <20200916132000.1850-6-manivannan.sadhasivam@linaro.org>
+        Wed, 16 Sep 2020 18:52:47 -0700 (PDT)
+Received: (nullmailer pid 680592 invoked by uid 1000);
+        Thu, 17 Sep 2020 01:52:45 -0000
+Date:   Wed, 16 Sep 2020 19:52:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>, linux-pci@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] PCI: iproc: Display PCIe Link information
+Message-ID: <20200917015245.GA678675@bogus>
+References: <20200915134541.14711-1-srinath.mannam@broadcom.com>
+ <20200915134541.14711-4-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200916132000.1850-6-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20200915134541.14711-4-srinath.mannam@broadcom.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed 16 Sep 08:20 CDT 2020, Manivannan Sadhasivam wrote:
-
-> Hardcode the PCIe config SID table value. This is needed to avoid random
-> MHI failure observed during reboot on SM8250.
+On Tue, Sep 15, 2020 at 07:15:41PM +0530, Srinath Mannam wrote:
+> After successful linkup more comprehensive information about PCIe link
+> speed and link width will be displayed to the console.
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> [mani: stripped out unnecessary settings and ported for upstream]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/pci/controller/pcie-iproc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index ca8ad354e09d..50748016ce96 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -57,6 +57,7 @@
->  #define PCIE20_PARF_SID_OFFSET			0x234
->  #define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
->  #define PCIE20_PARF_DEVICE_TYPE			0x1000
-> +#define PCIE20_PARF_BDF_TO_SID_TABLE_N		0x2000
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index cc5b7823edeb..8ef2d1fe392c 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -1479,6 +1479,7 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+>  {
+>  	struct device *dev;
+>  	int ret;
+> +	struct pci_dev *pdev;
+>  	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
 >  
->  #define PCIE20_ELBI_SYS_CTRL			0x04
->  #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
-> @@ -1290,6 +1291,9 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
->  	if (ret)
->  		goto err;
+>  	dev = pcie->dev;
+> @@ -1542,6 +1543,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+>  		goto err_power_off_phy;
+>  	}
 >  
-> +	writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N);
-> +	writel(0x01000100, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N + 0x054);
+> +	for_each_pci_bridge(pdev, host->bus) {
+> +		if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+> +			pcie_print_link_status(pdev);
+> +	}
 
-This needs to be properly implemented.
+If this information is useful for 1 host implementation, why not all of 
+them and put this in a common spot.
 
-The mechanism at hand is responsible for mapping BDFs by the means of a
-BDF->SID hash table.  Per the downstream kernel the hash is 256 entries
-of 32 bits registers.  The slot is selected by taking the crc8() of the
-BDF (in big endian) and in that slot encode the BDF in the upper 16
-bits, followed by the SID (relative to the first SID of the controller)
-in the next 8 and finally the index of the next entry in cases of
-collisions.
-
-Also like the downstream kernel you can extract this information from
-the iommu-map property. But note that the last cell in the iommu-map is
-"length", not mask as in the typical iommus property - so you would need
-to install "length" entries in the hash table, for each iommu-map.
-
-
-
-Finally, this was first introduced in SM8150, so it can not be done
-unconditionally in qcom_pcie_host_init(). The previous hardware used a
-different mechanism for configuring this information.
-
-Regards,
-Bjorn
-
-> +
->  	return 0;
->  err:
->  	qcom_ep_reset_assert(pcie);
-> -- 
-> 2.17.1
-> 
+Rob
