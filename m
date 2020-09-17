@@ -2,109 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7133A26E229
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 19:20:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9D7726E25F
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 19:29:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgIQRT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Sep 2020 13:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgIQRTj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Sep 2020 13:19:39 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A89C061756;
-        Thu, 17 Sep 2020 10:19:24 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id r9so3091216ioa.2;
-        Thu, 17 Sep 2020 10:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CTx4SmzLTM9R4VIN+7JIqONJ9j1anOACjhRKh3TuGxY=;
-        b=NlrhQuY65CItYgVlKVrPYv/5crqW3ibCPMk9LN9mZtLDYC2iLLp/ETU5vCCGuErIjE
-         h4qWU0VLhRjQkqk1xSCZH2asba2SaNDkmFD4XttCbTy6eWVNuyRnmCIb9xscUb36id8v
-         MLsqGzk+7tnaveXKoLtKxPCaOPKBB53kpbYCcoiRfkIjtO8hahzl/SJZy9H3sWlBVYdY
-         CSxqbEFjDnEELiGL1KiqaHvZ/NyLS7Z0puxlVCqeXYDtKuZTgDs04ofRzeaH3lTvP0vC
-         bxY6mEr7nACVyzICjHlTGa7VTtd3PDKHJi/nhLM6M1lrkMWwHm5GSJFmugzlPnbqqwdM
-         iRCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CTx4SmzLTM9R4VIN+7JIqONJ9j1anOACjhRKh3TuGxY=;
-        b=ZPWB9nBEFHevL7fk2xu+THmlyq0/BcArg6AiHJCRF0AlHObGIp+vwCeu3Qd98gBjC2
-         Qwl0677jyB3KXVLu16c41QcJ/bF3fqJflHJvXFKwcZxBTu8p5p2eQvbvp99esfcnODJ6
-         +sVxdLBTEWUyyCNd5lWQLM5XkhPDX5j8tB6Zd0bKsU+G/OTwg+qe7WC/+tfqN7n30Rat
-         YuQed9fvJd7tTjnN+DnpJCaARIBY/oLOouyrUbsKC9L4SVUHwIq848x/8gVH4U6JijYM
-         Nr9caN98mV141+ueq3jLEgwSn4rAT4WvGfB9B2+lURDyAZE+7RDC7azG04CP4KNd0lAD
-         HzVg==
-X-Gm-Message-State: AOAM533+z1AnboCDgFfv+lReIW9bPjlpmXHfb8X7q8TLVjCmzRW+L/ba
-        GEtYKg0UjjIVDmZIEpwKCZzHyDe0ik0Cmw2Fs5UlS5mVbYk=
-X-Google-Smtp-Source: ABdhPJxEY+mHc6gjE46QOlMBUYdnQ3inoVgBHX0mg3UwNm23n6R5Yz3een21dvdSmgbc+3nYVeB0wUL4vk5Q2HVMZsY=
-X-Received: by 2002:a05:6638:1448:: with SMTP id l8mr27177276jad.83.1600363163802;
- Thu, 17 Sep 2020 10:19:23 -0700 (PDT)
+        id S1726401AbgIQR2s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Sep 2020 13:28:48 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:14691 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgIQR20 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Sep 2020 13:28:26 -0400
+Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f639c8f0001>; Fri, 18 Sep 2020 01:27:43 +0800
+Received: from HKMAIL103.nvidia.com ([10.18.16.12])
+  by hkpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 17 Sep 2020 10:27:43 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate101.nvidia.com on Thu, 17 Sep 2020 10:27:43 -0700
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 17 Sep
+ 2020 17:27:39 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
+ by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Thu, 17 Sep 2020 17:27:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kOLcm7nhFVkO54mGu8VnCqfokE64/Gnwv95aC5KZZWJ8lN/9SghkYqpmEfgzQTLvNwvTL4oX/jmTO71AtD3KuLctYgbFmVu2Gpn+0Y4ah9seobrBkP54slGo8h1PFYqtYAgFw+r1HMHS/LUqMu4tCslQsmohCjr4VerJbrxE7K0EdZBoigU0Nr0GJft20GZFTWMEo7MlCn5GB8A2qE5nOmKLWNOM70TGn92OX2uoKSkOf0wNmIoWD564PfnwnV4zf9bZ18l0ZphD/wmnKzOlgqI1nqu6gVyBYUwI9SmWMrrorf0MVK4yfOxoF4pWzF9LjydxabS09usQuvUGwFq1UA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DAIQdb1o+TqXTuboiFpj1LQuKrJYaovCBe+643kFlus=;
+ b=QES9aITHBu/83+vWqm3YqH6RQUWYEyeGFWAW/sUAVrNqjOz/WEdvztAAB2hGe5kMqgzBhiBdH0mNjJk8TLcvFoa2JktiJOkq11MqinHi94ibWz/pMkVWIgVIYreWfIyiL1VUQjeQ1142pxzzKAZTE9a6rYvel60cYFZ4T4308R6u+ancsUOqSltfZr2XFpIX8RtnFZYWDwtMg2aCi0iFF4lQVvhsMVuyAN6njYgg9gc/IMA9W1ROHI3c0+47NzqQ6mY7gsnOOVdpunm5W5oPwK5EaEnH7uAdpgN56N1UiyVEK3ykCWH8aRFhGrhb0LP8kNyMlnxtIQrqNevMuYRiCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB4388.namprd12.prod.outlook.com (2603:10b6:5:2a9::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.13; Thu, 17 Sep
+ 2020 17:27:35 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3391.011; Thu, 17 Sep 2020
+ 17:27:35 +0000
+Date:   Thu, 17 Sep 2020 14:27:33 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <vkoul@kernel.org>, <megha.dey@intel.com>, <maz@kernel.org>,
+        <bhelgaas@google.com>, <tglx@linutronix.de>,
+        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
+        <ashok.raj@intel.com>, <yi.l.liu@intel.com>, <baolu.lu@intel.com>,
+        <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>,
+        <tony.luck@intel.com>, <jing.lin@intel.com>,
+        <dan.j.williams@intel.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <parav@mellanox.com>, <rafael@kernel.org>,
+        <netanelg@mellanox.com>, <shahafs@mellanox.com>,
+        <yan.y.zhao@linux.intel.com>, <pbonzini@redhat.com>,
+        <samuel.ortiz@intel.com>, <mona.hossain@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <x86@kernel.org>, <linux-pci@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+Subject: Re: [PATCH v3 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+Message-ID: <20200917172733.GU3699@nvidia.com>
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
+ <20200917150641.GM3699@nvidia.com>
+ <f4a085f1-f6de-2539-12fe-c7308d243a4a@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <f4a085f1-f6de-2539-12fe-c7308d243a4a@intel.com>
+X-ClientProxiedBy: MN2PR20CA0051.namprd20.prod.outlook.com
+ (2603:10b6:208:235::20) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-References: <20200917071042.1909191-1-liushixin2@huawei.com> <20200917165143.GA1707439@bjorn-Precision-5520>
-In-Reply-To: <20200917165143.GA1707439@bjorn-Precision-5520>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 17 Sep 2020 10:19:13 -0700
-Message-ID: <CAKgT0Uf=TmW0SKWROPcwAOdoaXvLn3t6_ynUtPVoH64bnCRTww@mail.gmail.com>
-Subject: Re: [PATCH -next] PCI/IOV: use module_pci_driver to simplify the code
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Liu Shixin <liushixin2@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0051.namprd20.prod.outlook.com (2603:10b6:208:235::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.14 via Frontend Transport; Thu, 17 Sep 2020 17:27:35 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kIxgz-000anV-Vd; Thu, 17 Sep 2020 14:27:33 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: adfef8a7-6826-4e79-4b6f-08d85b2ef781
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4388:
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB438871CFEEFCB4C5DA3C0178C23E0@DM6PR12MB4388.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QF0+8ygYyDBwTAANNptG8fvWvPHTnZpSG7jMyJtPLUSlsq402AF08ZcH+D8kX34auSYw9Q9wnkFcUsX2InZFsNQuKic0azIbBwHc5tV6sxcQRElguuc7ShEs5z37HfWuy7fLGrp4Xdiq7RCl3H1OghGaSvSAsQLx8Im1kyjuThMFAZqjrCoQRA+hQm+pApMbByEOEbEoYfXpz5SUprZqhmGjwo6NKsrMaYjNGB4/t1chrWw0g5XDhueulZ93ynZT0MF10VSsXiMYBcXMV3WjldA1uFASe2p3mGHZvioT1/697zKJeizSJm8VQ58SDOjc6aGsvatlOML22y9xMkBAMQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(9786002)(6916009)(186003)(4326008)(426003)(1076003)(36756003)(8936002)(478600001)(66946007)(66556008)(66476007)(7416002)(316002)(26005)(2906002)(9746002)(5660300002)(86362001)(33656002)(8676002)(2616005)(53546011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: /XGzkPPEep8Nk8bgHBO+R/f72fXbrSE4PYowZXGevP9T9ami3q99mngLjIp9MMy1TqSWaEoJdaLu+iv/R3mOJ5f/6L0MWLcCx9tVCl4z7VSuBZiE9Rurm68lh8zZJRxdD98fyyQ8+g4NcnwzcMR0ZO+L/N7qkiYQcHoMYdowpZ3QAkF4IBYg85OSJON0agHesV7LvPjAExMmy0YWnita20EnFuox1jy0+At7a5hVWRByHvzW5nn6kUA97A0Fdz8cl2/LKwmgUKRP+6YI5KL9a7kJRlnxUAPXTq9Ijp8qxsbOG9v4LY8ZHG9B/b90VOShgxbuNWPE0HgLeyF5prfvxRv1sREdpcP8PL+tOSAIMNAvDi0GVCQQMHBF1W5n41H61AG/8+vL1h8p2UwQNoXH92u+DApsKw4CTvtLwSPGnVW5vxuEDK/JRyN2dZQ+Lv8fHI0KaBzX4qZey9nGJ58bJiz655IgouFYHS7ZyVldrwK4Yydh0mjLrsLb3KwpD1ALGso9tG90IGCMgEj/p6Gc1OI2ihX1pR0mnSWv5tWFEzkcN/McVW4eTV865rDEihHNyVAtLpfsBQRpJdGMOBZHXVar8bze+cm+ZCrf0rrTYroW6VooUaH9+9rnqf8ELveFQ4nCGa/J38qF7MgXrYTPIA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: adfef8a7-6826-4e79-4b6f-08d85b2ef781
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2020 17:27:35.4702
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bsEJrJ5qjGrqMMK5IilBTB9utFW+SApcsnyWNL0bLkosUmbu7CoPxz7yKDEk/o7U
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4388
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1600363664; bh=DAIQdb1o+TqXTuboiFpj1LQuKrJYaovCBe+643kFlus=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
+         X-MS-Exchange-Transport-Forked:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=qhrWMDRrYz6jSZ+PmGksPiBNliFOS7eNxtq1mDwhbQuFLnuwIlssw5xP3i71Ho8bb
+         aM/lIIylxkeYoHG2IyWcmzhj9M76gXhjRKrlx/PRXvKS1vmCcLh2EIg8SwXuK7i57Y
+         ireJ7A+asmLuRwWIoc9qjPDMSJj7oauB5TNi09lkQrKRo9f+gUS8OrBc+GYg79nT+r
+         jyl7LXbpM2rbVOhyRQqSy988LF97iRbgtMNd0LEzQiLup/bnnEgiESI1bM2Tlb7HHs
+         C2SSWWCRuuxhCAJlWeXk6bfTV+ETvDklzelMcE4SeFCVAcc/rVQxNrfrWl48jfQ/xs
+         CbE6sIXXZK0zA==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 9:56 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Alexander]
->
-> On Thu, Sep 17, 2020 at 03:10:42PM +0800, Liu Shixin wrote:
-> > Use the module_pci_driver() macro to make the code simpler
-> > by eliminating module_init and module_exit calls.
-> >
-> > Signed-off-by: Liu Shixin <liushixin2@huawei.com>
->
-> Applied to pci/misc for v5.10, thanks!
+On Thu, Sep 17, 2020 at 10:15:24AM -0700, Dave Jiang wrote:
+> 
+> 
+> On 9/17/2020 8:06 AM, Jason Gunthorpe wrote:
+> > On Tue, Sep 15, 2020 at 04:27:35PM -0700, Dave Jiang wrote:
+> > >   drivers/dma/idxd/idxd.h                            |   65 +
+> > >   drivers/dma/idxd/init.c                            |  100 ++
+> > >   drivers/dma/idxd/irq.c                             |    6
+> > >   drivers/dma/idxd/mdev.c                            | 1089 ++++++++++++++++++++
+> > >   drivers/dma/idxd/mdev.h                            |  118 ++
+> > 
+> > It is common that drivers of a subsystem will be under that
+> > subsystem's directory tree. This allows the subsystem community to
+> > manage pages related to their subsystem and it's drivers.
+> > 
+> > Should the mdev parts be moved there?
+> 
+> I personally don't have a preference. I'll defer to Alex or Kirti to provide
+> that guidance. It may make certains things like dealing with dma fault
+> regions and etc easier using vfio calls from vfio_pci_private.h later on for
+> vSVM support. It also may be the better code review and maintenance domain
+> and alleviate Vinod having to deal with that portion since it's not
+> dmaengine domain.
 
-The code below seems pretty straight forward.
+That is the general reason, yes. Asking the dmaengine maintainer to
+review mdev just means it won't be reviewed properly.
 
-Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+This mistake has been made before and I view it as a lesson from the
+ARM SOC disaggregation.
 
-> > ---
-> >  drivers/pci/pci-pf-stub.c | 14 +-------------
-> >  1 file changed, 1 insertion(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-pf-stub.c b/drivers/pci/pci-pf-stub.c
-> > index a0b2bd6c918a..45855a5e9fca 100644
-> > --- a/drivers/pci/pci-pf-stub.c
-> > +++ b/drivers/pci/pci-pf-stub.c
-> > @@ -37,18 +37,6 @@ static struct pci_driver pf_stub_driver = {
-> >       .probe                  = pci_pf_stub_probe,
-> >       .sriov_configure        = pci_sriov_configure_simple,
-> >  };
-> > -
-> > -static int __init pci_pf_stub_init(void)
-> > -{
-> > -     return pci_register_driver(&pf_stub_driver);
-> > -}
-> > -
-> > -static void __exit pci_pf_stub_exit(void)
-> > -{
-> > -     pci_unregister_driver(&pf_stub_driver);
-> > -}
-> > -
-> > -module_init(pci_pf_stub_init);
-> > -module_exit(pci_pf_stub_exit);
-> > +module_pci_driver(pf_stub_driver);
-> >
-> >  MODULE_LICENSE("GPL");
-> > --
-> > 2.25.1
-> >
+Jason
