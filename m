@@ -2,91 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF43B26E278
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 19:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 031FF26E27D
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 19:33:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgIQRcd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Sep 2020 13:32:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
+        id S1726582AbgIQRdT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Sep 2020 13:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726458AbgIQRca (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Sep 2020 13:32:30 -0400
+        id S1726574AbgIQRdN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Sep 2020 13:33:13 -0400
 Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C07192137B;
-        Thu, 17 Sep 2020 17:32:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB6CB20725;
+        Thu, 17 Sep 2020 17:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600363950;
-        bh=FILNgR3grz7ZmaIuphzbDr2tocKVxDkRDNJ9MW8uHO8=;
+        s=default; t=1600363992;
+        bh=nWMmHBbmbhvD0r3jch7hRRWF1Si4T12WC6cr5pBZNrg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=q1NiPFr0WX2V61U67EWEAEyuEvbVfQ1B0TP8bOtiop0XX1i44JmzvhAYANhZrb6uj
-         CJbIex+ECShGfs9IKcfqjZ7N6KXm/2WXG0UwmLFcEcep+q5GiLKIeztbAsdg8SNF3e
-         eD1Dtgw+Rwm6iRckSqOLZKg5XKG1IG+Dp3iqqYuo=
-Date:   Thu, 17 Sep 2020 12:32:28 -0500
+        b=L3luejnWrrhIOPgufNxNcgkKfqMiqRm0e0ut9HolHPjqCnIUJDh/uwGOsXPs+m6SR
+         Tw8e53m+oxpIfW5L9CVoYtbvsKJ1F4DDagmY26li9FqW+LjtoJXn/eIyVritbDSTuX
+         CS9GkCeugNA6yt3l74Yb3KjZ/cu1jYfe7WJH9GBQ=
+Date:   Thu, 17 Sep 2020 12:33:10 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiang Biao <benbjiang@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in
- pci_read_config
-Message-ID: <20200917173228.GA1713970@bjorn-Precision-5520>
+To:     Tuan Phan <tuanphan@os.amperecomputing.com>
+Cc:     patches@amperecomputing.com, Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
+Message-ID: <20200917173310.GA1714144@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824052025.48362-1-benbjiang@tencent.com>
+In-Reply-To: <1596751055-12316-1-git-send-email-tuanphan@os.amperecomputing.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
-> From: Jiang Biao <benbjiang@tencent.com>
+On Thu, Aug 06, 2020 at 02:57:34PM -0700, Tuan Phan wrote:
+> Ampere Altra SOC supports only 32-bit ECAM reading. Therefore,
+> add an MCFG quirk for the platform.
 > 
-> pci_read_config() could block several ms in kernel space, mainly
-> caused by the while loop to call pci_user_read_config_dword().
-> Singel pci_user_read_config_dword() loop could consume 130us+,
->               |    pci_user_read_config_dword() {
->               |      _raw_spin_lock_irq() {
-> ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> ! 137.582 us  |      }
->               |      pci_read() {
->               |        raw_pci_read() {
->               |          pci_conf1_read() {
->   0.230 us    |            _raw_spin_lock_irqsave();
->   0.035 us    |            _raw_spin_unlock_irqrestore();
->   8.476 us    |          }
->   8.790 us    |        }
->   9.091 us    |      }
-> ! 147.263 us  |    }
-> and dozens of the loop could consume ms+.
-> 
-> If we execute some lspci commands concurrently, ms+ scheduling
-> latency could be detected.
-> 
-> Add scheduling chance in the loop to improve the latency.
-> 
-> Reported-by: Bin Lai <robinlai@tencent.com>
-> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
 
 Applied to pci/enumeration for v5.10, thanks!
 
 > ---
->  drivers/pci/pci-sysfs.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/acpi/pci_mcfg.c  | 20 ++++++++++++++++++++
+>  drivers/pci/ecam.c       | 10 ++++++++++
+>  include/linux/pci-ecam.h |  1 +
+>  3 files changed, 31 insertions(+)
 > 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 6d78df9..3b9f63d 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -708,6 +708,7 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
->  		data[off - init_off + 3] = (val >> 24) & 0xff;
->  		off += 4;
->  		size -= 4;
-> +		cond_resched();
->  	}
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index 54b36b7ad47d..e526571e0ebd 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -142,6 +142,26 @@ static struct mcfg_fixup mcfg_quirks[] = {
+>  	XGENE_V2_ECAM_MCFG(4, 0),
+>  	XGENE_V2_ECAM_MCFG(4, 1),
+>  	XGENE_V2_ECAM_MCFG(4, 2),
+> +
+> +#define ALTRA_ECAM_QUIRK(rev, seg) \
+> +	{ "Ampere", "Altra   ", rev, seg, MCFG_BUS_ANY, &pci_32b_read_ops }
+> +
+> +	ALTRA_ECAM_QUIRK(1, 0),
+> +	ALTRA_ECAM_QUIRK(1, 1),
+> +	ALTRA_ECAM_QUIRK(1, 2),
+> +	ALTRA_ECAM_QUIRK(1, 3),
+> +	ALTRA_ECAM_QUIRK(1, 4),
+> +	ALTRA_ECAM_QUIRK(1, 5),
+> +	ALTRA_ECAM_QUIRK(1, 6),
+> +	ALTRA_ECAM_QUIRK(1, 7),
+> +	ALTRA_ECAM_QUIRK(1, 8),
+> +	ALTRA_ECAM_QUIRK(1, 9),
+> +	ALTRA_ECAM_QUIRK(1, 10),
+> +	ALTRA_ECAM_QUIRK(1, 11),
+> +	ALTRA_ECAM_QUIRK(1, 12),
+> +	ALTRA_ECAM_QUIRK(1, 13),
+> +	ALTRA_ECAM_QUIRK(1, 14),
+> +	ALTRA_ECAM_QUIRK(1, 15),
+>  };
 >  
->  	if (size >= 2) {
+>  static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
+> index 8f065a42fc1a..b54d32a31669 100644
+> --- a/drivers/pci/ecam.c
+> +++ b/drivers/pci/ecam.c
+> @@ -168,4 +168,14 @@ const struct pci_ecam_ops pci_32b_ops = {
+>  		.write		= pci_generic_config_write32,
+>  	}
+>  };
+> +
+> +/* ECAM ops for 32-bit read only (non-compliant) */
+> +const struct pci_ecam_ops pci_32b_read_ops = {
+> +	.bus_shift	= 20,
+> +	.pci_ops	= {
+> +		.map_bus	= pci_ecam_map_bus,
+> +		.read		= pci_generic_config_read32,
+> +		.write		= pci_generic_config_write,
+> +	}
+> +};
+>  #endif
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index 1af5cb02ef7f..033ce74f02e8 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -51,6 +51,7 @@ extern const struct pci_ecam_ops pci_generic_ecam_ops;
+>  
+>  #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+>  extern const struct pci_ecam_ops pci_32b_ops;	/* 32-bit accesses only */
+> +extern const struct pci_ecam_ops pci_32b_read_ops; /* 32-bit read only */
+>  extern const struct pci_ecam_ops hisi_pcie_ops;	/* HiSilicon */
+>  extern const struct pci_ecam_ops thunder_pem_ecam_ops; /* Cavium ThunderX 1.x & 2.x */
+>  extern const struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
 > -- 
-> 1.8.3.1
+> 2.18.4
 > 
