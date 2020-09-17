@@ -2,277 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 717F326E449
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 20:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E5AC26E578
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Sep 2020 21:54:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgIQSnq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Sep 2020 14:43:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49584 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726507AbgIQSnp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Sep 2020 14:43:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600368215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=dZv9dt2ed12j3IyCoFGh5jr70B/K0OY49garRCUq3u0=;
-        b=TjAU5P/JIlSyzWp4uuq4BrBUSRxbtQsujxyai2wE9c8T3d6JfYvG9GYmNERpmJG2D256hF
-        K343LKinzXWx7raIbAgA5F+430X8zjitRGyELfbty12ZbscTvLGvjZRIHx1k5EAIRKXvs+
-        Whb+LWh49OUx4YQVrSmOUA/cHDWLQpE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-AHZEaX63PWSWj8WezI2lUQ-1; Thu, 17 Sep 2020 14:43:32 -0400
-X-MC-Unique: AHZEaX63PWSWj8WezI2lUQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5F88107465C;
-        Thu, 17 Sep 2020 18:43:28 +0000 (UTC)
-Received: from [10.10.112.95] (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1759855761;
-        Thu, 17 Sep 2020 18:43:26 +0000 (UTC)
-Subject: Re: [RFC][Patch v1 1/3] sched/isolation: API to get num of
- hosekeeping CPUs
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, frederic@kernel.org,
-        mtosatti@redhat.com, sassmann@redhat.com,
-        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
-        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
-        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        thomas.lendacky@amd.com, jerinj@marvell.com,
-        mathias.nyman@intel.com, jiri@nvidia.com,
-        "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-References: <20200909150818.313699-1-nitesh@redhat.com>
- <20200909150818.313699-2-nitesh@redhat.com>
- <20200917111807.00002eac@intel.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <801be69a-0881-aa84-16fb-4b5782d95860@redhat.com>
-Date:   Thu, 17 Sep 2020 14:43:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1728316AbgIQQMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Sep 2020 12:12:54 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14651 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727992AbgIQPOj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Sep 2020 11:14:39 -0400
+X-Greylist: delayed 316 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 11:13:04 EDT
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f637b320000>; Thu, 17 Sep 2020 08:05:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 17 Sep 2020 08:06:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 17 Sep 2020 08:06:51 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 17 Sep
+ 2020 15:06:46 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
+ by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Thu, 17 Sep 2020 15:06:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PaouiH4n4ErE8MgvABbxLCQ8NNZs8aSo4+tV8bhHZOaJB0s4LjB/570uBuE/fmfMxHH3ZmduM5khcoY31WjUMV1N44LjcCo9pYdfSHVK9Ln9y/k2MjZdNNr5jduPSWgU2/hqCw3B+mPQdeUOOOaZm/t2JVcPuojcYIrYHrlUSQ+DjA6R/1jhWThc6raOsaxiPli8lrIJkBX+yVupOO6SI0Qz37B6YdTojhUP73ou9wQwON1O4PzEShGxEqFm5OigcJhuI4GcB5Bep+GXu50v7An3T8T6zNTDkzWGVzFgkF60R8ni3yGkTG5pO6Xg3F0cDODOXC0MbrHIdn3VbJ+6wQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=114Y2T88q57MBNudUVjmRHVj56PrRbxje7YL3eLOgpc=;
+ b=itUv+b9inYpmbtDitHrXGJNyv/upb/FlC+5QezbRKFRPWKaqQeDZotU7rCyHYjjeAqgNVR2PmQzCzy62xIsreZKRM4IymrOraaRVHpV4Q1Vjr1zpyF4e+8CTx4P9+8+W/eHHjp7ufRwVSUHj3Mf6hjhJUrDGmLQ6VOGg/xdVlra8RZbPcJMNdTbd59ZrX24CPJ8lfuFnqx99Yju3Yq8OTGPJArstX4KDPWzFpXJ3DIUbM7a2NluG5jEl5fDTAUP/GaP0va0FphGUUOyJrN6EGBgOPiNnarQTvy9TASVV+44sthf6MrTVvOoPk2khdPa7ZsMb42DyJfHPjddELy9JUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR1201MB2491.namprd12.prod.outlook.com (2603:10b6:3:eb::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.11; Thu, 17 Sep
+ 2020 15:06:43 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3391.011; Thu, 17 Sep 2020
+ 15:06:43 +0000
+Date:   Thu, 17 Sep 2020 12:06:41 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <vkoul@kernel.org>, <megha.dey@intel.com>, <maz@kernel.org>,
+        <bhelgaas@google.com>, <tglx@linutronix.de>,
+        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
+        <ashok.raj@intel.com>, <yi.l.liu@intel.com>, <baolu.lu@intel.com>,
+        <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>,
+        <tony.luck@intel.com>, <jing.lin@intel.com>,
+        <dan.j.williams@intel.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <parav@mellanox.com>, <rafael@kernel.org>,
+        <netanelg@mellanox.com>, <shahafs@mellanox.com>,
+        <yan.y.zhao@linux.intel.com>, <pbonzini@redhat.com>,
+        <samuel.ortiz@intel.com>, <mona.hossain@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <x86@kernel.org>, <linux-pci@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+Subject: Re: [PATCH v3 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+Message-ID: <20200917150641.GM3699@nvidia.com>
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
+X-ClientProxiedBy: MN2PR20CA0007.namprd20.prod.outlook.com
+ (2603:10b6:208:e8::20) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-In-Reply-To: <20200917111807.00002eac@intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="sykWZyGOxPzNSXIvsAWNzG6mWTo7RX3SY"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0007.namprd20.prod.outlook.com (2603:10b6:208:e8::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.11 via Frontend Transport; Thu, 17 Sep 2020 15:06:43 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kIvUf-000Vd8-NX; Thu, 17 Sep 2020 12:06:41 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bccbaf2a-957d-4e09-50a0-08d85b1b49c8
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB2491:
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB2491721156D926F5F4B89FB6C23E0@DM5PR1201MB2491.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6yAtT1XdRgC4Tr2yBdCiSdlwK98sT3HL/OctJNRgtMYihmDURcWZ4RNMrTxoNGaQoVdOgUPkgBvuLfE7bR5t3ixiNubzyesqalZF0YZKMKUIT4q6lCLl9yY3MMXooZefKcDP7/N4bUs62zdi2qETEoUzGhanFo9g6Jz1LQCLLXWgv8qCWg2y6JcePH7JQXKOvcj/CUkmE3Zny/nxQESZSyezdZVXK2LmmGC9mXPpReD7UMobrw7GV0cB+JDAGh/IYNeDRP0owMC+L5uQssMHOgsTDmA9fjMGNZjPuxRC8vFf7589r7zGVeIRI5PXCzV2ACwY4WI9Hn3XAfE9bEaouQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(2616005)(4326008)(26005)(478600001)(426003)(9746002)(8936002)(316002)(9786002)(66946007)(36756003)(66476007)(6916009)(66556008)(186003)(86362001)(5660300002)(2906002)(7416002)(1076003)(4744005)(8676002)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: wz44S5/4xKHMatAoEOzW6QLXSoBHGQ6KPpg1nZx2Pg357zehDRqnMSHCVsZJtW02/X6re0FFsXw1SNBnZlHV/PviCVoAAceZTfuGGipRRWTMjurYzbMN5J8inDJ1kMilri6rR+lPJXLLV+504aomDMhg/Mhsz7RVb7BpGL6NvR8MRbTLyPglkwdHeuzeyOMMk/ua9x/4EfO1Ru+ZZ3ksUVnD083nGihrXbGnzAyPOV/aNyhR9nzR+IDZbfLGmr+T0jpQm7BzvOY+KkeX+xzpbCm+Af/l6YMmyoCadYboe1Ps5oimKXld0jwRy76WtBAbnxu59ZbBL7oDdwMRM7c6Tp0zmP2lTi4gHU1sHo0xCng5Vp0PeazJ6zDB+PhJYkIu1VVoxy6H96ggsleOS7MBgLEuO5oWWtG/H39mRV9xHfy7qk8PKTdBIpopjiyovUiRxv7aED9BePZxnEFNNYefVpOXLbQbcJtzzPpOnrnWMiaEptg/yUq5PYV+6rxkbAytTLUMF5IJwS98cqvjrcweGUvsUrV1GaoWeYg+6dKJty/oa6jaOZo+rJnkjmyc41fycGEhI62jxzRi1p29acXYr69GUK9WE1cAPQQs+zZqWt8FoZOhaTt4Gsb68JZg6m4MR50f6iNusS84+5c0B4CINg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: bccbaf2a-957d-4e09-50a0-08d85b1b49c8
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2020 15:06:43.5812
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dlEWRP432d/DwfghM1HLQebsf3OoblkOq7294K2KiaIYQjAu7w1tX7oJD9P+3vI1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB2491
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1600355122; bh=114Y2T88q57MBNudUVjmRHVj56PrRbxje7YL3eLOgpc=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
+         X-MS-Exchange-Transport-Forked:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=OK4zWo/8KihA2516nS+iwg45+PxYr80VnS+otJWUh0qRbJjkc2cJaMws8USTtE4NZ
+         AveRUHeC+Dn3Luw444tLUUvGUr5sncuBRrzUfJa8woLOquO1gLA8vejIrRFfy61o2Q
+         ZgR4SDH+NCBSRtSTNNPYOkJwTE7IvvmjwPHIV1d4ND3B3skMkWI+IQdo77BqOOP+Bx
+         B5KUaIJfOrFTYWO7puimsDFAh+EXzDvz+cYzkqGhpbcM1mEW0p65vDMgRyE/GqGnHv
+         W8zfDNztMIn3jTcVnBarHTMQG2KJ//KFkJikKYelyPAXIM69hB5WJ1V/FY9/yyV6Nc
+         O5dSbo7ehvRLg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---sykWZyGOxPzNSXIvsAWNzG6mWTo7RX3SY
-Content-Type: multipart/mixed; boundary="BkC94I1bakvFQJfqXdJVK6b9RIlJxfRoY"
+On Tue, Sep 15, 2020 at 04:27:35PM -0700, Dave Jiang wrote:
+>  drivers/dma/idxd/idxd.h                            |   65 +
+>  drivers/dma/idxd/init.c                            |  100 ++
+>  drivers/dma/idxd/irq.c                             |    6 
+>  drivers/dma/idxd/mdev.c                            | 1089 ++++++++++++++++++++
+>  drivers/dma/idxd/mdev.h                            |  118 ++
 
---BkC94I1bakvFQJfqXdJVK6b9RIlJxfRoY
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+It is common that drivers of a subsystem will be under that
+subsystem's directory tree. This allows the subsystem community to
+manage pages related to their subsystem and it's drivers.
 
+Should the mdev parts be moved there?
 
-On 9/17/20 2:18 PM, Jesse Brandeburg wrote:
-> Nitesh Narayan Lal wrote:
->
->> Introduce a new API num_housekeeping_cpus(), that can be used to retriev=
-e
->> the number of housekeeping CPUs by reading an atomic variable
->> __num_housekeeping_cpus. This variable is set from housekeeping_setup().
->>
->> This API is introduced for the purpose of drivers that were previously
->> relying only on num_online_cpus() to determine the number of MSIX vector=
-s
->> to create. In an RT environment with large isolated but a fewer
->> housekeeping CPUs this was leading to a situation where an attempt to
->> move all of the vectors corresponding to isolated CPUs to housekeeping
->> CPUs was failing due to per CPU vector limit.
->>
->> If there are no isolated CPUs specified then the API returns the number
->> of all online CPUs.
->>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  include/linux/sched/isolation.h |  7 +++++++
->>  kernel/sched/isolation.c        | 23 +++++++++++++++++++++++
->>  2 files changed, 30 insertions(+)
-> I'm not a scheduler expert, but a couple comments follow.
->
->> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isola=
-tion.h
->> index cc9f393e2a70..94c25d956d8a 100644
->> --- a/include/linux/sched/isolation.h
->> +++ b/include/linux/sched/isolation.h
->> @@ -25,6 +25,7 @@ extern bool housekeeping_enabled(enum hk_flags flags);
->>  extern void housekeeping_affine(struct task_struct *t, enum hk_flags fl=
-ags);
->>  extern bool housekeeping_test_cpu(int cpu, enum hk_flags flags);
->>  extern void __init housekeeping_init(void);
->> +extern unsigned int num_housekeeping_cpus(void);
->> =20
->>  #else
->> =20
->> @@ -46,6 +47,12 @@ static inline bool housekeeping_enabled(enum hk_flags=
- flags)
->>  static inline void housekeeping_affine(struct task_struct *t,
->>  =09=09=09=09       enum hk_flags flags) { }
->>  static inline void housekeeping_init(void) { }
->> +
->> +static unsigned int num_housekeeping_cpus(void)
->> +{
->> +=09return num_online_cpus();
->> +}
->> +
->>  #endif /* CONFIG_CPU_ISOLATION */
->> =20
->>  static inline bool housekeeping_cpu(int cpu, enum hk_flags flags)
->> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
->> index 5a6ea03f9882..7024298390b7 100644
->> --- a/kernel/sched/isolation.c
->> +++ b/kernel/sched/isolation.c
->> @@ -13,6 +13,7 @@ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
->>  EXPORT_SYMBOL_GPL(housekeeping_overridden);
->>  static cpumask_var_t housekeeping_mask;
->>  static unsigned int housekeeping_flags;
->> +static atomic_t __num_housekeeping_cpus __read_mostly;
->> =20
->>  bool housekeeping_enabled(enum hk_flags flags)
->>  {
->> @@ -20,6 +21,27 @@ bool housekeeping_enabled(enum hk_flags flags)
->>  }
->>  EXPORT_SYMBOL_GPL(housekeeping_enabled);
->> =20
->> +/*
-> use correct kdoc style, and you get free documentation from your source
-> (you're so close!)
->
-> should be (note the first line and the function title line change to
-> remove parens:
-> /**
->  * num_housekeeping_cpus - Read the number of housekeeping CPUs.
->  *
->  * This function returns the number of available housekeeping CPUs
->  * based on __num_housekeeping_cpus which is of type atomic_t
->  * and is initialized at the time of the housekeeping setup.
->  */
-
-My bad, I missed that.
-Thanks for pointing it out.
-
->
->> + * num_housekeeping_cpus() - Read the number of housekeeping CPUs.
->> + *
->> + * This function returns the number of available housekeeping CPUs
->> + * based on __num_housekeeping_cpus which is of type atomic_t
->> + * and is initialized at the time of the housekeeping setup.
->> + */
->> +unsigned int num_housekeeping_cpus(void)
->> +{
->> +=09unsigned int cpus;
->> +
->> +=09if (static_branch_unlikely(&housekeeping_overridden)) {
->> +=09=09cpus =3D atomic_read(&__num_housekeeping_cpus);
->> +=09=09/* We should always have at least one housekeeping CPU */
->> +=09=09BUG_ON(!cpus);
-> you need to crash the kernel because of this? maybe a WARN_ON? How did
-> the global even get set to the bad value? It's going to blame the poor
-> caller for this in the trace, but the caller likely had nothing to do
-> with setting the value incorrectly!
-
-Yes, ideally this should not be triggered, but if somehow it does then we h=
-ave
-a bug and that needs to be fixed. That's probably the only reason why I cho=
-se
-BUG_ON.
-But, I am not entirely against the usage of WARN_ON either, because we get =
-a
-stack trace anyways.
-I will see if anyone else has any other concerns on this patch and then I c=
-an
-post the next version.
-
->
->> +=09=09return cpus;
->> +=09}
->> +=09return num_online_cpus();
->> +}
->> +EXPORT_SYMBOL_GPL(num_housekeeping_cpus);
---=20
-Thanks
-Nitesh
-
-
---BkC94I1bakvFQJfqXdJVK6b9RIlJxfRoY--
-
---sykWZyGOxPzNSXIvsAWNzG6mWTo7RX3SY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9jrkwACgkQo4ZA3AYy
-oznAWQ/+LNkoBk/opDhpsa3BUvZBuRu+Mp2kh8m0YneZxK9li3b9N6fM5GJBplXR
-d380EKHI1vG7kNtpAezeAzqHNZdP0o6Ot2cdjRq63Czg+VL2j/BHmNxyUAZtJBtL
-owamuPgrp5E4TQGr8en6KpdI0PnrzqFN+ZkwEOx4LzOr1xaTssYwLhN0bhrle0jm
-uiImRTTxmmM2HhTKne4l3d9qzoS4ty79sbv/Tm6Gb/zIOQ5OXKlZKK7F6OWKk6iD
-0zVSPUERIoLJcsSUah4qxc6OCdE5z2jyuex1YcXLyVpHc7g0GilIqS7FjdkvS8ja
-tD9HJYivZvkFSukXpTn3DtlRdKIU6Bd16NdSsbx1WYCkf1IHhKDk66vpIo0MJNm/
-Q/9fpXQvZxam6heCt2/q4iy3PeGzdeGYng6GeyfrBT+YafZIIbBwH/jFm9wBzaXa
-4z1K3Pdx9Hr4ie+/XtaUoPXE/bT5QiJf4HAWlxDg3jrgj2UCpJhR9tWDYOYA29bR
-cz11jmYhWZyiStM179jEh3gnesOCL8T1aLGqxaMrLnZq/JdxAT+xK10VBy9j4Fiu
-Cr3JGvPZYGRriLMZXVR9/qiJbNVqEfgVAsasbE8VLsLjIgCggzuRUyj3OeUAJB4S
-uffEQdi3B1u31+2GH2yXdIv4yq0X6rtPnfTxEv1ti2Xbor4U8yc=
-=wCvB
------END PGP SIGNATURE-----
-
---sykWZyGOxPzNSXIvsAWNzG6mWTo7RX3SY--
-
+Jason
