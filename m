@@ -2,254 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7E02703B2
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 20:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C29E2703C9
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 20:12:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgIRSGP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Sep 2020 14:06:15 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53110 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgIRSGP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 14:06:15 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08I6jdH5017057;
-        Fri, 18 Sep 2020 01:45:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1600411539;
-        bh=4Fz6/znawPVT5Re4ej/ysxXwiAWhNVKJ7aypY2BXCzQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=mVxwBxqwGtRZgIAHkivTPqF/U/ubKRhnIOMmhlolmOzQnoFUQGlVGAV+8QgUcZD2M
-         obN11TQc/sd9OXrkADV9LKobO/HDEeoFi8GjRhkWPSD8aOSacp1r6+TXNCxBhIfHks
-         XK0L++DEqTmHC8uVZgVjmbbQTHXkks04P/MZ2L1o=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08I6jdkk126815
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Sep 2020 01:45:39 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 18
- Sep 2020 01:45:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 18 Sep 2020 01:45:38 -0500
-Received: from a0393678-ssd.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08I6gUCb094595;
-        Fri, 18 Sep 2020 01:45:33 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-Subject: [PATCH v5 17/17] Documentation: PCI: Add userguide for PCI endpoint NTB function
-Date:   Fri, 18 Sep 2020 12:12:27 +0530
-Message-ID: <20200918064227.1463-18-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200918064227.1463-1-kishon@ti.com>
-References: <20200918064227.1463-1-kishon@ti.com>
+        id S1726298AbgIRSMx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Sep 2020 14:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbgIRSMx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 14:12:53 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C164C0613CE
+        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 11:12:53 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x18so3399052pll.6
+        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 11:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rE4BZJp0q9zDr8kKMiT4zLrTffXmD+rm19TjujnN1Vk=;
+        b=Hm/XXSZmisiU6T6tNygou89zb4Ycs1lwy/6SoTmGc4hdMUZFBJNje4cBnYK/LR54S5
+         JGyuoXInxA9zBYd8nDTr0Qu5P8uH+/vXWhdoT4Mmzgt1sim6TjopH6EKXrimtqXHoOHI
+         rgWh7lGZz7y2Ae0mWVtAVQc91B1BzHSO4ZBYbJgCCc5XfiTQxGZA5988w/5j2ddwt+9h
+         mAqiEV06sdg8dIodDRfkXuY3jjZv9B6M7r1Ra/nwrvSzt5S9JtNQm9zHr9D7xpBPFuCT
+         SWex+b0QE5KrgqLz2uo9OfqZ6IdcAj5+pQZffqvsLf1HzIY4fKRt0qQKpRxi8F1nPnsx
+         X0SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rE4BZJp0q9zDr8kKMiT4zLrTffXmD+rm19TjujnN1Vk=;
+        b=tkH3FVZ/0k6hgojn6DlgIzgEez4AZe4BDOPdmxu8hwmCmnLLEg5DfaQInE6L0pFgYF
+         /zZqWJjC8KcRpIlZXyme9lGAEEQSUO4JRU753ZIEilPAgza6v2ZsjEHa5ioU21FjwO9L
+         G+ShO67t9dhQIyyX8M9VGrlbKdKbiF3iMmnOtXM9oZ3wxeKwkmieqBxAw6iseD5HTXl7
+         M4hulOpAix9GoAehxf49B7nxhuaesqZ078s83k7+kdi/c0RVdDAMIA1LdpyA+NiRWtgJ
+         yLVY0hlKCNMH1boJ4toptRXXFLKcG7EMuL7yW5X7KWqLkjcogb17/2DReJ80xi4NQQBE
+         JoAg==
+X-Gm-Message-State: AOAM531SdIjWOxqibWge6K7HD5QyO7PvIGs7t4vU+VAwaMYdPcI6Ctx1
+        Q5H7bB6UqyrkU3n7eRPNKOM7kLKR09LLNQ==
+X-Google-Smtp-Source: ABdhPJwfrxGeVpYY+o0j8pr1eIsjuqfOXri4PFS+X0KVtN+hxvJwc1QM8JFwnSj5/PyhFV0mZRVNNg==
+X-Received: by 2002:a17:90b:e01:: with SMTP id ge1mr13566751pjb.187.1600452772658;
+        Fri, 18 Sep 2020 11:12:52 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id l1sm3847426pgo.11.2020.09.18.11.12.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Sep 2020 11:12:52 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     linux-pci@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yue Wang <yue.wang@amlogic.com>
+Subject: [PATCH] pci: meson: build as module by default
+Date:   Fri, 18 Sep 2020 11:12:51 -0700
+Message-Id: <20200918181251.32423-1-khilman@baylibre.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add documentation to help users use pci-epf-ntb function driver and
-existing host side NTB infrastructure for NTB functionality.
+Enable pci-meson to build as a module whenever ARCH_MESON is enabled.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Yue Wang <yue.wang@amlogic.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 ---
- Documentation/PCI/endpoint/index.rst         |   1 +
- Documentation/PCI/endpoint/pci-ntb-howto.rst | 160 +++++++++++++++++++
- 2 files changed, 161 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
+Tested on Khadas VIM3 and Khadas VIM3 using NVMe SSD devices.
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index 9cb6e5f3c4d5..38ea1f604b6d 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -12,6 +12,7 @@ PCI Endpoint Framework
-    pci-test-function
-    pci-test-howto
-    pci-ntb-function
-+   pci-ntb-howto
+ drivers/pci/controller/dwc/Kconfig     | 3 ++-
+ drivers/pci/controller/dwc/pci-meson.c | 8 +++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 044a3761c44f..bc049865f8e0 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -237,8 +237,9 @@ config PCIE_HISI_STB
+ 	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
  
-    function/binding/pci-test
-    function/binding/pci-ntb
-diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-new file mode 100644
-index 000000000000..b6e1073c9a39
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-@@ -0,0 +1,160 @@
-+.. SPDX-License-Identifier: GPL-2.0
+ config PCI_MESON
+-	bool "MESON PCIe controller"
++	tristate "MESON PCIe controller"
+ 	depends on PCI_MSI_IRQ_DOMAIN
++	default m if ARCH_MESON
+ 	select PCIE_DW_HOST
+ 	help
+ 	  Say Y here if you want to enable PCI controller support on Amlogic
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 4f183b96afbb..7a1fb55ee44a 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -17,6 +17,7 @@
+ #include <linux/resource.h>
+ #include <linux/types.h>
+ #include <linux/phy/phy.h>
++#include <linux/module.h>
+ 
+ #include "pcie-designware.h"
+ 
+@@ -589,6 +590,7 @@ static const struct of_device_id meson_pcie_of_match[] = {
+ 	},
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, meson_pcie_of_match);
+ 
+ static struct platform_driver meson_pcie_driver = {
+ 	.probe = meson_pcie_probe,
+@@ -598,4 +600,8 @@ static struct platform_driver meson_pcie_driver = {
+ 	},
+ };
+ 
+-builtin_platform_driver(meson_pcie_driver);
++module_platform_driver(meson_pcie_driver);
 +
-+===================================================================
-+PCI Non-Transparent Bridge (NTB) Endpoint Function (EPF) User Guide
-+===================================================================
-+
-+:Author: Kishon Vijay Abraham I <kishon@ti.com>
-+
-+This document is a guide to help users use pci-epf-ntb function driver
-+and ntb_hw_epf host driver for NTB functionality. The list of steps to
-+be followed in the host side and EP side is given below. For the hardware
-+configuration and internals of NTB using configurable endpoints see
-+Documentation/PCI/endpoint/pci-ntb-function.rst
-+
-+Endpoint Device
-+===============
-+
-+Endpoint Controller Devices
-+---------------------------
-+
-+For implementing NTB functionality at least two endpoint controller devices
-+are required.
-+To find the list of endpoint controller devices in the system::
-+
-+        # ls /sys/class/pci_epc/
-+          2900000.pcie-ep  2910000.pcie-ep
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+	# ls /sys/kernel/config/pci_ep/controllers
-+	  2900000.pcie-ep  2910000.pcie-ep
-+
-+
-+Endpoint Function Drivers
-+-------------------------
-+
-+To find the list of endpoint function drivers in the system::
-+
-+	# ls /sys/bus/pci-epf/drivers
-+	  pci_epf_ntb   pci_epf_ntb
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+	# ls /sys/kernel/config/pci_ep/functions
-+	  pci_epf_ntb   pci_epf_ntb
-+
-+
-+Creating pci-epf-ntb Device
-+----------------------------
-+
-+PCI endpoint function device can be created using the configfs. To create
-+pci-epf-ntb device, the following commands can be used::
-+
-+	# mount -t configfs none /sys/kernel/config
-+	# cd /sys/kernel/config/pci_ep/
-+	# mkdir functions/pci_epf_ntb/func1
-+
-+The "mkdir func1" above creates the pci-epf-ntb function device that will
-+be probed by pci_epf_ntb driver.
-+
-+The PCI endpoint framework populates the directory with the following
-+configurable fields::
-+
-+	# ls functions/pci_epf_ntb/func1
-+          baseclass_code    deviceid          msi_interrupts    pci-epf-ntb.0
-+          progif_code       secondary         subsys_id         vendorid
-+          cache_line_size   interrupt_pin     msix_interrupts   primary
-+          revid             subclass_code     subsys_vendor_id
-+
-+The PCI endpoint function driver populates these entries with default values
-+when the device is bound to the driver. The pci-epf-ntb driver populates
-+vendorid with 0xffff and interrupt_pin with 0x0001::
-+
-+	# cat functions/pci_epf_ntb/func1/vendorid
-+	  0xffff
-+	# cat functions/pci_epf_ntb/func1/interrupt_pin
-+	  0x0001
-+
-+
-+Configuring pci-epf-ntb Device
-+-------------------------------
-+
-+The user can configure the pci-epf-ntb device using its configfs entry. In order
-+to change the vendorid and the deviceid, the following
-+commands can be used::
-+
-+	# echo 0x104c > functions/pci_epf_ntb/func1/vendorid
-+	# echo 0xb00d > functions/pci_epf_ntb/func1/deviceid
-+
-+In order to configure NTB specific attributes, a new sub-directory to func1
-+should be created::
-+
-+	# mkdir functions/pci_epf_ntb/func1/pci_epf_ntb.0/
-+
-+The NTB function driver will populate this directory with various attributes
-+that can be configured by the user::
-+
-+	# ls functions/pci_epf_ntb/func1/pci_epf_ntb.0/
-+          db_count    mw1         mw2         mw3         mw4         num_mws
-+          spad_count
-+
-+A sample configuration for NTB function is given below::
-+
-+	# echo 4 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/db_count
-+	# echo 128 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/spad_count
-+	# echo 2 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/num_mws
-+	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw1
-+	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw2
-+
-+Binding pci-epf-ntb Device to EP Controller
-+--------------------------------------------
-+
-+NTB function device should be attached to two PCIe endpoint controllers
-+connected to the two hosts. Use the 'primary' and 'secondary' entries
-+inside NTB function device to attach one PCIe endpoint controller to
-+primary interface and the other PCIe endpoint controller to the secondary
-+interface. ::
-+
-+        # ln -s controllers/2900000.pcie-ep/ functions/pci-epf-ntb/func1/primary
-+        # ln -s controllers/2910000.pcie-ep/ functions/pci-epf-ntb/func1/secondary
-+
-+Once the above step is completed, both the PCI endpoint controllers are ready to
-+establish a link with the host.
-+
-+
-+Start the Link
-+--------------
-+
-+In order for the endpoint device to establish a link with the host, the _start_
-+field should be populated with '1'. For NTB, both the PCIe endpoint controllers
-+should establish link with the host::
-+
-+        #echo 1 > controllers/2900000.pcie-ep/start
-+        #echo 1 > controllers/2910000.pcie-ep/start
-+
-+
-+RootComplex Device
-+==================
-+
-+lspci Output
-+------------
-+
-+Note that the devices listed here correspond to the values populated in
-+"Creating pci-epf-ntb Device" section above::
-+
-+        # lspci
-+        0000:00:00.0 PCI bridge: Texas Instruments Device b00d
-+        0000:01:00.0 RAM memory: Texas Instruments Device b00d
-+
-+
-+Using ntb_hw_epf Device
-+-----------------------
-+
-+The host side software follows the standard NTB software architecture in Linux.
-+All the existing client side NTB utilities like NTB Transport Client and NTB
-+Netdev, NTB Ping Pong Test Client and NTB Tool Test Client can be used with NTB
-+function device.
-+
-+For more information on NTB see
-+:doc:`Non-Transparent Bridge <../../driver-api/ntb>`
++MODULE_AUTHOR("Yue Wang <yue.wang@amlogic.com>");
++MODULE_DESCRIPTION("Amlogic PCIe Controller driver");
++MODULE_LICENSE("Dual BSD/GPL");
 -- 
-2.17.1
+2.28.0
 
