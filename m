@@ -2,277 +2,384 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B88C726E7F9
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 00:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E591326EACC
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 04:00:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbgIQWJ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Sep 2020 18:09:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22204 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbgIQWJX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Sep 2020 18:09:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600380560;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=/6zFeSGPAG8xBPGsswa+zaFQxvJLetl2hxSyTaDI24g=;
-        b=GFO9w1vCW0t9aWoXfGTO39/By50KJ6fwpNZgu6pkUVuTfVVt5etmOwrgYV1iquaZF2/fu+
-        V3Iqdr3o7CGj9+Mx2eyl0xStYrYRWBD132sBmCPcoJkYYpWfYqXfiUfmngzKMJNMNWpa9n
-        /QTCUWCmRAk04yoR23Ki2CyJXXLIjLI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-RM-hK7SZOwSS_3T8EivU9Q-1; Thu, 17 Sep 2020 18:09:16 -0400
-X-MC-Unique: RM-hK7SZOwSS_3T8EivU9Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 19C9E10A7AE4;
-        Thu, 17 Sep 2020 22:09:14 +0000 (UTC)
-Received: from [10.10.112.95] (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F416955761;
-        Thu, 17 Sep 2020 22:09:05 +0000 (UTC)
-Subject: Re: [RFC][Patch v1 1/3] sched/isolation: API to get num of
- hosekeeping CPUs
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, frederic@kernel.org,
-        mtosatti@redhat.com, sassmann@redhat.com,
-        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
-        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
-        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        thomas.lendacky@amd.com, jerinj@marvell.com,
-        mathias.nyman@intel.com, jiri@nvidia.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <20200917201123.GA1726926@bjorn-Precision-5520>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <ec44b017-fb54-b2aa-81a4-7f27ba7eaebc@redhat.com>
-Date:   Thu, 17 Sep 2020 18:09:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726101AbgIRCAw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Sep 2020 22:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgIRCAw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Sep 2020 22:00:52 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E25C06174A;
+        Thu, 17 Sep 2020 19:00:51 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id t16so4472211edw.7;
+        Thu, 17 Sep 2020 19:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4LWuM1zbIfjpHSv/XIhF8NZbMe6yKI2OR77j7oo+l0s=;
+        b=Lq4+yzB4WQYtAEytFKFCDiL/3O+xW6C8xPdoYUOWvm+F2sCigudCwW72KoFy0X0clk
+         QNkLxKD3ilgfX/BcNvSAG+pqtF6K6Vzigu6yWmLJCkDf1UBENiDRbx+MoowUyHDYd9A8
+         NlV/av4C3PptetGGcaV4A5anwWoRhZDZv4hSEGo1zfdDGY3dnAC7By1lOUIjhsxfwXxI
+         lWpy7nxPN1R0zcCpcyUMXE2dDvnoOFesdbLu1sq08S+t5nJ/IXAjUrJUpG0yd6hxeoWq
+         0jioCSJojx8JuIRuClmrX+sl88FxNKsp7Veipvhswr5sCG+/MhKuHRUgMwW0tyyzh0Rw
+         2JNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4LWuM1zbIfjpHSv/XIhF8NZbMe6yKI2OR77j7oo+l0s=;
+        b=VWHF4XblV+WinSb639CC9nqj/gYW9klGFZyRv2w28oF715s2wt5eyD2Z+ccTLaIyHw
+         pEkGiVvsVj5aFS8wMwvZPCoIGUzWDCTJINZSnVfVzJj/6Z2YWbiZPSeQ3Jh+5opdBjfX
+         WayO+sCqntULb7QcnYGL1yVvK56nqaEy/tcCTfkNDQYxrbaJgEIH4m0sjmzo5kmedOAN
+         ++xFskp8Ybj2lhOCf1Y14V1s8HJCK1eCqLjgdX2wsfN6y47CYCzhTAhd1I+OVI1O5HGk
+         3Jdwabc5phIrlw36qbcneo0XFNYJP2k9edicv3lgAOwsXvaLMjNVHRfJXykwKvusQkD5
+         PrwA==
+X-Gm-Message-State: AOAM531Kbg6Fm+nj1PIGnAm3nyzhjM3LQjVn+jyEDm7BLn4NMMZv3Sx6
+        zi/2ULRP8FyctOl3WjSYA9sxwiZKJRjudw/eza8=
+X-Google-Smtp-Source: ABdhPJzgiVP5LCgwkWgkGv6DB2/htX5lmgSkiFWK5sJekJkA6cLEyc1kmehFDtNX2d0lPgxFsIsy9hDUqNNxEBZlTu0=
+X-Received: by 2002:aa7:cd5a:: with SMTP id v26mr34976400edw.38.1600394450107;
+ Thu, 17 Sep 2020 19:00:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200917201123.GA1726926@bjorn-Precision-5520>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="qPHOouy6gPmk35aXRjjLdKpe2k9JahaLW"
+References: <1599644912-29245-1-git-send-email-wuht06@gmail.com>
+ <1599644912-29245-3-git-send-email-wuht06@gmail.com> <20200915173101.GB2146778@bogus>
+In-Reply-To: <20200915173101.GB2146778@bogus>
+From:   Hongtao Wu <wuht06@gmail.com>
+Date:   Fri, 18 Sep 2020 10:00:38 +0800
+Message-ID: <CAG_R4_Wuxn_TDHrHxKcyc5xBXshij5q86-zwrO31=gdz6Pse+w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hongtao Wu <billows.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---qPHOouy6gPmk35aXRjjLdKpe2k9JahaLW
-Content-Type: multipart/mixed; boundary="z470jYo3zBx5K3PjRdsFarqxC09qC8piH"
+Hi Bob,
+Thanks for the review.
 
---z470jYo3zBx5K3PjRdsFarqxC09qC8piH
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-
-
-On 9/17/20 4:11 PM, Bjorn Helgaas wrote:
-> [+cc Ingo, Peter, Juri, Vincent (scheduler maintainers)]
+On Wed, Sep 16, 2020 at 1:31 AM Rob Herring <robh@kernel.org> wrote:
 >
-> s/hosekeeping/housekeeping/ (in subject)
+> On Wed, Sep 09, 2020 at 05:48:32PM +0800, Hongtao Wu wrote:
+> > From: Hongtao Wu <billows.wu@unisoc.com>
+> >
+> > This series adds PCIe controller driver for Unisoc SoCs.
+> > This controller is based on DesignWare PCIe IP.
+> >
+> > Signed-off-by: Hongtao Wu <billows.wu@unisoc.com>
+> > ---
+> >  drivers/pci/controller/dwc/Kconfig     |  13 ++
+> >  drivers/pci/controller/dwc/Makefile    |   1 +
+> >  drivers/pci/controller/dwc/pcie-sprd.c | 231 +++++++++++++++++++++++++++++++++
+> >  3 files changed, 245 insertions(+)
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
+> >
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index 044a376..0553010 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -311,4 +311,17 @@ config PCIE_AL
+> >         required only for DT-based platforms. ACPI platforms with the
+> >         Annapurna Labs PCIe controller don't need to enable this.
+> >
+> > +
+> > +config PCIE_SPRD
+> > +     tristate "Unisoc PCIe controller - Host Mode"
+> > +     depends on ARCH_SPRD || COMPILE_TEST
+> > +     depends on PCI_MSI_IRQ_DOMAIN
+> > +     select PCIE_DW_HOST
+> > +     help
+> > +       Unisoc PCIe controller uses the DesignWare core. It can be configured
+> > +       as an Endpoint (EP) or a Root complex (RC). In order to enable host
+> > +       mode (the controller works as RC), PCIE_SPRD must be selected.
+> > +       Say Y or M here if you want to PCIe RC controller support on Unisoc
+> > +       SoCs.
+> > +
+> >  endmenu
+> > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> > index a751553..eb546e9 100644
+> > --- a/drivers/pci/controller/dwc/Makefile
+> > +++ b/drivers/pci/controller/dwc/Makefile
+> > @@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
+> >  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+> >  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+> >  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+> > +obj-$(CONFIG_PCIE_SPRD) += pcie-sprd.o
+> >
+> >  # The following drivers are for devices that use the generic ACPI
+> >  # pci_root.c driver but don't support standard ECAM config access.
+> > diff --git a/drivers/pci/controller/dwc/pcie-sprd.c b/drivers/pci/controller/dwc/pcie-sprd.c
+> > new file mode 100644
+> > index 0000000..cec4f34
+> > --- /dev/null
+> > +++ b/drivers/pci/controller/dwc/pcie-sprd.c
+> > @@ -0,0 +1,231 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * PCIe host controller driver for Unisoc SoCs
+> > + *
+> > + * Copyright (C) 2020 Unisoc, Inc.
+> > + *
+> > + * Author: Hongtao Wu <Billows.Wu@unisoc.com>
+> > + */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/property.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#include "pcie-designware.h"
+> > +
+> > +#define NUM_OF_ARGS 5
+> > +
+> > +struct sprd_pcie {
+> > +     struct dw_pcie pci;
+> > +};
+> > +
+> > +static int sprd_pcie_syscon_setting(struct platform_device *pdev, char *env)
+> > +{
+> > +     struct device_node *np = pdev->dev.of_node;
+> > +     int i, count, err;
+> > +     u32 type, delay, reg, mask, val, tmp_val;
+> > +     struct of_phandle_args out_args;
+> > +     struct regmap *iomap;
+> > +     struct device *dev = &pdev->dev;
+> > +
+> > +     if (!of_find_property(np, env, NULL)) {
+> > +             dev_info(dev, "There isn't property %s in dts\n", env);
+> > +             return 0;
+> > +     }
+> > +
+> > +     count = of_property_count_elems_of_size(np, env,
+> > +                                     (NUM_OF_ARGS + 1) * sizeof(u32));
+> > +     dev_info(dev, "Property (%s) reg count is %d :\n", env, count);
+> > +
+> > +     for (i = 0; i < count; i++) {
+> > +             err = of_parse_phandle_with_fixed_args(np, env, NUM_OF_ARGS,
+> > +                                                    i, &out_args);
+> > +             if (err < 0)
+> > +                     return err;
+> > +
+> > +             type = out_args.args[0];
+> > +             delay = out_args.args[1];
+> > +             reg = out_args.args[2];
+> > +             mask = out_args.args[3];
+> > +             val = out_args.args[4];
+> > +
+> > +             iomap = syscon_node_to_regmap(out_args.np);
+> > +
+> > +             switch (type) {
+> > +             case 0:
+> > +                     regmap_update_bits(iomap, reg, mask, val);
+> > +                     break;
+> > +
+> > +             case 1:
+> > +                     regmap_read(iomap, reg, &tmp_val);
+> > +                     tmp_val &= (~mask);
+> > +                     tmp_val |= (val & mask);
+> > +                     regmap_write(iomap, reg, tmp_val);
+> > +                     break;
+> > +             default:
+> > +                     break;
+> > +             }
+> > +
+> > +             if (delay)
+> > +                     usleep_range(delay, delay + 10);
+> > +
+> > +             regmap_read(iomap, reg, &tmp_val);
+> > +             dev_dbg(dev,
+> > +                     "%2d:reg[0x%8x] mask[0x%8x] val[0x%8x] result[0x%8x]\n",
+> > +                     i, reg, mask, val, tmp_val);
+> > +     }
+> > +
+> > +     return i;
+> > +}
+> > +
+> > +static int sprd_pcie_perst_assert(struct platform_device *pdev)
+> > +{
+> > +     return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-assert");
 >
-> On Wed, Sep 09, 2020 at 11:08:16AM -0400, Nitesh Narayan Lal wrote:
->> Introduce a new API num_housekeeping_cpus(), that can be used to retriev=
-e
->> the number of housekeeping CPUs by reading an atomic variable
->> __num_housekeeping_cpus. This variable is set from housekeeping_setup().
->>
->> This API is introduced for the purpose of drivers that were previously
->> relying only on num_online_cpus() to determine the number of MSIX vector=
-s
->> to create. In an RT environment with large isolated but a fewer
->> housekeeping CPUs this was leading to a situation where an attempt to
->> move all of the vectors corresponding to isolated CPUs to housekeeping
->> CPUs was failing due to per CPU vector limit.
-> Totally kibitzing here, but AFAICT the concepts of "isolated CPU" and
-> "housekeeping CPU" are not currently exposed to drivers, and it's not
-> completely clear to me that they should be.
+> Not documented. This should probably use the reset binding.
 >
-> We have carefully constructed notions of possible, present, online,
-> active CPUs, and it seems like whatever we do here should be
-> somehow integrated with those.
 
-At one point I thought about tweaking num_online_cpus(), but then I quickly
-moved away from that just because it is extensively used in the kernel and =
-we
-don't have to modify the behavior at all those places.
+Thanks! I'll Document it in the next version.
 
-Thank you for including Peter and Vincent as well.
-I would be happy to discuss/explore other options.
-
+> > +}
+> > +
+> > +static int sprd_pcie_perst_deassert(struct platform_device *pdev)
+> > +{
+> > +     return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-deassert");
+> > +}
+> > +
+> > +static int sprd_pcie_power_on(struct platform_device *pdev)
+> > +{
+> > +     int ret;
+> > +     struct device *dev = &pdev->dev;
+> > +
+> > +     ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweron-syscons");
+> > +     if (ret < 0)
+> > +             dev_err(dev,
+> > +                     "failed to set pcie poweroff syscons, return %d\n",
+> > +                     ret);
+> > +
+> > +     sprd_pcie_perst_deassert(pdev);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int sprd_pcie_power_off(struct platform_device *pdev)
+> > +{
+> > +     int ret;
+> > +     struct device *dev = &pdev->dev;
+> > +
+> > +     sprd_pcie_perst_assert(pdev);
+> > +
+> > +     ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweroff-syscons");
+> > +     if (ret < 0)
+> > +             dev_err(dev,
+> > +                     "failed to set pcie poweroff syscons, return %d\n",
+> > +                     ret);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int sprd_pcie_host_init(struct pcie_port *pp)
+> > +{
+> > +     int ret;
+> > +     struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +
+> > +     dw_pcie_setup_rc(pp);
+> > +     dw_pcie_msi_init(pp);
+> > +
+> > +     ret = dw_pcie_wait_for_link(pci);
+> > +     if (ret)
+> > +             dev_err(pci->dev, "pcie ep may has not been powered on yet\n");
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static const struct dw_pcie_host_ops sprd_pcie_host_ops = {
+> > +     .host_init = sprd_pcie_host_init,
+> > +};
+> > +
+> > +static int sprd_add_pcie_port(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct sprd_pcie *ctrl = platform_get_drvdata(pdev);
+> > +     struct dw_pcie *pci = &ctrl->pci;
+> > +     struct pcie_port *pp = &pci->pp;
+> > +
+> > +     pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
+> > +     if (IS_ERR(pci->dbi_base)) {
+> > +             dev_err(dev, "failed to get rc dbi base\n");
+> > +             return PTR_ERR(pci->dbi_base);
+> > +     }
+> > +
+> > +     pp->ops = &sprd_pcie_host_ops;
+> > +
+> > +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
 >
->> If there are no isolated CPUs specified then the API returns the number
->> of all online CPUs.
->>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  include/linux/sched/isolation.h |  7 +++++++
->>  kernel/sched/isolation.c        | 23 +++++++++++++++++++++++
->>  2 files changed, 30 insertions(+)
->>
->> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isola=
-tion.h
->> index cc9f393e2a70..94c25d956d8a 100644
->> --- a/include/linux/sched/isolation.h
->> +++ b/include/linux/sched/isolation.h
->> @@ -25,6 +25,7 @@ extern bool housekeeping_enabled(enum hk_flags flags);
->>  extern void housekeeping_affine(struct task_struct *t, enum hk_flags fl=
-ags);
->>  extern bool housekeeping_test_cpu(int cpu, enum hk_flags flags);
->>  extern void __init housekeeping_init(void);
->> +extern unsigned int num_housekeeping_cpus(void);
->> =20
->>  #else
->> =20
->> @@ -46,6 +47,12 @@ static inline bool housekeeping_enabled(enum hk_flags=
- flags)
->>  static inline void housekeeping_affine(struct task_struct *t,
->>  =09=09=09=09       enum hk_flags flags) { }
->>  static inline void housekeeping_init(void) { }
->> +
->> +static unsigned int num_housekeeping_cpus(void)
->> +{
->> +=09return num_online_cpus();
->> +}
->> +
->>  #endif /* CONFIG_CPU_ISOLATION */
->> =20
->>  static inline bool housekeeping_cpu(int cpu, enum hk_flags flags)
->> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
->> index 5a6ea03f9882..7024298390b7 100644
->> --- a/kernel/sched/isolation.c
->> +++ b/kernel/sched/isolation.c
->> @@ -13,6 +13,7 @@ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
->>  EXPORT_SYMBOL_GPL(housekeeping_overridden);
->>  static cpumask_var_t housekeeping_mask;
->>  static unsigned int housekeeping_flags;
->> +static atomic_t __num_housekeeping_cpus __read_mostly;
->> =20
->>  bool housekeeping_enabled(enum hk_flags flags)
->>  {
->> @@ -20,6 +21,27 @@ bool housekeeping_enabled(enum hk_flags flags)
->>  }
->>  EXPORT_SYMBOL_GPL(housekeeping_enabled);
->> =20
->> +/*
->> + * num_housekeeping_cpus() - Read the number of housekeeping CPUs.
->> + *
->> + * This function returns the number of available housekeeping CPUs
->> + * based on __num_housekeeping_cpus which is of type atomic_t
->> + * and is initialized at the time of the housekeeping setup.
->> + */
->> +unsigned int num_housekeeping_cpus(void)
->> +{
->> +=09unsigned int cpus;
->> +
->> +=09if (static_branch_unlikely(&housekeeping_overridden)) {
->> +=09=09cpus =3D atomic_read(&__num_housekeeping_cpus);
->> +=09=09/* We should always have at least one housekeeping CPU */
->> +=09=09BUG_ON(!cpus);
->> +=09=09return cpus;
->> +=09}
->> +=09return num_online_cpus();
->> +}
->> +EXPORT_SYMBOL_GPL(num_housekeeping_cpus);
->> +
->>  int housekeeping_any_cpu(enum hk_flags flags)
->>  {
->>  =09int cpu;
->> @@ -131,6 +153,7 @@ static int __init housekeeping_setup(char *str, enum=
- hk_flags flags)
->> =20
->>  =09housekeeping_flags |=3D flags;
->> =20
->> +=09atomic_set(&__num_housekeeping_cpus, cpumask_weight(housekeeping_mas=
-k));
->>  =09free_bootmem_cpumask_var(non_housekeeping_mask);
->> =20
->>  =09return 1;
->> --=20
->> 2.27.0
->>
---=20
-Nitesh
+> I don't think this check is needed. The DW core won't setup the MSI if
+> not enabled, so doesn't matter if msi_irq is initialized.
+>
 
+Thanks!
+I'll delete it in the next version.
 
---z470jYo3zBx5K3PjRdsFarqxC09qC8piH--
+> > +             pp->msi_irq = platform_get_irq_byname(pdev, "msi");
+> > +             if (pp->msi_irq < 0) {
+> > +                     dev_err(dev, "failed to get msi, return %d\n",
+> > +                             pp->msi_irq);
+>
+> No need to print an error, the core does this.
+>
 
---qPHOouy6gPmk35aXRjjLdKpe2k9JahaLW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Thanks!
+I'll delete it in the next version.
 
------BEGIN PGP SIGNATURE-----
+> > +                     return pp->msi_irq;
+> > +             }
+> > +     }
+> > +
+> > +     return dw_pcie_host_init(pp);
+> > +}
+> > +
+> > +static int sprd_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct sprd_pcie *ctrl;
+> > +     struct dw_pcie *pci;
+> > +     int ret;
+> > +
+> > +     ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
+> > +     if (!ctrl)
+> > +             return -ENOMEM;
+> > +
+> > +     pci = &ctrl->pci;
+> > +     pci->dev = dev;
+> > +
+> > +     platform_set_drvdata(pdev, ctrl);
+> > +
+> > +     ret = sprd_pcie_power_on(pdev);
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "failed to get pcie poweron syscons, return %d\n",
+> > +                     ret);
+> > +             goto err_power_off;
+> > +     }
+> > +
+> > +     ret = sprd_add_pcie_port(pdev);
+> > +     if (ret) {
+> > +             dev_warn(dev, "failed to initialize RC controller\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +err_power_off:
+> > +     sprd_pcie_power_off(pdev);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static const struct of_device_id sprd_pcie_of_match[] = {
+> > +     {
+> > +             .compatible = "sprd,pcie-rc",
+> > +     },
+> > +     {},
+> > +};
+> > +
+> > +static struct platform_driver sprd_pcie_driver = {
+> > +     .probe = sprd_pcie_probe,
+>
+> You need a .remove hook.
+>
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9j3oAACgkQo4ZA3AYy
-ozkFzhAAre38UgoNY3QsPxENtstDExHNr59GinuBuAQFl/fQz3WTaG3p9BWrLXxB
-T1zP0C2xCWMS93UHReZWpRdkPSLqFMd35tmq6u5HyHBlvEUKMV6eX6By2LT7o52Z
-2Uw2e21ZdQhXCj1WCq+3+OSvZvtlwr9oCSoAKibiKQUrVuofti43t5sJIaILxk4s
-7pnzMiQZZJt2Ku6IaYpo5ydW9i2GEMLMmpSZt+9ZrS894GAp2NHPAzInp+yfyTRP
-iWG3ER4EzS6FTcRMuZ2Gt2dcToKP5ap4e95pGOx9Zk2aLlte6vfsEutww85GbWrK
-QaKWL9MEuYM3SSBt9NZ0Uo+6EptkK9w8WjRamW5FJPnaZ0TUDW0GAUXhV6PEb8+u
-htujjTvbWtQSsxgH3hkByUV7QB52IcobSvCKX1OOpuhiccBkRJ5HpykyDcj61kcK
-04ZcoYzy20nLE36bHTSWjsblEbnAEEScY0OnMvJEn7MNC1UKdlSRM5mSckQDSmCA
-R7NFbxzzUFbGwltYDTEmq0Fs3M2nUptugn4qSU2A5k3mMh9QZdEi2cpH//tmA+hi
-5a4OgzCQqvCoWM8s3fejSobgBn+QwUO20F2K2iskOp9vhXlleVDPYGpsVR8rr1Xg
-cFite/wdu8coI1wEKxQVr+l6+IQJN/3gP4vrQZYw42c5yELZGXA=
-=Ka3q
------END PGP SIGNATURE-----
+Yes! I'll fix it.
 
---qPHOouy6gPmk35aXRjjLdKpe2k9JahaLW--
-
+> > +     .driver = {
+> > +             .name = "sprd-pcie",
+> > +             .of_match_table = sprd_pcie_of_match,
+> > +     },
+> > +};
+> > +
+> > +module_platform_driver(sprd_pcie_driver);
+> > +
+> > +MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.7.4
+> >
