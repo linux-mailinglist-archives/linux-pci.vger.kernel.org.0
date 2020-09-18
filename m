@@ -2,286 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 693392706F4
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 22:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D691D270748
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 22:46:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgIRUXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Sep 2020 16:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgIRUW6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 16:22:58 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24421C0613CE;
-        Fri, 18 Sep 2020 13:22:58 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id u126so8474106oif.13;
-        Fri, 18 Sep 2020 13:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=doA4ol07JEk8RvmCDvE+88F3JtPRfseL2+6tdCDWQqw=;
-        b=QAjG/sl8UIY2V68ScqGjPqpSnpyz8SiLhlbn+9TwfGAlU68sN4f6HL/rOl6hNuR8t9
-         TRbjj/+3zjcGPvS5IQxjWb/SP42RdnzIX7W8+TJpQe23EaF2Y/NG+ym3GGBfZHxbs37r
-         LMgygcdaRo2kO7syRCAuu7brZtOvkwg5mK7rWbTUzLrCw74gT20ynO2Qs0XvEeOcOWFJ
-         v9ZcGiwgCjZGdPRJpa7ylfICzg4yKuPqOtIhviSXNi8Ep8P21xCOMMF8LvMOvBRt2kw0
-         Uw68vY0hOQO28Jh2eL0Pq9UKC07QXtghNEhuXjMIdeUZi8ez+WswdseqqcN1TAEA+Jo0
-         WQYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=doA4ol07JEk8RvmCDvE+88F3JtPRfseL2+6tdCDWQqw=;
-        b=RREw4O0Nvu+TjqCrx9ZWr3YgNl85YWy5UgBhnVHrDNZ+PKZtP4FPh7A1tKYQzCn83v
-         AL9OyIMHrAiMO1g7X9aFcH8Yz5pC1aCiIHs5GfrmYqEX1q2R2WYGhDeVi0dfh7QvMTEf
-         A7iChSWUNzksaQB0p2kFzTCvGN5USlp9thKxyAFCiP6XE9xqTzDFnN0hFdk3jVmTF3sz
-         d2ByZfMRuSWC+KbnZAtLcN+yl1mcmRuu3eSRuKIkwXGm8jsuXxD/oCKWc5wdMNBaCeSS
-         B1q3bX+oZ1vfDbKSmYTiBisxlJBHK/CaN5PnHt1xgcEY0rvPIV38cGpOMnaHL3mwAKox
-         nz0g==
-X-Gm-Message-State: AOAM532KvgC5c7fFZ/ju9Y3StU/uB/hCH2hO/LE+GlHHm66oKlvSgwlC
-        9oTHUsoZ9ti9TxkAFUg2bpWWnBuOIiuh9rc8M08=
-X-Google-Smtp-Source: ABdhPJwphP9ojdahsOdNIORs8jQM7iAKWDDRb89RyKBzU9JdoeiJZQyTzCMhdFKMEp06LRl3gHYmyPqZfVD8YGyWrm4=
-X-Received: by 2002:aca:4754:: with SMTP id u81mr10252669oia.72.1600460577384;
- Fri, 18 Sep 2020 13:22:57 -0700 (PDT)
+        id S1726262AbgIRUqa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Sep 2020 16:46:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:61565 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgIRUqa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Sep 2020 16:46:30 -0400
+IronPort-SDR: aBwq7zjin4/U9gAl+FUf8Mcnfu0UJjl4CWFhHdkcTMLkjPhbQ8ySc3EIivg+yD0KF8hvwmPDOF
+ /UQ2LFixtwcw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9748"; a="178120853"
+X-IronPort-AV: E=Sophos;i="5.77,274,1596524400"; 
+   d="scan'208";a="178120853"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2020 13:46:27 -0700
+IronPort-SDR: UGMgjfBOkBQ4ff5uwMI0NpCQE7fTyIZlaUqbRxu9XOgVRkQnbw5nCtRLu9TOIZRE1T8DVEC1Jg
+ S00iD+VvJ2bw==
+X-IronPort-AV: E=Sophos;i="5.77,274,1596524400"; 
+   d="scan'208";a="484366814"
+Received: from xsunzhou-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.251.153.106])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2020 13:46:26 -0700
+From:   Sean V Kelley <sean.v.kelley@intel.com>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
+        qiuxu.zhuo@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: [PATCH v5 03/10] PCI/RCEC: Cache RCEC capabilities in pci_init_capabilities()
+Date:   Fri, 18 Sep 2020 13:45:56 -0700
+Message-Id: <20200918204603.62100-4-sean.v.kelley@intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200918204603.62100-1-sean.v.kelley@intel.com>
+References: <20200918204603.62100-1-sean.v.kelley@intel.com>
 MIME-Version: 1.0
-References: <20200918201436.2932360-1-samitolvanen@google.com>
-In-Reply-To: <20200918201436.2932360-1-samitolvanen@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 18 Sep 2020 22:22:46 +0200
-Message-ID: <CA+icZUW1MYSUz8jwOaVpi6ib1dyCv1VmG5priw6TTzXGSh_8Gg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/30] Add support for Clang LTO
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 18, 2020 at 10:14 PM 'Sami Tolvanen' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> This patch series adds support for building x86_64 and arm64 kernels
-> with Clang's Link Time Optimization (LTO).
->
-> In addition to performance, the primary motivation for LTO is
-> to allow Clang's Control-Flow Integrity (CFI) to be used in the
-> kernel. Google has shipped millions of Pixel devices running three
-> major kernel versions with LTO+CFI since 2018.
->
-> Most of the patches are build system changes for handling LLVM
-> bitcode, which Clang produces with LTO instead of ELF object files,
-> postponing ELF processing until a later stage, and ensuring initcall
-> ordering.
->
-> Note that patches 1-5 are not directly related to LTO, but are
-> needed to compile LTO kernels with ToT Clang, so I'm including them
-> in the series for your convenience:
->
->  - Patches 1-3 fix build issues with LLVM and they are already in
->    linux-next.
->
->  - Patch 4 fixes x86 builds with LLVM IAS, but it hasn't yet been
->    picked up by maintainers.
->
->  - Patch 5 is from Masahiro's kbuild tree and makes the LTO linker
->    script changes much cleaner.
->
+Extend support for Root Complex Event Collectors by decoding and
+caching the RCEC Endpoint Association Extended Capabilities when
+enumerating. Use that cached information for later error source
+reporting. See PCI Express Base Specification, version 5.0-1,
+section 7.9.10.
 
-Hi Sami,
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+---
+ drivers/pci/pci.h         | 18 ++++++++++++++
+ drivers/pci/pcie/Makefile |  2 +-
+ drivers/pci/pcie/rcec.c   | 52 +++++++++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c       |  3 ++-
+ include/linux/pci.h       |  4 +++
+ 5 files changed, 77 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/pci/pcie/rcec.c
 
-might be good to point to your GitHub tree and corresponding
-release-tag for easy fetching.
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index fa12f7cbc1a0..83670a6425d8 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -449,6 +449,16 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+ #endif	/* CONFIG_PCIEAER */
+ 
++#ifdef CONFIG_PCIEPORTBUS
++/* Cached RCEC Associated Endpoint Extended Capabilities */
++struct rcec_ext {
++	u8		ver;
++	u8		nextbusn;
++	u8		lastbusn;
++	u32		bitmap;
++};
++#endif
++
+ #ifdef CONFIG_PCIE_DPC
+ void pci_save_dpc_state(struct pci_dev *dev);
+ void pci_restore_dpc_state(struct pci_dev *dev);
+@@ -461,6 +471,14 @@ static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
+ static inline void pci_dpc_init(struct pci_dev *pdev) {}
+ #endif
+ 
++#ifdef CONFIG_PCIEPORTBUS
++void pci_rcec_init(struct pci_dev *dev);
++void pci_rcec_exit(struct pci_dev *dev);
++#else
++static inline void pci_rcec_init(struct pci_dev *dev) {}
++static inline void pci_rcec_exit(struct pci_dev *dev) {}
++#endif
++
+ #ifdef CONFIG_PCI_ATS
+ /* Address Translation Service */
+ void pci_ats_init(struct pci_dev *dev);
+diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+index 68da9280ff11..d9697892fa3e 100644
+--- a/drivers/pci/pcie/Makefile
++++ b/drivers/pci/pcie/Makefile
+@@ -2,7 +2,7 @@
+ #
+ # Makefile for PCI Express features and port driver
+ 
+-pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
++pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o rcec.o
+ 
+ obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
+ 
+diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+new file mode 100644
+index 000000000000..519ae086ff41
+--- /dev/null
++++ b/drivers/pci/pcie/rcec.c
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Root Complex Event Collector Support
++ *
++ * Authors:
++ *  Sean V Kelley <sean.v.kelley@intel.com>
++ *  Qiuxu Zhuo <qiuxu.zhuo@intel.com>
++ *
++ * Copyright (C) 2020 Intel Corp.
++ */
++
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/bitops.h>
++#include <linux/pci.h>
++#include <linux/pci_regs.h>
++
++#include "../pci.h"
++
++void pci_rcec_init(struct pci_dev *dev)
++{
++	u32 rcec, hdr, busn;
++
++	/* Only for Root Complex Event Collectors */
++	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)
++		return;
++
++	dev->rcec_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC);
++	if (!dev->rcec_cap)
++		return;
++
++	dev->rcec_ext = kzalloc(sizeof(*dev->rcec_ext), GFP_KERNEL);
++
++	rcec = dev->rcec_cap;
++	pci_read_config_dword(dev, rcec + PCI_RCEC_RCIEP_BITMAP, &dev->rcec_ext->bitmap);
++
++	/* Check whether RCEC BUSN register is present */
++	pci_read_config_dword(dev, rcec, &hdr);
++	dev->rcec_ext->ver = PCI_EXT_CAP_VER(hdr);
++	if (dev->rcec_ext->ver < PCI_RCEC_BUSN_REG_VER)
++		return;
++
++	pci_read_config_dword(dev, rcec + PCI_RCEC_BUSN, &busn);
++	dev->rcec_ext->nextbusn = PCI_RCEC_BUSN_NEXT(busn);
++	dev->rcec_ext->lastbusn = PCI_RCEC_BUSN_LAST(busn);
++}
++
++void pci_rcec_exit(struct pci_dev *dev)
++{
++	kfree(dev->rcec_ext);
++	dev->rcec_ext = NULL;
++}
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 03d37128a24f..16bc651fecb7 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2201,6 +2201,7 @@ static void pci_configure_device(struct pci_dev *dev)
+ static void pci_release_capabilities(struct pci_dev *dev)
+ {
+ 	pci_aer_exit(dev);
++	pci_rcec_exit(dev);
+ 	pci_vpd_release(dev);
+ 	pci_iov_release(dev);
+ 	pci_free_cap_save_buffers(dev);
+@@ -2400,7 +2401,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_ptm_init(dev);		/* Precision Time Measurement */
+ 	pci_aer_init(dev);		/* Advanced Error Reporting */
+ 	pci_dpc_init(dev);		/* Downstream Port Containment */
+-
++	pci_rcec_init(dev);		/* Root Complex Event Collector */
+ 	pcie_report_downtraining(dev);
+ 
+ 	if (pci_probe_reset_function(dev) == 0)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 835530605c0d..5c5c4eb642b6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -326,6 +326,10 @@ struct pci_dev {
+ #ifdef CONFIG_PCIEAER
+ 	u16		aer_cap;	/* AER capability offset */
+ 	struct aer_stats *aer_stats;	/* AER stats for this device */
++#endif
++#ifdef CONFIG_PCIEPORTBUS
++	u16		rcec_cap;	/* RCEC capability offset */
++	struct rcec_ext *rcec_ext;	/* RCEC cached assoc. endpoint extended capabilities */
+ #endif
+ 	u8		pcie_cap;	/* PCIe capability offset */
+ 	u8		msi_cap;	/* MSI capability offset */
+-- 
+2.28.0
 
-Thanks.
-
-Regards,
-- Sedat -
-
-
-> ---
-> Changes in v3:
->
->   - Added a separate patch to remove the unused DISABLE_LTO treewide,
->     as filtering out CC_FLAGS_LTO instead is preferred.
->
->   - Updated the Kconfig help to explain why LTO is behind a choice
->     and disabled by default.
->
->   - Dropped CC_FLAGS_LTO_CLANG, compiler-specific LTO flags are now
->     appended directly to CC_FLAGS_LTO.
->
->   - Updated $(AR) flags as KBUILD_ARFLAGS was removed earlier.
->
->   - Fixed ThinLTO cache handling for external module builds.
->
->   - Rebased on top of Masahiro's patch for preprocessing modules.lds,
->     and moved the contents of module-lto.lds to modules.lds.S.
->
->   - Moved objtool_args to Makefile.lib to avoid duplication of the
->     command line parameters in Makefile.modfinal.
->
->   - Clarified in the commit message for the initcall ordering patch
->     that the initcall order remains the same as without LTO.
->
->   - Changed link-vmlinux.sh to use jobserver-exec to control the
->     number of jobs started by generate_initcall_ordering.pl.
->
->   - Dropped the x86/relocs patch to whitelist L4_PAGE_OFFSET as it's
->     no longer needed with ToT kernel.
->
->   - Disabled LTO for arch/x86/power/cpu.c to work around a Clang bug
->     with stack protector attributes.
->
-> Changes in v2:
->
->   - Fixed -Wmissing-prototypes warnings with W=1.
->
->   - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
->     scrubbing to make distclean.
->
->   - Added a comment about Clang >=11 being required.
->
->   - Added a patch to disable LTO for the arm64 KVM nVHE code.
->
->   - Disabled objtool's noinstr validation with LTO unless enabled.
->
->   - Included Peter's proposed objtool mcount patch in the series
->     and replaced recordmcount with the objtool pass to avoid
->     whitelisting relocations that are not calls.
->
->   - Updated several commit messages with better explanations.
->
->
-> Arvind Sankar (2):
->   x86/boot/compressed: Disable relocation relaxation
->   x86/asm: Replace __force_order with memory clobber
->
-> Luca Stefani (1):
->   RAS/CEC: Fix cec_init() prototype
->
-> Masahiro Yamada (1):
->   kbuild: preprocess module linker script
->
-> Nick Desaulniers (1):
->   lib/string.c: implement stpcpy
->
-> Peter Zijlstra (1):
->   objtool: Add a pass for generating __mcount_loc
->
-> Sami Tolvanen (24):
->   objtool: Don't autodetect vmlinux.o
->   kbuild: add support for objtool mcount
->   x86, build: use objtool mcount
->   treewide: remove DISABLE_LTO
->   kbuild: add support for Clang LTO
->   kbuild: lto: fix module versioning
->   kbuild: lto: postpone objtool
->   kbuild: lto: limit inlining
->   kbuild: lto: merge module sections
->   kbuild: lto: remove duplicate dependencies from .mod files
->   init: lto: ensure initcall ordering
->   init: lto: fix PREL32 relocations
->   PCI: Fix PREL32 relocations for LTO
->   modpost: lto: strip .lto from module names
->   scripts/mod: disable LTO for empty.c
->   efi/libstub: disable LTO
->   drivers/misc/lkdtm: disable LTO for rodata.o
->   arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
->   arm64: vdso: disable LTO
->   KVM: arm64: disable LTO for the nVHE directory
->   arm64: allow LTO_CLANG and THINLTO to be selected
->   x86, vdso: disable LTO only for vDSO
->   x86, cpu: disable LTO for cpu.c
->   x86, build: allow LTO_CLANG and THINLTO to be selected
->
->  .gitignore                                    |   1 +
->  Makefile                                      |  74 ++++-
->  arch/Kconfig                                  |  68 +++++
->  arch/arm/Makefile                             |   4 -
->  .../module.lds => include/asm/module.lds.h}   |   2 +
->  arch/arm64/Kconfig                            |   2 +
->  arch/arm64/Makefile                           |   5 +-
->  .../module.lds => include/asm/module.lds.h}   |   2 +
->  arch/arm64/kernel/vdso/Makefile               |   4 +-
->  arch/arm64/kvm/hyp/nvhe/Makefile              |   4 +-
->  arch/ia64/Makefile                            |   1 -
->  .../{module.lds => include/asm/module.lds.h}  |   0
->  arch/m68k/Makefile                            |   1 -
->  .../module.lds => include/asm/module.lds.h}   |   0
->  arch/powerpc/Makefile                         |   1 -
->  .../module.lds => include/asm/module.lds.h}   |   0
->  arch/riscv/Makefile                           |   3 -
->  .../module.lds => include/asm/module.lds.h}   |   3 +-
->  arch/sparc/vdso/Makefile                      |   2 -
->  arch/um/include/asm/Kbuild                    |   1 +
->  arch/x86/Kconfig                              |   3 +
->  arch/x86/Makefile                             |   5 +
->  arch/x86/boot/compressed/Makefile             |   2 +
->  arch/x86/boot/compressed/pgtable_64.c         |   9 -
->  arch/x86/entry/vdso/Makefile                  |   5 +-
->  arch/x86/include/asm/special_insns.h          |  28 +-
->  arch/x86/kernel/cpu/common.c                  |   4 +-
->  arch/x86/power/Makefile                       |   4 +
->  drivers/firmware/efi/libstub/Makefile         |   2 +
->  drivers/misc/lkdtm/Makefile                   |   1 +
->  drivers/ras/cec.c                             |   9 +-
->  include/asm-generic/Kbuild                    |   1 +
->  include/asm-generic/module.lds.h              |  10 +
->  include/asm-generic/vmlinux.lds.h             |  11 +-
->  include/linux/init.h                          |  79 ++++-
->  include/linux/pci.h                           |  19 +-
->  kernel/Makefile                               |   3 -
->  kernel/trace/Kconfig                          |   5 +
->  lib/string.c                                  |  24 ++
->  scripts/.gitignore                            |   1 +
->  scripts/Makefile                              |   3 +
->  scripts/Makefile.build                        |  69 +++--
->  scripts/Makefile.lib                          |  17 +-
->  scripts/Makefile.modfinal                     |  29 +-
->  scripts/Makefile.modpost                      |  22 +-
->  scripts/generate_initcall_order.pl            | 270 ++++++++++++++++++
->  scripts/link-vmlinux.sh                       |  95 +++++-
->  scripts/mod/Makefile                          |   1 +
->  scripts/mod/modpost.c                         |  16 +-
->  scripts/mod/modpost.h                         |   9 +
->  scripts/mod/sumversion.c                      |   6 +-
->  scripts/{module-common.lds => module.lds.S}   |  31 ++
->  scripts/package/builddeb                      |   2 +-
->  tools/objtool/builtin-check.c                 |  13 +-
->  tools/objtool/builtin.h                       |   2 +-
->  tools/objtool/check.c                         |  83 ++++++
->  tools/objtool/check.h                         |   1 +
->  tools/objtool/objtool.h                       |   1 +
->  58 files changed, 919 insertions(+), 154 deletions(-)
->  rename arch/arm/{kernel/module.lds => include/asm/module.lds.h} (72%)
->  rename arch/arm64/{kernel/module.lds => include/asm/module.lds.h} (76%)
->  rename arch/ia64/{module.lds => include/asm/module.lds.h} (100%)
->  rename arch/m68k/{kernel/module.lds => include/asm/module.lds.h} (100%)
->  rename arch/powerpc/{kernel/module.lds => include/asm/module.lds.h} (100%)
->  rename arch/riscv/{kernel/module.lds => include/asm/module.lds.h} (84%)
->  create mode 100644 include/asm-generic/module.lds.h
->  create mode 100755 scripts/generate_initcall_order.pl
->  rename scripts/{module-common.lds => module.lds.S} (59%)
->
->
-> base-commit: 92ab97adeefccf375de7ebaad9d5b75d4125fe8b
-> --
-> 2.28.0.681.g6f77f65b4e-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200918201436.2932360-1-samitolvanen%40google.com.
