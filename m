@@ -2,311 +2,443 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB0DD26F4E5
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 06:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 222D526F609
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 08:42:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgIREFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Sep 2020 00:05:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35540 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726273AbgIREFP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 00:05:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600401913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wlk9HAI4Sd4VAZGEYPJ6IaZsqvXvWVGLIyj7zWCRFbs=;
-        b=ageMNoZa14gnoFjjNnEprGThoPdPU2eO6Sdb9znz11cJMsuuk4rpqv6txiK+8weX7+6Wmu
-        avmxUHFUseobQUvvDpHIVIh0f1XZ1mRTp5CTHUxtUnZge863iMzb1wyyccorE+KvYirAF/
-        Xme493gPoTLYvFPiEvVr9o+pt1Hv+yw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-HkFJZdJ0NPyOW6MrbXbx0Q-1; Fri, 18 Sep 2020 00:05:09 -0400
-X-MC-Unique: HkFJZdJ0NPyOW6MrbXbx0Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD7771891E84;
-        Fri, 18 Sep 2020 04:05:06 +0000 (UTC)
-Received: from [10.72.13.167] (ovpn-13-167.pek2.redhat.com [10.72.13.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E73E41C4;
-        Fri, 18 Sep 2020 04:04:52 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
+        id S1726466AbgIRGm5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Sep 2020 02:42:57 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55602 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgIRGm4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 02:42:56 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08I6ggKK015245;
+        Fri, 18 Sep 2020 01:42:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1600411362;
+        bh=PEAp/tAtz4SG7iL1uO7TRLavF7BSCuhGXN4014rUOJE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FLFUaJmHpqk4B8E2i6LtyzVd1Iwriq33XTnmuszzo9hJ6QofLc1qZH41C892njaGm
+         CMkL97m0+iBzFF4FfKc+Uz9lt7cqbT9Bm2cG7+8cL0s0q0IVUIP7rQ87an5t+nGvlF
+         7DENr3jw4FbfBXGQp2nedml68URz5DgoUO9cxkCI=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08I6ggI6039182;
+        Fri, 18 Sep 2020 01:42:42 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 18
+ Sep 2020 01:42:42 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 18 Sep 2020 01:42:42 -0500
+Received: from a0393678-ssd.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08I6gUCL094595;
+        Fri, 18 Sep 2020 01:42:36 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
         Dave Jiang <dave.jiang@intel.com>,
         Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
- <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
- <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
- <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
- <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
- <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
- <b2178e1d-2f5c-e8a3-72fb-70f2f8d6aa45@redhat.com>
- <45a8a97c-2061-13ee-5da8-9877a4a3b8aa@ti.com>
- <c8739d7f-e12e-f6a2-7018-9eeaf6feb054@redhat.com>
- <20200828123409.4cd2a812.cohuck@redhat.com>
- <ac8f7e4f-9f46-919a-f5c2-89b07794f0ab@ti.com>
- <9cd58cd1-0041-3d98-baf7-6e5bc2e7e317@redhat.com>
- <edf25301-93c0-4ba6-aa85-5f04137d0906@ti.com>
- <5733dbfc-76c1-45dc-6dce-ef5449eacc73@redhat.com>
- <181ae83d-edeb-9406-27cc-1195fe29ae95@ti.com>
- <ee0aa81d-064b-d7a7-86bb-79a3f4d3dd11@redhat.com>
- <67924594-c70e-390e-ce2e-dda41a94ada1@ti.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <dc006fed-c3b6-8925-51d8-5ed3ee8662cd@redhat.com>
-Date:   Fri, 18 Sep 2020 12:04:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
+Subject: [PATCH v5 01/17] Documentation: PCI: Add specification for the *PCI NTB* function device
+Date:   Fri, 18 Sep 2020 12:12:11 +0530
+Message-ID: <20200918064227.1463-2-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200918064227.1463-1-kishon@ti.com>
+References: <20200918064227.1463-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <67924594-c70e-390e-ce2e-dda41a94ada1@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Add specification for the *PCI NTB* function device. The endpoint function
+driver and the host PCI driver should be created based on this
+specification.
 
-On 2020/9/16 下午7:47, Kishon Vijay Abraham I wrote:
-> Hi Jason,
->
-> On 16/09/20 8:40 am, Jason Wang wrote:
->> On 2020/9/15 下午11:47, Kishon Vijay Abraham I wrote:
->>> Hi Jason,
->>>
->>> On 15/09/20 1:48 pm, Jason Wang wrote:
->>>> Hi Kishon:
->>>>
->>>> On 2020/9/14 下午3:23, Kishon Vijay Abraham I wrote:
->>>>>> Then you need something that is functional equivalent to virtio PCI
->>>>>> which is actually the concept of vDPA (e.g vDPA provides
->>>>>> alternatives if
->>>>>> the queue_sel is hard in the EP implementation).
->>>>> Okay, I just tried to compare the 'struct vdpa_config_ops' and 'struct
->>>>> vhost_config_ops' ( introduced in [RFC PATCH 03/22] vhost: Add ops for
->>>>> the VHOST driver to configure VHOST device).
->>>>>
->>>>> struct vdpa_config_ops {
->>>>>       /* Virtqueue ops */
->>>>>       int (*set_vq_address)(struct vdpa_device *vdev,
->>>>>                     u16 idx, u64 desc_area, u64 driver_area,
->>>>>                     u64 device_area);
->>>>>       void (*set_vq_num)(struct vdpa_device *vdev, u16 idx, u32 num);
->>>>>       void (*kick_vq)(struct vdpa_device *vdev, u16 idx);
->>>>>       void (*set_vq_cb)(struct vdpa_device *vdev, u16 idx,
->>>>>                 struct vdpa_callback *cb);
->>>>>       void (*set_vq_ready)(struct vdpa_device *vdev, u16 idx, bool
->>>>> ready);
->>>>>       bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
->>>>>       int (*set_vq_state)(struct vdpa_device *vdev, u16 idx,
->>>>>                   const struct vdpa_vq_state *state);
->>>>>       int (*get_vq_state)(struct vdpa_device *vdev, u16 idx,
->>>>>                   struct vdpa_vq_state *state);
->>>>>       struct vdpa_notification_area
->>>>>       (*get_vq_notification)(struct vdpa_device *vdev, u16 idx);
->>>>>       /* vq irq is not expected to be changed once DRIVER_OK is set */
->>>>>       int (*get_vq_irq)(struct vdpa_device *vdv, u16 idx);
->>>>>
->>>>>       /* Device ops */
->>>>>       u32 (*get_vq_align)(struct vdpa_device *vdev);
->>>>>       u64 (*get_features)(struct vdpa_device *vdev);
->>>>>       int (*set_features)(struct vdpa_device *vdev, u64 features);
->>>>>       void (*set_config_cb)(struct vdpa_device *vdev,
->>>>>                     struct vdpa_callback *cb);
->>>>>       u16 (*get_vq_num_max)(struct vdpa_device *vdev);
->>>>>       u32 (*get_device_id)(struct vdpa_device *vdev);
->>>>>       u32 (*get_vendor_id)(struct vdpa_device *vdev);
->>>>>       u8 (*get_status)(struct vdpa_device *vdev);
->>>>>       void (*set_status)(struct vdpa_device *vdev, u8 status);
->>>>>       void (*get_config)(struct vdpa_device *vdev, unsigned int offset,
->>>>>                  void *buf, unsigned int len);
->>>>>       void (*set_config)(struct vdpa_device *vdev, unsigned int offset,
->>>>>                  const void *buf, unsigned int len);
->>>>>       u32 (*get_generation)(struct vdpa_device *vdev);
->>>>>
->>>>>       /* DMA ops */
->>>>>       int (*set_map)(struct vdpa_device *vdev, struct vhost_iotlb
->>>>> *iotlb);
->>>>>       int (*dma_map)(struct vdpa_device *vdev, u64 iova, u64 size,
->>>>>                  u64 pa, u32 perm);
->>>>>       int (*dma_unmap)(struct vdpa_device *vdev, u64 iova, u64 size);
->>>>>
->>>>>       /* Free device resources */
->>>>>       void (*free)(struct vdpa_device *vdev);
->>>>> };
->>>>>
->>>>> +struct vhost_config_ops {
->>>>> +    int (*create_vqs)(struct vhost_dev *vdev, unsigned int nvqs,
->>>>> +              unsigned int num_bufs, struct vhost_virtqueue *vqs[],
->>>>> +              vhost_vq_callback_t *callbacks[],
->>>>> +              const char * const names[]);
->>>>> +    void (*del_vqs)(struct vhost_dev *vdev);
->>>>> +    int (*write)(struct vhost_dev *vdev, u64 vhost_dst, void *src,
->>>>> int len);
->>>>> +    int (*read)(struct vhost_dev *vdev, void *dst, u64 vhost_src, int
->>>>> len);
->>>>> +    int (*set_features)(struct vhost_dev *vdev, u64 device_features);
->>>>> +    int (*set_status)(struct vhost_dev *vdev, u8 status);
->>>>> +    u8 (*get_status)(struct vhost_dev *vdev);
->>>>> +};
->>>>> +
->>>>> struct virtio_config_ops
->>>>> I think there's some overlap here and some of the ops tries to do the
->>>>> same thing.
->>>>>
->>>>> I think it differs in (*set_vq_address)() and (*create_vqs)().
->>>>> [create_vqs() introduced in struct vhost_config_ops provides
->>>>> complimentary functionality to (*find_vqs)() in struct
->>>>> virtio_config_ops. It seemingly encapsulates the functionality of
->>>>> (*set_vq_address)(), (*set_vq_num)(), (*set_vq_cb)(),..].
->>>>>
->>>>> Back to the difference between (*set_vq_address)() and (*create_vqs)(),
->>>>> set_vq_address() directly provides the virtqueue address to the vdpa
->>>>> device but create_vqs() only provides the parameters of the virtqueue
->>>>> (like the number of virtqueues, number of buffers) but does not
->>>>> directly
->>>>> provide the address. IMO the backend client drivers (like net or vhost)
->>>>> shouldn't/cannot by itself know how to access the vring created on
->>>>> virtio front-end. The vdpa device/vhost device should have logic for
->>>>> that. That will help the client drivers to work with different types of
->>>>> vdpa device/vhost device and can access the vring created by virtio
->>>>> irrespective of whether the vring can be accessed via mmio or kernel
->>>>> space or user space.
->>>>>
->>>>> I think vdpa always works with client drivers in userspace and
->>>>> providing
->>>>> userspace address for vring.
->>>> Sorry for being unclear. What I meant is not replacing vDPA with the
->>>> vhost(bus) you proposed but the possibility of replacing virtio-pci-epf
->>>> with vDPA in:
->>> Okay, so the virtio back-end still use vhost and front end should use
->>> vDPA. I see. So the host side PCI driver for EPF should populate
->>> vdpa_config_ops and invoke vdpa_register_device().
->>
->> Yes.
->>
->>
->>>> My question is basically for the part of virtio_pci_epf_send_command(),
->>>> so it looks to me you have a vendor specific API to replace the
->>>> virtio-pci layout of the BAR:
->>> Even when we use vDPA, we have to use some sort of
->>> virtio_pci_epf_send_command() to communicate with virtio backend right?
->>
->> Right.
->>
->>
->>> Right, the layout is slightly different from the standard layout.
->>>
->>> This is the layout
->>> struct epf_vhost_reg_queue {
->>>           u8 cmd;
->>>           u8 cmd_status;
->>>           u16 status;
->>>           u16 num_buffers;
->>>           u16 msix_vector;
->>>           u64 queue_addr;
->>
->> What's the meaning of queue_addr here?
-> Using queue_addr, the virtio front-end communicates the address of the
-> allocated memory for virtqueue to the virtio back-end.
->> Does not mean the device expects a contiguous memory for avail/desc/used
->> ring?
-> It's contiguous memory. Isn't this similar to other virtio transport
-> (both PCI legacy and modern interface)?.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ Documentation/PCI/endpoint/index.rst          |   1 +
+ .../PCI/endpoint/pci-ntb-function.rst         | 351 ++++++++++++++++++
+ 2 files changed, 352 insertions(+)
+ create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
 
-
-That's only for legacy device, for modern device we don't have such 
-restriction.
-
-
->>
->>> } __packed;
->>>
->>> struct epf_vhost_reg {
->>>           u64 host_features;
->>>           u64 guest_features;
->>>           u16 msix_config;
->>>           u16 num_queues;
->>>           u8 device_status;
->>>           u8 config_generation;
->>>           u32 isr;
->>>           u8 cmd;
->>>           u8 cmd_status;
->>>           struct epf_vhost_reg_queue vq[MAX_VQS];
->>> } __packed;
->>>> +static int virtio_pci_epf_send_command(struct virtio_pci_device
->>>> *vp_dev,
->>>> +                       u32 command)
->>>> +{
->>>> +    struct virtio_pci_epf *pci_epf;
->>>> +    void __iomem *ioaddr;
->>>> +    ktime_t timeout;
->>>> +    bool timedout;
->>>> +    int ret = 0;
->>>> +    u8 status;
->>>> +
->>>> +    pci_epf = to_virtio_pci_epf(vp_dev);
->>>> +    ioaddr = vp_dev->ioaddr;
->>>> +
->>>> +    mutex_lock(&pci_epf->lock);
->>>> +    writeb(command, ioaddr + HOST_CMD);
->>>> +    timeout = ktime_add_ms(ktime_get(), COMMAND_TIMEOUT);
->>>> +    while (1) {
->>>> +        timedout = ktime_after(ktime_get(), timeout);
->>>> +        status = readb(ioaddr + HOST_CMD_STATUS);
->>>> +
->>>>
->>>> Several questions:
->>>>
->>>> - It's not clear to me how the synchronization is done between the RC
->>>> and EP. E.g how and when the value of HOST_CMD_STATUS can be changed.
->>> The HOST_CMD (commands sent to the EP) is serialized by using mutex.
->>> Once the EP reads the command, it resets the value in HOST_CMD. So
->>> HOST_CMD is less likely an issue.
->>
->> Here's my understanding of the protocol:
->>
->> 1) RC write to HOST_CMD
->> 2) RC wait for HOST_CMD_STATUS to be HOST_CMD_STATUS_OKAY
-> That's right!
->> It looks to me what EP should do is
->>
->> 1) EP reset HOST_CMD after reading new command
-> That's right! It does.
->> And it looks to me EP should also reset HOST_CMD_STATUS here?
-> yeah, that would require RC to send another command to reset the status.
-> Didn't see it required in the normal scenario but good to add this.
->> (I thought there should be patch to handle stuffs like this but I didn't
->> find it in this series)
-> This is added in [RFC PATCH 19/22] PCI: endpoint: Add EP function driver
-> to provide VHOST interface
->
-> pci_epf_vhost_cmd_handler() gets commands from RC using "reg->cmd;". On
-> the EP side, it is local memory access (mapped to BAR memory exposed to
-> the host) and hence accessed using structure member access.
-
-
-Thanks for the pointer, will have a look at and I think this part need 
-to be carefully designed and the key to the success of the epf transport.
-
+diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+index 4ca7439fbfc9..ef6861128506 100644
+--- a/Documentation/PCI/endpoint/index.rst
++++ b/Documentation/PCI/endpoint/index.rst
+@@ -11,5 +11,6 @@ PCI Endpoint Framework
+    pci-endpoint-cfs
+    pci-test-function
+    pci-test-howto
++   pci-ntb-function
+ 
+    function/binding/pci-test
+diff --git a/Documentation/PCI/endpoint/pci-ntb-function.rst b/Documentation/PCI/endpoint/pci-ntb-function.rst
+new file mode 100644
+index 000000000000..f7246c812801
+--- /dev/null
++++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
+@@ -0,0 +1,351 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=================
++PCI NTB Function
++=================
++
++:Author: Kishon Vijay Abraham I <kishon@ti.com>
++
++PCI Non Transparent Bridges (NTB) allow two host systems to communicate
++with each other by exposing each host as a device to the other host.
++NTBs typically support the ability to generate interrupts on the remote
++machine, expose memory ranges as BARs and perform DMA.  They also support
++scratchpads which are areas of memory within the NTB that are accessible
++from both machines.
++
++PCI NTB Function allows two different systems (or hosts) to communicate
++with each other by configurig the endpoint instances in such a way that
++transactions from one system is routed to the other system.
++
++In the below diagram, PCI NTB function configures the SoC with multiple
++PCIe Endpoint (EP) instances in such a way that transaction from one EP
++controller is routed to the other EP controller. Once PCI NTB function
++configures the SoC with multiple EP instances, HOST1 and HOST2 can
++communicate with each other using SoC as a bridge.
++
++.. code-block:: text
++
++    +-------------+                                   +-------------+
++    |             |                                   |             |
++    |    HOST1    |                                   |    HOST2    |
++    |             |                                   |             |
++    +------^------+                                   +------^------+
++           |                                                 |
++           |                                                 |
++ +---------|-------------------------------------------------|---------+
++ |  +------v------+                                   +------v------+  |
++ |  |             |                                   |             |  |
++ |  |     EP      |                                   |     EP      |  |
++ |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
++ |  |             <----------------------------------->             |  |
++ |  |             |                                   |             |  |
++ |  |             |                                   |             |  |
++ |  |             |  SoC With Multiple EP Instances   |             |  |
++ |  |             |  (Configured using NTB Function)  |             |  |
++ |  +-------------+                                   +-------------+  |
++ +---------------------------------------------------------------------+
++
++Constructs used for Implementing NTB
++====================================
++
++	1) Config Region
++	2) Self Scratchpad Registers
++	3) Peer Scratchpad Registers
++	4) Doorbell Registers
++	5) Memory Window
++
++
++Config Region:
++--------------
++
++Config Region is a construct that is specific to NTB implemented using NTB
++Endpoint Function Driver. The host and endpoint side NTB function driver will
++exchange information with each other using this region. Config Region has
++Control/Status Registers for configuring the Endpoint Controller. Host can
++write into this region for configuring the outbound ATU and to indicate the
++link status. Endpoint can indicate the status of commands issued be host in
++this region. Endpoint can also indicate the scratchpad offset, number of
++memory windows to the host using this region.
++
++The format of Config Region is given below. Each of the fields here are 32
++bits.
++
++.. code-block:: text
++
++	+------------------------+
++	|         COMMAND        |
++	+------------------------+
++	|         ARGUMENT       |
++	+------------------------+
++	|         STATUS         |
++	+------------------------+
++	|         TOPOLOGY       |
++	+------------------------+
++	|    ADDRESS (LOWER 32)  |
++	+------------------------+
++	|    ADDRESS (UPPER 32)  |
++	+------------------------+
++	|           SIZE         |
++	+------------------------+
++	|   NO OF MEMORY WINDOW  |
++	+------------------------+
++	|  MEMORY WINDOW1 OFFSET |
++	+------------------------+
++	|       SPAD OFFSET      |
++	+------------------------+
++	|        SPAD COUNT      |
++	+------------------------+
++	|      DB ENTRY SIZE     |
++	+------------------------+
++	|         DB DATA        |
++	+------------------------+
++	|            :           |
++	+------------------------+
++	|            :           |
++	+------------------------+
++	|         DB DATA        |
++	+------------------------+
++
++
++  COMMAND:
++
++	NTB function supports three commands:
++
++	  CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
++	invoking this command, the host should allocate and initialize
++	MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
++	Endpoint). The endpoint on receiving this command will configure
++	the outbound ATU such that transaction to DB BAR will be routed
++	to the MSI/MSI-X address programmed by the host. The ARGUMENT
++	register should be populated with number of DBs to configure (in the
++	lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
++	(TODO: Add support for MSI-X).
++
++	  CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
++	host invokes this command after allocating a buffer that can be
++	accessed by remote host. The allocated address should be programmed
++	in the ADDRESS register (64 bit), the size should be programmed in
++	the SIZE register and the memory window index should be programmed
++	in the ARGUMENT register. The endpoint on receiving this command
++	will configure the outbound ATU such that trasaction to MW BAR
++	will be routed to the address provided by the host.
++
++	  CMD_LINK_UP (0x3): Command to indicate an NTB application is
++	bound to the EP device on the host side. Once the endpoint
++	receives this command from both the hosts, the endpoint will
++	raise an LINK_UP event to both the hosts to indicate the hosts
++	can start communicating with each other.
++
++  ARGUMENT:
++
++	The value of this register is based on the commands issued in
++	command register. See COMMAND section for more information.
++
++  TOPOLOGY:
++
++	Set to NTB_TOPO_B2B_USD for Primary interface
++	Set to NTB_TOPO_B2B_DSD for Secondary interface
++
++  ADDRESS/SIZE:
++
++	Address and Size to be used while configuring the memory window.
++	See "CMD_CONFIGURE_MW" for more info.
++
++  MEMORY WINDOW1 OFFSET:
++
++	Memory Window 1 and Doorbell registers are packed together in the
++	same BAR. The initial portion of the region will have doorbell
++	registers and the latter portion of the region is for memory window 1.
++	This register will specify the offset of the memory window 1.
++
++  NO OF MEMORY WINDOW:
++
++	Specifies the number of memory windows supported by the NTB device.
++
++  SPAD OFFSET:
++
++	Self scratchpad region and config region are packed together in the
++	same BAR. The initial portion of the region will have config region
++	and the latter portion of the region is for self scratchpad. This
++	register will specify the offset of the self scratchpad registers.
++
++  SPAD COUNT:
++
++	Specifies the number of scratchpad registers supported by the NTB
++	device.
++
++  DB ENTRY SIZE:
++
++	Used to determine the offset within the DB BAR that should be written
++	in order to raise doorbell. EPF NTB can use either MSI/MSI-X to
++	ring doorbell (MSI-X support will be added later). MSI uses same
++	address for all the interrupts and MSI-X can provide different
++	addresses for different interrupts. The MSI/MSI-X address is provided
++	by the host and the address it gives is based on the MSI/MSI-X
++	implementation supported by the host. For instance, ARM platform
++	using GIC ITS will have same MSI-X address for all the interrupts.
++	In order to support all the combinations and use the same mechanism
++	for both MSI and MSI-X, EPF NTB allocates separate region in the
++	Outbound Address Space for each of the interrupts. This region will
++	be mapped to the MSI/MSI-X address provided by the host. If a host
++	provides the same address for all the interrupts, all the regions
++	will be translated to the same address. If a host provides different
++	address, the regions will be translated to different address. This
++	will ensure there is no difference while raising the doorbell.
++
++  DB DATA:
++
++	EPF NTB supports 32 interrupts. So there are 32 DB DATA registers.
++	This holds the MSI/MSI-X data that has to be written to MSI address
++	for raising doorbell interrupt. This will be populated by EPF NTB
++	while invoking CMD_CONFIGURE_DOORBELL.
++
++Scratchpad Registers:
++---------------------
++
++  Each host has it's own register space allocated in the memory of NTB EPC.
++  They are both readable and writable from both sides of the bridge. They
++  are used by applications built over NTB and can be used to pass control
++  and status information between both sides of a device.
++
++  Scratchpad registers has 2 parts
++	1) Self Scratchpad: Host's own register space
++	2) Peer Scratchpad: Remote host's register space.
++
++Doorbell Registers:
++-------------------
++
++  Registers using which one host can interrupt the other host.
++
++Memory Window:
++--------------
++
++  Actual transfer of data between the two hosts will happen using the
++  memory window.
++
++Modeling Constructs:
++====================
++
++There are 5 or more distinct regions (config, self scratchpad, peer
++scratchpad, doorbell, one or more memory windows) to be modeled to achieve
++NTB functionality. Atleast one memory window is required while more than
++one is permitted. All these regions should be mapped to BAR for hosts to
++access these regions.
++
++If one 32-bit BAR is allocated for each of these regions, the scheme would
++look like
++
++======  ===============
++BAR NO  CONSTRUCTS USED
++======  ===============
++BAR0    Config Region
++BAR1    Self Scratchpad
++BAR2    Peer Scratchpad
++BAR3    Doorbell
++BAR4    Memory Window 1
++BAR5    Memory Window 2
++======  ===============
++
++However if we allocate a separate BAR for each of the region, there would not
++be enough BARs for all the regions in a platform that supports only 64-bit
++BAR.
++
++In order to be be supported by most of the platforms, the regions should be
++packed and mapped to BARs in a way that provides NTB functionality and
++also making sure the hosts doesn't access any region that it is not supposed
++to.
++
++The following scheme is used in EPF NTB Function
++
++======  ===============================
++BAR NO  CONSTRUCTS USED
++======  ===============================
++BAR0    Config Region + Self Scratchpad
++BAR1    Peer Scratchpad
++BAR2    Doorbell + Memory Window 1
++BAR3    Memory Window 2
++BAR4    Memory Window 3
++BAR5    Memory Window 4
++======  ===============================
++
++With this scheme, for the basic NTB functionality 3 BARs should be sufficient.
++
++Modeling Config/Scratchpad Region:
++----------------------------------
++
++.. code-block:: text
++
++ +-----------------+------->+------------------+        +-----------------+
++ |       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
++ +-----------------+----+   +------------------+<-------+-----------------+
++ |       BAR1      |    |   |SCRATCHPAD REGION |        |       BAR1      |
++ +-----------------+    +-->+------------------+<-------+-----------------+
++ |       BAR2      |            Local Memory            |       BAR2      |
++ +-----------------+                                    +-----------------+
++ |       BAR3      |                                    |       BAR3      |
++ +-----------------+                                    +-----------------+
++ |       BAR4      |                                    |       BAR4      |
++ +-----------------+                                    +-----------------+
++ |       BAR5      |                                    |       BAR5      |
++ +-----------------+                                    +-----------------+
++   EP CONTROLLER 1                                        EP CONTROLLER 2
++
++Above diagram shows Config region + Scratchpad region for HOST1 (connected to
++EP controller 1) allocated in local memory. The HOST1 can access the config
++region and scratchpad region (self scratchpad) using BAR0 of EP controller 1.
++The peer host (HOST2 connected to EP controller 2) can also access this
++scratchpad region (peer scratchpad) using BAR1 of EP controller 2. This
++diagram shows the case where Config region and Scratchpad region is allocated
++for HOST1, however the same is applicable for HOST2.
++
++Modeling Doorbell/Memory Window 1:
++----------------------------------
++
++.. code-block:: text
++
++ +-----------------+    +----->+----------------+-----------+-----------------+
++ |       BAR0      |    |      |   Doorbell 1   +-----------> MSI-X ADDRESS 1 |
++ +-----------------+    |      +----------------+           +-----------------+
++ |       BAR1      |    |      |   Doorbell 2   +---------+ |                 |
++ +-----------------+----+      +----------------+         | |                 |
++ |       BAR2      |           |   Doorbell 3   +-------+ | +-----------------+
++ +-----------------+----+      +----------------+       | +-> MSI-X ADDRESS 2 |
++ |       BAR3      |    |      |   Doorbell 4   +-----+ |   +-----------------+
++ +-----------------+    |      |----------------+     | |   |                 |
++ |       BAR4      |    |      |                |     | |   +-----------------+
++ +-----------------+    |      |      MW1       +---+ | +-->+ MSI-X ADDRESS 3||
++ |       BAR5      |    |      |                |   | |     +-----------------+
++ +-----------------+    +----->-----------------+   | |     |                 |
++   EP CONTROLLER 1             |                |   | |     +-----------------+
++                               |                |   | +---->+ MSI-X ADDRESS 4 |
++                               +----------------+   |       +-----------------+
++                                EP CONTROLLER 2     |       |                 |
++                                  (OB SPACE)        |       |                 |
++                                                    +------->      MW1        |
++                                                            |                 |
++                                                            |                 |
++                                                            +-----------------+
++                                                            |                 |
++                                                            |                 |
++                                                            |                 |
++                                                            |                 |
++                                                            |                 |
++                                                            +-----------------+
++                                                             PCI Address Space
++                                                             (Managed by HOST2)
++
++Above diagram shows how the doorbell and memory window 1 is mapped so that
++HOST1 can raise doorbell interrupt on HOST2 and also how HOST1 can access
++buffers exposed by HOST2 using memory window1 (MW1). Here doorbell and
++memory window 1 regions are allocated in EP controller 2 outbound (OB) address
++space. Allocating and configuring BARs for doorbell and memory window1
++is done during the initialization phase of NTB endpoint function driver.
++Mapping from EP controller 2 OB space to PCI address space is done when HOST2
++sends CMD_CONFIGURE_MW/CMD_CONFIGURE_DOORBELL. The commands are explained
++below.
++
++Modeling Optional Memory Windows:
++---------------------------------
++
++This is modeled the same was as MW1 but each of the additional memory windows
++is mapped to separate BARs.
+-- 
+2.17.1
 
