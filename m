@@ -2,112 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91579270295
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 18:51:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 990532703B1
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 20:06:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgIRQvA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Sep 2020 12:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgIRQvA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 12:51:00 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39776C0613CE
-        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 09:51:00 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z18so3830734pfg.0
-        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 09:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i626wvoZabMUjQF03JmQZni3WGRHoiP51qRJmlnUzb0=;
-        b=YKmu7ZR3YGw2pkUc7qAyLWNw1ToEY5uahh0b1nu5RQvb8S4pY4wcQ13TxT6CgW+j/R
-         oj0K1BKhmkewY/6A75ltzB50km/zgemL/2F/PdATuq6vmOoX6n4qWeIg4UPMgL/pWA9p
-         9FYHn/c4Yr9+fcznMotxQqSKu59kwSATZgMMw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i626wvoZabMUjQF03JmQZni3WGRHoiP51qRJmlnUzb0=;
-        b=I2Lf336IAoLJDKVTIrXcsco9S0ZkTL6dOW6lDYCVTS3MMbEuj0zy3arS5IgEI9mSoo
-         KSFWp/nR5GB0D5mN7YsnWWgm283al7ZzV1nEjqz/H/lur0DSmONrbVb0dvVyt8t+gyew
-         K1ZxLpc4aD01r2jXU6knm1zIyvSiN69/v4h/Tv9ivLatytJUg4U9UWH3VeCsJLioI4zz
-         LcJfPJNfaManrZcuOx1QQ2ptbS15ofgOrcpLT+Vrvz71X6nKoCYX6ZcfxRSPDf+t1bKw
-         7Ilio4J26FuWfZQw0fpXa151UqU7F+3V9HvVcs7FDVmnC2ITxs8QdkIJd2ov2/ocJu3M
-         56rw==
-X-Gm-Message-State: AOAM5329WUslbs42vrZL1ugeI3AbRBizM1aWUuJlZNerNVuRd5SWixJA
-        Z9tznWovKc5TSafoJsRBrtSy7A==
-X-Google-Smtp-Source: ABdhPJz3HEhhD/ld3oY53TTJk0XHUv+g7pkTSJgO1zGCpQBObxHFfuD8bItjZA2V95MR/YmpiFIoKQ==
-X-Received: by 2002:a65:4689:: with SMTP id h9mr27004067pgr.50.1600447859418;
-        Fri, 18 Sep 2020 09:50:59 -0700 (PDT)
-Received: from [10.136.8.253] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id a14sm3274806pju.30.2020.09.18.09.50.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Sep 2020 09:50:58 -0700 (PDT)
-Subject: Re: [PATCH -next] PCI: iproc: use module_bcma_driver to simplify the
- code
-To:     Liu Shixin <liushixin2@huawei.com>,
+        id S1726156AbgIRSGP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Sep 2020 14:06:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53110 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgIRSGO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 14:06:14 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08I6j2tE016905;
+        Fri, 18 Sep 2020 01:45:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1600411502;
+        bh=dKk/x6X8YcSroAHhU2W03tyG96wKptoi3eaPmsVsNj8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Q6LWG1Dneo4hByflKrG6WSwCOh1OonroDWn23sMtildO0zZINVgeFhDlo0l7zjIMp
+         XXWm2ZdfOc3GwoVY3cLOMy5CRhneH0/u+raguCCo+Y4ulZN8EA9FlCYPVleIB4NHkT
+         MrICBpEQHNiKMGoPpfmzVghghYvrhYDknELb0GdY=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08I6j2kx042726;
+        Fri, 18 Sep 2020 01:45:02 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 18
+ Sep 2020 01:45:02 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 18 Sep 2020 01:45:02 -0500
+Received: from a0393678-ssd.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08I6gUCV094595;
+        Fri, 18 Sep 2020 01:44:25 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200918030829.3946025-1-liushixin2@huawei.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <c990bc93-b5f4-2464-faf2-9b6893fc5dae@broadcom.com>
-Date:   Fri, 18 Sep 2020 09:50:55 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
+Subject: [PATCH v5 11/17] PCI: cadence: Implement ->msi_map_irq() ops
+Date:   Fri, 18 Sep 2020 12:12:21 +0530
+Message-ID: <20200918064227.1463-12-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200918064227.1463-1-kishon@ti.com>
+References: <20200918064227.1463-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200918030829.3946025-1-liushixin2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Implement ->msi_map_irq() ops in order to map physical address to
+MSI address and return MSI data.
 
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 50 +++++++++++++++++++
+ drivers/pci/endpoint/pci-epc-core.c           |  7 ++-
+ include/linux/pci-epc.h                       |  2 +-
+ 3 files changed, 54 insertions(+), 5 deletions(-)
 
-On 9/17/2020 8:08 PM, Liu Shixin wrote:
-> module_bcma_driver() makes the code simpler by eliminating
-> boilerplate code.
-> 
-> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
-> ---
->  drivers/pci/controller/pcie-iproc-bcma.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc-bcma.c b/drivers/pci/controller/pcie-iproc-bcma.c
-> index aa55b064f64d..56b8ee7bf330 100644
-> --- a/drivers/pci/controller/pcie-iproc-bcma.c
-> +++ b/drivers/pci/controller/pcie-iproc-bcma.c
-> @@ -94,18 +94,7 @@ static struct bcma_driver iproc_pcie_bcma_driver = {
->  	.probe		= iproc_pcie_bcma_probe,
->  	.remove		= iproc_pcie_bcma_remove,
->  };
-> -
-> -static int __init iproc_pcie_bcma_init(void)
-> -{
-> -	return bcma_driver_register(&iproc_pcie_bcma_driver);
-> -}
-> -module_init(iproc_pcie_bcma_init);
-> -
-> -static void __exit iproc_pcie_bcma_exit(void)
-> -{
-> -	bcma_driver_unregister(&iproc_pcie_bcma_driver);
-> -}
-> -module_exit(iproc_pcie_bcma_exit);
-> +module_bcma_driver(iproc_pcie_bcma_driver);
->  
->  MODULE_AUTHOR("Hauke Mehrtens");
->  MODULE_DESCRIPTION("Broadcom iProc PCIe BCMA driver");
-> 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 254a3e1eff50..b9aacd6ce816 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -383,6 +383,54 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn,
+ 	return 0;
+ }
+ 
++static int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn,
++				    phys_addr_t addr, u8 interrupt_num,
++				    u32 entry_size, u32 *msi_data)
++{
++	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
++	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
++	struct cdns_pcie *pcie = &ep->pcie;
++	u16 flags, mme, data, data_mask;
++	u8 msi_count;
++	u64 pci_addr;
++	int ret;
++	int i;
++
++	/* Check whether the MSI feature has been enabled by the PCI host. */
++	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
++	if (!(flags & PCI_MSI_FLAGS_ENABLE))
++		return -EINVAL;
++
++	/* Get the number of enabled MSIs */
++	mme = (flags & PCI_MSI_FLAGS_QSIZE) >> 4;
++	msi_count = 1 << mme;
++	if (!interrupt_num || interrupt_num > msi_count)
++		return -EINVAL;
++
++	/* Compute the data value to be written. */
++	data_mask = msi_count - 1;
++	data = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_DATA_64);
++	data = data & ~data_mask;
++
++	/* Get the PCI address where to write the data into. */
++	pci_addr = cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_HI);
++	pci_addr <<= 32;
++	pci_addr |= cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_LO);
++	pci_addr &= GENMASK_ULL(63, 2);
++
++	for (i = 0; i < interrupt_num; i++) {
++		ret = cdns_pcie_ep_map_addr(epc, fn, addr, pci_addr,
++					    entry_size);
++		if (ret)
++			return ret;
++		addr = addr + entry_size;
++	}
++
++	*msi_data = data;
++
++	return 0;
++}
++
+ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn,
+ 				      u16 interrupt_num)
+ {
+@@ -482,6 +530,7 @@ static const struct pci_epc_features cdns_pcie_epc_features = {
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = true,
++	.align = 256,
+ };
+ 
+ static const struct pci_epc_features*
+@@ -501,6 +550,7 @@ static const struct pci_epc_ops cdns_pcie_epc_ops = {
+ 	.set_msix	= cdns_pcie_ep_set_msix,
+ 	.get_msix	= cdns_pcie_ep_get_msix,
+ 	.raise_irq	= cdns_pcie_ep_raise_irq,
++	.map_msi_irq	= cdns_pcie_ep_map_msi_irq,
+ 	.start		= cdns_pcie_ep_start,
+ 	.get_features	= cdns_pcie_ep_get_features,
+ };
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 73f9ff425824..d1e25be74665 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -235,7 +235,6 @@ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
+  *                         MSI data
+  * @epc: the EPC device which has the MSI capability
+  * @func_no: the physical endpoint function number in the EPC device
+- * @vfunc_no: the virtual endpoint function number in the physical function
+  * @phys_addr: the physical address of the outbound region
+  * @interrupt_num: the MSI interrupt number
+  * @entry_size: Size of Outbound address region for each interrupt
+@@ -249,7 +248,7 @@ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
+  * physical address (in outbound region) of the other interface to ring
+  * doorbell.
+  */
+-int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no,
+ 			phys_addr_t phys_addr, u8 interrupt_num, u32 entry_size,
+ 			u32 *msi_data)
+ {
+@@ -262,8 +261,8 @@ int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&epc->lock);
+-	ret = epc->ops->map_msi_irq(epc, func_no, vfunc_no, phys_addr,
+-				    interrupt_num, entry_size, msi_data);
++	ret = epc->ops->map_msi_irq(epc, func_no, phys_addr, interrupt_num,
++				    entry_size, msi_data);
+ 	mutex_unlock(&epc->lock);
+ 
+ 	return ret;
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 88284f3a0698..61f2cebcd272 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -78,7 +78,7 @@ struct pci_epc_ops {
+ 	int	(*get_msix)(struct pci_epc *epc, u8 func_no);
+ 	int	(*raise_irq)(struct pci_epc *epc, u8 func_no,
+ 			     enum pci_epc_irq_type type, u16 interrupt_num);
+-	int	(*map_msi_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++	int	(*map_msi_irq)(struct pci_epc *epc, u8 func_no,
+ 			       phys_addr_t phys_addr, u8 interrupt_num,
+ 			       u32 entry_size, u32 *msi_data);
+ 	int	(*start)(struct pci_epc *epc);
+-- 
+2.17.1
 
-Looks good to me. Thanks.
-
-Acked-by: Ray Jui <ray.jui@broadcom.com>
