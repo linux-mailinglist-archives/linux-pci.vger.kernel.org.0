@@ -2,183 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 362F42701F2
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 18:18:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51DB82701F5
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 18:19:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgIRQRk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Sep 2020 12:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgIRQRj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Sep 2020 12:17:39 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A080B2389E;
-        Fri, 18 Sep 2020 16:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600445858;
-        bh=La+I0LeRlQ8vBK6A9X61U1cHt0qFaaKJwXbA6HBmmA8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=We4EZjcqP/jZru3wF1M6V7KHDbfczAc2MWuOyzMe1DiI0No9Ihoo661RGh9/wEyQb
-         xuok4WfBwteCq0QPaYlyuJIHprk0j55quRKrqcd4Fi7dHGBZ2cMQuWSAJEy6U2kGR7
-         JlIU6LJ+EqLcwFM2qj6Blo5+9zvMC0zUugru2uJ8=
-Date:   Fri, 18 Sep 2020 11:17:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linuxarm@huawei.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Peter Wu <peter@lekensteyn.nl>
-Subject: Re: [PATCH] PCI: Make sure the bus bridge powered on when scanning
- bus
-Message-ID: <20200918161736.GA1810014@bjorn-Precision-5520>
+        id S1726327AbgIRQSB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Sep 2020 12:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgIRQSB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 12:18:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503CAC0613CE;
+        Fri, 18 Sep 2020 09:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=pMf3yFiIumdNcekeEz4Oor/d6RhvmD0GihZ6qnHJHTY=; b=X4vERyHqnHEBEA94wF51qqW4HX
+        NghotAlu3GSor0pxZlvBGiNHhbRiNdC+NjJDY4gArxz+EQUb3Q3FMg3dbMRZhdvSQtuAswZWTTp2/
+        T4L2vgVfjT/fQsbGttNjeAMsOEO+XCxpWTnlvq4WVVpXsXoQWIhIFtLA6Y66rhs4JZ8S9Lzen/gF8
+        G24akz24Y6oR5qETilCtbC0nH3dpd6HdyZeSghodHIqRU9I/zwIN7FLro4RHyCHaTrqUJkHKAoLYG
+        ZEluqruYgGD8oIGk0KLS9Uj3GNXuzmb6RRfluQqNZ+mArW3/cZr3FmyuntTySR2v+b/wpvpTU8ef0
+        Z7x+YLlA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kJJ5D-0005VP-4v; Fri, 18 Sep 2020 16:17:59 +0000
+Subject: Re: [PATCH v5 12/17] PCI: endpoint: Add EP function driver to provide
+ NTB functionality
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
+References: <20200918064227.1463-1-kishon@ti.com>
+ <20200918064227.1463-13-kishon@ti.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <31985ad8-2e9b-99d8-55ef-4ae90103e499@infradead.org>
+Date:   Fri, 18 Sep 2020 09:17:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3fc0ea97-d0ed-22ad-5906-8d9e98920ffd@hisilicon.com>
+In-Reply-To: <20200918064227.1463-13-kishon@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 18, 2020 at 05:31:54PM +0800, Yicong Yang wrote:
-> On 2020/9/18 5:07, Bjorn Helgaas wrote:
-> > On Wed, Jul 29, 2020 at 07:30:23PM +0800, Yicong Yang wrote:
-> >> When the bus bridge is runtime suspended, we'll fail to rescan
-> >> the devices through sysfs as we cannot access the configuration
-> >> space correctly when the bridge is in D3hot.
-> >> It can be reproduced like:
-> >>
-> >> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
-> >> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
-> >>
-> >> 0000:80:00.0 is root port and is runtime suspended and we cannot
-> >> get 0000:81:00.1 after rescan.
-> >>
-> >> Make bridge powered on when scanning the child bus, by adding
-> >> pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
-> >>
-> >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> >> ---
-> >>  drivers/pci/probe.c | 11 +++++++++++
-> >>  1 file changed, 11 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> >> index 2f66988..5bb502b 100644
-> >> --- a/drivers/pci/probe.c
-> >> +++ b/drivers/pci/probe.c
-> >> @@ -2795,6 +2795,14 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
-> >>  
-> >>  	dev_dbg(&bus->dev, "scanning bus\n");
-> >>  
-> >> +	/*
-> >> +	 * Make sure the bus bridge is powered on, otherwise we may not be
-> >> +	 * able to scan the devices as we may fail to access the configuration
-> >> +	 * space of subordinates.
-> >> +	 */
-> >> +	if (bus->self)
-> >> +		pm_runtime_get_sync(&bus->self->dev);
-> >
-> > I think if we do this, we should be able to remove the call from
-> > pci_scan_bridge() added by d963f6512e15 ("PCI: Power on bridges before
-> > scanning new devices"), right?
-> >
-> > The reason we need it here is because there are two paths to
-> > pci_scan_child_bus_extend() and only one of them calls
-> > pm_runtime_get_sync():
-> >
-> >   pci_scan_bridge_extend
-> >     pm_runtime_get_sync
-> >     pci_scan_child_bus_extend
-> >
-> >   pci_scan_child_bus
-> >     pci_scan_child_bus_extend
-> >
-> > If we move the pm_runtime_get_sync() from pci_scan_bridge_extend() to
-> > pci_scan_child_bus_extend(), both paths should be safe.
-> 
-> A bit different, I think. The issue I met is a bit different from
-> Mika, as we go through different sysfs files. Think about rescanning
-> device under a root port,
-> 
-> when echo 1 > /sysfs/bus/pci/devices/${RootPort}/rescan:
-> 
-> rescan_store()
->   pci_rescan_bus(pdev->bus) /* we will rescan the root bus */
->     pci_rescan_child_bus()
->       pci_scan_child_bus_extend()  /* we cannot wake up the bus bridge here as is on the root bus */
->         pci_scan_bridge_extend() /* we have to wake up the root port here */
-> 
-> when echo 1 > /sysfs/bus/pci/devices/${RootPort}/pci_bus/${PciBus}/rescan:
-> 
-> rescan_store()
->   pci_rescan_bus(bus) /* we will rescan the bus of the root port */
->     pci_rescan_child_bus()
->       pci_scan_child_bus_extend() /* we can wake up the bus bridge - root port here */
-> 
-> As different bus is rescanned, so it'll have problem without patch
-> d963f6512e15.
+On 9/17/20 11:42 PM, Kishon Vijay Abraham I wrote:
+> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
+> index 8820d0f7ec77..55ac7bb2d469 100644
+> --- a/drivers/pci/endpoint/functions/Kconfig
+> +++ b/drivers/pci/endpoint/functions/Kconfig
+> @@ -12,3 +12,15 @@ config PCI_EPF_TEST
+>  	   for PCI Endpoint.
+>  
+>  	   If in doubt, say "N" to disable Endpoint test driver.
+> +
+> +config PCI_EPF_NTB
+> +	tristate "PCI Endpoint NTB driver"
+> +	depends on PCI_ENDPOINT
+> +	help
+> +	   Select this configuration option to enable the NTB driver
+> +	   for PCI Endpoint. NTB driver implements NTB controller
+> +	   functionality using multiple PCIe endpoint instances. It
+> +	   can support NTB endpoint function devices created using
+> +	   device tree.
 
-Sorry, I didn't quite follow the above.
+Indent help text with one tab + 2 spaces...
+according to coding-style.rst.
 
-The problem here is about scanning a bridge's secondary bus when the
-bridge may be runtime-suspended.  The bridge may be in D0, D1, D2, or
-D3hot.  It is not in D3cold.  pm_runtime_get_sync() brings a device
-that may have been runtime-suspended back to D0.
 
-All PCI devices respond to config accesses when they are in D0, D1,
-D2, or D3hot [1], so we don't need pm_runtime_get_sync() to access a
-bridge's config space.
+> +
+> +	   If in doubt, say "N" to disable Endpoint NTB driver.
 
-But when a bridge is not in D0, it does not initiate transactions on
-its secondary bus [2], so we do need pm_runtime_get_sync() before we
-attempt config accesses for any children.
 
-pci_scan_bridge_extend() does not directly do anything with the
-secondary bus, which is why I'm not sure it needs
-pm_runtime_get_sync().
+thanks.
+-- 
+~Randy
 
-The accesses to the secondary bus are in pci_scan_slot(), so the
-pm_runtime_get_sync() you added immediately before calling
-pci_scan_slot() makes sense to me.  Although possibly it could go in
-pci_scan_slot() itself, since there are several other callers.
-
-[1] PCIe r5.0, sec 5.3.1.4.1
-[2] PCIe r5.0, sec 5.3.1 implementation note
-
-> >>  	/* Go find them, Rover! */
-> >>  	for (devfn = 0; devfn < 256; devfn += 8) {
-> >>  		nr_devs = pci_scan_slot(bus, devfn);
-> >> @@ -2907,6 +2915,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
-> >>  		}
-> >>  	}
-> >>  
-> >> +	if (bus->self)
-> >> +		pm_runtime_put(&bus->self->dev);
-> > I would probably do this:
-> >
-> >   struct pci_dev *bridge = bus->self;
-> >
-> >   if (bridge)
-> >     pm_runtime_get_sync(&bridge->dev);
-> >   ...
-> >   if (bridge)
-> >     pm_runtime_put(&bridge->dev);
-> 
-> Sure.
-> 
-> Regards,
-> Yicong
-> 
-> 
-> >
-> >>  	/*
-> >>  	 * We've scanned the bus and so we know all about what's on
-> >>  	 * the other side of any bridges that may be on this bus plus
-> >> -- 
-> >> 2.8.1
-> >>
-> > .
-> >
-> 
