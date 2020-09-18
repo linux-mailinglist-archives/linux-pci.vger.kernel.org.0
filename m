@@ -2,38 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB93726F422
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 05:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A91026F2A5
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 05:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbgIRDMN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Sep 2020 23:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
+        id S1728965AbgIRDAj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Sep 2020 23:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgIRCCM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Sep 2020 22:02:12 -0400
+        id S1727552AbgIRCFg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Sep 2020 22:05:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D36C23772;
-        Fri, 18 Sep 2020 02:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8FB3206BE;
+        Fri, 18 Sep 2020 02:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600394531;
-        bh=VmeZ1DFYbzu3R/HAnt7aUFll3uASV6SeN1Pfm3K1Ubs=;
+        s=default; t=1600394735;
+        bh=OB7fHBYN5dII9rmrmI+RtmMwKiuvarjzqOvqPoppLUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YroPYyANOsL4L75k9AhXIgK/ERYEb0QHcM5lJkoPXbxaqTyeJrobbOldttBgrUVu8
-         gB+ncInKvBKqnJVb/6J2yzp5mYRNBOLEjDryZBY0ZxONPLJQUjpq71tlP6ilMqGaeh
-         iZULSRqurUCDfV6m9pe5jUhBy9ptiuQkY4hNSsz0=
+        b=i14l33XhA7d5qxk+G5BuZHn1yHR8pX4Zc+0UKQqdUf4r/ZpNGf0LOaFO9NB7WtkRs
+         bG1ICqivrMvcGJtjj/Dg/kFE0TJxYwWTa8uvJ4gBe9/xlgAjxgMsnP4gUJP3qaLHWc
+         or+8UPPFroaxDXOHqhEY/2IwjnBF4rqHqqluKBG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Kit Chow <kchow@gigaio.com>,
+Cc:     Mikel Rychliski <mikel@mikelr.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 050/330] PCI: Avoid double hpmemsize MMIO window assignment
-Date:   Thu, 17 Sep 2020 21:56:30 -0400
-Message-Id: <20200918020110.2063155-50-sashal@kernel.org>
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 216/330] PCI: Use ioremap(), not phys_to_virt() for platform ROM
+Date:   Thu, 17 Sep 2020 21:59:16 -0400
+Message-Id: <20200918020110.2063155-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
 References: <20200918020110.2063155-1-sashal@kernel.org>
@@ -45,152 +44,241 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+From: Mikel Rychliski <mikel@mikelr.com>
 
-[ Upstream commit c13704f5685deb7d6eb21e293233e0901ed77377 ]
+[ Upstream commit 72e0ef0e5f067fd991f702f0b2635d911d0cf208 ]
 
-Previously, the kernel sometimes assigned more MMIO or MMIO_PREF space than
-desired.  For example, if the user requested 128M of space with
-"pci=realloc,hpmemsize=128M", we sometimes assigned 256M:
+On some EFI systems, the video BIOS is provided by the EFI firmware.  The
+boot stub code stores the physical address of the ROM image in pdev->rom.
+Currently we attempt to access this pointer using phys_to_virt(), which
+doesn't work with CONFIG_HIGHMEM.
 
-  pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-  pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+On these systems, attempting to load the radeon module on a x86_32 kernel
+can result in the following:
 
-With this patch applied:
+  BUG: unable to handle page fault for address: 3e8ed03c
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  *pde = 00000000
+  Oops: 0000 [#1] PREEMPT SMP
+  CPU: 0 PID: 317 Comm: systemd-udevd Not tainted 5.6.0-rc3-next-20200228 #2
+  Hardware name: Apple Computer, Inc. MacPro1,1/Mac-F4208DC8, BIOS     MP11.88Z.005C.B08.0707021221 07/02/07
+  EIP: radeon_get_bios+0x5ed/0xe50 [radeon]
+  Code: 00 00 84 c0 0f 85 12 fd ff ff c7 87 64 01 00 00 00 00 00 00 8b 47 08 8b 55 b0 e8 1e 83 e1 d6 85 c0 74 1a 8b 55 c0 85 d2 74 13 <80> 38 55 75 0e 80 78 01 aa 0f 84 a4 03 00 00 8d 74 26 00 68 dc 06
+  EAX: 3e8ed03c EBX: 00000000 ECX: 3e8ed03c EDX: 00010000
+  ESI: 00040000 EDI: eec04000 EBP: eef3fc60 ESP: eef3fbe0
+  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
+  CR0: 80050033 CR2: 3e8ed03c CR3: 2ec77000 CR4: 000006d0
+  Call Trace:
+   r520_init+0x26/0x240 [radeon]
+   radeon_device_init+0x533/0xa50 [radeon]
+   radeon_driver_load_kms+0x80/0x220 [radeon]
+   drm_dev_register+0xa7/0x180 [drm]
+   radeon_pci_probe+0x10f/0x1a0 [radeon]
+   pci_device_probe+0xd4/0x140
 
-  pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-  pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+Fix the issue by updating all drivers which can access a platform provided
+ROM. Instead of calling the helper function pci_platform_rom() which uses
+phys_to_virt(), call ioremap() directly on the pdev->rom.
 
-This happened when in the first pass, the MMIO_PREF succeeded but the MMIO
-failed. In the next pass, because MMIO_PREF was already assigned, the
-attempt to assign MMIO_PREF returned an error code instead of success
-(nothing more to do, already allocated). Hence, the size which was actually
-allocated, but thought to have failed, was placed in the MMIO window.
+radeon_read_platform_bios() previously directly accessed an __iomem
+pointer. Avoid this by calling memcpy_fromio() instead of kmemdup().
 
-The bug resulted in the MMIO_PREF being added to the MMIO window, which
-meant doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF, the
-MMIO window would likely fail to be assigned altogether due to lack of
-32-bit address space.
+pci_platform_rom() now has no remaining callers, so remove it.
 
-Change find_free_bus_resource() to do the following:
-
-  - Return first unassigned resource of the correct type.
-  - If there is none, return first assigned resource of the correct type.
-  - If none of the above, return NULL.
-
-Returning an assigned resource of the correct type allows the caller to
-distinguish between already assigned and no resource of the correct type.
-
-Add checks in pbus_size_io() and pbus_size_mem() to return success if
-resource returned from find_free_bus_resource() is already allocated.
-
-This avoids pbus_size_io() and pbus_size_mem() returning error code to
-__pci_bus_size_bridges() when a resource has been successfully assigned in
-a previous pass. This fixes the existing behaviour where space for a
-resource could be reserved multiple times in different parent bridge
-windows.
-
-Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-Link: https://lore.kernel.org/r/PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
-Reported-by: Kit Chow <kchow@gigaio.com>
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Link: https://lore.kernel.org/r/20200319021623.5426-1-mikel@mikelr.com
+Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-bus.c | 38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c      | 31 +++++++++++--------
+ .../drm/nouveau/nvkm/subdev/bios/shadowpci.c  | 17 ++++++++--
+ drivers/gpu/drm/radeon/radeon_bios.c          | 30 +++++++++++-------
+ drivers/pci/rom.c                             | 17 ----------
+ include/linux/pci.h                           |  1 -
+ 5 files changed, 52 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 5356630e0e483..44f4866d95d8c 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+index 50dff69a0f6e3..b1172d93c99c3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+@@ -192,30 +192,35 @@ static bool amdgpu_read_bios_from_rom(struct amdgpu_device *adev)
+ 
+ static bool amdgpu_read_platform_bios(struct amdgpu_device *adev)
+ {
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = adev->pdev->rom;
++	size_t romlen = adev->pdev->romlen;
++	void __iomem *bios;
+ 
+ 	adev->bios = NULL;
+ 
+-	bios = pci_platform_rom(adev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
+-	}
+ 
+-	adev->bios = kzalloc(size, GFP_KERNEL);
+-	if (adev->bios == NULL)
++	adev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!adev->bios)
+ 		return false;
+ 
+-	memcpy_fromio(adev->bios, bios, size);
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
+ 
+-	if (!check_atom_bios(adev->bios, size)) {
+-		kfree(adev->bios);
+-		return false;
+-	}
++	memcpy_fromio(adev->bios, bios, romlen);
++	iounmap(bios);
+ 
+-	adev->bios_size = size;
++	if (!check_atom_bios(adev->bios, romlen))
++		goto free_bios;
++
++	adev->bios_size = romlen;
+ 
+ 	return true;
++free_bios:
++	kfree(adev->bios);
++	return false;
  }
  
- /*
-- * Helper function for sizing routines: find first available bus resource
-- * of a given type.  Note: we intentionally skip the bus resources which
-- * have already been assigned (that is, have non-NULL parent resource).
-+ * Helper function for sizing routines.  Assigned resources have non-NULL
-+ * parent resource.
-+ *
-+ * Return first unassigned resource of the correct type.  If there is none,
-+ * return first assigned resource of the correct type.  If none of the
-+ * above, return NULL.
-+ *
-+ * Returning an assigned resource of the correct type allows the caller to
-+ * distinguish between already assigned and no resource of the correct type.
-  */
--static struct resource *find_free_bus_resource(struct pci_bus *bus,
--					       unsigned long type_mask,
--					       unsigned long type)
-+static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
-+						  unsigned long type_mask,
-+						  unsigned long type)
- {
-+	struct resource *r, *r_assigned = NULL;
- 	int i;
--	struct resource *r;
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+index 9b91da09dc5f8..8d9812a51ef63 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+@@ -101,9 +101,13 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	else
+ 		return ERR_PTR(-ENODEV);
  
- 	pci_bus_for_each_resource(bus, r, i) {
- 		if (r == &ioport_resource || r == &iomem_resource)
- 			continue;
- 		if (r && (r->flags & type_mask) == type && !r->parent)
- 			return r;
-+		if (r && (r->flags & type_mask) == type && !r_assigned)
-+			r_assigned = r;
++	if (!pdev->rom || pdev->romlen == 0)
++		return ERR_PTR(-ENODEV);
++
+ 	if ((priv = kmalloc(sizeof(*priv), GFP_KERNEL))) {
++		priv->size = pdev->romlen;
+ 		if (ret = -ENODEV,
+-		    (priv->rom = pci_platform_rom(pdev, &priv->size)))
++		    (priv->rom = ioremap(pdev->rom, pdev->romlen)))
+ 			return priv;
+ 		kfree(priv);
  	}
--	return NULL;
-+	return r_assigned;
+@@ -111,11 +115,20 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	return ERR_PTR(ret);
  }
  
- static resource_size_t calculate_iosize(resource_size_t size,
-@@ -866,8 +874,8 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 			 struct list_head *realloc_head)
++static void
++platform_fini(void *data)
++{
++	struct priv *priv = data;
++
++	iounmap(priv->rom);
++	kfree(priv);
++}
++
+ const struct nvbios_source
+ nvbios_platform = {
+ 	.name = "PLATFORM",
+ 	.init = platform_init,
+-	.fini = (void(*)(void *))kfree,
++	.fini = platform_fini,
+ 	.read = pcirom_read,
+ 	.rw = true,
+ };
+diff --git a/drivers/gpu/drm/radeon/radeon_bios.c b/drivers/gpu/drm/radeon/radeon_bios.c
+index 4d1490fbb0750..756a50e8aff20 100644
+--- a/drivers/gpu/drm/radeon/radeon_bios.c
++++ b/drivers/gpu/drm/radeon/radeon_bios.c
+@@ -108,25 +108,33 @@ static bool radeon_read_bios(struct radeon_device *rdev)
+ 
+ static bool radeon_read_platform_bios(struct radeon_device *rdev)
  {
- 	struct pci_dev *dev;
--	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
--							IORESOURCE_IO);
-+	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
-+							   IORESOURCE_IO);
- 	resource_size_t size = 0, size0 = 0, size1 = 0;
- 	resource_size_t children_add_size = 0;
- 	resource_size_t min_align, align;
-@@ -875,6 +883,10 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 	if (!b_res)
- 		return;
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = rdev->pdev->rom;
++	size_t romlen = rdev->pdev->romlen;
++	void __iomem *bios;
  
-+	/* If resource is already assigned, nothing more to do */
-+	if (b_res->parent)
-+		return;
-+
- 	min_align = window_alignment(bus, IORESOURCE_IO);
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		int i;
-@@ -978,7 +990,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	resource_size_t min_align, align, size, size0, size1;
- 	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
- 	int order, max_order;
--	struct resource *b_res = find_free_bus_resource(bus,
-+	struct resource *b_res = find_bus_resource_of_type(bus,
- 					mask | IORESOURCE_PREFETCH, type);
- 	resource_size_t children_add_size = 0;
- 	resource_size_t children_add_align = 0;
-@@ -987,6 +999,10 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	if (!b_res)
- 		return -ENOSPC;
+ 	rdev->bios = NULL;
  
-+	/* If resource is already assigned, nothing more to do */
-+	if (b_res->parent)
-+		return 0;
+-	bios = pci_platform_rom(rdev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
+-	}
+ 
+-	if (size == 0 || bios[0] != 0x55 || bios[1] != 0xaa) {
++	rdev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!rdev->bios)
+ 		return false;
+-	}
+-	rdev->bios = kmemdup(bios, size, GFP_KERNEL);
+-	if (rdev->bios == NULL) {
+-		return false;
+-	}
 +
- 	memset(aligns, 0, sizeof(aligns));
- 	max_order = 0;
- 	size = 0;
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
++
++	memcpy_fromio(rdev->bios, bios, romlen);
++	iounmap(bios);
++
++	if (rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa)
++		goto free_bios;
+ 
+ 	return true;
++free_bios:
++	kfree(rdev->bios);
++	return false;
+ }
+ 
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
+index 137bf0cee897c..8fc9a4e911e3a 100644
+--- a/drivers/pci/rom.c
++++ b/drivers/pci/rom.c
+@@ -195,20 +195,3 @@ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom)
+ 		pci_disable_rom(pdev);
+ }
+ EXPORT_SYMBOL(pci_unmap_rom);
+-
+-/**
+- * pci_platform_rom - provides a pointer to any ROM image provided by the
+- * platform
+- * @pdev: pointer to pci device struct
+- * @size: pointer to receive size of pci window over ROM
+- */
+-void __iomem *pci_platform_rom(struct pci_dev *pdev, size_t *size)
+-{
+-	if (pdev->rom && pdev->romlen) {
+-		*size = pdev->romlen;
+-		return phys_to_virt((phys_addr_t)pdev->rom);
+-	}
+-
+-	return NULL;
+-}
+-EXPORT_SYMBOL(pci_platform_rom);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index f39f22f9ee474..e92bd9b32f369 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1216,7 +1216,6 @@ int pci_enable_rom(struct pci_dev *pdev);
+ void pci_disable_rom(struct pci_dev *pdev);
+ void __iomem __must_check *pci_map_rom(struct pci_dev *pdev, size_t *size);
+ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom);
+-void __iomem __must_check *pci_platform_rom(struct pci_dev *pdev, size_t *size);
+ 
+ /* Power management related routines */
+ int pci_save_state(struct pci_dev *dev);
 -- 
 2.25.1
 
