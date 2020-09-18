@@ -2,113 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62031270798
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 22:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9835327076F
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Sep 2020 22:50:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgIRU42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Sep 2020 16:56:28 -0400
-Received: from mga01.intel.com ([192.55.52.88]:62248 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgIRU41 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Sep 2020 16:56:27 -0400
-IronPort-SDR: ddgolQSSA2Ex4auK9fTXwDNB4KuL7qcsdi2O7APi0Uu1g3sEJ2elehu/SwWFlOwwOiZDcLR1RI
- NIi6TOgkptig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9748"; a="178120917"
-X-IronPort-AV: E=Sophos;i="5.77,274,1596524400"; 
-   d="scan'208";a="178120917"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2020 13:46:31 -0700
-IronPort-SDR: /W71CSV7HTPPsufRn/8lv7wvqc/uP+yw0lluNhqkLmM7k6ve0djrZIfCJ4rLH8HTUAkM8BoXlw
- rMRXunqnX3nA==
-X-IronPort-AV: E=Sophos;i="5.77,274,1596524400"; 
-   d="scan'208";a="484366852"
-Received: from xsunzhou-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.251.153.106])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2020 13:46:31 -0700
-From:   Sean V Kelley <sean.v.kelley@intel.com>
-To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [PATCH v5 09/10] PCI/PME: Add pcie_walk_rcec() to RCEC PME handling
-Date:   Fri, 18 Sep 2020 13:46:02 -0700
-Message-Id: <20200918204603.62100-10-sean.v.kelley@intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200918204603.62100-1-sean.v.kelley@intel.com>
-References: <20200918204603.62100-1-sean.v.kelley@intel.com>
+        id S1726406AbgIRUuQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Sep 2020 16:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgIRUuQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 16:50:16 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1358FC0613D0
+        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 13:50:16 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p9so9823998ejf.6
+        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 13:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f4okZ/7bct4uSKwZ6O3z2m5KyitVLtU4XG9WgtUAxwc=;
+        b=TxBH8AyvU6HWp66ncdZqEtoRFWD/YTji6mddQAC1tx4KXEeHFtGLdS3R9syxDOr/gw
+         EJ35wyT17gb2NJYLGzLi6nzgB21j9JTRzpSNH6ko4dn+slxaKb4IH8Ki7QRFsqI7v9aA
+         S87ydkbPm8kuIhgWoL3lKfaG0SLalSIBz1ahIC+ONuQXK7GoSVTs2pnZksirb/CgEcGJ
+         dda7cH+5KO+boQPBNW5nn7bmDiexjhjP2RtZPQz3JvCcezgV03AKeN1igjv/uW0ePsfq
+         kEgfrqOrvUv6gNdwmh3rNp+rjsPflT1TKKMgiRyTccCH7ogTg/un4wxhA9XtkrhpxfY7
+         o61Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f4okZ/7bct4uSKwZ6O3z2m5KyitVLtU4XG9WgtUAxwc=;
+        b=m4+bnj6Lid0jqwImmHMWEQVXwbe/CMCJ4b8UhVTDxqABBSPz/eBdwJd/6UxYAs9YWD
+         kZ8BG0Zg0TX7GykFsRHrw2Fulzakmbl9pVqvjknfSPTqFm1L5WdbW3Udof9pyFV8jouu
+         +gcNTwFo7nGRrJ1btNoBQLKjIzd9ZCD/6WWy448XQ3XoFZgrfLiYN3sqBzCIk8fKdLOU
+         xiDWBvmklUZyQrXX9iTI3aqsE1EcLuOKxCtAyAAVaD/xVwpvox+dApr9kk72LaaQtc6N
+         A3kmRSSVwLsOhsDJn3ZyDNCtwHkYo531/gun+dnky77ct5b2rpMl/Yax/C6Y7dS+TXSX
+         4f9w==
+X-Gm-Message-State: AOAM532oXgeFSx+0WPu862Ca8MH/HXP2pIctMl4YYai4+Ys7ymLGyQTN
+        VWbopEiplAki6swBf7dFJcUnH8lJwlq4IWN72Gu11w==
+X-Google-Smtp-Source: ABdhPJxlmp9BJajUv0E4cVIdv3SYp0wheOk/nOpDB3mBZ4a/wfqp4uUfhfc+2gKB4vscqXhsi0M+J+iTaTW/5sPlq3g=
+X-Received: by 2002:a17:906:454e:: with SMTP id s14mr38862035ejq.137.1600462214260;
+ Fri, 18 Sep 2020 13:50:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200918201436.2932360-1-samitolvanen@google.com> <CA+icZUW1MYSUz8jwOaVpi6ib1dyCv1VmG5priw6TTzXGSh_8Gg@mail.gmail.com>
+In-Reply-To: <CA+icZUW1MYSUz8jwOaVpi6ib1dyCv1VmG5priw6TTzXGSh_8Gg@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 18 Sep 2020 13:50:03 -0700
+Message-ID: <CABCJKueyWvNB2MQw_PCLtZb8F1+sA1QOLJi_5qMKwdFCcwSMGg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/30] Add support for Clang LTO
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
-and also have the PME capability. As with AER, there is a need to be
-able to walk the RCiEPs associated with their RCEC for purposes of
-acting upon them with callbacks. So add RCEC support through the use
-of pcie_walk_rcec() to the current PME service driver and attach the
-PME service driver to the RCEC device.
+On Fri, Sep 18, 2020 at 1:22 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Fri, Sep 18, 2020 at 10:14 PM 'Sami Tolvanen' via Clang Built Linux
+> <clang-built-linux@googlegroups.com> wrote:
+> >
+> > This patch series adds support for building x86_64 and arm64 kernels
+> > with Clang's Link Time Optimization (LTO).
+> >
+> > In addition to performance, the primary motivation for LTO is
+> > to allow Clang's Control-Flow Integrity (CFI) to be used in the
+> > kernel. Google has shipped millions of Pixel devices running three
+> > major kernel versions with LTO+CFI since 2018.
+> >
+> > Most of the patches are build system changes for handling LLVM
+> > bitcode, which Clang produces with LTO instead of ELF object files,
+> > postponing ELF processing until a later stage, and ensuring initcall
+> > ordering.
+> >
+> > Note that patches 1-5 are not directly related to LTO, but are
+> > needed to compile LTO kernels with ToT Clang, so I'm including them
+> > in the series for your convenience:
+> >
+> >  - Patches 1-3 fix build issues with LLVM and they are already in
+> >    linux-next.
+> >
+> >  - Patch 4 fixes x86 builds with LLVM IAS, but it hasn't yet been
+> >    picked up by maintainers.
+> >
+> >  - Patch 5 is from Masahiro's kbuild tree and makes the LTO linker
+> >    script changes much cleaner.
+> >
+>
+> Hi Sami,
+>
+> might be good to point to your GitHub tree and corresponding
+> release-tag for easy fetching.
 
-Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
----
- drivers/pci/pcie/pme.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+Ah, true. You can also pull this series from
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index 6a32970bb731..87799166c96a 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
- static void pcie_pme_mark_devices(struct pci_dev *port)
- {
- 	pcie_pme_can_wakeup(port, NULL);
--	if (port->subordinate)
-+
-+	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
-+		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
-+	else if (port->subordinate)
- 		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
- }
- 
-@@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
-  */
- static int pcie_pme_probe(struct pcie_device *srv)
- {
--	struct pci_dev *port;
-+	struct pci_dev *port = srv->port;
- 	struct pcie_pme_service_data *data;
- 	int ret;
- 
-+	/* Limit to Root Ports or Root Complex Event Collectors */
-+	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-+	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-+		return -ENODEV;
-+
- 	data = kzalloc(sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
-@@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
- 	data->srv = srv;
- 	set_service_data(srv, data);
- 
--	port = srv->port;
- 	pcie_pme_interrupt_enable(port, false);
- 	pcie_clear_root_pme_status(port);
- 
-@@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
- 
- static struct pcie_port_service_driver pcie_pme_driver = {
- 	.name		= "pcie_pme",
--	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-+	.port_type	= PCIE_ANY_PORT,
- 	.service	= PCIE_PORT_SERVICE_PME,
- 
- 	.probe		= pcie_pme_probe,
--- 
-2.28.0
+  https://github.com/samitolvanen/linux.git lto-v3
 
+Sami
