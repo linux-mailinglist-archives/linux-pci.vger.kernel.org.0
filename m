@@ -2,159 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05A15270902
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Sep 2020 00:47:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C80A2270CEC
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Sep 2020 12:22:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgIRWrN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Sep 2020 18:47:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgIRWrN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Sep 2020 18:47:13 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 759A6C0613CE
-        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 15:47:13 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id db4so3826727qvb.4
-        for <linux-pci@vger.kernel.org>; Fri, 18 Sep 2020 15:47:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=XuZMGRcF3uXKcqay96ckMECDT+LBEbq1d4YT/NkGsJg=;
-        b=F5VwfY9uwDpMJ0BW9HLoB+IN/B3o4HUhfpCJP/YGsOIQQo7Vwu6NOcdV0RnRuU6xBR
-         nwXKRvlYglXm3G4SuBerAIAkx2lySv7J0FaeiSlS+OUIAaWMsIGBkV3NhmyfY6XTf8JX
-         1u07qRw4yY+MSy4Oa7dcac9liasKnyS1b6RCT8BG5p51DOMBDkiLw7tDgr2UQhshNZuy
-         cltydHEHZLo2MzpR2Q1T27u2iAEK7PiUzs+k9MkpkwkVC6BT5E8PCPQn5h5gDLjLXdEZ
-         gNNtNK1+k/mbUDxwI9EFiy6zC7tf7GImGxfFb04jCtoqKfcIYDAcvCMmAKAWUpZ3K6Z5
-         bZMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=XuZMGRcF3uXKcqay96ckMECDT+LBEbq1d4YT/NkGsJg=;
-        b=UYfO35sujeHg1GqwS4l1iZ7DMDCQlunVq7RKL0ZFIkmoIViSWk0wkBxD9ilWnTAlgg
-         rjtpdxG5SRECI6KkrEAwToR9jHQBVtFdm03hNh33Demwy/I9X+jvaJNd2tprpHmotqpX
-         ARkYoHyuJ2K6ql9k7xD7kHMc0Eqm7WKQwbKzTjuEpQJs3MgljfO36U32gfnBUBavKDt8
-         aQLLH7TFNcTXxPrxwVY1gkakB4/BUpm5kKDcbupqXHaFflRERLwsI0At+FmeSgb4TV7P
-         MOT21pQMdEKwQ1maMVTJhUzlfFm+fIKJ6PkiPuiWxFJb+aVY+f9CwlBu28BYo39yeLZl
-         An/A==
-X-Gm-Message-State: AOAM533qWVKzPQTAHZ1Eg+64/0vrkOsPaBC22pTIrRBM/aBX1/upW66K
-        IYnOhx+cF42uAl9D87EYCAiMD2VhnUsmzo1OFFV1ShaaiLg=
-X-Google-Smtp-Source: ABdhPJyxwubYqUxW6/mosOKJdjc+4AggHco8RyUC8B5RdO9nX5+JCJ7YqLpHcG1ohruKLLE0LLHeyHpC0y72dsWKS8o=
-X-Received: by 2002:a0c:9e0e:: with SMTP id p14mr18649712qve.25.1600469232143;
- Fri, 18 Sep 2020 15:47:12 -0700 (PDT)
+        id S1726152AbgISKWr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Sep 2020 06:22:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35380 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726041AbgISKWr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 19 Sep 2020 06:22:47 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 589AED33047BBAA67BED;
+        Sat, 19 Sep 2020 18:22:45 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Sat, 19 Sep 2020
+ 18:22:37 +0800
+Subject: Re: [PATCH] PCI: Make sure the bus bridge powered on when scanning
+ bus
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20200918161736.GA1810014@bjorn-Precision-5520>
+CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linuxarm@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Peter Wu <peter@lekensteyn.nl>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <0f900024-fb38-e485-9ba1-d7471c792bac@hisilicon.com>
+Date:   Sat, 19 Sep 2020 18:22:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <20200729222758.GA1963264@bjorn-Precision-5520> <20200803145832.11234-1-ian.kumlien@gmail.com>
-In-Reply-To: <20200803145832.11234-1-ian.kumlien@gmail.com>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Sat, 19 Sep 2020 00:47:01 +0200
-Message-ID: <CAA85sZttK8WUvOEmaGCegd77YEjji_QjTDwAucZstunKegqWGQ@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200918161736.GA1810014@bjorn-Precision-5520>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Any comments on this? I'm still patching my kernels...
+On 2020/9/19 0:17, Bjorn Helgaas wrote:
 
-On Mon, Aug 3, 2020 at 4:58 PM Ian Kumlien <ian.kumlien@gmail.com> wrote:
+> On Fri, Sep 18, 2020 at 05:31:54PM +0800, Yicong Yang wrote:
+>> On 2020/9/18 5:07, Bjorn Helgaas wrote:
+>>> On Wed, Jul 29, 2020 at 07:30:23PM +0800, Yicong Yang wrote:
+>>>> When the bus bridge is runtime suspended, we'll fail to rescan
+>>>> the devices through sysfs as we cannot access the configuration
+>>>> space correctly when the bridge is in D3hot.
+>>>> It can be reproduced like:
+>>>>
+>>>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+>>>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+>>>>
+>>>> 0000:80:00.0 is root port and is runtime suspended and we cannot
+>>>> get 0000:81:00.1 after rescan.
+>>>>
+>>>> Make bridge powered on when scanning the child bus, by adding
+>>>> pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
+>>>>
+>>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>>>> ---
+>>>>  drivers/pci/probe.c | 11 +++++++++++
+>>>>  1 file changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>>>> index 2f66988..5bb502b 100644
+>>>> --- a/drivers/pci/probe.c
+>>>> +++ b/drivers/pci/probe.c
+>>>> @@ -2795,6 +2795,14 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>>>  
+>>>>  	dev_dbg(&bus->dev, "scanning bus\n");
+>>>>  
+>>>> +	/*
+>>>> +	 * Make sure the bus bridge is powered on, otherwise we may not be
+>>>> +	 * able to scan the devices as we may fail to access the configuration
+>>>> +	 * space of subordinates.
+>>>> +	 */
+>>>> +	if (bus->self)
+>>>> +		pm_runtime_get_sync(&bus->self->dev);
+>>> I think if we do this, we should be able to remove the call from
+>>> pci_scan_bridge() added by d963f6512e15 ("PCI: Power on bridges before
+>>> scanning new devices"), right?
+>>>
+>>> The reason we need it here is because there are two paths to
+>>> pci_scan_child_bus_extend() and only one of them calls
+>>> pm_runtime_get_sync():
+>>>
+>>>   pci_scan_bridge_extend
+>>>     pm_runtime_get_sync
+>>>     pci_scan_child_bus_extend
+>>>
+>>>   pci_scan_child_bus
+>>>     pci_scan_child_bus_extend
+>>>
+>>> If we move the pm_runtime_get_sync() from pci_scan_bridge_extend() to
+>>> pci_scan_child_bus_extend(), both paths should be safe.
+>> A bit different, I think. The issue I met is a bit different from
+>> Mika, as we go through different sysfs files. Think about rescanning
+>> device under a root port,
+>>
+>> when echo 1 > /sysfs/bus/pci/devices/${RootPort}/rescan:
+>>
+>> rescan_store()
+>>   pci_rescan_bus(pdev->bus) /* we will rescan the root bus */
+>>     pci_rescan_child_bus()
+>>       pci_scan_child_bus_extend()  /* we cannot wake up the bus bridge here as is on the root bus */
+>>         pci_scan_bridge_extend() /* we have to wake up the root port here */
+>>
+>> when echo 1 > /sysfs/bus/pci/devices/${RootPort}/pci_bus/${PciBus}/rescan:
+>>
+>> rescan_store()
+>>   pci_rescan_bus(bus) /* we will rescan the bus of the root port */
+>>     pci_rescan_child_bus()
+>>       pci_scan_child_bus_extend() /* we can wake up the bus bridge - root port here */
+>>
+>> As different bus is rescanned, so it'll have problem without patch
+>> d963f6512e15.
+> Sorry, I didn't quite follow the above.
 >
-> Changes:
-> * Handle L0s correclty as well, making it per direction
-> * Moved the switch cost in to the if statement since a non L1 switch has
->   no additional cost.
+> The problem here is about scanning a bridge's secondary bus when the
+> bridge may be runtime-suspended.  The bridge may be in D0, D1, D2, or
+> D3hot.  It is not in D3cold.  pm_runtime_get_sync() brings a device
+> that may have been runtime-suspended back to D0.
 >
-> For L0s:
-> We sumarize the entire latency per direction to see if it's acceptable
-> for the PCIe endpoint.
+> All PCI devices respond to config accesses when they are in D0, D1,
+> D2, or D3hot [1], so we don't need pm_runtime_get_sync() to access a
+> bridge's config space.
 >
-> If it's not, we clear the link for the path that had too large latency.
+> But when a bridge is not in D0, it does not initiate transactions on
+> its secondary bus [2], so we do need pm_runtime_get_sync() before we
+> attempt config accesses for any children.
 >
-> For L1:
-> Currently we check the maximum latency of upstream and downstream
-> per link, not the maximum for the path
+> pci_scan_bridge_extend() does not directly do anything with the
+> secondary bus, which is why I'm not sure it needs
+> pm_runtime_get_sync().
 >
-> This would work if all links have the same latency, but:
-> endpoint -> c -> b -> a -> root  (in the order we walk the path)
+> The accesses to the secondary bus are in pci_scan_slot(), so the
+> pm_runtime_get_sync() you added immediately before calling
+> pci_scan_slot() makes sense to me.  Although possibly it could go in
+> pci_scan_slot() itself, since there are several other callers.
 >
-> If c or b has the higest latency, it will not register
+> [1] PCIe r5.0, sec 5.3.1.4.1
+> [2] PCIe r5.0, sec 5.3.1 implementation note
+
+yes it's right. with this patch and patch d963f6512e15 removed, the rescan
+works well and I've tested it. I didn't understand it correctly in my last
+reply, sorry. I'll remove d963f6512e15 in v2 patch.
+
+If we put the pm_runtime_get/put in the pci_scan_slot(), we'll get/put the
+bridge many times. so maybe put it immediately before pci_scan_slot() is
+better?
+
+Thanks,
+Yicong
+
+
 >
-> Fix this by maintaining the maximum latency value for the path
+>>>>  	/* Go find them, Rover! */
+>>>>  	for (devfn = 0; devfn < 256; devfn += 8) {
+>>>>  		nr_devs = pci_scan_slot(bus, devfn);
+>>>> @@ -2907,6 +2915,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>>>  		}
+>>>>  	}
+>>>>  
+>>>> +	if (bus->self)
+>>>> +		pm_runtime_put(&bus->self->dev);
+>>> I would probably do this:
+>>>
+>>>   struct pci_dev *bridge = bus->self;
+>>>
+>>>   if (bridge)
+>>>     pm_runtime_get_sync(&bridge->dev);
+>>>   ...
+>>>   if (bridge)
+>>>     pm_runtime_put(&bridge->dev);
+>> Sure.
+>>
+>> Regards,
+>> Yicong
+>>
+>>
+>>>>  	/*
+>>>>  	 * We've scanned the bus and so we know all about what's on
+>>>>  	 * the other side of any bridges that may be on this bus plus
+>>>> -- 
+>>>> 2.8.1
+>>>>
+>>> .
+>>>
+> .
 >
-> This change fixes a regression introduced (but not caused) by:
-> 66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
->
-> Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
-> ---
->  drivers/pci/pcie/aspm.c | 41 ++++++++++++++++++++++++++---------------
->  1 file changed, 26 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index b17e5ffd31b1..bc512e217258 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
->
->  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->  {
-> -       u32 latency, l1_switch_latency = 0;
-> +       u32 latency, l1_max_latency = 0, l1_switch_latency = 0,
-> +               l0s_latency_up = 0, l0s_latency_dw = 0;
->         struct aspm_latency *acceptable;
->         struct pcie_link_state *link;
->
-> @@ -447,15 +448,22 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->         acceptable = &link->acceptable[PCI_FUNC(endpoint->devfn)];
->
->         while (link) {
-> -               /* Check upstream direction L0s latency */
-> -               if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
-> -                   (link->latency_up.l0s > acceptable->l0s))
-> -                       link->aspm_capable &= ~ASPM_STATE_L0S_UP;
-> -
-> -               /* Check downstream direction L0s latency */
-> -               if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
-> -                   (link->latency_dw.l0s > acceptable->l0s))
-> -                       link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-> +               if (link->aspm_capable & ASPM_STATE_L0S) {
-> +                       /* Check upstream direction L0s latency */
-> +                       if (link->aspm_capable & ASPM_STATE_L0S_UP) {
-> +                               l0s_latency_up += link->latency_up.l0s;
-> +                               if (l0s_latency_up > acceptable->l0s)
-> +                                       link->aspm_capable &= ~ASPM_STATE_L0S_UP;
-> +                       }
-> +
-> +                       /* Check downstream direction L0s latency */
-> +                       if (link->aspm_capable & ASPM_STATE_L0S_DW) {
-> +                               l0s_latency_dw += link->latency_dw.l0s;
-> +                               if (l0s_latency_dw > acceptable->l0s)
-> +                                       link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-> +                       }
-> +               }
-> +
->                 /*
->                  * Check L1 latency.
->                  * Every switch on the path to root complex need 1
-> @@ -469,11 +477,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->                  * L1 exit latencies advertised by a device include L1
->                  * substate latencies (and hence do not do any check).
->                  */
-> -               latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> -               if ((link->aspm_capable & ASPM_STATE_L1) &&
-> -                   (latency + l1_switch_latency > acceptable->l1))
-> -                       link->aspm_capable &= ~ASPM_STATE_L1;
-> -               l1_switch_latency += 1000;
-> +               if (link->aspm_capable & ASPM_STATE_L1) {
-> +                       latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> +                       l1_max_latency = max_t(u32, latency, l1_max_latency);
-> +                       if (l1_max_latency + l1_switch_latency > acceptable->l1)
-> +                               link->aspm_capable &= ~ASPM_STATE_L1;
-> +
-> +                       l1_switch_latency += 1000;
-> +               }
->
->                 link = link->parent;
->         }
-> --
-> 2.28.0
->
+
