@@ -2,114 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC5C270D48
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Sep 2020 12:54:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A17B270D5B
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Sep 2020 13:01:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgISKyd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Sep 2020 06:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgISKyc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Sep 2020 06:54:32 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D683C0613CE;
-        Sat, 19 Sep 2020 03:54:32 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id s19so6353848ybc.5;
-        Sat, 19 Sep 2020 03:54:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pzSAC77KGj3b71DFM8b51B+fZYfC1Bsciu342riUU+I=;
-        b=q3aT5V6EYpJSrJl/fZxvehZ9OLp1zFUW4vS7anYCIVy32j7NWiA6qEyJPp+k82RqFP
-         0RcCLeEvdynv7ZL1KsxKuAPjJ3CmL385W0hTKZR3Svfxfq64HyLGOZv7XUxG1gVPiKY4
-         OcxFH/huz5+ZJwenNgGrJiujfVF077N5O7y/pTAEqSD5fVfPZDg0r3vfztI1xzKMhn27
-         /fFkHqgw4wyFop0l/J0qOegfFQsObv+T9uhO1opjkrdYtDjIzInwNF97zfNG12gyugE6
-         rPZISBt5qEfy55VNNc4dP4clg7dPo0hdPZolHWAEWcaS94b//yBekPMElBwzBVvlUdTm
-         GmIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pzSAC77KGj3b71DFM8b51B+fZYfC1Bsciu342riUU+I=;
-        b=itS3dXbvk4S1Ldnp/IIMacECrNyZW/WmgOk4BJlkRnhj31zd3fIisrWlb7sa2Tq7D0
-         XezdpcZ8wE7r9azt5c5gvYwFAmsEpdKTWJKagaIjmHtW9XkuuTVbhysf8Q2pSimjzc5e
-         WHzl+gq1iGQQhypALmnVRbpPGYEEZpiVfai52LS2x7hM7ttKwlIF7t3iolaTagj367uG
-         kgbIWlKHevrvD6xjwGIarmMCVhHrxXaSmxecrZhpdLVa3MI3pnOUzyCA76U5AdwZtbka
-         jPiabqUMKmfBMBaacWtxE8JJkYM4dIIAHvixIdGdrxqtOpP5haG7PEWQfEjc+pGC1+ji
-         JfuQ==
-X-Gm-Message-State: AOAM531XdgWFPWEOTN/3l75PFwNKJjjBwgv6lxNpFjBcJL1G0s2iotAp
-        TrLVy4dZ9CAd4Pkac9cOaZCF1BO01avuPhF/o48=
-X-Google-Smtp-Source: ABdhPJw5efc5NhFkTetrZgcf7Z8DzfCZh/tmjP6pUg93tWkSjNZlODD1MWwUBtozQzW7FY/5hEpct+waFEd5OOBoI4k=
-X-Received: by 2002:a25:e811:: with SMTP id k17mr45613290ybd.401.1600512871413;
- Sat, 19 Sep 2020 03:54:31 -0700 (PDT)
+        id S1726129AbgISLBz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Sep 2020 07:01:55 -0400
+Received: from mga04.intel.com ([192.55.52.120]:5486 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbgISLBz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 19 Sep 2020 07:01:55 -0400
+IronPort-SDR: jMtN8acD75qloapfQlfmau7bm1eWlvo6N5ErmkcxV0SlS+oG57hYaDTH34Vujd+IZ9omv/jgtG
+ Rsgj45nrpcqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9748"; a="157506625"
+X-IronPort-AV: E=Sophos;i="5.77,278,1596524400"; 
+   d="scan'208";a="157506625"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2020 03:56:54 -0700
+IronPort-SDR: VhWDct5HRZxHBRh2RVUwPxhG+x+YbhAHpeTNB4aQdrlOnZal8I0sTRbVHUI2Ts6ZqmXUe6POYd
+ 8ioP+8Swacpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,278,1596524400"; 
+   d="scan'208";a="347345176"
+Received: from lkp-server01.sh.intel.com (HELO a05db971c861) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 19 Sep 2020 03:56:52 -0700
+Received: from kbuild by a05db971c861 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kJaY0-00010r-7M; Sat, 19 Sep 2020 10:56:52 +0000
+Date:   Sat, 19 Sep 2020 18:56:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 9f7e8e9355250b59371f5262fe2c527b974151c5
+Message-ID: <5f65e3c0.afofTG1LzWtHgF0K%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sat, 19 Sep 2020 11:54:05 +0100
-Message-ID: <CA+V-a8vuR-7vqxNnrqQ5Ysf3Xjvhp3xRZ33i8+6nEGFLJciT3A@mail.gmail.com>
-Subject: Re: [PATCH 11/20] dt-bindings: usb: renesas,usbhs: Add r8a774e1 support
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Greg,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 9f7e8e9355250b59371f5262fe2c527b974151c5  Merge branch 'remotes/lorenzo/pci/xilinx'
 
-On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Document RZ/G2H (R8A774E1) SoC bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/usb/renesas,usbhs.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-Could you please pick this patch.
+elapsed time: 722m
 
-Cheers,
-Prabhakar
+configs tested: 86
+configs skipped: 2
 
-> diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-> index af4826fb6824..737c1f47b7de 100644
-> --- a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-> +++ b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-> @@ -39,6 +39,7 @@ properties:
->                - renesas,usbhs-r8a774a1 # RZ/G2M
->                - renesas,usbhs-r8a774b1 # RZ/G2N
->                - renesas,usbhs-r8a774c0 # RZ/G2E
-> +              - renesas,usbhs-r8a774e1 # RZ/G2H
->                - renesas,usbhs-r8a7795  # R-Car H3
->                - renesas,usbhs-r8a7796  # R-Car M3-W
->                - renesas,usbhs-r8a77961 # R-Car M3-W+
-> --
-> 2.17.1
->
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                          pxa3xx_defconfig
+powerpc                      mgcoge_defconfig
+parisc                generic-32bit_defconfig
+m68k                        m5272c3_defconfig
+sh                     magicpanelr2_defconfig
+arm                         nhk8815_defconfig
+arm                    vt8500_v6_v7_defconfig
+arm                         mv78xx0_defconfig
+arm                          badge4_defconfig
+mips                      loongson3_defconfig
+m68k                        stmark2_defconfig
+sh                           se7780_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a004-20200917
+i386                 randconfig-a006-20200917
+i386                 randconfig-a003-20200917
+i386                 randconfig-a001-20200917
+i386                 randconfig-a002-20200917
+i386                 randconfig-a005-20200917
+x86_64               randconfig-a014-20200917
+x86_64               randconfig-a011-20200917
+x86_64               randconfig-a016-20200917
+x86_64               randconfig-a012-20200917
+x86_64               randconfig-a015-20200917
+x86_64               randconfig-a013-20200917
+x86_64               randconfig-a004-20200918
+x86_64               randconfig-a006-20200918
+x86_64               randconfig-a003-20200918
+x86_64               randconfig-a002-20200918
+x86_64               randconfig-a005-20200918
+x86_64               randconfig-a001-20200918
+i386                 randconfig-a015-20200917
+i386                 randconfig-a014-20200917
+i386                 randconfig-a011-20200917
+i386                 randconfig-a013-20200917
+i386                 randconfig-a016-20200917
+i386                 randconfig-a012-20200917
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
