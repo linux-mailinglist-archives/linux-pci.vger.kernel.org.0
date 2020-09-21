@@ -2,88 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D92862724A0
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 15:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 054232724B8
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 15:10:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgIUNJo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Sep 2020 09:09:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgIUNJn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Sep 2020 09:09:43 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BA0C21789;
-        Mon, 21 Sep 2020 13:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600693783;
-        bh=tV9re0vJKY15IANIsLBtwOSpqPFekeUVNGNJqdyZCEQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gj2ZcVHpDmqMimR+38DpWqLVIREuioT8exZybsWFHEDcvm9ocAjPsjCYVcJIejTeq
-         yopx7AAKAYKx6zFRS23ZGPRbsjtxO5EP4vUKVsu4JQhwdOIHuo601ovmQuU97V1qYM
-         so6Ic5guzHtZXH8206Mj+TntjRgzl278reoWTD3Q=
-Received: by pali.im (Postfix)
-        id D1BED7BF; Mon, 21 Sep 2020 15:09:40 +0200 (CEST)
-Date:   Mon, 21 Sep 2020 15:09:40 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
+        id S1727417AbgIUNKn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Sep 2020 09:10:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59750 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727386AbgIUNKm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Sep 2020 09:10:42 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 009869A76134ABAF83D4;
+        Mon, 21 Sep 2020 21:10:37 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 21 Sep 2020 21:10:29 +0800
+From:   Qinglang Miao <miaoqinglang@huawei.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: aardvark: Fix comphy with old ATF
-Message-ID: <20200921130940.ticdda2lo2fhcrl5@pali>
-References: <20200902144344.16684-1-pali@kernel.org>
- <3f2b0e5b-87f1-7887-4afc-77f31d56b5a3@gmail.com>
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>
+Subject: [PATCH -next] PCI: cadence: simplify the return expression of cdns_pcie_host_init_address_translation()
+Date:   Mon, 21 Sep 2020 21:10:53 +0800
+Message-ID: <20200921131053.92752-1-miaoqinglang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3f2b0e5b-87f1-7887-4afc-77f31d56b5a3@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Lorenzo, could you look and review this patch series? It fixes commit
-366697018c9a and we would like to have fix also in stable kernels.
+Simplify the return expression.
 
-On Wednesday 16 September 2020 17:14:02 Tomasz Maciej Nowak wrote:
-> W dniu 02.09.2020 o 16:43, Pali Rohár pisze:
-> > This patch series fixes regression introduced in commit 366697018c9a
-> > ("PCI: aardvark: Add PHY support") which caused aardvark driver
-> > initialization failure on EspressoBin board with factory version of
-> > Arm Trusted Firmware provided by Marvell.
-> > 
-> > Second patch depends on the first patch, so please add appropriate
-> > Fixes/Cc:stable@ tags to have both patches correctly backported to
-> > stable kernels.
-> > 
-> > I have tested both patches with Marvell ATF firmware ebin-17.10-uart.zip
-> > and with upstream ATF+uboot and aardvark was initialized successfully.
-> > Without this patch series on ebin-17.10-uart.zip aardvark initialization
-> > failed.
-> > 
-> > Pali Rohár (2):
-> >   phy: marvell: comphy: Convert internal SMCC firmware return codes to
-> >     errno
-> >   PCI: aardvark: Fix initialization with old Marvell's Arm Trusted
-> >     Firmware
-> 
-> For both patches
-> 
-> Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-> 
-> > 
-> >  drivers/pci/controller/pci-aardvark.c        |  4 +++-
-> >  drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 14 +++++++++++---
-> >  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 14 +++++++++++---
-> >  3 files changed, 25 insertions(+), 7 deletions(-)
-> > 
-> 
+Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 4550e0d46..811c1cb2e 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -337,7 +337,7 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 	struct resource_entry *entry;
+ 	u64 cpu_addr = cfg_res->start;
+ 	u32 addr0, addr1, desc1;
+-	int r, err, busnr = 0;
++	int r, busnr = 0;
+ 
+ 	entry = resource_list_first_type(&bridge->windows, IORESOURCE_BUS);
+ 	if (entry)
+@@ -383,11 +383,7 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 		r++;
+ 	}
+ 
+-	err = cdns_pcie_host_map_dma_ranges(rc);
+-	if (err)
+-		return err;
+-
+-	return 0;
++	return cdns_pcie_host_map_dma_ranges(rc);
+ }
+ 
+ static int cdns_pcie_host_init(struct device *dev,
+-- 
+2.23.0
+
