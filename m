@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB608273442
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 22:54:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7A5C27346D
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 22:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgIUUxc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Sep 2020 16:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44344 "EHLO
+        id S1727339AbgIUU5M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Sep 2020 16:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728222AbgIUUxc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Sep 2020 16:53:32 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0ACC0613CF
-        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 13:53:31 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l15so765458wmh.1
-        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 13:53:31 -0700 (PDT)
+        with ESMTP id S1727639AbgIUU5M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Sep 2020 16:57:12 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21ACC061755
+        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 13:57:11 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s12so14339314wrw.11
+        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 13:57:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VyOUgvgYBcvSVJwd07G+1UHWY+oTYYCo3nDdISMnh30=;
-        b=Y/pgvdCDrmxLzJnZ5tCEsA7HcR7RBCHcBTSKiso3QJNVkTijtSibOIwXJflhj0DBe5
-         w9kDADB3J170E0BdvgnpqIcAn3k8zIMp/jGNgnXoVjLkxWilL6FNw+zK40T8canSNNZz
-         5mIgVZGMQlCjmAnWl24N0/6QSg+TKi7GWzLGA=
+        bh=wXU8E4FxznQQD8MxNMsVbqBxjwNIyEPzdBPOD3QrTPI=;
+        b=N6FyfiwPY5QtEWlJj3PdmS8XGx1U5ufl8pWwsm+Fnux17Pmh6qpEgb1vWmryGN03EL
+         dTCoDyFU3t9bMrdqHqFH3BZrl5U1663SvHfZssN9zh3oa7K7sr2erXZ8T7QjnyuEYQT+
+         M2UyHedHVrolPVx6kJf9jQ3DVM0X6vDq4Oa44=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VyOUgvgYBcvSVJwd07G+1UHWY+oTYYCo3nDdISMnh30=;
-        b=CatRnC8aD9+gXi3hFkwY84lFAs+e3Yr1dND6nzArc+WARSonn3VC243af4xoIw9pjF
-         45ly9Apw6pe2HaXzN2XuxADVSKSjMFC7ckfDTbrX2OR0qrCwJp+mzLAj3dzFmPBAU4Rk
-         hQoQBvFlMgoVYk8KCgv4Bx1TPvWQ1aYGasqtv35rD++QvhfNVLKlr1pP8k7htpHeLIZP
-         1Ug9bk+0Wux3jKjlkJdKp7x+FtqpeygflukhB6XAjHIszaO8jrP2U1Sw7sbOBghYZyJ7
-         ehT7KWZjbEp0+XErF8dzQWn5PQweaDyYccNoAtWSDF+z2yMFf1gqVaCpB5u/doXMIw8B
-         2tzA==
-X-Gm-Message-State: AOAM533onJng7kkgDYGG4MrCb5JmQdrv4EcUP2Zw3ULGj4lNUsxKrwms
-        o7ioawePQm2WKVRiR793ax9ARzeudF/K2MAhT1EjKA==
-X-Google-Smtp-Source: ABdhPJwhNPMSO458b6PqUB15rBbmkeVSq1GUSeU1VGw2EAY6t9Pmt0cRXiM3VBmzEErY7Rr9DTokbBJJPiSVgX46Gno=
-X-Received: by 2002:a1c:bad5:: with SMTP id k204mr1115131wmf.111.1600721610226;
- Mon, 21 Sep 2020 13:53:30 -0700 (PDT)
+        bh=wXU8E4FxznQQD8MxNMsVbqBxjwNIyEPzdBPOD3QrTPI=;
+        b=Ge0I/Q7SRSfGtD2Ms7fnhVXt5lRS1sucRwUVo+jNYJkH0Kh4fd6gFHIaUtJhhHRDLL
+         Rdl0PUFEFt41zFWy3zhnLnE5O8d+zVf4l0SwArIpyVNFdXM/xr9clWV5egKOcL81OHcg
+         RxrPipEI2aX+EY1VYYjargJqzHDBFpR3rmFW+gU9H3Bf+jp3Fg1ZGSaYkOOYLMQH2eib
+         DqK2fjCGWVfKWFySBxaR7MrqiTewnx1zwQxM0614yUbjgQDOdGjXP4rOnOYg8NPw8uVp
+         ffRb9z2v+8qIz25MTFP5zLQA779mXhE/lefNy4e9v+5C8BMrVYBkjIHh5kNYi3xhO/kb
+         trUg==
+X-Gm-Message-State: AOAM532Ipp9gCDlrbRlae0iA1jy9vBuRcDFzx/PBDw72AKXeDHMzpprm
+        66+PDnt469CaVK82MMmB3DSyrz2FJkJvBKYoyUTnvg==
+X-Google-Smtp-Source: ABdhPJyceShB4dHPj5kiObX0zNr7QXBsoAU/8HPZc4U+u2OCxbHyQLmtGH11lmmn01jJCFxpyo8e7lkEf90TNj61cz4=
+X-Received: by 2002:a5d:40cd:: with SMTP id b13mr1618302wrq.297.1600721830024;
+ Mon, 21 Sep 2020 13:57:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200921144017.334602-1-colin.king@canonical.com> <c9d7435b-42a1-2e40-7d40-62d227523f79@gmail.com>
-In-Reply-To: <c9d7435b-42a1-2e40-7d40-62d227523f79@gmail.com>
+References: <20200921204550.29296-1-a.dewar@sussex.ac.uk>
+In-Reply-To: <20200921204550.29296-1-a.dewar@sussex.ac.uk>
 From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Mon, 21 Sep 2020 16:53:18 -0400
-Message-ID: <CA+-6iNyg16dEfnJZpSppRHO6Z6fsWyQdjyzoVsBRW4W1x_4Yeg@mail.gmail.com>
-Subject: Re: [PATCH][next] PCI: brcmstb: fix a missing if statement on a
- return error check
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Colin King <colin.king@canonical.com>,
+Date:   Mon, 21 Sep 2020 16:56:58 -0400
+Message-ID: <CA+-6iNwJt4zq1fZv5ujsUJqTs_kcvF9iAcLRp6rtQudwm5CfHA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: brcmstb: Add missing if statement
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <a.dewar@sussex.ac.uk>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <bcm-kernel-feedback-list@broadcom.com>,
         Jim Quinlan <jquinlan@broadcom.com>,
@@ -62,73 +62,59 @@ Cc:     Colin King <colin.king@canonical.com>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        <linux-pci@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000fca8f205afd90a1b"
+        boundary="000000000000166fb005afd9187f"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000fca8f205afd90a1b
+--000000000000166fb005afd9187f
 Content-Type: text/plain; charset="UTF-8"
 
+On Mon, Sep 21, 2020 at 4:45 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
+>
+> brcm_pcie_resume() contains a return statement that was presumably
+> intended to have an "if (ret)" in front of it, otherwise the function
+> returns prematurely. Fix this.
+>
+> I don't know if this code was tested or not, but I assume that this bug
+> means that this driver will not resume properly.
+>
+> Fixes: ad3d29c77e1e ("PCI: brcmstb: Add control of rescal reset")
+> Addresses-Coverity: CID 1497099: Control flow issues (UNREACHABLE)
+> Signed-off-by: Alex Dewar <a.dewar@sussex.ac.uk>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 7a3ff4632e7c..cb0c11b7308e 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1154,6 +1154,7 @@ static int brcm_pcie_resume(struct device *dev)
+>         clk_prepare_enable(pcie->clk);
+>
+>         ret = brcm_phy_start(pcie);
+> +       if (ret)
+
 Hello,
-I am fine with Colin's suggested change or Florians as well:
+Florian suggested adding braces to the if clause and inserting a
+"clk_disable_unprepare(-cie->clk);" before the return.  I am fine with
+either what you have or implementing Florian's additional suggestion.
 
-         ret = brcm_phy_start(pcie);
-+        if (ret) {
-+                clk_disable_unprepare(pcie->clk);
-                 return ret;
-+        }
-
-Currently, our STB upstream suspend/resume is not functional yet and
-this is how this omission slipped by testing.
-
-Thanks,
+Thank you,
 Jim Quinlan
-Broadcom STB
-
-On Mon, Sep 21, 2020 at 3:43 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+Broadcom  STB
+>                 return ret;
 >
-> On 9/21/20 7:40 AM, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > The error return ret is not being check with an if statement and
-> > currently the code always returns leaving the following code as
-> > dead code. Fix this by adding in the missing if statement.
-> >
-> > Addresses-Coverity: ("Structurally dead code")
-> > Fixes: ad3d29c77e1e ("PCI: brcmstb: Add control of rescal reset")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > index 7a3ff4632e7c..cb0c11b7308e 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -1154,6 +1154,7 @@ static int brcm_pcie_resume(struct device *dev)
-> >       clk_prepare_enable(pcie->clk);
-> >
-> >       ret = brcm_phy_start(pcie);
-> > +     if (ret)
-> >               return ret;
->
-> Maybe this should also disable the clock if we failed to start the PHY
-> somehow.
-
-Hi Florian,
-
-I'm fine with Colin's change as
-
-
->
+>         /* Take bridge out of reset so we can access the SERDES reg */
 > --
-> Florian
+> 2.28.0
+>
 
---000000000000fca8f205afd90a1b
+--000000000000166fb005afd9187f
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -198,14 +184,14 @@ V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
 lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
 5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
 di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
-AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIObDc5TLvx36
-2G/+xdAYKXP+sue6v8iqU+pa6LNqtCQwMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTIwMDkyMTIwNTMzMFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIFUbmo1sgTbV
+WGCTZQJzpUMA9Urja1cCndU38XcyvbSlMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMDkyMTIwNTcxMFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
 YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBavqV+YLtK2aRdFIrFJ8wTPkVZ89CJ
-LqzoNVqMNHkvHMwh3+OTX4//EtYH3/Z6+l3HHq7DYKzFAtYL0QZOfr7qHCWMnGlqTDVIKGsRQI89
-QtBrI5kFOhUnvOt/eKMgX9pB4NFXJ0xY8466VaghHbgkN9oqTu11FLACIwgCHX49DojH0qSfCUb7
-n5RDCoK3sZGCCH3nlZ3p/P/VZE3oFMo/i1C0ukNo4eymZvy7rmZbh4jyyD6W3/T25rd5oahrXkWs
-09sPwAlt6TF3acottJHz7hGXDjseVzCCTmrzQBB8ZXuhpR2FVxMHZq4c24vRvu9ksPRsApUG1K3+
-udqikV/z
---000000000000fca8f205afd90a1b--
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQA//XZt1zD9cDmieH5gui2p3pnyZvFJ
+kCT2yRKfrWip1HUCCcVhshOe6/SS+TgiHcqfK3NSGJ+wV+yAQe3oW3nT3ZoDtmAMgEH7BJIEvR9m
+rSY/avT+tXxH2+Kj6sUSEwOSEsRUqxQ4DV/5WJfYnzsDUOIDWcKgnUtuUrItRe0sHNfav2Qhey5L
+qMMxDBRjxo+UR6vZKSQwNLiytxmqz171AwX+NUhkzpEyd3Wk8/K+MUw9fZ1kgQ9j2xkI72H55XyC
+f0Xi9cN/6cuU/nZbr96p9nPn3ZE/KhnfCfXkg8dPdVvsoeAnfvr1BW85SeeFTwRgFj7RMvqqNxe4
+qRkZV2Yg
+--000000000000166fb005afd9187f--
