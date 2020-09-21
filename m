@@ -2,131 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAA6F273006
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 19:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0F93273250
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 20:59:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgIURCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Sep 2020 13:02:03 -0400
-Received: from mail-eopbgr1320090.outbound.protection.outlook.com ([40.107.132.90]:15968
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730395AbgIURBs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Sep 2020 13:01:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AN4dZxL9QSnMIt+N+znXqkwVASB+ixH++4RSJb2felk+5bpv2BG634/UpqGuDy8vnEGtdsaBIUNoSt7pXOgMi7Le9JmHfj6D1A4WQNtHFHkuQ+ODx7Ira/zt4a27RL9r7SfXSLOUW+n3WrC5fVZxdqQT+buzW4S8TCuWa2S8NMOZ19y5WeWKBKjnyyiLn3H2sSO0Ythnas2KTrQRexMdmKmK5BYNt2c0Ref1QANbLYsa/tLQABd8IgNX9jAofSx3ExOPjj51xhlf0X4GZpHacRHwnoPYMFalxB9tFb3vBAcXDPY/wRwaf1x6+8pJfzXhey/jIk+nbq5hNdvo/ImfDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AbECJRC55ujkBJOAaQ8vYrje+7I/ZEVkIeK+mjXieEg=;
- b=lUZRjgzP1ITj6oWv3+/+usj9XLnFQAM+Em90R0gTgXVeQGV+lWptU9VATMmi6BbzXGGwNum9dSgGFva7yHpIWtXlw/mVV7TSO27aX1JZWTF/FhVwnQottrAeGMaiH350JBr4lIsQZMNKWp9P3HxMspd1sM4ffwDUh6Hj+vxo1I4Kf/qUzrmX2+BCc3WkckK0wNDsFG9ahjH/HlQCzPrNkYY1YTuW0Ue+2UYUHEvgV+Ug6QU3MFms1sirKTkEbS6Q3OtVcX+WaqT+TBOUlnyRLZOsPDjoSbRI8bKvwd5kJ7BbOaKzYe49PWmunwlgUNavkrzrguGmEfXs+TKNGyXQeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AbECJRC55ujkBJOAaQ8vYrje+7I/ZEVkIeK+mjXieEg=;
- b=NLXjNXnQZ2HSYD9lK+l6MQZ0TsgdaNd1PLjOsjECD/mloo66nm8WDnEZDSqeOlZcofIDBwdSJWVDheOuVkuPIk6YF4JdEpSakBMFuZIUWUtqM6k+e5kM7PMjRfYtxq23cRt+cPoVuLgtvUivL+NCaMCNkaBP9vGkz1nd7uJRGRw=
-Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM (2603:1096:802:1a::17)
- by KL1P15301MB0006.APCP153.PROD.OUTLOOK.COM (2603:1096:802:e::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.0; Mon, 21 Sep
- 2020 17:01:43 +0000
-Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
- ([fe80::800c:633d:2d74:4f61]) by KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
- ([fe80::800c:633d:2d74:4f61%5]) with mapi id 15.20.3412.020; Mon, 21 Sep 2020
- 17:01:42 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     Jake Oshins <jakeo@microsoft.com>
-Subject: RE: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Topic: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Index: AQHWhjZu2ALom6ybqEW4kSyfVSvz+KlzZFug
-Date:   Mon, 21 Sep 2020 17:01:42 +0000
-Message-ID: <KU1P153MB0120D7F862B8081BAF9FF136BF3A0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
-References: <20200908231759.13336-1-decui@microsoft.com>
-In-Reply-To: <20200908231759.13336-1-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0fc0a1ad-afe6-4ac4-ba76-4cd06c61e164;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-21T16:58:13Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2601:600:a280:7f70:708f:e6d8:2d4a:7623]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2e11e5a6-4edd-4e7c-465d-08d85e5003f9
-x-ms-traffictypediagnostic: KL1P15301MB0006:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KL1P15301MB00064EA72ECA9D6717992443BF3A0@KL1P15301MB0006.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cmiu3fV+B6V3xWVw+t/515rUJq9ck04sUB1RarCwPBFu+1zykz/9u1yk8SnFpjoOE0AcvD+yepO6BcVNuko7c9nZtd5BeelWCQtwWHAOEbZqG810qr8Wj/C99SrZSxKZCeXmi1MuCaLhBF4lCjBIH3IF6F2djkvSKZO3UeWXGJyoDjga8kyZjWMrNwh8JI4nMx494aujdddCq0T/Q44LEmkomOEZ+PajXjNm3qMlqQAcQPknU7xfeYPUw3zF0tm0YHb9dXv8CQW78SxdeMkm/Af38qUT/6Pr1kABnnoIokBWimBFfVXi2ijDJwIU6c5Q27xRWU909sr5l4qrfMRbKStCog5Y/YptVjsLcNDMWNupAM9v3nLZn8Z/UOIEMyrYYZ8uAVqZXxL5bmT15r8CIkpfnXnR7aCfz0ceGL2YbWI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0120.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(346002)(39860400002)(396003)(376002)(66946007)(4326008)(107886003)(8990500004)(6506007)(66476007)(66556008)(66446008)(2906002)(64756008)(316002)(76116006)(8936002)(52536014)(83380400001)(33656002)(186003)(8676002)(82950400001)(82960400001)(10290500003)(71200400001)(110136005)(55016002)(9686003)(478600001)(5660300002)(86362001)(6636002)(7696005)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: xTSLjfe0PgTifsssmnv4ID0NIj7tdEIs2pB/U/NUCOKzVwFBhtnCyNha0Pwu7FuL69hMB5WnmtCCRhU59EKZzJKQzWT3UAl9mrd9kD8nhhcvO1POfoyK0mDU19Ih9B8ty5yGIGYPXWQVuvcREkxm4uh00CcjGjtB1fZgcGbTWf1jLD26h6LVS8jAG+P0LTar97iod4SGpV3QRQuyETcdP9cqRsoIsYHZ7IyIoMYBtCMzGvGs1GLVIXijrX8wHqPzx8a5/QfLHZn+cktA0U66nI60lR2cBmhhGuEBaBVfPIZyL1KK9n3x6B5msJhps/+ZVMQWREUBrSdDRv8DT7iaJcxF+ryTvDRWHLTgCN5pEoWgnUIyMHnW2htW0CYRsEdupex8SYrLJqiOGC5vjEEuI4Zm2Q7yV3SYeTzJB8jQ1P7SrYJpsQ+zaTeG8giM4diAknq7SgDSw5mY9/yPNdjG7nnVKsDFSLEkznX1APyod1+huBBTNg4Al/pPOCoj5482mD+wCFSWy7pGTm3PT7eVVBo+hbNrX3ssrnsVvKuA9i+Hfn3JkMTtQUtpEDechkgraakbz6ypZKntDypux4e3OkurQm+anMHX0YkgAZuW/zl6dxeIsg9pF2xdJoc4UJbNvMYyQdt068I7Qf0Sn+/yg1G882N6oL3yqyB5vWeyC0WcTBqXfCWWLAyj8Nu2rs6jexn8fj3Fehv5vl2vzsocSw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727363AbgIUS6c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Sep 2020 14:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgIUS6c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Sep 2020 14:58:32 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0933C061755
+        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 11:58:31 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id gx22so10213710ejb.5
+        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 11:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rrEufNVuY5dCBzinzTyZLnRAK6NDit4k748EnZ9ZGyU=;
+        b=VwM6SxPchzpHYvDq5MuGqptnfOCO+2u8UOZQsUHmvXP+yQTF+Z7wlraeVtjd/s9jlB
+         wV193ZvJeoHSX0mG5NaEp1P+oe7FoNjVRmUSb2Z+JinKsMwFIqn+MpalsijQarctvj4U
+         FH4y6mRhga1p9JKtJgLYS2O01gvN0JoRMzpIJ8sTPjHm+K3XvxLJoxyawOroxTt3ewXo
+         2erVwwtPxW6qCdmd6A02Wa5wSMbzwpQ/xA7DOELk4+u1Yv0Dw6Gb0gPjk1AInJx+Npb8
+         9g541oYiyMOVYQWN0p1s+dSK+qehJVoUb8ZcAzai39YkrQsAMRZIWHvBa3cE/5jkadoT
+         Dtig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rrEufNVuY5dCBzinzTyZLnRAK6NDit4k748EnZ9ZGyU=;
+        b=O0kL6OzHiv8/NVi68mkHys6oosDziKXQCm1IfZ1zvEXV9mFXN7XjWVg1S0NNbHITs0
+         VdbIojPYboV0/k1uEJcxq+nWPeLxnPykisQt62k6Efmv/5Mq7eGN2Q3G/0WKxTjt6V/C
+         5k9sUkyxGkbZ+sdM8j2FMwry4ePaWH4RPeyE0FqvMPMV+kD7QjeB0gJE0lGCsbe0uVKU
+         GJWomUz+7A681O7WZs8w30Zvm12mqpAuwpPMe+Z5H5D4qQhaUCWJFSGxkZzsgfifQqwh
+         s6RNcWQJ9bulnxD5c6/j5+LI5ZCr6dn0ONusRvtHTdJ76nF2DX9DSzAyi5KnCWpYDcDB
+         fhHw==
+X-Gm-Message-State: AOAM5302Cwx7dxuMmLvP+HtKG08HCzOwcHl/NRanSboqzFMcngbOvGDi
+        8Ag/rYvIme+Xilih9duFgAQV4TjyIqpTUZ2EdZsVxw==
+X-Google-Smtp-Source: ABdhPJwAs9ksH6re9qMXbI2fsKP5Ghj4mOoCzkBFQS+BQszgLy1pqKFO8fFSdMFWe7XQ/UpW1tcdUlWla4BBqoqymc8=
+X-Received: by 2002:a17:906:ecf1:: with SMTP id qt17mr960026ejb.158.1600714709946;
+ Mon, 21 Sep 2020 11:58:29 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e11e5a6-4edd-4e7c-465d-08d85e5003f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2020 17:01:42.3551
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /N6km9ru+D8egVITdKkWl/78L7NOFKdiWqBYGAWw710WQpMSqksNpiA+90PdK2mLSEe8MWKqJ9LqlF8xSssiSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0006
+References: <20200918201436.2932360-1-samitolvanen@google.com>
+ <20200918201436.2932360-14-samitolvanen@google.com> <202009181427.86DE61B@keescook>
+In-Reply-To: <202009181427.86DE61B@keescook>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 21 Sep 2020 11:58:19 -0700
+Message-ID: <CABCJKuf5pKqEDaAKix5CaUmv92M5HOAB-psdNg=awF7BDZ+yvA@mail.gmail.com>
+Subject: Re: [PATCH v3 13/30] kbuild: lto: postpone objtool
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Tuesday, September 8, 2020 4:18 PM
->=20
-> Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X registers,
-> and we must use hv_compose_msi_msg() to ask Hyper-V to create the IOMMU
-> Interrupt Remapping Table Entries. This is not an issue for a lot of
-> PCI device drivers (e.g. NVMe driver, Mellanox NIC drivers), which
-> destroy and re-create the interrupts across hibernation, so
-> hv_compose_msi_msg() is called automatically. However, some other PCI
-> device drivers (e.g. the Nvidia driver) may not destroy and re-create
-> the interrupts across hibernation, so hv_pci_resume() has to call
-> hv_compose_msi_msg(), otherwise the PCI device drivers can no longer
-> receive MSI/MSI-X interrupts after hibernation.
->=20
-> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Jake Oshins <jakeo@microsoft.com>
->=20
-> ---
->=20
-> Changes in v2:
->     Fixed a typo in the comment in hv_irq_unmask. Thanks to Michael!
->     Added Jake's Reviewed-by.
->=20
->  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+Nick and 0-day bot both let me know that there's a typo in this patch,
+which I'll fix in v4:
 
-Hi Lorenzo, Bjorn,
-Can you please take a look at this patch?=20
-I hope it still could have a chance to be in 5.9. :-)
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index f7daa59ff14f..00d7baaf7949 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -223,7 +223,7 @@ dtc_cpp_flags  = -Wp,-MMD,$(depfile).pre.tmp
+-nostdinc                    \
+ objtool_args =                                                         \
+        $(if $(CONFIG_UNWINDER_ORC),orc generate,check)                 \
+        $(if $(part-of-module), --module,)                              \
+-       $(if $(CONFIG_FRAME_POINTER), --no-fp,)                         \
++       $(if $(CONFIG_FRAME_POINTER),, --no-fp)                         \
+        $(if $(CONFIG_GCOV_KERNEL), --no-unreachable,)                  \
+        $(if $(CONFIG_RETPOLINE), --retpoline,)                         \
+        $(if $(CONFIG_X86_SMAP), --uaccess,)                            \
 
-Thanks,
--- Dexuan
+Sami
+
+On Fri, Sep 18, 2020 at 2:27 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Sep 18, 2020 at 01:14:19PM -0700, Sami Tolvanen wrote:
+> > With LTO, LLVM bitcode won't be compiled into native code until
+> > modpost_link, or modfinal for modules. This change postpones calls
+> > to objtool until after these steps, and moves objtool_args to
+> > Makefile.lib, so the arguments can be reused in Makefile.modfinal.
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+>
+> Thanks for reorganizing this!
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202009181427.86DE61B%40keescook.
