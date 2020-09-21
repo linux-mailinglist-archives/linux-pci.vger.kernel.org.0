@@ -2,34 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46B00272294
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 13:33:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 788DD27237E
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 14:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgIULdh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Sep 2020 07:33:37 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2901 "EHLO huawei.com"
+        id S1726395AbgIUMOh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Sep 2020 08:14:37 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2902 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726326AbgIULdh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Sep 2020 07:33:37 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id A8E56E69047D0A45E599;
-        Mon, 21 Sep 2020 12:33:35 +0100 (IST)
+        id S1726367AbgIUMOh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Sep 2020 08:14:37 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 1D89D6BAABF9D10A1784;
+        Mon, 21 Sep 2020 13:14:35 +0100 (IST)
 Received: from localhost (10.52.121.13) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 21 Sep
- 2020 12:33:35 +0100
-Date:   Mon, 21 Sep 2020 12:31:56 +0100
+ 2020 13:14:34 +0100
+Date:   Mon, 21 Sep 2020 13:12:55 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Sean V Kelley <sean.v.kelley@intel.com>
 CC:     <bhelgaas@google.com>, <rafael.j.wysocki@intel.com>,
         <ashok.raj@intel.com>, <tony.luck@intel.com>,
         <sathyanarayanan.kuppuswamy@intel.com>, <qiuxu.zhuo@intel.com>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 07/10] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Message-ID: <20200921123156.00000f18@Huawei.com>
-In-Reply-To: <20200918204603.62100-8-sean.v.kelley@intel.com>
+Subject: Re: [PATCH v5 08/10] PCI/AER: Add pcie_walk_rcec() to RCEC AER
+ handling
+Message-ID: <20200921131255.00004381@Huawei.com>
+In-Reply-To: <20200918204603.62100-9-sean.v.kelley@intel.com>
 References: <20200918204603.62100-1-sean.v.kelley@intel.com>
-        <20200918204603.62100-8-sean.v.kelley@intel.com>
+        <20200918204603.62100-9-sean.v.kelley@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -43,159 +44,199 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 18 Sep 2020 13:46:00 -0700
+On Fri, 18 Sep 2020 13:46:01 -0700
 Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
+> and also have the AER capability. In addition, actions need to be taken
+> for assocated RCiEPs. In such cases the RCECs will need to be walked in
+> order to find and act upon their respective RCiEPs.  Extend the existing
+> ability to link the RCECs with a walking function pcie_walk_rcec(). Add
+> RCEC support to the current AER service driver and attach the AER service
+> driver to the RCEC device.
 > 
-> When attempting error recovery for an RCiEP associated with an RCEC device,
-> there needs to be a way to update the Root Error Status, the Uncorrectable
-> Error Status and the Uncorrectable Error Severity of the parent RCEC.
-> In some non-native cases in which there is no OS visible device
-> associated with the RCiEP, there is nothing to act upon as the firmware
-> is acting before the OS. So add handling for the linked 'rcec' in AER/ERR
-> while taking into account non-native cases.
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-I'll give this a test run later to check I'm not missing anything, but LGTM.
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+Hi,
 
+Couple of minor things in here, but assuming you tidy those up.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Thanks,
-
 > ---
->  drivers/pci/pcie/aer.c |  9 +++++----
->  drivers/pci/pcie/err.c | 38 ++++++++++++++++++++++++--------------
->  2 files changed, 29 insertions(+), 18 deletions(-)
+>  drivers/pci/pci.h       |  4 ++++
+>  drivers/pci/pcie/aer.c  | 27 ++++++++++++++++++++-------
+>  drivers/pci/pcie/rcec.c | 39 ++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 62 insertions(+), 8 deletions(-)
 > 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index ddb5872466fb..e8535a7d4b53 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -475,10 +475,14 @@ static inline void pci_dpc_init(struct pci_dev *pdev) {}
+>  void pci_rcec_init(struct pci_dev *dev);
+>  void pci_rcec_exit(struct pci_dev *dev);
+>  void pcie_link_rcec(struct pci_dev *rcec);
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata);
+>  #else
+>  static inline void pci_rcec_init(struct pci_dev *dev) {}
+>  static inline void pci_rcec_exit(struct pci_dev *dev) {}
+>  static inline void pcie_link_rcec(struct pci_dev *rcec) {}
+> +static inline void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +				  void *userdata) {}
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_ATS
 > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 65dff5f3457a..dccdba60b5d9 100644
+> index dccdba60b5d9..43772bfc134e 100644
 > --- a/drivers/pci/pcie/aer.c
 > +++ b/drivers/pci/pcie/aer.c
-> @@ -1358,17 +1358,18 @@ static int aer_probe(struct pcie_device *dev)
->  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->  {
->  	int aer = dev->aer_cap;
-> +	int rc = 0;
->  	u32 reg32;
-> -	int rc;
-> -
+> @@ -300,7 +300,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
+>  		return -EIO;
 >  
->  	/* Disable Root's interrupt in response to error messages */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
->  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+>  	port_type = pci_pcie_type(dev);
+> -	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT || port_type == PCI_EXP_TYPE_RC_EC) {
+>  		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
+>  		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
+>  	}
+> @@ -595,7 +595,8 @@ static umode_t aer_stats_attrs_are_visible(struct kobject *kobj,
+>  	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
+>  	     a == &dev_attr_aer_rootport_total_err_fatal.attr ||
+>  	     a == &dev_attr_aer_rootport_total_err_nonfatal.attr) &&
+> -	    pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
+> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
+
+This line should be indented one more space I think..
+
+>  		return 0;
 >  
-> -	rc = pci_bus_error_reset(dev);
-> -	pci_info(dev, "Root Port link has been reset\n");
-> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
-> +		rc = pci_bus_error_reset(dev);
-> +		pci_info(dev, "Root Port link has been reset\n");
-> +	}
+>  	return a->mode;
+> @@ -916,7 +917,10 @@ static bool find_source_device(struct pci_dev *parent,
+>  	if (result)
+>  		return true;
 >  
->  	/* Clear Root Error Status */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 5380ecc41506..a61a2518163a 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -149,7 +149,8 @@ static int report_resume(struct pci_dev *dev, void *data)
->  /**
->   * pci_bridge_walk - walk bridges potentially AER affected
->   * @bridge   bridge which may be an RCEC with associated RCiEPs,
-> - *           an RCiEP associated with an RCEC, or a Port.
-> + *           or a Port.
-> + * @dev      an RCiEP lacking an associated RCEC.
->   * @cb       callback to be called for each device found
->   * @userdata arbitrary pointer to be passed to callback.
->   *
-> @@ -160,13 +161,16 @@ static int report_resume(struct pci_dev *dev, void *data)
->   * If the device provided has no subordinate bus, call the provided
->   * callback on the device itself.
->   */
-> -static void pci_bridge_walk(struct pci_dev *bridge, int (*cb)(struct pci_dev *, void *),
-> +static void pci_bridge_walk(struct pci_dev *bridge, struct pci_dev *dev,
-> +			    int (*cb)(struct pci_dev *, void *),
->  			    void *userdata)
->  {
-> -	if (bridge->subordinate)
-> +	if (bridge && bridge->subordinate)
->  		pci_walk_bus(bridge->subordinate, cb, userdata);
-> -	else
-> +	else if (bridge)
->  		cb(bridge, userdata);
+> -	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+> +	if (pci_pcie_type(parent) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(parent, find_device_iter, e_info);
 > +	else
-> +		cb(dev, userdata);
+> +		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+>  
+>  	if (!e_info->error_dev_num) {
+>  		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
+> @@ -1053,6 +1057,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>  		if (!(info->status & ~info->mask))
+>  			return 0;
+>  	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> +		   pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC ||
+>  	           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+>  		   info->severity == AER_NONFATAL) {
+>  
+> @@ -1205,6 +1210,7 @@ static int set_device_error_reporting(struct pci_dev *dev, void *data)
+>  	int type = pci_pcie_type(dev);
+>  
+>  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
+> +	    (type == PCI_EXP_TYPE_RC_EC) ||
+>  	    (type == PCI_EXP_TYPE_UPSTREAM) ||
+>  	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
+>  		if (enable)
+> @@ -1229,9 +1235,11 @@ static void set_downstream_devices_error_reporting(struct pci_dev *dev,
+>  {
+>  	set_device_error_reporting(dev, &enable);
+>  
+> -	if (!dev->subordinate)
+> -		return;
+> -	pci_walk_bus(dev->subordinate, set_device_error_reporting, &enable);
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(dev, set_device_error_reporting, &enable);
+> +	else if (dev->subordinate)
+> +		pci_walk_bus(dev->subordinate, set_device_error_reporting, &enable);
+> +
 >  }
 >  
->  static pci_ers_result_t flr_on_rciep(struct pci_dev *dev)
-> @@ -196,16 +200,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	type = pci_pcie_type(dev);
->  	if (type == PCI_EXP_TYPE_ROOT_PORT ||
->  	    type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -	    type == PCI_EXP_TYPE_RC_EC ||
-> -	    type == PCI_EXP_TYPE_RC_END)
-> +	    type == PCI_EXP_TYPE_RC_EC)
->  		bridge = dev;
-> +	else if (type == PCI_EXP_TYPE_RC_END)
-> +		bridge = dev->rcec;
->  	else
->  		bridge = pci_upstream_bridge(dev);
+>  /**
+> @@ -1329,6 +1337,11 @@ static int aer_probe(struct pcie_device *dev)
+>  	struct device *device = &dev->device;
+>  	struct pci_dev *port = dev->port;
 >  
->  	pci_dbg(dev, "broadcast error_detected message\n");
->  	if (state == pci_channel_io_frozen) {
-> -		pci_bridge_walk(bridge, report_frozen_detected, &status);
-> +		pci_bridge_walk(bridge, dev, report_frozen_detected, &status);
->  		if (type == PCI_EXP_TYPE_RC_END) {
-> +			/*
-> +			 * The callback only clears the Root Error Status
-> +			 * of the RCEC (see aer.c).
-> +			 */
-> +			if (bridge)
-> +				reset_subordinate_devices(bridge);
+> +	/* Limit to Root Ports or Root Complex Event Collectors */
+> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
+> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+> +		return -ENODEV;
 > +
->  			status = flr_on_rciep(dev);
->  			if (status != PCI_ERS_RESULT_RECOVERED) {
->  				pci_warn(dev, "function level reset failed\n");
-> @@ -219,13 +231,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  			}
->  		}
->  	} else {
-> -		pci_bridge_walk(bridge, report_normal_detected, &status);
-> +		pci_bridge_walk(bridge, dev, report_normal_detected, &status);
->  	}
+>  	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
+>  	if (!rpc)
+>  		return -ENOMEM;
+> @@ -1385,7 +1398,7 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
 >  
->  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->  		status = PCI_ERS_RESULT_RECOVERED;
->  		pci_dbg(dev, "broadcast mmio_enabled message\n");
-> -		pci_bridge_walk(bridge, report_mmio_enabled, &status);
-> +		pci_bridge_walk(bridge, dev, report_mmio_enabled, &status);
->  	}
+>  static struct pcie_port_service_driver aerdriver = {
+>  	.name		= "aer",
+> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
+> +	.port_type	= PCIE_ANY_PORT,
+>  	.service	= PCIE_PORT_SERVICE_AER,
 >  
->  	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> @@ -236,18 +248,16 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		 */
->  		status = PCI_ERS_RESULT_RECOVERED;
->  		pci_dbg(dev, "broadcast slot_reset message\n");
-> -		pci_bridge_walk(bridge, report_slot_reset, &status);
-> +		pci_bridge_walk(bridge, dev, report_slot_reset, &status);
->  	}
+>  	.probe		= aer_probe,
+> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+> index 5630480a6659..e6d20131b578 100644
+> --- a/drivers/pci/pcie/rcec.c
+> +++ b/drivers/pci/pcie/rcec.c
+> @@ -53,7 +53,18 @@ static int link_rcec_helper(struct pci_dev *dev, void *data)
+>  	return 0;
+>  }
 >  
->  	if (status != PCI_ERS_RESULT_RECOVERED)
->  		goto failed;
+> -void walk_rcec(int (*cb)(struct pci_dev *dev, void *data), void *userdata)
+> +static int walk_rcec_helper(struct pci_dev *dev, void *data)
+> +{
+> +	struct walk_rcec_data *rcec_data = data;
+> +	struct pci_dev *rcec = rcec_data->rcec;
+> +
+> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) && rcec_assoc_rciep(rcec, dev))
+> +		rcec_data->user_callback(dev, rcec_data->user_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static void walk_rcec(int (*cb)(struct pci_dev *dev, void *data), void *userdata)
+
+Ah. The missing static. Shift that into the earlier patch!
+
+>  {
+>  	struct walk_rcec_data *rcec_data = userdata;
+>  	struct pci_dev *rcec = rcec_data->rcec;
+> @@ -113,6 +124,32 @@ void pcie_link_rcec(struct pci_dev *rcec)
+>  	walk_rcec(link_rcec_helper, &rcec_data);
+>  }
 >  
->  	pci_dbg(dev, "broadcast resume message\n");
-> -	pci_bridge_walk(bridge, report_resume, &status);
-> +	pci_bridge_walk(bridge, dev, report_resume, &status);
->  
-> -	if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> -	    type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -	    type == PCI_EXP_TYPE_RC_EC) {
-> +	if (bridge) {
->  		if (pcie_aer_is_native(bridge))
->  			pcie_clear_device_status(bridge);
->  		pci_aer_clear_nonfatal_status(bridge);
+> +/**
+> + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
+> + * @rcec     RCEC whose RCiEP devices should be walked.
+> + * @cb       Callback to be called for each RCiEP device found.
+> + * @userdata Arbitrary pointer to be passed to callback.
+> + *
+> + * Walk the given RCEC. Call the provided callback on each RCiEP device found.
+> + *
+> + * We check the return of @cb each time. If it returns anything
+> + * other than 0, we break out.
+> + */
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata)
+> +{
+> +	struct walk_rcec_data rcec_data;
+> +
+> +	if (!rcec->rcec_cap)
+> +		return;
+> +
+> +	rcec_data.rcec = rcec;
+> +	rcec_data.user_callback = cb;
+> +	rcec_data.user_data = userdata;
+> +
+> +	walk_rcec(walk_rcec_helper, &rcec_data);
+> +}
+> +
+>  void pci_rcec_init(struct pci_dev *dev)
+>  {
+>  	u32 rcec, hdr, busn;
 
 
