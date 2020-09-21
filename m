@@ -2,85 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B4A42714D5
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Sep 2020 16:08:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDF9B271A1D
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 06:35:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgITOIW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Sep 2020 10:08:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgITOIV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 20 Sep 2020 10:08:21 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AC2621531;
-        Sun, 20 Sep 2020 14:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600610900;
-        bh=lu9h9XynfWiHeNchuTVq0VmpBRgsLcjroJ08RriK6FQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tLu+eCAhLmynwau/OgjdgXITj8Uu3Ajyw7j6L6WMWTBtOCQUoxWo96pINqGo/ITMB
-         iLoj0ieZJon4iv+bsf0rstdavCuZDRNOCuxN4mFQi7hrQT+zsjVJE3jrAAC9dKoSX8
-         Rim6zO4acLR631zEPonMI5FK/X8l5Rf9YUot6uBQ=
-Date:   Sun, 20 Sep 2020 16:08:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
+        id S1726221AbgIUEfU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Sep 2020 00:35:20 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:32782 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbgIUEfU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Sep 2020 00:35:20 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08L4Yvj4101198;
+        Sun, 20 Sep 2020 23:34:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1600662897;
+        bh=WgoOtI+mWNEhU87sIoLc3wQAHysSHQBYrpEdQxdi7R0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eazXT8PpjR3wm78Fq29IuQUJ2XyEy/eua/RYyHa0+Qj1lxkL7NbSr00PqjvwxkH3f
+         NLBs6B6CnwpEK4f1PiDMHInJREBoS8PoBw7WfJTPEjXdpIqHJR7ovkpSDOciph1F/H
+         pcFU5HDANH16FxRruhH3LPrv/23zSDgCBJQo9FQw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08L4YvJW121785
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 20 Sep 2020 23:34:57 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 20
+ Sep 2020 23:34:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 20 Sep 2020 23:34:57 -0500
+Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08L4YphG020154;
+        Sun, 20 Sep 2020 23:34:52 -0500
+Subject: Re: [PATCH v5 12/17] PCI: endpoint: Add EP function driver to provide
+ NTB functionality
+To:     Randy Dunlap <rdunlap@infradead.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 11/20] dt-bindings: usb: renesas,usbhs: Add r8a774e1
- support
-Message-ID: <20200920140846.GB2915460@kroah.com>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8vuR-7vqxNnrqQ5Ysf3Xjvhp3xRZ33i8+6nEGFLJciT3A@mail.gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
+References: <20200918064227.1463-1-kishon@ti.com>
+ <20200918064227.1463-13-kishon@ti.com>
+ <31985ad8-2e9b-99d8-55ef-4ae90103e499@infradead.org>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b79f760b-0641-0e14-375b-df89588405b6@ti.com>
+Date:   Mon, 21 Sep 2020 10:04:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8vuR-7vqxNnrqQ5Ysf3Xjvhp3xRZ33i8+6nEGFLJciT3A@mail.gmail.com>
+In-Reply-To: <31985ad8-2e9b-99d8-55ef-4ae90103e499@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 19, 2020 at 11:54:05AM +0100, Lad, Prabhakar wrote:
-> Hi Greg,
+Hi Randy,
+
+On 18/09/20 9:47 pm, Randy Dunlap wrote:
+> On 9/17/20 11:42 PM, Kishon Vijay Abraham I wrote:
+>> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
+>> index 8820d0f7ec77..55ac7bb2d469 100644
+>> --- a/drivers/pci/endpoint/functions/Kconfig
+>> +++ b/drivers/pci/endpoint/functions/Kconfig
+>> @@ -12,3 +12,15 @@ config PCI_EPF_TEST
+>>  	   for PCI Endpoint.
+>>  
+>>  	   If in doubt, say "N" to disable Endpoint test driver.
+>> +
+>> +config PCI_EPF_NTB
+>> +	tristate "PCI Endpoint NTB driver"
+>> +	depends on PCI_ENDPOINT
+>> +	help
+>> +	   Select this configuration option to enable the NTB driver
+>> +	   for PCI Endpoint. NTB driver implements NTB controller
+>> +	   functionality using multiple PCIe endpoint instances. It
+>> +	   can support NTB endpoint function devices created using
+>> +	   device tree.
 > 
-> On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Document RZ/G2H (R8A774E1) SoC bindings.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/usb/renesas,usbhs.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> Could you please pick this patch.
+> Indent help text with one tab + 2 spaces...
+> according to coding-style.rst.
 
-Same here, doesn't a DT maintainer have to ack this?
+Okay, will fix this.
 
-thanks,
-
-greg k-h
+Thanks
+Kishon
