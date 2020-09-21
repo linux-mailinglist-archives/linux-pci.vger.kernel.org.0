@@ -2,91 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40339273562
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 23:58:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1155F27361A
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 00:59:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgIUV6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Sep 2020 17:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33212 "EHLO mail.kernel.org"
+        id S1728756AbgIUW6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Sep 2020 18:58:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgIUV6s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Sep 2020 17:58:48 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        id S1728591AbgIUW6i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Sep 2020 18:58:38 -0400
+Received: from localhost (lfbn-ncy-1-588-162.w81-51.abo.wanadoo.fr [81.51.203.162])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86BB323A60;
-        Mon, 21 Sep 2020 21:58:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 721432076E;
+        Mon, 21 Sep 2020 22:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600725527;
-        bh=FsOhUEaN2eYitnbmPGP9QWhgGMr0pTGOaY9Qi3p3COo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZedIIg+dTIci96FHGwcH55d/YLkmS62Tyw6CgpUoK9voMrFD1VKX4QpGi+4Q4RD6/
-         eTQw7a+xJWVF3gVeF9cZQNvdP6kp6tQfnZxufbavYDLhIvctyt1sYqivERxGYhAa/e
-         Tkl4bLOPEoo0EtIeHEzGIQeyWOPRSRsSkKmZ/WAY=
-Date:   Mon, 21 Sep 2020 16:58:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Todd Brandt <todd.e.brandt@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 209323] New: pcieport
- devices take longer than 1 second in resume]
-Message-ID: <20200921215846.GA2137712@bjorn-Precision-5520>
+        s=default; t=1600729117;
+        bh=2xk7Fmz3JjDQIAEPGMqF5VAoFrIcEHgYldDvUP9ihFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wlgl2Qt6SzVzrUnzox+uuaj2db3MfOfg8BnxPS8w3MUlFffW0wNf9oCF9nJMxLgc5
+         9+yBxfTqZgFDLxXDuSUxsvMo6KCvA0lRMLvCzymt1weUI4lWxtGKe3BQN1lkYKGZD6
+         bH62rL+RtrSyBOGvZvSyCWfiQrIvn8ciNV0EPaYk=
+Date:   Tue, 22 Sep 2020 00:58:35 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, mtosatti@redhat.com,
+        sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
+Subject: Re: [RFC][Patch v1 2/3] i40e: limit msix vectors based on
+ housekeeping CPUs
+Message-ID: <20200921225834.GA30521@lenoir>
+References: <20200909150818.313699-1-nitesh@redhat.com>
+ <20200909150818.313699-3-nitesh@redhat.com>
+ <20200917112359.00006e10@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200917112359.00006e10@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Is this related to https://lore.kernel.org/r/20200831093147.36775-1-mika.westerberg@linux.intel.com/ ?
+On Thu, Sep 17, 2020 at 11:23:59AM -0700, Jesse Brandeburg wrote:
+> Nitesh Narayan Lal wrote:
+> 
+> > In a realtime environment, it is essential to isolate unwanted IRQs from
+> > isolated CPUs to prevent latency overheads. Creating MSIX vectors only
+> > based on the online CPUs could lead to a potential issue on an RT setup
+> > that has several isolated CPUs but a very few housekeeping CPUs. This is
+> > because in these kinds of setups an attempt to move the IRQs to the
+> > limited housekeeping CPUs from isolated CPUs might fail due to the per
+> > CPU vector limit. This could eventually result in latency spikes because
+> > of the IRQ threads that we fail to move from isolated CPUs.
+> > 
+> > This patch prevents i40e to add vectors only based on available
+> > housekeeping CPUs by using num_housekeeping_cpus().
+> > 
+> > Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> 
+> The driver changes are straightforward, but this isn't the only driver
+> with this issue, right?  I'm sure ixgbe and ice both have this problem
+> too, you should fix them as well, at a minimum, and probably other
+> vendors drivers:
+> 
+> $ rg -c --stats num_online_cpus drivers/net/ethernet
+> ...
+> 50 files contained matches
 
------ Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
+Ouch, I was indeed surprised that these MSI vector allocations were done
+at the driver level and not at some $SUBSYSTEM level.
 
-Date: Fri, 18 Sep 2020 21:20:38 +0000
-From: bugzilla-daemon@bugzilla.kernel.org
-To: bjorn@helgaas.com
-Subject: [Bug 209323] New: pcieport devices take longer than 1 second in resume
-Message-ID: <bug-209323-41252@https.bugzilla.kernel.org/>
+The logic is already there in the driver so I wouldn't oppose to this very patch
+but would a shared infrastructure make sense for this? Something that would
+also handle hotplug operations?
 
-https://bugzilla.kernel.org/show_bug.cgi?id=209323
+Does it possibly go even beyond networking drivers?
 
-            Bug ID: 209323
-           Summary: pcieport devices take longer than 1 second in resume
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.8.0
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: todd.e.brandt@linux.intel.com
-            Blocks: 178231
-        Regression: No
+Thanks.
 
-Created attachment 292541
-  --> https://bugzilla.kernel.org/attachment.cgi?id=292541&action=edit
-otcpl-dell-9380-cfl_freeze.html
-
-pcieport devices are taking longer than 1 second across several machines. This
-bug is there to monitor which machines and kernel release this happens on.
-
-
-Referenced Bugs:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=178231
-[Bug 178231] Meta-bug: Linux suspend-to-mem and freeze performance optimization
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
-
------ End forwarded message -----
+> 
+> for this patch i40e
+> Acked-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
