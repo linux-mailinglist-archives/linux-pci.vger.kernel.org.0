@@ -2,240 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01789272261
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 13:26:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A19F0272270
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Sep 2020 13:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgIUL0l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Sep 2020 07:26:41 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2900 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbgIUL0l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Sep 2020 07:26:41 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id BED74476BC36C441F46C;
-        Mon, 21 Sep 2020 12:26:39 +0100 (IST)
-Received: from localhost (10.52.121.13) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 21 Sep
- 2020 12:26:39 +0100
-Date:   Mon, 21 Sep 2020 12:25:00 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rafael.j.wysocki@intel.com>,
-        <ashok.raj@intel.com>, <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@intel.com>, <qiuxu.zhuo@intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 06/10] PCI/RCEC: Add pcie_link_rcec() to associate
- RCiEPs
-Message-ID: <20200921122500.000032ff@Huawei.com>
-In-Reply-To: <20200918204603.62100-7-sean.v.kelley@intel.com>
-References: <20200918204603.62100-1-sean.v.kelley@intel.com>
-        <20200918204603.62100-7-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+        id S1726654AbgIUL2i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Sep 2020 07:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbgIUL2h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Sep 2020 07:28:37 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9032C061755;
+        Mon, 21 Sep 2020 04:28:36 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t10so12351244wrv.1;
+        Mon, 21 Sep 2020 04:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vrB+wCY042lJLf7nGNWVAiX4/elJqpuJ2MLbBI8/1x0=;
+        b=lJ2PIn2hyoicpc2UNBXM2gN4WBR9xUocX0CtaRAH1XEa1qqh0K3nyX8RXr586ComqS
+         PXnrJXhtzG+wJmllnrGIUchNGpHYdFb/wX+qKb0BdbQC1EwTIjEUQiCEwt6PFomHiCux
+         ncvCOwye3NFC+/iwCRVNBRzNy96hA4kSK8Hx8mxkFTHhM36udC+fFGFcuTtHk384dxzh
+         X3T41btIzGWFA0tV8kaChIWjovCidbqL1YtOIIocGDPQIiXEFTSLltnzukxKavn5VUjj
+         MHNAVIN4wrxH+ZpdyAV1maFMOLSSAuAqyVGdWLotwE2PRzlv+BpMN//f/gR2153lBivD
+         oXcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vrB+wCY042lJLf7nGNWVAiX4/elJqpuJ2MLbBI8/1x0=;
+        b=rJDnF0V6fRNTRMTPS8REUhqGTPLLxc7G15/bZL56RxtFRjs3/GFwCEIOYlLUQnOPgf
+         lUymz8YnHz/Oj1ttb47m1WLplVb1GQaMbSeyPMnaS1qWrZpzdkrIX2nhOdBsnr+WTzRn
+         NaLzHy1D44sGl9xCA8qX2kdfcvSfFy5+TG18Bm4UrCT+yB7tJbxnzZZe3yh6qBfzlj9f
+         bRX9FOYmaP4UL8gDAcoDIqNNrO1gqUsBTSHVOcQtZTpywlTAo0mAH5OYTLZg3wwWyO6w
+         m5weLCZkI3OWe4pb0APok9txXek34lT6VUdVr2CildmkSJU8tqM3W3RjvKUgOHd5Dpd8
+         gzUQ==
+X-Gm-Message-State: AOAM531+HL7FCQ6uZzVT0iMYHTLqkMyr346HB0sGrdDpsau5IzANTUq3
+        nbuiHX7ME/nQ7Ip/nmhnBa2FdD+pWMVyhrAG
+X-Google-Smtp-Source: ABdhPJycm9Y99RJHGX/Hg/HjpMbDZDId4vDXQhBo0nw9OZ9zQ7dzBrgjK0IcrYyHKRZb487w39n/8Q==
+X-Received: by 2002:a5d:61c7:: with SMTP id q7mr52716640wrv.343.1600687715532;
+        Mon, 21 Sep 2020 04:28:35 -0700 (PDT)
+Received: from ubuntu-laptop.micron.com ([165.225.203.62])
+        by smtp.googlemail.com with ESMTPSA id t17sm20628056wrx.82.2020.09.21.04.28.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Sep 2020 04:28:35 -0700 (PDT)
+Message-ID: <2f29372be8186f25222e370f5601019b4d95b7b3.camel@gmail.com>
+Subject: Re: [PATCH] PCI: kirin: Return -EPROBE_DEFER in case the gpio isn't
+ ready
+From:   Bean Huo <huobean@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, beanhuo@micron.com
+Date:   Mon, 21 Sep 2020 13:28:31 +0200
+In-Reply-To: <20200921112209.GA2220@e121166-lin.cambridge.arm.com>
+References: <20200918123800.19983-1-huobean@gmail.com>
+         <20200921112209.GA2220@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.13]
-X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 18 Sep 2020 13:45:59 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
-
-> A Root Complex Event Collector provides support for
-> terminating error and PME messages from associated RCiEPs.
+On Mon, 2020-09-21 at 12:22 +0100, Lorenzo Pieralisi wrote:
+> > Fix the above issue by letting kirin_pcie_probe() return
+> > -EPROBE_DEFER in
+> > such a case.
+> > 
+> > Fixes: 6e0832fa432e ("PCI: Collect all native drivers under
+> > drivers/pci/controller")
 > 
-> Make use of the RCEC Endpoint Association Extended Capability
-> to identify associated RCiEPs. Link the associated RCiEPs as
-> the RCECs are enumerated.
+> This is certainly not the commit that triggered the issue so I would
+> remove it. Kirin maintainers are CC'ed, waiting for their ACK.
 > 
-> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-A couple of minor things inline plus follow through on not
-special casing the older versions of the capability.
+> Lorenzo
 
-Otherwise looks good to me.
+Hi Lorenzo
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Thanks very much for your reply. It is true this is a bug which was
+introduced by the origin commit. It is ok  for me to remove this fix
+tag.
 
-> ---
->  drivers/pci/pci.h              |  2 +
->  drivers/pci/pcie/portdrv_pci.c |  3 ++
->  drivers/pci/pcie/rcec.c        | 96 ++++++++++++++++++++++++++++++++++
->  include/linux/pci.h            |  1 +
->  4 files changed, 102 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 7b547fc3679a..ddb5872466fb 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -474,9 +474,11 @@ static inline void pci_dpc_init(struct pci_dev *pdev) {}
->  #ifdef CONFIG_PCIEPORTBUS
->  void pci_rcec_init(struct pci_dev *dev);
->  void pci_rcec_exit(struct pci_dev *dev);
-> +void pcie_link_rcec(struct pci_dev *rcec);
->  #else
->  static inline void pci_rcec_init(struct pci_dev *dev) {}
->  static inline void pci_rcec_exit(struct pci_dev *dev) {}
-> +static inline void pcie_link_rcec(struct pci_dev *rcec) {}
->  #endif
->  
->  #ifdef CONFIG_PCI_ATS
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 4d880679b9b1..dbeb0155c2c3 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -110,6 +110,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->  		return -ENODEV;
->  
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_link_rcec(dev);
-> +
->  	status = pcie_port_device_register(dev);
->  	if (status)
->  		return status;
-> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-> index 519ae086ff41..5630480a6659 100644
-> --- a/drivers/pci/pcie/rcec.c
-> +++ b/drivers/pci/pcie/rcec.c
-> @@ -17,6 +17,102 @@
->  
->  #include "../pci.h"
->  
-> +struct walk_rcec_data {
-> +	struct pci_dev *rcec;
-> +	int (*user_callback)(struct pci_dev *dev, void *data);
-> +	void *user_data;
-> +};
-> +
-> +static bool rcec_assoc_rciep(struct pci_dev *rcec, struct pci_dev *rciep)
-> +{
-> +	unsigned long bitmap = rcec->rcec_ext->bitmap;
-> +	unsigned int devn;
-> +
-> +	/* An RCiEP found on bus in range */
-Perhaps adjust the comment to say:
-	/* An RCiEP found on a different bus in range */
-
-as the actual rcec bus can be in the range as I understand it.
-
-> +	if (rcec->bus->number != rciep->bus->number)
-> +		return true;
-> +
-> +	/* Same bus, so check bitmap */
-> +	for_each_set_bit(devn, &bitmap, 32)
-> +		if (devn == rciep->devfn)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
-> +static int link_rcec_helper(struct pci_dev *dev, void *data)
-> +{
-> +	struct walk_rcec_data *rcec_data = data;
-> +	struct pci_dev *rcec = rcec_data->rcec;
-> +
-> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) && rcec_assoc_rciep(rcec, dev)) {
-> +		dev->rcec = rcec;
-> +		pci_dbg(dev, "PME & error events reported via %s\n", pci_name(rcec));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void walk_rcec(int (*cb)(struct pci_dev *dev, void *data), void *userdata)
-
-static, or declare it in a header if we are going to need it elsewhere
-later in the series.
-
-> +{
-> +	struct walk_rcec_data *rcec_data = userdata;
-> +	struct pci_dev *rcec = rcec_data->rcec;
-> +	u8 nextbusn, lastbusn;
-> +	struct pci_bus *bus;
-> +	unsigned int bnr;
-> +
-> +	if (!rcec->rcec_cap)
-> +		return;
-> +
-> +	/* Walk own bus for bitmap based association */
-> +	pci_walk_bus(rcec->bus, cb, rcec_data);
-> +
-> +	/* Check whether RCEC BUSN register is present */
-> +	if (rcec->rcec_ext->ver < PCI_RCEC_BUSN_REG_VER)
-> +		return;
-
-If you make earlier suggested change go fill in nextbusn = 0xFF
-for the earlier versions of the capability can avoid special casing
-here.
-
-> +
-> +	nextbusn = rcec->rcec_ext->nextbusn;
-> +	lastbusn = rcec->rcec_ext->lastbusn;
-> +
-> +	/* All RCiEP devices are on the same bus as the RCEC */
-> +	if (nextbusn == 0xff && lastbusn == 0x00)
-> +		return;
-> +
-> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
-> +		/* No association indicated (PCIe 5.0-1, 7.9.10.3) */
-> +		if (bnr == rcec->bus->number)
-> +			continue;
-> +
-> +		bus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
-> +		if (!bus)
-> +			continue;
-> +
-> +		/* Find RCiEP devices on the given bus ranges */
-> +		pci_walk_bus(bus, cb, rcec_data);
-> +	}
-> +}
-> +
-> +/**
-> + * pcie_link_rcec - Link RCiEP devices associating with RCEC.
-> + * @rcec     RCEC whose RCiEP devices should be linked.
-> + *
-> + * Link the given RCEC to each RCiEP device found.
-
-I'm a fusspot on blank lines. The one here doesn't add anything!
-
-> + *
-> + */
-> +void pcie_link_rcec(struct pci_dev *rcec)
-> +{
-> +	struct walk_rcec_data rcec_data;
-> +
-> +	if (!rcec->rcec_cap)
-> +		return;
-> +
-> +	rcec_data.rcec = rcec;
-> +	rcec_data.user_callback = NULL;
-> +	rcec_data.user_data = NULL;
-> +
-> +	walk_rcec(link_rcec_helper, &rcec_data);
-> +}
-> +
->  void pci_rcec_init(struct pci_dev *dev)
->  {
->  	u32 rcec, hdr, busn;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 5c5c4eb642b6..ad382a9484ea 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -330,6 +330,7 @@ struct pci_dev {
->  #ifdef CONFIG_PCIEPORTBUS
->  	u16		rcec_cap;	/* RCEC capability offset */
->  	struct rcec_ext *rcec_ext;	/* RCEC cached assoc. endpoint extended capabilities */
-> +	struct pci_dev  *rcec;          /* Associated RCEC device */
->  #endif
->  	u8		pcie_cap;	/* PCIe capability offset */
->  	u8		msi_cap;	/* MSI capability offset */
-
+Thanks, 
+Bean
 
