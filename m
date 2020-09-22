@@ -2,126 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AA80274794
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 19:38:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2C827489D
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 20:52:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgIVRiF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 13:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42768 "EHLO mail.kernel.org"
+        id S1726666AbgIVSwL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 14:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbgIVRiF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Sep 2020 13:38:05 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726563AbgIVSwK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Sep 2020 14:52:10 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B15B22206;
-        Tue, 22 Sep 2020 17:38:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2301238D7;
+        Tue, 22 Sep 2020 18:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600796284;
-        bh=8KJSUWQ23WNDIuEAXrq8uOmC1A6VoeXegOzbLw8mHrE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=o1lsm5dOfOmgTpb7Ua+B3eFSm/rxPAXz+mpsYMilZSjyQntBLuUwPjpcKIwwM96ne
-         UfJagjMbQWIZqO+J7UW36XNNP20NnY4LeVQNzS5lbxx8Dzpwx6KPINavgfVgjCmmyZ
-         H0Xvph2RyUk22143V30helsBMNwG1KlscINTDX5w=
-Received: by mail-oi1-f182.google.com with SMTP id 185so21905436oie.11;
-        Tue, 22 Sep 2020 10:38:04 -0700 (PDT)
-X-Gm-Message-State: AOAM5329cLwWo0PkhiI/4LlXoZMycOxM2PD3x3t4Ig/Df7C7tGSy0ULW
-        5XMpRoUOuKr+WnsIfp0A28TI1rPH4QprxzIdnA==
-X-Google-Smtp-Source: ABdhPJyOpI4lih1uwLxz5TQ/FgdTIG0T0C/BbyJzcHEc4sdhT+cy/DdsdZAXNI8DpX0wHe/8B1ZJyGRP3VyEHusuL3s=
-X-Received: by 2002:aca:1711:: with SMTP id j17mr3449230oii.152.1600796283991;
- Tue, 22 Sep 2020 10:38:03 -0700 (PDT)
+        s=default; t=1600800730;
+        bh=GwkgfugyQ4Ep54Xky8JSEaOER8YI4ReiJg8rOAm/CVw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=b+QQwAICCf3FfpggZWCA0+S+/9BJpvk/992YEIXtKALKQG+kjNkX89UjrBDinUL4u
+         aDHUYT6ruzJa2OfVfywCXVieAeNEVhTgwfT0NBvzE7YW6/fjOFB8rYMd/mXCx8sSuN
+         vSfjeCxfWKkrJC6Ts9aN7OXt6sT5ZTBPtLRZZHog=
+Date:   Tue, 22 Sep 2020 13:52:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+Message-ID: <20200922185208.GA1743622@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200918103429.4769-1-nadeem@cadence.com>
-In-Reply-To: <20200918103429.4769-1-nadeem@cadence.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 22 Sep 2020 11:37:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJhpPCpkfrENtbc7zfgiEqPB7ssEt1H5BpjiPPPWSPEwA@mail.gmail.com>
-Message-ID: <CAL_JsqJhpPCpkfrENtbc7zfgiEqPB7ssEt1H5BpjiPPPWSPEwA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Cadence: Add quirk for Gen2 controller to do
- autonomous speed change.
-To:     Nadeem Athani <nadeem@cadence.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cbba08a5e9ca62778c8937f44eda2192a2045da7.1595617529.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 18, 2020 at 4:34 AM Nadeem Athani <nadeem@cadence.com> wrote:
->
-> Cadence controller will not initiate autonomous speed change if
-> strapped as Gen2. The Retrain bit is set as a quirk to trigger
-> this speed change.
->
-> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+On Fri, Jul 24, 2020 at 12:07:55PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Current pcie_do_recovery() implementation has following two issues:
+> 
+
+I'm having trouble parsing this out, probably just lack of my
+understanding...
+
+> 1. Fatal (DPC) error recovery is currently broken for non-hotplug
+> capable devices. Current fatal error recovery implementation relies
+> on PCIe hotplug (pciehp) handler for detaching and re-enumerating
+> the affected devices/drivers. pciehp handler listens for DLLSC state
+> changes and handles device/driver detachment on DLLSC_LINK_DOWN event
+> and re-enumeration on DLLSC_LINK_UP event. So when dealing with
+> non-hotplug capable devices, recovery code does not restore the state
+> of the affected devices correctly. 
+
+Apparently in the hotplug case, something *does* restore the state of
+affected devices?
+
+> Correct implementation should
+> restore the device state and call report_slot_reset() function after
+> resetting the link to restore the state of the device/driver.
+> 
+> You can find fatal non-hotplug related issues reported in following links:
+> 
+> https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
+> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+> https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+> 
+> 2. For non-fatal errors if report_error_detected() or
+> report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET then
+> current pcie_do_recovery() implementation does not do the requested
+> explicit device reset, instead just calls the report_slot_reset() on all
+> affected devices. Notifying about the reset via report_slot_reset()
+> without doing the actual device reset is incorrect.
+
+Is it possible to fix these two issues separately?
+
+> To fix above issues, use PCI_ERS_RESULT_NEED_RESET as error state after
+> successful reset_link() operation. This will ensure ->slot_reset() be
+> called after reset_link() operation for fatal errors. Also call
+> pci_bus_reset() to do slot/bus reset() before triggering device specific
+> ->slot_reset() callback. Also, using pci_bus_reset() will restore the state
+> of the devices after performing the reset operation.
+> 
+> Even though using pci_bus_reset() will do redundant reset operation after
+> ->reset_link() for fatal errors, it should should affect the functional
+> behavior.
+> 
+> [original patch is from jay.vosburgh@canonical.com]
+> [original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
+> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c |   13 +++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h      |    6 ++++++
->  2 files changed, 19 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 4550e0d..4cb7f29 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -83,6 +83,8 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->         struct cdns_pcie *pcie = &rc->pcie;
->         u32 value, ctrl;
->         u32 id;
-> +       u32 link_cap = CDNS_PCIE_LINK_CAP_OFFSET;
-> +       u8 sls, lnk_ctl;
->
->         /*
->          * Set the root complex BAR configuration register:
-> @@ -111,6 +113,17 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->         if (rc->device_id != 0xffff)
->                 cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->
-> +       /* Quirk to enable autonomous speed change for GEN2 controller */
-> +       /* Reading Supported Link Speed value */
-> +       sls = PCI_EXP_LNKCAP_SLS &
-> +               cdns_pcie_rp_readb(pcie, link_cap + PCI_EXP_LNKCAP);
-> +       if (sls == PCI_EXP_LNKCAP_SLS_5_0GB) {
-> +               /* Since this a Gen2 controller, set Retrain Link(RL) bit */
-> +               lnk_ctl = cdns_pcie_rp_readb(pcie, link_cap + PCI_EXP_LNKCTL);
-> +               lnk_ctl |= PCI_EXP_LNKCTL_RL;
-> +               cdns_pcie_rp_writeb(pcie, link_cap + PCI_EXP_LNKCTL, lnk_ctl);
+> 
+> Changes since v2:
+>  * Changed the subject of patch to "PCI/ERR: Fix reset logic in
+>    pcie_do_recovery() call". v2 patch link is,
+>    https://lore.kernel.org/linux-pci/ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+>  * Squashed "PCI/ERR: Add reset support for non fatal errors" patch.
+> 
+>  drivers/pci/pcie/err.c | 41 +++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 37 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 14bb8f54723e..b5eb6ba65be1 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -165,8 +165,29 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bus(bus, report_frozen_detected, &status);
+> +		/*
+> +		 * After resetting the link using reset_link() call, the
+> +		 * possible value of error status is either
+> +		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
+> +		 * PCI_ERS_RESULT_NEED_RESET (success case).
+> +		 * So ignore the return value of report_error_detected()
+> +		 * call for fatal errors.
+> +		 *
+> +		 * In EDR mode, since AER and DPC Capabilities are owned by
+> +		 * firmware, reported_error_detected() will return error
+> +		 * status PCI_ERS_RESULT_NO_AER_DRIVER. Continuing
+> +		 * pcie_do_recovery() with error status as
+> +		 * PCI_ERS_RESULT_NO_AER_DRIVER will report recovery failure
+> +		 * irrespective of recovery status. But successful reset_link()
+> +		 * call usually recovers all fatal errors. So ignoring the
+> +		 * status result of report_error_detected() also helps EDR based
+> +		 * error recovery.
 
-Why the byte accesses? This is a 16-bit register.
+This chain of connections is too long and complicated to be
+maintainable: EDR, AER/DPC ownership, NO_AER_DRIVER, etc.  It's always
+a bad sign when code needs this much explanation.
 
-> +       }
+I don't know how to simplify this, but it does need to be simplified
+somehow.  I think it might have been my idea to feed all these paths
+(AER, DPC, EDR) through the same recovery function, but I'm starting
+to think it was a bad idea.
+
+Or maybe it just isn't factored correctly.  IIUC for the DPC and EDR
+paths, but not for AER, the device (actually the whole subtree) has
+been reset before we even get here.  So it might help to separate out
+the reset part.
+
+> +		 */
+>  		status = reset_link(dev);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		if (status == PCI_ERS_RESULT_RECOVERED) {
+> +			status = PCI_ERS_RESULT_NEED_RESET;
+> +		} else {
+> +			status = PCI_ERS_RESULT_DISCONNECT;
+>  			pci_warn(dev, "link reset failed\n");
+>  			goto failed;
+>  		}
+> @@ -182,10 +203,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  
+>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+>  		/*
+> -		 * TODO: Should call platform-specific
+> -		 * functions to reset slot before calling
+> -		 * drivers' slot_reset callbacks?
+> +		 * TODO: Optimize the call to pci_reset_bus()
+> +		 *
+> +		 * There are two components to pci_reset_bus().
+> +		 *
+> +		 * 1. Do platform specific slot/bus reset.
+> +		 * 2. Save/Restore all devices in the bus.
+> +		 *
+> +		 * For hotplug capable devices and fatal errors,
+> +		 * device is already in reset state due to link
+> +		 * reset. So repeating platform specific slot/bus
+> +		 * reset via pci_reset_bus() call is redundant. So
+> +		 * can optimize this logic and conditionally call
+> +		 * pci_reset_bus().
+>  		 */
+> +		pci_reset_bus(dev);
 > +
->         cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
->         cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
->         cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index feed1e3..075c263 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -120,6 +120,7 @@
->   */
->  #define CDNS_PCIE_RP_BASE      0x00200000
->
-> +#define CDNS_PCIE_LINK_CAP_OFFSET 0xC0
->
->  /*
->   * Address Translation Registers
-> @@ -413,6 +414,11 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
->         cdns_pcie_write_sz(addr, 0x2, value);
->  }
->
-> +static inline u8 cdns_pcie_rp_readb(struct cdns_pcie *pcie, u32 reg)
-> +{
-> +       return readb(pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-> +}
-> +
->  /* Endpoint Function register access */
->  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
->                                           u32 reg, u8 value)
-> --
-> 1.7.1
->
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(dev, "broadcast slot_reset message\n");
+>  		pci_walk_bus(bus, report_slot_reset, &status);
+> -- 
+> 2.17.1
+> 
