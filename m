@@ -2,114 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BB3B273B41
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 08:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC70273D67
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 10:39:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbgIVGyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 02:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbgIVGyk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 02:54:40 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6628C061755
-        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 23:54:39 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        id S1726454AbgIVIiu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 04:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbgIVIiu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Sep 2020 04:38:50 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 3A84E100AFF3D;
-        Tue, 22 Sep 2020 08:54:35 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id EA240105C6C; Tue, 22 Sep 2020 08:54:34 +0200 (CEST)
-Date:   Tue, 22 Sep 2020 08:54:34 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: Enabling d3 support on hotplug bridges
-Message-ID: <20200922065434.GA19668@wunner.de>
-References: <CADnq5_PoDdSeOxGgr5TzVwTTJmLb7BapXyG0KDs92P=wXzTNfg@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F3DA23A1E;
+        Tue, 22 Sep 2020 08:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600763929;
+        bh=Mm0cw1XMHiTcGFvYZ5YAxmxvfxAfdbEoZVA80me39JE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lJGS3A93Lgq85UkTDgJdes21K55ht2plPLTIViCrhCUCIC3GbnIc5h/FFIvwdAN7y
+         GZhrRI/BtSs3f5OiCBv4YSrBUeSmOmarfFBLok5wtLaSTM8T+VppMPRyZogheOejZ9
+         PC9RJDxQ+/0Q63ijmDGf4+v/jSPWVgbPUXU+FO1g=
+Date:   Tue, 22 Sep 2020 10:39:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 07/20] dt-bindings: usb: renesas,usb3-peri: Document
+ r8a774e1 support
+Message-ID: <20200922083909.GA2092905@kroah.com>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8vJ2n3KEL8P+XmVob2zjoWaX+s4a6c1TV_WoPFkwdkZmA@mail.gmail.com>
+ <20200920140824.GA2915460@kroah.com>
+ <CAMuHMdUyXMfZcVKkqaZHJ8tJf-3Kotqg+S2NHMZT0VFO0ZJJww@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADnq5_PoDdSeOxGgr5TzVwTTJmLb7BapXyG0KDs92P=wXzTNfg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdUyXMfZcVKkqaZHJ8tJf-3Kotqg+S2NHMZT0VFO0ZJJww@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[cc += Mika]
-
-On Mon, Sep 21, 2020 at 07:10:55PM -0400, Alex Deucher wrote:
-> Recent AMD laptops which have iGPU + dGPU have been non-functional on
-> Linux.  The issue is that the laptops rely on ACPI to control the dGPU
-> power and that is not happening because the bridges are hotplug
-> capable, and the current pci code does not allow runtime pm on hotplug
-> capable bridges.  This worked on previous laptops presumably because
-> the bridges did not support hotplug or they hit one of the allowed
-> cases.  The driver enables runtime power management, but since the
-> dGPU does not actually get powered down via the platform ACPI
-> controls, no power is saved, and things fall apart on resume leading
-> to an unusable GPU or a system hang.  To work around this users can
-> currently disable runtime pm in the GPU driver or specify
-> pcie_port_pm=force to force d3 on bridges.  I'm not sure what the best
-> solution for this is.  I'd rather not have to add device IDs to a
-> whitelist every time we release a new platform.  Suggestions?  What
-> about something like the attached patch work?
-
-What is Windows doing on these machines?  Microsoft came up with an
-ACPI _DSD property to tell OSPM that it's safe to suspend a hotplug
-port to D3:
-
-https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
-
-We support that since 26ad34d510a8 ("PCI / ACPI: Whitelist D3 for more
-PCIe hotplug ports").
-
-I've skimmed the three gitlab bugs you mention below and none of them
-seems to contain an ACPI dump.  First thing to do is request that
-from the users and check if the HotPlugSupportInD3 property is
-present.  And if it's not, we need to find out why it's working
-on Windows.
-
-Thanks,
-
-Lukas
-
-> From 3a08cb6ac38c47b921b8b6f31b03fcd8f13c4018 Mon Sep 17 00:00:00 2001
-> From: Alex Deucher <alexander.deucher@amd.com>
-> Date: Mon, 21 Sep 2020 18:07:27 -0400
-> Subject: [PATCH] pci: allow d3 on hotplug bridges after 2018
+On Mon, Sep 21, 2020 at 09:30:39AM +0200, Geert Uytterhoeven wrote:
+> Hi Greg,
 > 
-> Newer AMD laptops have hotplug capabe bridges with dGPUs behind them.
-> If d3 is disabled on the bridge, the dGPU is never powered down even
-> though the dGPU driver may think it is because power is handled by
-> the pci core.  Things fall apart when the driver attempts to resume
-> a dGPU that was not properly powered down which leads to hangs.
+> On Sun, Sep 20, 2020 at 4:08 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Sat, Sep 19, 2020 at 11:50:07AM +0100, Lad, Prabhakar wrote:
+> > > On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
+> > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > >
+> > > > Document RZ/G2H (R8A774E1) SoC bindings.
+> > > >
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > Could you please pick this patch.
+> >
+> > Don't DT patches have to be acked by a DT maintainer first?
 > 
-> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1252
-> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1222
-> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1304
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a458c46d7e39..12927d5df4b9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2856,7 +2856,7 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->  		 * by vendors for runtime D3 at least until 2018 because there
->  		 * was no OS support.
->  		 */
-> -		if (bridge->is_hotplug_bridge)
-> +		if (bridge->is_hotplug_bridge && (dmi_get_bios_year() <= 2018))
->  			return false;
->  
->  		if (dmi_check_system(bridge_d3_blacklist))
-> -- 
-> 2.25.4
-> 
+> https://lore.kernel.org/r/20200721033508.GA3504365@bogus
+
+Ah, missed that, sorry.  This, and patch 11/20, now queued up.
+
+greg k-h
