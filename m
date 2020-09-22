@@ -2,73 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B257A273F10
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 11:59:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71141273F3F
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 12:08:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgIVJ7O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 05:59:14 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:45652 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgIVJ7O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 05:59:14 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1726461AbgIVKIV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 06:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbgIVKIV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Sep 2020 06:08:21 -0400
+Received: from localhost (lfbn-ncy-1-588-162.w81-51.abo.wanadoo.fr [81.51.203.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AA576C03D2;
-        Tue, 22 Sep 2020 09:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1600768753; bh=cVMEVxRWNSVrtDCL6M4MXWzU05kV04Tyh8DtD07yNXs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lL3+fFzVHizxCkwXcYaI7tYUyYL0ndviJRz3Ihh8KS8pMyMZtQrT9sooCVQgP9TbA
-         L7z+rygDRL+bEKp4O0CfbfZz4FPnQeUxswEI0bVKs8HQ16LWX9KR1xh5wtYYDZuiDE
-         cM8oa8+JT55EspLhPV6hEwpWscDvrcS8a5BLR+9s7Ciz9SydN74GnzpkzGTkufk90u
-         do6eziV0jXdkyT0xFX6nXRfv7erqWG1dflNwC/oDX+2NJ4Ym4IKyehWxMqLnlJ2sX9
-         1FxZiGC2n9J7YZ4IOD2Koivir9FCcRqxsrsZQwa5l3ue+8wua8WYu1wHLCsYkS0UC9
-         SVduJg5lU3cwA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 51C07A005D;
-        Tue, 22 Sep 2020 09:59:12 +0000 (UTC)
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: [PATCH] [-next] PCI: DWC: Fix cast truncates bits from constant value
-Date:   Tue, 22 Sep 2020 11:59:10 +0200
-Message-Id: <7ea7f7d342f97c758949a17b870012f52ce5b3f5.1600767645.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        by mail.kernel.org (Postfix) with ESMTPSA id A6120238A1;
+        Tue, 22 Sep 2020 10:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600769300;
+        bh=8DhSYCbvL/5uQLKa1OoCbzQjAI1KVYGhNkk/tvbAHZ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NHlyRnU9UhfcxJcB2NGTMckkO90/LQ4r1quggB0dvN5ilY1C6sPfDw4FdL5Avvzeu
+         VF1DknG4aCbj7mPorxnXwITF3ByQsjgWGj8ujFNnYTcTsNMY9cofIF5xZtHHWKa4jd
+         UVXu7GVI1s9vlH9MtIWjb3cSqadLBcN5sal4PMPg=
+Date:   Tue, 22 Sep 2020 12:08:17 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, mtosatti@redhat.com,
+        sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
+Subject: Re: [RFC][Patch v1 1/3] sched/isolation: API to get num of
+ hosekeeping CPUs
+Message-ID: <20200922100817.GB5217@lenoir>
+References: <20200909150818.313699-1-nitesh@redhat.com>
+ <20200909150818.313699-2-nitesh@redhat.com>
+ <20200921234044.GA31047@lenoir>
+ <fd48e554-6a19-f799-b273-e814e5389db9@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd48e554-6a19-f799-b273-e814e5389db9@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fixes warning given by executing "make C=2 drivers/pci/"
+On Mon, Sep 21, 2020 at 11:16:51PM -0400, Nitesh Narayan Lal wrote:
+> 
+> On 9/21/20 7:40 PM, Frederic Weisbecker wrote:
+> > On Wed, Sep 09, 2020 at 11:08:16AM -0400, Nitesh Narayan Lal wrote:
+> >> +/*
+> >> + * num_housekeeping_cpus() - Read the number of housekeeping CPUs.
+> >> + *
+> >> + * This function returns the number of available housekeeping CPUs
+> >> + * based on __num_housekeeping_cpus which is of type atomic_t
+> >> + * and is initialized at the time of the housekeeping setup.
+> >> + */
+> >> +unsigned int num_housekeeping_cpus(void)
+> >> +{
+> >> +	unsigned int cpus;
+> >> +
+> >> +	if (static_branch_unlikely(&housekeeping_overridden)) {
+> >> +		cpus = atomic_read(&__num_housekeeping_cpus);
+> >> +		/* We should always have at least one housekeeping CPU */
+> >> +		BUG_ON(!cpus);
+> >> +		return cpus;
+> >> +	}
+> >> +	return num_online_cpus();
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(num_housekeeping_cpus);
+> >> +
+> >>  int housekeeping_any_cpu(enum hk_flags flags)
+> >>  {
+> >>  	int cpu;
+> >> @@ -131,6 +153,7 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
+> >>  
+> >>  	housekeeping_flags |= flags;
+> >>  
+> >> +	atomic_set(&__num_housekeeping_cpus, cpumask_weight(housekeeping_mask));
+> > So the problem here is that it takes the whole cpumask weight but you're only
+> > interested in the housekeepers who take the managed irq duties I guess
+> > (HK_FLAG_MANAGED_IRQ ?).
+> 
+> IMHO we should also consider the cases where we only have nohz_full.
+> Otherwise, we may run into the same situation on those setups, do you agree?
 
-Sparse output:
-CHECK drivers/pci/controller/dwc/pcie-designware.c
- drivers/pci/controller/dwc/pcie-designware.c:432:52: warning:
- cast truncates bits from constant value (ffffffff7fffffff becomes
- 7fffffff)
+I guess it's up to the user to gather the tick and managed irq housekeeping
+together?
 
-Reported-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/pci/controller/dwc/pcie-designware.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Of course that makes the implementation more complicated. But if this is
+called only on drivers initialization for now, this could be just a function
+that does:
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 3c3a4d1..e7a41d9 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -429,7 +429,7 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
- 	}
- 
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, region | index);
--	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, (u32)~PCIE_ATU_ENABLE);
-+	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, ~(u32)PCIE_ATU_ENABLE);
- }
- 
- int dw_pcie_wait_for_link(struct dw_pcie *pci)
--- 
-2.7.4
+cpumask_weight(cpu_online_mask | housekeeping_cpumask(HK_FLAG_MANAGED_IRQ))
+
+And then can we rename it to housekeeping_num_online()?
+
+Thanks.
+
+> >
+> >>  	free_bootmem_cpumask_var(non_housekeeping_mask);
+> >>  
+> >>  	return 1;
+> >> -- 
+> >> 2.27.0
+> >>
+> -- 
+> Thanks
+> Nitesh
+> 
+
+
 
