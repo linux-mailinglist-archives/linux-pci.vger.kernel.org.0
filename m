@@ -2,56 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FE6A274A4A
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 22:45:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 428D8274A64
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 22:50:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgIVUpg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 16:45:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
+        id S1726807AbgIVUu0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 16:50:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:47828 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgIVUpg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Sep 2020 16:45:36 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368EF2085B;
-        Tue, 22 Sep 2020 20:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600807535;
-        bh=xWczEJ4t6Q/OE5TPUMmmYEyyltd6MdrfWxDDmTklryU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1CJzWXroyeS814IJWLzxTdTMQEw/xfAnIN6XbVDiK+J7NKqA+pDe1seG5URBOIJ4Q
-         Bg0B1UKPhEpJ2yu8E6sMjJCBGfQy5SpwyjLchgMpVbdsIk3of448X7b7EAzGvmqJ6e
-         QzQrGQ3AJTa55UbeeX3ueK7bQmt1EN3wbHvItt94=
-Date:   Tue, 22 Sep 2020 15:45:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 03/10] PCI/RCEC: Cache RCEC capabilities in
- pci_init_capabilities()
-Message-ID: <20200922204533.GA2228232@bjorn-Precision-5520>
+        id S1726563AbgIVUu0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Sep 2020 16:50:26 -0400
+IronPort-SDR: vkN4FTGi46Wt/qVpSex2jgeYhAYZBfDe78TQskNIQynd8H7HZpqn7YPACE96mo0vRoGkhv6/+u
+ ckYCPYwQB3Cg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9752"; a="222298640"
+X-IronPort-AV: E=Sophos;i="5.77,292,1596524400"; 
+   d="scan'208";a="222298640"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 13:50:24 -0700
+IronPort-SDR: Y36xdET4I6OzK/EPHTM1IqQ0YZpypLWOJz02xf18v5kwcvX1Rli6WDBMMcZgWm3e5+M03H+nXq
+ SR6idQoRvTTw==
+X-IronPort-AV: E=Sophos;i="5.77,292,1596524400"; 
+   d="scan'208";a="291423769"
+Received: from fkhoshne-mobl1.amr.corp.intel.com (HELO [10.255.230.168]) ([10.255.230.168])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 13:50:24 -0700
+Subject: Re: [PATCH v9 1/5] PCI: Conditionally initialize host bridge native_*
+ members
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+References: <20200922203950.GA2227863@bjorn-Precision-5520>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <56d9af56-223a-c141-bc05-9499fbd5ff0a@linux.intel.com>
+Date:   Tue, 22 Sep 2020 13:50:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200918204603.62100-4-sean.v.kelley@intel.com>
+In-Reply-To: <20200922203950.GA2227863@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I don't know what's going on with email, but I only see patches 3, 5,
-6, 9 on the list and on lore:
-https://lore.kernel.org/r/20200918204603.62100-4-sean.v.kelley@intel.com/
 
-Similar issues with Sathy's series, where I only see patches 1, 3, 5:
-https://lore.kernel.org/r/a640e9043db50f5adee8e38f5c60ff8423f3f598.1600457297.git.sathyanarayanan.kuppuswamy@linux.intel.com/
 
-On Fri, Sep 18, 2020 at 01:45:56PM -0700, Sean V Kelley wrote:
-> Extend support for Root Complex Event Collectors by decoding and
-> caching the RCEC Endpoint Association Extended Capabilities when
-> enumerating. Use that cached information for later error source
-...
+On 9/22/20 1:39 PM, Bjorn Helgaas wrote:
+> I got 1/5, 3/5, and 5/5 (and no cover letter).  Is there a 2/5 and a
+> 4/5?  Not sure if I should wait for more, or review these three as-is?
+I sent all 5 together with cover letter. Do you want me to send it again ?
+> 
+> On Fri, Sep 18, 2020 at 12:58:30PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> If CONFIG_PCIEPORTBUS is not enabled in kernel then initialing
+>> struct pci_host_bridge PCIe specific native_* members to "1" is
+>> incorrect. So protect the PCIe specific member initialization
+>> with CONFIG_PCIEPORTBUS.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/probe.c | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 03d37128a24f..0da0fc034413 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -588,12 +588,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+>>   	 * may implement its own AER handling and use _OSC to prevent the
+>>   	 * OS from interfering.
+>>   	 */
+>> +#ifdef CONFIG_PCIEPORTBUS
+>>   	bridge->native_aer = 1;
+>>   	bridge->native_pcie_hotplug = 1;
+>> -	bridge->native_shpc_hotplug = 1;
+>>   	bridge->native_pme = 1;
+>> -	bridge->native_ltr = 1;
+>>   	bridge->native_dpc = 1;
+>> +#endif
+>> +	bridge->native_ltr = 1;
+>> +	bridge->native_shpc_hotplug = 1;
+>>   
+>>   	device_initialize(&bridge->dev);
+>>   }
+>> -- 
+>> 2.17.1
+>>
 
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
