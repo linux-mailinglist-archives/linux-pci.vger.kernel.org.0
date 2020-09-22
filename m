@@ -2,165 +2,247 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87924274BFF
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 00:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C74274CFF
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 01:00:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgIVWUq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 18:20:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35813 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726667AbgIVWUp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 18:20:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600813243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=2IT41UhBShTLrA7lcStqErZ4z64G6Nos1dY5P+BunVs=;
-        b=jFDJ/NdiJwnWp6GDsXFq07T+gKAg97Zv9Mg3O+UAcX270HYQEz/B/tueDcJMPiyKm3qqrF
-        OzoNKtw/+16RvtY8z6DJqckddbgH1vc0Kj2hkuI9CPAb4jRjCFap7aoAozkLb6CZz5m5FN
-        E+4FuqlYeU5hf9JoFcKo2gxUcm9br6s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-tM0gRVhyPye4SaVdwkBIoA-1; Tue, 22 Sep 2020 18:20:41 -0400
-X-MC-Unique: tM0gRVhyPye4SaVdwkBIoA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726751AbgIVXAf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 19:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgIVXAf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Sep 2020 19:00:35 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E4A5801AE8;
-        Tue, 22 Sep 2020 22:20:39 +0000 (UTC)
-Received: from [10.10.115.78] (ovpn-115-78.rdu2.redhat.com [10.10.115.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 470B978805;
-        Tue, 22 Sep 2020 22:20:36 +0000 (UTC)
-Subject: Re: [RFC][Patch v1 1/3] sched/isolation: API to get num of
- hosekeeping CPUs
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Frederic Weisbecker <frederic@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, mtosatti@redhat.com,
-        sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
-References: <20200909150818.313699-1-nitesh@redhat.com>
- <20200909150818.313699-2-nitesh@redhat.com> <20200921234044.GA31047@lenoir>
- <fd48e554-6a19-f799-b273-e814e5389db9@redhat.com>
- <20200922100817.GB5217@lenoir>
- <b0608566-21c6-8fc9-4615-aa00099f6d04@redhat.com>
- <20200922205805.GD5217@lenoir> <20200922212648.GA3764123@lunn.ch>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <73f3a117-7617-4655-b286-29c1385011b3@redhat.com>
-Date:   Tue, 22 Sep 2020 18:20:35 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A40320672;
+        Tue, 22 Sep 2020 23:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600815633;
+        bh=U21I+/8tSG6uJIfhNRX/ouqzqww7SxvrUhM5JlUTJ44=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bp1uF9g7wmGYAKv9tGlwUhaGchL25SxEP4DS9YgbFySNDyymeQ5iRKmeEoYqgHcYQ
+         uRXx/iRLpVBOSlY+Uy6dhnUjbP6urVITqw8C5z6UBJgBTZEYr/6DtB2w/GaYpSSV9C
+         sdK4zsHGozEWWgCXEjbjdxJhApc1esYDw3DBk3mU=
+Date:   Tue, 22 Sep 2020 18:00:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+Message-ID: <20200922230031.GA2230332@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200922212648.GA3764123@lunn.ch>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="dC7dqyqLR1tpKpuFuqI0XbJiaqsa5tqXP"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA85sZvk_MqYKWBo3pHP+Z2sWyODuxS7Ni2DHfLikq6fJJ6g3Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---dC7dqyqLR1tpKpuFuqI0XbJiaqsa5tqXP
-Content-Type: multipart/mixed; boundary="3sZ0xzUPCP6XHiGSxVFTtQfrAlcMESyEu"
+[+cc Alexander]
 
---3sZ0xzUPCP6XHiGSxVFTtQfrAlcMESyEu
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+On Tue, Sep 22, 2020 at 11:02:35PM +0200, Ian Kumlien wrote:
+> On Tue, Sep 22, 2020 at 10:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Aug 03, 2020 at 04:58:32PM +0200, Ian Kumlien wrote:
 
+> > > @@ -469,11 +477,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+> > >                * L1 exit latencies advertised by a device include L1
+> > >                * substate latencies (and hence do not do any check).
+> > >                */
+> > > -             latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> > > -             if ((link->aspm_capable & ASPM_STATE_L1) &&
+> > > -                 (latency + l1_switch_latency > acceptable->l1))
+> > > -                     link->aspm_capable &= ~ASPM_STATE_L1;
+> > > -             l1_switch_latency += 1000;
+> > > +             if (link->aspm_capable & ASPM_STATE_L1) {
+> > > +                     latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> > > +                     l1_max_latency = max_t(u32, latency, l1_max_latency);
+> > > +                     if (l1_max_latency + l1_switch_latency > acceptable->l1)
+> > > +                             link->aspm_capable &= ~ASPM_STATE_L1;
+> > > +
+> > > +                     l1_switch_latency += 1000;
+> > > +             }
+> >
+> > This accumulates the 1 usec delays for a Switch to propagate the exit
+> > transition from its Downstream Port to its Upstream Port, but it
+> > doesn't accumulate the L1 exit latencies themselves for the entire
+> > path, does it?  I.e., we don't accumulate "latency" for the whole
+> > path.  Don't we need that?
+> 
+> Not for L1's apparently, from what I gather the maximum link latency
+> is "largest latency" + 1us * number-of-hops
+> 
+> Ie, just like the comment above states - the L1 total time might be
+> more but  1us is all that is needed to "start" and that propagates
+> over the link.
 
-On 9/22/20 5:26 PM, Andrew Lunn wrote:
->> Subject: Re: [RFC][Patch v1 1/3] sched/isolation: API to get num of hose=
-keeping CPUs
-> Hosekeeping? Are these CPUs out gardening in the weeds?
+Ah, you're right!  I don't think this is clear from the existing code
+comment, but it *is* clear from the example in sec 5.4.1.2.2 (Figure
+5-8) of the spec.
 
-Bjorn has already highlighted the typo, so I will be fixing it in the next
-version.
-Do you find the commit message and body of this patch unclear?
+> @@ -448,14 +449,18 @@ static void pcie_aspm_check_latency(struct
+> pci_dev *endpoint)
+> 
+>         while (link) {
+>                 /* Check upstream direction L0s latency */
+> -               if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
+> -                   (link->latency_up.l0s > acceptable->l0s))
+> -                       link->aspm_capable &= ~ASPM_STATE_L0S_UP;
+> +               if (link->aspm_capable & ASPM_STATE_L0S_UP) {
+> +                       l0s_latency_up += link->latency_up.l0s;
 
->
-> =09     Andrew
->
---=20
-Nitesh
+It's pretty clear from sec 5.4.1.2.2 that we *don't* need to
+accumulate the L1 exit latencies.  Unfortunately sec 5.4.1.1.2 about
+L0s exit doesn't have such a nice example.
 
+The L0s *language* is similar though:
 
---3sZ0xzUPCP6XHiGSxVFTtQfrAlcMESyEu--
+  5.4.1.1.2: If the Upstream component is a Switch (i.e., it is not
+  the Root Complex), then it must initiate a transition on its
+  Upstream Port Transmit Lanes (if the Upstream Port's Transmit Lanes
+  are in a low-power state) as soon as it detects an exit from L0s on
+  any of its Downstream Ports.
 
---dC7dqyqLR1tpKpuFuqI0XbJiaqsa5tqXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+  5.4.1.2.1: A Switch is required to initiate an L1 exit transition on
+  its Upstream Port Link after no more than 1 μs from the beginning of
+  an L1 exit transition on any of its Downstream Port Links.  during
+  L1 exit.
 
------BEGIN PGP SIGNATURE-----
+So a switch must start upstream L0s exit "as soon as" it sees L0s exit
+on any downstream port, while it must start L1 exit "no more than 1 μs"
+after seeing an L1 exit.
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9qeLMACgkQo4ZA3AYy
-ozmgRxAAtVCi1syEHTZZTwuNdr2BDm5NqfGracBRsN0RBeqIlTRUGWr2khLqr7gC
-vgNxI3JXoE4eDFsYS6jbeovSPIi1TV3nP+CFUlqXT0gmLbFIUg2sgV324MOGcLg7
-5lixDHRySUUK5FJonykQal+it/9GABvhYW0Ty1PPugmKvR9J6f4Wv4JYoUXtQ5g+
-vjhPj8A8WP/nIs/bXUlQx4TkS6y8BcW6IVjL3nn4E5mPsjrmp/clgtdSi0Uq++SF
-suQyShHtu2MCjtc0RDPW2GaBHDNOTVlpp4ILAeKr4cnECWDTknJbWWwd41HBV+X+
-byTtNCYeRqv1yAoqYHDoL32YCCtaxU3nUv0xi9XyxPY/53wrZgTz1PtnGsOZzsYG
-eqzXF3XRRjkV2Jh+KFXdni9B9a8UgvPIiSf6VJIZbTEXZctZRcW6Sju0LjUKX6Ed
-I+zT5m14zJAsKXh/cbBzVguvRIgxKvfGSYZa4LBA8bvpP0S7+6LzEi0aF3ZSY2Qr
-uiqHKwFf3zeoTIw3VIc4qktl6ozoWhPkkyKiyD5y1Mmz0BLB4X4R17zcAyGKzDqq
-Dp5auFOxqhZeSAgT6gZAxqtefBZu9bJ6RiUFlIsBCmAvBueBN6Qj6hwOXN3A70PK
-YGSPU1C4cxZTM5dLcQE3lOgGZpiuaZIOOxcUU0HVett/QqfclsA=
-=nlWP
------END PGP SIGNATURE-----
+And I really can't tell from the spec whether we need to accumulate
+the L0s exit latencies or not.  Maybe somebody can clarify this.
 
---dC7dqyqLR1tpKpuFuqI0XbJiaqsa5tqXP--
+> commit db3d9c4baf4ab177d87b5cd41f624f5901e7390f
+> Author: Ian Kumlien <ian.kumlien@gmail.com>
+> Date:   Sun Jul 26 16:01:15 2020 +0200
+> 
+>     Use maximum latency when determining L1 ASPM
+> 
+>     If it's not, we clear the link for the path that had too large latency.
+> 
+>     Currently we check the maximum latency of upstream and downstream
+>     per link, not the maximum for the path
+> 
+>     This would work if all links have the same latency, but:
+>     endpoint -> c -> b -> a -> root  (in the order we walk the path)
+> 
+>     If c or b has the higest latency, it will not register
+> 
+>     Fix this by maintaining the maximum latency value for the path
+> 
+>     See this bugzilla for more information:
+>     https://bugzilla.kernel.org/show_bug.cgi?id=208741
+> 
+>     This fixes an issue for me where my desktops machines maximum bandwidth
+>     for remote connections dropped from 933 MBit to ~40 MBit.
+> 
+>     The bug became obvious once we enabled ASPM on all links:
+>     66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
 
+I can't connect the dots here yet.  I don't see a PCIe-to-PCI/PCI-X
+bridge in your lspci, so I can't figure out why this commit would make
+a difference for you.
+
+IIUC, the problem device is 03:00.0, the Intel I211 NIC.  Here's the
+path to it:
+
+  00:01.2 Root Port              to [bus 01-07]
+  01:00.0 Switch Upstream Port   to [bus 02-07]
+  02:03.0 Switch Downstream Port to [bus 03]
+  03:00.0 Endpoint (Intel I211 NIC)
+
+And I think this is the relevant info:
+
+						    LnkCtl    LnkCtl
+	   ------DevCap-------  ----LnkCap-------  -Before-  -After--
+  00:01.2                                L1 <32us       L1+       L1-
+  01:00.0                                L1 <32us       L1+       L1-
+  02:03.0                                L1 <32us       L1+       L1+
+  03:00.0  L0s <512ns L1 <64us  L0s <2us L1 <16us  L0s- L1-  L0s- L1-
+
+The NIC says it can tolerate at most 512ns of L0s exit latency and at
+most 64us of L1 exit latency.
+
+02:03.0 doesn't support L0s, and the NIC itself can't exit L0s that
+fast anyway (it can only do <2us), so L0s should be out of the picture
+completely.
+
+Before your patch, apparently we (or BIOS) enabled L1 on the link from
+00:01.2 to 01:00.0, and partially enabled it on the link from 02:03.0
+to 03:00.0.
+
+It looks like we *should* be able to enable L1 on both links since the
+exit latency should be <33us (first link starts exit at T=0, completes
+by T=32; second link starts exit at T=1, completes by T=33), and
+03:00.0 can tolerate up to 64us.
+
+I guess the effect of your patch is to disable L1 on the 00:01.2 -
+01:00.0 link?  And that makes the NIC work better?  I am obviously
+missing something because I don't understand why the patch does that
+or why it works better.
+
+I added Alexander to cc since it sounds like he's helped debug this,
+too.
+
+>     Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 253c30cc1967..893b37669087 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+> 
+>  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  {
+> -       u32 latency, l1_switch_latency = 0;
+> +       u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+>         struct aspm_latency *acceptable;
+>         struct pcie_link_state *link;
+> 
+> @@ -456,10 +456,14 @@ static void pcie_aspm_check_latency(struct
+> pci_dev *endpoint)
+>                 if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+>                     (link->latency_dw.l0s > acceptable->l0s))
+>                         link->aspm_capable &= ~ASPM_STATE_L0S_DW;
+> +
+>                 /*
+>                  * Check L1 latency.
+> -                * Every switch on the path to root complex need 1
+> -                * more microsecond for L1. Spec doesn't mention L0s.
+> +                *
+> +                * PCIe r5.0, sec 5.4.1.2.2 states:
+> +                * A Switch is required to initiate an L1 exit transition on its
+> +                * Upstream Port Link after no more than 1 μs from the
+> beginning of an
+> +                * L1 exit transition on any of its Downstream Port Links.
+>                  *
+>                  * The exit latencies for L1 substates are not advertised
+>                  * by a device.  Since the spec also doesn't mention a way
+> @@ -469,11 +473,14 @@ static void pcie_aspm_check_latency(struct
+> pci_dev *endpoint)
+>                  * L1 exit latencies advertised by a device include L1
+>                  * substate latencies (and hence do not do any check).
+>                  */
+> -               latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> -               if ((link->aspm_capable & ASPM_STATE_L1) &&
+> -                   (latency + l1_switch_latency > acceptable->l1))
+> -                       link->aspm_capable &= ~ASPM_STATE_L1;
+> -               l1_switch_latency += 1000;
+> +               if (link->aspm_capable & ASPM_STATE_L1) {
+> +                       latency = max_t(u32, link->latency_up.l1,
+> link->latency_dw.l1);
+> +                       l1_max_latency = max_t(u32, latency, l1_max_latency);
+> +                       if (l1_max_latency + l1_switch_latency > acceptable->l1)
+> +                               link->aspm_capable &= ~ASPM_STATE_L1;
+> +
+> +                       l1_switch_latency += 1000;
+> +               }
+> 
+>                 link = link->parent;
+>         }
+> ----------------------
