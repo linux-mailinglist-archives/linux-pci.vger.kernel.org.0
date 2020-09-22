@@ -2,98 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68439273A92
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 08:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28302273ABB
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 08:20:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgIVGQo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 02:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbgIVGQo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 02:16:44 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BCAC061755
-        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 23:16:43 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g128so18313367iof.11
-        for <linux-pci@vger.kernel.org>; Mon, 21 Sep 2020 23:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v9s9Po6UiKRbZ5uT/8fH/TuJNU/zicMYiMISGAeP/xA=;
-        b=Pt9nzUaQ9puQlUPRX93LI00du7c//10Vm3whMQgAOc5heM8UnDvVGqm4nWNHpjOfrI
-         6hqjJABa+RcgctwZc1/dGc8MzXXk3ePmwBZOtzoIYyrAve82ykthJYDnhkG2OPPZl6r2
-         5wHRr1zvXGaucDv4HVKiRyuGqAv9qTjgVXKjlkDeWbDrDgmDfs/d2PXjd00vNRxqSFb3
-         HiFepAXHrqeSh5G7MVbq1LgSlRf0oYcaiuh4bqCObl2CLYw7gFK9LpHXvE6f5xqdRcca
-         eolhxc7l+1bbId6mT9hULXDsgB2CJfJCreZw2fSLn6uMzO2EFXUxCV5y7mWOTily3t1d
-         XJtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v9s9Po6UiKRbZ5uT/8fH/TuJNU/zicMYiMISGAeP/xA=;
-        b=aPx4YAUA7INPN0tWoTTSPWYMnbPZ96pn1mu7sJTwD5uf4S4TbkrhRXElOohl3VIGo6
-         mWndmLTuhALM+oDEKg8fvkl9pncJnwodMxweGbXC9iDOfTQoUORKtxUZMzRIepMGVGBS
-         Qwj5Hhi+9t+g9+bd3ELh0FmE6k9dukr85Do5YSWwpT3BXjBOcfS/RU4jVhQMYUEEFQrn
-         mAJfHTGkgxxJBIChLaoaiIYTgle62xA0CVgAy73rqTgNm6JEFN1BsrVuniospmgjEKvo
-         RCGeULPEBxZV4hP8j6PsehrMFCRxB4maguv7Vtu9sbQ7zZj4tAK4OgyqgH1MZPV6apWr
-         zSQQ==
-X-Gm-Message-State: AOAM533gwxuE4kNCuQPJO5jmj7IPJmHPueNElxIQFrG1gQzOOo9CzIqW
-        HwJBoWeqEnkuxCExYqa00g3rw+a/gviviUeYDgU=
-X-Google-Smtp-Source: ABdhPJwpStlmFVd9oyKFexCV3XkCirafLNVcTAd06GdyRBhDhkt+TsJafSirPz4cJEtmKQZ+tJxOvFrEnup4j8yljWM=
-X-Received: by 2002:a02:9086:: with SMTP id x6mr3000769jaf.126.1600755403176;
- Mon, 21 Sep 2020 23:16:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <1600680138-10949-1-git-send-email-chenhc@lemote.com>
- <45e7272c-e074-d894-9319-ee29f451f282@kernel.org> <CAAhV-H6+57ss5p037r04-X7=YZrQnLUsLDB3GrR-_OPXiucUgw@mail.gmail.com>
-In-Reply-To: <CAAhV-H6+57ss5p037r04-X7=YZrQnLUsLDB3GrR-_OPXiucUgw@mail.gmail.com>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Tue, 22 Sep 2020 14:16:31 +0800
-Message-ID: <CAAhV-H6_BBe1MWJyuVrQNd7NyOarUtz1_YKrQJYxXs3Jby-bsw@mail.gmail.com>
+        id S1728161AbgIVGUr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 02:20:47 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49552 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726556AbgIVGUq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Sep 2020 02:20:46 -0400
+Received: from [10.130.0.80] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_92yl2lf9_4WAA--.1914S3;
+        Tue, 22 Sep 2020 14:20:35 +0800 (CST)
 Subject: Re: [PATCH] PCI/portdrv: Don't disable pci device during shutdown
-To:     Sinan Kaya <okaya@kernel.org>
+To:     Sinan Kaya <okaya@kernel.org>, Huacai Chen <chenhc@lemote.com>
+References: <1600680138-10949-1-git-send-email-chenhc@lemote.com>
+ <45e7272c-e074-d894-9319-ee29f451f282@kernel.org>
+ <CAAhV-H6+57ss5p037r04-X7=YZrQnLUsLDB3GrR-_OPXiucUgw@mail.gmail.com>
+ <d2fee988-d41d-d2c4-3420-a4258c5379aa@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <dbae169e-061c-9306-9e5c-40e268bff128@loongson.cn>
+Date:   Tue, 22 Sep 2020 14:20:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <d2fee988-d41d-d2c4-3420-a4258c5379aa@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dx_92yl2lf9_4WAA--.1914S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF1UWF1UKw4kGw1UJFWUArb_yoW8Kw15pF
+        WDJas8ArWqgry2gw4xtry5J3W5Gr4Yva4fXw18G345uw4fWry5ArWxtFsa93WDGrZY9Fy7
+        Ja9Fq3yxW34UXw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+        MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+        JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+        vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280
+        aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyT
+        uYvjxUkVWLUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Sinan,
-
-On Tue, Sep 22, 2020 at 10:11 AM Huacai Chen <chenhc@lemote.com> wrote:
+On 09/22/2020 12:30 PM, Sinan Kaya wrote:
+> On 9/21/2020 10:11 PM, Huacai Chen wrote:
+>>> his sounds like a quirk to me rather than a behavior that should be
+>>> applied to all platforms.
+>> Yes, this is very like a quirk, but it seems there are a lot of
+>> platforms that have problems, and removing the pci_disable_device()
+>> has no side effect.
+> Why is there no side effect?
 >
-> Hi, Sinan,
->
-> On Mon, Sep 21, 2020 at 11:50 PM Sinan Kaya <okaya@kernel.org> wrote:
-> >
-> > On 9/21/2020 5:22 AM, Huacai Chen wrote:
-> > > Use separate remove()/shutdown() callback, and don't disable pci device
-> > > during shutdown. This can avoid some poweroff/reboot failures.
-> > >
-> > > The poweroff/reboot failures can easily reproduce on Loongson platforms.
-> > > I think this is not a Loongson-specific problem, instead, is a problem
-> > > related to some specific PCI hosts. On some x86 platforms, radeon/amdgpu
-> > > devices can cause the same problem, and commit faefba95c9e8ca3a523831c2e
-> > > ("drm/amdgpu: just suspend the hw on pci shutdown") can resolve it.
-> >
-> > This sounds like a quirk to me rather than a behavior that should be
-> > applied to all platforms.
-> Yes, this is very like a quirk, but it seems there are a lot of
-> platforms that have problems, and removing the pci_disable_device()
-> has no side effect.
-I have seen that you talk about kexec (but this email didn't go to my
-inbox). This has been discussed in another thread, and Lucas told us
-that in pci_device_shutdown the Bus Master is disabled for kexec. So I
-think there will be no memory corruption. Moreover, before 4.15 there
-is no .shutdown callback for portdrv, but kexec still works.
+> AFAIK, kexec goes through the shutdown path and you are leaving a PCI
+> device enabled during kexec boot which can corrupt the booting OS
+> memory.
 
-Yes, the perfect way is to modify all problematic drivers, as
-radeon/amdgpu does. But I don't have enough knowledge about all of the
-devices.
+Hi,
 
-Huacai
+The related kexec operations are already executed afterwards by the function
+pci_device_shutdown(), this is done by commit 4fc9bbf98fd6 ("PCI: Disable
+Bus Master only on kexec reboot") and commit 6e0eda3c3898 ("PCI: Don't try
+to disable Bus Master on disconnected PCI devices").
+
+drivers/pci/pci-driver.c
+static void pci_device_shutdown(struct device *dev)
+{
+  ...
+         if (drv && drv->shutdown)
+                 drv->shutdown(pci_dev);
+
+         /*
+          * If this is a kexec reboot, turn off Bus Master bit on the
+          * device to tell it to not continue to do DMA. Don't touch
+          * devices in D3cold or unknown states.
+          * If it is not a kexec reboot, firmware will hit the PCI
+          * devices with big hammer and stop their DMA any way.
+          */
+         if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+                 pci_clear_master(pci_dev);
+}
+
+device_shutdown()
+   dev->bus->shutdown() == pci_device_shutdown()
+     drv->shutdown() == pcie_portdrv_shutdown()
+     pci_disable_device()
+
+[   36.159446] Call Trace:
+[   36.241688] [<ffffffff80211434>] show_stack+0x9c/0x130
+[   36.326619] [<ffffffff80661b70>] dump_stack+0xb0/0xf0
+[   36.410403] [<ffffffff806a8240>] pcie_portdrv_shutdown+0x18/0x78
+[   36.495302] [<ffffffff8069c6b4>] pci_device_shutdown+0x44/0x90
+[   36.580027] [<ffffffff807aac90>] device_shutdown+0x130/0x290
+[   36.664486] [<ffffffff80265448>] kernel_power_off+0x38/0x80
+[   36.748272] [<ffffffff80265634>] __do_sys_reboot+0x1a4/0x258
+[   36.831985] [<ffffffff80218b90>] syscall_common+0x34/0x58
+
+Early discussions:
+https://lore.kernel.org/patchwork/patch/1304917/#1499666
+https://lore.kernel.org/patchwork/patch/1305067/
+
+
+Thanks,
+Tiezhu
+
 >
-> Huacai
+> I don't think you can generalize a behavior based on a few quirky
+> devices. You should be quirking only the device that has a problem
+> rather than changing the behavior of all other platforms.
+
