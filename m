@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 452FB274B61
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 23:46:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A565A274B6C
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 23:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgIVVpv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 17:45:51 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54193 "EHLO
+        id S1726760AbgIVVpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 17:45:49 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58151 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726738AbgIVVpu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 17:45:50 -0400
+        by vger.kernel.org with ESMTP id S1726643AbgIVVpt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 17:45:49 -0400
 Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id D183C5C01C0;
-        Tue, 22 Sep 2020 17:39:25 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 5F0C85C01C9;
+        Tue, 22 Sep 2020 17:39:28 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 22 Sep 2020 17:39:25 -0400
+  by compute1.internal (MEProxy); Tue, 22 Sep 2020 17:39:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         oregontracks.org; h=from:to:cc:subject:date:message-id
         :in-reply-to:references:mime-version:content-transfer-encoding;
-         s=fm1; bh=j3FGmFi/UuXMsj6wckdtZKcMOyX7nubPO/gaqFMWzMY=; b=gzQhl
-        YAeq45uQe3rcdkFA4byrZaHv5LV+2mn8yPh8dU4vZclE/2Ijt+VnGJTZ+N1DnpZW
-        w745a1LGCq18N2jHaWkTZBoVXxqNxKa9Fvri+7jaeC0cULhtfaQ0V4p33SHaS6T1
-        DRby1UOldwLlCWLBTjfVtaS22BuSH4+TEbcPXFi5Dj/Q9uuZ4+F78E8LAskEtgqB
-        vDMW4S1ghFx3IsEFOyslfW3FZWa18IjfP0bsEADWOMFubuWj7Zv+bsHUkbhJRIl3
-        8vuoybqlUge2Lo/3LhjJKiq5WmYV/u++c6c31XZ5UAvamey0/51AUyNSiOZ+QoyE
-        EtvglTVdCzRVppIQw==
+         s=fm1; bh=ERnpPU+gIC6hydkrdvGearFQ2eli18omiMWIHaoJwrQ=; b=cAmeS
+        XXSEfcV5mIKhek96Y6PY8VtdNZ/EX0Q+CG+uFXrdakw/F2BPsdpBYetlvyhA2JfR
+        TzPzfby4c0B0FdCPLRCD3F3NFW8lLCDoV5Vwk10lhV+wvGCAC188fkueisO3g3Zs
+        OR6IoZ6r534X+f5kW5nWdt1COKmDJDPMwz0J9zVn0f53vYhIUjOcKxyKZGNReVjO
+        75Y/lvM4kIakcnTeX41o4SNLguTg5pJKQYwsZHT3MGNEX+UA0b5AWgdsnqpYa1lk
+        CNbaFAGlcsljsthYFhrnDPVWMW/QsmpXxrAkw4EY7Sf6jPmkPiGJ2jbjUJWoWJbs
+        aEADox0zWHULzLd2g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=j3FGmFi/UuXMsj6wckdtZKcMOyX7nubPO/gaqFMWzMY=; b=O5qosg7k
-        +GBRqCRmzgfBRSFZTtDwnSZn8jqpV5/fQ9A2ks8+w7bOeDDae1UmJxEFHdyfz/jb
-        FAdSbeX6FFCR51KmvShN/0k+3VkYWIA1Cr6kgyar203OxKr8wiQIph3VjNO/s7ZI
-        WR1+2XxwvPLFF4GuiZfPT5lJAAvsvI15wb9PeUkQtmw9d7XrrqGKQpGbEPe3NjjC
-        cIqor+QvWfRjFqr3XbLAAPLZm8pJ/EIJoSR16UUY81dl424YCbb1nup7zDliKdpe
-        XRw3AbjOl2/TePeNmcoe8Br7Ogzd0azMcWqdTDsp09O+QE94hfN0lwy2PgQv+r64
-        hF6fhFpFl6sPxA==
-X-ME-Sender: <xms:DW9qX_xAjLog79qr85SXxunAdVxJMMIrfnXMRvhNlds2iIas5oLsOw>
-    <xme:DW9qX3QvYCizR-fOq64EmNrkseot56c57w_B_eAIm61r-UaTfo-Mnyik1JORw-0MT
-    eCjvY1pcGqmVTmP>
+        fm3; bh=ERnpPU+gIC6hydkrdvGearFQ2eli18omiMWIHaoJwrQ=; b=g2CQofjz
+        G+aVr1kdoteVyLLL14QPVoUkMa9orx4qI5QlyPoSKdP4zMLF9SdKtshUYzYqrTP4
+        xUOD+pjAzN95HWWtWdPhT9C0E2a6dy05R6jy5QzBYPhUXRir83meGG8kSdY6SBzJ
+        7X5WOi4K84DB6RoVtJbRzutAs4IPZ6xxspkuUu/rBpay2t+N2y7q4zkaKhFnDbuf
+        y60+M8rWpPFg3sU7j29R0T0bxtY+ylpZ+pA654B5CH/ZJf/OkiSUaEETTwbgBU0c
+        yb7NWraAiT2vbYDbWvig57ZaST3FWDr7IhH1ohg2G24Y8Rfg3fqzyUFqR4u6PHui
+        Gds+d7RnuGF9tg==
+X-ME-Sender: <xms:EG9qXyuDKWNnAI83yVuFcghMG5fOwriE2nyuU92pk1uuDF9_7c02XA>
+    <xme:EG9qX3eXHwId5Tvkh-zQW1gfDL1FsQ36w6GibQaIFwMye2j0GNy9NpdridnJSgUNc
+    _7c3spQHwAI_UdQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudeggdduieefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
     dtredttdenucfhrhhomhepufgvrghnucggucfmvghllhgvhicuoehsvggrnhhvkhdruggv
     vhesohhrvghgohhnthhrrggtkhhsrdhorhhgqeenucggtffrrghtthgvrhhnpeehkeffte
     eiudeiffelkeelvefftdelhfeitdeigeffleeufedvgfegvdefvedtteenucfkphepvdeg
-    rddvtddrudegkedrgeelnecuvehluhhsthgvrhfuihiivgepieenucfrrghrrghmpehmrg
+    rddvtddrudegkedrgeelnecuvehluhhsthgvrhfuihiivgepleenucfrrghrrghmpehmrg
     hilhhfrhhomhepshgvrghnvhhkrdguvghvsehorhgvghhonhhtrhgrtghkshdrohhrgh
-X-ME-Proxy: <xmx:DW9qX5XE5umScrnIdeiBL3PtdAaVeGOxcuQ3fnVRreP9nBIJmdUS-Q>
-    <xmx:DW9qX5j9HqBMPRA84x7jUC_85la3wMm8u5v5FJxCrh8QQ0qsvHS18g>
-    <xmx:DW9qXxBObNlR96gDfsy6nkQamX-duNwzXYotm291nbX2JOglJZ5krw>
-    <xmx:DW9qX7B-xPN61wbEeYKP6d0bxAVDRjG1JRKyH_bKsmgk7emEtrp1rw>
+X-ME-Proxy: <xmx:EG9qX9y_nBRjsKtiIjdxw57-Lyw9mK_5vEF2YJnhBiYgOsnf3xuEAw>
+    <xmx:EG9qX9PE0Ib9myGDyKne5FWwFkNMedTbAOTrXBPY4ua9uekfkCMOvg>
+    <xmx:EG9qXy8kgaD_KlNDTk8oPg5vJYbC19FBo0pAzpQ62kFhoCpD9cq-zw>
+    <xmx:EG9qX3Ptif0-U13I-iB-MWTtfI0HXunv0PSZg67N9zhkGW1ybKt7GA>
 Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A787E3064674;
-        Tue, 22 Sep 2020 17:39:23 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id BEC073064682;
+        Tue, 22 Sep 2020 17:39:26 -0400 (EDT)
 From:   Sean V Kelley <seanvk.dev@oregontracks.org>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rafael.j.wysocki@intel.com, ashok.raj@intel.com,
@@ -62,9 +62,9 @@ To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         qiuxu.zhuo@intel.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [PATCH v6 09/10] PCI/PME: Add pcie_walk_rcec() to RCEC PME handling
-Date:   Tue, 22 Sep 2020 14:38:58 -0700
-Message-Id: <20200922213859.108826-10-seanvk.dev@oregontracks.org>
+Subject: [PATCH v6 10/10] PCI/AER: Add RCEC AER error injection support
+Date:   Tue, 22 Sep 2020 14:38:59 -0700
+Message-Id: <20200922213859.108826-11-seanvk.dev@oregontracks.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200922213859.108826-1-seanvk.dev@oregontracks.org>
 References: <20200922213859.108826-1-seanvk.dev@oregontracks.org>
@@ -74,72 +74,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sean V Kelley <sean.v.kelley@intel.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
-and also have the PME capability. As with AER, there is a need to be
-able to walk the RCiEPs associated with their RCEC for purposes of
-acting upon them with callbacks. So add RCEC support through the use
-of pcie_walk_rcec() to the current PME service driver and attach the
-PME service driver to the RCEC device.
+The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
+and also have the AER capability. So add RCEC support to the current AER
+error injection driver.
 
-Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
 Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 ---
- drivers/pci/pcie/pme.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/pci/pcie/aer_inject.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index 6a32970bb731..87799166c96a 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
- static void pcie_pme_mark_devices(struct pci_dev *port)
- {
- 	pcie_pme_can_wakeup(port, NULL);
--	if (port->subordinate)
-+
-+	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
-+		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
-+	else if (port->subordinate)
- 		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
- }
- 
-@@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
-  */
- static int pcie_pme_probe(struct pcie_device *srv)
- {
--	struct pci_dev *port;
-+	struct pci_dev *port = srv->port;
- 	struct pcie_pme_service_data *data;
- 	int ret;
- 
-+	/* Limit to Root Ports or Root Complex Event Collectors */
-+	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-+	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-+		return -ENODEV;
-+
- 	data = kzalloc(sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
-@@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
- 	data->srv = srv;
- 	set_service_data(srv, data);
- 
--	port = srv->port;
- 	pcie_pme_interrupt_enable(port, false);
- 	pcie_clear_root_pme_status(port);
- 
-@@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
- 
- static struct pcie_port_service_driver pcie_pme_driver = {
- 	.name		= "pcie_pme",
--	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-+	.port_type	= PCIE_ANY_PORT,
- 	.service	= PCIE_PORT_SERVICE_PME,
- 
- 	.probe		= pcie_pme_probe,
+diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+index c2cbf425afc5..011a6c54b4e3 100644
+--- a/drivers/pci/pcie/aer_inject.c
++++ b/drivers/pci/pcie/aer_inject.c
+@@ -333,8 +333,11 @@ static int aer_inject(struct aer_error_inj *einj)
+ 	if (!dev)
+ 		return -ENODEV;
+ 	rpdev = pcie_find_root_port(dev);
++	/* If Root port not found, try to find an RCEC */
++	if (!rpdev)
++		rpdev = dev->rcec;
+ 	if (!rpdev) {
+-		pci_err(dev, "Root port not found\n");
++		pci_err(dev, "Neither root port nor RCEC found\n");
+ 		ret = -ENODEV;
+ 		goto out_put;
+ 	}
 -- 
 2.28.0
 
