@@ -2,52 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3040B274333
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 15:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEF9827437B
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 15:51:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgIVNeV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 09:34:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37822 "EHLO
+        id S1726473AbgIVNvI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 09:51:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40228 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726605AbgIVNeP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 09:34:15 -0400
+        by vger.kernel.org with ESMTP id S1726613AbgIVNvH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 09:51:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600781652;
+        s=mimecast20190719; t=1600782665;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=BjXXS2cvZamNlQHN2YXChkhIYtax6Ed2yLlS1GlHPr4=;
-        b=HvIkR/isb4nfG2BuM7pm7yXws6brj/zQgFynJ3xT5kcAzDcfQuVUbI+D2TPw7Pxcg5vbVC
-        Kn9IWL+meyaGIe9pZBUNXZDh7dThK8HzKCc0L46rS1b6OBpza4FoeIx0QRhp8/7Vyz4ykZ
-        iPSABJ+5WpdKym9+4CcnDrq9bDvWiVA=
+        bh=JwAzO2hDguT395WdpB/FIA5AVqhN9MXfUO7cpmP+390=;
+        b=fId7ToTAbpoLfNfH0fp2YfV/Ab1Wo3GWtqUtIqD6lofg31jMgAyB/Czr//a7UQdwQp+C8z
+        OqEWZSwGpE4Lz3o08roNMGeuMbdgeyt7Rl7M271bPjzOAMyEy+5JNfzFLus8P3G8cLenvV
+        reKn02e3mnQCCaJ/6FkCRCgHHHY1oLk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-EGrRiKfdN_C3nU1nubrAag-1; Tue, 22 Sep 2020 09:34:08 -0400
-X-MC-Unique: EGrRiKfdN_C3nU1nubrAag-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-203-AlbvZPgyOyyyqY2wxM4n3Q-1; Tue, 22 Sep 2020 09:51:01 -0400
+X-MC-Unique: AlbvZPgyOyyyqY2wxM4n3Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 295F4425E9;
-        Tue, 22 Sep 2020 13:34:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B6BA64140;
+        Tue, 22 Sep 2020 13:50:59 +0000 (UTC)
 Received: from [10.10.115.78] (ovpn-115-78.rdu2.redhat.com [10.10.115.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ABACC614F5;
-        Tue, 22 Sep 2020 13:34:03 +0000 (UTC)
-Subject: Re: [RFC][Patch v1 2/3] i40e: limit msix vectors based on
- housekeeping CPUs
-To:     Frederic Weisbecker <frederic@kernel.org>, bhelgaas@google.com
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF02E3782;
+        Tue, 22 Sep 2020 13:50:56 +0000 (UTC)
+Subject: Re: [RFC][Patch v1 1/3] sched/isolation: API to get num of
+ hosekeeping CPUs
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         linux-pci@vger.kernel.org, mtosatti@redhat.com,
         sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
         jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        thomas.lendacky@amd.com, jerinj@marvell.com,
-        mathias.nyman@intel.com, jiri@nvidia.com
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
 References: <20200909150818.313699-1-nitesh@redhat.com>
- <20200909150818.313699-3-nitesh@redhat.com>
- <20200917112359.00006e10@intel.com> <20200921225834.GA30521@lenoir>
- <65513ee8-4678-1f96-1850-0e13dbf1810c@redhat.com>
- <20200922095440.GA5217@lenoir>
+ <20200909150818.313699-2-nitesh@redhat.com> <20200921234044.GA31047@lenoir>
+ <fd48e554-6a19-f799-b273-e814e5389db9@redhat.com>
+ <20200922100817.GB5217@lenoir>
 From:   Nitesh Narayan Lal <nitesh@redhat.com>
 Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
@@ -93,146 +91,149 @@ Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
  VujM7c/b4pps
 Organization: Red Hat Inc,
-Message-ID: <1b7fba6f-85c3-50d6-a951-78db1ccfd04a@redhat.com>
-Date:   Tue, 22 Sep 2020 09:34:02 -0400
+Message-ID: <b0608566-21c6-8fc9-4615-aa00099f6d04@redhat.com>
+Date:   Tue, 22 Sep 2020 09:50:55 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200922095440.GA5217@lenoir>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200922100817.GB5217@lenoir>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Authentication-Results: relay.mimecast.com;
         auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="PDZV0yVtrsnz8iCpGtGumojvMZCcYC0xg"
+ boundary="6rGvnlUKxR9RsDui3Gutxxh1oToVXjqL0"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---PDZV0yVtrsnz8iCpGtGumojvMZCcYC0xg
-Content-Type: multipart/mixed; boundary="x5qKUNoegkyIUmDvOHigPup1eCGwUT80c"
+--6rGvnlUKxR9RsDui3Gutxxh1oToVXjqL0
+Content-Type: multipart/mixed; boundary="cwBsE0kL1GlZot94IXd2XWzTp29pWSk4k"
 
---x5qKUNoegkyIUmDvOHigPup1eCGwUT80c
+--cwBsE0kL1GlZot94IXd2XWzTp29pWSk4k
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 
 
-On 9/22/20 5:54 AM, Frederic Weisbecker wrote:
-> On Mon, Sep 21, 2020 at 11:08:20PM -0400, Nitesh Narayan Lal wrote:
->> On 9/21/20 6:58 PM, Frederic Weisbecker wrote:
->>> On Thu, Sep 17, 2020 at 11:23:59AM -0700, Jesse Brandeburg wrote:
->>>> Nitesh Narayan Lal wrote:
->>>>
->>>>> In a realtime environment, it is essential to isolate unwanted IRQs f=
-rom
->>>>> isolated CPUs to prevent latency overheads. Creating MSIX vectors onl=
-y
->>>>> based on the online CPUs could lead to a potential issue on an RT set=
-up
->>>>> that has several isolated CPUs but a very few housekeeping CPUs. This=
- is
->>>>> because in these kinds of setups an attempt to move the IRQs to the
->>>>> limited housekeeping CPUs from isolated CPUs might fail due to the pe=
-r
->>>>> CPU vector limit. This could eventually result in latency spikes beca=
-use
->>>>> of the IRQ threads that we fail to move from isolated CPUs.
->>>>>
->>>>> This patch prevents i40e to add vectors only based on available
->>>>> housekeeping CPUs by using num_housekeeping_cpus().
->>>>>
->>>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->>>> The driver changes are straightforward, but this isn't the only driver
->>>> with this issue, right?  I'm sure ixgbe and ice both have this problem
->>>> too, you should fix them as well, at a minimum, and probably other
->>>> vendors drivers:
->>>>
->>>> $ rg -c --stats num_online_cpus drivers/net/ethernet
->>>> ...
->>>> 50 files contained matches
->>> Ouch, I was indeed surprised that these MSI vector allocations were don=
+On 9/22/20 6:08 AM, Frederic Weisbecker wrote:
+> On Mon, Sep 21, 2020 at 11:16:51PM -0400, Nitesh Narayan Lal wrote:
+>> On 9/21/20 7:40 PM, Frederic Weisbecker wrote:
+>>> On Wed, Sep 09, 2020 at 11:08:16AM -0400, Nitesh Narayan Lal wrote:
+>>>> +/*
+>>>> + * num_housekeeping_cpus() - Read the number of housekeeping CPUs.
+>>>> + *
+>>>> + * This function returns the number of available housekeeping CPUs
+>>>> + * based on __num_housekeeping_cpus which is of type atomic_t
+>>>> + * and is initialized at the time of the housekeeping setup.
+>>>> + */
+>>>> +unsigned int num_housekeeping_cpus(void)
+>>>> +{
+>>>> +=09unsigned int cpus;
+>>>> +
+>>>> +=09if (static_branch_unlikely(&housekeeping_overridden)) {
+>>>> +=09=09cpus =3D atomic_read(&__num_housekeeping_cpus);
+>>>> +=09=09/* We should always have at least one housekeeping CPU */
+>>>> +=09=09BUG_ON(!cpus);
+>>>> +=09=09return cpus;
+>>>> +=09}
+>>>> +=09return num_online_cpus();
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(num_housekeeping_cpus);
+>>>> +
+>>>>  int housekeeping_any_cpu(enum hk_flags flags)
+>>>>  {
+>>>>  =09int cpu;
+>>>> @@ -131,6 +153,7 @@ static int __init housekeeping_setup(char *str, en=
+um hk_flags flags)
+>>>> =20
+>>>>  =09housekeeping_flags |=3D flags;
+>>>> =20
+>>>> +=09atomic_set(&__num_housekeeping_cpus, cpumask_weight(housekeeping_m=
+ask));
+>>> So the problem here is that it takes the whole cpumask weight but you'r=
+e only
+>>> interested in the housekeepers who take the managed irq duties I guess
+>>> (HK_FLAG_MANAGED_IRQ ?).
+>> IMHO we should also consider the cases where we only have nohz_full.
+>> Otherwise, we may run into the same situation on those setups, do you ag=
+ree?
+> I guess it's up to the user to gather the tick and managed irq housekeepi=
+ng
+> together?
+
+TBH I don't have a very strong case here at the moment.
+But still, IMHO, this will force the user to have both managed irqs and
+nohz_full in their environments to avoid these kinds of issues. Is that how
+we would like to proceed?
+
+The reason why I want to get this clarity is that going forward for any RT
+related work I can form my thoughts based on this discussion.
+
+>
+> Of course that makes the implementation more complicated. But if this is
+> called only on drivers initialization for now, this could be just a funct=
+ion
+> that does:
+>
+> cpumask_weight(cpu_online_mask | housekeeping_cpumask(HK_FLAG_MANAGED_IRQ=
+))
+
+Ack, this makes more sense.
+
+>
+> And then can we rename it to housekeeping_num_online()?
+
+It could be just me, but does something like hk_num_online_cpus() makes mor=
 e
->>> at the driver level and not at some $SUBSYSTEM level.
->>>
->>> The logic is already there in the driver so I wouldn't oppose to this v=
-ery patch
->>> but would a shared infrastructure make sense for this? Something that w=
-ould
->>> also handle hotplug operations?
->>>
->>> Does it possibly go even beyond networking drivers?
->> From a generic solution perspective, I think it makes sense to come up w=
-ith a
->> shared infrastructure.
->> Something that can be consumed by all the drivers and maybe hotplug oper=
-ations
->> as well (I will have to further explore the hotplug part).
-> That would be great. I'm completely clueless about those MSI things and t=
-he
-> actual needs of those drivers. Now it seems to me that if several CPUs be=
-come
-> offline, or as is planned in the future, CPU isolation gets enabled/disab=
-led
-> through cpuset, then the vectors may need some reorganization.
-
-+1
+sense here?
 
 >
-> But I don't also want to push toward a complicated solution to handle CPU=
- hotplug
-> if there is no actual problem to solve there.
-
-Sure, even I am not particularly sure about the hotplug scenarios.
-
->  So I let you guys judge.
+> Thanks.
 >
->> However, there are RT workloads that are getting affected because of thi=
-s
->> issue, so does it make sense to go ahead with this per-driver basis appr=
-oach
->> for now?
-> Yep that sounds good.
-
-Thank you for confirming.
-
+>>>>  =09free_bootmem_cpumask_var(non_housekeeping_mask);
+>>>> =20
+>>>>  =09return 1;
+>>>> --=20
+>>>> 2.27.0
+>>>>
+>> --=20
+>> Thanks
+>> Nitesh
+>>
 >
->> Since a generic solution will require a fair amount of testing and
->> understanding of different drivers. Having said that, I can definetly st=
-art
->> looking in that direction.
-> Thanks a lot!
 >
 --=20
+Thanks
 Nitesh
 
 
---x5qKUNoegkyIUmDvOHigPup1eCGwUT80c--
+--cwBsE0kL1GlZot94IXd2XWzTp29pWSk4k--
 
---PDZV0yVtrsnz8iCpGtGumojvMZCcYC0xg
+--6rGvnlUKxR9RsDui3Gutxxh1oToVXjqL0
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9p/UoACgkQo4ZA3AYy
-ozmWsBAAmDk7hoXzvBimZ9o8XOMTtZm4JymymG60f/Y7/vHbueNuCUG7DmI7mBiS
-VJEpIR4SVvwCt0w3E3WzQAmHRyzYNxIKBkpW3p6RaSbBFhuT9nMSKOzELtiBF7AV
-o9lfOMjMIiXhVcTKqxhJvIToVC0VaY4FEUvcam7BQG5DO16OCaBOMx6V5nrf5t2F
-/+YVmD15dryE/rTvYuwi9AZMGXBCMOq9SwxIr2sD7W5/62E0WQH3fyJInQnpLSbK
-xma8IsQaWKTdck2JBNBdBqssg/CRNSz82oHGLv5Tl/+IzUDu+t+Aody5Toq/TYJg
-iDidFzqF/mNyqlBxTC8HC++ofuzfPP1UY4wZXB76NoJdbSfDEDwysls55oGsODQl
-yUz1Ggaa9wul8Te0uYkezbn3pTWmMWBkWtvt7YVE6gbhWcDnr5YpAMx55/ntjl+C
-x9r7UL6J5jRMkYquRO1fkeo5gFB3wQ3d1VYHG1HNo4tAMvxfwNGoL0XVHdFWx0uD
-dzlwf8YzTkQVzZjQ8I05XWnm0cf7g2KS3BMBbL7ywUIriV7GGnbCbr0czpfCTeau
-IyOY7RdCG6MriQPGfsg3pKY/PwFdh4MOWIRXJoQMVR4Mb1JnTeWQQA5LC3RyOJHR
-Lgy78jBtNjDkGg6s7daYqnvpzRrhcu3Cfo04uePLhMsvX2fLGLg=
-=OcfM
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9qAT8ACgkQo4ZA3AYy
+ozmBpw/9EKYTu09viJpapk2luJCLxDL/fV+jsf56t32jq2vM01Q3edO7ffPwEB+l
+GvqpJPgK2KyJgoxYLp4SmYdgRNhJ99RbhL0If6mbXBUV+l34wtGYBvgwFklq6Qjr
+8C3QGShrEHLagiDkt3v89dpJDfTNvTyxFS4ftE4xtL9Cgw8Y8jJzezrFsSPtXTTl
+ZOEZYJb67GU+LECYI0SIxSiiW/qvvKnq4HkYJJ0/uDGSSXbfCPqwW+OMQGXN2ZUl
+oM/khLmpkwSgEc/bNul2nIf2pBclXa4nucC50jj8nVAMrPVvJMqdE4DHlCib06PW
+T303KvFtGTfZzfF0wNMeZXPFwSmB9jBuAxr3it0cLLB4+hHVD4FGX/ehegmvzXf3
+sgpeWpKUVp18gmQgj4BEzdmCkVGDRvuQnLyffcDESzREUuWuMjsMrLfuPHdbwra7
+rQcs5BGbC7ARlo4/i6RgEcTkrZjTXCO0z7y19Wuwh8LpQVHJHk6iY8d9LmeHnQlX
+HtOp/akiwPCsf4stfEXp0y/lFukHxfdTY6z9qi5rxUjtwDmf/lkDCWwQr5RDYWbZ
+4WrlUaOc0KYDJIXdj7s6WbguRkQY6yw7iMwt74zNqqwGS00Nhio75FIz82KDHdVX
+33nzVPF/S2TrKodGzQGiD7A8eG9pykApaC/A+5xAp/OJC2gDLNw=
+=C3Gd
 -----END PGP SIGNATURE-----
 
---PDZV0yVtrsnz8iCpGtGumojvMZCcYC0xg--
+--6rGvnlUKxR9RsDui3Gutxxh1oToVXjqL0--
 
