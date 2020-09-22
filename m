@@ -2,91 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B984274A84
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 22:59:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FF30274A72
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 22:56:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIVU7n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 16:59:43 -0400
-Received: from mga01.intel.com ([192.55.52.88]:18524 "EHLO mga01.intel.com"
+        id S1726661AbgIVU4z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 16:56:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbgIVU7n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Sep 2020 16:59:43 -0400
-IronPort-SDR: jy2xdUrEBe8qp+I9aOxvQKQjOqqKpqRh1yemYbN3Jrp1QxuZexlNVUCCQqHZhKl3T9vYbTPiso
- ypfWCvMs71Sg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9752"; a="178786776"
-X-IronPort-AV: E=Sophos;i="5.77,292,1596524400"; 
-   d="scan'208";a="178786776"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 13:54:43 -0700
-IronPort-SDR: sfwQf7KqKiLAR+tp+nP3aHVefQ4hNDMcKHBr79t1N78EHjNScZBo1JroRHai6Mj2X0tU1OaeTA
- h0bj/LnclfMQ==
-X-IronPort-AV: E=Sophos;i="5.77,292,1596524400"; 
-   d="scan'208";a="510718952"
-Received: from fkhoshne-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.255.230.168])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 13:54:43 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v9 5/5] PCI/DPC: Move AER/DPC dependency checks out of DPC driver
-Date:   Tue, 22 Sep 2020 13:54:32 -0700
-Message-Id: <2c112fb150348099af5db2f399b21968ab6577e3.1600457297.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1600457297.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1600457297.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1726448AbgIVU4z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Sep 2020 16:56:55 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FAFF2065D;
+        Tue, 22 Sep 2020 20:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600808214;
+        bh=w23Tp8zMDMR+UE8kJvtgaVeVoeMhyM1C6KfhRH9d1OM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WSJZZqyBzGY8B64QWbiho5uOZl1jGpj6c7TDM0VpMK9okur3c8DS1amwkXf9nKVnb
+         EoUu5IZshV7o2YhKg0BNxEgsUp7xHPIfeTbI4yZFWmDnv5Mt56qg0C0ijYvbWXateN
+         fh97/jv6sAtCUO9/dPjZGoE6Aakiqa+7Ki/rXUIE=
+Date:   Tue, 22 Sep 2020 15:56:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: Re: [PATCH v9 1/5] PCI: Conditionally initialize host bridge
+ native_* members
+Message-ID: <20200922205652.GA2229548@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56d9af56-223a-c141-bc05-9499fbd5ff0a@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+[+cc Sean]
 
-Currently, AER and DPC Capabilities dependency checks is
-distributed between DPC and portdrv service drivers. So move
-them out of DPC driver.
+On Tue, Sep 22, 2020 at 01:50:21PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> On 9/22/20 1:39 PM, Bjorn Helgaas wrote:
+> > I got 1/5, 3/5, and 5/5 (and no cover letter).  Is there a 2/5 and a
+> > 4/5?  Not sure if I should wait for more, or review these three as-is?
+> I sent all 5 together with cover letter. Do you want me to send it again ?
 
-Also, since services & PCIE_PORT_SERVICE_AER check already
-ensures AER native ownership, no need to add additional
-pcie_aer_is_native() check.
+I guess so.  I'm starting to suspect something wrong with Intel's
+email path.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/pcie/dpc.c          | 4 ----
- drivers/pci/pcie/portdrv_core.c | 1 +
- 2 files changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 5b1025a2994d..6261b0382f65 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -280,14 +280,10 @@ void pci_dpc_init(struct pci_dev *pdev)
- static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
--	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
- 	struct device *device = &dev->device;
- 	int status;
- 	u16 ctl, cap;
- 
--	if (!pcie_aer_is_native(pdev) && !host->native_dpc)
--		return -ENOTSUPP;
--
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
- 					   dpc_handler, IRQF_SHARED,
- 					   "pcie-dpc", pdev);
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index e257a2ca3595..ffa1d9fc458e 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -252,6 +252,7 @@ static int get_port_device_capability(struct pci_dev *dev)
- 	 * permission to use AER.
- 	 */
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-+	    host->native_dpc &&
- 	    (host->native_dpc || (services & PCIE_PORT_SERVICE_AER)))
- 		services |= PCIE_PORT_SERVICE_DPC;
- 
--- 
-2.17.1
-
+Sean had a similar problem a few days ago, and he re-sent the series,
+and the resend also has the same problem.
