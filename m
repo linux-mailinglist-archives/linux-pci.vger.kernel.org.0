@@ -2,90 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD20A27425F
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 14:50:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCAA62742E7
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Sep 2020 15:25:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgIVMuT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Sep 2020 08:50:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41103 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgIVMuT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 08:50:19 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1kKhkL-000132-Bd; Tue, 22 Sep 2020 12:50:13 +0000
-Subject: Re: [PATCH v2] PCI: brcmstb: fix a missing if statement on a return
- error check
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Markus Elfring <Markus.Elfring@web.de>
-Cc:     "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        kernel-janitors@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <jquinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh@kernel.org>
-References: <fe38fa7c-8ff7-8e83-968f-91007c058fcc@web.de>
- <CA+-6iNyGbL2jn1qUdX=AN17Xy5uX1-P=+Xi2NLSxHX-1FwLOwg@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Message-ID: <22b12b8a-4c16-5377-043d-00750597f822@canonical.com>
-Date:   Tue, 22 Sep 2020 13:50:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.2
+        id S1726566AbgIVNZa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Sep 2020 09:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgIVNZ3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Sep 2020 09:25:29 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B08C0613D0
+        for <linux-pci@vger.kernel.org>; Tue, 22 Sep 2020 06:25:29 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id u126so20976596oif.13
+        for <linux-pci@vger.kernel.org>; Tue, 22 Sep 2020 06:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=MzgADEAaLqCZCtsDLm4ffnQ0XJMngefK8MXJLmFTvck=;
+        b=g0DxYfucIcGiGXOubcAR92+JlwzpN3mK5MJhW44TdJyVq+F/AUto+L/UN1JwHPIjkh
+         qYaomSnSxFLnYY9VK2onowMvIF5Y/6PRABwDqQvn5DnngdxVTMPqrSYlCe97h9cQB49/
+         G0Gw03BvXwahf5/ABKVP8g2BLpvU9/7KvO226k2nesr/9DemUIA/eUpN4zU7/xAjNAek
+         JjGztsDYWHwMbBGiDZ4abtmbTDegwj2AE6P0nT7lKIhWtVBf9LW2wkP4JtePqfoPZ2Ar
+         iHWvdT2XHe1Ja7jOz8DEp8B3ZUNdapM5SxyZNqoGUekMk38x2x2x9AvSjugaR11mMIBe
+         OJIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=MzgADEAaLqCZCtsDLm4ffnQ0XJMngefK8MXJLmFTvck=;
+        b=mHiQGfxf9HVJzVFEZoZPpCCy5QXpHHOxQfD56nIOqkMA55059dXCd8VEGoMvSqEbd/
+         eJovL2kLXraIFiAEpiMlVKD4hKbPhSkA1DybxgkXoVhvLaaIt4DZI7XX0VmjrijdL9GN
+         bjbMLfRSh6FQW9owFL45hLHMObQbtXDvEJyfyjCqH1YgZa28HQQRYn7z2scWFsxFgF+/
+         FylIO7GT41bElWbPAjPKK6zy7B8iU9yxwK6uomDyKtydcpxepfSPD5mt8GOA1AkdzW/r
+         SvO+SjRqOtRCJXE0tWnhndgm9i75RfHqlJNZCJ02ssntNaGfTAIt2396niwBCWPChRse
+         SjRQ==
+X-Gm-Message-State: AOAM532JsioOxOw7xbLFVwbD5SNbQ2+8BgYTeVeUMPYJQZ1m5wFxAEk4
+        744/meX0DvLslMDNyLONpfMjZt3BLRlyLiz86lc=
+X-Google-Smtp-Source: ABdhPJzIbMX/RNHybHixTgT+xIAHSNcrTgBoHNJL7FlghbADx7xjJIdN0wAbNDufAr8YkefjGThzDfK/tYgAZY7UPc4=
+X-Received: by 2002:aca:f593:: with SMTP id t141mr2658945oih.166.1600781129004;
+ Tue, 22 Sep 2020 06:25:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CA+-6iNyGbL2jn1qUdX=AN17Xy5uX1-P=+Xi2NLSxHX-1FwLOwg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ac9:1a68:0:0:0:0:0 with HTTP; Tue, 22 Sep 2020 06:25:28
+ -0700 (PDT)
+Reply-To: cephasagbeh1@gmail.com
+From:   Cephas Agbeh <peterokekechambers1@gmail.com>
+Date:   Tue, 22 Sep 2020 13:25:28 +0000
+Message-ID: <CACoj33UYr8_6ZjLJuXzjPkxVPQfWCL8YwMjfD-14_doS_QkBXg@mail.gmail.com>
+Subject: Important Notification
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22/09/2020 13:43, Jim Quinlan wrote:
-> On Tue, Sep 22, 2020 at 7:49 AM Markus Elfring <Markus.Elfring@web.de> wrote:
->>
->>> The error return ret is not being check with an if statement and
->>
->> Wording alternative:
->> The return value from a call of the function “brcm_phy_start” was not checked and
->>
->>
->>> V2: disable clock as noted by Florian Fainelli and suggested by
->>>     Jim Quinlan.
->>
->> Alex Dewar contributed another update suggestion.
->>
->> [PATCH v2] PCI: brcmstb: Add missing if statement and error path
->> https://lore.kernel.org/linux-arm-kernel/20200921211623.33908-1-alex.dewar90@gmail.com/
->> https://lore.kernel.org/patchwork/patch/1309860/
->>
->> The exception handling needs further development considerations
->> for this function implementation.
-> Hello,
-> 
-> I agree with Alex's patch.  I should have suggested this at the
-> beginning but as our upstream STB suspend/resume is not yet functional
-> and the one-line change would have worked until we fixed
-> suspend/resume..  But this is the proper modification.
+I am bringing this notice to your attention in respect of the death of
+a deceased client of mine that has the same surname with you and his
+fund valued at $19.9M to be paid to you.contact me at
+cephasagbeh1@gmail.com for more details.
 
-Yup, go with Alex's patch. That one is correct.
-
-
-> 
-> Thanks,
-> Jim
->> Regards,
->> Markus
-
+Yours Sincerely,
+Cephas Agbeh,
+Attorney At Law.
