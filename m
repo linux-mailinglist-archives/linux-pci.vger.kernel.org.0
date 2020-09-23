@@ -2,137 +2,422 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93154276149
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 21:46:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C38822761D4
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 22:16:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgIWTqa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Sep 2020 15:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36730 "EHLO mail.kernel.org"
+        id S1726703AbgIWUQQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Sep 2020 16:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgIWTqa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Sep 2020 15:46:30 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726419AbgIWUQQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Sep 2020 16:16:16 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3872206B2;
-        Wed, 23 Sep 2020 19:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA17206D9;
+        Wed, 23 Sep 2020 20:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600890389;
-        bh=lpxoD5mCpoUdNQFJ4V0R7t4U1NB9Y1DoHhTBkhnahaA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rTGr4LvNkco1FzUzFdCFQBY+kp7fnxnb+BT8QzE1u0Iwf4q2N3TopKWt9hX8H50An
-         Y6awtFa/m1me1W4YKpgWds/DtotI4cp/8+6xljnDMtBX9u+7AFiqzvNC5w1lm+xEl0
-         j041pzDDFLBuORWcEnIEzeVj3roJJXs5vrPA8/Fg=
-Received: by mail-oi1-f177.google.com with SMTP id v20so1119672oiv.3;
-        Wed, 23 Sep 2020 12:46:29 -0700 (PDT)
-X-Gm-Message-State: AOAM5303fqGQ+Tcjy27FIWT/NpxqrmT7cBvBjee0xYMtKBu2ISX9d4Rg
-        GrNIWJqFTdOYUKkhlb5X0Jvj9kDS6gRLl19v2Q==
-X-Google-Smtp-Source: ABdhPJy4WNw1Y7iocXuEKIUXeliaNXDm+44vCu4iKNMjEVWblg9mCzqOJyZroSJfu2GIm7IKOtNmap6NX6rNpIxsBKo=
-X-Received: by 2002:aca:1711:: with SMTP id j17mr646620oii.152.1600890388844;
- Wed, 23 Sep 2020 12:46:28 -0700 (PDT)
+        s=default; t=1600892175;
+        bh=kBHE5F+4sQBEEv3YvIGz5yx2kVnlkeU6BE+dWdGgrq4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=S87XfJac/gD+PaUViJsXXG0/Cvc29LXJXaQ7+NpltSUREgXOQhTRO28AuP1k5MHDg
+         Z1D40tf9Y8Rua7Vq3cDYVUtJ8k2XICRbE6AOMrw5T+RsoVwOhDA0QxzViS+HPCFA4S
+         4HfmzYberjKoX8B0KzUm3I8lWupEVDNn9a0gdpJQ=
+Date:   Wed, 23 Sep 2020 15:16:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        roy.zang@nxp.com, amurray@thegoodpenguin.co.uk,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v6 04/11] PCI: designware-ep: Modify MSI and MSIX CAP way
+ of finding
+Message-ID: <20200923201613.GA2291357@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200923183427.9258-1-nadeem@cadence.com>
-In-Reply-To: <20200923183427.9258-1-nadeem@cadence.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 23 Sep 2020 13:46:17 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+2Q+7H_DMqYSWSBV2y3==ABXxhL6NVxTHTujWR6iTsJg@mail.gmail.com>
-Message-ID: <CAL_Jsq+2Q+7H_DMqYSWSBV2y3==ABXxhL6NVxTHTujWR6iTsJg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Cadence: Add quirk for Gen2 controller to do
- autonomous speed change.
-To:     Nadeem Athani <nadeem@cadence.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200314033038.24844-5-xiaowei.bao@nxp.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 23, 2020 at 12:34 PM Nadeem Athani <nadeem@cadence.com> wrote:
->
-> Cadence controller will not initiate autonomous speed change if
-> strapped as Gen2. The Retrain bit is set as a quirk to trigger
-> this speed change.
->
-> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+s/MSIX/MSI-X/ (subject and below)
+
+On Sat, Mar 14, 2020 at 11:30:31AM +0800, Xiaowei Bao wrote:
+> Each PF of EP device should have it's own MSI or MSIX capabitily
+> struct, so create a dw_pcie_ep_func struct and remove the msi_cap
+> and msix_cap to this struct from dw_pcie_ep, and manage the PFs
+> with a list.
+
+s/capabitily/capability/
+
+I know Lorenzo has already applied this, but for the future, or
+in case there are other reasons to update this patch.
+
+There are a bunch of unnecessary initializations below for future
+cleanup.
+
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 > ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 14 ++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h      | 15 +++++++++++++++
->  2 files changed, 29 insertions(+)
->
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 4550e0d469ca..a2317614268d 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -83,6 +83,9 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->         struct cdns_pcie *pcie = &rc->pcie;
->         u32 value, ctrl;
->         u32 id;
-> +       u32 link_cap = CDNS_PCIE_LINK_CAP_OFFSET;
-> +       u8 sls;
-> +       u16 lnk_ctl;
->
->         /*
->          * Set the root complex BAR configuration register:
-> @@ -111,6 +114,17 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->         if (rc->device_id != 0xffff)
->                 cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->
-> +       /* Quirk to enable autonomous speed change for GEN2 controller */
-> +       /* Reading Supported Link Speed value */
-> +       sls = PCI_EXP_LNKCAP_SLS &
-> +               cdns_pcie_rp_readb(pcie, link_cap + PCI_EXP_LNKCAP);
-
-A 32-bit register, right?
-
-> +       if (sls == PCI_EXP_LNKCAP_SLS_5_0GB) {
-> +               /* Since this a Gen2 controller, set Retrain Link(RL) bit */
-> +               lnk_ctl = cdns_pcie_rp_readw(pcie, link_cap + PCI_EXP_LNKCTL);
-> +               lnk_ctl |= PCI_EXP_LNKCTL_RL;
-> +               cdns_pcie_rp_writew(pcie, link_cap + PCI_EXP_LNKCTL, lnk_ctl);
-> +       }
-> +
->         cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
->         cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
->         cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index feed1e3038f4..fe560480c573 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -120,6 +120,7 @@
->   */
->  #define CDNS_PCIE_RP_BASE      0x00200000
->
-> +#define CDNS_PCIE_LINK_CAP_OFFSET 0xC0
->
->  /*
->   * Address Translation Registers
-> @@ -413,6 +414,20 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
->         cdns_pcie_write_sz(addr, 0x2, value);
+> v3:
+>  - This is a new patch, to fix the issue of MSI and MSIX CAP way of
+>    finding.
+> v4:
+>  - Correct some word of commit message.
+> v5:
+>  - No change.
+> v6:
+>  - Fix up the compile error.
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 135 +++++++++++++++++++++---
+>  drivers/pci/controller/dwc/pcie-designware.h    |  18 +++-
+>  2 files changed, 134 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 933bb89..fb915f2 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -19,6 +19,19 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+>  	pci_epc_linkup(epc);
 >  }
->
-> +static inline u8 cdns_pcie_rp_readb(struct cdns_pcie *pcie, u32 reg)
+>  
+> +struct dw_pcie_ep_func *
+> +dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
 > +{
-> +       void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+> +	struct dw_pcie_ep_func *ep_func;
 > +
-> +       return cdns_pcie_read_sz(addr, 0x1);
+> +	list_for_each_entry(ep_func, &ep->func_list, list) {
+> +		if (ep_func->func_no == func_no)
+> +			return ep_func;
+> +	}
+> +
+> +	return NULL;
 > +}
 > +
-> +static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
+>  static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
+>  {
+>  	unsigned int func_offset = 0;
+> @@ -59,6 +72,47 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>  		__dw_pcie_ep_reset_bar(pci, func_no, bar, 0);
+>  }
+>  
+> +static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+> +		u8 cap_ptr, u8 cap)
 > +{
-> +       void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	unsigned int func_offset = 0;
+
+Unnecessary initialization.
+
+> +	u8 cap_id, next_cap_ptr;
+> +	u16 reg;
 > +
-> +       return cdns_pcie_read_sz(addr, 0x2);
+> +	if (!cap_ptr)
+> +		return 0;
+> +
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = dw_pcie_readw_dbi(pci, func_offset + cap_ptr);
+> +	cap_id = (reg & 0x00ff);
+> +
+> +	if (cap_id > PCI_CAP_ID_MAX)
+> +		return 0;
+> +
+> +	if (cap_id == cap)
+> +		return cap_ptr;
+> +
+> +	next_cap_ptr = (reg & 0xff00) >> 8;
+> +	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
 > +}
 > +
->  /* Endpoint Function register access */
->  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
->                                           u32 reg, u8 value)
-> --
-> 2.15.0
->
+> +static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	unsigned int func_offset = 0;
+
+Unnecessary initialization.
+
+> +	u8 next_cap_ptr;
+> +	u16 reg;
+> +
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = dw_pcie_readw_dbi(pci, func_offset + PCI_CAPABILITY_LIST);
+> +	next_cap_ptr = (reg & 0x00ff);
+> +
+> +	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
+> +}
+> +
+>  static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
+>  				   struct pci_epf_header *hdr)
+>  {
+> @@ -246,13 +300,18 @@ static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no)
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+>  	unsigned int func_offset = 0;
+
+Unnecessary initialization (not from your patch).
+
+> +	struct dw_pcie_ep_func *ep_func;
+>  
+> -	if (!ep->msi_cap)
+> +	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+> +	if (!ep_func)
+> +		return -EINVAL;
+> +
+> +	if (!ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+>  
+> -	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+> +	reg = ep_func->msi_cap + func_offset + PCI_MSI_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	if (!(val & PCI_MSI_FLAGS_ENABLE))
+>  		return -EINVAL;
+> @@ -268,13 +327,18 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 interrupts)
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+>  	unsigned int func_offset = 0;
+
+Unnecessary initialization (not from your patch).
+
+> +	struct dw_pcie_ep_func *ep_func;
+> +
+> +	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+> +	if (!ep_func)
+> +		return -EINVAL;
+>  
+> -	if (!ep->msi_cap)
+> +	if (!ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+>  
+> -	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+> +	reg = ep_func->msi_cap + func_offset + PCI_MSI_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	val &= ~PCI_MSI_FLAGS_QMASK;
+>  	val |= (interrupts << 1) & PCI_MSI_FLAGS_QMASK;
+> @@ -291,13 +355,18 @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+>  	unsigned int func_offset = 0;
+
+Unnecessary initialization (not from your patch).
+
+> +	struct dw_pcie_ep_func *ep_func;
+> +
+> +	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+> +	if (!ep_func)
+> +		return -EINVAL;
+>  
+> -	if (!ep->msix_cap)
+> +	if (!ep_func->msix_cap)
+>  		return -EINVAL;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+>  
+> -	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
+> +	reg = ep_func->msix_cap + func_offset + PCI_MSIX_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+>  		return -EINVAL;
+> @@ -313,13 +382,18 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+>  	unsigned int func_offset = 0;
+
+Unnecessary initialization (not from your patch).
+
+> +	struct dw_pcie_ep_func *ep_func;
+>  
+> -	if (!ep->msix_cap)
+> +	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+> +	if (!ep_func)
+> +		return -EINVAL;
+> +
+> +	if (!ep_func->msix_cap)
+>  		return -EINVAL;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+>  
+> -	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
+> +	reg = ep_func->msix_cap + func_offset + PCI_MSIX_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	val &= ~PCI_MSIX_FLAGS_QSIZE;
+>  	val |= interrupts;
+> @@ -404,6 +478,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			     u8 interrupt_num)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+>  	unsigned int aligned_offset;
+>  	unsigned int func_offset = 0;
+
+Unnecessary initialization (not from your patch).
+
+> @@ -413,25 +488,29 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	bool has_upper;
+>  	int ret;
+>  
+> -	if (!ep->msi_cap)
+> +	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+> +	if (!ep_func)
+> +		return -EINVAL;
+> +
+> +	if (!ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+>  
+>  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
+> -	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+> +	reg = ep_func->msi_cap + func_offset + PCI_MSI_FLAGS;
+>  	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
+>  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
+> -	reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_LO;
+> +	reg = ep_func->msi_cap + func_offset + PCI_MSI_ADDRESS_LO;
+>  	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
+>  	if (has_upper) {
+> -		reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_HI;
+> +		reg = ep_func->msi_cap + func_offset + PCI_MSI_ADDRESS_HI;
+>  		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
+> -		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_64;
+> +		reg = ep_func->msi_cap + func_offset + PCI_MSI_DATA_64;
+>  		msg_data = dw_pcie_readw_dbi(pci, reg);
+>  	} else {
+>  		msg_addr_upper = 0;
+> -		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_32;
+> +		reg = ep_func->msi_cap + func_offset + PCI_MSI_DATA_32;
+>  		msg_data = dw_pcie_readw_dbi(pci, reg);
+>  	}
+>  	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+> @@ -467,6 +546,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			      u16 interrupt_num)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+>  	u16 tbl_offset, bir;
+>  	unsigned int func_offset = 0;
+
+Unnecessary initialization (not from your patch).
+
+> @@ -477,9 +557,16 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	void __iomem *msix_tbl;
+>  	int ret;
+>  
+> +	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+> +	if (!ep_func)
+> +		return -EINVAL;
+> +
+> +	if (!ep_func->msix_cap)
+> +		return -EINVAL;
+> +
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+>  
+> -	reg = ep->msix_cap + func_offset + PCI_MSIX_TABLE;
+> +	reg = ep_func->msix_cap + func_offset + PCI_MSIX_TABLE;
+>  	tbl_offset = dw_pcie_readl_dbi(pci, reg);
+>  	bir = (tbl_offset & PCI_MSIX_TABLE_BIR);
+>  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+> @@ -558,6 +645,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	int i;
+>  	int ret;
+>  	u32 reg;
+> +	u8 func_no;
+>  	void *addr;
+>  	u8 hdr_type;
+>  	unsigned int nbars;
+> @@ -566,6 +654,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct device *dev = pci->dev;
+>  	struct device_node *np = dev->of_node;
+> +	struct dw_pcie_ep_func *ep_func;
+> +
+> +	INIT_LIST_HEAD(&ep->func_list);
+>  
+>  	if (!pci->dbi_base || !pci->dbi_base2) {
+>  		dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
+> @@ -632,9 +723,19 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	if (ret < 0)
+>  		epc->max_functions = 1;
+>  
+> -	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+> +	for (func_no = 0; func_no < epc->max_functions; func_no++) {
+> +		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
+> +		if (!ep_func)
+> +			return -ENOMEM;
+>  
+> -	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+> +		ep_func->func_no = func_no;
+> +		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
+> +							      PCI_CAP_ID_MSI);
+> +		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
+> +							       PCI_CAP_ID_MSIX);
+> +
+> +		list_add_tail(&ep_func->list, &ep->func_list);
+> +	}
+>  
+>  	if (ep->ops->ep_init)
+>  		ep->ops->ep_init(ep);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index cb32afa..dd9b7b4 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -230,8 +230,16 @@ struct dw_pcie_ep_ops {
+>  	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
+>  };
+>  
+> +struct dw_pcie_ep_func {
+> +	struct list_head	list;
+> +	u8			func_no;
+> +	u8			msi_cap;	/* MSI capability offset */
+> +	u8			msix_cap;	/* MSI-X capability offset */
+> +};
+> +
+>  struct dw_pcie_ep {
+>  	struct pci_epc		*epc;
+> +	struct list_head	func_list;
+>  	const struct dw_pcie_ep_ops *ops;
+>  	phys_addr_t		phys_base;
+>  	size_t			addr_size;
+> @@ -244,8 +252,6 @@ struct dw_pcie_ep {
+>  	u32			num_ob_windows;
+>  	void __iomem		*msi_mem;
+>  	phys_addr_t		msi_mem_phys;
+> -	u8			msi_cap;	/* MSI capability offset */
+> -	u8			msix_cap;	/* MSI-X capability offset */
+>  };
+>  
+>  struct dw_pcie_ops {
+> @@ -437,6 +443,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
+>  				       u16 interrupt_num);
+>  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
+> +struct dw_pcie_ep_func *
+> +dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no);
+>  #else
+>  static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+>  {
+> @@ -478,5 +486,11 @@ static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep,
+>  static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>  {
+>  }
+> +
+> +static inline struct dw_pcie_ep_func *
+> +dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
+> +{
+> +	return NULL;
+> +}
+>  #endif
+>  #endif /* _PCIE_DESIGNWARE_H */
+> -- 
+> 2.9.5
+> 
