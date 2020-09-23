@@ -2,169 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 524F2275E88
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 19:23:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42E53275F9C
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 20:18:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgIWRXu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Sep 2020 13:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbgIWRXu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Sep 2020 13:23:50 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726764AbgIWSSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Sep 2020 14:18:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44838 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726572AbgIWSRi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Sep 2020 14:17:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600885055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jgZKBASAdOPCe+dZxTfTeplwc7t5VMKQw5zF/QhNk4E=;
+        b=e6atXzfRJPP4LtHbPqkubqIsuBfA87i9z4c4ci8FGEQ3m+B/KUznz2atyKymtsM4l/oZnC
+        vSJuAygcFDvc23i0ScrqwuFS/x1s6sExSsdpYqFmEPACG4dckfaLDi3ximMgQsTjKONBOO
+        4tWcmD3CYCjYx819vC5LVq5y17hJF94=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-179-4bx5UWG8ObywqRpplFOaSQ-1; Wed, 23 Sep 2020 14:17:33 -0400
+X-MC-Unique: 4bx5UWG8ObywqRpplFOaSQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B33F221F0
-        for <linux-pci@vger.kernel.org>; Wed, 23 Sep 2020 17:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600881829;
-        bh=730KdbTlfAh6bLWtoHtsz8yH6kRXQvyGVrEQq7gSANU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NYwzNX8cDLPLw28QKKLAMaSEmE4trXAkB+v3qLNlHcmSoMjQorgFg/WGV9b+M/k1A
-         OVZO8rOgYBw1HNxTQHRKi7RO90FVD9vfWfbz63NPR/Cl/31J70UcF30ocGzLzx7RuN
-         KYFT/k4oLeZ8VQvnAw+qq/kVyxY/bL8tNNy4CL8s=
-Received: by mail-ot1-f54.google.com with SMTP id o8so494867otl.4
-        for <linux-pci@vger.kernel.org>; Wed, 23 Sep 2020 10:23:49 -0700 (PDT)
-X-Gm-Message-State: AOAM530jotxRtg6yy603yYpy3qP1Ra8guXBgvJ8Ka9I/TBj5hrzLgbda
-        VLFcr/3CiFshPe5KGGaPxiOYjICNWMGFaLqk7w==
-X-Google-Smtp-Source: ABdhPJxUtzwTOVGogBCfk3/mDj7n+lJEHqswrMVz+ppffanPQR9H7uxwnTsaqk3Xj43eCclj08B5LLHvpJt3+Qf+o1c=
-X-Received: by 2002:a9d:6b0d:: with SMTP id g13mr489792otp.129.1600881828244;
- Wed, 23 Sep 2020 10:23:48 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D42191007464;
+        Wed, 23 Sep 2020 18:17:30 +0000 (UTC)
+Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BF8215C1C7;
+        Wed, 23 Sep 2020 18:17:21 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        helgaas@kernel.org, nitesh@redhat.com, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+Subject: [PATCH v2 0/4] isolation: limit msix vectors based on housekeeping CPUs
+Date:   Wed, 23 Sep 2020 14:11:22 -0400
+Message-Id: <20200923181126.223766-1-nitesh@redhat.com>
 MIME-Version: 1.0
-References: <20200905204416.GA83847@rocinante> <20200922232715.GA2238688@bjorn-Precision-5520>
-In-Reply-To: <20200922232715.GA2238688@bjorn-Precision-5520>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 23 Sep 2020 11:23:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKs2m_echD97C+Q_NFS=yJif0LcgLMdDLnywjz35mboKQ@mail.gmail.com>
-Message-ID: <CAL_JsqKs2m_echD97C+Q_NFS=yJif0LcgLMdDLnywjz35mboKQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Unify ECAM constants in native PCI Express drivers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        PCI <linux-pci@vger.kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 5:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rob, who's doing a lot of cleanup in these drivers]
->
-> On Sat, Sep 05, 2020 at 10:44:16PM +0200, Krzysztof Wilczy=C5=84ski wrote=
-:
-> > Hello Jonathan,
-> >
-> > Thank you for the review!  Also, apologies for late reply.
-> >
-> > On 20-08-28 10:08:43, Jonathan Cameron wrote:
-> > [...]
-> > >
-> > > Might potentially be worth tidying up the masks as well?
-> > > Or potentially drop them given I suspect that there are no cases
-> > > in which the mask is actually doing anything...
-> >
-> > Just to confirm - you have the following constants in mind?
-> >
-> > drivers/pci/controller/pcie-rockchip.h:
-> >
-> > #define PCIE_ECAM_BUS(x)      (((x) & 0xff) << 20)
-> > #define PCIE_ECAM_DEV(x)      (((x) & 0x1f) << 15)
-> > #define PCIE_ECAM_FUNC(x)     (((x) & 0x7) << 12)
-> >
-> > drivers/pci/controller/dwc/pcie-al.c:
-> >
-> > #define PCIE_ECAM_DEVFN(x)    (((x) & 0xff) << 12)
-> >
-> > I can move PCIE_ECAM_BUS, PCIE_ECAM_DEV and PCIE_ECAM_FUNC (as
-> > PCIE_ECAM_FUN) to the linux/pci-ecam.h file, as these seem useful, but
-> > without the masks, and then update other files to use these.  We could
-> > then leverage these, for example:
-> >
-> >       pci_base_addr =3D (void __iomem *)((uintptr_t)pp->va_cfg0_base +
-> > -                                      (busnr_ecam << 20) +
-> > -                                      PCIE_ECAM_DEVFN(devfn));
-> > +                                      PCIE_ECAM_BUS(busnr_ecam) +
-> > +                                      PCIE_ECAM_FUN(devfn));
-> >
-> > What do you think?  Bjorn, would that be acceptable?
->
-> It would be nice to use the same style and same macros for all of
-> the following, which are all really doing the same thing:
->
->   al_pcie_conf_addr_map()
->     pci_base_addr =3D (void __iomem *)((uintptr_t)pp->va_cfg0_base +
->                                      (busnr_ecam << 20) +
->                                      PCIE_ECAM_DEVFN(devfn));
->
->   rockchip_pcie_rd_other_conf()
->     busdev =3D PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
->                             PCI_FUNC(devfn), where);
->
->   nwl_pcie_map_bus()
->     relbus =3D (bus->number << ECAM_BUS_LOC_SHIFT) |
->                     (devfn << ECAM_DEV_LOC_SHIFT);
->
->     return pcie->ecam_base + relbus + where;
->
->   xilinx_pcie_map_bus()
->     relbus =3D (bus->number << ECAM_BUS_NUM_SHIFT) |
->              (devfn << ECAM_DEV_NUM_SHIFT);
->
->     return port->reg_base + relbus + where;
->
-> Maybe that's something like using PCIE_ECAM_ADDR() everywhere?  I'm
-> not sure there's value in having the caller do the PCI_SLOT() and
-> PCI_FUNC() decomposition, though, i.e., maybe it's something like
-> this?
->
->   #define PCIE_ECAM_REG(x)  ((x) & 0xfff)
->
->   #define PCI_ECAM_OFFSET(bus, devfn, where) \
->     PCIE_ECAM_BUS(bus->number) | \
->     PCIE_ECAM_DEVFN(devfn) | \
->     PCIE_ECAM_REG(where)
-
-LGTM. This was on my radar, but not something I've looked at.
-
-There's also aardvark which isn't ECAM, but does the same calculation.
-Call it indirect ECAM:
-
-drivers/pci/controller/pci-aardvark.c:#define PCIE_CONF_BUS(bus)
-                 (((bus) & 0xff) << 20)
-drivers/pci/controller/pci-aardvark.c-#define PCIE_CONF_DEV(dev)
-                 (((dev) & 0x1f) << 15)
-drivers/pci/controller/pci-aardvark.c-#define PCIE_CONF_FUNC(fun)
-                 (((fun) & 0x7)  << 12)
-drivers/pci/controller/pci-aardvark.c-#define PCIE_CONF_REG(reg)
-                 ((reg) & 0xffc)
-drivers/pci/controller/pci-aardvark.c-#define PCIE_CONF_ADDR(bus,
-devfn, where) \
-drivers/pci/controller/pci-aardvark.c-  (PCIE_CONF_BUS(bus) |
-PCIE_CONF_DEV(PCI_SLOT(devfn))    | \
-drivers/pci/controller/pci-aardvark.c-
-PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
-
-And VMD:
-drivers/pci/controller/vmd.c-   char __iomem *addr =3D vmd->cfgbar +
-drivers/pci/controller/vmd.c:                        ((bus->number -
-vmd->busn_start) << 20) +
-drivers/pci/controller/vmd.c-                        (devfn << 12) + reg;
-drivers/pci/controller/vmd.c-
+This is a follow-up posting for "[RFC v1 0/3] isolation: limit msix vectors
+based on housekeeping CPUs".
 
 
-And brcm_pcie_cfg_index().
+Issue
+=====
+With the current implementation device drivers while creating their MSIX        
+vectors only take num_online_cpus() into consideration which works quite well  
+for a non-RT environment, but in an RT environment that has a large number of   
+isolated CPUs and very few housekeeping CPUs this could lead to a problem.    
+The problem will be triggered when something like tuned will try to move all    
+the IRQs from isolated CPUs to the limited number of housekeeping CPUs to       
+prevent interruptions for a latency-sensitive workload that will be running on   
+the isolated CPUs. This failure is caused because of the per CPU vector         
+limitation.                                                                     
 
-Rob
+
+Proposed Fix
+============
+In this patch-set, the following changes are proposed:
+- A generic API hk_num_online_cpus() which is meant to return the online
+  housekeeping CPUs that are meant to handle managed IRQ jobs.
+- i40e: Specifically for the i40e driver the num_online_cpus() used in 
+  i40e_init_msix() to calculate numbers msix vectors is replaced with the above
+  defined API. This is done to restrict the number of msix vectors for i40e in
+  RT environments.
+- pci_alloc_irq_vector(): With the help of hk_num_online_cpus() the max_vecs
+  passed in pci_alloc_irq_vector() is restricted only to the online
+  housekeeping CPUs only in an RT environment. However, if the min_vecs exceeds
+  the online housekeeping CPUs, max_vecs is limited based on the min_vecs
+  instead.
+
+
+Future Work
+===========
+
+- In the previous upstream discussion [1], it was decided that it would be
+  better if we can have a generic framework that can be consumed by all the
+  drivers to  fix this kind of issue. However, it will be a long term work,
+  and since there are RT workloads that are getting impacted by the reported
+  issue. We agreed upon the proposed per-device approach for now.
+
+
+Testing
+=======
+Functionality:
+- To test that the issue is resolved with i40e change I added a tracepoint
+  in i40e_init_msix() to find the number of CPUs derived for vector creation
+  with and without tuned's realtime-virtual-host profile. As per expectation
+  with the profile applied I was only getting the number of housekeeping CPUs
+  and all available CPUs without it.
+  Similarly did a few more tests with different modes eg with only
+  nohz_full, isolcpus etc.
+
+Performance:
+- To analyze the performance impact I have targetted the change introduced in 
+  pci_alloc_irq_vectors() and compared the results against a vanilla kernel
+  (5.9.0-rc3) results.
+
+  Setup Information:
+  + I had a couple of 24-core machines connected back to back via a couple of
+    mlx5 NICs and I analyzed the average bitrate for server-client TCP and UDP
+    transmission via iperf. 
+  + To minimize the Bitrate variation of iperf TCP and UDP stream test I have
+    applied the tuned's network-throughput profile and disabled HT.
+ Test Information:
+  + For the environment that had no isolated CPUs:
+    I have tested with single stream and 24 streams (same as that of online
+    CPUs).
+  + For the environment that had 20 isolated CPUs:
+    I have tested with single stream, 4 streams (same as that the number of
+    housekeeping) and 24 streams (same as that of online CPUs).
+
+ Results:
+  # UDP Stream Test:
+    + There was no degradation observed in UDP stream tests in both
+      environments. (With isolated CPUs and without isolated CPUs after the
+      introduction of the patches).
+  # TCP Stream Test - No isolated CPUs:
+    + No noticeable degradation was observed.
+  # TCP Stream Test - With isolated CPUs:
+    + Multiple Stream (4)  - Average degradation of around 5-6%
+    + Multiple Stream (24) - Average degradation of around 2-3%
+    + Single Stream        - Even on a vanilla kernel the Bitrate observed for
+                             a TCP single stream test seem to vary
+                             significantly across different runs (eg. the %
+                             variation between the best and the worst case on
+                             a vanilla kernel was around 8-10%). A similar
+                             variation was observed with the kernel that
+                             included my patches. No additional degradation
+                             was observed.
+
+If there are any suggestions for more performance evaluation, I would
+be happy to discuss/perform them.
+
+Changes from v1[2]:
+==================
+Patch1:                                                                       
+- Replaced num_houskeeeping_cpus() with hk_num_online_cpus() and started using
+  the cpumask corresponding to HK_FLAG_MANAGED_IRQ to derive the number of
+  online housekeeping CPUs. This is based on Frederic Weisbecker's suggestion.                                           
+- Since the hk_num_online_cpus() is self-explanatory, got rid of             
+  the comment that was added previously.                                     
+Patch2:                                                                       
+- Added a new patch that is meant to enable managed IRQ isolation for nohz_full
+  CPUs. This is based on Frederic Weisbecker's suggestion.              
+Patch4 (PCI):                                                                 
+- For cases where the min_vecs exceeds the online housekeeping CPUs, instead
+  of skipping modification to max_vecs, started restricting it based on the
+  min_vecs. This is based on a suggestion from Marcelo Tosatti.                                                                    
+
+[1] https://lore.kernel.org/lkml/20200922095440.GA5217@lenoir/
+[2] https://lore.kernel.org/lkml/20200909150818.313699-1-nitesh@redhat.com/
+
+Nitesh Narayan Lal (4):
+  sched/isolation: API to get housekeeping online CPUs
+  sched/isolation: Extend nohz_full to isolate managed IRQs
+  i40e: limit msix vectors based on housekeeping CPUs
+  PCI: Limit pci_alloc_irq_vectors as per housekeeping CPUs
+
+ drivers/net/ethernet/intel/i40e/i40e_main.c |  3 ++-
+ include/linux/pci.h                         | 15 +++++++++++++++
+ include/linux/sched/isolation.h             | 13 +++++++++++++
+ kernel/sched/isolation.c                    |  2 +-
+ 4 files changed, 31 insertions(+), 2 deletions(-)
+
+-- 
+
+
