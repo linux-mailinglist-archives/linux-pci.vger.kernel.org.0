@@ -2,155 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76B7B27623A
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 22:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3121276303
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 23:23:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgIWUiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Sep 2020 16:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
+        id S1726265AbgIWVXV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Sep 2020 17:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbgIWUiL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Sep 2020 16:38:11 -0400
+        id S1726199AbgIWVXV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Sep 2020 17:23:21 -0400
 Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C589220725;
-        Wed, 23 Sep 2020 20:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 979A321D43;
+        Wed, 23 Sep 2020 21:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600893491;
-        bh=AskTKIC0gVf9+eudy7V2ZFeIHmr9SERPbmozivXSEaQ=;
+        s=default; t=1600896199;
+        bh=Zgn3c+UxEDUOIiDQMN544vj+WQGJs1d6/Kld3xA69RQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BuDzCXnwneiQEBijijm9OgF/t4EVX12j+56co+NLwWejFSek19RliEPne7vUBU8AV
-         DdU2YzX7tm6v52Y6F6fSdEinqudN3rDVWx7q+Q6Mn9j8mHPIr2b0dtIWooiEHJIy/X
-         IHHdXtaiVkyZvSiz5zAfr2rEsweAw2olm40Hk1Sg=
-Date:   Wed, 23 Sep 2020 15:38:09 -0500
+        b=saYFYIk4jQCylMNnOdIvcx39qNmSoL+cfMEeuMAHIyKXqNZhvROpBDSmC6+8eA8cO
+         6HKpnNQHtLXKSzYKl9xb2tsgrEzhcEaiBwuTIWMy2eo6KYG2oYlZiPTmBge3xGgUqm
+         4hDeIU7Zs7ORPFLKVrvcMg+SBWdWXwfNLs8PmGaY=
+Date:   Wed, 23 Sep 2020 16:23:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nadeem Athani <nadeem@cadence.com>
-Cc:     tjoseph@cadence.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kishon@ti.com, mparab@cadence.com,
-        sjakhade@cadence.com
-Subject: Re: [PATCH v2] PCI: Cadence: Add quirk for Gen2 controller to do
- autonomous speed change.
-Message-ID: <20200923203809.GA2289779@bjorn-Precision-5520>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+Message-ID: <20200923212318.GA2295660@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200923183427.9258-1-nadeem@cadence.com>
+In-Reply-To: <CAA85sZs5f09uh+eCcZ+2Mh4Hj=GVVncZjyGR8Ru3vBQ3Z-_nNA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Something like:
+On Wed, Sep 23, 2020 at 01:29:18AM +0200, Ian Kumlien wrote:
+> On Wed, Sep 23, 2020 at 1:00 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Sep 22, 2020 at 11:02:35PM +0200, Ian Kumlien wrote:
 
-  PCI: cadence: Retrain Link to work around Gen2 training defect
-
-to match history (see "git log --oneline
-drivers/pci/controller/cadence/pcie-cadence-host.c").
-
-On Wed, Sep 23, 2020 at 08:34:27PM +0200, Nadeem Athani wrote:
-> Cadence controller will not initiate autonomous speed change if
-> strapped as Gen2. The Retrain bit is set as a quirk to trigger
-> this speed change.
-
-To match the spec terminology:
-
-  Set the Retrain Link bit ...
-
-Obviously I don't know the details of your device or even how PCIe
-works at this level.  But IIUC a link always comes up at 2.5 GT/s
-first and then the upstream and downstream components negotiate the
-highest speed they both support.  It sounds like your controller
-doesn't actually do this negotiation unless you set the Retrain Link
-bit?
-
-Is cdns_pcie_host_init_root_port() the only time this needs to be
-done?  We don't have to worry about doing this again after a reset,
-hot-add event, etc?
-
-> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 14 ++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h      | 15 +++++++++++++++
->  2 files changed, 29 insertions(+)
+> > > commit db3d9c4baf4ab177d87b5cd41f624f5901e7390f
+> > > Author: Ian Kumlien <ian.kumlien@gmail.com>
+> > > Date:   Sun Jul 26 16:01:15 2020 +0200
+> > >
+> > >     Use maximum latency when determining L1 ASPM
+> > >
+> > >     If it's not, we clear the link for the path that had too large latency.
+> > >
+> > >     Currently we check the maximum latency of upstream and downstream
+> > >     per link, not the maximum for the path
+> > >
+> > >     This would work if all links have the same latency, but:
+> > >     endpoint -> c -> b -> a -> root  (in the order we walk the path)
+> > >
+> > >     If c or b has the higest latency, it will not register
+> > >
+> > >     Fix this by maintaining the maximum latency value for the path
+> > >
+> > >     See this bugzilla for more information:
+> > >     https://bugzilla.kernel.org/show_bug.cgi?id=208741
+> > >
+> > >     This fixes an issue for me where my desktops machines maximum bandwidth
+> > >     for remote connections dropped from 933 MBit to ~40 MBit.
+> > >
+> > >     The bug became obvious once we enabled ASPM on all links:
+> > >     66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
+> >
+> > I can't connect the dots here yet.  I don't see a PCIe-to-PCI/PCI-X
+> > bridge in your lspci, so I can't figure out why this commit would make
+> > a difference for you.
+> >
+> > IIUC, the problem device is 03:00.0, the Intel I211 NIC.  Here's the
+> > path to it:
+> >
+> >   00:01.2 Root Port              to [bus 01-07]
+> >   01:00.0 Switch Upstream Port   to [bus 02-07]
+> >   02:03.0 Switch Downstream Port to [bus 03]
+> >   03:00.0 Endpoint (Intel I211 NIC)
+> >
+> > And I think this is the relevant info:
+> >
+> >                                                     LnkCtl    LnkCtl
+> >            ------DevCap-------  ----LnkCap-------  -Before-  -After--
+> >   00:01.2                                L1 <32us       L1+       L1-
+> >   01:00.0                                L1 <32us       L1+       L1-
+> >   02:03.0                                L1 <32us       L1+       L1+
+> >   03:00.0  L0s <512ns L1 <64us  L0s <2us L1 <16us  L0s- L1-  L0s- L1-
+> >
+> > The NIC says it can tolerate at most 512ns of L0s exit latency and at
+> > most 64us of L1 exit latency.
+> >
+> > 02:03.0 doesn't support L0s, and the NIC itself can't exit L0s that
+> > fast anyway (it can only do <2us), so L0s should be out of the picture
+> > completely.
+> >
+> > Before your patch, apparently we (or BIOS) enabled L1 on the link from
+> > 00:01.2 to 01:00.0, and partially enabled it on the link from 02:03.0
+> > to 03:00.0.
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 4550e0d469ca..a2317614268d 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -83,6 +83,9 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  	struct cdns_pcie *pcie = &rc->pcie;
->  	u32 value, ctrl;
->  	u32 id;
-> +	u32 link_cap = CDNS_PCIE_LINK_CAP_OFFSET;
+> According to the spec, this is managed by the OS - which was the
+> change introduced...
 
-This is not actually the link cap offset.  Based on the usage, this
-appears to be the offset of the PCIe Capability.
+BIOS frequently enables ASPM and, if CONFIG_PCIEASPM_DEFAULT=y, I
+don't think Linux touches it unless a user requests it via sysfs.
 
-> +	u8 sls;
-> +	u16 lnk_ctl;
->  
->  	/*
->  	 * Set the root complex BAR configuration register:
-> @@ -111,6 +114,17 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  	if (rc->device_id != 0xffff)
->  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->  
-> +	/* Quirk to enable autonomous speed change for GEN2 controller */
-> +	/* Reading Supported Link Speed value */
-> +	sls = PCI_EXP_LNKCAP_SLS &
-> +		cdns_pcie_rp_readb(pcie, link_cap + PCI_EXP_LNKCAP);
+What does "grep ASPM .config" tell you?
 
-The conventional way to write this would be
+Boot with "pci=earlydump" and the dmesg will tell us what the BIOS
+did.
 
-  sls = cdns_pcie_rp_readb(pcie, link_cap + PCI_EXP_LNKCAP) &
-    PCI_EXP_LNKCAP_SLS;
+If you do this in the unmodified kernel:
 
-> +	if (sls == PCI_EXP_LNKCAP_SLS_5_0GB) {
-> +		/* Since this a Gen2 controller, set Retrain Link(RL) bit */
-> +		lnk_ctl = cdns_pcie_rp_readw(pcie, link_cap + PCI_EXP_LNKCTL);
-> +		lnk_ctl |= PCI_EXP_LNKCTL_RL;
-> +		cdns_pcie_rp_writew(pcie, link_cap + PCI_EXP_LNKCTL, lnk_ctl);
-> +	}
-> +
->  	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
->  	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
->  	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index feed1e3038f4..fe560480c573 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -120,6 +120,7 @@
->   */
->  #define CDNS_PCIE_RP_BASE	0x00200000
->  
-> +#define CDNS_PCIE_LINK_CAP_OFFSET 0xC0
+  # echo 1 > /sys/.../0000:03:00.0/l1_aspm
 
-Use lower-case in hex as the rest of the file does.
+it should enable L1 for 03:00.0.  I'd like to know whether it actually
+does, and whether the NIC behaves any differently when L1 is enabled
+for the entire path instead of just the first three components.
 
->  /*
->   * Address Translation Registers
-> @@ -413,6 +414,20 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
->  	cdns_pcie_write_sz(addr, 0x2, value);
->  }
->  
-> +static inline u8 cdns_pcie_rp_readb(struct cdns_pcie *pcie, u32 reg)
-> +{
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-> +
-> +	return cdns_pcie_read_sz(addr, 0x1);
-> +}
-> +
-> +static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
-> +{
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-> +
-> +	return cdns_pcie_read_sz(addr, 0x2);
-> +}
-> +
->  /* Endpoint Function register access */
->  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
->  					  u32 reg, u8 value)
-> -- 
-> 2.15.0
+If the above doesn't work, you should be able to enable ASPM manually:
+
+  # setpci -s03:00.0 CAP_EXP+0x10.w=0x0042
+
+> > It looks like we *should* be able to enable L1 on both links since the
+> > exit latency should be <33us (first link starts exit at T=0, completes
+> > by T=32; second link starts exit at T=1, completes by T=33), and
+> > 03:00.0 can tolerate up to 64us.
+> >
+> > I guess the effect of your patch is to disable L1 on the 00:01.2 -
+> > 01:00.0 link?  And that makes the NIC work better?  I am obviously
+> > missing something because I don't understand why the patch does that
+> > or why it works better.
 > 
+> It makes it work like normal again, like if i disable ASPM on the
+> nic itself...
+
+I wonder if ASPM is just broken on this device.
+__e1000e_disable_aspm() mentions hardware errata on a different Intel
+NIC.
+
+> I don't know which value that reflects, up or down - since we do max
+> of both values and
+> it actually disables ASPM.
+> 
+> What we can see is that the first device that passes the threshold
+> is 01:00.0
+
+I don't understand this.  03:00.0 claims to be able to tolerate 64us
+of L1 exit latency.  The path should only have <33us of latency, so
+it's not even close to the 64us threshold.
+
+> How can I read more data from PCIe without needing to add kprint...
+> 
+> This is what lspci uses apparently:
+> #define  PCI_EXP_LNKCAP_L0S     0x07000 /* L0s Exit Latency */
+> #define  PCI_EXP_LNKCAP_L1      0x38000 /* L1 Exit Latency */
+> 
+> But which latencies are those? up or down?
+
+I think the idea in aspm.c that exit latencies depend on which
+direction traffic is going is incorrect.  The components at the
+upstream and downstream ends of the link may have different exit
+latencies, of course.
