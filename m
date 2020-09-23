@@ -2,109 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1314275C9E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 17:58:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B2BF275CB3
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Sep 2020 18:03:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgIWP6X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Sep 2020 11:58:23 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33248 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIWP6X (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Sep 2020 11:58:23 -0400
-Received: by mail-il1-f193.google.com with SMTP id y2so129829ila.0;
-        Wed, 23 Sep 2020 08:58:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=za4dzsCtkhhKE2qSFREMD9TZL8grdfoNBNEF/t9aU8I=;
-        b=UiIpb7zkzy3hC34kGdvgNSm21JzyjFaRoBANmvV2kslflNYStlvC7HHSBcomTvP33h
-         GeSHQJkW4VZ9QgKoitulS/3qv31gApblKpd+JhCo0+C9hvYhpsbe3KNq2hAAKc7mxS/8
-         XUZlAbEiTWVdJSc+ecEj9V+svzvEOyosz4U6hLn751IHnlVEWAzZf9UClQPFb6O1mPqq
-         lqWseA4bKD+cbBH64n5Yh+nkpcQbJljFoZN+BAPy2s4AAEn91/LSowN0E60bx7w+CQik
-         r54dT/2RjnMyisQB2qhEnmsp/gDXzsFIXukDF4Sm1VcSn27JcjY9hnjfaeeC/HEYAO7W
-         g8Gg==
-X-Gm-Message-State: AOAM531XA1UjjAJ3LrViohPi9z6OyK2g+ywOH8bdaLyTrUwLQ5wAA1Ma
-        YKC5xJXoZf+RLGcln1eYJQ==
-X-Google-Smtp-Source: ABdhPJyIjRvQdWuwtq80W4I2hGjILoCUSMd5IE/qDYtsXFBJbCq6Bzodcgk1lvY+nbjDTvEaZmEQLw==
-X-Received: by 2002:a92:6b04:: with SMTP id g4mr423262ilc.192.1600876701801;
-        Wed, 23 Sep 2020 08:58:21 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id s23sm127845iol.23.2020.09.23.08.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 08:58:20 -0700 (PDT)
-Received: (nullmailer pid 827972 invoked by uid 1000);
-        Wed, 23 Sep 2020 15:58:18 -0000
-Date:   Wed, 23 Sep 2020 09:58:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        vkoul@kernel.org, svarbanov@mm-sol.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgautam@codeaurora.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/5] pci: controller: dwc: qcom: Add PCIe support for
- SM8250 SoC
-Message-ID: <20200923155817.GA811543@bogus>
-References: <20200916132000.1850-1-manivannan.sadhasivam@linaro.org>
- <20200916132000.1850-5-manivannan.sadhasivam@linaro.org>
+        id S1726681AbgIWQDa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Sep 2020 12:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726761AbgIWQDa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Sep 2020 12:03:30 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1033A214F1;
+        Wed, 23 Sep 2020 16:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600877009;
+        bh=9l/nrbnWUjMS39tgMqGNaBSTyJVZza8YTM6Xjn+ycYY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WYl2FawGX2+QKlnFsTqAaXa8CepNhpyp/R+w3kW9XcSchavbM7bYh2y7qq1E6GaGN
+         P10B6R+XuJTi/uDJHzZCy1ano93li/Xbw9aJQi5q4StyW4kxWcO9iX7Snm2zQ1q4nM
+         1dCH74jjZhMh9MQki5h8oNAQS1JiIxguuJO1lyEI=
+Date:   Wed, 23 Sep 2020 11:03:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Rajat Jain <rajatja@google.com>,
+        linux-nvme@lists.infradead.org, iommu@lists.linux-foundation.org
+Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 209149] New: "iommu/vt-d:
+ Enable PCI ACS for platform opt in hint" makes NVMe config space not
+ accessible after S3]
+Message-ID: <20200923160327.GA2267374@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200916132000.1850-5-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 06:49:59PM +0530, Manivannan Sadhasivam wrote:
-> The PCIe IP on SM8250 SoC is similar to the one used on SDM845. Hence
-> the support is added reusing the 2.7.0 ops. Only difference is the need
-> of ATU base, which will be fetched opionally if provided by DT/ACPI.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 3aac77a295ba..ca8ad354e09d 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1370,6 +1370,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	struct pcie_port *pp;
->  	struct dw_pcie *pci;
->  	struct qcom_pcie *pcie;
-> +	void __iomem *atu_base;
->  	int ret;
->  
->  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> @@ -1422,6 +1423,11 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> +	/* Get the optional ATU region if provided */
-> +	atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
-> +	if (!IS_ERR(atu_base))
-> +		pci->atu_base = atu_base;
-> +
+[+cc IOMMU and NVMe folks]
 
-This is getting moved to the DWC common code[1].
+Sorry, I forgot to forward this to linux-pci when it was first
+reported.
 
-Rob
+Apparently this happens with v5.9-rc3, and may be related to
+50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint"),
+which appeared in v5.8-rc3.
 
-[1] https://lore.kernel.org/r/1599814203-14441-3-git-send-email-hayashi.kunihiko@socionext.com
+There are several dmesg logs and proposed patches in the bugzilla, but
+no analysis yet of what the problem is.  From the first dmesg
+attachment (https://bugzilla.kernel.org/attachment.cgi?id=292327):
 
->  	pcie->phy = devm_phy_optional_get(dev, "pciephy");
->  	if (IS_ERR(pcie->phy)) {
->  		ret = PTR_ERR(pcie->phy);
-> @@ -1476,6 +1482,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
->  	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
->  	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
-> +	{ .compatible = "qcom,pcie-sm8250", .data = &ops_2_7_0 },
->  	{ }
->  };
->  
-> -- 
-> 2.17.1
-> 
+  [   50.434945] PM: suspend entry (deep)
+  [   50.802086] nvme 0000:01:00.0: saving config space at offset 0x0 (reading 0x11e0f)
+  [   50.842775] ACPI: Preparing to enter system sleep state S3
+  [   50.858922] ACPI: Waking up from system sleep state S3
+  [   50.883622] nvme 0000:01:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+  [   50.947352] nvme 0000:01:00.0: restoring config space at offset 0x0 (was 0xffffffff, writing 0x11e0f)
+  [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
+  [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
+  [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
+  [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
+  [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+  [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+  [   50.947843] nvme nvme0: frozen state error detected, reset controller
+
+I suspect the nvme "can't change power state" and restore config space
+errors are a consequence of the DPC event.  If DPC disables the link,
+the device is inaccessible.
+
+I don't know what caused the ACS Violation.  The AER TLP Header Log
+might have a clue, but unfortunately we didn't print it.
+
+Tangent:
+
+  The fact that we didn't print the AER TLP Header log looks like
+  a bug in itself.  PCIe r5.0, sec 6.2.7, table 6-5, says many
+  errors, including ACS Violation, should log the TLP header.  But
+  aer_get_device_error_info() only reads the log for error bits in
+  AER_LOG_TLP_MASKS, which doesn't include PCI_ERR_UNC_ACSV.
+
+  I don't think there's a "TLP Header Log Valid" bit, and it's ugly to
+  have to update AER_LOG_TLP_MASKS if new errors are added.  I think
+  maybe we should always print the header log.
+
+----- Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
+
+Date: Fri, 04 Sep 2020 14:31:20 +0000
+From: bugzilla-daemon@bugzilla.kernel.org
+To: bjorn@helgaas.com
+Subject: [Bug 209149] New: "iommu/vt-d: Enable PCI ACS for platform opt in
+	hint" makes NVMe config space not accessible after S3
+Message-ID: <bug-209149-41252@https.bugzilla.kernel.org/>
+
+https://bugzilla.kernel.org/show_bug.cgi?id=209149
+
+            Bug ID: 209149
+           Summary: "iommu/vt-d: Enable PCI ACS for platform opt in hint"
+                    makes NVMe config space not accessible after S3
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: mainline
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: PCI
+          Assignee: drivers_pci@kernel-bugs.osdl.org
+          Reporter: kai.heng.feng@canonical.com
+        Regression: No
+
+Here's the error:
+[   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01
+source:0x0000
+[   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error
+detected
+[   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected
+(Non-Fatal), type=Transaction Layer, (Receiver ID)
+[   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error
+status/mask=00200000/00010000
+[   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+[   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+[   50.947843] nvme nvme0: frozen state error detected, reset controller
+
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
+
+----- End forwarded message -----
