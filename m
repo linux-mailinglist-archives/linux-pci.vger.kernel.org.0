@@ -2,117 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C10FB276EBF
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 12:30:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47C33276F31
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 13:00:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbgIXKaO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 06:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbgIXKaO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 06:30:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2934C0613CE
-        for <linux-pci@vger.kernel.org>; Thu, 24 Sep 2020 03:30:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s12so3177608wrw.11
-        for <linux-pci@vger.kernel.org>; Thu, 24 Sep 2020 03:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=znzUeIRH1ne+QRXgI3ldPbArevzy1R8C3LyhHivzoF4=;
-        b=qk0VM2b6qYCdVzwHNTA9pKcSI+q16THf//P5w/CjrxapWjynBG3uVUmYe+J1sMZrD/
-         LNFbCu9JUK3q3nJyk/a+Q/nNFSrtAf+aOAdGDrjB/f/tlUzHyZk/e6HukMxXwPLS7wPd
-         5TC0ccHevIrMKtFwr/rlDrNFYEC/WVtzjHiflol+lbiYXA9RqRnLc9PIx+e5xCj2sBcU
-         tsXixF8PPr0KylfAkv7YzHuF/9fK0i3DmlIfoOrVqPNPtKaWQo89vT4NiDUmWPXW4pZJ
-         d3TdFMZmu9s5ySjxM2xo0mvbDN7TtxQwB6/sbF/JPVKo30rQtdBO+LMDkQmSJJOcrkTM
-         Nucg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=znzUeIRH1ne+QRXgI3ldPbArevzy1R8C3LyhHivzoF4=;
-        b=kkvqSmf1M5pr9Rdt2PIQijPA71IpETjnxGQiUV5TJ80MKKRZz766uiIorjJLh70+1m
-         atfS2Xva1Otrl7dnLMstM1dEFhLqhE8d9wygAZgcVi/9j+CRhGbGJPNrIlRfleroJ84N
-         EoznfgGLrn31v40KjW8Ic20Yue3hEv3VRUYwZ24B6UysZyUBV6ffoy8uf2zDX5yR/Kas
-         zfcdXUlAMXE2vw310NdiezdGG3mm4jnzbD4bt2I5GfGsn/LUR2q67a+HJAEKbLw04+5z
-         VlsghCfPtaBSa9Q7nDxRhiFfH8SY9mZC1kMTFpal5xkFALtwfrfpKfd8gE+EtjQxMTgr
-         otzA==
-X-Gm-Message-State: AOAM5334OgaWGkKc+PBNC4yaLAvMscXXeBnc8Y7u9QFmMtiXFpwFaDQo
-        BJBGVu23gjtjDed7uSMW6nn11w==
-X-Google-Smtp-Source: ABdhPJxtACZr7VVPwp22Cf6DNucqOWM3y2OALl52UMDzWmOMP+EbGgfCzGceL1CMmGKZg4tjOTJEFQ==
-X-Received: by 2002:a5d:4246:: with SMTP id s6mr4274207wrr.414.1600943412498;
-        Thu, 24 Sep 2020 03:30:12 -0700 (PDT)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id u126sm3619614wmu.9.2020.09.24.03.30.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2020 03:30:11 -0700 (PDT)
-Date:   Thu, 24 Sep 2020 12:29:53 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Auger Eric <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH v3 0/6] Add virtio-iommu built-in topology
-Message-ID: <20200924102953.GD170808@myrica>
-References: <20200821131540.2801801-1-jean-philippe@linaro.org>
- <ab2a1668-e40c-c8f0-b77b-abadeceb4b82@redhat.com>
- <20200924045958-mutt-send-email-mst@kernel.org>
- <20200924092129.GH27174@8bytes.org>
- <20200924053159-mutt-send-email-mst@kernel.org>
- <20200924100255.GM27174@8bytes.org>
+        id S1726783AbgIXLAj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 07:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbgIXLAj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Sep 2020 07:00:39 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E497239D2;
+        Thu, 24 Sep 2020 11:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600945238;
+        bh=mcQstb6kgrv0RCLL5uYxJdTKMZzoQT1OGetbZvl4Dys=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HoERfLtzBHHfF9t7LHk1EVr5ENzggxhqG1fq2bIBjO0rsHGK7+wyVwfYjlsSOHeVA
+         M2Wa79HeFQQdgQZtj7cflzJuVlevXeBaUrbCsrOhW3X/dRNU9OBkViJu/G4EEt7sy5
+         tU5Ik3Bfo84YfhmKKB2zzpIf67hmF9bIGgyaHe2M=
+Received: by mail-oi1-f180.google.com with SMTP id v20so3230816oiv.3;
+        Thu, 24 Sep 2020 04:00:38 -0700 (PDT)
+X-Gm-Message-State: AOAM531Appt7O9pFAt8jBm2tWPQqJCLmPNwi6dlhl5HJdSGFsRaOOvRJ
+        s9BAUFKezVDQ9qkEgUTUqpXxpJrjU0a+R4mJzi0=
+X-Google-Smtp-Source: ABdhPJw672kHZvlPXq/Xj5fIkVqsPRuNnsOGNIheEW6trScKa826onwsLVZV11OPHvh1+Q14Z8+jPRWJ3pwlGNVeYa8=
+X-Received: by 2002:a54:4517:: with SMTP id l23mr2228436oil.174.1600945237175;
+ Thu, 24 Sep 2020 04:00:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200924100255.GM27174@8bytes.org>
+References: <20200923142607.10c89bd2@xhacker.debian>
+In-Reply-To: <20200923142607.10c89bd2@xhacker.debian>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 24 Sep 2020 13:00:26 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEyQGEu7=-kbDuTDW9_xXkmns1HM2dQMrLn=XL9W88vJw@mail.gmail.com>
+Message-ID: <CAMj1kXEyQGEu7=-kbDuTDW9_xXkmns1HM2dQMrLn=XL9W88vJw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: Move allocate and map page for msi out of dw_pcie_msi_init()
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 12:02:55PM +0200, Joerg Roedel wrote:
-> On Thu, Sep 24, 2020 at 05:38:13AM -0400, Michael S. Tsirkin wrote:
-> > On Thu, Sep 24, 2020 at 11:21:29AM +0200, Joerg Roedel wrote:
-> > > On Thu, Sep 24, 2020 at 05:00:35AM -0400, Michael S. Tsirkin wrote:
-> > > > OK so this looks good. Can you pls repost with the minor tweak
-> > > > suggested and all acks included, and I will queue this?
-> > > 
-> > > My NACK still stands, as long as a few questions are open:
-> > > 
-> > > 	1) The format used here will be the same as in the ACPI table? I
-> > > 	   think the answer to this questions must be Yes, so this leads
-> > > 	   to the real question:
-> > 
-> > I am not sure it's a must.
-> 
-> It is, having only one parser for the ACPI and MMIO descriptions was one
-> of the selling points for MMIO in past discussions and I think it makes
-> sense to keep them in sync.
+On Wed, 23 Sep 2020 at 08:28, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+>
+> Currently, dw_pcie_msi_init() allocates and maps page for msi, then
+> program the PCIE_MSI_ADDR_LO and PCIE_MSI_ADDR_HI. The Root Complex
+> may lose power during suspend-to-RAM, so when we resume, we want to
+> redo the latter but not the former. If designware based driver (for
+> example, pcie-tegra194.c) calls dw_pcie_msi_init() in resume path, the
+> previous msi page will be leaked.
+>
+> Move the allocate and map msi page from dw_pcie_msi_init() to
+> dw_pcie_host_init() to fix this problem.
+>
+> Fixes: 56e15a238d92 ("PCI: tegra: Add Tegra194 PCIe support")
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-It's not possible to use exactly the same code for parsing. The access
-methods are different (need to deal with port-IO for built-in description
-on PCI, for example) and more importantly, the structure is different as
-well. The ACPI table needs nodes for virtio-iommu while the built-in
-description is contained in the virtio-iommu itself. So the endpoint nodes
-point to virtio-iommu node on ACPI, while they don't need a pointer on the
-built-in desc. I kept as much as possible common in structures and
-implementation, but in the end we still need about 200 unique lines on
-each side.
+Why do you allocate a page for this in the first place? Isn't
+PCIE_MSI_ADDR_HI:PCIE_MSI_ADDR_LO simply a magic DMA address that
+never gets forwarded across to the CPU side of the host bridge, and
+triggers a SPI instead, which gets handled by reading
+PCIE_MSI_INTR0_STATUS ?
 
-Thanks,
-Jean
+Couldn't you just map the zero page instead?
 
-> 
-> > We can always tweak the parser if there are slight differences
-> > between ACPI and virtio formats.
-> 
-> There is no guarantee that there only need to be "tweaks" until the
-> ACPI table format is stablized.
-> 
-> Regards,
-> 
-> 	Joerg
-> 
+
+> ---
+>  drivers/pci/controller/dwc/pci-dra7xx.c       | 18 ++++++++++++-
+>  .../pci/controller/dwc/pcie-designware-host.c | 27 +++++++++----------
+>  2 files changed, 30 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index dc387724cf08..4301cf844a4c 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -490,7 +490,9 @@ static struct irq_chip dra7xx_pci_msi_bottom_irq_chip = {
+>  static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
+>  {
+>         struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +       struct device *dev = pci->dev;
+>         u32 ctrl, num_ctrls;
+> +       int ret;
+>
+>         pp->msi_irq_chip = &dra7xx_pci_msi_bottom_irq_chip;
+>
+> @@ -506,7 +508,21 @@ static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
+>                                     ~0);
+>         }
+>
+> -       return dw_pcie_allocate_domains(pp);
+> +       ret = dw_pcie_allocate_domains(pp);
+> +       if (ret)
+> +               return ret;
+> +
+> +       pp->msi_page = alloc_page(GFP_KERNEL);
+> +       pp->msi_data = dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
+> +                                   DMA_FROM_DEVICE);
+> +       ret = dma_mapping_error(dev, pp->msi_data);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to map MSI data\n");
+> +               __free_page(pp->msi_page);
+> +               pp->msi_page = NULL;
+> +               dw_pcie_free_msi(pp);
+> +       }
+> +       return ret;
+>  }
+>
+>  static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 9dafecba347f..c23ba64f64fe 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -294,20 +294,7 @@ void dw_pcie_free_msi(struct pcie_port *pp)
+>
+>  void dw_pcie_msi_init(struct pcie_port *pp)
+>  {
+> -       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -       struct device *dev = pci->dev;
+> -       u64 msi_target;
+> -
+> -       pp->msi_page = alloc_page(GFP_KERNEL);
+> -       pp->msi_data = dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
+> -                                   DMA_FROM_DEVICE);
+> -       if (dma_mapping_error(dev, pp->msi_data)) {
+> -               dev_err(dev, "Failed to map MSI data\n");
+> -               __free_page(pp->msi_page);
+> -               pp->msi_page = NULL;
+> -               return;
+> -       }
+> -       msi_target = (u64)pp->msi_data;
+> +       u64 msi_target = (u64)pp->msi_data;
+>
+>         /* Program the msi_data */
+>         dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
+> @@ -440,6 +427,18 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                                 irq_set_chained_handler_and_data(pp->msi_irq,
+>                                                             dw_chained_msi_isr,
+>                                                             pp);
+> +
+> +                       pp->msi_page = alloc_page(GFP_KERNEL);
+> +                       pp->msi_data = dma_map_page(pci->dev, pp->msi_page,
+> +                                                   0, PAGE_SIZE,
+> +                                                   DMA_FROM_DEVICE);
+> +                       ret = dma_mapping_error(pci->dev, pp->msi_data);
+> +                       if (ret) {
+> +                               dev_err(pci->dev, "Failed to map MSI data\n");
+> +                               __free_page(pp->msi_page);
+> +                               pp->msi_page = NULL;
+> +                               goto err_free_msi;
+> +                       }
+>                 } else {
+>                         ret = pp->ops->msi_host_init(pp);
+>                         if (ret < 0)
+> --
+> 2.28.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
