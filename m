@@ -2,125 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0F3E276781
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 06:06:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D871B276793
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 06:14:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgIXEGF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 00:06:05 -0400
-Received: from mga02.intel.com ([134.134.136.20]:1793 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgIXEGF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Sep 2020 00:06:05 -0400
-IronPort-SDR: YPZAqsJ9FuUwt5BasewU/KjFjsMOKv5hXl6drtc1Jo+7WCM/SAsK3SuPS9XMsA/hC+ruSFrEH2
- yUqDB0Q0XBVQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9753"; a="148742977"
-X-IronPort-AV: E=Sophos;i="5.77,296,1596524400"; 
-   d="scan'208";a="148742977"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2020 21:06:04 -0700
-IronPort-SDR: lCB7twMKEy7YoLxAl1iGlDk04HMidEkWq+sreiWlLZaGvJnMXn503NT6308WSABhaEwtzNtxy+
- dwk/HuFUWwhg==
-X-IronPort-AV: E=Sophos;i="5.77,296,1596524400"; 
-   d="scan'208";a="382903886"
-Received: from jdelagui-mobl.amr.corp.intel.com (HELO [10.255.231.15]) ([10.255.231.15])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2020 21:06:04 -0700
-Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
- call
-To:     Sinan Kaya <okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-References: <20200922233333.GA2239404@bjorn-Precision-5520>
- <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
- <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
- <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com>
- <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
- <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
- <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
-Date:   Wed, 23 Sep 2020 21:06:01 -0700
+        id S1726581AbgIXEO5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 00:14:57 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53794 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgIXEO5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 00:14:57 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08O4Eo85064904;
+        Wed, 23 Sep 2020 23:14:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1600920890;
+        bh=GMJPvC24sCbvp8uGIm32LT2BfyBpRHhmvR//qmqmAKw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MDf1TDadMfXGzbt8ZpGTq46cAWoCsJCYzfSvKHIg57BCEI8r5lOcNp0N1Rpy30z8b
+         +fJ+QO2RF4Ah+VorIOfaS/H5SgxutdTUfW4qDaId94czOvwpWcjYM2PjZjW2polUO2
+         eaArjZ5Qh+dwfgzZINyfhXXNjOJOKxSRTlrMNo9g=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08O4Eo83102712
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Sep 2020 23:14:50 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 23
+ Sep 2020 23:14:49 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 23 Sep 2020 23:14:49 -0500
+Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08O4Ek9P027997;
+        Wed, 23 Sep 2020 23:14:47 -0500
+Subject: Re: [PATCH v2] PCI: Cadence: Add quirk for Gen2 controller to do
+ autonomous speed change.
+To:     Nadeem Athani <nadeem@cadence.com>, <tjoseph@cadence.com>,
+        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>
+References: <20200923183427.9258-1-nadeem@cadence.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <37fca4c0-1cba-866a-27ed-9a0a0cbe69e6@ti.com>
+Date:   Thu, 24 Sep 2020 09:44:45 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200923183427.9258-1-nadeem@cadence.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Nadeem,
 
-
-On 9/23/20 8:13 PM, Sinan Kaya wrote:
-> On 9/23/2020 10:51 PM, Kuppuswamy, Sathyanarayanan wrote:
->>>
->>> I see. Can I assume that your system supports DPC?
->>> DPC is supposed to recover the link via dpc_reset_link().
->> Yes. But the affected device/drivers cleanup during error recovery
->> is handled by hotplug handler. So we are facing issue when dealing
->> with non hotplug capable ports.
+On 24/09/20 12:04 am, Nadeem Athani wrote:
+> Cadence controller will not initiate autonomous speed change if
+> strapped as Gen2. The Retrain bit is set as a quirk to trigger
+> this speed change.
 > 
-> This is confusing.
+> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 14 ++++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h      | 15 +++++++++++++++
+>  2 files changed, 29 insertions(+)
 > 
-> Why would hotplug driver be involved unless port supports hotplug and
-> the link goes down? You said that DLLSC is only supported on hotplug
-> capable ports.
-hotplug driver is *only* involved when dealing with recovery of hotplug
-capable ports. For hotplug capable ports, when DPC is triggered and link
-goes down, DLLSC handler in pciehp driver will remove the affected
-devices/drivers. Once the link comes back it will re-attach them.
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 4550e0d469ca..a2317614268d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -83,6 +83,9 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  	struct cdns_pcie *pcie = &rc->pcie;
+>  	u32 value, ctrl;
+>  	u32 id;
+> +	u32 link_cap = CDNS_PCIE_LINK_CAP_OFFSET;
+> +	u8 sls;
+> +	u16 lnk_ctl;
+>  
+>  	/*
+>  	 * Set the root complex BAR configuration register:
+> @@ -111,6 +114,17 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  	if (rc->device_id != 0xffff)
+>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+>  
+> +	/* Quirk to enable autonomous speed change for GEN2 controller */
+> +	/* Reading Supported Link Speed value */
+> +	sls = PCI_EXP_LNKCAP_SLS &
+> +		cdns_pcie_rp_readb(pcie, link_cap + PCI_EXP_LNKCAP);
+> +	if (sls == PCI_EXP_LNKCAP_SLS_5_0GB) {
+> +		/* Since this a Gen2 controller, set Retrain Link(RL) bit */
+> +		lnk_ctl = cdns_pcie_rp_readw(pcie, link_cap + PCI_EXP_LNKCTL);
+> +		lnk_ctl |= PCI_EXP_LNKCTL_RL;
+> +		cdns_pcie_rp_writew(pcie, link_cap + PCI_EXP_LNKCTL, lnk_ctl);
+> +	}
 
-> 
-> Need a better description of symptoms and what triggers hotplug driver
-> to activate.
-For problem description, please check the following details
+Is this workaround required for all Cadence controller? If not, enable
+this workaround only for versions which doesn't do autonomous speed change.
 
-Current pcie_do_recovery() implementation has following two issues:
+I think this workaround should also be applied only after checking for
+link status (cdns_pcie_link_up()).
 
-1. Fatal (DPC) error recovery is currently broken for non-hotplug
-capable devices. Current fatal error recovery implementation relies
-on PCIe hotplug (pciehp) handler for detaching and re-enumerating
-the affected devices/drivers. pciehp handler listens for DLLSC state
-changes and handles device/driver detachment on DLLSC_LINK_DOWN event
-and re-enumeration on DLLSC_LINK_UP event. So when dealing with
-non-hotplug capable devices, recovery code does not restore the state
-of the affected devices correctly. Correct implementation should
-restore the device state and call report_slot_reset() function after
-resetting the link to restore the state of the device/driver.
+And this is also applicable for GEN3/GEN4 controller. So the check
+should be to see the capability of the connected PCIe device and not the
+controller itself.
 
-You can find fatal non-hotplug related issues reported in following links:
-
-https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
-https://lore.kernel.org/linux-pci/12115.1588207324@famine/
-https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
-
-2. For non-fatal errors if report_error_detected() or
-report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET then
-current pcie_do_recovery() implementation does not do the requested
-explicit device reset, instead just calls the report_slot_reset() on all
-affected devices. Notifying about the reset via report_slot_reset()
-without doing the actual device reset is incorrect.
-
-To fix above issues, use PCI_ERS_RESULT_NEED_RESET as error state after
-successful reset_link() operation. This will ensure ->slot_reset() be
-called after reset_link() operation for fatal errors. Also call
-pci_bus_reset() to do slot/bus reset() before triggering device specific
-->slot_reset() callback. Also, using pci_bus_reset() will restore the state
-of the devices after performing the reset operation.
-
-Even though using pci_bus_reset() will do redundant reset operation after
-->reset_link() for fatal errors, it should should affect the functional
-behavior.
-
-> 
-> Can you expand this a little bit?
-> 
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Thanks
+Kishon
