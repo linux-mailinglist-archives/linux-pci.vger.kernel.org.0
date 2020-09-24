@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 755F2277B26
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 23:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E73A277B49
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 23:52:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725208AbgIXVj0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 17:39:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57410 "EHLO
+        id S1726487AbgIXVwi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 17:52:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59749 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726239AbgIXVjY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 17:39:24 -0400
+        by vger.kernel.org with ESMTP id S1726606AbgIXVwi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 17:52:38 -0400
 Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600983562;
+        s=mimecast20190719; t=1600984356;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=4eYx2adougRmO6mXBQxS+3jgL7biIs5NBsuk2ViDvrQ=;
-        b=dQ6mMUCtbhFqq9GWRBJwgp9o4+zH3Y6q5RGiONIKko71uhP8oef5ImyYrs8Ro3mj+DjTaT
-        jl8hOEQphi7Dls0BeoTCvC2ZFZ/JEGXRyY9mOAAo/Q7f+zVmp2+RxGcpFhXqGijOcdQEu/
-        HDl5Dxy94mGejp+xUBBo5gEnAWmcQqs=
+        bh=55gvcOcuPkvetKnzYPSs0vPdhhkjAUFXh2VoSe6ikOg=;
+        b=giYw47XFUHtYZlyBozJ/ugG2EpBhNLaj5gyOOKew6niMy8xYUUkoCBmUFeQ6guPiPmgLft
+        A2G6LEezwl00pa7m+B7XZCnfuhXmN5p6DQgDboOwbR2nrbFJJV1eCIK3QmVCl4WmLjyJi8
+        WTgaHJw62nY+FPMLf1HsuKCrBdmboAw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-p_J92l7gNKKx-XRhSsitng-1; Thu, 24 Sep 2020 17:39:18 -0400
-X-MC-Unique: p_J92l7gNKKx-XRhSsitng-1
+ us-mta-84-PuyteNK4PhWkWN3XRkaQpQ-1; Thu, 24 Sep 2020 17:52:32 -0400
+X-MC-Unique: PuyteNK4PhWkWN3XRkaQpQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 503A081F03C;
-        Thu, 24 Sep 2020 21:39:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99211186DD39;
+        Thu, 24 Sep 2020 21:52:29 +0000 (UTC)
 Received: from [10.10.115.120] (ovpn-115-120.rdu2.redhat.com [10.10.115.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 056BF1002C07;
-        Thu, 24 Sep 2020 21:39:09 +0000 (UTC)
-Subject: Re: [PATCH v2 4/4] PCI: Limit pci_alloc_irq_vectors as per
- housekeeping CPUs
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2382C1002C07;
+        Thu, 24 Sep 2020 21:52:20 +0000 (UTC)
+Subject: Re: [PATCH v2 1/4] sched/isolation: API to get housekeeping online
+ CPUs
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
@@ -46,7 +46,7 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         mathias.nyman@intel.com, jiri@nvidia.com, mingo@redhat.com,
         peterz@infradead.org, juri.lelli@redhat.com,
         vincent.guittot@linaro.org
-References: <20200924204535.GA2337207@bjorn-Precision-5520>
+References: <20200924204759.GA2342589@bjorn-Precision-5520>
 From:   Nitesh Narayan Lal <nitesh@redhat.com>
 Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
@@ -92,12 +92,12 @@ Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
  VujM7c/b4pps
 Organization: Red Hat Inc,
-Message-ID: <493a6fe5-f33f-85b2-6149-809f3cb4390f@redhat.com>
-Date:   Thu, 24 Sep 2020 17:39:07 -0400
+Message-ID: <c19c4bc8-05d4-42a2-9469-2de79919c808@redhat.com>
+Date:   Thu, 24 Sep 2020 17:52:19 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200924204535.GA2337207@bjorn-Precision-5520>
+In-Reply-To: <20200924204759.GA2342589@bjorn-Precision-5520>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Authentication-Results: relay.mimecast.com;
         auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
@@ -105,200 +105,105 @@ X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="BDL0z9iH3vAdESVRZCTIUT2hpLdfAYevK"
+ boundary="GbfTiM6QGMwFGM7V57u3YLDc9THkNTYV6"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---BDL0z9iH3vAdESVRZCTIUT2hpLdfAYevK
-Content-Type: multipart/mixed; boundary="NMw72KAobuYLvXJJvBDrYvObo65DuMClI"
+--GbfTiM6QGMwFGM7V57u3YLDc9THkNTYV6
+Content-Type: multipart/mixed; boundary="PqkWgqMEmSF4m1ZnA44cawYhl6Mg3QGNC"
 
---NMw72KAobuYLvXJJvBDrYvObo65DuMClI
+--PqkWgqMEmSF4m1ZnA44cawYhl6Mg3QGNC
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 
 
-On 9/24/20 4:45 PM, Bjorn Helgaas wrote:
-> Possible subject:
->
->   PCI: Limit pci_alloc_irq_vectors() to housekeeping CPUs
-
-Will switch to this.
-
->
-> On Wed, Sep 23, 2020 at 02:11:26PM -0400, Nitesh Narayan Lal wrote:
->> This patch limits the pci_alloc_irq_vectors, max_vecs argument that is
->> passed on by the caller based on the housekeeping online CPUs (that are
->> meant to perform managed IRQ jobs).
+On 9/24/20 4:47 PM, Bjorn Helgaas wrote:
+> On Wed, Sep 23, 2020 at 02:11:23PM -0400, Nitesh Narayan Lal wrote:
+>> Introduce a new API hk_num_online_cpus(), that can be used to
+>> retrieve the number of online housekeeping CPUs that are meant to handle
+>> managed IRQ jobs.
 >>
->> A minimum of the max_vecs passed and housekeeping online CPUs is derived
->> to ensure that we don't create excess vectors as that can be problematic
->> specifically in an RT environment. In cases where the min_vecs exceeds t=
-he
->> housekeeping online CPUs, max vecs is restricted based on the min_vecs
->> instead. The proposed change is required because for an RT environment
->> unwanted IRQs are moved to the housekeeping CPUs from isolated CPUs to
->> keep the latency overhead to a minimum. If the number of housekeeping CP=
-Us
->> is significantly lower than that of the isolated CPUs we can run into
->> failures while moving these IRQs to housekeeping CPUs due to per CPU
->> vector limit.
-> Does this capture enough of the log?
->
->   If we have isolated CPUs dedicated for use by real-time tasks, we
->   try to move IRQs to housekeeping CPUs to reduce overhead on the
->   isolated CPUs.
-
-How about:
-"
-If we have isolated CPUs or CPUs running in nohz_full mode for the purpose
-of real-time, we try to move IRQs to housekeeping CPUs to reduce latency
-overhead on these real-time CPUs.
-"
-
-What do you think?
-
->
->   If we allocate too many IRQ vectors, moving them all to housekeeping
->   CPUs may exceed per-CPU vector limits.
->
->   When we have isolated CPUs, limit the number of vectors allocated by
->   pci_alloc_irq_vectors() to the minimum number required by the
->   driver, or to one per housekeeping CPU if that is larger
-
-I think this is good, I can adopt this.
-
-> .
->
+>> This API is introduced for the drivers that were previously relying only
+>> on num_online_cpus() to determine the number of MSIX vectors to create.
+>> In an RT environment with large isolated but fewer housekeeping CPUs thi=
+s
+>> was leading to a situation where an attempt to move all of the vectors
+>> corresponding to isolated CPUs to housekeeping CPUs were failing due to
+>> per CPU vector limit.
+>>
 >> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 >> ---
->>  include/linux/pci.h | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
+>>  include/linux/sched/isolation.h | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
 >>
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 835530605c0d..cf9ca9410213 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -38,6 +38,7 @@
->>  #include <linux/interrupt.h>
->>  #include <linux/io.h>
->>  #include <linux/resource_ext.h>
->> +#include <linux/sched/isolation.h>
->>  #include <uapi/linux/pci.h>
->> =20
->>  #include <linux/pci_ids.h>
->> @@ -1797,6 +1798,20 @@ static inline int
->>  pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
->>  =09=09      unsigned int max_vecs, unsigned int flags)
->>  {
->> +=09unsigned int hk_cpus =3D hk_num_online_cpus();
->> +
->> +=09/*
->> +=09 * For a real-time environment, try to be conservative and at max on=
-ly
->> +=09 * ask for the same number of vectors as there are housekeeping onli=
-ne
->> +=09 * CPUs. In case, the min_vecs requested exceeds the housekeeping
->> +=09 * online CPUs, restrict the max_vecs based on the min_vecs instead.
->> +=09 */
->> +=09if (hk_cpus !=3D num_online_cpus()) {
->> +=09=09if (min_vecs > hk_cpus)
->> +=09=09=09max_vecs =3D min_vecs;
->> +=09=09else
->> +=09=09=09max_vecs =3D min_t(int, max_vecs, hk_cpus);
->> +=09}
-> Is the below basically the same?
->
-> =09/*
-> =09 * If we have isolated CPUs for use by real-time tasks,
-> =09 * minimize overhead on those CPUs by moving IRQs to the
-> =09 * remaining "housekeeping" CPUs.  Limit vector usage to keep
-> =09 * housekeeping CPUs from running out of IRQ vectors.
-> =09 */
-
-How about the following as a comment:
-
-"
-If we have isolated CPUs or CPUs running in nohz_full mode for real-time,
-latency overhead is minimized on those CPUs by moving the IRQ vectors to
-the housekeeping CPUs. Limit the number of vectors to keep housekeeping
-CPUs from running out of IRQ vectors.
-
-"
-
-> =09if (housekeeping_cpus < num_online_cpus()) {
-> =09=09if (housekeeping_cpus < min_vecs)
-> =09=09=09max_vecs =3D min_vecs;
-> =09=09else if (housekeeping_cpus < max_vecs)
-> =09=09=09max_vecs =3D housekeeping_cpus;
-> =09}
-
-The only reason I went with hk_cpus instead of housekeeping_cpus is because
-at other places in the kernel I found a similar naming convention (eg.
-hk_mask, hk_flags etc.).
-But if housekeeping_cpus makes things more clear, I can switch to that
-instead.
-
-Although after Frederic and Peter's suggestion the previous call will chang=
-e
-to something like:
-
-"
-housekeeping_cpus =3D housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ);
-"
-
-Which should still falls in the that 80 chars per line limit.
-
->
-> My comment isn't quite right because this patch only limits the number
-> of vectors; it doesn't actually *move* IRQs to the housekeeping CPUs.
-
-Yeap it doesn't move IRQs to the housekeeping CPUs.
-
-> I don't know where the move happens (or maybe you just avoid assigning
-> IRQs to isolated CPUs, and I don't know how that happens either).
-
-This can happen in the userspace, either manually or by some application
-such as tuned.
-
->
->>  =09return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags=
-,
->>  =09=09=09=09=09      NULL);
+>> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isola=
+tion.h
+>> index cc9f393e2a70..2e96b626e02e 100644
+>> --- a/include/linux/sched/isolation.h
+>> +++ b/include/linux/sched/isolation.h
+>> @@ -57,4 +57,17 @@ static inline bool housekeeping_cpu(int cpu, enum hk_=
+flags flags)
+>>  =09return true;
 >>  }
+>> =20
+>> +static inline unsigned int hk_num_online_cpus(void)
+>> +{
+>> +#ifdef CONFIG_CPU_ISOLATION
+>> +=09const struct cpumask *hk_mask;
+>> +
+>> +=09if (static_branch_unlikely(&housekeeping_overridden)) {
+>> +=09=09hk_mask =3D housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+>> +=09=09return cpumask_weight(hk_mask);
+>> +=09}
+>> +#endif
+>> +=09return cpumask_weight(cpu_online_mask);
+> Just curious: why is this not
+>
+>   #ifdef CONFIG_CPU_ISOLATION
+>   ...
+>   #endif
+>     return num_online_cpus();
+
+I think doing an atomic read is better than a bitmap operation.
+Thanks for pointing this out.
+
+>
+>> +}
+>> +
+>>  #endif /* _LINUX_SCHED_ISOLATION_H */
 >> --=20
 >> 2.18.2
 >>
 --=20
-Thanks
 Nitesh
 
 
---NMw72KAobuYLvXJJvBDrYvObo65DuMClI--
+--PqkWgqMEmSF4m1ZnA44cawYhl6Mg3QGNC--
 
---BDL0z9iH3vAdESVRZCTIUT2hpLdfAYevK
+--GbfTiM6QGMwFGM7V57u3YLDc9THkNTYV6
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9tEfsACgkQo4ZA3AYy
-oznJGg/8DS6jCI09TtnpD4mtCtrb2spnGkcp1Td/junReGQDOvhq9eLL0UTPM9jn
-5qJvhYT+TWZxcNWe13E0fVk7T5ShyBMTdwivmaOag38QpbbMIJhoPcbVJaXhuryq
-Vzt0KGblz5XHJA8BtJRSlCNMTWw2FTdQGxVTcbxcN/OIJ+nzOEAJpnrogB0lUYJ9
-mnFlipqxpAOYksbzLzR51MbeC4I/3uIJL6RXGzxDIePkZcOuRef7UCFH5lqaVMcE
-Qx+DRRuqfxekr9U6hLwnWcpKX667JnbpXGXhlgQesL2QY7Fh3NjM7qz6vwTUJfJr
-x8h0+7quS5ArTixkWJO880nfaptvMrbtpphMfSvEj0HPeQiY9Uwx3eySZlLvBwqH
-1yCdcCG0hM9dvu+h5DIZ/0I9aeDD0naYOMBVnJrr1LcRLebmBxDq/p8/QpmH4MUu
-0sXGEcsi3mnFxpM0A1x2kKthde4y3HLMJkIm4lxwVrxrBEwJ52zURTiUFRpCdIpt
-qubSLpxWn2znF7I+A4kmlZrM830jb1w1Ih18O8IJcHVzNXu2aWZwrXaFzoMR/cYP
-q3ZMd2zukrOJYdCa5GbxGme6+P8PvlDrnefJu9XUk7o1ysrhQDmDFG1EdvCnyqd7
-X6bxPR4GlltYIZOCFjzuYLB8IOQzTPHmreLfFsmM6HivE7NgR7w=
-=gRXS
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9tFRMACgkQo4ZA3AYy
+ozl4/w/8CrO6/ptua+CGUhZZfc2jaRcCPXNJCMrtLTkJ00cgwl39W3zsnna9zmKy
+E5h3vGDUCoWegf99MdJyJptSP84Q1XPTsqzripqUH411Pedgb0DADTl10a4+mZTy
+NeQMLKghWPj00ZCn5ngqu3UAtnsgeYAblGtEB2zlGCay6XAegnw7eKCy8gOh2Rww
+jOtrvWzmOaPerOCm2AEdR0cFu/UPsZxbnEEvgz4ndRLo9f9sqGyJV7CT+E6ppi0q
+IxoZqFPBNsKqU97uy5nRzo0AbvCKaswqDvy20IMuOTvxjXySYYpuuG94ihN0mCey
+1u985Rwah3XlD2aCaWNfFKgX5dy28lMZ7Ph3pNcVP4ck2dCLjn03cGR8xDToysqY
+6iaoh+7Tbu9SLmkoKw5cQFz54L1fq9BDyeanlZTXoslaBdp+Crwk9uqsLlVi0WOf
+90w3Sl7PbwI/A4s4L29Xmqa9JVdBDicrVM4RqNmtPZxmeoGWxVyu3PNm8qS2O5oW
+MlyCXIfF8PXPrL72SSd49kYYMWnC/m/8dzNgsakO/SsyWWSLxpqcOvS5pN0luXwS
+/pxLsRAemKpJ/Xj7FkjBgoj/f59Nzbgg1QhNR00OCTTW5XKChb613ZtWEtPoK3oI
+f8H5etLehJzXW3YvMLKtBV7E5oBeRrcMaNx2K+6yWRTKeZpUxHg=
+=x1J0
 -----END PGP SIGNATURE-----
 
---BDL0z9iH3vAdESVRZCTIUT2hpLdfAYevK--
+--GbfTiM6QGMwFGM7V57u3YLDc9THkNTYV6--
 
