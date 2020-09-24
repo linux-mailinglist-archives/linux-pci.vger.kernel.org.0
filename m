@@ -2,92 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AA62776A6
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 18:24:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ADFB277844
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 20:09:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgIXQYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 12:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
+        id S1728592AbgIXSJI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 14:09:08 -0400
+Received: from mga09.intel.com ([134.134.136.24]:47009 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgIXQYo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Sep 2020 12:24:44 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2B3D238E3;
-        Thu, 24 Sep 2020 16:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600964684;
-        bh=vFQ/jlTzhlIN2us7zr7mpKdkocgl+KGTCuVffTtovC4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ft0gchCDOdWmf8uY3Pux9ul9+2UGwTUzZZGFmzUC9lo8iFgbuh3riaz2BMx7w0u/9
-         apKSnNzdRqe5ahiR5zoC3vMjgh6LLTm7hgDbCguiRO5MQo2V6gfUZgqCXhBOESatiB
-         Ij5nIFD8pO/QqrkqgJmDVCcto6nPk6UXBUdB4QLU=
-Date:   Thu, 24 Sep 2020 11:24:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ian Kumlien <ian.kumlien@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
-Message-ID: <20200924162442.GA2321475@bjorn-Precision-5520>
+        id S1727753AbgIXSJH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Sep 2020 14:09:07 -0400
+IronPort-SDR: GEpELOF18HVsme9RnRgRLLRi4KKz6Ym6vVTDNH6/IK8+wf2UBVogtOJYqxtuMyDnrFgIyQ1gl+
+ fZ0GyhWSFi+A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9754"; a="162202366"
+X-IronPort-AV: E=Sophos;i="5.77,298,1596524400"; 
+   d="scan'208";a="162202366"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 11:09:07 -0700
+IronPort-SDR: fTN88eBS4ZGG0H6UJwXoUequL6Ju3JPJg39ZHVmhom6pOBekTTlWPf9fPUWHkwAuWhbvL0v4Lo
+ o1rPhHwRFtBg==
+X-IronPort-AV: E=Sophos;i="5.77,298,1596524400"; 
+   d="scan'208";a="487025646"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 11:09:06 -0700
+Date:   Thu, 24 Sep 2020 11:09:05 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Rajat Jain <rajatja@google.com>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        iommu@lists.linux-foundation.org,
+        "Jechlitschek, Christoph" <christoph.jechlitschek@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [bugzilla-daemon@bugzilla.kernel.org: [Bug 209149] New:
+ "iommu/vt-d: Enable PCI ACS for platform opt in hint" makes NVMe config
+ space not accessible after S3]
+Message-ID: <20200924180905.GB85236@otc-nc-03>
+References: <20200923160327.GA2267374@bjorn-Precision-5520>
+ <6CD003F6-DDF4-4C57-AD9E-79C8AB5C01BF@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA85sZvm5SyiG_AE3=4Xowz4AYuMW38uvw8QJ5D8WL3=1Tkv7w@mail.gmail.com>
+In-Reply-To: <6CD003F6-DDF4-4C57-AD9E-79C8AB5C01BF@canonical.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 23, 2020 at 11:36:00PM +0200, Ian Kumlien wrote:
+Hi Kai
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=66ff14e59e8a
++ Alex, since he had some of the early quirks authored.
+
+On Thu, Sep 24, 2020 at 12:31:53AM +0800, Kai-Heng Feng wrote:
+> [+Cc Christoph]
 > 
-> "7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-> Linux to enable ASPM, but for some undocumented reason, it didn't enable
-> ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+> > On Sep 24, 2020, at 00:03, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > [+cc IOMMU and NVMe folks]
+> > 
+> > Sorry, I forgot to forward this to linux-pci when it was first
+> > reported.
+> > 
+> > Apparently this happens with v5.9-rc3, and may be related to
+> > 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint"),
+> > which appeared in v5.8-rc3.
+> > 
+> > There are several dmesg logs and proposed patches in the bugzilla, but
+> > no analysis yet of what the problem is.  From the first dmesg
+> > attachment (https://bugzilla.kernel.org/attachment.cgi?id=292327):
 > 
-> Remove this exclusion so we can enable ASPM on these links."
-> ...
+> AFAIK Intel is working on it internally.
+> Comet Lake probably needs ACS quirk like older generation chips.
 
-> And all of this worked before the commit above.
+I have confirmed with Internal documentation that the problem exists on
+Comet Lake. But its fixed ICL and TGL generations.
 
-OK, really sorry, I got myself totally confused here, and I need to
-start over from scratch.  Correct me when I go off the rails.
+Unfortunately I do not see if the public specupdate documents are for these
+generation chipsets to makes sure all root port id's can be captured.
 
-You're running 5.8.11+, and you get ~40 Mbit/s on the Intel I211 NIC.
-Reverting 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to
-PCIe-to-PCI/PCI-X Bridges") gets your bandwidth up to the 900+ Mbit/s
-you expect.
+There is also another entry in bugzilla that was forwarded that referred to
+Request Redirect Capability to be always disabled as well. This same
+workaround also seems to be turning off RR for the root port. I believe it
+should fix it as well. But i saw another patch attached.
 
-66ff14e59e8a only makes a difference if you have a PCIe-to-PCI/PCI-X
-Bridge (PCI_EXP_TYPE_PCI_BRIDGE) in your system.  But from your lspci
-and pci=earlydump output, I don't see any of those.  The only bridges
-I see are:
+Can you tell how you reproduce this? just doing a
 
-[    0.810346] pci 0000:00:01.2: [1022:1483] type 01 Root Port to [bus 01-07]
-[    0.810587] pci 0000:00:03.1: [1022:1483] type 01 Root Port to [bus 08]
-[    0.810587] pci 0000:00:03.2: [1022:1483] type 01 Root Port to [bus 09]
-[    0.810837] pci 0000:00:07.1: [1022:1484] type 01 Root Port to [bus 0a]
-[    0.811587] pci 0000:00:08.1: [1022:1484] type 01 Root Port to [bus 0b]
-[    0.812586] pci 0000:01:00.0: [1022:57ad] type 01 Upstream Port to [bus 02-07]
-[    0.812629] pci 0000:02:03.0: [1022:57a3] type 01 Downstream Port to [bus 03]
-[    0.813584] pci 0000:02:04.0: [1022:57a3] type 01 Downstream Port to [bus 04]
-[    0.814584] pci 0000:02:08.0: [1022:57a4] type 01 Downstream Port to [bus 05]
-[    0.815584] pci 0000:02:09.0: [1022:57a4] type 01 Downstream Port to [bus 06]
-[    0.815584] pci 0000:02:0a.0: [1022:57a4] type 01 Downstream Port to [bus 07]
+#echo mem > /sys/power/state
 
-So I'm lost right off the bat.  You have no PCI_EXP_TYPE_PCI_BRIDGE
-device, so how can 66ff14e59e8a make a difference for you?
+is sufficient with an attached NVMe drive? 
 
-Can you add a printk there, e.g.,
+> 
+> > 
+> >  [   50.434945] PM: suspend entry (deep)
+> >  [   50.802086] nvme 0000:01:00.0: saving config space at offset 0x0 (reading 0x11e0f)
+> >  [   50.842775] ACPI: Preparing to enter system sleep state S3
+> >  [   50.858922] ACPI: Waking up from system sleep state S3
+> >  [   50.883622] nvme 0000:01:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+> >  [   50.947352] nvme 0000:01:00.0: restoring config space at offset 0x0 (was 0xffffffff, writing 0x11e0f)
+> >  [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
+> >  [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
+> >  [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
+> >  [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
+> >  [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+> >  [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+> >  [   50.947843] nvme nvme0: frozen state error detected, reset controller
+> > 
+> > I suspect the nvme "can't change power state" and restore config space
+> > errors are a consequence of the DPC event.  If DPC disables the link,
+> > the device is inaccessible.
+> > 
+> > I don't know what caused the ACS Violation.  The AER TLP Header Log
+> > might have a clue, but unfortunately we didn't print it.
+> > 
 
-        list_for_each_entry(child, &linkbus->devices, bus_list) {
-                if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
-  +                     pci_info(child, "PCIe-to-PCI bridge, disabling ASPM\n");
-                        link->aspm_disable = ASPM_STATE_ALL;
-                        break;
-                }
-        }
+Apparently it also requires to disable RR, and I'm not able to confirm if
+CML requires that as well. 
 
+pci_quirk_disable_intel_spt_pch_acs_redir() also seems to consult the same
+table, so i'm not sure why we need the other patch in bugzilla is required.
+
+
+Cheers,
+Ashok
