@@ -2,114 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D871B276793
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 06:14:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 863BD2767A3
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 06:24:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgIXEO5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 00:14:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53794 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgIXEO5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 00:14:57 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08O4Eo85064904;
-        Wed, 23 Sep 2020 23:14:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1600920890;
-        bh=GMJPvC24sCbvp8uGIm32LT2BfyBpRHhmvR//qmqmAKw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MDf1TDadMfXGzbt8ZpGTq46cAWoCsJCYzfSvKHIg57BCEI8r5lOcNp0N1Rpy30z8b
-         +fJ+QO2RF4Ah+VorIOfaS/H5SgxutdTUfW4qDaId94czOvwpWcjYM2PjZjW2polUO2
-         eaArjZ5Qh+dwfgzZINyfhXXNjOJOKxSRTlrMNo9g=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08O4Eo83102712
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 23 Sep 2020 23:14:50 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 23
- Sep 2020 23:14:49 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 23 Sep 2020 23:14:49 -0500
-Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08O4Ek9P027997;
-        Wed, 23 Sep 2020 23:14:47 -0500
-Subject: Re: [PATCH v2] PCI: Cadence: Add quirk for Gen2 controller to do
- autonomous speed change.
-To:     Nadeem Athani <nadeem@cadence.com>, <tjoseph@cadence.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mparab@cadence.com>, <sjakhade@cadence.com>
-References: <20200923183427.9258-1-nadeem@cadence.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <37fca4c0-1cba-866a-27ed-9a0a0cbe69e6@ti.com>
-Date:   Thu, 24 Sep 2020 09:44:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200923183427.9258-1-nadeem@cadence.com>
-Content-Type: text/plain; charset="utf-8"
+        id S1726687AbgIXEYy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 00:24:54 -0400
+Received: from mail-eopbgr00084.outbound.protection.outlook.com ([40.107.0.84]:10831
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726504AbgIXEYy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Sep 2020 00:24:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ACPvv/Np960s3qf1mRK6mb7gMZNpphOkZikmggJOQpPTKeoo+mWj+GAcpWUn3WfLKgPSux2wPFpWpos9kKD4qARfQgc2aVXZ5qmtOjWZT2TBllid7eVXZGs57KB1oL/jXX5JhTj9xZRHfxktva8JLWO+IXODVeSNOL+uSnGo5h2rE42eFSNA/WGCUFvXPdGCk2bg2YBSotC5OESBeAZXM7p8uWOhKH8gaxvQeiEUzQLI4UReLkdgJPw0+wqB3sMIcdz5wJPlYJob5HsQLr7mXJTphXrtu3GjmlTS9ODPjtf950uM1ip4Zq3+tnhzbianHCz+ulx/PYy7X5YHfOWatA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gr1f66atMOQJyJ+9OKW3yn3YeqEcRYcbQT37H6QhKUk=;
+ b=YiWJ0HocX89MLF5gbcI6i/OCNhX3+xDoQ5iAd2CqQQsZGIJr0mnYBIIgAH5KSTe/M/j/iyS9WanvQ9wwiop1qYBpQMZ++NxVKrpuMzG9QQWGPRJKVK0j31KrcQ4UfJhOx8Xhwy+viQwEdT5Z4Grt9ZY9/cZpYVtf5zNeoKUj5bgMH+wcmcYFrudtwgDOPLrNF2zCkvPN1UAuQU/9WlKZ6sR+5ByRSf+ivb1/CL2nrVbbRaoWj9nTSi//kwwvWEOcXISnjSXqq9g+VtX5v0pmY3VHycDqqEsP0rK1btibFsUfQFtfBj0xW19Va96VLDqwxXoe1FzVKNA/cdLFu3LCOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gr1f66atMOQJyJ+9OKW3yn3YeqEcRYcbQT37H6QhKUk=;
+ b=Lp2GsLwOrlSCZ61CAef9UwIH0/Hd9+4OUGDBzIfktP3RX4do6a2hYhQhAGWCZZLuh/yjpT0ueeAgDHu9hY5Ty9amexrAGI8dpXIsuFrQYs5TvgrimC/s+8iLA70KkPqZKmBZMzY3yNCsAD86iT0r+9gbIZxjDAV6zvl5Rmy0YXg=
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
+ by HE1PR0402MB2729.eurprd04.prod.outlook.com (2603:10a6:3:e0::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.11; Thu, 24 Sep
+ 2020 04:24:48 +0000
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::c872:d354:7cf7:deb9]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::c872:d354:7cf7:deb9%3]) with mapi id 15.20.3412.022; Thu, 24 Sep 2020
+ 04:24:48 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Michael Walle <michael@walle.cc>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: RE: [PATCH] PCI: dwc: Added link up check in map_bus of
+ dw_child_pcie_ops
+Thread-Topic: [PATCH] PCI: dwc: Added link up check in map_bus of
+ dw_child_pcie_ops
+Thread-Index: AQHWi+0seUdQCD5Vd0CU4riR8OTpR6lruCmAgAJdkFCAAHLqAIAEyNzQ
+Date:   Thu, 24 Sep 2020 04:24:47 +0000
+Message-ID: <HE1PR0402MB337180458625B05D1529535384390@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+References: <20200916054130.8685-1-Zhiqiang.Hou@nxp.com>
+ <CAL_JsqJwgNUpWFTq2YWowDUigndSOB4rUcVm0a_U=FEpEmk94Q@mail.gmail.com>
+ <HE1PR0402MB3371F8191538F47E8249F048843F0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <CAL_JsqLdQY_DqpduaTv4hMDM_-cvZ_+s8W+HdOuZVVYjTO4yxw@mail.gmail.com>
+In-Reply-To: <CAL_JsqLdQY_DqpduaTv4hMDM_-cvZ_+s8W+HdOuZVVYjTO4yxw@mail.gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 82e4b6dd-b847-4dfb-8d9c-08d86041c5e2
+x-ms-traffictypediagnostic: HE1PR0402MB2729:
+x-microsoft-antispam-prvs: <HE1PR0402MB27292A1D4E373FB4E2F8E90884390@HE1PR0402MB2729.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1NFN9Tn1OAX/Us5ys5tZRSb+6Dd2G4wWIFgVKEbFlLL8rWhhMEP6FE58DVxQJbC+6T5Zk2Mb2kYuCdc+IpJDztE8fALnDvD0CyRcoDtLZzDCmwbjeMyvYKLq/3s+1fUP7dpyXESKPw+C3UYyZZndrYbc3KYAb8N+D2RZ46e1UpGN2gSUNCLxLFNx5Sdn85Ecdb60z6eCOXzFakHM6K1mzLB+TiGkjQV4VOp14i8RJ92ISll8V3Hb1eSG/hMuRakNg6RVNODm2O5Vp0rNaX+XF65SAb8JJGCEOd0mtLcXfjZykXQge4MwUUkAlzna6YBuYQwRDvcXS0egp9qpvwUScakK0VtVs7aCfijK6SYNXRgN9aR07xzf3o9BZnusb2cn
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(186003)(8936002)(4326008)(2906002)(86362001)(6506007)(5660300002)(53546011)(7696005)(52536014)(316002)(8676002)(55016002)(33656002)(66556008)(76116006)(6916009)(83380400001)(64756008)(478600001)(66946007)(54906003)(9686003)(66476007)(71200400001)(26005)(66446008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: cobvSn8BNwr5bfle1nGbIuf8yyLO8dvO0HXyeACd4pK/5g9VURmqpGVgH7mJO4WZ8B8sJm22zozJufRFN5EFkbw/CwANFGJe3I1/GqqVNCa2QNxvaXI7i3kqXYPTsCQAvcPcgvRO1YmjmRmo/KUgWiniLeVvlxbY14T2h5K/af7vkJNmCVCma9KUtNNKoJopvlz/BLC3yxbldxEqF+/20qUuS1bO34dSuOuA+aTBDL7N1/agxxH4f4U8kEK4YDXqun2laHH7h9+co02Vrk4W7GaCPbbtEdgXzsU2ukeff8Awg8BnlwUhUg/k/I6Vh2o9BmcHcK5hcYrTFrgUTgar+gv17GRLCAZUYoaN0+iXSfgAtdnJ/v4IxjZ3nG9VCPCgk0nuKMwCFWOVEmByg4ch9faoFEq81ybDDrQYJG8UNpIlehv4g15WLWq4jkd6yv6lpJN8J2Z6ZrC6Nz9GYTK1a2le0CIpRgirJsjHC9HR4HZQyTPr496Ied0YhcYLIHjdS49JRjB7g92KNKXwU5J0Z/M/4GtmtH4sWUK51HPOSrU8Gj5U8IthEX13CMvm7uLTT9WC/RLorF9ni5MBX9/L9X9xbUYc/3fwY8ZPN2Vw2+c6wk/wS/WK2gwU02elMShDDy59UjAWP0DklQIoyEjVYg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82e4b6dd-b847-4dfb-8d9c-08d86041c5e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2020 04:24:48.0235
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GRCe3fIfbCRBmGJd7PbqCbPwhQWDAKSStnlQ1ZENn1GEo5LJMtt9E3Bqos8H/F87c+27hOEKLyLDXbGGSgXNww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB2729
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Nadeem,
-
-On 24/09/20 12:04 am, Nadeem Athani wrote:
-> Cadence controller will not initiate autonomous speed change if
-> strapped as Gen2. The Retrain bit is set as a quirk to trigger
-> this speed change.
-> 
-> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 14 ++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h      | 15 +++++++++++++++
->  2 files changed, 29 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 4550e0d469ca..a2317614268d 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -83,6 +83,9 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  	struct cdns_pcie *pcie = &rc->pcie;
->  	u32 value, ctrl;
->  	u32 id;
-> +	u32 link_cap = CDNS_PCIE_LINK_CAP_OFFSET;
-> +	u8 sls;
-> +	u16 lnk_ctl;
->  
->  	/*
->  	 * Set the root complex BAR configuration register:
-> @@ -111,6 +114,17 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  	if (rc->device_id != 0xffff)
->  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->  
-> +	/* Quirk to enable autonomous speed change for GEN2 controller */
-> +	/* Reading Supported Link Speed value */
-> +	sls = PCI_EXP_LNKCAP_SLS &
-> +		cdns_pcie_rp_readb(pcie, link_cap + PCI_EXP_LNKCAP);
-> +	if (sls == PCI_EXP_LNKCAP_SLS_5_0GB) {
-> +		/* Since this a Gen2 controller, set Retrain Link(RL) bit */
-> +		lnk_ctl = cdns_pcie_rp_readw(pcie, link_cap + PCI_EXP_LNKCTL);
-> +		lnk_ctl |= PCI_EXP_LNKCTL_RL;
-> +		cdns_pcie_rp_writew(pcie, link_cap + PCI_EXP_LNKCTL, lnk_ctl);
-> +	}
-
-Is this workaround required for all Cadence controller? If not, enable
-this workaround only for versions which doesn't do autonomous speed change.
-
-I think this workaround should also be applied only after checking for
-link status (cdns_pcie_link_up()).
-
-And this is also applicable for GEN3/GEN4 controller. So the check
-should be to see the capability of the connected PCIe device and not the
-controller itself.
-
-Thanks
-Kishon
+SGkgUm9iLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4N
+Cj4gU2VudDogMjAyMOW5tDnmnIgxOOaXpSAyMzoyOA0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5n
+LmhvdUBueHAuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgUENJIDxs
+aW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsgTG9yZW56bw0KPiBQaWVyYWxpc2kgPGxvcmVuem8u
+cGllcmFsaXNpQGFybS5jb20+OyBCam9ybiBIZWxnYWFzDQo+IDxiaGVsZ2Fhc0Bnb29nbGUuY29t
+PjsgR3VzdGF2byBQaW1lbnRlbA0KPiA8Z3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20+OyBN
+aWNoYWVsIFdhbGxlIDxtaWNoYWVsQHdhbGxlLmNjPjsNCj4gQXJkIEJpZXNoZXV2ZWwgPGFyZGJA
+a2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gUENJOiBkd2M6IEFkZGVkIGxpbmsg
+dXAgY2hlY2sgaW4gbWFwX2J1cyBvZg0KPiBkd19jaGlsZF9wY2llX29wcw0KPiANCj4gT24gRnJp
+LCBTZXAgMTgsIDIwMjAgYXQgNTowMiBBTSBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+
+IHdyb3RlOg0KPiA+DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4gVGhhbmtzIGEgbG90IGZvciB5b3Vy
+IGNvbW1lbnRzIQ0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4g
+RnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiA+IFNlbnQ6IDIwMjDlubQ5
+5pyIMTfml6UgNDoyOQ0KPiA+ID4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4N
+Cj4gPiA+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBQQ0kgPGxpbnV4LXBjaUB2
+Z2VyLmtlcm5lbC5vcmc+Ow0KPiA+ID4gTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFs
+aXNpQGFybS5jb20+OyBCam9ybiBIZWxnYWFzDQo+ID4gPiA8YmhlbGdhYXNAZ29vZ2xlLmNvbT47
+IEd1c3Rhdm8gUGltZW50ZWwNCj4gPiA+IDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbT47
+IE1pY2hhZWwgV2FsbGUNCj4gPG1pY2hhZWxAd2FsbGUuY2M+Ow0KPiA+ID4gQXJkIEJpZXNoZXV2
+ZWwgPGFyZGJAa2VybmVsLm9yZz4NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFBDSTogZHdj
+OiBBZGRlZCBsaW5rIHVwIGNoZWNrIGluIG1hcF9idXMgb2YNCj4gPiA+IGR3X2NoaWxkX3BjaWVf
+b3BzDQo+ID4gPg0KPiA+ID4gT24gVHVlLCBTZXAgMTUsIDIwMjAgYXQgMTE6NDkgUE0gWmhpcWlh
+bmcgSG91DQo+IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+IHdyb3RlOg0KPiA+ID4gPg0K
+PiA+ID4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+ID4g
+Pg0KPiA+ID4gPiBPbiBOWFAgTGF5ZXJzY2FwZSBwbGF0Zm9ybXMsIGl0IHJlc3VsdHMgaW4gU0Vy
+cm9yIGluIHRoZQ0KPiA+ID4gPiBlbnVtZXJhdGlvbiBvZiB0aGUgUENJZSBjb250cm9sbGVyLCB3
+aGljaCBpcyBub3QgY29ubmVjdGluZyB3aXRoDQo+ID4gPiA+IGFuIEVuZHBvaW50IGRldmljZS4g
+QW5kIGl0IGRvZXNuJ3QgbWFrZSBzZW5zZSB0byBlbnVtZXJhdGUgdGhlDQo+ID4gPiA+IEVuZHBv
+aW50cyB3aGVuIHRoZSBQQ0llIGxpbmsgaXMgZG93bi4gU28gdGhpcyBwYXRjaCBhZGRlZCB0aGUg
+bGluaw0KPiA+ID4gPiB1cCBjaGVjayB0byBhdm9pZCB0byBmaXJlIGNvbmZpZ3VyYXRpb24gdHJh
+bnNhY3Rpb25zIG9uIGxpbmsgZG93biBidXMuDQo+ID4gPg0KPiA+ID4gTWljaGFlbCByZXBvcnRl
+ZCB0aGUgc2FtZSBpc3N1ZSBhcyB3ZWxsLg0KPiA+ID4NCj4gPiA+IFdoYXQgaGFwcGVucyBpZiB0
+aGUgbGluayBnb2VzIGRvd24gYmV0d2VlbiB0aGUgY2hlY2sgYW5kIHRoZSBhY2Nlc3M/DQo+ID4N
+Cj4gPiBUaGlzIHBhdGNoIGNhbm5vdCBjb3ZlciB0aGlzIGNhc2UsIGFuZCB3aWxsIGdldCB0aGUg
+U0Vycm9yLg0KPiA+IEJ1dCBJIHRoaW5rIGl0IG1ha2VzIHNlbnNlIHRvIGF2b2lkIGZpcmluZyB0
+cmFuc2FjdGlvbnMgb24gbGluayBkb3duIGJ1cy4NCj4gDQo+IFRoYXQncyBpbXBvc3NpYmxlIHRv
+IGRvIHdpdGhvdXQgYSByYWNlIGV2ZW4gaW4gaC93Lg0KDQpBZ3JlZS4NCg0KPiANCj4gPiA+IEl0
+J3MgYSByYWN5IGNoZWNrLiBJJ2QgbGlrZSB0byBmaW5kIGFuIGFsdGVybmF0aXZlIHNvbHV0aW9u
+LiBJdCdzDQo+ID4gPiBldmVuIHdvcnNlIGlmIExheWVyc2NhcGUgaXMgdXNlZCBpbiBFQ0FNIG1v
+ZGUuIEkgbG9va2VkIGF0IHRoZSBFREsyDQo+ID4gPiBzZXR1cCBmb3IgbGF5ZXJzY2FwZVsxXSBh
+bmQgaXQgbG9va3MgbGlrZSByb290IHBvcnRzIGFyZSBqdXN0IHNraXBwZWQgaWYgbGluaw0KPiBp
+cyBkb3duLg0KPiA+ID4gTWF5YmUgYSBsaW5rIGRvd24ganVzdCBuZXZlciBoYXBwZW5zIG9uY2Ug
+dXAsIGJ1dCBpZiBzbywgdGhlbiB3ZQ0KPiA+ID4gb25seSBuZWVkIHRvIGNoZWNrIGl0IG9uY2Ug
+YW5kIGZhaWwgcHJvYmUuDQo+ID4NCj4gPiBNYW55IGN1c3RvbWVycyBjb25uZWN0IHRoZSBGUEdB
+IEVuZHBvaW50LCB3aGljaCBtYXkgZXN0YWJsaXNoIFBDSWUNCj4gPiBsaW5rIGFmdGVyIHRoZSBQ
+Q0llIGVudW1lcmF0aW9uIGFuZCB0aGVuIHJlc2NhbiB0aGUgUENJZSBidXMsIHNvIEkNCj4gPiB0
+aGluayBpdCBzaG91bGQgbm90IGV4aXQgdGhlIHByb2JlIG9mIHJvb3QgcG9ydCBldmVuIGlmIHRo
+ZXJlIGlzIG5vdCBsaW5rIHVwDQo+IGR1cmluZyBlbnVtZXJhdGlvbi4NCj4gDQo+IFRoYXQncyBh
+IGdvb2QgcmVhc29uLiBJIHdhbnQgdG8gdW5pZnkgdGhlIGJlaGF2aW9yIGhlcmUgYXMgaXQgdmFy
+aWVzIHBlcg0KPiBwbGF0Zm9ybSBjdXJyZW50bHkgYW5kIHdhc24ndCBzdXJlIHdoaWNoIHdheSB0
+byBnby4NCj4gDQo+IA0KPiA+ID4gSSd2ZSBkdWcgaW50byB0aGlzIGEgYml0IG1vcmUgYW5kIGFt
+IGN1cmlvdXMgYWJvdXQgdGhlIFBDSUVfQUJTRVJSDQo+ID4gPiByZWdpc3RlciBzZXR0aW5nIHdo
+aWNoIGlzIHNldCB0bzoNCj4gPiA+DQo+ID4gPiAjZGVmaW5lIFBDSUVfQUJTRVJSX1NFVFRJTkcg
+MHg5NDAxIC8qIEZvcndhcmQgZXJyb3Igb2Ygbm9uLXBvc3RlZA0KPiA+ID4gcmVxdWVzdCAqLw0K
+PiA+ID4NCj4gPiA+IEl0IHNlZW1zIHRvIG1lIHRoaXMgaXMgbm90IHdoYXQgd2Ugd2FudCBhdCBs
+ZWFzdCBmb3IgY29uZmlnDQo+ID4gPiBhY2Nlc3NlcywgYnV0IGNvbW1pdCA4NGQ4OTdkNjk5MyB3
+aGVyZSB0aGlzIHdhcyBhZGRlZCBzZWVtcyB0byBzYXkNCj4gPiA+IG90aGVyd2lzZS4gSXMgaXQg
+bm90IHBvc3NpYmxlIHRvIGNvbmZpZ3VyZSB0aGUgcmVzcG9uc2UgcGVyIGFjY2VzcyB0eXBlPw0K
+PiA+DQo+ID4gVGhhbmtzIGEgbG90IGZvciB5b3VyIGludmVzdGlnYXRpb24hDQo+ID4gVGhlIHN0
+b3J5IGlzIGxpa2UgdGhpczogU29tZSBjdXN0b21lcnMgd29ycnkgYWJvdXQgdGhlc2Ugc2lsZW50
+IGVycm9yDQo+ID4gKERXQyBQQ0llIElQIHdvbid0IGZvcndhcmQgdGhlIGVycm9yIG9mIG91dGJv
+dW5kIG5vbi1wb3N0IHJlcXVlc3QgYnkNCj4gPiBkZWZhdWx0KSwgc28gd2Ugd2VyZSBwdXNoZWQg
+dG8gZW5hYmxlIHRoZSBlcnJvciBmb3J3YXJkaW5nIHRvIEFYSSBpbg0KPiA+IHRoZSBjb21taXQN
+Cj4gPiA4NGQ4OTdkNjk5MyBhcyB5b3Ugc2F3LiBCdXQgaXQgY2Fubm90IGRpZmZlcmVudGlhdGUg
+dGhlIGNvbmZpZw0KPiA+IHRyYW5zYWN0aW9ucyBmcm9tIHRoZSBNRU1fcmQsIGV4Y2VwdCB0aGUg
+VmVuZG9yIElEIGFjY2Vzcywgd2hpY2ggaXMNCj4gPiBjb250cm9sbGVkIGJ5IGEgc2VwYXJhdGUg
+Yml0IGFuZCBpdCB3YXMgc2V0IHRvIG5vdCBmb3J3YXJkIGVycm9yIG9mIGFjY2Vzcw0KPiBvZiBW
+ZW5kb3IgSUQuDQo+ID4gU28gd2UgdGhpbmsgaXQncyBva2F5IHRvIGVuYWJsZSB0aGUgZXJyb3Ig
+Zm9yd2FyZGluZywgdGhlIFNFcnJvcg0KPiA+IHNob3VsZCBub3Qgb2NjdXIsIGJlY2F1c2UgYWZ0
+ZXIgdGhlIGVudW1lcmF0aW9uIGl0IHdvbid0IGFjY2VzcyB0aGUNCj4gbm9uLWV4aXN0ZW50IGZ1
+bmN0aW9ucy4NCj4gDQo+IFdlJ3ZlIHJlamVjdGVkIHVwc3RyZWFtIHN1cHBvcnQgZm9yIHBsYXRm
+b3JtcyBhYm9ydGluZyBvbiBjb25maWcNCj4gYWNjZXNzZXNbMV0uIEkgdGhpbmsgdGhlcmUncyBj
+bGVhciBjb25zZW5zdXMgdGhhdCBhYm9ydGluZyBpcyB0aGUgd3JvbmcNCj4gYmVoYXZpb3IuDQo+
+IA0KPiBEbyBNRU1fd3IgZXJyb3JzIGdldCBmb3J3YXJkZWQ/IFNlZW1zIGxpa2UgdGhhdCB3b3Vs
+ZCBiZSBlbm91Z2guIEFsc28sDQo+IHdvdWxkbid0IHBhZ2UgZmF1bHRzIGNhdGNoIG1vc3QgT09C
+IGFjY2Vzc2VzIGFueXdheXM/IFlvdSBuZWVkIHRoaW5ncw0KPiBwYWdlIGFsaWduZWQgYW55d2F5
+cyB3aXRoIGFuIElPTU1VIGFuZCBkb2luZyB1c2Vyc3BhY2UgYWNjZXNzIG9yIGd1ZXN0DQo+IGFz
+c2lnbm1lbnQuDQoNClllcywgZXJyb3JzIG9mIE1FTV93ciBjYW4gYmUgZm9yd2FyZGVkLg0KDQo+
+IA0KPiBIZXJlJ3MgYW5vdGhlciBpZGVhLCBob3cgYWJvdXQgb25seSBlbmFibGluZyBmb3J3YXJk
+aW5nIGVycm9ycyBpZiB0aGUgbGluayBpcw0KPiB1cD8gSWYgcmVhbGx5IHdvdWxkIG5lZWQgdG8g
+YmUgY29uZmlndXJlZCBhbnkgdGltZSB0aGUgbGluayBzdGF0ZSBjaGFuZ2VzDQo+IHJhdGhlciB0
+aGFuIGp1c3QgYXQgcHJvYmUuIEknbSBub3Qgc3VyZSBpZiB5b3UgaGF2ZSBhIHdheSB0byBkaXNh
+YmxlIGl0IG9uIGxpbmsNCj4gZG93biB0aG91Z2guDQoNCkR1ZyBkZWVwZXIgaW50byB0aGlzIGlz
+c3VlIGFuZCBmb3VuZCB0aGUgc2V0dGluZyBvZiBub3QgZm9yd2FyZGluZyBlcnJvciBvZiBub24t
+ZXhpc3RlbnQgVmVuZGVyIElEIGFjY2VzcyBjb3VudHMgb24gdGhlIGxpbmsgcGFydG5lcjoNCjEu
+IFdoZW4gdGhlcmUgaXMgYSBsaW5rIHBhcnRuZXIgKG5hbWVseSBsaW5rIHVwKSwgaXQgd2lsbCBy
+ZXR1cm4gMHhmZmZmIHdoZW4gcmVhZCBub24tZXhpc3RlbnQgZnVuY3Rpb24gVmVuZG9yIElEIGFu
+ZCB3b24ndCBmb3J3YXJkIGVycm9yIHRvIEFYSS4NCjIuIFdoZW4gbm8gbGluayBwYXJ0bmVyIChs
+aW5rIGRvd24pLCBpdCB3aWxsIGZvcndhcmQgdGhlIGVycm9yIG9mIHJlYWRpbmcgbm9uLWV4aXN0
+ZW50IGZ1bmN0aW9uIFZlbmRvciBJRCB0byBBWEkgYW5kIHJlc3VsdCBpbiBTRXJyb3IuDQoNCkkg
+dGhpbmsgdGhpcyBpcyBhIERXQyBQQ0llIElQIHNwZWNpZmljIGlzc3VlIGJ1dCBub3QgZ2V0IGZl
+ZWRiYWNrIGZyb20gZGVzaWduIHRlYW0uDQpJJ20gdGhpbmtpbmcgdG8gZGlzYWJsZSB0aGlzIGVy
+cm9yIGZvcndhcmRpbmcganVzdCBsaWtlIG90aGVyIHBsYXRmb3Jtcywgc2luY2Ugd2hlbiB0aGVz
+ZSBlcnJvcnMgKFVSLCBDQSBhbmQgQ1QpIGFyZSBkZXRlY3RlZCwgQUVSIGRyaXZlciBjYW4gYWxz
+byByZXBvcnQgdGhlIGVycm9yIGFuZCB0cnkgdG8gcmVjb3Zlci4NCg0KVGhhbmtzLA0KWmhpcWlh
+bmcNCg0KPiANCj4gUm9iDQo=
