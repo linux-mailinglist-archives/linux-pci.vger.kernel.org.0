@@ -2,45 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B07B276F67
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 13:09:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFD5A277039
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 13:47:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgIXLJB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 07:09:01 -0400
-Received: from mail-bn8nam08on2061.outbound.protection.outlook.com ([40.107.100.61]:62176
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726444AbgIXLJB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Sep 2020 07:09:01 -0400
+        id S1727447AbgIXLr4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 07:47:56 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:43386 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726406AbgIXLr4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 07:47:56 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7FB64C043E;
+        Thu, 24 Sep 2020 11:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1600948074; bh=BWV6t/tL8bMKJCJqIt6yqTnWEX3xhX3f9RMEHZUPB7o=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Qw+DGSWhIs75aP7sO0RX2m4lfVQroQ2X5ebLaQXouBBeZvhSyJAuQx22qixZApS8k
+         wzPJ2D0glDa0mCJBoDDpUeJVKaOdu1iaPEaYFeJ1og8s/oXDlGFUbOCfBWSqGHJ7Jd
+         +xxOTj0cn6Rm1J2c2Oxv/+iqpJNEdTcA4VceA51P1MyG6NYdMxjxPEQp2ky+IIOd8D
+         1zdNfenaD/jSfZS5v96vH/dGjEDSkCGox1EQnSIba4xWH08ykbFFE1JC+rBeemt3gM
+         b8wZeox3DJD49i8ft1mVk4GzNKWOW0Yz2wDoziDhSVZILFTR74y3FGj61iPw4cXBDe
+         ncnqQ/ULyEyEQ==
+Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7C335A0071;
+        Thu, 24 Sep 2020 11:47:47 +0000 (UTC)
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 5407C400A1;
+        Thu, 24 Sep 2020 11:47:43 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="NdE+qCbV";
+        dkim-atps=neutral
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZE7r/R0rBVRwUHL1VeGAVaLhZKGdysgboTfmhIkefRYkjAK8+DMDbI7KfEj9fNdEgO3vPxsHZLMl5vxlkJhgD+wZ5LBO0Fc4aTq8Vb/X/3mODWXloFxQXqRt1iauQff0WEDoaoti/06tgXQO4t289YemLAIuhMlUc54MAAcVrWXQ5BpcUHMY0Tx7JhBWjwbSp5Gg0MbVU9lJHo0kejdM9q0eEtMuSKLmRtWICwl+FPEDL+LAnAcCn1AgUXSYZgEIE3LobFeizv13gbRklCOnRjCMHQtP4iRNBuRTmNeiVJ7wW5fNnPbyv5E+G86YL5GnWV+8K5P3ypGdFwG73W4ReQ==
+ b=Y+fz9mY/WzUadHxReA+C+HNRkp/zViyf+gaJ+m+BhcFIzinfjxZzmRZaTdhD/xW9NYvQsiP0F6s0HxrLNIdy1+rtLKDEkNnqVvlzfcEATQdBjLeNRb4sSesqOyRBDI5mV/M9T+KC4lewz4NBFHzkSQh+uw9coe9LGTcFE/FuuVdyqZrsdVcNtxHOH4syxwwyo7VX6XoL60W+FkjVQCMYkaBHNvY18hu2pek6LTK3+OMrGmjMVt/zRVhwZzQuZP0bIq+EFAdkQT0uXHieQB49tBnXMN3fb6XreMn2P35BijX9dzEq8/h3REvhtoASI23H3HXTaGkk23QV+zM6XrWSpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=egHxvw+w9N0tvNHpaDO8CSDWOi3GV6GGHWZAPQoRtuc=;
- b=YnY4C0wpZ6ZeLtXZcQy2lB1LS/tj4+lV0VkqGqjw6WawRTo92kvuL4+thjkFANOHXVqYXDxu7IeRmNaontOvq34YI5QhaIXGjTMAQSizeYSPBhKkX7JVk1/O7b+pg4KMHEy2/UMA9hx54b6mAt3ehWCjeLYsrqTeCKd9Zi7HY6P9Bix07ktU67A61ZsYqAh/E0m9UEPKuxwjR56D98f8N8PmLAR1rMnaks12pGaoLtOZJHP7PbfYt+fzT0fQiXJgktOJTkNWve0u9bo/saEskDC9//VGrviJjCo+KxJZtp/CGJhoFpSfo+JcBwCyLAgw6BCmSSCHyS1/5E7hQqT1XQ==
+ bh=7eljf1+x3TgFEFeceehNM3RN2D/1jY11+QIaM4oYOdY=;
+ b=ATg63lX7oJMKti5yxTAgpEWX36VPdfzTmpJJiK4zOXP0mPZ4uXV0b/3tQBqIYWiHhdxIvZwdepS7lElQeYhk28Tlsdizi9vIoUZkz0pvLFbgVvlAwOEvYEeTUdd/0LDalumJkPrGAD9fnlyo++UZUL80c8fT+0e/h/80bCSuuzI5ECbvKKFvFdY7FxyTIKCT7PSnVBXTu8InyQeHfZYGadUBcqI+EjyXVWOPRvWEyZelgDkRYh3WY974soXt528Fe6E8SwDiQyxBhWgRToawecoMtDh1zsMIjoYOAorSEkvI1QSwIBs+T3gIURl6QznqJkbSd0p3M5llh2rabqJsDQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=egHxvw+w9N0tvNHpaDO8CSDWOi3GV6GGHWZAPQoRtuc=;
- b=W8ex16ZN48IvWrNgg/3qQVUwbpCePl0Fl4RP4HmmDdxQnkA+/+VgC7CHSV71F3gelXYwuVVp8eNJ7jjt7MtFM/5KqID7r0YJwUc8WK4AAQaFyQsYGQMbhVt9XZprbTujrAKmloX5rUPmQmsJ7+QRuMHjEp58iOUNDsm5D6gY7Bc=
-Authentication-Results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=synaptics.com;
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
- by DM6PR03MB4698.namprd03.prod.outlook.com (2603:10b6:5:180::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20; Thu, 24 Sep
- 2020 11:08:55 +0000
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3391.027; Thu, 24 Sep 2020
- 11:08:55 +0000
-Date:   Thu, 24 Sep 2020 19:07:42 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
+ bh=7eljf1+x3TgFEFeceehNM3RN2D/1jY11+QIaM4oYOdY=;
+ b=NdE+qCbVTC2bQIfztx8ZfMh9QAJmb6I5R3k8lfGZ4XmZ/SqappWhcDBtaTGF2z8636EOP4Fu3qyDjC7Zbv+Ya1zebiy07PtkV9eJqWloi9Zxdslkt1qf0f+jqfDbQX+SBYwCU7GR68d1ZQR1fssBuIpOMe8lZkIMbffU8jcZHq8=
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
+ DM6PR12MB4044.namprd12.prod.outlook.com (2603:10b6:5:21d::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3412.22; Thu, 24 Sep 2020 11:47:41 +0000
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::742c:dafa:9df7:4f4]) by DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::742c:dafa:9df7:4f4%10]) with mapi id 15.20.3391.025; Thu, 24 Sep 2020
+ 11:47:41 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,7 +86,6 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Jesper Nilsson <jesper.nilsson@axis.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         Binghui Wang <wangbinghui@hisilicon.com>,
         Andy Gross <agross@kernel.org>,
@@ -71,360 +96,168 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v2 5/5] PCI: dwc: Move dw_pcie_msi_init() from each users to
- designware host
-Message-ID: <20200924190742.76939458@xhacker.debian>
-In-Reply-To: <20200924190421.549cb8fc@xhacker.debian>
+CC:     "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: RE: [PATCH v2 2/5] PCI: dwc: Check alloc_page() return value
+Thread-Topic: [PATCH v2 2/5] PCI: dwc: Check alloc_page() return value
+Thread-Index: AQHWkmNVdfDcCP1yiU+UsZH88KvvBql3rAgw
+Date:   Thu, 24 Sep 2020 11:47:41 +0000
+Message-ID: <DM5PR12MB1276CA27BA879C8A80187CBFDA390@DM5PR12MB1276.namprd12.prod.outlook.com>
 References: <20200924190421.549cb8fc@xhacker.debian>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR01CA0072.jpnprd01.prod.outlook.com
- (2603:1096:404:2b::36) To DM6PR03MB4555.namprd03.prod.outlook.com
- (2603:10b6:5:102::17)
+ <20200924190623.3251c2ac@xhacker.debian>
+In-Reply-To: <20200924190623.3251c2ac@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWJkNzA5YmI2LWZlNWItMTFlYS05OGNmLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxiZDcwOWJiOC1mZTViLTExZWEtOThjZi1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjExNjgiIHQ9IjEzMjQ1NDIxNjU3MjEx?=
+ =?us-ascii?Q?MzA2MiIgaD0iYjZLR2R2S3Z1ZXJkbFpuWDMrVVM0QU9EOW5ZPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFD?=
+ =?us-ascii?Q?bWtNaC9hSkxXQVlPcHlEQytXKzM4ZzZuSU1MNWI3ZndPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFOclNWM2dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: synaptics.com; dkim=none (message not signed)
+ header.d=none;synaptics.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [89.155.14.32]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6f12d17-7a31-4295-69ae-08d8607fa4ce
+x-ms-traffictypediagnostic: DM6PR12MB4044:
+x-microsoft-antispam-prvs: <DM6PR12MB4044F8FAEB3F82D7622985CBDA390@DM6PR12MB4044.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3U0P+nLP+YGhi/MPZpiyv6rNAZi14z1hoOxwFf+02KHEHiCaHS6LeWm9qzJEDILYkFQ+kHGzG+Y+PDvWNdwMIAmB1p5pyDar1JZjCWzUpjZvcSST6shWfR36DfrRWyjfNSZWmwm9Bsxe6Ykw5SnyVJ4qhu06G+staXYJrl7ziOkAie+/5qaUHk/qvbbIQDftdevyf5xVD7m5F3Ufjbxma471I1tlEAGgmJjanLP+gul8uG6yiRAv9hJ143FqPF0cwVPD/bhYr7f/tO92vnkGwvVL9bhDkDTxM9AYdE8/MFghmpwC/CO0W2UxL6VykIaFDOOnFye/oUbyDQmIGMfzWVS9IPcmmVNZBH4vapRx0iJgBPBmmiUOtGy3aQZTuYU7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(136003)(396003)(366004)(54906003)(186003)(33656002)(110136005)(64756008)(316002)(66446008)(8936002)(7416002)(478600001)(4326008)(52536014)(71200400001)(5660300002)(7406005)(8676002)(66556008)(66476007)(7696005)(76116006)(66946007)(2906002)(55016002)(53546011)(9686003)(6506007)(4744005)(26005)(86362001)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: AiUuUWSeCqvLbEgDCy5LV0G1Yl/l9X1D3EOVACj8Dk+YU5BLr9hdB/KREpe4y/Icje5Uk5GbP6LOWywR3XWvBT+VCnunB3oFsNq9EU8mAyNK95rqirwGsjvISZOcip0VZO/2gR9S0eNheAmpC1PvJbkEry78H68lR+oOAHSGw6q4lLwPqwvQHzmUZt83wJQufqrHeXDa/EdPz8ogL2Vsa/HqTDi3ZxrhgRlLP7uT8z8W445F7YY9LT/7HpIAH3DbR3BcHMPjziHeCI385yuf/z5R89QnAYf1XMh7gIER8v2PXMYjhLltUkqo7ywW9bvQzdNKp0rQseTCQx1sx8Pg8zYKucZKJPYTTnBb0x3cPKabAsHJGYWkX/aK8pb7Q+w6bLEje81OGDA3kHCYghiEtlaOks4JDlEed+6ra0x5OupGFPFLvXBrRT9ts+d+FCuMb5qYk9OpCsUQFcrqQ57qGqper6cED7FEiHxMgwOHXygtomIFbgQJkdL1EwzdwcCuj/BiGr2ko9nClvtIoifer39E40H0HqFAjFqRykPsUy4OpailWkAgp2LvKE8T/P14w2Hub6Hc4DQvcrhLqYvcnFEOZfo5gPuvv/+ucRPOdtXTt98ClBd5JUciuF0B4WHy+l24YkrQswApaAhcyc3L+w==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0072.jpnprd01.prod.outlook.com (2603:1096:404:2b::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20 via Frontend Transport; Thu, 24 Sep 2020 11:08:43 +0000
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 950f8817-b4a3-49a6-84ba-08d8607a3a43
-X-MS-TrafficTypeDiagnostic: DM6PR03MB4698:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB469846A98C5A031AD91368ADED390@DM6PR03MB4698.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uOBA/EWW6Sn2tsmw18k8nJIRW08dSetQAc8YWMA9aQ8fVxlVQ4+g41omqmKjEhTiy+W1qnrSRvEwrNSff9Ase8AHPSKLZtwqx49Gyv68PLfKL7O73qEM+amypm34hFyhB0AEySuo5dSMkLRAJt7rDCBPEydN+JGAGede3C4JmDWVwpDObiO1jUC4vLR3b2WbuuSQm8tCADjwFjNq77MapoikCbxIvCTMfEEZ2Ag2XP3R16I3A2Tp10QvPcauZQbS7wSjZqAsWWJL9g8CVeTercalZfYqIqBcimi8fbdux6J+/df3cqHhltDy+BYtKGklGPrz1wucSIOOkQ1mlvz1EFzh9tOKTn6eLFoaaYF1/OETJmiiZ38/G4LGwtE41MuI
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(366004)(39860400002)(376002)(136003)(2906002)(30864003)(86362001)(6506007)(52116002)(7696005)(83380400001)(478600001)(5660300002)(186003)(66556008)(16526019)(956004)(1076003)(26005)(316002)(66476007)(7406005)(66946007)(9686003)(55016002)(8676002)(8936002)(110136005)(4326008)(7416002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: RMlcwVeKDKiEtrsFAaYSr1uIYx+ljMIdpOqJ4n8kZbE+1xKsSZlRCVUMA+ev/EgO7x4dO0n1ZueApqf9AHB5TAo6a23nDadZat/RuidMWanoSEhtiZZhiFP/0pNB2QJlSCpmdVbS6shGP7dax+pDgitP3klrMwVl/ncLOUNMQYF4p9otoYQJ3d2MMjsyaAqkCF5C7+cEZMN4nZPM6MDIl6C5AW6edB0jRPTiFrxrQHmCQkcpWVD0CpH4FkMzAG2vNX2VM2j7ppUdys54spK4vdagYdL6lZuFwOJ3BkVdco7s5amBsOPtwwsaDv5gVanevqYZld8r7mg78KwP08YpDk4xHNzitfR9fXtu1rE0FOQ7s9v8WPJnwdztU/7WXH4mgHagmCQWR3xnh/k275grRmnvwYkFbi2SFe8dCbBiBm9IgxZcStF1vSmfo2KCJk9y9XmnZb3UED2nqN7aj1f16WYF7vHZYoATNIHvEMsGi5MkkwhjMYI60NtMQAea1GmNz5ao0ZhwgEw5Cut7yKfCET0zIT3TCTwEf8TuGt9xoV9+p1MjV28eQMj1Zkb7OyEs9yyn2bHJIL8ITRmRO19a9PEX9yiVjxlTJSxG+fuinKlX1vnUMsTHZ5FviMOvlNA325S/KazSCMLmrMwFx6OIUw==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 950f8817-b4a3-49a6-84ba-08d8607a3a43
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
+X-OriginatorOrg: synopsys.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2020 11:08:55.6822
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1276.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6f12d17-7a31-4295-69ae-08d8607fa4ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2020 11:47:41.3449
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XPTytS6VDF0pwFMYxJZGwIxIqb7SWCwf77ORKRYIyr9oDX4MVobpNC8gHkda+kK5sH03dQjTvSBW6i5NDgqitw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4698
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bJr4dzK9z+VfI/59cnzKnxmqrQOUWxwVFz2K5RVioY69yd/IXnFDCOpIMB5Jfh+EAFI8LOELYwwwIMwge6fnHg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4044
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently, dw_pcie_msi_init() allocates and maps page for msi, then
-program the PCIE_MSI_ADDR_LO and PCIE_MSI_ADDR_HI. The Root Complex
-may lose power during suspend-to-RAM, so when we resume, we want to
-redo the latter but not the former. If designware based driver (for
-example, pcie-tegra194.c) calls dw_pcie_msi_init() in resume path, the
-previous msi page will be leaked. From another side, except
-pci-dra7xx.c we can move the dw_pcie_msi_init() from each users to
-designware host, I.E move the msi page allocation and mapping to
-dw_pcie_host_init() and move the PCIE_MSI_ADDR_* programming to
-dw_pcie_setup_rc(). After this moving, we solve the msi page leakage
-as well.
+On Thu, Sep 24, 2020 at 12:6:23, Jisheng Zhang=20
+<Jisheng.Zhang@synaptics.com> wrote:
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/pci/controller/dwc/pci-dra7xx.c       |  1 +
- drivers/pci/controller/dwc/pci-exynos.c       |  2 --
- drivers/pci/controller/dwc/pci-imx6.c         |  3 ---
- drivers/pci/controller/dwc/pci-meson.c        |  8 -------
- drivers/pci/controller/dwc/pcie-artpec6.c     | 10 --------
- .../pci/controller/dwc/pcie-designware-host.c | 24 ++++++++++++-------
- .../pci/controller/dwc/pcie-designware-plat.c |  3 ---
- drivers/pci/controller/dwc/pcie-designware.h  |  5 ++++
- drivers/pci/controller/dwc/pcie-histb.c       |  3 ---
- drivers/pci/controller/dwc/pcie-kirin.c       |  3 ---
- drivers/pci/controller/dwc/pcie-qcom.c        |  3 ---
- drivers/pci/controller/dwc/pcie-spear13xx.c   |  1 -
- drivers/pci/controller/dwc/pcie-tegra194.c    |  2 --
- drivers/pci/controller/dwc/pcie-uniphier.c    |  9 +------
- 14 files changed, 22 insertions(+), 55 deletions(-)
+> We need to check alloc_page() succeed or not before continuing.
+>=20
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
+pci/controller/dwc/pcie-designware-host.c
+> index 0a19de946351..9e04e8ef3aa4 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -303,6 +303,11 @@ void dw_pcie_msi_init(struct pcie_port *pp)
+>  	u64 msi_target;
+> =20
+>  	pp->msi_page =3D alloc_page(GFP_KERNEL);
+> +	if (!pp->msi_page) {
+> +		dev_err(dev, "Failed to alloc MSI page\n");
+> +		return;
+> +	}
+> +
+>  	pp->msi_data =3D dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
+>  				    DMA_FROM_DEVICE);
+>  	if (dma_mapping_error(dev, pp->msi_data)) {
+> --=20
+> 2.28.0
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index dc387724cf08..d8b74389e353 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -210,6 +210,7 @@ static int dra7xx_pcie_host_init(struct pcie_port *pp)
- 	dra7xx_pcie_establish_link(pci);
- 	dw_pcie_wait_for_link(pci);
- 	dw_pcie_msi_init(pp);
-+	dw_pcie_msi_config(pp);
- 	dra7xx_pcie_enable_interrupts(dra7xx);
- 
- 	return 0;
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 8d82c43ae299..9cca0ce79777 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -298,8 +298,6 @@ static void exynos_pcie_msi_init(struct exynos_pcie *ep)
- 	struct pcie_port *pp = &pci->pp;
- 	u32 val;
- 
--	dw_pcie_msi_init(pp);
--
- 	/* enable MSI interrupt */
- 	val = exynos_pcie_readl(ep->mem_res->elbi_base, PCIE_IRQ_EN_LEVEL);
- 	val |= IRQ_MSI_ENABLE;
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 5fef2613b223..dba6e351e3df 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -848,9 +848,6 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
- 	dw_pcie_setup_rc(pp);
- 	imx6_pcie_establish_link(imx6_pcie);
- 
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(pp);
--
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 4f183b96afbb..cd0d9dd8dd61 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -377,12 +377,6 @@ static int meson_pcie_establish_link(struct meson_pcie *mp)
- 	return dw_pcie_wait_for_link(pci);
- }
- 
--static void meson_pcie_enable_interrupts(struct meson_pcie *mp)
--{
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(&mp->pci.pp);
--}
--
- static int meson_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
- 				  u32 *val)
- {
-@@ -467,8 +461,6 @@ static int meson_pcie_host_init(struct pcie_port *pp)
- 	if (ret)
- 		return ret;
- 
--	meson_pcie_enable_interrupts(mp);
--
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index 97d50bb50f06..af1e6bb28e7a 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -346,15 +346,6 @@ static void artpec6_pcie_deassert_core_reset(struct artpec6_pcie *artpec6_pcie)
- 	usleep_range(100, 200);
- }
- 
--static void artpec6_pcie_enable_interrupts(struct artpec6_pcie *artpec6_pcie)
--{
--	struct dw_pcie *pci = artpec6_pcie->pci;
--	struct pcie_port *pp = &pci->pp;
--
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(pp);
--}
--
- static int artpec6_pcie_host_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -368,7 +359,6 @@ static int artpec6_pcie_host_init(struct pcie_port *pp)
- 	dw_pcie_setup_rc(pp);
- 	artpec6_pcie_establish_link(pci);
- 	dw_pcie_wait_for_link(pci);
--	artpec6_pcie_enable_interrupts(artpec6_pcie);
- 
- 	return 0;
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 7a8adf597803..6603d7c36f2e 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -296,11 +296,23 @@ void dw_pcie_msi_deinit(struct pcie_port *pp)
- 	}
- }
- 
-+void dw_pcie_msi_config(struct pcie_port *pp)
-+{
-+	if (pp->msi_page) {
-+		u64 msi_target = (u64)pp->msi_data;
-+
-+		/* Program the msi_data */
-+		dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
-+				    lower_32_bits(msi_target));
-+		dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
-+				    upper_32_bits(msi_target));
-+	}
-+}
-+
- void dw_pcie_msi_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct device *dev = pci->dev;
--	u64 msi_target;
- 
- 	pp->msi_page = alloc_page(GFP_KERNEL);
- 	if (!pp->msi_page) {
-@@ -314,15 +326,7 @@ void dw_pcie_msi_init(struct pcie_port *pp)
- 		dev_err(dev, "Failed to map MSI data\n");
- 		__free_page(pp->msi_page);
- 		pp->msi_page = NULL;
--		return;
- 	}
--	msi_target = (u64)pp->msi_data;
--
--	/* Program the msi_data */
--	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
--			    lower_32_bits(msi_target));
--	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
--			    upper_32_bits(msi_target));
- }
- EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
- 
-@@ -449,6 +453,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 				irq_set_chained_handler_and_data(pp->msi_irq,
- 							    dw_chained_msi_isr,
- 							    pp);
-+			dw_pcie_msi_init(pp);
- 		} else {
- 			ret = pp->ops->msi_host_init(pp);
- 			if (ret < 0)
-@@ -654,6 +659,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
- 					    4, ~0);
- 		}
-+		dw_pcie_msi_config(pp);
- 	}
- 
- 	/* Setup RC BARs */
-diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
-index 712456f6ce36..9ccf69a3dcf4 100644
---- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-@@ -40,9 +40,6 @@ static int dw_plat_pcie_host_init(struct pcie_port *pp)
- 	dw_pcie_setup_rc(pp);
- 	dw_pcie_wait_for_link(pci);
- 
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(pp);
--
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 43b8061e1bec..40d22fe33afe 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -372,6 +372,7 @@ static inline void dw_pcie_dbi_ro_wr_dis(struct dw_pcie *pci)
- irqreturn_t dw_handle_msi_irq(struct pcie_port *pp);
- void dw_pcie_msi_init(struct pcie_port *pp);
- void dw_pcie_msi_deinit(struct pcie_port *pp);
-+void dw_pcie_msi_config(struct pcie_port *pp);
- void dw_pcie_setup_rc(struct pcie_port *pp);
- int dw_pcie_host_init(struct pcie_port *pp);
- void dw_pcie_host_deinit(struct pcie_port *pp);
-@@ -390,6 +391,10 @@ static inline void dw_pcie_msi_deinit(struct pcie_port *pp)
- {
- }
- 
-+static inline void dw_pcie_msi_config(struct pcie_port *pp)
-+{
-+}
-+
- static inline void dw_pcie_setup_rc(struct pcie_port *pp)
- {
- }
-diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-index 2a2835746077..fbf53e897ca7 100644
---- a/drivers/pci/controller/dwc/pcie-histb.c
-+++ b/drivers/pci/controller/dwc/pcie-histb.c
-@@ -196,9 +196,6 @@ static int histb_pcie_host_init(struct pcie_port *pp)
- {
- 	histb_pcie_establish_link(pp);
- 
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(pp);
--
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index e496f51e0152..d7246995daf0 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -425,9 +425,6 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
- {
- 	kirin_pcie_establish_link(pp);
- 
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(pp);
--
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 3aac77a295ba..2abbb850fb56 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1281,9 +1281,6 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 
- 	dw_pcie_setup_rc(pp);
- 
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(pp);
--
- 	qcom_ep_reset_deassert(pcie);
- 
- 	ret = qcom_pcie_establish_link(pcie);
-diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-index 62846562da0b..760e27de0082 100644
---- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-+++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-@@ -157,7 +157,6 @@ static void spear13xx_pcie_enable_interrupts(struct spear13xx_pcie *spear13xx_pc
- 
- 	/* Enable MSI interrupt */
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
--		dw_pcie_msi_init(pp);
- 		writel(readl(&app_reg->int_mask) |
- 				MSI_CTRL_INT, &app_reg->int_mask);
- 	}
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 70498689d0c0..b51fe136d345 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -783,8 +783,6 @@ static void tegra_pcie_enable_msi_interrupts(struct pcie_port *pp)
- 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
- 	u32 val;
- 
--	dw_pcie_msi_init(pp);
--
- 	/* Enable MSI interrupt generation */
- 	val = appl_readl(pcie, APPL_INTR_EN_L0_0);
- 	val |= APPL_INTR_EN_L0_0_SYS_MSI_INTR_EN;
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index 3a7f403b57b8..d7b465b669f4 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -318,14 +318,7 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
- 	uniphier_pcie_irq_enable(priv);
- 
- 	dw_pcie_setup_rc(pp);
--	ret = uniphier_pcie_establish_link(pci);
--	if (ret)
--		return ret;
--
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		dw_pcie_msi_init(pp);
--
--	return 0;
-+	return uniphier_pcie_establish_link(pci);
- }
- 
- static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
--- 
-2.28.0
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
 
