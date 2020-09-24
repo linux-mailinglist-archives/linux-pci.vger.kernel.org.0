@@ -2,103 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16784277526
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 17:22:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22AA62776A6
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 18:24:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgIXPWf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 11:22:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
+        id S1728044AbgIXQYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 12:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgIXPWf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Sep 2020 11:22:35 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1726516AbgIXQYo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Sep 2020 12:24:44 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA9721D24;
-        Thu, 24 Sep 2020 15:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2B3D238E3;
+        Thu, 24 Sep 2020 16:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600960954;
-        bh=Yd6+N8DdYbFJlR3ArRFMZ3pnfXxzBUYV2dip6Y0US34=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T2kaCVSS2CbamKKiTutFc00BRiKWI0sfdiTa5h1vvsTTzvW5UHp0FvrR+qyr2Pv14
-         D3PR0J+cKwpKKilfXdmyLthpTQlcV6urQmGeA7TqjAzhWGzBfil8ChO0ae5ufuDw7L
-         t7y/LzqdKJD4IwITlfDcjsryy+Jfq1pMlA31r+Po=
-Received: by pali.im (Postfix)
-        id 4169F8A3; Thu, 24 Sep 2020 17:22:32 +0200 (CEST)
-Date:   Thu, 24 Sep 2020 17:22:32 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Update comment about disabling link
- training
-Message-ID: <20200924152232.ecoxpmxdc5iyrz76@pali>
-References: <20200924084618.12442-1-pali@kernel.org>
- <20200924151106.GA2319992@bjorn-Precision-5520>
+        s=default; t=1600964684;
+        bh=vFQ/jlTzhlIN2us7zr7mpKdkocgl+KGTCuVffTtovC4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ft0gchCDOdWmf8uY3Pux9ul9+2UGwTUzZZGFmzUC9lo8iFgbuh3riaz2BMx7w0u/9
+         apKSnNzdRqe5ahiR5zoC3vMjgh6LLTm7hgDbCguiRO5MQo2V6gfUZgqCXhBOESatiB
+         Ij5nIFD8pO/QqrkqgJmDVCcto6nPk6UXBUdB4QLU=
+Date:   Thu, 24 Sep 2020 11:24:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+Message-ID: <20200924162442.GA2321475@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200924151106.GA2319992@bjorn-Precision-5520>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAA85sZvm5SyiG_AE3=4Xowz4AYuMW38uvw8QJ5D8WL3=1Tkv7w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 24 September 2020 10:11:06 Bjorn Helgaas wrote:
-> On Thu, Sep 24, 2020 at 10:46:18AM +0200, Pali Rohár wrote:
-> > It is not HW bug or workaround for some cards but it is requirement by PCI
-> > Express spec. After fundamental reset is needed 100ms delay prior enabling
-> > link training. So update comment in code to reflect this requirement.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index 50ab6d7519ae..19b9b79226e5 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -259,7 +259,12 @@ static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-> >  	if (!pcie->reset_gpio)
-> >  		return;
-> >  
-> > -	/* PERST does not work for some cards when link training is enabled */
-> > +	/*
-> > +	 * As required by PCI Express spec a delay for at least 100ms after
-> > +	 * de-asserting PERST# signal is needed before link training is enabled.
-> > +	 * So ensure that link training is disabled prior de-asserting PERST#
-> > +	 * signal to fulfill that PCI Express spec requirement.
+On Wed, Sep 23, 2020 at 11:36:00PM +0200, Ian Kumlien wrote:
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=66ff14e59e8a
 > 
-> Can you please include the spec citation here?  In the PCIe base spec,
-> PERST# is only mentioned in PCIe r5.0, sec 6.6.1, and I don't see the
-> connection there to 100ms between de-assert of PERST# and enabling
-> link training.
-
-Hello! I copied this "comment" from other place in pci-aardvark.c where
-that timeout 100ms is already applied. Timeout with explanation comment
-was introduced in following commit:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f4c7d053d7f7
-
-Here are links to discussions about that patch:
-
-https://lore.kernel.org/linux-pci/20190313213752.1246-1-repk@triplefau.lt/T/#u
-https://lore.kernel.org/linux-pci/20190522213351.21366-2-repk@triplefau.lt/T/#u
-
-> Sec 6.1.1 does talk about 100ms before sending config requests (for
-> ports that support <= 5 GT/s), and 100ms after link training completes
-> (for ports that support > 5 GT/s).
+> "7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
+> Linux to enable ASPM, but for some undocumented reason, it didn't enable
+> ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
 > 
-> Maybe there's more language in a form-factor spec or something?
-> 
-> > +	 */
-> >  	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-> >  	reg &= ~LINK_TRAINING_EN;
-> >  	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-> > -- 
-> > 2.20.1
-> > 
+> Remove this exclusion so we can enable ASPM on these links."
+> ...
+
+> And all of this worked before the commit above.
+
+OK, really sorry, I got myself totally confused here, and I need to
+start over from scratch.  Correct me when I go off the rails.
+
+You're running 5.8.11+, and you get ~40 Mbit/s on the Intel I211 NIC.
+Reverting 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to
+PCIe-to-PCI/PCI-X Bridges") gets your bandwidth up to the 900+ Mbit/s
+you expect.
+
+66ff14e59e8a only makes a difference if you have a PCIe-to-PCI/PCI-X
+Bridge (PCI_EXP_TYPE_PCI_BRIDGE) in your system.  But from your lspci
+and pci=earlydump output, I don't see any of those.  The only bridges
+I see are:
+
+[    0.810346] pci 0000:00:01.2: [1022:1483] type 01 Root Port to [bus 01-07]
+[    0.810587] pci 0000:00:03.1: [1022:1483] type 01 Root Port to [bus 08]
+[    0.810587] pci 0000:00:03.2: [1022:1483] type 01 Root Port to [bus 09]
+[    0.810837] pci 0000:00:07.1: [1022:1484] type 01 Root Port to [bus 0a]
+[    0.811587] pci 0000:00:08.1: [1022:1484] type 01 Root Port to [bus 0b]
+[    0.812586] pci 0000:01:00.0: [1022:57ad] type 01 Upstream Port to [bus 02-07]
+[    0.812629] pci 0000:02:03.0: [1022:57a3] type 01 Downstream Port to [bus 03]
+[    0.813584] pci 0000:02:04.0: [1022:57a3] type 01 Downstream Port to [bus 04]
+[    0.814584] pci 0000:02:08.0: [1022:57a4] type 01 Downstream Port to [bus 05]
+[    0.815584] pci 0000:02:09.0: [1022:57a4] type 01 Downstream Port to [bus 06]
+[    0.815584] pci 0000:02:0a.0: [1022:57a4] type 01 Downstream Port to [bus 07]
+
+So I'm lost right off the bat.  You have no PCI_EXP_TYPE_PCI_BRIDGE
+device, so how can 66ff14e59e8a make a difference for you?
+
+Can you add a printk there, e.g.,
+
+        list_for_each_entry(child, &linkbus->devices, bus_list) {
+                if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+  +                     pci_info(child, "PCIe-to-PCI bridge, disabling ASPM\n");
+                        link->aspm_disable = ASPM_STATE_ALL;
+                        break;
+                }
+        }
+
