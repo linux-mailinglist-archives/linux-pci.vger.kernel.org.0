@@ -2,191 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90DB3276F3E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 13:03:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ABBB276F77
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 13:09:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgIXLDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 07:03:50 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37266 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgIXLDt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 07:03:49 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a3so3234671oib.4;
-        Thu, 24 Sep 2020 04:03:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pn+i27Dx8fEtrGXxMazmn/X4tGbmkIv7rNYd8W3GRss=;
-        b=ZQksqPbsOH5r5tthy8DtuUBuyGjBlwdntxObW9ZoDTW5IyrOf1lLyF65tMQOCiwo++
-         dE8CJeRrH2e3RfXn9kMAi6v4s/cKBGaSj0mh01+LsWY9zwxtxmJwr+34LbTVJQtWw5pj
-         2Lx0ht1UsRnSUw1cfUh6dXk4DOm4TyTtW7PtSXXT3wBlMAulMU48NaVocr6MYSyi2c76
-         nx0J7UzFPk96FmxvZ336w0jZA0Kw89C1wGT5R2h6+9ufy4HwF3jFsNpuGO7GATRU4Bty
-         8bTLRctseXcDj2XdHP8wC93TWb7/+QZqnD1YJYQBCZt6XcH7xdhswuBQsC0g4+J99qB4
-         57+Q==
-X-Gm-Message-State: AOAM533jbZW/VelROv/obcar38pD3AoIbOK/5KBwNylZfQ0kZPsDaDq/
-        9m6H1638WVUUfl2CW356Ys5sIvqokDeHEBZN2hI=
-X-Google-Smtp-Source: ABdhPJzDlpEJUA+Oq7l4adHVs9utovmT1K6AS39uuXbGtk7ZnfPxF0dnzHWkg5WoiVh0kzqj9RfrHNDZVceiVU+YuOc=
-X-Received: by 2002:aca:df84:: with SMTP id w126mr2207061oig.103.1600945428210;
- Thu, 24 Sep 2020 04:03:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200818142430.1156547-1-Jonathan.Cameron@huawei.com>
- <20200903133318.000017f5@Huawei.com> <20200918131427.0000080f@Huawei.com>
-In-Reply-To: <20200918131427.0000080f@Huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 24 Sep 2020 13:03:37 +0200
-Message-ID: <CAJZ5v0h_X-zhTJ-9d9cTLTe6yaneqLV7FsLv90NA5UL8eg1ovw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] ACPI: Only create NUMA nodes from entries in SRAT
- or SRAT emulation.
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
+        id S1727626AbgIXLJa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 07:09:30 -0400
+Received: from mail-bn8nam08on2041.outbound.protection.outlook.com ([40.107.100.41]:43489
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726444AbgIXLJ3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Sep 2020 07:09:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XaH05Wjnvw6vkNjudNpLeXLMElDoACnGW/PUDIZgpbrBnb9mvmzKAhKWI3QpgsyrVtBCfEi6VrgzM1zSs81Lly6OzFL/uHA9mFYH6JNp3Me90H2H8ARVz0MsnKIekxrdgHIQHA68scMu/b2O/w/O9cliRARonCKSAV7+K7MWQmkBGVA6nMvoJP7mf7MDzVrGmdmmFZI0MLx+HccGUru8cgLK/vMiylsqG2HWMV1/8l0A/v4xNGEisOIOG4FqJx3c/JO33V75/PgCX67B+cFS3MPhEoiy2hO3MpuSJH4N31/NsgtwSoqwN/8dCPoRtfVwr0YkPePzAol+XI4Izodgjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5/XfW+d2ccySJec181Cd3HFaKQHRrJtIlLvMou+83PI=;
+ b=jGruw0HWEXbi/cmSxQZDo2KuOAPXCPBIGqLv0qTOxcJcKJsAXLDfbjMMVlnScCn+AaXhYYNYhENCsTSK/zxCCbxYNQnc3Q1xW0H5oSsEC1p+HOJytP6hYEHGPb0qhCwThFKsR+T9SeCUfF20WXhAo3PK6IeyYzNBmZOhcYzoxjsqu4gphHOqBFTS5yz5nLz8q9MvX7yeCCeEQoJgvJ0bxhVgvO9riAZl9kIXiu6TBj2bJ8OKRSlHVGeiiZYpQSXVPULfn3bq1fmOE48jy/0SHmspXCZjGDTJW/xYYbDVjOmjMQCDmtMHgnh5uHv/fkKASpr4TRRkAq7KWVWrwZrCIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5/XfW+d2ccySJec181Cd3HFaKQHRrJtIlLvMou+83PI=;
+ b=VzSGm3FUnqYYrpJ0Zmh2kzfthdYA6EVnL0HWrxXFVV+bSXkK85DUEyAiL8IFligLkq9jFHdN16gi8ig8l2GlV21kN8gCMh5D+4+qjyHPjkvBy4bV1Aw8wtH0LqPvoDR85GrxIPOb+D849/mKffylzeQkMGM+1yUgGzxwYiOrlsE=
+Authentication-Results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=synaptics.com;
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
+ by DM6PR03MB4698.namprd03.prod.outlook.com (2603:10b6:5:180::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20; Thu, 24 Sep
+ 2020 11:09:26 +0000
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3391.027; Thu, 24 Sep 2020
+ 11:09:26 +0000
+Date:   Thu, 24 Sep 2020 19:05:14 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-ia64@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>, Ingo Molnar <mingo@redhat.com>,
-        martin@geanix.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH v2 0/5] PCI: dwc: improve msi handling
+Message-ID: <20200924190421.549cb8fc@xhacker.debian>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYAPR01CA0072.jpnprd01.prod.outlook.com
+ (2603:1096:404:2b::36) To DM6PR03MB4555.namprd03.prod.outlook.com
+ (2603:10b6:5:102::17)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0072.jpnprd01.prod.outlook.com (2603:1096:404:2b::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20 via Frontend Transport; Thu, 24 Sep 2020 11:09:14 +0000
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 02a99038-efe4-4220-3b33-08d8607a4c95
+X-MS-TrafficTypeDiagnostic: DM6PR03MB4698:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB46984443010BE657EC425712ED390@DM6PR03MB4698.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HCyi8jhamBFq+Mm2cirI3hJwb318yvz08vVGjxIoVCIbct/GVtsDb/Fu9Qv7jxspAz/ZnOWuxd5YGJ/KdlfxHuZamGQHcSnkpt9oPJ8N4kJuqcBmDPUeB2H9t/n5cdY8y/fkN48mQbQU+GbugiI+MiSdLtS1M/HE897FNtO5aq4VZ2IqYVakG+WzcpPOpGzbp4z5kU1cY2aSz3BD8Le4dEtLDOVoxM8Ki3k8Jpn8aIYOm3CewlbCG4uswYD8WTDHf8eshfGRnngkWi/dEAMW/RPCl3dQqLwe75+c2aTV1Mj8rXS0+0zHMEeylCdzsydvVFy/lIEf0qRITTwvs5hgYZF1GXnO6pUKyJHKUNda7Jl5YINSIxdDl9zZZ9WD0sWe
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(366004)(39860400002)(376002)(136003)(2906002)(86362001)(6506007)(52116002)(7696005)(83380400001)(478600001)(5660300002)(186003)(66556008)(16526019)(956004)(1076003)(26005)(316002)(66476007)(7406005)(66946007)(9686003)(55016002)(8676002)(8936002)(110136005)(4326008)(7416002)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: vcbm7GI5dcr4QE9YADmqEQa8Py0TNqyjX9X7srnnrUhZqQOJxxV/VFNqtRiNOZF1DBuDu6FQ9OwwRdywG987+BDO884jQHpX9yaiFp5blavEZK480MeIv6m+sIoW5JzGE1vUBWYLYLC8je7CWJqJ0ULnN3vrMsGZ8aWjglJXXh9a6tac2fu36vnfn6JhfEWwaePlpIlOK4BHmdNIRgefw+bmXol4DC4f4U2HhnMkELD3CS7P9O6JdwS59faGQz/K7q+2x2Hz7ZiCUmOJGGX1VFJsPZgnlPhAoOHjAse5ZSkypETQQf+laWEEPyXv+4j7+bIzeaZCPss7JQlPRquvJD2/ApFJuF5DkAMnGXnKuI/kD9N0QaxAJPedQhAYpjDlmRw7sCwOTVYYLf2NVegs5OqoFARyrOunT8wdcCDKF6/mWLa/50kJD4rf7Po6Wdmm9rWsvCWfWlaTQ5GQWnve9tw2N37NDqaml0H+0fKh9FAsbpimtiyn/QkP6gcjaOZlnHteN75IrKv3Ga4mRBb/DLB9NaWKm/WE3FsgkNuXKERf3aO5Zi6NB9uzrUBEhePuqFlStxTu1vYfTkxVk7AfRDy8mciHqwf95qPpt182xlyRSWTluuSMDA9HgAO97AzrRMzrafteEVkaXfSepO0OQQ==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02a99038-efe4-4220-3b33-08d8607a4c95
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2020 11:09:26.2009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: COEQ8Non1hWcp9jtTpHBgb+h7ZDwAU4wXYuB78qdJpDJYlorF07b1sHsYCHL4bzJUXxLj73t/UVNbl6c6a3aow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4698
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 18, 2020 at 2:16 PM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 3 Sep 2020 13:33:18 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
->
-> > On Tue, 18 Aug 2020 22:24:24 +0800
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > > This is a trivial rebase and resend of V2 now the merge window has closed.
-> > >
-> > > Here, I will use the term Proximity Domains for the ACPI description and
-> > > NUMA Nodes for the in kernel representation.
-> > >
-> > > ACPI 6.3 included a clarification that only Static Resource Allocation
-> > > Structures in SRAT may define the existence of proximity domains
-> > > (sec 5.2.16). This clarification closed a possible interpretation that
-> > > other parts of ACPI (e.g. DSDT _PXM, NFIT etc) could define new proximity
-> > > domains that were not also mentioned in SRAT structures.
-> > >
-> > > In practice the kernel has never allowed this alternative interpretation as
-> > > such nodes are only partially initialized. This is architecture specific
-> > > but to take an example, on x86 alloc_node_data has not been called.
-> > > Any use of them for node specific allocation, will result in a crash as the
-> > > infrastructure to fallback to a node with memory is not setup.
-> > >
-> > > We ran into a problem when enabling _PXM handling for PCI devices and found
-> > > there were boards out there advertising devices in proximity domains that
-> > > didn't exist [2].
-> > >
-> > > The fix suggested in this series is to replace instances that should not
-> > > 'create' new nodes with pxm_to_node.  This function needs a some additional
-> > > hardening against invalid inputs to make sure it is safe for use in these
-> > > new callers.
-> > >
-> > > Patch 1 Hardens pxm_to_node() against numa_off, and pxm entry being too large.
-> > >
-> > > Patch 2-4 change the various callers not related to SRAT entries so that they
-> > > set this parameter to false, so do not attempt to initialize a new NUMA node
-> > > if the relevant one does not already exist.
-> > >
-> > > Patch 5 is a function rename to reflect change in functionality of
-> > > acpi_map_pxm_to_online_node() as it no longer creates a new map, but just does a
-> > > lookup of existing maps.
-> > >
-> > > Patch 6 covers the one place we do not allow the full flexibility defined
-> > > in the ACPI spec.  For SRAT GIC Interrupt Translation Service (ITS) Affinity
-> > > Structures, on ARM64, the driver currently makes an additional pass of SRAT
-> > > later in the boot than the one used to identify NUMA domains.
-> > > Note, this currently means that an ITS placed in a proximity domain that is
-> > > not defined by another SRAT structure will result in the a crash.
-> > >
-> > > To avoid this crash with minimal changes we do not create new NUMA nodes based
-> > > on this particular entry type.  Any current platform trying to do this will not
-> > > boot, so this is an improvement, if perhaps not a perfect solution.
-> > >
-> > > [1] Note in ACPI Specification 6.3 5.2.16 System Resource Affinity Table (SRAT)
-> > > [2] https://patchwork.kernel.org/patch/10597777/
-> >
-> > Looking for input from ARM (Lorenzo?), X86(not sure) and ACPI(Rafael?) people
-> > on this set. As it also touches NFIT handling perhaps someone who focuses on
-> > that as well. Please feel free to CC additional people who might be interested.
-> >
-> > I'm fairly confident that it should be uncontroversial (famous last words)
-> > and it closes down a problem that lead to issues with seemingly obvious
-> > changes in the past. (The whole PCI _PXM issue on some threadripper platforms).
-> >
-> > Thanks to Bjorn, Hanjun and Barry for feedback on earlier revisions.
-> >
->
-> Hi All,
->
-> Still after reviews on this set. If anyone one would like me to resend please
-> let me know.  Also any corrections to my suggested set of people to review would
-> be welcome.
->
-> +CC Rafael who I've managed to drop from this version which won't have helped.
+Improve the msi code:
+1. Add proper error handling.
+2. Move dw_pcie_msi_init() from each users to designware host to solve
+msi page leakage in resume path.
 
-Thanks!
-
-I've just applied the series for 5.10 (with some minor edits in patch
-changelogs and subjects), so if anyone has any reservations regarding
-it, please let me know ASAP.
-
-In particular, I took the Hanjun's R-by on the last patch to be
-sufficient from the ARM64 perspective.
-
-Cheers!
+Since v1:
+  - add proper error handling patches.
+  - solve the msi page leakage by moving dw_pcie_msi_init() from each
+    users to designware host
 
 
-> > > Thanks to Bjorn Helgaas for review of v1 and Barry Song for internal reviews that
-> > > lead to a slightly different approach for this v2.
-> > >
-> > > Changes since v2.
-> > > * Trivial rebase to v5.9-rc1
-> > > * Collect up tags.
-> > >
-> > > Changes since v1.
-> > > * Use pxm_to_node for what was previously the path using acpi_map_pxm_to_node
-> > >   with create==false. (Barry)
-> > > * Broke patch up into an initial noop stage followed by patches (Bjorn)
-> > >   to update each type of case in which partial creation of NUMA nodes is prevented.
-> > > * Added patch 5 to rename function to reflect change of functionality.
-> > > * Updated descriptions (now mostly in individual patches) inline with Bjorn's comments.
-> > >
-> > > Jonathan Cameron (6):
-> > >   ACPI: Add out of bounds and numa_off protections to pxm_to_node
-> > >   ACPI: Do not create new NUMA domains from ACPI static tables that are
-> > >     not SRAT
-> > >   ACPI: Remove side effect of partly creating a node in
-> > >     acpi_map_pxm_to_online_node
-> > >   ACPI: Rename acpi_map_pxm_to_online_node to pxm_to_online_node
-> > >   ACPI: Remove side effect of partly creating a node in acpi_get_node
-> > >   irq-chip/gic-v3-its: Fix crash if ITS is in a proximity domain without
-> > >     processor or memory
-> > >
-> > >  drivers/acpi/arm64/iort.c        |  2 +-
-> > >  drivers/acpi/nfit/core.c         |  6 ++----
-> > >  drivers/acpi/numa/hmat.c         |  4 ++--
-> > >  drivers/acpi/numa/srat.c         |  4 ++--
-> > >  drivers/iommu/intel/dmar.c       |  2 +-
-> > >  drivers/irqchip/irq-gic-v3-its.c |  7 ++++++-
-> > >  include/linux/acpi.h             | 15 +++++++--------
-> > >  7 files changed, 21 insertions(+), 19 deletions(-)
-> > >
-> >
-> >
-> > _______________________________________________
-> > Linuxarm mailing list
-> > Linuxarm@huawei.com
-> > http://hulk.huawei.com/mailman/listinfo/linuxarm
->
->
+Jisheng Zhang (5):
+  PCI: dwc: Call dma_unmap_page() before freeing the msi page
+  PCI: dwc: Check alloc_page() return value
+  PCI: dwc: Rename dw_pcie_free_msi to dw_pcie_msi_deinit
+  PCI: dwc: Skip PCIE_MSI_INTR0* programming if MSI is disabled
+  PCI: dwc: Move dw_pcie_msi_init() from each users to designware host
+
+ drivers/pci/controller/dwc/pci-dra7xx.c       |  1 +
+ drivers/pci/controller/dwc/pci-exynos.c       |  2 -
+ drivers/pci/controller/dwc/pci-imx6.c         |  3 --
+ drivers/pci/controller/dwc/pci-meson.c        |  8 ----
+ drivers/pci/controller/dwc/pcie-artpec6.c     | 10 -----
+ .../pci/controller/dwc/pcie-designware-host.c | 43 +++++++++++++------
+ .../pci/controller/dwc/pcie-designware-plat.c |  3 --
+ drivers/pci/controller/dwc/pcie-designware.h  |  9 +++-
+ drivers/pci/controller/dwc/pcie-histb.c       |  3 --
+ drivers/pci/controller/dwc/pcie-kirin.c       |  3 --
+ drivers/pci/controller/dwc/pcie-qcom.c        |  3 --
+ drivers/pci/controller/dwc/pcie-spear13xx.c   |  1 -
+ drivers/pci/controller/dwc/pcie-tegra194.c    |  2 -
+ drivers/pci/controller/dwc/pcie-uniphier.c    |  9 +---
+ 14 files changed, 38 insertions(+), 62 deletions(-)
+
+-- 
+2.28.0
+
