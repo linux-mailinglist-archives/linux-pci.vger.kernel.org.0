@@ -2,64 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7056327704B
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 13:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3BD82770A2
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 14:10:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbgIXLu4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 07:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgIXLux (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 07:50:53 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED88BC0613CE
-        for <linux-pci@vger.kernel.org>; Thu, 24 Sep 2020 04:50:52 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7689F295; Thu, 24 Sep 2020 13:50:50 +0200 (CEST)
-Date:   Thu, 24 Sep 2020 13:50:49 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Auger Eric <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH v3 0/6] Add virtio-iommu built-in topology
-Message-ID: <20200924115048.GQ27174@8bytes.org>
-References: <20200821131540.2801801-1-jean-philippe@linaro.org>
- <ab2a1668-e40c-c8f0-b77b-abadeceb4b82@redhat.com>
- <20200924045958-mutt-send-email-mst@kernel.org>
- <20200924092129.GH27174@8bytes.org>
- <20200924053159-mutt-send-email-mst@kernel.org>
- <20200924100255.GM27174@8bytes.org>
- <20200924102953.GD170808@myrica>
+        id S1727690AbgIXMKC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 08:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727478AbgIXMKA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Sep 2020 08:10:00 -0400
+Received: from localhost (lfbn-ncy-1-588-162.w81-51.abo.wanadoo.fr [81.51.203.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5105223787;
+        Thu, 24 Sep 2020 12:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600949399;
+        bh=Q2Pyd20nkzH5RcR2DXUGrcfyCzRdQdQbglCmLc8qUHQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gKRsq62RWwZyvuQF9n7kPBbr0UmaFfJr73oCx2/4Kz08aFhC+e3DMZHcGVDVE6vH2
+         a9a3lQkRM+MEX43LoXWqicdZDOssTQ0BcaAuESV55tke8rRH5sJw87/hS6VlVB2gOL
+         v4MSRtMxJ5FkvmDWAQEK7nQS/9uWn5xc030slumQ=
+Date:   Thu, 24 Sep 2020 14:09:57 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     peterz@infradead.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com,
+        mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org
+Subject: Re: [PATCH v2 1/4] sched/isolation: API to get housekeeping online
+ CPUs
+Message-ID: <20200924120956.GA19346@lenoir>
+References: <20200923181126.223766-1-nitesh@redhat.com>
+ <20200923181126.223766-2-nitesh@redhat.com>
+ <20200924084029.GC1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200924102953.GD170808@myrica>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200924084029.GC1362448@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 12:29:53PM +0200, Jean-Philippe Brucker wrote:
-> It's not possible to use exactly the same code for parsing.
+On Thu, Sep 24, 2020 at 10:40:29AM +0200, peterz@infradead.org wrote:
+> On Wed, Sep 23, 2020 at 02:11:23PM -0400, Nitesh Narayan Lal wrote:
+> > Introduce a new API hk_num_online_cpus(), that can be used to
+> > retrieve the number of online housekeeping CPUs that are meant to handle
+> > managed IRQ jobs.
+> > 
+> > This API is introduced for the drivers that were previously relying only
+> > on num_online_cpus() to determine the number of MSIX vectors to create.
+> > In an RT environment with large isolated but fewer housekeeping CPUs this
+> > was leading to a situation where an attempt to move all of the vectors
+> > corresponding to isolated CPUs to housekeeping CPUs were failing due to
+> > per CPU vector limit.
+> > 
+> > Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> > ---
+> >  include/linux/sched/isolation.h | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+> > index cc9f393e2a70..2e96b626e02e 100644
+> > --- a/include/linux/sched/isolation.h
+> > +++ b/include/linux/sched/isolation.h
+> > @@ -57,4 +57,17 @@ static inline bool housekeeping_cpu(int cpu, enum hk_flags flags)
+> >  	return true;
+> >  }
+> >  
+> > +static inline unsigned int hk_num_online_cpus(void)
+> 
+> This breaks with the established naming of that header.
 
-The access methods can be separate and don't affect the parsing logic.
-
-> The access methods are different (need to deal with port-IO for
-> built-in description on PCI, for example) and more importantly, the
-> structure is different as well. The ACPI table needs nodes for
-> virtio-iommu while the built-in description is contained in the
-> virtio-iommu itself. So the endpoint nodes point to virtio-iommu node
-> on ACPI, while they don't need a pointer on the built-in desc. I kept
-> as much as possible common in structures and implementation, but in
-> the end we still need about 200 unique lines on each side.
-
-Will it hurt the non-ACPI version to have the not-needed pointers anyway
-to keep the parsers the same?
-
-
-	Joerg
+I guess we can make it housekeeping_num_online_cpus() ?
