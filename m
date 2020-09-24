@@ -2,208 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8A222764F4
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 02:15:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83A1C2765C2
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 03:15:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgIXAPA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Sep 2020 20:15:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgIXAPA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Sep 2020 20:15:00 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0968C0613CE
-        for <linux-pci@vger.kernel.org>; Wed, 23 Sep 2020 17:14:59 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id gr14so2069225ejb.1
-        for <linux-pci@vger.kernel.org>; Wed, 23 Sep 2020 17:14:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xMJO2Jcr81Kz6dNqWOWrAXyKpzQnQDDmiKEkvmDCFHs=;
-        b=itAKrwDR7THUW5vb1fATAqPjIcciWQgvUdDbLWtiMxugPCGaqoklMz4l5vL5iAkJS8
-         TAm6XOAvfXme6OwnipDWtroxYetRmJByQlBtYMlNaAf99pCO2Vq31WdORfsn+QO/Rwym
-         tBfvpgbbNZ/I8QgTWxnrjH4GjKENr9B5tjm5bl4u/TlA4yWVEKGyq3/IY1QvifNM6khk
-         b+N8GuRTnmFpILNRR1d/QD0xP3Rm9srxVQDtGdxNZXLK2GvdH4toWwAtVRo5mIEIao9x
-         3K7zAatoM9kx1qA36EcEQ2vQjN++Xnzk94zmQ7JYqZway3QCZ2B4vqnwAnMfOZOClsoG
-         7xoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xMJO2Jcr81Kz6dNqWOWrAXyKpzQnQDDmiKEkvmDCFHs=;
-        b=gTbAyrFOE0/iURkHbYSG88eAxzHw43G5nGNN8D8t9yGFALQRfJaoqGG+4timDv8UNP
-         AW7ZOzzS//YbwCTpv3vXhM9VhDTHizDEdul0ztXxyF176FCiJA5m8nbVxCwQ6cYigOjM
-         fa0rtzsXk4VLWVC/MpcccBo7ULzW/gbABAuK7x4wNHDw7hmD99AO+Rmcstl+v2UxCHjF
-         C7vix19gC1AluxiagM6sfwIQoMqOSGuwtDl/ff5U+rtjzEy6UlRn/eluhP5WGXqfzoyL
-         kSeui324z5jhBykeuIFkjAa0IzAJmUZZ3lMAnmxDzbIS5+QZraV7NcF54iffC+eku5VQ
-         sI4g==
-X-Gm-Message-State: AOAM531dtND7uq0majrYtDFObbzFoqFNHOc7LLOEw8XB21hGB1izZiMm
-        wWZIcplthiLwf5L/TG603iA=
-X-Google-Smtp-Source: ABdhPJyL5fy5D0ORVZQiYxifw7L5iZjWhHi9DLAuojzfSwn2CIZ6UTP1Bh2/AiQU76IDgHpMqLCKUA==
-X-Received: by 2002:a17:906:24d6:: with SMTP id f22mr2017448ejb.85.1600906498290;
-        Wed, 23 Sep 2020 17:14:58 -0700 (PDT)
-Received: from net.saheed (5402C65D.dsl.pool.telekom.hu. [84.2.198.93])
-        by smtp.gmail.com with ESMTPSA id r9sm1026559ejc.102.2020.09.23.17.14.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 17:14:57 -0700 (PDT)
-From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 8/8] PCI/ASPM: Remove struct pcie_link_state.l1ss
-Date:   Thu, 24 Sep 2020 01:15:17 +0200
-Message-Id: <20200923231517.221310-9-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200923231517.221310-1-refactormyself@gmail.com>
-References: <20200923231517.221310-1-refactormyself@gmail.com>
+        id S1726768AbgIXBPN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Sep 2020 21:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbgIXBPM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Sep 2020 21:15:12 -0400
+Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30E1520702;
+        Thu, 24 Sep 2020 01:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600910111;
+        bh=6VO9dZwnsXlsKXsq0Q9aS8CX2S/ibUxCCgYUgCz+1cI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Y508G1MMUD4YhUuUYF9rcawq9VpUqinyJ3AAw/CQOB0okNc9aC3Kp8gKpUWAFePw0
+         mxhh2lJHF54imbrwSgqb55GKqvHNxHih7AL2YwJxpIZYjwmd4KfDaCVaJ9Fgp839Du
+         Io+IKAvRKrXOBLVqPtqpwgOWyTmIgzmr+m0U23Rk=
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200922233333.GA2239404@bjorn-Precision-5520>
+ <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
+Date:   Wed, 23 Sep 2020 21:15:09 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pcie_link_state.l1ss.{up_cap_ptr, dw_cap_ptr} are used to cache the value
-of l1ss_cap_ptr for upstream and downstream respectively. This value can
-now be obtained directly from struct pci_dev, it is no longer useful to
-cache it. So, aspm_calc_l1ss_info() will only be computing the values for
-ctl1 and ctl2. The addresses of these can also be passed in.
+On 9/22/2020 7:44 PM, Kuppuswamy, Sathyanarayanan wrote:
+>> here does the restore happen here?  I.e., what function does this?
+> 
+> DLLSC link down event will remove affected devices/drivers. And link up
+> event
+> will re-create all devices.
+> 
+> on DLLSC link down event
+> ->pciehp_ist()
+>   ->pciehp_handle_presence_or_link_change()
+>     ->pciehp_disable_slot()
+>       ->__pciehp_disable_slot()
+>         ->remove_board()
+>           ->pciehp_unconfigure_device()
+> 
+> on DLLSC link up event
+> ->pciehp_ist()
+>   ->pciehp_handle_presence_or_link_change()
+>     ->pciehp_enable_slot()
+>       ->__pciehp_enable_slot()
+>         ->board_added()
+>           ->pciehp_configure_device()
 
-Then if aspm_calc_l1ss_info() calculates pcie_link_state.l1ss.{ctl1, ctl2}
-which are only used inside pcie_config_aspm_l1ss(). Calling the function
-where it is needed will remove the need to cache the values in the struct.
-
- - Move call to aspm_calc_l1ss_info() from pcie_aspm_cap_init() to
-   pcie_config_aspm_l1ss().
- - Rename aspm_calc_l1ss_info() to aspm_calc_l1ss_ctl_values().
- - Rework the function to take a pci_dev and pointers to ctl1 and ctl2.
- - Change calls to aspm_calc_l1ss_info() into new function.
- - Replace l1ss.{up,dw}_cap_ptr with pci_dev->l1ss_cap_ptr
- - Replace pcie_link_state.l1ss.{ctl1, ctl2} with local variables.
- - No more reference to struct pcie_link_state.l1ss, so remove it.
- - Remove pcie_link_state.l1ss
-
-Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
----
- drivers/pci/pcie/aspm.c | 45 ++++++++++++++---------------------------
- 1 file changed, 15 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index f4fc2d65240c..b9bacdef8c80 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -74,14 +74,6 @@ struct pcie_link_state {
- 	 * has one slot under it, so at most there are 8 functions.
- 	 */
- 	struct aspm_latency acceptable[8];
--
--	/* L1 PM Substate info */
--	struct {
--		u32 up_cap_ptr;		/* L1SS cap ptr in upstream dev */
--		u32 dw_cap_ptr;		/* L1SS cap ptr in downstream dev */
--		u32 ctl1;		/* value to be programmed in ctl1 */
--		u32 ctl2;		/* value to be programmed in ctl2 */
--	} l1ss;
- };
- 
- static int aspm_disabled, aspm_force;
-@@ -444,17 +436,15 @@ static struct pci_dev *pci_function_0(struct pci_bus *linkbus)
- }
- 
- /* Calculate L1.2 PM substate timing parameters */
--static void aspm_calc_l1ss_info(struct pcie_link_state *link)
-+static void aspm_calc_l1ss_ctl_values(struct pci_dev *pdev,
-+					u32 *ctl1, u32 *ctl2)
- {
-+	struct pcie_link_state *link = pdev->link_state;
- 	u32 val1, val2, scale1, scale2;
- 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
- 	struct pci_dev *dw_pdev = link->downstream;
- 	struct pci_dev *up_pdev = link->pdev;
- 
--	link->l1ss.up_cap_ptr = up_pdev->l1ss_cap_ptr;
--	link->l1ss.dw_cap_ptr = dw_pdev->l1ss_cap_ptr;
--	link->l1ss.ctl1 = link->l1ss.ctl2 = 0;
--
- 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
- 		return;
- 
-@@ -471,10 +461,10 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link)
- 
- 	if (calc_l1ss_pwron(up_pdev, scale1, val1) >
- 	    calc_l1ss_pwron(dw_pdev, scale2, val2)) {
--		link->l1ss.ctl2 |= scale1 | (val1 << 3);
-+		*ctl2 |= scale1 | (val1 << 3);
- 		t_power_on = calc_l1ss_pwron(up_pdev, scale1, val1);
- 	} else {
--		link->l1ss.ctl2 |= scale2 | (val2 << 3);
-+		*ctl2 |= scale2 | (val2 << 3);
- 		t_power_on = calc_l1ss_pwron(dw_pdev, scale2, val2);
- 	}
- 
-@@ -490,7 +480,7 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link)
- 	 */
- 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
- 	encode_l12_threshold(l1_2_threshold, &scale, &value);
--	link->l1ss.ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
-+	*ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
- }
- 
- static void aspm_support(struct pci_dev *pdev)
-@@ -580,9 +570,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	if (up_l1ss_ctl1 & dw_l1ss_ctl1 & PCI_L1SS_CTL1_PCIPM_L1_2)
- 		link->aspm_enabled |= ASPM_STATE_L1_2_PCIPM;
- 
--	if (link->aspm_support & ASPM_STATE_L1SS)
--		aspm_calc_l1ss_info(link);
--
- 	/* Save default state */
- 	link->aspm_default = link->aspm_enabled;
- 
-@@ -625,12 +612,13 @@ static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
- /* Configure the ASPM L1 substates */
- static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- {
--	u32 val, enable_req;
-+	u32 val, enable_req, ctl1, ctl2;
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
--	u32 up_cap_ptr = link->l1ss.up_cap_ptr;
--	u32 dw_cap_ptr = link->l1ss.dw_cap_ptr;
-+	int up_cap_ptr = parent->l1ss_cap_ptr;
-+	int dw_cap_ptr = child->l1ss_cap_ptr;
- 
- 	enable_req = (link->aspm_enabled ^ state) & state;
-+	aspm_calc_l1ss_ctl_values(parent, &ctl1, &ctl2);
- 
- 	/*
- 	 * Here are the rules specified in the PCIe spec for enabling L1SS:
-@@ -665,24 +653,21 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 
- 		/* Program T_POWER_ON times in both ports */
- 		pci_write_config_dword(parent, up_cap_ptr + PCI_L1SS_CTL2,
--				       link->l1ss.ctl2);
-+								ctl2);
- 		pci_write_config_dword(child, dw_cap_ptr + PCI_L1SS_CTL2,
--				       link->l1ss.ctl2);
-+								ctl2);
- 
- 		/* Program Common_Mode_Restore_Time in upstream device */
- 		pci_clear_and_set_dword(parent, up_cap_ptr + PCI_L1SS_CTL1,
--					PCI_L1SS_CTL1_CM_RESTORE_TIME,
--					link->l1ss.ctl1);
-+					PCI_L1SS_CTL1_CM_RESTORE_TIME, ctl1);
- 
- 		/* Program LTR_L1.2_THRESHOLD time in both ports */
- 		pci_clear_and_set_dword(parent,	up_cap_ptr + PCI_L1SS_CTL1,
- 					PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
--					PCI_L1SS_CTL1_LTR_L12_TH_SCALE,
--					link->l1ss.ctl1);
-+					PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
- 		pci_clear_and_set_dword(child, dw_cap_ptr + PCI_L1SS_CTL1,
- 					PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
--					PCI_L1SS_CTL1_LTR_L12_TH_SCALE,
--					link->l1ss.ctl1);
-+					PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
- 	}
- 
- 	val = 0;
--- 
-2.18.4
-
+AFAIK, DLLSC is a requirement not optional. Why is this not supported by
+non-hotplug ports?
