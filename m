@@ -2,209 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69CDB2770EC
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 14:26:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3719027713B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 14:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbgIXM0j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 08:26:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35822 "EHLO
+        id S1727718AbgIXMld (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 08:41:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49261 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727553AbgIXM0j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 08:26:39 -0400
+        by vger.kernel.org with ESMTP id S1727570AbgIXMld (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Sep 2020 08:41:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600950396;
+        s=mimecast20190719; t=1600951291;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=GFwnR9UycNy1oDIUGAN8i4fEjDMSf68GZffXYsCYHqE=;
-        b=JAkLpB0iOsMD97DS3Bkt6+mOrsntsVPgPHWIrAp+XM758s80GDccDrM4/01A92cgjzghkl
-        hlJjy3FM0VZv3hquforuWadZuE8mzENTz98zc3PuxpxaKypQjJ+gY39ogdVhRtGGP0y7sG
-        OW27p4zmfMX70QG3RR0gp251LDWevMg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-596-ykcPeZN1Oc2VwDfhZWc7wA-1; Thu, 24 Sep 2020 08:26:35 -0400
-X-MC-Unique: ykcPeZN1Oc2VwDfhZWc7wA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A30F61074646;
-        Thu, 24 Sep 2020 12:26:32 +0000 (UTC)
-Received: from [10.10.115.120] (ovpn-115-120.rdu2.redhat.com [10.10.115.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BEC8D55760;
-        Thu, 24 Sep 2020 12:26:24 +0000 (UTC)
-Subject: Re: [PATCH v2 1/4] sched/isolation: API to get housekeeping online
- CPUs
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        mtosatti@redhat.com, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-References: <20200923181126.223766-1-nitesh@redhat.com>
- <20200923181126.223766-2-nitesh@redhat.com> <20200924121150.GB19346@lenoir>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <ce5b0ace-518f-e17c-38dc-083fccedbc9b@redhat.com>
-Date:   Thu, 24 Sep 2020 08:26:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+         in-reply-to:in-reply-to:references:references;
+        bh=aNSiF3HKmN7T9wLSIPvLbtJzDyySplPmYpNDTcjCSdE=;
+        b=Iq4Nc56+qxPCtsc9Np16NHTK8Qq+B6BBTv8y4Fakr/nrlgk73LWeOgxj2eHtDKBIol6Dze
+        7iXi4SaKHli28MQ88/itFneRQqYvPY6h44W6nwc9Ej9nMRB+so/pZ84tAe2l1bVxQ3XE1l
+        KuJXpb6dXkmMg4x4IWEziaZnKdD659Y=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-152-T0G3EO7NN3qANHK6jKM01A-1; Thu, 24 Sep 2020 08:41:28 -0400
+X-MC-Unique: T0G3EO7NN3qANHK6jKM01A-1
+Received: by mail-wr1-f70.google.com with SMTP id w7so1197635wrp.2
+        for <linux-pci@vger.kernel.org>; Thu, 24 Sep 2020 05:41:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aNSiF3HKmN7T9wLSIPvLbtJzDyySplPmYpNDTcjCSdE=;
+        b=HvLBHmZVXbuPa/tMQqh41aRnBm1Ql2t8NPxY2ior88vyS1CqxcR+/6hvqn2AlWxCG2
+         4EQSIjYBxoF8KXxT9dcoBru0TeoKT1zueYcZRPmdAIO8z9E4trrYj/6W8lkf1unvxPV7
+         INL8dacpoljcw1tV/qNEZiZ4y0F/Q5FQkjr8LSrenFGRbvyoLs0qJjH78L5ttNX/yW/U
+         XSuSodlFdJddESmaP0LxfhtLJT1whNGEIRhpGKUBsV8NNb7/qTSejM1AEacGTjTv9YE0
+         SPeW0qJaIxNxoiQpDSD+JG9v8f9vsr2D0QOEY0S9zvNyybnSfmWmjPf+AKpM5ouuUvZU
+         HXXw==
+X-Gm-Message-State: AOAM530TE4vJlfoNrahHsbZyY04QBflOTVn/Wod8UvioKFsGKmPmYk6D
+        7I67tKLnh8dDKsmaUYBQGT2IBeVuR+rTjmKKfn2R7MgJSqZYMyHSVYNQTn9teDZNBLalFX4NML+
+        TKrpcwgssDtVDqwqmUSL7
+X-Received: by 2002:adf:e4c5:: with SMTP id v5mr4746940wrm.320.1600951287613;
+        Thu, 24 Sep 2020 05:41:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyEXHb/sRDwgsZMDckSultGUskNu3nU9TGPgRovxnxIBYnpHIZ20/F1hEMcaTVWh90tOc5wHQ==
+X-Received: by 2002:adf:e4c5:: with SMTP id v5mr4746933wrm.320.1600951287425;
+        Thu, 24 Sep 2020 05:41:27 -0700 (PDT)
+Received: from redhat.com (bzq-79-179-71-128.red.bezeqint.net. [79.179.71.128])
+        by smtp.gmail.com with ESMTPSA id z11sm3575767wru.88.2020.09.24.05.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2020 05:41:26 -0700 (PDT)
+Date:   Thu, 24 Sep 2020 08:41:21 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, jasowang@redhat.com, kevin.tian@intel.com,
+        sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH v3 0/6] Add virtio-iommu built-in topology
+Message-ID: <20200924083918-mutt-send-email-mst@kernel.org>
+References: <20200821131540.2801801-1-jean-philippe@linaro.org>
+ <ab2a1668-e40c-c8f0-b77b-abadeceb4b82@redhat.com>
+ <20200924045958-mutt-send-email-mst@kernel.org>
+ <20200924092129.GH27174@8bytes.org>
+ <20200924053159-mutt-send-email-mst@kernel.org>
+ <20200924100255.GM27174@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200924121150.GB19346@lenoir>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="72MaNEbag39Db2lEW8tcVt79cQG44k8G1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200924100255.GM27174@8bytes.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---72MaNEbag39Db2lEW8tcVt79cQG44k8G1
-Content-Type: multipart/mixed; boundary="GoWiIk5Gfq1KfDGPvs02C2lhYgrQgjSJI"
+On Thu, Sep 24, 2020 at 12:02:55PM +0200, Joerg Roedel wrote:
+> On Thu, Sep 24, 2020 at 05:38:13AM -0400, Michael S. Tsirkin wrote:
+> > On Thu, Sep 24, 2020 at 11:21:29AM +0200, Joerg Roedel wrote:
+> > > On Thu, Sep 24, 2020 at 05:00:35AM -0400, Michael S. Tsirkin wrote:
+> > > > OK so this looks good. Can you pls repost with the minor tweak
+> > > > suggested and all acks included, and I will queue this?
+> > > 
+> > > My NACK still stands, as long as a few questions are open:
+> > > 
+> > > 	1) The format used here will be the same as in the ACPI table? I
+> > > 	   think the answer to this questions must be Yes, so this leads
+> > > 	   to the real question:
+> > 
+> > I am not sure it's a must.
+> 
+> It is, having only one parser for the ACPI and MMIO descriptions was one
+> of the selling points for MMIO in past discussions and I think it makes
+> sense to keep them in sync.
+> 
+> > We can always tweak the parser if there are slight differences
+> > between ACPI and virtio formats.
+> 
+> There is no guarantee that there only need to be "tweaks" until the
+> ACPI table format is stablized.
+> 
+> Regards,
+> 
+> 	Joerg
 
---GoWiIk5Gfq1KfDGPvs02C2lhYgrQgjSJI
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+But this has nothing to do with Linux.  There is also no guarantee that
+the two committees will decide to use exactly the same format. Once one
+of them sets the format in stone, we can add support for that format to
+linux. If another one is playing nice and uses the same format, we can
+use the same parsers. If it doesn't linux will have to follow suit.
 
-
-On 9/24/20 8:11 AM, Frederic Weisbecker wrote:
-> On Wed, Sep 23, 2020 at 02:11:23PM -0400, Nitesh Narayan Lal wrote:
->> Introduce a new API hk_num_online_cpus(), that can be used to
->> retrieve the number of online housekeeping CPUs that are meant to handle
->> managed IRQ jobs.
->>
->> This API is introduced for the drivers that were previously relying only
->> on num_online_cpus() to determine the number of MSIX vectors to create.
->> In an RT environment with large isolated but fewer housekeeping CPUs thi=
-s
->> was leading to a situation where an attempt to move all of the vectors
->> corresponding to isolated CPUs to housekeeping CPUs were failing due to
->> per CPU vector limit.
->>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  include/linux/sched/isolation.h | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isola=
-tion.h
->> index cc9f393e2a70..2e96b626e02e 100644
->> --- a/include/linux/sched/isolation.h
->> +++ b/include/linux/sched/isolation.h
->> @@ -57,4 +57,17 @@ static inline bool housekeeping_cpu(int cpu, enum hk_=
-flags flags)
->>  =09return true;
->>  }
->> =20
->> +static inline unsigned int hk_num_online_cpus(void)
->> +{
->> +#ifdef CONFIG_CPU_ISOLATION
->> +=09const struct cpumask *hk_mask;
->> +
->> +=09if (static_branch_unlikely(&housekeeping_overridden)) {
->> +=09=09hk_mask =3D housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-> HK_FLAG_MANAGED_IRQ should be pass as an argument to the function:
->
-> housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ) because it's
-> completely arbitrary otherwise.
-
-
-Yeap that is more sensible, I will do that.
-Do you have any other concerns/suggestions on any other patch?
-
->
->> +=09=09return cpumask_weight(hk_mask);
->> +=09}
->> +#endif
->> +=09return cpumask_weight(cpu_online_mask);
->> +}
->> +
->>  #endif /* _LINUX_SCHED_ISOLATION_H */
->> --=20
->> 2.18.2
->>
---=20
-Thanks
-Nitesh
-
-
---GoWiIk5Gfq1KfDGPvs02C2lhYgrQgjSJI--
-
---72MaNEbag39Db2lEW8tcVt79cQG44k8G1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9skGoACgkQo4ZA3AYy
-ozlwQQ/8D0DZIkSC1XngXpOpenq1bY11v3CvrsnfLsLUmknHDo4xrCGEULJ9K65b
-9fpkPwThDaGzhGqSo8jmQI/AprBs8y6B6ySOj2iSjvdZLxol2VEGKCxDoh+R8FeT
-HD6kAeV7FJhHeGNrmNHGHNXYu1yP6l5kmik0luws32bQeZc8+o8uKwG6fsGqoVSz
-A1N/p1+gT2ZpZDfLo5Nn11cv3NRxDlhcaQkHVnlTU2hJeH3WL1uTCx0TCbxQ4mo2
-4hExQACOrfP6H6qJUP2g0iQfm+ylUB6mIa2i6WtDoFf0ZLfxE8NqRi2gxTY5k9QY
-WF3R+JzVggkMUVJ731R8zRVUp9/WRTGkf/VPapLhZR+UWUZbAks6g1NmmyZ4Gg8U
-UDJ4u3PR5Bjj55Bc62CqtdL9lW4eF65uJq8Yd4Q2L4mefsXlh9GaeOFjUxrwPehe
-NBmahDZREbB20ZFkzOICkXkX2KcrwtYFIgw8nrtZas6FMJy5MeihnAlkRf5To+4t
-TYSPCpabewRyAvDtfKTls4HWXWDn5CnwqjXRuJr1buHhUaJc3K2AwKRAF4se9sem
-6T26tmiFVE7ZLBRznT848oYCv1dTVg+KNtrzTSiDiDdQlIXs92tIAVGq/dmU0omF
-IrQ+vGJhYD8qZA/lC5HldoYjqSe2bVgdfwickj0jVFVhZVBquGA=
-=DZW2
------END PGP SIGNATURE-----
-
---72MaNEbag39Db2lEW8tcVt79cQG44k8G1--
+-- 
+MST
 
