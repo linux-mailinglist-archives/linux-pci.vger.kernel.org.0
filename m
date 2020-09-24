@@ -2,122 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2D982771CE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 15:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65A43277227
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Sep 2020 15:28:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgIXNHl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Sep 2020 09:07:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:45824 "EHLO foss.arm.com"
+        id S1727880AbgIXN2j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Sep 2020 09:28:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727704AbgIXNHl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Sep 2020 09:07:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F31212FC;
-        Thu, 24 Sep 2020 06:07:41 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E4223F718;
-        Thu, 24 Sep 2020 06:07:38 -0700 (PDT)
-Date:   Thu, 24 Sep 2020 14:07:34 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, bhelgaas@google.com, shawnguo@kernel.org,
-        kishon@ti.com, leoyang.li@nxp.com, gustavo.pimentel@synopsys.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org, andrew.murray@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv8 10/12] arm64: dts: layerscape: Add PCIe EP node for
- ls1088a
-Message-ID: <20200924130734.GA17981@e121166-lin.cambridge.arm.com>
-References: <20200918080024.13639-1-Zhiqiang.Hou@nxp.com>
- <20200918080024.13639-11-Zhiqiang.Hou@nxp.com>
+        id S1727809AbgIXN2i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Sep 2020 09:28:38 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C0692344C;
+        Thu, 24 Sep 2020 13:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600954118;
+        bh=1IipRSbhWLSRfEw8Jk9nFBwa6cgG1ZliWjzUE9q9GdM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SmNnlkJH67GdcpPmbO80TyoWT6ckht84GU4BeFncVDy/kI1IYAWPQovrTTWtlMqqN
+         nMCz1LtJehPQSH5Grar5eWubFjzMnmvb9BsksldOdrfhnqd2czCEfLxU8+yAGDYicM
+         YRc7cEV7wI6PnnSTndsOr5dRta0mJH5jH44CqfRE=
+Received: by mail-ot1-f45.google.com with SMTP id 60so3158059otw.3;
+        Thu, 24 Sep 2020 06:28:38 -0700 (PDT)
+X-Gm-Message-State: AOAM532eWqgZP2ivrWYazz60JgoqZkqq9kliSlYq4hzgKWBvBhM6Kpkh
+        VCluTkIgGsHJzp2eD4UUQDWaAhRAXYZqzVBQvg==
+X-Google-Smtp-Source: ABdhPJx333FQr3fLvubWM0pHrSJVAM9Gmc+ieB7uq6OQJ2CyoCs/GkXZ7hQ9ksO9nsUuKwj1htuQiWhki5Rf/ma9YqI=
+X-Received: by 2002:a9d:6ada:: with SMTP id m26mr3180859otq.192.1600954117510;
+ Thu, 24 Sep 2020 06:28:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200918080024.13639-11-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200923142607.10c89bd2@xhacker.debian> <CAMj1kXEyQGEu7=-kbDuTDW9_xXkmns1HM2dQMrLn=XL9W88vJw@mail.gmail.com>
+In-Reply-To: <CAMj1kXEyQGEu7=-kbDuTDW9_xXkmns1HM2dQMrLn=XL9W88vJw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 24 Sep 2020 07:28:25 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLkQ_NqrDDJZkm5ef-mf4_Vh0sW1DqQjitz-GzGBNbWhA@mail.gmail.com>
+Message-ID: <CAL_JsqLkQ_NqrDDJZkm5ef-mf4_Vh0sW1DqQjitz-GzGBNbWhA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: Move allocate and map page for msi out of dw_pcie_msi_init()
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 18, 2020 at 04:00:22PM +0800, Zhiqiang Hou wrote:
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
-> 
-> Add PCIe EP node for ls1088a to support EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> ---
-> V8:
->  - s/pcie_ep/pcie-ep.
-> 
->  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
+On Thu, Sep 24, 2020 at 5:00 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Wed, 23 Sep 2020 at 08:28, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+> >
+> > Currently, dw_pcie_msi_init() allocates and maps page for msi, then
+> > program the PCIE_MSI_ADDR_LO and PCIE_MSI_ADDR_HI. The Root Complex
+> > may lose power during suspend-to-RAM, so when we resume, we want to
+> > redo the latter but not the former. If designware based driver (for
+> > example, pcie-tegra194.c) calls dw_pcie_msi_init() in resume path, the
+> > previous msi page will be leaked.
+> >
+> > Move the allocate and map msi page from dw_pcie_msi_init() to
+> > dw_pcie_host_init() to fix this problem.
+> >
+> > Fixes: 56e15a238d92 ("PCI: tegra: Add Tegra194 PCIe support")
+> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+>
+> Why do you allocate a page for this in the first place? Isn't
+> PCIE_MSI_ADDR_HI:PCIE_MSI_ADDR_LO simply a magic DMA address that
+> never gets forwarded across to the CPU side of the host bridge, and
+> triggers a SPI instead, which gets handled by reading
+> PCIE_MSI_INTR0_STATUS ?
 
-Dropped this patch. dts files updates should be sent via arm-soc along
-with platform support.
+My question too after digging into this some more. I've asked the
+question on the thread that further complicated all this changing from
+virt_to_phys() to dma_map_page()[1].
 
-Thanks,
-Lorenzo
+> Couldn't you just map the zero page instead?
 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 169f4742ae3b..f21dd143ab6d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -499,6 +499,17 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie-ep@3400000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03400000 0x0 0x00100000
-> +			       0x20 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <24>;
-> +			num-ob-windows = <128>;
-> +			max-functions = /bits/ 8 <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3500000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-> @@ -525,6 +536,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie-ep@3500000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03500000 0x0 0x00100000
-> +			       0x28 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3600000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-> @@ -551,6 +572,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie-ep@3600000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03600000 0x0 0x00100000
-> +			       0x30 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		smmu: iommu@5000000 {
->  			compatible = "arm,mmu-500";
->  			reg = <0 0x5000000 0 0x800000>;
-> -- 
-> 2.17.1
-> 
+Why a page even? You could use PCIE_MSI_ADDR_LO address itself even.
+Or just an address in the driver data which is what some other drivers
+do.
+
+Rob
+
+[1] https://lore.kernel.org/linux-pci/20200923231846.GA1499246@bogus/
