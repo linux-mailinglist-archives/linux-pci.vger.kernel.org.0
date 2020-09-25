@@ -2,247 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13E012793FF
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Sep 2020 00:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E16E127942E
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Sep 2020 00:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgIYWPo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 18:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgIYWPn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Sep 2020 18:15:43 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4C820809;
-        Fri, 25 Sep 2020 22:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601072143;
-        bh=2hOV9JcU0J5teRkwVCkPUAdtrzsWK+/gvtfXSFG9gKI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RcIyO0tBv5W8bvTSwQuG+AmEbMYPIgticU24c5R6clNFnWEZOUEmotZ6v0c3OJd87
-         c0fqGPjVWEpqUBqVonwUPPNetdlWFxKZrfmKencCLDtHrklWXCxrO+lmwTUXhfx0Hs
-         xQWr1ExTU3yA4Sg4BSZxvNFHoI2cIvhma1c71mSQ=
-Date:   Fri, 25 Sep 2020 17:15:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <seanvk.dev@oregontracks.org>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: Re: [PATCH v6 06/10] PCI/RCEC: Add pcie_link_rcec() to associate
- RCiEPs
-Message-ID: <20200925221540.GA2460947@bjorn-Precision-5520>
+        id S1727599AbgIYW1F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 18:27:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbgIYW1F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 18:27:05 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C49C0613CE
+        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 15:27:05 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o21so2941041qtp.2
+        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 15:27:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2AdFulKFxP+iqq8Kp0DDRTBioLEGOowxYYyiL0nYjyw=;
+        b=TAdCZ38MB2FgZYVUPqRfBxPqlFGXhiY4V/yq3AtP1e/kVtfEvZq6YzUPgRGXqZsI8g
+         BKSIFXaBh0dvti3K+8tZO8sEbW/SBN5X11O77c+F3LqsMQfVQg+MbGzC4er6zJMUG1lo
+         SEMArYNUP2yz0ReIVqWvlSK0bbnGW8cjFn2r+yy9BkdAvLOeKSQ5TLmDbsmTr+2d+C9h
+         H2gKAMvSOckKSvq0eT8Nbagefy3OnYhb7lr1ETQT/DtzRn9MlNoe0DyTh2B7TLP3F2LV
+         XJJyyb4k4ZTTuePQDUGOrgaNUTAegcxsWnsuvqdjTTv0oRaLHyRlTYbYQchMEcXTBR3e
+         GOxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2AdFulKFxP+iqq8Kp0DDRTBioLEGOowxYYyiL0nYjyw=;
+        b=OltGib2k1eWGPVDpuy0OA6EbfVSQ/72PFkVXirwfl9WLpkRycst0UXKo8XHD6M/9wP
+         2y/vGturbMqVCM7M1Hs3MB3uCTLroqjQV+VGTKWi6GB877478Wq5waTVBpcD9jIB/Amh
+         FJchIFo2TGHPhHC0kWCDFJd0gY+d25CUQMcxfeqfx5dbPU20YJGxrDbgKrsV45U+jwe+
+         TI5Xj5pPa2ZV/Tv0kXyS6VQwLoXcT2cQ3lzlBoYtJ/nZbTVcs81iR+lpPMdTowK56wzf
+         osuqe4k5a+L5rogv61h+F0f5ZQEY7B000gbCr+AZa14K7dOrAsJ8TumD+gutd6lfZBmc
+         +hjw==
+X-Gm-Message-State: AOAM5332MWuZoCvGrAyKFMgiiPq9ELjKAp8Z6ua3Lyk6w3c2jQJBGbnT
+        iF/UOFojLjebAyyvWxovRnxF0Q89B0SmSQyPx8U=
+X-Google-Smtp-Source: ABdhPJzwg2zZEX79/hhwv6aYSDZHVnQZ2qVXJYLsfXCjoBvCRcWf9FfRLCKxZDB94R1vxxxQZjtNNjaozH9cTNRSZaE=
+X-Received: by 2002:ac8:7c90:: with SMTP id y16mr1927317qtv.45.1601072824502;
+ Fri, 25 Sep 2020 15:27:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200922213859.108826-7-seanvk.dev@oregontracks.org>
+References: <CAA85sZvrPApeAYPVSYdVuKnp84xCpLBLf+f32e=R9tdPC0dvOw@mail.gmail.com>
+ <20200925154936.GA2438758@bjorn-Precision-5520>
+In-Reply-To: <20200925154936.GA2438758@bjorn-Precision-5520>
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+Date:   Sat, 26 Sep 2020 00:26:53 +0200
+Message-ID: <CAA85sZsRgEEQ9bRqvMKTkGW4QhVp+cqNbw+VmRZQHfpy==F0+Q@mail.gmail.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 02:38:55PM -0700, Sean V Kelley wrote:
-> From: Sean V Kelley <sean.v.kelley@intel.com>
-> 
-> A Root Complex Event Collector provides support for
-> terminating error and PME messages from associated RCiEPs.
-> 
-> Make use of the RCEC Endpoint Association Extended Capability
-> to identify associated RCiEPs. Link the associated RCiEPs as
-> the RCECs are enumerated.
-> 
-> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> ---
->  drivers/pci/pci.h              |  2 +
->  drivers/pci/pcie/portdrv_pci.c |  3 ++
->  drivers/pci/pcie/rcec.c        | 96 ++++++++++++++++++++++++++++++++++
->  include/linux/pci.h            |  1 +
->  4 files changed, 102 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 7b547fc3679a..ddb5872466fb 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -474,9 +474,11 @@ static inline void pci_dpc_init(struct pci_dev *pdev) {}
->  #ifdef CONFIG_PCIEPORTBUS
->  void pci_rcec_init(struct pci_dev *dev);
->  void pci_rcec_exit(struct pci_dev *dev);
-> +void pcie_link_rcec(struct pci_dev *rcec);
->  #else
->  static inline void pci_rcec_init(struct pci_dev *dev) {}
->  static inline void pci_rcec_exit(struct pci_dev *dev) {}
-> +static inline void pcie_link_rcec(struct pci_dev *rcec) {}
->  #endif
->  
->  #ifdef CONFIG_PCI_ATS
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 4d880679b9b1..dbeb0155c2c3 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -110,6 +110,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->  		return -ENODEV;
->  
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_link_rcec(dev);
+On Fri, Sep 25, 2020 at 5:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc linux-pci, others again]
+>
+> On Fri, Sep 25, 2020 at 03:54:11PM +0200, Ian Kumlien wrote:
+> > On Fri, Sep 25, 2020 at 3:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Fri, Sep 25, 2020 at 12:18:50PM +0200, Ian Kumlien wrote:
+> > > > So.......
+> > > > [    0.815843] pci 0000:04:00.0: L1 latency exceeded - path: 1000 - max: 64000
+> > > > [    0.815843] pci 0000:00:01.2: Upstream device - 32000
+> > > > [    0.815844] pci 0000:01:00.0: Downstream device - 32000
+> > >
+> > > Wait a minute.  I've been looking at *03:00.0*, not 04:00.0.  Based
+> > > on your bugzilla, here's the path:
+> >
+> > Correct, or you could do it like this:
+> > 00:01.2/01:00.0/02:03.0/03:00.0 Ethernet controller: Intel Corporation
+> > I211 Gigabit Network Connection (rev 03)
+> >
+> > >   00:01.2 Root Port              to [bus 01-07]
+> > >   01:00.0 Switch Upstream Port   to [bus 02-07]
+> > >   02:03.0 Switch Downstream Port to [bus 03]
+> > >   03:00.0 Endpoint (Intel I211 NIC)
+> > >
+> > > Your system does also have an 04:00.0 here:
+> > >
+> > >   00:01.2 Root Port              to [bus 01-07]
+> > >   01:00.0 Switch Upstream Port   to [bus 02-07]
+> > >   02:04.0 Switch Downstream Port to [bus 04]
+> > >   04:00.0 Endpoint (Realtek 816e)
+> > >   04:00.1 Endpoint (Realtek RTL8111/8168/8411 NIC)
+> > >   04:00.2 Endpoint (Realtek 816a)
+> > >   04:00.4 Endpoint (Realtek 816d EHCI USB)
+> > >   04:00.7 Endpoint (Realtek 816c IPMI)
+> > >
+> > > Which NIC is the problem?
+> >
+> > The intel one - so the side effect of the realtek nic is that it fixes
+> > the intel nics issues.
+> >
+> > It would be that the intel nic actually has a bug with L1 (and it
+> > would seem that it's to kind with latencies) so it actually has a
+> > smaller buffer...
+> >
+> > And afair, the realtek has a larger buffer, since it behaves better
+> > with L1 enabled.
+> >
+> > Either way, it's a fix that's needed ;)
+>
+> OK, what specifically is the fix that's needed?  The L0s change seems
+> like a "this looks wrong" thing that doesn't actually affect your
+> situation, so let's skip that for now.
 
-Nice solution.  One day we'll get rid of pcie_portdrv_probe() and
-integrate this stuff better into the PCI core, and we'll have to
-figure out a little different solution then.  But we'll be smarter
-then so it should be possible :)
+L1 latency calculation is not good enough, it assumes that *any*
+link is the highest latency link - which is incorrect.
 
->  	status = pcie_port_device_register(dev);
->  	if (status)
->  		return status;
-> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-> index 519ae086ff41..5630480a6659 100644
-> --- a/drivers/pci/pcie/rcec.c
-> +++ b/drivers/pci/pcie/rcec.c
-> @@ -17,6 +17,102 @@
->  
->  #include "../pci.h"
->  
-> +struct walk_rcec_data {
-> +	struct pci_dev *rcec;
-> +	int (*user_callback)(struct pci_dev *dev, void *data);
-> +	void *user_data;
-> +};
-> +
-> +static bool rcec_assoc_rciep(struct pci_dev *rcec, struct pci_dev *rciep)
-> +{
-> +	unsigned long bitmap = rcec->rcec_ext->bitmap;
-> +	unsigned int devn;
-> +
-> +	/* An RCiEP found on bus in range */
-> +	if (rcec->bus->number != rciep->bus->number)
-> +		return true;
-> +
-> +	/* Same bus, so check bitmap */
-> +	for_each_set_bit(devn, &bitmap, 32)
-> +		if (devn == rciep->devfn)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
-> +static int link_rcec_helper(struct pci_dev *dev, void *data)
-> +{
-> +	struct walk_rcec_data *rcec_data = data;
-> +	struct pci_dev *rcec = rcec_data->rcec;
-> +
-> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) && rcec_assoc_rciep(rcec, dev)) {
-> +		dev->rcec = rcec;
-> +		pci_dbg(dev, "PME & error events reported via %s\n", pci_name(rcec));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void walk_rcec(int (*cb)(struct pci_dev *dev, void *data), void *userdata)
-> +{
-> +	struct walk_rcec_data *rcec_data = userdata;
-> +	struct pci_dev *rcec = rcec_data->rcec;
-> +	u8 nextbusn, lastbusn;
-> +	struct pci_bus *bus;
-> +	unsigned int bnr;
-> +
-> +	if (!rcec->rcec_cap)
-> +		return;
-> +
-> +	/* Walk own bus for bitmap based association */
-> +	pci_walk_bus(rcec->bus, cb, rcec_data);
-> +
-> +	/* Check whether RCEC BUSN register is present */
-> +	if (rcec->rcec_ext->ver < PCI_RCEC_BUSN_REG_VER)
-> +		return;
-> +
-> +	nextbusn = rcec->rcec_ext->nextbusn;
-> +	lastbusn = rcec->rcec_ext->lastbusn;
-> +
-> +	/* All RCiEP devices are on the same bus as the RCEC */
-> +	if (nextbusn == 0xff && lastbusn == 0x00)
-> +		return;
-> +
-> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
-> +		/* No association indicated (PCIe 5.0-1, 7.9.10.3) */
-> +		if (bnr == rcec->bus->number)
-> +			continue;
-> +
-> +		bus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
-> +		if (!bus)
-> +			continue;
-> +
-> +		/* Find RCiEP devices on the given bus ranges */
-> +		pci_walk_bus(bus, cb, rcec_data);
-> +	}
-> +}
-> +
-> +/**
-> + * pcie_link_rcec - Link RCiEP devices associating with RCEC.
-> + * @rcec     RCEC whose RCiEP devices should be linked.
-> + *
-> + * Link the given RCEC to each RCiEP device found.
-> + *
-> + */
-> +void pcie_link_rcec(struct pci_dev *rcec)
-> +{
-> +	struct walk_rcec_data rcec_data;
-> +
-> +	if (!rcec->rcec_cap)
-> +		return;
-> +
-> +	rcec_data.rcec = rcec;
-> +	rcec_data.user_callback = NULL;
-> +	rcec_data.user_data = NULL;
-> +
-> +	walk_rcec(link_rcec_helper, &rcec_data);
-> +}
-> +
->  void pci_rcec_init(struct pci_dev *dev)
->  {
->  	u32 rcec, hdr, busn;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 5c5c4eb642b6..ad382a9484ea 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -330,6 +330,7 @@ struct pci_dev {
->  #ifdef CONFIG_PCIEPORTBUS
->  	u16		rcec_cap;	/* RCEC capability offset */
->  	struct rcec_ext *rcec_ext;	/* RCEC cached assoc. endpoint extended capabilities */
-> +	struct pci_dev  *rcec;          /* Associated RCEC device */
+The latency to bring L1 up is number-of-hops*1000 +
+maximum-latency-along-the-path
 
-Wondering if we can put this pointer inside the struct rcec_ext (or
-whatever we call it) so we don't have to pay *two* pointers for every
-PCI device?  Maybe it should be something like this:
+currently it's only doing number-of-hops*1000 +
+arbitrary-latency-of-current-link
 
-  struct rcec {
-    u8			ea_ver;
-    u8			ea_nextbusn;
-    u8			ea_lastbusn;
-    u32			ea_bitmap;
-    struct pci_dev	*rcec;
-  }
+> And let's support the change you *do* need with the "lspci -vv" for
+> all the relevant devices (including both 03:00.0 and 04:00.x, I guess,
+> since they share the 00:01.2 - 01:00.0 link), before and after the
+> change.
 
-I dunno.  Not sure if that would be better or worse, since we'd be
-mixing RCEC stuff (the EA capability info) with RCiEP stuff (the
-pointer to the related RCEC).  Could even be a union, since any given
-device only needs one of them, but I'm pretty sure that would be
-worse.
+They are all included in all lspci output in the bug
 
-BTW, 03/10 didn't add a forward declaration, e.g.,
+> I want to identify something in the "before" configuration that is
+> wrong according to the spec, and a change in the "after" config so it
+> now conforms to the spec.
 
-  struct rcec_ext;
+So there are a few issues here, the current code does not apply to spec.
 
-to include/linux/pci.h, and the actual definition is in
-drivers/pci/pci.h.  It seems like you should need that?
+The intel nic gets fixed as a side effect (it should still get a
+proper fix) of making
+the code apply to spec.
 
->  #endif
->  	u8		pcie_cap;	/* PCIe capability offset */
->  	u8		msi_cap;	/* MSI capability offset */
-> -- 
-> 2.28.0
-> 
+Basically, while hunting for the issue, I found that the L1 and L0s
+latency calculations used to determine
+if they should be enabled or not is wrong - that is what I'm currently
+trying to push - it also seems like the
+intel nic claims that it can handle 64us but apparently it can't.
+
+So, three bugs, two are "fixed" one needs additional fixing.
+
+> Bjorn
