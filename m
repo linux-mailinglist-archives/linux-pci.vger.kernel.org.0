@@ -2,93 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5048B278ED5
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 18:40:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63B46278F2E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 18:55:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgIYQkW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 12:40:22 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44646 "EHLO mga01.intel.com"
+        id S1728966AbgIYQzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 12:55:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728353AbgIYQkW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Sep 2020 12:40:22 -0400
-IronPort-SDR: CHDeJUsVZvy3PQ43INxcT1lcdZZijBYSbDd5fSP6CNGBygw2RZ/G2dbBA15+FzF05BO/sHWZsN
- qQUZnhmjysmA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9755"; a="179655316"
-X-IronPort-AV: E=Sophos;i="5.77,302,1596524400"; 
-   d="scan'208";a="179655316"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2020 09:40:16 -0700
-IronPort-SDR: Qz8UptCdPjaACMrQab4Cq1l0NWLpyR8p73aa1nGo2XuyBzjl6yTtTlD7rN3WbmJY1RkB8oJnjW
- 5pecNSJHP5JQ==
-X-IronPort-AV: E=Sophos;i="5.77,302,1596524400"; 
-   d="scan'208";a="323440246"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2020 09:40:13 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kLmzG-001v06-Ax; Fri, 25 Sep 2020 15:38:06 +0300
-Date:   Fri, 25 Sep 2020 15:38:06 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ethan Zhao <haifeng.zhao@intel.com>
-Cc:     bhelgaas@google.com, oohall@gmail.com, ruscur@russell.cc,
-        lukas@wunner.de, stuart.w.hayes@gmail.com, mr.nuke.me@gmail.com,
-        mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pei.p.jia@intel.com
-Subject: Re: [PATCH 4/5] PCI: only return true when dev io state is really
- changed
-Message-ID: <20200925123806.GG3956970@smile.fi.intel.com>
-References: <20200925023423.42675-1-haifeng.zhao@intel.com>
- <20200925023423.42675-5-haifeng.zhao@intel.com>
+        id S1727201AbgIYQzg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Sep 2020 12:55:36 -0400
+Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4C5208A9;
+        Fri, 25 Sep 2020 16:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601052935;
+        bh=FCnaTnYcZHQuULVl0YIupO3iHg0Utdkkp8LWTqR42s4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kn8VBTU8PhAcq6E7couopmje+jp500udz3Quvh8rKVBoqYgVJsneSxPOofWI5JJpU
+         Vh2EA/wpQgbKv623Gg1tewu9yUiu1QXdnisE5BKV0rTiLnl2JP4TA/0YYaAr0IJKUs
+         wvgCts2Q8iKzLjgynhzYvGlESbm8Xd2rUpxdU2o4=
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200922233333.GA2239404@bjorn-Precision-5520>
+ <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
+ <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
+ <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com>
+ <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
+ <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
+ <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
+ <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
+ <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
+ <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
+Date:   Fri, 25 Sep 2020 12:55:34 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200925023423.42675-5-haifeng.zhao@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 10:34:22PM -0400, Ethan Zhao wrote:
-> When uncorrectable error happens, AER driver and DPC driver interrupt
-> handlers likely call
->    pcie_do_recovery()->pci_walk_bus()->report_frozen_detected() with
-> pci_channel_io_frozen the same time.
+On 9/25/2020 1:11 AM, Kuppuswamy, Sathyanarayanan wrote:
+> 
+> 
+> On 9/24/20 1:52 PM, Sinan Kaya wrote:
+>> On 9/24/2020 12:06 AM, Kuppuswamy, Sathyanarayanan wrote:
 
-Call chains are better to read if they split like
+>>
+>> So, this is a matter of moving the save/restore logic from the hotplug
+>> driver into common code so that DPC slot reset takes advantage of it?
+> We are not moving it out of hotplug path. But fixing it in this code path.
+> With this fix, we will not depend on hotplug driver to restore the state.
 
-   foo() ->
-     bar() ->
-       baz()
-
->    If pci_dev_set_io_state() return true even if the original state is
-> pci_channel_io_frozen, that will cause AER or DPC handler re-enter
-> the error detecting and recovery procedure one after another.
->    The result is the recovery flow mixed between AER and DPC.
-> So simplify the pci_dev_set_io_state() function to only return true
-> when dev->error_state is changed.
-
-...
-
-> +	if (dev->error_state != new) {
->  		dev->error_state = new;
-> +		changed = true;
-> +	}
->  	return changed;
-
-Perhaps
-	if (dev->error_state == new)
-		return changed;
-
-	dev->error_state = new;
-	return true;
-
-?
+Any possibility of unification?
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+[snip]
+>>
+>>> To fix above issues, use PCI_ERS_RESULT_NEED_RESET as error state after
+>>> successful reset_link() operation. This will ensure ->slot_reset() be
+>>> called after reset_link() operation for fatal errors.
+>>
+>> You lost me here. Why do we want to do secondary bus reset on top of
+>> DPC reset?
+> For non-hotplug capable slots, when reset (PCI_ERS_RESULT_NEED_RESET) is
+> requested, we want to reset it before calling ->slot_reset() callback.
 
+Why? Isn't DPC slot reset enough?
+What will bus reset do that DPC slot reset won't do?
 
+I can understand calling bus reset if DPC is not supported.
+I don't understand the requirement to do double reset.
