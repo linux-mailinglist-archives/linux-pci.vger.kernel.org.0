@@ -2,102 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90D0927831C
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 10:48:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD05278346
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 10:54:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgIYIsb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 04:48:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727201AbgIYIs1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 04:48:27 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC548C0613CE
-        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 01:48:26 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id p9so2553158ejf.6
-        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 01:48:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=emoRYvFV1+wXfCW/+6p/GyQoadovw+Jiwhu8aTMgKU0=;
-        b=RWh2LCU3swUTd56gEVNeEdyA1NuXcjnKwsJ6epb6yxfVwwlLyFft7qyoYDwb4nSD9F
-         2ctMzK3OnYPpBhfB1hXaN3ZqkBStmtssR+A0F4tTkVNttmHkadGMPbB/84TaovHS7yYy
-         U4Aqwxn8iCPadf5Ycj4Ne+YqdCs5T2uajhIfJfOejoTRQ6KgTMCRPlUPsLbq7RGFqd1V
-         781yi0atyQkM34kDqmrYHg12hbrVcr/yEJY8uPJsgmj8qRRMxkn4sKzK7JwrC1sZ46Qg
-         EDnQpsCCVANaMSxML5qXH1UgJ69a32feNN9dx7qoyw3WHcd5oGHewMx8FT1MBaO7IOVU
-         p8nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=emoRYvFV1+wXfCW/+6p/GyQoadovw+Jiwhu8aTMgKU0=;
-        b=d4s7UGrGgqNbDCEMT8vZPxH1WVErMs8zncr5vozKnDexgjCc7D/QV8iZvD5ZRB3FI0
-         eeCL+gFa/8T09wFWZPTdJtQgSVWPtPHIin5NHomN0e6MZd6njmkphko8syxaWUrxeHbc
-         QkCr/iYUpiTtXkfvf8fiZIb7/xSd78Cq0C5O6KpgauXSv4iZJJzVwSmg8ZcvMQKt5mHH
-         HjxdTuTupjjRh1S3ULIlBrt5NEAUTc83+h0yBbFaiCaS0HReALosjo1EBYloqLcghG0Y
-         YEjek9c76+JafF2Zphx2f6o2c9hta2YjOT58YDnpRwRFrVsDopsOe3HS2qUIPjIgE5P3
-         005g==
-X-Gm-Message-State: AOAM533B56jqKpmh0lTMvh6mJcEiZBcBbZzu5CXAldI3DU4EScorW9XZ
-        dJD8bCpnCNwHZd+8zzC3Lef8xw==
-X-Google-Smtp-Source: ABdhPJwrEYir8FTp3IhJ0bHKhMyHKLPJqzcUuhw51auhBeqZ1mDOELPLruwZjAdXUK33OCq9RAsS4A==
-X-Received: by 2002:a17:906:5611:: with SMTP id f17mr1721401ejq.427.1601023705423;
-        Fri, 25 Sep 2020 01:48:25 -0700 (PDT)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id m6sm1425837ejb.85.2020.09.25.01.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2020 01:48:24 -0700 (PDT)
-Date:   Fri, 25 Sep 2020 10:48:06 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org
-Cc:     joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
-        jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, eric.auger@redhat.com,
-        lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH v3 0/6] Add virtio-iommu built-in topology
-Message-ID: <20200925084806.GB490533@myrica>
-References: <20200821131540.2801801-1-jean-philippe@linaro.org>
+        id S1727067AbgIYIyE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 04:54:04 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16576 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgIYIyE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 04:54:04 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f6dafcb0001>; Fri, 25 Sep 2020 01:52:27 -0700
+Received: from [10.26.74.254] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 25 Sep
+ 2020 08:53:48 +0000
+Subject: Re: [PATCH v2 0/5] PCI: dwc: improve msi handling
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "Yue Wang" <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Neil Armstrong" <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-arm-kernel@axis.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        Vidya Sagar <vidyas@nvidia.com>
+References: <20200924190421.549cb8fc@xhacker.debian>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <de4d9294-4f6d-c7d1-efc7-c8ef6570bd64@nvidia.com>
+Date:   Fri, 25 Sep 2020 09:53:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821131540.2801801-1-jean-philippe@linaro.org>
+In-Reply-To: <20200924190421.549cb8fc@xhacker.debian>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1601023947; bh=fWA/VvBZqbohPm2n/wszG6Dx2YqT5L4FZiRaNfHoaCY=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=fEA++s28b/AQ7mzCLkLzYFRlJF2BG2COMVrHmZ9Cjc9p5TbBFqA5BOrVtJltGemIH
+         oSNwCyvZoGvaq8JWbamivR4JiDHJ/fbHitkOBJUyOKk7fhFokWkA1SANddNTwBcXbB
+         rJtZyjOJgzSgh4jh1o7XcmqvLXAzSBHYcicmtJ9h9TR22K1MmS7jVQdifrj4pS6LSh
+         CZ5NHyDgIi28TtEhytLl0KvjvjNJQH8L1ZdjBKU9CMVcbwGoJxuinK8SOz6YpIuAxo
+         hXWH5k1Il3WIy1HCnjUYcvviC2GDIwIFEgHTYvXo7Sko+a01zKS96FQk+ozLWpbU2o
+         blYdOUWHAkYjw==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:15:34PM +0200, Jean-Philippe Brucker wrote:
-> Add a topology description to the virtio-iommu driver and enable x86
-> platforms.
-> 
-> Since [v2] we have made some progress on adding ACPI support for
-> virtio-iommu, which is the preferred boot method on x86. It will be a
-> new vendor-agnostic table describing para-virtual topologies in a
-> minimal format. However some platforms don't use either ACPI or DT for
-> booting (for example microvm), and will need the alternative topology
-> description method proposed here. In addition, since the process to get
-> a new ACPI table will take a long time, this provides a boot method even
-> to ACPI-based platforms, if only temporarily for testing and
-> development.
-> 
-> v3:
-> * Add patch 1 that moves virtio-iommu to a subfolder.
-> * Split the rest:
->   * Patch 2 adds topology-helper.c, which will be shared with the ACPI
->     support.
->   * Patch 4 adds definitions.
->   * Patch 5 adds parser in topology.c.
-> * Address other comments.
-> 
-> Linux and QEMU patches available at:
-> https://jpbrucker.net/git/linux virtio-iommu/devel
-> https://jpbrucker.net/git/qemu virtio-iommu/devel
 
-I'm parking this work again, until we make progress on the ACPI table, or
-until a platform without ACPI and DT needs it. Until then, I've pushed v4
-to my virtio-iommu/topo branch and will keep it rebased on master.
+On 24/09/2020 12:05, Jisheng Zhang wrote:
+> Improve the msi code:
+> 1. Add proper error handling.
+> 2. Move dw_pcie_msi_init() from each users to designware host to solve
+> msi page leakage in resume path.
 
-Thanks,
-Jean
+Apologies if this is slightly off topic, but I have been meaning to ask
+about MSIs and PCI. On Tegra194 which uses the DWC PCI driver, whenever we
+hotplug CPUs we see the following warnings ...
 
+ [      79.068351] WARNING KERN IRQ70: set affinity failed(-22).
+ [      79.068362] WARNING KERN IRQ71: set affinity failed(-22).
+
+These interrupts are the MSIs ...
+
+70:          0          0          0          0          0          0          0          0   PCI-MSI 134217728 Edge      PCIe PME, aerdrv
+71:          0          0          0          0          0          0          0          0   PCI-MSI 134742016 Edge      ahci[0001:01:00.0]
+
+This caused because ...
+
+ static int dw_pci_msi_set_affinity(struct irq_data *d,
+                                    const struct cpumask *mask, bool force)
+ {
+         return -EINVAL;
+ }
+
+Now the above is not unique to the DWC PCI host driver, it appears that
+most PCIe drivers also do the same. However, I am curious if there is
+any way to avoid the above warnings given that setting the affinity does
+not appear to be supported in anyway AFAICT.
+
+Cheers
+Jon 
+
+-- 
+nvpublic
