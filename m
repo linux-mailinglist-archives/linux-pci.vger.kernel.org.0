@@ -2,457 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7879F279312
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 23:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 150E12793A7
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 23:38:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgIYVPU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 17:15:20 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36572 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbgIYVPU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 17:15:20 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x69so4339486lff.3
-        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 14:15:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xajnmYYE2JFCYF9eRVb6X0yNwDSWyIil7f0EIJpqbMM=;
-        b=hqalyobz6Y45JF80kF3yhTjboMBtQkiJfBqzn9DJzXTw+APP7rvtRfXoonZXJy8Exq
-         X/JL5818qYg9PBjbMp2RgnMA52O4NbLcX0iVdaiis181Urk/QrFwDOqNxzXcOry6iR5M
-         wekod8hO+CQo2GiAP/IarLoQF28zkxKOsytzfQb0knbYimAdZ8ndTwjL9TGK7ip1NNal
-         YilyUI60ZTsj53+hLeB2BlnSJAQTfnWFB5+nySQ1ZYoHCbzgOEcKgTubWcNEPYQp7M82
-         M4RPKmUfkbsBsZM/0dL42l+Z+u3KKwznp55yy72cJONqf69lYJr+sGclklyEwsvb22a1
-         Hkhw==
-X-Gm-Message-State: AOAM531vv5Sn4qhRi4IkP+PC3wIfO4CBKsQujAWgwPvjSdp1hFx8qR7s
-        u1ONrpRD4Sb7LrM3kOZaibc=
-X-Google-Smtp-Source: ABdhPJyXGoOg6v4p1gSsVdz4nJuvFKr5sER/uS374i1xzstKHcnV5KfXk+5THcP5U/Dcd8ZnRNtJaw==
-X-Received: by 2002:a19:4186:: with SMTP id o128mr219428lfa.148.1601068515602;
-        Fri, 25 Sep 2020 14:15:15 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id d1sm199063lfe.180.2020.09.25.14.15.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2020 14:15:15 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v2] PCI: Unify ECAM constants in native PCI Express drivers
-Date:   Fri, 25 Sep 2020 21:15:13 +0000
-Message-Id: <20200925211513.1701254-1-kw@linux.com>
-X-Mailer: git-send-email 2.28.0
+        id S1728678AbgIYViW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 17:38:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41431 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727201AbgIYViW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 17:38:22 -0400
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601069899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=gpW0sj/nM7AwMpbkqOmCDPVLocu/rnov7w2AYNtGosY=;
+        b=aIoOuHxX3XvopvWqzL1WADRiZPpeKz/LoUlmmywPeA78QRik6BOgV53W1Ln2m/x9/O/Mwv
+        EjIJh8szgNzGNED1r9dWYCA8MzVnnU7o+3h5kL96iwFH+bk9fN4UArnf2a4ls+OD14QxDP
+        /TjWQSpVg1i3Cmak8WDnaZSNA5hq2BU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-kd5xHqXCP4iz6dgTFozQaQ-1; Fri, 25 Sep 2020 17:38:17 -0400
+X-MC-Unique: kd5xHqXCP4iz6dgTFozQaQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4D75805EE4;
+        Fri, 25 Sep 2020 21:38:14 +0000 (UTC)
+Received: from [10.10.114.192] (ovpn-114-192.rdu2.redhat.com [10.10.114.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C07D75577A;
+        Fri, 25 Sep 2020 21:38:06 +0000 (UTC)
+Subject: Re: [PATCH v3 4/4] PCI: Limit pci_alloc_irq_vectors() to housekeeping
+ CPUs
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
+        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
+        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
+        thomas.lendacky@amd.com, jiri@nvidia.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, lgoncalv@redhat.com
+References: <20200925202307.GA2456332@bjorn-Precision-5520>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <256490f0-0762-447c-a7be-0e5a6bb04fc4@redhat.com>
+Date:   Fri, 25 Sep 2020 17:38:05 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200925202307.GA2456332@bjorn-Precision-5520>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="YGhoGpiEK97LlikE5tgeBsj6NKFwnYVHR"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Unify ECAM-related constants into a single set of standard constants
-defining memory address shift values for the byte-level address that can
-be used when accessing the PCI Express Configuration Space, and then
-move native PCI Express controller drivers to use newly introduced
-definitions retiring any driver-specific ones.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--YGhoGpiEK97LlikE5tgeBsj6NKFwnYVHR
+Content-Type: multipart/mixed; boundary="Df7GsTEDJLdhut9BI6tcE476jLN1S7Yy0"
 
-The ECAM ("Enhanced Configuration Access Mechanism") is defined by the
-PCI Express specification (see PCI Base Specification, Revision 5.0,
-Version 1.0, Section 7.2.2, p. 676), thus most hardware should implement
-it the same way.  Most of the native PCI Express controller drivers
-define their ECAM-related constants, many of these could be shared, or
-use open-coded values when setting the .bus_shift field of the struct
-pci_ecam_ops.
+--Df7GsTEDJLdhut9BI6tcE476jLN1S7Yy0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
-All of the newly added constants should remove ambiguity and reduce the
-number of open-coded values, and also correlate more strongly with the
-descriptions in the aforementioned specification (see Table 7-1
-"Enhanced Configuration Address Mapping", p. 677).
 
-There is no change to functionality.
+On 9/25/20 4:23 PM, Bjorn Helgaas wrote:
+> On Fri, Sep 25, 2020 at 02:26:54PM -0400, Nitesh Narayan Lal wrote:
+>> If we have isolated CPUs dedicated for use by real-time tasks, we try to
+>> move IRQs to housekeeping CPUs from the userspace to reduce latency
+>> overhead on the isolated CPUs.
+>>
+>> If we allocate too many IRQ vectors, moving them all to housekeeping CPU=
+s
+>> may exceed per-CPU vector limits.
+>>
+>> When we have isolated CPUs, limit the number of vectors allocated by
+>> pci_alloc_irq_vectors() to the minimum number required by the driver, or
+>> to one per housekeeping CPU if that is larger.
+>>
+>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+>> ---
+>>  include/linux/pci.h | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 835530605c0d..a7b10240b778 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -38,6 +38,7 @@
+>>  #include <linux/interrupt.h>
+>>  #include <linux/io.h>
+>>  #include <linux/resource_ext.h>
+>> +#include <linux/sched/isolation.h>
+>>  #include <uapi/linux/pci.h>
+>> =20
+>>  #include <linux/pci_ids.h>
+>> @@ -1797,6 +1798,22 @@ static inline int
+>>  pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>>  =09=09      unsigned int max_vecs, unsigned int flags)
+>>  {
+>> +=09unsigned int hk_cpus;
+>> +
+>> +=09hk_cpus =3D housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ);
+> Add blank line here before the block comment.
+>
+>> +=09/*
+>> +=09 * If we have isolated CPUs for use by real-time tasks, to keep the
+>> +=09 * latency overhead to a minimum, device-specific IRQ vectors are mo=
+ved
+>> +=09 * to the housekeeping CPUs from the userspace by changing their
+>> +=09 * affinity mask. Limit the vector usage to keep housekeeping CPUs f=
+rom
+>> +=09 * running out of IRQ vectors.
+>> +=09 */
+>> +=09if (hk_cpus < num_online_cpus()) {
+>> +=09=09if (hk_cpus < min_vecs)
+>> +=09=09=09max_vecs =3D min_vecs;
+>> +=09=09else if (hk_cpus < max_vecs)
+>> +=09=09=09max_vecs =3D hk_cpus;
+>> +=09}
+> It seems like you'd want to do this inside
+> pci_alloc_irq_vectors_affinity() since that's an exported interface,
+> and drivers that use it will bypass the limiting you're doing here.
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
-Changes in v2:
-  Use PCIE_ECAM_ADDR macro when computing ECAM address offset, but drop
-  PCI_SLOT and PCI_FUNC macros from the PCIE_ECAM_ADDR macro in favour
-  of using a single value for the device/function.
+Good point, few drivers directly use this.
+I took a quick look and it seems I may also have to take the pre and the
+post vectors into consideration.
 
- drivers/pci/controller/dwc/pcie-al.c        |  8 +++-----
- drivers/pci/controller/dwc/pcie-hisi.c      |  4 ++--
- drivers/pci/controller/pci-host-generic.c   |  4 ++--
- drivers/pci/controller/pci-thunder-ecam.c   |  2 +-
- drivers/pci/controller/pci-thunder-pem.c    |  7 +++++--
- drivers/pci/controller/pci-xgene.c          |  7 +++++--
- drivers/pci/controller/pcie-rockchip-host.c |  7 +++----
- drivers/pci/controller/pcie-rockchip.h      |  8 +-------
- drivers/pci/controller/pcie-tango.c         |  2 +-
- drivers/pci/controller/pcie-xilinx-nwl.c    |  8 +++-----
- drivers/pci/controller/pcie-xilinx.c        | 10 +++-------
- drivers/pci/ecam.c                          |  4 ++--
- include/linux/pci-ecam.h                    | 22 +++++++++++++++++++++
- 13 files changed, 53 insertions(+), 40 deletions(-)
+>>  =09return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags=
+,
+>>  =09=09=09=09=09      NULL);
+>>  }
+>> --=20
+>> 2.18.2
+>>
+--=20
+Nitesh
 
-diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-index d57d4ee15848..7c2aa049113c 100644
---- a/drivers/pci/controller/dwc/pcie-al.c
-+++ b/drivers/pci/controller/dwc/pcie-al.c
-@@ -76,7 +76,7 @@ static int al_pcie_init(struct pci_config_window *cfg)
- }
- 
- const struct pci_ecam_ops al_pcie_ops = {
--	.bus_shift    = 20,
-+	.bus_shift    = PCIE_ECAM_BUS_SHIFT,
- 	.init         =  al_pcie_init,
- 	.pci_ops      = {
- 		.map_bus    = al_pcie_map_bus,
-@@ -138,8 +138,6 @@ struct al_pcie {
- 	struct al_pcie_target_bus_cfg target_bus_cfg;
- };
- 
--#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
--
- #define to_al_pcie(x)		dev_get_drvdata((x)->dev)
- 
- static inline u32 al_pcie_controller_readl(struct al_pcie *pcie, u32 offset)
-@@ -228,7 +226,7 @@ static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
- 	void __iomem *pci_base_addr;
- 
- 	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
--					 (busnr_ecam << 20) +
-+					 PCIE_ECAM_BUS(busnr_ecam) +
- 					 PCIE_ECAM_DEVFN(devfn));
- 
- 	if (busnr_reg != target_bus_cfg->reg_val) {
-@@ -300,7 +298,7 @@ static void al_pcie_config_prepare(struct al_pcie *pcie)
- 
- 	target_bus_cfg = &pcie->target_bus_cfg;
- 
--	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
-+	ecam_bus_mask = (pcie->ecam_size >> PCIE_ECAM_BUS_SHIFT) - 1;
- 	if (ecam_bus_mask > 255) {
- 		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
- 		ecam_bus_mask = 255;
-diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
-index 5ca86796d43a..b7afbf1d4bd9 100644
---- a/drivers/pci/controller/dwc/pcie-hisi.c
-+++ b/drivers/pci/controller/dwc/pcie-hisi.c
-@@ -100,7 +100,7 @@ static int hisi_pcie_init(struct pci_config_window *cfg)
- }
- 
- const struct pci_ecam_ops hisi_pcie_ops = {
--	.bus_shift    = 20,
-+	.bus_shift    = PCIE_ECAM_BUS_SHIFT,
- 	.init         =  hisi_pcie_init,
- 	.pci_ops      = {
- 		.map_bus    = hisi_pcie_map_bus,
-@@ -135,7 +135,7 @@ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
- }
- 
- static const struct pci_ecam_ops hisi_pcie_platform_ops = {
--	.bus_shift    = 20,
-+	.bus_shift    = PCIE_ECAM_BUS_SHIFT,
- 	.init         =  hisi_pcie_platform_init,
- 	.pci_ops      = {
- 		.map_bus    = hisi_pcie_map_bus,
-diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
-index b51977abfdf1..593436aee7a0 100644
---- a/drivers/pci/controller/pci-host-generic.c
-+++ b/drivers/pci/controller/pci-host-generic.c
-@@ -15,7 +15,7 @@
- #include <linux/platform_device.h>
- 
- static const struct pci_ecam_ops gen_pci_cfg_cam_bus_ops = {
--	.bus_shift	= 16,
-+	.bus_shift	= PCIE_CAM_BUS_SHIFT,
- 	.pci_ops	= {
- 		.map_bus	= pci_ecam_map_bus,
- 		.read		= pci_generic_config_read,
-@@ -49,7 +49,7 @@ static void __iomem *pci_dw_ecam_map_bus(struct pci_bus *bus,
- }
- 
- static const struct pci_ecam_ops pci_dw_ecam_bus_ops = {
--	.bus_shift	= 20,
-+	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
- 	.pci_ops	= {
- 		.map_bus	= pci_dw_ecam_map_bus,
- 		.read		= pci_generic_config_read,
-diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
-index 7e8835fee5f7..22ed7e995b39 100644
---- a/drivers/pci/controller/pci-thunder-ecam.c
-+++ b/drivers/pci/controller/pci-thunder-ecam.c
-@@ -346,7 +346,7 @@ static int thunder_ecam_config_write(struct pci_bus *bus, unsigned int devfn,
- }
- 
- const struct pci_ecam_ops pci_thunder_ecam_ops = {
--	.bus_shift	= 20,
-+	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
- 	.pci_ops	= {
- 		.map_bus        = pci_ecam_map_bus,
- 		.read           = thunder_ecam_config_read,
-diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
-index 3f847969143e..50a7a2c52a7f 100644
---- a/drivers/pci/controller/pci-thunder-pem.c
-+++ b/drivers/pci/controller/pci-thunder-pem.c
-@@ -19,6 +19,9 @@
- #define PEM_CFG_WR 0x28
- #define PEM_CFG_RD 0x30
- 
-+/* Enhanced Configuration Access Mechanism (ECAM) */
-+#define THUNDER_PCIE_ECAM_BUS_SHIFT	24
-+
- struct thunder_pem_pci {
- 	u32		ea_entry[3];
- 	void __iomem	*pem_reg_base;
-@@ -404,7 +407,7 @@ static int thunder_pem_acpi_init(struct pci_config_window *cfg)
- }
- 
- const struct pci_ecam_ops thunder_pem_ecam_ops = {
--	.bus_shift	= 24,
-+	.bus_shift	= THUNDER_PCIE_ECAM_BUS_SHIFT,
- 	.init		= thunder_pem_acpi_init,
- 	.pci_ops	= {
- 		.map_bus	= pci_ecam_map_bus,
-@@ -441,7 +444,7 @@ static int thunder_pem_platform_init(struct pci_config_window *cfg)
- }
- 
- static const struct pci_ecam_ops pci_thunder_pem_ops = {
--	.bus_shift	= 24,
-+	.bus_shift	= THUNDER_PCIE_ECAM_BUS_SHIFT,
- 	.init		= thunder_pem_platform_init,
- 	.pci_ops	= {
- 		.map_bus	= pci_ecam_map_bus,
-diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index 8e0db84f089d..1d1fcb02a5d3 100644
---- a/drivers/pci/controller/pci-xgene.c
-+++ b/drivers/pci/controller/pci-xgene.c
-@@ -60,6 +60,9 @@
- #define XGENE_PCIE_IP_VER_1		1
- #define XGENE_PCIE_IP_VER_2		2
- 
-+/* Enhanced Configuration Access Mechanism (ECAM) */
-+#define XGENE_PCIE_ECAM_BUS_SHIFT	16
-+
- #if defined(CONFIG_PCI_XGENE) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
- struct xgene_pcie_port {
- 	struct device_node	*node;
-@@ -257,7 +260,7 @@ static int xgene_v1_pcie_ecam_init(struct pci_config_window *cfg)
- }
- 
- const struct pci_ecam_ops xgene_v1_pcie_ecam_ops = {
--	.bus_shift	= 16,
-+	.bus_shift	= XGENE_PCIE_ECAM_BUS_SHIFT,
- 	.init		= xgene_v1_pcie_ecam_init,
- 	.pci_ops	= {
- 		.map_bus	= xgene_pcie_map_bus,
-@@ -272,7 +275,7 @@ static int xgene_v2_pcie_ecam_init(struct pci_config_window *cfg)
- }
- 
- const struct pci_ecam_ops xgene_v2_pcie_ecam_ops = {
--	.bus_shift	= 16,
-+	.bus_shift	= XGENE_PCIE_ECAM_BUS_SHIFT,
- 	.init		= xgene_v2_pcie_ecam_init,
- 	.pci_ops	= {
- 		.map_bus	= xgene_pcie_map_bus,
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 0bb2fb3e8a0b..a6952701b504 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -162,8 +162,7 @@ static int rockchip_pcie_rd_other_conf(struct rockchip_pcie *rockchip,
- {
- 	u32 busdev;
- 
--	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
--				PCI_FUNC(devfn), where);
-+	busdev = PCIE_ECAM_ADDR(bus, devfn, where);
- 
- 	if (!IS_ALIGNED(busdev, size)) {
- 		*val = 0;
-@@ -196,8 +195,8 @@ static int rockchip_pcie_wr_other_conf(struct rockchip_pcie *rockchip,
- {
- 	u32 busdev;
- 
--	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
--				PCI_FUNC(devfn), where);
-+	busdev = PCIE_ECAM_ADDR(bus, devfn, where);
-+
- 	if (!IS_ALIGNED(busdev, size))
- 		return PCIBIOS_BAD_REGISTER_NUMBER;
- 
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index c7d0178fc8c2..1650a5087450 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -13,6 +13,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- 
- /*
-  * The upper 16 bits of PCIE_CLIENT_CONFIG are a write mask for the lower 16
-@@ -178,13 +179,6 @@
- #define MIN_AXI_ADDR_BITS_PASSED		8
- #define PCIE_RC_SEND_PME_OFF			0x11960
- #define ROCKCHIP_VENDOR_ID			0x1d87
--#define PCIE_ECAM_BUS(x)			(((x) & 0xff) << 20)
--#define PCIE_ECAM_DEV(x)			(((x) & 0x1f) << 15)
--#define PCIE_ECAM_FUNC(x)			(((x) & 0x7) << 12)
--#define PCIE_ECAM_REG(x)			(((x) & 0xfff) << 0)
--#define PCIE_ECAM_ADDR(bus, dev, func, reg) \
--	  (PCIE_ECAM_BUS(bus) | PCIE_ECAM_DEV(dev) | \
--	   PCIE_ECAM_FUNC(func) | PCIE_ECAM_REG(reg))
- #define PCIE_LINK_IS_L2(x) \
- 	(((x) & PCIE_CLIENT_DEBUG_LTSSM_MASK) == PCIE_CLIENT_DEBUG_LTSSM_L2)
- #define PCIE_LINK_UP(x) \
-diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-index d093a8ce4bb1..8f0d695afbde 100644
---- a/drivers/pci/controller/pcie-tango.c
-+++ b/drivers/pci/controller/pcie-tango.c
-@@ -208,7 +208,7 @@ static int smp8759_config_write(struct pci_bus *bus, unsigned int devfn,
- }
- 
- static const struct pci_ecam_ops smp8759_ecam_ops = {
--	.bus_shift	= 20,
-+	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
- 	.pci_ops	= {
- 		.map_bus	= pci_ecam_map_bus,
- 		.read		= smp8759_config_read,
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index f3cf7d61924f..714128ef8d18 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -18,6 +18,7 @@
- #include <linux/of_platform.h>
- #include <linux/of_irq.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
- #include <linux/irqchip/chained_irq.h>
- 
-@@ -124,8 +125,6 @@
- #define E_ECAM_CR_ENABLE		BIT(0)
- #define E_ECAM_SIZE_LOC			GENMASK(20, 16)
- #define E_ECAM_SIZE_SHIFT		16
--#define ECAM_BUS_LOC_SHIFT		20
--#define ECAM_DEV_LOC_SHIFT		12
- #define NWL_ECAM_VALUE_DEFAULT		12
- 
- #define CFG_DMA_REG_BAR			GENMASK(2, 0)
-@@ -245,10 +244,9 @@ static void __iomem *nwl_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
- 	if (!nwl_pcie_valid_device(bus, devfn))
- 		return NULL;
- 
--	relbus = (bus->number << ECAM_BUS_LOC_SHIFT) |
--			(devfn << ECAM_DEV_LOC_SHIFT);
-+	relbus = PCIE_ECAM_ADDR(bus, devfn, where);
- 
--	return pcie->ecam_base + relbus + where;
-+	return pcie->ecam_base + relbus;
- }
- 
- /* PCIe operations */
-diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-index 8523be61bba5..abaee5d68676 100644
---- a/drivers/pci/controller/pcie-xilinx.c
-+++ b/drivers/pci/controller/pcie-xilinx.c
-@@ -21,6 +21,7 @@
- #include <linux/of_platform.h>
- #include <linux/of_irq.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
- 
- #include "../pci.h"
-@@ -86,10 +87,6 @@
- /* Phy Status/Control Register definitions */
- #define XILINX_PCIE_REG_PSCR_LNKUP	BIT(11)
- 
--/* ECAM definitions */
--#define ECAM_BUS_NUM_SHIFT		20
--#define ECAM_DEV_NUM_SHIFT		12
--
- /* Number of MSI IRQs */
- #define XILINX_NUM_MSI_IRQS		128
- 
-@@ -188,10 +185,9 @@ static void __iomem *xilinx_pcie_map_bus(struct pci_bus *bus,
- 	if (!xilinx_pcie_valid_device(bus, devfn))
- 		return NULL;
- 
--	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
--		 (devfn << ECAM_DEV_NUM_SHIFT);
-+	relbus = PCIE_ECAM_ADDR(bus, devfn, where);
- 
--	return port->reg_base + relbus + where;
-+	return port->reg_base + relbus;
- }
- 
- /* PCIe operations */
-diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-index 8f065a42fc1a..ffd010290084 100644
---- a/drivers/pci/ecam.c
-+++ b/drivers/pci/ecam.c
-@@ -149,7 +149,7 @@ EXPORT_SYMBOL_GPL(pci_ecam_map_bus);
- 
- /* ECAM ops */
- const struct pci_ecam_ops pci_generic_ecam_ops = {
--	.bus_shift	= 20,
-+	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
- 	.pci_ops	= {
- 		.map_bus	= pci_ecam_map_bus,
- 		.read		= pci_generic_config_read,
-@@ -161,7 +161,7 @@ EXPORT_SYMBOL_GPL(pci_generic_ecam_ops);
- #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
- /* ECAM ops for 32-bit access only (non-compliant) */
- const struct pci_ecam_ops pci_32b_ops = {
--	.bus_shift	= 20,
-+	.bus_shift	= PCIE_ECAM_BUS_SHIFT,
- 	.pci_ops	= {
- 		.map_bus	= pci_ecam_map_bus,
- 		.read		= pci_generic_config_read32,
-diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-index 1af5cb02ef7f..37c5df8bead0 100644
---- a/include/linux/pci-ecam.h
-+++ b/include/linux/pci-ecam.h
-@@ -9,6 +9,28 @@
- #include <linux/kernel.h>
- #include <linux/platform_device.h>
- 
-+/*
-+ * Memory address shift values for the byte-level address that
-+ * can be used when accessing the PCI Express Configuration Space.
-+ */
-+
-+/* Configuration Access Mechanism (CAM) */
-+#define PCIE_CAM_BUS_SHIFT	16 /* Bus Number */
-+
-+/* Enhanced Configuration Access Mechanism (ECAM) */
-+#define PCIE_ECAM_BUS_SHIFT	20 /* Bus Number */
-+#define PCIE_ECAM_DEV_SHIFT	15 /* Device Number */
-+#define PCIE_ECAM_FUN_SHIFT	12 /* Function Number */
-+
-+#define PCIE_ECAM_BUS(x)	(((x) & 0xff) << PCIE_ECAM_BUS_SHIFT)
-+#define PCIE_ECAM_DEVFN(x)	(((x) & 0xff) << PCIE_ECAM_FUN_SHIFT)
-+#define PCIE_ECAM_REG(x)	((x) & 0xfff)
-+
-+#define PCIE_ECAM_ADDR(bus, devfn, where) \
-+    (PCIE_ECAM_BUS(bus->number) | \
-+     PCIE_ECAM_DEVFN(devfn) | \
-+     PCIE_ECAM_REG(where))
-+
- /*
-  * struct to hold pci ops and bus shift of the config window
-  * for a PCI controller.
--- 
-2.28.0
+
+--Df7GsTEDJLdhut9BI6tcE476jLN1S7Yy0--
+
+--YGhoGpiEK97LlikE5tgeBsj6NKFwnYVHR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9uYz0ACgkQo4ZA3AYy
+ozkiEBAAvGh1LoOrI92FwWB9mO6IUhqq1kV5fqaTQoQVDCd9xBSPfsWT+gsFaduP
+L9udE6raj+9EpQkKdIiqcAL5Csx/8KmvNqbeY/ABw4MAlNxlcc9iBHl3dTvkAw9b
+pPeMsNnQiPPt18S/SYvkUsSVD7tb8S334qRmxQqU2RgjzIX9DZINMbXVhrzbCTkJ
+gTjsuFAIZyKjw6pHvqc51qWOr91TdMtk3kFyPKSEK5jUGuI36Gmuh38W5o6ZtPuZ
+1t9VKvcCODdQE5ehdGN10E7Z0bjDdCkNy+qV3ddgteMr1AHctofL9FbhrAkAIreP
+BZxJ9YuFkexkNbAJfUIiItFeQMJ8bEhtqz5kuGuod73HjyNsjXrYWy4sCNSizeBN
+QuoMzNgXPNkp++V6Qv1ta36A+pDM/k0A/W0yC91lPhrhJoV/nWClMayOrk2ywINv
+H8FtM+Ci0lA6NTVtwDgPVkBe06xgTEENtXQ4EnBxahmJ9DBWDh1N7f1P0J7KYMCB
+iwxdkktbb0GcVo7/9oOObfztqO/bEat0Nz3pDhJz0XbnhVHCxDeHwtaMgWO/64UJ
+f6X0MJRX9006GFx7Y2iExMzsyKypT0/+49RXOsFkLMXJidNzylG1OjZw7dtg3z5i
+Bp9SpF9tRQ3laz3BnyqBuyDbT9EBm4zaUFiQG1ZAv0KqAkAOXVs=
+=EFzi
+-----END PGP SIGNATURE-----
+
+--YGhoGpiEK97LlikE5tgeBsj6NKFwnYVHR--
 
