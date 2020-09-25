@@ -2,88 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBE4427950A
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Sep 2020 01:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCF0A279521
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Sep 2020 01:50:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgIYXsJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 19:48:09 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41800 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729549AbgIYXr5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 19:47:57 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y17so4599099lfa.8;
-        Fri, 25 Sep 2020 16:47:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=66bypUmih1JiEGjHtw9M23S4MfR794g05kwseF1xQyY=;
-        b=B2DFMiCSECF7MHk46ssboGP5N/WrApJhs3ioXV3EMy3nKXTwSTbVPZ5/cmyBbUSKZc
-         TNnqoKWdaG2gDZRu3z0u4ZXLW6GQUf5/GPnkxb49dWsLPa84ry/XUrah9h4Eu67CWCYj
-         0K98kIK92+gCGqu9brX3qJeeV0UG/qlxGV4Q5eYHjEWrTCEo4e0uT91WgrkTL5/h8iz3
-         kEfL+ytofopQhFEpB1rFR+i72qC26LB9j6npyv66LQdakdYvrmuEV8b0vkOSTh84jbeB
-         XfTmGvlNIHzbwzJmZEadFsmJqsBVJcK2g+ef32r/kSZ4Nn1P/mlioscYYbqadVT18Qq9
-         KCgQ==
-X-Gm-Message-State: AOAM533EpFJEvcZvzgGJVR52uJ5LcK0vklWnMRSQiukGW925EYEOduU0
-        NZ3q1Ukytp0GY9vUXIzVIWQ=
-X-Google-Smtp-Source: ABdhPJyWeqBa3lvDurrhgEYjjcDV2F1CFpmMBZ1kf2SE3EX9twMQP9mphmB36AfqmNWqEI//JBWNNQ==
-X-Received: by 2002:a19:614b:: with SMTP id m11mr433037lfk.6.1601077675489;
-        Fri, 25 Sep 2020 16:47:55 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id l188sm420751lfd.127.2020.09.25.16.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2020 16:47:54 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: hv: Document missing hv_pci_protocol_negotiation() parameter
-Date:   Fri, 25 Sep 2020 23:47:53 +0000
-Message-Id: <20200925234753.1767227-1-kw@linux.com>
-X-Mailer: git-send-email 2.28.0
+        id S1729022AbgIYXu5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 19:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728780AbgIYXu5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Sep 2020 19:50:57 -0400
+Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1307A20866;
+        Fri, 25 Sep 2020 23:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601077856;
+        bh=GfAjzYpvzXjmi87tcxPpWjdbb2BOqtsmnBF/0nq3rzg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=C4C+uK+Q8QeDxc9+hwrzC501NMnw0U9kZGHyapjODn5eIDLLrcwrVaIKoG4c2Qk0A
+         rn3RpGFD1iM0Y9CgL99qEWmuzfAsLkMVkyvLyXu09S9Q9RTzsQa++njJxd/zi5MHo4
+         Ce6/mSVPVUAi1BEBfo2PpWiZYfKQGRJNztahW1qw=
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200922233333.GA2239404@bjorn-Precision-5520>
+ <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
+ <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
+ <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com>
+ <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
+ <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
+ <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
+ <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
+ <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
+ <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
+ <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
+ <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
+ <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
+ <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <1bbbdfde-2493-7ff5-fd13-b6340b1228e7@kernel.org>
+Date:   Fri, 25 Sep 2020 19:50:55 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing documentation for the parameter "version" and "num_version"
-of the hv_pci_protocol_negotiation() function and resolve build time
-kernel-doc warnings:
+On 9/25/2020 2:16 PM, Kuppuswamy, Sathyanarayanan wrote:
+>> One approach is to share the restore code between hotplug driver and
+>> DPC driver.
+>>
+>> If this is a too involved change, DPC driver should restore state
+>> when hotplug is not supported.
+> Yes. we can add a condition for hotplug capability check.
 
-  drivers/pci/controller/pci-hyperv.c:2535: warning: Function parameter
-  or member 'version' not described in 'hv_pci_protocol_negotiation'
+Now that I think about this more...
 
-  drivers/pci/controller/pci-hyperv.c:2535: warning: Function parameter
-  or member 'num_version' not described in 'hv_pci_protocol_negotiation'
+This won't work. Link is brought down automatically by the DPC hardware.
+Therefore, all software state is lost. Restore won't help here.
 
-No change to functionality intended.
-
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/pci-hyperv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index fc4c3a15e570..6102330e27e1 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2515,7 +2515,10 @@ static void hv_pci_onchannelcallback(void *context)
- 
- /**
-  * hv_pci_protocol_negotiation() - Set up protocol
-- * @hdev:	VMBus's tracking struct for this root PCI bus
-+ * @hdev:		VMBus's tracking struct for this root PCI bus.
-+ * @version:		Array of supported channel protocol versions in
-+ *			the order of probing - highest go first.
-+ * @num_version:	Number of elements in the version array.
-  *
-  * This driver is intended to support running on Windows 10
-  * (server) and later versions. It will not run on earlier
--- 
-2.28.0
-
+The only solution I can see is to force driver disconnect and rescan.
