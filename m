@@ -2,124 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9C41279224
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 22:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6D9B27920C
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 22:33:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgIYUdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1728856AbgIYUdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 25 Sep 2020 16:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:44042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgIYUZb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Sep 2020 16:25:31 -0400
+        id S1726316AbgIYUXK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Sep 2020 16:23:10 -0400
 Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AD3623A05;
-        Fri, 25 Sep 2020 19:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06632086A;
+        Fri, 25 Sep 2020 20:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601063956;
-        bh=+CwG8PMkVFhMLUU31Blay8HXYnthfew4j3ndlVqdqV4=;
+        s=default; t=1601065390;
+        bh=aAD9nZhpTjqZoeBXICyqCwtEuwV7OkIfU4T3ggIlc10=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OWhggZDhSYl0qMYW0YAQIddY39OAOqqLqFyDjAQ/ZX9r5LIP4fixN2DVMJ7QOyqxo
-         BbiWoEJ+dbsG7/ajKgMTnQ+fievEx2WK/XQIsAfvzgiyKkMH+0vUFn/ToNY+k1ImkW
-         ksSTroXu6gpfpxq8RExqFYGVpFMen7YdW8qgv6Ww=
-Date:   Fri, 25 Sep 2020 14:59:13 -0500
+        b=IP0ezM9Hn3/SEbnXK8TrCpPU7kRkkU4GntqwiLY9scgvlBhza9gfYs4fDlR+UTw5E
+         7meYkbHytKkecaciibT3kRIDoZvHZ5bhjtn7r5lSZ6JMAEMa0Fxet1Bn5KanI+X0A2
+         EvYfgyhUyriYf30OHWamCVzv44rklq3Ah2VB2B4o=
+Date:   Fri, 25 Sep 2020 15:23:07 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <seanvk.dev@oregontracks.org>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: Re: [PATCH v6 02/10] PCI/RCEC: Bind RCEC devices to the Root Port
- driver
-Message-ID: <20200925195913.GA2455203@bjorn-Precision-5520>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
+        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
+        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
+        thomas.lendacky@amd.com, jiri@nvidia.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, lgoncalv@redhat.com
+Subject: Re: [PATCH v3 4/4] PCI: Limit pci_alloc_irq_vectors() to
+ housekeeping CPUs
+Message-ID: <20200925202307.GA2456332@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200922213859.108826-3-seanvk.dev@oregontracks.org>
+In-Reply-To: <20200925182654.224004-5-nitesh@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 02:38:51PM -0700, Sean V Kelley wrote:
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Fri, Sep 25, 2020 at 02:26:54PM -0400, Nitesh Narayan Lal wrote:
+> If we have isolated CPUs dedicated for use by real-time tasks, we try to
+> move IRQs to housekeeping CPUs from the userspace to reduce latency
+> overhead on the isolated CPUs.
 > 
-> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors may
-> optionally be sent to a corresponding Root Complex Event Collector (RCEC).
-> Each RCiEP must be associated with no more than one RCEC. Interface errors
-> are reported to the OS by RCECs.
+> If we allocate too many IRQ vectors, moving them all to housekeeping CPUs
+> may exceed per-CPU vector limits.
 > 
-> For an RCEC (technically not a Bridge), error messages "received" from
-> associated RCiEPs must be enabled for "transmission" in order to cause a
-> System Error via the Root Control register or (when the Advanced Error
-> Reporting Capability is present) reporting via the Root Error Command
-> register and logging in the Root Error Status register and Error Source
-> Identification register.
+> When we have isolated CPUs, limit the number of vectors allocated by
+> pci_alloc_irq_vectors() to the minimum number required by the driver, or
+> to one per housekeeping CPU if that is larger.
 > 
-> Given the commonality with Root Ports and the need to also support AER
-> and PME services for RCECs, extend the Root Port driver to support RCEC
-> devices through the addition of the RCEC Class ID to the driver
-> structure.
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 > ---
->  drivers/pci/pcie/portdrv_core.c | 8 ++++----
->  drivers/pci/pcie/portdrv_pci.c  | 5 ++++-
->  2 files changed, 8 insertions(+), 5 deletions(-)
+>  include/linux/pci.h | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 50a9522ab07d..99769c636775 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -234,11 +234,11 @@ static int get_port_device_capability(struct pci_dev *dev)
->  #endif
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 835530605c0d..a7b10240b778 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -38,6 +38,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/resource_ext.h>
+> +#include <linux/sched/isolation.h>
+>  #include <uapi/linux/pci.h>
 >  
->  	/*
-> -	 * Root ports are capable of generating PME too.  Root Complex
-> -	 * Event Collectors can also generate PMEs, but we don't handle
-> -	 * those yet.
-> +	 * Root ports and Root Complex Event Collectors are capable
-> +	 * of generating PME.
->  	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+>  #include <linux/pci_ids.h>
+> @@ -1797,6 +1798,22 @@ static inline int
+>  pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  		      unsigned int max_vecs, unsigned int flags)
+>  {
+> +	unsigned int hk_cpus;
+> +
+> +	hk_cpus = housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ);
 
-It seems like this change belongs in patch 09/10, where we change
-pme.c so it claims both Root Ports and RCECs.  Does this hunk
-accomplish anything before 09/10?
+Add blank line here before the block comment.
 
->  	    (pcie_ports_native || host->native_pme)) {
->  		services |= PCIE_PORT_SERVICE_PME;
->  
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 3a3ce40ae1ab..4d880679b9b1 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	if (!pci_is_pcie(dev) ||
->  	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
->  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
-> -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
-> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
-> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->  		return -ENODEV;
->  
->  	status = pcie_port_device_register(dev);
-> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] = {
->  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
->  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
->  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
-> +	/* handle any Root Complex Event Collector */
-> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
->  	{ },
->  };
->  
+> +	/*
+> +	 * If we have isolated CPUs for use by real-time tasks, to keep the
+> +	 * latency overhead to a minimum, device-specific IRQ vectors are moved
+> +	 * to the housekeeping CPUs from the userspace by changing their
+> +	 * affinity mask. Limit the vector usage to keep housekeeping CPUs from
+> +	 * running out of IRQ vectors.
+> +	 */
+> +	if (hk_cpus < num_online_cpus()) {
+> +		if (hk_cpus < min_vecs)
+> +			max_vecs = min_vecs;
+> +		else if (hk_cpus < max_vecs)
+> +			max_vecs = hk_cpus;
+> +	}
+
+It seems like you'd want to do this inside
+pci_alloc_irq_vectors_affinity() since that's an exported interface,
+and drivers that use it will bypass the limiting you're doing here.
+
+>  	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+>  					      NULL);
+>  }
 > -- 
-> 2.28.0
+> 2.18.2
 > 
