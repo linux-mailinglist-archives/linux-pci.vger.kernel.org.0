@@ -2,135 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5698278237
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 10:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7F78278256
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 10:13:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgIYIHJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 04:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
+        id S1727286AbgIYINE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 04:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgIYIHI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 04:07:08 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5AAC0613CE
-        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 01:07:08 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id f142so1952329qke.13
-        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 01:07:08 -0700 (PDT)
+        with ESMTP id S1727063AbgIYINE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 04:13:04 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BC8C0613CE
+        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 01:13:04 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o5so2493656wrn.13
+        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 01:13:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hn0e3Tp85GV0MRP60OpDMqINazpvyfo57YYV96qSEcQ=;
-        b=QnngdGG5WlwoASqtYZgero4yQufOwOZS90U1fysFJd+DzrgFEW9bQjmABtldW27LAh
-         ERev8Bh0ARgvN0brT9uPynBmrZu/KZLWBMf5mu1Tavpj4CxmwiUD+YNZuuNGpebQy+Zr
-         HGl0oZDJuKWRB+aznMZtuPRhebIcVFeELlpu0aQcSlKuqRa78vH9pLsFvimH7wr0dMEm
-         j9P/UNAA5sAHoEKDQd8mD8jNejfYfrDXi3RY3yrIzDOC2hN4FUf1C4FE+hDAC0O01RQN
-         j9Ks2/EYQCqWpKPWVrIFQE2uLoCxtwa9SB9ZODZYw6jHZd2Owk6HQhCgHy1AlGUvcwb0
-         dh3A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=H+3WzdqdQFTD9YVJPe0cUi1421BcNuytEOcD1N3pbAA=;
+        b=iqNxY34qj1j0Vv2BeallVZbgpm04aSXY4oypqhqgW0QDLuR8mqpJNA1B9Y9UnjdMrl
+         zVFiBENE+bjpgYfDjjt2EamF+PHd0FtpAIHypBr4RHDbRo5BFaSpq0F83RDxs+f4HHo5
+         68k9OZcMaOtaIDhr0gqewkiOmoFGvJGS1P5b1jz8vHWmvN1aXRfa+DeuVoIK65vvlHJY
+         GE8o9OaXY+isCDJSd5Q1GxaXlL3866/Xh8fTBY80W+1hwhaL4rlF/754RIxVkj7JaVXL
+         F1eOfIjmFVKkuUgOLFVSWSCoOQkvlur6VP1qVSfjZ+XAsxHVtMU59+vuFJVGFACTiOnK
+         Y8sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hn0e3Tp85GV0MRP60OpDMqINazpvyfo57YYV96qSEcQ=;
-        b=EcFcKo3mPLkRFY0+IZopcEVgvRZfItRA0VLfzJQqiNirBkeOnkwHgei1kQEGKeFywn
-         iyH/XDk4zkvv4R024Wfgp6xQWh2iECGpF2rLUn+5IhR3l7NiEixGbtYJQ6sP4Yh+hvXH
-         Uu7gi2V80euTJx9BMpBU5KGLWM32z5wEzDLgSxv+De8A1+bLPwZLoWdTxY9+IIAUdk2k
-         KplkgP3ZJjIp/ggf1pbj/W6CeDRQ7NaNP1amMM/2bgAoHlgxoUy6nsK0a7WSe3or9xQy
-         VDKiqVdYWsFpmOEONf6w+T9w2xv0thKqsq2PeDwF4RQ0VOIGeKvo4xDqRgOCxAzWjigx
-         yQRw==
-X-Gm-Message-State: AOAM531fgJMqka8NT0JJEvZyZCJqaINxuRTiX9LhOhqnXXIYKGmS6IYW
-        zG+r1fBftHOWhHaNiVpx553dtH/D7KEDhSjj8DBeJsw015U=
-X-Google-Smtp-Source: ABdhPJx3ahT7FEhKPf0OavdvXPLl7+bCb13GIRGxDVX6iUygdrhrgzv/E1yZH9GdKb4UtRjnrcrozUrEwalyp/r86CY=
-X-Received: by 2002:ae9:ee06:: with SMTP id i6mr2939612qkg.380.1601021227723;
- Fri, 25 Sep 2020 01:07:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAA85sZvm5SyiG_AE3=4Xowz4AYuMW38uvw8QJ5D8WL3=1Tkv7w@mail.gmail.com>
- <20200924162442.GA2321475@bjorn-Precision-5520>
-In-Reply-To: <20200924162442.GA2321475@bjorn-Precision-5520>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Fri, 25 Sep 2020 10:06:54 +0200
-Message-ID: <CAA85sZvLN4tvFS_EpC1SHyZic8kgCDF7NFG6KSeEXqSAyjuBmA@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H+3WzdqdQFTD9YVJPe0cUi1421BcNuytEOcD1N3pbAA=;
+        b=ivw1ULQeQIud2b1cVo6jIok23m3q5Cc2EqDli3uZu2IkMhp69dCdFvIh2pv5dlAViu
+         GAotvY2JQUtkCDSp2dH7Nw+b4A4IaCTJzqCMg0xvyeG1wK0HQ441scESV9raFrePFp1l
+         oqveH7NU2vwhAwH40VpXy7s5b37CAbsi+zso8WjZiYikkRifXxGlZXXKz5w3CEHQA6aC
+         h0pJdHRmP6XdYx1L2e8tgyUqbG52fAiwmfwSk6ZiybpaT75xoLIhKvqHuCM34sGqLQzT
+         LB9AKaOdz7Nyh6ZhfdVTnxu4N2191mzGCAQ5yT/kBhLN5U6nUilZ1MEI7fJA3mUi6AeP
+         oU4g==
+X-Gm-Message-State: AOAM530PhB0BrL39bOyU2YjpCmfl1VmUfSIbCTzdvJ/E6oT6wc21siRE
+        OF3Ap0EaHtfcyOFYN6mfkapftQ==
+X-Google-Smtp-Source: ABdhPJzferA03aonshOz4wYiPb6ai1yoyCYdneu0wO9qrUHroSPM0f6AASiRX9eeyY81L6rbKyBxMQ==
+X-Received: by 2002:adf:f382:: with SMTP id m2mr2925330wro.327.1601021582974;
+        Fri, 25 Sep 2020 01:13:02 -0700 (PDT)
+Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id k15sm1982212wrv.90.2020.09.25.01.13.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2020 01:13:02 -0700 (PDT)
+Date:   Fri, 25 Sep 2020 10:12:43 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org,
+        joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
+        jasowang@redhat.com, kevin.tian@intel.com,
+        sebastien.boeuf@intel.com, eric.auger@redhat.com,
+        lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH v3 5/6] iommu/virtio: Support topology description in
+ config space
+Message-ID: <20200925081243.GA490533@myrica>
+References: <20200821131540.2801801-6-jean-philippe@linaro.org>
+ <20200924152203.GA2320481@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200924152203.GA2320481@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ok so it might not be related to that change then...
+On Thu, Sep 24, 2020 at 10:22:03AM -0500, Bjorn Helgaas wrote:
+> On Fri, Aug 21, 2020 at 03:15:39PM +0200, Jean-Philippe Brucker wrote:
+> > Platforms without device-tree nor ACPI can provide a topology
+> > description embedded into the virtio config space. Parse it.
+> > 
+> > Use PCI FIXUP to probe the config space early, because we need to
+> > discover the topology before any DMA configuration takes place, and the
+> > virtio driver may be loaded much later. Since we discover the topology
+> > description when probing the PCI hierarchy, the virtual IOMMU cannot
+> > manage other platform devices discovered earlier.
+> 
+> > +struct viommu_cap_config {
+> > +	u8 bar;
+> > +	u32 length; /* structure size */
+> > +	u32 offset; /* structure offset within the bar */
+> 
+> s/the bar/the BAR/ (to match comment below).
+> 
+> > +static void viommu_pci_parse_topology(struct pci_dev *dev)
+> > +{
+> > +	int ret;
+> > +	u32 features;
+> > +	void __iomem *regs, *common_regs;
+> > +	struct viommu_cap_config cap = {0};
+> > +	struct virtio_pci_common_cfg __iomem *common_cfg;
+> > +
+> > +	/*
+> > +	 * The virtio infrastructure might not be loaded at this point. We need
+> > +	 * to access the BARs ourselves.
+> > +	 */
+> > +	ret = viommu_pci_find_capability(dev, VIRTIO_PCI_CAP_COMMON_CFG, &cap);
+> > +	if (!ret) {
+> > +		pci_warn(dev, "common capability not found\n");
+> 
+> Is the lack of this capability really an error, i.e., is this
+> pci_warn() or pci_info()?  The "device doesn't have topology
+> description" below is only pci_dbg(), which suggests that we can live
+> without this.
 
-but:
- ID] Interval           Transfer     Bitrate
-[  5]   0.00-1.00   sec  4.34 MBytes  36.4 Mbits/sec
-[  5]   1.00-2.00   sec  7.11 MBytes  59.6 Mbits/sec
-[  5]   2.00-3.00   sec  4.76 MBytes  39.9 Mbits/sec
-[  5]   3.00-4.00   sec  4.13 MBytes  34.7 Mbits/sec
-[  5]   4.00-5.00   sec  4.19 MBytes  35.1 Mbits/sec
-[  5]   5.00-6.00   sec  5.70 MBytes  47.8 Mbits/sec
-[  5]   6.00-7.00   sec  5.96 MBytes  50.0 Mbits/sec
-[  5]   7.00-8.00   sec  4.17 MBytes  35.0 Mbits/sec
-[  5]   8.00-9.00   sec  4.14 MBytes  34.7 Mbits/sec
-[  5]   9.00-10.00  sec  4.08 MBytes  34.3 Mbits/sec
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate
-[  5]   0.00-10.00  sec  48.6 MBytes  40.8 Mbits/sec                  receiver
+At this point we know that this is a (modern) virtio-pci device which,
+according to the virtio 1.0 specification, must have this capability. So
+this is definitely an error, but the topology description is an optional
+feature.
 
-The issue persists
+> 
+> Maybe a hint about what "common capability" means?
 
-On Thu, Sep 24, 2020 at 6:24 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Sep 23, 2020 at 11:36:00PM +0200, Ian Kumlien wrote:
->
-> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=66ff14e59e8a
-> >
-> > "7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-> > Linux to enable ASPM, but for some undocumented reason, it didn't enable
-> > ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
-> >
-> > Remove this exclusion so we can enable ASPM on these links."
-> > ...
->
-> > And all of this worked before the commit above.
->
-> OK, really sorry, I got myself totally confused here, and I need to
-> start over from scratch.  Correct me when I go off the rails.
->
-> You're running 5.8.11+, and you get ~40 Mbit/s on the Intel I211 NIC.
-> Reverting 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to
-> PCIe-to-PCI/PCI-X Bridges") gets your bandwidth up to the 900+ Mbit/s
-> you expect.
->
-> 66ff14e59e8a only makes a difference if you have a PCIe-to-PCI/PCI-X
-> Bridge (PCI_EXP_TYPE_PCI_BRIDGE) in your system.  But from your lspci
-> and pci=earlydump output, I don't see any of those.  The only bridges
-> I see are:
->
-> [    0.810346] pci 0000:00:01.2: [1022:1483] type 01 Root Port to [bus 01-07]
-> [    0.810587] pci 0000:00:03.1: [1022:1483] type 01 Root Port to [bus 08]
-> [    0.810587] pci 0000:00:03.2: [1022:1483] type 01 Root Port to [bus 09]
-> [    0.810837] pci 0000:00:07.1: [1022:1484] type 01 Root Port to [bus 0a]
-> [    0.811587] pci 0000:00:08.1: [1022:1484] type 01 Root Port to [bus 0b]
-> [    0.812586] pci 0000:01:00.0: [1022:57ad] type 01 Upstream Port to [bus 02-07]
-> [    0.812629] pci 0000:02:03.0: [1022:57a3] type 01 Downstream Port to [bus 03]
-> [    0.813584] pci 0000:02:04.0: [1022:57a3] type 01 Downstream Port to [bus 04]
-> [    0.814584] pci 0000:02:08.0: [1022:57a4] type 01 Downstream Port to [bus 05]
-> [    0.815584] pci 0000:02:09.0: [1022:57a4] type 01 Downstream Port to [bus 06]
-> [    0.815584] pci 0000:02:0a.0: [1022:57a4] type 01 Downstream Port to [bus 07]
->
-> So I'm lost right off the bat.  You have no PCI_EXP_TYPE_PCI_BRIDGE
-> device, so how can 66ff14e59e8a make a difference for you?
->
-> Can you add a printk there, e.g.,
->
->         list_for_each_entry(child, &linkbus->devices, bus_list) {
->                 if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
->   +                     pci_info(child, "PCIe-to-PCI bridge, disabling ASPM\n");
->                         link->aspm_disable = ASPM_STATE_ALL;
->                         break;
->                 }
->         }
->
+Yes, "virtio-pci common configuration capability" would be more
+appropriate
+
+> 
+> > +		return;
+> > +	}
+> > +
+> > +	if (pci_enable_device_mem(dev))
+> > +		return;
+> > +
+> > +	common_regs = pci_iomap(dev, cap.bar, 0);
+> > +	if (!common_regs)
+> > +		return;
+> > +
+> > +	common_cfg = common_regs + cap.offset;
+> > +
+> > +	/* Perform the init sequence before we can read the config */
+> > +	ret = viommu_pci_reset(common_cfg);
+> 
+> I guess this is some special device-specific reset, not any kind of
+> standard PCI reset?
+
+Yes it's the virtio reset - writing 0 to the status register in the BAR.
+
+Thanks,
+Jean
