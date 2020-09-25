@@ -2,108 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAC2A279049
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 20:27:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D6B0279059
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 20:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbgIYS1U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 14:27:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32185 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729768AbgIYS1S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 14:27:18 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601058437;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:in-reply-to:in-reply-to:references:references;
-        bh=rRcKZ8I6kczvYIrMGUe8rB/gq5sgstXC59hVf7TDlHU=;
-        b=WFAT6hK3J5IS3OJKEUtDBbYo7EHf1AcdLZhu5qB2oPFcOaww7CQZ9WKhOzlQw93gtPYMRG
-        pHBT7s8BGPNCexJhNEF5ecwDBaTWjqmBYAwsG7U10dh++GzF8TF2/NEzWhvm++urVFZu2J
-        A9Zy5kQeYm0mv+uKT3pAaZxSYnbmKKY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-FZhrcYxJO-OgZXPDVOWqFQ-1; Fri, 25 Sep 2020 14:27:13 -0400
-X-MC-Unique: FZhrcYxJO-OgZXPDVOWqFQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729676AbgIYSaZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 14:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727201AbgIYSaZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Sep 2020 14:30:25 -0400
+Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2F0188EF1F;
-        Fri, 25 Sep 2020 18:27:10 +0000 (UTC)
-Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1BBA878810;
-        Fri, 25 Sep 2020 18:27:09 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        helgaas@kernel.org, nitesh@redhat.com, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jiri@nvidia.com, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        lgoncalv@redhat.com
-Subject: [PATCH v3 4/4] PCI: Limit pci_alloc_irq_vectors() to housekeeping CPUs
-Date:   Fri, 25 Sep 2020 14:26:54 -0400
-Message-Id: <20200925182654.224004-5-nitesh@redhat.com>
-In-Reply-To: <20200925182654.224004-1-nitesh@redhat.com>
-References: <20200925182654.224004-1-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mail.kernel.org (Postfix) with ESMTPSA id E6320208A9;
+        Fri, 25 Sep 2020 18:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601058624;
+        bh=rXcFv8OheuhLrzWzB3xaBLB97MzI/dNcICm7DSrTx3k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=k52FA68Qt7WN/ka8Vqi6Df1TbvWssCa2ZhdmAwPynzOqUiN1rEmIAYQxOGaMGVkI8
+         KRlw/RbfyDcF0YB1F2E7xh5rsoBaJYOP4IHOQ/5ppZ6E/ylXSL0fPWz/YXumTIL0pP
+         MmeE4OhHAlupAVf8cXkCxYF7gjaahrYAzLJhXux0=
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200922233333.GA2239404@bjorn-Precision-5520>
+ <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
+ <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
+ <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com>
+ <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
+ <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
+ <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
+ <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
+ <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
+ <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
+ <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
+ <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
+ <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
+ <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <44f0cac5-8deb-1169-eb6d-93ac4889fe7e@kernel.org>
+Date:   Fri, 25 Sep 2020 14:30:21 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If we have isolated CPUs dedicated for use by real-time tasks, we try to
-move IRQs to housekeeping CPUs from the userspace to reduce latency
-overhead on the isolated CPUs.
+On 9/25/2020 2:16 PM, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>> If this is a too involved change, DPC driver should restore state
+>> when hotplug is not supported.
+> Yes. we can add a condition for hotplug capability check.
+>>
+>> DPC driver should be self-sufficient by itself.
+>>
 
-If we allocate too many IRQ vectors, moving them all to housekeeping CPUs
-may exceed per-CPU vector limits.
+Sounds good.
 
-When we have isolated CPUs, limit the number of vectors allocated by
-pci_alloc_irq_vectors() to the minimum number required by the driver, or
-to one per housekeeping CPU if that is larger.
+>>> Also for non-fatal errors, if reset is requested then we still need
+>>> some kind of bus reset call here
+>>
+>> DPC should handle both fatal and non-fatal cases
+> Currently DPC is only triggered for FATAL errors.
+>  and cause a bus reset
 
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- include/linux/pci.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Thanks for the heads up.
+This seems to have changed since I looked at the DPC code.
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 835530605c0d..a7b10240b778 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -38,6 +38,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/resource_ext.h>
-+#include <linux/sched/isolation.h>
- #include <uapi/linux/pci.h>
- 
- #include <linux/pci_ids.h>
-@@ -1797,6 +1798,22 @@ static inline int
- pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
- 		      unsigned int max_vecs, unsigned int flags)
- {
-+	unsigned int hk_cpus;
-+
-+	hk_cpus = housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ);
-+	/*
-+	 * If we have isolated CPUs for use by real-time tasks, to keep the
-+	 * latency overhead to a minimum, device-specific IRQ vectors are moved
-+	 * to the housekeeping CPUs from the userspace by changing their
-+	 * affinity mask. Limit the vector usage to keep housekeeping CPUs from
-+	 * running out of IRQ vectors.
-+	 */
-+	if (hk_cpus < num_online_cpus()) {
-+		if (hk_cpus < min_vecs)
-+			max_vecs = min_vecs;
-+		else if (hk_cpus < max_vecs)
-+			max_vecs = hk_cpus;
-+	}
- 	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
- 					      NULL);
- }
--- 
-2.18.2
+>> in hardware already before triggering an interrupt.
+> Error recovery is not triggered only DPC driver. AER also uses the
+> same error recovery code. If DPC is not supported, then we still need
+> reset logic.
 
+It sounds like we are cross-talking two issues.
+
+1. no state restore on DPC after FATAL error.
+Let's fix this.
+
+2. no bus reset on NON_FATAL error through AER driver path.
+This already tells me that you need to split your change into
+multiple patches.
+
+Let's talk about this too. bus reset should be triggered via
+AER driver before informing the recovery.
+
+	if (status == PCI_ERS_RESULT_NEED_RESET) {
+		/*
+		 * TODO: Should call platform-specific
+		 * functions to reset slot before calling
+		 * drivers' slot_reset callbacks?
+		 */
+		status = PCI_ERS_RESULT_RECOVERED;
+		pci_dbg(dev, "broadcast slot_reset message\n");
+		pci_walk_bus(bus, report_slot_reset, &status);
+	}
