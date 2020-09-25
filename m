@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6AD52793AD
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 23:40:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6A5E2793C1
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 23:49:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgIYVkA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 17:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36304 "EHLO
+        id S1727286AbgIYVta (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 17:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgIYVkA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 17:40:00 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FD3C0613CE
-        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 14:40:00 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id x16so2898928pgj.3
-        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 14:40:00 -0700 (PDT)
+        with ESMTP id S1726412AbgIYVta (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 17:49:30 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D2AC0613CE
+        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 14:49:30 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id jw11so186301pjb.0
+        for <linux-pci@vger.kernel.org>; Fri, 25 Sep 2020 14:49:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QmafiPpDZbVY4DMisW5kzbNf40EP7isLeadTAsoh5x8=;
-        b=0hmcMVXQnMNYDdihlk8d+BigaxwjlFUKEWFJygyC7crtrjFYF5HVpZBV4BMMXrl6wh
-         g4zM7i8Qx0Cg+y/SILRSBeGnudsKB8sQJyuD9ZVItsW5kJ2J+kk6JlR3tAep1e5faA+A
-         bpZLtRF3bgjctigvr+/YCirJkP5KP+WcFXFr6vYWkQ6wiqbfxB+Jrp7m1t1tB711/pVo
-         oUbFOGNeObzQDAvpvh5YKKvWqNPzo2MD/9riMMcOOFjOWOoNmJ8ureamrqBiB8mf+BWJ
-         AJNmkmgnGDv9dFj5ktZKA3XZvG2O7IAShpcekjNNgZ8zhZbZvWXKvNFOOM+VpxjaamPs
-         ay9Q==
+         :mime-version;
+        bh=fnjUF/voPvuzv/dLnDwKTFVpoCBAlVLzlUtOZ7ywSnE=;
+        b=C3vpLmGCW68ANbhnOaz2h6lzbnyxJxhTilf7RmDW7o5+xYdQShz3cfUnUmaMf36WUB
+         Goh+j3wX4IomhnOFgSk9Qqzndy26jMQUtVDDVNUETPGOuJILmetyLO214ZUbsg2OfRp4
+         mF4Enl6IpFLmTjP/8gf9gDfbhaq91+N4R6gOa2uRvERoXHaCach8ohD9rzyfEtQyd6Ot
+         /gs1NS1whrz3/PzrAmIoXYWJLPq1E83qJnhtADt6ZM0HlEXIuYhZgsHhTT5h+YslGvQP
+         +OtHTZaA5tuv4Mn0jTiu379rlMSeT6Wd2AM56p5cKudwH/XJVKHe0s4KDTFlL1h2zB8j
+         d69g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QmafiPpDZbVY4DMisW5kzbNf40EP7isLeadTAsoh5x8=;
-        b=lUhkVBXJir9wsuWW46HZKJbk9vYhNNatfyLmrCw5TNoRH1kITZc3O6p4rYNw1fBojL
-         KP4lkNLIiwGzosJjsfk/aQgIO9fg6lMHKcq8ezYp4+pyhd4wFc5BEOS3r4NaoitfAQMp
-         EpmO/JY8JACAfr/FC7dSfcPmuWrxh3gCe5jlnJ2R6LWjpp/Iwe44qCG7MFh7TJNf+ycu
-         uc7n5x3lB/lus3YmNDpAUqFSOCt0XH7y6DunK3nnGbH5MInelyzqN40oXq2crPycJBiJ
-         08hTfkvsFgXYJW4XoJ+bOlcZArvZmAm/huFDVjDSikfwiFZWq6lrjYDJi2T3kddUD9Os
-         f2uw==
-X-Gm-Message-State: AOAM530VZTK8tOqpdoIfmRY46hXITF/YWaKuBCbbIekYJ/2DgsW6Lv6e
-        1gccOGsCgQmT2WT6kVJQf4q1V9II9Ukgqg==
-X-Google-Smtp-Source: ABdhPJyDGTEY5Iecp1lQPV3mBvl+zW3o+Szp0F3pV38ayi3WvjRD1hCPSnL+DrX8aKq+u7PdZnvgSw==
-X-Received: by 2002:aa7:9157:0:b029:142:2501:3984 with SMTP id 23-20020aa791570000b029014225013984mr1093626pfi.73.1601069999565;
-        Fri, 25 Sep 2020 14:39:59 -0700 (PDT)
+         :references:mime-version;
+        bh=fnjUF/voPvuzv/dLnDwKTFVpoCBAlVLzlUtOZ7ywSnE=;
+        b=gr+LeqbD2xhGqprIHF4bBwH8aotJSnfX1aBldZEW7b37vHh99GsBRszPtXCG8FgiHi
+         xXstlETpPfuviS4DLYKvoMuz6MWHpRDz4rl4xvwfrMUvOH0x/cAA8Fx13sqshlBPTK4m
+         uZAlcdwaCZReMccbPNHJ8L5cOy/DxtfGhp33I0kjTKyin6sYQyIBJ2jOgvedcP4rhFpt
+         78qyQ5onk7MD0l7oP2SalQJ5y5T+TPs9v9Rcm9uFafcQob8iuXDZzbtdpuWB3EltoNGQ
+         BHv4fBqfESb90wYOVEicgkax2rOcVGPXl5mJeoMVGwCzUB1hGuBzzjGcJeVYIyK9tGc3
+         74lg==
+X-Gm-Message-State: AOAM533gaBlcwurbHsEs3e3h1ok3jlvCIDmlViudYB7voHQeX7mANAju
+        d8xbXdHcXccgPs4uBaAZDomuWA==
+X-Google-Smtp-Source: ABdhPJyaYrhQywp2qaaPfy4YgApx9UaJR3jSScPYQ8aimLoSCq4iazoA7b1KyyBsEEuWJ+ZQf75HQg==
+X-Received: by 2002:a17:90b:1b50:: with SMTP id nv16mr491097pjb.153.1601070569873;
+        Fri, 25 Sep 2020 14:49:29 -0700 (PDT)
 Received: from [10.212.51.97] ([192.55.54.42])
-        by smtp.gmail.com with ESMTPSA id y10sm3694581pfp.77.2020.09.25.14.39.57
+        by smtp.gmail.com with ESMTPSA id o11sm3341494pgq.36.2020.09.25.14.49.28
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Sep 2020 14:39:58 -0700 (PDT)
+        Fri, 25 Sep 2020 14:49:29 -0700 (PDT)
 From:   "Sean V Kelley" <sean.v.kelley@intel.com>
 To:     "Bjorn Helgaas" <helgaas@kernel.org>
 Cc:     "Sean V Kelley" <seanvk.dev@oregontracks.org>, bhelgaas@google.com,
@@ -54,120 +54,226 @@ Cc:     "Sean V Kelley" <seanvk.dev@oregontracks.org>, bhelgaas@google.com,
         ashok.raj@intel.com, tony.luck@intel.com,
         sathyanarayanan.kuppuswamy@intel.com, qiuxu.zhuo@intel.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 02/10] PCI/RCEC: Bind RCEC devices to the Root Port
- driver
-Date:   Fri, 25 Sep 2020 14:39:56 -0700
+Subject: Re: [PATCH v6 03/10] PCI/RCEC: Cache RCEC capabilities in
+ pci_init_capabilities()
+Date:   Fri, 25 Sep 2020 14:49:27 -0700
 X-Mailer: MailMate (1.13.2r5673)
-Message-ID: <CD5CCACF-114C-4F61-AC06-CED19149ADB7@intel.com>
-In-Reply-To: <20200925195913.GA2455203@bjorn-Precision-5520>
-References: <20200925195913.GA2455203@bjorn-Precision-5520>
+Message-ID: <02EA37E5-87CB-401E-B5CA-BDE3A0D92517@intel.com>
+In-Reply-To: <20200925201312.GA2455652@bjorn-Precision-5520>
+References: <20200925201312.GA2455652@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25 Sep 2020, at 12:59, Bjorn Helgaas wrote:
+On 25 Sep 2020, at 13:13, Bjorn Helgaas wrote:
 
-> On Tue, Sep 22, 2020 at 02:38:51PM -0700, Sean V Kelley wrote:
->> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> On Tue, Sep 22, 2020 at 02:38:52PM -0700, Sean V Kelley wrote:
+>> From: Sean V Kelley <sean.v.kelley@intel.com>
 >>
->> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors 
->> may
->> optionally be sent to a corresponding Root Complex Event Collector 
->> (RCEC).
->> Each RCiEP must be associated with no more than one RCEC. Interface 
->> errors
->> are reported to the OS by RCECs.
+>> Extend support for Root Complex Event Collectors by decoding and
+>> caching the RCEC Endpoint Association Extended Capabilities when
+>> enumerating. Use that cached information for later error source
+>> reporting. See PCI Express Base Specification, version 5.0-1,
+>> section 7.9.10.
 >>
->> For an RCEC (technically not a Bridge), error messages "received" 
->> from
->> associated RCiEPs must be enabled for "transmission" in order to 
->> cause a
->> System Error via the Root Control register or (when the Advanced 
->> Error
->> Reporting Capability is present) reporting via the Root Error Command
->> register and logging in the Root Error Status register and Error 
->> Source
->> Identification register.
->>
->> Given the commonality with Root Ports and the need to also support 
->> AER
->> and PME services for RCECs, extend the Root Port driver to support 
->> RCEC
->> devices through the addition of the RCEC Class ID to the driver
->> structure.
->>
->> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+>> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 >> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 >> ---
->>  drivers/pci/pcie/portdrv_core.c | 8 ++++----
->>  drivers/pci/pcie/portdrv_pci.c  | 5 ++++-
->>  2 files changed, 8 insertions(+), 5 deletions(-)
+>>  drivers/pci/pci.h         | 18 ++++++++++++++
+>>  drivers/pci/pcie/Makefile |  2 +-
+>>  drivers/pci/pcie/rcec.c   | 52 
+>> +++++++++++++++++++++++++++++++++++++++
+>>  drivers/pci/probe.c       |  3 ++-
+>>  include/linux/pci.h       |  4 +++
+>>  5 files changed, 77 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/pci/pcie/rcec.c
 >>
->> diff --git a/drivers/pci/pcie/portdrv_core.c 
->> b/drivers/pci/pcie/portdrv_core.c
->> index 50a9522ab07d..99769c636775 100644
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -234,11 +234,11 @@ static int get_port_device_capability(struct 
->> pci_dev *dev)
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index fa12f7cbc1a0..83670a6425d8 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -449,6 +449,16 @@ int aer_get_device_error_info(struct pci_dev 
+>> *dev, struct aer_err_info *info);
+>>  void aer_print_error(struct pci_dev *dev, struct aer_err_info 
+>> *info);
+>>  #endif	/* CONFIG_PCIEAER */
+>>
+>> +#ifdef CONFIG_PCIEPORTBUS
+>> +/* Cached RCEC Associated Endpoint Extended Capabilities */
+>> +struct rcec_ext {
+>> +	u8		ver;
+>> +	u8		nextbusn;
+>> +	u8		lastbusn;
+>> +	u32		bitmap;
+>> +};
+>> +#endif
+>> +
+>>  #ifdef CONFIG_PCIE_DPC
+>>  void pci_save_dpc_state(struct pci_dev *dev);
+>>  void pci_restore_dpc_state(struct pci_dev *dev);
+>> @@ -461,6 +471,14 @@ static inline void pci_restore_dpc_state(struct 
+>> pci_dev *dev) {}
+>>  static inline void pci_dpc_init(struct pci_dev *pdev) {}
 >>  #endif
 >>
->>  	/*
->> -	 * Root ports are capable of generating PME too.  Root Complex
->> -	 * Event Collectors can also generate PMEs, but we don't handle
->> -	 * those yet.
->> +	 * Root ports and Root Complex Event Collectors are capable
->> +	 * of generating PME.
->>  	 */
->> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
->> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+>> +#ifdef CONFIG_PCIEPORTBUS
+>> +void pci_rcec_init(struct pci_dev *dev);
+>> +void pci_rcec_exit(struct pci_dev *dev);
+>> +#else
+>> +static inline void pci_rcec_init(struct pci_dev *dev) {}
+>> +static inline void pci_rcec_exit(struct pci_dev *dev) {}
+>> +#endif
+>> +
+>>  #ifdef CONFIG_PCI_ATS
+>>  /* Address Translation Service */
+>>  void pci_ats_init(struct pci_dev *dev);
+>> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+>> index 68da9280ff11..d9697892fa3e 100644
+>> --- a/drivers/pci/pcie/Makefile
+>> +++ b/drivers/pci/pcie/Makefile
+>> @@ -2,7 +2,7 @@
+>>  #
+>>  # Makefile for PCI Express features and port driver
+>>
+>> -pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
+>> +pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o rcec.o
+>>
+>>  obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
+>>
+>> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+>> new file mode 100644
+>> index 000000000000..519ae086ff41
+>> --- /dev/null
+>> +++ b/drivers/pci/pcie/rcec.c
+>> @@ -0,0 +1,52 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Root Complex Event Collector Support
+>> + *
+>> + * Authors:
+>> + *  Sean V Kelley <sean.v.kelley@intel.com>
+>> + *  Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>> + *
+>> + * Copyright (C) 2020 Intel Corp.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/pci_regs.h>
 >
-> It seems like this change belongs in patch 09/10, where we change
-> pme.c so it claims both Root Ports and RCECs.  Does this hunk
-> accomplish anything before 09/10?
+> Do we really need all the above?  I don't see any errno or bitops
+> here.
 
-You are right.  It’s not needed until 09/10.  Will move.
+Will remove unused.
+
+>
+>> +#include "../pci.h"
+>> +
+>> +void pci_rcec_init(struct pci_dev *dev)
+>> +{
+>> +	u32 rcec, hdr, busn;
+>> +
+>> +	/* Only for Root Complex Event Collectors */
+>> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)
+>> +		return;
+>> +
+>> +	dev->rcec_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC);
+>> +	if (!dev->rcec_cap)
+>> +		return;
+>> +
+>> +	dev->rcec_ext = kzalloc(sizeof(*dev->rcec_ext), GFP_KERNEL);
+>> +
+>> +	rcec = dev->rcec_cap;
+>> +	pci_read_config_dword(dev, rcec + PCI_RCEC_RCIEP_BITMAP, 
+>> &dev->rcec_ext->bitmap);
+>> +
+>> +	/* Check whether RCEC BUSN register is present */
+>> +	pci_read_config_dword(dev, rcec, &hdr);
+>> +	dev->rcec_ext->ver = PCI_EXT_CAP_VER(hdr);
+>> +	if (dev->rcec_ext->ver < PCI_RCEC_BUSN_REG_VER)
+>> +		return;
+>> +
+>> +	pci_read_config_dword(dev, rcec + PCI_RCEC_BUSN, &busn);
+>> +	dev->rcec_ext->nextbusn = PCI_RCEC_BUSN_NEXT(busn);
+>> +	dev->rcec_ext->lastbusn = PCI_RCEC_BUSN_LAST(busn);
+>> +}
+>> +
+>> +void pci_rcec_exit(struct pci_dev *dev)
+>> +{
+>> +	kfree(dev->rcec_ext);
+>> +	dev->rcec_ext = NULL;
+>> +}
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 03d37128a24f..16bc651fecb7 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -2201,6 +2201,7 @@ static void pci_configure_device(struct pci_dev 
+>> *dev)
+>>  static void pci_release_capabilities(struct pci_dev *dev)
+>>  {
+>>  	pci_aer_exit(dev);
+>> +	pci_rcec_exit(dev);
+>>  	pci_vpd_release(dev);
+>>  	pci_iov_release(dev);
+>>  	pci_free_cap_save_buffers(dev);
+>> @@ -2400,7 +2401,7 @@ static void pci_init_capabilities(struct 
+>> pci_dev *dev)
+>>  	pci_ptm_init(dev);		/* Precision Time Measurement */
+>>  	pci_aer_init(dev);		/* Advanced Error Reporting */
+>>  	pci_dpc_init(dev);		/* Downstream Port Containment */
+>> -
+>> +	pci_rcec_init(dev);		/* Root Complex Event Collector */
+>>  	pcie_report_downtraining(dev);
+>>
+>>  	if (pci_probe_reset_function(dev) == 0)
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 835530605c0d..5c5c4eb642b6 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -326,6 +326,10 @@ struct pci_dev {
+>>  #ifdef CONFIG_PCIEAER
+>>  	u16		aer_cap;	/* AER capability offset */
+>>  	struct aer_stats *aer_stats;	/* AER stats for this device */
+>> +#endif
+>> +#ifdef CONFIG_PCIEPORTBUS
+>> +	u16		rcec_cap;	/* RCEC capability offset */
+>
+> Looking through the whole series, I think rcec_cap is used (a) in
+> pci_rcec_init(), where we actually read the RCEC EA capability, and
+> (b) in walk_rcec() and pcie_link_rcec(), where we only use it to test
+> whether the device has an RCEC EA capability.
+>
+> Couldn't we accomplish (b) just by testing "dev->rcec_ext"?  Then we
+> wouldn't need to save rcec_cap at all.
+
+Yes, rcec_ext really implies that the cap is there so the explicit cap 
+would not be necessary.  Will remove and make use of the renamed rcec_ea 
+(per below).
+
+>
+>> +	struct rcec_ext *rcec_ext;	/* RCEC cached assoc. endpoint extended 
+>> capabilities */
+>
+> Maybe "rcec_ea"?  The important part is that this is the Endpoint
+> Association information.  The fact that it happens to be an "extended"
+> capability isn't very interesting.
+
+Right, better to be more specific here.  Will change.
 
 Thanks,
 
 Sean
 
 >
->>  	    (pcie_ports_native || host->native_pme)) {
->>  		services |= PCIE_PORT_SERVICE_PME;
->>
->> diff --git a/drivers/pci/pcie/portdrv_pci.c 
->> b/drivers/pci/pcie/portdrv_pci.c
->> index 3a3ce40ae1ab..4d880679b9b1 100644
->> --- a/drivers/pci/pcie/portdrv_pci.c
->> +++ b/drivers/pci/pcie/portdrv_pci.c
->> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev 
->> *dev,
->>  	if (!pci_is_pcie(dev) ||
->>  	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
->>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
->> -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
->> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
->> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->>  		return -ENODEV;
->>
->>  	status = pcie_port_device_register(dev);
->> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] 
->> = {
->>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
->>  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
->>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
->> +	/* handle any Root Complex Event Collector */
->> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
->>  	{ },
->>  };
->>
+>>  #endif
+>>  	u8		pcie_cap;	/* PCIe capability offset */
+>>  	u8		msi_cap;	/* MSI capability offset */
 >> -- 
 >> 2.28.0
 >>
