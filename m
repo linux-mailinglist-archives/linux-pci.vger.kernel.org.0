@@ -2,127 +2,265 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8993627930D
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 23:13:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9EC4279310
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 23:14:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgIYVNh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 17:13:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38858 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728171AbgIYVNh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Sep 2020 17:13:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id q4so4513799iop.5;
-        Fri, 25 Sep 2020 14:13:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8kwDPxGWO4Zarxs+976VhrgRShKS6L8rrmLcdeo03XU=;
-        b=bH/1qrFFXBB+RdHaYuesSn2ZJcCnGGEyTyLGosZ/9cVR1NiXHaLXberYDX69X1uKLN
-         zIgF7TTeuuoBevGkEQ8r2CyYWhHHTN8xgBLs97grXMuTfD+ZT7gNkY4LyA1DeJBY4zT0
-         5N1klZwobGIOUtZhpVSlaSQX2lDJaLn8ob9rZRyIgRCrQ8e7FOfqnuBWk8akltqiOvde
-         I1XTm0ZYdEBHpQoY+7dvk8eDSuSPaNJerLilpz+/61bPUW3f9EJdlE1KTDAFWpXRjBin
-         hlMwwarAeD+x1K5KrpBrsJ3u4V1qqL4oPpN+j/zHs4WwKaJdl7ykLD8HwEHTDqMSBEYL
-         Zg+Q==
-X-Gm-Message-State: AOAM530BesOfRlxhKsESc1x0g3xIqut4R18wfkpd5ekObIPoluxgoh62
-        L/zcOsbd5HSsh933SDx7Pe1hoYa8C3EH
-X-Google-Smtp-Source: ABdhPJzcS6KJxgxXK5xNBZe2qTu3yKbC+yVLPJn/UV/Er3LVgOvC7c2afoKP/sKN6F+XgON+lf0dUQ==
-X-Received: by 2002:a5d:97cd:: with SMTP id k13mr367521ios.164.1601068416055;
-        Fri, 25 Sep 2020 14:13:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id o13sm2302386ilk.40.2020.09.25.14.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2020 14:13:35 -0700 (PDT)
-Received: (nullmailer pid 980712 invoked by uid 1000);
-        Fri, 25 Sep 2020 21:13:34 -0000
-Date:   Fri, 25 Sep 2020 15:13:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Yue Wang <yue.wang@amlogic.com>, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] pci: meson: build as module by default
-Message-ID: <20200925211334.GA972187@bogus>
-References: <20200918181251.32423-1-khilman@baylibre.com>
+        id S1727286AbgIYVOL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 17:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726849AbgIYVOL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Sep 2020 17:14:11 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B42421D42;
+        Fri, 25 Sep 2020 21:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601068449;
+        bh=cu/yb+YARFaOh6GCfCM2VA/cSGfLAfinRxekQ22Ojkg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cygQazVng5mPTiGZQBf6aPXb10LNrcsbDVQ/7lh3JRSS2PXtzl2NtYyHOOOzZNIoj
+         KGmv20PgzPmHsQRtv+fzldEjrrjPArH49YcB9/rwTWIskzzzdKnhS2CPk1zHjzrPgO
+         XQddZyM3NDDfCjtinz7lrIi/oTvyA1ROWu/4z/yw=
+Date:   Fri, 25 Sep 2020 16:14:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <seanvk.dev@oregontracks.org>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
+        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH v6 04/10] PCI/AER: Extend AER error handling to RCECs
+Message-ID: <20200925211407.GA2457926@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200918181251.32423-1-khilman@baylibre.com>
+In-Reply-To: <20200922213859.108826-5-seanvk.dev@oregontracks.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 18, 2020 at 11:12:51AM -0700, Kevin Hilman wrote:
-> Enable pci-meson to build as a module whenever ARCH_MESON is enabled.
+[+cc Sinan, who's been reviewing changes in this area (thanks, Sinan!)]
+
+On Tue, Sep 22, 2020 at 02:38:53PM -0700, Sean V Kelley wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> Cc: Yue Wang <yue.wang@amlogic.com>
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> Currently the kernel does not handle AER errors for Root Complex
+> integrated End Points (RCiEPs)[0]. These devices sit on a root bus within
+> the Root Complex (RC). AER handling is performed by a Root Complex Event
+> Collector (RCEC) [1] which is a effectively a type of RCiEP on the same
+> root bus.
+> 
+> For an RCEC (technically not a Bridge), error messages "received" from
+> associated RCiEPs must be enabled for "transmission" in order to cause a
+> System Error via the Root Control register or (when the Advanced Error
+> Reporting Capability is present) reporting via the Root Error Command
+> register and logging in the Root Error Status register and Error Source
+> Identification register.
+> 
+> In addition to the defined OS level handling of the reset flow for the
+> associated RCiEPs of an RCEC, it is possible to also have non-native
+> handling. In that case there is no need to take any actions on the RCEC
+> because the firmware is responsible for them. This is true where APEI [2]
+> is used to report the AER errors via a GHES[v2] HEST entry [3] and
+> relevant AER CPER record [4] and non-native handling is in use.
+> 
+> We effectively end up with two different types of discovery for
+> purposes of handling AER errors:
+> 
+> 1) Normal bus walk - we pass the downstream port above a bus to which
+> the device is attached and it walks everything below that point.
+> 
+> 2) An RCiEP with no visible association with an RCEC as there is no need
+> to walk devices. In that case, the flow is to just call the callbacks for
+> the actual device, which in turn references its associated RCEC.
+> 
+> A new walk function pci_bridge_walk(), similar to pci_bus_walk(),
+> is provided that takes a pci_dev instead of a bus. If that bridge
+> corresponds to a downstream port it will walk the subordinate bus of
+> that bridge. If the device does not then it will call the function on
+> that device alone.
+> 
+> [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex
+> Integrated Endpoint Rules.
+> [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling and
+> Logging
+> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface (APEI)
+> [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
+> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+
+I like this patch.  I think there are a few things that could be
+peeled off as "no functional change" preliminary patches to make the
+important changes more obvious in the "money patch".
+
 > ---
-> Tested on Khadas VIM3 and Khadas VIM3 using NVMe SSD devices.
+>  drivers/pci/pci.h      |  2 +-
+>  drivers/pci/pcie/err.c | 77 +++++++++++++++++++++++++++++++-----------
+>  2 files changed, 59 insertions(+), 20 deletions(-)
 > 
->  drivers/pci/controller/dwc/Kconfig     | 3 ++-
->  drivers/pci/controller/dwc/pci-meson.c | 8 +++++++-
->  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 044a3761c44f..bc049865f8e0 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -237,8 +237,9 @@ config PCIE_HISI_STB
->  	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 83670a6425d8..7b547fc3679a 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -575,7 +575,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+>  /* PCI error reporting and recovery */
+>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  			pci_channel_state_t state,
+> -			pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
+> +			pci_ers_result_t (*reset_subordinate_devices)(struct pci_dev *pdev));
 >  
->  config PCI_MESON
-> -	bool "MESON PCIe controller"
-> +	tristate "MESON PCIe controller"
->  	depends on PCI_MSI_IRQ_DOMAIN
-> +	default m if ARCH_MESON
->  	select PCIE_DW_HOST
->  	help
->  	  Say Y here if you want to enable PCI controller support on Amlogic
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 4f183b96afbb..7a1fb55ee44a 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -17,6 +17,7 @@
->  #include <linux/resource.h>
->  #include <linux/types.h>
->  #include <linux/phy/phy.h>
-> +#include <linux/module.h>
+>  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+>  #ifdef CONFIG_PCIEASPM
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index c543f419d8f9..e575fa6cee63 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -146,38 +146,73 @@ static int report_resume(struct pci_dev *dev, void *data)
+>  	return 0;
+>  }
 >  
->  #include "pcie-designware.h"
->  
-> @@ -589,6 +590,7 @@ static const struct of_device_id meson_pcie_of_match[] = {
->  	},
->  	{},
->  };
-> +MODULE_DEVICE_TABLE(of, meson_pcie_of_match);
->  
->  static struct platform_driver meson_pcie_driver = {
->  	.probe = meson_pcie_probe,
+> +/**
+> + * pci_bridge_walk - walk bridges potentially AER affected
+> + * @bridge   bridge which may be an RCEC with associated RCiEPs,
+> + *           an RCiEP associated with an RCEC, or a Port.
+> + * @cb       callback to be called for each device found
+> + * @userdata arbitrary pointer to be passed to callback.
+> + *
+> + * If the device provided is a bridge, walk the subordinate bus,
+> + * including any bridged devices on buses under this bus.
+> + * Call the provided callback on each device found.
+> + *
+> + * If the device provided has no subordinate bus, call the provided
+> + * callback on the device itself.
+> + */
+> +static void pci_bridge_walk(struct pci_dev *bridge, int (*cb)(struct pci_dev *, void *),
 
-You need a remove hook to tear down the PCI bus at least. 
+Maybe call this pci_walk_bridge() so it's the same order as the
+existing pci_walk_bus(), unless there's some reason to be different.
 
-Really I'd like to add a devres hook in pci_host_probe to do that for 
-all the drivers.
-
-> @@ -598,4 +600,8 @@ static struct platform_driver meson_pcie_driver = {
->  	},
->  };
->  
-> -builtin_platform_driver(meson_pcie_driver);
-> +module_platform_driver(meson_pcie_driver);
+> +			    void *userdata)
+> +{
+> +	if (bridge->subordinate)
+> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+> +	else
+> +		cb(bridge, userdata);
+> +}
 > +
-> +MODULE_AUTHOR("Yue Wang <yue.wang@amlogic.com>");
-> +MODULE_DESCRIPTION("Amlogic PCIe Controller driver");
-> +MODULE_LICENSE("Dual BSD/GPL");
+>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  			pci_channel_state_t state,
+> -			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+> +			pci_ers_result_t (*reset_subordinate_devices)(struct pci_dev *pdev))
 
-First line is: SPDX-License-Identifier: GPL-2.0
+The rename to "reset_subordinate_devices" seems separable, since it
+doesn't change the interface.
 
+>  {
+>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> -	struct pci_bus *bus;
+> +	struct pci_dev *bridge;
+> +	int type;
+>  
+>  	/*
+> -	 * Error recovery runs on all subordinates of the first downstream port.
+> -	 * If the downstream port detected the error, it is cleared at the end.
+> +	 * Error recovery runs on all subordinates of the first downstream
+> +	 * bridge. If the downstream bridge detected the error, it is
+> +	 * cleared at the end. For RCiEPs we should reset just the RCiEP itself.
+>  	 */
+> -	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> -		dev = dev->bus->self;
+> -	bus = dev->subordinate;
+> +	type = pci_pcie_type(dev);
+> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	    type == PCI_EXP_TYPE_RC_EC ||
+> +	    type == PCI_EXP_TYPE_RC_END)
+> +		bridge = dev;
+> +	else
+> +		bridge = pci_upstream_bridge(dev);
+
+This makes it much easier to read, thank you.  I think the addition of
+"type", rename of "dev" to "bridge", the inversion of the condition
+(major improvement, thanks again), and use of pci_upstream_bridge()
+instead of dev->bus->self might also be separable?
+
+Of course, you'd have to add the RC_EC and RC_END cases later, in the
+money patch, but that's a good thing because it won't get lost in all
+the other things being changed.
+
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+> -		pci_walk_bus(bus, report_frozen_detected, &status);
+> -		status = reset_link(dev);
+> +		pci_bridge_walk(bridge, report_frozen_detected, &status);
+> +		if (type == PCI_EXP_TYPE_RC_END) {
+> +			pci_warn(dev, "link reset not possible for RCiEP\n");
+> +			status = PCI_ERS_RESULT_NONE;
+> +			goto failed;
+> +		}
+> +
+> +		status = reset_subordinate_devices(bridge);
+>  		if (status != PCI_ERS_RESULT_RECOVERED) {
+> -			pci_warn(dev, "link reset failed\n");
+> +			pci_warn(dev, "subordinate device reset failed\n");
+>  			goto failed;
+>  		}
+>  	} else {
+> -		pci_walk_bus(bus, report_normal_detected, &status);
+> +		pci_bridge_walk(bridge, report_normal_detected, &status);
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(dev, "broadcast mmio_enabled message\n");
+> -		pci_walk_bus(bus, report_mmio_enabled, &status);
+> +		pci_bridge_walk(bridge, report_mmio_enabled, &status);
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> @@ -188,18 +223,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		 */
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(dev, "broadcast slot_reset message\n");
+> -		pci_walk_bus(bus, report_slot_reset, &status);
+> +		pci_bridge_walk(bridge, report_slot_reset, &status);
+>  	}
+>  
+>  	if (status != PCI_ERS_RESULT_RECOVERED)
+>  		goto failed;
+>  
+>  	pci_dbg(dev, "broadcast resume message\n");
+> -	pci_walk_bus(bus, report_resume, &status);
+> -
+> -	if (pcie_aer_is_native(dev))
+> -		pcie_clear_device_status(dev);
+> -	pci_aer_clear_nonfatal_status(dev);
+> +	pci_bridge_walk(bridge, report_resume, &status);
+> +
+> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	    type == PCI_EXP_TYPE_RC_EC) {
+
+Addition of this check also seems worthy of a separate patch (for just
+root ports and downstream ports first, then RC_EC being added later).
+That would make a convenient place to explain why we need the change.
+I think it's *correct*; it just gets lost in the noise and not even
+mentioned when it's done as part of one big patch.
+
+> +		if (pcie_aer_is_native(bridge))
+> +			pcie_clear_device_status(bridge);
+> +		pci_aer_clear_nonfatal_status(bridge);
+> +	}
+>  	pci_info(dev, "device recovery successful\n");
+>  	return status;
+>  
 > -- 
 > 2.28.0
 > 
-> 
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
