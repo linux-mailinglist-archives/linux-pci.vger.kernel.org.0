@@ -2,33 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1EE278F66
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 19:12:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2D8D278FDA
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Sep 2020 19:47:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgIYRMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Sep 2020 13:12:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:29630 "EHLO mga04.intel.com"
+        id S1727324AbgIYRro (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Sep 2020 13:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727521AbgIYRMn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Sep 2020 13:12:43 -0400
-IronPort-SDR: M23hTGy65RZdhh55Q0K0UNn+UqaHW7SVZn9AyBmEMi/vJdoULHjhyod61dH1VX54lCxpGY7G5f
- KF0QpkjrKgaQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9755"; a="158988191"
-X-IronPort-AV: E=Sophos;i="5.77,302,1596524400"; 
-   d="scan'208";a="158988191"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2020 10:11:36 -0700
-IronPort-SDR: N9qUM2kQQYcBmlx5yh5/8dXOuUXX/0lOMEfPuYTgIhfYvd/oMAPoRnfdMgFJYGswNSBacdsZDR
- R/FsilD2KtWQ==
-X-IronPort-AV: E=Sophos;i="5.77,302,1596524400"; 
-   d="scan'208";a="455925879"
-Received: from snouri-mobl1.amr.corp.intel.com (HELO [10.255.231.80]) ([10.255.231.80])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2020 10:11:35 -0700
+        id S1726368AbgIYRro (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Sep 2020 13:47:44 -0400
+Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4DA9221EC;
+        Fri, 25 Sep 2020 17:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601056063;
+        bh=zdZv9Z8tskjplrJSb7CqrkFqUhrNUE84Hm0tFfNiXb0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pvW6pFgcr8z9SV/vaK9grVj8BQgtUjinM8Iy0F5ceW8YkLL1M1SCov70+SuMB+Wt1
+         1Lul9hFX0cRtmG8W5fwgPQrLA94UFZLXZUD98fhr2ulser3UqGc6Daa7P5yO+Ep9ok
+         fLECAHuMU5TIRyN0kpDifBT44vEz+jP1xHQ531iY=
 Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
  call
-To:     Sinan Kaya <okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, ashok.raj@intel.com,
         Jay Vosburgh <jay.vosburgh@canonical.com>
@@ -43,64 +42,75 @@ References: <20200922233333.GA2239404@bjorn-Precision-5520>
  <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
  <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
  <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
-Date:   Fri, 25 Sep 2020 10:11:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
+Date:   Fri, 25 Sep 2020 13:47:41 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 9/25/2020 1:11 PM, Kuppuswamy, Sathyanarayanan wrote:
+>> Why? Isn't DPC slot reset enough?
+> It will do the reset at hardware level. But driver state is not
+> cleaned up. So doing bus reset will restore both driver and
+> hardware states.
 
+I really don't like this. If hotplug driver is restoring the state
+and DPC driver is not; let's fix the DPC driver rather than causing
+two resets and hope for the best.
 
-On 9/25/20 9:55 AM, Sinan Kaya wrote:
-> On 9/25/2020 1:11 AM, Kuppuswamy, Sathyanarayanan wrote:
->>
->>
->> On 9/24/20 1:52 PM, Sinan Kaya wrote:
->>> On 9/24/2020 12:06 AM, Kuppuswamy, Sathyanarayanan wrote:
-> 
->>>
->>> So, this is a matter of moving the save/restore logic from the hotplug
->>> driver into common code so that DPC slot reset takes advantage of it?
->> We are not moving it out of hotplug path. But fixing it in this code path.
->> With this fix, we will not depend on hotplug driver to restore the state.
-> 
-> Any possibility of unification?
-If we do that, it might need rework of hotplug driver. It will be a big
-change. IMO, its better not to touch that bee hive.
-> 
-> 
-> [snip]
->>>
->>>> To fix above issues, use PCI_ERS_RESULT_NEED_RESET as error state after
->>>> successful reset_link() operation. This will ensure ->slot_reset() be
->>>> called after reset_link() operation for fatal errors.
->>>
->>> You lost me here. Why do we want to do secondary bus reset on top of
->>> DPC reset?
->> For non-hotplug capable slots, when reset (PCI_ERS_RESULT_NEED_RESET) is
->> requested, we want to reset it before calling ->slot_reset() callback.
-> 
-> Why? Isn't DPC slot reset enough?
-It will do the reset at hardware level. But driver state is not
-cleaned up. So doing bus reset will restore both driver and
-hardware states.
-Also for non-fatal errors, if reset is requested then we still need
-some kind of bus reset call here.
-> What will bus reset do that DPC slot reset won't do?
-> 
-> I can understand calling bus reset if DPC is not supported.
-> I don't understand the requirement to do double reset.
-> 
+One approach is to share the restore code between hotplug driver and
+DPC driver.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+If this is a too involved change, DPC driver should restore state
+when hotplug is not supported.
+
+DPC driver should be self-sufficient by itself.
+
+> Also for non-fatal errors, if reset is requested then we still need
+> some kind of bus reset call here.
+
+DPC should handle both fatal and non-fatal cases and cause a bus reset
+in hardware already before triggering an interrupt.
+
+I disagree that you need an additional reset on top of DPC reset.
+Isn't one reset enough?
+
+What will the second reset provide that first reset won't provide?
+
+I see that you are trying to do the second reset only because second
+reset restores state.
+
+That looks like a short-term fix only to explode on the next iteration.
