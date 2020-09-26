@@ -2,230 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F996279A97
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Sep 2020 18:09:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC051279CB7
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Sep 2020 23:48:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgIZQJq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Sep 2020 12:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37612 "EHLO
+        id S1726478AbgIZVsC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Sep 2020 17:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729448AbgIZQJq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Sep 2020 12:09:46 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 101E7C0613CE;
-        Sat, 26 Sep 2020 09:09:46 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e23so2704349eja.3;
-        Sat, 26 Sep 2020 09:09:45 -0700 (PDT)
+        with ESMTP id S1726426AbgIZVsC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Sep 2020 17:48:02 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69536C0613CE
+        for <linux-pci@vger.kernel.org>; Sat, 26 Sep 2020 14:48:02 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id y9so6080438ilq.2
+        for <linux-pci@vger.kernel.org>; Sat, 26 Sep 2020 14:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S9aQwc+PCXsFhcBP9B3buLgLm5i11ItqWdopFn2Q6u8=;
-        b=mJz3H0Pc++vE/5/LLlbAUiaNAFhfEM4af+bwy7gxpM3JPo0j7Bidn6BRAvFjj/BWkH
-         74MwBEvv9DS0XYGM1wnGhQ/gAbf9pIDa9F0RerBbFf7xCkW9gwcSj36qSQ/mKSiFQu03
-         ewrqsec9BBaz6lk7aFs+7iXPx3L9SrxMffg8M2DW6ZxFU2sz0BbEOFOBK+O3aT0lVxa+
-         3OedArQPmmmqxngK1vhOuF6LVBCFgbQo0xueUisSqXSaGbtgvSHpUICaFx4/Ai47Dp3o
-         p/BRQZMjNKamCJjTWb8ZYzEFsZSSVR4wbjQXwzD71AFuMbCIVbFerkStSM4zY14yu0oZ
-         Kvww==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=5PekNm2CYoK7QsYmc8lHTwqnrRxbAa3AOuW9+vVzHHE=;
+        b=TJuUNiqL2n9b3VPqBRAApAk+HUIuT3xo1chdkt6seAV7L1Vfpn+79lHe0smh+rFg1n
+         0vkx+XDkwpUwdDvVEet5iG0DjfmPS2xM7kTXUjhT5Nbbe6ASpMELWN3K2plEGm6Sp3Wr
+         QrS/FSVHxrQCqqeoPb8GWEqBcGlNuAUYPZw9Ak2dDur77K0/a1OFmAVSJZzlwcyfaZnv
+         CIr9KOqPKDKsiEIyh4AlKiOiRYbZ4Rxc2jc+2c48Vo6is1bY/MTSjw2IiZKSlWbirZ+T
+         Y1tnf/Rape8yt6u37kWBN6AtgTmO9WlmhkvuhyqNxxU5huyfwedXZkC9TYAFpSgR1/0B
+         gICQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S9aQwc+PCXsFhcBP9B3buLgLm5i11ItqWdopFn2Q6u8=;
-        b=bxHhSikkHJ8tSFsYxusLWmwULQVQymGgfd4kfQZ2R1/mXDjzuAcijV1ApCFclNZr7Y
-         YI9hHOzGYBxi1xtAWGnsWI9jopXj1zwFMpr0wsUlC6/xUsUB63uYmp4Hi+XRNheeP6Q+
-         u57o/hKmsxeRBux9DsyrgP1u0Gf2Al9JhP38Lc9ConGHx3vdY/FzSkgvjn5/wSEmS+EW
-         y6teMGet6V2eW8dn3WMOAlsrBF7nqlBggaxTc3sc8GWDqgwu0tQp+ZySBLvZbCpDsH4n
-         Hsl14PUI08yV0kDo8Jt9YFC7Ly4idlXKlatOs+XUMV2EH9lgwN9j1MjBpEDoxIoDkWDa
-         Xz6Q==
-X-Gm-Message-State: AOAM532g/phqmtVPVROX6m5a+EoiqgAjoYopdwBQ7iOIlrGN9d3RzEdI
-        xcnS1ccqwb2BjoWF0lAspGNlkWioxF40ww==
-X-Google-Smtp-Source: ABdhPJyVC2laUx2EzaRwyPizJ9IaoVs9J2Z56SkJZthNfHAcZHd0butvaxYPmy6iPYrNM0VWVAMtEg==
-X-Received: by 2002:a17:906:7f0b:: with SMTP id d11mr8208853ejr.439.1601136584421;
-        Sat, 26 Sep 2020 09:09:44 -0700 (PDT)
-Received: from desktop.lan (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id c11sm4608899edu.44.2020.09.26.09.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2020 09:09:43 -0700 (PDT)
-From:   marek.vasut@gmail.com
-To:     linux-pci@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH V2] PCI: rcar: Add L1 link state fix into data abort hook
-Date:   Sat, 26 Sep 2020 18:09:34 +0200
-Message-Id: <20200926160934.136182-1-marek.vasut@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=5PekNm2CYoK7QsYmc8lHTwqnrRxbAa3AOuW9+vVzHHE=;
+        b=nB3oc72NirkrPq+GQ07KdhYAyP+U7abKe0XuRAWGbhUaHx2CMjEnvqXhnbHDuakgkO
+         wTlcT/usShCNRiWcJZq3WvSfuGqmiDND3jC6lhRNyOeKwH/Ly/731LZZVVd2fZ7+5wAB
+         OhBTXf6YIjishz3yGkKoRjlPP6h77jmOHXJePdFncNyD5Ajf55JFGquDlozYwmoO9CAK
+         zM4bYYmFfQM08f3k9d5sHBe+jeRLwq58RB4LCrqifWUiczcPSSaZ97KYjuxJE+AU1X/D
+         70vGELaq2g6pE2g7LNbib11pq4bmkE3mANBBlyYlenNBdfjyr74aOy3CLC+zXg+S65U6
+         OU4A==
+X-Gm-Message-State: AOAM532NVoj9lAZfKhHimkUYn2tBt1NcC5vzVz3JTssHzrA8R61h1vj+
+        P4bKv7DZuBDpfYEKdg0tqtxrWENLrsFASc/gMd0=
+X-Google-Smtp-Source: ABdhPJzc5WlxBizJQV87l36H24ayX9V+4Vw3sfa7aHRVOnHVEoA9gcXnUubT/9uSDmQdzrr5EZva2y4xTQj9gkIyoqU=
+X-Received: by 2002:a92:cb01:: with SMTP id s1mr4987251ilo.225.1601156881680;
+ Sat, 26 Sep 2020 14:48:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a02:92c5:0:0:0:0:0 with HTTP; Sat, 26 Sep 2020 14:48:01
+ -0700 (PDT)
+Reply-To: ibrahimidewu4@gmail.com
+From:   "Mr. Ibrahim Idewu" <evelyn.allyson111@gmail.com>
+Date:   Sat, 26 Sep 2020 22:48:01 +0100
+Message-ID: <CADQiT_99F+1BUBN8FhgUydzAGp3+8iGHJ0wuFqwNkRY4ahrmpg@mail.gmail.com>
+Subject: I NEED YOUR RESPOND PLEASE
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+Hello Dear Friend,
 
-The R-Car PCIe controller is capable of handling L0s/L1 link states.
-While the controller can enter and exit L0s link state, and exit L1
-link state, without any additional action from the driver, to enter
-L1 link state, the driver must complete the link state transition by
-issuing additional commands to the controller.
+My name is Mr.ibrahim idewu. I have decided to seek a confidential
+co-operation  with you in the execution of the deal described
+here-under for our both  mutual benefit and I hope you will keep it a
+top secret because of the nature  of the transaction, During the
+course of our bank year auditing, I discovered  an unclaimed/abandoned
+fund, sum total of {US$19.3 Million United State  Dollars} in the bank
+account that belongs to a Saudi Arabia businessman Who unfortunately
+lost his life and entire family in a Motor Accident.
 
-The problem is, this transition is not atomic. The controller sets
-PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
-the PCIe card, but then the controller enters some sort of inbetween
-state. The driver must detect this condition and complete the link
-state transition, by setting L1IATN bit in PMCTLR and waiting for
-the link state transition to complete.
+Now our bank has been waiting for any of the relatives to come-up for
+the claim but nobody has done that. I personally has been unsuccessful
+in locating any of the relatives, now, I sincerely seek your consent
+to present you as the next of kin / Will Beneficiary to the deceased
+so that the proceeds of this account valued at {US$19.3 Million United
+State Dollars} can be paid to you, which we will share in these
+percentages ratio, 60% to me and 40% to you. All I request is your
+utmost sincere co-operation; trust and maximum confidentiality to
+achieve this project successfully. I have carefully mapped out the
+moralities for execution of this transaction under a legitimate
+arrangement to protect you from any breach of the law both in your
+country and here in Burkina Faso when the fund is being transferred to
+your bank account.
 
-If a PCIe access happens inside of this window, where the controller
-is inbetween L0 and L1 link states, the access generates a fault and
-the ARM 'imprecise external abort' handler is invoked.
+I will have to provide all the relevant document that will be
+requested to indicate that you are the rightful beneficiary of this
+legacy and our bank will release the fund to you without any further
+delay, upon your consideration and acceptance of this offer, please
+send me the following information as stated below so we can proceed
+and get this fund transferred to your designated bank account
+immediately.
 
-Just like other PCI controller drivers, here we hook the fault handler,
-perform the fixup to help the controller enter L1 link state, and then
-restart the instruction which triggered the fault. Since the controller
-is in L1 link state now, the link can exit from L1 link state to L0 and
-successfully complete the access.
+-Your Full Name:
+-Your Contact Address:
+-Your direct Mobile telephone Number:
+-Your Date of Birth:
+-Your occupation:
 
-Note that this fixup is applicable only to Aarch32 R-Car controllers,
-the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
-0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
-[1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
+I await your swift response and re-assurance.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: - Update commit message, add link to TFA repository commit
-    - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
-    - Cache clock and check whether they are enabled before register
-      access
----
- drivers/pci/controller/pcie-rcar-host.c | 65 +++++++++++++++++++++++++
- drivers/pci/controller/pcie-rcar.h      |  7 +++
- 2 files changed, 72 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index cdc0963f154e..f8ff8c55716a 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -42,6 +43,21 @@ struct rcar_msi {
- 	int irq2;
- };
- 
-+#ifdef CONFIG_ARM
-+/*
-+ * Here we keep a static copy of the remapped PCIe controller address.
-+ * This is only used on aarch32 systems, all of which have one single
-+ * PCIe controller, to provide quick access to the PCIe controller in
-+ * the L1 link state fixup function, called from ARM fault handler.
-+ */
-+static void __iomem *pcie_base;
-+/*
-+ * Static copy of bus clock pointer, so we can check whether the clock
-+ * are enabled or not.
-+ */
-+static struct clk *pcie_bus_clk;
-+#endif
-+
- static inline struct rcar_msi *to_rcar_msi(struct msi_controller *chip)
- {
- 	return container_of(chip, struct rcar_msi, chip);
-@@ -804,6 +820,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
- 	}
- 	host->msi.irq2 = i;
- 
-+#ifdef CONFIG_ARM
-+	/* Cache static copy for L1 link state fixup hook on aarch32 */
-+	pcie_base = pcie->base;
-+	pcie_bus_clk = host->bus_clk;
-+#endif
-+
- 	return 0;
- 
- err_irq2:
-@@ -1050,4 +1072,47 @@ static struct platform_driver rcar_pcie_driver = {
- 	},
- 	.probe = rcar_pcie_probe,
- };
-+
-+#ifdef CONFIG_ARM
-+static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
-+		unsigned int fsr, struct pt_regs *regs)
-+{
-+	u32 pmsr;
-+
-+	if (!pcie_base || !pcie_bus_clk || !__clk_is_enabled(pcie_bus_clk))
-+		return 1;
-+
-+	pmsr = readl(pcie_base + PMSR);
-+
-+	/*
-+	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
-+	 * the PCIe controller is not in L1 link state. If true, apply
-+	 * fix, which will put the controller into L1 link state, from
-+	 * which it can return to L0s/L0 on its own.
-+	 */
-+	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
-+		writel(L1IATN, pcie_base + PMCTLR);
-+		while (!(readl(pcie_base + PMSR) & L1FAEG))
-+			;
-+		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
-+static int __init rcar_pcie_init(void)
-+{
-+#ifdef CONFIG_ARM_LPAE
-+	hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-+			"asynchronous external abort");
-+#else
-+	hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-+			"imprecise external abort");
-+#endif
-+	return platform_driver_register(&rcar_pcie_driver);
-+}
-+device_initcall(rcar_pcie_init);
-+#else
- builtin_platform_driver(rcar_pcie_driver);
-+#endif
-diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-index d4c698b5f821..9bb125db85c6 100644
---- a/drivers/pci/controller/pcie-rcar.h
-+++ b/drivers/pci/controller/pcie-rcar.h
-@@ -85,6 +85,13 @@
- #define  LTSMDIS		BIT(31)
- #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
- #define PMSR			0x01105c
-+#define  L1FAEG			BIT(31)
-+#define  PMEL1RX		BIT(23)
-+#define  PMSTATE		GENMASK(18, 16)
-+#define  PMSTATE_L1		(3 << 16)
-+#define PMCTLR			0x011060
-+#define  L1IATN			BIT(31)
-+
- #define MACS2R			0x011078
- #define MACCGSPSETR		0x011084
- #define  SPCNGRSN		BIT(31)
--- 
-2.28.0
-
+Best regards,
+Mr.ibrahim idewu.
