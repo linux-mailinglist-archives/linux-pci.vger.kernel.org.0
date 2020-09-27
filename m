@@ -2,215 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64278279DCE
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Sep 2020 05:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60084279DED
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Sep 2020 06:25:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgI0DnO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Sep 2020 23:43:14 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58924 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729125AbgI0DnN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 26 Sep 2020 23:43:13 -0400
-IronPort-SDR: 23b77/7KnAKEb7ZNGM+E/10kvKchstZXKryJx7pA3PbegISwZdHcVTQADATbx58qS02aA11quB
- gTykfBHOAxsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9756"; a="141242669"
-X-IronPort-AV: E=Sophos;i="5.77,308,1596524400"; 
-   d="scan'208";a="141242669"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2020 20:30:09 -0700
-IronPort-SDR: /wwLhQ00ZDWYLeunlYjmlNNi7cd4uT8kCVVDO92RCiFu8Bwobqd+oPQSWp41oA57CvFTMyzLfR
- fyxzLJlly+3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,308,1596524400"; 
-   d="scan'208";a="337697529"
-Received: from shskylake.sh.intel.com ([10.239.48.137])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Sep 2020 20:30:06 -0700
-From:   Ethan Zhao <haifeng.zhao@intel.com>
-To:     bhelgaas@google.com, oohall@gmail.com, ruscur@russell.cc,
-        lukas@wunner.de, andriy.shevchenko@linux.intel.com,
-        stuart.w.hayes@gmail.com, mr.nuke.me@gmail.com,
-        mika.westerberg@linux.intel.com
+        id S1726840AbgI0EZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Sep 2020 00:25:50 -0400
+Received: from smtprelay0047.hostedemail.com ([216.40.44.47]:60954 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726478AbgI0EZu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Sep 2020 00:25:50 -0400
+X-Greylist: delayed 553 seconds by postgrey-1.27 at vger.kernel.org; Sun, 27 Sep 2020 00:25:49 EDT
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id 1C49018009059
+        for <linux-pci@vger.kernel.org>; Sun, 27 Sep 2020 04:16:37 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id C0D3C181D330D;
+        Sun, 27 Sep 2020 04:16:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1714:1730:1747:1777:1792:2393:2559:2562:2828:3138:3139:3140:3141:3142:3351:3622:3865:3867:3871:4321:5007:10004:10400:10848:11026:11658:11914:12048:12296:12297:12438:12740:12760:12895:13069:13311:13357:13439:14659:14721:21080:21627:21990:30045:30054:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
+X-HE-Tag: cart93_150a0df27176
+X-Filterd-Recvd-Size: 1792
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 27 Sep 2020 04:16:33 +0000 (UTC)
+Message-ID: <5e22dba6543b4fc09c5c18c839eab42bd31b18f6.camel@perches.com>
+Subject: Re: [PATCH 4/5 V2] PCI: only return true when dev io state is
+ really changed
+From:   Joe Perches <joe@perches.com>
+To:     Ethan Zhao <haifeng.zhao@intel.com>, bhelgaas@google.com,
+        oohall@gmail.com, ruscur@russell.cc, lukas@wunner.de,
+        andriy.shevchenko@linux.intel.com, stuart.w.hayes@gmail.com,
+        mr.nuke.me@gmail.com, mika.westerberg@linux.intel.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         pei.p.jia@intel.com, ashok.raj@linux.intel.com,
-        sathyanarayanan.kuppuswamy@intel.com,
-        Ethan Zhao <haifeng.zhao@intel.com>
-Subject: [PATCH 3/5 V2] PCI/ERR: get device before call device driver to avoid NULL pointer reference
-Date:   Sat, 26 Sep 2020 23:28:27 -0400
-Message-Id: <20200927032829.11321-4-haifeng.zhao@intel.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200927032829.11321-1-haifeng.zhao@intel.com>
+        sathyanarayanan.kuppuswamy@intel.com
+Date:   Sat, 26 Sep 2020 21:16:32 -0700
+In-Reply-To: <20200927032829.11321-5-haifeng.zhao@intel.com>
 References: <20200927032829.11321-1-haifeng.zhao@intel.com>
+         <20200927032829.11321-5-haifeng.zhao@intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-During DPC error injection test we found there is race condition between
-pciehp and DPC driver, NULL pointer reference caused panic as following
+On Sat, 2020-09-26 at 23:28 -0400, Ethan Zhao wrote:
+> simplify the pci_dev_set_io_state() function to only return true
+> when dev->error_state is changed.
+[]
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+[]
+> @@ -362,35 +362,11 @@ static inline bool pci_dev_set_io_state(struct pci_dev *dev,
+>  	bool changed = false;
+[]
+> +	if (dev->error_state == new)
+> +		return changed;
+> +
+> +	dev->error_state = new;
+> +	changed = true;
+>  	return changed;
+>  }
 
- # setpci -s 64:02.0 0x196.w=000a
-  // 64:02.0 is rootport has DPC capability
- # setpci -s 65:00.0 0x04.w=0544
-  // 65:00.0 is NVMe SSD populated in above port
- # mount /dev/nvme0n1p1 nvme
+This would be simpler removing the unnecessary
+changed automatic
 
- (tested on stable 5.8 & ICS(Ice Lake SP platform, see
- https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server))
+...
 
- Buffer I/O error on dev nvme0n1p1, logical block 468843328,
- async page read
- BUG: kernel NULL pointer dereference, address: 0000000000000050
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 0
- Oops: 0000 [#1] SMP NOPTI
- CPU: 12 PID: 513 Comm: irq/124-pcie-dp Not tainted 5.8.0-0.0.7.el8.x86_64+ #1
- RIP: 0010:report_error_detected.cold.4+0x7d/0xe6
- Code: b6 d0 e8 e8 fe 11 00 e8 16 c5 fb ff be 06 00 00 00 48 89 df e8 d3 65 ff
- ff b8 06 00 00 00 e9 75 fc ff ff 48 8b 43 68 45 31 c9 <48> 8b 50 50 48 83 3a 00
- 41 0f 94 c1 45 31 c0 48 85 d2 41 0f 94 c0
- RSP: 0018:ff8e06cf8762fda8 EFLAGS: 00010246
- RAX: 0000000000000000 RBX: ff4e3eaacf42a000 RCX: ff4e3eb31f223c01
- RDX: ff4e3eaacf42a140 RSI: ff4e3eb31f223c00 RDI: ff4e3eaacf42a138
- RBP: ff8e06cf8762fdd0 R08: 00000000000000bf R09: 0000000000000000
- R10: 000000eb8ebeab53 R11: ffffffff93453258 R12: 0000000000000002
- R13: ff4e3eaacf42a130 R14: ff8e06cf8762fe2c R15: ff4e3eab44733828
- FS:  0000000000000000(0000) GS:ff4e3eab1fd00000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000050 CR3: 0000000f8f80a004 CR4: 0000000000761ee0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- PKRU: 55555554
- Call Trace:
- ? report_normal_detected+0x20/0x20
- report_frozen_detected+0x16/0x20
- pci_walk_bus+0x75/0x90
- ? dpc_irq+0x90/0x90
- pcie_do_recovery+0x157/0x201
- ? irq_finalize_oneshot.part.47+0xe0/0xe0
- dpc_handler+0x29/0x40
- irq_thread_fn+0x24/0x60
- irq_thread+0xea/0x170
- ? irq_forced_thread_fn+0x80/0x80
- ? irq_thread_check_affinity+0xf0/0xf0
- kthread+0x124/0x140
- ? kthread_park+0x90/0x90
- ret_from_fork+0x1f/0x30
- Modules linked in: nft_fib_inet.........
- CR2: 0000000000000050
+	if (dev->error_state == new)
+		return false;
 
-Though we partly close the race condition with patch 'PCI: pciehp: check
-and wait port status out of DPC before handling DLLSC and PDC', but there
-is no hardware spec or software sequence to guarantee the pcie_ist() run
-into pci_wait_port_outdpc() first or DPC triggered status bits being set
-first when errors triggered DPC containment procedure, so device still
-could be removed by function pci_stop_and_removed_bus_device() then freed
-by pci_dev_put() in pciehp driver first during pcie_do_recover()/
-pci_walk_bus() is called by dpc_handler() in DPC driver.
+	dev->error_state = new;
 
-Maybe unify pci_bus_sem and pci_rescan_remove_lock to serialize the
-removal and walking operation is the right way, but here we use
-pci_dev_get() to increase the reference count of device before using the
-device to avoid it is freed in use.
+	return true;
+}
 
-With this patch and patch 'PCI: pciehp: check and wait port status out of
-DPC before handling DLLSC and PDC', stable 5.9-rc6 could pass the error
-injection test and no panic happened.
-
-Brute DPC error injection script:
-
-for i in {0..100}
-do
-        setpci -s 64:02.0 0x196.w=000a
-        setpci -s 65:00.0 0x04.w=0544
-        mount /dev/nvme0n1p1 /root/nvme
-        sleep 1
-done
-
-Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-Tested-by: Wen Jin <wen.jin@intel.com>
-Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-Changes:
- V2: revise doc according to Andy's suggestion.
-
- drivers/pci/pcie/err.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index c543f419d8f9..e35c4480c86b 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -52,6 +52,8 @@ static int report_error_detected(struct pci_dev *dev,
- 	pci_ers_result_t vote;
- 	const struct pci_error_handlers *err_handler;
- 
-+	if (!pci_dev_get(dev))
-+		return 0;
- 	device_lock(&dev->dev);
- 	if (!pci_dev_set_io_state(dev, state) ||
- 		!dev->driver ||
-@@ -76,6 +78,7 @@ static int report_error_detected(struct pci_dev *dev,
- 	pci_uevent_ers(dev, vote);
- 	*result = merge_result(*result, vote);
- 	device_unlock(&dev->dev);
-+	pci_dev_put(dev);
- 	return 0;
- }
- 
-@@ -94,6 +97,8 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
- 	pci_ers_result_t vote, *result = data;
- 	const struct pci_error_handlers *err_handler;
- 
-+	if (!pci_dev_get(dev))
-+		return 0;
- 	device_lock(&dev->dev);
- 	if (!dev->driver ||
- 		!dev->driver->err_handler ||
-@@ -105,6 +110,7 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
- 	*result = merge_result(*result, vote);
- out:
- 	device_unlock(&dev->dev);
-+	pci_dev_put(dev);
- 	return 0;
- }
- 
-@@ -113,6 +119,8 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
- 	pci_ers_result_t vote, *result = data;
- 	const struct pci_error_handlers *err_handler;
- 
-+	if (!pci_dev_get(dev))
-+		return 0;
- 	device_lock(&dev->dev);
- 	if (!dev->driver ||
- 		!dev->driver->err_handler ||
-@@ -124,6 +132,7 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
- 	*result = merge_result(*result, vote);
- out:
- 	device_unlock(&dev->dev);
-+	pci_dev_put(dev);
- 	return 0;
- }
- 
-@@ -131,6 +140,8 @@ static int report_resume(struct pci_dev *dev, void *data)
- {
- 	const struct pci_error_handlers *err_handler;
- 
-+	if (!pci_dev_get(dev))
-+		return 0;
- 	device_lock(&dev->dev);
- 	if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
- 		!dev->driver ||
-@@ -143,6 +154,7 @@ static int report_resume(struct pci_dev *dev, void *data)
- out:
- 	pci_uevent_ers(dev, PCI_ERS_RESULT_RECOVERED);
- 	device_unlock(&dev->dev);
-+	pci_dev_put(dev);
- 	return 0;
- }
- 
--- 
-2.18.4
 
