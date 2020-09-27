@@ -2,100 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC051279CB7
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Sep 2020 23:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F41D0279D22
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Sep 2020 02:17:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgIZVsC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Sep 2020 17:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgIZVsC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Sep 2020 17:48:02 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69536C0613CE
-        for <linux-pci@vger.kernel.org>; Sat, 26 Sep 2020 14:48:02 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id y9so6080438ilq.2
-        for <linux-pci@vger.kernel.org>; Sat, 26 Sep 2020 14:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=5PekNm2CYoK7QsYmc8lHTwqnrRxbAa3AOuW9+vVzHHE=;
-        b=TJuUNiqL2n9b3VPqBRAApAk+HUIuT3xo1chdkt6seAV7L1Vfpn+79lHe0smh+rFg1n
-         0vkx+XDkwpUwdDvVEet5iG0DjfmPS2xM7kTXUjhT5Nbbe6ASpMELWN3K2plEGm6Sp3Wr
-         QrS/FSVHxrQCqqeoPb8GWEqBcGlNuAUYPZw9Ak2dDur77K0/a1OFmAVSJZzlwcyfaZnv
-         CIr9KOqPKDKsiEIyh4AlKiOiRYbZ4Rxc2jc+2c48Vo6is1bY/MTSjw2IiZKSlWbirZ+T
-         Y1tnf/Rape8yt6u37kWBN6AtgTmO9WlmhkvuhyqNxxU5huyfwedXZkC9TYAFpSgR1/0B
-         gICQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=5PekNm2CYoK7QsYmc8lHTwqnrRxbAa3AOuW9+vVzHHE=;
-        b=nB3oc72NirkrPq+GQ07KdhYAyP+U7abKe0XuRAWGbhUaHx2CMjEnvqXhnbHDuakgkO
-         wTlcT/usShCNRiWcJZq3WvSfuGqmiDND3jC6lhRNyOeKwH/Ly/731LZZVVd2fZ7+5wAB
-         OhBTXf6YIjishz3yGkKoRjlPP6h77jmOHXJePdFncNyD5Ajf55JFGquDlozYwmoO9CAK
-         zM4bYYmFfQM08f3k9d5sHBe+jeRLwq58RB4LCrqifWUiczcPSSaZ97KYjuxJE+AU1X/D
-         70vGELaq2g6pE2g7LNbib11pq4bmkE3mANBBlyYlenNBdfjyr74aOy3CLC+zXg+S65U6
-         OU4A==
-X-Gm-Message-State: AOAM532NVoj9lAZfKhHimkUYn2tBt1NcC5vzVz3JTssHzrA8R61h1vj+
-        P4bKv7DZuBDpfYEKdg0tqtxrWENLrsFASc/gMd0=
-X-Google-Smtp-Source: ABdhPJzc5WlxBizJQV87l36H24ayX9V+4Vw3sfa7aHRVOnHVEoA9gcXnUubT/9uSDmQdzrr5EZva2y4xTQj9gkIyoqU=
-X-Received: by 2002:a92:cb01:: with SMTP id s1mr4987251ilo.225.1601156881680;
- Sat, 26 Sep 2020 14:48:01 -0700 (PDT)
+        id S1727364AbgI0ARA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Sep 2020 20:17:00 -0400
+Received: from mail-eopbgr750117.outbound.protection.outlook.com ([40.107.75.117]:32736
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726840AbgI0ARA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 26 Sep 2020 20:17:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ih/pzMy62gRnpJo7EUBsojeL01U4sGSpYvYars61KRAXXFkzIjIFaB6aOmLMNRIWy0nMjkaOj58lo/Cb8caJ2x4/B2qDaQB27ur8o1v+WlfHa9OyQUpHeZrqlv+2pkFoRX5cMHVUl1n19rsMhVqp/rOG5uLAOZABlyMnw7ITIe8zjyVeWJvY16RVT0ON/N1WNqad5x6bvXHO/hp6k8QJWwUwiXt6pmesdMQlh9aPOiqqqipEXEyZnyWtM/Chp9M5srRX+y8W3Bkz830hkx9hd+18qtX4BWXC7dyYPyB8T46rZRQqfZsXq+mPx3ghw4WuQ2BVsLguxlisOGADKEMnxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k+n17WvREN0wOs9mLeYjQTH7xRpm04TV4/BDd/I/1t0=;
+ b=LCCOkFTHF7/IRYhJyqWhX0jmuDIylzQBVwRa+UA027jqBj3zPIlJwLwAKAVingra8WkDroVygHWWEVbqjz7rjUZNg+JM3ugfFepSbscirYBNQJLqLILT/402+wvXX6Com9LORbmjKGDIfWO4uK8IWSgfboLpkkii96CA+nr6lFyyGTltsv1HIHO0YxryN194sSvDQXIkOS114VBs/oilBnRWKcyPryvtdz9toLFi9M98mMxz6xDpjshLnvVuTBcSGRDLbWZo/0V6yq5Bumsic4l+0BsJsPzHNxSwZ+5AixUbCZxUlVS5zFbnnuziMEKjDcgQqj1cg8hW16VX5jS26A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k+n17WvREN0wOs9mLeYjQTH7xRpm04TV4/BDd/I/1t0=;
+ b=PeArmjJaFiOsPtaaoJwcyZO+Me5Py37H5OaoGTY5XmbPMM7kOuNxkkyzuvSILnx6pnF3CfHtXsHHFQEd/PJnkGQOEBuqRaSi9yOSZfxNXdBb4fms66wo8Ov6I7An1DjV6qBUg5tefrHFqV+x7B886VfEBcxNVE7ro3tLjAridwk=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MWHPR2101MB0731.namprd21.prod.outlook.com (2603:10b6:301:81::37) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.18; Sun, 27 Sep
+ 2020 00:16:57 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1%4]) with mapi id 15.20.3412.028; Sun, 27 Sep 2020
+ 00:16:57 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>,
+        KY Srinivasan <kys@microsoft.com>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: Document missing hv_pci_protocol_negotiation()
+ parameter
+Thread-Topic: [PATCH] PCI: hv: Document missing hv_pci_protocol_negotiation()
+ parameter
+Thread-Index: AQHWk5ZXeAPUQFnW5EqRVDrKDYzLkql7nz2Q
+Date:   Sun, 27 Sep 2020 00:16:57 +0000
+Message-ID: <MW2PR2101MB1052F5A4F74B560D8B6911F2D7340@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200925234753.1767227-1-kw@linux.com>
+In-Reply-To: <20200925234753.1767227-1-kw@linux.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-27T00:16:55Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cbbb124e-ee06-4f99-9572-8e70a4aebcff;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: linux.com; dkim=none (message not signed)
+ header.d=none;linux.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 931a588f-545c-4d07-520d-08d8627aa56b
+x-ms-traffictypediagnostic: MWHPR2101MB0731:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2101MB0731640DC9AA8E3E5600EEF4D7340@MWHPR2101MB0731.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: acBqmK/VZnjKrxeAzOy9NwcIZe2/Boej3cSwqcmVv1nA4MzrJIT6heTWz+Qt2H2HHsfDPjRkh05SMD5FUERT5sdyvpjMg6t8obPrF2MM4RT2QM5Xk77UEqWDDl5SEkelC2BGAlAnBr2iVUvkCpy8QdeTBLm0czBnX+ivmkaUkP1xrGKQiVVOC58HIErp2z+rdatdoc6+e/WYGpNNVxhJYP9t0HJy7HO+mCmwjjbb/bjZ6rJ1OBdQ+T+z6VudjkuP+MicPHcd4oKir6ctF9B1LllhQrfHsAbCSnfG6U3/jojxb//4wwTRkM+SfmuNwJhl0E2AHYtKM09gfQfkzcujtQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(316002)(186003)(8990500004)(33656002)(66946007)(76116006)(110136005)(6506007)(54906003)(7696005)(71200400001)(66574015)(53546011)(82960400001)(82950400001)(83380400001)(8936002)(66446008)(2906002)(9686003)(478600001)(10290500003)(86362001)(6636002)(55016002)(5660300002)(26005)(52536014)(64756008)(66556008)(66476007)(8676002)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 3SNunysRn4Vwf1LeChvhhng7guYbOKByNtr+6mBMDA/KSr1uzRozdY+Bo2UYj0jsjA20Iu/WH+XuE3gBcwhJqVr1RpfHJTQSB8FXSxkXeZoTKtUTBWxc1GNcXgPrAYhINozzsAi2lxFrMWgxxg6HFKmfWBSSQ1YgUl+Nz/J5Tu8CO/ZYQxrc7a+G3oFSyCqkPQ64HcGtYgpY/HNyf2NvpOJdN7ahKdgJBeWpWMn8I0VzaxzsbYLOx+nER7P4osJfCXxQJd+iN5dZsqmHfEHP1t6YMUGla7D/5Ply/Hq4lgXYsqCWz+/CMUfhPTpIerDe3XzI63Zb0oPyfD3VwMKN720HtGIbyTw0oiVPEVOkH3uxB0++BqllCUPxqmU0uOWFGJRPwDYZZoiLca67Cv8HkP88sjmzNyxkTj5eJMeRdIW3s5SRIhZCCyUQG7UEmS2HqhG5Dv4IedZOTxp5D5+XziAbqOniW8BRX5tcwy7mtl7AMx4OM36xO0rAyR3Jmj7dI727LaFm4h4hcFMuK93B/POo+qhFopOvtu1EHmizDYLD1iMbYwgaXj55ZXKQj+9iUv/4nugERnRIVy7h1bYWd3ywgdqKEgi0LCGClWZKRCwDYTO8Cx79g3swlPdHVvQkdfwNULmY+3IwbsCyWRm3hQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Received: by 2002:a02:92c5:0:0:0:0:0 with HTTP; Sat, 26 Sep 2020 14:48:01
- -0700 (PDT)
-Reply-To: ibrahimidewu4@gmail.com
-From:   "Mr. Ibrahim Idewu" <evelyn.allyson111@gmail.com>
-Date:   Sat, 26 Sep 2020 22:48:01 +0100
-Message-ID: <CADQiT_99F+1BUBN8FhgUydzAGp3+8iGHJ0wuFqwNkRY4ahrmpg@mail.gmail.com>
-Subject: I NEED YOUR RESPOND PLEASE
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 931a588f-545c-4d07-520d-08d8627aa56b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2020 00:16:57.2582
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zBZikdSME9gtgs6/Y6RZ68EG4QLMfFkAoK2qNwUM+7eq6HCOtdoFKD5PMsSTFkO1Dus16QByhGhwCXnxi605KBJSx4deCcu04I2SsBAxDHA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0731
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Dear Friend,
-
-My name is Mr.ibrahim idewu. I have decided to seek a confidential
-co-operation  with you in the execution of the deal described
-here-under for our both  mutual benefit and I hope you will keep it a
-top secret because of the nature  of the transaction, During the
-course of our bank year auditing, I discovered  an unclaimed/abandoned
-fund, sum total of {US$19.3 Million United State  Dollars} in the bank
-account that belongs to a Saudi Arabia businessman Who unfortunately
-lost his life and entire family in a Motor Accident.
-
-Now our bank has been waiting for any of the relatives to come-up for
-the claim but nobody has done that. I personally has been unsuccessful
-in locating any of the relatives, now, I sincerely seek your consent
-to present you as the next of kin / Will Beneficiary to the deceased
-so that the proceeds of this account valued at {US$19.3 Million United
-State Dollars} can be paid to you, which we will share in these
-percentages ratio, 60% to me and 40% to you. All I request is your
-utmost sincere co-operation; trust and maximum confidentiality to
-achieve this project successfully. I have carefully mapped out the
-moralities for execution of this transaction under a legitimate
-arrangement to protect you from any breach of the law both in your
-country and here in Burkina Faso when the fund is being transferred to
-your bank account.
-
-I will have to provide all the relevant document that will be
-requested to indicate that you are the rightful beneficiary of this
-legacy and our bank will release the fund to you without any further
-delay, upon your consideration and acceptance of this offer, please
-send me the following information as stated below so we can proceed
-and get this fund transferred to your designated bank account
-immediately.
-
--Your Full Name:
--Your Contact Address:
--Your direct Mobile telephone Number:
--Your Date of Birth:
--Your occupation:
-
-I await your swift response and re-assurance.
-
-Best regards,
-Mr.ibrahim idewu.
+RnJvbTogS3J6eXN6dG9mIFdpbGN6ecWEc2tpIDxrd0BsaW51eC5jb20+IFNlbnQ6IEZyaWRheSwg
+U2VwdGVtYmVyIDI1LCAyMDIwIDQ6NDggUE0NCj4gVG86IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNy
+b3NvZnQuY29tPg0KPiBDYzogSGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47
+IFN0ZXBoZW4gSGVtbWluZ2VyDQo+IDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPjsgV2VpIExpdSA8
+d2VpLmxpdUBrZXJuZWwub3JnPjsgQmpvcm4gSGVsZ2Fhcw0KPiA8YmhlbGdhYXNAZ29vZ2xlLmNv
+bT47IGxpbnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5v
+cmcNCj4gU3ViamVjdDogW1BBVENIXSBQQ0k6IGh2OiBEb2N1bWVudCBtaXNzaW5nIGh2X3BjaV9w
+cm90b2NvbF9uZWdvdGlhdGlvbigpIHBhcmFtZXRlcg0KPiANCj4gQWRkIG1pc3NpbmcgZG9jdW1l
+bnRhdGlvbiBmb3IgdGhlIHBhcmFtZXRlciAidmVyc2lvbiIgYW5kICJudW1fdmVyc2lvbiINCj4g
+b2YgdGhlIGh2X3BjaV9wcm90b2NvbF9uZWdvdGlhdGlvbigpIGZ1bmN0aW9uIGFuZCByZXNvbHZl
+IGJ1aWxkIHRpbWUNCj4ga2VybmVsLWRvYyB3YXJuaW5nczoNCj4gDQo+ICAgZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9wY2ktaHlwZXJ2LmM6MjUzNTogd2FybmluZzogRnVuY3Rpb24gcGFyYW1ldGVy
+DQo+ICAgb3IgbWVtYmVyICd2ZXJzaW9uJyBub3QgZGVzY3JpYmVkIGluICdodl9wY2lfcHJvdG9j
+b2xfbmVnb3RpYXRpb24nDQo+IA0KPiAgIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVy
+di5jOjI1MzU6IHdhcm5pbmc6IEZ1bmN0aW9uIHBhcmFtZXRlcg0KPiAgIG9yIG1lbWJlciAnbnVt
+X3ZlcnNpb24nIG5vdCBkZXNjcmliZWQgaW4gJ2h2X3BjaV9wcm90b2NvbF9uZWdvdGlhdGlvbicN
+Cj4gDQo+IE5vIGNoYW5nZSB0byBmdW5jdGlvbmFsaXR5IGludGVuZGVkLg0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogS3J6eXN6dG9mIFdpbGN6ecWEc2tpIDxrd0BsaW51eC5jb20+DQo+IC0tLQ0KPiAg
+ZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMgfCA1ICsrKystDQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMgYi9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL3BjaS1oeXBlcnYuYw0KPiBpbmRleCBmYzRjM2ExNWU1NzAuLjYxMDIzMzBlMjdlMSAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMNCj4gKysr
+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMNCj4gQEAgLTI1MTUsNyArMjUx
+NSwxMCBAQCBzdGF0aWMgdm9pZCBodl9wY2lfb25jaGFubmVsY2FsbGJhY2sodm9pZCAqY29udGV4
+dCkNCj4gDQo+ICAvKioNCj4gICAqIGh2X3BjaV9wcm90b2NvbF9uZWdvdGlhdGlvbigpIC0gU2V0
+IHVwIHByb3RvY29sDQo+IC0gKiBAaGRldjoJVk1CdXMncyB0cmFja2luZyBzdHJ1Y3QgZm9yIHRo
+aXMgcm9vdCBQQ0kgYnVzDQo+ICsgKiBAaGRldjoJCVZNQnVzJ3MgdHJhY2tpbmcgc3RydWN0IGZv
+ciB0aGlzIHJvb3QgUENJIGJ1cy4NCj4gKyAqIEB2ZXJzaW9uOgkJQXJyYXkgb2Ygc3VwcG9ydGVk
+IGNoYW5uZWwgcHJvdG9jb2wgdmVyc2lvbnMgaW4NCj4gKyAqCQkJdGhlIG9yZGVyIG9mIHByb2Jp
+bmcgLSBoaWdoZXN0IGdvIGZpcnN0Lg0KPiArICogQG51bV92ZXJzaW9uOglOdW1iZXIgb2YgZWxl
+bWVudHMgaW4gdGhlIHZlcnNpb24gYXJyYXkuDQo+ICAgKg0KPiAgICogVGhpcyBkcml2ZXIgaXMg
+aW50ZW5kZWQgdG8gc3VwcG9ydCBydW5uaW5nIG9uIFdpbmRvd3MgMTANCj4gICAqIChzZXJ2ZXIp
+IGFuZCBsYXRlciB2ZXJzaW9ucy4gSXQgd2lsbCBub3QgcnVuIG9uIGVhcmxpZXINCj4gLS0NCj4g
+Mi4yOC4wDQoNClJldmlld2VkLWJ5OiAgTWljaGFlbCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29m
+dC5jb20+DQo=
