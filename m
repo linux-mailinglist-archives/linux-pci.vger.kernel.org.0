@@ -2,101 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5E5F27A454
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 00:01:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF8527A47C
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 01:32:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgI0WBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Sep 2020 18:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57484 "EHLO
+        id S1726440AbgI0XcX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Sep 2020 19:32:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgI0WBC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Sep 2020 18:01:02 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF33FC0613CE;
-        Sun, 27 Sep 2020 15:01:01 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a9so5084389wmm.2;
-        Sun, 27 Sep 2020 15:01:01 -0700 (PDT)
+        with ESMTP id S1726380AbgI0XcX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Sep 2020 19:32:23 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A26C0613CE;
+        Sun, 27 Sep 2020 16:32:22 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id z13so9176545iom.8;
+        Sun, 27 Sep 2020 16:32:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9PYh9zOEyCKmAv70piA7xO/5F+a+eOAGeDMzmq6LTgU=;
-        b=duHzLi7FajhOJGaiNZP2BGpTLfA0z9VPSWRVlAm6MVY8pZhpRbRqnAtDjD7f17nd4G
-         cSpv5eJdGfoSjwQLUx+z0mC/5QOcREqdt1spddn3sS/tpNFzSHDCpWIK3m3SUqBX0iav
-         IMrhcaqeDh8YisTM1vAVIAs4iBEH1sHHtf5Wn+jUJonIrnDYP4DwU1LgwGMhyqGORNlw
-         lN4gXYcs2Lvq+lEPN1GSeL86Ue0yxWARpwvG/PmDctRy4EkQjWH26s9jmOas7TF+mt3Z
-         1NyzF+bg+jlg4zYO+dSpb9094njEXuHc01qnYlNNwI9dYcWqLIiE3wzag0ghbe2QjiQK
-         vSSw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aZ6YU8QkqvXetA4BeWJq48mo0OJ9Oxz0crizVyRgPnQ=;
+        b=LBfnpwp3MtO84n7rLN09lDdxgaQPgijIySJX9jjqBw9KF+omtpeDch6oBcawxzUGzs
+         yX85kVxYB9ppBIhv3Pe7vxEvtWnD6wV5PvMNS8ofM0Y5ExRkegvqyKBqHk+KJLmRTaNZ
+         gvyvTQILWZPfvMBiSZW6FCRgne+/XX1lJ3EL3Fi9U8G8TkLw2Sz/55XyABK9Z+rmz+ig
+         LHnRDwU3nq0vU1/XHDiYuL/CvA98PKq6A7/h/Pp5qXeO3MRG1WLYmIHXIljDEacAA67a
+         vLz6rw4USRScKtxncxlaNdz3GL5xZOMOHLCVceypITeAf2XTcXYvDWVkx/oIfj51Lwe8
+         v8dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9PYh9zOEyCKmAv70piA7xO/5F+a+eOAGeDMzmq6LTgU=;
-        b=pe9Ai8VCKxlWQcRC9jaGvdDnW7k3QOgVlWZN6S1jJ5BLdEZhrV3g+qqSc+57N+nJw0
-         djcaXPUAZnp1JHlCW2SlAHlmSXqNioGFgsgM6IA4U0BRA/2CXV86dhd3lPCtkDMri/2S
-         bf+Jc7ZuxNtXTRJE9F6wHbGe0RGvzwKYupPICSZivE2W1jccDRSqduQ/imt9Fle45nT1
-         Vr1H8VfZY23sIduuk7eDQyykiwQywNHcfLQUsCcIyYhIDjfRjjEQCqF9iJD/6cunJUj/
-         i8UQfvrUX+j0uLcLt5VoXARvxluH40fhEAARwHhPTtZIzSqJmvSRUa54Fq/zSgEoh/GQ
-         2CuA==
-X-Gm-Message-State: AOAM5327kV5PwjB0UB5keMmg5rh/sdHtWwIY6WctYduAamrsrDJYd0yY
-        aupienvMV+XyBZtfyulcHApY4n6gAUNd4g==
-X-Google-Smtp-Source: ABdhPJzCVHlLwwuaO0c74jXnittihkW6Wpt/gODmZ4sWhulUYBYw61c+WMVbx0Qn9YVh7eRgUJFmwQ==
-X-Received: by 2002:a7b:cd8b:: with SMTP id y11mr8559604wmj.172.1601244060486;
-        Sun, 27 Sep 2020 15:01:00 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id x17sm4123584wrg.57.2020.09.27.15.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2020 15:00:59 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>, stable@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: qcom: use PHY_REFCLK_USE_PAD only for ipq8064
-Date:   Mon, 28 Sep 2020 00:00:50 +0200
-Message-Id: <20200927220050.448-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aZ6YU8QkqvXetA4BeWJq48mo0OJ9Oxz0crizVyRgPnQ=;
+        b=r/8nys+/ZZA99iKf8tEHWCHTJN6taIkLFwsp2vqdidWeWoNDtqKXv7qTKkm0Xw1xkI
+         YZ969q12P7/gk6rYV6dtAx1Y0sCza7e/QbC0cr8+RleNaR81s2BKxJG1fyIhkC4LxvSL
+         XCNTqVoAfhOFWFRdXKvS6qacJ0+RzRFp6ZfVuxA07o2lrI72stgqcXD0FHzCbeNMxd3w
+         c0vidHYEEhLDDGtrPIb/P2CNvtJKSjPGNyUByNS3uAD9TD2x5+k+b0W9njUTY/KnODrz
+         wV/coPSdTMfLqIsCMOUHvv0cWShUnJ0nbuOoOWbYZc9kjBUEdUeI1KYIiLQ+/4A6Avp5
+         r03A==
+X-Gm-Message-State: AOAM532r4qq5RFkYfIZxnKok66yNXeIjJe7xW3dDBevQBZX6mlfgwkk+
+        NPCv9IK6KqWf3DcokeJlPTyslvIoS+wgRGXVMX4=
+X-Google-Smtp-Source: ABdhPJzc5IwJZV09KI9PTIqU3GAYgTusaIZZSB0Qp6/tVIkfZR6sanJs/6HxmjpQN3io4gLQcfBmDzgSFMghUZUlYxE=
+X-Received: by 2002:a02:6623:: with SMTP id k35mr6811796jac.105.1601249541984;
+ Sun, 27 Sep 2020 16:32:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAOSf1CEv3v940FR_we70qCBME0qFXPizPT8EFbf3XyK2-fPDrw@mail.gmail.com>
+ <20200925194335.GA2453596@bjorn-Precision-5520>
+In-Reply-To: <20200925194335.GA2453596@bjorn-Precision-5520>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Mon, 28 Sep 2020 09:32:10 +1000
+Message-ID: <CAOSf1CGwj=m+P_XFAOG-KUz8mYCe1axLtk9JPmG5harHE7oArQ@mail.gmail.com>
+Subject: Re: [PATCH] rpadlpar_io:Add MODULE_DESCRIPTION entries to kernel modules
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The use of PHY_REFCLK_USE_PAD introduced a regression for apq8064
-devices. It was tested that while apq doesn't require the padding, ipq
-SoC must use it or the kernel hangs on boot.
+On Sat, Sep 26, 2020 at 5:43 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Sep 24, 2020 at 04:41:39PM +1000, Oliver O'Halloran wrote:
+> > On Thu, Sep 24, 2020 at 3:15 PM Mamatha Inamdar
+> > <mamatha4@linux.vnet.ibm.com> wrote:
+> > >
+> > > This patch adds a brief MODULE_DESCRIPTION to rpadlpar_io kernel modules
+> > > (descriptions taken from Kconfig file)
+> > >
+> > > Signed-off-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+> > > ---
+> > >  drivers/pci/hotplug/rpadlpar_core.c |    1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+> > > index f979b70..bac65ed 100644
+> > > --- a/drivers/pci/hotplug/rpadlpar_core.c
+> > > +++ b/drivers/pci/hotplug/rpadlpar_core.c
+> > > @@ -478,3 +478,4 @@ static void __exit rpadlpar_io_exit(void)
+> > >  module_init(rpadlpar_io_init);
+> > >  module_exit(rpadlpar_io_exit);
+> > >  MODULE_LICENSE("GPL");
+> > > +MODULE_DESCRIPTION("RPA Dynamic Logical Partitioning driver for I/O slots");
+> >
+> > RPA as a spec was superseded by PAPR in the early 2000s. Can we rename
+> > this already?
+> >
+> > The only potential problem I can see is scripts doing: modprobe
+> > rpadlpar_io or similar
+> >
+> > However, we should be able to fix that with a module alias.
+>
+> Is MODULE_DESCRIPTION() connected with how modprobe works?
 
-Fixes: de3c4bf6489 ("PCI: qcom: Add support for tx term offset for rev 2.1.0")
-Reported-by: Ilia Mirkin <imirkin@alum.mit.edu>
-Signed-off-by: Ilia Mirkin <imirkin@alum.mit.edu>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Cc: stable@vger.kernel.org # v4.19+
----
- drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I don't think so. The description is just there as an FYI.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 3aac77a295ba..dad6e9ce66ba 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -387,7 +387,9 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 
- 	/* enable external reference clock */
- 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
--	val &= ~PHY_REFCLK_USE_PAD;
-+	/* USE_PAD is required only for ipq806x */
-+	if (!of_device_is_compatible(node, "qcom,pcie-apq8064"))
-+		val &= ~PHY_REFCLK_USE_PAD;
- 	val |= PHY_REFCLK_SSP_EN;
- 	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
- 
--- 
-2.27.0
+> If this patch just improves documentation, without breaking users of
+> modprobe, I'm fine with it, even if it would be nice to rename to PAPR
+> or something in the future.
 
+Right, the change in this patch is just a documentation fix and
+shouldn't cause any problems.
+
+I was suggesting renaming the module itself since the term "RPA" is
+only used in this hotplug driver and some of the corresponding PHB add
+/ remove handling in arch/powerpc/platforms/pseries/. We can make that
+change in a follow up though.
+
+> But, please use "git log --oneline drivers/pci/hotplug/rpadlpar*" and
+> match the style, and also look through the rest of drivers/pci/ to see
+> if we should do the same thing to any other modules.
+>
+> Bjorn
