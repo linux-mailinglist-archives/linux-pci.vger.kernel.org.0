@@ -2,215 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 024F427A49B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 01:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED78127A4AE
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 02:06:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgI0Xpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Sep 2020 19:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35494 "EHLO mail.kernel.org"
+        id S1726421AbgI1AGk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Sep 2020 20:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbgI0Xpt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 27 Sep 2020 19:45:49 -0400
+        id S1726316AbgI1AGk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 27 Sep 2020 20:06:40 -0400
 Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D0A523A32;
-        Sun, 27 Sep 2020 23:45:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F157123977;
+        Mon, 28 Sep 2020 00:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601250348;
-        bh=k2I0AjRhB2xyAVs5+JOSNrQz8ZCGD56r2njVEF9Jov0=;
+        s=default; t=1601251599;
+        bh=KC5CcWfnXI5J7ZGZyWZksdDVk7BeqgeUgtI3GPqGpKQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vop/41BzdLIAZRyxeAhU+9KaK4yecqk2pVw8yxyjq985PMA5mAjOC+3LXBmt/M+vX
-         VVgrKCuGtAVIqO8MjQPS0H1GtGthLSeP5q59dfqiHvYEDCQFExym6GC9t1X61YuLjP
-         8Nol6x+GWRN7GiWiDBJeuv5jzV3nYPLhj6WN1n8Q=
-Date:   Sun, 27 Sep 2020 18:45:45 -0500
+        b=O8g2x38Mg8ZuQp+WJCUPCxkTengLKU3+mkk9/UhM2WhoYImMvjUa1YCjTUTUf8xQg
+         JxfV1YcO+BnRJvThnnziykeWATi3FLWfWkzYozTjj/z5CLC2XTXo32h9NnjLwiQbkG
+         flu3ExN/ZgGhSHSLXFENLY83v5CfFUbnl3+tAD2M=
+Date:   Sun, 27 Sep 2020 19:06:37 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <seanvk.dev@oregontracks.org>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: Re: [PATCH v6 07/10] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Message-ID: <20200927234545.GA2470139@bjorn-Precision-5520>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+Message-ID: <20200928000637.GA2471891@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200922213859.108826-8-seanvk.dev@oregontracks.org>
+In-Reply-To: <CAA85sZsRgEEQ9bRqvMKTkGW4QhVp+cqNbw+VmRZQHfpy==F0+Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 02:38:56PM -0700, Sean V Kelley wrote:
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Sat, Sep 26, 2020 at 12:26:53AM +0200, Ian Kumlien wrote:
+> On Fri, Sep 25, 2020 at 5:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Sep 25, 2020 at 03:54:11PM +0200, Ian Kumlien wrote:
+> > > On Fri, Sep 25, 2020 at 3:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >
+> > > > On Fri, Sep 25, 2020 at 12:18:50PM +0200, Ian Kumlien wrote:
+> > > > > So.......
+> > > > > [    0.815843] pci 0000:04:00.0: L1 latency exceeded - path: 1000 - max: 64000
+> > > > > [    0.815843] pci 0000:00:01.2: Upstream device - 32000
+> > > > > [    0.815844] pci 0000:01:00.0: Downstream device - 32000
+> > > >
+> > > > Wait a minute.  I've been looking at *03:00.0*, not 04:00.0.  Based
+> > > > on your bugzilla, here's the path:
+> > >
+> > > Correct, or you could do it like this:
+> > > 00:01.2/01:00.0/02:03.0/03:00.0 Ethernet controller: Intel Corporation
+> > > I211 Gigabit Network Connection (rev 03)
+> > >
+> > > >   00:01.2 Root Port              to [bus 01-07]
+> > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
+> > > >   02:03.0 Switch Downstream Port to [bus 03]
+> > > >   03:00.0 Endpoint (Intel I211 NIC)
+> > > >
+> > > > Your system does also have an 04:00.0 here:
+> > > >
+> > > >   00:01.2 Root Port              to [bus 01-07]
+> > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
+> > > >   02:04.0 Switch Downstream Port to [bus 04]
+> > > >   04:00.0 Endpoint (Realtek 816e)
+> > > >   04:00.1 Endpoint (Realtek RTL8111/8168/8411 NIC)
+> > > >   04:00.2 Endpoint (Realtek 816a)
+> > > >   04:00.4 Endpoint (Realtek 816d EHCI USB)
+> > > >   04:00.7 Endpoint (Realtek 816c IPMI)
+> > > >
+> > > > Which NIC is the problem?
+> > >
+> > > The intel one - so the side effect of the realtek nic is that it fixes
+> > > the intel nics issues.
+> > >
+> > > It would be that the intel nic actually has a bug with L1 (and it
+> > > would seem that it's to kind with latencies) so it actually has a
+> > > smaller buffer...
+> > >
+> > > And afair, the realtek has a larger buffer, since it behaves better
+> > > with L1 enabled.
+> > >
+> > > Either way, it's a fix that's needed ;)
+> >
+> > OK, what specifically is the fix that's needed?  The L0s change seems
+> > like a "this looks wrong" thing that doesn't actually affect your
+> > situation, so let's skip that for now.
 > 
-> When attempting error recovery for an RCiEP associated with an RCEC device,
-> there needs to be a way to update the Root Error Status, the Uncorrectable
-> Error Status and the Uncorrectable Error Severity of the parent RCEC.
-> In some non-native cases in which there is no OS visible device
-> associated with the RCiEP, there is nothing to act upon as the firmware
-> is acting before the OS. So add handling for the linked 'rcec' in AER/ERR
-> while taking into account non-native cases.
+> L1 latency calculation is not good enough, it assumes that *any*
+> link is the highest latency link - which is incorrect.
 > 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> ---
->  drivers/pci/pcie/aer.c |  9 +++++----
->  drivers/pci/pcie/err.c | 38 ++++++++++++++++++++++++--------------
->  2 files changed, 29 insertions(+), 18 deletions(-)
+> The latency to bring L1 up is number-of-hops*1000 +
+> maximum-latency-along-the-path
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 65dff5f3457a..dccdba60b5d9 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1358,17 +1358,18 @@ static int aer_probe(struct pcie_device *dev)
->  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->  {
->  	int aer = dev->aer_cap;
-> +	int rc = 0;
->  	u32 reg32;
-> -	int rc;
-> -
->  
->  	/* Disable Root's interrupt in response to error messages */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
->  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->  
-> -	rc = pci_bus_error_reset(dev);
-> -	pci_info(dev, "Root Port link has been reset\n");
-> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
-> +		rc = pci_bus_error_reset(dev);
-> +		pci_info(dev, "Root Port link has been reset\n");
-> +	}
->  
->  	/* Clear Root Error Status */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 5380ecc41506..a61a2518163a 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -149,7 +149,8 @@ static int report_resume(struct pci_dev *dev, void *data)
->  /**
->   * pci_bridge_walk - walk bridges potentially AER affected
->   * @bridge   bridge which may be an RCEC with associated RCiEPs,
-> - *           an RCiEP associated with an RCEC, or a Port.
-> + *           or a Port.
-> + * @dev      an RCiEP lacking an associated RCEC.
->   * @cb       callback to be called for each device found
->   * @userdata arbitrary pointer to be passed to callback.
->   *
-> @@ -160,13 +161,16 @@ static int report_resume(struct pci_dev *dev, void *data)
->   * If the device provided has no subordinate bus, call the provided
->   * callback on the device itself.
->   */
-> -static void pci_bridge_walk(struct pci_dev *bridge, int (*cb)(struct pci_dev *, void *),
-> +static void pci_bridge_walk(struct pci_dev *bridge, struct pci_dev *dev,
-> +			    int (*cb)(struct pci_dev *, void *),
->  			    void *userdata)
->  {
-> -	if (bridge->subordinate)
-> +	if (bridge && bridge->subordinate)
-
-I *guess* this means there's a possibility that bridge is NULL?  And I
-guess that case is when pci_upstream_bridge(dev) in pcie_do_recovery()
-was NULL?
-
-I can't figure out what that means in practice.  Oh, wait, I bet I
-know -- this is the non-native case where there's no OS-visible
-reporting device.
-
-We need some sort of comment because this is really not a top-of-mind
-situation unless you happen to be working on one of the few systems
-like that.
-
-Not too sure this scenario is really a good fit for the
-pci_bridge_walk() model, but I think it's OK for now with a hint so we
-can remember this no RCEC, no Root Port model.
-
->  		pci_walk_bus(bridge->subordinate, cb, userdata);
-> -	else
-> +	else if (bridge)
->  		cb(bridge, userdata);
-> +	else
-> +		cb(dev, userdata);
->  }
->  
->  static pci_ers_result_t flr_on_rciep(struct pci_dev *dev)
-> @@ -196,16 +200,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	type = pci_pcie_type(dev);
->  	if (type == PCI_EXP_TYPE_ROOT_PORT ||
->  	    type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -	    type == PCI_EXP_TYPE_RC_EC ||
-> -	    type == PCI_EXP_TYPE_RC_END)
-> +	    type == PCI_EXP_TYPE_RC_EC)
->  		bridge = dev;
-> +	else if (type == PCI_EXP_TYPE_RC_END)
-> +		bridge = dev->rcec;
->  	else
->  		bridge = pci_upstream_bridge(dev);
->  
->  	pci_dbg(dev, "broadcast error_detected message\n");
->  	if (state == pci_channel_io_frozen) {
-> -		pci_bridge_walk(bridge, report_frozen_detected, &status);
-> +		pci_bridge_walk(bridge, dev, report_frozen_detected, &status);
->  		if (type == PCI_EXP_TYPE_RC_END) {
-> +			/*
-> +			 * The callback only clears the Root Error Status
-> +			 * of the RCEC (see aer.c).
-> +			 */
-> +			if (bridge)
-> +				reset_subordinate_devices(bridge);
-
-It's unfortunate to add yet another special case in this code, and I'm
-not thrilled about the one in aer_root_reset() either.  It's just not
-obvious why they should be there.  I'm sure if I spent 30 minutes
-decoding things, it would all make sense.  Guess I'm just griping
-because I don't have a better suggestion.
-
->  			status = flr_on_rciep(dev);
->  			if (status != PCI_ERS_RESULT_RECOVERED) {
->  				pci_warn(dev, "function level reset failed\n");
-> @@ -219,13 +231,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  			}
->  		}
->  	} else {
-> -		pci_bridge_walk(bridge, report_normal_detected, &status);
-> +		pci_bridge_walk(bridge, dev, report_normal_detected, &status);
->  	}
->  
->  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->  		status = PCI_ERS_RESULT_RECOVERED;
->  		pci_dbg(dev, "broadcast mmio_enabled message\n");
-> -		pci_bridge_walk(bridge, report_mmio_enabled, &status);
-> +		pci_bridge_walk(bridge, dev, report_mmio_enabled, &status);
->  	}
->  
->  	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> @@ -236,18 +248,16 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		 */
->  		status = PCI_ERS_RESULT_RECOVERED;
->  		pci_dbg(dev, "broadcast slot_reset message\n");
-> -		pci_bridge_walk(bridge, report_slot_reset, &status);
-> +		pci_bridge_walk(bridge, dev, report_slot_reset, &status);
->  	}
->  
->  	if (status != PCI_ERS_RESULT_RECOVERED)
->  		goto failed;
->  
->  	pci_dbg(dev, "broadcast resume message\n");
-> -	pci_bridge_walk(bridge, report_resume, &status);
-> +	pci_bridge_walk(bridge, dev, report_resume, &status);
->  
-> -	if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> -	    type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -	    type == PCI_EXP_TYPE_RC_EC) {
-> +	if (bridge) {
->  		if (pcie_aer_is_native(bridge))
->  			pcie_clear_device_status(bridge);
->  		pci_aer_clear_nonfatal_status(bridge);
-> -- 
-> 2.28.0
+> currently it's only doing number-of-hops*1000 +
+> arbitrary-latency-of-current-link
 > 
+> > And let's support the change you *do* need with the "lspci -vv" for
+> > all the relevant devices (including both 03:00.0 and 04:00.x, I guess,
+> > since they share the 00:01.2 - 01:00.0 link), before and after the
+> > change.
+> 
+> They are all included in all lspci output in the bug
+
+No doubt.  But I spent a long time going through those and the
+differences I found are not enough to show a spec violation or a fix.
+
+Here's what I extracted (this is a repeat; I mentioned this before):
+
+                                                    LnkCtl    LnkCtl
+           ------DevCap-------  ----LnkCap-------  -Before-  -After--
+  00:01.2                                L1 <32us       L1+       L1-
+  01:00.0                                L1 <32us       L1+       L1-
+  02:03.0                                L1 <32us       L1+       L1+
+  03:00.0  L0s <512ns L1 <64us  L0s <2us L1 <16us  L0s- L1-  L0s- L1-
+
+I don't see anything wrong here yet.  03:00.0 claims it can handle up
+to 64us of L1 exit latency, and the L1 exit latency of the entire path
+should be 33us.  What am I missing?
+
+> > I want to identify something in the "before" configuration that is
+> > wrong according to the spec, and a change in the "after" config so it
+> > now conforms to the spec.
+> 
+> So there are a few issues here, the current code does not apply to spec.
+> 
+> The intel nic gets fixed as a side effect (it should still get a
+> proper fix) of making
+> the code apply to spec.
+> 
+> Basically, while hunting for the issue, I found that the L1 and L0s
+> latency calculations used to determine
+> if they should be enabled or not is wrong - that is what I'm currently
+> trying to push - it also seems like the
+> intel nic claims that it can handle 64us but apparently it can't.
+> 
+> So, three bugs, two are "fixed" one needs additional fixing.
+
+OK, we just need to split these up as much as possible and support
+them with the relevant lspci output, analysis of what specifically is
+wrong, and the lspci output showing the effect of the fix.
+
+Bjorn
