@@ -2,262 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 824ED27B372
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 19:41:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B94727B389
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 19:46:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgI1RlT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 13:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgI1RlT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 13:41:19 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5C0C061755
-        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 10:41:19 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id j10so865989qvk.11
-        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 10:41:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aXcoiSKbLa/EI5AngGtI16loJCMADhr7tbmNwp+blgg=;
-        b=FNkEyypvampqVIZsyrysUN8QYWfsxEy9cABdhnn/LzWY8Zeox6zQcAJk2oB+LColR2
-         tLNogOfrUG3fyehpIbwSKbyWgTzvxeUmlhT6xnCgwyaPDBlQUxt3QGscX9NqsWc9X33B
-         4P3m6seFw/NrwiZUWoRlNOzEc3AC6RGkEbN2s3jmuzka3jhbWVjzm0GW6m8A3hAawpmP
-         b9ac+i/cjyTGD3+f9AQXJ7K+ppT1gBfsXbb5ej6RrskgXZ5EMcShs2tOGhSV9hUvjcRL
-         Juv0OaU497Y6Fsvh9X/ZtMzlQsqKayxgAgfnn+KVCGjCchGCaCRwH6qxeEFkSR9T222y
-         IFNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aXcoiSKbLa/EI5AngGtI16loJCMADhr7tbmNwp+blgg=;
-        b=BPf8w6WAF8PTzbOVim6M6Krq1rlyN9+liOOglghjZK0IK1a0I51lvjO2HfhJJyfEGa
-         YPHcBJzhAKHJ0Ndva10LyIQtijYbmRnPTI++rh5LIjKCknJZKK4SOBP5vfDLBPOGa/Pg
-         gyFCtJnLnA/sr3L02Gy9JKzkEI41d33Qu9h785qOhVs331tlDH9ymzIMOsuu7egoM3SG
-         pfPH72vyyi0wTAtWNtgg2fXGFuO45FDyz3d9VnSihiC7KnLu2iqPd8Fuc4nRL4X+G1fB
-         32IU/XwdrhbFqPOFjQQMHwEj6CyFhP0pCPIFWE3GeNszKg/MJZorBtaXPFkQ1V3OrEJp
-         jKHQ==
-X-Gm-Message-State: AOAM532tVP0gVDv4RUPJWLgJ83dwni+5tMwYR5u0I4dEV7DC8pnTlaxg
-        sZKwKuitGdx7yK6CDtJJAAiPmOYEAhNmOJvzHA8=
-X-Google-Smtp-Source: ABdhPJyw+Jse6HLmnuUdvsIIqpTMqPDhmwsfc6SzYFrPR9msKHGpraKBS8i18aTPevQYkms4IMp3wf5e87smjOETbeU=
-X-Received: by 2002:a05:6214:1752:: with SMTP id dc18mr739295qvb.10.1601314878555;
- Mon, 28 Sep 2020 10:41:18 -0700 (PDT)
+        id S1726506AbgI1Rq4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 13:46:56 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10517 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgI1Rq4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 13:46:56 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f72215a0000>; Mon, 28 Sep 2020 10:46:02 -0700
+Received: from [10.26.75.44] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Sep
+ 2020 17:46:33 +0000
+Subject: Re: [PATCH v2 0/5] PCI: dwc: improve msi handling
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+CC:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        <linux-pci@vger.kernel.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <linux-arm-kernel@axis.com>, Vidya Sagar <vidyas@nvidia.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        <linux-tegra@vger.kernel.org>,
+        "Krzysztof Kozlowski" <krzk@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "Kukjin Kim" <kgene@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
+        <linux-arm-msm@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "Yue Wang" <yue.wang@Amlogic.com>,
+        <linux-samsung-soc@vger.kernel.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Jingoo Han" <jingoohan1@gmail.com>,
+        Andy Gross <agross@kernel.org>, <linux-kernel@vger.kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+References: <20200924190421.549cb8fc@xhacker.debian>
+ <de4d9294-4f6d-c7d1-efc7-c8ef6570bd64@nvidia.com>
+ <20200925171712.254a018d@xhacker.debian>
+ <20200925172724.5bdf6aab@xhacker.debian>
+ <d4715e17-147f-a4fe-32c1-32fdfe8548bb@nvidia.com>
+ <20200927162830.3531ba60@xhacker.debian>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <0818bea3-d993-0fa7-b924-8eb8e2eb8493@nvidia.com>
+Date:   Mon, 28 Sep 2020 18:46:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CAA85sZuexf2pqfHBCKKGRos8psg_6ZZFeXiFm3ncPz-6JtqEdQ@mail.gmail.com>
- <20200928170921.GA2485236@bjorn-Precision-5520>
-In-Reply-To: <20200928170921.GA2485236@bjorn-Precision-5520>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Mon, 28 Sep 2020 19:41:05 +0200
-Message-ID: <CAA85sZuDVA1d_c7OQ3xyZiOVDneL6oN6bM-Sn2QfhfGAAoHhYg@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200927162830.3531ba60@xhacker.debian>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1601315162; bh=Idg9d3OZyxKyVn3C5vDYEJ7CX2ekA9vEdGPpSxNhCfs=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=FaWtC0/jd3epme0wPiwNIz17d8V1Eh5t3Ko0f1g8JuPvFHFmeD9jTXoPLL3xcCUMc
+         H3XIkhDfQBtmHkJcgo0we/T4D/DKuPzvIWV1gX4K0/KwzZcNbWQwVtOKRx+bEAYkEZ
+         4HKMewYZ3QoTkb79OyGXmShI5Q0C3zR7j1T905DGgOaybpcR07l3C88+Y1Pm0ugaXK
+         ACuey8b9trdu4xwnVYuPAHimu2PGFUCABAomPKEIbsz1RM3pHXGvcllqGpglY4/TpB
+         yCUaovwDTOkssn7Dd6x1Xxra2G8jb4iigFRnjIJCK8d4cHD2Fkm/k2UBT6DRkdS/Z4
+         1mhWpwhmlbmZg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 28, 2020 at 7:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Sep 28, 2020 at 12:24:11PM +0200, Ian Kumlien wrote:
-> > On Mon, Sep 28, 2020 at 2:06 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Sat, Sep 26, 2020 at 12:26:53AM +0200, Ian Kumlien wrote:
-> > > > On Fri, Sep 25, 2020 at 5:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > On Fri, Sep 25, 2020 at 03:54:11PM +0200, Ian Kumlien wrote:
-> > > > > > On Fri, Sep 25, 2020 at 3:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Fri, Sep 25, 2020 at 12:18:50PM +0200, Ian Kumlien wrote:
-> > > > > > > > So.......
-> > > > > > > > [    0.815843] pci 0000:04:00.0: L1 latency exceeded - path: 1000 - max: 64000
-> > > > > > > > [    0.815843] pci 0000:00:01.2: Upstream device - 32000
-> > > > > > > > [    0.815844] pci 0000:01:00.0: Downstream device - 32000
-> > > > > > >
-> > > > > > > Wait a minute.  I've been looking at *03:00.0*, not 04:00.0.  Based
-> > > > > > > on your bugzilla, here's the path:
-> > > > > >
-> > > > > > Correct, or you could do it like this:
-> > > > > > 00:01.2/01:00.0/02:03.0/03:00.0 Ethernet controller: Intel Corporation
-> > > > > > I211 Gigabit Network Connection (rev 03)
-> > > > > >
-> > > > > > >   00:01.2 Root Port              to [bus 01-07]
-> > > > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
-> > > > > > >   02:03.0 Switch Downstream Port to [bus 03]
-> > > > > > >   03:00.0 Endpoint (Intel I211 NIC)
-> > > > > > >
-> > > > > > > Your system does also have an 04:00.0 here:
-> > > > > > >
-> > > > > > >   00:01.2 Root Port              to [bus 01-07]
-> > > > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
-> > > > > > >   02:04.0 Switch Downstream Port to [bus 04]
-> > > > > > >   04:00.0 Endpoint (Realtek 816e)
-> > > > > > >   04:00.1 Endpoint (Realtek RTL8111/8168/8411 NIC)
-> > > > > > >   04:00.2 Endpoint (Realtek 816a)
-> > > > > > >   04:00.4 Endpoint (Realtek 816d EHCI USB)
-> > > > > > >   04:00.7 Endpoint (Realtek 816c IPMI)
-> > > > > > >
-> > > > > > > Which NIC is the problem?
-> > > > > >
-> > > > > > The intel one - so the side effect of the realtek nic is that it fixes
-> > > > > > the intel nics issues.
-> > > > > >
-> > > > > > It would be that the intel nic actually has a bug with L1 (and it
-> > > > > > would seem that it's to kind with latencies) so it actually has a
-> > > > > > smaller buffer...
-> > > > > >
-> > > > > > And afair, the realtek has a larger buffer, since it behaves better
-> > > > > > with L1 enabled.
-> > > > > >
-> > > > > > Either way, it's a fix that's needed ;)
-> > > > >
-> > > > > OK, what specifically is the fix that's needed?  The L0s change seems
-> > > > > like a "this looks wrong" thing that doesn't actually affect your
-> > > > > situation, so let's skip that for now.
-> > > >
-> > > > L1 latency calculation is not good enough, it assumes that *any*
-> > > > link is the highest latency link - which is incorrect.
-> > > >
-> > > > The latency to bring L1 up is number-of-hops*1000 +
-> > > > maximum-latency-along-the-path
-> > > >
-> > > > currently it's only doing number-of-hops*1000 +
-> > > > arbitrary-latency-of-current-link
-> > > >
-> > > > > And let's support the change you *do* need with the "lspci -vv" for
-> > > > > all the relevant devices (including both 03:00.0 and 04:00.x, I guess,
-> > > > > since they share the 00:01.2 - 01:00.0 link), before and after the
-> > > > > change.
-> > > >
-> > > > They are all included in all lspci output in the bug
-> > >
-> > > No doubt.  But I spent a long time going through those and the
-> > > differences I found are not enough to show a spec violation or a fix.
-> > >
-> > > Here's what I extracted (this is a repeat; I mentioned this before):
-> > >
-> > >                                                     LnkCtl    LnkCtl
-> > >            ------DevCap-------  ----LnkCap-------  -Before-  -After--
-> > >   00:01.2                                L1 <32us       L1+       L1-
-> > >   01:00.0                                L1 <32us       L1+       L1-
-> > >   02:03.0                                L1 <32us       L1+       L1+
-> > >   03:00.0  L0s <512ns L1 <64us  L0s <2us L1 <16us  L0s- L1-  L0s- L1-
-> > >
-> > > I don't see anything wrong here yet.  03:00.0 claims it can handle up
-> > > to 64us of L1 exit latency, and the L1 exit latency of the entire path
-> > > should be 33us.  What am I missing?
-> >
-> > it should be 32+3 so 35 us - but the intel nic claims something it
-> > can't live up to.
->
-> How did you compute 35us?  Here's my math for 33us:
->
->   It looks like we *should* be able to enable L1 on both links since
->   the exit latency should be <33us (first link starts exit at T=0,
->   completes by T=32; second link starts exit at T=1, completes by
->   T=33), and 03:00.0 can tolerate up to 64us.
 
-03:00.0 + 0
-02:03.0 + 1000
-01:00.0 + 1000
-00:01.2 + 1000
+On 27/09/2020 09:28, Jisheng Zhang wrote:
 
-so, 32 us + 3us or am I missing something?
+...
 
-> If 03:00.0 advertises that it can tolerate 64us but it really can't,
-> the fix would be a quirk to override the DevCap value for that device.
+> I see, the msi_domain_set_affinity() calls parent->chip->irq_set_affinity
+> without checking, grepping the irqchip and pci dir, I found that
+> if the MSI is based on some cascaded interrupt mechanism, they all
+> point the irq_set_affinity to irq_chip_set_affinity_parent(), so I believe
+> below patch works:
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index bf25d783b5c5..093fba616736 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -137,12 +137,6 @@ static void dw_pci_setup_msi_msg(struct irq_data *d, struct msi_msg *msg)
+>  		(int)d->hwirq, msg->address_hi, msg->address_lo);
+>  }
+>  
+> -static int dw_pci_msi_set_affinity(struct irq_data *d,
+> -				   const struct cpumask *mask, bool force)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+>  static void dw_pci_bottom_mask(struct irq_data *d)
+>  {
+>  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> @@ -197,7 +191,7 @@ static struct irq_chip dw_pci_msi_bottom_irq_chip = {
+>  	.name = "DWPCI-MSI",
+>  	.irq_ack = dw_pci_bottom_ack,
+>  	.irq_compose_msi_msg = dw_pci_setup_msi_msg,
+> -	.irq_set_affinity = dw_pci_msi_set_affinity,
+> +	.irq_set_affinity = irq_chip_set_affinity_parent,
+>  	.irq_mask = dw_pci_bottom_mask,
+>  	.irq_unmask = dw_pci_bottom_unmask,
+>  };
+> 
 
-Yeah, I wonder what it should be - I assume we could calculate it from latencies
-or perhaps there is something hidden in pcie 4 or higher L1 modes...
 
-I'm very uncertain of what level lspci handles and how much of the
-data it extracts
-(And i don't know better myself either ;))
+Unfortunately, this still crashes ...
 
-> > Since this is triggered by the realtek device
->
-> I'm still under the impression that the throughput problem is with
-> 03:00.0, the Intel I211 NIC.  In what sense is this triggered by the
-> Realtek device?  Does the I211 work correctly until we add the Realtek
-> device below the same switch?
+[   11.521674] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
+[   11.530324] Mem abort info:
+[   11.533089]   ESR = 0x96000004
+[   11.536105]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   11.541333]   SET = 0, FnV = 0
+[   11.544344]   EA = 0, S1PTW = 0
+[   11.547441] Data abort info:
+[   11.550279]   ISV = 0, ISS = 0x00000004
+[   11.554056]   CM = 0, WnR = 0
+[   11.557007] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000467341000
+[   11.563333] [0000000000000018] pgd=0000000000000000, p4d=0000000000000000
+[   11.570024] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[   11.575517] Modules linked in: crct10dif_ce pwm_tegra snd_hda_core phy_tegra194_p2u lm90 pcie_tegra194 tegra_bpmp_thermal pwm_fan ip_tables x_tables ipv6
+[   11.589046] CPU: 3 PID: 148 Comm: kworker/3:1 Not tainted 5.9.0-rc4-00009-g6fdf18edb995-dirty #7
+[   11.597669] Hardware name: NVIDIA Jetson AGX Xavier Developer Kit (DT)
+[   11.604110] Workqueue: events deferred_probe_work_func
+[   11.609174] pstate: 60c00089 (nZCv daIf +PAN +UAO BTYPE=--)
+[   11.614657] pc : irq_chip_set_affinity_parent+0x4/0x30
+[   11.619735] lr : msi_domain_set_affinity+0x44/0xc0
+[   11.624448] sp : ffff800012d4b390
+[   11.627744] x29: ffff800012d4b390 x28: ffff0003e7234c20 
+[   11.632983] x27: ffff0003e913e460 x26: 0000000000000000 
+[   11.638231] x25: ffff800011d7e890 x24: ffff800011d7e8b8 
+[   11.643466] x23: 0000000000000000 x22: ffff0003e913e400 
+[   11.648701] x21: ffff0003e913e460 x20: ffff0003e913e460 
+[   11.653932] x19: ffff800011b19000 x18: ffffffffffffffff 
+[   11.659160] x17: 0000000000000000 x16: 0000000000000000 
+[   11.664390] x15: 0000000000000001 x14: 0000000000000040 
+[   11.669636] x13: 0000000000000228 x12: 0000000000000030 
+[   11.674864] x11: 0101010101010101 x10: 0000000000000040 
+[   11.680111] x9 : 0000000000000000 x8 : 0000000000000004 
+[   11.685363] x7 : ffffffffffffffff x6 : 00000000000000ff 
+[   11.690596] x5 : 0000000000000000 x4 : 0000000000000000 
+[   11.695843] x3 : ffff8000100d89a8 x2 : 0000000000000000 
+[   11.701058] x1 : ffff800011d7e8d8 x0 : 0000000000000000 
+[   11.706288] Call trace:
+[   11.708708]  irq_chip_set_affinity_parent+0x4/0x30
+[   11.713431]  irq_do_set_affinity+0x4c/0x178
+[   11.717540]  irq_setup_affinity+0x124/0x1b0
+[   11.721650]  irq_startup+0x6c/0x118
+[   11.725081]  __setup_irq+0x810/0x8a0
+[   11.728580]  request_threaded_irq+0xdc/0x188
+[   11.732793]  pcie_pme_probe+0x98/0x110
+[   11.736481]  pcie_port_probe_service+0x34/0x60
+[   11.740848]  really_probe+0x110/0x400
+[   11.744445]  driver_probe_device+0x54/0xb8
+[   11.748482]  __device_attach_driver+0x90/0xc0
+[   11.752758]  bus_for_each_drv+0x70/0xc8
+[   11.756526]  __device_attach+0xec/0x150
+[   11.760306]  device_initial_probe+0x10/0x18
+[   11.764413]  bus_probe_device+0x94/0xa0
+[   11.768203]  device_add+0x464/0x730
+[   11.771630]  device_register+0x1c/0x28
+[   11.775311]  pcie_port_device_register+0x2d0/0x3e8
+[   11.780017]  pcie_portdrv_probe+0x34/0xd8
+[   11.783957]  local_pci_probe+0x3c/0xa0
+[   11.787647]  pci_device_probe+0x128/0x1c8
+[   11.791588]  really_probe+0x110/0x400
+[   11.795179]  driver_probe_device+0x54/0xb8
+[   11.799202]  __device_attach_driver+0x90/0xc0
+[   11.803480]  bus_for_each_drv+0x70/0xc8
+[   11.807244]  __device_attach+0xec/0x150
+[   11.811009]  device_attach+0x10/0x18
+[   11.814518]  pci_bus_add_device+0x4c/0xb0
+[   11.818456]  pci_bus_add_devices+0x44/0x90
+[   11.822478]  dw_pcie_host_init+0x370/0x4f8
+[   11.826504]  tegra_pcie_dw_probe+0x5e8/0xb50 [pcie_tegra194]
+[   11.832044]  platform_drv_probe+0x50/0xa8
+[   11.835984]  really_probe+0x110/0x400
+[   11.839580]  driver_probe_device+0x54/0xb8
+[   11.843608]  __device_attach_driver+0x90/0xc0
+[   11.847887]  bus_for_each_drv+0x70/0xc8
+[   11.851655]  __device_attach+0xec/0x150
+[   11.855424]  device_initial_probe+0x10/0x18
+[   11.859548]  bus_probe_device+0x94/0xa0
+[   11.863317]  deferred_probe_work_func+0x6c/0xa0
+[   11.867781]  process_one_work+0x1cc/0x360
+[   11.871720]  worker_thread+0x48/0x450
+[   11.875318]  kthread+0x120/0x150
+[   11.878495]  ret_from_fork+0x10/0x1c
+[   11.882027] Code: a8c17bfd d65f03c0 d503201f f9401400 (f9400c03) 
 
-They are both embedded devices on the motherboard
-Asus  Pro WS X570-ACE with bios: 2206
+Cheers
+Jon
 
-So i can't test one without the other...
-
-> >                                                      LnkCtl    LnkCtl
-> >             ------DevCap-------  ----LnkCap-------  -Before-  -After--
-> >    00:01.2                                L1 <32us       L1+       L1-
-> >    01:00.0                                L1 <32us       L1+       L1-
-> >    02:04.0                                L1 <32us       L1+       L1+
-> >    04:00.0  L0s <512 L1 <64us
-> >
-> > But exit for 04:00.0 is 64us which means it breaks its own latency
-> > requirements once it's behind anything
->
-> From your "lspci-before" attachment, 04:00.0 advertises:
->
->   04:00.0 DevCap: Latency L1 <64us
->           LnkCap: Exit Latency L1 <64us
->
-> So I see what you mean; if it's behind a switch, the link on the
-> upstream side of the switch would add some L1 exit latency, so we
-> wouldn't be able to exit L1 for the entire path in <64us.  This isn't
-> broken in the sense of a hardware defect; it just means we won't be
-> able to enable L1 on some parts of the path.
-
-Yes, it just seems odd to have the same latency as max latency..
-
-It could also be that they are assuming that we will not check that
-endpoint's latency
-as we walk the path... I have heard that this is quite tricky to get
-right and that Microsoft also had problems with it.
-
-(I assume that they would have a bit more resources and devices to test with)
-
-> I wouldn't be surprised if Linux is doing that wrong right now, but we
-> would just need to nail down exactly what's wrong.
-
-OK
-
-> > > > > I want to identify something in the "before" configuration that is
-> > > > > wrong according to the spec, and a change in the "after" config so it
-> > > > > now conforms to the spec.
-> > > >
-> > > > So there are a few issues here, the current code does not apply to spec.
-> > > >
-> > > > The intel nic gets fixed as a side effect (it should still get a
-> > > > proper fix) of making
-> > > > the code apply to spec.
-> > > >
-> > > > Basically, while hunting for the issue, I found that the L1 and L0s
-> > > > latency calculations used to determine
-> > > > if they should be enabled or not is wrong - that is what I'm currently
-> > > > trying to push - it also seems like the
-> > > > intel nic claims that it can handle 64us but apparently it can't.
-> > > >
-> > > > So, three bugs, two are "fixed" one needs additional fixing.
-> > >
-> > > OK, we just need to split these up as much as possible and support
-> > > them with the relevant lspci output, analysis of what specifically is
-> > > wrong, and the lspci output showing the effect of the fix.
-> >
-> > Could i have a copy of the pcie spec? I have found sections of it but
-> > it's really hard to find them again when you
-> > want to refer to something... Which I need to do to show that it
-> > doesn't conform...
->
-> Wish I could give you the spec, but it's not public.  There are books
-> that cover most of this material, e.g., Mindshare's "PCI Express
-> System Architecture".  I have a 2004 copy and it covers ASPM (but not
-> the L1 Substates).  I have also heard rumors that it's possible to
-> find older copies of the spec on the web.
-
-Dang... :/
-
-> > Ie I can't show all the errors on my system :)
-> >
-> > > Bjorn
+-- 
+nvpublic
