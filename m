@@ -2,74 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE21C27AA2D
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 11:02:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED0A927AAC5
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 11:31:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgI1JCX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 05:02:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39510 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgI1JCX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 05:02:23 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k10so341784wru.6;
-        Mon, 28 Sep 2020 02:02:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=32QwR42HFcU9ojGJECj3ZA1ItJ1AvvkKrKA1NI2UEZw=;
-        b=I8BggSFNrjDd8OP7LJxvQNp6baO5wA8u23H+DWC53Po/ZQ9FeG6Zu9+J0zk7WOO5v2
-         J9YzX29uJdfVTHPzbmGCnsfU96RO3Pr7dNrO6qqxeuR8HMMW4mCNeK5JD1X214hwRRR1
-         r68Hwia5UV/Gp+t/s+E5Bf/831WePf/yCrhNPciqFM5Kipq8Ac9aPnK895mGylkBxifU
-         MrbK5JSrYHC9gaMcNMFQnlInmh1o9dZGF2NOgP3ePTimyTAEFbCDAZLBHFQ8Sbb1rJs0
-         gL8gGaLMX2zyvCmZx4tXJYU2+SqcTx49JhQJzNbqZqeqKNjoPZFJwPXvehLtYigoGwl1
-         TLdg==
-X-Gm-Message-State: AOAM5324u1E3EGXjZZB9rt1BulJ5TaNzMtQXw6kRaYqAbRcH4zRAtb7V
-        OnC/in5vrncYT4E4y0PkiUY=
-X-Google-Smtp-Source: ABdhPJxWQCvkABAXFEQpSWWHprxz0J735ZuPrUQCO/ZrqeYeAxjmldjFBJxvMrr0bKoJMSiYonO6SA==
-X-Received: by 2002:adf:a49d:: with SMTP id g29mr524920wrb.219.1601283741805;
-        Mon, 28 Sep 2020 02:02:21 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id k4sm561750wrx.51.2020.09.28.02.02.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2020 02:02:21 -0700 (PDT)
-Date:   Mon, 28 Sep 2020 09:02:20 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: hv: Document missing hv_pci_protocol_negotiation()
- parameter
-Message-ID: <20200928090220.abgztj5onp6oaltm@liuwe-devbox-debian-v2>
-References: <20200925234753.1767227-1-kw@linux.com>
+        id S1726583AbgI1JbP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 05:31:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:48156 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgI1JbO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 05:31:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F2AA101E;
+        Mon, 28 Sep 2020 02:31:14 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA2A73F73B;
+        Mon, 28 Sep 2020 02:31:12 -0700 (PDT)
+Date:   Mon, 28 Sep 2020 10:31:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        George Cherian <george.cherian@marvell.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 0/3] Fix pci_iounmap() on !CONFIG_GENERIC_IOMAP
+Message-ID: <20200928093107.GA12010@e121166-lin.cambridge.arm.com>
+References: <20200915093203.16934-1-lorenzo.pieralisi@arm.com>
+ <cover.1600254147.git.lorenzo.pieralisi@arm.com>
+ <20200918114508.GA20110@e121166-lin.cambridge.arm.com>
+ <CAK8P3a1f9Qj+yhMB4QaAu36ZUQ1p6oKHm2MZQ3zU31q6xmymGA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200925234753.1767227-1-kw@linux.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK8P3a1f9Qj+yhMB4QaAu36ZUQ1p6oKHm2MZQ3zU31q6xmymGA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 25, 2020 at 11:47:53PM +0000, Krzysztof Wilczyński wrote:
-> Add missing documentation for the parameter "version" and "num_version"
-> of the hv_pci_protocol_negotiation() function and resolve build time
-> kernel-doc warnings:
+On Fri, Sep 18, 2020 at 09:58:51PM +0200, Arnd Bergmann wrote:
+> On Fri, Sep 18, 2020 at 1:45 PM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> > >
+> > > Lorenzo Pieralisi (3):
+> > >   sparc32: Remove useless io_32.h __KERNEL__ preprocessor guard
+> > >   sparc32: Move ioremap/iounmap declaration before asm-generic/io.h
+> > >     include
+> > >   asm-generic/io.h: Fix !CONFIG_GENERIC_IOMAP pci_iounmap()
+> > >     implementation
+> > >
+> > >  arch/sparc/include/asm/io_32.h | 17 ++++++---------
+> > >  include/asm-generic/io.h       | 39 +++++++++++++++++++++++-----------
+> > >  2 files changed, 34 insertions(+), 22 deletions(-)
+> >
+> > Arnd, David, Bjorn,
+> >
+> > I have got review/test tags, is it OK if we merge this series please ?
+> >
+> > Can we pull it in the PCI tree or you want it to go via a different
+> > route upstream ?
+> >
+> > Please let me know.
 > 
->   drivers/pci/controller/pci-hyperv.c:2535: warning: Function parameter
->   or member 'version' not described in 'hv_pci_protocol_negotiation'
-> 
->   drivers/pci/controller/pci-hyperv.c:2535: warning: Function parameter
->   or member 'num_version' not described in 'hv_pci_protocol_negotiation'
-> 
-> No change to functionality intended.
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> Going through the PCI tree sounds good to me, but I can
+> take it through the asm-generic tree if Bjorn doesn't want to
+> pick it up there.
 
-Applied to hyperv-next. Thanks.
+Bjorn, can we pull this series into PCI tree please - if that's OK
+with you ?
+
+Thanks,
+Lorenzo
