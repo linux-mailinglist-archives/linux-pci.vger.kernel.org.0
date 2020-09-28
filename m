@@ -2,61 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE3FB27A5C3
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 05:28:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91BF627A612
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 06:08:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgI1D2a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Sep 2020 23:28:30 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:7882 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726393AbgI1D2a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Sep 2020 23:28:30 -0400
-X-UUID: 2e567311069b47fd9e21a0b4bb7b90c5-20200928
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=agUedE9PsMXuVeno9bFALFYE9PxOrPom7M+8kFzGWYA=;
-        b=GRiY7BdVQdwHOAQzibc9oZE06JufBhSXtL9aA66cGOxzdpuwcpBYZa2k4lJCTrcPIWCAETzbFx2wp2lYrnoHgLCUbPyW9OJIeTFOtgrKCKfd9UsRg+RqhjsRVIFqvDFGsTm8YIOfi0qiayG8prUez9EjYQJm3d6P83RoI8VR5og=;
-X-UUID: 2e567311069b47fd9e21a0b4bb7b90c5-20200928
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1991438022; Mon, 28 Sep 2020 11:28:25 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 28 Sep
- 2020 11:28:23 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 28 Sep 2020 11:28:23 +0800
-Message-ID: <1601263551.21671.1.camel@mhfsdcap03>
-Subject: Re: Aw: [PATCH v6 0/4] Spilt PCIe node to comply with hardware
- design
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
-To:     Frank Wunderlich <frank-w@public-files.de>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>
-Date:   Mon, 28 Sep 2020 11:25:51 +0800
-In-Reply-To: <trinity-a791b919-956f-4cde-a496-919d4f3f2ba9-1600083556775@3c-app-gmx-bap20>
-References: <20200914112659.7091-1-chuanjia.liu@mediatek.com>
-         <trinity-a791b919-956f-4cde-a496-919d4f3f2ba9-1600083556775@3c-app-gmx-bap20>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: FCAC36D56FCFFF84C336092A77EF8DD389128F98161ACBA993639780B59DBAF42000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        id S1725298AbgI1EIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 00:08:25 -0400
+Received: from mga18.intel.com ([134.134.136.126]:30276 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbgI1EIZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 00:08:25 -0400
+IronPort-SDR: PSk58SnQkmWiCFKcD4fSDF7WeMRIivdUDWlRohsHXcwdd9SEw5GmoWpTzDpM6Ni5t6ijb1BzRT
+ Q7ZYuhtlq8mA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9757"; a="149710878"
+X-IronPort-AV: E=Sophos;i="5.77,312,1596524400"; 
+   d="scan'208";a="149710878"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2020 21:08:24 -0700
+IronPort-SDR: NM66TBsNtL7Aeg04tTKV/P63A/LteiApke6ROtr3Xp3uonWtPJ7U3oUNuQ8fB5sBnHNKyKAC9+
+ M8SUe7WQAUvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,312,1596524400"; 
+   d="scan'208";a="311628124"
+Received: from shskylake.sh.intel.com ([10.239.48.137])
+  by orsmga006.jf.intel.com with ESMTP; 27 Sep 2020 21:08:20 -0700
+From:   Ethan Zhao <haifeng.zhao@intel.com>
+To:     bhelgaas@google.com, oohall@gmail.com, ruscur@russell.cc,
+        lukas@wunner.de, andriy.shevchenko@linux.intel.com,
+        stuart.w.hayes@gmail.com, mr.nuke.me@gmail.com,
+        mika.westerberg@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pei.p.jia@intel.com, ashok.raj@linux.intel.com,
+        sathyanarayanan.kuppuswamy@intel.com,
+        Ethan Zhao <haifeng.zhao@intel.com>
+Subject: [PATCH 0/5 V5] Fix DPC hotplug race and enhance error handling
+Date:   Mon, 28 Sep 2020 00:06:46 -0400
+Message-Id: <20200928040651.24937-1-haifeng.zhao@intel.com>
+X-Mailer: git-send-email 2.18.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA5LTE0IGF0IDEzOjM5ICswMjAwLCBGcmFuayBXdW5kZXJsaWNoIHdyb3Rl
-Og0KPiA+IEJldHJlZmY6IFtQQVRDSCB2NiAwLzRdIFNwaWx0IFBDSWUgbm9kZSB0byBjb21wbHkg
-d2l0aCBoYXJkd2FyZSBkZXNpZ24NCj4gDQo+IGp1c3QgaWYgeW91IG5lZWQgdG8gbWFrZSBhbm90
-aGVyIHZlcnNpb24gKGFzIGl0IGlzIG9ubHkgdGhlIGNvdmVyLWxldHRlcikgeW91IGNhbiBmaXgg
-dGhlIHR5cG8gaW4gc3ViamVjdCA7KQ0KDQpUaGFua3MgZm9yIHlvdXIgcmVtaW5kaW5nLCBJIHdp
-bGwgY2hhbmdlIGl0IGluIHRoZSBuZXh0IHZlcnNpb24uDQo+IA0KPiByZWdhcmRzIEZyYW5rDQo+
-IA0KDQo=
+This simple patch set fixed some serious security issues found when DPC
+error injection and NVMe SSD hotplug brute force test were doing -- race
+condition between DPC handler and pciehp, AER interrupt handlers, caused
+system hang and system with DPC feature couldn't recover to normal
+working state as expected (NVMe instance lost, mount operation hang,
+race PCIe access caused uncorrectable errors reported alternatively etc).
+
+With this patch set applied, stable 5.9-rc6 on ICS (Ice Lake SP platform,
+see
+https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server))
+
+could pass the PCIe Gen4 NVMe SSD brute force hotplug test with any time 
+interval between hot-remove and plug-in operation tens of times without
+any errors occur and system works normal.
+
+With this patch set applied, system with DPC feature could recover from
+NON-FATAL and FATAL errors injection test and works as expected.
+
+System works smoothly when errors happen while hotplug is doing, no
+uncorrectable errors found.
+
+Brute DPC error injection script:
+
+for i in {0..100}
+do
+        setpci -s 64:02.0 0x196.w=000a 
+        setpci -s 65:00.0 0x04.w=0544 
+        mount /dev/nvme0n1p1 /root/nvme
+        sleep 1
+done
+
+Other details see every commits description part.
+
+This patch set could be applied to stable 5.9-rc6 directly.
+
+Help to review and test.
+
+V2: changed according to review by Andy Shevchenko.
+V3: changed patch 4/5 to simpler coding.
+V4: move function pci_wait_port_outdpc() to DPC driver and its
+declaration to pci.h. (tip from Christoph Hellwig <hch@infradead.org>).
+V5: fix building issue reported by lkp@intel.com with some config.
+
+Thanks,
+Ethan
+
+
+Ethan Zhao (5):
+  PCI: define a function to check and wait till port finish DPC handling
+  PCI: pciehp: check and wait port status out of DPC before handling
+    DLLSC and PDC
+  PCI/ERR: get device before call device driver to avoid NULL pointer
+    reference
+  PCI: only return true when dev io state is really changed
+  PCI/ERR: don't mix io state not changed and no driver together
+
+ drivers/pci/hotplug/pciehp_hpc.c |  4 +++-
+ drivers/pci/pci.h                | 34 +++++---------------------------
+ drivers/pci/pcie/err.c           | 18 +++++++++++++++--
+ include/linux/pci.h              | 31 +++++++++++++++++++++++++++++
+ 4 files changed, 55 insertions(+), 32 deletions(-)
+
+-- 
+2.18.4
 
