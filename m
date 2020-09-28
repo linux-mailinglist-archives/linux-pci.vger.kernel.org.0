@@ -2,29 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C89AE27AD8B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 14:11:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 325CD27ADA1
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 14:16:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgI1MLk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 08:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52386 "EHLO mail.kernel.org"
+        id S1726485AbgI1MQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 08:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgI1MLk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Sep 2020 08:11:40 -0400
+        id S1726281AbgI1MQw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 08:16:52 -0400
 Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDA52083B;
-        Mon, 28 Sep 2020 12:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98702083B;
+        Mon, 28 Sep 2020 12:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601295099;
-        bh=NK7+H/Aeb5qTM2CC+Dotq0cvh0sf74ZwVYE2Z4WjsRQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Qbv/4iT98v3fufYZRVwMVbg01QTkaf635XRL7rtSN9sp2LSfeplmr6ZNwXsSWEe+4
-         voeOVqjaJDotsxrl7+lX2H/Q3sorqUt3ZjzqIeAHNdH6t5bKFoypvUtki5XNI0xV50
-         qwUihFFy3e3dZuYRw9XTg6pA3KxUU36tND05JKuc=
+        s=default; t=1601295412;
+        bh=1IDcn/q9rvVLSbuuWRAYiXlIVFFdblHW6YdWWqmHXvc=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=B4QW4EmqoIcJJ8a6Msqln+1qNhbPBAe2XhFYFOn0A49E5T21PqKc+bANPZaIwQ8h5
+         mVvQCRvaXc3asZ0o2n5NAQ4lrIModMq1WCslu3xp9QahRcA1iRs1mwTjuhELVr9c7z
+         XiEQDkNLfnUsFqTyqj9CaEl21uHUT5UmWFiauAiQ=
 Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
  call
+From:   Sinan Kaya <okaya@kernel.org>
 To:     "Kuppuswamy, Sathyanarayanan" 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>
@@ -47,7 +48,7 @@ References: <20200922233333.GA2239404@bjorn-Precision-5520>
  <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
  <44f0cac5-8deb-1169-eb6d-93ac4889fe7e@kernel.org>
  <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
-From:   Sinan Kaya <okaya@kernel.org>
+ <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
 Autocrypt: addr=okaya@kernel.org; keydata=
  mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
  uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
@@ -72,37 +73,24 @@ Autocrypt: addr=okaya@kernel.org; keydata=
  9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
  2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
  L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <d508091f-a5a3-1127-6a42-e546532da7b2@kernel.org>
-Date:   Mon, 28 Sep 2020 08:11:37 -0400
+Message-ID: <1200962b-824c-bc38-36b1-d35a3208f948@kernel.org>
+Date:   Mon, 28 Sep 2020 08:16:50 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
+In-Reply-To: <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/27/2020 10:43 PM, Kuppuswamy, Sathyanarayanan wrote:
->> 2. no bus reset on NON_FATAL error through AER driver path.
->> This already tells me that you need to split your change into
->> multiple patches.
->>
->> Let's talk about this too. bus reset should be triggered via
->> AER driver before informing the recovery.
-> But as per error recovery documentation, any call to
-> ->error_detected() or ->mmio_enabled() can request
-> PCI_ERS_RESULT_NEED_RESET. So we need to add code
-> to do the actual reset before calling ->slot_reset()
-> callback. So call to pci_reset_bus() fixes this
-> issue.
-> 
->      if (status == PCI_ERS_RESULT_NEED_RESET) {
-> +        pci_reset_bus(dev);
+On 9/28/2020 7:17 AM, Sinan Kaya wrote:
+> This should remove/rescan logic should be inside DPC's slot_reset()
+> function BTW. Not here.
 
-This part seems to make sense as you already highlighted there is
-a TO-DO in the code.
+Correct function name is dpc_handler().
 
-This is an independent change that deserves its own patch.
+I hope I did not create confusion with slot_reset() that gets called for
+each driver post recovery.
