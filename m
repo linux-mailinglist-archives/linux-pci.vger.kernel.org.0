@@ -2,190 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7657927A9C1
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 10:41:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9D2727A9C4
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 10:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgI1IlN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 04:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
+        id S1726477AbgI1ImW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 04:42:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgI1IlN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 04:41:13 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE93C0613CE;
-        Mon, 28 Sep 2020 01:41:12 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id r7so7316967ejs.11;
-        Mon, 28 Sep 2020 01:41:12 -0700 (PDT)
+        with ESMTP id S1726328AbgI1ImW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 04:42:22 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAB6C0613CE
+        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 01:42:22 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id k8so346616pfk.2
+        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 01:42:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mF3TdtdfTqdhXO/Zs1AU32YnshdL+mbU+4GCV/pjrmM=;
-        b=t4DZf5kqFq3rSeItFWLtpI7+uQEHgSZfjnYeqOJFHR20GdxJOcyK/6oXWamCnH+SRI
-         /BspyhsOGse9XL9pl8JQPMDi6kZFqWIaXLq4kIp6kHXaL1VNU2SA3wXxuakKFiSBN6Nn
-         vcACQT/8FnNAq+bAHue3v2nt0AqRqpHwp2KWMuplp+vWfRZVbBfKnGVgKCfjZD0qV1s9
-         1BgA/pTXwKisJJK6GuToTDBSDbrRQNUnAIMPbRDp51sjrOGP/we+74/KyeQxflpr2zuv
-         9NCG714uvjOwew2m4xSdnhOQiKwNASqhq8qaxOZlyijJwrscG0EThay5pHCsDS7dcxU5
-         Lmng==
+         :cc:content-transfer-encoding;
+        bh=LbSvS6xucv6qQU6kb4xODer9d183a3qn9bjDS4gtIws=;
+        b=aeknpsxF7DM72WJ/40+nFkB1xu/WjrmEb3jnEFVekimZREQwycQGZO4FBj6+IVsoc2
+         pH6CcQllUExMB/3NCvXJHnIuNIKs9DZh9Pfcs9W/b8zQdzMuLoc88VgERYclatJBEAS6
+         DANJZ5EjMLcrH16VmO33MJdw5Yd+3kJC9Eg+yJeYDcJBY9Co+D+KAzekBs5r3jbkMsfg
+         14knf7ZSH+NAyyO9knr6HXzYi5EqZFU4yN9zk1rqM3iUWKsfkyk7KU+M5J4PPHtrp0W5
+         uSj73PhaVAKqTcGz+BZAkZFTNKMAXhyKSm4iBBb/P1CQPOEwN72sPGrL49ZnOUjfL1tF
+         Qycw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mF3TdtdfTqdhXO/Zs1AU32YnshdL+mbU+4GCV/pjrmM=;
-        b=UdGUwfEA+2msjkCEsCV0JNUQqdZ6CPpaJGF2ljbMgW50cwMqeSYEMhnFkS1lJrS44t
-         a4QG2S+lqsbz7RoQmGQtjRk7gZgVcVeVOLQnlQvzb6+2LHXZfoBfw+i1ZyGVug9HbQs4
-         oCidehJfTVEwIqyY25/HxIlNu3wUispcE/kuyCqgZn/iiQSwvWZyFJ33mjsgx7k6AEno
-         UQpzbSy7xX7TBid1gQFtSecuZc2GTx05KgUy3qlNU/ATiUQbUlDBiTzWSAhwcZRkFC8v
-         FxkSYt9+4of4GwPlKTC+YdBE64/wy+v/8LCgjKnehv+5SqoCSyoWb/PaZacoRBKMOYMn
-         HcEg==
-X-Gm-Message-State: AOAM533gMFcKeE1DZyL0EGKNnWsErSZFT1GtxxePQ28Eq17VmZMLup3n
-        ay4qiJOD2KAJvkWshLogaHIna7hrJhoryESPv64=
-X-Google-Smtp-Source: ABdhPJyS6AEr1N1XwWtqPRGGbMSw6iqdbXjwwcgRPHr6yzv482Y9EqN0WIU5XJqEYRN7go8iB6FPpD4drdlg/yADczQ=
-X-Received: by 2002:a17:906:4cd6:: with SMTP id q22mr576780ejt.139.1601282471610;
- Mon, 28 Sep 2020 01:41:11 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LbSvS6xucv6qQU6kb4xODer9d183a3qn9bjDS4gtIws=;
+        b=eTAqRCY2X61huCLR4ZAOtJ0jqNW4pb2ApsEVU0iexKvge6ibP+z4XqKTrOySIBHzbb
+         io8+wF9+bKRhndujn9JUQPNw0w2L5kBQbN+j/h5B52tW22pS+9SGsQsGzPsuNwykMSV5
+         RlX+DZi/DoFC5q60MoQvTRUOIyJ/zVFr+Hb37yp2gk49BO7wCPoo/hpASmrYL3/gqe9O
+         h+k/Y1fDdePIo1LzdUVdKhLC5IN2AmNWt0SVztjS/kyk2X1TORmszMZ3u3mMP+f3xx2Q
+         5uvCXgH26ehrwoALRy4Siwu6snAKX11V03GUhlyh21QhWGfBKEr4kbIrocotOw9U+dsa
+         l1IA==
+X-Gm-Message-State: AOAM532PWn9qPQlz04d7maVj/tofUFZx/MVeReas2vy792hwdntIBJhm
+        Nrz6lD/UGabFqpAgPRY7ZHVB5AQ8zF5263wK/mc=
+X-Google-Smtp-Source: ABdhPJyAp7m6nKyLgfxEk6lztleswMiQDjDSM/xir4ism+bljlVXOLh2HDwBhf/2/gQugZ7RbfHmXkXnzq8mzjvYl4E=
+X-Received: by 2002:a63:d648:: with SMTP id d8mr399965pgj.4.1601282541848;
+ Mon, 28 Sep 2020 01:42:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200922233333.GA2239404@bjorn-Precision-5520>
- <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com> <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
- <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com> <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
- <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com> <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
- <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com> <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
- <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com> <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
- <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com> <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
- <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com> <44f0cac5-8deb-1169-eb6d-93ac4889fe7e@kernel.org>
- <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
-In-Reply-To: <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Mon, 28 Sep 2020 16:41:00 +0800
-Message-ID: <CAKF3qh18ts53GQswbvQbcMApkR9ZpCtqyWffaRw4DvMrBMUE5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery() call
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Sinan Kaya <okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200927082736.14633-1-haifeng.zhao@intel.com>
+ <20200927082736.14633-3-haifeng.zhao@intel.com> <CAHp75VdnwfcNFZ3puPcKSyQk1WbtJJefVDMSC=o8r016nHEgcA@mail.gmail.com>
+ <MWHPR11MB1696B1DF37BE8F323E67FEE497350@MWHPR11MB1696.namprd11.prod.outlook.com>
+In-Reply-To: <MWHPR11MB1696B1DF37BE8F323E67FEE497350@MWHPR11MB1696.namprd11.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 28 Sep 2020 11:42:03 +0300
+Message-ID: <CAHp75Ve7fQpRweq9dQ_gnU37X5qzz2vZZv++m+_M1SV-W9ou3A@mail.gmail.com>
+Subject: Re: [PATCH 2/5 V4] PCI: pciehp: check and wait port status out of DPC
+ before handling DLLSC and PDC
+To:     "Zhao, Haifeng" <haifeng.zhao@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        linux-pci <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Sathyanarayanan,
+On Mon, Sep 28, 2020 at 5:24 AM Zhao, Haifeng <haifeng.zhao@intel.com> wrot=
+e:
+>
+> Andy,
+>     May I ask what you think that's not relevant in the oops ?  any rules=
+ ?
 
-On Mon, Sep 28, 2020 at 10:44 AM Kuppuswamy, Sathyanarayanan
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
-> Hi,
->
-> On 9/25/20 11:30 AM, Sinan Kaya wrote:
-> > On 9/25/2020 2:16 PM, Kuppuswamy, Sathyanarayanan wrote:
-> >>>
-> >>> If this is a too involved change, DPC driver should restore state
-> >>> when hotplug is not supported.
-> >> Yes. we can add a condition for hotplug capability check.
-> >>>
-> >>> DPC driver should be self-sufficient by itself.
-> >>>
-> >
-> > Sounds good.
-> >
-> >>>> Also for non-fatal errors, if reset is requested then we still need
-> >>>> some kind of bus reset call here
-> >>>
-> >>> DPC should handle both fatal and non-fatal cases
-> >> Currently DPC is only triggered for FATAL errors.
-> >>   and cause a bus reset
-> >
-> > Thanks for the heads up.
-> > This seems to have changed since I looked at the DPC code.
-> >
-> >>> in hardware already before triggering an interrupt.
-> >> Error recovery is not triggered only DPC driver. AER also uses the
-> >> same error recovery code. If DPC is not supported, then we still need
-> >> reset logic.
-> >
-> > It sounds like we are cross-talking two issues.
-> >
-> > 1. no state restore on DPC after FATAL error.
-> > Let's fix this.
-> Agree. Few more detail about the above issue is,
->
-> There are two cases under FATAL error.
->
-> FATAL + hotplug - In this case, link will be reseted. And hotplug handler
-> will remove the driver state. This case works well with current code.
->
-> FATAL + no-hotplug - In this case, link will still be reseted. But
-> currently driver state is not properly restored. So I attempted
-> to restore it using pci_reset_bus().
+First of all, please don't send private messages on OSS development
+matters (partially returned Cc list).
+Second, stop top postings.
 
-Seems you should fix something at device driver side, not do double-reset in
-DPC driver, one reset is done by hardware, and you want to do another by
-DPC driver ?
+Now to the question, the rule is simple =E2=80=94 it's called "common sense=
+".
+See below the examples, but you may cut even more. So, don't pollute
+commit messages with unrelated information.
 
-Why hardware initiated reset is not enough for you ?
+> On Sun, Sep 27, 2020 at 11:31 AM Ethan Zhao <haifeng.zhao@intel.com> wrot=
+e:
 
-Thanks,
-Ethan
+...
 
->                 status = reset_link(dev);
-> -               if (status != PCI_ERS_RESULT_RECOVERED) {
-> +               if (status == PCI_ERS_RESULT_RECOVERED) {
-> +                       status = PCI_ERS_RESULT_NEED_RESET;
+> >    Buffer I/O error on dev nvme0n1p1, logical block 3328, async page re=
+ad
+> >    BUG: kernel NULL pointer dereference, address: 0000000000000050
+
+The below...
+
+> >    #PF: supervisor read access in kernel mode
+> >    #PF: error_code(0x0000) - not-present page
+> >    PGD 0
 >
-> ...
+> Seems like you randomly did something about the series and would like it =
+to be applied?! It's no go!
+> Please, read my comments again v1 one more time and carefully comment or =
+address.
 >
->         if (status == PCI_ERS_RESULT_NEED_RESET) {
->                 /*
-> -                * TODO: Should call platform-specific
-> -                * functions to reset slot before calling
-> -                * drivers' slot_reset callbacks?
-> +                * TODO: Optimize the call to pci_reset_bus()
-> +                *
-> +                * There are two components to pci_reset_bus().
-> +                *
-> +                * 1. Do platform specific slot/bus reset.
-> +                * 2. Save/Restore all devices in the bus.
-> +                *
-> +                * For hotplug capable devices and fatal errors,
-> +                * device is already in reset state due to link
-> +                * reset. So repeating platform specific slot/bus
-> +                * reset via pci_reset_bus() call is redundant. So
-> +                * can optimize this logic and conditionally call
-> +                * pci_reset_bus().
->                  */
-> +               pci_reset_bus(dev);
->
-> >
-> > 2. no bus reset on NON_FATAL error through AER driver path.
-> > This already tells me that you need to split your change into
-> > multiple patches.
-> >
-> > Let's talk about this too. bus reset should be triggered via
-> > AER driver before informing the recovery.
-> But as per error recovery documentation, any call to
-> ->error_detected() or ->mmio_enabled() can request
-> PCI_ERS_RESULT_NEED_RESET. So we need to add code
-> to do the actual reset before calling ->slot_reset()
-> callback. So call to pci_reset_bus() fixes this
-> issue.
->
->         if (status == PCI_ERS_RESULT_NEED_RESET) {
-> +               pci_reset_bus(dev);
->
->
-> >
-> >       if (status == PCI_ERS_RESULT_NEED_RESET) {
-> >               /*
-> >                * TODO: Should call platform-specific
-> >                * functions to reset slot before calling
-> >                * drivers' slot_reset callbacks?
-> >                */
-> >               status = PCI_ERS_RESULT_RECOVERED;
-> >               pci_dbg(dev, "broadcast slot_reset message\n");
-> >               pci_walk_bus(bus, report_slot_reset, &status);
-> >       }
-> >
->
-> --
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
+> Why do you still have these (some above, some below this comment) non-rel=
+evant lines of oops?
+
+..
+
+> >    Oops: 0000 [#1] SMP NOPTI
+
+...is anybody getting new information from the above? I don't think so.
+
+> >    CPU: 12 PID: 513 Comm: irq/124-pcie-dp Not tainted 5.8.0 el8.x86_64+=
+ #1
+> >    RIP: 0010:report_error_detected.cold.4+0x7d/0xe6
+> >    Code: b6 d0 e8 e8 fe 11 00 e8 16 c5 fb ff be 06 00 00 00 48 89 df e8=
+ d3
+> >    65 ff ff b8 06 00 00 00 e9 75 fc ff ff 48 8b 43 68 45 31 c9 <48> 8b =
+50
+> >    50 48 83 3a 00 41 0f 94 c1 45 31 c0 48 85 d2 41 0f 94 c0
+> >    RSP: 0018:ff8e06cf8762fda8 EFLAGS: 00010246
+> >    RAX: 0000000000000000 RBX: ff4e3eaacf42a000 RCX: ff4e3eb31f223c01
+> >    RDX: ff4e3eaacf42a140 RSI: ff4e3eb31f223c00 RDI: ff4e3eaacf42a138
+> >    RBP: ff8e06cf8762fdd0 R08: 00000000000000bf R09: 0000000000000000
+> >    R10: 000000eb8ebeab53 R11: ffffffff93453258 R12: 0000000000000002
+> >    R13: ff4e3eaacf42a130 R14: ff8e06cf8762fe2c R15: ff4e3eab44733828
+> >    FS:  0000000000000000(0000) GS:ff4e3eab1fd00000(0000) knl
+> >    GS:0000000000000000
+> >    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >    CR2: 0000000000000050 CR3: 0000000f8f80a004 CR4: 0000000000761ee0
+> >    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >    PKRU: 55555554
+> >    Call Trace:
+> >    ? report_normal_detected+0x20/0x20
+> >    report_frozen_detected+0x16/0x20
+> >    pci_walk_bus+0x75/0x90
+> >    ? dpc_irq+0x90/0x90
+> >    pcie_do_recovery+0x157/0x201
+> >    ? irq_finalize_oneshot.part.47+0xe0/0xe0
+> >    dpc_handler+0x29/0x40
+> >    irq_thread_fn+0x24/0x60
+
+The below, for example, does it affect anyhow the meaning of the crash
+log? I don't think so, can be cut.
+
+> >    irq_thread+0xea/0x170
+> >    ? irq_forced_thread_fn+0x80/0x80
+> >    ? irq_thread_check_affinity+0xf0/0xf0
+> >    kthread+0x124/0x140
+> >    ? kthread_park+0x90/0x90
+> >    ret_from_fork+0x1f/0x30
+> >    Modules linked in: nft_fib_inet.........
+> >    CR2: 0000000000000050
+
+
+--
+With Best Regards,
+Andy Shevchenko
