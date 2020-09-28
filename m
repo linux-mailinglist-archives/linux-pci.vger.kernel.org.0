@@ -2,38 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9A7127B469
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 20:26:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C37827B481
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 20:32:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgI1SZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 14:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35786 "EHLO mail.kernel.org"
+        id S1726583AbgI1Sc1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 14:32:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38347 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbgI1SZ7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Sep 2020 14:25:59 -0400
-Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B888206C3;
-        Mon, 28 Sep 2020 18:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601317558;
-        bh=Hqj7bmcqb0fJWzGn6GYE0i3laa0sjiF2AKvBBWEqduw=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=NdGGNGXVPmkeehQO7Wil32kjU2ZHxxdp2Pu2+J+i4m6FvVjFEPdmwWrin1wqet9Bx
-         x1XNqE4FBm+l/2v24WaiH43ivMYoClORE72gAwhrZmuAGomoqCTHwmy8sNCrh4mokG
-         pfFf2+fDFTxhkO0iaLUNpmqpZRVnCzPu5vpFFEn8=
+        id S1726526AbgI1Sc1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 14:32:27 -0400
+IronPort-SDR: pK85NiHMkZZG4p8WDEekTGojWQwBTmatiZdmBFktxsLIA+eAsgBfHMJwovAfvrBhKVXFFoTgni
+ C0i+68hDO3JQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9758"; a="226189212"
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="226189212"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 11:32:21 -0700
+IronPort-SDR: pfPxQndJaC+NinPZjzS2oRzK9EMqP5WQzue6VzOlfZIfyMKMPXzzPwN/zJ7Kw8QT8vOkUlJtE9
+ 5jX6UhFMMm0Q==
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="307430935"
+Received: from sethura1-mobl2.amr.corp.intel.com (HELO [10.254.88.203]) ([10.254.88.203])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 11:32:21 -0700
 Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
  call
-From:   Sinan Kaya <okaya@kernel.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
+To:     Sinan Kaya <okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
 Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, ashok.raj@intel.com,
         Jay Vosburgh <jay.vosburgh@canonical.com>
 References: <20200922233333.GA2239404@bjorn-Precision-5520>
- <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
  <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com>
  <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
  <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
@@ -50,59 +49,47 @@ References: <20200922233333.GA2239404@bjorn-Precision-5520>
  <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
  <8a3aeb3c-83c4-8626-601d-360946d55dd8@linux.intel.com>
  <9b295cad-7302-cf2c-d19d-d27fabcb48be@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <93b4015f-df2b-728b-3ef7-ac5aa10f03ed@kernel.org>
-Date:   Mon, 28 Sep 2020 14:25:56 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+ <93b4015f-df2b-728b-3ef7-ac5aa10f03ed@kernel.org>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <d6da2246-cf82-315e-c716-62ab9ec13a22@linux.intel.com>
+Date:   Mon, 28 Sep 2020 11:32:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <9b295cad-7302-cf2c-d19d-d27fabcb48be@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <93b4015f-df2b-728b-3ef7-ac5aa10f03ed@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/28/2020 2:02 PM, Sinan Kaya wrote:
-> Since there is no state restoration for FATAL errors, I am wondering
-> whether
-> calls to ->error_detected(), ->mmio_enabled() and ->slot_reset() are
-> required?
 
-I also would like to ask someone closer to the spec language double
-check this.
 
-When we recover the link at the end of the DPC handler, what is the
-expected state of the endpoint?
+On 9/28/20 11:25 AM, Sinan Kaya wrote:
+> On 9/28/2020 2:02 PM, Sinan Kaya wrote:
+>> Since there is no state restoration for FATAL errors, I am wondering
+>> whether
+>> calls to ->error_detected(), ->mmio_enabled() and ->slot_reset() are
+>> required?
+> 
+> I also would like to ask someone closer to the spec language double
+> check this.
+> 
+> When we recover the link at the end of the DPC handler, what is the
+> expected state of the endpoint?
+> 
+> Is it a some kind of a reset like secondary bus reset? (I assumed this
+>   one)
+I think it will be in reset state.
+> 
+> Undefined?
+> 
+> or just plain link recovery with everything else as intact as it used
+> to be?
+> 
 
-Is it a some kind of a reset like secondary bus reset? (I assumed this
- one)
-
-Undefined?
-
-or just plain link recovery with everything else as intact as it used
-to be?
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
