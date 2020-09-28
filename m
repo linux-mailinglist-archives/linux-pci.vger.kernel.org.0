@@ -2,207 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB14F27B2C0
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 19:09:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 101D527B2E4
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 19:15:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgI1RJY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 13:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37126 "EHLO mail.kernel.org"
+        id S1726506AbgI1RPt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 13:15:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55832 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgI1RJY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Sep 2020 13:09:24 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4F0420757;
-        Mon, 28 Sep 2020 17:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601312963;
-        bh=smxG/R7ufpY6aZWNm88C/aBRnKHVj5REoeIcc4WAukY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GRUTFUgsX3aqFFI7mw2cibnQjzawrhdPOa3kSIRNBdsuitys4lG/DmSz/0xqc6rgT
-         PPnaA0/zvkEjm1YFP9TOMM7AuX70CkFSVaRQ47cRCP5fjr5CSYXkro1nDnzCGHXeup
-         LJupHewQqC2opM/2orpOCYY/cx3OsaQyQYsCnDbM=
-Date:   Mon, 28 Sep 2020 12:09:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ian Kumlien <ian.kumlien@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
-Message-ID: <20200928170921.GA2485236@bjorn-Precision-5520>
+        id S1726281AbgI1RPt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 13:15:49 -0400
+IronPort-SDR: tb41lbWrRFpG9ZRUAg6PYHWfEiQHilozQl4n4L5M1NinCHYvL0jm4ozlCnqMrUhoAwwEKZgJRH
+ k67+wz6md/GA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9758"; a="141437653"
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="141437653"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 10:15:47 -0700
+IronPort-SDR: pUE4d4kRrN3n0sQhOro+Fv/Fo8sWe/Ulj1lzc9aUQqNIpzH5jDcjFd/8S27J26RmlOBX/b7y/3
+ NuyX3c10hmUw==
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="307410544"
+Received: from sethura1-mobl2.amr.corp.intel.com (HELO [10.254.88.203]) ([10.254.88.203])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 10:15:47 -0700
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+To:     Sinan Kaya <okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200922233333.GA2239404@bjorn-Precision-5520>
+ <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
+ <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
+ <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com>
+ <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
+ <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
+ <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
+ <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
+ <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
+ <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
+ <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
+ <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
+ <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
+ <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
+ <44f0cac5-8deb-1169-eb6d-93ac4889fe7e@kernel.org>
+ <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
+ <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <8a3aeb3c-83c4-8626-601d-360946d55dd8@linux.intel.com>
+Date:   Mon, 28 Sep 2020 10:15:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA85sZuexf2pqfHBCKKGRos8psg_6ZZFeXiFm3ncPz-6JtqEdQ@mail.gmail.com>
+In-Reply-To: <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 28, 2020 at 12:24:11PM +0200, Ian Kumlien wrote:
-> On Mon, Sep 28, 2020 at 2:06 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Sat, Sep 26, 2020 at 12:26:53AM +0200, Ian Kumlien wrote:
-> > > On Fri, Sep 25, 2020 at 5:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Fri, Sep 25, 2020 at 03:54:11PM +0200, Ian Kumlien wrote:
-> > > > > On Fri, Sep 25, 2020 at 3:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > >
-> > > > > > On Fri, Sep 25, 2020 at 12:18:50PM +0200, Ian Kumlien wrote:
-> > > > > > > So.......
-> > > > > > > [    0.815843] pci 0000:04:00.0: L1 latency exceeded - path: 1000 - max: 64000
-> > > > > > > [    0.815843] pci 0000:00:01.2: Upstream device - 32000
-> > > > > > > [    0.815844] pci 0000:01:00.0: Downstream device - 32000
-> > > > > >
-> > > > > > Wait a minute.  I've been looking at *03:00.0*, not 04:00.0.  Based
-> > > > > > on your bugzilla, here's the path:
-> > > > >
-> > > > > Correct, or you could do it like this:
-> > > > > 00:01.2/01:00.0/02:03.0/03:00.0 Ethernet controller: Intel Corporation
-> > > > > I211 Gigabit Network Connection (rev 03)
-> > > > >
-> > > > > >   00:01.2 Root Port              to [bus 01-07]
-> > > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
-> > > > > >   02:03.0 Switch Downstream Port to [bus 03]
-> > > > > >   03:00.0 Endpoint (Intel I211 NIC)
-> > > > > >
-> > > > > > Your system does also have an 04:00.0 here:
-> > > > > >
-> > > > > >   00:01.2 Root Port              to [bus 01-07]
-> > > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
-> > > > > >   02:04.0 Switch Downstream Port to [bus 04]
-> > > > > >   04:00.0 Endpoint (Realtek 816e)
-> > > > > >   04:00.1 Endpoint (Realtek RTL8111/8168/8411 NIC)
-> > > > > >   04:00.2 Endpoint (Realtek 816a)
-> > > > > >   04:00.4 Endpoint (Realtek 816d EHCI USB)
-> > > > > >   04:00.7 Endpoint (Realtek 816c IPMI)
-> > > > > >
-> > > > > > Which NIC is the problem?
-> > > > >
-> > > > > The intel one - so the side effect of the realtek nic is that it fixes
-> > > > > the intel nics issues.
-> > > > >
-> > > > > It would be that the intel nic actually has a bug with L1 (and it
-> > > > > would seem that it's to kind with latencies) so it actually has a
-> > > > > smaller buffer...
-> > > > >
-> > > > > And afair, the realtek has a larger buffer, since it behaves better
-> > > > > with L1 enabled.
-> > > > >
-> > > > > Either way, it's a fix that's needed ;)
-> > > >
-> > > > OK, what specifically is the fix that's needed?  The L0s change seems
-> > > > like a "this looks wrong" thing that doesn't actually affect your
-> > > > situation, so let's skip that for now.
-> > >
-> > > L1 latency calculation is not good enough, it assumes that *any*
-> > > link is the highest latency link - which is incorrect.
-> > >
-> > > The latency to bring L1 up is number-of-hops*1000 +
-> > > maximum-latency-along-the-path
-> > >
-> > > currently it's only doing number-of-hops*1000 +
-> > > arbitrary-latency-of-current-link
-> > >
-> > > > And let's support the change you *do* need with the "lspci -vv" for
-> > > > all the relevant devices (including both 03:00.0 and 04:00.x, I guess,
-> > > > since they share the 00:01.2 - 01:00.0 link), before and after the
-> > > > change.
-> > >
-> > > They are all included in all lspci output in the bug
-> >
-> > No doubt.  But I spent a long time going through those and the
-> > differences I found are not enough to show a spec violation or a fix.
-> >
-> > Here's what I extracted (this is a repeat; I mentioned this before):
-> >
-> >                                                     LnkCtl    LnkCtl
-> >            ------DevCap-------  ----LnkCap-------  -Before-  -After--
-> >   00:01.2                                L1 <32us       L1+       L1-
-> >   01:00.0                                L1 <32us       L1+       L1-
-> >   02:03.0                                L1 <32us       L1+       L1+
-> >   03:00.0  L0s <512ns L1 <64us  L0s <2us L1 <16us  L0s- L1-  L0s- L1-
-> >
-> > I don't see anything wrong here yet.  03:00.0 claims it can handle up
-> > to 64us of L1 exit latency, and the L1 exit latency of the entire path
-> > should be 33us.  What am I missing?
+
+
+On 9/28/20 4:17 AM, Sinan Kaya wrote:
+> On 9/27/2020 10:43 PM, Kuppuswamy, Sathyanarayanan wrote:
+>> FATAL + no-hotplug - In this case, link will still be reseted. But
+>> currently driver state is not properly restored. So I attempted
+>> to restore it using pci_reset_bus().
+>>
+>>           status = reset_link(dev);
+>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
+>> +        if (status == PCI_ERS_RESULT_RECOVERED) {
+>> +            status = PCI_ERS_RESULT_NEED_RESET;
+>>
+>> ...
+>>
+>>       if (status == PCI_ERS_RESULT_NEED_RESET) {
+>>           /*
+>> -         * TODO: Should call platform-specific
+>> -         * functions to reset slot before calling
+>> -         * drivers' slot_reset callbacks?
+>> +         * TODO: Optimize the call to pci_reset_bus()
+>> +         *
+>> +         * There are two components to pci_reset_bus().
+>> +         *
+>> +         * 1. Do platform specific slot/bus reset.
+>> +         * 2. Save/Restore all devices in the bus.
+>> +         *
+>> +         * For hotplug capable devices and fatal errors,
+>> +         * device is already in reset state due to link
+>> +         * reset. So repeating platform specific slot/bus
+>> +         * reset via pci_reset_bus() call is redundant. So
+>> +         * can optimize this logic and conditionally call
+>> +         * pci_reset_bus().
+>>            */
+>> +        pci_reset_bus(dev);
 > 
-> it should be 32+3 so 35 us - but the intel nic claims something it
-> can't live up to.
-
-How did you compute 35us?  Here's my math for 33us:
-
-  It looks like we *should* be able to enable L1 on both links since
-  the exit latency should be <33us (first link starts exit at T=0,
-  completes by T=32; second link starts exit at T=1, completes by
-  T=33), and 03:00.0 can tolerate up to 64us.
-
-If 03:00.0 advertises that it can tolerate 64us but it really can't,
-the fix would be a quirk to override the DevCap value for that device.
-
-> Since this is triggered by the realtek device
-
-I'm still under the impression that the throughput problem is with
-03:00.0, the Intel I211 NIC.  In what sense is this triggered by the
-Realtek device?  Does the I211 work correctly until we add the Realtek
-device below the same switch?
-
->                                                      LnkCtl    LnkCtl
->             ------DevCap-------  ----LnkCap-------  -Before-  -After--
->    00:01.2                                L1 <32us       L1+       L1-
->    01:00.0                                L1 <32us       L1+       L1-
->    02:04.0                                L1 <32us       L1+       L1+
->    04:00.0  L0s <512 L1 <64us
+> I think we have to go to remove/rescan for this case as you also
+> mentioned above. There is no state to save. All BAR assignments
+> are gone. Entire device programming is also lost.
 > 
-> But exit for 04:00.0 is 64us which means it breaks its own latency
-> requirements once it's behind anything
-
-From your "lspci-before" attachment, 04:00.0 advertises:
-
-  04:00.0 DevCap: Latency L1 <64us
-          LnkCap: Exit Latency L1 <64us
-
-So I see what you mean; if it's behind a switch, the link on the
-upstream side of the switch would add some L1 exit latency, so we
-wouldn't be able to exit L1 for the entire path in <64us.  This isn't
-broken in the sense of a hardware defect; it just means we won't be
-able to enable L1 on some parts of the path.
-
-I wouldn't be surprised if Linux is doing that wrong right now, but we
-would just need to nail down exactly what's wrong.
-
-> > > > I want to identify something in the "before" configuration that is
-> > > > wrong according to the spec, and a change in the "after" config so it
-> > > > now conforms to the spec.
-> > >
-> > > So there are a few issues here, the current code does not apply to spec.
-> > >
-> > > The intel nic gets fixed as a side effect (it should still get a
-> > > proper fix) of making
-> > > the code apply to spec.
-> > >
-> > > Basically, while hunting for the issue, I found that the L1 and L0s
-> > > latency calculations used to determine
-> > > if they should be enabled or not is wrong - that is what I'm currently
-> > > trying to push - it also seems like the
-> > > intel nic claims that it can handle 64us but apparently it can't.
-> > >
-> > > So, three bugs, two are "fixed" one needs additional fixing.
-> >
-> > OK, we just need to split these up as much as possible and support
-> > them with the relevant lspci output, analysis of what specifically is
-> > wrong, and the lspci output showing the effect of the fix.
+> I don't think pci_reset_bus() can recover from this situation safely.
+> It will make things worse by saving/restoring the hardware default
+> state.
 > 
-> Could i have a copy of the pcie spec? I have found sections of it but
-> it's really hard to find them again when you
-> want to refer to something... Which I need to do to show that it
-> doesn't conform...
+> This should remove/rescan logic should be inside DPC's slot_reset()
+> function BTW. Not here.
+Since there is no state restoration for FATAL errors, I am wondering whether
+calls to ->error_detected(), ->mmio_enabled() and ->slot_reset() are
+required?
 
-Wish I could give you the spec, but it's not public.  There are books
-that cover most of this material, e.g., Mindshare's "PCI Express
-System Architecture".  I have a 2004 copy and it covers ASPM (but not
-the L1 Substates).  I have also heard rumors that it's possible to
-find older copies of the spec on the web.
+Let me know your comments about following pseudo code.
 
-> Ie I can't show all the errors on my system :)
+if (fatal error & hotplug_supported)
+    do nothing // if fatal triggered by DPC, clear DPC state.
+
+if (fatal error & no-hotplug)
+   perform slot_reset and renumerate affected devices.
+
 > 
-> > Bjorn
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
