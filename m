@@ -2,107 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A414827AC72
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 13:10:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB76A27AC75
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 13:10:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgI1LKG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 07:10:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:49468 "EHLO foss.arm.com"
+        id S1726607AbgI1LKU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 07:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgI1LKF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Sep 2020 07:10:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A24FC31B;
-        Mon, 28 Sep 2020 04:10:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8142E3F6CF;
-        Mon, 28 Sep 2020 04:10:03 -0700 (PDT)
-Date:   Mon, 28 Sep 2020 12:09:57 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Liu Shixin <liushixin2@huawei.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: tegra: convert to use DEFINE_SEQ_ATTRIBUTE
- macro
-Message-ID: <20200928110957.GA13256@e121166-lin.cambridge.arm.com>
-References: <20200916025025.3992783-1-liushixin2@huawei.com>
+        id S1726328AbgI1LKU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 07:10:20 -0400
+Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546712080A;
+        Mon, 28 Sep 2020 11:10:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601291419;
+        bh=wYqO00bCRCBLIXF7AwyYWv9ZRjMNILumIMJciP1IhIk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ylAQgUPKW1cL9jioDd4xvnxl4dvs4ndWg2LJcS0ZHQEJ6hRL3iJyIkyj5NVPbrddN
+         jOrDQsF8gP0EqBmP4opUyv2Il08NrHOkqKvJZ5V3J4xUpeoqXrOQXlyaa+yVucKYYu
+         mB2Ztmcit17uS3j/+dYAcz5GJ7XRCLmAowVv/AeA=
+Subject: Re: [PATCH 2/5 V2] PCI: pciehp: check and wait port status out of DPC
+ before handling DLLSC and PDC
+To:     "Zhao, Haifeng" <haifeng.zhao@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "lukas@wunner.de" <lukas@wunner.de>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "stuart.w.hayes@gmail.com" <stuart.w.hayes@gmail.com>,
+        "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jia, Pei P" <pei.p.jia@intel.com>,
+        "ashok.raj@linux.intel.com" <ashok.raj@linux.intel.com>,
+        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
+References: <20200927032829.11321-1-haifeng.zhao@intel.com>
+ <20200927032829.11321-3-haifeng.zhao@intel.com>
+ <f2c9e3db-2027-f669-fcdd-fbc80888b934@kernel.org>
+ <MWHPR11MB1696BA6B8473248A8638FD3797350@MWHPR11MB1696.namprd11.prod.outlook.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <14b7d988-212b-93dc-6fa6-6b155d5c8ac3@kernel.org>
+Date:   Mon, 28 Sep 2020 07:10:17 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200916025025.3992783-1-liushixin2@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <MWHPR11MB1696BA6B8473248A8638FD3797350@MWHPR11MB1696.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 10:50:25AM +0800, Liu Shixin wrote:
-> Use DEFINE_SEQ_ATTRIBUTE macro to simplify the code.
+On 9/27/2020 10:01 PM, Zhao, Haifeng wrote:
+> Sinan,
+>    I explained the reason why locks don't protect this case in the patch description part. 
+> Write side and read side hold different semaphore and mutex.
 > 
-> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
-> ---
->  drivers/pci/controller/pci-tegra.c | 28 +++-------------------------
->  1 file changed, 3 insertions(+), 25 deletions(-)
 
-Applied to pci/tegra, thanks.
+I have been thinking about it some time but is there any reason why we
+have to handle all port AER/DPC/HP events in different threads?
 
-Lorenzo
+Can we go to single threaded event loop for all port drivers events?
 
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index c1d34353c29b..556c30a718f0 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2564,36 +2564,14 @@ static int tegra_pcie_ports_seq_show(struct seq_file *s, void *v)
->  	return 0;
->  }
->  
-> -static const struct seq_operations tegra_pcie_ports_seq_ops = {
-> +static const struct seq_operations tegra_pcie_ports_sops = {
->  	.start = tegra_pcie_ports_seq_start,
->  	.next = tegra_pcie_ports_seq_next,
->  	.stop = tegra_pcie_ports_seq_stop,
->  	.show = tegra_pcie_ports_seq_show,
->  };
->  
-> -static int tegra_pcie_ports_open(struct inode *inode, struct file *file)
-> -{
-> -	struct tegra_pcie *pcie = inode->i_private;
-> -	struct seq_file *s;
-> -	int err;
-> -
-> -	err = seq_open(file, &tegra_pcie_ports_seq_ops);
-> -	if (err)
-> -		return err;
-> -
-> -	s = file->private_data;
-> -	s->private = pcie;
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct file_operations tegra_pcie_ports_ops = {
-> -	.owner = THIS_MODULE,
-> -	.open = tegra_pcie_ports_open,
-> -	.read = seq_read,
-> -	.llseek = seq_lseek,
-> -	.release = seq_release,
-> -};
-> +DEFINE_SEQ_ATTRIBUTE(tegra_pcie_ports);
->  
->  static void tegra_pcie_debugfs_exit(struct tegra_pcie *pcie)
->  {
-> @@ -2610,7 +2588,7 @@ static int tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
->  		return -ENOMEM;
->  
->  	file = debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs,
-> -				   pcie, &tegra_pcie_ports_ops);
-> +				   pcie, &tegra_pcie_ports_fops);
->  	if (!file)
->  		goto remove;
->  
-> -- 
-> 2.25.1
-> 
+This will require some refactoring but it wlll eliminate the lock
+nightmares we are having.
+
+This means no sleeping. All sleeps need to happen outside of the loop.
+
+I wanted to see what you all are thinking about this.
+
+It might become a performance problem if the system is
+continuously observing a hotplug/aer/dpc events.
+
+I always think that these should be rare events.
