@@ -2,90 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EFB427B41B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 20:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB7D27B423
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 20:11:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgI1SJf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 14:09:35 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:45279 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgI1SJf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 14:09:35 -0400
-Received: by mail-oo1-f68.google.com with SMTP id h8so553909ooc.12;
-        Mon, 28 Sep 2020 11:09:34 -0700 (PDT)
+        id S1726562AbgI1SLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 14:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgI1SLH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 14:11:07 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0487DC061755
+        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 11:11:06 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id z25so2094445iol.10
+        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 11:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xq2IDxkKp0XeWZXnLMbFGou5K1qTkzRIbnj2klhRbOw=;
+        b=NgNmXF9phYvMyXQuQNFrNyJqZIrFNg2rtMm+NEXo9qU7YYy68znrg8JABVWVzICL6b
+         BdKnTGYJLNYXwl9o6j2tPK+2FwoIuWI4Ic72Jfh0W8n93DD5kN+OqLVxgSwDnOHuRsr2
+         4W219lGHuSEy66P5CS2ymCVTLDrNMNGVJqx0cvsJtvd4AgN6DgZPgbCsSBPCDitYnhnz
+         wnUIuywgiBYgX/bzJKLayDWtRWc+8g4ohdcJ9NI3TW26T6njXb/9b9xXSqxumuJlUkQK
+         JQHmgK5uqQwsb1Dm1WSXqz0kcEW+DRZa9JmN+rB0nljvvALf+KYp0qyOBUnBnI5FJbCV
+         HUWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wMT5ZrxVtHbXVPSICRQWobxCMk3iNHaaOR4uieHpOHA=;
-        b=h/Cenc/1HEL0jq38qR0jfteF/pKDX3oKx0BCXWnT34FzYrBQ38zPIsMLslKUm0/83s
-         3mxKXo3pB+Ip/ijAaCA7pM6q7ZZMYaY6DnTaYqcMC489j6eMs71WZBoCzLOsZl+6/+Zk
-         U2Nt45hefJb/Bys+2sI5KCLNfsgVXwpa7q+AF4hpcj+4E0jOSOvPVTOriJxbVHhm/UFw
-         YexDcvxY5m65hbRhbSjeSY5lXyu/vO8/faf7mR92pnBi5AUqWSFVR7Noyr7sFF/O0Ib7
-         EGDdhjuniaD74t3xakll1STxhinLCTkKNXxKcmAF2IZuvf/FOEi5Ghs8CaVfPI5XL+nk
-         Ynpg==
-X-Gm-Message-State: AOAM533P5fD98g8YPgs2F/2SBHE+NmpEj3Tes/nKwUgVHaaMqVqo3tzi
-        dh97sKAHOmfj9sUgBqrqSDwXD35qXoeG
-X-Google-Smtp-Source: ABdhPJwjKDnO50jz8lQGsBYCJS49AqBrllbiT5iMZ+97qq7nHLg337GBNQdl5XKa2g1uvACykSHM2A==
-X-Received: by 2002:a4a:614f:: with SMTP id u15mr1698170ooe.70.1601316573938;
-        Mon, 28 Sep 2020 11:09:33 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h14sm400674otr.21.2020.09.28.11.09.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2020 11:09:33 -0700 (PDT)
-Received: (nullmailer pid 3007215 invoked by uid 1000);
-        Mon, 28 Sep 2020 18:09:32 -0000
-Date:   Mon, 28 Sep 2020 13:09:32 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: uniphier-ep: Add iATU register
- description
-Message-ID: <20200928180932.GA3006259@bogus>
-References: <1601255133-17715-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1601255133-17715-3-git-send-email-hayashi.kunihiko@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xq2IDxkKp0XeWZXnLMbFGou5K1qTkzRIbnj2klhRbOw=;
+        b=FfILel+vyNqq539+PFdFn8xKT9byWy7tNJMLvrYhe6d2TF6llbrPpa0R02QN+hG+TP
+         v4xNlCkWtHGhV6/t2SBJRjIatP/CHF8GIEarwVC2UviwTtsbOMrQyGUYOad8YYGIFG91
+         dj6QjKzgdeOchp24YVMuWAadr7I+Y4iQ5r9p3AwgVPOXGCEljnRs+d3fuIjIh7e53L/p
+         0b2DwVTf1w8XIQ6um3rnXGcseHAq5+xJrqAxyQb3DdE0Iu1zEGmfMYRh3VrrI+QidNuY
+         xJut3ZbTpw7Kc02gh2ZUwMUsAOtykCuB4KLKjDRvq8CbcqNR0s3aZaCdzKUn2iMMV9A3
+         9npA==
+X-Gm-Message-State: AOAM5314WfV4hX1+QWqPPiIv+HFB/rLu1d448RmwzuX5JDbgPzlgYSPv
+        GLVGLHbabwNP7sZmoeqW5FoOjpLve1VzTZHUtus=
+X-Google-Smtp-Source: ABdhPJwyXJa57eIhG67uW3vHWwGsOvmk10Q4RRZmRVDaqaXBgCY+Oz1KNc7e8QKv77el57Ehu0qCNpdbiuk/tOK68K0=
+X-Received: by 2002:a05:6602:22ca:: with SMTP id e10mr7535846ioe.88.1601316664018;
+ Mon, 28 Sep 2020 11:11:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1601255133-17715-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <CAA85sZuexf2pqfHBCKKGRos8psg_6ZZFeXiFm3ncPz-6JtqEdQ@mail.gmail.com>
+ <20200928170921.GA2485236@bjorn-Precision-5520>
+In-Reply-To: <20200928170921.GA2485236@bjorn-Precision-5520>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 28 Sep 2020 11:10:52 -0700
+Message-ID: <CAKgT0UfEQ7o=UKgdajvXc1W+MRhTE4DrQmy0i6Mw04tYpK+Ojg@mail.gmail.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ian Kumlien <ian.kumlien@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 28 Sep 2020 10:05:31 +0900, Kunihiko Hayashi wrote:
-> In the dt-bindings, "atu" reg-names is required to get the register space
-> for iATU in Synopsis DWC version 4.80 or later.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+On Mon, Sep 28, 2020 at 10:11 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Sep 28, 2020 at 12:24:11PM +0200, Ian Kumlien wrote:
+> > On Mon, Sep 28, 2020 at 2:06 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Sat, Sep 26, 2020 at 12:26:53AM +0200, Ian Kumlien wrote:
+> > > > On Fri, Sep 25, 2020 at 5:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Fri, Sep 25, 2020 at 03:54:11PM +0200, Ian Kumlien wrote:
+> > > > > > On Fri, Sep 25, 2020 at 3:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Fri, Sep 25, 2020 at 12:18:50PM +0200, Ian Kumlien wrote:
+> > > > > > > > So.......
+> > > > > > > > [    0.815843] pci 0000:04:00.0: L1 latency exceeded - path: 1000 - max: 64000
+> > > > > > > > [    0.815843] pci 0000:00:01.2: Upstream device - 32000
+> > > > > > > > [    0.815844] pci 0000:01:00.0: Downstream device - 32000
+> > > > > > >
+> > > > > > > Wait a minute.  I've been looking at *03:00.0*, not 04:00.0.  Based
+> > > > > > > on your bugzilla, here's the path:
+> > > > > >
+> > > > > > Correct, or you could do it like this:
+> > > > > > 00:01.2/01:00.0/02:03.0/03:00.0 Ethernet controller: Intel Corporation
+> > > > > > I211 Gigabit Network Connection (rev 03)
+> > > > > >
+> > > > > > >   00:01.2 Root Port              to [bus 01-07]
+> > > > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
+> > > > > > >   02:03.0 Switch Downstream Port to [bus 03]
+> > > > > > >   03:00.0 Endpoint (Intel I211 NIC)
+> > > > > > >
+> > > > > > > Your system does also have an 04:00.0 here:
+> > > > > > >
+> > > > > > >   00:01.2 Root Port              to [bus 01-07]
+> > > > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
+> > > > > > >   02:04.0 Switch Downstream Port to [bus 04]
+> > > > > > >   04:00.0 Endpoint (Realtek 816e)
+> > > > > > >   04:00.1 Endpoint (Realtek RTL8111/8168/8411 NIC)
+> > > > > > >   04:00.2 Endpoint (Realtek 816a)
+> > > > > > >   04:00.4 Endpoint (Realtek 816d EHCI USB)
+> > > > > > >   04:00.7 Endpoint (Realtek 816c IPMI)
+> > > > > > >
+> > > > > > > Which NIC is the problem?
+> > > > > >
+> > > > > > The intel one - so the side effect of the realtek nic is that it fixes
+> > > > > > the intel nics issues.
+> > > > > >
+> > > > > > It would be that the intel nic actually has a bug with L1 (and it
+> > > > > > would seem that it's to kind with latencies) so it actually has a
+> > > > > > smaller buffer...
+> > > > > >
+> > > > > > And afair, the realtek has a larger buffer, since it behaves better
+> > > > > > with L1 enabled.
+> > > > > >
+> > > > > > Either way, it's a fix that's needed ;)
+> > > > >
+> > > > > OK, what specifically is the fix that's needed?  The L0s change seems
+> > > > > like a "this looks wrong" thing that doesn't actually affect your
+> > > > > situation, so let's skip that for now.
+> > > >
+> > > > L1 latency calculation is not good enough, it assumes that *any*
+> > > > link is the highest latency link - which is incorrect.
+> > > >
+> > > > The latency to bring L1 up is number-of-hops*1000 +
+> > > > maximum-latency-along-the-path
+> > > >
+> > > > currently it's only doing number-of-hops*1000 +
+> > > > arbitrary-latency-of-current-link
+> > > >
+> > > > > And let's support the change you *do* need with the "lspci -vv" for
+> > > > > all the relevant devices (including both 03:00.0 and 04:00.x, I guess,
+> > > > > since they share the 00:01.2 - 01:00.0 link), before and after the
+> > > > > change.
+> > > >
+> > > > They are all included in all lspci output in the bug
+> > >
+> > > No doubt.  But I spent a long time going through those and the
+> > > differences I found are not enough to show a spec violation or a fix.
+> > >
+> > > Here's what I extracted (this is a repeat; I mentioned this before):
+> > >
+> > >                                                     LnkCtl    LnkCtl
+> > >            ------DevCap-------  ----LnkCap-------  -Before-  -After--
+> > >   00:01.2                                L1 <32us       L1+       L1-
+> > >   01:00.0                                L1 <32us       L1+       L1-
+> > >   02:03.0                                L1 <32us       L1+       L1+
+> > >   03:00.0  L0s <512ns L1 <64us  L0s <2us L1 <16us  L0s- L1-  L0s- L1-
+> > >
+> > > I don't see anything wrong here yet.  03:00.0 claims it can handle up
+> > > to 64us of L1 exit latency, and the L1 exit latency of the entire path
+> > > should be 33us.  What am I missing?
+> >
+> > it should be 32+3 so 35 us - but the intel nic claims something it
+> > can't live up to.
+>
+> How did you compute 35us?  Here's my math for 33us:
+>
+>   It looks like we *should* be able to enable L1 on both links since
+>   the exit latency should be <33us (first link starts exit at T=0,
+>   completes by T=32; second link starts exit at T=1, completes by
+>   T=33), and 03:00.0 can tolerate up to 64us.
+>
+> If 03:00.0 advertises that it can tolerate 64us but it really can't,
+> the fix would be a quirk to override the DevCap value for that device.
+>
+> > Since this is triggered by the realtek device
+>
+> I'm still under the impression that the throughput problem is with
+> 03:00.0, the Intel I211 NIC.  In what sense is this triggered by the
+> Realtek device?  Does the I211 work correctly until we add the Realtek
+> device below the same switch?
+>
+> >                                                      LnkCtl    LnkCtl
+> >             ------DevCap-------  ----LnkCap-------  -Before-  -After--
+> >    00:01.2                                L1 <32us       L1+       L1-
+> >    01:00.0                                L1 <32us       L1+       L1-
+> >    02:04.0                                L1 <32us       L1+       L1+
+> >    04:00.0  L0s <512 L1 <64us
+> >
+> > But exit for 04:00.0 is 64us which means it breaks its own latency
+> > requirements once it's behind anything
+>
+> From your "lspci-before" attachment, 04:00.0 advertises:
+>
+>   04:00.0 DevCap: Latency L1 <64us
+>           LnkCap: Exit Latency L1 <64us
+>
+> So I see what you mean; if it's behind a switch, the link on the
+> upstream side of the switch would add some L1 exit latency, so we
+> wouldn't be able to exit L1 for the entire path in <64us.  This isn't
+> broken in the sense of a hardware defect; it just means we won't be
+> able to enable L1 on some parts of the path.
+>
+> I wouldn't be surprised if Linux is doing that wrong right now, but we
+> would just need to nail down exactly what's wrong.
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: reg: [[1711276032, 4096], [1711280128, 4096], [1711341568, 65536], [1728053248, 4194304]] is too short
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: reg-names: ['dbi', 'dbi2', 'link', 'addr_space'] is too short
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-
-
-See https://patchwork.ozlabs.org/patch/1372225
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Actually I wonder if we shouldn't be looking at the wakeup latency
+being the highest possible latency for any endpoint on the switch plus
+1us per link? Wouldn't it be possible for us to see head-of-line
+blocking on the PCIe bus if TLPs are being routed to the realtek
+resulting in us having to buffer in the switch until the realtek link
+is awake? The current code makes sense from the upstream perspective,
+but I don't think it takes the downstream routing into account and
+that could result in head-of-line blocking could it not?
