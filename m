@@ -2,102 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4150227B710
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 23:36:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 101EC27B74A
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 23:44:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgI1VgG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 17:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49482 "EHLO
+        id S1726901AbgI1VoC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 17:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbgI1VgG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 17:36:06 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5882EC0613CE
-        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 14:36:06 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id y14so2034864pgf.12
-        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 14:36:06 -0700 (PDT)
+        with ESMTP id S1726891AbgI1VoC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 17:44:02 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B071C061755
+        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 14:44:02 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id q10so1291889qvs.1
+        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 14:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=9CeopZp8WY9RSvM4Dc5FY/xYVy88bbr1SqV3oic9qQA=;
-        b=v51yHcg3rrbkOLHvDLP9ouUMsXf2KuP7FFSjqT+4AgwsxzYcIHJD5gmGrem3vz7s/V
-         fOOZiCdjAjDdW+c5RSL5TuhE4kFl9lIrFcRJJnaM9dACSpDD77eFqxFUtfhe/tFunr+3
-         jiXKN9H9w/zrvuP1iT/OaEvb9ELPJhwJ5JddGeZJ0zkekFwqUJ1mw2bsZfONZpyUiFCw
-         hdBdcPeTPzCr1QBhjT+pF8TItWq8t7qJFVFPAXSFlVK6VYv5m+4JWvzEecxs8JhMMafc
-         1ZF74dyj2CXLM1J5u2fcLiNRREzTHd/fuQLBxxR11xyTzZNTv+uzYiKDudPx+Phqmw7W
-         KtiA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8fuD6KDogaQaBb3zkEarSXU9oLyjtCvWLZWd0pJwqO8=;
+        b=R8qdGiDHnLhn3SVFCqt/XsTB/oOk7ZvxuTm7suVEPQ0b9ceYYxiJzTO7bHkic7vlHY
+         52tCeaI24nxxvW8rWCyoE5IcHgvGKEZkTFbEVls9R1xWIgxYg7mJvLAmxuN4Wp5FS7ga
+         AdrvAUWyl2tv03srDvT3KayJoM97PsjsKcCtSqY/BWL98c2YODhBbYUD0Tu2QYs7z+Ro
+         2rloz2+HDF0ZpuHuwtW5Fo+rwXqtvN+CDW/gs2UUKSDCOuF9c+nwwl3eoG4HCEBcb4Hr
+         0ROpCxfWxMFPEFOnnCU35C7WdkJxEwvYoDQi3gNOV69+SjLyvpOI4+hED/IbndEmGjGA
+         oClw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=9CeopZp8WY9RSvM4Dc5FY/xYVy88bbr1SqV3oic9qQA=;
-        b=BzrPRIcvUxahTlGxfYSCE2GEZObeh9OKVzhi9C5HJFtw2QrAJTSlaMzcmIHGDRaDIu
-         wm20SAQVIC9uqXgzFFWH/zcQjvlFh9xvGmpRq3J1sH8lflzGSnfPHqDyVmGJdSnx21+g
-         BolPC1/Lv/d70H5tHXKOJeGaVJNXIvwDbLGblicnte8jO+CX9OuxeEdorpLmtTmep/rK
-         vn0wX5RvpNC0a8qxyieIXM+Vb8CskAfkHKbaWud+xOrzQQ9c8kbmgj18YIVyKBSpvJQI
-         dIOUk937bQespEq4B2AVZRTHRjzcfaJIlzzT/RvGx7HrVKQpkJrP7Lk+1FNx91eLv1il
-         d7Jw==
-X-Gm-Message-State: AOAM531cwm+cMJ1E71DWIDdxA595Y7i+ATTWPjZeuMtB0k7YjvTN5Iih
-        qLDFdkAtViRxtChXkJPmy7FATQ==
-X-Google-Smtp-Source: ABdhPJw28AorJK6x/SMLDvlhDyx8HInlpiwTMaNwmhH7iD/ET6ohf55xsQzWW/a1KDHOohXFAGjIaA==
-X-Received: by 2002:a17:902:b789:b029:d2:63a5:d3f0 with SMTP id e9-20020a170902b789b02900d263a5d3f0mr1273387pls.81.1601328965826;
-        Mon, 28 Sep 2020 14:36:05 -0700 (PDT)
-Received: from [10.251.155.156] ([192.55.55.45])
-        by smtp.gmail.com with ESMTPSA id s24sm2263457pjp.53.2020.09.28.14.36.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Sep 2020 14:36:05 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     "Sean V Kelley" <seanvk.dev@oregontracks.org>, bhelgaas@google.com,
-        Jonathan.Cameron@huawei.com, rafael.j.wysocki@intel.com,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@intel.com, qiuxu.zhuo@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 07/10] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Date:   Mon, 28 Sep 2020 14:36:00 -0700
-X-Mailer: MailMate (1.13.2r5673)
-Message-ID: <93B0C872-C440-484A-9908-2D5B974595CD@intel.com>
-In-Reply-To: <20200928014711.GA2475864@bjorn-Precision-5520>
-References: <20200928014711.GA2475864@bjorn-Precision-5520>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8fuD6KDogaQaBb3zkEarSXU9oLyjtCvWLZWd0pJwqO8=;
+        b=PgumdILjIxxMQ6nrQC7mX7YFX6MTqDFtZCJK1f95DZydHxemUW6PFQpILZbSf6pZSL
+         nO8LTfJUa/YNxeqXxZDMb1nUL4JvCkEbGTSCeFvZ4oqntt9asgDaJBbG2BTzzYxYWWJ5
+         vM8fxGExhVU83Lfqw8Ekx81Bpa28T0+VRMAXovy36DZBHK00RNMBdyrAd698Tj1apci1
+         JjcxxYZ0D1VOGxblPSTvlJvpn5hw9Z7WvIRuFg8wcdRD4wUnUedIoQgNY5OjtCfRwFEf
+         zFZr2zKiFuJr5nJJhGIeuk24vxM7xULD9Kdm7YfM9IG0Kqsa+PJzRvUIC/cAHd96FrJ3
+         UjJw==
+X-Gm-Message-State: AOAM532l+DFKJAIFNpwTmYkMYVqpiVLLNk91ujFAFD91TvaGnVkoPguP
+        Lsnw6lHRd5T9FBfRVIYhJrjHmTpwYzL60fAFrPU=
+X-Google-Smtp-Source: ABdhPJzyWUga8l68FDJvWpG2r9K97axDL58K1sVm1cYnf6IUs2wXOfmN36FlD3iuYTzRRWn+n60jJm2DOiQfLGc4o5s=
+X-Received: by 2002:a05:6214:292:: with SMTP id l18mr1666233qvv.3.1601329441534;
+ Mon, 28 Sep 2020 14:44:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+References: <CAA85sZuexf2pqfHBCKKGRos8psg_6ZZFeXiFm3ncPz-6JtqEdQ@mail.gmail.com>
+ <20200928170921.GA2485236@bjorn-Precision-5520> <CAA85sZuDVA1d_c7OQ3xyZiOVDneL6oN6bM-Sn2QfhfGAAoHhYg@mail.gmail.com>
+ <CAKgT0UcQN77zrtRK8yKgNRR0pifGUceoRHXWW+cYukzmsQPNyQ@mail.gmail.com>
+In-Reply-To: <CAKgT0UcQN77zrtRK8yKgNRR0pifGUceoRHXWW+cYukzmsQPNyQ@mail.gmail.com>
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+Date:   Mon, 28 Sep 2020 23:43:50 +0200
+Message-ID: <CAA85sZvEpUH_admrVOX0fX3Ug9erJqEwNRrBg1c72dPzTtFY5g@mail.gmail.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 27 Sep 2020, at 18:47, Bjorn Helgaas wrote:
-
-> On Sun, Sep 27, 2020 at 06:45:45PM -0500, Bjorn Helgaas wrote:
->> On Tue, Sep 22, 2020 at 02:38:56PM -0700, Sean V Kelley wrote:
->>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Mon, Sep 28, 2020 at 9:53 PM Alexander Duyck
+<alexander.duyck@gmail.com> wrote:
 >
->>>  	pci_dbg(dev, "broadcast error_detected message\n");
->>>  	if (state == pci_channel_io_frozen) {
->>> -		pci_bridge_walk(bridge, report_frozen_detected, &status);
->>> +		pci_bridge_walk(bridge, dev, report_frozen_detected, &status);
->>>  		if (type == PCI_EXP_TYPE_RC_END) {
->>> +			/*
->>> +			 * The callback only clears the Root Error Status
->>> +			 * of the RCEC (see aer.c).
->>> +			 */
->>> +			if (bridge)
->>> +				reset_subordinate_devices(bridge);
->>
->> It's unfortunate to add yet another special case in this code, and 
->> I'm
->> not thrilled about the one in aer_root_reset() either.  It's just not
->> obvious why they should be there.  I'm sure if I spent 30 minutes
->> decoding things, it would all make sense.  Guess I'm just griping
->> because I don't have a better suggestion.
->
-> I'm sorry, this was unkind of me.  If I don't have a constructive
-> idea, there's no reason for me to complain about this.  I apologize.
->
-> Bjorn
+> On Mon, Sep 28, 2020 at 10:42 AM Ian Kumlien <ian.kumlien@gmail.com> wrot=
+e:
 
-No worries at all. The unfortunate handling of the Spec for RCEC/RCiEP 
-associations and the added needs for native versus non-native is 
-frustrating.
+> Just do a google search for "pcie gen 2 specification" you should find
+> a few results that way.
 
-Sean
+Actually found a draft pcie gen 4 spec...
+
+and according to 5.4.1.2.2 exit from the L1 State
+"A Switch is required to initiate an L1 exit transition on its
+Upstream Port Link after no more than 1
+=CE=BCs from the beginning of an L1 exit transition on any of its
+Downstream Port Links. Refer to
+Section 4.2 for details of the Physical Layer signaling during L1 exit.
+
+Consider the example in Figure 5-8. The numbers attached to each Port
+represent the
+corresponding Port=E2=80=99s reported Transmit Lanes L1 exit latency in uni=
+ts
+of microseconds.
+
+Links 1, 2, and 3 are all in the L1 state, and Endpoint C initiates a
+transition to the L0 state at time
+T. Since Switch B takes 32 =CE=BCs to exit L1 on its Ports, Link 3 will
+transition to the L0 state at T+32
+(longest time considering T+8 for the Endpoint C, and T+32 for Switch B).
+
+Switch B is required to initiate a transition from the L1 state on its
+Upstream Port Link (Link 2)
+after no more than 1 =CE=BCs from the beginning of the transition from the
+L1 state on Link 3.
+Therefore, transition to the L0 state will begin on Link 2 at T+1.
+Similarly, Link 1 will start its
+transition to the L0 state at time T+2.
+
+Following along as above, Link 2 will complete its transition to the
+L0 state at time T+33 (since
+Switch B takes longer to transition and it started at time T+1). Link
+1 will complete its transition to
+the L0 state at time T+34 (since the Root Complex takes 32 =CE=BCs to
+transition and it started at time
+T+2).
+
+Therefore, among Links 1, 2, and 3, the Link to complete the
+transition to the L0 state last is Link 1
+with a 34 =CE=BCs delay. This is the delay experienced by the packet that
+initiated the transition in
+Endpoint C."
+
+So basically, my change to L1 is validated by this, ;)
