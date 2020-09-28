@@ -2,192 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E470427ABBE
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 12:24:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F04027AC21
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 12:43:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgI1KYX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 06:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgI1KYX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 06:24:23 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E52FC061755
-        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 03:24:23 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g72so417921qke.8
-        for <linux-pci@vger.kernel.org>; Mon, 28 Sep 2020 03:24:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ONMQwBnEKV8poL/SY4eKE9jQeR6eWOBs7fxZwB/IeQg=;
-        b=IsVDYpGydom0SAYAxmuEAbk1u6Rvzw4ej2dB47PoERwWFEYalvcAE807s7DbGfLtAR
-         BRIhsxccVNptxgoyWS6z5vsV6iKRt3RQwIF4OriF45x65Wh/7j42s5ouKFzOpFYqYioj
-         EYbNjJLjQB6eBG3XSluwpcajE4ntxQX7in7+sbPFYoXGQ2yZnQYbRUM9VlElu0L1YO/Z
-         iA0IzJwrurPxqLFQLA0fDE5xnJgeJF2SAM7Q1lJTZsW2tUnGE+z7UZihv+Vz9ynlq1rs
-         BKnMF5kD7R5UFFT6EWaGhTpiyNVyRxnipvJHcAj4Y6W7OKYdNqIm11dk4eU/7MbU25NE
-         c08w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ONMQwBnEKV8poL/SY4eKE9jQeR6eWOBs7fxZwB/IeQg=;
-        b=uY+Ce0ak4jd7Z42s7UkwOQI5whEfeD82LPmsxbeI5NTpFvzs/1tp72pvDb06bSJeJU
-         f+bJeQEjx7ywEAvQUwb1I+quBx1b54l1eQvOyyISLUxM5k04l44gSzVpaAqogZ/7WC1o
-         zfRLcXnRTwu3cxqWQHWxiNILb+RAdU3NX4LOf8vB3xmmYCxTOM+6jW7s/lpK+ea8vrm2
-         /wjoseaAvXYvhCVKO6SXcyJQAh3ErwSpmQGxf/036MVa5WW5/r4cbQwnogHX07j72r4y
-         +hTeERoCyWYkubpEtNRaoOrpOKfGgwrs8n/Y+HhHyv4toDy7cI8xHg65GK8pDA3WN8ha
-         SnhQ==
-X-Gm-Message-State: AOAM5311X4S9mE4z4d4E8TeTErI7zyUoGXxpx/0KRKx67i6oWI2zyV1u
-        AwYH8SlDTwitYcloE0RrhqBsaGV1bjLE+4az70/htzGyMCY=
-X-Google-Smtp-Source: ABdhPJxXdjzQL5Q53sSLTqXpeHD8XU8mFz/G1VaG4fQPDCGkqOMqyfUspS9wJ2Cz9oheF+8ppx/IfYWvI3Jktw8zU5U=
-X-Received: by 2002:a37:a3d8:: with SMTP id m207mr644250qke.175.1601288662592;
- Mon, 28 Sep 2020 03:24:22 -0700 (PDT)
+        id S1726657AbgI1KnR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 06:43:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:49148 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbgI1KnR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 06:43:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7427C1063;
+        Mon, 28 Sep 2020 03:43:16 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E33693F6CF;
+        Mon, 28 Sep 2020 03:43:14 -0700 (PDT)
+Date:   Mon, 28 Sep 2020 11:43:09 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        jakeo@microsoft.com, maz@kernel.org
+Subject: Re: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
+ re-created
+Message-ID: <20200928104309.GA12565@e121166-lin.cambridge.arm.com>
+References: <20200908231759.13336-1-decui@microsoft.com>
 MIME-Version: 1.0
-References: <CAA85sZsRgEEQ9bRqvMKTkGW4QhVp+cqNbw+VmRZQHfpy==F0+Q@mail.gmail.com>
- <20200928000637.GA2471891@bjorn-Precision-5520>
-In-Reply-To: <20200928000637.GA2471891@bjorn-Precision-5520>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Mon, 28 Sep 2020 12:24:11 +0200
-Message-ID: <CAA85sZuexf2pqfHBCKKGRos8psg_6ZZFeXiFm3ncPz-6JtqEdQ@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908231759.13336-1-decui@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 28, 2020 at 2:06 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sat, Sep 26, 2020 at 12:26:53AM +0200, Ian Kumlien wrote:
-> > On Fri, Sep 25, 2020 at 5:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Sep 25, 2020 at 03:54:11PM +0200, Ian Kumlien wrote:
-> > > > On Fri, Sep 25, 2020 at 3:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > >
-> > > > > On Fri, Sep 25, 2020 at 12:18:50PM +0200, Ian Kumlien wrote:
-> > > > > > So.......
-> > > > > > [    0.815843] pci 0000:04:00.0: L1 latency exceeded - path: 1000 - max: 64000
-> > > > > > [    0.815843] pci 0000:00:01.2: Upstream device - 32000
-> > > > > > [    0.815844] pci 0000:01:00.0: Downstream device - 32000
-> > > > >
-> > > > > Wait a minute.  I've been looking at *03:00.0*, not 04:00.0.  Based
-> > > > > on your bugzilla, here's the path:
-> > > >
-> > > > Correct, or you could do it like this:
-> > > > 00:01.2/01:00.0/02:03.0/03:00.0 Ethernet controller: Intel Corporation
-> > > > I211 Gigabit Network Connection (rev 03)
-> > > >
-> > > > >   00:01.2 Root Port              to [bus 01-07]
-> > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
-> > > > >   02:03.0 Switch Downstream Port to [bus 03]
-> > > > >   03:00.0 Endpoint (Intel I211 NIC)
-> > > > >
-> > > > > Your system does also have an 04:00.0 here:
-> > > > >
-> > > > >   00:01.2 Root Port              to [bus 01-07]
-> > > > >   01:00.0 Switch Upstream Port   to [bus 02-07]
-> > > > >   02:04.0 Switch Downstream Port to [bus 04]
-> > > > >   04:00.0 Endpoint (Realtek 816e)
-> > > > >   04:00.1 Endpoint (Realtek RTL8111/8168/8411 NIC)
-> > > > >   04:00.2 Endpoint (Realtek 816a)
-> > > > >   04:00.4 Endpoint (Realtek 816d EHCI USB)
-> > > > >   04:00.7 Endpoint (Realtek 816c IPMI)
-> > > > >
-> > > > > Which NIC is the problem?
-> > > >
-> > > > The intel one - so the side effect of the realtek nic is that it fixes
-> > > > the intel nics issues.
-> > > >
-> > > > It would be that the intel nic actually has a bug with L1 (and it
-> > > > would seem that it's to kind with latencies) so it actually has a
-> > > > smaller buffer...
-> > > >
-> > > > And afair, the realtek has a larger buffer, since it behaves better
-> > > > with L1 enabled.
-> > > >
-> > > > Either way, it's a fix that's needed ;)
-> > >
-> > > OK, what specifically is the fix that's needed?  The L0s change seems
-> > > like a "this looks wrong" thing that doesn't actually affect your
-> > > situation, so let's skip that for now.
-> >
-> > L1 latency calculation is not good enough, it assumes that *any*
-> > link is the highest latency link - which is incorrect.
-> >
-> > The latency to bring L1 up is number-of-hops*1000 +
-> > maximum-latency-along-the-path
-> >
-> > currently it's only doing number-of-hops*1000 +
-> > arbitrary-latency-of-current-link
-> >
-> > > And let's support the change you *do* need with the "lspci -vv" for
-> > > all the relevant devices (including both 03:00.0 and 04:00.x, I guess,
-> > > since they share the 00:01.2 - 01:00.0 link), before and after the
-> > > change.
-> >
-> > They are all included in all lspci output in the bug
->
-> No doubt.  But I spent a long time going through those and the
-> differences I found are not enough to show a spec violation or a fix.
->
-> Here's what I extracted (this is a repeat; I mentioned this before):
->
->                                                     LnkCtl    LnkCtl
->            ------DevCap-------  ----LnkCap-------  -Before-  -After--
->   00:01.2                                L1 <32us       L1+       L1-
->   01:00.0                                L1 <32us       L1+       L1-
->   02:03.0                                L1 <32us       L1+       L1+
->   03:00.0  L0s <512ns L1 <64us  L0s <2us L1 <16us  L0s- L1-  L0s- L1-
->
-> I don't see anything wrong here yet.  03:00.0 claims it can handle up
-> to 64us of L1 exit latency, and the L1 exit latency of the entire path
-> should be 33us.  What am I missing?
+[+MarcZ - this patch needs IRQ maintainers vetting]
 
-it should be 32+3 so 35 us - but the intel nic claims something it
-can't live up to.
+On Tue, Sep 08, 2020 at 04:17:59PM -0700, Dexuan Cui wrote:
+> Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X registers,
+> and we must use hv_compose_msi_msg() to ask Hyper-V to create the IOMMU
+> Interrupt Remapping Table Entries. This is not an issue for a lot of
+> PCI device drivers (e.g. NVMe driver, Mellanox NIC drivers), which
+> destroy and re-create the interrupts across hibernation, so
+> hv_compose_msi_msg() is called automatically. However, some other PCI
+> device drivers (e.g. the Nvidia driver) may not destroy and re-create
+> the interrupts across hibernation, so hv_pci_resume() has to call
+> hv_compose_msi_msg(), otherwise the PCI device drivers can no longer
+> receive MSI/MSI-X interrupts after hibernation.
 
-Since this is triggered by the realtek device
-                                                     LnkCtl    LnkCtl
-            ------DevCap-------  ----LnkCap-------  -Before-  -After--
-   00:01.2                                L1 <32us       L1+       L1-
-   01:00.0                                L1 <32us       L1+       L1-
-   02:04.0                                L1 <32us       L1+       L1+
-   04:00.0  L0s <512 L1 <64us
+This looks like drivers bugs and I don't think the HV controller
+driver is where you should fix them. Regardless, this commit log
+does not provide the information that it should.
 
-But exit for 04:00.0 is 64us which means it breaks its own latency
-requirements once it's behind anything
+> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Jake Oshins <jakeo@microsoft.com>
+> 
+> ---
+> 
+> Changes in v2:
+>     Fixed a typo in the comment in hv_irq_unmask. Thanks to Michael!
+>     Added Jake's Reviewed-by.
+> 
+>  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index fc4c3a15e570..dd21afb5d62b 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
+>  	pbus = pdev->bus;
+>  	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
+>  
+> +	if (hbus->state == hv_pcibus_removing) {
+> +		/*
+> +		 * During hibernation, when a CPU is offlined, the kernel tries
+> +		 * to move the interrupt to the remaining CPUs that haven't
+> +		 * been offlined yet. In this case, the below hv_do_hypercall()
+> +		 * always fails since the vmbus channel has been closed, so we
+> +		 * should not call the hypercall, but we still need
+> +		 * pci_msi_unmask_irq() to reset the mask bit in desc->masked:
+> +		 * see cpu_disable_common() -> fixup_irqs() ->
+> +		 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
+> +		 */
+> +		pci_msi_unmask_irq(data);
 
-> > > I want to identify something in the "before" configuration that is
-> > > wrong according to the spec, and a change in the "after" config so it
-> > > now conforms to the spec.
-> >
-> > So there are a few issues here, the current code does not apply to spec.
-> >
-> > The intel nic gets fixed as a side effect (it should still get a
-> > proper fix) of making
-> > the code apply to spec.
-> >
-> > Basically, while hunting for the issue, I found that the L1 and L0s
-> > latency calculations used to determine
-> > if they should be enabled or not is wrong - that is what I'm currently
-> > trying to push - it also seems like the
-> > intel nic claims that it can handle 64us but apparently it can't.
-> >
-> > So, three bugs, two are "fixed" one needs additional fixing.
->
-> OK, we just need to split these up as much as possible and support
-> them with the relevant lspci output, analysis of what specifically is
-> wrong, and the lspci output showing the effect of the fix.
+This is not appropriate - it looks like a plaster to paper over an
+issue with hyper-V hibernation code sequence. Fix that issue instead
+of papering over it here.
 
-Could i have a copy of the pcie spec? I have found sections of it but
-it's really hard to find them again when you
-want to refer to something... Which I need to do to show that it
-doesn't conform...
+Thanks,
+Lorenzo
 
-Ie I can't show all the errors on my system :)
-
-> Bjorn
+> +		return;
+> +	}
+> +
+>  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
+>  
+>  	params = &hbus->retarget_msi_interrupt_params;
+> @@ -3372,6 +3387,33 @@ static int hv_pci_suspend(struct hv_device *hdev)
+>  	return 0;
+>  }
+>  
+> +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
+> +{
+> +	struct msi_desc *entry;
+> +	struct irq_data *irq_data;
+> +
+> +	for_each_pci_msi_entry(entry, pdev) {
+> +		irq_data = irq_get_irq_data(entry->irq);
+> +		if (WARN_ON_ONCE(!irq_data))
+> +			return -EINVAL;
+> +
+> +		hv_compose_msi_msg(irq_data, &entry->msg);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
+> + * re-writes the MSI/MSI-X registers, but since Hyper-V doesn't trap and
+> + * emulate the accesses, we have to call hv_compose_msi_msg() to ask
+> + * Hyper-V to re-create the IOMMU Interrupt Remapping Table Entries.
+> + */
+> +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
+> +{
+> +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
+> +}
+> +
+>  static int hv_pci_resume(struct hv_device *hdev)
+>  {
+>  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+> @@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
+>  
+>  	prepopulate_bars(hbus);
+>  
+> +	hv_pci_restore_msi_state(hbus);
+> +
+>  	hbus->state = hv_pcibus_installed;
+>  	return 0;
+>  out:
+> -- 
+> 2.19.1
+> 
