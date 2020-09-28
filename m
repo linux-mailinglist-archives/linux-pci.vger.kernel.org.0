@@ -2,150 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F04027AC21
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 12:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A414827AC72
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 13:10:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgI1KnR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 06:43:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:49148 "EHLO foss.arm.com"
+        id S1726461AbgI1LKG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 07:10:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:49468 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgI1KnR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Sep 2020 06:43:17 -0400
+        id S1726328AbgI1LKF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 07:10:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7427C1063;
-        Mon, 28 Sep 2020 03:43:16 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A24FC31B;
+        Mon, 28 Sep 2020 04:10:04 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E33693F6CF;
-        Mon, 28 Sep 2020 03:43:14 -0700 (PDT)
-Date:   Mon, 28 Sep 2020 11:43:09 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8142E3F6CF;
+        Mon, 28 Sep 2020 04:10:03 -0700 (PDT)
+Date:   Mon, 28 Sep 2020 12:09:57 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        jakeo@microsoft.com, maz@kernel.org
-Subject: Re: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Message-ID: <20200928104309.GA12565@e121166-lin.cambridge.arm.com>
-References: <20200908231759.13336-1-decui@microsoft.com>
+To:     Liu Shixin <liushixin2@huawei.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: tegra: convert to use DEFINE_SEQ_ATTRIBUTE
+ macro
+Message-ID: <20200928110957.GA13256@e121166-lin.cambridge.arm.com>
+References: <20200916025025.3992783-1-liushixin2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908231759.13336-1-decui@microsoft.com>
+In-Reply-To: <20200916025025.3992783-1-liushixin2@huawei.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+MarcZ - this patch needs IRQ maintainers vetting]
-
-On Tue, Sep 08, 2020 at 04:17:59PM -0700, Dexuan Cui wrote:
-> Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X registers,
-> and we must use hv_compose_msi_msg() to ask Hyper-V to create the IOMMU
-> Interrupt Remapping Table Entries. This is not an issue for a lot of
-> PCI device drivers (e.g. NVMe driver, Mellanox NIC drivers), which
-> destroy and re-create the interrupts across hibernation, so
-> hv_compose_msi_msg() is called automatically. However, some other PCI
-> device drivers (e.g. the Nvidia driver) may not destroy and re-create
-> the interrupts across hibernation, so hv_pci_resume() has to call
-> hv_compose_msi_msg(), otherwise the PCI device drivers can no longer
-> receive MSI/MSI-X interrupts after hibernation.
-
-This looks like drivers bugs and I don't think the HV controller
-driver is where you should fix them. Regardless, this commit log
-does not provide the information that it should.
-
-> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Jake Oshins <jakeo@microsoft.com>
+On Wed, Sep 16, 2020 at 10:50:25AM +0800, Liu Shixin wrote:
+> Use DEFINE_SEQ_ATTRIBUTE macro to simplify the code.
 > 
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
 > ---
-> 
-> Changes in v2:
->     Fixed a typo in the comment in hv_irq_unmask. Thanks to Michael!
->     Added Jake's Reviewed-by.
-> 
->  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index fc4c3a15e570..dd21afb5d62b 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
->  	pbus = pdev->bus;
->  	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
->  
-> +	if (hbus->state == hv_pcibus_removing) {
-> +		/*
-> +		 * During hibernation, when a CPU is offlined, the kernel tries
-> +		 * to move the interrupt to the remaining CPUs that haven't
-> +		 * been offlined yet. In this case, the below hv_do_hypercall()
-> +		 * always fails since the vmbus channel has been closed, so we
-> +		 * should not call the hypercall, but we still need
-> +		 * pci_msi_unmask_irq() to reset the mask bit in desc->masked:
-> +		 * see cpu_disable_common() -> fixup_irqs() ->
-> +		 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-> +		 */
-> +		pci_msi_unmask_irq(data);
+>  drivers/pci/controller/pci-tegra.c | 28 +++-------------------------
+>  1 file changed, 3 insertions(+), 25 deletions(-)
 
-This is not appropriate - it looks like a plaster to paper over an
-issue with hyper-V hibernation code sequence. Fix that issue instead
-of papering over it here.
+Applied to pci/tegra, thanks.
 
-Thanks,
 Lorenzo
 
-> +		return;
-> +	}
-> +
->  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
->  
->  	params = &hbus->retarget_msi_interrupt_params;
-> @@ -3372,6 +3387,33 @@ static int hv_pci_suspend(struct hv_device *hdev)
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index c1d34353c29b..556c30a718f0 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2564,36 +2564,14 @@ static int tegra_pcie_ports_seq_show(struct seq_file *s, void *v)
 >  	return 0;
 >  }
 >  
-> +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
-> +{
-> +	struct msi_desc *entry;
-> +	struct irq_data *irq_data;
-> +
-> +	for_each_pci_msi_entry(entry, pdev) {
-> +		irq_data = irq_get_irq_data(entry->irq);
-> +		if (WARN_ON_ONCE(!irq_data))
-> +			return -EINVAL;
-> +
-> +		hv_compose_msi_msg(irq_data, &entry->msg);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
-> + * re-writes the MSI/MSI-X registers, but since Hyper-V doesn't trap and
-> + * emulate the accesses, we have to call hv_compose_msi_msg() to ask
-> + * Hyper-V to re-create the IOMMU Interrupt Remapping Table Entries.
-> + */
-> +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
-> +{
-> +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
-> +}
-> +
->  static int hv_pci_resume(struct hv_device *hdev)
+> -static const struct seq_operations tegra_pcie_ports_seq_ops = {
+> +static const struct seq_operations tegra_pcie_ports_sops = {
+>  	.start = tegra_pcie_ports_seq_start,
+>  	.next = tegra_pcie_ports_seq_next,
+>  	.stop = tegra_pcie_ports_seq_stop,
+>  	.show = tegra_pcie_ports_seq_show,
+>  };
+>  
+> -static int tegra_pcie_ports_open(struct inode *inode, struct file *file)
+> -{
+> -	struct tegra_pcie *pcie = inode->i_private;
+> -	struct seq_file *s;
+> -	int err;
+> -
+> -	err = seq_open(file, &tegra_pcie_ports_seq_ops);
+> -	if (err)
+> -		return err;
+> -
+> -	s = file->private_data;
+> -	s->private = pcie;
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct file_operations tegra_pcie_ports_ops = {
+> -	.owner = THIS_MODULE,
+> -	.open = tegra_pcie_ports_open,
+> -	.read = seq_read,
+> -	.llseek = seq_lseek,
+> -	.release = seq_release,
+> -};
+> +DEFINE_SEQ_ATTRIBUTE(tegra_pcie_ports);
+>  
+>  static void tegra_pcie_debugfs_exit(struct tegra_pcie *pcie)
 >  {
->  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> @@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
+> @@ -2610,7 +2588,7 @@ static int tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
+>  		return -ENOMEM;
 >  
->  	prepopulate_bars(hbus);
+>  	file = debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs,
+> -				   pcie, &tegra_pcie_ports_ops);
+> +				   pcie, &tegra_pcie_ports_fops);
+>  	if (!file)
+>  		goto remove;
 >  
-> +	hv_pci_restore_msi_state(hbus);
-> +
->  	hbus->state = hv_pcibus_installed;
->  	return 0;
->  out:
 > -- 
-> 2.19.1
+> 2.25.1
 > 
