@@ -2,82 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A837927B849
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 01:35:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17F7027B860
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 01:40:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgI1Xfb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 19:35:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59744 "EHLO mail.kernel.org"
+        id S1727010AbgI1Xkb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 19:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbgI1Xfb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Sep 2020 19:35:31 -0400
+        id S1727004AbgI1Xkb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 19:40:31 -0400
 Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E8462388B;
-        Mon, 28 Sep 2020 22:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BDB623976;
+        Mon, 28 Sep 2020 22:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601331496;
-        bh=PUhM2Ga8oNnbG1Q+CupQvWsGL9gLNVc8nvROFjzbG18=;
+        s=default; t=1601331872;
+        bh=R8n7VfMaVBdjtMmbaj7tuKdOS9ilUGLpUjzTwMwX6xE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IJDJQiOAiEsFmlXaHr7IUI3+NaSMTxcpvN2Wpx+Af0P7iA89G6WVCHoOxP8NbXzzI
-         93dS594EejrOYRM7+TH2GlEeki328oaJOgiUKfn8wJaJJwsRfKG4oI9z44JxEgXUQo
-         W23B7Se84nQZhZ7/+hU9lQGUKJ/tg+XUXVbyRD2A=
-Date:   Mon, 28 Sep 2020 17:18:15 -0500
+        b=KLkZlirErAXrcSTXBVQYtWk4y6L1U/32iwQINoIJ6TTP5XmKAabP8rX+gQLdmyZqw
+         qh6pHw0/PL6zXxVfH99GVqWrZOnWewmNvE1krsz65wTZJnMhEndo2XgC5JPi+Wu6JG
+         Lp2JvoP2ZqJ2EqesmIFoSBTvW/uTiyTu6QAGvDqk=
+Date:   Mon, 28 Sep 2020 17:24:31 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix comparison to bool warning in pci.c
-Message-ID: <20200928221815.GA2501439@bjorn-Precision-5520>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        kernel-janitors@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/14] PCI/P2PDMA: drop double zeroing
+Message-ID: <20200928222431.GA2501991@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200925224555.1752460-1-kw@linux.com>
+In-Reply-To: <1600601186-7420-15-git-send-email-Julia.Lawall@inria.fr>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 25, 2020 at 10:45:55PM +0000, Krzysztof Wilczyński wrote:
-> Take care about Coccinelle warnings:
+On Sun, Sep 20, 2020 at 01:26:26PM +0200, Julia Lawall wrote:
+> sg_init_table zeroes its first argument, so the allocation of that argument
+> doesn't have to.
 > 
->   drivers/pci/pci.c:6008:6-12: WARNING: Comparison to bool
->   drivers/pci/pci.c:6024:7-13: WARNING: Comparison to bool
+> the semantic patch that makes this change is as follows:
+> (http://coccinelle.lip6.fr/)
 > 
-> No change to functionality intended.
+> // <smpl>
+> @@
+> expression x;
+> @@
 > 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> x =
+> - kzalloc
+> + kmalloc
+>  (...)
+> ...
+> sg_init_table(x,...)
+> // </smpl>
+> 
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 Applied to pci/misc for v5.10, thanks!
 
-I can't remember why I thought about renaming "decode".
-
 > ---
->  drivers/pci/pci.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/p2pdma.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e39c5499770f..487e7214743d 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6005,7 +6005,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+> diff -u -p a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -762,7 +762,7 @@ struct scatterlist *pci_p2pmem_alloc_sgl
+>  	struct scatterlist *sg;
+>  	void *addr;
 >  
->  	if (flags & PCI_VGA_STATE_CHANGE_DECODES) {
->  		pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> -		if (decode == true)
-> +		if (decode)
->  			cmd |= command_bits;
->  		else
->  			cmd &= ~command_bits;
-> @@ -6021,7 +6021,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->  		if (bridge) {
->  			pci_read_config_word(bridge, PCI_BRIDGE_CONTROL,
->  					     &cmd);
-> -			if (decode == true)
-> +			if (decode)
->  				cmd |= PCI_BRIDGE_CTL_VGA;
->  			else
->  				cmd &= ~PCI_BRIDGE_CTL_VGA;
-> -- 
-> 2.28.0
+> -	sg = kzalloc(sizeof(*sg), GFP_KERNEL);
+> +	sg = kmalloc(sizeof(*sg), GFP_KERNEL);
+>  	if (!sg)
+>  		return NULL;
+>  
 > 
