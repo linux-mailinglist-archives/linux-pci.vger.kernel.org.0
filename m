@@ -2,137 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7940127B3F9
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 20:02:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EFB427B41B
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 20:09:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgI1SCi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 14:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbgI1SCR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Sep 2020 14:02:17 -0400
-Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F263C20BED;
-        Mon, 28 Sep 2020 18:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601316136;
-        bh=ecZXyWDxzaXZoqVvnUfNYLoG/DJ+B7euoHgszVXCivc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fHwtX++CygUGfmenlMSqel4CBIYAF3jMJOK04h5tYPQJ2/L+ZA1mbAubxue4rIqzO
-         tkpDg2eviLKjAotH+X3lZ/K9JCwEaSsWz7MSByERF43brhWlWmFILAlgLkzUSevMMp
-         zWOdT5u34THPsDBWy5iiKueaLbmH53sbh2mNpdfM=
-Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
- call
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-References: <20200922233333.GA2239404@bjorn-Precision-5520>
- <704c39bf-6f0c-bba3-70b8-91de6a445e43@linux.intel.com>
- <3d27d0a4-2115-fa72-8990-a84910e4215f@kernel.org>
- <d5aa53dc-0c94-e57a-689a-1c1f89787af1@linux.intel.com>
- <526dc846-b12b-3523-4995-966eb972ceb7@kernel.org>
- <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
- <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
- <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
- <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
- <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
- <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
- <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
- <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
- <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
- <44f0cac5-8deb-1169-eb6d-93ac4889fe7e@kernel.org>
- <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
- <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
- <8a3aeb3c-83c4-8626-601d-360946d55dd8@linux.intel.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <9b295cad-7302-cf2c-d19d-d27fabcb48be@kernel.org>
-Date:   Mon, 28 Sep 2020 14:02:14 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726567AbgI1SJf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 14:09:35 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:45279 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbgI1SJf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 14:09:35 -0400
+Received: by mail-oo1-f68.google.com with SMTP id h8so553909ooc.12;
+        Mon, 28 Sep 2020 11:09:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wMT5ZrxVtHbXVPSICRQWobxCMk3iNHaaOR4uieHpOHA=;
+        b=h/Cenc/1HEL0jq38qR0jfteF/pKDX3oKx0BCXWnT34FzYrBQ38zPIsMLslKUm0/83s
+         3mxKXo3pB+Ip/ijAaCA7pM6q7ZZMYaY6DnTaYqcMC489j6eMs71WZBoCzLOsZl+6/+Zk
+         U2Nt45hefJb/Bys+2sI5KCLNfsgVXwpa7q+AF4hpcj+4E0jOSOvPVTOriJxbVHhm/UFw
+         YexDcvxY5m65hbRhbSjeSY5lXyu/vO8/faf7mR92pnBi5AUqWSFVR7Noyr7sFF/O0Ib7
+         EGDdhjuniaD74t3xakll1STxhinLCTkKNXxKcmAF2IZuvf/FOEi5Ghs8CaVfPI5XL+nk
+         Ynpg==
+X-Gm-Message-State: AOAM533P5fD98g8YPgs2F/2SBHE+NmpEj3Tes/nKwUgVHaaMqVqo3tzi
+        dh97sKAHOmfj9sUgBqrqSDwXD35qXoeG
+X-Google-Smtp-Source: ABdhPJwjKDnO50jz8lQGsBYCJS49AqBrllbiT5iMZ+97qq7nHLg337GBNQdl5XKa2g1uvACykSHM2A==
+X-Received: by 2002:a4a:614f:: with SMTP id u15mr1698170ooe.70.1601316573938;
+        Mon, 28 Sep 2020 11:09:33 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h14sm400674otr.21.2020.09.28.11.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2020 11:09:33 -0700 (PDT)
+Received: (nullmailer pid 3007215 invoked by uid 1000);
+        Mon, 28 Sep 2020 18:09:32 -0000
+Date:   Mon, 28 Sep 2020 13:09:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: uniphier-ep: Add iATU register
+ description
+Message-ID: <20200928180932.GA3006259@bogus>
+References: <1601255133-17715-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1601255133-17715-3-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <8a3aeb3c-83c4-8626-601d-360946d55dd8@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1601255133-17715-3-git-send-email-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/28/2020 1:15 PM, Kuppuswamy, Sathyanarayanan wrote:
-> Since there is no state restoration for FATAL errors, I am wondering
-> whether
-> calls to ->error_detected(), ->mmio_enabled() and ->slot_reset() are
-> required?
-
-Good question,
-
-Initially when we started, we were trying to handle both NON_FATAL and
-FATAL errors in DPC.
-
-We have seen value in unifying AER's callback mechanism with DPC.
-It looks like this no longer applies for DPC.
-
-Some drivers want these indication to stop outgoing DMA/timers so that
-system can recover quickly.
-
-There is value in calling them with existing AER based design.
-
-I agree it doesn't apply here anymore if we are going to remove the
-device driver. Maybe, you should stop calling pcie_do_recovery() in DPC
-as well.
-
+On Mon, 28 Sep 2020 10:05:31 +0900, Kunihiko Hayashi wrote:
+> In the dt-bindings, "atu" reg-names is required to get the register space
+> for iATU in Synopsis DWC version 4.80 or later.
 > 
-> Let me know your comments about following pseudo code.
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> if (fatal error & hotplug_supported)
->    do nothing // if fatal triggered by DPC, clear DPC state.
-> 
-> if (fatal error & no-hotplug)
->   perform slot_reset and renumerate affected devices.
 
-LGTM,
 
-I apologize for calling this slot_reset but slot_reset in err.c code is
-for post recovery callback to endpoint drivers. Let's not use this term
-here anymore to not confuse ourselves.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-remove device + rescan similar to how hotplug remove + hotplug insertion
-notifications does eventually.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: reg: [[1711276032, 4096], [1711280128, 4096], [1711341568, 65536], [1728053248, 4194304]] is too short
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: reg-names: ['dbi', 'dbi2', 'link', 'addr_space'] is too short
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
 
-All of this to be done in DPC driver without any err.c involvement.
 
-Bjorn,
+See https://patchwork.ozlabs.org/patch/1372225
 
-What do you think? Is this a good direction?
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-Sinan
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
