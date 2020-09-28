@@ -2,81 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D282227ACBD
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 13:32:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F23EE27AD06
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Sep 2020 13:42:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgI1Lca (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Sep 2020 07:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgI1Lc0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Sep 2020 07:32:26 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F609C061755;
-        Mon, 28 Sep 2020 04:32:26 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1601292744;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3tT8GIht0pqlC3XdLLIRoOvHpL/MYONBAnnoKe8BbB0=;
-        b=LXXbqOT1YgvA5tzHKFXBQLL4ReUjnBD4aB1eMxPsbYDGZyiqWgV23Bq2BlyRx1buzRXgec
-        5qytwhPVx8rnGYHTykl6SEN1PD3SRnY2V+tXlvyooWzKU2nFBsXChQC+t7pK2MsIuOVtQJ
-        gmT+YmotRF1Iq/KpYsKi0FattscIZeJE9HZiIJQ0ARwUv7boyROQbFdbi07BVSncIwyIp4
-        /LLjBZnYFklz1IWRfe9j2QD9tlchu8XOnMSyfkPpM5d8v4P3pQlS93JwNji4DbM5uIgDbl
-        +oWQHpCZB8tNjFHYiEBt3TmEb8WIFNtY4C7cBiWBAfMe59FnJco+5zfoOc06gw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1601292744;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3tT8GIht0pqlC3XdLLIRoOvHpL/MYONBAnnoKe8BbB0=;
-        b=IaLC29w1ViYuMkvTqlia7KFa1b4c3Q5+ZZn5gpwdVyZX3qgwsW78qU1NTwGUWw/jss8anD
-        MN5ZdzhxhAwaY6BQ==
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrzej Jakowski <andrzej.jakowski@linux.intel.com>,
-        Sushma Kalakota <sushmax.kalakota@intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 5/6] x86/apic/msi: Use Real PCI DMA device when configuring IRTE
-In-Reply-To: <20200907143207.GC9474@e121166-lin.cambridge.arm.com>
-References: <20200728194945.14126-1-jonathan.derrick@intel.com> <20200728194945.14126-6-jonathan.derrick@intel.com> <20200907143207.GC9474@e121166-lin.cambridge.arm.com>
-Date:   Mon, 28 Sep 2020 13:32:24 +0200
-Message-ID: <877dsekugn.fsf@nanos.tec.linutronix.de>
+        id S1726566AbgI1Lme (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Sep 2020 07:42:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:49980 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbgI1Lmd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Sep 2020 07:42:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3676331B;
+        Mon, 28 Sep 2020 04:42:30 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BA1F3F6CF;
+        Mon, 28 Sep 2020 04:42:29 -0700 (PDT)
+Date:   Mon, 28 Sep 2020 12:42:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH] [-next] PCI: DWC: Fix cast truncates bits from constant
+ value
+Message-ID: <20200928114227.GB13256@e121166-lin.cambridge.arm.com>
+References: <7ea7f7d342f97c758949a17b870012f52ce5b3f5.1600767645.git.gustavo.pimentel@synopsys.com>
+ <20200922165755.GA2211756@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200922165755.GA2211756@bjorn-Precision-5520>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 07 2020 at 15:32, Lorenzo Pieralisi wrote:
+On Tue, Sep 22, 2020 at 11:57:55AM -0500, Bjorn Helgaas wrote:
+> [+cc Lorenzo]
+> 
+> On Tue, Sep 22, 2020 at 11:59:10AM +0200, Gustavo Pimentel wrote:
+> > Fixes warning given by executing "make C=2 drivers/pci/"
+> > 
+> > Sparse output:
+> > CHECK drivers/pci/controller/dwc/pcie-designware.c
+> >  drivers/pci/controller/dwc/pcie-designware.c:432:52: warning:
+> >  cast truncates bits from constant value (ffffffff7fffffff becomes
+> >  7fffffff)
+> > 
+> > Reported-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Joao Pinto <jpinto@synopsys.com>
+> > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> 
+> Looks good to me; thanks for persevering with this.
+> 
+> Hopefully Lorenzo will apply this and, in the process, adjust the
+> subject line to match the history:
+> 
+>   PCI: dwc: ...
 
-> On Tue, Jul 28, 2020 at 01:49:44PM -0600, Jon Derrick wrote:
->> VMD retransmits child device MSI/X with the VMD endpoint's requester-id.
->> In order to support direct interrupt remapping of VMD child devices,
->> ensure that the IRTE is programmed with the VMD endpoint's requester-id
->> using pci_real_dma_dev().
->> 
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
->> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
->> ---
->>  arch/x86/kernel/apic/msi.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> I'd need an x86 maintainer ACK on this patch.
+Done, applied to pci/dwc, thanks.
 
-That conflicts with the big PCI/MSI overhaul which is pending in
+Lorenzo
 
-  git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/irq
-
-native_setup_msi_irqs() does not exist anymore.
-
-patch 3 has conflicts as well.
-
-Thanks,
-
-        tglx
+> >  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 3c3a4d1..e7a41d9 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -429,7 +429,7 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+> >  	}
+> >  
+> >  	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, region | index);
+> > -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, (u32)~PCIE_ATU_ENABLE);
+> > +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, ~(u32)PCIE_ATU_ENABLE);
+> >  }
+> >  
+> >  int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> > -- 
+> > 2.7.4
+> > 
