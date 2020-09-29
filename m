@@ -2,127 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8395627D12B
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 16:32:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E241527D20C
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 17:02:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgI2Oc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Sep 2020 10:32:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43118 "EHLO mail.kernel.org"
+        id S1728630AbgI2PCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Sep 2020 11:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgI2Oc3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Sep 2020 10:32:29 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728627AbgI2PCz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Sep 2020 11:02:55 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D849F20C09;
-        Tue, 29 Sep 2020 14:32:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42B3C2075F;
+        Tue, 29 Sep 2020 15:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601389948;
-        bh=VjYWaMro1xYrDNe26Vn7kbXKrgcLLp4Ul6eqYCvWIoQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=H42ozem74rjURrts0hRxe5T7CR4s7jiAxWHjUUrTYgxfrnGr0VLpdA4Aw1dCyY2XN
-         F3H1cPJHIvXCrMnWjDV3iLSMTT23c4tqpcm164P6bprzHmV6oXC2ERW52N1oVptGMB
-         32FTqmUy5XKdV9HwtzY+TaD8vzqFnaRvS+GdHy30=
-Received: by mail-ot1-f46.google.com with SMTP id 60so4623648otw.3;
-        Tue, 29 Sep 2020 07:32:27 -0700 (PDT)
-X-Gm-Message-State: AOAM530hi35aVK04eo9DT35oBrTCsxBc06yqeDT+7RJyjb7kAAo18258
-        LDW5TRFGJegbTh4tDbzO0PkVpUlrsBGMACKTcQ==
-X-Google-Smtp-Source: ABdhPJzrYJQxmXmK64+WMD0rkZVvGC2aVs8Bric+nrdYTcuT20sY6koxQbDnQMlcrE1ulqGTm+OoF2mzSgf9Ky4PhtA=
-X-Received: by 2002:a9d:6ada:: with SMTP id m26mr3041497otq.192.1601389946977;
- Tue, 29 Sep 2020 07:32:26 -0700 (PDT)
+        s=default; t=1601391774;
+        bh=NXldqJpYGauanSfTEPI04TFDaHThUR0ilLTddf/V0s8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ffqPonC9r3hF2Lzzq3xl0JqoVcOpCGe/mkvAwevJ5pIIXmwau4aF7zCutg2qWnEWC
+         4W12P5AOZEv8gHl3px6WzjtotcSPwF3Kasl4xiobIPt8d/AmtO4WwBJxf3TVVWhGcJ
+         S1rBe+wQagOJUgpVh2pqyRa0CeYajsOpwy49Xs20=
+Date:   Tue, 29 Sep 2020 10:02:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, bhelgaas@google.com, minghuan.Lian@nxp.com,
+        roy.zang@nxp.com, mingkai.hu@nxp.com, leoyang.li@nxp.com
+Subject: Re: [PATCH] PCI: layerscape: Change back to the default error
+ response behavior
+Message-ID: <20200929150252.GA2540544@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200821035420.380495-1-robh@kernel.org> <20200915091218.28737-1-michael@walle.cc>
- <CAL_JsqLHBPduSjs1L3R2vbsLygJNDzajt4XThAkRG0DEu-GnAA@mail.gmail.com>
- <346b694e43b1b6b86e4f3164e6589d25@walle.cc> <6b776dda-e575-74f0-5575-0e5d30641522@ti.com>
-In-Reply-To: <6b776dda-e575-74f0-5575-0e5d30641522@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Sep 2020 09:32:16 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+kQdmRfMQo-1AE+A3TxH7J99fuuuV5H0H=cOT1DK436Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+kQdmRfMQo-1AE+A3TxH7J99fuuuV5H0H=cOT1DK436Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/40] PCI: dwc: Driver clean-ups
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        "Gross, Andy" <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel@axis.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Song Xiaowei <songxiaowei@hisilicon.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wangbinghui <wangbinghui@hisilicon.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Yue Wang <yue.wang@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200929131328.13779-1-Zhiqiang.Hou@nxp.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 12:24 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi,
->
-> On 16/09/20 1:24 pm, Michael Walle wrote:
-> > Am 2020-09-16 00:02, schrieb Rob Herring:
-> >> Can you try this? The link up check seemed unnecessary as it is racy.
-> >> What happens if the link goes down right after checking? That's the
-> >> only thing in the change that sticks out.
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
-> >> b/drivers/pci/controller/dwc/pcie-designware-host.c
-> >> index 317ff512f8df..afee1a0e8883 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> >> @@ -441,6 +441,9 @@ static void __iomem
-> >> *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
-> >>         struct pcie_port *pp = bus->sysdata;
-> >>         struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> >>
-> >> +       if (!dw_pcie_link_up(pci))
-> >> +               return NULL;
-> >> +
-> >>         busdev = PCIE_ATU_BUS(bus->number) |
-> >> PCIE_ATU_DEV(PCI_SLOT(devfn)) |
-> >>                  PCIE_ATU_FUNC(PCI_FUNC(devfn));
-> >
-> > This will fix the issue.
->
-> This fix is required to get DRA7 EVM booting again in linux-next.
+On Tue, Sep 29, 2020 at 09:13:28PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> In the current error response behavior, it will send a SLVERR response
+> to device's internal AXI slave system interface when the PCIe controller
+> experiences an erroneous completion (UR, CA and CT) from an external
+> completer for its outbound non-posted request, which will result in
+> SError and crash the kernel directly.
 
-Did you see the discussion here[1]? Is firmware setting up the same
-register in question?
+Possible wording:
 
-Rob
+  As currently configured, when the PCIe controller receives a
+  Completion with UR or CA status, or a Completion Timeout occurs, it
+  sends a SLVERR response to the internal AXI slave system interface,
+  which results in SError and a kernel crash.
 
-[1] http://lore.kernel.org/r/HE1PR0402MB33713A623A37D08AE3253DEB84320@HE1PR0402MB3371.eurprd04.prod.outlook.com
+Please add a blank line between paragraphs, and
+s/This patch change back it/Change it/ below.
+
+> This patch change back it to the default behavior to increase the
+> robustness of the kernel. In the default behavior, it always sends an
+> OKAY response to the internal AXI slave interface when the controller
+> gets these erroneous completions. And the AER driver will report and
+> try to recover these errors.
+
+This reverts 84d897d69938 ("PCI: layerscape: Change default error
+response behavior"), so please mention that in the commit log,
+probably as:
+
+Fixes: 84d897d69938 ("PCI: layerscape: Change default error response behavior")
+
+Maybe it also needs a stable tag, e.g., v4.15+?
+
+Since this is a pure revert, whatever problem 84d897d69938 fixed must
+now be fixed in some other way.  Otherwise, this revert would just be
+reintroducing the problem fixed by 84d897d69938.
+
+This commit log should mention that what that other fix is.
+
+AER is only a reporting mechanism, it is asynchronous to the
+instruction stream, and it's optional (may not be implemented in the
+hardware, and may not be supported by the kernel), so I'm not super
+convinced that it can be the answer to this problem.
+
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-layerscape.c | 11 -----------
+>  1 file changed, 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index f24f79a70d9a..e92ab8a77046 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -30,8 +30,6 @@
+>  
+>  /* PEX Internal Configuration Registers */
+>  #define PCIE_STRFMR1		0x71c /* Symbol Timer & Filter Mask Register1 */
+> -#define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
+> -#define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
+>  
+>  #define PCIE_IATU_NUM		6
+>  
+> @@ -123,14 +121,6 @@ static int ls_pcie_link_up(struct dw_pcie *pci)
+>  	return 1;
+>  }
+>  
+> -/* Forward error response of outbound non-posted requests */
+> -static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
+> -{
+> -	struct dw_pcie *pci = pcie->pci;
+> -
+> -	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
+> -}
+> -
+>  static int ls_pcie_host_init(struct pcie_port *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -142,7 +132,6 @@ static int ls_pcie_host_init(struct pcie_port *pp)
+>  	 * dw_pcie_setup_rc() will reconfigure the outbound windows.
+>  	 */
+>  	ls_pcie_disable_outbound_atus(pcie);
+> -	ls_pcie_fix_error_response(pcie);
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  	ls_pcie_clear_multifunction(pcie);
+> -- 
+> 2.17.1
+> 
