@@ -2,198 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6F9027CE1D
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 14:52:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54AB427CE55
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 15:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgI2MwB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Sep 2020 08:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbgI2MwA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Sep 2020 08:52:00 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B5E1C061755
-        for <linux-pci@vger.kernel.org>; Tue, 29 Sep 2020 05:52:00 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c62so4143601qke.1
-        for <linux-pci@vger.kernel.org>; Tue, 29 Sep 2020 05:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RY99X9nnZSYlf1S6aSItFIQw8RkreoB6RaFJEIeiGww=;
-        b=VDU5qlBaPuAZzZjXWscjwnTHbryiqE5wyUD35y59HDeJ5LgOydXfgzMu3DCw8QHcRQ
-         a/MODB3hi5BZ6t6Li7o3BG1JUN4p2Lh/OFkrzsczAPyW4BWtYauPulIwdeOhRLYyUupW
-         ntJJR2Ps5AeKsqi2az7GsbC6NZod1hmDCiC++X/Xs/7Wz1h90R1Tq0dPsLc0hQd0xLgO
-         k6IY7NcFy0wlRjal5P7siJ8H4ddGoMhvSxjvBZ/2nYnDRRgpgR0jYXDkUQrSF1tK3cev
-         q6iy1H0AGGAgC4Oyqyba98xjMDfj9/0ttTQCi5kgcXJMivZiatfcxEbLDqe6jjkgGodp
-         E2rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RY99X9nnZSYlf1S6aSItFIQw8RkreoB6RaFJEIeiGww=;
-        b=e+pSlAjwErqpzny9KLicdF1K6DLj/7sKIY6Voqi75H8bQXmEwX8sp1ffDFJ6u2isTj
-         eZh6F7Sy6KcojmqEybwF571vI3W5xqE41SY63l6z0YZqAkZ7C7s8W8v2gvpEveCf4u6J
-         QDI340KpaKcX+omMZ0H/F9RWWd79BI3pIJXImyJ1IJCCYSMj9GcH8cVaxo1YWuIMuZ2A
-         oO1Essl3Y7WQY/8GHwiFINedFBal44b9F9E3wD33KLL9yelGsGEh962vJeBt3Ibu8Ug5
-         aSFrjs8a7ZflmAMHrcffgr5uUzo1OxqKuhsK4Yt/ugjoHxqW9BVv7EVZN5uD1o+RQxIv
-         VGQQ==
-X-Gm-Message-State: AOAM5318qy5KVW1o+XCldyGSxG5NlxwsIgkOsjMrCT8XJGxFbYfGVQhv
-        HGsNIyr6BYDfn66akL4IiAV9RZ0QjbkHrKK3M13l3MptRlqhxw==
-X-Google-Smtp-Source: ABdhPJxj+RW/1dFn1sQHGHK0wxX+TqKbIiTSVKv8dMHnlZJ8w7NSEQrWNsks/1QDQ/WHnIoZ0WrqKXDwMqTlt5kWxuM=
-X-Received: by 2002:a37:a3d8:: with SMTP id m207mr4015416qke.175.1601383918996;
- Tue, 29 Sep 2020 05:51:58 -0700 (PDT)
+        id S1728323AbgI2NCU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Sep 2020 09:02:20 -0400
+Received: from mail-db8eur05on2077.outbound.protection.outlook.com ([40.107.20.77]:39777
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727495AbgI2NCU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Sep 2020 09:02:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=STiaiaXDpH+Z+gk1TrQfA9d9jZkWzbn5znaFdA2lS9QYF7ahvAi13oA6/+Do5OYpGE8UtvZw/klctn7yBsDgDoJJhGoBNz5cTf+CDqPQT2MvXC8PMPtCyS9qhndUdr+FP//i7OFFBXWdBN9N1x5fCXGdVWFLgrNc+3cOjE58/oEbX6ebGU/a2jTvXVw4+J3ovgBLgqoASW2BOY1Cqp+IqYZmRfZm/cRHvd60MCgHdZbPEWyqeKN7z84gVeX4cBQbG9zzp+k5THqDDXQHx4vK99/1E3JpidlIL1RD4PUIAO771SSarg5PLb8OPR5dUHAR5vXzuDJWh96gPP5lbytlHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RI57TuLhnQ8QWFruBYaK5dSs+LfKPVROgZH1Q2ExHS8=;
+ b=oJg2uDvsWpjiuGWDA37d+GLbRpB5LJF7CxfBrOhoiMe+ysFRUvKAUqhvrwk3LPdOYXGkqEGp/nHmOV6UnIhYag6pq5P5fIBITBWQiPYfeIUBF+ezBzHsTUdQCvjugLwNpJTWogP7QPrhD1qBfu37M6aKSpKvEx2ed7HK2Rkb1vmW6ztnsFnUmyVRRrYWC2sjr9U5uVXpgiTVKsa3pFQTtyGuXX9xHyq8OMZyDo82eNfaUb7HvzkBxMBe2IytNkJUNO5HeObVpj9IfQiZRfGpnGsbRHZF/l2ToklePbTVKo9OyM0ZPyyDPR2xiGH+hh4NlEgPKduY3bsk0wDVq57whA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RI57TuLhnQ8QWFruBYaK5dSs+LfKPVROgZH1Q2ExHS8=;
+ b=rTRNimmr0q7Bve4ci3OQGU3RwiLxvfTN4njBuHvCZhtasrwB3uO4Cexd1lVsirHkY3KyBWaP98CsaVYbFHHFgmLlloNPhOPhAbTZHPllkU93MaWrDes5pG61YEJ+J9rcnvqfNv/l8Pc+A51pVTVaKO/U3Laq2J19OWr5jspRc10=
+Received: from VI1PR04MB4960.eurprd04.prod.outlook.com (2603:10a6:803:57::21)
+ by VI1PR0401MB2381.eurprd04.prod.outlook.com (2603:10a6:800:2a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.32; Tue, 29 Sep
+ 2020 13:02:15 +0000
+Received: from VI1PR04MB4960.eurprd04.prod.outlook.com
+ ([fe80::b178:a37b:1f9e:3a6]) by VI1PR04MB4960.eurprd04.prod.outlook.com
+ ([fe80::b178:a37b:1f9e:3a6%3]) with mapi id 15.20.3412.029; Tue, 29 Sep 2020
+ 13:02:15 +0000
+From:   Sherry Sun <sherry.sun@nxp.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "sudeep.dutt@intel.com" <sudeep.dutt@intel.com>,
+        "ashutosh.dixit@intel.com" <ashutosh.dixit@intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/4] misc: vop: change the way of allocating vring
+Thread-Topic: [PATCH V2 1/4] misc: vop: change the way of allocating vring
+Thread-Index: AQHWljzplsyX1hz4OU+a360o7kgHHKl/aLCAgAAnNWA=
+Date:   Tue, 29 Sep 2020 13:02:15 +0000
+Message-ID: <VI1PR04MB4960EC71CABE17C0556EBEBC92320@VI1PR04MB4960.eurprd04.prod.outlook.com>
+References: <20200929084425.24052-1-sherry.sun@nxp.com>
+ <20200929084425.24052-2-sherry.sun@nxp.com>
+ <20200929102333.GA7784@infradead.org>
+In-Reply-To: <20200929102333.GA7784@infradead.org>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [114.219.66.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 19252d97-71bc-4768-1dc2-08d86477e39c
+x-ms-traffictypediagnostic: VI1PR0401MB2381:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0401MB2381542B67A59D3F774951D792320@VI1PR0401MB2381.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yQFGb/kSWCgk/GuA2b9K1I4ediHWdVigLESMPU9BxeAGO4/Kni8mxXj+JGkRNTOUWW62Q6VnDcVBNKqlo2/Ktj1hrF36GNx8Z+I4mc1ppjLFtuzlVwKoYv0gQ7dTDuFCfJHrtSVZ6Q47bpCxEjuhRGQioaJC/I2/WE46uxtBo7pYWpybb4yFTdJvqSRNgQdPqpxY04vsXGL2c39omV6SPOdA+aN1il8onSLMVSPYjnoKVIRe+CG0o1bC0+teltEfTfQdZVYcpHnY7kLLepRnm7eUwUc8/pTjACE/nZ67cDX/kvUKS7GS/yfvDROF07WCFGHNOvF1VJDrWdDb5oxcdg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4960.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(366004)(39850400004)(376002)(316002)(44832011)(71200400001)(26005)(186003)(54906003)(83380400001)(7696005)(2906002)(6506007)(478600001)(76116006)(33656002)(55016002)(6916009)(86362001)(558084003)(9686003)(4326008)(8676002)(5660300002)(8936002)(52536014)(64756008)(66556008)(66476007)(66946007)(66446008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: X88Le7MeAhduSld4O1j2GMirTE7O1bkvoHSBZzAKxCZo66e3bxeZRkyUNmTbfnLrPD23uUQI9BaX8SwP0feUUNF1HN5IqzH4lnFklqWw4iSzKfk8Cqz0vpceDfEwMwMEpCDG2QhJe9o9sLrV20Qs+qsjgT1l9bxKFgIYbsowbr9/gGVA/q5EP7QPLeyGAyDoVy/0nm/cS9eYP20Uv4/+u2tRxjXjLbPSOkl0MKlTSGh/LNrYhRFNC0wom7BoeySLVrdZjglnags4l3YoOcGi4opU7E1AoiL5mtDY1RQ0xqRyCp6M1WrTEmcNQw495q92Qe9/zvsQL5q5qd8cSF2g9xvMcegNMj2i2k79yYADuPDNjoQZAIeuB8PopSgF/5Jh+SKvhppJi+BeLFMhHMHEL6rSfGDq8Nwnw6NUv3DOGF4j20jn59aM6AkjJ/ij7zWxTzUytC2hj+184d/KFgPyZB4luM7zhk0ve73GZVE2JMmYNrEcFjo6GfiL4r5/J7hPGCofh2xQoVoxZFrNfd8sgVo5LfaYTDeAuWCLefdF1KaJ3doTnI4ilaJgN5iFnmYYytdQngyI5G42PUuq58kinokiNWt7NJvjxIFsw1fYLRzMYsYr32mqFBhzxgYekvOrUoEL/PgQSoragUKejEDqFw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAA85sZuexf2pqfHBCKKGRos8psg_6ZZFeXiFm3ncPz-6JtqEdQ@mail.gmail.com>
- <20200928170921.GA2485236@bjorn-Precision-5520> <CAA85sZuDVA1d_c7OQ3xyZiOVDneL6oN6bM-Sn2QfhfGAAoHhYg@mail.gmail.com>
- <CAKgT0UcQN77zrtRK8yKgNRR0pifGUceoRHXWW+cYukzmsQPNyQ@mail.gmail.com>
- <CAA85sZt7LQ0NrWFnR-fk0s+jqsO9FxsYiu4JavnH6V423Rba1w@mail.gmail.com>
- <CAA85sZuW4iy6hXEKrfQjLV-nmG-E8pe0joZpMSb_vzs7Pnc=wA@mail.gmail.com> <CAKgT0UfvSBQX4U2f_Qe3qVH67Oo=eyyrFipjHU6b2e9jCE+8pg@mail.gmail.com>
-In-Reply-To: <CAKgT0UfvSBQX4U2f_Qe3qVH67Oo=eyyrFipjHU6b2e9jCE+8pg@mail.gmail.com>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Tue, 29 Sep 2020 14:51:48 +0200
-Message-ID: <CAA85sZvtMWyaOYx+GhQUy4+3+5MAWt3JP=ANJ2ggQu2ONrh4Wg@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4960.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19252d97-71bc-4768-1dc2-08d86477e39c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2020 13:02:15.4570
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RzCEGL9liEx5bS02uiJWxzbZgndWpj6q7X4z49YbnodyfzyYIqyV0lzkPU7Q0StYhdvRJzpJ4/BwtTtnpwtUpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2381
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 1:31 AM Alexander Duyck
-<alexander.duyck@gmail.com> wrote:
->
-> On Mon, Sep 28, 2020 at 1:33 PM Ian Kumlien <ian.kumlien@gmail.com> wrote:
-> >
-> > On Mon, Sep 28, 2020 at 10:04 PM Ian Kumlien <ian.kumlien@gmail.com> wrote:
-> > >
-> > > On Mon, Sep 28, 2020 at 9:53 PM Alexander Duyck
-> > > <alexander.duyck@gmail.com> wrote:
->
-> <snip>
->
-> > > > You should be able to manually disable L1 on the realtek link
-> > > > (4:00.0<->2:04.0) instead of doing it on the upstream link on the
-> > > > switch. That may provide a datapoint on the L1 behavior of the setup.
-> > > > Basically if you took the realtek out of the equation in terms of the
-> > > > L1 exit time you should see the exit time drop to no more than 33us
-> > > > like what would be expected with just the i210.
-> > >
-> > > Yeah, will try it out with echo 0 >
-> > > /sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/0000:02:04.0/0000:04:00.0/link/l1_aspm
-> > > (which is the device reported by my patch)
-> >
-> > So, 04:00.0 is already disabled, the existing code apparently handled
-> > that correctly... *but*
-> >
-> > given the path:
-> > 00:01.2/01:00.0/02:04.0/04:00.0 Unassigned class [ff00]: Realtek
-> > Semiconductor Co., Ltd. Device 816e (rev 1a)
-> >
-> > Walking backwards:
-> > -- 04:00.0 has l1 disabled
-> > -- 02:04.0 doesn't have aspm?!
-> >
-> > lspci reports:
-> > Capabilities: [370 v1] L1 PM Substates
-> > L1SubCap: PCI-PM_L1.2- PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1+ L1_PM_Substates+
-> > L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-> > L1SubCtl2:
-> > Capabilities: [400 v1] Data Link Feature <?>
-> > Capabilities: [410 v1] Physical Layer 16.0 GT/s <?>
-> > Capabilities: [440 v1] Lane Margining at the Receiver <?>
-> >
-> > However the link directory is empty.
-> >
-> > Anything we should know about these unknown capabilities? also aspm
-> > L1.1 and .1.2, heh =)
-> >
-> > -- 01:00.0 has L1, disabling it makes the intel nic work again
->
-> I recall that much. However the question is why? If there is already a
-> 32us time to bring up the link between the NIC and the switch why
-> would the additional 1us to also bring up the upstream port have that
-> much of an effect? That is why I am thinking that it may be worthwhile
-> to try to isolate things further so that only the upstream port and
-> the NIC have L1 enabled. If we are still seeing issues in that state
-> then I can only assume there is something off with the
-> 00:01.2<->1:00.0 link to where it either isn't advertising the actual
-> L1 recovery time. For example the "Width x4 (downgraded)" looks very
-> suspicious and could be responsible for something like that if the
-> link training is having to go through exception cases to work out the
-> x4 link instead of a x8.
+Hi Christoph,
 
-It is a x4 link, all links that aren't "fully populated" or "fully
-utilized" are listed as downgraded...
+>=20
+> > +		vr->va =3D dma_alloc_coherent(vop_dev(vdev), vr_size,
+> &vr_addr,
+> > +GFP_KERNEL);
+>=20
+> Please stick to 80 character lines unless you have a really good reason n=
+ot to.
 
-So, x16 card in x8 slot or pcie 3 card in pcie 2 slot - all lists as downgraded
+Okay, will change it in V3.
 
-> > ASPM L1 enabled:
-> > [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> > [  5]   0.00-1.00   sec  5.40 MBytes  45.3 Mbits/sec    0   62.2 KBytes
-> > [  5]   1.00-2.00   sec  4.47 MBytes  37.5 Mbits/sec    0   70.7 KBytes
-> > [  5]   2.00-3.00   sec  4.10 MBytes  34.4 Mbits/sec    0   42.4 KBytes
-> > [  5]   3.00-4.00   sec  4.47 MBytes  37.5 Mbits/sec    0   65.0 KBytes
-> > [  5]   4.00-5.00   sec  4.47 MBytes  37.5 Mbits/sec    0    105 KBytes
-> > [  5]   5.00-6.00   sec  4.47 MBytes  37.5 Mbits/sec    0   84.8 KBytes
-> > [  5]   6.00-7.00   sec  4.47 MBytes  37.5 Mbits/sec    0   65.0 KBytes
-> > [  5]   7.00-8.00   sec  4.10 MBytes  34.4 Mbits/sec    0   45.2 KBytes
-> > [  5]   8.00-9.00   sec  4.47 MBytes  37.5 Mbits/sec    0   56.6 KBytes
-> > [  5]   9.00-10.00  sec  4.47 MBytes  37.5 Mbits/sec    0   48.1 KBytes
-> > - - - - - - - - - - - - - - - - - - - - - - - - -
-> > [ ID] Interval           Transfer     Bitrate         Retr
-> > [  5]   0.00-10.00  sec  44.9 MBytes  37.7 Mbits/sec    0             sender
-> > [  5]   0.00-10.01  sec  44.0 MBytes  36.9 Mbits/sec                  receiver
-> >
-> > ASPM L1 disabled:
-> > [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> > [  5]   0.00-1.00   sec   111 MBytes   935 Mbits/sec  733    761 KBytes
-> > [  5]   1.00-2.00   sec   110 MBytes   923 Mbits/sec  733    662 KBytes
-> > [  5]   2.00-3.00   sec   109 MBytes   912 Mbits/sec  1036   1.20 MBytes
-> > [  5]   3.00-4.00   sec   109 MBytes   912 Mbits/sec  647    738 KBytes
-> > [  5]   4.00-5.00   sec   110 MBytes   923 Mbits/sec  852    744 KBytes
-> > [  5]   5.00-6.00   sec   109 MBytes   912 Mbits/sec  546    908 KBytes
-> > [  5]   6.00-7.00   sec   109 MBytes   912 Mbits/sec  303    727 KBytes
-> > [  5]   7.00-8.00   sec   109 MBytes   912 Mbits/sec  432    769 KBytes
-> > [  5]   8.00-9.00   sec   110 MBytes   923 Mbits/sec  462    652 KBytes
-> > [  5]   9.00-10.00  sec   109 MBytes   912 Mbits/sec  576    764 KBytes
-> > - - - - - - - - - - - - - - - - - - - - - - - - -
-> > [ ID] Interval           Transfer     Bitrate         Retr
-> > [  5]   0.00-10.00  sec  1.07 GBytes   918 Mbits/sec  6320             sender
-> > [  5]   0.00-10.01  sec  1.06 GBytes   912 Mbits/sec                  receiver
-> >
-> > (all measurements are over live internet - so thus variance)
->
-> I forgot there were 5 total devices that were hanging off of there as
-> well. You might try checking to see if disabling L1 on devices 5:00.0,
-> 6:00.0 and/or 7:00.0 has any effect while leaving the L1 on 01:00.0
-> and the NIC active. The basic idea is to go through and make certain
-> we aren't seeing an L1 issue with one of the other downstream links on
-> the switch.
-
-I did, and i saw no change, only disabling L1 on 01:00.0 gives any effect.
-But i'd say you're right in your thinking - with L0s head-of-queue
-stalling can happen
-due to retry buffers and so on, was interesting to see it detailed...
-
-> The more I think about it the entire setup for this does seem a bit
-> suspicious. I was looking over the lspci tree and the dump from the
-> system. From what I can tell the upstream switch link at 01.2 <->
-> 1:00.0 is only a Gen4 x4 link. However coming off of that is 5
-> devices, two NICs using either Gen1 or 2 at x1, and then a USB
-> controller and 2 SATA controller reporting Gen 4 x16. Specifically
-> those last 3 devices have me a bit curious as they are all reporting
-> L0s and L1 exit latencies that are the absolute minimum which has me
-> wondering if they are even reporting actual values.
-
-Heh, I have been trying to google for erratas wrt to:
-01:00.0 PCI bridge: Advanced Micro Devices, Inc. [AMD] Matisse Switch
-Upstream aka 1022:57ad
-
-and the cpu, to see if there is something else I could have missed,
-but i haven't found anything relating to this yet...
+Regards
+Sherry
