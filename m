@@ -2,171 +2,290 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E38027DA24
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 23:31:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24AD027DA65
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 23:46:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgI2Vb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Sep 2020 17:31:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbgI2Vb4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Sep 2020 17:31:56 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A9802075E;
-        Tue, 29 Sep 2020 21:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601415115;
-        bh=gzFmxT/6qmRw+vWd7neiLPEnz55xC18T5I9oR0epPQ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=biK92FkJ5NO8eo4zPyCqvnlWe1Yt3MLOicMFgBva2Q03CECFAc/BCvqfLEgK7xyZS
-         n/xueHrZ4FMwD3oxXt2YgJZuUawZVQGCl2Lqv1pXVTYUpiPe3xLqhJOt2MUvHNc+tE
-         zxrnAEpq7sJsCVijoI3emJcmeU1S6W2xMBeD4y4A=
-Date:   Tue, 29 Sep 2020 16:31:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 RESEND 1/1] PCI: pcie_bus_config can be set at build
- time
-Message-ID: <20200929213153.GA2578412@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200928194651.5393-2-james.quinlan@broadcom.com>
+        id S1728260AbgI2Vqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Sep 2020 17:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbgI2Vqe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Sep 2020 17:46:34 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7ECC0613D2
+        for <linux-pci@vger.kernel.org>; Tue, 29 Sep 2020 14:46:34 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id w2so3353044qvr.19
+        for <linux-pci@vger.kernel.org>; Tue, 29 Sep 2020 14:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=Ap+f/PgcipKb6Xwr77y488UFXUT7vfttNzHvf2XvHy4=;
+        b=pxKmqbIyigake3W0fjk0CRWa/igqGxUHw3qFQELTPLC8nWdshs6mmWUCsQ6mIdj9mG
+         uR5ZhLNSIBFiqGVc359gKgBsTxJNJ8p21PXv3uvfxnXCxmkNLh5wwhzGsP0HgoPqWeAO
+         VjS8ZUqRHIykm1dP4nBu0NuaOvVgSyeBdxKSa0NKmaABqVUoEwbij5ohsdr/EJXpG30x
+         orV+/IJfgecdn4qvWQ4NZpRQ3MXZCbtccw1nAVaWSBwDCbW3uVrbh0YwHbOTc6+nUKSI
+         RwLmbxOmZQOdsU3BP0kHwmms5vuVFkSvwH1o+lLIJ+TNqdvCZDhucmsmE/67Tu8vBWfm
+         jbTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=Ap+f/PgcipKb6Xwr77y488UFXUT7vfttNzHvf2XvHy4=;
+        b=YMq5q18wsub/d2ynXUDuKqUK6zrsbtTNULPECKsR71GAR++2Ek83f4w356JUsUbJWt
+         gECjmaQuOToFVjM6M/Zzrblf4lM2QD50qDpqheicPEDE8rZb1Ve9RwxQ5u98Hu0nykq/
+         n3kMg4ZG2dz0hP6U6qGSKlDtn10fyZwXSLINlG36dsbiGP8UltSzcNRYrK97OOfJjYvX
+         8uYdUFTvtIUOboEgJGcgqBc0Mizyv5CbUHtmHwi5qdeVnoN13/nI7zIoFUeFgkN3HWUf
+         FkqKGMKY8hZcjByJC9qtIGXqJtyKLlUIpcQJQynZt3BOAJKBAF/2C64HZYJkcUhAodZW
+         o3YQ==
+X-Gm-Message-State: AOAM531B9eL0COjFOZMxf2DcPg52kwIUtoXuI9/M2SkOHX7bF9rXGNkY
+        J3ACUoQcCeiTyORvbFF8NofMJUToi3Rov3+bRrM=
+X-Google-Smtp-Source: ABdhPJz55DdleGieWMtR/fQtUn1HHck6f+hJzMa/0ZjSBmixhPTxqRcXtmlftsciZe+KGj3y0OcPa3T2LEQ42XxFFxA=
+Sender: "samitolvanen via sendgmr" 
+        <samitolvanen@samitolvanen1.mtv.corp.google.com>
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:a0c:b409:: with SMTP id
+ u9mr6416334qve.9.1601415993082; Tue, 29 Sep 2020 14:46:33 -0700 (PDT)
+Date:   Tue, 29 Sep 2020 14:46:02 -0700
+Message-Id: <20200929214631.3516445-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.709.gb0816b6eb0-goog
+Subject: [PATCH v4 00/29] Add support for Clang LTO
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 28, 2020 at 03:46:51PM -0400, Jim Quinlan wrote:
-> The Kconfig is modified so that the pcie_bus_config setting can be done at
-> build time in the same manner as the CONFIG_PCIEASPM_XXXX choice.  The
-> pci_bus_config setting may still be overridden by the bootline param.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+This patch series adds support for building x86_64 and arm64 kernels
+with Clang's Link Time Optimization (LTO).
 
-Applied to pci/enumeration for v5.10, thanks!
+In addition to performance, the primary motivation for LTO is
+to allow Clang's Control-Flow Integrity (CFI) to be used in the
+kernel. Google has shipped millions of Pixel devices running three
+major kernel versions with LTO+CFI since 2018.
 
-I tweaked the help texts and made the Kconfig stuff depend on
-CONFIG_EXPERT.  Will that still be enough for what you need?  I'm
-worried that users will get themselves in trouble if they fiddle with
-things without really understanding what's going on.
+Most of the patches are build system changes for handling LLVM
+bitcode, which Clang produces with LTO instead of ELF object files,
+postponing ELF processing until a later stage, and ensuring initcall
+ordering.
 
-Here's what I applied:
+Again, patches 1-3 are not directly related to LTO, but are needed
+to compile LTO kernels with ToT Clang, so I'm including them in the
+series for your convenience:
+
+ - Patch 1 ("RAS/CEC: Fix cec_init() prototype") fixes an initcall
+   type mismatch which breaks allmodconfig with LTO. This patch is
+   in linux-next.
+   
+ - Patch 2 ("x86/asm: Replace __force_order with memory clobber")
+   fixes x86 builds with LLVM's integrated assembler, which we use
+   with LTO for inline assembly. This patch hasn't been picked up
+   by maintainers yet.
+
+ - Patch 3 ("kbuild: preprocess module linker script") is from
+   Masahiro's kbuild tree and makes the LTO linker script changes
+   much cleaner.
+
+Furthermore, patches 4-8 include Peter's patch for generating
+__mcount_loc with objtool, and build system changes to enable it on
+x86. With these patches, we no longer need to annotate functions
+that have non-call references to __fentry__ with LTO, which makes
+supporting dynamic ftrace much simpler.
+
+Patch 9 disables recordmcount for arm64 when patchable function
+entry is used (enabled by default if the compiler supports the
+feature), which removes thousands of unnecessary recordmcount
+invocations from a defconfig build.
+
+Note that you can also pull this series from
+
+  https://github.com/samitolvanen/linux.git lto-v4
 
 
-commit 2a87f534d198 ("PCI: Add Kconfig options for pcie_bus_config")
-Author: Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Mon Sep 28 15:46:51 2020 -0400
+---
+Changes in v4:
 
-    PCI: Add Kconfig options for pcie_bus_config
-    
-    Add Kconfig options for changing the default pcie_bus_config in the same
-    manner as the CONFIG_PCIEASPM_XXXX choice.  The pci_bus_config setting may
-    still be overridden by kernel command-line parameters, e.g.,
-    "pci=pcie_bus_tune_off".
-    
-    [bhelgaas: depend on EXPERT, tweak help texts]
-    Link: https://lore.kernel.org/r/20200928194651.5393-2-james.quinlan@broadcom.com
-    Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+  - Fixed a typo in Makefile.lib to correctly pass --no-fp to objtool.
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 4bef5c2bae9f..d323b25ae27e 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -187,6 +187,68 @@ config PCI_HYPERV
- 	  The PCI device frontend driver allows the kernel to import arbitrary
- 	  PCI devices from a PCI backend to support PCI driver domains.
- 
-+choice
-+	prompt "PCI Express hierarchy optimization setting"
-+	default PCIE_BUS_DEFAULT
-+	depends on PCI && EXPERT
-+	help
-+	  MPS (Max Payload Size) and MRRS (Max Read Request Size) are PCIe
-+	  device parameters that affect performance and the ability to
-+	  support hotplug and peer-to-peer DMA.
-+
-+	  The following choices set the MPS and MRRS optimization strategy
-+	  at compile-time.  The choices are the same as those offered for
-+	  the kernel command-line parameter 'pci', i.e.,
-+	  'pci=pcie_bus_tune_off', 'pci=pcie_bus_safe',
-+	  'pci=pcie_bus_perf', and 'pci=pcie_bus_peer2peer'.
-+
-+	  This is a compile-time setting and can be overridden by the above
-+	  command-line parameters.  If unsure, choose PCIE_BUS_DEFAULT.
-+
-+config PCIE_BUS_TUNE_OFF
-+	bool "Tune Off"
-+	depends on PCI
-+	help
-+	  Use the BIOS defaults; don't touch MPS at all.  This is the same
-+	  as booting with 'pci=pcie_bus_tune_off'.
-+
-+config PCIE_BUS_DEFAULT
-+	bool "Default"
-+	depends on PCI
-+	help
-+	  Default choice; ensure that the MPS matches upstream bridge.
-+
-+config PCIE_BUS_SAFE
-+	bool "Safe"
-+	depends on PCI
-+	help
-+	  Use largest MPS that boot-time devices support.  If you have a
-+	  closed system with no possibility of adding new devices, this
-+	  will use the largest MPS that's supported by all devices.  This
-+	  is the same as booting with 'pci=pcie_bus_safe'.
-+
-+config PCIE_BUS_PERFORMANCE
-+	bool "Performance"
-+	depends on PCI
-+	help
-+	  Use MPS and MRRS for best performance.  Ensure that a given
-+	  device's MPS is no larger than its parent MPS, which allows us to
-+	  keep all switches/bridges to the max MPS supported by their
-+	  parent.  This is the same as booting with 'pci=pcie_bus_perf'.
-+
-+config PCIE_BUS_PEER2PEER
-+	bool "Peer2peer"
-+	depends on PCI
-+	help
-+	  Set MPS = 128 for all devices.  MPS configuration effected by the
-+	  other options could cause the MPS on one root port to be
-+	  different than that of the MPS on another, which may cause
-+	  hot-added devices or peer-to-peer DMA to fail.  Set MPS to the
-+	  smallest possible value (128B) system-wide to avoid these issues.
-+	  This is the same as booting with 'pci=pcie_bus_peer2peer'.
-+
-+endchoice
-+
- source "drivers/pci/hotplug/Kconfig"
- source "drivers/pci/controller/Kconfig"
- source "drivers/pci/endpoint/Kconfig"
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a458c46d7e39..49b66ba7c874 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -101,7 +101,19 @@ unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
- #define DEFAULT_HOTPLUG_BUS_SIZE	1
- unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
- 
-+
-+/* PCIE bus config, can be overridden by bootline param */
-+#ifdef CONFIG_PCIE_BUS_TUNE_OFF
-+enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_TUNE_OFF;
-+#elif defined CONFIG_PCIE_BUS_SAFE
-+enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_SAFE;
-+#elif defined CONFIG_PCIE_BUS_PERFORMANCE
-+enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PERFORMANCE;
-+#elif defined CONFIG_PCIE_BUS_PEER2PEER
-+enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PEER2PEER;
-+#else
- enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
-+#endif
- 
- /*
-  * The default CLS is used if arch didn't set CLS explicitly and not
+  - Moved ftrace configs related to generating __mcount_loc to Kconfig,
+    so they are available also in Makefile.modfinal.
+
+  - Dropped two prerequisite patches that were merged to Linus' tree.
+
+Changes in v3:
+
+  - Added a separate patch to remove the unused DISABLE_LTO treewide,
+    as filtering out CC_FLAGS_LTO instead is preferred.
+
+  - Updated the Kconfig help to explain why LTO is behind a choice
+    and disabled by default.
+
+  - Dropped CC_FLAGS_LTO_CLANG, compiler-specific LTO flags are now
+    appended directly to CC_FLAGS_LTO.
+
+  - Updated $(AR) flags as KBUILD_ARFLAGS was removed earlier.
+
+  - Fixed ThinLTO cache handling for external module builds.
+
+  - Rebased on top of Masahiro's patch for preprocessing modules.lds,
+    and moved the contents of module-lto.lds to modules.lds.S.
+
+  - Moved objtool_args to Makefile.lib to avoid duplication of the
+    command line parameters in Makefile.modfinal.
+
+  - Clarified in the commit message for the initcall ordering patch
+    that the initcall order remains the same as without LTO.
+
+  - Changed link-vmlinux.sh to use jobserver-exec to control the
+    number of jobs started by generate_initcall_ordering.pl.
+
+  - Dropped the x86/relocs patch to whitelist L4_PAGE_OFFSET as it's
+    no longer needed with ToT kernel.
+
+  - Disabled LTO for arch/x86/power/cpu.c to work around a Clang bug
+    with stack protector attributes.
+
+Changes in v2:
+
+  - Fixed -Wmissing-prototypes warnings with W=1.
+
+  - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
+    scrubbing to make distclean.
+
+  - Added a comment about Clang >=11 being required.
+
+  - Added a patch to disable LTO for the arm64 KVM nVHE code.
+
+  - Disabled objtool's noinstr validation with LTO unless enabled.
+
+  - Included Peter's proposed objtool mcount patch in the series
+    and replaced recordmcount with the objtool pass to avoid
+    whitelisting relocations that are not calls.
+
+  - Updated several commit messages with better explanations.
+
+
+Arvind Sankar (1):
+  x86/asm: Replace __force_order with memory clobber
+
+Luca Stefani (1):
+  RAS/CEC: Fix cec_init() prototype
+
+Masahiro Yamada (1):
+  kbuild: preprocess module linker script
+
+Peter Zijlstra (1):
+  objtool: Add a pass for generating __mcount_loc
+
+Sami Tolvanen (25):
+  objtool: Don't autodetect vmlinux.o
+  tracing: move function tracer options to Kconfig
+  tracing: add support for objtool mcount
+  x86, build: use objtool mcount
+  arm64: disable recordmcount with DYNAMIC_FTRACE_WITH_REGS
+  treewide: remove DISABLE_LTO
+  kbuild: add support for Clang LTO
+  kbuild: lto: fix module versioning
+  kbuild: lto: postpone objtool
+  kbuild: lto: limit inlining
+  kbuild: lto: merge module sections
+  kbuild: lto: remove duplicate dependencies from .mod files
+  init: lto: ensure initcall ordering
+  init: lto: fix PREL32 relocations
+  PCI: Fix PREL32 relocations for LTO
+  modpost: lto: strip .lto from module names
+  scripts/mod: disable LTO for empty.c
+  efi/libstub: disable LTO
+  drivers/misc/lkdtm: disable LTO for rodata.o
+  arm64: vdso: disable LTO
+  KVM: arm64: disable LTO for the nVHE directory
+  arm64: allow LTO_CLANG and THINLTO to be selected
+  x86, vdso: disable LTO only for vDSO
+  x86, cpu: disable LTO for cpu.c
+  x86, build: allow LTO_CLANG and THINLTO to be selected
+
+ .gitignore                                    |   1 +
+ Makefile                                      |  68 +++--
+ arch/Kconfig                                  |  68 +++++
+ arch/arm/Makefile                             |   4 -
+ .../module.lds => include/asm/module.lds.h}   |   2 +
+ arch/arm64/Kconfig                            |   4 +
+ arch/arm64/Makefile                           |   4 -
+ .../module.lds => include/asm/module.lds.h}   |   2 +
+ arch/arm64/kernel/vdso/Makefile               |   4 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile              |   4 +-
+ arch/ia64/Makefile                            |   1 -
+ .../{module.lds => include/asm/module.lds.h}  |   0
+ arch/m68k/Makefile                            |   1 -
+ .../module.lds => include/asm/module.lds.h}   |   0
+ arch/powerpc/Makefile                         |   1 -
+ .../module.lds => include/asm/module.lds.h}   |   0
+ arch/riscv/Makefile                           |   3 -
+ .../module.lds => include/asm/module.lds.h}   |   3 +-
+ arch/sparc/vdso/Makefile                      |   2 -
+ arch/um/include/asm/Kbuild                    |   1 +
+ arch/x86/Kconfig                              |   3 +
+ arch/x86/Makefile                             |   5 +
+ arch/x86/boot/compressed/pgtable_64.c         |   9 -
+ arch/x86/entry/vdso/Makefile                  |   5 +-
+ arch/x86/include/asm/special_insns.h          |  28 +-
+ arch/x86/kernel/cpu/common.c                  |   4 +-
+ arch/x86/power/Makefile                       |   4 +
+ drivers/firmware/efi/libstub/Makefile         |   2 +
+ drivers/misc/lkdtm/Makefile                   |   1 +
+ drivers/ras/cec.c                             |   9 +-
+ include/asm-generic/Kbuild                    |   1 +
+ include/asm-generic/module.lds.h              |  10 +
+ include/asm-generic/vmlinux.lds.h             |  11 +-
+ include/linux/init.h                          |  79 ++++-
+ include/linux/pci.h                           |  19 +-
+ kernel/Makefile                               |   3 -
+ kernel/trace/Kconfig                          |  29 ++
+ scripts/.gitignore                            |   1 +
+ scripts/Makefile                              |   3 +
+ scripts/Makefile.build                        |  69 +++--
+ scripts/Makefile.lib                          |  17 +-
+ scripts/Makefile.modfinal                     |  29 +-
+ scripts/Makefile.modpost                      |  22 +-
+ scripts/generate_initcall_order.pl            | 270 ++++++++++++++++++
+ scripts/link-vmlinux.sh                       |  95 +++++-
+ scripts/mod/Makefile                          |   1 +
+ scripts/mod/modpost.c                         |  16 +-
+ scripts/mod/modpost.h                         |   9 +
+ scripts/mod/sumversion.c                      |   6 +-
+ scripts/{module-common.lds => module.lds.S}   |  31 ++
+ scripts/package/builddeb                      |   2 +-
+ tools/objtool/builtin-check.c                 |  13 +-
+ tools/objtool/builtin.h                       |   2 +-
+ tools/objtool/check.c                         |  83 ++++++
+ tools/objtool/check.h                         |   1 +
+ tools/objtool/objtool.h                       |   1 +
+ 56 files changed, 906 insertions(+), 160 deletions(-)
+ rename arch/arm/{kernel/module.lds => include/asm/module.lds.h} (72%)
+ rename arch/arm64/{kernel/module.lds => include/asm/module.lds.h} (76%)
+ rename arch/ia64/{module.lds => include/asm/module.lds.h} (100%)
+ rename arch/m68k/{kernel/module.lds => include/asm/module.lds.h} (100%)
+ rename arch/powerpc/{kernel/module.lds => include/asm/module.lds.h} (100%)
+ rename arch/riscv/{kernel/module.lds => include/asm/module.lds.h} (84%)
+ create mode 100644 include/asm-generic/module.lds.h
+ create mode 100755 scripts/generate_initcall_order.pl
+ rename scripts/{module-common.lds => module.lds.S} (59%)
+
+
+base-commit: ccc1d052eff9f3cfe59d201263903fe1d46c79a5
+-- 
+2.28.0.709.gb0816b6eb0-goog
+
