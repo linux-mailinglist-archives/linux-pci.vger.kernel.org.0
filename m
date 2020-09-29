@@ -2,133 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 839C927CF05
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 15:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAA7027D14A
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Sep 2020 16:35:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbgI2NXW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Sep 2020 09:23:22 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13115 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbgI2NXW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Sep 2020 09:23:22 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f7335390005>; Tue, 29 Sep 2020 06:23:05 -0700
-Received: from [10.26.75.44] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 29 Sep
- 2020 13:22:59 +0000
-Subject: Re: [PATCH v2 0/5] PCI: dwc: improve msi handling
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        "Kevin Hilman" <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-arm-kernel@axis.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Vidya Sagar <vidyas@nvidia.com>
-References: <20200924190421.549cb8fc@xhacker.debian>
- <de4d9294-4f6d-c7d1-efc7-c8ef6570bd64@nvidia.com>
- <20200929184851.22682ff1@xhacker.debian>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <8e06a370-a37a-5f33-b43b-2830adb31b3e@nvidia.com>
-Date:   Tue, 29 Sep 2020 14:22:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1731014AbgI2OfH convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 29 Sep 2020 10:35:07 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:33844 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729299AbgI2OfH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Sep 2020 10:35:07 -0400
+X-Greylist: delayed 374 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Sep 2020 10:35:05 EDT
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-61-ZaxFTzRNPfG963eBr-HtoA-2; Tue, 29 Sep 2020 15:28:46 +0100
+X-MC-Unique: ZaxFTzRNPfG963eBr-HtoA-2
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 29 Sep 2020 15:28:43 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 29 Sep 2020 15:28:43 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sherry Sun' <sherry.sun@nxp.com>,
+        Christoph Hellwig <hch@infradead.org>
+CC:     "sudeep.dutt@intel.com" <sudeep.dutt@intel.com>,
+        "ashutosh.dixit@intel.com" <ashutosh.dixit@intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 2/4] misc: vop: do not allocate and reassign the used
+ ring
+Thread-Topic: [PATCH V2 2/4] misc: vop: do not allocate and reassign the used
+ ring
+Thread-Index: AQHWljzyKmM/fdkzH06RNY+P7PsXKql/aOeAgAAnh9CAABtZEA==
+Date:   Tue, 29 Sep 2020 14:28:43 +0000
+Message-ID: <a8a0e23c6d1044b795aa3559542d80ac@AcuMS.aculab.com>
+References: <20200929084425.24052-1-sherry.sun@nxp.com>
+ <20200929084425.24052-3-sherry.sun@nxp.com>
+ <20200929102419.GB7784@infradead.org>
+ <VI1PR04MB4960404C6A13953B137AD39B92320@VI1PR04MB4960.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB4960404C6A13953B137AD39B92320@VI1PR04MB4960.eurprd04.prod.outlook.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <20200929184851.22682ff1@xhacker.debian>
-Content-Type: text/plain; charset="utf-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1601385785; bh=O1AmZKE8e7EeFMJXiJzyuvgvP7i5Nhyk8/759La3vkU=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=PEUGx/Oto2o82hJdlAk6/ts4WMeu88gqStSAIbht98Z/IG5S7VWh+vP98HENpPGWz
-         dvi4P4CwF9nHeRHsl9AzVkrvmXIBrwVTKKBrg57TUdTtX6rbg2iu/yl/npKamfzDfN
-         bde3+rbXPUm4osMwTFyxLBEvxx/+GgYRccoic8JmGxsvmJpOdJQ499JIrzTlkZbfGy
-         uatLuKB6XhZi8NLNwtLMbP08tRGBLxw/s1yS6UBfhIRviBPwMOohoewPUOkIiYkNbc
-         kQHmRyOIchEWyKHIRxQV7sPqqZB+NDjrJDEXtUGp+aaP6iFoCKud6BERbUL3KiIhZi
-         LjHupkiehvUcg==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jisheng,
-
-On 29/09/2020 11:48, Jisheng Zhang wrote:
-> Hi Jon,
+From: Sherry Sun
+> Sent: 29 September 2020 14:02
 > 
-> On Fri, 25 Sep 2020 09:53:45 +0100 Jon Hunter wrote:
+> Hi Christoph,
 > 
->>
->> On 24/09/2020 12:05, Jisheng Zhang wrote:
->>> Improve the msi code:
->>> 1. Add proper error handling.
->>> 2. Move dw_pcie_msi_init() from each users to designware host to solve
->>> msi page leakage in resume path.  
->>
->> Apologies if this is slightly off topic, but I have been meaning to ask
->> about MSIs and PCI. On Tegra194 which uses the DWC PCI driver, whenever we
->> hotplug CPUs we see the following warnings ...
->>
->>  [      79.068351] WARNING KERN IRQ70: set affinity failed(-22).
->>  [      79.068362] WARNING KERN IRQ71: set affinity failed(-22).
->>
+> > > diff --git a/include/uapi/linux/mic_common.h
+> > > b/include/uapi/linux/mic_common.h index 504e523f702c..e680fe27af69
+> > > 100644
+> > > --- a/include/uapi/linux/mic_common.h
+> > > +++ b/include/uapi/linux/mic_common.h
+> > > @@ -56,8 +56,6 @@ struct mic_device_desc {
+> > >   * @vdev_reset: Set to 1 by guest to indicate virtio device has been reset.
+> > >   * @guest_ack: Set to 1 by guest to ack a command.
+> > >   * @host_ack: Set to 1 by host to ack a command.
+> > > - * @used_address_updated: Set to 1 by guest when the used address
+> > > should be
+> > > - * updated.
+> > >   * @c2h_vdev_db: The doorbell number to be used by guest. Set by host.
+> > >   * @h2c_vdev_db: The doorbell number to be used by host. Set by guest.
+> > >   */
+> > > @@ -67,7 +65,6 @@ struct mic_device_ctrl {
+> > >  	__u8 vdev_reset;
+> > >  	__u8 guest_ack;
+> > >  	__u8 host_ack;
+> > > -	__u8 used_address_updated;
+> > >  	__s8 c2h_vdev_db;
+> > >  	__s8 h2c_vdev_db;
+> > >  } __attribute__ ((aligned(8)));
+> >
+> > This is an ABI change.
 > 
-> I tried to reproduce this issue on Synaptics SoC, but can't reproduce it.
-> Per my understanding of the code in kernel/irq/cpuhotplug.c, this warning
-> happened when we migrate irqs away from the offline cpu, this implicitly
-> implies that before this point the irq has bind to the offline cpu, but how
-> could this happen given current dw_pci_msi_set_affinity() implementation
-> always return -EINVAL
+> Yes, it is. But I noticed that this structure is only used by the vop driver.
+> And until now I haven't seen any user tools use it, including the user tool
+> mpssd which is corresponding to the vop driver.
 
-By default the smp_affinity should be set so that all CPUs can be
-interrupted ...
+Just rename it as 'must_be_zero'.
 
-$ cat /proc/irq/70/smp_affinity
-0xff
+I've just looked at the header.
+WTF is all the __attribute__ ((aligned(8))); about?
+Someone is really trying to make it slow on anything other than x86.
+It would have been much better to ensure the structure members
+are all 'naturally aligned'.
 
-In my case there are 8 CPUs and so 0xff implies that the interrupt can
-be triggered on any of the 8 CPUs.
+I'm not sure of the usage of the mic_device_ctrl structure.
+But you really don't want to share a structure that has
+adjacent bytes written by two different entities.
+Even with coherent memory you probably should have
+separated the data by cache line.
 
-Do you see the set_affinity callback being called for the DWC irqchip in
-migrate_one_irq()?
+	David
 
-Cheers
-Jon
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
--- 
-nvpublic
