@@ -2,99 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F04CE27E077
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 07:38:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBACC27E07C
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 07:38:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725306AbgI3FgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 01:36:24 -0400
-Received: from mx.socionext.com ([202.248.49.38]:57167 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbgI3FgW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Sep 2020 01:36:22 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 30 Sep 2020 14:36:13 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 681F9180BE3;
-        Wed, 30 Sep 2020 14:36:13 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 30 Sep 2020 14:36:13 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id ED9781A0509;
-        Wed, 30 Sep 2020 14:36:12 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 4/4] PCI: keystone: Remove iATU register mapping
-Date:   Wed, 30 Sep 2020 14:36:07 +0900
-Message-Id: <1601444167-11316-5-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1601444167-11316-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1601444167-11316-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1725786AbgI3Fhb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 01:37:31 -0400
+Received: from mail-eopbgr40070.outbound.protection.outlook.com ([40.107.4.70]:30190
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725320AbgI3Fha (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 30 Sep 2020 01:37:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FGP8iRuyxnmCbV94VeTucIHJn9aJ/3yClMvGFN+3j5j8D1k8S8NQ7ka8IF3gbnYvzCH6TFiqerqULQJ9IOhKSggGDgXcgaiQtOeHneZ3JgF35kkz2Qx8UX3wkBInaSemC+FQ4oC8c9Wnuzwf5Gxvk8TCFEHOWpfaKRiCoPYI6h7PfLiVCgsNtERJVC41FGKLg8ok8s7T2j7G9AferB/4HojsRso+7x90D9QrPKHyXuKXNIK3WmBNfmTkRuyAPRYZcwMOIpLw77E8Yj+kVUUKap2AlXAcbyWhoRJ9hhBWdBIen32oMFiPgMl2inYZkW9ddXxsFxYKi6Ynyx/DcOiwMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vR24KPjNGldEpjfjrQBCtFDshzqJEHCEGnePNUe/4tI=;
+ b=cRX3zCbjO6b9M7B1sIhUR3tiaIr/rd6sCL0JpyC8GBkwr8z+a+AiswkORTXpfblWnldfYw78XXPh/pJE3LgBe6uGJ52QO4Oifvnf0NiiHQ7nnk2wVTwjMPCyiGWBjYmF8VzzCU5eXZ2u7I6PtyA2h1q7E1k6g9SAVw0/1LgiPWt+QXrllHUSk35Mmhwm65RexAydGiqYWR1KbqahrhAp0wp8ke2Ikv1oWtkY8c3xu2mHfqI0TBfDy6cAdVe9Ab6daVcnHO/7JwvEVWMW/MG3UXM01REzONUdFqFgvOZtR6/A6IXboXHrheZGVxCTlFk9gqNv6cfDT9CtfZZhwqnUNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vR24KPjNGldEpjfjrQBCtFDshzqJEHCEGnePNUe/4tI=;
+ b=WpVIyVMQJksk+/erUsS7D0FkUh1qHP3g18x3MDprp1UnRlnDN74YPTZ6/nhvOg4RQcaxtLNICZHPMyuq35duyxvoLZfzALKBAENy9kftvYbg0UcKa/XvsOMtJ4UkawKUGu3ysh7N+oF664bazUUVyHtj1ckzWk/KYElTO8byAac=
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
+ by HE1PR0401MB2457.eurprd04.prod.outlook.com (2603:10a6:3:7e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.28; Wed, 30 Sep
+ 2020 05:37:26 +0000
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::c872:d354:7cf7:deb9]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::c872:d354:7cf7:deb9%3]) with mapi id 15.20.3412.029; Wed, 30 Sep 2020
+ 05:37:25 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Change back to the default error
+ response behavior
+Thread-Topic: [PATCH] PCI: layerscape: Change back to the default error
+ response behavior
+Thread-Index: AQHWlmOUIiAVbf4g/0+1Jt3JLmBS46l/tm0AgACz4oA=
+Date:   Wed, 30 Sep 2020 05:37:25 +0000
+Message-ID: <HE1PR0402MB3371F5BAB03DABFBD63A5F3C84330@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+References: <20200929131328.13779-1-Zhiqiang.Hou@nxp.com>
+ <20200929150252.GA2540544@bjorn-Precision-5520>
+In-Reply-To: <20200929150252.GA2540544@bjorn-Precision-5520>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0a6b5171-cdab-4ff7-dd42-08d86502e9bf
+x-ms-traffictypediagnostic: HE1PR0401MB2457:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HE1PR0401MB2457ECD5FD22D955C3FCC81C84330@HE1PR0401MB2457.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1dYBOlcXbQuuAHJgZD//QQZ9PRvaZXsqaRLgYM+R1v4HqyDONI9AhSZUsADz6sFfRBGLFSZTCRgZUplmp1mS8mXVg8Hifoc95L3YdP0QGUP2sKBMn7+x8aCN5wwGWVUSr8TB+Z6oQqSZXaba7UlJweSVjgi5arMAJXy9xm6g3q7IpSKTc/yoB1Vg4Q9Abqii8FA1/h30b7+/ESRdxtZX8x/RS/DIn6Gwzf4554d3c7vLAjhEk9TfIDnwum9KhwaU/d9kM7v5kidZIG194TaM40Ev0sXrqrOEdSHONdzJxGcfmYMCGMm1o9utoQshr/pJ0SXAydX/E2v9ZI57F+w7yeAA4Cba5DHloeyyo+Hc57DHr497HbZVRdmvX4U9FZjj
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(8676002)(7696005)(9686003)(66946007)(55016002)(26005)(76116006)(6506007)(53546011)(54906003)(83380400001)(52536014)(6916009)(71200400001)(5660300002)(4326008)(316002)(186003)(86362001)(33656002)(64756008)(478600001)(8936002)(66446008)(2906002)(66476007)(66556008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hCZkQzi4h53BTygCVdsQtkWKXHbPJ/P4mwStAHKkMFo+bzVl+57FASUIQ71E5z6mjBqwQwnNjy4JEvEvCXLp9UqiDXrEUg69knQ/MWubPygCiZUyrqZeGWWx9PgHKgEiiQrw0zpC3EnKQk3dD0EtZovhAppmCteHXfMo05Z5HyNd1DLoVIyqxZje17THpj96WxWe6NvifRNTCtGz+sdZzmm3mNtWb/obYSCaJ5rHgqSBRT1XtnhluOLBrthv/TWL9sV77zPFyvmESQBCMmG52DKrl+B44IscEbbXEVMbjIl7JQDKEC2CPCjq32XM6WLASDU8S1Hr4DM+EQfmrOcwtA35eer06q2z1aeuUIQ09wu2UIow32Hs2w0OoKUixKgOqblgeyIYqOwWWFi+sHyBZ+WBax93gWKltq9GeAz3NuY3CqRYcJdq0LuzSC8SH1BHVLxOq6adoXsM7jXo0wwwoe02EYx2oRTJKNNcnc5F7D/kcZt7RH6De/ezAOWFFtDbhz63Nnze1nC2BIysmlPJ2Ljv9JfDo2IR03Haewu3CbPrt1CwtbLPKo479cYsxcdruGGrxrRFUK3ihZcFSjJpvFmiYg7ByppdoVPlEe1HO94wQcQgiFbiyTc98CS4XRZvC/H6z/4Jk9mqJKCa+FxG0Q==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a6b5171-cdab-4ff7-dd42-08d86502e9bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2020 05:37:25.6861
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JjJ04/KAlEJFN+8wdxn0LG17COmBsZQTI6XQ+k4L7d1O8HqM9XRvFxEEGXiN8GwC8LG0iNvv/FF4gXtZlkTWSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2457
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-After applying "PCI: dwc: Add common iATU register support",
-there is no need to set own iATU in the Keystone driver itself.
-
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- drivers/pci/controller/dwc/pci-keystone.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index b554812..a222728 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -1154,7 +1154,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	struct keystone_pcie *ks_pcie;
- 	struct device_link **link;
- 	struct gpio_desc *gpiod;
--	void __iomem *atu_base;
- 	struct resource *res;
- 	unsigned int version;
- 	void __iomem *base;
-@@ -1275,23 +1274,12 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 		goto err_get_sync;
- 	}
- 
--	if (pci->version >= 0x480A) {
--		atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
--		if (IS_ERR(atu_base)) {
--			ret = PTR_ERR(atu_base);
--			goto err_get_sync;
--		}
--
--		pci->atu_base = atu_base;
--
-+	if (pci->version >= 0x480A)
- 		ret = ks_pcie_am654_set_mode(dev, mode);
--		if (ret < 0)
--			goto err_get_sync;
--	} else {
-+	else
- 		ret = ks_pcie_set_mode(dev);
--		if (ret < 0)
--			goto err_get_sync;
--	}
-+	if (ret < 0)
-+		goto err_get_sync;
- 
- 	switch (mode) {
- 	case DW_PCIE_RC_TYPE:
--- 
-2.7.4
-
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxoZWxnYWFzQGtlcm5l
+bC5vcmc+DQo+IFNlbnQ6IDIwMjDE6jnUwjI5yNUgMjM6MDMNCj4gVG86IFoucS4gSG91IDx6aGlx
+aWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gcm9iaEBrZXJuZWwub3JnOyBi
+aGVsZ2Fhc0Bnb29nbGUuY29tOyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47
+IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgTWluZ2thaSBIdQ0KPiA8bWluZ2thaS5odUBu
+eHAuY29tPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0hdIFBDSTogbGF5ZXJzY2FwZTogQ2hhbmdlIGJhY2sgdG8gdGhlIGRlZmF1bHQgZXJyb3INCj4g
+cmVzcG9uc2UgYmVoYXZpb3INCj4gDQo+IE9uIFR1ZSwgU2VwIDI5LCAyMDIwIGF0IDA5OjEzOjI4
+UE0gKzA4MDAsIFpoaXFpYW5nIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpo
+aXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gSW4gdGhlIGN1cnJlbnQgZXJyb3IgcmVzcG9u
+c2UgYmVoYXZpb3IsIGl0IHdpbGwgc2VuZCBhIFNMVkVSUiByZXNwb25zZQ0KPiA+IHRvIGRldmlj
+ZSdzIGludGVybmFsIEFYSSBzbGF2ZSBzeXN0ZW0gaW50ZXJmYWNlIHdoZW4gdGhlIFBDSWUNCj4g
+PiBjb250cm9sbGVyIGV4cGVyaWVuY2VzIGFuIGVycm9uZW91cyBjb21wbGV0aW9uIChVUiwgQ0Eg
+YW5kIENUKSBmcm9tIGFuDQo+ID4gZXh0ZXJuYWwgY29tcGxldGVyIGZvciBpdHMgb3V0Ym91bmQg
+bm9uLXBvc3RlZCByZXF1ZXN0LCB3aGljaCB3aWxsDQo+ID4gcmVzdWx0IGluIFNFcnJvciBhbmQg
+Y3Jhc2ggdGhlIGtlcm5lbCBkaXJlY3RseS4NCj4gDQo+IFBvc3NpYmxlIHdvcmRpbmc6DQo+IA0K
+PiAgIEFzIGN1cnJlbnRseSBjb25maWd1cmVkLCB3aGVuIHRoZSBQQ0llIGNvbnRyb2xsZXIgcmVj
+ZWl2ZXMgYQ0KPiAgIENvbXBsZXRpb24gd2l0aCBVUiBvciBDQSBzdGF0dXMsIG9yIGEgQ29tcGxl
+dGlvbiBUaW1lb3V0IG9jY3VycywgaXQNCj4gICBzZW5kcyBhIFNMVkVSUiByZXNwb25zZSB0byB0
+aGUgaW50ZXJuYWwgQVhJIHNsYXZlIHN5c3RlbSBpbnRlcmZhY2UsDQo+ICAgd2hpY2ggcmVzdWx0
+cyBpbiBTRXJyb3IgYW5kIGEga2VybmVsIGNyYXNoLg0KPiANCj4gUGxlYXNlIGFkZCBhIGJsYW5r
+IGxpbmUgYmV0d2VlbiBwYXJhZ3JhcGhzLCBhbmQgcy9UaGlzIHBhdGNoIGNoYW5nZSBiYWNrDQo+
+IGl0L0NoYW5nZSBpdC8gYmVsb3cuDQo+IA0KPiA+IFRoaXMgcGF0Y2ggY2hhbmdlIGJhY2sgaXQg
+dG8gdGhlIGRlZmF1bHQgYmVoYXZpb3IgdG8gaW5jcmVhc2UgdGhlDQo+ID4gcm9idXN0bmVzcyBv
+ZiB0aGUga2VybmVsLiBJbiB0aGUgZGVmYXVsdCBiZWhhdmlvciwgaXQgYWx3YXlzIHNlbmRzIGFu
+DQo+ID4gT0tBWSByZXNwb25zZSB0byB0aGUgaW50ZXJuYWwgQVhJIHNsYXZlIGludGVyZmFjZSB3
+aGVuIHRoZSBjb250cm9sbGVyDQo+ID4gZ2V0cyB0aGVzZSBlcnJvbmVvdXMgY29tcGxldGlvbnMu
+IEFuZCB0aGUgQUVSIGRyaXZlciB3aWxsIHJlcG9ydCBhbmQNCj4gPiB0cnkgdG8gcmVjb3ZlciB0
+aGVzZSBlcnJvcnMuDQo+IA0KPiBUaGlzIHJldmVydHMgODRkODk3ZDY5OTM4ICgiUENJOiBsYXll
+cnNjYXBlOiBDaGFuZ2UgZGVmYXVsdCBlcnJvciByZXNwb25zZQ0KPiBiZWhhdmlvciIpLCBzbyBw
+bGVhc2UgbWVudGlvbiB0aGF0IGluIHRoZSBjb21taXQgbG9nLCBwcm9iYWJseSBhczoNCj4gDQo+
+IEZpeGVzOiA4NGQ4OTdkNjk5MzggKCJQQ0k6IGxheWVyc2NhcGU6IENoYW5nZSBkZWZhdWx0IGVy
+cm9yIHJlc3BvbnNlDQo+IGJlaGF2aW9yIikNCj4gDQo+IE1heWJlIGl0IGFsc28gbmVlZHMgYSBz
+dGFibGUgdGFnLCBlLmcuLCB2NC4xNSs/DQoNClRoYW5rcyBmb3IgeW91ciBnb29kIHN1Z2dlc3Rp
+b25zISBXaWxsIGZpeCBpbiB2Mi4NCg0KPiANCj4gU2luY2UgdGhpcyBpcyBhIHB1cmUgcmV2ZXJ0
+LCB3aGF0ZXZlciBwcm9ibGVtIDg0ZDg5N2Q2OTkzOCBmaXhlZCBtdXN0IG5vdw0KPiBiZSBmaXhl
+ZCBpbiBzb21lIG90aGVyIHdheS4gIE90aGVyd2lzZSwgdGhpcyByZXZlcnQgd291bGQganVzdCBi
+ZQ0KPiByZWludHJvZHVjaW5nIHRoZSBwcm9ibGVtIGZpeGVkIGJ5IDg0ZDg5N2Q2OTkzOC4NCj4g
+DQo+IFRoaXMgY29tbWl0IGxvZyBzaG91bGQgbWVudGlvbiB0aGF0IHdoYXQgdGhhdCBvdGhlciBm
+aXggaXMuDQo+IA0KPiBBRVIgaXMgb25seSBhIHJlcG9ydGluZyBtZWNoYW5pc20sIGl0IGlzIGFz
+eW5jaHJvbm91cyB0byB0aGUgaW5zdHJ1Y3Rpb24NCj4gc3RyZWFtLCBhbmQgaXQncyBvcHRpb25h
+bCAobWF5IG5vdCBiZSBpbXBsZW1lbnRlZCBpbiB0aGUgaGFyZHdhcmUsIGFuZCBtYXkNCj4gbm90
+IGJlIHN1cHBvcnRlZCBieSB0aGUga2VybmVsKSwgc28gSSdtIG5vdCBzdXBlciBjb252aW5jZWQg
+dGhhdCBpdCBjYW4gYmUgdGhlDQo+IGFuc3dlciB0byB0aGlzIHByb2JsZW0uDQo+DQoNClRoZSBj
+b21taXQgODRkODk3ZDY5OTM4ICgiUENJOiBsYXllcnNjYXBlOiBDaGFuZ2UgZGVmYXVsdCBlcnJv
+ciByZXNwb25zZSBiZWhhdmlvciIpIGRvZXNuJ3QgZml4IGFueSBpc3N1ZSwgaXQganVzdCBlbmFi
+bGUgYSBmZWF0dXJlIG9mIERlc2lnbldhcmUgUENJZSBJUCB0aGF0IGl0IGFsbG93cyBlcnJvciBy
+ZXNwb25zZSB0byBBWEkgc2xhdmUgaW50ZXJmYWNlLCB3aGljaCBhcmUgbm90IGVuYWJsZWQgb24g
+YWxsIG90aGVyIHBsYXRmb3JtcyB3aXRoIERXQyBJUC4gQXMgbWVudGlvbmVkIGluIHRoYXQgY29t
+bWl0IGl0IHdpbGwgYWxzbyBzZW5kIGFuIE9LQVkgcmVzcG9uc2UgdG8gQVhJIHNsYXZlIGludGVy
+ZmFjZSBmb3IgZXJyb25lb3VzIGNvbXBsZXRpb24gb2Ygbm9uLXBvc3QgdHJhbnNhY3Rpb24gaW5j
+bHVkaW5nIENGRyBhbmQgTUVNX3JkIHRyYW5zYWN0aW9ucywgaG93ZXZlciB1cHN0cmVhbSB3b24n
+dCBzdXBwb3J0IGZvciBwbGF0Zm9ybXMgYWJvcnRpbmcgb24gQ0ZHIGFjY2Vzc2VzLCBzbyB3ZSBo
+YXZlIHRvIGNoYW5nZSBpdCBiYWNrIHRvIHRoZSBkZWZhdWx0IGVycm9yIHJlc3BvbnNlIGJlaGF2
+aW9yIGFuZCBiZWFyIHRoZSBlcnJvciBvZiBNRU1fcmQgaXNuJ3QgZm9yd2FyZGVkLCBqdXN0IGxp
+a2Ugb3RoZXIgRFdDIElQIHBsYXRmb3Jtcy4NCg0KSSByZW1lbWJlciB0aGUgU0Vycm9yIGludGVy
+cnVwdCBtZWNoYW5pc20gaXMgYWxzbyBhc3luY2hyb25vdXMgYWJvcnQgYW5kIGl0IGlzIG9ubHkg
+YSByZXBvcnRpbmcgbWVjaGFuaXNtLiBDb250cmFzdCB3aXRoIHRoZSBBRVIsIGl0IHdpbGwgbWFr
+ZSB0aGUga2VybmVsIGNyYXNoLiBTbyBib3RoIG9mIHRoZXNlIDIgbWVjaGFuaXNtIGNhbm5vdCBl
+bnN1cmUgdGhlIGRhdGEgaW50ZWdyaXR5LCBnZW5lcmFsbHkgdGhlIHVwcGVyIGxheWVyIGRhdGEg
+dHJhbnNmZXIgcHJvdG9jb2wgaGFzIGl0cyBvd24gbWVjaGFuaXNtIHRvIGVuc3VyZSB0aGUgZGF0
+YSBpbnRlZ3JpdHksIGl0J3Mgbm90IGEgaXNzdWUgZm9yIGFsbW9zdCB1c2Vycy4gSWYgb25lIHJl
+YWxseSB3YW50cyBhIGtlcm5lbCBjcmFzaCB3aGVuIHRoZXJlIGlzIGVycm9yIG9mIE1FTV9yZCwg
+aGUgY2FuIGVuYWJsZSB0aGlzIGluIGhpcyBsb2NhbCBjb2RlLg0KDQpUaGFua3MsDQpaaGlxaWFu
+Zw0KIA0KPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5j
+b20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNj
+YXBlLmMgfCAxMSAtLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTEgZGVsZXRpb25z
+KC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNp
+LWxheWVyc2NhcGUuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVy
+c2NhcGUuYw0KPiA+IGluZGV4IGYyNGY3OWE3MGQ5YS4uZTkyYWI4YTc3MDQ2IDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gPiAr
+KysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4gQEAg
+LTMwLDggKzMwLDYgQEANCj4gPg0KPiA+ICAvKiBQRVggSW50ZXJuYWwgQ29uZmlndXJhdGlvbiBS
+ZWdpc3RlcnMgKi8NCj4gPiAgI2RlZmluZSBQQ0lFX1NUUkZNUjEJCTB4NzFjIC8qIFN5bWJvbCBU
+aW1lciAmIEZpbHRlciBNYXNrDQo+IFJlZ2lzdGVyMSAqLw0KPiA+IC0jZGVmaW5lIFBDSUVfQUJT
+RVJSCQkweDhkMCAvKiBCcmlkZ2UgU2xhdmUgRXJyb3IgUmVzcG9uc2UNCj4gUmVnaXN0ZXIgKi8N
+Cj4gPiAtI2RlZmluZSBQQ0lFX0FCU0VSUl9TRVRUSU5HCTB4OTQwMSAvKiBGb3J3YXJkIGVycm9y
+IG9mDQo+IG5vbi1wb3N0ZWQgcmVxdWVzdCAqLw0KPiA+DQo+ID4gICNkZWZpbmUgUENJRV9JQVRV
+X05VTQkJNg0KPiA+DQo+ID4gQEAgLTEyMywxNCArMTIxLDYgQEAgc3RhdGljIGludCBsc19wY2ll
+X2xpbmtfdXAoc3RydWN0IGR3X3BjaWUgKnBjaSkNCj4gPiAgCXJldHVybiAxOw0KPiA+ICB9DQo+
+ID4NCj4gPiAtLyogRm9yd2FyZCBlcnJvciByZXNwb25zZSBvZiBvdXRib3VuZCBub24tcG9zdGVk
+IHJlcXVlc3RzICovIC1zdGF0aWMNCj4gPiB2b2lkIGxzX3BjaWVfZml4X2Vycm9yX3Jlc3BvbnNl
+KHN0cnVjdCBsc19wY2llICpwY2llKSAtew0KPiA+IC0Jc3RydWN0IGR3X3BjaWUgKnBjaSA9IHBj
+aWUtPnBjaTsNCj4gPiAtDQo+ID4gLQlpb3dyaXRlMzIoUENJRV9BQlNFUlJfU0VUVElORywgcGNp
+LT5kYmlfYmFzZSArIFBDSUVfQUJTRVJSKTsNCj4gPiAtfQ0KPiA+IC0NCj4gPiAgc3RhdGljIGlu
+dCBsc19wY2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9wb3J0ICpwcCkgIHsNCj4gPiAgCXN0cnVj
+dCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fcHAocHApOyBAQCAtMTQyLDcgKzEzMiw2
+IEBADQo+ID4gc3RhdGljIGludCBsc19wY2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9wb3J0ICpw
+cCkNCj4gPiAgCSAqIGR3X3BjaWVfc2V0dXBfcmMoKSB3aWxsIHJlY29uZmlndXJlIHRoZSBvdXRi
+b3VuZCB3aW5kb3dzLg0KPiA+ICAJICovDQo+ID4gIAlsc19wY2llX2Rpc2FibGVfb3V0Ym91bmRf
+YXR1cyhwY2llKTsNCj4gPiAtCWxzX3BjaWVfZml4X2Vycm9yX3Jlc3BvbnNlKHBjaWUpOw0KPiA+
+DQo+ID4gIAlkd19wY2llX2RiaV9yb193cl9lbihwY2kpOw0KPiA+ICAJbHNfcGNpZV9jbGVhcl9t
+dWx0aWZ1bmN0aW9uKHBjaWUpOw0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
