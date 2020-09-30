@@ -2,101 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E72227F585
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 00:51:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAED827F5CB
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 01:18:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731899AbgI3Wv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 18:51:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59750 "EHLO mail.kernel.org"
+        id S1732132AbgI3XPh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 19:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731808AbgI3Wv4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Sep 2020 18:51:56 -0400
+        id S1732129AbgI3XP3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 30 Sep 2020 19:15:29 -0400
 Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C272F20719;
-        Wed, 30 Sep 2020 22:51:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2010C2076A;
+        Wed, 30 Sep 2020 23:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601506316;
-        bh=KFmouRsvBVZ3Y/PYT9xJnwdLHua2k27n0cu1H9BZ6l8=;
+        s=default; t=1601507729;
+        bh=id6jYAcbj7ZDrxFxqLcRs6IFIMcf4bKjBStxpZA2N+w=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ErCOiYuE3T/ukx2QVvOYx3P0p85+8zd+cviA6M2gceIzSfDLjPA9npAn6qBYwnZ64
-         D8WZF8dQV6bbmloxOP+jC9nRt+BSSIUUmr/oIZ34jAPvXpKNwOIl5kUOFbSrvWE/mR
-         Z4k8wm4xr98IWOFHxbMljjMiI7xM95LPcjIeY/qk=
-Date:   Wed, 30 Sep 2020 17:51:54 -0500
+        b=Um83YSRn19ZPpvkuiuawCz4za9l/koOnvdBkAMvR9fA1Pszm26T6ciJ/ASIYYDPO+
+         hCAWgBLuXHHbVB1BOVAKCrq5nTwSWMzrNtpx/MQd6qLx1FaqyePqol3TAXRwtk4ARX
+         G2a0G1DO4+pAxtJTKC9cOWS8scHSXIR8wgR8K9qw=
+Date:   Wed, 30 Sep 2020 18:15:27 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        Samuel Dionne-Riel <samuel@dionne-riel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] of: address: Work around missing device_type property
- in pcie nodes
-Message-ID: <20200930225154.GA2631019@bjorn-Precision-5520>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] PCI/PM: Fix D2 transition delay
+Message-ID: <20200930231527.GA2645760@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_Jsq+xBKbYXWipwmZ=ZidorsMUFDw2NpUyxobx4FCTn+8Hmg@mail.gmail.com>
+In-Reply-To: <20200929194748.2566828-1-helgaas@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 03:34:10PM -0500, Rob Herring wrote:
-> On Wed, Sep 30, 2020 at 12:37 PM Niklas Söderlund
-> <niklas.soderlund@ragnatech.se> wrote:
-> >
-> > Hi Marc,
-> >
-> > On 2020-09-30 18:23:21 +0100, Marc Zyngier wrote:
-> > > Hi Niklas,
-> > >
-> > > [+ Samuel]
-> > >
-> > > On 2020-09-30 17:27, Niklas Söderlund wrote:
-> > > > Hi Marc,
-> > > >
-> > > > I'm afraid this commit breaks booting my rk3399 device.
-> > > >
-> > > > I bisected the problem to this patch merged as [1]. I'm testing on a
-> > > > Scarlet device and I'm using the unmodified upstream
-> > > > rk3399-gru-scarlet-inx.dtb for my tests.
-> > > >
-> > > > The problem I'm experience is a black screen after the bootloader and
-> > > > the device is none responsive over the network. I have no serial console
-> > > > to this device so I'm afraid I can't tell you if there is anything
-> > > > useful on to aid debugging there.
-> > > >
-> > > > If I try to test one commit earlier [2] the system boots as expected and
-> > > > everything works as it did for me in v5.8 and earlier. I have worked
-> > > > little with this device and have no clue about what is really on the PCI
-> > > > buss. But running from [2] I have this info about PCI if it's helpful,
-> > > > please ask if somethings missing.
-> > >
-> > > Please see the thread at [1]. The problem was reported a few weeks back
-> > > by Samuel, and I was expecting Rob and Lorenzo to push a fix for this.
-> >
-> > Thanks for providing a solution.
-> >
-> > >
-> > > Rob, Lorenzo, any update on this?
+On Tue, Sep 29, 2020 at 02:47:46PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> The fix is in Bjorn's tree[1].
+> Remove an unused #define.
 > 
-> Bjorn, going to send this to Linus before v5.9 is out?
+> Fix the D2 transition delay.  I changed this a year ago to conform to the
+> PCIe r5.0 spec, but I think the number I relied on is a typo in the spec.
+> I asked the PCI-SIG to fix the typo.  Hopefully I'll get a response before
+> the merge window.
+> 
+> Bjorn Helgaas (2):
+>   PCI/PM: Remove unused PCI_PM_BUS_WAIT
+>   PCI/PM: Revert "PCI/PM: Apply D2 delay as milliseconds, not
+>     microseconds"
+> 
+>  drivers/pci/pci.c | 2 +-
+>  drivers/pci/pci.h | 7 +++----
+>  2 files changed, 4 insertions(+), 5 deletions(-)
 
-Definitely, thanks for the reminder.  I'm assuming the fix in question
-is https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=for-linus&id=e338eecf3fe79054e8a31b8c39a1234b5acfdabe
-
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=for-linus
+Applied with Rafael's reviewed-by to pci/pm for v5.10.  Subject to
+revision based on feedback from the PCI-SIG, of course.
