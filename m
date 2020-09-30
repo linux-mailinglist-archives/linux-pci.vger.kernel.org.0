@@ -2,61 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A6FD27F4CC
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 00:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B9C827F4E0
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 00:11:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbgI3WGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 18:06:11 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:54099 "EHLO
+        id S1730090AbgI3WLR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 18:11:17 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:50213 "EHLO
         wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730470AbgI3WGL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 18:06:11 -0400
-X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Wed, 30 Sep 2020 18:06:10 EDT
+        by vger.kernel.org with ESMTP id S1728721AbgI3WLR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 18:11:17 -0400
 Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailnew.west.internal (Postfix) with ESMTP id 6332CFA8;
-        Wed, 30 Sep 2020 17:58:37 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Wed, 30 Sep 2020 17:58:38 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 368A7A5C;
+        Wed, 30 Sep 2020 18:03:26 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Wed, 30 Sep 2020 18:03:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         oregontracks.org; h=from:to:cc:subject:date:message-id
-        :in-reply-to:references:mime-version:content-transfer-encoding;
-         s=fm1; bh=/xGcW+2xAAEsf/UaEloN+2L6gVCe1zrPoKRx2oQPxk8=; b=obg8P
-        sTD4cEaJF/WeqYFoFH5ceVw1F2SukZeG1AtgtaB29wUUzG84cqyG8wU7eagagsD2
-        uQ0UL2XohXn4LnLIhMdvpQkbhQR9ux992wLeDmhNmTi1aPCp7nk669BwYiQvz6su
-        SpB9uwLZqJ4W1Few4MupkzvJDm6SONjotSXyWgm17VIySDsUt0o0yfh2YRTMWVrB
-        TT320xRSZYJUk4mXR5P0wsW9BnZZ8tZYBkpTU9mW0H+T19xT2HXXdpo1quY7cKFD
-        +MEfyvA+AOxcTafDutl5Om06FEqgVxFKP9mrKw4wZj1vi+ekElhVW8a31Ec++y3d
-        UmUF5Vv/ySXCaBg4A==
+        :mime-version:content-transfer-encoding; s=fm1; bh=/xGcW+2xAAEsf
+        /UaEloN+2L6gVCe1zrPoKRx2oQPxk8=; b=ffshd02Aa9gP/2kfJSpH+WGaF3mI2
+        ix6IvpSlzUNj4wJKAmnwJWtjDE4aPf77hME6rgM1qb6/cqqaDBMjfv36nrSXPLd4
+        LkVhkATM20KQlIArc0vLxQIS4ovpXp7ohlYCQdGG/rfJpIXc5ekIgaTDeLBSBeRc
+        C+ysJ8mmR/LinEd3/9qVsEqFCDyZtG8SuD+lcCW1dcLszQsoLpBNJrtIsviKKbOy
+        xnrtHKSb61heYZYc/3CC/GEFwPORaOdRmvDhmRJNT02dAtde8w42tbetjjFCTLt5
+        fnOVPPoUuVLqzm3CawcCxI3Q+2O/7txs4BQFo3VFPWCLoFXywVN8FU5Tw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=/xGcW+2xAAEsf/UaEloN+2L6gVCe1zrPoKRx2oQPxk8=; b=t5/QPJIi
-        eWPAhsxdFoMd178j9GIjuhsnF5IHegtY3EEiYf6SYjq/tlasZ+gvod/Lw5/91fVF
-        pBEMjmEH/eZdUWaJqsHNn0qazwBvBWukWYmep46aoJ8bp+dY7RqL4PiBT6rMOEnV
-        U/eD5y5ZY97F5mZlxMijyNaT6v4yToxO1WmDETEO8SQ76sZXn3dW3aut9+JKBJX2
-        jAsn5A+eQdosxaq39zv8Xzba0K6AnKVJ06sAMPp8/B2wmO2R1RaZzpIOc5wkFmRX
-        B3e3hkvxaMf4C34dEy1pOoqazdQJXp47m5cCQOqEX8NS5EJSvxSPBRs+lGVi/DM/
-        dcu6fOQzXsdYLw==
-X-ME-Sender: <xms:jP90X6HhbIHIxWoLLYEitb9qoTjiFt7oVI6xouProFFjqBoIm6axGA>
-    <xme:jP90X7XTdNT5XmweJKIswdTWRLlGjjeFDlQ1eoostjJkBlfqZLO7CPdDpdpYt_eUG
-    xaaYaDMJjvngCUx>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrfeefgddthecutefuodetggdotefrodftvf
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/xGcW+2xAAEsf/UaE
+        loN+2L6gVCe1zrPoKRx2oQPxk8=; b=jYQRLFnqlHlwFDXL19/5I4psQUSgB2mKf
+        yVx37Ou+ODqRs0SNNopMH8QLkspoY61czdTPqA5HFNau9Dm5u7hpRhM1mGFr3hFh
+        RVVJRkFHiOJc5K2xUiicukdSIZWv6FMHPsPR5I0k0H2A3ercaW5twzQoh3oRDpa4
+        2q3oSmYoHquI5q1xYEjTVyBSmWLuEfHKiv99TqUEd1XVGh3Fasy8ssO/pXC2Wo7d
+        PxJCn8jnfD7Rsc7R+KIlJDPOnenE5QOMLKQWHGlbcBNRsOJXQbDy3QfXC0wls/tS
+        VEB0/mXgXslAAVOeL762OB8I1ruJ0mRdozWjRL6QPybPXEGiuVdUw==
+X-ME-Sender: <xms:rQB1X4SabvPJSvFPNC8HFCzx-v3Q9QUFw0YMcXO9CedvSGg4dEUIww>
+    <xme:rQB1X1x-kDa1TODm6lj8oj62U1MXc2Bpfvx0p4psQu4Mc66CKX6OyYUgcia3nB9c9
+    fl79B3SYwD9SLAS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrfeefgddtiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgvrghnucgg
-    ucfmvghllhgvhicuoehsvggrnhhvkhdruggvvhesohhrvghgohhnthhrrggtkhhsrdhorh
-    hgqeenucggtffrrghtthgvrhhnpeehkeffteeiudeiffelkeelvefftdelhfeitdeigeff
-    leeufedvgfegvdefvedtteenucfkphepvdegrddvtddrudegkedrgeelnecuvehluhhsth
-    gvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepshgvrghnvhhkrdguvghv
-    sehorhgvghhonhhtrhgrtghkshdrohhrgh
-X-ME-Proxy: <xmx:jP90X0IaL4SSnS3BB7RqlwfwgeNFHj-MCnfY9a2mZEcafgVW0JAnoA>
-    <xmx:jP90X0HmYE_0zM-VNdBClVy8lr0DtA03m9xBwNmEjvN-cQV2NgXdcw>
-    <xmx:jP90XwU0ULk2pHo0zpdJ4sB6yB1Rkr15izmbu-fn8CuEyhAsrgAxqw>
-    <xmx:jf90X0oXwcu4y8JrV53hSFUKLUnslfTgczV-rXRne3twEy3AH5IZ-vWj_RE>
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgvrghnucggucfm
+    vghllhgvhicuoehsvggrnhhvkhdruggvvhesohhrvghgohhnthhrrggtkhhsrdhorhhgqe
+    enucggtffrrghtthgvrhhnpeffledtueeihfehlefhgeefheejvefgteevhfefheffhfeu
+    uddvudfffeekteeiudenucfkphepvdegrddvtddrudegkedrgeelnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgvrghnvhhkrdguvghvseho
+    rhgvghhonhhtrhgrtghkshdrohhrgh
+X-ME-Proxy: <xmx:rQB1X13NPEnR104hDj0BAXDlMRD6P5hbJAxpweuXlZu9GIwCwxJDWQ>
+    <xmx:rQB1X8BqBAwwm8B-cfT9Z4exyGaIMq9EEgxqSlRCWm-JoSTSsO8V5Q>
+    <xmx:rQB1Xxi4DTvOc96-8lV26ZMK0Gs1-KaN_kmRowqW7bXwZNcNeRnZyg>
+    <xmx:rQB1XyXH3Tc8PULt21H9jVgFDtY4nsIs8ja7uj9mr6-a0AxPvkLFLNlppW0>
 Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7B4B13280059;
-        Wed, 30 Sep 2020 17:58:35 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2F7A83064682;
+        Wed, 30 Sep 2020 18:03:23 -0400 (EDT)
 From:   Sean V Kelley <seanvk.dev@oregontracks.org>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rafael.j.wysocki@intel.com, ashok.raj@intel.com,
@@ -66,11 +63,9 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sean V Kelley <sean.v.kelley@intel.com>,
         Bjorn Helgaas <helgaas@google.com>
 Subject: [PATCH v7 04/13] PCI/ERR: Rename reset_link() to reset_subordinate_device()
-Date:   Wed, 30 Sep 2020 14:58:11 -0700
-Message-Id: <20200930215820.1113353-5-seanvk.dev@oregontracks.org>
+Date:   Wed, 30 Sep 2020 15:03:16 -0700
+Message-Id: <20200930220316.1113655-1-seanvk.dev@oregontracks.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200930215820.1113353-1-seanvk.dev@oregontracks.org>
-References: <20200930215820.1113353-1-seanvk.dev@oregontracks.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
