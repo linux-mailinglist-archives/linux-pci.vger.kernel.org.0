@@ -2,96 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C99B27F496
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 23:57:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29B9C27F497
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 23:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbgI3V5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 17:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45942 "EHLO
+        id S1730470AbgI3V6N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 17:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730470AbgI3V5Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 17:57:25 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1D2C061755;
-        Wed, 30 Sep 2020 14:57:24 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1601503043;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aE8dC9I5iKTJGv2hkvbLLzQFcBGFHFP/7J2ECzWs5Rw=;
-        b=pwA8eJ1rz8WzO5MjZ1Kay52a8lgyypTxazoN9apYsq1+TD9DLP3zkX1BxEX0ZtiDdON2Lc
-        hUfS1vRc7hVo4qZLyDGKLtJ9hhgRsQxPnfIYQupptsbwrXv1Gq6MoXc3rvZSfhVzmOfiMe
-        J6mqjT66RmVTPDCQjDuuI3ITS5kS7SqqRvRvJGPkAQfwLLf3qZimT3K220ebxVy2XWjAci
-        UOt0XFMLKwXiiNiMZ9Kxcdgi7kez/7I1a0csTVt6iiZ1yZUM3O7Sl6T2dYvxnBaaf3WLkM
-        1n8G7Hawr2WoTXuJLX/6huBPe8QudF4g4Mvg2gSCk7kbLP/cMkmt2B0GWl+ccg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1601503043;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aE8dC9I5iKTJGv2hkvbLLzQFcBGFHFP/7J2ECzWs5Rw=;
-        b=2sMwS7zfROc6xXIExg1b0iGDgg6gLNAfMrWZJRgLHJh4Y4JThgs/2h59DehPhq2BLB2Xq1
-        yY1wK5ZMHUg9ICBw==
-To:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
-        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        dan.j.williams@intel.com, kwankhede@nvidia.com,
-        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
-        netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v3 05/18] dmaengine: idxd: add IMS support in base driver
-In-Reply-To: <20200930214941.GB26492@otc-nc-03>
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com> <160021248979.67751.3799965857372703876.stgit@djiang5-desk3.ch.intel.com> <87sgazgl0b.fsf@nanos.tec.linutronix.de> <20200930185103.GT816047@nvidia.com> <20200930214941.GB26492@otc-nc-03>
-Date:   Wed, 30 Sep 2020 23:57:22 +0200
-Message-ID: <87d023gc71.fsf@nanos.tec.linutronix.de>
+        with ESMTP id S1730117AbgI3V6M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 17:58:12 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0A1C0613D1
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 14:58:12 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s31so2067001pga.7
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 14:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t4yHwQDoeC7Qpj3w+ohiUiQzIr7R18uaPZSHZDC/wBA=;
+        b=LHz9Zcam7CeKHZ2FruDPRDuY0e07YHSqVvGalfh32T3Fuffnt2bHgr5rwgpKJmywr5
+         vYYvj2pj3Prw08WL6qW4WlpRdEOLUCrT+9hncLjFVN1Ft8Md5FT+cXeVzwCbCclkl92o
+         hiVEXzmM9WAhHeXPsScWmhH08ZPlqMeItatEG49WX1OQPxwmMQyfc2iYMB/Z7txm5yp9
+         RRa0vfTlhSB0oEdLv191LDpEXlrqdDLR97VB59MmnkaiwZ4LOuqrpJLUtPF1GuZMwqmk
+         sGSI3yP3GaxL9/tqCvhaOlXgx1uB7P44MkrgKvdzV+0gcVnwItyMO1mDDu9EjVXS5h+m
+         ERsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t4yHwQDoeC7Qpj3w+ohiUiQzIr7R18uaPZSHZDC/wBA=;
+        b=nrKRv2x6ORPy9TSfWhy3hMd3V0PaoVVdh4FH7ZFQy8NR7ChhaETZAkMevNZNuAF/58
+         rEsvq3UkcNI27FBnr4mu/B6rw5L586xlel0JjdDwbK0KkydtNIUINQf9vGU6YBP2SsJe
+         TZt2wvsGSXIi5ZbN3AeViwMRF5qCEhKIUmWtHqX5A9Y4TFoCoR5TJhGAHOJiVPP+l1W2
+         d3ovfNt6A4kAGUGAG/uC6N400RqoNFZmwpn1FrfPsNwJiNNN4ht1513P/ZlhcWFhpCcs
+         Pwye9lZZI744FBUaa9+Ap6zldreaW15gaz3c4bMhHuYi1vQpP+xRZGtTtCA7RLE1roof
+         jSZA==
+X-Gm-Message-State: AOAM533KZU6thlY9YryMfwwZUrEFaCbqHxlm65/f17qUSlIGzJ69s9Wo
+        lqI1vmtgiLUA3kCh/kbUxFyONeEklsGktHuQv8XlFw==
+X-Google-Smtp-Source: ABdhPJwzX9Viqx7zQJehaAJaWpHju7adBUzL4TnFBbDcXOlCvSY7YI0nAchHwIA2JZ5jrnbbiiAg20J+xNYGNfRzTkU=
+X-Received: by 2002:a17:902:c40d:b029:d2:93e8:1f4b with SMTP id
+ k13-20020a170902c40db02900d293e81f4bmr4327278plk.29.1601503091998; Wed, 30
+ Sep 2020 14:58:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200929214631.3516445-1-samitolvanen@google.com>
+In-Reply-To: <20200929214631.3516445-1-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 30 Sep 2020 14:58:00 -0700
+Message-ID: <CAKwvOdnYBkUx9YpY9XLONbNYFD7JrOfGbRFQ8ZTf-sa2GTgQdQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/29] Add support for Clang LTO
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 30 2020 at 14:49, Ashok Raj wrote:
->> It is the weirdest thing, IMHO. Intel defined a dvsec cap in their
->> SIOV cookbook, but as far as I can see it serves no purpose at
->> all.
->> 
->> Last time I asked I got some unclear mumbling about "OEMs".
->> 
-> One of the parameters it has is the "supported system page-sizes" which is
-> usually there in the SRIOV properties. So it needed a place holder for
-> that. 
+On Tue, Sep 29, 2020 at 2:46 PM Sami Tolvanen <samitolvanen@google.com> wrote:
 >
-> IMS is a device specific capability, and I almost forgot why we needed
-> until I had to checking internally. Remember when a device is given to a
-> guest, MSIX routing via Interrupt Remapping is automatic via the VFIO/IRQFD
-> and such.
+> This patch series adds support for building x86_64 and arm64 kernels
+> with Clang's Link Time Optimization (LTO).
+>
+> In addition to performance, the primary motivation for LTO is
+> to allow Clang's Control-Flow Integrity (CFI) to be used in the
+> kernel. Google has shipped millions of Pixel devices running three
+> major kernel versions with LTO+CFI since 2018.
+>
+> Most of the patches are build system changes for handling LLVM
+> bitcode, which Clang produces with LTO instead of ELF object files,
+> postponing ELF processing until a later stage, and ensuring initcall
+> ordering.
 
--ENOPARSE
+Sami, thanks for continuing to drive the series. I encourage you to
+keep resending with fixes accumulated or dropped on a weekly cadence.
 
-> When we provision an entire PCI device that is IMS capable. The guest
-> driver does know it can update the IMS entries directly without going to
-> the host. But in order to do remapping we need something like how we manage
-> PASID allocation from guest, so an IRTE entry can be allocated and the host
-> driver can write the proper values for IMS.
+The series worked well for me on arm64, but for x86_64 on mainline I
+saw a stream of new objtool warnings:
 
-And how is that related to that capbility thing?
+testing your LTO series; x86_64 defconfig + CONFIG_THINLTO:
+``` LTO vmlinux.o OBJTOOL vmlinux.o vmlinux.o: warning: objtool:
+wakeup_long64()+0x61: indirect jump found in RETPOLINE build
+vmlinux.o: warning: objtool: .text+0x308a: indirect jump found in
+RETPOLINE build vmlinux.o: warning: objtool: .text+0x30c5: indirect
+jump found in RETPOLINE build vmlinux.o: warning: objtool:
+copy_user_enhanced_fast_string() falls through to next function
+copy_user_generic_unrolled() vmlinux.o: warning: objtool:
+__memcpy_mcsafe() falls through to next function mcsafe_handle_tail()
+vmlinux.o: warning: objtool: memset() falls through to next function
+memset_erms() vmlinux.o: warning: objtool: __memcpy() falls through to
+next function memcpy_erms() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_rax() falls through to next function
+__x86_retpoline_rax() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_rbx() falls through to next function
+__x86_retpoline_rbx() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_rcx() falls through to next function
+__x86_retpoline_rcx() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_rdx() falls through to next function
+__x86_retpoline_rdx() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_rsi() falls through to next function
+__x86_retpoline_rsi() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_rdi() falls through to next function
+__x86_retpoline_rdi() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_rbp() falls through to next function
+__x86_retpoline_rbp() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r8() falls through to next function
+__x86_retpoline_r8() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r9() falls through to next function
+__x86_retpoline_r9() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r10() falls through to next function
+__x86_retpoline_r10() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r11() falls through to next function
+__x86_retpoline_r11() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r12() falls through to next function
+__x86_retpoline_r12() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r13() falls through to next function
+__x86_retpoline_r13() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r14() falls through to next function
+__x86_retpoline_r14() vmlinux.o: warning: objtool:
+__x86_indirect_thunk_r15() falls through to next function
+__x86_retpoline_r15() ```
 
-Also this stuff is host side and not guest side. I seriously doubt that
-you want to hand in the whole PCI device which contains the IMS
-thing. The whole point of IMS was as far as I was told that you can
-create gazillions of subdevices and have seperate MSI interrupts for
-each of them.
+I think those should be resolved before I provide any kind of tested
+by tag.  My other piece of feedback was that I like the default
+ThinLTO, but I think the help text in the Kconfig which is visible
+during menuconfig could be improved by informing the user the
+tradeoffs.  For example, if CONFIG_THINLTO is disabled, it should be
+noted that full LTO will be used instead.  Also, that full LTO may
+produce slightly better optimized binaries than ThinLTO, at the cost
+of not utilizing multiple cores when linking and thus significantly
+slower to link.
 
+Maybe explaining that setting it to "n" implies a full LTO build,
+which will be much slower to link but possibly slightly faster would
+be good?  It's not visible unless LTO_CLANG and ARCH_SUPPORTS_THINLTO
+is enabled, so I don't think you need to explain that THINLTO without
+those is *not* full LTO.  I'll leave the precise wording to you. WDYT?
+
+Also, when I look at your treewide DISABLE_LTO patch, I think "does
+that need to be a part of this series, or is it a cleanup that can
+stand on its own?"  I think it may be the latter?  Maybe it would help
+shed one more patch than to have to carry it to just send it?  Or did
+I miss something as to why it should remain a part of this series?
+-- 
 Thanks,
-
-        tglx
+~Nick Desaulniers
