@@ -2,151 +2,257 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A14E227E934
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 15:08:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F49027E966
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 15:22:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbgI3NIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 09:08:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4048 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgI3NIa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Sep 2020 09:08:30 -0400
-IronPort-SDR: +Wso0RloPbEgnNBHl2XmoS53z1e0tyEAJmL3ClISb14O9I0oCT6V1ETop5MUYBV7KmqmmEaexj
- 9TtQwjyOReiA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9759"; a="161663924"
-X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
-   d="scan'208";a="161663924"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 06:08:29 -0700
-IronPort-SDR: 7s2UjCbfKUqBwDv/XvMW3S47VDpzGckwYBowePWDcL41i65KVN689X/0oxm6L0Yb63h8tgLizY
- Uxws7zv6TMRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
-   d="scan'208";a="457649639"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga004.jf.intel.com with ESMTP; 30 Sep 2020 06:08:28 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 30 Sep 2020 06:08:28 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 30 Sep 2020 06:08:27 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Wed, 30 Sep 2020 06:08:27 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "jgg@nvidia.com" <jgg@nvidia.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "sivanich@hpe.com" <sivanich@hpe.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "Lu, Baolu" <baolu.lu@intel.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        id S1728043AbgI3NWr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 09:22:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45942 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbgI3NWr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 09:22:47 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08UDMXgv023331;
+        Wed, 30 Sep 2020 08:22:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1601472153;
+        bh=4V0e4kqtterMUYXsLqJjv3LDGmCqZY7hgAlR/HaanLw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ka8/io88KSXJKAY5i9z43PiR36sES2Z5o+CSjDvUaqNhxZSDUOy8GGcsd+bTzkEuu
+         ur7W+JsMXjk3BuVvVqqSuWtFzNmUQnefear+d9gHgOlLOiVw11c8+m2nxj+t3nwqVi
+         mrOFvXsa10/dDpsgyJR3SVNpdlQr9VmkZmda5QlE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08UDMWQg093361
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Sep 2020 08:22:32 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 30
+ Sep 2020 08:22:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 30 Sep 2020 08:22:32 -0500
+Received: from [10.250.232.108] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08UDMTTb096260;
+        Wed, 30 Sep 2020 08:22:30 -0500
+Subject: Re: [PATCH] PCI: dwc: Added link up check in map_bus of
+ dw_child_pcie_ops
+To:     Rob Herring <robh@kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+CC:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "steve.wahl@hpe.com" <steve.wahl@hpe.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rja@hpe.com" <rja@hpe.com>, "joro@8bytes.org" <joro@8bytes.org>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-Subject: Re: [patch V2 24/46] PCI: vmd: Mark VMD irqdomain with
- DOMAIN_BUS_VMD_MSI
-Thread-Topic: [patch V2 24/46] PCI: vmd: Mark VMD irqdomain with
- DOMAIN_BUS_VMD_MSI
-Thread-Index: AQHWe6Ci+RtSrJb+okaPJR2eu/FJZalSxzQAgC8GCICAAANhgIAAAwyA
-Date:   Wed, 30 Sep 2020 13:08:27 +0000
-Message-ID: <97a8605902a7ee9f17af471458d1fe3029f2ad20.camel@intel.com>
-References: <20200826111628.794979401@linutronix.de>
-         <20200826112333.047315047@linutronix.de>
-         <20200831143940.GA1152540@nvidia.com>
-         <1d284a478d4e5bf4a247ee83afa1b8b45f9e1b3f.camel@intel.com>
-         <20200930125733.GI816047@nvidia.com>
-In-Reply-To: <20200930125733.GI816047@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B8974402C8B105498508BBB556348F59@intel.com>
-Content-Transfer-Encoding: base64
+        PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michael Walle <michael@walle.cc>,
+        Ard Biesheuvel <ardb@kernel.org>
+References: <20200916054130.8685-1-Zhiqiang.Hou@nxp.com>
+ <CAL_JsqJwgNUpWFTq2YWowDUigndSOB4rUcVm0a_U=FEpEmk94Q@mail.gmail.com>
+ <HE1PR0402MB3371F8191538F47E8249F048843F0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <CAL_JsqLdQY_DqpduaTv4hMDM_-cvZ_+s8W+HdOuZVVYjTO4yxw@mail.gmail.com>
+ <HE1PR0402MB337180458625B05D1529535384390@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <20200928093911.GB12010@e121166-lin.cambridge.arm.com>
+ <HE1PR0402MB33713A623A37D08AE3253DEB84320@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <DM5PR12MB1276D80424F88F8A9243D5E2DA320@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CAL_JsqJJxq2jZzbzZffsrPxnoLJdWLLS-7bG-vaqyqs5NkQhHQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9ac53f04-f2e8-c5f9-e1f7-e54270ec55a0@ti.com>
+Date:   Wed, 30 Sep 2020 18:52:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJJxq2jZzbzZffsrPxnoLJdWLLS-7bG-vaqyqs5NkQhHQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-K01lZ2hhDQoNCk9uIFdlZCwgMjAyMC0wOS0zMCBhdCAwOTo1NyAtMDMwMCwgSmFzb24gR3VudGhv
-cnBlIHdyb3RlOg0KPiBPbiBXZWQsIFNlcCAzMCwgMjAyMCBhdCAxMjo0NTozMFBNICswMDAwLCBE
-ZXJyaWNrLCBKb25hdGhhbiB3cm90ZToNCj4gPiBIaSBKYXNvbg0KPiA+IA0KPiA+IE9uIE1vbiwg
-MjAyMC0wOC0zMSBhdCAxMTozOSAtMDMwMCwgSmFzb24gR3VudGhvcnBlIHdyb3RlOg0KPiA+ID4g
-T24gV2VkLCBBdWcgMjYsIDIwMjAgYXQgMDE6MTY6NTJQTSArMDIwMCwgVGhvbWFzIEdsZWl4bmVy
-IHdyb3RlOg0KPiA+ID4gPiBGcm9tOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5k
-ZT4NCj4gPiA+ID4gDQo+ID4gPiA+IERldmljZXMgb24gdGhlIFZNRCBidXMgdXNlIHRoZWlyIG93
-biBNU0kgaXJxIGRvbWFpbiwgYnV0IGl0IGlzIG5vdA0KPiA+ID4gPiBkaXN0aW5ndWlzaGFibGUg
-ZnJvbSByZWd1bGFyIFBDSS9NU0kgaXJxIGRvbWFpbnMuIFRoaXMgaXMgcmVxdWlyZWQNCj4gPiA+
-ID4gdG8gZXhjbHVkZSBWTUQgZGV2aWNlcyBmcm9tIGdldHRpbmcgdGhlIGlycSBkb21haW4gcG9p
-bnRlciBzZXQgYnkNCj4gPiA+ID4gaW50ZXJydXB0IHJlbWFwcGluZy4NCj4gPiA+ID4gDQo+ID4g
-PiA+IE92ZXJyaWRlIHRoZSBkZWZhdWx0IGJ1cyB0b2tlbi4NCj4gPiA+ID4gDQo+ID4gPiA+IFNp
-Z25lZC1vZmYtYnk6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPiA+ID4g
-PiBBY2tlZC1ieTogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4NCj4gPiA+ID4g
-IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMgfCAgICA2ICsrKysrKw0KPiA+ID4gPiAgMSBm
-aWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiANCj4gPiA+ID4gKysrIGIvZHJp
-dmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+ID4gPiBAQCAtNTc5LDYgKzU3OSwxMiBAQCBz
-dGF0aWMgaW50IHZtZF9lbmFibGVfZG9tYWluKHN0cnVjdCB2bWRfDQo+ID4gPiA+ICAJCXJldHVy
-biAtRU5PREVWOw0KPiA+ID4gPiAgCX0NCj4gPiA+ID4gIA0KPiA+ID4gPiArCS8qDQo+ID4gPiA+
-ICsJICogT3ZlcnJpZGUgdGhlIGlycSBkb21haW4gYnVzIHRva2VuIHNvIHRoZSBkb21haW4gY2Fu
-IGJlIGRpc3Rpbmd1aXNoZWQNCj4gPiA+ID4gKwkgKiBmcm9tIGEgcmVndWxhciBQQ0kvTVNJIGRv
-bWFpbi4NCj4gPiA+ID4gKwkgKi8NCj4gPiA+ID4gKwlpcnFfZG9tYWluX3VwZGF0ZV9idXNfdG9r
-ZW4odm1kLT5pcnFfZG9tYWluLCBET01BSU5fQlVTX1ZNRF9NU0kpOw0KPiA+ID4gPiArDQo+ID4g
-PiANCj4gPiA+IEhhdmluZyB0aGUgbm9uLXRyYW5zcGFyZW50LWJyaWRnZSBob2xkIGEgTVNJIHRh
-YmxlIGFuZA0KPiA+ID4gbXVsdGlwbGV4L2RlLW11bHRpcGxleCBJUlFzIGxvb2tzIGxpa2UgYW5v
-dGhlciBnb29kIHVzZSBjYXNlIGZvcg0KPiA+ID4gc29tZXRoaW5nIGNsb3NlIHRvIHBjaV9zdWJk
-ZXZpY2VfbXNpX2NyZWF0ZV9pcnFfZG9tYWluKCk/DQo+ID4gPiANCj4gPiA+IElmIGVhY2ggZGV2
-aWNlIGNvdWxkIGhhdmUgaXRzIG93biBpbnRlcm5hbCBNU0ktWCB0YWJsZSBwcm9ncmFtbWVkDQo+
-ID4gPiBwcm9wZXJseSB0aGluZ3Mgd291bGQgd29yayBhbG90IGJldHRlci4gRGlzYWJsZSBjYXB0
-dXJlL3JlbWFwIG9mIHRoZQ0KPiA+ID4gTVNJIHJhbmdlIGluIHRoZSBOVEIuDQo+ID4gV2UgY2Fu
-IGRpc2FibGUgdGhlIGNhcHR1cmUgYW5kIHJlbWFwIGluIG5ld2VyIGRldmljZXMgc28gd2UgZG9u
-J3QgZXZlbg0KPiA+IG5lZWQgdGhlIGlycSBkb21haW4uDQo+IA0KPiBZb3UnZCBzdGlsbCBuZWVk
-IGFuIGlycSBkb21haW4sIGl0IGp1c3QgY29tZXMgZnJvbQ0KPiBwY2lfc3ViZGV2aWNlX21zaV9j
-cmVhdGVfaXJxX2RvbWFpbigpIGluc3RlYWQgb2YgaW50ZXJuYWwgdG8gdGhpcw0KPiBkcml2ZXIu
-DQpJIGhhdmUgdGhpcyBzZXQgd2hpY2ggZGlzYWJsZXMgcmVtYXBwaW5nIGFuZCBieXBhc3NlcyB0
-aGUgY3JlYXRpb24gb2YNCnRoZSBJUlEgZG9tYWluOg0KaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJz
-Lm9yZy9wcm9qZWN0L2xpbnV4LXBjaS9saXN0Lz9zZXJpZXM9MTkyOTM2DQoNCkl0IGFsbG93cyB0
-aGUgZW5kLWRldmljZXMgbGlrZSBOVk1lIHRvIGRpcmVjdGx5IG1hbmFnZXIgdGhlaXIgb3duDQpp
-bnRlcnJ1cHRzIGFuZCBlbGltaW5hdGVzIHRoZSBWTUQgaW50ZXJydXB0IGNvbXBsZXRlbHkuIFRo
-ZSBvbmx5IHF1aXJrDQp3YXMgdGhhdCBrZXJuZWwgaGFzIHRvIHByb2dyYW0gSVJURSB3aXRoIHRo
-ZSBWTUQgZGV2aWNlIElEIGFzIGl0IHN0aWxsDQpyZW1hcHMgUmVxdWVzdGVyLUlEIGZyb20gc3Vi
-ZGV2aWNlcy4NCg0KPiANCj4gPiBJIHdvdWxkIGhvd2V2ZXIgbGlrZSB0byBkZXRlcm1pbmUgaWYg
-dGhlIE1TSSBkYXRhIGJpdHMgY291bGQgYmUgdXNlZA0KPiA+IGZvciBpbmRpdmlkdWFsIGRldmlj
-ZXMgdG8gaGF2ZSB0aGUgSVJRIGRvbWFpbiBzdWJzeXN0ZW0gZGVtdWx0aXBsZXggdGhlDQo+ID4g
-dmlycSBmcm9tIHRoYXQgYW5kIGVsaW1pbmF0ZSB0aGUgSVJRIGxpc3QgaXRlcmF0aW9uLg0KPiAN
-Cj4gWWVzLCBleGFjdGx5LiBUaGlzIG5ldyBwY2lfc3ViZGV2aWNlX21zaV9jcmVhdGVfaXJxX2Rv
-bWFpbigpIGNyZWF0ZXMNCj4gKnByb3BlciogZnVsbHkgZnVuY3Rpb25hbCBpbnRlcnJ1cHRzLCBu
-byBuZWVkIGZvciBhbnkgSVJRIGhhbmRsZXIgaW4NCj4gdGhpcyBkcml2ZXIuDQo+IA0KPiA+IEEg
-Y29uY2VybiBJIGhhdmUgYWJvdXQgdGhhdCBzY2hlbWUgaXMgdmlydHVhbGl6YXRpb24gYXMgSSB0
-aGluayB0aG9zZQ0KPiA+IGJpdHMgYXJlIHVzZWQgdG8gcm91dGUgdG8gdGhlIHZpcnR1YWwgdmVj
-dG9yLg0KPiANCj4gSXQgc2hvdWxkIGJlIGZpbmUgd2l0aCB0aGlzIHBhdGNoIHNlcmllcywgY29u
-c3VsdCB3aXRoIE1lZ2hhIGhvdw0KPiB2aXJ0dWFsaXphdGlvbiBpcyB3b3JraW5nIHdpdGggSURY
-RC9ldGMNCj4gDQo+IEphc29uDQo=
+Hi,
+
+On 29/09/20 10:41 pm, Rob Herring wrote:
+> On Tue, Sep 29, 2020 at 10:24 AM Gustavo Pimentel
+> <Gustavo.Pimentel@synopsys.com> wrote:
+>>
+>> On Tue, Sep 29, 2020 at 5:5:41, Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+>>
+>>> Hi Lorenzo,
+>>>
+>>> Thanks a lot for your comments!
+>>>
+>>>> -----Original Message-----
+>>>> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>>>> Sent: 2020年9月28日 17:39
+>>>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>>>> Cc: Rob Herring <robh@kernel.org>; linux-kernel@vger.kernel.org; PCI
+>>>> <linux-pci@vger.kernel.org>; Bjorn Helgaas <bhelgaas@google.com>;
+>>>> Gustavo Pimentel <gustavo.pimentel@synopsys.com>; Michael Walle
+>>>> <michael@walle.cc>; Ard Biesheuvel <ardb@kernel.org>
+>>>> Subject: Re: [PATCH] PCI: dwc: Added link up check in map_bus of
+>>>> dw_child_pcie_ops
+>>>>
+>>>> On Thu, Sep 24, 2020 at 04:24:47AM +0000, Z.q. Hou wrote:
+>>>>> Hi Rob,
+>>>>>
+>>>>> Thanks a lot for your comments!
+>>>>>
+>>>>>> -----Original Message-----
+>>>>>> From: Rob Herring <robh@kernel.org>
+>>>>>> Sent: 2020年9月18日 23:28
+>>>>>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>>>>>> Cc: linux-kernel@vger.kernel.org; PCI <linux-pci@vger.kernel.org>;
+>>>>>> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>; Bjorn Helgaas
+>>>>>> <bhelgaas@google.com>; Gustavo Pimentel
+>>>>>> <gustavo.pimentel@synopsys.com>; Michael Walle
+>>>> <michael@walle.cc>;
+>>>>>> Ard Biesheuvel <ardb@kernel.org>
+>>>>>> Subject: Re: [PATCH] PCI: dwc: Added link up check in map_bus of
+>>>>>> dw_child_pcie_ops
+>>>>>>
+>>>>>> On Fri, Sep 18, 2020 at 5:02 AM Z.q. Hou <zhiqiang.hou@nxp.com>
+>>>> wrote:
+>>>>>>>
+>>>>>>> Hi Rob,
+>>>>>>>
+>>>>>>> Thanks a lot for your comments!
+>>>>>>>
+>>>>>>>> -----Original Message-----
+>>>>>>>> From: Rob Herring <robh@kernel.org>
+>>>>>>>> Sent: 2020年9月17日 4:29
+>>>>>>>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>>>>>>>> Cc: linux-kernel@vger.kernel.org; PCI
+>>>>>>>> <linux-pci@vger.kernel.org>; Lorenzo Pieralisi
+>>>>>>>> <lorenzo.pieralisi@arm.com>; Bjorn Helgaas
+>>>>>>>> <bhelgaas@google.com>; Gustavo Pimentel
+>>>>>>>> <gustavo.pimentel@synopsys.com>; Michael Walle
+>>>>>> <michael@walle.cc>;
+>>>>>>>> Ard Biesheuvel <ardb@kernel.org>
+>>>>>>>> Subject: Re: [PATCH] PCI: dwc: Added link up check in map_bus of
+>>>>>>>> dw_child_pcie_ops
+>>>>>>>>
+>>>>>>>> On Tue, Sep 15, 2020 at 11:49 PM Zhiqiang Hou
+>>>>>> <Zhiqiang.Hou@nxp.com>
+>>>>>>>> wrote:
+>>>>>>>>>
+>>>>>>>>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>>>>>>>>>
+>>>>>>>>> On NXP Layerscape platforms, it results in SError in the
+>>>>>>>>> enumeration of the PCIe controller, which is not connecting
+>>>>>>>>> with an Endpoint device. And it doesn't make sense to
+>>>>>>>>> enumerate the Endpoints when the PCIe link is down. So this
+>>>>>>>>> patch added the link up check to avoid to fire configuration
+>>>> transactions on link down bus.
+>>>>>>>>
+>>>>>>>> Michael reported the same issue as well.
+>>>>>>>>
+>>>>>>>> What happens if the link goes down between the check and the
+>>>> access?
+>>>>>>>
+>>>>>>> This patch cannot cover this case, and will get the SError.
+>>>>>>> But I think it makes sense to avoid firing transactions on link down bus.
+>>>>>>
+>>>>>> That's impossible to do without a race even in h/w.
+>>>>>
+>>>>> Agree.
+>>>>>
+>>>>>>
+>>>>>>>> It's a racy check. I'd like to find an alternative solution.
+>>>>>>>> It's even worse if Layerscape is used in ECAM mode. I looked at
+>>>>>>>> the EDK2 setup for layerscape[1] and it looks like root ports
+>>>>>>>> are just skipped if link
+>>>>>> is down.
+>>>>>>>> Maybe a link down just never happens once up, but if so, then we
+>>>>>>>> only need to check it once and fail probe.
+>>>>>>>
+>>>>>>> Many customers connect the FPGA Endpoint, which may establish PCIe
+>>>>>>> link after the PCIe enumeration and then rescan the PCIe bus, so I
+>>>>>>> think it should not exit the probe of root port even if there is
+>>>>>>> not link up
+>>>>>> during enumeration.
+>>>>>>
+>>>>>> That's a good reason. I want to unify the behavior here as it varies
+>>>>>> per platform currently and wasn't sure which way to go.
+>>>>>>
+>>>>>>
+>>>>>>>> I've dug into this a bit more and am curious about the
+>>>>>>>> PCIE_ABSERR register setting which is set to:
+>>>>>>>>
+>>>>>>>> #define PCIE_ABSERR_SETTING 0x9401 /* Forward error of
+>>>>>>>> non-posted request */
+>>>>>>>>
+>>>>>>>> It seems to me this is not what we want at least for config
+>>>>>>>> accesses, but commit 84d897d6993 where this was added seems to
+>>>>>>>> say otherwise. Is it not possible to configure the response per access
+>>>> type?
+>>>>>>>
+>>>>>>> Thanks a lot for your investigation!
+>>>>>>> The story is like this: Some customers worry about these silent
+>>>>>>> error (DWC PCIe IP won't forward the error of outbound non-post
+>>>>>>> request by default), so we were pushed to enable the error
+>>>>>>> forwarding to AXI in the commit
+>>>>>>> 84d897d6993 as you saw. But it cannot differentiate the config
+>>>>>>> transactions from the MEM_rd, except the Vendor ID access, which
+>>>>>>> is controlled by a separate bit and it was set to not forward
+>>>>>>> error of access
+>>>>>> of Vendor ID.
+>>>>>>> So we think it's okay to enable the error forwarding, the SError
+>>>>>>> should not occur, because after the enumeration it won't access
+>>>>>>> the
+>>>>>> non-existent functions.
+>>>>>>
+>>>>>> We've rejected upstream support for platforms aborting on config
+>>>>>> accesses[1]. I think there's clear consensus that aborting is the
+>>>>>> wrong behavior.
+>>>>>>
+>>>>>> Do MEM_wr errors get forwarded? Seems like that would be enough.
+>>>>>> Also, wouldn't page faults catch most OOB accesses anyways? You need
+>>>>>> things page aligned anyways with an IOMMU and doing userspace access
+>>>>>> or guest assignment.
+>>>>>
+>>>>> Yes, errors of MEM_wr can be forwarded.
+>>>>>
+>>>>>>
+>>>>>> Here's another idea, how about only enabling forwarding errors if
+>>>>>> the link is up? If really would need to be configured any time the
+>>>>>> link state changes rather than just at probe. I'm not sure if you
+>>>>>> have a way to disable it on link down though.
+>>>>>
+>>>>> Dug deeper into this issue and found the setting of not forwarding
+>>>>> error of non-existent Vender ID access counts on the link partner: 1.
+>>>>> When there is a link partner (namely link up), it will return 0xffff
+>>>>> when read non-existent function Vendor ID and won't forward error to
+>>>>> AXI.  2. When no link partner (link down), it will forward the error
+>>>>> of reading non-existent function Vendor ID to AXI and result in
+>>>>> SError.
+>>>>>
+>>>>> I think this is a DWC PCIe IP specific issue but not get feedback from
+>>>>> design team.  I'm thinking to disable this error forwarding just like
+>>>>> other platforms, since when these errors (UR, CA and CT) are detected,
+>>>>> AER driver can also report the error and try to recover.
+>>>>
+>>>> I take this as you shall send a patch to fix this issue shortly, is this correct ?
+>>>
+>>> The issue becomes complex:
+>>> I reviewed the DWC PCIe databook of verion 4.40a which is used on Layerscape platforms, and it said that " Your RC application should not generate CFG requests until it has confirmed that the link is up by sampling the smlh_link_up and rmlh_link_up outputs".
+>>> So, the link up checking should not be remove before each outbound CFG access.
+>>> Gustavo, can you share more details on the link up checking? Does it only exist in the 4.40a?
+>>
+>> Hi Zhiqiang,
+>>
+>> According to the information that I got from the IP team you are correct,
+>> the same requirement still exists on the newer IP versions.
+> 
+> How is that possible in a race free way?
+> 
+> Testing on meson and layerscape (with the forwarding of errors
+> disabled) shows a link check is not needed. But then dra7xx seems to
+> need one (or has some f/w setup).
+
+Yeah, I don't see any registers in the DRA7x PCIe wrapper for disabling
+error forwarding.
+
+Thanks
+Kishon
