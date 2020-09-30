@@ -2,130 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8E927DE3E
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 04:07:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C7E27DE6B
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 04:21:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbgI3CHX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Sep 2020 22:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60140 "EHLO
+        id S1729446AbgI3CVD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Sep 2020 22:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729322AbgI3CHW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Sep 2020 22:07:22 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A680C061755;
-        Tue, 29 Sep 2020 19:07:22 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l24so127897edj.8;
-        Tue, 29 Sep 2020 19:07:22 -0700 (PDT)
+        with ESMTP id S1726689AbgI3CVD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Sep 2020 22:21:03 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C390EC061755;
+        Tue, 29 Sep 2020 19:21:02 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id nw23so530769ejb.4;
+        Tue, 29 Sep 2020 19:21:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xyAHQbXp/6MC70Z0VwrDxQPUEm52mhP+JTOEWvEI/ps=;
-        b=owZdRZTGnUKBsLuWA5zO8Gi5OwS7aOdqwSvqfTW98I77NGMfn6e0rkJ6RPvqA/uWfW
-         54MqIhXw8X0hRTcharSLheF9jjzv8TeBxU51V7Aw8IOI0lSoB94QeoMlbq+57Pqall67
-         rPljp4YUxYqcoqe1Noo+SDsVEKJTohsdMAr3UkB1r0UTGxI0xCQyfnp0beo8LglOjfpG
-         EIDbe7ndI5zm5q+8zIJTsECCRsIo/5mbrK0JOpkTbR0CS4etWgryVJNs5r9TkkzRIdhQ
-         ZO3sX8sha3t8FK0AyjJhPDq7SF4tyvUeOxPS4TNHmnnkasvtxWXu4BpC9eg5MBqyVCuy
-         U3vg==
+        bh=VviVj9bYE7aXVNpstffQ7ePdMsng1BehF9I+7/XekM8=;
+        b=LQjmSSLzZ9xYDHO61ieHODLq/x3LIKoty3Zho6MH+qyAsGtCXqf1zsbpyYdcNjOnlg
+         jDJwEezl9CWPcn4aXXwJdR/S7lVyj6Zr1RP2+KOGNdvW/KXEfM4B3+uO+RCXRzCOLJee
+         9s3hQcE7/Pk6DbfwhWhgtgKP8il+cYIcTFaZcFgp7xSw3L2N0ToUtFPX+ybtQO00RDdN
+         vcs4N11g2A+uEZvNOzyoI3cO7v+bMoKAKRJp8ejjarx45ev2xpZNzi8c/Kp5tobzJSdV
+         9gqfjyjoOKuBG0tNH03aWWXGNnrL8z3eehgI/+dZFwUgdPJliWMrjAe1Qb5BqM7ZrIIV
+         qr1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xyAHQbXp/6MC70Z0VwrDxQPUEm52mhP+JTOEWvEI/ps=;
-        b=oAlI+cVc/EK2OA5+lN/XYLUN3bF+qbywNGgOj47maI8FDkFRR6pujzNuDoRdI+72Bl
-         wacLKWaMf3akSo9uI0VD37YADlFM7lt4UkNOzXv+bP80WHVXC0pUE182wqyWeC7NrK3Z
-         hjMwBgMZamGzzcM7Pw25lMGbYA7ALzWGc4X5P7AUszkXrPXaFw7a+LGQU9Q3agUCGhq3
-         RLcIJfULq6KXR5IXGeMSInHyoMaCORRVSPIVFLgIamTbnpbC3Z43uUsjkVjuvqLaQkRl
-         AC+GiM6WQiql1UXCmCe49BY/SyEYKKZS2p/Iubp1qWphkJuXVNwXk5KQasNsfSdEP4WN
-         h4Fg==
-X-Gm-Message-State: AOAM530IK5wp3/bdLACJwiaOzWw2s/3IdSNw1AoXg6YeA6i6M2Ee+Wb7
-        7ZSQ772kgomwOUur728T21vL5U4EEeOQwt2ppMMpvBxT/Fs=
-X-Google-Smtp-Source: ABdhPJwXBpc6cGmAhTa6kVnOYWj6hEAT/BkLi/9jX3CmaiR9ZHnh/r19EwMU8OUz1K3J+dsjQIKqTsgtgEYEQuu+Ek0=
-X-Received: by 2002:a50:b063:: with SMTP id i90mr361048edd.187.1601431641331;
- Tue, 29 Sep 2020 19:07:21 -0700 (PDT)
+        bh=VviVj9bYE7aXVNpstffQ7ePdMsng1BehF9I+7/XekM8=;
+        b=awLFjnx4XtxBt/HtNZ/zqubD855sZ+T177tlzFYCfQs63OgxlY/3QsYpYtTyT6U74L
+         15vQ633oc1QkueuSSkeqMaN9Fd1gvX6kQsZp8gQSHJIMJb6LDJpv93zBV3Gf1HVTBdqh
+         KtVKgaucR3Lpaxv5v01Cp5OaTIuTtwLIvRu2ey5M6GL7tMbufge/5SKXKQL9GxaqVTqf
+         4sujg9jVqtoX/Ly9y+GmtLoLrLBN0GEb8chfkXdGEZ/Vug9xG3t8ga9kWgT0ywMC6Nns
+         UA8uYE2Q2aw29xG56TPJ6Cx/mmjnY+0oPe+EFQ27u9NXOubBTj3oznAzFZUurjLTfWCb
+         9n7A==
+X-Gm-Message-State: AOAM532f74t3v4BL5pxgyCxbo9n/3vPm3RokHkxD1jiHNGTFtshzuhKj
+        T8TyFsKz1gCPle7LDMgPQ+cjdHk3UXTB0SrgZs0=
+X-Google-Smtp-Source: ABdhPJxrFIv5ybeLKeFyWBmAzsMd72cDCVT2+TMBsOuyb25Ml82cB6Y4bzJUTA6bJniQcZMA+Z29ogsfeRXUEg0cOuA=
+X-Received: by 2002:a17:906:6409:: with SMTP id d9mr580121ejm.344.1601432461534;
+ Tue, 29 Sep 2020 19:21:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200925023423.42675-1-haifeng.zhao@intel.com>
- <20200925023423.42675-4-haifeng.zhao@intel.com> <20200925123515.GF3956970@smile.fi.intel.com>
- <CAKF3qh1j-D=6mmyjuLQu9=Pka3ZbB+43_Ec4oge0LhRNnQz-Ug@mail.gmail.com>
- <20200929085105.GA3956970@smile.fi.intel.com> <CAKF3qh28CLbt7N2MJ8WE318wYU4kFe+F5Uew3znVJ17yyTR7OA@mail.gmail.com>
- <20200929104815.GD3956970@smile.fi.intel.com>
-In-Reply-To: <20200929104815.GD3956970@smile.fi.intel.com>
+References: <20200927032829.11321-1-haifeng.zhao@intel.com>
+ <20200927032829.11321-3-haifeng.zhao@intel.com> <f2c9e3db-2027-f669-fcdd-fbc80888b934@kernel.org>
+ <20200929081800.GA15858@wunner.de> <CAKF3qh3UxkVOwCOUB4rNdxLX0k9oZQRzXT_N0BNYKWL_BAHa5w@mail.gmail.com>
+ <20200929100759.GA21885@wunner.de>
+In-Reply-To: <20200929100759.GA21885@wunner.de>
 From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Wed, 30 Sep 2020 10:07:10 +0800
-Message-ID: <CAKF3qh094jwPWLB+tegw3knOT=tPrGf=YURkb6=3Cx_ej_rH1Q@mail.gmail.com>
-Subject: Re: [PATCH 3/5] PCI/ERR: get device before call device driver to
- avoid null pointer reference
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Ethan Zhao <haifeng.zhao@intel.com>,
+Date:   Wed, 30 Sep 2020 10:20:50 +0800
+Message-ID: <CAKF3qh2xVfj0KNGj8MFC_Z+gOqNw7JD1uDbVy=OgLnkZ0t-0+Q@mail.gmail.com>
+Subject: Re: [PATCH 2/5 V2] PCI: pciehp: check and wait port status out of DPC
+ before handling DLLSC and PDC
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Sinan Kaya <okaya@kernel.org>, Ethan Zhao <haifeng.zhao@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>, Oliver <oohall@gmail.com>,
-        ruscur@russell.cc, Lukas Wunner <lukas@wunner.de>,
+        ruscur@russell.cc,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Stuart Hayes <stuart.w.hayes@gmail.com>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
         linux-pci <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Jia, Pei P" <pei.p.jia@intel.com>
+        "Jia, Pei P" <pei.p.jia@intel.com>, ashok.raj@linux.intel.com,
+        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 6:48 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Sep 29, 2020 at 6:08 PM Lukas Wunner <lukas@wunner.de> wrote:
 >
-> On Tue, Sep 29, 2020 at 05:38:00PM +0800, Ethan Zhao wrote:
-> > On Tue, Sep 29, 2020 at 4:51 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Tue, Sep 29, 2020 at 10:35:14AM +0800, Ethan Zhao wrote:
-> > > > Preferred style, there will be cleared comment in v6.
+> On Tue, Sep 29, 2020 at 05:46:41PM +0800, Ethan Zhao wrote:
+> > On Tue, Sep 29, 2020 at 4:29 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > On Sun, Sep 27, 2020 at 11:27:46AM -0400, Sinan Kaya wrote:
+> > > > On 9/26/2020 11:28 PM, Ethan Zhao wrote:
+> > > > > --- a/drivers/pci/hotplug/pciehp_hpc.c
+> > > > > +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> > > > > @@ -710,8 +710,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+> > > > >     down_read(&ctrl->reset_lock);
+> > > > >     if (events & DISABLE_SLOT)
+> > > > >             pciehp_handle_disable_request(ctrl);
+> > > > > -   else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC))
+> > > > > +   else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC)) {
+> > > > > +           pci_wait_port_outdpc(pdev);
+> > > > >             pciehp_handle_presence_or_link_change(ctrl, events);
+> > > > > +   }
+> > > > >     up_read(&ctrl->reset_lock);
+> > > >
+> > > > This looks like a hack TBH.
+> [...]
+> > > > Why is device lock not protecting this situation?
+> > > > Is there a lock missing in hotplug driver?
 > > >
-> > > Avoid top postings.
+> > > According to Ethan's commit message, there are two issues here:
+> > > One, that pciehp may remove a device even though DPC recovered the error,
+> > > and two, that a null pointer deref occurs.
 > > >
-> > > > On Sat, Sep 26, 2020 at 12:42 AM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Thu, Sep 24, 2020 at 10:34:21PM -0400, Ethan Zhao wrote:
->
-> ...
->
-> > > > > >  Buffer I/O error on dev nvme0n1p1, logical block 468843328,
-> > > > > >  async page read
-> > > > > >  BUG: kernel NULL pointer dereference, address: 0000000000000050
-> > > > > >  #PF: supervisor read access in kernel mode
-> > > > > >  #PF: error_code(0x0000) - not-present page
-> > > > >
-> > > > > Same comment about Oops.
-> > >
-> > > In another thread it was a good advice to move the full Oops (if you think it's
-> > > very useful to have) after the cutter '---' line, so it will be in email
-> > > archives but Git history.
+> > > The latter is most certainly not a locking issue but failure of DPC
+> > > to hold a reference on the pci_dev.
 > >
-> > So git history wouldn't give any of the Oops context, and he/she has
-> > to access LKML,
-> > if offline, then ...lost.
+> > This is what patch 3/5 proposed to fix.
 >
-> Tell me, do you really think the line:
->    #PF: error_code(0x0000) - not-present page
-> makes any sense in the commit message?
->
-> I do not think so. And so on, for almost 60% of the Oops.
-> Really, to help one person you will make millions suffering. It's not okay.
->
-If you and millions  feel so suffered,  why not try to simplify the
-Oops code to not
-output nonsense too much to console and log. :)
+> Please reorder the series to fix the null pointer deref first,
+> i.e. move patch 3 before patch 2.  If the null pointer deref is
+> fixed by patch 3, do not mention it in patch 2.
 
-They might not be so important to old birds as you. but it is easy to cut off
-the road for newcomers.
-
-Anyway, it is not the focus of this patchset. help to take a look and
-try the code.
-
+Make sense.
 
 Thanks,
 Ethan
-
-> --
-> With Best Regards,
-> Andy Shevchenko
 >
+> Thanks,
 >
+> Lukas
