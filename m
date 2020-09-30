@@ -2,126 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB04827F4D1
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 00:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3C9327F4EA
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 00:13:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbgI3WGl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 18:06:41 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:57963 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730269AbgI3WGl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 18:06:41 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 408A0E02;
-        Wed, 30 Sep 2020 18:06:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Wed, 30 Sep 2020 18:06:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        oregontracks.org; h=from:to:cc:subject:date:message-id
-        :mime-version:content-transfer-encoding; s=fm1; bh=Dl0bQCDDUwenL
-        KwYEIseGLFy/a/7FZofVNps7JlV2rY=; b=MkTqjLthiqAvW2AGDy0meBMsvLUMa
-        HZphneUUA+8UoyiyKSw9TUtmQfjwO1ApxjqgRcVlc+6I/NlooWYocB1O+Y5W3ua2
-        rbmnhYsaY0Ad/bf/lhtiPIxk2UrCCxwUk0kmvbiOKyOX78YLU2XSyzGvqWcIhY7F
-        FhFX0q5J6HdY+dJ7M4NF/z3jTv1qeiSeqpqaX1kIc2yYN6Ffno765UI3sjxpKOuq
-        FU447eQ2jzchi+XUwloVKEDgMMvDuNRSIB8cQey1vNhyRWZo7+G3z0L4wdHi4Lq7
-        nFk0CWBqM56Js1ShUbrUjMKpDJmFWbwf5ETZSNsr6JkpiXqSnBKyzErOg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Dl0bQCDDUwenLKwYE
-        IseGLFy/a/7FZofVNps7JlV2rY=; b=bJ1czuR/Vyo7fTAR+QEa7o9b8Nh7U2T8L
-        CEheC2/e6airAy1X/6w+REp8vQ5/uLrtfXkCEuEns1w9dBkPqNg6k2qz8kjew8Fp
-        qn8ZKz8slwH//fObH9scKASgDBRvcUeIw/22WdB3RhzJK0UEeau1aOUdBn/rWQ7a
-        rafQCNwWdqEm7R8hE7NxkksUfgYDY/txIWk9qt1VAxEBBjxFF7FJiZs+epNP5SaC
-        BIpySbRjRsVg4EiB7Ej6L3woG1x1VBCE5+He3XsYEuMk0YUmdJggvi30saSV9q6s
-        gVeTPvgz+L4JghBrdh15hVuvj6eozWQ5bhEtbY35/35tedM05kUcw==
-X-ME-Sender: <xms:bwF1X9qtjbvnBZcjBnqhrMH0-ugRSTIx_3DnMzCi8Ad2xhO5FWPVYQ>
-    <xme:bwF1X_r9cr60rrElurgLDpPDp8rQHnhGm13sPvNl-DMVsJezIGHl9BWqtMvRELUV9
-    WfFbGFOUOdZZZlJ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrfeefgddtjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
-    dtnecuhfhrohhmpefuvggrnhcuggcumfgvlhhlvgihuceoshgvrghnvhhkrdguvghvseho
-    rhgvghhonhhtrhgrtghkshdrohhrgheqnecuggftrfgrthhtvghrnhepffeltdeuiefhhe
-    elhfegfeehjeevgfetvefhfeehfffhueduvdduffefkeetiedunecukfhppedvgedrvddt
-    rddugeekrdegleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehsvggrnhhvkhdruggvvhesohhrvghgohhnthhrrggtkhhsrdhorhhg
-X-ME-Proxy: <xmx:bwF1X6MX_UxI96efPmRj6WjZozTTkVZiqsuOyDTALDQ53mH-OLxD4g>
-    <xmx:bwF1X47uJpT3zkbtGw6O6q3KJhAoLvQM4OBzauRb6sy8KiATYrBlog>
-    <xmx:bwF1X87qEloXwmA9XnXOJd0x0I9U0wbVTPL7EStL5zR8YePv-pxYWA>
-    <xmx:bwF1X7b63wiIakqi2lyiMDEUE005mWHWQyvXMvOSNCUlp_gVk0eUVA>
-Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 138973280059;
-        Wed, 30 Sep 2020 18:06:36 -0400 (EDT)
-From:   Sean V Kelley <seanvk.dev@oregontracks.org>
-To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [PATCH v7 04/13] PCI/ERR: Rename reset_link() to reset_subordinate_device()
-Date:   Wed, 30 Sep 2020 15:06:30 -0700
-Message-Id: <20200930220630.1113939-1-seanvk.dev@oregontracks.org>
-X-Mailer: git-send-email 2.28.0
+        id S1731112AbgI3WND (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 18:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730842AbgI3WNC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 18:13:02 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE97C0613D1
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 15:13:01 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id i1so3569330edv.2
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 15:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/5JyINSMzWB8voXWZyV8ASlSh5pqRDmgZFl229b53xc=;
+        b=vIRIWKYp7RTSUGB8ntUgtpTfuIX9PNECXrtz7OF4WuzjxaB6ucqKe+labxFFw91k3e
+         QxLYAkxotsyYRcimIeAn7Z8xictu3hpLg464s+yhLPGoBBznroXq6KWSnvggTT+OKc+4
+         aDiohWxi2bv6qcv/jsb8X6MLhFKoc5VlhLVAgI9mvRP+ESLwvXgjzFulM/aycHPXZ43C
+         1PZWgQU//0UlvKQQQTsVxdhKKn2R1cZHSse1ucxAjFxlIjoTBB5mxWh5AjLIfsBpQ8Qr
+         kwHSrW70qM469yHzjDZCiyJ6JH0YYN8N5o79By5EDLYjMuAR2Pr4Z/ShSwy2ytzZ+9o+
+         xxNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/5JyINSMzWB8voXWZyV8ASlSh5pqRDmgZFl229b53xc=;
+        b=DF01BdGsKjzkIO9ijJwJVHDxOOgMhZX++8d20ShYR2ZKTCghQwD15KmqVXrLqOCD7A
+         6vU/+UYLwv2+om6uTbmfm95/LfUIH+qxnIgs3kBpQiMCs8D/aSY9O/o3Hk9DdW8Nuab7
+         3cFKQdKYeR2gomU9KAIUWb1IApHlTLrzxHDsseMdCDv7v/i8ONYzzb6/ixjvYHpb1ojJ
+         uQC+bUr7TzTsObaxizkiodiYpJRM9bbtBuURZikJ8KMu/xY7IsHSEV2fy9ouYPAFBHlS
+         EDgkcaP0tB01ayPldXLF7+/7xDAPwdTkwKahfy4wargtAhzOWe7L5MAAAGQoZL8sAy99
+         SW/w==
+X-Gm-Message-State: AOAM531VMCCQ3Q8UgdDCpLGjPG0jGy16ykuV9YTKNyi44TO1qbPRiI6c
+        0csYlmuEu/kSTXwG4JXGGH8W7jsqSKAMF6Gh4+lnSA==
+X-Google-Smtp-Source: ABdhPJzjWahTDCS64Nwdg2Qz+9IkGNUdbgNKy/rFx3FC7CVjfHrBmMTaxElMCOz9QatJ5KolJbRCcmnwy3926ope18M=
+X-Received: by 2002:aa7:c0d3:: with SMTP id j19mr5304520edp.40.1601503980129;
+ Wed, 30 Sep 2020 15:13:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200929214631.3516445-1-samitolvanen@google.com> <CAKwvOdnYBkUx9YpY9XLONbNYFD7JrOfGbRFQ8ZTf-sa2GTgQdQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdnYBkUx9YpY9XLONbNYFD7JrOfGbRFQ8ZTf-sa2GTgQdQ@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Wed, 30 Sep 2020 15:12:49 -0700
+Message-ID: <CABCJKufUU=s6GcRCRcmuKnANtyyKEBNJVuaPw416C1OPNgywEQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/29] Add support for Clang LTO
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sean V Kelley <sean.v.kelley@intel.com>
+On Wed, Sep 30, 2020 at 2:58 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Tue, Sep 29, 2020 at 2:46 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > This patch series adds support for building x86_64 and arm64 kernels
+> > with Clang's Link Time Optimization (LTO).
+> >
+> > In addition to performance, the primary motivation for LTO is
+> > to allow Clang's Control-Flow Integrity (CFI) to be used in the
+> > kernel. Google has shipped millions of Pixel devices running three
+> > major kernel versions with LTO+CFI since 2018.
+> >
+> > Most of the patches are build system changes for handling LLVM
+> > bitcode, which Clang produces with LTO instead of ELF object files,
+> > postponing ELF processing until a later stage, and ensuring initcall
+> > ordering.
+>
+> Sami, thanks for continuing to drive the series. I encourage you to
+> keep resending with fixes accumulated or dropped on a weekly cadence.
+>
+> The series worked well for me on arm64, but for x86_64 on mainline I
+> saw a stream of new objtool warnings:
+[...]
 
-reset_link() appears to be misnamed. The point is to really
-reset any devices below a given bridge. So rename it to
-reset_subordinate_devices() to make it clear that we are
-passing a bridge with the intent to reset the devices below it.
+Objtool normally won't print out these warnings when run on vmlinux.o,
+but we can't pass --vmlinux to objtool as that also implies noinstr
+validation right now. I think we'd have to split that from --vmlinux
+to avoid these. I can include a patch to add a --noinstr flag in v5.
+Peter, any thoughts about this?
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
----
- drivers/pci/pci.h      | 2 +-
- drivers/pci/pcie/err.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> I think those should be resolved before I provide any kind of tested
+> by tag.  My other piece of feedback was that I like the default
+> ThinLTO, but I think the help text in the Kconfig which is visible
+> during menuconfig could be improved by informing the user the
+> tradeoffs.  For example, if CONFIG_THINLTO is disabled, it should be
+> noted that full LTO will be used instead.  Also, that full LTO may
+> produce slightly better optimized binaries than ThinLTO, at the cost
+> of not utilizing multiple cores when linking and thus significantly
+> slower to link.
+>
+> Maybe explaining that setting it to "n" implies a full LTO build,
+> which will be much slower to link but possibly slightly faster would
+> be good?  It's not visible unless LTO_CLANG and ARCH_SUPPORTS_THINLTO
+> is enabled, so I don't think you need to explain that THINLTO without
+> those is *not* full LTO.  I'll leave the precise wording to you. WDYT?
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 88e27a98def5..efea170805fa 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -574,7 +574,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
- /* PCI error reporting and recovery */
- pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 			pci_channel_state_t state,
--			pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
-+			pci_ers_result_t (*reset_subordinate_devices)(struct pci_dev *pdev));
+Sure, sounds good. I'll update the help text in the next version.
 
- bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
- #ifdef CONFIG_PCIEASPM
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index c543f419d8f9..950612342f1c 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -148,7 +148,7 @@ static int report_resume(struct pci_dev *dev, void *data)
+> Also, when I look at your treewide DISABLE_LTO patch, I think "does
+> that need to be a part of this series, or is it a cleanup that can
+> stand on its own?"  I think it may be the latter?  Maybe it would help
+> shed one more patch than to have to carry it to just send it?  Or did
+> I miss something as to why it should remain a part of this series?
 
- pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 			pci_channel_state_t state,
--			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
-+			pci_ers_result_t (*reset_subordinate_devices)(struct pci_dev *pdev))
- {
- 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
- 	struct pci_bus *bus;
-@@ -165,9 +165,9 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	pci_dbg(dev, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bus(bus, report_frozen_detected, &status);
--		status = reset_link(dev);
-+		status = reset_subordinate_device(dev);
- 		if (status != PCI_ERS_RESULT_RECOVERED) {
--			pci_warn(dev, "link reset failed\n");
-+			pci_warn(dev, "subordinate device reset failed\n");
- 			goto failed;
- 		}
- 	} else {
---
-2.28.0
+I suppose it could be stand-alone, but as these patches are also
+disabling LTO by filtering out flags in some of the same files,
+removing the unused DISABLE_LTO flags first would reduce confusion.
+But I'm fine with sending it separately too if that's preferred.
 
+Sami
