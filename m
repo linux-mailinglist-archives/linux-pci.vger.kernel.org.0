@@ -2,132 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3C9327F4EA
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 00:13:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB37227F4EE
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 00:15:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbgI3WND (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 18:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48368 "EHLO
+        id S1730268AbgI3WPl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 18:15:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730842AbgI3WNC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 18:13:02 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE97C0613D1
-        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 15:13:01 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id i1so3569330edv.2
-        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 15:13:01 -0700 (PDT)
+        with ESMTP id S1727210AbgI3WPl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 18:15:41 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FF2C061755
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 15:15:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d9so2356196pfd.3
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 15:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/5JyINSMzWB8voXWZyV8ASlSh5pqRDmgZFl229b53xc=;
-        b=vIRIWKYp7RTSUGB8ntUgtpTfuIX9PNECXrtz7OF4WuzjxaB6ucqKe+labxFFw91k3e
-         QxLYAkxotsyYRcimIeAn7Z8xictu3hpLg464s+yhLPGoBBznroXq6KWSnvggTT+OKc+4
-         aDiohWxi2bv6qcv/jsb8X6MLhFKoc5VlhLVAgI9mvRP+ESLwvXgjzFulM/aycHPXZ43C
-         1PZWgQU//0UlvKQQQTsVxdhKKn2R1cZHSse1ucxAjFxlIjoTBB5mxWh5AjLIfsBpQ8Qr
-         kwHSrW70qM469yHzjDZCiyJ6JH0YYN8N5o79By5EDLYjMuAR2Pr4Z/ShSwy2ytzZ+9o+
-         xxNw==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IWHKwPVIVcemGc90Z3hO6SXFiJGRIxohxqpgqu+BDQQ=;
+        b=gJ/7u5pCaguTSJVI/m5PGfLSSeWSoVDx7vy1UpGyoQ7pwlTCtttUSj5HGR/+F8Cksc
+         tOjyhH4jyVwNT70X005zV5RS4hDbW3FlcUHR+87Io5OqCzHxgYNRxOFqmX3+FkECICTW
+         qzMMuaMqYak9bVgcWyLvkedlQPX04KF2jLp/zU5wHFwqovp/H8CsZHjgWRlvaPRV7sQ4
+         sj6TLlWek1h4wK4bKwKAmivgU6awM3NTSjTpUdvvCJH+4BDZiIMyg6MzgYrXlEntkHIe
+         yWLT4AaXl1RSKWLcH0Dy68BYSktw2GPm2kTrUq1h5fpTwZimBNnEeprBLP++5sxHUT1E
+         MeGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/5JyINSMzWB8voXWZyV8ASlSh5pqRDmgZFl229b53xc=;
-        b=DF01BdGsKjzkIO9ijJwJVHDxOOgMhZX++8d20ShYR2ZKTCghQwD15KmqVXrLqOCD7A
-         6vU/+UYLwv2+om6uTbmfm95/LfUIH+qxnIgs3kBpQiMCs8D/aSY9O/o3Hk9DdW8Nuab7
-         3cFKQdKYeR2gomU9KAIUWb1IApHlTLrzxHDsseMdCDv7v/i8ONYzzb6/ixjvYHpb1ojJ
-         uQC+bUr7TzTsObaxizkiodiYpJRM9bbtBuURZikJ8KMu/xY7IsHSEV2fy9ouYPAFBHlS
-         EDgkcaP0tB01ayPldXLF7+/7xDAPwdTkwKahfy4wargtAhzOWe7L5MAAAGQoZL8sAy99
-         SW/w==
-X-Gm-Message-State: AOAM531VMCCQ3Q8UgdDCpLGjPG0jGy16ykuV9YTKNyi44TO1qbPRiI6c
-        0csYlmuEu/kSTXwG4JXGGH8W7jsqSKAMF6Gh4+lnSA==
-X-Google-Smtp-Source: ABdhPJzjWahTDCS64Nwdg2Qz+9IkGNUdbgNKy/rFx3FC7CVjfHrBmMTaxElMCOz9QatJ5KolJbRCcmnwy3926ope18M=
-X-Received: by 2002:aa7:c0d3:: with SMTP id j19mr5304520edp.40.1601503980129;
- Wed, 30 Sep 2020 15:13:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IWHKwPVIVcemGc90Z3hO6SXFiJGRIxohxqpgqu+BDQQ=;
+        b=gGaV4a58yktMswrQtEbUhEoBJyQTfgk+JpVZstIlocUkMTXH/b/NFt6TLPTGojzGvI
+         XH4HzjDzLYSOs3RH6QkRbqpDcXn8bcx5O6AJACeczxzs7HBQmPX0iCSq4aaDniIeH2qU
+         48aD/SHxj6s5a9lc1kpcmB+uVkycplzFeXeNOF3IbLxk3q1SkUrLciRPx+pQFcEuoeQS
+         4SkxE67PDfFBplJSJoan5BPJ/n6a42drXsaWX9s9HsFXmTtftcqcASsSPzoB5SUCkBSP
+         9zHXydQtFEauZZozB6mfClC/1NpokIQeSKH+fK+kjpzaM7gocB7+zljQIRD6B7TyW0Tp
+         ZHEA==
+X-Gm-Message-State: AOAM533WdhHDI6WLqN/gzUYVcvUJy5tJmTJCuc5k9vgnAoZBrKZOTQgS
+        WbofxHVDDzKZD0BCXTaamdXJ1w==
+X-Google-Smtp-Source: ABdhPJyvRxRvtFTD0F5SDQByJMS5583bWfh8XuJnv06pKbHckMxby2B1VSunAcrin2ZooNsQBPvTXw==
+X-Received: by 2002:a17:902:70c9:b029:d2:950a:d82e with SMTP id l9-20020a17090270c9b02900d2950ad82emr4395419plt.26.1601504140590;
+        Wed, 30 Sep 2020 15:15:40 -0700 (PDT)
+Received: from [10.212.76.164] (fmdmzpr04-ext.fm.intel.com. [192.55.55.39])
+        by smtp.gmail.com with ESMTPSA id c1sm3596523pfj.219.2020.09.30.15.15.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Sep 2020 15:15:39 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Sean V Kelley" <seanvk.dev@oregontracks.org>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
+        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 03/13] PCI/RCEC: Cache RCEC capabilities in
+ pci_init_capabilities()
+Date:   Wed, 30 Sep 2020 15:15:36 -0700
+X-Mailer: MailMate (1.13.2r5673)
+Message-ID: <C878940D-0AAC-48D1-99C5-28D7A5E98ACA@intel.com>
+In-Reply-To: <20200930215820.1113353-4-seanvk.dev@oregontracks.org>
+References: <20200930215820.1113353-1-seanvk.dev@oregontracks.org>
+ <20200930215820.1113353-4-seanvk.dev@oregontracks.org>
 MIME-Version: 1.0
-References: <20200929214631.3516445-1-samitolvanen@google.com> <CAKwvOdnYBkUx9YpY9XLONbNYFD7JrOfGbRFQ8ZTf-sa2GTgQdQ@mail.gmail.com>
-In-Reply-To: <CAKwvOdnYBkUx9YpY9XLONbNYFD7JrOfGbRFQ8ZTf-sa2GTgQdQ@mail.gmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 30 Sep 2020 15:12:49 -0700
-Message-ID: <CABCJKufUU=s6GcRCRcmuKnANtyyKEBNJVuaPw416C1OPNgywEQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/29] Add support for Clang LTO
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 2:58 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+On 30 Sep 2020, at 14:58, Sean V Kelley wrote:
+
+> From: Sean V Kelley <sean.v.kelley@intel.com>
 >
-> On Tue, Sep 29, 2020 at 2:46 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> >
-> > This patch series adds support for building x86_64 and arm64 kernels
-> > with Clang's Link Time Optimization (LTO).
-> >
-> > In addition to performance, the primary motivation for LTO is
-> > to allow Clang's Control-Flow Integrity (CFI) to be used in the
-> > kernel. Google has shipped millions of Pixel devices running three
-> > major kernel versions with LTO+CFI since 2018.
-> >
-> > Most of the patches are build system changes for handling LLVM
-> > bitcode, which Clang produces with LTO instead of ELF object files,
-> > postponing ELF processing until a later stage, and ensuring initcall
-> > ordering.
+> Extend support for Root Complex Event Collectors by decoding and
+> caching the RCEC Endpoint Association Extended Capabilities when
+> enumerating. Use that cached information for later error source
+> reporting. See PCI Express Base Specification, version 5.0-1,
+> section 7.9.10.
 >
-> Sami, thanks for continuing to drive the series. I encourage you to
-> keep resending with fixes accumulated or dropped on a weekly cadence.
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> ---
+>  drivers/pci/pci.h         | 17 +++++++++++
+>  drivers/pci/pcie/Makefile |  2 +-
+>  drivers/pci/pcie/rcec.c   | 59 
+> +++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/probe.c       |  2 ++
+>  include/linux/pci.h       |  4 +++
+>  5 files changed, 83 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pci/pcie/rcec.c
 >
-> The series worked well for me on arm64, but for x86_64 on mainline I
-> saw a stream of new objtool warnings:
-[...]
-
-Objtool normally won't print out these warnings when run on vmlinux.o,
-but we can't pass --vmlinux to objtool as that also implies noinstr
-validation right now. I think we'd have to split that from --vmlinux
-to avoid these. I can include a patch to add a --noinstr flag in v5.
-Peter, any thoughts about this?
-
-> I think those should be resolved before I provide any kind of tested
-> by tag.  My other piece of feedback was that I like the default
-> ThinLTO, but I think the help text in the Kconfig which is visible
-> during menuconfig could be improved by informing the user the
-> tradeoffs.  For example, if CONFIG_THINLTO is disabled, it should be
-> noted that full LTO will be used instead.  Also, that full LTO may
-> produce slightly better optimized binaries than ThinLTO, at the cost
-> of not utilizing multiple cores when linking and thus significantly
-> slower to link.
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index fa12f7cbc1a0..88e27a98def5 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -449,6 +449,15 @@ int aer_get_device_error_info(struct pci_dev 
+> *dev, struct aer_err_info *info);
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>  #endif	/* CONFIG_PCIEAER */
 >
-> Maybe explaining that setting it to "n" implies a full LTO build,
-> which will be much slower to link but possibly slightly faster would
-> be good?  It's not visible unless LTO_CLANG and ARCH_SUPPORTS_THINLTO
-> is enabled, so I don't think you need to explain that THINLTO without
-> those is *not* full LTO.  I'll leave the precise wording to you. WDYT?
+> +#ifdef CONFIG_PCIEPORTBUS
+> +/* Cached RCEC Endpoint Association */
+> +struct rcec_ea {
+> +	u8		nextbusn;
+> +	u8		lastbusn;
+> +	u32		bitmap;
+> +};
+> +#endif
+> +
+>  #ifdef CONFIG_PCIE_DPC
+>  void pci_save_dpc_state(struct pci_dev *dev);
+>  void pci_restore_dpc_state(struct pci_dev *dev);
+> @@ -461,6 +470,14 @@ static inline void pci_restore_dpc_state(struct 
+> pci_dev *dev) {}
+>  static inline void pci_dpc_init(struct pci_dev *pdev) {}
+>  #endif
+>
+> +#ifdef CONFIG_PCIEPORTBUS
+> +int pci_rcec_init(struct pci_dev *dev);
+> +void pci_rcec_exit(struct pci_dev *dev);
+> +#else
+> +static inline int pci_rcec_init(struct pci_dev *dev) {return 0;}
 
-Sure, sounds good. I'll update the help text in the next version.
+Will fix the spacing here on the inline. That’s what I get for a last 
+minute change of void to int for return…
 
-> Also, when I look at your treewide DISABLE_LTO patch, I think "does
-> that need to be a part of this series, or is it a cleanup that can
-> stand on its own?"  I think it may be the latter?  Maybe it would help
-> shed one more patch than to have to carry it to just send it?  Or did
-> I miss something as to why it should remain a part of this series?
+Sean
 
-I suppose it could be stand-alone, but as these patches are also
-disabling LTO by filtering out flags in some of the same files,
-removing the unused DISABLE_LTO flags first would reduce confusion.
-But I'm fine with sending it separately too if that's preferred.
-
-Sami
+> +static inline void pci_rcec_exit(struct pci_dev *dev) {}
+> +#endif
+> +
+>  #ifdef CONFIG_PCI_ATS
+>  /* Address Translation Service */
+>  void pci_ats_init(struct pci_dev *dev);
+> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+> index 68da9280ff11..d9697892fa3e 100644
+> --- a/drivers/pci/pcie/Makefile
+> +++ b/drivers/pci/pcie/Makefile
+> @@ -2,7 +2,7 @@
+>  #
+>  # Makefile for PCI Express features and port driver
+>
+> -pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
+> +pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o rcec.o
+>
+>  obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
+>
+> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+> new file mode 100644
+> index 000000000000..da02b0af442d
+> --- /dev/null
+> +++ b/drivers/pci/pcie/rcec.c
+> @@ -0,0 +1,59 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Root Complex Event Collector Support
+> + *
+> + * Authors:
+> + *  Sean V Kelley <sean.v.kelley@intel.com>
+> + *  Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> + *
+> + * Copyright (C) 2020 Intel Corp.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_regs.h>
+> +
+> +#include "../pci.h"
+> +
+> +int pci_rcec_init(struct pci_dev *dev)
+> +{
+> +	struct rcec_ea *rcec_ea;
+> +	u32 rcec, hdr, busn;
+> +	u8 ver;
+> +
+> +	/* Only for Root Complex Event Collectors */
+> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)
+> +		return 0;
+> +
+> +	rcec = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC);
+> +	if (!rcec)
+> +		return 0;
+> +
+> +	rcec_ea = kzalloc(sizeof(*rcec_ea), GFP_KERNEL);
+> +	if (!rcec_ea)
+> +		return -ENOMEM;
+> +	dev->rcec_ea = rcec_ea;
+> +
+> +	pci_read_config_dword(dev, rcec + PCI_RCEC_RCIEP_BITMAP, 
+> &rcec_ea->bitmap);
+> +
+> +	/* Check whether RCEC BUSN register is present */
+> +	pci_read_config_dword(dev, rcec, &hdr);
+> +	ver = PCI_EXT_CAP_VER(hdr);
+> +	if (ver < PCI_RCEC_BUSN_REG_VER) {
+> +		/* Avoid later ver check by setting nextbusn */
+> +		rcec_ea->nextbusn = 0xff;
+> +		return 0;
+> +	}
+> +
+> +	pci_read_config_dword(dev, rcec + PCI_RCEC_BUSN, &busn);
+> +	rcec_ea->nextbusn = PCI_RCEC_BUSN_NEXT(busn);
+> +	rcec_ea->lastbusn = PCI_RCEC_BUSN_LAST(busn);
+> +
+> +	return 0;
+> +}
+> +
+> +void pci_rcec_exit(struct pci_dev *dev)
+> +{
+> +	kfree(dev->rcec_ea);
+> +	dev->rcec_ea = NULL;
+> +}
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 03d37128a24f..25f01f841f2d 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2201,6 +2201,7 @@ static void pci_configure_device(struct pci_dev 
+> *dev)
+>  static void pci_release_capabilities(struct pci_dev *dev)
+>  {
+>  	pci_aer_exit(dev);
+> +	pci_rcec_exit(dev);
+>  	pci_vpd_release(dev);
+>  	pci_iov_release(dev);
+>  	pci_free_cap_save_buffers(dev);
+> @@ -2400,6 +2401,7 @@ static void pci_init_capabilities(struct pci_dev 
+> *dev)
+>  	pci_ptm_init(dev);		/* Precision Time Measurement */
+>  	pci_aer_init(dev);		/* Advanced Error Reporting */
+>  	pci_dpc_init(dev);		/* Downstream Port Containment */
+> +	pci_rcec_init(dev);		/* Root Complex Event Collector */
+>
+>  	pcie_report_downtraining(dev);
+>
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 835530605c0d..2290439e8bc0 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -304,6 +304,7 @@ struct pcie_link_state;
+>  struct pci_vpd;
+>  struct pci_sriov;
+>  struct pci_p2pdma;
+> +struct rcec_ea;
+>
+>  /* The pci_dev structure describes PCI devices */
+>  struct pci_dev {
+> @@ -326,6 +327,9 @@ struct pci_dev {
+>  #ifdef CONFIG_PCIEAER
+>  	u16		aer_cap;	/* AER capability offset */
+>  	struct aer_stats *aer_stats;	/* AER stats for this device */
+> +#endif
+> +#ifdef CONFIG_PCIEPORTBUS
+> +	struct rcec_ea	*rcec_ea;	/* RCEC cached endpoint association */
+>  #endif
+>  	u8		pcie_cap;	/* PCIe capability offset */
+>  	u8		msi_cap;	/* MSI capability offset */
+> -- 
+> 2.28.0
