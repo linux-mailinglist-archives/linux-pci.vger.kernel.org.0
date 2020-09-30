@@ -2,114 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B836D27EE50
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 18:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A90C127EF21
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 18:27:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbgI3QF5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 12:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47976 "EHLO
+        id S1731071AbgI3Q11 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 12:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731063AbgI3QFv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 12:05:51 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063DFC061755
-        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 09:05:51 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id o8so3601072ejb.10
-        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 09:05:50 -0700 (PDT)
+        with ESMTP id S1725355AbgI3Q10 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 12:27:26 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC36C0613D1
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 09:27:24 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y17so2897197lfa.8
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 09:27:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4nf8e6hIaPbRqntvQjCiPI17gKDQL3g6MdR3siKHn30=;
-        b=FdREMa9YQ4gNRdQHURf/x/R8SmYVJ5gIkH9KpmlqeEAlOLeXAhaYjSC7VB4Y8/uoLl
-         NpSU9flOBZMB2LnlrWowvIpCnct6WksL48hJ6hEvbeije9viNCjBJLNglsVPmK17McTE
-         bQR932o1ftCv5I/jccydLYq37ELOk8HLaS5waUMw2Sl4+mDrlXBlbynVNtazEd8rcTZn
-         oCfVkT2gQBFoWgRMv35xCS9XqXQ6DAZwYypy9P5mdyuszGukdvxnnn/AnzhUUV4OJTG3
-         jalYoYIzQjQOW6W2UeOKJ1wH4ANi3gdiXC8IiXeG+7KUsH9D9cVc5b9Ynx38GiIxo6v5
-         fQpQ==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=SDgDsKonRl9jKYsZXyPmbBwG+e3LnZR8gLRHIxhxmiU=;
+        b=nrxha9o+yENidrz+UzMaKu4BoX+lo90cT7XY4QgLsjnRDLNQGJGSY9uD1gZ1j95+BM
+         fVFFaU/yWA/EXnIH8o/IHp+xG0AZK7WvY7szYAyny8WO7MsWZW//FlllvvSbwJ8wkiDj
+         KHNfyLIK6B8sQit/STZHE2/Itu8DMOoajo9TPMv3epsIUxBwK8dcoOpi4haOWBvAaUry
+         QSGWlitgBAnG+TtFQ5p12/3ir2eSAoXN0tZfvwH4m1dV7QmPemwezQ76O3PT6P4SjC11
+         GM8JEUZ2PlA1IJxMfHmaglslwpuWtWoItwMASrNjVxGkosSmWg2qqLcUfk+H+ixAOJPi
+         1LpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4nf8e6hIaPbRqntvQjCiPI17gKDQL3g6MdR3siKHn30=;
-        b=I1WzNjPcu3nj1zClLVk1te9zYiUicnxlx1KqAzQD26D4vUi99zp50hbMFOG5y94LrM
-         S0GC9jqAIvNQp/vrdF2gNJi3S7zS+V7R6YvcUMpeRP4juIA8UI+qC/iRKmNzqqIV6Glz
-         oxEGWZ5qOyfgNThnf2/GR6deirARPs4F2FJQ04yXkxeOTrQSf7/zHmbHQlMprBXarxBa
-         BvurvfiHW81WUDBbWCqr18vSxsfMq02+1PIgRKPFkI+Mm8j48CK+zo5U1WiYrQnFJmno
-         O+4Xe4BLzD+AbAz52n4EHfbaPJhDwGhLQMiIneKkSFEirAc5Yv4qrvJwfab+3qjDFG1P
-         f6pQ==
-X-Gm-Message-State: AOAM532n7Cpd1L5joJeHkEUoiFzsP5X9q1K4PsPQbB0AAiiBoVPjAhPw
-        uUCxjOvFqYxDrX9RhbvC1QC/GuO4g59SUD1Itblj9Q==
-X-Google-Smtp-Source: ABdhPJzYVdbm3fjbvWcAsssxdkKlp1Qf8hBl3VmZLS0706h18aYEVSeaUqFy3XkT6TY1fv56XT82VdDVYI9SZJ5H+mA=
-X-Received: by 2002:a17:906:a256:: with SMTP id bi22mr3464394ejb.375.1601481949457;
- Wed, 30 Sep 2020 09:05:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=SDgDsKonRl9jKYsZXyPmbBwG+e3LnZR8gLRHIxhxmiU=;
+        b=qLhXueDx66Kq397FF1YGuVkeBKCbSsSJVAZ2VIPTjBMipRD48KakmXivkrLS+mUuyB
+         CUZvQ7bm6dpgFV8OqVO5fjJOL40DzrXpm984piIRR7R8JmnrvzH6AVJLkpLb0cV8NYvy
+         69kEALOLLjOoAIzrAZSgZBIJlwZpJiTxv7+8NuLMYzUPV7mv0g4EuLv9S1W7JSU7GKL2
+         u4yvB9Y9VD5buZEpU9u2DPApYHwwOBUbW8QinFflRGu3VZWcxMcI+c5YRnTDC4m9Qt/j
+         X3356fMv8C4WlZfc4BKl3ED6PQPopPSuqAG8UPVXl+3Ldub+xRR92S20bqIzSAmndr73
+         R9AQ==
+X-Gm-Message-State: AOAM530sDnSMiw/cuFFy/E3X8JQ5+HrJZX585j8miPAIuPirTH76UGyK
+        UmLEYHhpR7RnO8/35HBC6GgF8g==
+X-Google-Smtp-Source: ABdhPJwT3egLNqlOPdmJqDBfOvuBtNjLqFSOvCK/N7g6m3nbAMLWYxg8FpxRpAbVie8oM/srAUTQxw==
+X-Received: by 2002:a19:942:: with SMTP id 63mr1224078lfj.23.1601483243337;
+        Wed, 30 Sep 2020 09:27:23 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id l129sm242018lfd.279.2020.09.30.09.27.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2020 09:27:22 -0700 (PDT)
+Date:   Wed, 30 Sep 2020 18:27:22 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com
+Subject: Re: [PATCH v2] of: address: Work around missing device_type property
+ in pcie nodes
+Message-ID: <20200930162722.GF1516931@oden.dyn.berto.se>
+References: <20200819094255.474565-1-maz@kernel.org>
 MIME-Version: 1.0
-References: <20200929214631.3516445-1-samitolvanen@google.com>
- <20200929214631.3516445-7-samitolvanen@google.com> <20200929201257.1570aadd@oasis.local.home>
-In-Reply-To: <20200929201257.1570aadd@oasis.local.home>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 30 Sep 2020 09:05:38 -0700
-Message-ID: <CABCJKud3S7pn8Ap3AkNRUUC4v8nMwOzM2_EwEB6+NFzDp5gppA@mail.gmail.com>
-Subject: Re: [PATCH v4 06/29] tracing: move function tracer options to Kconfig
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819094255.474565-1-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 5:13 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Tue, 29 Sep 2020 14:46:08 -0700
-> Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> > +++ b/kernel/trace/Kconfig
-> > @@ -595,6 +595,22 @@ config FTRACE_MCOUNT_RECORD
-> >       depends on DYNAMIC_FTRACE
-> >       depends on HAVE_FTRACE_MCOUNT_RECORD
-> >
-> > +config FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
-> > +     bool
-> > +     depends on FTRACE_MCOUNT_RECORD
-> > +
-> > +config FTRACE_MCOUNT_USE_CC
-> > +     def_bool y
-> > +     depends on $(cc-option,-mrecord-mcount)
->
-> Does the above get executed at every build? Or does a make *config need
-> to be done? If someone were to pass a .config to someone else that had
-> a compiler that didn't support this, would it be changed if the person
-> just did a make?
+Hi Marc,
 
-Yes, it's updated if you copy a .config and just run make. For
-example, here's what happens when I create a config with gcc and then
-build it with Clang:
+I'm afraid this commit breaks booting my rk3399 device.
 
-$ make defconfig
-...
-$ ./scripts/config -e FUNCTION_TRACER -e DYNAMIC_FTRACE
-$ make olddefconfig
-...
-$ grep MCOUNT_USE .config
-CONFIG_FTRACE_MCOUNT_USE_CC=y
-$ make CC=clang
-scripts/kconfig/conf  --syncconfig Kconfig
-...
-^C
-$ grep MCOUNT_USE .config
-CONFIG_FTRACE_MCOUNT_USE_OBJTOOL=y
+I bisected the problem to this patch merged as [1]. I'm testing on a 
+Scarlet device and I'm using the unmodified upstream  
+rk3399-gru-scarlet-inx.dtb for my tests.
 
-Sami
+The problem I'm experience is a black screen after the bootloader and 
+the device is none responsive over the network. I have no serial console 
+to this device so I'm afraid I can't tell you if there is anything 
+useful on to aid debugging there.
+
+If I try to test one commit earlier [2] the system boots as expected and 
+everything works as it did for me in v5.8 and earlier. I have worked 
+little with this device and have no clue about what is really on the PCI 
+buss. But running from [2] I have this info about PCI if it's helpful, 
+please ask if somethings missing.
+
+# dmesg | grep -i pci
+[    0.003943] PCI/MSI: /interrupt-controller@fee00000/interrupt-controller@fee20000 domain created
+[    0.922022] PCI: CLS 0 bytes, default 64
+[    0.941517] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
+[    0.941577] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbefffff -> 0x00fa000000
+[    0.941962] rockchip-pcie f8000000.pcie: GPIO lookup for consumer ep
+[    0.941981] rockchip-pcie f8000000.pcie: using device tree for GPIO lookup
+[    0.942018] of_get_named_gpiod_flags: parsed 'ep-gpios' property of node '/pcie@f8000000[0]' - status (0)
+[    0.942255] rockchip-pcie f8000000.pcie: no vpcie12v regulator found
+[    4.196248] ehci-pci: EHCI PCI platform driver
+[    4.214639] ohci-pci: OHCI PCI platform driver
+
+
+# ls /sys/bus/{pci,pci_express}/devices
+/sys/bus/pci/devices:
+
+/sys/bus/pci_express/devices:
+
+
+# ls /sys/bus/{pci,pci_express}/drivers
+/sys/bus/pci/drivers:
+cavium_rng_pf  cavium_rng_vf  dwc3-haps  ehci-pci  exar_serial  ohci-pci  pcieport  serial  xhci_hcd
+
+/sys/bus/pci_express/drivers:
+pcie_pme
+
+
+# ls /sys/bus/platform/drivers/rockchip-{pcie,pcie-phy}
+/sys/bus/platform/drivers/rockchip-pcie:
+bind  uevent  unbind
+
+/sys/bus/platform/drivers/rockchip-pcie-phy:
+bind  ff770000.syscon:pcie-phy  uevent  unbind
+
+1. d1ac0002dd297069 ("of: address: Work around missing device_type property in pcie nodes")
+2. 43647929175e2cd3 ("dt: writing-schema: Miscellaneous grammar fixes")
+
+On 2020-08-19 10:42:55 +0100, Marc Zyngier wrote:
+> Recent changes to the DT PCI bus parsing made it mandatory for
+> device tree nodes describing a PCI controller to have the
+> 'device_type = "pci"' property for the node to be matched.
+> 
+> Although this follows the letter of the specification, it
+> breaks existing device-trees that have been working fine
+> for years.  Rockchip rk3399-based systems are a prime example
+> of such collateral damage, and have stopped discovering their
+> PCI bus.
+> 
+> In order to paper over it, let's add a workaround to the code
+> matching the device type, and accept as PCI any node that is
+> named "pcie",
+> 
+> A warning will hopefully nudge the user into updating their
+> DT to a fixed version if they can, but the incentive is
+> obviously pretty small.
+> 
+> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> Suggested-by: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/of/address.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 590493e04b01..b37bd9cc2810 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -128,15 +128,29 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+>   * PCI bus specific translator
+>   */
+>  
+> +static bool of_node_is_pcie(struct device_node *np)
+> +{
+> +	bool is_pcie = of_node_name_eq(np, "pcie");
+> +
+> +	if (is_pcie)
+> +		pr_warn_once("%pOF: Missing device_type\n", np);
+> +
+> +	return is_pcie;
+> +}
+> +
+>  static int of_bus_pci_match(struct device_node *np)
+>  {
+>  	/*
+>   	 * "pciex" is PCI Express
+>  	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+>  	 * "ht" is hypertransport
+> +	 *
+> +	 * If none of the device_type match, and that the node name is
+> +	 * "pcie", accept the device as PCI (with a warning).
+>  	 */
+>  	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
+> -		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
+> +		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
+> +		of_node_is_pcie(np);
+>  }
+>  
+>  static void of_bus_pci_count_cells(struct device_node *np,
+> -- 
+> 2.27.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Regards,
+Niklas Söderlund
