@@ -2,141 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B40827F078
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 19:25:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 307C527F0A2
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 19:37:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgI3RZi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 13:25:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38694 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725355AbgI3RZi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Sep 2020 13:25:38 -0400
-IronPort-SDR: 7PxRitwFbX+8mNPFj14EOLf6TlCjZkO+jnW3uSQD7yYurwkz7EN8d61XkS/1x6hLV3ZPA4uc1y
- lYTg2KBi2Egg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9760"; a="150158533"
-X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
-   d="scan'208";a="150158533"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 10:25:37 -0700
-IronPort-SDR: FK7/wIJBisXTMuj6iqUnpiUpF0sHZmEXgWujctvoBj/uFfZp+PCakKD8gDd4Smm5TFBZfQyr6i
- CR1IGgnmqLIQ==
-X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
-   d="scan'208";a="308240091"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.255.88.197]) ([10.255.88.197])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 10:25:34 -0700
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1725355AbgI3Rhs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 13:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731335AbgI3Rhr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 13:37:47 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75431C0613D1
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 10:37:47 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w3so2319239ljo.5
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 10:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=nbODIVmtMlo+oLH9Hrd8YGZI1ZfekrJ3et3L9IP3emw=;
+        b=XMWwh4Nz6o2C7++lYVkhjkwC5h4Fg1CtBXKYaVfnuMN0DhI1MS18W9JzZHWGJ190qC
+         3Yn6DG46RbfYlASND+TtT+IOlnxrJmcLcxSLeHwbkQyZdViuFmTwIWAZBeD8IoS0NgJU
+         9/iu6348F5EBEQr0YdW3SqexfZcYhbP+g0Ce9IocdnoKHCkTPkissYZFeY5D/HkbZaUV
+         s9mlzqY4RyugivLGjSCtbpu4TEyGPKucmg/Kefjoa7DrChvJ+I+QfArOGA35WACDbwal
+         gY6BbBKRqovl/O0BCwOEWFasJnokCoS90w4YSuXv4Xd+jcRUCcQt1litY3yaF4F5TaZU
+         Qiug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=nbODIVmtMlo+oLH9Hrd8YGZI1ZfekrJ3et3L9IP3emw=;
+        b=Z6sD+lprTW+PRe43tu+BL10eiS4EJnHV3pznMKbbvcSg7fZ0ha3nzSJZAFgOYdF5oc
+         3ZHSQANiaqj0X7DqgFASnqlq8gR3HlRVRP/ccARpGQ3+bHI+dPHyUyA3CVhJm5LRdfsC
+         XnS6PANlUCDddnc/SLELHmw/k6SaNHEDhFGfNaEeZw8Ql4k4i9t3YlSloIbaYsKSfaun
+         7vFatPl4CuNSh9etXhDyfvNhIlvEnRYmL2IDM6FQDrKPHO82jInCLXN12J0NdB2rPKl1
+         82GCcFN+MIpAkKlGxLuq6jiSt+Rj9f2cw+i5qmyeJQ6gmHzv4I8f6Zb4uXQyF40yEjIP
+         relg==
+X-Gm-Message-State: AOAM533eayRvyNedXFyAQSHws0Dr8uoLZn+YPxkYo/H5QmH3+MMcxzUh
+        j8fdoZNgrhtvK6NJkFKNCH2nPw==
+X-Google-Smtp-Source: ABdhPJyqDCDXp1ZYRf9156ssXFOuXiNaysi5BzWkXQEbMYcWMwfcZgmysMuz722U1SrRArZ4ULE7OA==
+X-Received: by 2002:a2e:89ca:: with SMTP id c10mr1263859ljk.223.1601487465710;
+        Wed, 30 Sep 2020 10:37:45 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id 77sm261464lfg.199.2020.09.30.10.37.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2020 10:37:45 -0700 (PDT)
+Date:   Wed, 30 Sep 2020 19:37:44 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        ravi.v.shankar@intel.com
-References: <20200826111628.794979401@linutronix.de>
- <10b5d933-f104-7699-341a-0afb16640d54@intel.com>
- <87v9fvix5f.fsf@nanos.tec.linutronix.de> <20200930114301.GD816047@nvidia.com>
- <87k0wbi94b.fsf@nanos.tec.linutronix.de>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <e07aa723-12cd-7eb7-392a-642f96b98f79@intel.com>
-Date:   Wed, 30 Sep 2020 10:25:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Heiko Stuebner <heiko@sntech.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
+        samuel@dionne-riel.com
+Subject: Re: [PATCH v2] of: address: Work around missing device_type property
+ in pcie nodes
+Message-ID: <20200930173744.GG1516931@oden.dyn.berto.se>
+References: <20200819094255.474565-1-maz@kernel.org>
+ <20200930162722.GF1516931@oden.dyn.berto.se>
+ <977f60f07a4cb5c59f0e5f8a9dfb3993@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87k0wbi94b.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <977f60f07a4cb5c59f0e5f8a9dfb3993@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas/Jason,
+Hi Marc,
 
-On 9/30/2020 8:20 AM, Thomas Gleixner wrote:
-> On Wed, Sep 30 2020 at 08:43, Jason Gunthorpe wrote:
->> On Wed, Sep 30, 2020 at 08:41:48AM +0200, Thomas Gleixner wrote:
->>> On Tue, Sep 29 2020 at 16:03, Megha Dey wrote:
->>>> On 8/26/2020 4:16 AM, Thomas Gleixner wrote:
->>>>> #9	is obviously just for the folks interested in IMS
->>>>>
->>>> I see that the tip tree (as of 9/29) has most of these patches but
->>>> notice that the DEV_MSI related patches
->>>>
->>>> haven't made it. I have tested the tip tree(x86/irq branch) with your
->>>> DEV_MSI infra patches and our IMS patches with the IDXD driver and was
->>> Your IMS patches? Why do you need something special again?
+On 2020-09-30 18:23:21 +0100, Marc Zyngier wrote:
+> Hi Niklas,
+> 
+> [+ Samuel]
+> 
+> On 2020-09-30 17:27, Niklas Söderlund wrote:
+> > Hi Marc,
+> > 
+> > I'm afraid this commit breaks booting my rk3399 device.
+> > 
+> > I bisected the problem to this patch merged as [1]. I'm testing on a
+> > Scarlet device and I'm using the unmodified upstream
+> > rk3399-gru-scarlet-inx.dtb for my tests.
+> > 
+> > The problem I'm experience is a black screen after the bootloader and
+> > the device is none responsive over the network. I have no serial console
+> > to this device so I'm afraid I can't tell you if there is anything
+> > useful on to aid debugging there.
+> > 
+> > If I try to test one commit earlier [2] the system boots as expected and
+> > everything works as it did for me in v5.8 and earlier. I have worked
+> > little with this device and have no clue about what is really on the PCI
+> > buss. But running from [2] I have this info about PCI if it's helpful,
+> > please ask if somethings missing.
+> 
+> Please see the thread at [1]. The problem was reported a few weeks back
+> by Samuel, and I was expecting Rob and Lorenzo to push a fix for this.
 
-By IMS patches, I meant your IMS driver patch that was updated (as it 
-was untested, it had some compile
+Thanks for providing a solution.
 
-errors and we removed the IMS_QUEUE parts) :
+> 
+> Rob, Lorenzo, any update on this?
+> 
+>         M.
+> 
+> [1]
+> https://lore.kernel.org/linux-devicetree/20200829164920.7d28e01a@DUFFMAN/
+> -- 
+> Jazz is not dead. It just smells funny...
 
-https://lore.kernel.org/lkml/160021246221.67751.16280230469654363209.stgit@djiang5-desk3.ch.intel.com/
-
-and some iommu related changes required by IMS.
-
-https://lore.kernel.org/lkml/160021246905.67751.1674517279122764758.stgit@djiang5-desk3.ch.intel.com/
-
-The whole patchset can be found here:
-
-https://lore.kernel.org/lkml/f4a085f1-f6de-2539-12fe-c7308d243a4a@intel.com/
-
-It would be great if you could review the IMS patches :)
-
->>>
->>>> wondering if we should push out those patches as part of our patchset?
->>> As I don't have any hardware to test that, I was waiting for you and
->>> Jason to confirm that this actually works for the two different IMS
->>> implementations.
->> How urgently do you need this? The code looked good from what I
->> understood. It will be a while before we have all the parts to send an
->> actual patch though.
-> I personally do not need it at all :) Megha might have different
-> thoughts...
-
-I have tested these patches and it works fine (I had to add a couple of 
-EXPORT_SYMBOLS).
-
-We were hoping to get IMS in the 5.10 merge window :)
-
->
->> We might be able to put together a mockup just to prove it
-> If that makes Megha's stuff going that would of course be appreciated,
-> but we can defer the IMS_QUEUE part for later. It's orthogonal to the
-> IMS_ARRAY stuff.
-
-In our patch series, we have removed the IMS_QUEUE stuff and retained 
-only the IMS_ARRAY parts
-
-as that was sufficient for us.
-
->
-> Thanks,
->
->          tglx
+-- 
+Regards,
+Niklas Söderlund
