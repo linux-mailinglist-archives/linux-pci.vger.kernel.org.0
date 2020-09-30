@@ -2,106 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C7DE27F461
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 23:49:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8475B27F48E
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 23:56:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbgI3Vtv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 17:49:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:18352 "EHLO mga04.intel.com"
+        id S1730817AbgI3V4f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 17:56:35 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:43596 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729912AbgI3Vtu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Sep 2020 17:49:50 -0400
-IronPort-SDR: 3pwTbQ+PyLHo+/t7/m+oYJNBO6awHIDHPr2gKiEVcgDYssxxqQ3AUD5/nNW0DM2Bnxd1KNgOkj
- yakTHZFtxZ0g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9760"; a="159954216"
-X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
-   d="scan'208";a="159954216"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 14:49:43 -0700
-IronPort-SDR: whgfrvKYaHNYFGsg59jQmb1KuytntRh+SRaISfKFhavWJ8UbYdE12wOGXii/sLxyjSAhvbtvCv
- Kx+YOyMkj4uA==
-X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
-   d="scan'208";a="457826098"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 14:49:43 -0700
-Date:   Wed, 30 Sep 2020 14:49:41 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
-        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        dan.j.williams@intel.com, kwankhede@nvidia.com,
-        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
-        netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v3 05/18] dmaengine: idxd: add IMS support in base driver
-Message-ID: <20200930214941.GB26492@otc-nc-03>
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
- <160021248979.67751.3799965857372703876.stgit@djiang5-desk3.ch.intel.com>
- <87sgazgl0b.fsf@nanos.tec.linutronix.de>
- <20200930185103.GT816047@nvidia.com>
+        id S1729996AbgI3V4f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 30 Sep 2020 17:56:35 -0400
+Received: from [192.168.1.7] (unknown [195.24.90.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id DC0AAD02C;
+        Thu,  1 Oct 2020 00:56:31 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1601502992; bh=68306tD5YsLAUj9ja2C1ptuKKgPEa+UuaTIaQDbVT2s=;
+        h=Subject:To:Cc:From:Date:From;
+        b=aDkrizEokwM7XC4UymK132wXDpetASonhfo+m6Zr7vuJDWMGap2VG9ZekNCX9+amf
+         2hrFtWUZSO9KghaB7t9rmYCJgGiULzfIx8/DY7RcYMAZdsRCGk8XUeStur6BpWOJ0S
+         z9hgZ8F77eeMA7cAHlLt3mS8q/qADNtQsq5zO0Z2BX2h++dVTZ4SINoKhz6HkPuxVP
+         m2OJ4+Atvw9Z+mXfGDBktDKYKnh2iVShGzL9Si4szaIjRjpsLEUgR+tc25YcFMvVCL
+         yeZINPUhPptQ1hKtcKt/AFLHFHA6Uki1UZsR4VxDvOFmRJtDUAfvawVX/10YKpgGyQ
+         UUCd1L17tDSWA==
+Subject: Re: [PATCH v2 4/5] PCI: qcom: Add SM8250 SoC support
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        vkoul@kernel.org, robh@kernel.org
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        devicetree@vger.kernel.org
+References: <20200930150925.31921-1-manivannan.sadhasivam@linaro.org>
+ <20200930150925.31921-5-manivannan.sadhasivam@linaro.org>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <0a6a765d-1b80-9d1b-f881-b75f13bd5b02@mm-sol.com>
+Date:   Thu, 1 Oct 2020 00:56:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200930185103.GT816047@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200930150925.31921-5-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jason
+Hi Mani,
 
-On Wed, Sep 30, 2020 at 03:51:03PM -0300, Jason Gunthorpe wrote:
-> On Wed, Sep 30, 2020 at 08:47:00PM +0200, Thomas Gleixner wrote:
+On 9/30/20 6:09 PM, Manivannan Sadhasivam wrote:
+> The PCIe IP on SM8250 SoC is similar to the one used on SDM845. Hence
+> the support is added reusing the members of ops_2_7_0. The key
+> difference between ops_2_7_0 and ops_sm8250 is the config_sid callback,
+> which will be added in successive commit.
 > 
-> > > +	pci_read_config_dword(pdev, SIOVCAP(dvsec), &val32);
-> > > +	if ((val32 & 0x1) && idxd->hw.gen_cap.max_ims_mult) {
-> > > +		idxd->ims_size = idxd->hw.gen_cap.max_ims_mult * 256ULL;
-> > > +		dev_dbg(dev, "IMS size: %u\n", idxd->ims_size);
-> > > +		set_bit(IDXD_FLAG_SIOV_SUPPORTED, &idxd->flags);
-> > > +		dev_dbg(&pdev->dev, "IMS supported for device\n");
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	dev_dbg(&pdev->dev, "SIOV unsupported for device\n");
-> > 
-> > It's really hard to find the code inside all of this dev_dbg()
-> > noise. But why is this capability check done in this driver? Is this
-> > capability stuff really IDXD specific or is the next device which
-> > supports this going to copy and pasta the above?
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> It is the weirdest thing, IMHO. Intel defined a dvsec cap in their
-> SIOV cookbook, but as far as I can see it serves no purpose at
-> all.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 3aac77a295ba..44db91861b47 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1359,6 +1359,16 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
+>  	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+>  };
+>  
+> +/* Qcom IP rev.: 1.9.0 */
+> +static const struct qcom_pcie_ops ops_sm8250 = {
+
+This breaks the policy compatible -> ops_X_Y_Z. Could you introduce new
+method config_sid and check into for compatible qcom,pcie-sm8250 string
+there?
+
+> +	.get_resources = qcom_pcie_get_resources_2_7_0,
+> +	.init = qcom_pcie_init_2_7_0,
+> +	.deinit = qcom_pcie_deinit_2_7_0,
+> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> +	.post_init = qcom_pcie_post_init_2_7_0,
+> +	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+> +};
+> +
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = qcom_pcie_link_up,
+>  };
+> @@ -1476,6 +1486,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
+>  	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
+>  	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
+> +	{ .compatible = "qcom,pcie-sm8250", .data = &ops_sm8250 },
+>  	{ }
+>  };
+>  
 > 
-> Last time I asked I got some unclear mumbling about "OEMs".
-> 
-One of the parameters it has is the "supported system page-sizes" which is
-usually there in the SRIOV properties. So it needed a place holder for
-that. 
 
-IMS is a device specific capability, and I almost forgot why we needed
-until I had to checking internally. Remember when a device is given to a
-guest, MSIX routing via Interrupt Remapping is automatic via the VFIO/IRQFD
-and such.
-
-When we provision an entire PCI device that is IMS capable. The guest
-driver does know it can update the IMS entries directly without going to
-the host. But in order to do remapping we need something like how we manage
-PASID allocation from guest, so an IRTE entry can be allocated and the host
-driver can write the proper values for IMS.
-
-Hope this helps clear things up.
-
-Cheers,
-Ashok
-
+-- 
+regards,
+Stan
