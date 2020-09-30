@@ -2,118 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65C7E27DE6B
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 04:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4638027E008
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 07:16:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgI3CVD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Sep 2020 22:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgI3CVD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Sep 2020 22:21:03 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C390EC061755;
-        Tue, 29 Sep 2020 19:21:02 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id nw23so530769ejb.4;
-        Tue, 29 Sep 2020 19:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VviVj9bYE7aXVNpstffQ7ePdMsng1BehF9I+7/XekM8=;
-        b=LQjmSSLzZ9xYDHO61ieHODLq/x3LIKoty3Zho6MH+qyAsGtCXqf1zsbpyYdcNjOnlg
-         jDJwEezl9CWPcn4aXXwJdR/S7lVyj6Zr1RP2+KOGNdvW/KXEfM4B3+uO+RCXRzCOLJee
-         9s3hQcE7/Pk6DbfwhWhgtgKP8il+cYIcTFaZcFgp7xSw3L2N0ToUtFPX+ybtQO00RDdN
-         vcs4N11g2A+uEZvNOzyoI3cO7v+bMoKAKRJp8ejjarx45ev2xpZNzi8c/Kp5tobzJSdV
-         9gqfjyjoOKuBG0tNH03aWWXGNnrL8z3eehgI/+dZFwUgdPJliWMrjAe1Qb5BqM7ZrIIV
-         qr1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VviVj9bYE7aXVNpstffQ7ePdMsng1BehF9I+7/XekM8=;
-        b=awLFjnx4XtxBt/HtNZ/zqubD855sZ+T177tlzFYCfQs63OgxlY/3QsYpYtTyT6U74L
-         15vQ633oc1QkueuSSkeqMaN9Fd1gvX6kQsZp8gQSHJIMJb6LDJpv93zBV3Gf1HVTBdqh
-         KtVKgaucR3Lpaxv5v01Cp5OaTIuTtwLIvRu2ey5M6GL7tMbufge/5SKXKQL9GxaqVTqf
-         4sujg9jVqtoX/Ly9y+GmtLoLrLBN0GEb8chfkXdGEZ/Vug9xG3t8ga9kWgT0ywMC6Nns
-         UA8uYE2Q2aw29xG56TPJ6Cx/mmjnY+0oPe+EFQ27u9NXOubBTj3oznAzFZUurjLTfWCb
-         9n7A==
-X-Gm-Message-State: AOAM532f74t3v4BL5pxgyCxbo9n/3vPm3RokHkxD1jiHNGTFtshzuhKj
-        T8TyFsKz1gCPle7LDMgPQ+cjdHk3UXTB0SrgZs0=
-X-Google-Smtp-Source: ABdhPJxrFIv5ybeLKeFyWBmAzsMd72cDCVT2+TMBsOuyb25Ml82cB6Y4bzJUTA6bJniQcZMA+Z29ogsfeRXUEg0cOuA=
-X-Received: by 2002:a17:906:6409:: with SMTP id d9mr580121ejm.344.1601432461534;
- Tue, 29 Sep 2020 19:21:01 -0700 (PDT)
+        id S1725786AbgI3FQ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 01:16:28 -0400
+Received: from mx.socionext.com ([202.248.49.38]:56888 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbgI3FQ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 30 Sep 2020 01:16:27 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 30 Sep 2020 14:16:10 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 11E5E180BE3;
+        Wed, 30 Sep 2020 14:16:10 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Wed, 30 Sep 2020 14:16:10 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 76736402FD;
+        Wed, 30 Sep 2020 14:16:09 +0900 (JST)
+Received: from [10.212.0.250] (unknown [10.212.0.250])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id D69F8120447;
+        Wed, 30 Sep 2020 14:16:08 +0900 (JST)
+Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: uniphier-ep: Add iATU register
+ description
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <1601255133-17715-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1601255133-17715-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200928180932.GA3006259@bogus>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <e7c5c7b5-2311-f4bb-8356-a21866a2f729@socionext.com>
+Date:   Wed, 30 Sep 2020 14:16:08 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200927032829.11321-1-haifeng.zhao@intel.com>
- <20200927032829.11321-3-haifeng.zhao@intel.com> <f2c9e3db-2027-f669-fcdd-fbc80888b934@kernel.org>
- <20200929081800.GA15858@wunner.de> <CAKF3qh3UxkVOwCOUB4rNdxLX0k9oZQRzXT_N0BNYKWL_BAHa5w@mail.gmail.com>
- <20200929100759.GA21885@wunner.de>
-In-Reply-To: <20200929100759.GA21885@wunner.de>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Wed, 30 Sep 2020 10:20:50 +0800
-Message-ID: <CAKF3qh2xVfj0KNGj8MFC_Z+gOqNw7JD1uDbVy=OgLnkZ0t-0+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5 V2] PCI: pciehp: check and wait port status out of DPC
- before handling DLLSC and PDC
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Sinan Kaya <okaya@kernel.org>, Ethan Zhao <haifeng.zhao@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Oliver <oohall@gmail.com>,
-        ruscur@russell.cc,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Jia, Pei P" <pei.p.jia@intel.com>, ashok.raj@linux.intel.com,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200928180932.GA3006259@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 6:08 PM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Tue, Sep 29, 2020 at 05:46:41PM +0800, Ethan Zhao wrote:
-> > On Tue, Sep 29, 2020 at 4:29 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > > On Sun, Sep 27, 2020 at 11:27:46AM -0400, Sinan Kaya wrote:
-> > > > On 9/26/2020 11:28 PM, Ethan Zhao wrote:
-> > > > > --- a/drivers/pci/hotplug/pciehp_hpc.c
-> > > > > +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> > > > > @@ -710,8 +710,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
-> > > > >     down_read(&ctrl->reset_lock);
-> > > > >     if (events & DISABLE_SLOT)
-> > > > >             pciehp_handle_disable_request(ctrl);
-> > > > > -   else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC))
-> > > > > +   else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC)) {
-> > > > > +           pci_wait_port_outdpc(pdev);
-> > > > >             pciehp_handle_presence_or_link_change(ctrl, events);
-> > > > > +   }
-> > > > >     up_read(&ctrl->reset_lock);
-> > > >
-> > > > This looks like a hack TBH.
-> [...]
-> > > > Why is device lock not protecting this situation?
-> > > > Is there a lock missing in hotplug driver?
-> > >
-> > > According to Ethan's commit message, there are two issues here:
-> > > One, that pciehp may remove a device even though DPC recovered the error,
-> > > and two, that a null pointer deref occurs.
-> > >
-> > > The latter is most certainly not a locking issue but failure of DPC
-> > > to hold a reference on the pci_dev.
-> >
-> > This is what patch 3/5 proposed to fix.
->
-> Please reorder the series to fix the null pointer deref first,
-> i.e. move patch 3 before patch 2.  If the null pointer deref is
-> fixed by patch 3, do not mention it in patch 2.
+On 2020/09/29 3:09, Rob Herring wrote:
+> On Mon, 28 Sep 2020 10:05:31 +0900, Kunihiko Hayashi wrote:
+>> In the dt-bindings, "atu" reg-names is required to get the register space
+>> for iATU in Synopsis DWC version 4.80 or later.
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: reg: [[1711276032, 4096], [1711280128, 4096], [1711341568, 65536], [1728053248, 4194304]] is too short
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: reg-names: ['dbi', 'dbi2', 'link', 'addr_space'] is too short
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
 
-Make sense.
+I found this binding update was wrong.
+I'll fix and resend it.
 
-Thanks,
-Ethan
->
-> Thanks,
->
-> Lukas
+> 
+> 
+> See https://patchwork.ozlabs.org/patch/1372225
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
