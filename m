@@ -2,111 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FAF827F361
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 22:34:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDD8027F379
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Sep 2020 22:45:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbgI3UeX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Sep 2020 16:34:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725355AbgI3UeX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Sep 2020 16:34:23 -0400
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 540F92075F;
-        Wed, 30 Sep 2020 20:34:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601498062;
-        bh=QfKwLKJeboaj9ZoI7BhbZ+bcUjrWN0qiAPiA8FEHF94=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f7Glgz5TcfN7f4iEiAg9hTjORT0PqxZOT+WoRIIyzU1VivBV00GvNO1JKB2gK8aRN
-         Hs8x7vFljnJ9//ngSVSsQRGcdtDtzEQxHczFoyeavNGzeDIP+OWCSvZqxNHlGiHm4g
-         EjSNeIJXnLqaqJdcz4pc6WDdiW3bz4RC4o/jdUmg=
-Received: by mail-ot1-f50.google.com with SMTP id g96so3143931otb.12;
-        Wed, 30 Sep 2020 13:34:22 -0700 (PDT)
-X-Gm-Message-State: AOAM531jZC4XzPFiOdwPcJOev856EKc8rR0xxmCc7wkyx9RAwtyOm84c
-        E+xV5pwNY8kZqJT4OL46N5LxNVHs2REOuo+n8A==
-X-Google-Smtp-Source: ABdhPJyzwAAPRXXAS2xvoZvN/yxKutEE4lHyxhoMfTZUFh2tvOgKBBCP8Z5+2QRHxiT4htRIoCYE3EgLLi4n0QpHamU=
-X-Received: by 2002:a9d:6b0d:: with SMTP id g13mr2700531otp.129.1601498061577;
- Wed, 30 Sep 2020 13:34:21 -0700 (PDT)
+        id S1730083AbgI3UpH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Sep 2020 16:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgI3UpG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Sep 2020 16:45:06 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA42C0613D0
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 13:45:06 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 197so1865636pge.8
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 13:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JgQmmymEepmTyKfdtmZJjASTO5kyTURiWqToh5meDKE=;
+        b=N1JSnjgIbsN1xv7O/7f3T3QNscpYc+Oc8Onavg+xJhKmu87Vl5txC0mRnj581yP+T5
+         vji39GuQ54k3KnvTyItbHHJyjV7n/9yiIdpidKzXo0JDXhzi+h96aiFk9fi64j8d2bCt
+         gMDMVPAGpbUo9icFxVDwyRsfPfCjPc7VT3l7U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JgQmmymEepmTyKfdtmZJjASTO5kyTURiWqToh5meDKE=;
+        b=YStJNL4xabbn3wMi+M2w4Pc4Y2V7vw+ZsQgomE7PObo/Q4WK0CUN8CEjuU5SeUydGP
+         1dPyh0TpG+GPJtjpjs80NTW5SONZHCnlkAvlSLqYXDJmA9giCQzBNUuWRFQz8eiIcnwF
+         Pw2l4j9qNHo0OUYJQewmNHRfJqEkiJ+FnDHhuB4YMAvWzDZV3E/skxzq8RyleJ9yxL5d
+         p2gZvWnVvPKzoNXDu/wZ17CBQEb5CuaxybOwgCmdV6q5gvp0aWA4DbN1JjetuJCeCr8V
+         0PSGYSLW2uzwuasbwvg1Ey+64PWuT3N6muEAXdfvt+9JePvQvbHzfr+ykO8xGufju/sF
+         BdOg==
+X-Gm-Message-State: AOAM5338Gr3CLR+6mwmDOf7fzf7b9IK0hrcDhJZNfi2etaDZ9ex8eJvG
+        9WAxE3G0oQ5E9jK2+4RW3VyyGg==
+X-Google-Smtp-Source: ABdhPJwj25UpjOCh8s4y4qnI0EKHGhfilZz0SCC4DlHMi6btWQ6hwRXxTigXsih3jOgTEpH2lz1kwQ==
+X-Received: by 2002:a63:4d4a:: with SMTP id n10mr3430255pgl.96.1601498706030;
+        Wed, 30 Sep 2020 13:45:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g24sm3730158pfk.65.2020.09.30.13.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2020 13:45:05 -0700 (PDT)
+Date:   Wed, 30 Sep 2020 13:45:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v4 10/29] treewide: remove DISABLE_LTO
+Message-ID: <202009301344.3949D2FA8@keescook>
+References: <20200929214631.3516445-1-samitolvanen@google.com>
+ <20200929214631.3516445-11-samitolvanen@google.com>
 MIME-Version: 1.0
-References: <20200819094255.474565-1-maz@kernel.org> <20200930162722.GF1516931@oden.dyn.berto.se>
- <977f60f07a4cb5c59f0e5f8a9dfb3993@kernel.org> <20200930173744.GG1516931@oden.dyn.berto.se>
-In-Reply-To: <20200930173744.GG1516931@oden.dyn.berto.se>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 30 Sep 2020 15:34:10 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+xBKbYXWipwmZ=ZidorsMUFDw2NpUyxobx4FCTn+8Hmg@mail.gmail.com>
-Message-ID: <CAL_Jsq+xBKbYXWipwmZ=ZidorsMUFDw2NpUyxobx4FCTn+8Hmg@mail.gmail.com>
-Subject: Re: [PATCH v2] of: address: Work around missing device_type property
- in pcie nodes
-To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        Samuel Dionne-Riel <samuel@dionne-riel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200929214631.3516445-11-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 12:37 PM Niklas S=C3=B6derlund
-<niklas.soderlund@ragnatech.se> wrote:
->
-> Hi Marc,
->
-> On 2020-09-30 18:23:21 +0100, Marc Zyngier wrote:
-> > Hi Niklas,
-> >
-> > [+ Samuel]
-> >
-> > On 2020-09-30 17:27, Niklas S=C3=B6derlund wrote:
-> > > Hi Marc,
-> > >
-> > > I'm afraid this commit breaks booting my rk3399 device.
-> > >
-> > > I bisected the problem to this patch merged as [1]. I'm testing on a
-> > > Scarlet device and I'm using the unmodified upstream
-> > > rk3399-gru-scarlet-inx.dtb for my tests.
-> > >
-> > > The problem I'm experience is a black screen after the bootloader and
-> > > the device is none responsive over the network. I have no serial cons=
-ole
-> > > to this device so I'm afraid I can't tell you if there is anything
-> > > useful on to aid debugging there.
-> > >
-> > > If I try to test one commit earlier [2] the system boots as expected =
-and
-> > > everything works as it did for me in v5.8 and earlier. I have worked
-> > > little with this device and have no clue about what is really on the =
-PCI
-> > > buss. But running from [2] I have this info about PCI if it's helpful=
-,
-> > > please ask if somethings missing.
-> >
-> > Please see the thread at [1]. The problem was reported a few weeks back
-> > by Samuel, and I was expecting Rob and Lorenzo to push a fix for this.
->
-> Thanks for providing a solution.
->
-> >
-> > Rob, Lorenzo, any update on this?
+On Tue, Sep 29, 2020 at 02:46:12PM -0700, Sami Tolvanen wrote:
+> This change removes all instances of DISABLE_LTO from
+> Makefiles, as they are currently unused, and the preferred
+> method of disabling LTO is to filter out the flags instead.
+> 
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-The fix is in Bjorn's tree[1].
+Thanks! I think this makes things cleaner in the later patches. :)
 
-Bjorn, going to send this to Linus before v5.9 is out?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Rob
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=
-=3Dfor-linus
+-- 
+Kees Cook
