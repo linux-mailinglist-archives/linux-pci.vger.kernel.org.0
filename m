@@ -2,90 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B97902809EF
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 00:17:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1AB7280AAE
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 01:00:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbgJAWRn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Oct 2020 18:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37960 "EHLO mail.kernel.org"
+        id S1733284AbgJAW75 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Oct 2020 18:59:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:38207 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgJAWRn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Oct 2020 18:17:43 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9025420738;
-        Thu,  1 Oct 2020 22:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601590662;
-        bh=QgsY8jGyViSfTb9WzhX4gU2yFRvsgIiYaDpuYDHqOkY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Pm4oPWJF6gCSJpkpCEQr2Fdkjz+KChBeZq/me6zL5rQfJOrVOKqnXfHM3iGq6a+MT
-         7Sm3OxDhRc2AKOrJ7eKo4BsfAR62LDAVDXfsBlf3AtrL9gOaZgtlXx+qmrA/tAuR9a
-         aHQCKwBkYpmtYa5C3ZbBGPeGWBEIpnyeY3bWhQnY=
-Date:   Thu, 1 Oct 2020 17:17:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Puranjay Mohan <puranjay12@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v6 2/2] PCI/ASPM: Add support for
- LTR _DSM
-Message-ID: <20201001221741.GA2737641@bjorn-Precision-5520>
+        id S1733120AbgJAW7v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Oct 2020 18:59:51 -0400
+IronPort-SDR: 34ZgJ1/y6fnww//6M5oiKgLkrN/0qJHQunzM4V/9KD558XF+U1f1e9IgCKHFdhREULWkzGT0iT
+ cfetxGo2is4g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9761"; a="163714844"
+X-IronPort-AV: E=Sophos;i="5.77,325,1596524400"; 
+   d="scan'208";a="163714844"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 15:59:46 -0700
+IronPort-SDR: eUvBViyftsQa/0xJxQj4EJlPKRJ8DGtAozX87INObox97mcHiMdB5toNI8i7m6kwTzfAvf3cjF
+ 4PIZBk7XJKMA==
+X-IronPort-AV: E=Sophos;i="5.77,325,1596524400"; 
+   d="scan'208";a="514951687"
+Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.209.13.228]) ([10.209.13.228])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 15:59:44 -0700
+Subject: Re: [PATCH v3 01/18] irqchip: Add IMS (Interrupt Message Storage)
+ driver
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        maz@kernel.org, bhelgaas@google.com, alex.williamson@redhat.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, jgg@mellanox.com,
+        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        dan.j.williams@intel.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
+ <160021246221.67751.16280230469654363209.stgit@djiang5-desk3.ch.intel.com>
+ <87362zi0nr.fsf@nanos.tec.linutronix.de>
+From:   "Dey, Megha" <megha.dey@intel.com>
+Message-ID: <dd1c34c5-e2c0-25fc-b668-a5bbb7869397@intel.com>
+Date:   Thu, 1 Oct 2020 15:59:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201001214436.2735412-3-helgaas@kernel.org>
+In-Reply-To: <87362zi0nr.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 01, 2020 at 04:44:36PM -0500, Bjorn Helgaas wrote:
-> From: Puranjay Mohan <puranjay12@gmail.com>
-> 
-> Latency Tolerance Reporting (LTR) is required for the ASPM L1.2 PM
-> substate.  Devices with Upstream Ports (Endpoints and Switches) may support
-> the optional LTR Capability.  When LTR is enabled, devices transmit LTR
-> messages containing Snoop and No-Snoop Latencies upstream.  The L1.2
-> substate may be entered if the most recent LTR values are greater than or
-> equal to the LTR_L1.2_THRESHOLD from the L1 PM Substates Control 1
-> register.
-> 
-> Add a new function pci_ltr_init() which will be called from
-> pci_init_capabilities() to initialize every PCIe device's LTR values.
-> Add code in probe.c to evaluate LTR _DSM and save the latencies in pci_dev.
+Hi Thomas,
 
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2106,6 +2106,9 @@ static void pci_configure_ltr(struct pci_dev *dev)
->  	if (!pci_is_pcie(dev))
->  		return;
->  
-> +	/* Read latency values (if any) from platform */
-> +	pci_acpi_evaluate_ltr_latency(dev);
-> +
->  	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
->  	if (!(cap & PCI_EXP_DEVCAP2_LTR))
->  		return;
-> @@ -2400,6 +2403,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->  	pci_ptm_init(dev);		/* Precision Time Measurement */
->  	pci_aer_init(dev);		/* Advanced Error Reporting */
->  	pci_dpc_init(dev);		/* Downstream Port Containment */
-> +	pci_ltr_init(dev);		/* Latency Tolerance Reporting */
+On 9/30/2020 11:23 AM, Thomas Gleixner wrote:
+> On Tue, Sep 15 2020 at 16:27, Dave Jiang wrote:
+>> From: Thomas Gleixner <tglx@linutronix.de>
+>> +config IMS_MSI_ARRAY
+>> +	bool "IMS Interrupt Message Storm MSI controller for device memory storage arrays"
+> Hehe, you missed a Message Storm :)
+i will change this in the next version
+>> +	depends on PCI
+>> +	select IMS_MSI
+>> +	select GENERIC_MSI_IRQ_DOMAIN
+>> +	help
+>> +	  Support for IMS Interrupt Message Storm MSI controller
+> and another one.
+ok :)
+>
+>> +	  with IMS slot storage in a slot array in device memory
+>> +
+>> +static void ims_array_mask_irq(struct irq_data *data)
+>> +{
+>> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>> +	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+>> +	u32 __iomem *ctrl = &slot->ctrl;
+>> +
+>> +	iowrite32(ioread32(ctrl) | IMS_VECTOR_CTRL_MASK, ctrl);
+>> +	ioread32(ctrl); /* Flush write to device */
+> Bah, I fundamentaly hate tail comments. They are a distraction and
+> disturb the reading flow. Put it above the ioread32() please.
+Will do.
+>
+>> +static void ims_array_unmask_irq(struct irq_data *data)
+>> +{
+>> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>> +	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+>> +	u32 __iomem *ctrl = &slot->ctrl;
+>> +
+>> +	iowrite32(ioread32(ctrl) & ~IMS_VECTOR_CTRL_MASK, ctrl);
+> Why is this one not flushed?
+I will add it.
+>
+>> +}
+>> +
+>> +static void ims_array_write_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>> +{
+>> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>> +	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+>> +
+>> +	iowrite32(msg->address_lo, &slot->address_lo);
+>> +	iowrite32(msg->address_hi, &slot->address_hi);
+>> +	iowrite32(msg->data, &slot->data);
+>> +	ioread32(slot);
+> Yuck? slot points to the struct and just because ioread32() accepts a
+> void pointer does not make it any more readable.
+hmm ok , will change this.
+>
+>> +static void ims_array_reset_slot(struct ims_slot __iomem *slot)
+>> +{
+>> +	iowrite32(0, &slot->address_lo);
+>> +	iowrite32(0, &slot->address_hi);
+>> +	iowrite32(0, &slot->data);
+>> +	iowrite32(0, &slot->ctrl);
+> Flush?
 
-I don't think we're doing this in quite the right order.  If I
-understand correctly, we have this:
+ok!
 
-  pci_device_add
-    pci_configure_device
-      pci_configure_ltr
-        pci_acpi_evaluate_ltr_latency
-          acpi_evaluate_dsm(DSM_PCI_LTR_MAX_LATENCY)
-        pcie_capability_set_word(PCI_EXP_DEVCTL2_LTR_EN)  <-- enable LTR
-    pci_init_capabilities
-      pci_ltr_init
-        pci_write_config_word(PCI_LTR_MAX_SNOOP_LAT)  <-- set LTR msg content
+-Megha
 
-So we enable LTR messages before we set the latency values in the LTR
-capability.  I think we need to set the values *first*.
-
->  	pcie_report_downtraining(dev);
+>
+> Thanks,
+>
+>          tglx
