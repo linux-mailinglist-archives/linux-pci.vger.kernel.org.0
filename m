@@ -2,71 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA52228003F
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 15:36:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B27828004C
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 15:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732020AbgJANgo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Oct 2020 09:36:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731993AbgJANgo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 09:36:44 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64148C0613D0;
-        Thu,  1 Oct 2020 06:36:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fKHBx2l1x20GN0S3b+jTfen0uwxhiVfe2eiMSbpdaJc=; b=rkoYrYmb5/6jzedCCWXFLJn1Js
-        Su3dhZ5KWDv1MASUxHWIyi0HHPm/ePgWAlqmlPl7vX0YAy66AJdPY+/xm0WAUYoRmEBX+mO+6T8+V
-        Icj9pc59qTGH/yoN90T+98J5m6GdmDo4o+YQ6Qcwfvu5StJC1CMj+dZsOTyf/c9HP8WlPBGOb+o0Q
-        6D9yVgyZ+6MFyhrDwUasgeNYH4HtwuVAWOPmdotfUbYA/8kLlXOVNla6GYLXq1AzitcCts/t+cL5h
-        IEg2Eshs26M+j10DrIY85wx56KguUB9k4rNB/xtXHnDIekBqXSRpUNU87NEPTQuVilHGV1nifj4NB
-        bclif4ew==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kNyko-0004ix-3E; Thu, 01 Oct 2020 13:36:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 436ED300446;
-        Thu,  1 Oct 2020 15:36:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 30D1F203DC1C6; Thu,  1 Oct 2020 15:36:12 +0200 (CEST)
-Date:   Thu, 1 Oct 2020 15:36:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, jthierry@redhat.com, jpoimboe@redhat.com
-Subject: Re: [PATCH v4 04/29] objtool: Add a pass for generating __mcount_loc
-Message-ID: <20201001133612.GQ2628@hirez.programming.kicks-ass.net>
-References: <20200929214631.3516445-1-samitolvanen@google.com>
- <20200929214631.3516445-5-samitolvanen@google.com>
- <alpine.LSU.2.21.2010011504340.6689@pobox.suse.cz>
+        id S1732096AbgJANjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Oct 2020 09:39:46 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10709 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731993AbgJANjq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 09:39:46 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f75dbba0004>; Thu, 01 Oct 2020 06:38:02 -0700
+Received: from [10.2.161.39] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 1 Oct
+ 2020 13:39:44 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Wei Liu <wei.liu@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        <x86@kernel.org>, <iommu@lists.linux-foundation.org>,
+        <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>
+Subject: Re: Boot crash due to "x86/msi: Consolidate MSI allocation"
+Date:   Thu, 1 Oct 2020 09:39:42 -0400
+X-Mailer: MailMate (1.13.2r5673)
+Message-ID: <2F4EC354-C0BB-44BD-86A5-07F321590C31@nvidia.com>
+In-Reply-To: <874knegxtg.fsf@nanos.tec.linutronix.de>
+References: <A838FF2B-11FC-42B9-87D7-A76CF46E0575@nvidia.com>
+ <874knegxtg.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2010011504340.6689@pobox.suse.cz>
+Content-Type: multipart/signed;
+        boundary="=_MailMate_E37D7855-5714-45DB-89F0-E1847DF19DAF_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1601559483; bh=sFTfs2wKiAAdF9G/OK6dAZg/42/8CaV6qHMuyOsZ5z8=;
+        h=From:To:CC:Subject:Date:X-Mailer:Message-ID:In-Reply-To:
+         References:MIME-Version:Content-Type:X-Originating-IP:
+         X-ClientProxiedBy;
+        b=TPHGplKHkL8cUhcoay8Vx9C6+fu8GLE1UKqjQd6vyy68K1+6s48tbdNX4Ixo22ipS
+         WefYfhwsODoZoqNxCtcVZ/XS1m+h9X/xjtquPVVQpptUXb5Hh1mzGojUag9Ifrx2yM
+         CcLqu3+MWgws6V6CjhPPn9ZJhyfDmDIhYBRrnrapdfldkQiq9WH8eIbRbSJmK5xNor
+         dl5stqBjUQfaHYUUSwlKTrVBRA5DwcHGVYv6iRlep5m8731W9A02mP3EqZsNIGJd5a
+         lxBXeGTgYkTuEwRr9JMV6JIWe8/nGcC1wKDVdvQdQPL4dPrwKWpG9kAjTtUV3dZyor
+         FntxzCcwEWz+Q==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 01, 2020 at 03:17:07PM +0200, Miroslav Benes wrote:
+--=_MailMate_E37D7855-5714-45DB-89F0-E1847DF19DAF_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> I also wonder about making 'mcount' command separate from 'check'. Similar 
-> to what is 'orc' now. But that could be done later.
+On 1 Oct 2020, at 4:22, Thomas Gleixner wrote:
 
-I'm not convinced more commands make sense. That only begets us the
-problem of having to run multiple commands.
+> Yan,
+>
+> On Wed, Sep 30 2020 at 21:29, Zi Yan wrote:
+>> I am running linux-next on my Dell R630 and the system crashed at boot=
+
+>> time. I bisected linux-next and got to your commit:
+>>
+>>     x86/msi: Consolidate MSI allocation
+>>
+>> The crash log is below and my .config is attached.
+>>
+>> [   11.840905]  intel_get_irq_domain+0x24/0xb0
+>> [   11.840905]  native_setup_msi_irqs+0x3b/0x90
+>
+> This is not really helpful because that's in the middle of the queue an=
+d
+> that code is gone at the very end. Yes, it's unfortunate that this
+> breaks bisection.
+>
+> Can you please test:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/irq
+>
+> which contains fixes and if it still crashes provide the dmesg of it.
+>
+
+My system boots without any problem using this tree. Thanks.
+
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_E37D7855-5714-45DB-89F0-E1847DF19DAF_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl913B4PHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKh4EP+wa4YAP+3OSFbCe0zBYGBxknODe/+Ns2BfM/
+VWWcPZpcXCkaGo+f8EeYWM8tSgeYE42mDsJcG69uCRmKMJLM352iud3Kz1JRZm2Q
+vxl1pWEvmvbiYmoAYbzp8B9564jX0uWJy9zKOzXkuh/jmD2m58zviAK9adapw5b0
+PvVuTaa+FYYHVYxitrag3xgZsEXqK7bgJq3fCGTZ7+lRGrmM9atX616B6Dn/xx4F
+/qamJ3Ema0UE45AbrrIJ076P9RJEzaTmD6SzdDfJ0Ygc2quCjskTnm1pq+MSC9fc
+5Tm8IH+O+vGPeIXwZGMIj3hYWG93yDusIHPbLgTKxj1n6ygsvtEUteBB1tQ7jtKB
+dK/u/L37LOZsBwhmjN2vNjpxyawj8SmwbSOcsPhGRDNY+9vO5ZAyF0NL/42urRHD
+RP+m3xqp3PJOWZASZe6RNi7y1C92d9HbCHVZnc0zOz6/Ko2VtWImx9mDmsQEqD/N
+cq7tq04HF9FOGeVgrmfviH+68K/FdmZct454G2y4k7eJ3Nth6MzSVopV8PWzzqrP
+Jx+WQen0XUW7f1z+mf7ZmmjWpyooywgzCBHMSEoRCsA1TRgMN1pFaAfrX4LorzON
+Bl1HnvJTZH4yxyOAb1L+a+aIrqKJmwMIWT1Gm8e0FGSKuH6wPyE/CrQdXvQkbmub
+3YTfhW6e
+=3Jrz
+-----END PGP SIGNATURE-----
+
+--=_MailMate_E37D7855-5714-45DB-89F0-E1847DF19DAF_=--
