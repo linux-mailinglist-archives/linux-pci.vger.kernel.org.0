@@ -2,96 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D36E627FC60
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 11:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BA1527FCC4
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 12:02:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbgJAJYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Oct 2020 05:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731131AbgJAJYv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 05:24:51 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0574DC0613E2
-        for <linux-pci@vger.kernel.org>; Thu,  1 Oct 2020 02:24:50 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id di5so2531253qvb.13
-        for <linux-pci@vger.kernel.org>; Thu, 01 Oct 2020 02:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=kmdUfgj4VlRnEq5JoDVWa7lqp74R5i1K5CodSIOf1pSwPCE9uSOY7XFYe9dDDDdyKA
-         7UEft2wTfLwpAj7JCfLi+GO/QRhW0WsZzGhPRI6kYtLWZlFBZMz9g1zmXxnwT+hX7l+w
-         DFeB6PoMGxVfBZS84gEFZSCohxIaNmiBpZcUofl+oZleWQOboOU4C6Lvh4Zl9+FJgUqO
-         QWByPoes3pe3Q93CDb7oHN7QodBxmL13+8QrbhGLog2eDASuGvphKd2LBdDKtXN3Vjg9
-         2HYK/MHlUgyoSE5m21D7qHHDAFFB+CyvQ+cTwShZKmfPr4beGLA8di8ui9wFOBs22Jr6
-         EjvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=YMr4MH5OAXDGu0QML7PGb/CPtpXoy4tXxOqSUwqRpH+Vc8zPN85itrgOpjjDEwVupa
-         DC7bp1W8G557WHdfpgRVOj+7r7Zzk9sxokyQCwNxA7QTaUmdlrP1TAiu2rW3YAcEocNx
-         Nu0/u3sDI6eJpaFSxxOOjkmzrtlh30jVqOARbpS2QHFTu+VPCwJmT3e/6uvvwsCUgx/J
-         Kr5c8rusSbroKkoJu61x/WZWUL5aPoRo7X1f/mZB/FdYC160E46HN592iwg1dxusGe9G
-         idOEICOaBEE3V256H6reszSQ0DOTsdbEwv3Fm45EoYVVpFaoz6JNvhZGHvgzj1kKq1Pa
-         ZmYw==
-X-Gm-Message-State: AOAM533l+iVQUzXh0mj426jJ2vOyYi8rZzojKp6Xe/5S4VQDgM0zb994
-        Zpx7wV8khxAEiuGkdyeML/yqWO1phRyjiWV8K+s=
-X-Google-Smtp-Source: ABdhPJx9QIpXqiMKp9qrulR+SF+hFWJbIxnLc9KlZiIrxUJj79iwhnOgETmv1VWK3tnQJNyVv8JegKv5X0x+PCKpsR4=
-X-Received: by 2002:a0c:80c3:: with SMTP id 61mr6579548qvb.23.1601544289825;
- Thu, 01 Oct 2020 02:24:49 -0700 (PDT)
+        id S1725975AbgJAKCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Oct 2020 06:02:37 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2938 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725938AbgJAKCh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Oct 2020 06:02:37 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id A04EBA1DF8756758B9D4;
+        Thu,  1 Oct 2020 11:02:35 +0100 (IST)
+Received: from localhost (10.52.127.250) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 1 Oct 2020
+ 11:02:35 +0100
+Date:   Thu, 1 Oct 2020 11:00:52 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <seanvk.dev@oregontracks.org>
+CC:     <bhelgaas@google.com>, <rafael.j.wysocki@intel.com>,
+        <ashok.raj@intel.com>, <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@intel.com>, <qiuxu.zhuo@intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: Re: [PATCH v7 06/13] PCI/ERR: Limit AER resets in
+ pcie_do_recovery()
+Message-ID: <20201001100052.00004f86@Huawei.com>
+In-Reply-To: <20200930215820.1113353-7-seanvk.dev@oregontracks.org>
+References: <20200930215820.1113353-1-seanvk.dev@oregontracks.org>
+        <20200930215820.1113353-7-seanvk.dev@oregontracks.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Received: by 2002:a0c:e484:0:0:0:0:0 with HTTP; Thu, 1 Oct 2020 02:24:49 -0700 (PDT)
-Reply-To: ayishagddafio@mail.ru
-From:   AISHA GADDAFI <theodoreguerinrevsister@gmail.com>
-Date:   Thu, 1 Oct 2020 02:24:49 -0700
-Message-ID: <CAD5W7L99JLdzHRwwrtH+RbW+LmhYHc-AdbjD_QZAHOS4sAcaqQ@mail.gmail.com>
-Subject: Lieber Freund (Assalamu Alaikum),?
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.127.250]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Lieber Freund (Assalamu Alaikum),
+On Wed, 30 Sep 2020 14:58:13 -0700
+Sean V Kelley <seanvk.dev@oregontracks.org> wrote:
 
-Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
-Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
-Mutter und eine Witwe
-mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
-hen
-Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
+> From: Sean V Kelley <sean.v.kelley@intel.com>
+> 
+> In some cases a bridge may not exist as the hardware
+> controlling may be handled only by firmware and so is
+> not visible to the OS. This scenario is also possible
+> in future use cases involving non-native use of RCECs
+> by firmware. So explicitly apply conditional logic
+> around these resets by limiting them to root ports and
+> downstream ports.
+> 
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 
-Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
-f=C3=BCnfhunderttausend
-United State Dollar ($ 27.500.000.00) und ich brauche eine
-vertrauensw=C3=BCrdige Investition
-Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
-jedoch
-M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
-von
-Investitionsprojekten in Ihrem Land
-Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
-bauen.
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
-n und
-Unternehmensgewinn zu verhandeln
-Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
+> ---
+>  drivers/pci/pcie/err.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index c6922c099c76..9e552330155b 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -203,9 +203,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(dev, "broadcast resume message\n");
+>  	pci_walk_bus(bus, report_resume, &status);
+>  
+> -	if (pcie_aer_is_native(dev))
+> -		pcie_clear_device_status(dev);
+> -	pci_aer_clear_nonfatal_status(dev);
+> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+> +		if (pcie_aer_is_native(bridge))
+> +			pcie_clear_device_status(bridge);
+> +		pci_aer_clear_nonfatal_status(bridge);
+> +	}
+>  	pci_info(dev, "device recovery successful\n");
+>  	return status;
+>  
 
-Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
-antworten Sie bitte dringend
-Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
-.
 
-Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
-esse (
-ayishagddafio@mail.ru ) zur weiteren Diskussion.
-
-Freundliche Gr=C3=BC=C3=9Fe
-Frau Aisha Al-Qaddafi
