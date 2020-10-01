@@ -2,83 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 551B3280156
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 16:33:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3729A280164
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 16:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732449AbgJAOdb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Oct 2020 10:33:31 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:41740 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732020AbgJAOdb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 10:33:31 -0400
-Received: by mail-oo1-f68.google.com with SMTP id t3so1519427ook.8;
-        Thu, 01 Oct 2020 07:33:29 -0700 (PDT)
+        id S1732213AbgJAOgV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Oct 2020 10:36:21 -0400
+Received: from mail-ot1-f52.google.com ([209.85.210.52]:43234 "EHLO
+        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbgJAOgV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 10:36:21 -0400
+Received: by mail-ot1-f52.google.com with SMTP id n61so5583407ota.10;
+        Thu, 01 Oct 2020 07:36:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=NklUCDIMExUICy4FN/gh63Vm3SmGzKI/5Dwr1ozJ1xo=;
-        b=Uye2+7mYqgX89ErfbrN19Ywi5H8ep5QlB475QIIkeLx+4MtiZnluCT8Ayj5oMDuah/
-         X3VI3p/1xoRqc90ue14+uRGHnU5T+CSbBpMNCSFUONviMRdPluG6VhyZ6t0ziOVpQWf5
-         5qCqbSFAajrV5sYt0fdIrqEMgWlg4/MjNQmuL64DscaMXWLG3LY+K0QN2ALwTqxXrvqy
-         GCoRbjPuzRTBi4AYoed1PjP6LlxxLSB+ML80CitU301Z2aeickSJi3B6oQf6v4euVWP5
-         SkhFJMXhoRNuSlZ5MdR9ZBkO768iwigMNOj0Vh1UBc+6Auk0tdurJFS9V1RyzA7gvUNm
-         BP5Q==
-X-Gm-Message-State: AOAM533Hwl06GCV8x1+z+TBM6dt/UsBDrObdk66WFuJF8qPyGRaf2r67
-        A05UQ3DCgg1cCo29Sksj4ewRms3+EF2z
-X-Google-Smtp-Source: ABdhPJwtom5klA/Ap8NrMcL34dnJEga9NT+pmkNy471CG5ehIqBT2YW5RiioY1ZL73r4Gt8Hdb3wCQ==
-X-Received: by 2002:a4a:95f1:: with SMTP id p46mr5633028ooi.93.1601562808922;
-        Thu, 01 Oct 2020 07:33:28 -0700 (PDT)
+        bh=+OGojTsCgqqLX3sjLykJ84TRTlSsl+ju2zMZnbDe0Q8=;
+        b=QRnOM+IxsTTs9H1tY7HDu/OsSYRXxwJLncArHUCxwyJ7hiyJx7ksQHKrPJweIyvHpr
+         CpN/n27sT8aaKHDNSXjr5Ywi/3Mxn8hDhX1lp+qjpA9AbLaUWSxaURltin63GJVWNOpj
+         p3DC+z83K1Rbw8TGe2KNuRgdpegCg98BaG7+x3ADG7z5pRfCdYwPSmyVWzGAqBn76kgD
+         jwcHr3eqVvTwJxf4pbjvNEpd8IU3nthhtBCN5CVhtb3iSYhZI5n2jM8z4mMr/uvmf2NV
+         6Jj2iHvKGbuZeFBOb5t6gZ/AVrGWhken1D5JrzR2IiH2XxxkL79cTmq/zZ6AGVADyy6H
+         CD+w==
+X-Gm-Message-State: AOAM532NSg8sFR8nwZSqCPeMv7r8WhGdAiFoYLaazEYGjeQ5xfpdbODG
+        a2ZTVqKWO35GruQwt9C2pg==
+X-Google-Smtp-Source: ABdhPJxSR7DmJ5mucTzds9TF9ad3q725ZrZ5jfvvZFpr4UUHPT/2L5I//UDn0pXDn5Jj82hpwdxQ0Q==
+X-Received: by 2002:a9d:7084:: with SMTP id l4mr5295944otj.161.1601562980318;
+        Thu, 01 Oct 2020 07:36:20 -0700 (PDT)
 Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g7sm1204483otk.56.2020.10.01.07.33.27
+        by smtp.gmail.com with ESMTPSA id y7sm1063888oih.51.2020.10.01.07.36.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2020 07:33:28 -0700 (PDT)
-Received: (nullmailer pid 695955 invoked by uid 1000);
-        Thu, 01 Oct 2020 14:33:22 -0000
-Date:   Thu, 1 Oct 2020 09:33:22 -0500
+        Thu, 01 Oct 2020 07:36:19 -0700 (PDT)
+Received: (nullmailer pid 700173 invoked by uid 1000);
+        Thu, 01 Oct 2020 14:36:19 -0000
+Date:   Thu, 1 Oct 2020 09:36:19 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        virtualization@lists.linux-foundation.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Nuno Das Neves <nudasnev@microsoft.com>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Vineeth Pillai <viremana@linux.microsoft.com>
-Subject: Re: [PATCH RFC v1 12/18] asm-generic/hyperv: update
- hv_interrupt_entry
-Message-ID: <20201001143322.GA695896@bogus>
-References: <20200914112802.80611-1-wei.liu@kernel.org>
- <20200914115928.83184-4-wei.liu@kernel.org>
+To:     Liu Shixin <liushixin2@huawei.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-pci@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH -next] PCI: iproc: use module_bcma_driver to simplify the
+ code
+Message-ID: <20201001143619.GA700120@bogus>
+References: <20200918030829.3946025-1-liushixin2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200914115928.83184-4-wei.liu@kernel.org>
+In-Reply-To: <20200918030829.3946025-1-liushixin2@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 14 Sep 2020 11:59:21 +0000, Wei Liu wrote:
-> We will soon use the same structure to handle IO-APIC interrupts as
-> well. Introduce an enum to identify the source and a data structure for
-> IO-APIC RTE.
+On Fri, 18 Sep 2020 11:08:29 +0800, Liu Shixin wrote:
+> module_bcma_driver() makes the code simpler by eliminating
+> boilerplate code.
 > 
-> While at it, update pci-hyperv.c to use the enum.
-> 
-> No functional change.
-> 
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
 > ---
->  drivers/pci/controller/pci-hyperv.c |  2 +-
->  include/asm-generic/hyperv-tlfs.h   | 36 +++++++++++++++++++++++++++--
->  2 files changed, 35 insertions(+), 3 deletions(-)
+>  drivers/pci/controller/pcie-iproc-bcma.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
