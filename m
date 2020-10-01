@@ -2,227 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4749427F92D
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 07:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 439BD27F943
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 08:01:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725960AbgJAF5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Oct 2020 01:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35472 "EHLO
+        id S1725902AbgJAGBL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Oct 2020 02:01:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgJAF5q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 01:57:46 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B40C061755
-        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 22:57:46 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id l18so1395700pjz.1
-        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 22:57:46 -0700 (PDT)
+        with ESMTP id S1725892AbgJAGBK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 02:01:10 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A72C0613D0
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 23:01:10 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m34so3167032pgl.9
+        for <linux-pci@vger.kernel.org>; Wed, 30 Sep 2020 23:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kiX+HcnWEaQ/frOzIoE2M7foTxs3fyHoDiIV9RqEj4g=;
-        b=UyLt6mK8U5anWM0yWYfYHgN8KUllVC8Z+S8rujEtdgKN+E6GSCjt5ku5WHt1L5Rvg2
-         XR7LDStBwn4bXnz7u11QrOJrfHrScCKZcbMtxlX4iZXIbumru1lGOGssooubUMqJHtGt
-         WtYRf0OaMywrwlte/hSSyrRN+6Dnl2TmntSsowHISo1Hsw7eZ+blFd7hnE9J/Pq8pxZm
-         AuF939JUdGxbUUiGe2VeYtCA59N6wii4ALylbRdt3tQGuga6G0pGrxVed1+rRjKgSis8
-         G1qLzrDQj+CpGgfcx02NcbbBOTnk8gX/72KKgURqge8roKLtKCgbT0VmAO+/Byaeimn2
-         lSVQ==
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=q3/tWPpznoYbqp/fbNV3MS1JZqzMCoiUhemnnoHkb9c=;
+        b=eMhNmQ8DmhlqopE1tffCto14gwoSHZxwVWfteuSRX4sMpXJdhLvslk1t91Jj4extX0
+         Ru0YUygHdxOZsecdC07zBv1tXTl0dGMDSsFgWTfZXprkF5rvrGWJZX69GVztCkMsPS3G
+         ciGFY8fTbn9ImsRr1AMFN/8Cut+1tRAuEYVoM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kiX+HcnWEaQ/frOzIoE2M7foTxs3fyHoDiIV9RqEj4g=;
-        b=G2tI1edJYuYefBQYUy7FgsbtKDwgz+xq7KZMWUowjh+Ki2Sv5VoskBXCsipiRA3HjD
-         loIwM14v+9sNzsRHaL/RusgPJvV2vnEpa2KEOKdrhmkzHtWoXXcNJP5ShhKzdwWBuRXm
-         g+qb50jT6HUuUymxEc+RyNeOlBi6CBd/v/BNj/A1STTTTOUQM1/RsEPYYVTVXOxNMd9K
-         UToT/z9t7T+XQHgO7d7jTYAH7dkh/H16eQkBL87xle5lH5SiBkVHaG/E9auFLzdgwyuK
-         uvdyf1ATifuOZwvOJrxO4spAkPiQylHeUhwPPYFvDAmqyo6CIGTofNWXBTjT/9TjXRFO
-         kV1w==
-X-Gm-Message-State: AOAM531sLU7won8Fswy5tucPYDFOQx9Rv/1UnC9XjiuCm4G9TE+QawBE
-        VykkkqKnm4xj5UeHwl/gYjdP
-X-Google-Smtp-Source: ABdhPJxheAicHAZx58yBCUFoYDzimhPjr2e22zKPIuj3vDiczyWS1xLAJgsp3NExq3YfGP4PMoSn+w==
-X-Received: by 2002:a17:90a:ad8b:: with SMTP id s11mr5587657pjq.40.1601531866063;
-        Wed, 30 Sep 2020 22:57:46 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:188:5adb:1423:88c1:4321:a364])
-        by smtp.gmail.com with ESMTPSA id 36sm4129742pgl.72.2020.09.30.22.57.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 30 Sep 2020 22:57:45 -0700 (PDT)
-Date:   Thu, 1 Oct 2020 11:27:36 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        vkoul@kernel.org, robh@kernel.org, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgautam@codeaurora.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] PCI: qcom: Add support for configuring BDF to SID
- mapping for SM8250
-Message-ID: <20201001055736.GB3203@Mani-XPS-13-9360>
-References: <20200930150925.31921-1-manivannan.sadhasivam@linaro.org>
- <20200930150925.31921-6-manivannan.sadhasivam@linaro.org>
- <507b3d50-6792-60b7-1ccd-f7b3031c20ac@mm-sol.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <507b3d50-6792-60b7-1ccd-f7b3031c20ac@mm-sol.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=q3/tWPpznoYbqp/fbNV3MS1JZqzMCoiUhemnnoHkb9c=;
+        b=VhLm/gdRczOtTTJjtspdfgM8VAMaRQ67CoNRYZ6rR1uK3FnPigDFrZntw0PR/QSPmZ
+         2unA0JbQb1FQ8GkY53VeT3pUj3SdrPxVm5KBRPCcVc+XmVMsQCjORp4VMHnkHWmmDHh3
+         pbH1gF/5Cogpfl9qnIaLaNNRnAR4DkkcgHJ5rMZkgAYt6rxcr0jzFgWuU6zCHU+/Uzri
+         pkV0btL0h2+7LmdUcYHsY9ALOn69RRrz49fn8kQUzgri6WqTkcsaFuMR90G7zsUHGAVz
+         +phDN6mPpHkUNqdtfWoj3guTpef5UGonO1EjHDCf9mPUw6+xaNlOyq5JEh/nrvm6H3dg
+         Yt6A==
+X-Gm-Message-State: AOAM532mBRYqRK8HeJ/LrSjxacX8ReWf5u9D/VkOj/mnNV8EW3r0LTCP
+        6I24YpvbS3srUlazqHw8adzqlQ==
+X-Google-Smtp-Source: ABdhPJwmcbGffPjlP6r485rkbOLTJr00urfc/ImOUlJ/uZqXYwfduo2dJPm7nMBidK2mrNuZV6GudQ==
+X-Received: by 2002:a62:6287:0:b029:142:2501:3982 with SMTP id w129-20020a6262870000b029014225013982mr5717876pfb.71.1601532070061;
+        Wed, 30 Sep 2020 23:01:10 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id l2sm4032112pjy.3.2020.09.30.23.01.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2020 23:01:09 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v3 0/3] PCI: iproc: Add fixes to pcie iproc 
+Date:   Thu,  1 Oct 2020 11:30:51 +0530
+Message-Id: <20201001060054.6616-1-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="00000000000029056405b095be1b"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Stan,
+--00000000000029056405b095be1b
 
-On Thu, Oct 01, 2020 at 12:46:46AM +0300, Stanimir Varbanov wrote:
-> Hi Mani,
-> 
-> On 9/30/20 6:09 PM, Manivannan Sadhasivam wrote:
-> > For SM8250, we need to write the BDF to SID mapping in PCIe controller
-> > register space for proper working. This is accomplished by extracting
-> > the BDF and SID values from "iommu-map" property in DT and writing those
-> > in the register address calculated from the hash value of BDF. In case
-> > of collisions, the index of the next entry will also be written.
-> 
-> This describes what the patch is doing. But why? Is that done in the
-> other DWC low-level drivers or this is qcom specialty?
-> 
+This patch series contains fixes and improvements to pcie iproc driver.
 
-AFAIK, only some NXP SoCs deal with similar kind of mapping but right now
-this is a Qcom only stuff.
+This patch set is based on Linux-5.9.0-rc2.
 
-> > 
-> > For the sake of it, let's introduce a "config_sid" callback and do it
-> > conditionally for SM8250.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig     |   1 +
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 138 +++++++++++++++++++++++++
-> >  2 files changed, 139 insertions(+)
-> > 
+Changes from v2:
+  - Addressed Bjorn's review comments
+     - Corrected subject line and commit message of Patches 1 and 2.
+     
+Changes from v1:
+  - Addressed Bjorn's review comments
+     - pcie_print_link_status is used to print Link information.
+     - Added IARR1/IMAP1 window map definition.
 
-[...]
+Bharat Gooty (1):
+  PCI: iproc: Fix out-of-bound array accesses
 
-> > +
-> > +/* sid info structure */
-> > +struct qcom_pcie_sid_info_t {
-> 
-> why _t postfix? Maybe qcom_pcie_sid ?
-> 
+Roman Bacik (1):
+  PCI: iproc: Invalidate correct PAXB inbound windows
 
-Just to differentiate the struct name and its variable. But I can
-remove the _t suffix.
+Srinath Mannam (1):
+  PCI: iproc: Display PCIe Link information
 
-> SID - Stream ID ?
-> 
+ drivers/pci/controller/pcie-iproc.c | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-Yes! Will expand in commit message also.
+-- 
+2.17.1
 
-> > +	u16 bdf;
-> > +	u8 pcie_sid;
-> > +	u8 hash;
-> > +	u32 smmu_sid;
-> > +	u32 value;
-> >  };
-> >  
-> >  struct qcom_pcie {
-> > @@ -193,6 +208,8 @@ struct qcom_pcie {
-> >  	struct phy *phy;
-> >  	struct gpio_desc *reset;
-> >  	const struct qcom_pcie_ops *ops;
-> > +	struct qcom_pcie_sid_info_t *sid_info;
-> > +	u32 sid_info_len;
-> >  	int gen;
-> >  };
-> >  
-> > @@ -1257,6 +1274,120 @@ static int qcom_pcie_link_up(struct dw_pcie *pci)
-> >  	return !!(val & PCI_EXP_LNKSTA_DLLLA);
-> >  }
-> >  
-> > +static int qcom_pcie_get_iommu_map(struct qcom_pcie *pcie)
-> > +{
-> > +	/* iommu map structure */
-> > +	struct {
-> > +		u32 bdf;
-> > +		u32 phandle;
-> > +		u32 smmu_sid;
-> > +		u32 smmu_sid_len;
-> > +	} *map;
-> > +	struct device *dev = pcie->pci->dev;
-> > +	int i, size = 0;
-> > +	u32 smmu_sid_base;
-> > +
-> > +	of_get_property(dev->of_node, "iommu-map", &size);
-> > +	if (!size)
-> > +		return 0;
-> > +
-> > +	map = kzalloc(size, GFP_KERNEL);
-> > +	if (!map)
-> > +		return -ENOMEM;
-> > +
-> > +	of_property_read_u32_array(dev->of_node,
-> > +		"iommu-map", (u32 *)map, size / sizeof(u32));
-> 
-> iommu-map is a standard DT property why we have to parse it manually?
-> 
 
-So right now we don't have a way to pass this information from DT. And there
-is no IOMMU API to parse the fields also. We need to extract this information
-to program the hash tables (BDF, SID) as the mapping between BDF and SID is not
-1:1 in SM8250.
+--00000000000029056405b095be1b
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Perhaps I can add this information in commit message.
-
-> > +
-> > +	pcie->sid_info_len = size / (sizeof(*map));
-> > +	pcie->sid_info = devm_kcalloc(dev, pcie->sid_info_len,
-> > +				sizeof(*pcie->sid_info), GFP_KERNEL);
-> > +	if (!pcie->sid_info) {
-> > +		kfree(map);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	/* Extract the SMMU SID base from the first entry of iommu-map */
-> > +	smmu_sid_base = map[0].smmu_sid;
-> > +	for (i = 0; i < pcie->sid_info_len; i++) {
-> > +		pcie->sid_info[i].bdf = map[i].bdf;
-> > +		pcie->sid_info[i].smmu_sid = map[i].smmu_sid;
-> > +		pcie->sid_info[i].pcie_sid =
-> > +				pcie->sid_info[i].smmu_sid - smmu_sid_base;
-> > +	}
-> > +
-> > +	kfree(map);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int qcom_pcie_config_sid_sm8250(struct qcom_pcie *pcie)
-> > +{
-> > +	void __iomem *bdf_to_sid_base = pcie->parf +
-> > +		PCIE20_PARF_BDF_TO_SID_TABLE_N;
-> > +	u8 qcom_pcie_crc8_table[CRC8_TABLE_SIZE];
-> > +	int ret, i;
-> > +
-> > +	ret = qcom_pcie_get_iommu_map(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (!pcie->sid_info)
-> > +		return 0;
-> > +
-> > +	crc8_populate_msb(qcom_pcie_crc8_table, QCOM_PCIE_CRC8_POLYNOMIAL);
-> > +
-> > +	/* Registers need to be zero out first */
-> > +	memset_io(bdf_to_sid_base, 0, CRC8_TABLE_SIZE * sizeof(u32));
-> > +
-> > +	/* Initial setup for boot */
-> 
-> Could you elaborate more what the code below is trying to achieve. Is
-> that connected to bootloaders?
-> 
-
-No. This is trying to program the hash tables for initial boot but I think this
-doesn't make sense here as it will be done all the time. I'll just remove this
-comment.
-
-Thanks,
-Mani
+MIIQSAYJKoZIhvcNAQcCoIIQOTCCEDUCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg2dMIIE6DCCA9CgAwIBAgIOSBtqCRO9gCTKXSLwFPMwDQYJKoZIhvcNAQELBQAwTDEgMB4GA1UE
+CxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMT
+Ckdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAwWhcNMjQwNjE1MDAwMDAwWjBdMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25h
+bFNpZ24gMiBDQSAtIFNIQTI1NiAtIEczMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+tpZok2X9LAHsYqMNVL+Ly6RDkaKar7GD8rVtb9nw6tzPFnvXGeOEA4X5xh9wjx9sScVpGR5wkTg1
+fgJIXTlrGESmaqXIdPRd9YQ+Yx9xRIIIPu3Jp/bpbiZBKYDJSbr/2Xago7sb9nnfSyjTSnucUcIP
+ZVChn6hKneVGBI2DT9yyyD3PmCEJmEzA8Y96qT83JmVH2GaPSSbCw0C+Zj1s/zqtKUbwE5zh8uuZ
+p4vC019QbaIOb8cGlzgvTqGORwK0gwDYpOO6QQdg5d03WvIHwTunnJdoLrfvqUg2vOlpqJmqR+nH
+9lHS+bEstsVJtZieU1Pa+3LzfA/4cT7XA/pnwwIDAQABo4IBtTCCAbEwDgYDVR0PAQH/BAQDAgEG
+MGoGA1UdJQRjMGEGCCsGAQUFBwMCBggrBgEFBQcDBAYIKwYBBQUHAwkGCisGAQQBgjcUAgIGCisG
+AQQBgjcKAwQGCSsGAQQBgjcVBgYKKwYBBAGCNwoDDAYIKwYBBQUHAwcGCCsGAQUFBwMRMBIGA1Ud
+EwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFGlygmIxZ5VEhXeRgMQENkmdewthMB8GA1UdIwQYMBaA
+FI/wS3+oLkUkrk1Q+mOai97i3Ru8MD4GCCsGAQUFBwEBBDIwMDAuBggrBgEFBQcwAYYiaHR0cDov
+L29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3RyMzA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3Js
+Lmdsb2JhbHNpZ24uY29tL3Jvb3QtcjMuY3JsMGcGA1UdIARgMF4wCwYJKwYBBAGgMgEoMAwGCisG
+AQQBoDIBKAowQQYJKwYBBAGgMgFfMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNp
+Z24uY29tL3JlcG9zaXRvcnkvMA0GCSqGSIb3DQEBCwUAA4IBAQConc0yzHxn4gtQ16VccKNm4iXv
+6rS2UzBuhxI3XDPiwihW45O9RZXzWNgVcUzz5IKJFL7+pcxHvesGVII+5r++9eqI9XnEKCILjHr2
+DgvjKq5Jmg6bwifybLYbVUoBthnhaFB0WLwSRRhPrt5eGxMw51UmNICi/hSKBKsHhGFSEaJQALZy
+4HL0EWduE6ILYAjX6BSXRDtHFeUPddb46f5Hf5rzITGLsn9BIpoOVrgS878O4JnfUWQi29yBfn75
+HajifFvPC+uqn+rcVnvrpLgsLOYG/64kWX/FRH8+mhVe+mcSX3xsUpcxK9q9vLTVtroU/yJUmEC4
+OcH5dQsbHBqjMIIDXzCCAkegAwIBAgILBAAAAAABIVhTCKIwDQYJKoZIhvcNAQELBQAwTDEgMB4G
+A1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNV
+BAMTCkdsb2JhbFNpZ24wHhcNMDkwMzE4MTAwMDAwWhcNMjkwMzE4MTAwMDAwWjBMMSAwHgYDVQQL
+ExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMK
+R2xvYmFsU2lnbjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMwldpB5BngiFvXAg7aE
+yiie/QV2EcWtiHL8RgJDx7KKnQRfJMsuS+FggkbhUqsMgUdwbN1k0ev1LKMPgj0MK66X17YUhhB5
+uzsTgHeMCOFJ0mpiLx9e+pZo34knlTifBtc+ycsmWQ1z3rDI6SYOgxXG71uL0gRgykmmKPZpO/bL
+yCiR5Z2KYVc3rHQU3HTgOu5yLy6c+9C7v/U9AOEGM+iCK65TpjoWc4zdQQ4gOsC0p6Hpsk+QLjJg
+6VfLuQSSaGjlOCZgdbKfd/+RFO+uIEn8rUAVSNECMWEZXriX7613t2Saer9fwRPvm2L7DWzgVGkW
+qQPabumDk3F2xmmFghcCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
+HQYDVR0OBBYEFI/wS3+oLkUkrk1Q+mOai97i3Ru8MA0GCSqGSIb3DQEBCwUAA4IBAQBLQNvAUKr+
+yAzv95ZURUm7lgAJQayzE4aGKAczymvmdLm6AC2upArT9fHxD4q/c2dKg8dEe3jgr25sbwMpjjM5
+RcOO5LlXbKr8EpbsU8Yt5CRsuZRj+9xTaGdWPoO4zzUhw8lo/s7awlOqzJCK6fBdRoyV3XpYKBov
+Hd7NADdBj+1EbddTKJd+82cEHhXXipa0095MJ6RMG3NzdvQXmcIfeg7jLQitChws/zyrVQ4PkX42
+68NXSb7hLi18YIvDQVETI53O9zJrlAGomecsMx86OyXShkDOOyyGeMlhLxS67ttVb9+E7gUJTb0o
+2HLO02JQZR7rkpeDMdmztcpHWD9fMIIFSjCCBDKgAwIBAgIMNrzy1txQrCWrqOxyMA0GCSqGSIb3
+DQEBCwUAMF0xCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTMwMQYDVQQD
+EypHbG9iYWxTaWduIFBlcnNvbmFsU2lnbiAyIENBIC0gU0hBMjU2IC0gRzMwHhcNMjAwOTIxMTQx
+NzUyWhcNMjIwOTIyMTQxNzUyWjCBkjELMAkGA1UEBhMCSU4xEjAQBgNVBAgTCUthcm5hdGFrYTES
+MBAGA1UEBxMJQmFuZ2Fsb3JlMRYwFAYDVQQKEw1Ccm9hZGNvbSBJbmMuMRcwFQYDVQQDEw5Tcmlu
+YXRoIE1hbm5hbTEqMCgGCSqGSIb3DQEJARYbc3JpbmF0aC5tYW5uYW1AYnJvYWRjb20uY29tMIIB
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzM0rsY9oflF7FPm4sVIBpoG0MDeqp1DKUq/L
+Tjs6D9B6IdU3vfx830fe4Byta3nNX96Ayd8ZYExlu5zw7i2Nu+YArifsiYs0Ckkfl+xFUA/nTZwg
+YiGfUEyj3cOjJJB4uaM72ijA80VvqmWNihzmuWWfrATpiPY9SHz0/3id67MJtVU+y3pLjxHPrkCy
+9ZKRr57dF9SYlw9e4GgIF8+SYOPcvkmRUdnQjIUiXDiULTgyKUL2LAtcXpgGCk+4W7gZ2KeeO8t6
+vmErFPzoLCSoF131XRIpgrbhLNi9IkOfU7tmNn6cdkoxASiobSGkkio2N1PWTZBPpKfik+OOAo8H
+kQIDAQABo4IB0jCCAc4wDgYDVR0PAQH/BAQDAgWgMIGeBggrBgEFBQcBAQSBkTCBjjBNBggrBgEF
+BQcwAoZBaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NwZXJzb25hbHNpZ24y
+c2hhMmczb2NzcC5jcnQwPQYIKwYBBQUHMAGGMWh0dHA6Ly9vY3NwMi5nbG9iYWxzaWduLmNvbS9n
+c3BlcnNvbmFsc2lnbjJzaGEyZzMwTQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUH
+AgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwRAYD
+VR0fBD0wOzA5oDegNYYzaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc3BlcnNvbmFsc2lnbjJz
+aGEyZzMuY3JsMCYGA1UdEQQfMB2BG3NyaW5hdGgubWFubmFtQGJyb2FkY29tLmNvbTATBgNVHSUE
+DDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBRpcoJiMWeVRIV3kYDEBDZJnXsLYTAdBgNVHQ4EFgQU
+zNITc3dFEkM+jmMQc3Lwyyi3bSEwDQYJKoZIhvcNAQELBQADggEBAID0zJzfCJvIXZdUQvaJ2R8K
+PqH211/mV+mEOqJsd0nM9XA/3QfXg1CSTt5d9dMrhUNqtbebI53ls4lA/r4p+D6/gS53cbNd+xxF
+1lTbpXwrbPqa8h3oRDmttKWPeE4tGq6Npt5AgsVYgsKQCeiDicN2QfHSr+vLO1XnP/HHAZtdpwOw
+fdegvyqihabnO/m+F5oMaBPUmzE+iQDKHmK2R3btmrFkZ8mIPEPM97mUf2J8LUrrThang9TN6edm
++X3T4mIB0kCJfTYzyaZ2zhYx2kDVdOfMO4HbkqHQc2fRuFTuVKgUf8xa5BK6Q8QV5sD1YxLGb+XL
+TIRpMXJNiJf6eEMxggJvMIICawIBATBtMF0xCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxT
+aWduIG52LXNhMTMwMQYDVQQDEypHbG9iYWxTaWduIFBlcnNvbmFsU2lnbiAyIENBIC0gU0hBMjU2
+IC0gRzMCDDa88tbcUKwlq6jscjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQg4N/N
+iKoUZ1O33JW+rx/fdsgFFV2APX8fzjEB7ZkGEjUwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAc
+BgkqhkiG9w0BCQUxDxcNMjAxMDAxMDYwMTEwWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQB
+KjALBglghkgBZQMEARYwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkq
+hkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAAnfrhJyiIiRF8EKEAaKFF5E
+4DgYNRJEbkOGAGc2DYjfIWiRK3E2MQmLB6ResS0KEvSvyi3JOugobgY+N+8LV8sfOkn8YhneBUxz
+l8VId43d0Xq79UHpcSewX6KCWr/fY1s23pFxPgYEdLBuh5EVvBKmq07LejSNVhKwNdBTdNGc+j30
+fv7h2l4IF6R9T6OFgTHFdR85dm2qxFAX9VNvsIY1Ks/kcF64/l+5gmlUhyxnE33bAedlswCChFYU
+Nv6oeNhNZ8WlJmi001kgaD17oz/l2pCtaSw9Xil17vR+9vhFgO+whCLx3dpRiR1mQ/TvdS2nQxS1
+62voFQDssg3d/K0=
+--00000000000029056405b095be1b--
