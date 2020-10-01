@@ -2,141 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69AFF280430
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 18:46:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E54280434
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 18:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732299AbgJAQqi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Oct 2020 12:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50894 "EHLO
+        id S1732016AbgJAQq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Oct 2020 12:46:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732274AbgJAQqi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 12:46:38 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F0AC0613D0;
-        Thu,  1 Oct 2020 09:46:38 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q1so6781156ilt.6;
-        Thu, 01 Oct 2020 09:46:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+1JUkO3QCGoe44LoRPf6LoiKyh+E2Tmq//NtAEjkplw=;
-        b=S7s40mmk6t0Wqt0W5AbDBwjYW3G/WTDn3hPKIrxoltDbGXZ9wQGaTKtR18YhifrQE+
-         zzGtLOgQqMBzq+SSxoPy+KKsWMokL+LDpQz2uiosRao0q101vpI+ziKKhkrtAxKmiKwO
-         OxW6pADOvnYf7vTZgENUy1kAfT0a7x7wdfNOMQ97cCHGLao7VXGyrgsW6DR/nkgSBjzw
-         xyQeFw+iiShhi9F/4Heh4BfDXjuygWe58ng5H4PHCzyVjWVT7y/ZVCZod+G3BlryFqKC
-         YiPDMkYzM8utJeLAxcIhpakGRbu8phkUbMhWFTEWvtygvijqUBqYDMVSnjMILVwcGnqO
-         KEEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+1JUkO3QCGoe44LoRPf6LoiKyh+E2Tmq//NtAEjkplw=;
-        b=ErdtS9Zc3qMevvUQuiZS0RNW6DTz3hVZJWoTOT/nxpa/7hYwEE8tRsEfZetTpc9dOJ
-         86YX+qhysokwrndhZ3CKVWNaIVkcm94UOPThj8PnxnWTMDVgH0kuBlu7JGqwSU3EWj/F
-         7kKMW/6nh8W1YBSm38OSEzKzCtTguW/o4ybP6UjAJph+sBzRKg3CX7QYgJveSGuTKpWk
-         iyK7sdO//p/v8P2G/T/b0Jf/rXxwb5MR7Ly4oWN9f0gNB3tQ9CxSlJp49wNUuAywgBm+
-         LdrVwgdP1khsrpqyz0TICEu8mJq/o4yfMksycyaBTCsUa49rdj45+IDAUd4oN1aRYBLu
-         Eptg==
-X-Gm-Message-State: AOAM531+M5oZ3iKtsRz2jXTYoFTzIL/r9Wv8NOPboW6YZJgjYI0UL3fC
-        T/ROyAyKWSYZZjM7ypuN9vPwH8FQIwNaNCYDi7U=
-X-Google-Smtp-Source: ABdhPJySkXGVvzlLtuibxEhmC5gJlHATz519uol0/U1KIrMD6UhO6+eVc4Eq5vC++e/Z1fshO/XSsoSe4JXQsfm0dlg=
-X-Received: by 2002:a92:950d:: with SMTP id y13mr3222543ilh.42.1601570797364;
- Thu, 01 Oct 2020 09:46:37 -0700 (PDT)
+        with ESMTP id S1732107AbgJAQqz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 12:46:55 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A197C0613D0
+        for <linux-pci@vger.kernel.org>; Thu,  1 Oct 2020 09:46:55 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 6131C22F99;
+        Thu,  1 Oct 2020 18:46:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1601570811;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SUlIC2qg+S8tqNWZ4hKY5u/wUrtwXqRGM3IktJxX77U=;
+        b=eSnTM3IChuDzLyHwrw9AlCth3cEBefgDJrW6fRp9/IJYcbbPTzhJtb6p79i3hLZeG4y2Lt
+        UL4dW5BvC1otmA9MY957c5zKzKUSvBw/CKFsLbicMWNXwDHYlmsmj0cQkfra4fK1qZZjSM
+        HJA/VRxWo3CQxVHpl5ipQI/rMKlU+9A=
 MIME-Version: 1.0
-References: <20201001014250.26987-1-david.e.box@linux.intel.com>
- <20201001014250.26987-5-david.e.box@linux.intel.com> <CAHp75VfcXbedZbbF3KATWYMR1SPXusuaU+vrkvM1zsRpYzDFiA@mail.gmail.com>
-In-Reply-To: <CAHp75VfcXbedZbbF3KATWYMR1SPXusuaU+vrkvM1zsRpYzDFiA@mail.gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 1 Oct 2020 09:46:26 -0700
-Message-ID: <CAKgT0UcJXEeC4ZNQ0vq6Q6gBQeUe9uaFDHoDNoTjL0eYWaYUEA@mail.gmail.com>
-Subject: Re: [PATCH V7 4/5] platform/x86: Intel PMT Telemetry capability driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 01 Oct 2020 18:46:51 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH] PCI: dwc: Added link up check in map_bus of
+ dw_child_pcie_ops
+In-Reply-To: <67ac959f-561e-d1a0-2d89-9a85d5f92c72@ti.com>
+References: <20200916054130.8685-1-Zhiqiang.Hou@nxp.com>
+ <CAL_JsqJwgNUpWFTq2YWowDUigndSOB4rUcVm0a_U=FEpEmk94Q@mail.gmail.com>
+ <HE1PR0402MB3371F8191538F47E8249F048843F0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <CAL_JsqLdQY_DqpduaTv4hMDM_-cvZ_+s8W+HdOuZVVYjTO4yxw@mail.gmail.com>
+ <HE1PR0402MB337180458625B05D1529535384390@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <20200928093911.GB12010@e121166-lin.cambridge.arm.com>
+ <HE1PR0402MB33713A623A37D08AE3253DEB84320@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <DM5PR12MB1276D80424F88F8A9243D5E2DA320@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CAL_JsqJJxq2jZzbzZffsrPxnoLJdWLLS-7bG-vaqyqs5NkQhHQ@mail.gmail.com>
+ <9ac53f04-f2e8-c5f9-e1f7-e54270ec55a0@ti.com>
+ <CAL_JsqJEp8yyctJYUjHM4Ti6ggPb4ouYM_WDvpj_PiobnAozBw@mail.gmail.com>
+ <67ac959f-561e-d1a0-2d89-9a85d5f92c72@ti.com>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <99d24fe08ecb5a6f5bba7dc6b1e2b42b@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 1, 2020 at 9:03 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Oct 1, 2020 at 4:43 AM David E. Box <david.e.box@linux.intel.com> wrote:
-> >
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> >
-> > PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
-> > The Telemetry capability provides access to device telemetry metrics that
-> > provide hardware performance data to users from read-only register spaces.
-> >
-> > With this driver present the intel_pmt directory can be populated with
-> > telem<x> devices. These devices will contain the standard intel_pmt sysfs
-> > data and a "telem" binary sysfs attribute which can be used to access the
-> > telemetry data.
->
-> ...
->
-> > +static DEFINE_XARRAY_ALLOC(telem_array);
-> > +static struct intel_pmt_namespace pmt_telem_ns = {
-> > +       .name = "telem",
-> > +       .xa = &telem_array
->
-> Leave comma at the end.
->
-> > +};
-> > +
-> > +/*
-> > + * driver initialization
-> > + */
->
-> This is a useless comment.
->
-> > +       size = offsetof(struct pmt_telem_priv, entry[pdev->num_resources]);
-> > +       priv = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
-> > +       if (!priv)
-> > +               return -ENOMEM;
->
-> Please, use struct_size() from overflow.h instead of custom approach.
->
-> ...
+Am 2020-10-01 15:32, schrieb Kishon Vijay Abraham I:
 
-So all of the above make sense and can be fixed shortly and pushed as
-a v8 for both the telemetry and crashlog drivers.
+> Meanwhile would it be okay to add linkup check atleast for DRA7X so 
+> that
+> we could have it booting in linux-next?
 
-> > +static struct platform_driver pmt_telem_driver = {
-> > +       .driver = {
-> > +               .name   = TELEM_DEV_NAME,
->
-> I'm not sure I have interpreted this:
->         - Use 'raw' string instead of defines for device names
-> correctly. Can you elaborate?
+Layerscape SoCs (at least the LS1028A) are also still broken in 
+linux-next,
+did I miss something here?
 
-Can you point me to a reference of that? I'm not sure what you are referring to.
-
-> > +       },
-> > +       .remove = pmt_telem_remove,
-> > +       .probe  = pmt_telem_probe,
-> > +};
->
-> ...
->
-> > +MODULE_ALIAS("platform:" TELEM_DEV_NAME);
->
-> Ditto.
-
-This doesn't make sense to me. Are you saying we are expected to use
-"pmt_telemetry" everywhere instead of the define? It seems like that
-would be much more error prone. It seems like common practice to use
-DRV_NAME throughout a driver for these sort of things so if you are
-wanting us to rename it to that I am fine with that, but I am not sure
-getting rid of the use of a define makes sense.
+-michael
