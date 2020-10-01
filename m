@@ -2,68 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C47A827FA6D
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 09:44:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F19F227FB68
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Oct 2020 10:22:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgJAHoL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Oct 2020 03:44:11 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:35426 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgJAHoK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 03:44:10 -0400
-Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 981363B380A;
-        Thu,  1 Oct 2020 07:43:12 +0000 (UTC)
-Received: from localhost (lfbn-tou-1-420-199.w86-206.abo.wanadoo.fr [86.206.245.199])
-        (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A7DD020000A;
-        Thu,  1 Oct 2020 07:42:50 +0000 (UTC)
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH 2/2] PCI: dwc: spear13xx driver needs OF
-Date:   Thu,  1 Oct 2020 09:42:44 +0200
-Message-Id: <20201001074244.349443-2-thomas.petazzoni@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20201001074244.349443-1-thomas.petazzoni@bootlin.com>
-References: <20201001074244.349443-1-thomas.petazzoni@bootlin.com>
+        id S1726992AbgJAIWh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Oct 2020 04:22:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34254 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgJAIWh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Oct 2020 04:22:37 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1601540555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ONHqAv4qT+OTc2BgimstCJPvlJyn9PqWstJJf6uzEpc=;
+        b=NgazHTI+SJGDs8egXRGtdo+QGi3xh0JlmycrGchBYrODbgZTjUWPuqO6ut+FnIDPq/gdSJ
+        vByj+411k82ifrt2BEVuNPgqX27Y3wm+6Dmn4KcscKE05+QXauqWGac/+IkXdSlflKGPVQ
+        gqO3sNFZEbbRG+38SCAe6Uy+7ikGtCs4oqeZOia8yJeiTw1hywgKpiq12HtknxenkgKzRe
+        OJrPufOitZDre5pRXFtSqz9yo9w/AoYjWbk8swkUhUsvsq/Dr/oz8+/DUOp6P8ZPNkir9G
+        eIp6uHls/G0PP4zrn3niGbMtU2e4Jej+7XYXpi+l/7lKt0TktRFbV900KLGnEw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1601540555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ONHqAv4qT+OTc2BgimstCJPvlJyn9PqWstJJf6uzEpc=;
+        b=IOZyUThnP0eFdoTtp5uGay28riwQzj9H86PK6wCN00tcNvQN7l480emm6WUDFykV9hpp72
+        zqYBI/TNYKqiSDAg==
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: Boot crash due to "x86/msi: Consolidate MSI allocation"
+In-Reply-To: <A838FF2B-11FC-42B9-87D7-A76CF46E0575@nvidia.com>
+References: <A838FF2B-11FC-42B9-87D7-A76CF46E0575@nvidia.com>
+Date:   Thu, 01 Oct 2020 10:22:35 +0200
+Message-ID: <874knegxtg.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fixes the following build warning when CONFIG_OF is disabled:
+Yan,
 
-drivers/pci/controller/dwc/pcie-spear13xx.c:297:34: warning: ‘spear13xx_pcie_of_match’ defined but not used [-Wunused-const-variable=]
-  297 | static const struct of_device_id spear13xx_pcie_of_match[] = {
-      |                                  ^~~~~~~~~~~~~~~~~~~~~~~
+On Wed, Sep 30 2020 at 21:29, Zi Yan wrote:
+> I am running linux-next on my Dell R630 and the system crashed at boot
+> time. I bisected linux-next and got to your commit:
+>
+>     x86/msi: Consolidate MSI allocation
+>
+> The crash log is below and my .config is attached.
+>
+> [   11.840905]  intel_get_irq_domain+0x24/0xb0
+> [   11.840905]  native_setup_msi_irqs+0x3b/0x90
 
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
----
- drivers/pci/controller/dwc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is not really helpful because that's in the middle of the queue and
+that code is gone at the very end. Yes, it's unfortunate that this
+breaks bisection.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 96994b715f26..62f6671d7e12 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -96,7 +96,7 @@ config PCI_IMX6
- 
- config PCIE_SPEAR13XX
- 	bool "STMicroelectronics SPEAr PCIe controller"
--	depends on ARCH_SPEAR13XX || COMPILE_TEST
-+	depends on OF && (ARCH_SPEAR13XX || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
--- 
-2.26.2
+Can you please test:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/irq
+
+which contains fixes and if it still crashes provide the dmesg of it.
+
+Thanks,
+
+        tglx
 
