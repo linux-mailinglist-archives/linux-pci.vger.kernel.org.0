@@ -2,101 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B151281B2B
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58B3C281B92
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 21:22:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387602AbgJBSx3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 14:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgJBSx3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 14:53:29 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0970EC0613D0
-        for <linux-pci@vger.kernel.org>; Fri,  2 Oct 2020 11:53:29 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 34so1356706pgo.13
-        for <linux-pci@vger.kernel.org>; Fri, 02 Oct 2020 11:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=iPAQMAMc1hYTdFsccictID911P3trsdKp6hSOQvOeKM=;
-        b=TbmjMQuBlCveAwmWwmy0rJQ/hA6alnl0KmM8J0ZZ58RmP01IE5DTu2H3o8e5bX6+6i
-         0YwyoLs9btHGeslavZk5eR6mazSh0Vp56XipFnfOSms2ZLhxONKw1FBfgQUmT7N0OHeO
-         0Qmsf5V6Dfx/L64zKA4I+egZpuHu0tIpULzjvF6KJIgs3+UEe7vhvxb50hmLE30oCTJJ
-         z0sqXQx19yAtu78ZbE66rGH8j2v7WPhXkHGfJcFSJCCNuY8eATn0k0r71+mxZn0DJiiu
-         GANK0TBCTARGx7mLBm3ERcQkqwVWH6HUggvBkiEa0pztkARv5aN3GdSHv+3Iaf1YwO1Y
-         sXfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=iPAQMAMc1hYTdFsccictID911P3trsdKp6hSOQvOeKM=;
-        b=apaDspx15gefFTJDRscU9EYUiO2+DnHaGBIgdSEgWqZ6V7eNyUCUPYWJ1k9axpmb2e
-         YJt3pW0IGTxLfWWVQBn7X7SkDLpu+/eFgTmA1XSPn/bK4RQMMZwty1AJWWmW5S8eYBFv
-         FHdQRKtFgOofbxI+r+CQkVBsoPHtnlVC9Ud5YMobMpvwn9PZohbXAMXxhU8lrH1nd12h
-         Uu6Bh4IfqTIAZsj/QsvsSek7czTbmjw+kTDXaDlh2NnN1omrPxIkUYvoab/q7mC9Tv8S
-         qLqdDoq4hB8xtpl2C1qM/EJuMsUGmGoYCw+dCCrMhL459eDfSiyiavCUbdBHPODfFPqF
-         qlFg==
-X-Gm-Message-State: AOAM531qLJznCPFL9hfUYuq+InXNLLaF+YKFmRqnL+pMBH3YXiqFlp5d
-        Yghj6aCQkP6Cw6X136FyAdnk9w==
-X-Google-Smtp-Source: ABdhPJzg9saFTkFjFL/6YScANuADv4CnZG6bZfHBk7SDK2lhxGXr30RQbFBKLPsfKq04zJHatQgCWQ==
-X-Received: by 2002:a63:fd0a:: with SMTP id d10mr3374536pgh.273.1601664808545;
-        Fri, 02 Oct 2020 11:53:28 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id b3sm2798336pfd.66.2020.10.02.11.53.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2020 11:53:27 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yue Wang <yue.wang@amlogic.com>
-Subject: Re: [PATCH] pci: meson: build as module by default
-In-Reply-To: <20200928163440.GA16986@e121166-lin.cambridge.arm.com>
-References: <20200918181251.32423-1-khilman@baylibre.com> <20200928163440.GA16986@e121166-lin.cambridge.arm.com>
-Date:   Fri, 02 Oct 2020 11:53:27 -0700
-Message-ID: <7h362wmpco.fsf@baylibre.com>
+        id S2387692AbgJBTWD convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 2 Oct 2020 15:22:03 -0400
+Received: from mx.metalurgs.lv ([81.198.125.103]:65054 "EHLO mx.metalurgs.lv"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388418AbgJBTWD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Oct 2020 15:22:03 -0400
+X-Greylist: delayed 404 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 15:22:02 EDT
+Received: from mx.metalurgs.lv (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id E646D62B3D
+        for <linux-pci@vger.kernel.org>; Fri,  2 Oct 2020 22:15:16 +0300 (EEST)
+Received: from kas30pipe.localhost (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id C3E5A62B34
+        for <linux-pci@vger.kernel.org>; Fri,  2 Oct 2020 22:15:16 +0300 (EEST)
+Received: by mx.metalurgs.lv (Postfix, from userid 1005)
+        id A999C62B92; Fri,  2 Oct 2020 22:15:14 +0300 (EEST)
+Received: from [100.64.1.74] (unknown [190.15.125.50])
+        (Authenticated sender: admin)
+        by mx.metalurgs.lv (Postfix) with ESMTPA id 7351762AC0;
+        Fri,  2 Oct 2020 22:15:08 +0300 (EEST)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Description: Mail message body
+To:     Recipients <financialcapability6@gmail.com>
+From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
+Date:   Fri, 02 Oct 2020 16:15:01 -0300
+Reply-To: binmurrah@gmail.com
+X-SpamTest-Envelope-From: financialcapability6@gmail.com
+X-SpamTest-Group-ID: 00000000
+X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
+X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
+X-SpamTest-Info: {DATE: unreal year}
+X-SpamTest-Method: none
+X-SpamTest-Rate: 55
+X-SpamTest-Status: Not detected
+X-SpamTest-Status-Extended: not_detected
+X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
+Message-ID: <20201002191514.A999C62B92@mx.metalurgs.lv>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Subject: Low Rate Loan.
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+         bases: 20140401 #7726142, check: 20201002 notchecked
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+Hello Dear,
 
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+We are Investment Company offering Corporate and Personal
+Loan at 3% Interest Rate for a duration of 10Years.
 
-> On Fri, Sep 18, 2020 at 11:12:51AM -0700, Kevin Hilman wrote:
->> Enable pci-meson to build as a module whenever ARCH_MESON is enabled.
->> 
->> Cc: Yue Wang <yue.wang@amlogic.com>
->> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->> ---
->> Tested on Khadas VIM3 and Khadas VIM3 using NVMe SSD devices.
->> 
->>  drivers/pci/controller/dwc/Kconfig     | 3 ++-
->>  drivers/pci/controller/dwc/pci-meson.c | 8 +++++++-
->>  2 files changed, 9 insertions(+), 2 deletions(-)
->
-> Applied to pci/meson, thanks.
+We also pay 1% commission to brokers, who introduce project
+owners for finance or other opportunities.
 
-Rob pointed out that the MODULE_LICENCE wasn't the same as the SPDX
-header.  Could you squash the update below before submitting?
+Please get back to me if you are interested for more
+details.
 
-Thanks,
-
-Kevin
-
-
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 7a1fb55ee44a..35b167e907aa 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -604,4 +604,4 @@ module_platform_driver(meson_pcie_driver);
- 
- MODULE_AUTHOR("Yue Wang <yue.wang@amlogic.com>");
- MODULE_DESCRIPTION("Amlogic PCIe Controller driver");
--MODULE_LICENSE("Dual BSD/GPL");
-+MODULE_LICENSE("GPL v2");
+Yours faithfully,
+Hashim Bin 
