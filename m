@@ -2,64 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58B3C281B92
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 21:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CED69281BE4
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 21:23:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbgJBTWD convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 2 Oct 2020 15:22:03 -0400
-Received: from mx.metalurgs.lv ([81.198.125.103]:65054 "EHLO mx.metalurgs.lv"
+        id S2388504AbgJBTXm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 15:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388418AbgJBTWD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Oct 2020 15:22:03 -0400
-X-Greylist: delayed 404 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 15:22:02 EDT
-Received: from mx.metalurgs.lv (localhost [127.0.0.1])
-        by mx.metalurgs.lv (Postfix) with ESMTP id E646D62B3D
-        for <linux-pci@vger.kernel.org>; Fri,  2 Oct 2020 22:15:16 +0300 (EEST)
-Received: from kas30pipe.localhost (localhost [127.0.0.1])
-        by mx.metalurgs.lv (Postfix) with ESMTP id C3E5A62B34
-        for <linux-pci@vger.kernel.org>; Fri,  2 Oct 2020 22:15:16 +0300 (EEST)
-Received: by mx.metalurgs.lv (Postfix, from userid 1005)
-        id A999C62B92; Fri,  2 Oct 2020 22:15:14 +0300 (EEST)
-Received: from [100.64.1.74] (unknown [190.15.125.50])
-        (Authenticated sender: admin)
-        by mx.metalurgs.lv (Postfix) with ESMTPA id 7351762AC0;
-        Fri,  2 Oct 2020 22:15:08 +0300 (EEST)
+        id S2388419AbgJBTXm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Oct 2020 15:23:42 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83B18206DB;
+        Fri,  2 Oct 2020 19:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601666621;
+        bh=pYhhz+UueBHB3YsRZz5MWsBWxMANxmmfXeJqqXTkOaI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=r44fK/oB+rH6SHGmt0tef5OPMbmugQ+BZ8rb25KDnMvzFG8JaIoZdT4iwaHtQmDaG
+         TQFJ0bZyCPCgcpGDw9Kmcr41p6TefMyWvZkF8QOFBXFl08NWgb0D+BKAhIHW/2ElHt
+         gDlxm2AO+aeQ3VH2Aml7eH/Ut12wU8+FQ3fJ9ems=
+Date:   Fri, 2 Oct 2020 14:23:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: [GIT PULL] PCI fixes for v5.9
+Message-ID: <20201002192340.GA2820115@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Description: Mail message body
-To:     Recipients <financialcapability6@gmail.com>
-From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
-Date:   Fri, 02 Oct 2020 16:15:01 -0300
-Reply-To: binmurrah@gmail.com
-X-SpamTest-Envelope-From: financialcapability6@gmail.com
-X-SpamTest-Group-ID: 00000000
-X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
-X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
-X-SpamTest-Info: {DATE: unreal year}
-X-SpamTest-Method: none
-X-SpamTest-Rate: 55
-X-SpamTest-Status: Not detected
-X-SpamTest-Status-Extended: not_detected
-X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
-Message-ID: <20201002191514.A999C62B92@mx.metalurgs.lv>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Subject: Low Rate Loan.
-X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
-         bases: 20140401 #7726142, check: 20201002 notchecked
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Dear,
+PCI fixes:
 
-We are Investment Company offering Corporate and Personal
-Loan at 3% Interest Rate for a duration of 10Years.
+  - Fix rockchip regression in rockchip_pcie_valid_device() (Lorenzo
+    Pieralisi)
 
-We also pay 1% commission to brokers, who introduce project
-owners for finance or other opportunities.
+  - Add Pali Rohár as aardvark PCI maintainer (Pali Rohár)
 
-Please get back to me if you are interested for more
-details.
 
-Yours faithfully,
-Hashim Bin 
+The following changes since commit 7c2308f79fc81ba0bf24ccd2429fb483a91bcd51:
+
+  PCI/P2PDMA: Fix build without DMA ops (2020-08-17 17:08:21 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.9-fixes-2
+
+for you to fetch changes up to 76a6b0b90d532ed9bb9f6069aa12859c185e5b99:
+
+  MAINTAINERS: Add Pali Rohár as aardvark PCI maintainer (2020-09-30 16:51:14 -0500)
+
+----------------------------------------------------------------
+pci-v5.9-fixes-2
+
+----------------------------------------------------------------
+Lorenzo Pieralisi (1):
+      PCI: rockchip: Fix bus checks in rockchip_pcie_valid_device()
+
+Pali Rohár (1):
+      MAINTAINERS: Add Pali Rohár as aardvark PCI maintainer
+
+ MAINTAINERS                                 |  1 +
+ drivers/pci/controller/pcie-rockchip-host.c | 11 ++++-------
+ 2 files changed, 5 insertions(+), 7 deletions(-)
