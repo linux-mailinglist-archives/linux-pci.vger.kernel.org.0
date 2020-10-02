@@ -2,216 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F0BC281940
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 19:29:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 071EE281AC9
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbgJBR3P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 13:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388335AbgJBR3P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Oct 2020 13:29:15 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1B84206C3;
-        Fri,  2 Oct 2020 17:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601659755;
-        bh=CtllLYMk0Gz+Iiir55pP+3jQFilH0kKCtSY4Szn/EEA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ldGDJ4HmbhFANa0MZrBQWZQE1uYa2eGB08xJF0BmHFRQqrvT0IsCmttxDmnXAiQr+
-         hwBthftkYplzuAb0C6IYYsRJ1d/veddsSs3F8vPbhXyETTgU4Z94BD7UuVnOGKiMX7
-         M1cingYGoc7OZ5TCyr1nQcO4J5kI1hzKCojpQEZw=
-Date:   Fri, 2 Oct 2020 12:29:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ethan Zhao <haifeng.zhao@intel.com>
-Cc:     bhelgaas@google.com, oohall@gmail.com, ruscur@russell.cc,
-        lukas@wunner.de, andriy.shevchenko@linux.intel.com,
-        stuart.w.hayes@gmail.com, mr.nuke.me@gmail.com,
-        mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@linux.intel.com,
-        sathyanarayanan.kuppuswamy@intel.com, xerces.zhao@gmail.com,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v6 4/5] PCI: only return true when dev io state is really
- changed
-Message-ID: <20201002172913.GA2809822@bjorn-Precision-5520>
+        id S2388265AbgJBSXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 14:23:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52811 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387602AbgJBSXy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 14:23:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601663032;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K5o0jYIGnG/0f5zW82Cze4bYT081fEytdlidzckiyxk=;
+        b=AaCjpbJCNqEpnB0aER0qwg7daAd7pBl4IRZjJqv4WeS73E8C6mVssuD80eLVcchEBtoqPJ
+        TDbTRMow1aIQkPN3+mo0KTDDWUne5/j2UvncE5leADkomU7TMog0aDU1/1m9jAHkUuCtdt
+        qCwuDGE5BuWCsprwlHflwOK2K99/xZA=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-ewndQx58PVCweXgQAoWYBQ-1; Fri, 02 Oct 2020 14:23:51 -0400
+X-MC-Unique: ewndQx58PVCweXgQAoWYBQ-1
+Received: by mail-il1-f197.google.com with SMTP id 9so1226896ile.22
+        for <linux-pci@vger.kernel.org>; Fri, 02 Oct 2020 11:23:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K5o0jYIGnG/0f5zW82Cze4bYT081fEytdlidzckiyxk=;
+        b=f6BEEh8YdfKT4WSwrRkkknbfJgoZw++cpnJTyXrr+74gbeh5aXTZu7w2Z8+DGptdnl
+         h7cp42zvNwaFJ0LZBxa1m70SrcxfkG5lrcCyoW6G7ikUUqP6p0AuB+BhYdxw1kM/+0lR
+         XgHbz0YQ7BEKvfQFfClplYgDqbxInxbLnF7K6ruwWxKs35yqJJ7xiQNMn9QRg/JhLMtv
+         iFnJ0Zo4mFHZWbFRUpOhUxrCLezGz42DbvwcfR1CqORmWUTpgD8ICKOmzmKxN+SOL+1G
+         p27b8gsXZn+uUfOn7jywri54AOrUD8El9xxxRHM0Z4B8A05DQbjE/8MjKUnN1ZIs4ETI
+         Xkog==
+X-Gm-Message-State: AOAM531p5MVAiIYWlbhsHesbuWoC3rqIKsBetVLuMcAM8QmUqbYkX1TE
+        zhTslHp2PoAarw8zsxFMjrewzLrruYzsOWyGrNtUj9FlZBKLLfoBBgZ2DP0+PdHg9vY1lW+OtHc
+        eODfVvBhltPPV/P7SbD/j
+X-Received: by 2002:a5e:dc04:: with SMTP id b4mr2936562iok.208.1601663030551;
+        Fri, 02 Oct 2020 11:23:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJym7hhfSAz5RkroqhQVSDKIyKMh66KVDC7NYEDjTn8eT708NnRxui/FuJxqPH3RScDsgKVqBg==
+X-Received: by 2002:a5e:dc04:: with SMTP id b4mr2936537iok.208.1601663030343;
+        Fri, 02 Oct 2020 11:23:50 -0700 (PDT)
+Received: from localhost (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
+        by smtp.gmail.com with ESMTPSA id u15sm1052127ior.6.2020.10.02.11.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Oct 2020 11:23:49 -0700 (PDT)
+Date:   Fri, 2 Oct 2020 12:23:48 -0600
+From:   Al Stone <ahs3@redhat.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, jasowang@redhat.com, kevin.tian@intel.com,
+        sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH v3 0/6] Add virtio-iommu built-in topology
+Message-ID: <20201002182348.GO138842@redhat.com>
+References: <20200821131540.2801801-1-jean-philippe@linaro.org>
+ <ab2a1668-e40c-c8f0-b77b-abadeceb4b82@redhat.com>
+ <20200924045958-mutt-send-email-mst@kernel.org>
+ <20200924092129.GH27174@8bytes.org>
+ <20200924053159-mutt-send-email-mst@kernel.org>
+ <d54b674e-2626-fc73-d663-136573c32b8a@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200930070537.30982-5-haifeng.zhao@intel.com>
+In-Reply-To: <d54b674e-2626-fc73-d663-136573c32b8a@redhat.com>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Sinan]
-
-On Wed, Sep 30, 2020 at 03:05:36AM -0400, Ethan Zhao wrote:
-> When uncorrectable error happens, AER driver and DPC driver interrupt
-> handlers likely call
+On 24 Sep 2020 11:54, Auger Eric wrote:
+> Hi,
 > 
->    pcie_do_recovery()
->    ->pci_walk_bus()
->      ->report_frozen_detected()
+> Adding Al in the loop
 > 
-> with pci_channel_io_frozen the same time.
->    If pci_dev_set_io_state() return true even if the original state is
-> pci_channel_io_frozen, that will cause AER or DPC handler re-enter
-> the error detecting and recovery procedure one after another.
->    The result is the recovery flow mixed between AER and DPC.
-> So simplify the pci_dev_set_io_state() function to only return true
-> when dev->error_state is changed.
+> On 9/24/20 11:38 AM, Michael S. Tsirkin wrote:
+> > On Thu, Sep 24, 2020 at 11:21:29AM +0200, Joerg Roedel wrote:
+> >> On Thu, Sep 24, 2020 at 05:00:35AM -0400, Michael S. Tsirkin wrote:
+> >>> OK so this looks good. Can you pls repost with the minor tweak
+> >>> suggested and all acks included, and I will queue this?
+> >>
+> >> My NACK still stands, as long as a few questions are open:
+> >>
+> >> 	1) The format used here will be the same as in the ACPI table? I
+> >> 	   think the answer to this questions must be Yes, so this leads
+> >> 	   to the real question:
+> > 
+> > I am not sure it's a must.
+> > We can always tweak the parser if there are slight differences
+> > between ACPI and virtio formats.
+> > 
+> > But we do want the virtio format used here to be approved by the virtio
+> > TC, so it won't change.
+> > 
+> > Eric, Jean-Philippe, does one of you intend to create a github issue
+> > and request a ballot for the TC? It's been posted end of August with no
+> > changes ...
+> Jean-Philippe, would you?
+> > 
+> >> 	2) Has the ACPI table format stabalized already? If and only if
+> >> 	   the answer is Yes I will Ack these patches. We don't need to
+> >> 	   wait until the ACPI table format is published in a
+> >> 	   specification update, but at least some certainty that it
+> >> 	   will not change in incompatible ways anymore is needed.
+> >>
 > 
-> Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-> Tested-by: Wen Jin <wen.jin@intel.com>
-> Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
-> Reviewed-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
-> Changnes:
->  v2: revise description and code according to suggestion from Andy.
->  v3: change code to simpler.
->  v4: no change.
->  v5: no change.
->  v6: no change.
+> Al, do you have any news about the the VIOT definition submission to
+> the UEFI ASWG?
 > 
->  drivers/pci/pci.h | 37 +++++--------------------------------
->  1 file changed, 5 insertions(+), 32 deletions(-)
+> Thank you in advance
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 455b32187abd..f2beeaeda321 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -359,39 +359,12 @@ struct pci_sriov {
->  static inline bool pci_dev_set_io_state(struct pci_dev *dev,
->  					pci_channel_state_t new)
->  {
-> -	bool changed = false;
-> -
->  	device_lock_assert(&dev->dev);
-> -	switch (new) {
-> -	case pci_channel_io_perm_failure:
-> -		switch (dev->error_state) {
-> -		case pci_channel_io_frozen:
-> -		case pci_channel_io_normal:
-> -		case pci_channel_io_perm_failure:
-> -			changed = true;
-> -			break;
-> -		}
-> -		break;
-> -	case pci_channel_io_frozen:
-> -		switch (dev->error_state) {
-> -		case pci_channel_io_frozen:
-> -		case pci_channel_io_normal:
-> -			changed = true;
-> -			break;
-> -		}
-> -		break;
-> -	case pci_channel_io_normal:
-> -		switch (dev->error_state) {
-> -		case pci_channel_io_frozen:
-> -		case pci_channel_io_normal:
-> -			changed = true;
-> -			break;
-> -		}
-> -		break;
-> -	}
-> -	if (changed)
-> -		dev->error_state = new;
-> -	return changed;
-> +	if (dev->error_state == new)
-> +		return false;
-> +
-> +	dev->error_state = new;
-> +	return true;
->  }
+> Best Regards
+> 
+> Eric
 
-IIUC this changes the behavior of the function, but it's difficult to
-analyze because it does a lot of simplification at the same time.
+A follow-up to my earlier post ....
 
-Please consider the following, which is intended to simplify the
-function while preserving the behavior (but please verify; it's been a
-long time since I looked at this).  Then maybe see how your patch
-could be done on top of this?
+Hearing no objection, I've submitted the VIOT table description to
+the ASWG for consideration under what they call the "code first"
+process.  The "first reading" -- a brief discussion on what the
+table is and why we would like to add it -- was held yesterday.
+No concerns have been raised as yet.  Given the discussions that
+have already occurred, I don't expect any, either.  I have been
+wrong at least once before, however.
 
-Alternatively, come up with your own simplification patch + the
-functionality change.
+At this point, ASWG will revisit the request to add VIOT each
+week.  If there have been no comments in the prior week, and no
+further discussion during the meeting, then a vote will be taken.
+Otherwise, there will be discussion and we try again the next
+week.
 
+The ASWG was also told that the likelihood of this definition of
+the table changing is pretty low, and that it has been thought out
+pretty well already.  ASWG's consideration will therefore start
+from the assumption that it would be best _not_ to make changes.
 
-commit 983d9b1f8177 ("PCI/ERR: Simplify pci_dev_set_io_state()")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue May 19 12:28:57 2020 -0500
+So, I'll let you know what happens next week.
 
-    PCI/ERR: Simplify pci_dev_set_io_state()
-    
-    Truth table:
-    
-                                  requested new state
-      current          ------------------------------------------
-      state            normal         frozen         perm_failure
-      ------------  +  -------------  -------------  ------------
-      normal        |  normal         frozen         perm_failure
-      frozen        |  normal         frozen         perm_failure
-      perm_failure  |  perm_failure*  perm_failure*  perm_failure
-    
-      * "not changed", returns false
-    
-    No functional change intended.
-    
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6d3f75867106..81408552f7c9 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -358,39 +358,21 @@ struct pci_sriov {
- static inline bool pci_dev_set_io_state(struct pci_dev *dev,
- 					pci_channel_state_t new)
- {
--	bool changed = false;
--
- 	device_lock_assert(&dev->dev);
--	switch (new) {
--	case pci_channel_io_perm_failure:
--		switch (dev->error_state) {
--		case pci_channel_io_frozen:
--		case pci_channel_io_normal:
--		case pci_channel_io_perm_failure:
--			changed = true;
--			break;
--		}
--		break;
--	case pci_channel_io_frozen:
--		switch (dev->error_state) {
--		case pci_channel_io_frozen:
--		case pci_channel_io_normal:
--			changed = true;
--			break;
--		}
--		break;
--	case pci_channel_io_normal:
--		switch (dev->error_state) {
--		case pci_channel_io_frozen:
--		case pci_channel_io_normal:
--			changed = true;
--			break;
--		}
--		break;
-+
-+	/* Can always put a device in perm_failure state */
-+	if (new == pci_channel_io_perm_failure) {
-+		dev->error_state == pci_channel_io_perm_failure;
-+		return true;
- 	}
--	if (changed)
--		dev->error_state = new;
--	return changed;
-+
-+	/* If already in perm_failure, can't set to normal or frozen */
-+	if (dev->error_state == pci_channel_io_perm_failure)
-+		return false;
-+
-+	/* Can always change normal to frozen or vice versa */
-+	dev->error_state = new;
-+	return true;
- }
- 
- static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+> 
+> > 
+> > Not that I know, but I don't see why it's a must.
+> > 
+> >> So what progress has been made with the ACPI table specification, is it
+> >> just a matter of time to get it approved or are there concerns?
+> >>
+> >> Regards,
+> >>
+> >> 	Joerg
+> > 
+> 
+
+-- 
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Red Hat, Inc.
+ahs3@redhat.com
+-----------------------------------
+
