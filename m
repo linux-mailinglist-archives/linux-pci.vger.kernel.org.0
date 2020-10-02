@@ -2,67 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7D742817C9
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 18:23:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F0BC281940
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 19:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733260AbgJBQXV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 12:23:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55606 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgJBQXV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 12:23:21 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1kONq3-00050Y-1E; Fri, 02 Oct 2020 16:23:19 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        linux-pci@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] PCI/ASPM: fix an unintended sign extension of a u16
-Date:   Fri,  2 Oct 2020 17:23:18 +0100
-Message-Id: <20201002162318.93555-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        id S2388132AbgJBR3P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 13:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388335AbgJBR3P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Oct 2020 13:29:15 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1B84206C3;
+        Fri,  2 Oct 2020 17:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601659755;
+        bh=CtllLYMk0Gz+Iiir55pP+3jQFilH0kKCtSY4Szn/EEA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ldGDJ4HmbhFANa0MZrBQWZQE1uYa2eGB08xJF0BmHFRQqrvT0IsCmttxDmnXAiQr+
+         hwBthftkYplzuAb0C6IYYsRJ1d/veddsSs3F8vPbhXyETTgU4Z94BD7UuVnOGKiMX7
+         M1cingYGoc7OZ5TCyr1nQcO4J5kI1hzKCojpQEZw=
+Date:   Fri, 2 Oct 2020 12:29:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ethan Zhao <haifeng.zhao@intel.com>
+Cc:     bhelgaas@google.com, oohall@gmail.com, ruscur@russell.cc,
+        lukas@wunner.de, andriy.shevchenko@linux.intel.com,
+        stuart.w.hayes@gmail.com, mr.nuke.me@gmail.com,
+        mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@linux.intel.com,
+        sathyanarayanan.kuppuswamy@intel.com, xerces.zhao@gmail.com,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH v6 4/5] PCI: only return true when dev io state is really
+ changed
+Message-ID: <20201002172913.GA2809822@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200930070537.30982-5-haifeng.zhao@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+[+cc Sinan]
 
-The multiplication of the u16 variable 'value' causes it to be
-prompted to a int type and this is then sign extended to a u64.
-When the result of the multiplication is > 0x7fffffff the upper
-bits are all unitentionally set to 1 on a sign extension operation.
-Fix this by explicitly casting value to a u64 to avoid the int
-type promotion and the following sign extension.
+On Wed, Sep 30, 2020 at 03:05:36AM -0400, Ethan Zhao wrote:
+> When uncorrectable error happens, AER driver and DPC driver interrupt
+> handlers likely call
+> 
+>    pcie_do_recovery()
+>    ->pci_walk_bus()
+>      ->report_frozen_detected()
+> 
+> with pci_channel_io_frozen the same time.
+>    If pci_dev_set_io_state() return true even if the original state is
+> pci_channel_io_frozen, that will cause AER or DPC handler re-enter
+> the error detecting and recovery procedure one after another.
+>    The result is the recovery flow mixed between AER and DPC.
+> So simplify the pci_dev_set_io_state() function to only return true
+> when dev->error_state is changed.
+> 
+> Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
+> Tested-by: Wen Jin <wen.jin@intel.com>
+> Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
+> Reviewed-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+> Changnes:
+>  v2: revise description and code according to suggestion from Andy.
+>  v3: change code to simpler.
+>  v4: no change.
+>  v5: no change.
+>  v6: no change.
+> 
+>  drivers/pci/pci.h | 37 +++++--------------------------------
+>  1 file changed, 5 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 455b32187abd..f2beeaeda321 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -359,39 +359,12 @@ struct pci_sriov {
+>  static inline bool pci_dev_set_io_state(struct pci_dev *dev,
+>  					pci_channel_state_t new)
+>  {
+> -	bool changed = false;
+> -
+>  	device_lock_assert(&dev->dev);
+> -	switch (new) {
+> -	case pci_channel_io_perm_failure:
+> -		switch (dev->error_state) {
+> -		case pci_channel_io_frozen:
+> -		case pci_channel_io_normal:
+> -		case pci_channel_io_perm_failure:
+> -			changed = true;
+> -			break;
+> -		}
+> -		break;
+> -	case pci_channel_io_frozen:
+> -		switch (dev->error_state) {
+> -		case pci_channel_io_frozen:
+> -		case pci_channel_io_normal:
+> -			changed = true;
+> -			break;
+> -		}
+> -		break;
+> -	case pci_channel_io_normal:
+> -		switch (dev->error_state) {
+> -		case pci_channel_io_frozen:
+> -		case pci_channel_io_normal:
+> -			changed = true;
+> -			break;
+> -		}
+> -		break;
+> -	}
+> -	if (changed)
+> -		dev->error_state = new;
+> -	return changed;
+> +	if (dev->error_state == new)
+> +		return false;
+> +
+> +	dev->error_state = new;
+> +	return true;
+>  }
 
-Addresses-Coverity: ("Unintended sign extension")
-Fixes: 5ccf2a6e483f ("PCI/ASPM: Add support for LTR _DSM")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/pci/pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+IIUC this changes the behavior of the function, but it's difficult to
+analyze because it does a lot of simplification at the same time.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index db8feb2033e7..736197f9094b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3083,8 +3083,8 @@ static u64 pci_ltr_decode(u16 latency)
- 	case 1: return value * 32;
- 	case 2: return value * 1024;
- 	case 3: return value * 32768;
--	case 4: return value * 1048576;
--	case 5: return value * 33554432;
-+	case 4: return (uint64_t)value * 1048576;
-+	case 5: return (uint64_t)value * 33554432;
+Please consider the following, which is intended to simplify the
+function while preserving the behavior (but please verify; it's been a
+long time since I looked at this).  Then maybe see how your patch
+could be done on top of this?
+
+Alternatively, come up with your own simplification patch + the
+functionality change.
+
+
+commit 983d9b1f8177 ("PCI/ERR: Simplify pci_dev_set_io_state()")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue May 19 12:28:57 2020 -0500
+
+    PCI/ERR: Simplify pci_dev_set_io_state()
+    
+    Truth table:
+    
+                                  requested new state
+      current          ------------------------------------------
+      state            normal         frozen         perm_failure
+      ------------  +  -------------  -------------  ------------
+      normal        |  normal         frozen         perm_failure
+      frozen        |  normal         frozen         perm_failure
+      perm_failure  |  perm_failure*  perm_failure*  perm_failure
+    
+      * "not changed", returns false
+    
+    No functional change intended.
+    
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 6d3f75867106..81408552f7c9 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -358,39 +358,21 @@ struct pci_sriov {
+ static inline bool pci_dev_set_io_state(struct pci_dev *dev,
+ 					pci_channel_state_t new)
+ {
+-	bool changed = false;
+-
+ 	device_lock_assert(&dev->dev);
+-	switch (new) {
+-	case pci_channel_io_perm_failure:
+-		switch (dev->error_state) {
+-		case pci_channel_io_frozen:
+-		case pci_channel_io_normal:
+-		case pci_channel_io_perm_failure:
+-			changed = true;
+-			break;
+-		}
+-		break;
+-	case pci_channel_io_frozen:
+-		switch (dev->error_state) {
+-		case pci_channel_io_frozen:
+-		case pci_channel_io_normal:
+-			changed = true;
+-			break;
+-		}
+-		break;
+-	case pci_channel_io_normal:
+-		switch (dev->error_state) {
+-		case pci_channel_io_frozen:
+-		case pci_channel_io_normal:
+-			changed = true;
+-			break;
+-		}
+-		break;
++
++	/* Can always put a device in perm_failure state */
++	if (new == pci_channel_io_perm_failure) {
++		dev->error_state == pci_channel_io_perm_failure;
++		return true;
  	}
- 	return 0;
+-	if (changed)
+-		dev->error_state = new;
+-	return changed;
++
++	/* If already in perm_failure, can't set to normal or frozen */
++	if (dev->error_state == pci_channel_io_perm_failure)
++		return false;
++
++	/* Can always change normal to frozen or vice versa */
++	dev->error_state = new;
++	return true;
  }
--- 
-2.27.0
-
+ 
+ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
