@@ -2,108 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD5CE281B40
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B151281B2B
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbgJBS4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 14:56:39 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:59433 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388317AbgJBS4h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 14:56:37 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A46895C0164;
-        Fri,  2 Oct 2020 14:48:21 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 02 Oct 2020 14:48:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        oregontracks.org; h=from:to:cc:subject:date:message-id
-        :in-reply-to:references:mime-version:content-transfer-encoding;
-         s=fm1; bh=FYJAyl/MCQ7ZZ3uczTR1M/sIuCBUsCHpedex+XRt07c=; b=TRHXa
-        DSXC+yyGTGixVjy1uTe9VoOe2iqjmLZSG3ILCvh+3uoDVSuj6DqynWicC3GRtoIK
-        LpIea3QQXwAHRGv0ZlMxewQrOh0YCICgE5pVf3P62CqDCwLoDx4Cx+W38Q2l12fC
-        5vcAD8L/nx/fiUI5U710tEkgE1FNLbDLgwaXIjbdmJe0ttst5Lt0EYMu7nahsuq2
-        RXQ4wotB/kQckRIbY6GbOaeWPYX0Nu1gFkZPuLGtIPQn0VQ3Hz1cW+jgx/jLqYDu
-        v4J3+1o6ZgaWwGPnfyX8Aq1kxIfP7/YRlwFd1vGCaZ/cLrwldtWmnUmxwPhZElXg
-        xhbpt6/+LPePI4VBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=FYJAyl/MCQ7ZZ3uczTR1M/sIuCBUsCHpedex+XRt07c=; b=LPcxwMiZ
-        dBZT8zELBc7/LiScvuKSHpa1iNmnkm7ap9jH3ts0PzYxrEQYy9Cey6gEbWRtzE11
-        fvDIbmJ6Rgof7hpBfg/2DuZpK8oikPNFZWY0K5VTN6dzNKXtnyfk9/l9bhu3oig3
-        5bS7I0/vGhxS00ZauY27c9mMXq5rpG82sKgGlQpF0lbVeEYZVudVw6CeOS9ZJ0Qf
-        1uqPQlcQ1IbSNUp4zGPyJRdL6DtNanuarCL63HTnV9ykgoQ/QbmHoJtc5E4qPzl/
-        167WIShR9DXcEcXXquauhXX6y/MN7GQPns0fnydA4Iz6bXYpo0KugTcc3P4UH2tw
-        3mcNqrR/qXeeOw==
-X-ME-Sender: <xms:9XV3X8tbEe7YP3lQK6aFIOU17yjQenHblhxPwRE2NM4bM7iymqYGlg>
-    <xme:9XV3X5eT9uabIJcCxZyNtO76WwzKO096_1NlySi7cvLe7cnYs1kGU14hwYpzEb3hO
-    qhju6Y9xIYiqs-Z>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrfeeigdduvdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomhepufgvrghnucggucfmvghllhgvhicuoehsvggrnhhvkhdruggv
-    vhesohhrvghgohhnthhrrggtkhhsrdhorhhgqeenucggtffrrghtthgvrhhnpeehkeffte
-    eiudeiffelkeelvefftdelhfeitdeigeffleeufedvgfegvdefvedtteenucfkphepvdeg
-    rddvtddrudegkedrgeelnecuvehluhhsthgvrhfuihiivgepuddunecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehsvggrnhhvkhdruggvvhesohhrvghgohhnthhrrggtkhhsrdhorhhg
-X-ME-Proxy: <xmx:9XV3X3zZKtizykha2ogDmCQk793KN1b0CeuPUmTf4m5W5gS1Imco7g>
-    <xmx:9XV3X_Nt19T_XZe489dWeDqgXx81vtfRGA10WrKo_j8pIjmNZwQ4qA>
-    <xmx:9XV3X8_myX707CV3INNWAXvyiyQ3t0cXc2FC1cj9ZErVwlsHFF5QMw>
-    <xmx:9XV3X5MxmARTZfh3J7E3KwwQJm12LKTSEicOmMFfiHy72e8aIGcBqA>
-Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F3352306468A;
-        Fri,  2 Oct 2020 14:48:18 -0400 (EDT)
-From:   Sean V Kelley <seanvk.dev@oregontracks.org>
-To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [PATCH v8 14/14] PCI/AER: Add RCEC AER error injection support
-Date:   Fri,  2 Oct 2020 11:47:35 -0700
-Message-Id: <20201002184735.1229220-15-seanvk.dev@oregontracks.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201002184735.1229220-1-seanvk.dev@oregontracks.org>
-References: <20201002184735.1229220-1-seanvk.dev@oregontracks.org>
+        id S2387602AbgJBSx3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 14:53:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgJBSx3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 14:53:29 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0970EC0613D0
+        for <linux-pci@vger.kernel.org>; Fri,  2 Oct 2020 11:53:29 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 34so1356706pgo.13
+        for <linux-pci@vger.kernel.org>; Fri, 02 Oct 2020 11:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=iPAQMAMc1hYTdFsccictID911P3trsdKp6hSOQvOeKM=;
+        b=TbmjMQuBlCveAwmWwmy0rJQ/hA6alnl0KmM8J0ZZ58RmP01IE5DTu2H3o8e5bX6+6i
+         0YwyoLs9btHGeslavZk5eR6mazSh0Vp56XipFnfOSms2ZLhxONKw1FBfgQUmT7N0OHeO
+         0Qmsf5V6Dfx/L64zKA4I+egZpuHu0tIpULzjvF6KJIgs3+UEe7vhvxb50hmLE30oCTJJ
+         z0sqXQx19yAtu78ZbE66rGH8j2v7WPhXkHGfJcFSJCCNuY8eATn0k0r71+mxZn0DJiiu
+         GANK0TBCTARGx7mLBm3ERcQkqwVWH6HUggvBkiEa0pztkARv5aN3GdSHv+3Iaf1YwO1Y
+         sXfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=iPAQMAMc1hYTdFsccictID911P3trsdKp6hSOQvOeKM=;
+        b=apaDspx15gefFTJDRscU9EYUiO2+DnHaGBIgdSEgWqZ6V7eNyUCUPYWJ1k9axpmb2e
+         YJt3pW0IGTxLfWWVQBn7X7SkDLpu+/eFgTmA1XSPn/bK4RQMMZwty1AJWWmW5S8eYBFv
+         FHdQRKtFgOofbxI+r+CQkVBsoPHtnlVC9Ud5YMobMpvwn9PZohbXAMXxhU8lrH1nd12h
+         Uu6Bh4IfqTIAZsj/QsvsSek7czTbmjw+kTDXaDlh2NnN1omrPxIkUYvoab/q7mC9Tv8S
+         qLqdDoq4hB8xtpl2C1qM/EJuMsUGmGoYCw+dCCrMhL459eDfSiyiavCUbdBHPODfFPqF
+         qlFg==
+X-Gm-Message-State: AOAM531qLJznCPFL9hfUYuq+InXNLLaF+YKFmRqnL+pMBH3YXiqFlp5d
+        Yghj6aCQkP6Cw6X136FyAdnk9w==
+X-Google-Smtp-Source: ABdhPJzg9saFTkFjFL/6YScANuADv4CnZG6bZfHBk7SDK2lhxGXr30RQbFBKLPsfKq04zJHatQgCWQ==
+X-Received: by 2002:a63:fd0a:: with SMTP id d10mr3374536pgh.273.1601664808545;
+        Fri, 02 Oct 2020 11:53:28 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id b3sm2798336pfd.66.2020.10.02.11.53.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Oct 2020 11:53:27 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yue Wang <yue.wang@amlogic.com>
+Subject: Re: [PATCH] pci: meson: build as module by default
+In-Reply-To: <20200928163440.GA16986@e121166-lin.cambridge.arm.com>
+References: <20200918181251.32423-1-khilman@baylibre.com> <20200928163440.GA16986@e121166-lin.cambridge.arm.com>
+Date:   Fri, 02 Oct 2020 11:53:27 -0700
+Message-ID: <7h362wmpco.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Hi Lorenzo,
 
-The Root Complex Event Collectors (RCEC) appear as peers to Root Ports
-and also have the AER capability. So add RCEC support to the current AER
-error injection driver.
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
 
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
----
- drivers/pci/pcie/aer_inject.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> On Fri, Sep 18, 2020 at 11:12:51AM -0700, Kevin Hilman wrote:
+>> Enable pci-meson to build as a module whenever ARCH_MESON is enabled.
+>> 
+>> Cc: Yue Wang <yue.wang@amlogic.com>
+>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+>> ---
+>> Tested on Khadas VIM3 and Khadas VIM3 using NVMe SSD devices.
+>> 
+>>  drivers/pci/controller/dwc/Kconfig     | 3 ++-
+>>  drivers/pci/controller/dwc/pci-meson.c | 8 +++++++-
+>>  2 files changed, 9 insertions(+), 2 deletions(-)
+>
+> Applied to pci/meson, thanks.
 
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index c2cbf425afc5..011a6c54b4e3 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -333,8 +333,11 @@ static int aer_inject(struct aer_error_inj *einj)
- 	if (!dev)
- 		return -ENODEV;
- 	rpdev = pcie_find_root_port(dev);
-+	/* If Root port not found, try to find an RCEC */
-+	if (!rpdev)
-+		rpdev = dev->rcec;
- 	if (!rpdev) {
--		pci_err(dev, "Root port not found\n");
-+		pci_err(dev, "Neither root port nor RCEC found\n");
- 		ret = -ENODEV;
- 		goto out_put;
- 	}
--- 
-2.28.0
+Rob pointed out that the MODULE_LICENCE wasn't the same as the SPDX
+header.  Could you squash the update below before submitting?
 
+Thanks,
+
+Kevin
+
+
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 7a1fb55ee44a..35b167e907aa 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -604,4 +604,4 @@ module_platform_driver(meson_pcie_driver);
+ 
+ MODULE_AUTHOR("Yue Wang <yue.wang@amlogic.com>");
+ MODULE_DESCRIPTION("Amlogic PCIe Controller driver");
+-MODULE_LICENSE("Dual BSD/GPL");
++MODULE_LICENSE("GPL v2");
