@@ -2,112 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E55A281DB9
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 23:38:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB3FB281DE3
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 23:54:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725379AbgJBViA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 17:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49146 "EHLO mail.kernel.org"
+        id S1725783AbgJBVyT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 17:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725355AbgJBViA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Oct 2020 17:38:00 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF844206DC;
-        Fri,  2 Oct 2020 21:37:58 +0000 (UTC)
+        id S1725283AbgJBVyP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Oct 2020 17:54:15 -0400
+Subject: Re: [GIT PULL] PCI fixes for v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601674679;
-        bh=2wUdEhOpFAzuGlqi1DcVIiKuTKGFfto/06HTJ2Vk+hU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AjQdrKVifpCWu4O1GUNo0hg0cxeLf1MaR20DjS9j7JojAk/TlCImJvbDoRd2O4rzu
-         vGfSJ1AXJWYm5/FOVmLSSIv0CTpYMfKF3PxJLvclf0QUSu32KRix3OmkORBWEZoaXv
-         J7jftYLWG9y5NUov+kCwDzV3/AugSFWcq/Z1FsUQ=
-Date:   Fri, 2 Oct 2020 16:37:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
+        s=default; t=1601675654;
+        bh=Sedu4Ol4Dx2hlL9u19V1g53nGqB7sE7TdbvwP8ClP0U=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=121ZF9EkqjiJX07IkIYxgRdQcSAxx5E/kLj1JvL1+4crocuy+xc3sAqHyRD1ukMys
+         +2zd6fwLYV0UPnAW7BAFE7vgmJvVltpmVwURjRqVPS2TOEoXNR7oH94nDUuU9/txNK
+         VeYCahl8FJvIFrLIqS2XEVq6KASGdjNi78IN+dRY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20201002192340.GA2820115@bjorn-Precision-5520>
+References: <20201002192340.GA2820115@bjorn-Precision-5520>
+X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20201002192340.GA2820115@bjorn-Precision-5520>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.9-fixes-2
+X-PR-Tracked-Commit-Id: 76a6b0b90d532ed9bb9f6069aa12859c185e5b99
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4d9c3a688a01e7dd0a33cf3ddb7b206cf867b615
+Message-Id: <160167565446.8763.4518696998898472595.pr-tracker-bot@kernel.org>
+Date:   Fri, 02 Oct 2020 21:54:14 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v3] PCI: Unify ECAM constants in native PCI Express
- drivers
-Message-ID: <20201002213757.GA2827924@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201002202017.GA95575@rocinante>
+        Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 02, 2020 at 10:20:17PM +0200, Krzysztof Wilczyński wrote:
-> Hi Rob,
-> 
-> [...]
-> > What about vmd which I mentioned? I also found iproc and brcmstb are
-> > ECAM (well, same shifts, but indirect addressing).
-> [...]
-> 
-> I wanted to cover these (and some others I also found) in a separate
-> patch, especially since some of the drivers don't explicitly claim to
-> support ECAM - but I will include these changes in the v4. 
->  
-> > > +/
-> > > + * Enhanced Configuration Access Mechanism (ECAM)
-> > > + *
-> > > + * N.B. This is a non-standard platform-specific ECAM bus shift value.  For
-> > > + * standard values defined in the PCI Express Base Specification see
-> > > + * include/linux/pci-ecam.h.
-> > > + */
-> > > +#define XGENE_PCIE_ECAM_BUS_SHIFT      16
-> > 
-> > Isn't this just CAM? Though perhaps CAM on PCIe is not standard...
-> > 
-> > For CAM, there's also tegra, ftpci100, mvebu, and versatile. I think
-> > I'd drop CAM from this patch and do all of those in a separate patch.
-> 
-> Will do.
-> 
-> Bjorn was also not convinced about referring to things as "CAM" since
-> the specification (the one I quoted in the patch) does not name it as
-> such, and rather refers to it as Type 1 access of the PCI bus
-> configuration space.
+The pull request you sent on Fri, 2 Oct 2020 14:23:40 -0500:
 
-"Type 1" has two specific meanings in PCI, and neither is quite this
-config access mechanism:
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.9-fixes-2
 
-  1) "Type 0 Functions" have a "Type 0 Configuration Space Header" --
-     these are basically endpoint devices.  "Type 1" Functions have
-     Type 1 headers and are PCI-to-PCI bridges (Root Ports, Switches,
-     Bridges in PCIe).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4d9c3a688a01e7dd0a33cf3ddb7b206cf867b615
 
-  2) "Type 0" config transactions target a device on the current bus,
-     i.e., the recipient does not need to decode the bus number in the
-     transaction.  A "Type 1" config transaction needs to be routed
-     through one or more bridges.  The last bridge, where the bus
-     number in the transaction matches the bridge's secondary bus
-     number, converts the transaction to a Type 0 transaction on its
-     secondary bus.
+Thank you!
 
-The "CAM" devices that use a 16-bit shift for the bus number are sort
-of similar to the "Configuration Mechanism #1" description in PCI
-r3.0, sec 3.2.2.3.2, but it's not really a good match because they
-don't implement the x86-specific parts like I/O port registers at
-0xcf8 and 0xcfc.  Also, that mechanism only allows access to the first
-256 bytes of config space, and some/all of these extend the address
-format so they can address extended config space (offsets
-0x100-0xfff).
-
-Bjorn
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
