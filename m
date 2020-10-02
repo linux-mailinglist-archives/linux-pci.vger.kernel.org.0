@@ -2,169 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 071EE281AC9
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:23:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E08DE281B3A
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:56:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388265AbgJBSXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 14:23:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52811 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387602AbgJBSXy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 14:23:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601663032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=K5o0jYIGnG/0f5zW82Cze4bYT081fEytdlidzckiyxk=;
-        b=AaCjpbJCNqEpnB0aER0qwg7daAd7pBl4IRZjJqv4WeS73E8C6mVssuD80eLVcchEBtoqPJ
-        TDbTRMow1aIQkPN3+mo0KTDDWUne5/j2UvncE5leADkomU7TMog0aDU1/1m9jAHkUuCtdt
-        qCwuDGE5BuWCsprwlHflwOK2K99/xZA=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-ewndQx58PVCweXgQAoWYBQ-1; Fri, 02 Oct 2020 14:23:51 -0400
-X-MC-Unique: ewndQx58PVCweXgQAoWYBQ-1
-Received: by mail-il1-f197.google.com with SMTP id 9so1226896ile.22
-        for <linux-pci@vger.kernel.org>; Fri, 02 Oct 2020 11:23:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K5o0jYIGnG/0f5zW82Cze4bYT081fEytdlidzckiyxk=;
-        b=f6BEEh8YdfKT4WSwrRkkknbfJgoZw++cpnJTyXrr+74gbeh5aXTZu7w2Z8+DGptdnl
-         h7cp42zvNwaFJ0LZBxa1m70SrcxfkG5lrcCyoW6G7ikUUqP6p0AuB+BhYdxw1kM/+0lR
-         XgHbz0YQ7BEKvfQFfClplYgDqbxInxbLnF7K6ruwWxKs35yqJJ7xiQNMn9QRg/JhLMtv
-         iFnJ0Zo4mFHZWbFRUpOhUxrCLezGz42DbvwcfR1CqORmWUTpgD8ICKOmzmKxN+SOL+1G
-         p27b8gsXZn+uUfOn7jywri54AOrUD8El9xxxRHM0Z4B8A05DQbjE/8MjKUnN1ZIs4ETI
-         Xkog==
-X-Gm-Message-State: AOAM531p5MVAiIYWlbhsHesbuWoC3rqIKsBetVLuMcAM8QmUqbYkX1TE
-        zhTslHp2PoAarw8zsxFMjrewzLrruYzsOWyGrNtUj9FlZBKLLfoBBgZ2DP0+PdHg9vY1lW+OtHc
-        eODfVvBhltPPV/P7SbD/j
-X-Received: by 2002:a5e:dc04:: with SMTP id b4mr2936562iok.208.1601663030551;
-        Fri, 02 Oct 2020 11:23:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJym7hhfSAz5RkroqhQVSDKIyKMh66KVDC7NYEDjTn8eT708NnRxui/FuJxqPH3RScDsgKVqBg==
-X-Received: by 2002:a5e:dc04:: with SMTP id b4mr2936537iok.208.1601663030343;
-        Fri, 02 Oct 2020 11:23:50 -0700 (PDT)
-Received: from localhost (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
-        by smtp.gmail.com with ESMTPSA id u15sm1052127ior.6.2020.10.02.11.23.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2020 11:23:49 -0700 (PDT)
-Date:   Fri, 2 Oct 2020 12:23:48 -0600
-From:   Al Stone <ahs3@redhat.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH v3 0/6] Add virtio-iommu built-in topology
-Message-ID: <20201002182348.GO138842@redhat.com>
-References: <20200821131540.2801801-1-jean-philippe@linaro.org>
- <ab2a1668-e40c-c8f0-b77b-abadeceb4b82@redhat.com>
- <20200924045958-mutt-send-email-mst@kernel.org>
- <20200924092129.GH27174@8bytes.org>
- <20200924053159-mutt-send-email-mst@kernel.org>
- <d54b674e-2626-fc73-d663-136573c32b8a@redhat.com>
+        id S2387768AbgJBS4h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 14:56:37 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:57941 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388291AbgJBS4h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 14:56:37 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id E434E5C0049;
+        Fri,  2 Oct 2020 14:47:51 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 02 Oct 2020 14:47:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        oregontracks.org; h=from:to:cc:subject:date:message-id
+        :mime-version:content-transfer-encoding; s=fm1; bh=RB2m5O3FLxKM8
+        kvAcVlLnQhGPdkPQ8GN15FhYZkptp8=; b=Yb3ClpvdCbRN3ZB030FpNIbtHzgKF
+        sr74Jo2WuNCv+yYqF49JvGm7Pyb7URcDfbaNEi5Ra/d/uC7Y5ioBK9a8X9jNUAzN
+        62Md06gdVpC+CYoG5Ag9wV8EtbjVLsnm1oaGCRB24LhwJ+KoWlHg9fwg0m4EBNk2
+        mYeCYkduw2KsCaEa765kzugnYw62Qf4PMmtPNqI9IpBgniyGIvQtVWGUwYFcLKV7
+        PMfOR+JpCrJFniC2kQndCb4OrxeVg50A+mg2K4AUUJW2tj7rjFlV7RIpvF6ljiTU
+        DETMudkZ5GfvNNSW5sbqLdGHSYYpYY1zFWCr81a8u0AeEliu2jhquqgZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=RB2m5O3FLxKM8kvAc
+        VlLnQhGPdkPQ8GN15FhYZkptp8=; b=SsFnX3br8Aaivm8U1jbYgXXBQgSrxbYI6
+        hJSH70PR+AYHBjBCM+Gk/V04GvCMAtLbsrU0UdmFbCogz1cmwT0hsmKre1KEKTTe
+        R4RND15yb+4hOYAzuf4+9EmuGLczpigDa6xwbGiBDuE7panVJWNARUF5qQuraeeH
+        XRXuKEuXcQe5LZALJMsTdKuRftnKqBT17RCf/p2+oRHdLT6d2XMX1lT7Ap1/JAoq
+        +FV0PzB8H+7CKb9YcuCCdMOetU8wlfVTyxYBc1aeg/DDRBVi8npSJPBRlG8RQyzW
+        /srZYh+pQ++qZ1qC2bQDkqJsqAPCbqQqrCC2Hf0mqEX42HiPs4sFA==
+X-ME-Sender: <xms:13V3X2WMgtdkjj1YzAPhYBDFRA4uzVoe3qCUzh3XLiq4_7Mm2spPrg>
+    <xme:13V3Xymhylc2IbTCXCFtOP38xFpdkgwhgrkPxoIH0xndmcorXd3R9RAoDiZIzuKu9
+    xdKWSmFJEWZGwWs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrfeeigdduvdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomhepufgvrghnucggucfmvghllhgvhicuoehsvggrnhhvkhdruggvvhes
+    ohhrvghgohhnthhrrggtkhhsrdhorhhgqeenucggtffrrghtthgvrhhnpeduleelieette
+    dtudetfeetjefgkefgvdeiieevjedtffetudehieehgfeuhfffieenucffohhmrghinhep
+    khgvrhhnvghlrdhorhhgpdgtohhmphhuthgvvgigphhrvghsshhlihhnkhdrohhrghenuc
+    fkphepvdegrddvtddrudegkedrgeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepshgvrghnvhhkrdguvghvsehorhgvghhonhhtrhgrtghksh
+    drohhrgh
+X-ME-Proxy: <xmx:13V3X6bMPYX2p2KygAE0buOO3rwrPOEffK8ZzYrCQqeAD4IeUy_U0Q>
+    <xmx:13V3X9WyGCOEFSm2R0oTR-X9XGJRrHpfc_ghvY1L9FhfFIvgPR3iNw>
+    <xmx:13V3XwlHz_Ah7i60O0V8SEKkW17O_TLFZ-6EjQ1VeWNxA9amZOnPTg>
+    <xmx:13V3X6XHsji_usgt4sNlmvXRz3_E-_hZhLQOeiwtRJ4RRJyqScfy6g>
+Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 17CED3064684;
+        Fri,  2 Oct 2020 14:47:48 -0400 (EDT)
+From:   Sean V Kelley <seanvk.dev@oregontracks.org>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
+        qiuxu.zhuo@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: [PATCH v8 00/14] Add RCEC handling to PCI/AER
+Date:   Fri,  2 Oct 2020 11:47:21 -0700
+Message-Id: <20201002184735.1229220-1-seanvk.dev@oregontracks.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d54b674e-2626-fc73-d663-136573c32b8a@redhat.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24 Sep 2020 11:54, Auger Eric wrote:
-> Hi,
-> 
-> Adding Al in the loop
-> 
-> On 9/24/20 11:38 AM, Michael S. Tsirkin wrote:
-> > On Thu, Sep 24, 2020 at 11:21:29AM +0200, Joerg Roedel wrote:
-> >> On Thu, Sep 24, 2020 at 05:00:35AM -0400, Michael S. Tsirkin wrote:
-> >>> OK so this looks good. Can you pls repost with the minor tweak
-> >>> suggested and all acks included, and I will queue this?
-> >>
-> >> My NACK still stands, as long as a few questions are open:
-> >>
-> >> 	1) The format used here will be the same as in the ACPI table? I
-> >> 	   think the answer to this questions must be Yes, so this leads
-> >> 	   to the real question:
-> > 
-> > I am not sure it's a must.
-> > We can always tweak the parser if there are slight differences
-> > between ACPI and virtio formats.
-> > 
-> > But we do want the virtio format used here to be approved by the virtio
-> > TC, so it won't change.
-> > 
-> > Eric, Jean-Philippe, does one of you intend to create a github issue
-> > and request a ballot for the TC? It's been posted end of August with no
-> > changes ...
-> Jean-Philippe, would you?
-> > 
-> >> 	2) Has the ACPI table format stabalized already? If and only if
-> >> 	   the answer is Yes I will Ack these patches. We don't need to
-> >> 	   wait until the ACPI table format is published in a
-> >> 	   specification update, but at least some certainty that it
-> >> 	   will not change in incompatible ways anymore is needed.
-> >>
-> 
-> Al, do you have any news about the the VIOT definition submission to
-> the UEFI ASWG?
-> 
-> Thank you in advance
-> 
-> Best Regards
-> 
-> Eric
+From: Sean V Kelley <sean.v.kelley@intel.com>
 
-A follow-up to my earlier post ....
+Changes since v7 [1]:
 
-Hearing no objection, I've submitted the VIOT table description to
-the ASWG for consideration under what they call the "code first"
-process.  The "first reading" -- a brief discussion on what the
-table is and why we would like to add it -- was held yesterday.
-No concerns have been raised as yet.  Given the discussions that
-have already occurred, I don't expect any, either.  I have been
-wrong at least once before, however.
+- No functional changes.
 
-At this point, ASWG will revisit the request to add VIOT each
-week.  If there have been no comments in the prior week, and no
-further discussion during the meeting, then a vote will be taken.
-Otherwise, there will be discussion and we try again the next
-week.
+- Reword bridge patch.
+- Noted testing below for #non-native/no RCEC case
+(Jonathan Cameron)
 
-The ASWG was also told that the likelihood of this definition of
-the table changing is pretty low, and that it has been thought out
-pretty well already.  ASWG's consideration will therefore start
-from the assumption that it would be best _not_ to make changes.
+- Separate out pci_walk_bus() into pci_walk_bridge() change.
+- Put remaining dev to bridge name changes in the separate patch from v7.
+(Bjorn Helgaas)
 
-So, I'll let you know what happens next week.
+[1] https://lore.kernel.org/lkml/20200930215820.1113353-1-seanvk.dev@oregontracks.org/
 
-> 
-> > 
-> > Not that I know, but I don't see why it's a must.
-> > 
-> >> So what progress has been made with the ACPI table specification, is it
-> >> just a matter of time to get it approved or are there concerns?
-> >>
-> >> Regards,
-> >>
-> >> 	Joerg
-> > 
-> 
+Root Complex Event Collectors (RCEC) provide support for terminating error
+and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
+resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
+a single bus. An RCEC will explicitly declare supported RCiEPs through the
+Root Complex Endpoint Association Extended Capability.
 
--- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Red Hat, Inc.
-ahs3@redhat.com
------------------------------------
+(See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+
+The kernel lacks handling for these RCECs and the error messages received
+from their respective associated RCiEPs. More recently, a new CPU
+interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
+purposes of error messaging from CXL 1.1 supported RCiEP devices.
+
+DocLink: https://www.computeexpresslink.org/
+
+This use case is not limited to CXL. Existing hardware today includes
+support for RCECs, such as the Denverton microserver product
+family. Future hardware will be forthcoming.
+
+(See Intel Document, Order number: 33061-003US)
+
+So services such as AER or PME could be associated with an RCEC driver.
+In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
+platform's RCEC it shall signal PME and AER error conditions through that
+RCEC.
+
+Towards the above use cases, add the missing RCEC class and extend the
+PCIe Root Port and service drivers to allow association of RCiEPs to their
+respective parent RCEC and facilitate handling of terminating error and PME
+messages.
+
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #non-native/no RCEC
+
+
+Jonathan Cameron (1):
+  PCI/AER: Extend AER error handling to RCECs
+
+Qiuxu Zhuo (5):
+  PCI/RCEC: Add RCEC class code and extended capability
+  PCI/RCEC: Bind RCEC devices to the Root Port driver
+  PCI/AER: Apply function level reset to RCiEP on fatal error
+  PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
+  PCI/AER: Add RCEC AER error injection support
+
+Sean V Kelley (8):
+  PCI/RCEC: Cache RCEC capabilities in pci_init_capabilities()
+  PCI/ERR: Rename reset_link() to reset_subordinate_device()
+  PCI/ERR: Use "bridge" for clarity in pcie_do_recovery()
+  PCI/ERR: Add pci_walk_bridge() to pcie_do_recovery()
+  PCI/ERR: Limit AER resets in pcie_do_recovery()
+  PCI/RCEC: Add pcie_link_rcec() to associate RCiEPs
+  PCI/AER: Add pcie_walk_rcec() to RCEC AER handling
+  PCI/PME: Add pcie_walk_rcec() to RCEC PME handling
+
+ drivers/pci/pci.h               |  25 ++++-
+ drivers/pci/pcie/Makefile       |   2 +-
+ drivers/pci/pcie/aer.c          |  36 ++++--
+ drivers/pci/pcie/aer_inject.c   |   5 +-
+ drivers/pci/pcie/err.c          | 109 +++++++++++++++----
+ drivers/pci/pcie/pme.c          |  15 ++-
+ drivers/pci/pcie/portdrv_core.c |   8 +-
+ drivers/pci/pcie/portdrv_pci.c  |   8 +-
+ drivers/pci/pcie/rcec.c         | 187 ++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c             |   2 +
+ include/linux/pci.h             |   5 +
+ include/linux/pci_ids.h         |   1 +
+ include/uapi/linux/pci_regs.h   |   7 ++
+ 13 files changed, 367 insertions(+), 43 deletions(-)
+ create mode 100644 drivers/pci/pcie/rcec.c
+
+--
+2.28.0
 
