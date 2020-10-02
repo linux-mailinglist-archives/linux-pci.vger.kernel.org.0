@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6F33281B3D
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:56:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C50A6281B41
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 20:56:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387688AbgJBS4i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 14:56:38 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:46257 "EHLO
+        id S2388317AbgJBS4k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 14:56:40 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:33683 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388321AbgJBS4h (ORCPT
+        by vger.kernel.org with ESMTP id S2388327AbgJBS4h (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Oct 2020 14:56:37 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8AD005C0114;
-        Fri,  2 Oct 2020 14:47:53 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id EF05F5C013A;
+        Fri,  2 Oct 2020 14:47:55 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 02 Oct 2020 14:47:53 -0400
+  by compute4.internal (MEProxy); Fri, 02 Oct 2020 14:47:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         oregontracks.org; h=from:to:cc:subject:date:message-id
         :in-reply-to:references:mime-version:content-transfer-encoding;
-         s=fm1; bh=sXU2mMj241EpiiCcqsuur0tkuJtqxuKBseWszyh/a9c=; b=gBblj
-        ySLx6V5DKR0N39C4frpz8GVRPpqXtM5UiLCooTmLbfheHdNYEwRiHx19vHT6bRhd
-        N5FY2tTHfOhyT8zIk16RrScsw4qN63dxjWMfHJyKuDHcmE3kFaLyzkueRoxA3q1k
-        YW8g8c9SLnEZQfRJ5wPokcRyWmVDS64E97L1eSXXYGv/KzgEalTEkesTXXvDmffC
-        KqtKLkyMHs0A81/8toXL+azvTdIZHcjtDm/ag34oM+m4i4gd+TAwhYrAYcVtZNcb
-        WU9ofVA0C5IyF0dAKsJk/A0Jc+7eCpxnqtOuFrXdR8VA7gbTfTFEn+OXn+gYedEX
-        SIYXVYw7rvhHpYNww==
+         s=fm1; bh=U8/XHA7xYYbMasOe6r2wYXcREytGZ8ybKr2Q2zebr+Y=; b=Li57r
+        0OhbtswFDkcCLTEduCGTemKqBCAOlw5X+oxlATYw0hjb5saFbC9dxxLyd9UH+75h
+        zSYBU8x/JT7R1hbwjv4RMZcmjVZK9MzHiBLNNub79XcrP8BFZWzt1tlXsDT+oNMY
+        F7llExjS795nieBkR6R+IcI4pmyQpqVyTgn5war5YTP+Uj4KwVTANW2uLSypuydj
+        dZpirQCgkZ79JazfLY5c4q+fv9RQOOrBk2ETL9nzCwT/xwjQ+d0MRvUzEhEBJOv5
+        UPS7aEKz6Ac6DMhNHHLMC6movGsQMzwQ+MG7Iv+CkJ3R8p50MN0Y+TxUXeAIyI0G
+        NRfMZERubhNb/NkzA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=sXU2mMj241EpiiCcqsuur0tkuJtqxuKBseWszyh/a9c=; b=LeWF0jhD
-        9dzRysunuM7s/QL/lrhO90ONjmyYSAQJMlROy0ohSv2L9prV6mPN87gLvxZ7SHwc
-        WzIMopBWTm/cRJJWQW/Ee4U0l1cc6ktt0dMIANMhYKZengx0nHOcfbL2HsVZk6wH
-        tw+874QL80s+ok7Xu6ymRxB/45150gdUsAC0bs5FVrRL5zsGLolYBDzuw8xPV5xP
-        k2KkUtgrUCzMqGj9dWuY9ll1PXEVwe68ku3nb6yucbvK0qRpKo0MgagheEO7L2BE
-        UNrVPTjEN0yGT8Bv5Xtd3fiC9iqWwMiV1PgOC9tb9YJKyFsgAQHxIyuL51ToDvZh
-        Xa064ANLJHWTqg==
-X-ME-Sender: <xms:2XV3X6xcb_suRKjT-yzsvm1d2bdAs_90RJGZXvOmT8BAeMtKcrVLDA>
-    <xme:2XV3X2QZM_ruO11j1EDEDyGsiqj22AQhdeTlJCSAzJrNlWObGZ2r4Iuda-52bF5nf
-    2O7h7ZUXrjtdQAY>
+        fm3; bh=U8/XHA7xYYbMasOe6r2wYXcREytGZ8ybKr2Q2zebr+Y=; b=QqFVurkq
+        30yLnEpAem6izbTk/GXzSKnItlKf7cuiuP10UXahzxLHT95cIcTNOonOLz5wfWAz
+        WivsLdAUaLnWXeIm6lNG14XzIdzZ90KMk9/mngtU/vbF+QCLD761X9t36eAPz97m
+        VHcDqD9wF7ZJkQJPbOfBAu+/i+HymFXMQodOSRVb4KI1IWPuUlro/WkGpM/+ZbHc
+        x4YL2pXQ7f/Bgz4rM4js6OkWkgZLBIYr2pgDYwrQh9FnQ+0K0/QTSD9vsfcrPTDw
+        Ln8mHpfACnaXuLZIKFviPd4DY6IBLkUbg4GwtT8lJoEsiSspKaMgcA1igurxb/q1
+        ID8SQwL9XLyW1Q==
+X-ME-Sender: <xms:23V3X0adIFwO-QMs-7aBGRV88D3elbziUhZGkKkfzepKGxp4gejP2g>
+    <xme:23V3X_b2rX-Knvh4FNdhr0CXmvTC1OyCX3ll8OZNXCbauZRqq8zDMGNhcLXlayyWB
+    tsO9kRFKUtYaovP>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrfeeigdduvdekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
@@ -48,22 +48,23 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrfeeigdduvdekucetufdoteggod
     eiudeiffelkeelvefftdelhfeitdeigeffleeufedvgfegvdefvedtteenucfkphepvdeg
     rddvtddrudegkedrgeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
     hilhhfrhhomhepshgvrghnvhhkrdguvghvsehorhgvghhonhhtrhgrtghkshdrohhrgh
-X-ME-Proxy: <xmx:2XV3X8X_IYhwZCYv-ucGSFUEal8itu88cOv9aSMZmuP3Jf9WnqfZMA>
-    <xmx:2XV3XwhRxGa4AqALiOFf86RAVhicZMSeTRnm24K5JSH5fWFuRBYNqQ>
-    <xmx:2XV3X8B0BwJs9VxseOjHHiF8hZf3TAiu0qVTXMQ-Ydi9808zKlnvpw>
-    <xmx:2XV3X-1EXd_GIaZF0HUXfgGpQqAvmnVEaKN8wo__4yt8fH750ByMxA>
+X-ME-Proxy: <xmx:23V3X--CG59RpmnUq4P2IksxLbdQ-Y7tETM40nL-ns8mAfK5uzyAwg>
+    <xmx:23V3X-rlkLEwDPWvjR1_hxTIzV_fZXVJnlShMqSvtaR-DHJBBf20uw>
+    <xmx:23V3X_rkPeXGGzbuM_EiJN5pRzEWHmKUawCwKo5QmRxbtPSFcjSHig>
+    <xmx:23V3X7Iq--CjeuTbSEaEWiUj5Zm7ikOqIkWHhB5ORFsL5ithOE6_ig>
 Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B985A3064686;
-        Fri,  2 Oct 2020 14:47:51 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9F92E3064686;
+        Fri,  2 Oct 2020 14:47:53 -0400 (EDT)
 From:   Sean V Kelley <seanvk.dev@oregontracks.org>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rafael.j.wysocki@intel.com, ashok.raj@intel.com,
         tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
         qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 01/14] PCI/RCEC: Add RCEC class code and extended capability
-Date:   Fri,  2 Oct 2020 11:47:22 -0700
-Message-Id: <20201002184735.1229220-2-seanvk.dev@oregontracks.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: [PATCH v8 02/14] PCI/RCEC: Bind RCEC devices to the Root Port driver
+Date:   Fri,  2 Oct 2020 11:47:23 -0700
+Message-Id: <20201002184735.1229220-3-seanvk.dev@oregontracks.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201002184735.1229220-1-seanvk.dev@oregontracks.org>
 References: <20201002184735.1229220-1-seanvk.dev@oregontracks.org>
@@ -75,52 +76,54 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-A PCIe Root Complex Event Collector (RCEC) has the base class 0x08,
-sub-class 0x07, and programming interface 0x00. Add the class code
-0x0807 to identify RCEC devices and add the defines for the RCEC
-Endpoint Association Extended Capability.
+If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors may
+optionally be sent to a corresponding Root Complex Event Collector (RCEC).
+Each RCiEP must be associated with no more than one RCEC. Interface errors
+are reported to the OS by RCECs.
 
-See PCI Express Base Specification, version 5.0-1, section "1.3.4
-Root Complex Event Collector" and section "7.9.10 Root Complex
-Event Collector Endpoint Association Extended Capability"
+For an RCEC (technically not a Bridge), error messages "received" from
+associated RCiEPs must be enabled for "transmission" in order to cause a
+System Error via the Root Control register or (when the Advanced Error
+Reporting Capability is present) reporting via the Root Error Command
+register and logging in the Root Error Status register and Error Source
+Identification register.
 
+Given the commonality with Root Ports and the need to also support AER
+and PME services for RCECs, extend the Root Port driver to support RCEC
+devices through the addition of the RCEC Class ID to the driver
+structure.
+
+Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- include/linux/pci_ids.h       | 1 +
- include/uapi/linux/pci_regs.h | 7 +++++++
- 2 files changed, 8 insertions(+)
+ drivers/pci/pcie/portdrv_pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1ab1e24bcbce..d8156a5dbee8 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -81,6 +81,7 @@
- #define PCI_CLASS_SYSTEM_RTC		0x0803
- #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
- #define PCI_CLASS_SYSTEM_SDHCI		0x0805
-+#define PCI_CLASS_SYSTEM_RCEC		0x0807
- #define PCI_CLASS_SYSTEM_OTHER		0x0880
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 3a3ce40ae1ab..4d880679b9b1 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+ 	if (!pci_is_pcie(dev) ||
+ 	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
+ 	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
+-	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
++	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
++	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+ 		return -ENODEV;
  
- #define PCI_BASE_CLASS_INPUT		0x09
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f9701410d3b5..f335f65f65d6 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -828,6 +828,13 @@
- #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
- #define PCI_EXT_CAP_PWR_SIZEOF	16
+ 	status = pcie_port_device_register(dev);
+@@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] = {
+ 	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
+ 	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
+ 	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
++	/* handle any Root Complex Event Collector */
++	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
+ 	{ },
+ };
  
-+/* Root Complex Event Collector Endpoint Association  */
-+#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
-+#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
-+#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
-+#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
-+#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
-+
- /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
- #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
- #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
 -- 
 2.28.0
 
