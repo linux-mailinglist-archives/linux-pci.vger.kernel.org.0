@@ -2,76 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE142811DA
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 13:57:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B1432811E4
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 14:00:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387827AbgJBL5l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 07:57:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:33818 "EHLO foss.arm.com"
+        id S2387412AbgJBMAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 08:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387768AbgJBL5l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Oct 2020 07:57:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 748CE1063;
-        Fri,  2 Oct 2020 04:57:40 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A82793F70D;
-        Fri,  2 Oct 2020 04:57:39 -0700 (PDT)
-Date:   Fri, 2 Oct 2020 12:57:37 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: loongson: simplify the return expression of
- loongson_pci_probe()
-Message-ID: <20201002115737.GD23640@e121166-lin.cambridge.arm.com>
-References: <20200921131054.92797-1-miaoqinglang@huawei.com>
+        id S1725964AbgJBMAz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Oct 2020 08:00:55 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDE09206C9;
+        Fri,  2 Oct 2020 12:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601640055;
+        bh=Sr90evd9gcNYgaoF17OoqAbGXM9qXNWcrxXuzdz7v40=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UhoNDI0F1WeWxvof9iTBiHlzUYB7yl/wCXUVMZBInL8gGWKaUvARFAAeoUmiPqv9H
+         wAW/p2Vb4fKSS6SlDpPFTz/XLBbMN2rambZGagb8Y6o+AW8NYxJiW0mL5+KtExfc+z
+         o8WFSJOo0aabEfkwCmiyM5HJdDbuHM5WCWb8j5Hs=
+Received: by pali.im (Postfix)
+        id 541DBE79; Fri,  2 Oct 2020 14:00:52 +0200 (CEST)
+Date:   Fri, 2 Oct 2020 14:00:52 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: aardvark: Fix comphy with old ATF
+Message-ID: <20201002120052.jouqx6ap4wrskozs@pali>
+References: <20200902144344.16684-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200921131054.92797-1-miaoqinglang@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902144344.16684-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 09:10:54PM +0800, Qinglang Miao wrote:
-> Simplify the return expression.
+On Wednesday 02 September 2020 16:43:42 Pali Rohár wrote:
+> This patch series fixes regression introduced in commit 366697018c9a
+> ("PCI: aardvark: Add PHY support") which caused aardvark driver
+> initialization failure on EspressoBin board with factory version of
+> Arm Trusted Firmware provided by Marvell.
 > 
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
-> ---
->  drivers/pci/controller/pci-loongson.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+> Second patch depends on the first patch, so please add appropriate
+> Fixes/Cc:stable@ tags to have both patches correctly backported to
+> stable kernels.
+> 
+> I have tested both patches with Marvell ATF firmware ebin-17.10-uart.zip
+> and with upstream ATF+uboot and aardvark was initialized successfully.
+> Without this patch series on ebin-17.10-uart.zip aardvark initialization
+> failed.
 
-Applied to pci/loongson, thanks.
+Lorenzo or Bjorn, could you review this patch series? I would like to
+see this regression fixed in stable kernels.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 719c19fe2..48169b1e3 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -183,7 +183,6 @@ static int loongson_pci_probe(struct platform_device *pdev)
->  	struct device_node *node = dev->of_node;
->  	struct pci_host_bridge *bridge;
->  	struct resource *regs;
-> -	int err;
->  
->  	if (!node)
->  		return -ENODEV;
-> @@ -222,11 +221,7 @@ static int loongson_pci_probe(struct platform_device *pdev)
->  	bridge->ops = &loongson_pci_ops;
->  	bridge->map_irq = loongson_map_irq;
->  
-> -	err = pci_host_probe(bridge);
-> -	if (err)
-> -		return err;
-> -
-> -	return 0;
-> +	return pci_host_probe(bridge);
->  }
->  
->  static struct platform_driver loongson_pci_driver = {
+> Pali Rohár (2):
+>   phy: marvell: comphy: Convert internal SMCC firmware return codes to
+>     errno
+>   PCI: aardvark: Fix initialization with old Marvell's Arm Trusted
+>     Firmware
+> 
+>  drivers/pci/controller/pci-aardvark.c        |  4 +++-
+>  drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 14 +++++++++++---
+>  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 14 +++++++++++---
+>  3 files changed, 25 insertions(+), 7 deletions(-)
+> 
 > -- 
-> 2.23.0
+> 2.20.1
 > 
