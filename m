@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 271A528117C
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 13:47:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2219228118D
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Oct 2020 13:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgJBLq7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 07:46:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:33472 "EHLO foss.arm.com"
+        id S1726017AbgJBLuz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 07:50:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:33558 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgJBLq7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Oct 2020 07:46:59 -0400
+        id S1725964AbgJBLuz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Oct 2020 07:50:55 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 858631063;
-        Fri,  2 Oct 2020 04:46:58 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E78CB1063;
+        Fri,  2 Oct 2020 04:50:54 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50CA73F70D;
-        Fri,  2 Oct 2020 04:46:57 -0700 (PDT)
-Date:   Fri, 2 Oct 2020 12:46:52 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0C893F70D;
+        Fri,  2 Oct 2020 04:50:53 -0700 (PDT)
+Date:   Fri, 2 Oct 2020 12:50:51 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     Liu Shixin <liushixin2@huawei.com>
 Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
@@ -27,7 +27,7 @@ Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH -next] PCI: iproc: use module_bcma_driver to simplify the
  code
-Message-ID: <20201002114652.GA23640@e121166-lin.cambridge.arm.com>
+Message-ID: <20201002115051.GB23640@e121166-lin.cambridge.arm.com>
 References: <20200918030829.3946025-1-liushixin2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -47,7 +47,7 @@ On Fri, Sep 18, 2020 at 11:08:29AM +0800, Liu Shixin wrote:
 >  drivers/pci/controller/pcie-iproc-bcma.c | 13 +------------
 >  1 file changed, 1 insertion(+), 12 deletions(-)
 
-Applied to pci/iproc, thanks.
+Applied to pci/mobiveil, thanks.
 
 Lorenzo
 
