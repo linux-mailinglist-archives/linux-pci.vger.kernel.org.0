@@ -2,291 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 691C52821E1
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Oct 2020 09:05:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D436428221F
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Oct 2020 09:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725763AbgJCHFt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Oct 2020 03:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgJCHFs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Oct 2020 03:05:48 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F09C0613D0;
-        Sat,  3 Oct 2020 00:05:48 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id u8so4791375ejg.1;
-        Sat, 03 Oct 2020 00:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJyOcOKILBJdWGFJmI1yQoUhibY5AAXXh2Y4ApfaMWE=;
-        b=AZD7OG/+LqTNmUAFpueGqp7AJ+zOuQmlmqEWDJbKcdCXjxTGHZL0KcgszQ0z7ovAMH
-         ev0DM9g6Glb8goNvE5YELOhqxd129DqHqlE77+jbBfzVXQct2096+NQoj6DxqvDFWLQT
-         SvXBnSzok9IU/IX6ccM2eOQdWzd8hayx6FPtcdc2BVmmo+c8wx9vDb8ED6cdibU9sC02
-         sxGU7cO7cGbNTONruIufd2N04t7RV+a46Q1picwtxhO6mxjz2mCrHFKWVLaAwYgKhekK
-         ygt7OFtNEmcG9tVQntO8KuG9S7IllexJ8G1qGP7JCalsR5GY4mK/puK0KvRby6s8p9og
-         Dvkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJyOcOKILBJdWGFJmI1yQoUhibY5AAXXh2Y4ApfaMWE=;
-        b=f+4FjSn10Yy87MeyvGOKRhgDNxWoILTtVNLbqYTLzPo6f2WnXYoxFFQYFxvhQM8iiK
-         hbGPp/0n01Gk9vfw/+da1bU/S9eQZLyv5NUWF07og8WwEp0QZIWMNahz1SdRvDysNcum
-         65dQymbGyE5eQ8y4h2fe6UncDFt/PHupN+z7HYLviYF5kME/YQicYDoVqJXnXznvYcrW
-         mNeTpChEd/J74iOT6FsCZm8odFo220v0s5LecPZwpmVBStvn+0u0ANwpfElmU3S90JU6
-         3QU1hP1bTZW62paO8ByVDdgG2j1+TCIXtlI3xf5NDWaOytt1FcJQ84Jy5fiWKAw3jQRE
-         Nn2g==
-X-Gm-Message-State: AOAM530hn4k5O/B9gxzvSQd/LHJ7ZJjHkCE5gAyH24MrWKOwi35Jf/Bd
-        vHl5BWrkabpJmtT4FyEU0K6YGEsa737Df5p/RUo=
-X-Google-Smtp-Source: ABdhPJyRdaEBSpZ4tYSMUGSfEnrZX3HOFbRHaf79cu2SKJZlojw4l+3UaJaTvrA4l2bfHrkRLjE0FvsB7w/K5ntiQIM=
-X-Received: by 2002:a17:906:30c5:: with SMTP id b5mr5655000ejb.98.1601708747130;
- Sat, 03 Oct 2020 00:05:47 -0700 (PDT)
+        id S1725792AbgJCHtH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 3 Oct 2020 03:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbgJCHtG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 3 Oct 2020 03:49:06 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF12206CA;
+        Sat,  3 Oct 2020 07:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601711345;
+        bh=rSNbOsR9qrZbk/22kRR7H2mTyhHla1eb6pLRYw92C3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xpfo7j5Ogz+5FMLQE6JEcdCuZJLS220njFOGq0w4q/ezcS8/YUJxV/tVp00x1cRme
+         PeytJ+bYJeETsXVwvFCvNmLXIxzaEU/n9jv+Ho+tcc1DWNdFus5jjW+U0OJ02cZ/dL
+         cV4hpDQF2Gtg0pwq+PecAcI5R7GAWDWmhCugOA3g=
+Date:   Sat, 3 Oct 2020 09:49:01 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Another round of adding missing
+ 'additionalProperties'
+Message-ID: <20201003074901.GA109727@kroah.com>
+References: <20201002234143.3570746-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20200930070537.30982-5-haifeng.zhao@intel.com> <20201002172913.GA2809822@bjorn-Precision-5520>
-In-Reply-To: <20201002172913.GA2809822@bjorn-Precision-5520>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Sat, 3 Oct 2020 15:05:35 +0800
-Message-ID: <CAKF3qh2b4kjQ348ukD1fv6zcYn55Es4wbwJh2DiKtBL_G+PYjg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] PCI: only return true when dev io state is really changed
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ethan Zhao <haifeng.zhao@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Oliver <oohall@gmail.com>,
-        ruscur@russell.cc, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ashok.raj@linux.intel.com,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>,
-        Sinan Kaya <okaya@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
+On Fri, Oct 02, 2020 at 06:41:43PM -0500, Rob Herring wrote:
+> Another round of wack-a-mole. The json-schema default is additional
+> unknown properties are allowed, but for DT all properties should be
+> defined.
+> 
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Baolin Wang <baolin.wang7@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-hwmon@vger.kernel.org
+> Cc: linux-iio@vger.kernel.org
+> Cc: openipmi-developer@lists.sourceforge.net
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-remoteproc@vger.kernel.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-usb@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> I'll take this thru the DT tree.
 
-On Sat, Oct 3, 2020 at 1:29 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Sinan]
->
-> On Wed, Sep 30, 2020 at 03:05:36AM -0400, Ethan Zhao wrote:
-> > When uncorrectable error happens, AER driver and DPC driver interrupt
-> > handlers likely call
-> >
-> >    pcie_do_recovery()
-> >    ->pci_walk_bus()
-> >      ->report_frozen_detected()
-> >
-> > with pci_channel_io_frozen the same time.
-> >    If pci_dev_set_io_state() return true even if the original state is
-> > pci_channel_io_frozen, that will cause AER or DPC handler re-enter
-> > the error detecting and recovery procedure one after another.
-> >    The result is the recovery flow mixed between AER and DPC.
-> > So simplify the pci_dev_set_io_state() function to only return true
-> > when dev->error_state is changed.
-> >
-> > Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-> > Tested-by: Wen Jin <wen.jin@intel.com>
-> > Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
-> > Reviewed-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > ---
-> > Changnes:
-> >  v2: revise description and code according to suggestion from Andy.
-> >  v3: change code to simpler.
-> >  v4: no change.
-> >  v5: no change.
-> >  v6: no change.
-> >
-> >  drivers/pci/pci.h | 37 +++++--------------------------------
-> >  1 file changed, 5 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 455b32187abd..f2beeaeda321 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -359,39 +359,12 @@ struct pci_sriov {
-> >  static inline bool pci_dev_set_io_state(struct pci_dev *dev,
-> >                                       pci_channel_state_t new)
-> >  {
-> > -     bool changed = false;
-> > -
-> >       device_lock_assert(&dev->dev);
-> > -     switch (new) {
-> > -     case pci_channel_io_perm_failure:
-> > -             switch (dev->error_state) {
-> > -             case pci_channel_io_frozen:
-> > -             case pci_channel_io_normal:
-> > -             case pci_channel_io_perm_failure:
-> > -                     changed = true;
-> > -                     break;
-> > -             }
-> > -             break;
-> > -     case pci_channel_io_frozen:
-> > -             switch (dev->error_state) {
-> > -             case pci_channel_io_frozen:
-> > -             case pci_channel_io_normal:
-> > -                     changed = true;
-> > -                     break;
-> > -             }
-> > -             break;
-> > -     case pci_channel_io_normal:
-> > -             switch (dev->error_state) {
-> > -             case pci_channel_io_frozen:
-> > -             case pci_channel_io_normal:
-> > -                     changed = true;
-> > -                     break;
-> > -             }
-> > -             break;
-> > -     }
-> > -     if (changed)
-> > -             dev->error_state = new;
-> > -     return changed;
-> > +     if (dev->error_state == new)
-> > +             return false;
-> > +
-> > +     dev->error_state = new;
-> > +     return true;
-> >  }
->
-> IIUC this changes the behavior of the function, but it's difficult to
-> analyze because it does a lot of simplification at the same time.
->
-> Please consider the following, which is intended to simplify the
-> function while preserving the behavior (but please verify; it's been a
-> long time since I looked at this).  Then maybe see how your patch
-> could be done on top of this?
->
-> Alternatively, come up with your own simplification patch + the
-> functionality change.
->
->
-> commit 983d9b1f8177 ("PCI/ERR: Simplify pci_dev_set_io_state()")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Tue May 19 12:28:57 2020 -0500
->
->     PCI/ERR: Simplify pci_dev_set_io_state()
->
->     Truth table:
->
->                                   requested new state
->       current          ------------------------------------------
->       state            normal         frozen         perm_failure
->       ------------  +  -------------  -------------  ------------
->       normal        |  normal         frozen         perm_failure
->       frozen        |  normal         frozen         perm_failure
->       perm_failure  |  perm_failure*  perm_failure*  perm_failure
->
->       * "not changed", returns false
->
->     No functional change intended.
->
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 6d3f75867106..81408552f7c9 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -358,39 +358,21 @@ struct pci_sriov {
->  static inline bool pci_dev_set_io_state(struct pci_dev *dev,
->                                         pci_channel_state_t new)
->  {
-> -       bool changed = false;
-> -
->         device_lock_assert(&dev->dev);
-> -       switch (new) {
-> -       case pci_channel_io_perm_failure:
-> -               switch (dev->error_state) {
-> -               case pci_channel_io_frozen:
-> -               case pci_channel_io_normal:
-> -               case pci_channel_io_perm_failure:
-> -                       changed = true;
-> -                       break;
-> -               }
-> -               break;
-> -       case pci_channel_io_frozen:
-> -               switch (dev->error_state) {
-> -               case pci_channel_io_frozen:
-> -               case pci_channel_io_normal:
-> -                       changed = true;
-> -                       break;
-> -               }
-> -               break;
-> -       case pci_channel_io_normal:
-> -               switch (dev->error_state) {
-> -               case pci_channel_io_frozen:
-> -               case pci_channel_io_normal:
-> -                       changed = true;
-> -                       break;
-> -               }
-> -               break;
-> +
-> +       /* Can always put a device in perm_failure state */
-> +       if (new == pci_channel_io_perm_failure) {
-> +               dev->error_state == pci_channel_io_perm_failure;
-> +               return true;
->         }
-> -       if (changed)
-> -               dev->error_state = new;
-> -       return changed;
-> +
-> +       /* If already in perm_failure, can't set to normal or frozen */
-> +       if (dev->error_state == pci_channel_io_perm_failure)
-> +               return false;
-            This line goes to the first.
-> +
-> +       /* Can always change normal to frozen or vice versa */
-> +       dev->error_state = new;
-> +       return true;
->  }
-Per code grepping,  there are two kinds of cases
-pci_dev_set_io_state() are called.
-1. doesn't care about the return value, just set it to
-pci_chnnel_io_perm_failure.
-     and later handling depends on dev->error_state,  whatever the
-value changed or not.
-    pciehp_unconfigure_device()
-     -> pci_walk_bus()
-         -> pci_dev_set_disconnected()
-              ->pci_dev_set_io_state()  with pci_chnnel_io_perm_failure
+For USB:
 
-2.  cares about the return value or the dev->error_state is changed or not. and
-   the later handling also depends on if the value of dev->error_state
-is changed or not.
-
-    pcie_do_recovery()
-    ->pci_walk_bus()
-        ->report_frozen_detected()
-            ->report_error_detected()
-                ->pci_dev_set_io_state()   with pci_channel_io_frozen.
-
-    This case, if the original value was pci_channel_io_frozen, no
-need to set it again
-     and say it is *changed*.   ----- return true only it is really changed.
-
-    pcie_do_recovery()
-    ->pci_walk_bus()
-        ->report_resume()
-            ->pcI_dev_set_ios_state() with pci_channel_io_normal.
-
-   The same.
-
-    pcie_do_recovery()
-    ->pci_walk_bus()
-        ->report_normal_detected() with pci_channel_io_normal
-
-    The same.
-
-    I will combat the 'Truth Table'  to keep the original functions
-and let it return true
-    only when it really changes to avoid re-enter the later handling process.
-
-    Will send v7 for your review.
-
-   Thanks,
-    Ethan
->
->  static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
