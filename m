@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14386282021
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Oct 2020 03:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BF8428202B
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Oct 2020 03:31:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725805AbgJCBbe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Oct 2020 21:31:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2332 "EHLO mga05.intel.com"
+        id S1725793AbgJCBbo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Oct 2020 21:31:44 -0400
+Received: from mga05.intel.com ([192.55.52.43]:2330 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbgJCBbc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Oct 2020 21:31:32 -0400
-IronPort-SDR: rv3Ec5QSls2xabFhD+T4JKE5SZRVmdrTiIAKvGSzkmN40BqCYw3C7qOBajdqfaSNtZJsOe2dp3
- OVgZx2EDGHUA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9762"; a="247866960"
+        id S1725562AbgJCBba (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Oct 2020 21:31:30 -0400
+IronPort-SDR: hr0NpQRZl4VUuFPwxs+Pdq45XU7OcJBzay9NojL35kYhs/jxmm0Ft+7P7Wta2/NIGxXjPLj0zl
+ xmNpUmhaFvmQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9762"; a="247866962"
 X-IronPort-AV: E=Sophos;i="5.77,329,1596524400"; 
-   d="scan'208";a="247866960"
+   d="scan'208";a="247866962"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2020 18:31:27 -0700
-IronPort-SDR: Sl/Kb6LUvuzDp287HuxEcr9IIJ/QVOZmqyjiWmZaM8uKTEVVUiEt1wrJCKzAzNdaHIv9Sy0TP6
- zdy44Qr4oRgw==
+IronPort-SDR: fmXsK/th6NUQS/5oKAD865COdUKzK2xicPOOsRJpVVvuNvfnOEG+yTe7NjmHUA+PR3llKJMuL7
+ c2mxVvruzOQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,329,1596524400"; 
-   d="scan'208";a="352530719"
+   d="scan'208";a="352530720"
 Received: from linux.intel.com ([10.54.29.200])
   by orsmga007.jf.intel.com with ESMTP; 02 Oct 2020 18:31:27 -0700
 Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 2FB46580A89;
+        by linux.intel.com (Postfix) with ESMTP id 55734580AB2;
         Fri,  2 Oct 2020 18:31:27 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
@@ -37,9 +37,9 @@ To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
 Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH V8 3/5] platform/x86: Intel PMT class driver
-Date:   Fri,  2 Oct 2020 18:31:21 -0700
-Message-Id: <20201003013123.20269-4-david.e.box@linux.intel.com>
+Subject: [PATCH V8 4/5] platform/x86: Intel PMT Telemetry capability driver
+Date:   Fri,  2 Oct 2020 18:31:22 -0700
+Message-Id: <20201003013123.20269-5-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20201003013123.20269-1-david.e.box@linux.intel.com>
 References: <20201003013123.20269-1-david.e.box@linux.intel.com>
@@ -51,154 +51,68 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Intel Platform Monitoring Technology is meant to provide a common way to
-access telemetry and system metrics.
+PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
+The Telemetry capability provides access to device telemetry metrics that
+provide hardware performance data to users from read-only register spaces.
 
-Register mappings are not provided by the driver. Instead, a GUID is read
-from a header for each endpoint. The GUID identifies the device and is to
-be used with an XML, provided by the vendor, to discover the available set
-of metrics and their register mapping.  This allows firmware updates to
-modify the register space without needing to update the driver every time
-with new mappings. Firmware writes a new GUID in this case to specify the
-new mapping.  Software tools with access to the associated XML file can
-then interpret the changes.
+With this driver present the intel_pmt directory can be populated with
+telem<x> devices. These devices will contain the standard intel_pmt sysfs
+data and a "telem" binary sysfs attribute which can be used to access the
+telemetry data.
 
-The module manages access to all Intel PMT endpoints on a system,
-independent of the device exporting them. It creates an intel_pmt class
-to manage the devices. For each telemetry endpoint, sysfs files provide
-GUID and size information as well as a pointer to the parent device the
-telemetry came from. Software may discover the association between
-endpoints and devices by iterating through the list in sysfs, or by looking
-for the existence of the class folder under the device of interest.  A
-binary sysfs attribute of the same name allows software to then read or map
-the telemetry space for direct access.
+Also create a PCI device id list for early telemetry hardware that require
+workarounds for known issues.
 
+Co-developed-by: David E. Box <david.e.box@linux.intel.com>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 ---
- .../ABI/testing/sysfs-class-intel_pmt         |  54 ++++
- MAINTAINERS                                   |   1 +
- drivers/platform/x86/Kconfig                  |  12 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/intel_pmt_class.c        | 297 ++++++++++++++++++
- drivers/platform/x86/intel_pmt_class.h        |  52 +++
- 6 files changed, 417 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt
- create mode 100644 drivers/platform/x86/intel_pmt_class.c
- create mode 100644 drivers/platform/x86/intel_pmt_class.h
+ drivers/platform/x86/Kconfig               |  11 ++
+ drivers/platform/x86/Makefile              |   1 +
+ drivers/platform/x86/intel_pmt_telemetry.c | 160 +++++++++++++++++++++
+ 3 files changed, 172 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
 
-diff --git a/Documentation/ABI/testing/sysfs-class-intel_pmt b/Documentation/ABI/testing/sysfs-class-intel_pmt
-new file mode 100644
-index 000000000000..926b5cf95fd1
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-intel_pmt
-@@ -0,0 +1,54 @@
-+What:		/sys/class/intel_pmt/
-+Date:		October 2020
-+KernelVersion:	5.10
-+Contact:	David Box <david.e.box@linux.intel.com>
-+Description:
-+		The intel_pmt/ class directory contains information for
-+		devices that expose hardware telemetry using Intel Platform
-+		Monitoring Technology (PMT)
-+
-+What:		/sys/class/intel_pmt/telem<x>
-+Date:		October 2020
-+KernelVersion:	5.10
-+Contact:	David Box <david.e.box@linux.intel.com>
-+Description:
-+		The telem<x> directory contains files describing an instance of
-+		a PMT telemetry device that exposes hardware telemetry. Each
-+		telem<x> directory has an associated telem file. This file
-+		may be opened and mapped or read to access the telemetry space
-+		of the device. The register layout of the telemetry space is
-+		determined from an XML file that matches the PCI device id and
-+		GUID for the device.
-+
-+What:		/sys/class/intel_pmt/telem<x>/telem
-+Date:		October 2020
-+KernelVersion:	5.10
-+Contact:	David Box <david.e.box@linux.intel.com>
-+Description:
-+		(RO) The telemetry data for this telemetry device. This file
-+		may be mapped or read to obtain the data.
-+
-+What:		/sys/class/intel_pmt/telem<x>/guid
-+Date:		October 2020
-+KernelVersion:	5.10
-+Contact:	David Box <david.e.box@linux.intel.com>
-+Description:
-+		(RO) The GUID for this telemetry device. The GUID identifies
-+		the version of the XML file for the parent device that is to
-+		be used to get the register layout.
-+
-+What:		/sys/class/intel_pmt/telem<x>/size
-+Date:		October 2020
-+KernelVersion:	5.10
-+Contact:	David Box <david.e.box@linux.intel.com>
-+Description:
-+		(RO) The size of telemetry region in bytes that corresponds to
-+		the mapping size for the telem file.
-+
-+What:		/sys/class/intel_pmt/telem<x>/offset
-+Date:		October 2020
-+KernelVersion:	5.10
-+Contact:	David Box <david.e.box@linux.intel.com>
-+Description:
-+		(RO) The offset of telemetry region in bytes that corresponds to
-+		the mapping for the telem file.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0f2663b1d376..47fdb8a6e151 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8950,6 +8950,7 @@ INTEL PMT DRIVER
- M:	"David E. Box" <david.e.box@linux.intel.com>
- S:	Maintained
- F:	drivers/mfd/intel_pmt.c
-+F:	drivers/platform/x86/intel_pmt_*
- 
- INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
- M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 40219bba6801..12431e0e974d 100644
+index 12431e0e974d..90b4c1bd9532 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1360,6 +1360,18 @@ config INTEL_PMC_CORE
- 		- LTR Ignore
- 		- MPHY/PLL gating status (Sunrisepoint PCH only)
+@@ -1372,6 +1372,17 @@ config INTEL_PMT_CLASS
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_pmt_class.
  
-+config INTEL_PMT_CLASS
-+	tristate "Intel Platform Monitoring Technology (PMT) Class driver"
++config INTEL_PMT_TELEMETRY
++	tristate "Intel Platform Monitoring Technology (PMT) Telemetry driver"
++	select INTEL_PMT_CLASS
 +	help
-+	  The Intel Platform Monitoring Technology (PMT) class driver provides
-+	  the basic sysfs interface and file hierarchy uses by PMT devices.
-+
-+	  For more information, see:
-+	  <file:Documentation/ABI/testing/sysfs-class-intel_pmt>
++	  The Intel Platform Monitory Technology (PMT) Telemetry driver provides
++	  access to hardware telemetry metrics on devices that support the
++	  feature.
 +
 +	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_pmt_class.
++	  will be called intel_pmt_telemetry.
 +
  config INTEL_PUNIT_IPC
  	tristate "Intel P-Unit IPC Driver"
  	help
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 5f823f7eff45..f4b1f87f2401 100644
+index f4b1f87f2401..6a7b61f59ea8 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -140,6 +140,7 @@ obj-$(CONFIG_INTEL_MFLD_THERMAL)	+= intel_mid_thermal.o
- obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
+@@ -141,6 +141,7 @@ obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
  obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
  obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
-+obj-$(CONFIG_INTEL_PMT_CLASS)		+= intel_pmt_class.o
+ obj-$(CONFIG_INTEL_PMT_CLASS)		+= intel_pmt_class.o
++obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= intel_pmt_telemetry.o
  obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
  obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
  obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
-diff --git a/drivers/platform/x86/intel_pmt_class.c b/drivers/platform/x86/intel_pmt_class.c
+diff --git a/drivers/platform/x86/intel_pmt_telemetry.c b/drivers/platform/x86/intel_pmt_telemetry.c
 new file mode 100644
-index 000000000000..aa88dc23bbde
+index 000000000000..f8a87614efa4
 --- /dev/null
-+++ b/drivers/platform/x86/intel_pmt_class.c
-@@ -0,0 +1,297 @@
++++ b/drivers/platform/x86/intel_pmt_telemetry.c
+@@ -0,0 +1,160 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Intel Platform Monitory Technology Telemetry driver
@@ -206,354 +120,159 @@ index 000000000000..aa88dc23bbde
 + * Copyright (c) 2020, Intel Corporation.
 + * All Rights Reserved.
 + *
-+ * Author: "Alexander Duyck" <alexander.h.duyck@linux.intel.com>
++ * Author: "David E. Box" <david.e.box@linux.intel.com>
 + */
 +
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/mm.h>
 +#include <linux/pci.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
++#include <linux/overflow.h>
 +
 +#include "intel_pmt_class.h"
 +
-+#define PMT_XA_START		0
-+#define PMT_XA_MAX		INT_MAX
-+#define PMT_XA_LIMIT		XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
++#define TELEM_DEV_NAME		"pmt_telemetry"
++
++#define TELEM_SIZE_OFFSET	0x0
++#define TELEM_GUID_OFFSET	0x4
++#define TELEM_BASE_OFFSET	0x8
++#define TELEM_ACCESS(v)		((v) & GENMASK(3, 0))
++/* size is in bytes */
++#define TELEM_SIZE(v)		(((v) & GENMASK(27, 12)) >> 10)
++
++/* Used by client hardware to identify a fixed telemetry entry*/
++#define TELEM_CLIENT_FIXED_BLOCK_GUID	0x10000000
++
++struct pmt_telem_priv {
++	int				num_entries;
++	struct intel_pmt_entry		entry[];
++};
 +
 +/*
-+ * sysfs
++ * Early implementations of PMT on client platforms have some
++ * differences from the server platforms (which use the Out Of Band
++ * Management Services Module OOBMSM). This list tracks those
++ * platforms as needed to handle those differences. Newer client
++ * platforms are expected to be fully compatible with server.
 + */
-+static ssize_t
-+intel_pmt_read(struct file *filp, struct kobject *kobj,
-+	       struct bin_attribute *attr, char *buf, loff_t off,
-+	       size_t count)
++static const struct pci_device_id pmt_telem_early_client_pci_ids[] = {
++	{ PCI_VDEVICE(INTEL, 0x9a0d) }, /* TGL */
++	{ PCI_VDEVICE(INTEL, 0x467d) }, /* ADL */
++	{ }
++};
++
++static bool intel_pmt_is_early_client_hw(struct device *dev)
 +{
-+	struct intel_pmt_entry *entry = container_of(attr,
-+						     struct intel_pmt_entry,
-+						     pmt_bin_attr);
++	struct pci_dev *parent = to_pci_dev(dev->parent);
 +
-+	if (off < 0)
-+		return -EINVAL;
-+
-+	if (off >= entry->size)
-+		return 0;
-+
-+	if (count > entry->size - off)
-+		count = entry->size - off;
-+
-+	memcpy_fromio(buf, entry->base + off, count);
-+
-+	return count;
++	return !!pci_match_id(pmt_telem_early_client_pci_ids, parent);
 +}
 +
-+static int
-+intel_pmt_mmap(struct file *filp, struct kobject *kobj,
-+		struct bin_attribute *attr, struct vm_area_struct *vma)
++static bool pmt_telem_region_overlaps(struct intel_pmt_entry *entry,
++				      struct device *dev)
 +{
-+	struct intel_pmt_entry *entry = container_of(attr,
-+						     struct intel_pmt_entry,
-+						     pmt_bin_attr);
-+	unsigned long vsize = vma->vm_end - vma->vm_start;
-+	struct device *dev = kobj_to_dev(kobj);
-+	unsigned long phys = entry->base_addr;
-+	unsigned long pfn = PFN_DOWN(phys);
-+	unsigned long psize;
++	u32 guid = readl(entry->disc_table + TELEM_GUID_OFFSET);
 +
-+	if (vma->vm_flags & (VM_WRITE | VM_MAYWRITE))
-+		return -EROFS;
++	if (guid != TELEM_CLIENT_FIXED_BLOCK_GUID)
++		return false;
 +
-+	psize = (PFN_UP(entry->base_addr + entry->size) - pfn) * PAGE_SIZE;
-+	if (vsize > psize) {
-+		dev_err(dev, "Requested mmap size is too large\n");
-+		return -EINVAL;
-+	}
++	return intel_pmt_is_early_client_hw(dev);
++}
 +
-+	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-+	if (io_remap_pfn_range(vma, vma->vm_start, pfn,
-+		vsize, vma->vm_page_prot))
-+		return -EAGAIN;
++static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
++				   struct intel_pmt_header *header,
++				   struct device *dev)
++{
++	void __iomem *disc_table = entry->disc_table;
++
++	if (pmt_telem_region_overlaps(entry, dev))
++		return 1;
++
++	header->access_type = TELEM_ACCESS(readl(disc_table));
++	header->guid = readl(disc_table + TELEM_GUID_OFFSET);
++	header->base_offset = readl(disc_table + TELEM_BASE_OFFSET);
++
++	/* Size is measured in DWORDS, but accessor returns bytes */
++	header->size = TELEM_SIZE(readl(disc_table));
 +
 +	return 0;
 +}
 +
-+static ssize_t
-+guid_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct intel_pmt_entry *entry = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "0x%x\n", entry->guid);
-+}
-+static DEVICE_ATTR_RO(guid);
-+
-+static ssize_t size_show(struct device *dev, struct device_attribute *attr,
-+			 char *buf)
-+{
-+	struct intel_pmt_entry *entry = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%zu\n", entry->size);
-+}
-+static DEVICE_ATTR_RO(size);
-+
-+static ssize_t
-+offset_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct intel_pmt_entry *entry = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%lu\n", offset_in_page(entry->base_addr));
-+}
-+static DEVICE_ATTR_RO(offset);
-+
-+static struct attribute *intel_pmt_attrs[] = {
-+	&dev_attr_guid.attr,
-+	&dev_attr_size.attr,
-+	&dev_attr_offset.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(intel_pmt);
-+
-+static struct class intel_pmt_class = {
-+	.name = "intel_pmt",
-+	.owner = THIS_MODULE,
-+	.dev_groups = intel_pmt_groups,
++static DEFINE_XARRAY_ALLOC(telem_array);
++static struct intel_pmt_namespace pmt_telem_ns = {
++	.name = "telem",
++	.xa = &telem_array,
++	.pmt_header_decode = pmt_telem_header_decode,
 +};
 +
-+static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
-+				    struct intel_pmt_header *header,
-+				    struct device *dev,
-+				    struct resource *disc_res)
++static int pmt_telem_remove(struct platform_device *pdev)
 +{
-+	struct pci_dev *pci_dev = to_pci_dev(dev->parent);
-+	u8 bir;
++	struct pmt_telem_priv *priv = platform_get_drvdata(pdev);
++	int i;
 +
-+	/*
-+	 * The base offset should always be 8 byte aligned.
-+	 *
-+	 * For non-local access types the lower 3 bits of base offset
-+	 * contains the index of the base address register where the
-+	 * telemetry can be found.
-+	 */
-+	bir = GET_BIR(header->base_offset);
-+
-+	/* Local access and BARID only for now */
-+	switch (header->access_type) {
-+	case ACCESS_LOCAL:
-+		if (bir) {
-+			dev_err(dev,
-+				"Unsupported BAR index %d for access type %d\n",
-+				bir, header->access_type);
-+			return -EINVAL;
-+		}
-+		/*
-+		 * For access_type LOCAL, the base address is as follows:
-+		 * base address = end of discovery region + base offset
-+		 */
-+		entry->base_addr = disc_res->end + 1 + header->base_offset;
-+		break;
-+	case ACCESS_BARID:
-+		/*
-+		 * If another BAR was specified then the base offset
-+		 * represents the offset within that BAR. SO retrieve the
-+		 * address from the parent PCI device and add offset.
-+		 */
-+		entry->base_addr = pci_resource_start(pci_dev, bir) +
-+				   GET_ADDRESS(header->base_offset);
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported access type %d\n",
-+			header->access_type);
-+		return -EINVAL;
-+	}
-+
-+	entry->guid = header->guid;
-+	entry->size = header->size;
++	for (i = 0; i < priv->num_entries; i++)
++		intel_pmt_dev_destroy(&priv->entry[i], &pmt_telem_ns);
 +
 +	return 0;
 +}
 +
-+static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
-+				  struct intel_pmt_namespace *ns,
-+				  struct device *parent)
++static int pmt_telem_probe(struct platform_device *pdev)
 +{
-+	struct resource res;
-+	struct device *dev;
-+	int ret;
++	struct pmt_telem_priv *priv;
++	size_t size;
++	int i, ret;
 +
-+	ret = xa_alloc(ns->xa, &entry->devid, entry, PMT_XA_LIMIT, GFP_KERNEL);
-+	if (ret)
-+		return ret;
++	size = struct_size(priv, entry, pdev->num_resources);
++	priv = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
 +
-+	dev = device_create(&intel_pmt_class, parent, MKDEV(0, 0), entry,
-+			    "%s%d", ns->name, entry->devid);
++	platform_set_drvdata(pdev, priv);
 +
-+	if (IS_ERR(dev)) {
-+		dev_err(parent, "Could not create %s%d device node\n",
-+			ns->name, entry->devid);
-+		ret = PTR_ERR(dev);
-+		goto fail_dev_create;
-+	}
++	for (i = 0; i < pdev->num_resources; i++) {
++		struct intel_pmt_entry *entry = &priv->entry[i];
 +
-+	entry->kobj = &dev->kobj;
-+
-+	if (ns->attr_grp) {
-+		ret = sysfs_create_group(entry->kobj, ns->attr_grp);
++		ret = intel_pmt_dev_create(entry, &pmt_telem_ns, pdev, i);
++		if (ret < 0)
++			goto abort_probe;
 +		if (ret)
-+			goto fail_sysfs;
++			continue;
++
++		priv->num_entries++;
 +	}
 +
-+	/* if size is 0 assume no data buffer, so no file needed */
-+	if (!entry->size)
-+		return 0;
-+
-+	res.start = entry->base_addr;
-+	res.end = res.start + entry->size - 1;
-+	res.flags = IORESOURCE_MEM;
-+
-+	entry->base = devm_ioremap_resource(dev, &res);
-+	if (IS_ERR(entry->base)) {
-+		ret = PTR_ERR(entry->base);
-+		goto fail_ioremap;
-+	}
-+
-+	sysfs_bin_attr_init(&entry->pmt_bin_attr);
-+	entry->pmt_bin_attr.attr.name = ns->name;
-+	entry->pmt_bin_attr.attr.mode = 0440;
-+	entry->pmt_bin_attr.mmap = intel_pmt_mmap;
-+	entry->pmt_bin_attr.read = intel_pmt_read;
-+	entry->pmt_bin_attr.size = entry->size;
-+
-+	ret = sysfs_create_bin_file(&dev->kobj, &entry->pmt_bin_attr);
-+	if (!ret)
-+		return 0;
-+
-+fail_ioremap:
-+	sysfs_remove_group(entry->kobj, ns->attr_grp);
-+fail_sysfs:
-+	device_unregister(dev);
-+fail_dev_create:
-+	xa_erase(ns->xa, entry->devid);
-+
++	return 0;
++abort_probe:
++	pmt_telem_remove(pdev);
 +	return ret;
 +}
 +
-+int intel_pmt_dev_create(struct intel_pmt_entry *entry,
-+			 struct intel_pmt_namespace *ns,
-+			 struct platform_device *pdev, int idx)
++static struct platform_driver pmt_telem_driver = {
++	.driver = {
++		.name   = TELEM_DEV_NAME,
++	},
++	.remove = pmt_telem_remove,
++	.probe  = pmt_telem_probe,
++};
++
++static int __init pmt_telem_init(void)
 +{
-+	struct intel_pmt_header header;
-+	struct resource	*disc_res;
-+	int ret = -ENODEV;
-+
-+	disc_res = platform_get_resource(pdev, IORESOURCE_MEM, idx);
-+	if (!disc_res)
-+		return ret;
-+
-+	entry->disc_table = devm_platform_ioremap_resource(pdev, idx);
-+	if (IS_ERR(entry->disc_table))
-+		return PTR_ERR(entry->disc_table);
-+
-+	ret = ns->pmt_header_decode(entry, &header, &pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = intel_pmt_populate_entry(entry, &header, &pdev->dev, disc_res);
-+	if (ret)
-+		return ret;
-+
-+	return intel_pmt_dev_register(entry, ns, &pdev->dev);
-+
++	return platform_driver_register(&pmt_telem_driver);
 +}
-+EXPORT_SYMBOL_GPL(intel_pmt_dev_create);
++module_init(pmt_telem_init);
 +
-+void intel_pmt_dev_destroy(struct intel_pmt_entry *entry,
-+			   struct intel_pmt_namespace *ns)
++static void __exit pmt_telem_exit(void)
 +{
-+	struct device *dev = kobj_to_dev(entry->kobj);
-+
-+	if (entry->size)
-+		sysfs_remove_bin_file(entry->kobj, &entry->pmt_bin_attr);
-+
-+	if (ns->attr_grp)
-+		sysfs_remove_group(entry->kobj, ns->attr_grp);
-+
-+	device_unregister(dev);
-+	xa_erase(ns->xa, entry->devid);
++	platform_driver_unregister(&pmt_telem_driver);
++	xa_destroy(&telem_array);
 +}
-+EXPORT_SYMBOL_GPL(intel_pmt_dev_destroy);
++module_exit(pmt_telem_exit);
 +
-+static int __init pmt_class_init(void)
-+{
-+	return class_register(&intel_pmt_class);
-+}
-+
-+static void __exit pmt_class_exit(void)
-+{
-+	class_unregister(&intel_pmt_class);
-+}
-+
-+module_init(pmt_class_init);
-+module_exit(pmt_class_exit);
-+
-+MODULE_AUTHOR("Alexander Duyck <alexander.h.duyck@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel PMT Class driver");
++MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
++MODULE_DESCRIPTION("Intel PMT Telemetry driver");
++MODULE_ALIAS("platform:" TELEM_DEV_NAME);
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/platform/x86/intel_pmt_class.h b/drivers/platform/x86/intel_pmt_class.h
-new file mode 100644
-index 000000000000..de8f8139ba31
---- /dev/null
-+++ b/drivers/platform/x86/intel_pmt_class.h
-@@ -0,0 +1,52 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _INTEL_PMT_CLASS_H
-+#define _INTEL_PMT_CLASS_H
-+
-+#include <linux/platform_device.h>
-+#include <linux/xarray.h>
-+#include <linux/types.h>
-+#include <linux/bits.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+
-+/* PMT access types */
-+#define ACCESS_BARID		2
-+#define ACCESS_LOCAL		3
-+
-+/* PMT discovery base address/offset register layout */
-+#define GET_BIR(v)		((v) & GENMASK(2, 0))
-+#define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
-+
-+struct intel_pmt_entry {
-+	struct bin_attribute	pmt_bin_attr;
-+	struct kobject		*kobj;
-+	void __iomem		*disc_table;
-+	void __iomem		*base;
-+	unsigned long		base_addr;
-+	size_t			size;
-+	u32			guid;
-+	int			devid;
-+};
-+
-+struct intel_pmt_header {
-+	u32	base_offset;
-+	u32	size;
-+	u32	guid;
-+	u8	access_type;
-+};
-+
-+struct intel_pmt_namespace {
-+	const char *name;
-+	struct xarray *xa;
-+	const struct attribute_group *attr_grp;
-+	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
-+				 struct intel_pmt_header *header,
-+				 struct device *dev);
-+};
-+
-+int intel_pmt_dev_create(struct intel_pmt_entry *entry,
-+			 struct intel_pmt_namespace *ns,
-+			 struct platform_device *pdev, int idx);
-+void intel_pmt_dev_destroy(struct intel_pmt_entry *entry,
-+			   struct intel_pmt_namespace *ns);
-+#endif
 -- 
 2.20.1
 
