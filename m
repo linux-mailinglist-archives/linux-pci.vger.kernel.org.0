@@ -2,133 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AFF32828F2
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Oct 2020 06:57:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34EBF282B25
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Oct 2020 16:16:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725819AbgJDE5v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 4 Oct 2020 00:57:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:60183 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgJDE5v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 4 Oct 2020 00:57:51 -0400
-IronPort-SDR: xsJTYiHMU9isfRf2SZdE1jwUUhtgnF3UIROIT03V2xI1dTi4IJKmnw/pBHKKsQxhVtCZMDjOkh
- DIJHf5af6pLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9763"; a="181387079"
-X-IronPort-AV: E=Sophos;i="5.77,334,1596524400"; 
-   d="scan'208";a="181387079"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2020 21:57:50 -0700
-IronPort-SDR: 1m64lsAECejvgOfT786z1x8HjoeT8NuY7DMdZ6dxJj68S/dd4q6aoFI3R85h+1em24QBB7Fadh
- rBV9lTPdiMIA==
-X-IronPort-AV: E=Sophos;i="5.77,334,1596524400"; 
-   d="scan'208";a="517996501"
-Received: from araj-mobl1.jf.intel.com ([10.251.22.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2020 21:57:48 -0700
-Date:   Sat, 3 Oct 2020 21:57:47 -0700
-From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
-To:     Ethan Zhao <haifeng.zhao@intel.com>
-Cc:     bhelgaas@google.com, oohall@gmail.com, ruscur@russell.cc,
-        lukas@wunner.de, andriy.shevchenko@linux.intel.com,
-        stuart.w.hayes@gmail.com, mr.nuke.me@gmail.com,
-        mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sathyanarayanan.kuppuswamy@intel.com,
-        xerces.zhao@gmail.com, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v7 0/5] Fix DPC hotplug race and enhance error handling
-Message-ID: <20201004045745.GA3207@araj-mobl1.jf.intel.com>
-References: <20201003075514.32935-1-haifeng.zhao@intel.com>
+        id S1725963AbgJDOQV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Oct 2020 10:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgJDOQU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 4 Oct 2020 10:16:20 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F27C0613CE;
+        Sun,  4 Oct 2020 07:16:20 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l24so6666962edj.8;
+        Sun, 04 Oct 2020 07:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nk55SPUM9RHc7m+tJtoUiO1lBW1OPPh/kv5Dcob7pWg=;
+        b=igbWmR7RHK6gXQEWxWfyvQq3FaEV67cFpaZCGMe7nU89pUvZtc1maigYA2eX8nQfcm
+         1M0TWKDsdn3PfXjX+v43gNZBiAkZOXn3RHfjweLtQFzWgcvb18WFJ3+mFAZBovWUuv7u
+         5MEVDeKhjxBXMZnv/9aL6nswHfduvzswOf5kRhfzZXMMt5EjwQlTaDdIDQEvOslYvHAP
+         l+AzL1ehi6a3Ecathn0vn1r5PmzyTAUT8hcYiO04fVAvrqYRlK/HnXMnDC5PdD3LINFh
+         qeRydzVCuuijpktKQuIA8duYHFzRW1aQm7M7Hqu8VSq+VhVrikI0FhgDLAvHoqI/RYXn
+         kBcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nk55SPUM9RHc7m+tJtoUiO1lBW1OPPh/kv5Dcob7pWg=;
+        b=qFFXoXZVTtgFnhOuhu5aeAHa1A42o1d8uGT1YH1dUtVSaAEKb2HXqKPUXlTUfZVt4h
+         4X6c0YzQGkxncShfnbSdHaE/EkOjjwtK/WyM73uC5FemaXQnyjrprRu3pAGLN/C/jhAP
+         UUoN8pARNpKOcsHJ2oB4DeStzKHSqEG1ajZdqsU2renk+7e159WWOUd3JOcYEfb4gl4h
+         FnIueybdwovdhiXnfDVcG8m8gF+JJnH4JYAY5IVWefT4CkBKaN0nBaXldeHSIx4GjaO+
+         sdFuAqrK1pwhYnoutqBExG65xxu0G0Dh79hlhRLklF2JuXYQkAIHGIen0UQwHLSM3mc6
+         jiNA==
+X-Gm-Message-State: AOAM532ml9W4AArnoix90FaCoIaY9dpnaf067lI6XASfYoAGlROuw8EJ
+        0wBcbRp1HYbnhypEOMYSmp0+BwrQ0wyrDQ==
+X-Google-Smtp-Source: ABdhPJzMWETfHNxS1+oldFfgpAHoR7U3mTMvXJfaY7hXnzlQGi9iDgUYOxkOW7FtyXBE208NQKmKJw==
+X-Received: by 2002:a50:cdd1:: with SMTP id h17mr12831425edj.94.1601820977450;
+        Sun, 04 Oct 2020 07:16:17 -0700 (PDT)
+Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
+        by smtp.gmail.com with ESMTPSA id p24sm1256489edq.35.2020.10.04.07.16.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Oct 2020 07:16:16 -0700 (PDT)
+Subject: Re: [PATCH V2] PCI: rcar: Add L1 link state fix into data abort hook
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        linux-pci@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+References: <20200926160934.136182-1-marek.vasut@gmail.com>
+ <7ce58972-2946-0107-2298-c5a6f6e12feb@gmail.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <a7af4067-d585-2e5e-cb1d-12954250dfd1@gmail.com>
+Date:   Sun, 4 Oct 2020 16:10:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201003075514.32935-1-haifeng.zhao@intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <7ce58972-2946-0107-2298-c5a6f6e12feb@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ethan
+On 9/27/20 10:29 AM, Sergei Shtylyov wrote:
+[...]
+>> the ARM 'imprecise external abort' handler is invoked.
+>>
+>> Just like other PCI controller drivers, here we hook the fault handler,
+>> perform the fixup to help the controller enter L1 link state, and then
+>> restart the instruction which triggered the fault. Since the controller
+> 
+>    If this is imprecise or async external abort, how we can re-execute
+> the instruction that triggered the fault? It's been probably executed
+> already, no?
 
-On Sat, Oct 03, 2020 at 03:55:09AM -0400, Ethan Zhao wrote:
-> Hi,folks,
-> 
-> This simple patch set fixed some serious security issues found when DPC
-> error injection and NVMe SSD hotplug brute force test were doing -- race
-> condition between DPC handler and pciehp, AER interrupt handlers, caused
-> system hang and system with DPC feature couldn't recover to normal
-> working state as expected (NVMe instance lost, mount operation hang,
-> race PCIe access caused uncorrectable errors reported alternatively etc).
+It has been executed and triggered the fault, because it could not
+access the data across the bus. Now the bus is back in operational
+state, so restart the instruction, let it access the data and do its task.
 
-I think maybe picking from other commit messages to make this description in 
-cover letter bit clear. The fundamental premise is that when due to error
-conditions when events are processed by both DPC handler and hotplug handling of 
-DLLSC both operating on the same device object ends up with crashes.
-
-
-> 
-> With this patch set applied, stable 5.9-rc6 on ICS (Ice Lake SP platform,
-> see
-> https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server))
-> 
-> could pass the PCIe Gen4 NVMe SSD brute force hotplug test with any time
-> interval between hot-remove and plug-in operation tens of times without
-> any errors occur and system works normal.
-
-> 
-> With this patch set applied, system with DPC feature could recover from
-> NON-FATAL and FATAL errors injection test and works as expected.
-> 
-> System works smoothly when errors happen while hotplug is doing, no
-> uncorrectable errors found.
-> 
-> Brute DPC error injection script:
-> 
-> for i in {0..100}
-> do
->         setpci -s 64:02.0 0x196.w=000a
->         setpci -s 65:00.0 0x04.w=0544
->         mount /dev/nvme0n1p1 /root/nvme
->         sleep 1
-> done
-> 
-> Other details see every commits description part.
-> 
-> This patch set could be applied to stable 5.9-rc6/rc7 directly.
-> 
-> Help to review and test.
-> 
-> v2: changed according to review by Andy Shevchenko.
-> v3: changed patch 4/5 to simpler coding.
-> v4: move function pci_wait_port_outdpc() to DPC driver and its
->    declaration to pci.h. (tip from Christoph Hellwig <hch@infradead.org>).
-> v5: fix building issue reported by lkp@intel.com with some config.
-> v6: move patch[3/5] as the first patch according to Lukas's suggestion.
->     and rewrite the comment part of patch[3/5].
-> v7: change the patch[4/5], based on Bjorn's code and truth table.
->     change the patch[5/5] about the debug output information.
-> 
-> Thanks,
-> Ethan 
-> 
-> 
-> Ethan Zhao (5):
->   PCI/ERR: get device before call device driver to avoid NULL pointer
->     dereference
->   PCI/DPC: define a function to check and wait till port finish DPC
->     handling
->   PCI: pciehp: check and wait port status out of DPC before handling
->     DLLSC and PDC
->   PCI: only return true when dev io state is really changed
->   PCI/ERR: don't mix io state not changed and no driver together
-> 
->  drivers/pci/hotplug/pciehp_hpc.c |  4 ++-
->  drivers/pci/pci.h                | 55 +++++++++++++-------------------
->  drivers/pci/pcie/dpc.c           | 27 ++++++++++++++++
->  drivers/pci/pcie/err.c           | 18 +++++++++--
->  4 files changed, 68 insertions(+), 36 deletions(-)
-> 
-> 
-> base-commit: a1b8638ba1320e6684aa98233c15255eb803fac7
-> -- 
-> 2.18.4
-> 
+[...]
