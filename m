@@ -2,76 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3005F282B2A
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Oct 2020 16:17:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC2A3282BC1
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Oct 2020 18:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgJDORn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 4 Oct 2020 10:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgJDORm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 4 Oct 2020 10:17:42 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D50C0613CE
-        for <linux-pci@vger.kernel.org>; Sun,  4 Oct 2020 07:17:42 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id u8so7853935lff.1
-        for <linux-pci@vger.kernel.org>; Sun, 04 Oct 2020 07:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=P/JFHaNraPpxUew9uDi2BwheT94xssSB3xMj3UxWdGM=;
-        b=BkRh6a99W3qHl5dZBnjR+mbI2bNiehYWniXMPg88tYmvZm+efkOqDbzwSk2cwllGnY
-         2DneSGsaqLgOjTVZW3BcBdJEyEqojbMG2mhQbxq4VQ8NYpH4wIrVs3kFhId7F+9yP9Ib
-         L7PNuoifY1kWe7omJhaSu4/oCoXWKZMB2qGgZTqkiVBEJgAhwS+ihN+6ftRTQLJN168j
-         QX7wytcxw54wlNtq6/UHrkGuFOv1PdDjkHK8tv4EhjyD+xCEmHJT174/bOYQF9ZR3ko7
-         Y2xfLAD/dU0Rgq46UuJN9AlsPVIYzA4VILaZQ4QQFdZzrl0DWKQ66DFEWpDJr4rCmK/1
-         hzeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=P/JFHaNraPpxUew9uDi2BwheT94xssSB3xMj3UxWdGM=;
-        b=Z0IwtnLPMfEKzdghtIx7FL7egg4V7DoRfva4KsxawEmsZ1ia/n+uq4iZvWfNgjOO/M
-         ZLKz/b2KBowONq1toYZ+ShsVSG6pRkmQIG+tef+jilDcmkPqNlhn9wckGm5Fneze5JXs
-         5jXlRnjMbbZihgRyz4WRGfZHp2IeOqxYwkiHhPlWrZq33Gus/QuT/kYZuiv9tibd3Vd9
-         ZysaxxdualrLlMiDR2nohPyNkdriQYO/YSztRsBBfS8fwVkCpKDTqbpiyZfQgmblcJUJ
-         5TUkMxUt8NFV7wuzpkzwexcAvrLsPfHkwez3qJ0RHzA6c+S45hWIXXod7xSBR54H2PoB
-         RkSw==
-X-Gm-Message-State: AOAM530lWhJHNWwa89AbdEEEjir2qKMe+Fu8U9zVgAhY9AH4o9gNm/r3
-        V3DNQGZ7R3BMKgDcJEMhKRZibv0AKvM=
-X-Google-Smtp-Source: ABdhPJzIXxurLhvx/MJ9uYEr6qYdEZhMqBnydxPb48ixYIGR4rqBqJHMA1vgp/bTqhKg+4EvU+Zrqw==
-X-Received: by 2002:a05:6512:682:: with SMTP id t2mr4412467lfe.201.1601821060657;
-        Sun, 04 Oct 2020 07:17:40 -0700 (PDT)
-Received: from mettala-desktop.elisa-laajakaista.fi (91-159-201-147.elisa-laajakaista.fi. [91.159.201.147])
-        by smtp.gmail.com with ESMTPSA id f2sm2495020lfm.208.2020.10.04.07.17.39
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Oct 2020 07:17:40 -0700 (PDT)
-Message-ID: <2b89febed2f0fe0e5d657e61148d06c0aa4c9e32.camel@gmail.com>
-Subject: SATA SSD doesn't work before resume. IRQ and device id changed.
-From:   Jouni =?ISO-8859-1?Q?Mett=E4l=E4?= <jtmettala@gmail.com>
-To:     linux-pci@vger.kernel.org
-Date:   Sun, 04 Oct 2020 17:17:39 +0300
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        id S1726254AbgJDQPd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Oct 2020 12:15:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbgJDQPc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 4 Oct 2020 12:15:32 -0400
+Received: from localhost (unknown [171.61.67.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61CEB2068D;
+        Sun,  4 Oct 2020 16:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601828131;
+        bh=ipIbwBDHbGx7U/nYVtWvwEV/y7/NQhikV5Ng+1S41wo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BkrFjq5pesVDCZqCgigvVGnAkYU3kAenXEVcy0C+EYf4QSa7nY/PHBghx8c3UJ+K0
+         V7wA5EiZjeOgOA1F0vSfPpr62TK79z4/hmO6HvTvKyMEs+fXYkKqMHx+Zl0SJ9Rz3x
+         kkipw8CWwDYt7zwpufpGFZLd9NoEY63vruFFDBV0=
+Date:   Sun, 4 Oct 2020 21:45:26 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Another round of adding missing
+ 'additionalProperties'
+Message-ID: <20201004161526.GA2968@vkoul-mobl>
+References: <20201002234143.3570746-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello, I am triaging https://bugzilla.kernel.org/show_bug.cgi?id=209419
-2.5" SATA SSD does not show up on boot but is visible after resuming 
-from sleep as removable drive
+On 02-10-20, 18:41, Rob Herring wrote:
 
-It looks more like pci subsystem thing than sata. After resume:
-Subsystem: Acer Incorporated [ALI] Device [1025:1422] is shown as
-Device [0000:0000]. SATA disk then shows as USB disk. Is there
-something simpler than suspend/resume to find this SSD? 
+>  .../phy/amlogic,meson-g12a-usb2-phy.yaml      |  2 ++
+>  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml |  2 ++
+>  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml |  2 ++
+>  .../bindings/phy/qcom,qusb2-phy.yaml          |  1 +
+>  .../bindings/phy/qcom-usb-ipq4019-phy.yaml    |  2 ++
 
-Is it good idea to reload some modules with parameters or boot with
-some parameters?
+For phy changes:
 
-Jouni
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
+-- 
+~Vinod
