@@ -2,164 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E70B282560
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Oct 2020 18:44:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AFF32828F2
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Oct 2020 06:57:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbgJCQoY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Oct 2020 12:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60446 "EHLO mail.kernel.org"
+        id S1725819AbgJDE5v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Oct 2020 00:57:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60183 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgJCQoX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 3 Oct 2020 12:44:23 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6113206DD;
-        Sat,  3 Oct 2020 16:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601743463;
-        bh=S3sAnQDBNabe+nq9DeDE2jPRh1gT/Xyn37oT63FKG1g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b62gbR04EigLrKIktqropCmaOLCU5DfeNDHXXDqUww+AWwnsUfUqo8PJiv6mAXcnS
-         ikJFfoRMM9yC1gNora4BaDXzLsAOYL349CqhaJuZalRE4RLpBQne4sHjUaQDtonnCR
-         KgQE/MX66StK57BQDYedeEuhD5Tno9RntxLVR0Eg=
-Date:   Sat, 3 Oct 2020 11:44:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
+        id S1725818AbgJDE5v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 4 Oct 2020 00:57:51 -0400
+IronPort-SDR: xsJTYiHMU9isfRf2SZdE1jwUUhtgnF3UIROIT03V2xI1dTi4IJKmnw/pBHKKsQxhVtCZMDjOkh
+ DIJHf5af6pLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9763"; a="181387079"
+X-IronPort-AV: E=Sophos;i="5.77,334,1596524400"; 
+   d="scan'208";a="181387079"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2020 21:57:50 -0700
+IronPort-SDR: 1m64lsAECejvgOfT786z1x8HjoeT8NuY7DMdZ6dxJj68S/dd4q6aoFI3R85h+1em24QBB7Fadh
+ rBV9lTPdiMIA==
+X-IronPort-AV: E=Sophos;i="5.77,334,1596524400"; 
+   d="scan'208";a="517996501"
+Received: from araj-mobl1.jf.intel.com ([10.251.22.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2020 21:57:48 -0700
+Date:   Sat, 3 Oct 2020 21:57:47 -0700
+From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
 To:     Ethan Zhao <haifeng.zhao@intel.com>
 Cc:     bhelgaas@google.com, oohall@gmail.com, ruscur@russell.cc,
         lukas@wunner.de, andriy.shevchenko@linux.intel.com,
         stuart.w.hayes@gmail.com, mr.nuke.me@gmail.com,
         mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@linux.intel.com,
-        sathyanarayanan.kuppuswamy@intel.com, xerces.zhao@gmail.com
-Subject: Re: [PATCH v7 4/5] PCI: only return true when dev io state is really
- changed
-Message-ID: <20201003164421.GA2883839@bjorn-Precision-5520>
+        linux-kernel@vger.kernel.org, sathyanarayanan.kuppuswamy@intel.com,
+        xerces.zhao@gmail.com, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v7 0/5] Fix DPC hotplug race and enhance error handling
+Message-ID: <20201004045745.GA3207@araj-mobl1.jf.intel.com>
+References: <20201003075514.32935-1-haifeng.zhao@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201003075514.32935-5-haifeng.zhao@intel.com>
+In-Reply-To: <20201003075514.32935-1-haifeng.zhao@intel.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 03, 2020 at 03:55:13AM -0400, Ethan Zhao wrote:
-> When uncorrectable error happens, AER driver and DPC driver interrupt
-> handlers likely call
-> 
->    pcie_do_recovery()
->    ->pci_walk_bus()
->      ->report_frozen_detected()
-> 
-> with pci_channel_io_frozen the same time.
->    If pci_dev_set_io_state() return true even if the original state is
-> pci_channel_io_frozen, that will cause AER or DPC handler re-enter
-> the error detecting and recovery procedure one after another.
->    The result is the recovery flow mixed between AER and DPC.
-> So simplify the pci_dev_set_io_state() function to only return true
-> when dev->error_state is really changed.
-> 
-> Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-> Tested-by: Wen Jin <wen.jin@intel.com>
-> Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
-> Reviewed-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
-> Changnes:
->  v2: revise description and code according to suggestion from Andy.
->  v3: change code to simpler.
->  v4: no change.
->  v5: no change.
->  v6: no change.
->  v7: changed based on Bjorn's code and truth table.
-> 
->  drivers/pci/pci.h | 53 ++++++++++++++++++-----------------------------
->  1 file changed, 20 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 455b32187abd..47af1ff2a286 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -354,44 +354,31 @@ struct pci_sriov {
->   *
->   * Must be called with device_lock held.
->   *
-> - * Returns true if state has been changed to the requested state.
-> + * Returns true if state has been really changed to the requested state.
->   */
->  static inline bool pci_dev_set_io_state(struct pci_dev *dev,
->  					pci_channel_state_t new)
->  {
-> -	bool changed = false;
-> -
->  	device_lock_assert(&dev->dev);
-> -	switch (new) {
-> -	case pci_channel_io_perm_failure:
-> -		switch (dev->error_state) {
-> -		case pci_channel_io_frozen:
-> -		case pci_channel_io_normal:
-> -		case pci_channel_io_perm_failure:
-> -			changed = true;
-> -			break;
-> -		}
-> -		break;
-> -	case pci_channel_io_frozen:
-> -		switch (dev->error_state) {
-> -		case pci_channel_io_frozen:
-> -		case pci_channel_io_normal:
-> -			changed = true;
-> -			break;
-> -		}
-> -		break;
-> -	case pci_channel_io_normal:
-> -		switch (dev->error_state) {
-> -		case pci_channel_io_frozen:
-> -		case pci_channel_io_normal:
-> -			changed = true;
-> -			break;
-> -		}
-> -		break;
-> -	}
-> -	if (changed)
-> -		dev->error_state = new;
-> -	return changed;
-> +
-> +/*
-> + *			Truth table:
-> + *			requested new state
-> + *     current          ------------------------------------------
-> + *     state            normal         frozen         perm_failure
-> + *     ------------  +  -------------  -------------  ------------
-> + *     normal        |  normal         frozen         perm_failure
-> + *     frozen        |  normal         frozen         perm_failure
-> + *     perm_failure  |  perm_failure*  perm_failure*  perm_failure
-> + */
-> +
-> +	if (dev->error_state == pci_channel_io_perm_failure)
-> +		return false;
-> +	else if (dev->error_state == new)
-> +		return false;
-> +
-> +	dev->error_state = new;
-> +	return true;
+Hi Ethan
 
-No, you missed the point.  I want
+On Sat, Oct 03, 2020 at 03:55:09AM -0400, Ethan Zhao wrote:
+> Hi,folks,
+> 
+> This simple patch set fixed some serious security issues found when DPC
+> error injection and NVMe SSD hotplug brute force test were doing -- race
+> condition between DPC handler and pciehp, AER interrupt handlers, caused
+> system hang and system with DPC feature couldn't recover to normal
+> working state as expected (NVMe instance lost, mount operation hang,
+> race PCIe access caused uncorrectable errors reported alternatively etc).
 
-  1) One patch that converts the "switch" to the shorter "if"
-     statements.  This one will be big and ugly, but should not change
-     the functionality at all, and it should be pretty easy to verify
-     that since there aren't very many states involved.
+I think maybe picking from other commit messages to make this description in 
+cover letter bit clear. The fundamental premise is that when due to error
+conditions when events are processed by both DPC handler and hotplug handling of 
+DLLSC both operating on the same device object ends up with crashes.
 
-     Since this one is pure code simplification, the commit log won't
-     say anything at all about AER or DPC or their requirements
-     because it's not changing any behavior.
 
-  2) A separate patch that's tiny and makes whatever functional change
-     you need.
+> 
+> With this patch set applied, stable 5.9-rc6 on ICS (Ice Lake SP platform,
+> see
+> https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server))
+> 
+> could pass the PCIe Gen4 NVMe SSD brute force hotplug test with any time
+> interval between hot-remove and plug-in operation tens of times without
+> any errors occur and system works normal.
 
->  }
->  
->  static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+> 
+> With this patch set applied, system with DPC feature could recover from
+> NON-FATAL and FATAL errors injection test and works as expected.
+> 
+> System works smoothly when errors happen while hotplug is doing, no
+> uncorrectable errors found.
+> 
+> Brute DPC error injection script:
+> 
+> for i in {0..100}
+> do
+>         setpci -s 64:02.0 0x196.w=000a
+>         setpci -s 65:00.0 0x04.w=0544
+>         mount /dev/nvme0n1p1 /root/nvme
+>         sleep 1
+> done
+> 
+> Other details see every commits description part.
+> 
+> This patch set could be applied to stable 5.9-rc6/rc7 directly.
+> 
+> Help to review and test.
+> 
+> v2: changed according to review by Andy Shevchenko.
+> v3: changed patch 4/5 to simpler coding.
+> v4: move function pci_wait_port_outdpc() to DPC driver and its
+>    declaration to pci.h. (tip from Christoph Hellwig <hch@infradead.org>).
+> v5: fix building issue reported by lkp@intel.com with some config.
+> v6: move patch[3/5] as the first patch according to Lukas's suggestion.
+>     and rewrite the comment part of patch[3/5].
+> v7: change the patch[4/5], based on Bjorn's code and truth table.
+>     change the patch[5/5] about the debug output information.
+> 
+> Thanks,
+> Ethan 
+> 
+> 
+> Ethan Zhao (5):
+>   PCI/ERR: get device before call device driver to avoid NULL pointer
+>     dereference
+>   PCI/DPC: define a function to check and wait till port finish DPC
+>     handling
+>   PCI: pciehp: check and wait port status out of DPC before handling
+>     DLLSC and PDC
+>   PCI: only return true when dev io state is really changed
+>   PCI/ERR: don't mix io state not changed and no driver together
+> 
+>  drivers/pci/hotplug/pciehp_hpc.c |  4 ++-
+>  drivers/pci/pci.h                | 55 +++++++++++++-------------------
+>  drivers/pci/pcie/dpc.c           | 27 ++++++++++++++++
+>  drivers/pci/pcie/err.c           | 18 +++++++++--
+>  4 files changed, 68 insertions(+), 36 deletions(-)
+> 
+> 
+> base-commit: a1b8638ba1320e6684aa98233c15255eb803fac7
 > -- 
 > 2.18.4
 > 
