@@ -2,182 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C4D1283EB2
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 20:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC898283EE5
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 20:40:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgJESjS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Oct 2020 14:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728806AbgJESjH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Oct 2020 14:39:07 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C052C0613CE
-        for <linux-pci@vger.kernel.org>; Mon,  5 Oct 2020 11:39:07 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id di5so6487774qvb.13
-        for <linux-pci@vger.kernel.org>; Mon, 05 Oct 2020 11:39:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wZMbw02ji2VfGx4XJXciVpIoLB9O4c+md2Jm76gRgFU=;
-        b=pe2GUXzXrxANpPocifkGHsF5cOnqiJGSViQJOYBStdgW+xZeGnW15ZXo0C6u1lz0wL
-         RidCKDSy9SbzWwfMysE/+rGCp1IsO8wPmrQ7coTYIQGnFa74rhMuJGYu4WQwjZfDt+3E
-         PUvEPNvz50lu6zFvhiI1umfmUlVFbPeyYIua2TpnWTQSKhkEr21s6ibbxT2CwHuyyQQ5
-         bH3enGcervWolA/70DH5wD2PXVU2GgF+RP9rR2C9ArirTDDfA4CZZLWwcuUjrgGsq6lR
-         X7GZZlxVb27Kz7Cr5HP8RmUs1Xorp1IUgNO+pbF0F4LwdPSlZRnyL+Vq7hAIeq/U/q7C
-         Yp4Q==
+        id S1727693AbgJESkk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 5 Oct 2020 14:40:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49348 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbgJESkk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Oct 2020 14:40:40 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1kPVPZ-0008Be-RQ
+        for linux-pci@vger.kernel.org; Mon, 05 Oct 2020 18:40:38 +0000
+Received: by mail-pg1-f199.google.com with SMTP id n24so6295374pgl.3
+        for <linux-pci@vger.kernel.org>; Mon, 05 Oct 2020 11:40:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wZMbw02ji2VfGx4XJXciVpIoLB9O4c+md2Jm76gRgFU=;
-        b=HoIIf7LVicCgCPWIQ12x+V7ROuezvyqKLYzqcRZhPf3eSKDuZBFOcQu4E+Xog2y7WB
-         MIWLQfNgtAhFcG2oYJiJoj5KgJydKyMlj+QO8sphNKmRIM3Pfdfs5NfSWuLBZOmeqVOl
-         U71t8ioIAQNSsJ1fTum6hotaTB7iQekR2L7sHK0sHTHUX2MI7FLle+KsLPuI0Erkhy9k
-         w9SrvBlZk8ofROh29N2zlR9XwHS6T1YPcxPdgNAm1b5DUjHcwhxbJYcLsxOqNQ9/DavZ
-         rh9hkco4h86ynJs0RaZZOK7nvU51nHSS02lYrQuCY1vgodlZjMdN3UevYGTfvuCs6N6N
-         9lQw==
-X-Gm-Message-State: AOAM531vx3N4XE6Wmry/DunwU+1wclBrElUxynLyxkJILNBkIAM0Ibld
-        toUsGVDDyFy75sy8rDZ84n9b9Ku61fwaN1CvSOY=
-X-Google-Smtp-Source: ABdhPJwSZu0pzDJ32W4jp+qeXU/qdAplSVHoEiqJA1Xv+r8rL6hOPKCy8KvjgVCBv+KPb05w5UXMt0sMzlzIJpf33nI=
-X-Received: by 2002:a0c:9e0e:: with SMTP id p14mr1038607qve.25.1601923146022;
- Mon, 05 Oct 2020 11:39:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200803145832.11234-1-ian.kumlien@gmail.com> <20201005183141.GA3028319@bjorn-Precision-5520>
-In-Reply-To: <20201005183141.GA3028319@bjorn-Precision-5520>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Mon, 5 Oct 2020 20:38:55 +0200
-Message-ID: <CAA85sZuQgQ=+pVsgdZQCX2HSoRw1-4UHEsyid32=0JSPr01n2g@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=QxxY5hOmSO6qtZjMRL3JNa4hhIFzs0ULtV6GyWEV/cw=;
+        b=P8gULxzsSJwS+3g5so2kns4txrnVRyF89pr5uk3RGBjU1lrHuBira5HXMi6NEZo8VC
+         5wkBzlZLKz9vig8XFoPoQMdphslvZe5MyS49eLqtq+vwuxgO3d3bP4mD7E/Gj1DKZWB2
+         2DfmYXaJKaWHU5JOyEWatqjDNa9ARsdc6iYmmMrrd+icM65s3wE98JmYsMPmTNNlo6NJ
+         hWSF6S+D6FRxsJDdGHCRrbEide5vIxWoAj123NQ5b5mM6JT0zae+JYZVeVnRY5j+sStd
+         LLPbYEYzvOpulan/A8I0p+Q9RIol+4yd8AXgxUUfP+gecMxcTxUCHn3U1jbvEjGvqMku
+         6Y+g==
+X-Gm-Message-State: AOAM532uWRIL7eWTZxeIbSy7aF8f1Sdj0gEYusA5wM1QdNeNF7G1iLqo
+        1gejvqao5lPshunjPk+JbzFWkHtha2e4r78VoptyhowGijzoR9WviWqUPX8mFPQJTyud9t3ruiD
+        SWNqO5kzznJExEFaMCEZAcpyg9sTn8gBHgQ4CfQ==
+X-Received: by 2002:a65:5185:: with SMTP id h5mr828449pgq.37.1601923236167;
+        Mon, 05 Oct 2020 11:40:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy7Gh646eckSWleHa8CsLKPrEyGlJDvdti4AwQqbkNRgsJLohkCFtTD9VkihxkAziEAvfEx9Q==
+X-Received: by 2002:a65:5185:: with SMTP id h5mr828422pgq.37.1601923235733;
+        Mon, 05 Oct 2020 11:40:35 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id i9sm652998pfq.53.2020.10.05.11.40.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Oct 2020 11:40:34 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH 2/2] PCI: vmd: Enable ASPM for mobile platforms
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20201002221830.GA2822405@bjorn-Precision-5520>
+Date:   Tue, 6 Oct 2020 02:40:32 +0800
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, jonathan.derrick@intel.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <98360545-DC08-44A9-B096-ACF6823EF85D@canonical.com>
+References: <20201002221830.GA2822405@bjorn-Precision-5520>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 5, 2020 at 8:31 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Aug 03, 2020 at 04:58:32PM +0200, Ian Kumlien wrote:
-> > Changes:
-> > * Handle L0s correclty as well, making it per direction
-> > * Moved the switch cost in to the if statement since a non L1 switch has
-> >   no additional cost.
-> >
-> > For L0s:
-> > We sumarize the entire latency per direction to see if it's acceptable
-> > for the PCIe endpoint.
-> >
-> > If it's not, we clear the link for the path that had too large latency.
-> >
-> > For L1:
-> > Currently we check the maximum latency of upstream and downstream
-> > per link, not the maximum for the path
-> >
-> > This would work if all links have the same latency, but:
-> > endpoint -> c -> b -> a -> root  (in the order we walk the path)
-> >
-> > If c or b has the higest latency, it will not register
-> >
-> > Fix this by maintaining the maximum latency value for the path
-> >
-> > This change fixes a regression introduced (but not caused) by:
-> > 66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
-> >
-> > Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
->
-> I'm not sure where we're at with this.  If we can come up with:
->
->   - "lspci -vv" for the entire affected hierarchy before the fix
->
->   - specific identification of incorrect configuration per spec
->
->   - patch that fixes that specific misconfiguration
->
->   - "lspci -vv" for the entire affected hierarchy after the fix
->
-> then we have something to work with.  It doesn't have to (and should
-> not) fix all the problems at once.
+Hi Bjorn,
 
-So detail the changes on my specific machine and then mention
-5.4.1.2.2 of the pci spec
-detailing the exit from PCIe ASPM L1?
+> On Oct 3, 2020, at 06:18, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> On Wed, Sep 30, 2020 at 04:24:54PM +0800, Kai-Heng Feng wrote:
+>> BIOS may not be able to program ASPM for links behind VMD, prevent Intel
+>> SoC from entering deeper power saving state.
+> 
+> It's not a question of BIOS not being *able* to configure ASPM.  I
+> think BIOS could do it, at least in principle, if it had a driver for
+> VMD.  Actually, it probably *does* include some sort of VMD code
+> because it sounds like BIOS can assign some Root Ports to appear
+> either as regular Root Ports or behind the VMD.
+> 
+> Since this issue is directly related to the unusual VMD topology, I
+> think it would be worth a quick recap here.  Maybe something like:
+> 
+>  VMD is a Root Complex Integrated Endpoint that acts as a host bridge
+>  to a secondary PCIe domain.  BIOS can reassign one or more Root
+>  Ports to appear within a VMD domain instead of the primary domain.
+> 
+>  However, BIOS may not enable ASPM for the hierarchies behind a VMD,
+>  ...
+> 
+> (This is based on the commit log from 185a383ada2e ("x86/PCI: Add
+> driver for Intel Volume Management Device (VMD)")).
 
-Basically writing a better changelog for the first patch?
+Ok, will just copy the portion as-is if there's patch v2 :)
 
-Any comments on the L0s patch?
+> 
+> But we still have the problem that CONFIG_PCIEASPM_DEFAULT=y means
+> "use the BIOS defaults", and this patch would make it so we use the
+> BIOS defaults *except* for things behind VMD.
+> 
+>  - Why should VMD be a special case?
 
-> > ---
-> >  drivers/pci/pcie/aspm.c | 41 ++++++++++++++++++++++++++---------------
-> >  1 file changed, 26 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index b17e5ffd31b1..bc512e217258 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
-> >
-> >  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> >  {
-> > -     u32 latency, l1_switch_latency = 0;
-> > +     u32 latency, l1_max_latency = 0, l1_switch_latency = 0,
-> > +             l0s_latency_up = 0, l0s_latency_dw = 0;
-> >       struct aspm_latency *acceptable;
-> >       struct pcie_link_state *link;
-> >
-> > @@ -447,15 +448,22 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> >       acceptable = &link->acceptable[PCI_FUNC(endpoint->devfn)];
-> >
-> >       while (link) {
-> > -             /* Check upstream direction L0s latency */
-> > -             if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
-> > -                 (link->latency_up.l0s > acceptable->l0s))
-> > -                     link->aspm_capable &= ~ASPM_STATE_L0S_UP;
-> > -
-> > -             /* Check downstream direction L0s latency */
-> > -             if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
-> > -                 (link->latency_dw.l0s > acceptable->l0s))
-> > -                     link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-> > +             if (link->aspm_capable & ASPM_STATE_L0S) {
-> > +                     /* Check upstream direction L0s latency */
-> > +                     if (link->aspm_capable & ASPM_STATE_L0S_UP) {
-> > +                             l0s_latency_up += link->latency_up.l0s;
-> > +                             if (l0s_latency_up > acceptable->l0s)
-> > +                                     link->aspm_capable &= ~ASPM_STATE_L0S_UP;
-> > +                     }
-> > +
-> > +                     /* Check downstream direction L0s latency */
-> > +                     if (link->aspm_capable & ASPM_STATE_L0S_DW) {
-> > +                             l0s_latency_dw += link->latency_dw.l0s;
-> > +                             if (l0s_latency_dw > acceptable->l0s)
-> > +                                     link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-> > +                     }
-> > +             }
-> > +
-> >               /*
-> >                * Check L1 latency.
-> >                * Every switch on the path to root complex need 1
-> > @@ -469,11 +477,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> >                * L1 exit latencies advertised by a device include L1
-> >                * substate latencies (and hence do not do any check).
-> >                */
-> > -             latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> > -             if ((link->aspm_capable & ASPM_STATE_L1) &&
-> > -                 (latency + l1_switch_latency > acceptable->l1))
-> > -                     link->aspm_capable &= ~ASPM_STATE_L1;
-> > -             l1_switch_latency += 1000;
-> > +             if (link->aspm_capable & ASPM_STATE_L1) {
-> > +                     latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> > +                     l1_max_latency = max_t(u32, latency, l1_max_latency);
-> > +                     if (l1_max_latency + l1_switch_latency > acceptable->l1)
-> > +                             link->aspm_capable &= ~ASPM_STATE_L1;
-> > +
-> > +                     l1_switch_latency += 1000;
-> > +             }
-> >
-> >               link = link->parent;
-> >       }
-> > --
-> > 2.28.0
-> >
+Because BIOS doesn't handle ASPM for it so it's up to software to do the job.
+In the meantime we want other devices still use the BIOS defaults to not introduce any regression.
+
+> 
+>  - How would we document such a special case?
+
+I wonder whether other devices that add PCIe domain have the same behavior?
+Maybe it's not a special case at all...
+
+I understand the end goal is to keep consistency for the entire ASPM logic. However I can't think of any possible solution right now.
+
+> 
+>  - If we built with CONFIG_PCIEASPM_POWERSAVE=y, would that solve the
+>    SoC power state problem?
+
+Yes.
+
+> 
+>  - What issues would CONFIG_PCIEASPM_POWERSAVE=y introduce?
+
+This will break many systems, at least for the 1st Gen Ryzen desktops and laptops.
+All PCIe ASPM are not enabled by BIOS, and those systems immediately freeze once ASPM is enabled.
+
+Kai-Heng
+
+> 
+> Link to previous discussion for the archives:
+> https://lore.kernel.org/r/49A36179-D336-4A5E-8B7A-A632833AE6B2@canonical.com
+> 
+>> So enable ASPM for links behind VMD to increase battery life.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> drivers/pci/controller/vmd.c | 22 +++++++++++++++++++++-
+>> 1 file changed, 21 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+>> index f69ef8c89f72..058fdef9c566 100644
+>> --- a/drivers/pci/controller/vmd.c
+>> +++ b/drivers/pci/controller/vmd.c
+>> @@ -417,6 +417,22 @@ static int vmd_find_free_domain(void)
+>> 	return domain + 1;
+>> }
+>> 
+>> +static const struct pci_device_id vmd_mobile_bridge_tbl[] = {
+>> +	{ PCI_VDEVICE(INTEL, 0x9a09) },
+>> +	{ PCI_VDEVICE(INTEL, 0xa0b0) },
+>> +	{ PCI_VDEVICE(INTEL, 0xa0bc) },
+>> +	{ }
+>> +};
+>> +
+>> +static int vmd_enable_aspm(struct device *dev, void *data)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +
+>> +	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>> {
+>> 	struct pci_sysdata *sd = &vmd->sysdata;
+>> @@ -603,8 +619,12 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>> 	 * and will fail pcie_bus_configure_settings() early. It can instead be
+>> 	 * run on each of the real root ports.
+>> 	 */
+>> -	list_for_each_entry(child, &vmd->bus->children, node)
+>> +	list_for_each_entry(child, &vmd->bus->children, node) {
+>> +		if (pci_match_id(vmd_mobile_bridge_tbl, child->self))
+>> +			device_for_each_child(&child->self->dev, NULL, vmd_enable_aspm);
+> 
+> Wouldn't something like this be sufficient?
+> 
+>  list_for_each_entry(dev, &child->devices, bus_list)
+>    vmd_enable_aspm(dev);
+> 
+>> 		pcie_bus_configure_settings(child);
+>> +	}
+>> 
+>> 	pci_bus_add_devices(vmd->bus);
+>> 
+>> -- 
+>> 2.17.1
+
