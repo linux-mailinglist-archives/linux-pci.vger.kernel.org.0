@@ -2,154 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96F64283819
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 16:44:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B40A2838AB
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 17:01:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgJEOoi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Oct 2020 10:44:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:43528 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbgJEOoh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Oct 2020 10:44:37 -0400
-IronPort-SDR: yvpYjTyLUXoD/VU+YyDvwFkMfUDlbVNAPhIwvoOtpGJPD16YmYkZpS7lZ9iZzJ+/078yHxjtks
- WKiBFJ+qVe1A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9764"; a="225227854"
-X-IronPort-AV: E=Sophos;i="5.77,338,1596524400"; 
-   d="scan'208";a="225227854"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2020 07:39:16 -0700
-IronPort-SDR: D4qJwgb/QeueQDG/NXoGaQEp3tkpAZgTRLs0mA5hDFZzCQdnyWpXD+VU+/L2K5ELrQIPOURi5Q
- ysrfZsn2/xBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,338,1596524400"; 
-   d="scan'208";a="459635446"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by orsmga004.jf.intel.com with ESMTP; 05 Oct 2020 07:39:15 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 5 Oct 2020 07:39:15 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 5 Oct 2020 07:39:14 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Mon, 5 Oct 2020 07:39:14 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "kbusch@kernel.org" <kbusch@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "vicamo.yang@canonical.com" <vicamo.yang@canonical.com>
-Subject: Re: [PATCH v3] PCI: vmd: Offset Client VMD MSI-X vectors
-Thread-Topic: [PATCH v3] PCI: vmd: Offset Client VMD MSI-X vectors
-Thread-Index: AQHWisw4Sw0h2Rj1+k6JGTw0rhZQoKmJc5WAgAA2tYA=
-Date:   Mon, 5 Oct 2020 14:39:14 +0000
-Message-ID: <8eeb8ee44d29c264c1dcc5153f4a580959cb6668.camel@intel.com>
-References: <20200914190128.5114-1-jonathan.derrick@intel.com>
-         <20201005112315.GA12904@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20201005112315.GA12904@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A769CBA025BAA64791E3A6715313F684@intel.com>
-Content-Transfer-Encoding: base64
+        id S1726693AbgJEPBr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Oct 2020 11:01:47 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37172 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbgJEPBq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Oct 2020 11:01:46 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 3DF5F1C0B7C; Mon,  5 Oct 2020 17:01:43 +0200 (CEST)
+Date:   Mon, 5 Oct 2020 17:01:42 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Another round of adding missing
+ 'additionalProperties'
+Message-ID: <20201005150142.GA28675@duo.ucw.cz>
+References: <20201002234143.3570746-1-robh@kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTEwLTA1IGF0IDEyOjIzICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gTW9uLCBTZXAgMTQsIDIwMjAgYXQgMDM6MDE6MjhQTSAtMDQwMCwgSm9uIERlcnJp
-Y2sgd3JvdGU6DQo+ID4gQ2xpZW50IFZNRCBwbGF0Zm9ybXMgaGF2ZSBhIHNvZnR3YXJlLXRyaWdn
-ZXJlZCBNU0ktWCB2ZWN0b3IgMCB0aGF0IHdpbGwNCj4gPiBub3QgZm9yd2FyZCBoYXJkd2FyZS1y
-ZW1hcHBlZCBNU0kgZnJvbSB0aGUgc3ViLWRldmljZSBkb21haW4uIFRoaXMNCj4gPiBjYXVzZXMg
-YW4gaXNzdWUgd2l0aCBWTUQgcGxhdGZvcm1zIHRoYXQgdXNlIEFIQ0kgYmVoaW5kIFZNRCBhbmQg
-aGF2ZSBhDQo+ID4gc2luZ2xlIE1TSS1YIHZlY3RvciByZW1hcHBlZCB0byBWTUQgdmVjdG9yIDAu
-IEFkZCBhIFZNRCBNU0ktWCB2ZWN0b3INCj4gPiBvZmZzZXQgZm9yIHRoZXNlIHBsYXRmb3Jtcy4N
-Cj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb24gRGVycmljayA8am9uYXRoYW4uZGVycmlja0Bp
-bnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gdjM6IENvbW1pdCBNU0ktWCBjbGVhbnVwDQo+ID4gICAg
-IHZtZF9uZXh0X2lycSBjaGVjayBmaXggcGVyIEtlaXRoDQo+ID4gDQo+ID4gIGRyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvdm1kLmMgfCAzNyArKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0t
-LS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygt
-KQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+IGluZGV4IGY2OWVmOGM4OWY3Mi4uMTBj
-MGQyMDE5MGUwIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMN
-Cj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+ID4gQEAgLTUzLDYgKzUz
-LDEyIEBAIGVudW0gdm1kX2ZlYXR1cmVzIHsNCj4gPiAgCSAqIHZlbmRvci1zcGVjaWZpYyBjYXBh
-YmlsaXR5IHNwYWNlDQo+ID4gIAkgKi8NCj4gPiAgCVZNRF9GRUFUX0hBU19NRU1CQVJfU0hBRE9X
-X1ZTQ0FQCT0gKDEgPDwgMiksDQo+ID4gKw0KPiA+ICsJLyoNCj4gPiArCSAqIERldmljZSBtYXkg
-dXNlIE1TSS1YIHZlY3RvciAwIGZvciBzb2Z0d2FyZSB0cmlnZ2VyaW5nIGFuZCB3aWxsIG5vdA0K
-PiA+ICsJICogYmUgdXNlZCBmb3IgTVNJIHJlbWFwcGluZw0KPiA+ICsJICovDQo+ID4gKwlWTURf
-RkVBVF9PRkZTRVRfRklSU1RfVkVDVE9SCQk9ICgxIDw8IDMpLA0KPiA+ICB9Ow0KPiA+ICANCj4g
-PiAgLyoNCj4gPiBAQCAtMTA0LDYgKzExMCw3IEBAIHN0cnVjdCB2bWRfZGV2IHsNCj4gPiAgCXN0
-cnVjdCBpcnFfZG9tYWluCSppcnFfZG9tYWluOw0KPiA+ICAJc3RydWN0IHBjaV9idXMJCSpidXM7
-DQo+ID4gIAl1OAkJCWJ1c25fc3RhcnQ7DQo+ID4gKwl1OAkJCWZpcnN0X3ZlYzsNCj4gPiAgfTsN
-Cj4gPiAgDQo+ID4gIHN0YXRpYyBpbmxpbmUgc3RydWN0IHZtZF9kZXYgKnZtZF9mcm9tX2J1cyhz
-dHJ1Y3QgcGNpX2J1cyAqYnVzKQ0KPiA+IEBAIC0xOTksMjUgKzIwNiwyNiBAQCBzdGF0aWMgaXJx
-X2h3X251bWJlcl90IHZtZF9nZXRfaHdpcnEoc3RydWN0IG1zaV9kb21haW5faW5mbyAqaW5mbywN
-Cj4gPiAgICovDQo+ID4gIHN0YXRpYyBzdHJ1Y3Qgdm1kX2lycV9saXN0ICp2bWRfbmV4dF9pcnEo
-c3RydWN0IHZtZF9kZXYgKnZtZCwgc3RydWN0IG1zaV9kZXNjICpkZXNjKQ0KPiA+ICB7DQo+ID4g
-LQlpbnQgaSwgYmVzdCA9IDE7DQo+ID4gIAl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiA+ICsJaW50
-IGksIGJlc3Q7DQo+ID4gIA0KPiA+IC0JaWYgKHZtZC0+bXNpeF9jb3VudCA9PSAxKQ0KPiA+IC0J
-CXJldHVybiAmdm1kLT5pcnFzWzBdOw0KPiA+ICsJaWYgKHZtZC0+bXNpeF9jb3VudCA9PSAxICsg
-dm1kLT5maXJzdF92ZWMpDQo+ID4gKwkJcmV0dXJuICZ2bWQtPmlycXNbdm1kLT5maXJzdF92ZWNd
-Ow0KPiA+ICANCj4gPiAgCS8qDQo+ID4gLQkgKiBXaGl0ZSBsaXN0IGZvciBmYXN0LWludGVycnVw
-dCBoYW5kbGVycy4gQWxsIG90aGVycyB3aWxsIHNoYXJlIHRoZQ0KPiA+ICsJICogQWxsb3cgbGlz
-dCBmb3IgZmFzdC1pbnRlcnJ1cHQgaGFuZGxlcnMuIEFsbCBvdGhlcnMgd2lsbCBzaGFyZSB0aGUN
-Cj4gDQo+IElzIHRoaXMgY29tbWVudCBjaGFuZ2UgcmVsYXRlZCB0byB0aGlzIHBhdGNoIGxvZ2lj
-YWwgY2hhbmdlID8NCkl0J3MgZm9yIGZvbGxvd2luZyBjb25kdWN0IHN0YW5kYXJkcyBidXQgbm90
-IHJlbGF0ZWQNCg0KPiANCj4gT3RoZXIgdGhhbiB0aGF0IHJlYWR5IHRvIG1lcmdlIGl0LCBwbGVh
-c2UgbGV0IG1lIGtub3cuDQo+IA0KVGhpcyB3aWxsIGJlIG5lY2Vzc2FyeSBhcyB0aGUgJ3JlbWFw
-cGluZyBkaXNhYmxlJyBzZXQgaGFkIGNvbmZsaWN0cw0Kd2l0aCBYODYgTVNJIGNsZWFudXAuDQpJ
-dCdzIHJlYWR5IHRvIG1lcmdlIGlmIHRoZSByZW1hcHBpbmcgc2V0IGlzIGRyb3BwZWQuDQoNCg0K
-PiBUaGFua3MsDQo+IExvcmVuem8NCj4gDQo+ID4gIAkgKiAic2xvdyIgaW50ZXJydXB0IHZlY3Rv
-ci4NCj4gPiAgCSAqLw0KPiA+ICAJc3dpdGNoIChtc2lfZGVzY190b19wY2lfZGV2KGRlc2MpLT5j
-bGFzcykgew0KPiA+ICAJY2FzZSBQQ0lfQ0xBU1NfU1RPUkFHRV9FWFBSRVNTOg0KPiA+ICAJCWJy
-ZWFrOw0KPiA+ICAJZGVmYXVsdDoNCj4gPiAtCQlyZXR1cm4gJnZtZC0+aXJxc1swXTsNCj4gPiAr
-CQlyZXR1cm4gJnZtZC0+aXJxc1t2bWQtPmZpcnN0X3ZlY107DQo+ID4gIAl9DQo+ID4gIA0KPiA+
-ICAJcmF3X3NwaW5fbG9ja19pcnFzYXZlKCZsaXN0X2xvY2ssIGZsYWdzKTsNCj4gPiAtCWZvciAo
-aSA9IDE7IGkgPCB2bWQtPm1zaXhfY291bnQ7IGkrKykNCj4gPiArCWJlc3QgPSB2bWQtPmZpcnN0
-X3ZlYyArIDE7DQo+ID4gKwlmb3IgKGkgPSBiZXN0OyBpIDwgdm1kLT5tc2l4X2NvdW50OyBpKysp
-DQo+ID4gIAkJaWYgKHZtZC0+aXJxc1tpXS5jb3VudCA8IHZtZC0+aXJxc1tiZXN0XS5jb3VudCkN
-Cj4gPiAgCQkJYmVzdCA9IGk7DQo+ID4gIAl2bWQtPmlycXNbYmVzdF0uY291bnQrKzsNCj4gPiBA
-QCAtNjI5LDYgKzYzNyw3IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCB2bWRfaXJxKGludCBpcnEsIHZv
-aWQgKmRhdGEpDQo+ID4gIA0KPiA+ICBzdGF0aWMgaW50IHZtZF9wcm9iZShzdHJ1Y3QgcGNpX2Rl
-diAqZGV2LCBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqaWQpDQo+ID4gIHsNCj4gPiArCXVu
-c2lnbmVkIGxvbmcgZmVhdHVyZXMgPSAodW5zaWduZWQgbG9uZykgaWQtPmRyaXZlcl9kYXRhOw0K
-PiA+ICAJc3RydWN0IHZtZF9kZXYgKnZtZDsNCj4gPiAgCWludCBpLCBlcnI7DQo+ID4gIA0KPiA+
-IEBAIC02NTMsMTIgKzY2MiwxNSBAQCBzdGF0aWMgaW50IHZtZF9wcm9iZShzdHJ1Y3QgcGNpX2Rl
-diAqZGV2LCBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqaWQpDQo+ID4gIAkgICAgZG1hX3Nl
-dF9tYXNrX2FuZF9jb2hlcmVudCgmZGV2LT5kZXYsIERNQV9CSVRfTUFTSygzMikpKQ0KPiA+ICAJ
-CXJldHVybiAtRU5PREVWOw0KPiA+ICANCj4gPiArCWlmIChmZWF0dXJlcyAmIFZNRF9GRUFUX09G
-RlNFVF9GSVJTVF9WRUNUT1IpDQo+ID4gKwkJdm1kLT5maXJzdF92ZWMgPSAxOw0KPiA+ICsNCj4g
-PiAgCXZtZC0+bXNpeF9jb3VudCA9IHBjaV9tc2l4X3ZlY19jb3VudChkZXYpOw0KPiA+ICAJaWYg
-KHZtZC0+bXNpeF9jb3VudCA8IDApDQo+ID4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gIA0KPiA+
-IC0Jdm1kLT5tc2l4X2NvdW50ID0gcGNpX2FsbG9jX2lycV92ZWN0b3JzKGRldiwgMSwgdm1kLT5t
-c2l4X2NvdW50LA0KPiA+IC0JCQkJCVBDSV9JUlFfTVNJWCk7DQo+ID4gKwl2bWQtPm1zaXhfY291
-bnQgPSBwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoZGV2LCB2bWQtPmZpcnN0X3ZlYyArIDEsDQo+ID4g
-KwkJCQkJCXZtZC0+bXNpeF9jb3VudCwgUENJX0lSUV9NU0lYKTsNCj4gPiAgCWlmICh2bWQtPm1z
-aXhfY291bnQgPCAwKQ0KPiA+ICAJCXJldHVybiB2bWQtPm1zaXhfY291bnQ7DQo+ID4gIA0KPiA+
-IEBAIC03NTUsMTMgKzc2NywxNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQg
-dm1kX2lkc1tdID0gew0KPiA+ICAJCQkJVk1EX0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMsfSwN
-Cj4gPiAgCXtQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4NDY3ZiksDQo+ID4gIAkJ
-LmRyaXZlcl9kYXRhID0gVk1EX0ZFQVRfSEFTX01FTUJBUl9TSEFET1dfVlNDQVAgfA0KPiA+IC0J
-CQkJVk1EX0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMsfSwNCj4gPiArCQkJCVZNRF9GRUFUX0hB
-U19CVVNfUkVTVFJJQ1RJT05TIHwNCj4gPiArCQkJCVZNRF9GRUFUX09GRlNFVF9GSVJTVF9WRUNU
-T1IsfSwNCj4gPiAgCXtQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4NGMzZCksDQo+
-ID4gIAkJLmRyaXZlcl9kYXRhID0gVk1EX0ZFQVRfSEFTX01FTUJBUl9TSEFET1dfVlNDQVAgfA0K
-PiA+IC0JCQkJVk1EX0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMsfSwNCj4gPiArCQkJCVZNRF9G
-RUFUX0hBU19CVVNfUkVTVFJJQ1RJT05TIHwNCj4gPiArCQkJCVZNRF9GRUFUX09GRlNFVF9GSVJT
-VF9WRUNUT1IsfSwNCj4gPiAgCXtQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfSU5URUwsIFBDSV9E
-RVZJQ0VfSURfSU5URUxfVk1EXzlBMEIpLA0KPiA+ICAJCS5kcml2ZXJfZGF0YSA9IFZNRF9GRUFU
-X0hBU19NRU1CQVJfU0hBRE9XX1ZTQ0FQIHwNCj4gPiAtCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVT
-VFJJQ1RJT05TLH0sDQo+ID4gKwkJCQlWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUyB8DQo+
-ID4gKwkJCQlWTURfRkVBVF9PRkZTRVRfRklSU1RfVkVDVE9SLH0sDQo+ID4gIAl7MCx9DQo+ID4g
-IH07DQo+ID4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUocGNpLCB2bWRfaWRzKTsNCj4gPiAtLSANCj4g
-PiAyLjE4LjENCj4gPiANCg==
+
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> Another round of wack-a-mole. The json-schema default is additional
+> unknown properties are allowed, but for DT all properties should be
+> defined.
+
+for leds:
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+I assume you apply it..?
+								Pavel
+							=09
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX3s1VgAKCRAw5/Bqldv6
+8owIAKDAkiq29W/tD49n7es9bNcHQLqXywCfWHIfHZ6OrlZTPZUQgy45PCK/EKM=
+=qVmv
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
