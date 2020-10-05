@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 739872832FD
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 11:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A81DA283300
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 11:16:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgJEJQd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Oct 2020 05:16:33 -0400
-Received: from mail-bn7nam10on2084.outbound.protection.outlook.com ([40.107.92.84]:59364
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        id S1725960AbgJEJQk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Oct 2020 05:16:40 -0400
+Received: from mail-eopbgr680053.outbound.protection.outlook.com ([40.107.68.53]:57843
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725891AbgJEJQc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Oct 2020 05:16:32 -0400
+        id S1725891AbgJEJQj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 5 Oct 2020 05:16:39 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cjcr4NgmHzkPO65EU5sya3q+bVFFEKaHAw2woCqEntTmig4j3CnIImPK9DT+f4ffxeqBiJBSvgAi45r/6+EzEFO/rVRoz4n5PQKNhSXFIzaPEG1A1Aowz/1CBg78jIj17HNCkZcWtMkEmrLleYybQk1wR8SyW6b7YcfFFg6lcHHqhzUwOYJLCGGq5mPgPnW/8C/+UtjwD6VJgo8sfHj4yLfA9AbCmICasdBQ8dGSG6G6oIvNW//rE/oU0MfZX5Av4ssTRb+k8hV6cOVofpwEecFphpQ3CY8sbM13rwiC0ei+0rhDV4reDQDLVeDhezaz+I5K6CBWPNZttzI5ekR7ug==
+ b=ly6732tWUQ5zbeEJBo/VMoyqqoycYalCdIw4xLu+1d9kxFVyGc5/uL9aZq+jSGnh2+Z4DNL+qlQAXUcOza1m0cvMjgOMEWcQqAry5MzFEwEnc3w/0Pbi0FwPGaVOzKnxZGJ99jxOigHzqm2nO5/KUTg2gcJRbE9gG8UNtHSTITofgq8inzclHdQ6fAMd4rOnovVCD6eg5smr7ZWhZmAhzTT+TsV4AFSrLzql+9QSjZL7PKQwYXGDivcmrLKZG1WuzuCl8xPtyRLXf4xX5Ei0OralWvDt/bA8Ys+MjnBVTWH5SwfT45q1lfkBrlx8dVP4tjJGJTyYbWSHg94Xv0k4Ng==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=keYn3xZSeTe02oYkXhucLonJ2fdQs/o//mSCHTY2f1o=;
- b=V6Zyk47RE/IzsfREN4g8T4uk+yU/H57W6td/ipII94ohymP2/ebsn5jMLtJHEk3gSIZm4qx7eHe2g/FhrqIypx1minmMOCuLncJth2T2tpQ6L1f9YyBxJb3PJwkht02UjOViv8D2DKVsV2qL2klSA6FRmvj0njyj9phmrdFpaOPMKQR3R/tQHKDU1aPJGYic0QsY3Lt7l8SO92pUOLcb4hW8SNGrBnBNmAf9PL2Wk+yXTHl7PuDSHcLRoLZOqRRsGiKIVtUyo/uv6Jb3cMcHUD+EwUvfCBYy4q7rG/+/lvpORI+W0lhYwKB5eXM8SFKYcirkL0DpZXAj9MyihHqxOg==
+ bh=ZGXBUboTiCCQic9XHlxf0IEpm2dc4XrxLTGozKlcyv8=;
+ b=I4WGm83C6DqPwA6iUmQMH7/Hssmvb+SS/QLXaN8SST6VF40JcxRTzfNU+FeVAQp/8uws2aCToXiIPXTBPqFy4jCt2OJ3D1MQ0APZRtFTrRTFrGVYFDIPOZKsD76Rjeu9tL1hku1eT1sHI+9w/HHnuyiAkH5FLMx5QtglC4Pl4N7fsl723CQIqU+rixq3TB4SbHUePKFFaf+13XY0fWgrjQyqp+c/vOnnEBcFAP/sXxRI30RyD5IxtYdBKKKKrrcybw2wvprbmp0ZvX1BLhGU9owAOVlYxf4CwzuHPnnqbUfwVf1odDD39RfvJBLQMdMXTzfnpJVAL3io5pp47Hg2JA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=synaptics.com; dmarc=pass action=none
  header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=keYn3xZSeTe02oYkXhucLonJ2fdQs/o//mSCHTY2f1o=;
- b=Sx4Pjvnfw4gIwh9TEcVsv1UgPumkzhWtfmk0vk9WVfJjJvYXtbP/a0IFRaxpEVkYoJVKlpOIYOWwUG2HWyD+geoU7ZFjQ604bN4+2CqG/Q5JS9z7b89sTRaZ3ouI8zdQFK1ISZKkQ5uB5/kYHGRwjklCO142r8WAC3f0R0byd+Y=
+ bh=ZGXBUboTiCCQic9XHlxf0IEpm2dc4XrxLTGozKlcyv8=;
+ b=Pot7Mxu2LyBSpBtkfTAETdTm0uaivqsR2sP9ERqhcU3YeuBJ+HKPhwWyP7FWS2g+X7GvqA5zX2Z5/APNAnoYUs5oyb6E/eR4JLVq3y/AdcTsHE+6DxlHqnf16thCCSq4CtUzmHAA+my5ipYaiRt1sn9Cqt3mkqieuhc3jwyT220=
 Authentication-Results: nxp.com; dkim=none (message not signed)
  header.d=none;nxp.com; dmarc=none action=none header.from=synaptics.com;
 Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
  by DS7PR03MB5560.namprd03.prod.outlook.com (2603:10b6:5:2d0::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.32; Mon, 5 Oct
- 2020 09:16:29 +0000
+ 2020 09:16:37 +0000
 Received: from DM6PR03MB4555.namprd03.prod.outlook.com
  ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
  ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3433.044; Mon, 5 Oct 2020
- 09:16:29 +0000
-Date:   Mon, 5 Oct 2020 16:57:33 +0800
+ 09:16:37 +0000
+Date:   Mon, 5 Oct 2020 16:57:53 +0800
 From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
@@ -54,9 +54,8 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH dwc-next 1/3] PCI: dwc: Don't assume the ops in dw_pcie
- always exists
-Message-ID: <20201005165733.1dc15ce0@xhacker.debian>
+Subject: [PATCH dwc-next 2/3] PCI: dwc: al: Remove useless dw_pcie_ops
+Message-ID: <20201005165753.2f98b3fd@xhacker.debian>
 In-Reply-To: <20201005165657.0fd31b10@xhacker.debian>
 References: <20201005165657.0fd31b10@xhacker.debian>
 X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
@@ -68,136 +67,62 @@ X-ClientProxiedBy: TYAPR01CA0070.jpnprd01.prod.outlook.com
  (2603:10b6:5:102::17)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0070.jpnprd01.prod.outlook.com (2603:1096:404:2b::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.34 via Frontend Transport; Mon, 5 Oct 2020 09:16:25 +0000
+Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0070.jpnprd01.prod.outlook.com (2603:1096:404:2b::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.34 via Frontend Transport; Mon, 5 Oct 2020 09:16:32 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b34c4805-8003-46f5-4023-08d8690f5806
+X-MS-Office365-Filtering-Correlation-Id: 72568b87-76d9-4e50-9105-08d8690f5c50
 X-MS-TrafficTypeDiagnostic: DS7PR03MB5560:
-X-Microsoft-Antispam-PRVS: <DS7PR03MB55608CF0979A7F11D13848B8ED0C0@DS7PR03MB5560.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-Microsoft-Antispam-PRVS: <DS7PR03MB55601F10840ACEAF997A9F02ED0C0@DS7PR03MB5560.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:639;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AQrz36fnz30Y7/IOWJplgw3TOtMQkCQBCRZSpokWhBKdyQgVELlFohTFbiTSpPyJAZ6dUMBBUuzIAPEe93ODPy+XlqLjz3FVK2jbryAbRp63lUXXQyajCsAp//bysmr6ACgqsWM9+BQ4HbvelY5tPO5rOluIV0D/dKsls+H5wuXLZIAwRsC19PO0NuOt00SDbNU+fV2SdmceSLo1XtkHxycv+U5Falasv5lEnDi/Q5n+dgaHcXjAZyGcil9h5f8o6NhhLj0r6LiP5zSOU5ATuElpMh7b9ABRl8hNMoD8cqKA9Ja0jdxSvyOsV4JE/nLjVU39bqqw9cJxpUKtU9q9BBR3ORE46qbvFARsuC9eYmEDt3s+f4LftT6RKL644+Eq
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39850400004)(396003)(346002)(376002)(136003)(2906002)(8936002)(9686003)(16526019)(66946007)(66556008)(66476007)(186003)(26005)(8676002)(7416002)(55016002)(83380400001)(1076003)(5660300002)(6666004)(478600001)(52116002)(7696005)(316002)(110136005)(6506007)(4326008)(956004)(86362001)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 3J0/kGRQnzbg4YkzOxW+Ndir6zZ/WcR1IW3B7Qd8JNQtTZEd+AQE5xrugqZk031nyMFmM1GhqpEzlCfkUzHIOcfb0rqALgIJ11he7dxwG5qJJHy1yb2XzN9muF93GXHrxL3XlrtUkj4LP8tS2mj/7U0xzh7t53bRM9IdnDd+VNBW/avbG4z6D0lROODPEry2ldGnFFIOuUIMduygqNblVtSK8jND4YXBedEdDtCkdq9Zm67Nu+ROwdH9OdGa/kCJrPkM0knLJLYLW2kDJiP51ilM+zGL2o7xXpntkg8Ur+y5OJRLfZf9+lVrfYMeqqcNsDfhsKnbZ8uyjsIrbWQPoWfLt7Ajy/znP4lGgXkQi5X4iRrX10P3XZPZFmdGP4q4zt2z0/ad+GBwbzHgZ0JzsBDfhdaXbE4bA+nP1dzMvpBqnnKNOYbD7ECJXNXaw+KIZex+dnb5L9RIM0ElmLZCrY/bS95WEwLKpGQwrz6m+nxj3BAtQvHy7Gl9q/d8dXBxJh5Ekrb9xZW6e3EovY6NJvJtRp4Lr4HyqoTWco+brpE53T1gTqSGLCkTtyUUrwFLDoKQ61ViRgOvl80KzJL3jc++lzvLlTH14T5f2Yh5GIg32m4mbTYxwR4ETN0O8gSCKFRLd7EBCKt8jOVEqkGKZA==
+X-Microsoft-Antispam-Message-Info: PEGSRvdnM2vzJDvwaNd8J4zJhExmFRQISkZKvblGQshG6d/vdPeVJXrIwVz1mMwXwPdv76NPKsebeUAHcZ95r9+NGgYKLSXRAcT+9mXoXZFIN22+VR5IxNt6zqZp0OqcwpR4OTccrR5Lq3ejJMULI2ap+MaUiKqwsak3e3KUWcFzbo7ZsH+SvySmohjJcJTrbEflhqOEHczOqN4aSsWM2fLyCGnv1GA9bEee5MEKiCnhVKht7NeXxErMwAwvszR95ntUSkB1sKHZ5d5/vZYOn0NTsdlgsRGoEE+p3wEk27Nhf66P0pkNgvWt/rKoi8dzs5RhCFx1ykGwDjTnp7321woGzgFefDKykJkJ55rUQV8GQtpjfmu7Ei6u2s2b9CdT
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(8936002)(9686003)(16526019)(66946007)(66556008)(66476007)(186003)(26005)(8676002)(7416002)(55016002)(83380400001)(4744005)(1076003)(5660300002)(6666004)(498600001)(52116002)(7696005)(110136005)(6506007)(4326008)(956004)(86362001)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: c4gnWpUI0Dais8w9DChT7uLMgcW/O2wsihBp09UzcX7uF5zrwqIBmmcIJG4VRRwaPNUi1U/U5wWQyJ8YjzuotTQqlfllc7UeMSiBh+RTajrC16Y2Odlyz9yfDAwtdGW7KrEr6LWtrBNQ+kxreFztffw6u+lR8QGOvklP3U8DhRlV1Dqw1szEj1jKf9OIjJ/zo6u7rdmyzqD+fCLOsY2yCOlovq1Zpcpb9/5ZeGrCSULYcmGuO+JgbIXGaophq8XMNIkQV6Vp9in/czRjCSAV6lWliGaciHk7KH/8zh7v6ACoS6lCdBderstIW3vixqcDwIhjlefnpj5YMhDUugCOi7AkRH70wC/OEnOhT+T5I/GbvkB36CKxdXC1pZ7Lj+F6uPE0n6/MQY89YWaeBJu+JbTrC4vmaZGewHboJROEP2Vh0wagZC96Wss32q60zsURi8FfdHRvydOGpbDWcZAWHLN870mP88DYadXHORaBQ6jjznNCwXR/bjjRU58UsX7DpqIL4XDigt4FKVxRrzoOARyTyYpu916fojI2i735LN0Xo7qfBEyikkYTU6A3F0sxw3MsvY16V4O7QznEDzxYIgEIemZZJ2gVIxECjnWlBg5I5le1cYOdVekI2BKbWiETDrOO6qrbw+lFa3NSdwCpnQ==
 X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b34c4805-8003-46f5-4023-08d8690f5806
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72568b87-76d9-4e50-9105-08d8690f5c50
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2020 09:16:29.7264
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2020 09:16:36.9563
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EY7vUHOO+iNIZKK+P6TuWSegGCuPpa14zVXafWXq9CWaIb9eFv2wNatJCjVpzXPWhotFADZO5M0j1CEVXFyjiQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: qf1WKywWZqS36flVD9pEfiofQ7xSyWdZFfe1H37BebSgbAXUh5nUN4GcwkpqB2epiEEsb+rr27g7ev8zkZGCdw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR03MB5560
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some designware based device driver especially host only driver may
-work well with the default read_dbi/write_dbi/link_up implementation
-in pcie-designware.c, thus remove the assumption to simplify those
-drivers.
+We have removed the dw_pcie_ops always exists assumption in dwc
+core driver, we can remove the useless dw_pcie_ops now.
 
 Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c |  8 +++-----
- drivers/pci/controller/dwc/pcie-designware.c    | 14 +++++++-------
- 2 files changed, 10 insertions(+), 12 deletions(-)
+ drivers/pci/controller/dwc/pcie-al.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index ad7da4ea43a5..411b7624331d 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -432,10 +432,8 @@ static void dw_pcie_ep_stop(struct pci_epc *epc)
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
--	if (!pci->ops->stop_link)
--		return;
--
--	pci->ops->stop_link(pci);
-+	if (pci->ops && pci->ops->stop_link)
-+		pci->ops->stop_link(pci);
+diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+index f973fbca90cf..a1fe1b847ef1 100644
+--- a/drivers/pci/controller/dwc/pcie-al.c
++++ b/drivers/pci/controller/dwc/pcie-al.c
+@@ -339,9 +339,6 @@ static int al_add_pcie_port(struct pcie_port *pp,
+ 	return 0;
  }
  
- static int dw_pcie_ep_start(struct pci_epc *epc)
-@@ -443,7 +441,7 @@ static int dw_pcie_ep_start(struct pci_epc *epc)
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
--	if (!pci->ops->start_link)
-+	if (!pci->ops || !pci->ops->start_link)
- 		return -EINVAL;
- 
- 	return pci->ops->start_link(pci);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 3c1f17c78241..2a6109109029 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -140,7 +140,7 @@ u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
- 	int ret;
- 	u32 val;
- 
--	if (pci->ops->read_dbi)
-+	if (pci->ops && pci->ops->read_dbi)
- 		return pci->ops->read_dbi(pci, pci->dbi_base, reg, size);
- 
- 	ret = dw_pcie_read(pci->dbi_base + reg, size, &val);
-@@ -155,7 +155,7 @@ void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
+-static const struct dw_pcie_ops dw_pcie_ops = {
+-};
+-
+ static int al_pcie_probe(struct platform_device *pdev)
  {
- 	int ret;
+ 	struct device *dev = &pdev->dev;
+@@ -360,7 +357,6 @@ static int al_pcie_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
--	if (pci->ops->write_dbi) {
-+	if (pci->ops && pci->ops->write_dbi) {
- 		pci->ops->write_dbi(pci, pci->dbi_base, reg, size, val);
- 		return;
- 	}
-@@ -170,7 +170,7 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
- {
- 	int ret;
+ 	pci->dev = dev;
+-	pci->ops = &dw_pcie_ops;
  
--	if (pci->ops->write_dbi2) {
-+	if (pci->ops && pci->ops->write_dbi2) {
- 		pci->ops->write_dbi2(pci, pci->dbi_base2, reg, size, val);
- 		return;
- 	}
-@@ -185,7 +185,7 @@ static u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
- 	int ret;
- 	u32 val;
- 
--	if (pci->ops->read_dbi)
-+	if (pci->ops && pci->ops->read_dbi)
- 		return pci->ops->read_dbi(pci, pci->atu_base, reg, 4);
- 
- 	ret = dw_pcie_read(pci->atu_base + reg, 4, &val);
-@@ -199,7 +199,7 @@ static void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 val)
- {
- 	int ret;
- 
--	if (pci->ops->write_dbi) {
-+	if (pci->ops && pci->ops->write_dbi) {
- 		pci->ops->write_dbi(pci, pci->atu_base, reg, 4, val);
- 		return;
- 	}
-@@ -270,7 +270,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- {
- 	u32 retries, val;
- 
--	if (pci->ops->cpu_addr_fixup)
-+	if (pci->ops && pci->ops->cpu_addr_fixup)
- 		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
- 
- 	if (pci->iatu_unroll_enabled) {
-@@ -478,7 +478,7 @@ int dw_pcie_link_up(struct dw_pcie *pci)
- {
- 	u32 val;
- 
--	if (pci->ops->link_up)
-+	if (pci->ops && pci->ops->link_up)
- 		return pci->ops->link_up(pci);
- 
- 	val = readl(pci->dbi_base + PCIE_PORT_DEBUG1);
+ 	al_pcie->pci = pci;
+ 	al_pcie->dev = dev;
 -- 
 2.28.0
 
