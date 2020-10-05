@@ -2,173 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 218EF2831C7
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 10:20:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E529C2831F1
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 10:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgJEIUW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Oct 2020 04:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgJEIUW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Oct 2020 04:20:22 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83EA2075A;
-        Mon,  5 Oct 2020 08:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601886021;
-        bh=k+cn2MVadKtAEfTX4w1xKEndDAizAPhubuZsEg16NKA=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=b2mxDKapGiFurhQjsp4HEfPs36HSRoFnBpwIkksZFf7oGoqHFfZwDmAeyDz66PMy5
-         vtXa8G3wT/xClHEI77HGa5MbaoN9TdiCX63VoeDnTWmqHFuK2W+C7j2BIZdJKPLFo5
-         ki1pYznY6gijxc82EWP3dG1CZgPqk84tAeUBZHsE=
-Received: by pali.im (Postfix)
-        id 62647A07; Mon,  5 Oct 2020 10:20:18 +0200 (CEST)
-Date:   Mon, 5 Oct 2020 10:20:18 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
-Message-ID: <20201005082018.rowqpfifyyrilxma@pali>
-References: <20200716110423.xtfyb3n6tn5ixedh@pali>
- <20200814080824.dg57kmbimyf3ushe@pali>
- <20200909112850.hbtgkvwqy2rlixst@pali>
+        id S1726248AbgJEI0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Oct 2020 04:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgJEI0j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Oct 2020 04:26:39 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 785C6C0613B2
+        for <linux-pci@vger.kernel.org>; Mon,  5 Oct 2020 01:26:38 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id r24so3766128vsp.8
+        for <linux-pci@vger.kernel.org>; Mon, 05 Oct 2020 01:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=41Y6sjMmjcMlV2JauZyN/TxOh6umZ/keewCU2mb8LIc=;
+        b=AXAmvxEcZgWulidtPjWzcdr2Qm2OYOtZA0wDa8FmovT91MPeLRIwIVCT8lx9v5UNlG
+         SctQfxm1GmrUHlaNPX+RFUQtBHXdidJ0/CU1C9clQS0l30cTxEkteaWVnvPQuLuFSdee
+         4MV2Fpon9L5TsVQGS1K3gSKttvhofJOiwA9P0bVAeb/tNn5WAcwRk5Be/IAOdU2QkdYn
+         VFrey16k5OCZxA1L7Q1xqspPxsd/+WYGgx9scKUGZYuyhxSBuKF1PhH1KfSOoQx2J5OY
+         401UuKSNx0/BKxG4Vky36hMzFvsFJwDUWIuAQewHgLK5qqZWGGWEkqztdK9+VC+FKpcj
+         S9OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=41Y6sjMmjcMlV2JauZyN/TxOh6umZ/keewCU2mb8LIc=;
+        b=EbgmyIJc1Zi8Kv37oAqFtmJvKhE93jnE9mITHtSePg0wUJWDMZu4CAAAl0F1xD+5UC
+         lu/ZfphkinuqVo6LS6sg9M1d1G6C2b5oKKxjw8P2wBbXe6El0iuLbheK2Jsnhok3Bnym
+         TLdP9KVvsyoil4U5pEGhnaFRTCXnXFleqSGaxG966XT0095gVOIhuW9gavESTtxRBmbV
+         4kSEb43mLnehTrqvbjmAI4iqlZsHWxyxcEkvSPtij1G23TAtja5M74T9epo+1acqKTTj
+         CVWdtemZBdCdEVqegBuX7cSAxuR0TzMPlY4KlpqEk2NX+gqHLaGLZaHPGkf3k7YmQwg1
+         WO2Q==
+X-Gm-Message-State: AOAM532iAGP5UTl6F6BLyM2rlTyLyNd5sAq6l0AlxYxkimJqhLJSwd4V
+        zndUImshMMFha5ajTNaUt829c8Hmj6xL6D3n5deJ9w==
+X-Google-Smtp-Source: ABdhPJxlPMGygHVTcnGIf5MQvmk2y9YM/OMFZ7y/LPtKUwwQZxTgA80YvlEMQPDfoWIYZailBQzIdWarus99WB2IvNI=
+X-Received: by 2002:a67:ec9a:: with SMTP id h26mr6751269vsp.34.1601886397228;
+ Mon, 05 Oct 2020 01:26:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200909112850.hbtgkvwqy2rlixst@pali>
-User-Agent: NeoMutt/20180716
+References: <20201002234143.3570746-1-robh@kernel.org>
+In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 5 Oct 2020 10:26:01 +0200
+Message-ID: <CAPDyKFq=ZUiYhm0-K5ZVYS1FH2O5e-+Gt6Dftf=LmL9ABa7CaA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Another round of adding missing 'additionalProperties'
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-spi@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-leds@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-mips@vger.kernel.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Linux USB List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PING?
+On Sat, 3 Oct 2020 at 01:41, Rob Herring <robh@kernel.org> wrote:
+>
+> Another round of wack-a-mole. The json-schema default is additional
+> unknown properties are allowed, but for DT all properties should be
+> defined.
+>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Baolin Wang <baolin.wang7@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-hwmon@vger.kernel.org
+> Cc: linux-iio@vger.kernel.org
+> Cc: openipmi-developer@lists.sourceforge.net
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-remoteproc@vger.kernel.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-usb@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> I'll take this thru the DT tree.
+>
 
-On Wednesday 09 September 2020 13:28:50 Pali Rohár wrote:
-> Hello! I'm adding more people to loop.
-> 
-> Can somebody look at these race conditions and my patch?
-> 
-> On Friday 14 August 2020 10:08:24 Pali Rohár wrote:
-> > Hello! I would like to remind this issue which I reported month ago.
-> > 
-> > On Thursday 16 July 2020 13:04:23 Pali Rohár wrote:
-> > > Hello Bjorn!
-> > > 
-> > > I see following error message in dmesg which looks like a race condition:
-> > > 
-> > > sysfs: cannot create duplicate filename '/devices/platform/soc/d0070000.pcie/pci0000:00/0000:00:00.0/config'
-> > > 
-> > > I looked at it deeper and found out that in PCI subsystem code is race
-> > > condition between pci_bus_add_device() and pci_sysfs_init() calls. Both
-> > > of these functions calls pci_create_sysfs_dev_files() and calling this
-> > > function more times for same pci device throws above error message.
-> > > 
-> > > There can be two different race conditions:
-> > > 
-> > > 1. pci_bus_add_device() called pcibios_bus_add_device() or
-> > > pci_fixup_device() but have not called pci_create_sysfs_dev_files() yet.
-> > > Meanwhile pci_sysfs_init() is running and pci_create_sysfs_dev_files()
-> > > was called for newly registered device. In this case function
-> > > pci_create_sysfs_dev_files() is called two times, ones from
-> > > pci_bus_add_device() and once from pci_sysfs_init().
-> > > 
-> > > 2. pci_sysfs_init() is called. It first sets sysfs_initialized to 1
-> > > which unblock calling pci_create_sysfs_dev_files(). Then another bus
-> > > registers new PCI device and calls pci_bus_add_device() which calls
-> > > pci_create_sysfs_dev_files() and registers sysfs files. Function
-> > > pci_sysfs_init() continues execution and calls function
-> > > pci_create_sysfs_dev_files() also for this newly registered device. So
-> > > pci_create_sysfs_dev_files() is again called two times.
-> > > 
-> > > 
-> > > I workaround both race conditions I created following hack patch. After
-> > > applying it I'm not getting that 'sysfs: cannot create duplicate filename'
-> > > error message anymore.
-> > > 
-> > > Can you look at it how to fix both race conditions in proper way?
-> > 
-> > Is this workaround diff enough? Or are you going to prepare something better?
-> > 
-> > Please let me know if I should send this diff as regular patch.
-> > 
-> > > 
-> > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> > > index 8e40b3e6da77..691be2258c4e 100644
-> > > --- a/drivers/pci/bus.c
-> > > +++ b/drivers/pci/bus.c
-> > > @@ -316,7 +316,7 @@ void pci_bus_add_device(struct pci_dev *dev)
-> > >  	 */
-> > >  	pcibios_bus_add_device(dev);
-> > >  	pci_fixup_device(pci_fixup_final, dev);
-> > > -	pci_create_sysfs_dev_files(dev);
-> > > +	pci_create_sysfs_dev_files(dev, false);
-> > >  	pci_proc_attach_device(dev);
-> > >  	pci_bridge_d3_update(dev);
-> > >  
-> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > index 6d78df981d41..b0c4852a51dd 100644
-> > > --- a/drivers/pci/pci-sysfs.c
-> > > +++ b/drivers/pci/pci-sysfs.c
-> > > @@ -1328,13 +1328,13 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> > >  	return retval;
-> > >  }
-> > >  
-> > > -int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
-> > > +int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing)
-> > >  {
-> > >  	int retval;
-> > >  	int rom_size;
-> > >  	struct bin_attribute *attr;
-> > >  
-> > > -	if (!sysfs_initialized)
-> > > +	if (!sysfs_initializing && !sysfs_initialized)
-> > >  		return -EACCES;
-> > >  
-> > >  	if (pdev->cfg_size > PCI_CFG_SPACE_SIZE)
-> > > @@ -1437,18 +1437,21 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
-> > >  static int __init pci_sysfs_init(void)
-> > >  {
-> > >  	struct pci_dev *pdev = NULL;
-> > > -	int retval;
-> > > +	int retval = 0;
-> > >  
-> > > -	sysfs_initialized = 1;
-> > >  	for_each_pci_dev(pdev) {
-> > > -		retval = pci_create_sysfs_dev_files(pdev);
-> > > +		if (!pci_dev_is_added(pdev))
-> > > +			continue;
-> > > +		retval = pci_create_sysfs_dev_files(pdev, true);
-> > >  		if (retval) {
-> > >  			pci_dev_put(pdev);
-> > > -			return retval;
-> > > +			goto out;
-> > >  		}
-> > >  	}
-> > >  
-> > > -	return 0;
-> > > +out:
-> > > +	sysfs_initialized = 1;
-> > > +	return retval;
-> > >  }
-> > >  late_initcall(pci_sysfs_init);
-> > >  
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index 6d3f75867106..304294c7171e 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -19,7 +19,7 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-> > >  
-> > >  /* Functions internal to the PCI core code */
-> > >  
-> > > -int pci_create_sysfs_dev_files(struct pci_dev *pdev);
-> > > +int pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing);
-> > >  void pci_remove_sysfs_dev_files(struct pci_dev *pdev);
-> > >  #if !defined(CONFIG_DMI) && !defined(CONFIG_ACPI)
-> > >  static inline void pci_create_firmware_label_files(struct pci_dev *pdev)
-> > > 
+[...]
+
+>  .../bindings/mmc/mmc-pwrseq-emmc.yaml         |  2 ++
+>  .../bindings/mmc/mmc-pwrseq-sd8787.yaml       |  2 ++
+>  .../bindings/mmc/mmc-pwrseq-simple.yaml       |  2 ++
+
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
