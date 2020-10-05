@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A81DA283300
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 11:16:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1ED0283302
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 11:16:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725960AbgJEJQk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Oct 2020 05:16:40 -0400
-Received: from mail-eopbgr680053.outbound.protection.outlook.com ([40.107.68.53]:57843
+        id S1725935AbgJEJQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Oct 2020 05:16:50 -0400
+Received: from mail-eopbgr680081.outbound.protection.outlook.com ([40.107.68.81]:49939
         "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725891AbgJEJQj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Oct 2020 05:16:39 -0400
+        id S1725891AbgJEJQu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 5 Oct 2020 05:16:50 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ly6732tWUQ5zbeEJBo/VMoyqqoycYalCdIw4xLu+1d9kxFVyGc5/uL9aZq+jSGnh2+Z4DNL+qlQAXUcOza1m0cvMjgOMEWcQqAry5MzFEwEnc3w/0Pbi0FwPGaVOzKnxZGJ99jxOigHzqm2nO5/KUTg2gcJRbE9gG8UNtHSTITofgq8inzclHdQ6fAMd4rOnovVCD6eg5smr7ZWhZmAhzTT+TsV4AFSrLzql+9QSjZL7PKQwYXGDivcmrLKZG1WuzuCl8xPtyRLXf4xX5Ei0OralWvDt/bA8Ys+MjnBVTWH5SwfT45q1lfkBrlx8dVP4tjJGJTyYbWSHg94Xv0k4Ng==
+ b=OLe9DEwMcf5+bwqNTYeJJkGxl2Ntb8Fmn4oCIn/XOLeM8XN8PTDKDlYbuX3KFUB6K3zxesxmUqrrL/YxzAWR9pKtBuSIRPGGe2UyEukl6MqZKo7kexeenh59U454azPNC4NPk4W3eGLud2SYgiqOEFzly5vsIgNKPVMqn4+qDLU24jKBYTbNzFSjbXcjkN8BlejLnGL+UHogxsjOoEAuV1lSGGki8UiDjtVMxZvt2WTjJPrhmt1dhUdY5W1idATKTnCXsVAj6QCtzNN8oiSiRwA1xqHFMines+d5TMQNJsUnfaRQOpXa2mfIUXnmrdaEkWE+eA3Xawdc2LYAJD4hpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZGXBUboTiCCQic9XHlxf0IEpm2dc4XrxLTGozKlcyv8=;
- b=I4WGm83C6DqPwA6iUmQMH7/Hssmvb+SS/QLXaN8SST6VF40JcxRTzfNU+FeVAQp/8uws2aCToXiIPXTBPqFy4jCt2OJ3D1MQ0APZRtFTrRTFrGVYFDIPOZKsD76Rjeu9tL1hku1eT1sHI+9w/HHnuyiAkH5FLMx5QtglC4Pl4N7fsl723CQIqU+rixq3TB4SbHUePKFFaf+13XY0fWgrjQyqp+c/vOnnEBcFAP/sXxRI30RyD5IxtYdBKKKKrrcybw2wvprbmp0ZvX1BLhGU9owAOVlYxf4CwzuHPnnqbUfwVf1odDD39RfvJBLQMdMXTzfnpJVAL3io5pp47Hg2JA==
+ bh=ECZRctN+O108XAOkiGEksdZCMGTb5t6HY4e92TF/9fw=;
+ b=MaVEewFX00md8B0Iw09q+6x4Up9GJYMV7agqwXkZ5f3Zbva4sQ9Ofec1GOOYt9lyTYKbOxENWmIoOH9oQOrdoVwM22EN1qcE4gUDDsN6gnrnXRLVGNkd1gFjbV4kn7Vpfrh2XP7phYaSXLSJxYWpAT8Rag9rskPBS0C4rC4Jse+aeuNt9DQId+x5yr+xTYFwbuzYGAifXxWeMtfeF0wqwv5ek/2r/grviG595uGa8t52MAVKlTXdeWdcBOfvXg/7bL00gi0OjKNgwVlX7qrGMVxSdophlRT0Xdl0vKy+FAi+mGsfRreRWDW8hpJg4D5jQAdZ5YIGcscchjYgnkrOkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=synaptics.com; dmarc=pass action=none
  header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZGXBUboTiCCQic9XHlxf0IEpm2dc4XrxLTGozKlcyv8=;
- b=Pot7Mxu2LyBSpBtkfTAETdTm0uaivqsR2sP9ERqhcU3YeuBJ+HKPhwWyP7FWS2g+X7GvqA5zX2Z5/APNAnoYUs5oyb6E/eR4JLVq3y/AdcTsHE+6DxlHqnf16thCCSq4CtUzmHAA+my5ipYaiRt1sn9Cqt3mkqieuhc3jwyT220=
+ bh=ECZRctN+O108XAOkiGEksdZCMGTb5t6HY4e92TF/9fw=;
+ b=HtoOZOVYiBjh+Cv6FRJnmKUiM+gwlHx1N+n04lTPHQuYV77pbmZL01z76RwTRMp+B48cU00BP5UuGj9xqY9rY9E73Kuk/fKvMN4YkWWoreR/V9BnT3SzSyrk0kLBTD4R1y3h6SWIrBKpwsWcraFyRPiVY6Xc6KA7z1r9Qdb3xNM=
 Authentication-Results: nxp.com; dkim=none (message not signed)
  header.d=none;nxp.com; dmarc=none action=none header.from=synaptics.com;
 Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
  by DS7PR03MB5560.namprd03.prod.outlook.com (2603:10b6:5:2d0::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.32; Mon, 5 Oct
- 2020 09:16:37 +0000
+ 2020 09:16:47 +0000
 Received: from DM6PR03MB4555.namprd03.prod.outlook.com
  ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
  ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3433.044; Mon, 5 Oct 2020
- 09:16:37 +0000
-Date:   Mon, 5 Oct 2020 16:57:53 +0800
+ 09:16:47 +0000
+Date:   Mon, 5 Oct 2020 17:03:43 +0800
 From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
@@ -54,8 +54,8 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH dwc-next 2/3] PCI: dwc: al: Remove useless dw_pcie_ops
-Message-ID: <20201005165753.2f98b3fd@xhacker.debian>
+Subject: [PATCH dwc-next 3/3] PCI: dwc: imx6: Remove useless dw_pcie_ops
+Message-ID: <20201005170343.49ced6ac@xhacker.debian>
 In-Reply-To: <20201005165657.0fd31b10@xhacker.debian>
 References: <20201005165657.0fd31b10@xhacker.debian>
 X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
@@ -67,27 +67,27 @@ X-ClientProxiedBy: TYAPR01CA0070.jpnprd01.prod.outlook.com
  (2603:10b6:5:102::17)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0070.jpnprd01.prod.outlook.com (2603:1096:404:2b::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.34 via Frontend Transport; Mon, 5 Oct 2020 09:16:32 +0000
+Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0070.jpnprd01.prod.outlook.com (2603:1096:404:2b::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.34 via Frontend Transport; Mon, 5 Oct 2020 09:16:42 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 72568b87-76d9-4e50-9105-08d8690f5c50
+X-MS-Office365-Filtering-Correlation-Id: 240f642e-9721-4ffd-b548-08d8690f62e5
 X-MS-TrafficTypeDiagnostic: DS7PR03MB5560:
-X-Microsoft-Antispam-PRVS: <DS7PR03MB55601F10840ACEAF997A9F02ED0C0@DS7PR03MB5560.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:639;
+X-Microsoft-Antispam-PRVS: <DS7PR03MB5560415844837F351391696CED0C0@DS7PR03MB5560.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1417;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PEGSRvdnM2vzJDvwaNd8J4zJhExmFRQISkZKvblGQshG6d/vdPeVJXrIwVz1mMwXwPdv76NPKsebeUAHcZ95r9+NGgYKLSXRAcT+9mXoXZFIN22+VR5IxNt6zqZp0OqcwpR4OTccrR5Lq3ejJMULI2ap+MaUiKqwsak3e3KUWcFzbo7ZsH+SvySmohjJcJTrbEflhqOEHczOqN4aSsWM2fLyCGnv1GA9bEee5MEKiCnhVKht7NeXxErMwAwvszR95ntUSkB1sKHZ5d5/vZYOn0NTsdlgsRGoEE+p3wEk27Nhf66P0pkNgvWt/rKoi8dzs5RhCFx1ykGwDjTnp7321woGzgFefDKykJkJ55rUQV8GQtpjfmu7Ei6u2s2b9CdT
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(8936002)(9686003)(16526019)(66946007)(66556008)(66476007)(186003)(26005)(8676002)(7416002)(55016002)(83380400001)(4744005)(1076003)(5660300002)(6666004)(498600001)(52116002)(7696005)(110136005)(6506007)(4326008)(956004)(86362001)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: c4gnWpUI0Dais8w9DChT7uLMgcW/O2wsihBp09UzcX7uF5zrwqIBmmcIJG4VRRwaPNUi1U/U5wWQyJ8YjzuotTQqlfllc7UeMSiBh+RTajrC16Y2Odlyz9yfDAwtdGW7KrEr6LWtrBNQ+kxreFztffw6u+lR8QGOvklP3U8DhRlV1Dqw1szEj1jKf9OIjJ/zo6u7rdmyzqD+fCLOsY2yCOlovq1Zpcpb9/5ZeGrCSULYcmGuO+JgbIXGaophq8XMNIkQV6Vp9in/czRjCSAV6lWliGaciHk7KH/8zh7v6ACoS6lCdBderstIW3vixqcDwIhjlefnpj5YMhDUugCOi7AkRH70wC/OEnOhT+T5I/GbvkB36CKxdXC1pZ7Lj+F6uPE0n6/MQY89YWaeBJu+JbTrC4vmaZGewHboJROEP2Vh0wagZC96Wss32q60zsURi8FfdHRvydOGpbDWcZAWHLN870mP88DYadXHORaBQ6jjznNCwXR/bjjRU58UsX7DpqIL4XDigt4FKVxRrzoOARyTyYpu916fojI2i735LN0Xo7qfBEyikkYTU6A3F0sxw3MsvY16V4O7QznEDzxYIgEIemZZJ2gVIxECjnWlBg5I5le1cYOdVekI2BKbWiETDrOO6qrbw+lFa3NSdwCpnQ==
+X-Microsoft-Antispam-Message-Info: 2MwF9SBQ4SPZ8YeDebxA26X0YTxRGMZtJY1808S5yu6jV6J/DQqJl3PXie909pY/j1FcjggCPvUDCz0b6frj/lOg56nngUdsbaNXcFWkRcsCMaCMVTL/EnHOtu3fxteQuNIS1Bq4+kDQQIljlaVymI6ApS0cpF4o4PxmTcAawxMUJsgMl3ernFxKReKuJSZ0fgwC2sW5N4qNLJHps9KZLuc+kCtJvdWy3w7q1xxtB0WounMbwgLa6u2HmaI8d5yYfZOrAMeaok/xvXDLjw5Pf6Hs93FHiaXUnPbH3zkpYIo0SRhYzWv8AB/8/iSBK02d/Drh65+Pze3eXGsxxW6Om/UCr/8dwE3THvoyukbHwVZNMGe3IYh6vnIrexHPalIU
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39850400004)(396003)(346002)(376002)(136003)(2906002)(8936002)(9686003)(16526019)(66946007)(66556008)(66476007)(186003)(26005)(8676002)(7416002)(55016002)(83380400001)(1076003)(5660300002)(478600001)(52116002)(7696005)(316002)(110136005)(6506007)(4326008)(956004)(86362001)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: eqjjfcoqPiSq48ZEuFk1N2ZEKhGa5c3Zoue70FvbvH5wINNW8Vxff8ycHRYtAAVh+ZUH0KwE8zoEgbvUzumw7+q18vZ1QvzZM8b5kpXOvrmZufHp9G6sVsmyl/mL3uhwKrGXQLWsfM6sM47/HO+OrHnfUJ85KplC7byYTE7ZYeBvlN4vOLJ4Rb1cnfXLmq4Wwhoz1wBkFvhU3kc/refIRkZBMUSbjMEe/Fc80f1wMnsBEYAV3Hb1ekkxjOVlc5lAPi1ie19LpToqw02Gbuw9o7EZSCFLFeJVFj31N/BDhpIjbV5GGQHFSX4zaaeQ1ZMobMK8kG77QX31mpUHwTGschJ3CsM3yGlEV96vLG7y8t021G+gYpxfYEs7VfEIT9YQgfsTmO2vnQWSw2S+4rlHwVqXhxuw7geBTWubI+U0tB1a5kuBsZuQO0SQq7nUft6B4sIJN3tYHP4MyA/VS77ERl8zhPOorOylyruJPofOXuzf6Is46NEvk3L6d4a/bTl77Y+fL1qrdqPAEk4cuGdr0tjM/T15kTs+QOBolR8XCXyNy9JZAvfQyk5g+Wmi/sb2DErbwVu3hVBRKRvjLgGkf/zCrSTiSFfwWRUVQYw1OGaY89ZUq07Nsr78nH9PkHaPvPZxFeH8PragQNzuQLjyYw==
 X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72568b87-76d9-4e50-9105-08d8690f5c50
+X-MS-Exchange-CrossTenant-Network-Message-Id: 240f642e-9721-4ffd-b548-08d8690f62e5
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2020 09:16:36.9563
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2020 09:16:47.9441
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qf1WKywWZqS36flVD9pEfiofQ7xSyWdZFfe1H37BebSgbAXUh5nUN4GcwkpqB2epiEEsb+rr27g7ev8zkZGCdw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wnj0iiSFbxgMHk3C9vaxuruH0p4qo9UgTCwpW8d2oj1InqZhkBWKnkErVJuDXuPXuMnYV/4YTNCfza/Tr+6MBg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR03MB5560
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -98,31 +98,32 @@ core driver, we can remove the useless dw_pcie_ops now.
 
 Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- drivers/pci/controller/dwc/pcie-al.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-index f973fbca90cf..a1fe1b847ef1 100644
---- a/drivers/pci/controller/dwc/pcie-al.c
-+++ b/drivers/pci/controller/dwc/pcie-al.c
-@@ -339,9 +339,6 @@ static int al_add_pcie_port(struct pcie_port *pp,
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 337c74cbdfdb..72f8bc7d878c 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -870,10 +870,6 @@ static int imx6_add_pcie_port(struct imx6_pcie *imx6_pcie,
  	return 0;
  }
  
 -static const struct dw_pcie_ops dw_pcie_ops = {
+-	/* No special ops needed, but pcie-designware still expects this struct */
 -};
 -
- static int al_pcie_probe(struct platform_device *pdev)
+ #ifdef CONFIG_PM_SLEEP
+ static void imx6_pcie_ltssm_disable(struct device *dev)
  {
- 	struct device *dev = &pdev->dev;
-@@ -360,7 +357,6 @@ static int al_pcie_probe(struct platform_device *pdev)
+@@ -1013,7 +1009,6 @@ static int imx6_pcie_probe(struct platform_device *pdev)
  		return -ENOMEM;
  
  	pci->dev = dev;
 -	pci->ops = &dw_pcie_ops;
  
- 	al_pcie->pci = pci;
- 	al_pcie->dev = dev;
+ 	imx6_pcie->pci = pci;
+ 	imx6_pcie->drvdata = of_device_get_match_data(dev);
 -- 
 2.28.0
 
