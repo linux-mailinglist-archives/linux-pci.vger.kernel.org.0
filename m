@@ -2,55 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2956A283412
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 12:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DFFC28347B
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 13:01:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgJEKhJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Oct 2020 06:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgJEKhH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Oct 2020 06:37:07 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76CE0C0613CE;
-        Mon,  5 Oct 2020 03:37:07 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id ce10so11165146ejc.5;
-        Mon, 05 Oct 2020 03:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EQcMf3aBHGTHbFtiLcGPyEnLeByAfRIiKvJYpM7dHjI=;
-        b=JMXtpOzBphG2KW05zXFj2vXclgc2K+H8JNLe4wZm7v+D9biCrsBBlunvumrZBdu1ay
-         dGsC3P+vCBgpuvq8Us5VYT17QD/j1PGdTs3yayROXo3Im6WBME+yzVPRs9dhmCnhv+Kp
-         deAaGEl4mX/k8HNSg+lcAp97KgIlUIgmSSwwdLTGDqN7XE8+lWKnDQvOaVfL9MZ14U+a
-         QRIvo/0Rw3hXEZYEYP0VkWPlkV5tVRSOzoq3CiZiRn3rvyx0WeBnBNIUIK3FrMGOYn9N
-         QIQdKyuVIgtZvtCvpApddnOAphNZZn8AUAHtmpPXbjSAxqojzQj+J6GDsnofUdkYSHTP
-         MAYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EQcMf3aBHGTHbFtiLcGPyEnLeByAfRIiKvJYpM7dHjI=;
-        b=GTjT0sqgscirFuksdmXhumGdg9b7CDq+MuYYKd/R/tiveGwbYDIsoVDOonn3+CdVZG
-         zGnQHQv5HLeyQC1vdwUY0CQJ9C7JFuUApte2C8IbnOSboyF0BKedtG288fjX7st+OBQ1
-         9g8621CtHzat/D6890n/ih3J30ugDkacwKA3tyv1vENQk7JmMuJFcSwThFl4o/0Q5a24
-         ByJWNHeV1Uv9Edk5xHosWLmCBM3NATuXfCDaPGX6BZHKFQ8NszqQ8tCO1RRiSNYbwYRp
-         ka2FFVC3MTIUoW4HJyU0SimKcFXz31tSLnOgFZBFKyn8S3ykM6K37lEJaKJ3cSJiyJ4t
-         p53w==
-X-Gm-Message-State: AOAM5337dIcGvB9GV+KsxhVtmS+4COZ0Qa1NSuAir03dDOQ+oekzj5Y/
-        XDaNJ8qvSWUpaD+I/F7q+t8=
-X-Google-Smtp-Source: ABdhPJyAUrA9v+oT7mNxthuQoeotTCXMOOGXsGx3LdAG3pM2W9hPKJEenugRGvwJUGZXAZHqegPZ7g==
-X-Received: by 2002:a17:906:6545:: with SMTP id u5mr14725364ejn.346.1601894226145;
-        Mon, 05 Oct 2020 03:37:06 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id yz15sm7567670ejb.9.2020.10.05.03.37.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2020 03:37:04 -0700 (PDT)
-Date:   Mon, 5 Oct 2020 12:37:03 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
+        id S1726442AbgJELB2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Oct 2020 07:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725891AbgJELB1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 5 Oct 2020 07:01:27 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 831DF20578;
+        Mon,  5 Oct 2020 11:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601895686;
+        bh=zT1ggZQfYdTWKaaKhhfthWc1Wmu2z51MEgqhMdjk+B0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SD/Qgw9FIMuzORoe+m+VTXdFP3akbnWWNU81Odi9c5GKdU7J+GKmby2c8netpfgmA
+         adZ1oHsaoFEdzavqQfYQskxWQibYcQ5HrNcWX5oNl7SvediEUDK9mfzz+po5gPOLGv
+         GYaHousl0JgdpMqFSA4SRgxVcsLFkSnV03Ue+OnE=
+Date:   Mon, 5 Oct 2020 12:00:22 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Rob Herring <robh@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
@@ -66,7 +43,6 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
         Vinod Koul <vkoul@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
@@ -83,55 +59,45 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org
 Subject: Re: [PATCH] dt-bindings: Another round of adding missing
  'additionalProperties'
-Message-ID: <20201005103703.GN425362@ulmo>
+Message-ID: <20201005110022.GB5139@sirena.org.uk>
 References: <20201002234143.3570746-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CQDko/0aYvuiEzgn"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
 Content-Disposition: inline
 In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+X-Cookie: Most of your faults are not your fault.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---CQDko/0aYvuiEzgn
+--6sX45UoQRIJXqkqR
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
 On Fri, Oct 02, 2020 at 06:41:43PM -0500, Rob Herring wrote:
-[...]
->  .../arm/tegra/nvidia,tegra20-pmc.yaml         |  2 ++
-[...]
->  .../bindings/sound/nvidia,tegra186-dspk.yaml  |  2 ++
->  .../sound/nvidia,tegra210-admaif.yaml         |  2 ++
->  .../bindings/sound/nvidia,tegra210-dmic.yaml  |  2 ++
->  .../bindings/sound/nvidia,tegra210-i2s.yaml   |  2 ++
-[...]
->  .../bindings/usb/nvidia,tegra-xudc.yaml       |  2 ++
-[...]
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> Another round of wack-a-mole. The json-schema default is additional
+> unknown properties are allowed, but for DT all properties should be
+> defined.
 
---CQDko/0aYvuiEzgn
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--6sX45UoQRIJXqkqR
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl96908ACgkQ3SOs138+
-s6Hn/g/+OAyAW+yLaNZ0EuRduaLOLtd19HpvVqZdf68FWcAxWHANPdIKnVuc++CF
-2r+nHjgPy4zI3LGP1bGlgPufCdAapy2QTx9sGt/VeTEOuo9uTjb6J4Y7xXC11qQT
-pVI+v4ofSi48FN6vY6VWsotDscDJFLkJy/eZdb1RRuU44SG4dw04Z3fn1STm9wAN
-PS6hKtpUTbZYzgI0hngx2Ph30t7fyu18NIRPsKZ6/3WgR4HwD8cdpVi+06ThN3GQ
-s5CEQ/J7l9z1tfQhUypxLic1JV21su9fCERZQd96CKyIvcpJ5RByk7d7EnnZ4A53
-ZDRzwiymRP29X0IUzvEoHc7XvUP/mIZIkRNtTc3tLGZHZ34+Gc805Hcy5slbzhRz
-V+Gl3oXG56OhWLSbyNQXOOlbJJAmdFS1IDAoV752G6kq5fFZ397AW34DLF5YJX0k
-lYF3NWBTpuxxWCGuceKkACfscLE1dAifN2Rtgf9mbM1k2mIG7mVa6tdpxJ3sjf8Y
-1T0v3HYAwfOKTajaYUY4UYLMIJcZNjjJsw/olvcM6a9c8x/g79W3BgSjS6F/pEww
-DtuObW8366dl2WoqlYTJ9eWvKXSbCHRBhPpYLamHRBOBj7HKqGSHyyq0hEGPvd6X
-Hr+OJUghj7CHS+5vXEq5oNiT4bE6x9ytJdHNf5hIiRchRu6TeOQ=
-=hMJa
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl96/MYACgkQJNaLcl1U
+h9DVIAf/YahMxzxRA1HRo6CR552Pzfu8pWuFTeWzZTi4iIVW4oR/TUvjaBuMBAZF
+jIi3Kk2yR9lW+bCaPvUIjXsdB31S0iHgXORKR9ByRsx4fZS4MC/x9KFlv/v5dziQ
+nMO+lF+vyZQrYQrfwQmBJ5JdbeM9r2Oh+tUBcsKZkPsvg10glGuisr1mO1CEaEuL
+zcz31MfKpdGbLUEOlPzruZ5uNt0/FHU6FxOusAGW9lkYx+c7GjNWtdDh8h7gzd1n
+SzrDKnBlTWCZ+Owy2r9hJS6ow+fIjoYDT+Xtp6AvrSk9oJ6hggQ6NyxPpesZWbKV
+3Kfe7+KGLuHI4AMEU0u/czJWmNdEJw==
+=5yDb
 -----END PGP SIGNATURE-----
 
---CQDko/0aYvuiEzgn--
+--6sX45UoQRIJXqkqR--
