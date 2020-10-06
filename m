@@ -2,139 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25E5128459E
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 07:42:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE8192845FC
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 08:27:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgJFFml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Oct 2020 01:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgJFFmb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 01:42:31 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A13C0613AA
-        for <linux-pci@vger.kernel.org>; Mon,  5 Oct 2020 22:42:31 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id kk9so1075336pjb.2
-        for <linux-pci@vger.kernel.org>; Mon, 05 Oct 2020 22:42:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FYOEybxQ9Y8nUxVZmzLLg+Qyso2tjlpbGNthFRqblLc=;
-        b=scAXD8YuBk8j/NF0iYDdCeaAVj2lJqU4ekQ7XmxKGRZD9n7rlAL/7uG23DDE1fcZ56
-         zF72mU8P6EdMfXizzEbowAVRT7aqB90B0ZPahldWPyAERYWd6msUiWvIw5u5I68GC10s
-         2mfO8dqRM6oWZLB0Q6RNjtouVvMzAMtCqHytHKbKwrjH25Far6tK8oMk2FL/+Ytm6yFo
-         ix24Oh/3R7FZgjcOmnnbZhO2Rnj4pwkEjTGIWiz4UAhFCmHcKJq5fJPHDGVhMb52+bja
-         GRW+sJiWWq/RfS6N9j6fS0MlegpQS8J4O6R0p/6fHQbNSKo6Dg2SOD+ESIa+qx/GxTp7
-         QQLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FYOEybxQ9Y8nUxVZmzLLg+Qyso2tjlpbGNthFRqblLc=;
-        b=S/D7LvPeqAw0bShR6jcRmcvJN56Q61Y58bF+TDJR9UPHfKyORv+jXAw+YnD4nw/e0u
-         Lk1hFiu5zUl+g/xj0P4MhayKYVvsTmmLzD5IThu4Eio1RInSiTNZ1cwjLaKJYUb8Cv9T
-         k6B8NPsGTHCBqTk8eDMY9tjO52CAvZrLXWUTGyT9ei5CuCjgibLgzuYG/ujcWDXMquOa
-         5tu83KDl3jhaChRKDBTdjcbnnEEQZSKvDkpsi0avxRUbNVXOGuPxcv2gmJiYLFvnexUe
-         HQl4E5VXs3CzEVALd4gbJbpDummLyBq/+zXwUZVSMF24KhYikC98cxX+YHuN9wiCF4Oa
-         CnIw==
-X-Gm-Message-State: AOAM532SjetI033hBC82KwPuMCKTs3sHlLDUTtyBiDTOU5sVCcSISKpw
-        fQhkC64pYV/tS6Caj/4rLv7XNA==
-X-Google-Smtp-Source: ABdhPJzo+T1F54fl8q16F3SuWBffglk48PEytQu7/wpxM8oR5iYvbOQGglf6EbVoa0EICQ893qG+lw==
-X-Received: by 2002:a17:90b:950:: with SMTP id dw16mr2661711pjb.200.1601962950652;
-        Mon, 05 Oct 2020 22:42:30 -0700 (PDT)
-Received: from localhost ([122.181.54.133])
-        by smtp.gmail.com with ESMTPSA id d145sm2005503pfd.136.2020.10.05.22.42.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Oct 2020 22:42:29 -0700 (PDT)
-Date:   Tue, 6 Oct 2020 11:12:28 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Andrew Lunn <andrew@lunn.ch>,
+        id S1726761AbgJFG1E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Oct 2020 02:27:04 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8461 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgJFG1E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 02:27:04 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f7c0e290000>; Mon, 05 Oct 2020 23:26:49 -0700
+Received: from [10.25.78.32] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 6 Oct
+ 2020 06:26:39 +0000
+Subject: Re: [PATCH v2 0/5] PCI: dwc: improve msi handling
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Cameron <jic23@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Richard Weinberger <richard@nod.at>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "Yue Wang" <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Neil Armstrong" <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: Explicitly allow additional properties
- in board/SoC schemas
-Message-ID: <20201006054228.ho3ajzfgpiew32ft@vireshk-i7>
-References: <20201005183830.486085-1-robh@kernel.org>
- <20201005183830.486085-4-robh@kernel.org>
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Kunihiko Hayashi" <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20200924190421.549cb8fc@xhacker.debian>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <b977d9b4-cc98-e817-0d51-8f2c6ba1445d@nvidia.com>
+Date:   Tue, 6 Oct 2020 11:56:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201005183830.486085-4-robh@kernel.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200924190421.549cb8fc@xhacker.debian>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1601965609; bh=+klW06t1SRSkGS8ctt+a82sY0wQKshniw25tq0QSLaQ=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=AK0csA0Ad2YZWQjDqG6mpJBocxrJivGMWN4Ul4Khquqsz4sXDbayWAKH2+5u2Z3hb
+         Dwnnnmie9OTCA1ZI5fcvM10RVW6SwfJHdZN6r1gyuhgUp4wspP3HQiKKeaPJRlt6TS
+         ftqc47lNt61dYxJBT6XlkXDgwQYBcnZRalTTLs1O2CA9N1xHXNIzMp/9BCFgF/3j4d
+         FR/UwmF0Mrck4tf7j34h+cbH01kRo3EmTivl9RItdCJTzy1Ka9lt1SfGAsf/zUW7Wi
+         aU56gk+7gz9xzR1PbXKZ3xMUxaPWpmb7fA52h1f/jWv9XAwAZ3SE3V+Y+LHJj7Q+fE
+         l3eYB+DIUVnkA==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05-10-20, 13:38, Rob Herring wrote:
-> In order to add meta-schema checks for additional/unevaluatedProperties
-> being present, all schema need to make this explicit. As the top-level
-> board/SoC schemas always have additional properties, add
-> 'additionalProperties: true'.
+Hi,
+I would like to verify this series along with the other series "PCI: 
+dwc: fix two MSI issues" on Tegra194. I tried to apply these series on 
+both linux-next and Lorenzo's pci/dwc branches but there seem to be non 
+trivial conflicts. Could you please tell me which branch I can use and 
+apply these series cleanly?
+FWIW, I acknowledge that the existing code does leak MSI target page 
+every time system goes through suspend-resume sequence on Tegra194.
+
+Thanks,
+Vidya Sagar
+
+On 9/24/2020 4:35 PM, Jisheng Zhang wrote:
+> External email: Use caution opening links or attachments
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/spear.yaml               | 3 +++
-
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+> 
+> Improve the msi code:
+> 1. Add proper error handling.
+> 2. Move dw_pcie_msi_init() from each users to designware host to solve
+> msi page leakage in resume path.
+> 
+> Since v1:
+>    - add proper error handling patches.
+>    - solve the msi page leakage by moving dw_pcie_msi_init() from each
+>      users to designware host
+> 
+> 
+> Jisheng Zhang (5):
+>    PCI: dwc: Call dma_unmap_page() before freeing the msi page
+>    PCI: dwc: Check alloc_page() return value
+>    PCI: dwc: Rename dw_pcie_free_msi to dw_pcie_msi_deinit
+>    PCI: dwc: Skip PCIE_MSI_INTR0* programming if MSI is disabled
+>    PCI: dwc: Move dw_pcie_msi_init() from each users to designware host
+> 
+>   drivers/pci/controller/dwc/pci-dra7xx.c       |  1 +
+>   drivers/pci/controller/dwc/pci-exynos.c       |  2 -
+>   drivers/pci/controller/dwc/pci-imx6.c         |  3 --
+>   drivers/pci/controller/dwc/pci-meson.c        |  8 ----
+>   drivers/pci/controller/dwc/pcie-artpec6.c     | 10 -----
+>   .../pci/controller/dwc/pcie-designware-host.c | 43 +++++++++++++------
+>   .../pci/controller/dwc/pcie-designware-plat.c |  3 --
+>   drivers/pci/controller/dwc/pcie-designware.h  |  9 +++-
+>   drivers/pci/controller/dwc/pcie-histb.c       |  3 --
+>   drivers/pci/controller/dwc/pcie-kirin.c       |  3 --
+>   drivers/pci/controller/dwc/pcie-qcom.c        |  3 --
+>   drivers/pci/controller/dwc/pcie-spear13xx.c   |  1 -
+>   drivers/pci/controller/dwc/pcie-tegra194.c    |  2 -
+>   drivers/pci/controller/dwc/pcie-uniphier.c    |  9 +---
+>   14 files changed, 38 insertions(+), 62 deletions(-)
+> 
+> --
+> 2.28.0
+> 
