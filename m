@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD54F2851F5
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 20:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 365AC2851FD
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 21:00:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgJFS5o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Oct 2020 14:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgJFS5o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 14:57:44 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C93C061755;
-        Tue,  6 Oct 2020 11:57:44 -0700 (PDT)
+        id S1726893AbgJFTA1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Oct 2020 15:00:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38288 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgJFTA0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 15:00:26 -0400
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1602010660;
+        s=2020; t=1602010824;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=v9RVExHAFhfiLD/J+tya2zETyut3wnRGwzyKv5m9r0Q=;
-        b=jv+gXVUlsJ2a5b7kNJ/46oVI0DInRlarp1cObzbzRZyIxvdzl3pABixQJt2ENsg2pvR86F
-        v6np9S6suu7lgyAKCbqCtDhL5wlMmnRxRGlc4LNgX7ecGEYETsiRjbvQ6Xd86DlQ7zjS9O
-        D5RR9bNOZIhBwTcaETE/gQRDkooU4rkeOFP6Hw69w2iec1YwK2PRr103foBIJ5bskO1sEn
-        KxPbXN+fMOxL6vnxLvg2ernpjxxCii4suZCrG0NuWd2r+W3i1v46JoagDWAy9NI3a0uvd8
-        +hnbxD/djtxxGd25eHQmC9VKAXifpNP584XZaI2SFMt8CcMigI+8XXpDI2qkEg==
+        bh=F8SQ0k7RLei+mK3UMQDWPVDraM3VGYk47tKS5XTJPEU=;
+        b=Uy5kBvdctYZXM07+PHqZq72K/MYxqST8WcuVV2aJ7bI2RRp9+Hoo+hIbRMI2jNnG03EeJ/
+        dLXkIlnNQhHbLhbqBL/hVKRAn2kLwbwwQML3U8GrRvDa4EQjNe6+O9PpcMqb/h5iUwiKkL
+        rpkZR4HWO+gZ16di3YP40M3SwIcAx3lPhg/X7wi65YMTbEQEEJW1HduZKlpYGRX9l5/bZE
+        rLrtKoEgZsR5s1wTHeN4sTaEQZkuMAE+hnv65Eq2clUakVBKie1uKpRw2A/V6VQGtdgkMc
+        MA2v11SXbE123QdWkpBls2Qm+NbSmEocGjFehwf+118WKPKCzfVh3yhUMiCMYQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1602010660;
+        s=2020e; t=1602010824;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=v9RVExHAFhfiLD/J+tya2zETyut3wnRGwzyKv5m9r0Q=;
-        b=S2uj2/iyNS9jNMg+CSSI8CiNzw2BEPY8b1rXgzS+ckoj0G4crizVGNlCGBxDesTJoIs9iE
-        cRzvpLLglUC76FAA==
-To:     Dexuan Cui <decui@microsoft.com>, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
+        bh=F8SQ0k7RLei+mK3UMQDWPVDraM3VGYk47tKS5XTJPEU=;
+        b=wO0Hply58Utt7IDcUrnj83TDombhYB2nXAEbIe/4ZPkYf8T75Mg+FtxAoWDAEpUe6q/2Mb
+        NCdqgR+aISo8BmCw==
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Stefan Haberland <sth@linux.vnet.ibm.com>,
         Jens Axboe <axboe@kernel.dk>,
@@ -46,56 +46,40 @@ Cc:     Long Li <longli@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>
 Subject: Re: irq_build_affinity_masks() allocates improper affinity if num_possible_cpus() > num_present_cpus()?
-In-Reply-To: <KU1P153MB0120D20BC6ED8CF54168EEE6BF0D0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
-References: <KU1P153MB0120D20BC6ED8CF54168EEE6BF0D0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
-Date:   Tue, 06 Oct 2020 20:57:39 +0200
-Message-ID: <87lfgj6v30.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <65ba8a8b86201d8906313fbacc4fb711b9b423af.camel@infradead.org>
+References: <KU1P153MB0120D20BC6ED8CF54168EEE6BF0D0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM> <65ba8a8b86201d8906313fbacc4fb711b9b423af.camel@infradead.org>
+Date:   Tue, 06 Oct 2020 21:00:24 +0200
+Message-ID: <87h7r76uyf.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 06 2020 at 06:47, Dexuan Cui wrote:
-> I'm running a single-CPU Linux VM on Hyper-V. The Linux kernel is v5.9-rc7
-> and I have CONFIG_NR_CPUS=256.
+On Tue, Oct 06 2020 at 09:37, David Woodhouse wrote:
+> On Tue, 2020-10-06 at 06:47 +0000, Dexuan Cui wrote:
+>> PS2, the latest Hyper-V provides only one ACPI MADT entry to a 1-CPU VM,
+>> so the issue described above can not reproduce there.
 >
-> The Hyper-V Host (Version 17763-10.0-1-0.1457) provides a guest firmware,
-> which always reports 128 Local APIC entries in the ACPI MADT table. Here
-> only the first Local APIC entry's "Processor Enabled" is 1 since this
-> Linux VM is configured to have only 1 CPU. This means: in the Linux kernel,
-> the "cpu_present_mask" and " cpu_online_mask " have only 1 CPU (i.e. CPU0),
-> while the "cpu_possible_mask" has 128 CPUs, and the "nr_cpu_ids" is 128.
+> It seems fairly easy to reproduce in qemu with -smp 1,maxcpus=3D128 and a
+> virtio-blk drive, having commented out the 'desc->pre_vectors++' around
+> line 130 of virtio_pci_common.c so that it does actually spread them.
 >
-> I pass through an MSI-X-capable PCI device to the Linux VM (which has
-> only 1 virtual CPU), and the below code does *not* report any error
-> (i.e. pci_alloc_irq_vectors_affinity() returns 2, and request_irq()
-> returns 0), but the code does not work: the second MSI-X interrupt is not
-> happening while the first interrupt does work fine.
+> [    0.836252] i=3D0, affi =3D 0,65-127
+> [    0.836672] i=3D1, affi =3D 1-64
+> [    0.837905] virtio_blk virtio1: [vda] 41943040 512-byte logical blocks=
+ (21.5 GB/20.0 GiB)
+> [    0.839080] vda: detected capacity change from 0 to 21474836480
 >
-> int nr_irqs = 2;
-> int i, nvec, irq;
->
-> nvec = pci_alloc_irq_vectors_affinity(pdev, nr_irqs, nr_irqs,
->                 PCI_IRQ_MSIX | PCI_IRQ_AFFINITY, NULL);
+> In my build I had to add 'nox2apic' because I think I actually already
+> fixed this for the x2apic + no-irq-remapping case with the max_affinity
+> patch series=C2=B9. But mostly by accident.
 
-Why should it return an error?
+There is nothing to fix. It's intentional behaviour. Managed interrupts
+and their spreading (aside of the rather odd spread here) work that way.
 
-> for (i = 0; i < nvec; i++) {
->         irq = pci_irq_vector(pdev, i);
->         err = request_irq(irq, test_intr, 0, "test_intr", &intr_cxt[i]);
-> }
-
-And why do you expect that the second interrupt works?
-
-This is about managed interrupts and the spreading code has two vectors
-to which it can spread the interrupts. One is assigned to one half of
-the possible CPUs and the other one to the other half. Now you have only
-one CPU online so only the interrupt with has the online CPU in the
-assigned affinity mask is started up.
-
-That's how managed interrupts work. If you don't want managed interrupts
-then don't use them.
+And virtio-blk works perfectly fine with that.
 
 Thanks,
 
