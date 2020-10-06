@@ -2,139 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96F09284855
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 10:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD46B284862
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 10:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725931AbgJFIVf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Oct 2020 04:21:35 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:59422 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgJFIVf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Oct 2020 04:21:35 -0400
-X-Greylist: delayed 384 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Oct 2020 04:21:34 EDT
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id CAC98205AE;
-        Tue,  6 Oct 2020 10:15:08 +0200 (CEST)
-Received: from [192.168.108.70] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id B0FDF20590;
-        Tue,  6 Oct 2020 10:15:08 +0200 (CEST)
-Subject: Re: [PATCH v2 5/5] PCI: qcom: Add support for configuring BDF to SID
- mapping for SM8250
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        vkoul@kernel.org, robh@kernel.org, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, mgautam@codeaurora.org
-References: <20200930150925.31921-1-manivannan.sadhasivam@linaro.org>
- <20200930150925.31921-6-manivannan.sadhasivam@linaro.org>
- <507b3d50-6792-60b7-1ccd-f7b3031c20ac@mm-sol.com>
- <20201001055736.GB3203@Mani-XPS-13-9360>
- <e63b3ed4-d822-45dc-de60-23385fb45468@mm-sol.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <1dd23bad-3bea-fb55-e1fb-05ea3497dfd3@free.fr>
-Date:   Tue, 6 Oct 2020 10:15:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726006AbgJFIW6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Oct 2020 04:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgJFIWz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 04:22:55 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25BAFC0613D4
+        for <linux-pci@vger.kernel.org>; Tue,  6 Oct 2020 01:22:54 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id n18so4589359wrs.5
+        for <linux-pci@vger.kernel.org>; Tue, 06 Oct 2020 01:22:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gQZ92N8EMr7LGVwcFgd0mzk1VK6749oG4otqf+GLMOc=;
+        b=zz0oXuy8DvLu/oqK9eyLFeY6GHKr0NNTLe+2Dc/x+LalYxQQw6uANkSbT/JLx0kvFw
+         JsFeeLTos6PMTBn+7hMGtQhoLWEqq+QuVUSBlZUX0ftSWK1YjyFRCOSMOBqz5D6MKAf1
+         trjhFyJHYmtSCLJ5XHzS7cF0NIB/qannWZC+J0hX6vMT6mPQvXUmjZ455nksyYjcFU+P
+         Sjl2xSWKvUjPg0CnAC82f7nU5/tWpx/auKHYNX85Ug+b+OjV7o89Jn5KftNigXVWbulQ
+         oiixrU7pMYnJfnHsL1qk6QIXkuIzWdHeWBqffLu7TxlUGZ9S3im+iPRnZpD+Am2dPSXN
+         L+mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gQZ92N8EMr7LGVwcFgd0mzk1VK6749oG4otqf+GLMOc=;
+        b=lWanu2DrHrzSgLMK0xP8//of3fcRizwM/laaESfritQ/0ybP8sBZVR+mXJYVvYCBJq
+         bd2vPf+s5jEzf7O0NXnTIPYlN5cJnyacPRcbZ86jvHT21rKMZ+bB8X+IUWjSm4vI9aiE
+         qJqlfmV5QXXL9XfdedSBlvYdEe3ndCMJuxRB0CwRgptapwQLyi3kVSVJ96I1gOpq6Oz7
+         M2ym+wOTsmQ3PuK14GQ+ecZQtnO4a6pgl9YXePeTun43apSmcpC61kGGW9Ro4XnbKcZp
+         xhIQWC4praE4qogHDL3Fi0q2L5xE3tR29jdO6nuvsbR7lU3CSEDkIecAmAPB43O++QuG
+         vX0w==
+X-Gm-Message-State: AOAM531hKlqqkBFwrLw/laffZGLNqN6bQgy6q23t4qwyfJPcoyVF/D5B
+        9TUudtNaH2EpmHOgwr4hkZQQig==
+X-Google-Smtp-Source: ABdhPJxneCP/XHEIGTuaYnepMY95XJGJWgT/9+OwKrX8AbsmbSuGbQwcSXMgWa3UoshUsl19yJaa5g==
+X-Received: by 2002:adf:fa52:: with SMTP id y18mr3564855wrr.264.1601972572464;
+        Tue, 06 Oct 2020 01:22:52 -0700 (PDT)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id v17sm3056116wrc.23.2020.10.06.01.22.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Oct 2020 01:22:51 -0700 (PDT)
+Subject: Re: [PATCH 4/4] dt-bindings: Explicitly allow additional properties
+ in common schemas
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Richard Weinberger <richard@nod.at>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+References: <20201005183830.486085-1-robh@kernel.org>
+ <20201005183830.486085-5-robh@kernel.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <9d2a9da4-d28d-dcf0-2b43-66e28b6b8dec@linaro.org>
+Date:   Tue, 6 Oct 2020 09:22:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <e63b3ed4-d822-45dc-de60-23385fb45468@mm-sol.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20201005183830.486085-5-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Oct  6 10:15:08 2020 +0200 (CEST)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 01/10/2020 12:57, Stanimir Varbanov wrote:
 
-> On 10/1/20 8:57 AM, Manivannan Sadhasivam wrote:
->
->> On Thu, Oct 01, 2020 at 12:46:46AM +0300, Stanimir Varbanov wrote:
->>
->>> On 9/30/20 6:09 PM, Manivannan Sadhasivam wrote:
->>>
->>>> For SM8250, we need to write the BDF to SID mapping in PCIe controller
->>>> register space for proper working. This is accomplished by extracting
->>>> the BDF and SID values from "iommu-map" property in DT and writing those
->>>> in the register address calculated from the hash value of BDF. In case
->>>> of collisions, the index of the next entry will also be written.
->>>
->>> This describes what the patch is doing. But why? Is that done in the
->>> other DWC low-level drivers or this is qcom specialty?
->>
->> AFAIK, only some NXP SoCs deal with similar kind of mapping but right now
->> this is a Qcom only stuff.
->>
->>>> For the sake of it, let's introduce a "config_sid" callback and do it
->>>> conditionally for SM8250.
->>>>
->>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>>> ---
->>>>  drivers/pci/controller/dwc/Kconfig     |   1 +
->>>>  drivers/pci/controller/dwc/pcie-qcom.c | 138 +++++++++++++++++++++++++
->>>>  2 files changed, 139 insertions(+)
+
+On 05/10/2020 19:38, Rob Herring wrote:
+> In order to add meta-schema checks for additional/unevaluatedProperties
+> being present, all schema need to make this explicit. As common/shared
+> schema are included by other schemas, they should always allow for
+> additionalProperties.
 > 
-> <snip>
+> Signed-off-by: Rob Herring<robh@kernel.org>
 > 
->>>>  
->>>> +static int qcom_pcie_get_iommu_map(struct qcom_pcie *pcie)
->>>> +{
->>>> +	/* iommu map structure */
->>>> +	struct {
->>>> +		u32 bdf;
->>>> +		u32 phandle;
->>>> +		u32 smmu_sid;
->>>> +		u32 smmu_sid_len;
->>>> +	} *map;
->>>> +	struct device *dev = pcie->pci->dev;
->>>> +	int i, size = 0;
->>>> +	u32 smmu_sid_base;
->>>> +
->>>> +	of_get_property(dev->of_node, "iommu-map", &size);
->>>> +	if (!size)
->>>> +		return 0;
->>>> +
->>>> +	map = kzalloc(size, GFP_KERNEL);
->>>> +	if (!map)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	of_property_read_u32_array(dev->of_node,
->>>> +		"iommu-map", (u32 *)map, size / sizeof(u32));
->>>
->>> iommu-map is a standard DT property why we have to parse it manually?
->>>
->>
->> So right now we don't have a way to pass this information from DT. And there
->> is no IOMMU API to parse the fields also. We need to extract this information
->> to program the hash tables (BDF, SID) as the mapping between BDF and SID is not
->> 1:1 in SM8250.
-> 
-> We used iommu-map for msm8998 see this commit:
-> 
-> b84dfd175c09888751f501e471fdca346f582e06
-> ("arm64: dts: qcom: msm8998: Add PCIe PHY and RC nodes")
-> 
-> I also Cc-ed Marc if he knows something more.
+>   Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml  | 2 ++
+>   Documentation/devicetree/bindings/nvmem/nvmem.yaml           | 2 ++
 
-My memory is hazy.
+for nvmem parts,
 
-I remember an odd quirk in the downstream kernel:
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[v1,1/3] PCI: qcom: Setup PCIE20_PARF_BDF_TRANSLATE_N
-http://patchwork.ozlabs.org/project/linux-pci/patch/958ae127-3aa2-6824-c875-e3012644ed3d@free.fr/
-
-Manivannan, are you trying to deal with PCIE20_PARF_BDF_TRANSLATE_N
-or some equivalent register?
-
-+Robin, he's the one who helped me figure this stuff out (iommu-map).
-It was in reply to patch 2:
-http://patchwork.ozlabs.org/project/linux-pci/patch/82ab78ee-4a38-4eee-f064-272b6f964f17@free.fr/
-
-In the end, I dropped patch 1 because... everything seemed to work
-without it (?!) (Makes one wonder what it actually does. But qcom
-refused to provide any register documentation, which is idiotic
-because this is DW IP, and they are open-source friendly, IIUC.)
-
-Regards.
+thanks,
+srini
