@@ -2,444 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBA49284250
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Oct 2020 23:58:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7E92843B4
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 03:10:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgJEV6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Oct 2020 17:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgJEV6U (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Oct 2020 17:58:20 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E37C42068E;
-        Mon,  5 Oct 2020 21:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601935099;
-        bh=vSfCc3VGzgAkGYGH4VoWVDFDyZnqi7f7RPcG6Siacfk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=x1otGtNCSn1jZhhBtotXZwn666+5wf5LTpsyYNmxaPFx29P0ir562jUirJ2wMKamW
-         o2orrHxD+0fUgb0qwNsi/RDEzfJy1kykEueOXin4dek2/aO+K1b3/TwgQSs19opGdd
-         SHh/aR/EtLKlQH7vz+TOXGzf1+2JVK+YHCJedMJU=
-Date:   Mon, 5 Oct 2020 16:58:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pratyush Anand <pratyush.anand@gmail.com>
-Subject: Re: [PATCH 1/2] PCI: dwc: armada-8k driver needs OF support
-Message-ID: <20201005215817.GA3063223@bjorn-Precision-5520>
+        id S1726058AbgJFBK0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Oct 2020 21:10:26 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:41393 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgJFBKX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Oct 2020 21:10:23 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20201006011017epoutp0296e01a9602596620fa94cb505b1f2ccc~7QfYIgmPy1813818138epoutp02j;
+        Tue,  6 Oct 2020 01:10:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20201006011017epoutp0296e01a9602596620fa94cb505b1f2ccc~7QfYIgmPy1813818138epoutp02j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1601946617;
+        bh=B4PawtUJM2t4wzU2pvIySnG7we9Bhgj1khiFTd9d9CE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Rx8RJtC6Yj3KjGbngnY3QrOD1xUh97k2CcjP1L4bTfTZIPheVmtqSJrA4EZdpPPOg
+         trAwp0No0N/0erQYIZqHeGT1O8Y1jJ5bsPfmRbRjm0h8DI5JF5XlW5/vhGg3S/8m9/
+         spUfOkBMrCNoisTG2YOcZI8q4vf8cCSD1/9SF9L8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20201006011016epcas1p459c312e10a907b7832b22cd23eb9d8a4~7QfXew6HM1279312793epcas1p4Q;
+        Tue,  6 Oct 2020 01:10:16 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4C4zsY6sg8zMqYks; Tue,  6 Oct
+        2020 01:10:09 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        20.E2.09577.1F3CB7F5; Tue,  6 Oct 2020 10:10:09 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20201006011008epcas1p300f9dc6918a008b4b0acf5870f438a2e~7QfP7yysc1939819398epcas1p3e;
+        Tue,  6 Oct 2020 01:10:08 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20201006011008epsmtrp151af87c3414c2b6b37057fcba7d215f2~7QfP5fMXI0584005840epsmtrp1N;
+        Tue,  6 Oct 2020 01:10:08 +0000 (GMT)
+X-AuditID: b6c32a39-bfdff70000002569-24-5f7bc3f11c68
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C1.AB.08604.0F3CB7F5; Tue,  6 Oct 2020 10:10:08 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20201006011007epsmtip14dca797b06e6c0e4525f28d6ead67ad0~7QfO-JeoX3017730177epsmtip1d;
+        Tue,  6 Oct 2020 01:10:07 +0000 (GMT)
+Subject: Re: [PATCH 4/4] dt-bindings: Explicitly allow additional properties
+ in common schemas
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Richard Weinberger <richard@nod.at>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <0e155728-89b3-5f31-f008-dfd57b6c4f6b@samsung.com>
+Date:   Tue, 6 Oct 2020 10:23:28 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201001111729.GA6420@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20201005183830.486085-5-robh@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01UaVBTVxSe+/KWoFKfiOXCVIHYOtUqEhF66KB1lNpXdapVy1hnbIzwBhhD
+        kknAqnQYQMCouFBcSkRgCC5sChGQTVBWaQtBUEQxrmhAFgUEXKA2EJzy7zvnfOd8850z9woF
+        NiahgzBQHsyr5FKZiJ5CFlTOd13UVxkqcU0cXQxpN28zYDBWCCD/vZaBTONRGtIiA+DE43Ya
+        kgZmQ6IhioTkqgYKMk+MUlCZ2oHg1uBLGvbpLtGQ+vJPCiLSmkl4FJlBgMGQw0BjwREK0uKT
+        KTgQl8bAw8FqBEO3NAQcHzlPgP5pCwUZwycE0Bf7gILLySMI9nflI9CMvkZQU/iEgKSqXhLu
+        9g9R0FycSEN+90UEsTn55nl6M6/qw1EEJZHnGKhPqqVh4HAVAqMxA0HBQBQNNZm3aPhHd5iB
+        iL67DKSeixZA68UyBvJLrxFQlFhHwTn9CAGV+8souJR6nIS2iAs0dDbHCiBGOx2Mf1XT8L64
+        hoH4om4EH0oLGWh/fISGC2/N2v+25JLwd0kwxNTUUCvWcNFN50kuKSuU6+7sJLm89LsEV6l5
+        zXBFWiPDpehDuL6mNsSd1iRQnK60k+Ca60M4fcYBmgu/ZiC5+y2lNNfb0MBw6VlZ1AbHrTu9
+        AnipH69y4uW+Cr9Auf8y0dpNklUSdw9X8SKxJ3wtcpJLg/hlIu91GxatDpSZjypy2iWVhZhT
+        G6RqtWjxci+VIiSYdwpQqIOXiXiln0zpqXRRS4PUIXJ/F19F0DdiV9cl7mbi9p0ByRffEUo9
+        uTun+yYVjuoFB5GVELNLcVfXfXQQTRHasIUIv0h5QlqCfoTr4zIoSzCEcElkA/mx5VR1FmMp
+        XEW4sT9lgvUS4aL2B+Osmex2bBpqGxexZbfh2nsvxucK2DRbXN0WO16g2QW4vKOVHsPTWWd8
+        +81TNIat2eX48tk3xBgm2c+x4W3r+NBZrA+uK4ia4MzAdQnt5rxQaMV64Lz0eWNpAWuH77Un
+        ExbsiK/0JArGdDHbPBV3HHuGLBa8cd/pjokNzMQvavMYC3bAnUdjJnAoTq+roi3NGoTzyhsp
+        S8ENl5+NJ8aEBex8fKl4sSXtjIven0EW4U9w72AsNUbBrDXWxNhYKHNx8yMjYcH2WLf/AH0M
+        ibST3GgnWdBOsqD9XywFkRnoU16pDvLn1WKl++Rz69H4i1/gWYhO9bxyqUCEEFUgLBSIbK1d
+        fHZLbKz9pHv28iqFRBUi49UVyN283ziBwyxfhfnLkAdLxO5L3NzcYKnYw10sFtlZP77nJLFh
+        /aXB/E6eV/Kqj32E0MohnHC0Cr9uN/qLx0oUL2mqWLHQ3SDbfHL1g0SvGblX91k3eLY8jFtZ
+        aveqKbs/bsuhz5yPcyafMvsuU3h7j1PY2sK2nxqmrTuUlOzhoBs2Zuderc5N7bmxRRs2tzg1
+        TNMTuGezH/fFwqJ5I4p5Pnsdt//2+/36gNqN+iub1iR8f2rY7dcdmWr7Q93DP288Mnvrm/gz
+        LlFLTaFZTL1uTuY227gn30WXZWWv831rMgavcpL/WCZ7fmdtxNMv7da3vtt1Q/dtzvU5lVKP
+        P2a8HqgxmbxadPLn630Hs4fnS21brSN/uFBSVb4jgV7p/FXjM+81u+0ls+x8o1dPvbk3qCTs
+        pKDj8p3erdPsMsNHRaQ6QCpeIFCppf8BncC7Z3oFAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxiA851rgRCOBcIB41SGmBHBsTD2uhlisjkO0yWbm2RbdNiMBlBA
+        RmFDWTJA5CaXOQWh0pZLASlYoFCkgIC0sMCklYsExDoRzEDuooCCshayhH9P3u95vvfPy8P5
+        BsqJFxIeJYwMF4Q6U5ZEvdb5Hfd5bWzA+2MaR5D33qfBYGzHQb0qpqHCmEWBPCEYskfHKZAu
+        7oB8QyIBMp2ehIrsNyRoiyYQDLyco+BCcRUFRXO5JMTL+wl4nKDAwGCopuFefSYJ8isyElIv
+        y2n452UHgqWBFAyurpVhoBobJEGxnI3DQvojEmplawiSp9QIUt68QNDZ8AQDqW6WgOHnSyT0
+        N+ZToJ5WIkivVpv+U5k83XoWgqaEUhp6pH9RsJihQ2A0KhDULyZS0FkxQMHd4gwa4heGaSgq
+        vYjDkLKFBnVzGwaa/C4SSlVrGGiTW0ioKrpKwEj8DQom+9NxSBLbgLG7g4LVxk4armimEaw3
+        N9AwPppJwY1Xpt1vB2sI+LspCpI6O8lDX3AX+8oITloZy01PThJcXfkwxmlTXtCcRmykuQJV
+        NLfQN4K46yl5JFfcPIlx/T3RnEqRSnFxbQaCezjYTHGzej3NlVdWkl/t/MHyYKAwNOQXYeR+
+        n1OWwTLlayxCRcRUT/eScagHT0MWPJbxYq91VNJm5jNNiJXmO2/OHdmc3g6TwzOxLavVitKQ
+        pUmZQezsQvJGa8ucYv9dGtlw7JiTbMZzS7ODM0o7dqxRT24GasSup0k2FlCMG9s6MUSZ2YbZ
+        zd5fGUNmtmZ82NqSFczMBOPCGl4NEWa2Z/xZjXwM23S2sV1544R5mQXjzdaVu5rHOLOXXZP2
+        4ZvswD4Yl2GbvJO9NZOP/4FsxVtq8ZZEvCURb0kKEKFAjsIIUVhQmMgzwjNc+KuHSBAmig4P
+        8vjpbJgKbdy823sN6JZi3qMdYTzUjlge7mxn7eEfE8C3DhScOy+MPBsQGR0qFLWj7TzC2cF6
+        6OfCH/lMkCBKeEYojBBG/v+K8Syc4jCL2x+7enjndd+V7Tp/WP9g38D3kuNtCwUdvMRrOcQ9
+        7yn+apJ0wD1G6dLm0i3ZI7F4NhZ3wr/s8Sxhm9r95aef+HgNn9Me8AtE/GFdpo9VwtShE3d6
+        JaV43TbdrmLXiQ+qVlMnjX57vEvOnFzLfrKvde/DY+OF64Xhjwb+DP399NGYcu60+Gn3bnuh
+        Plrqq3E1hF5qIattpkZHu5JKahwor5zrTPqz166tB46VyY+UH92vr/1opWbHN1a+ys7j2tIs
+        q7J5z88Lb4a4bf+u6UO/b8uXvUSWt2fm7hysh9y3n03nGn0dpxoEgQFPL1WnXoiVHL7p9C64
+        X7a30fymDsxaFjW2fO1MiIIFnm54pEjwH6+El7RiBAAA
+X-CMS-MailID: 20201006011008epcas1p300f9dc6918a008b4b0acf5870f438a2e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20201005183933epcas1p36d2c9cc1f3ad9180421269ca74330d65
+References: <20201005183830.486085-1-robh@kernel.org>
+        <CGME20201005183933epcas1p36d2c9cc1f3ad9180421269ca74330d65@epcas1p3.samsung.com>
+        <20201005183830.486085-5-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 01, 2020 at 12:17:30PM +0100, Lorenzo Pieralisi wrote:
-> On Thu, Oct 01, 2020 at 09:42:43AM +0200, Thomas Petazzoni wrote:
-> > Fixes the following build warning when CONFIG_OF is disabled:
-> > 
-> > drivers/pci/controller/dwc/pcie-armada8k.c:344:34: warning: ‘armada8k_pcie_of_match’ defined but not used [-Wunused-const-variable=]
-> >   344 | static const struct of_device_id armada8k_pcie_of_match[] = {
-> >       |                                  ^~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+On 10/6/20 3:38 AM, Rob Herring wrote:
+> In order to add meta-schema checks for additional/unevaluatedProperties
+> being present, all schema need to make this explicit. As common/shared
+> schema are included by other schemas, they should always allow for
+> additionalProperties.
 > 
-> Merged both patches into pci/dwc, thanks.
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+(snip)
 
-Can we do something like the following instead?  Untested other than
-building for x86 64-bit.  It's a little bit of a mix of of_match_ptr()
-changes, a gpio/consumer.h change, and a bunch of Kconfig changes.  I
-didn't bother to sort or split them apart.
+>  Documentation/devicetree/bindings/extcon/wlf,arizona.yaml    | 2 ++
+(snip)
 
-Also handy for historians to include the
+For the extcon part,
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-  $ make W=1 drivers/pci/controller/dwc/pcie-armada8k.o
-
-that generated the warning.
-
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index f18c3725ef80..c74581b0e4ec 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -8,13 +8,11 @@ config PCI_MVEBU
- 	depends on ARCH_MVEBU || ARCH_DOVE || COMPILE_TEST
- 	depends on MVEBU_MBUS
- 	depends on ARM
--	depends on OF
- 	select PCI_BRIDGE_EMUL
- 
- config PCI_AARDVARK
- 	bool "Aardvark PCIe controller"
- 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
--	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCI_BRIDGE_EMUL
- 	help
-@@ -34,7 +32,6 @@ config PCIE_XILINX_NWL
- 
- config PCI_FTPCI100
- 	bool "Faraday Technology FTPCI100 PCI controller"
--	depends on OF
- 	default ARCH_GEMINI
- 
- config PCI_TEGRA
-@@ -85,7 +82,6 @@ config PCI_HOST_COMMON
- 
- config PCI_HOST_GENERIC
- 	tristate "Generic PCI host controller"
--	depends on OF
- 	select PCI_HOST_COMMON
- 	select IRQ_DOMAIN
- 	help
-@@ -94,7 +90,6 @@ config PCI_HOST_GENERIC
- 
- config PCIE_XILINX
- 	bool "Xilinx AXI PCIe host bridge support"
--	depends on OF || COMPILE_TEST
- 	help
- 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
- 	  Host Bridge driver.
-@@ -110,7 +105,7 @@ config PCIE_XILINX_CPM
- config PCI_XGENE
- 	bool "X-Gene PCIe controller"
- 	depends on ARM64 || COMPILE_TEST
--	depends on OF || (ACPI && PCI_QUIRKS)
-+	depends on ACPI && PCI_QUIRKS
- 	help
- 	  Say Y here if you want internal PCI support on APM X-Gene SoC.
- 	  There are 5 internal PCIe ports available. Each port is GEN3 capable
-@@ -127,7 +122,6 @@ config PCI_XGENE_MSI
- 
- config PCI_V3_SEMI
- 	bool "V3 Semiconductor PCI controller"
--	depends on OF
- 	depends on ARM || COMPILE_TEST
- 	default ARCH_INTEGRATOR_AP
- 
-@@ -145,7 +139,6 @@ config PCIE_IPROC
- config PCIE_IPROC_PLATFORM
- 	tristate "Broadcom iProc PCIe platform bus driver"
- 	depends on ARCH_BCM_IPROC || (ARM && COMPILE_TEST)
--	depends on OF
- 	select PCIE_IPROC
- 	default ARCH_BCM_IPROC
- 	help
-@@ -189,7 +182,7 @@ config PCIE_ALTERA_MSI
- config PCI_HOST_THUNDER_PEM
- 	bool "Cavium Thunder PCIe controller to off-chip devices"
- 	depends on ARM64 || COMPILE_TEST
--	depends on OF || (ACPI && PCI_QUIRKS)
-+	depends on ACPI && PCI_QUIRKS
- 	select PCI_HOST_COMMON
- 	help
- 	  Say Y here if you want PCIe support for CN88XX Cavium Thunder SoCs.
-@@ -197,7 +190,7 @@ config PCI_HOST_THUNDER_PEM
- config PCI_HOST_THUNDER_ECAM
- 	bool "Cavium Thunder ECAM controller to on-chip devices on pass-1.x silicon"
- 	depends on ARM64 || COMPILE_TEST
--	depends on OF || (ACPI && PCI_QUIRKS)
-+	depends on ACPI && PCI_QUIRKS
- 	select PCI_HOST_COMMON
- 	help
- 	  Say Y here if you want ECAM support for CN88XX-Pass-1.x Cavium Thunder SoCs.
-@@ -209,7 +202,6 @@ config PCIE_ROCKCHIP
- config PCIE_ROCKCHIP_HOST
- 	tristate "Rockchip PCIe host controller"
- 	depends on ARCH_ROCKCHIP || COMPILE_TEST
--	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_ROCKCHIP
-@@ -221,7 +213,6 @@ config PCIE_ROCKCHIP_HOST
- config PCIE_ROCKCHIP_EP
- 	bool "Rockchip PCIe endpoint controller"
- 	depends on ARCH_ROCKCHIP || COMPILE_TEST
--	depends on OF
- 	depends on PCI_ENDPOINT
- 	select MFD_SYSCON
- 	select PCIE_ROCKCHIP
-@@ -233,7 +224,6 @@ config PCIE_ROCKCHIP_EP
- config PCIE_MEDIATEK
- 	tristate "MediaTek PCIe controller"
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
--	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	help
- 	  Say Y here if you want to enable PCIe controller support on
-@@ -241,7 +231,7 @@ config PCIE_MEDIATEK
- 
- config PCIE_TANGO_SMP8759
- 	bool "Tango SMP8759 PCIe controller (DANGEROUS)"
--	depends on ARCH_TANGO && PCI_MSI && OF
-+	depends on ARCH_TANGO && PCI_MSI
- 	depends on BROKEN
- 	select PCI_HOST_COMMON
- 	help
-@@ -271,7 +261,6 @@ config VMD
- config PCIE_BRCMSTB
- 	tristate "Broadcom Brcmstb PCIe host controller"
- 	depends on ARCH_BCM2835 || COMPILE_TEST
--	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	help
- 	  Say Y here to enable PCIe host controller support for
-@@ -287,7 +276,6 @@ config PCI_HYPERV_INTERFACE
- config PCI_LOONGSON
- 	bool "LOONGSON PCI Controller"
- 	depends on MACH_LOONGSON64 || COMPILE_TEST
--	depends on OF
- 	depends on PCI_QUIRKS
- 	default MACH_LOONGSON64
- 	help
-diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-index 5d30564190e1..cb3b19f801a2 100644
---- a/drivers/pci/controller/cadence/Kconfig
-+++ b/drivers/pci/controller/cadence/Kconfig
-@@ -8,13 +8,11 @@ config PCIE_CADENCE
- 
- config PCIE_CADENCE_HOST
- 	bool
--	depends on OF
- 	select IRQ_DOMAIN
- 	select PCIE_CADENCE
- 
- config PCIE_CADENCE_EP
- 	bool
--	depends on OF
- 	depends on PCI_ENDPOINT
- 	select PCIE_CADENCE
- 
-@@ -23,7 +21,6 @@ config PCIE_CADENCE_PLAT
- 
- config PCIE_CADENCE_PLAT_HOST
- 	bool "Cadence PCIe platform host controller"
--	depends on OF
- 	select PCIE_CADENCE_HOST
- 	select PCIE_CADENCE_PLAT
- 	help
-@@ -33,7 +30,6 @@ config PCIE_CADENCE_PLAT_HOST
- 
- config PCIE_CADENCE_PLAT_EP
- 	bool "Cadence PCIe platform endpoint controller"
--	depends on OF
- 	depends on PCI_ENDPOINT
- 	select PCIE_CADENCE_EP
- 	select PCIE_CADENCE_PLAT
-@@ -47,7 +43,6 @@ config PCI_J721E
- 
- config PCI_J721E_HOST
- 	bool "TI J721E PCIe platform host controller"
--	depends on OF
- 	select PCIE_CADENCE_HOST
- 	select PCI_J721E
- 	help
-@@ -57,7 +52,6 @@ config PCI_J721E_HOST
- 
- config PCI_J721E_EP
- 	bool "TI J721E PCIe platform endpoint controller"
--	depends on OF
- 	depends on PCI_ENDPOINT
- 	select PCIE_CADENCE_EP
- 	select PCI_J721E
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 044a3761c44f..ab55cd76680e 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -23,7 +23,7 @@ config PCI_DRA7XX_HOST
- 	bool "TI DRA7xx PCIe controller Host Mode"
- 	depends on SOC_DRA7XX || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
--	depends on OF && HAS_IOMEM && TI_PIPE3
-+	depends on HAS_IOMEM && TI_PIPE3
- 	select PCIE_DW_HOST
- 	select PCI_DRA7XX
- 	default y if SOC_DRA7XX
-@@ -39,7 +39,7 @@ config PCI_DRA7XX_EP
- 	bool "TI DRA7xx PCIe controller Endpoint Mode"
- 	depends on SOC_DRA7XX || COMPILE_TEST
- 	depends on PCI_ENDPOINT
--	depends on OF && HAS_IOMEM && TI_PIPE3
-+	depends on HAS_IOMEM && TI_PIPE3
- 	select PCIE_DW_EP
- 	select PCI_DRA7XX
- 	help
-@@ -131,7 +131,7 @@ config PCI_KEYSTONE_EP
- 
- config PCI_LAYERSCAPE
- 	bool "Freescale Layerscape PCIe controller - Host mode"
--	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on ARM || ARCH_LAYERSCAPE || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
-@@ -144,7 +144,7 @@ config PCI_LAYERSCAPE
- 
- config PCI_LAYERSCAPE_EP
- 	bool "Freescale Layerscape PCIe controller - Endpoint mode"
--	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on ARM || ARCH_LAYERSCAPE || COMPILE_TEST
- 	depends on PCI_ENDPOINT
- 	select PCIE_DW_EP
- 	help
-@@ -155,7 +155,7 @@ config PCI_LAYERSCAPE_EP
- 	  controller works in RC mode.
- 
- config PCI_HISI
--	depends on OF && (ARM64 || COMPILE_TEST)
-+	depends on ARM64 || COMPILE_TEST
- 	bool "HiSilicon Hip05 and Hip06 SoCs PCIe controllers"
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
-@@ -166,7 +166,7 @@ config PCI_HISI
- 
- config PCIE_QCOM
- 	bool "Qualcomm PCIe controller"
--	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-+	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
-@@ -210,7 +210,7 @@ config PCIE_ARTPEC6_EP
- 
- config PCIE_INTEL_GW
- 	bool "Intel Gateway PCIe host controller support"
--	depends on OF && (X86 || COMPILE_TEST)
-+	depends on X86 || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
-@@ -220,7 +220,7 @@ config PCIE_INTEL_GW
- 	  hardware wrappers.
- 
- config PCIE_KIRIN
--	depends on OF && (ARM64 || COMPILE_TEST)
-+	depends on ARM64 || COMPILE_TEST
- 	bool "HiSilicon Kirin series SoCs PCIe controllers"
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
-@@ -282,7 +282,7 @@ config PCIE_TEGRA194_EP
- config PCIE_UNIPHIER
- 	bool "Socionext UniPhier PCIe host controllers"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
--	depends on OF && HAS_IOMEM
-+	depends on HAS_IOMEM
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
-@@ -292,7 +292,7 @@ config PCIE_UNIPHIER
- config PCIE_UNIPHIER_EP
- 	bool "Socionext UniPhier PCIe endpoint controllers"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
--	depends on OF && HAS_IOMEM
-+	depends on HAS_IOMEM
- 	depends on PCI_ENDPOINT
- 	select PCIE_DW_EP
- 	help
-@@ -301,7 +301,7 @@ config PCIE_UNIPHIER_EP
- 
- config PCIE_AL
- 	bool "Amazon Annapurna Labs PCIe controller"
--	depends on OF && (ARM64 || COMPILE_TEST)
-+	depends on ARM64 || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
-diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-index 13901f359a41..f02dcbab0041 100644
---- a/drivers/pci/controller/dwc/pcie-armada8k.c
-+++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-@@ -350,7 +350,7 @@ static struct platform_driver armada8k_pcie_driver = {
- 	.probe		= armada8k_pcie_probe,
- 	.driver = {
- 		.name	= "armada8k-pcie",
--		.of_match_table = of_match_ptr(armada8k_pcie_of_match),
-+		.of_match_table = armada8k_pcie_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- };
-diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-index 62846562da0b..b2ef8ffde79e 100644
---- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-+++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-@@ -303,7 +303,7 @@ static struct platform_driver spear13xx_pcie_driver = {
- 	.probe		= spear13xx_pcie_probe,
- 	.driver = {
- 		.name	= "spear-pcie",
--		.of_match_table = of_match_ptr(spear13xx_pcie_of_match),
-+		.of_match_table = spear13xx_pcie_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- };
-diff --git a/drivers/pci/controller/mobiveil/Kconfig b/drivers/pci/controller/mobiveil/Kconfig
-index a62d247018cf..c6529955bc56 100644
---- a/drivers/pci/controller/mobiveil/Kconfig
-+++ b/drivers/pci/controller/mobiveil/Kconfig
-@@ -14,7 +14,6 @@ config PCIE_MOBIVEIL_HOST
- config PCIE_MOBIVEIL_PLAT
- 	bool "Mobiveil AXI PCIe controller"
- 	depends on ARCH_ZYNQMP || COMPILE_TEST
--	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_MOBIVEIL_HOST
- 	help
-@@ -25,7 +24,7 @@ config PCIE_MOBIVEIL_PLAT
- config PCIE_LAYERSCAPE_GEN4
- 	bool "Freescale Layerscape PCIe Gen4 controller"
- 	depends on PCI
--	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-+	depends on ARM64 || ARCH_LAYERSCAPE
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_MOBIVEIL_HOST
- 	help
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 1559f79e63b6..1c5f2fd47c51 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -9,7 +9,7 @@
-  */
- 
- #include <linux/delay.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
-index da3cd216da00..9a50698abffd 100644
---- a/drivers/pci/controller/pci-ftpci100.c
-+++ b/drivers/pci/controller/pci-ftpci100.c
-@@ -566,7 +566,7 @@ static const struct of_device_id faraday_pci_of_match[] = {
- static struct platform_driver faraday_pci_driver = {
- 	.driver = {
- 		.name = "ftpci100",
--		.of_match_table = of_match_ptr(faraday_pci_of_match),
-+		.of_match_table = faraday_pci_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- 	.probe  = faraday_pci_probe,
-diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-index 1f54334f09f7..c91dec10440f 100644
---- a/drivers/pci/controller/pci-v3-semi.c
-+++ b/drivers/pci/controller/pci-v3-semi.c
-@@ -903,7 +903,7 @@ static const struct of_device_id v3_pci_of_match[] = {
- static struct platform_driver v3_pci_driver = {
- 	.driver = {
- 		.name = "pci-v3-semi",
--		.of_match_table = of_match_ptr(v3_pci_of_match),
-+		.of_match_table = v3_pci_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- 	.probe  = v3_pci_probe,
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
