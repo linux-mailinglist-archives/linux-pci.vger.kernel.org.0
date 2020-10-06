@@ -2,109 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61ABD2846AB
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 09:01:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD432284780
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Oct 2020 09:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgJFHAZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Oct 2020 03:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbgJFHAZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 03:00:25 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44330C0613D9
-        for <linux-pci@vger.kernel.org>; Tue,  6 Oct 2020 00:00:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id n15so6384408wrq.2
-        for <linux-pci@vger.kernel.org>; Tue, 06 Oct 2020 00:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Oe7zU6gzISKBUmakEze1jPjt4AoCrxJWUb32hirWtf4=;
-        b=duVae73qGXrIWn0dA9Y2ba0eTvLVJldQbfNGMJhbCGq9paoehFS47xcK9OLpCkH4WF
-         NqBrFaENJwbrU/th8XmIkh1VS1vd2oH1s1pXzDf2b99Cb/bAZ5mIsHV6ptmyF1OBtQBy
-         GT9rg4w2n4Isj8jXnTNnLi+Aw/L7SFWFx72v0bNTNomBvhPxjgr+pR8su7g3MDB9LEtn
-         /vLB/qwXlI19SAUsjJySvCczuoNdnCBTeLhRqUeV/ScZadUIhYWFwLaiDoYkjoSe+gXj
-         C3HqfoAXjTKslZ5dKtYyztKJYZ9eX7NM47nSfo4FbYcgGC7bh2R2dMJAzlKCSNaNoWRF
-         iUUA==
+        id S1727251AbgJFHh7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Oct 2020 03:37:59 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36572 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgJFHh6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 03:37:58 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 60so11408196otw.3;
+        Tue, 06 Oct 2020 00:37:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Oe7zU6gzISKBUmakEze1jPjt4AoCrxJWUb32hirWtf4=;
-        b=qg1rRmCeBc/yu631ft91GsFtYmCPbxovn3W3jw59SqgEAAkvUVw2/edE4JP8jpuOC1
-         XhJa21gmV8sqzVnHotbriuGGITVk54BAQnw1cUq5Hm5i9+ypQuz81fbN/TndXQ6t07lY
-         ytEexseHyKNj2/7v2RETX642JxvzlO6ATp82cdcFQWh9H2BNxiglXgsdBmbqeN4jPpQ2
-         8ae1uleDM0iz+KpLEzHn+rl20rfkO+NQ3R2q7cchyURV3KW3el3EfgmDRZz6Xd0b+YU/
-         vGIsPUlWRtM9TQW4V5bvsVoSJI3QqRlNOMGCw7mDch67izL6ox5njv3sAMkeph58byjl
-         6tGA==
-X-Gm-Message-State: AOAM533o1HHS2RhI5wnNVKSN8HTGBEaAGNeAYcYXK/FHMdJWChgYJEp2
-        C7UDsc6Ngrp0/plGGIG5fhizWg==
-X-Google-Smtp-Source: ABdhPJzRpE6n88xNVq3Fk+xQSff8QQNC8n1c0b7ajSoy19OwpevLFHK5HQwgX5M07UqJkIIa/Io0cQ==
-X-Received: by 2002:adf:bb43:: with SMTP id x3mr3174885wrg.250.1601967621811;
-        Tue, 06 Oct 2020 00:00:21 -0700 (PDT)
-Received: from dell ([91.110.221.236])
-        by smtp.gmail.com with ESMTPSA id o186sm2537036wmb.12.2020.10.06.00.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2020 00:00:21 -0700 (PDT)
-Date:   Tue, 6 Oct 2020 08:00:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Another round of adding missing
- 'additionalProperties'
-Message-ID: <20201006070013.GA6148@dell>
-References: <20201002234143.3570746-1-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8+YGZEZXCDlVSYcoSNcJ9v6pHT8JdkLtCN5s+E2ToaQ=;
+        b=L3b/PWChkoqoS3sM68KkIks1b0cT9jMiy6dEJ9WER5VSr4OUBijAy2r0ZZDu964yjz
+         VfYs+kttlFUUP4B0e2mPea0gSV3iwIyp/iscNyRT6mHVtn8iPaLkWHSACJPMMBwj+eSl
+         utbFbKULMEnBeRrgiJxKhsqHpC0l88y4yzNFHScB/x1qHcvrT7e4I0yjt3x/Sann2q4h
+         y6EQVsfVkoKicpJiyuAJVQuixqzSrEfdShe63f3CfTQY76y4JWp4uaRykmsJ7mzqt11b
+         pwyHr5l4guJHbdpXDUG3lkH7L8LwjJrWNf7+Z0I8N80RMqyHFPxvrMulIJw3KWT1NFHX
+         8Wcw==
+X-Gm-Message-State: AOAM530TkVNGXR8CUhM7L2hbvAP7zPSf1zQWRsPH5X4MYux3okdjemRq
+        M09bV9zRdfkzREB3AYB0zIRmbB0IPlE+jS+LjT4=
+X-Google-Smtp-Source: ABdhPJz2bCZlgB6we6A9AWlaXsOI2O+CwxUcnmKhPrIVPza5tGmo+mK6C98Ugzjy2W9HQnh3L0gpSmpM+xs5ujOFQMY=
+X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr2082078otc.145.1601969875043;
+ Tue, 06 Oct 2020 00:37:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
+References: <20201005183830.486085-1-robh@kernel.org> <20201005183830.486085-2-robh@kernel.org>
+In-Reply-To: <20201005183830.486085-2-robh@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 6 Oct 2020 09:37:43 +0200
+Message-ID: <CAMuHMdXjBSzbs4yAPJ-XUTBRZWKN61hO8vQ1-nGN5nAo7JnV-w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: Add missing 'unevaluatedProperties'
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-iio@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Sebastian Reichel <sre@kernel.org>, linux-ide@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-leds@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-rtc@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-input@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-can@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Richard Weinberger <richard@nod.at>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 02 Oct 2020, Rob Herring wrote:
+Hi Rob,
 
-> Another round of wack-a-mole. The json-schema default is additional
-> unknown properties are allowed, but for DT all properties should be
-> defined.
+On Mon, Oct 5, 2020 at 8:39 PM Rob Herring <robh@kernel.org> wrote:
+> This doesn't yet do anything in the tools, but make it explicit so we can
+> check either 'unevaluatedProperties' or 'additionalProperties' is present
+> in schemas.
+>
+> 'unevaluatedProperties' is appropriate when including another schema (via
+> '$ref') and all possible properties and/or child nodes are not
+> explicitly listed in the schema with the '$ref'.
+>
+> This is in preparation to add a meta-schema to check for missing
+> 'unevaluatedProperties' or 'additionalProperties'. This has been a
+> constant source of review issues.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Thanks for your patch!
+
+>  Documentation/devicetree/bindings/bus/renesas,bsc.yaml       | 2 ++
+>  .../bindings/memory-controllers/renesas,rpc-if.yaml          | 2 ++
+>  Documentation/devicetree/bindings/net/renesas,ether.yaml     | 2 ++
+>  Documentation/devicetree/bindings/serial/renesas,hscif.yaml  | 2 ++
+>  Documentation/devicetree/bindings/serial/renesas,sci.yaml    | 2 ++
+>  Documentation/devicetree/bindings/serial/renesas,scif.yaml   | 2 ++
+>  Documentation/devicetree/bindings/serial/renesas,scifa.yaml  | 2 ++
+>  Documentation/devicetree/bindings/serial/renesas,scifb.yaml  | 2 ++
+>  Documentation/devicetree/bindings/spi/renesas,hspi.yaml      | 2 ++
+>  Documentation/devicetree/bindings/spi/renesas,rspi.yaml      | 2 ++
+>  Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml  | 2 ++
+
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/Documentation/devicetree/bindings/net/renesas,ether.yaml
+> +++ b/Documentation/devicetree/bindings/net/renesas,ether.yaml
+> @@ -85,6 +85,8 @@ required:
+>    - clocks
+>    - pinctrl-0
+>
+> +unevaluatedProperties: false
+
+This one has received an "additionalProperties: false" in commit
+41506bff84f1563e ("dt-bindings: net: renesas, ether: Improve schema validation")
+in net-next, which you probably want to remove.
+
+> +
+>  examples:
+>    # Lager board
+>    - |
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
