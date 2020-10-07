@@ -2,148 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52B1F28657C
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 19:10:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EF712865D9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 19:25:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgJGRK1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 13:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
+        id S1727954AbgJGRY6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 13:24:58 -0400
+Received: from mga06.intel.com ([134.134.136.31]:19743 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgJGRK1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Oct 2020 13:10:27 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CADE321707;
-        Wed,  7 Oct 2020 17:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602090626;
-        bh=dws2CpzEWU0JT8f0BWVwWDLwOmd1rKbKq0cKE+yRI+A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PxaVnUlf9ix7pnsdYskq35CddMgFV5OeK/e12Xlifv00IgAI81Hxzg65V/nJ7tLpa
-         k9Muw+CcNoe/uiGpRR99VVFpSpXpRNVYQBLNRQN4Cy8386l81mD7MAsKx2PrXRCYtd
-         n68DUWpTZ/fnEm5oHdgY12bgKFlapV047nnW892I=
-Date:   Wed, 7 Oct 2020 12:10:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <len.brown@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Disable PTM during suspend on Intel PCI bridges
-Message-ID: <20201007171024.GA3252529@bjorn-Precision-5520>
+        id S1726348AbgJGRY6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Oct 2020 13:24:58 -0400
+IronPort-SDR: 8gqoJfdp9w6OF3hUhtDeu/a6+wQ0u1kCavENw68I3CzOuNYgHn7WhrnoJ9nqMubu72KulUecj4
+ EVNz2Ym8vteA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9767"; a="226640674"
+X-IronPort-AV: E=Sophos;i="5.77,347,1596524400"; 
+   d="scan'208";a="226640674"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 10:24:42 -0700
+IronPort-SDR: b9zOkwa7LvyHbSC5Eh+2GttwP0Db6g8aVUBH+EwWdVmDE6fIsB6HBW0/T0EjblCu8IJq8GQTy+
+ pY/rV66xjD0Q==
+X-IronPort-AV: E=Sophos;i="5.77,347,1596524400"; 
+   d="scan'208";a="311833132"
+Received: from jdelcan-mobl.amr.corp.intel.com (HELO [10.254.64.135]) ([10.254.64.135])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 10:24:42 -0700
+Subject: Re: [PATCH v8 1/6] PCI/ERR: get device before call device driver to
+ avoid NULL pointer dereference
+To:     Ethan Zhao <haifeng.zhao@intel.com>, bhelgaas@google.com,
+        oohall@gmail.com, ruscur@russell.cc, lukas@wunner.de,
+        andriy.shevchenko@linux.intel.com, stuart.w.hayes@gmail.com,
+        mr.nuke.me@gmail.com, mika.westerberg@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@linux.intel.com, xerces.zhao@gmail.com
+References: <20201007113158.48933-1-haifeng.zhao@intel.com>
+ <20201007113158.48933-2-haifeng.zhao@intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
+Message-ID: <0430ee93-2561-84fc-3eba-3c66374b6cd8@intel.com>
+Date:   Wed, 7 Oct 2020 10:24:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gRph3UMffWqUVqTnDE149Ai-SbzmhjzZU1x=QOzAZeZA@mail.gmail.com>
+In-Reply-To: <20201007113158.48933-2-haifeng.zhao@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 06:53:16PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Oct 7, 2020 at 6:49 PM David E. Box <david.e.box@linux.intel.com> wrote:
-> >
-> > On Intel Platform Controller Hubs (PCH) since Cannon Lake, the Precision
-> > Time Measurement (PTM) capability can prevent PCIe root ports from power
-> > gating during suspend-to-idle, causing increased power consumption on
-> > systems that suspend using Low Power S0 Idle [1]. The issue is yet to be
-> > root caused but believed to be coming from a race condition in the suspend
-> > flow as the incidence rate varies for different platforms on Linux but the
-> > issue does not occur at all in other operating systems. For now, disable
-> > the feature on suspend on all Intel root ports and enable again on resume.
-> 
-> IMV it should also be noted that there is no particular reason why PTM
-> would need to be enabled while the whole system is suspended.  At
-> least it doesn't seem to be particularly useful in that state.
 
-Is this a hardware erratum?  If not, and this is working as designed,
-it sounds like we'd need to apply this quirk to every device that
-supports PTM.  That's not really practical.
+On 10/7/20 4:31 AM, Ethan Zhao wrote:
+> During DPC error injection test we found there is race condition between
+> pciehp and DPC driver, NULL pointer dereference caused panic as following
+>
+>   # setpci -s 64:02.0 0x196.w=000a
+>    // 64:02.0 is rootport has DPC capability
+>   # setpci -s 65:00.0 0x04.w=0544
+>    // 65:00.0 is NVMe SSD populated in above port
+>   # mount /dev/nvme0n1p1 nvme
+>
+>   (tested on stable 5.8 & ICS(Ice Lake SP platform, see
+>   https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server))
+>
+>   BUG: kernel NULL pointer dereference, address: 0000000000000050
+>   ...
+>   CPU: 12 PID: 513 Comm: irq/124-pcie-dp Not tainted 5.8.0-0.0.7.el8.x86_64+ #1
+>   RIP: 0010:report_error_detected.cold.4+0x7d/0xe6
+>   Code: b6 d0 e8 e8 fe 11 00 e8 16 c5 fb ff be 06 00 00 00 48 89 df e8 d3 65 ff
+>   ff b8 06 00 00 00 e9 75 fc ff ff 48 8b 43 68 45 31 c9 <48> 8b 50 50 48 83 3a 00
+>   41 0f 94 c1 45 31 c0 48 85 d2 41 0f 94 c0
+>   RSP: 0018:ff8e06cf8762fda8 EFLAGS: 00010246
+>   RAX: 0000000000000000 RBX: ff4e3eaacf42a000 RCX: ff4e3eb31f223c01
+>   RDX: ff4e3eaacf42a140 RSI: ff4e3eb31f223c00 RDI: ff4e3eaacf42a138
+>   RBP: ff8e06cf8762fdd0 R08: 00000000000000bf R09: 0000000000000000
+>   R10: 000000eb8ebeab53 R11: ffffffff93453258 R12: 0000000000000002
+>   R13: ff4e3eaacf42a130 R14: ff8e06cf8762fe2c R15: ff4e3eab44733828
+>   FS:  0000000000000000(0000) GS:ff4e3eab1fd00000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000000000000050 CR3: 0000000f8f80a004 CR4: 0000000000761ee0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   PKRU: 55555554
+>   Call Trace:
+>   ? report_normal_detected+0x20/0x20
+>   report_frozen_detected+0x16/0x20
+>   pci_walk_bus+0x75/0x90
+>   ? dpc_irq+0x90/0x90
+>   pcie_do_recovery+0x157/0x201
+>   ? irq_finalize_oneshot.part.47+0xe0/0xe0
+>   dpc_handler+0x29/0x40
+>   irq_thread_fn+0x24/0x60
+>   ...
+>
+> Debug shows when port DPC feature was enabled and triggered by errors,
+> DLLSC/PDC/DPC interrupts will be sent to pciehp and DPC driver almost
+> at the same time, and no delay between them is required by specification.
+> so DPC driver and pciehp drivers may handle these interrupts cocurrently.
+>
+> While DPC driver is doing pci_walk_bus() and calling device driver's
+> callback without pci_dev_get() to increase device reference count, the
+> device and its driver instance are likely being freed by
+> pci_stop_and_removed_bus_device()
+> -> pci_dev_put().
+>
+> So does pci_dev_get() before using the device instance to avoid NULL
+> pointer dereference.
+Won't it be better if you get this in pcie_do_recovery()?
+>
+> Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
+> Tested-by: Wen Jin <wen.jin@intel.com>
+> Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
+> ---
+> Changes:
+>   v2: revise doc according to Andy's suggestion.
+>   v3: no change.
+>   v4: no change.
+>   v5: no change.
+>   v6: moved to [1/5] from [3/5] and revised comment according to Lukas'
+>       suggestion.
+>   v7: no change.
+>   v8: no change.
+>
+>   drivers/pci/pcie/err.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+>
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index c543f419d8f9..e35c4480c86b 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -52,6 +52,8 @@ static int report_error_detected(struct pci_dev *dev,
+>   	pci_ers_result_t vote;
+>   	const struct pci_error_handlers *err_handler;
+>   
+> +	if (!pci_dev_get(dev))
+> +		return 0;
+>   	device_lock(&dev->dev);
+>   	if (!pci_dev_set_io_state(dev, state) ||
+>   		!dev->driver ||
+> @@ -76,6 +78,7 @@ static int report_error_detected(struct pci_dev *dev,
+>   	pci_uevent_ers(dev, vote);
+>   	*result = merge_result(*result, vote);
+>   	device_unlock(&dev->dev);
+> +	pci_dev_put(dev);
+>   	return 0;
+>   }
+>   
+> @@ -94,6 +97,8 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+>   	pci_ers_result_t vote, *result = data;
+>   	const struct pci_error_handlers *err_handler;
+>   
+> +	if (!pci_dev_get(dev))
+> +		return 0;
+>   	device_lock(&dev->dev);
+>   	if (!dev->driver ||
+>   		!dev->driver->err_handler ||
+> @@ -105,6 +110,7 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+>   	*result = merge_result(*result, vote);
+>   out:
+>   	device_unlock(&dev->dev);
+> +	pci_dev_put(dev);
+>   	return 0;
+>   }
+>   
+> @@ -113,6 +119,8 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+>   	pci_ers_result_t vote, *result = data;
+>   	const struct pci_error_handlers *err_handler;
+>   
+> +	if (!pci_dev_get(dev))
+> +		return 0;
+>   	device_lock(&dev->dev);
+>   	if (!dev->driver ||
+>   		!dev->driver->err_handler ||
+> @@ -124,6 +132,7 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+>   	*result = merge_result(*result, vote);
+>   out:
+>   	device_unlock(&dev->dev);
+> +	pci_dev_put(dev);
+>   	return 0;
+>   }
+>   
+> @@ -131,6 +140,8 @@ static int report_resume(struct pci_dev *dev, void *data)
+>   {
+>   	const struct pci_error_handlers *err_handler;
+>   
+> +	if (!pci_dev_get(dev))
+> +		return 0;
+>   	device_lock(&dev->dev);
+>   	if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
+>   		!dev->driver ||
+> @@ -143,6 +154,7 @@ static int report_resume(struct pci_dev *dev, void *data)
+>   out:
+>   	pci_uevent_ers(dev, PCI_ERS_RESULT_RECOVERED);
+>   	device_unlock(&dev->dev);
+> +	pci_dev_put(dev);
+>   	return 0;
+>   }
+>   
 
-The bugzilla says "there is no erratum as this does not affect
-Windows," but that doesn't answer the question.  What I want to know
-is whether this is a *hardware* defect and whether it will be fixed in
-future hardware.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-If it's a "wont-fix" hardware issue, we can just disable PTM
-completely on Intel hardware and we won't have to worry about it
-during suspend.
-
-> > Link: https://www.uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf
-> > Bug: https://bugzilla.kernel.org/show_bug.cgi?id=209361
-> > Tested-by: Len Brown <len.brown@intel.com>
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> >  drivers/pci/quirks.c | 57 ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 57 insertions(+)
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index bdf9b52567e0..e82b1f60c7a1 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -5632,3 +5632,60 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
-> >  }
-> >  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
-> >                                PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-> > +
-> > +#ifdef CONFIG_PCIE_PTM
-> > +/*
-> > + * On Intel Platform Controller Hubs (PCH) since Cannon Lake, the Precision
-> > + * Time Measurement (PTM) capability can prevent the PCIe root port from
-> > + * power gating during suspend-to-idle, causing increased power consumption.
-> > + * So disable the feature on suspend on all Intel root ports and enable
-> > + * again on resume.
-> > + */
-> > +static void quirk_intel_ptm_disable_suspend(struct pci_dev *dev)
-> > +{
-> > +       int pos;
-> > +       u32 ctrl;
-> > +
-> > +       if (!(dev->ptm_enabled && dev->ptm_root))
-> > +               return;
-> > +
-> > +       pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-> > +       if (!pos)
-> > +               return;
-> > +
-> > +       pci_dbg(dev, "quirk: disabling PTM\n");
-> > +
-> > +       dev->ptm_enabled = 0;
-> > +       dev->ptm_root = 0;
-> > +
-> > +       pci_read_config_dword(dev, pos + PCI_PTM_CTRL, &ctrl);
-> > +       ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
-> > +       pci_write_config_dword(dev, pos + PCI_PTM_CTRL, ctrl);
-> > +}
-> > +
-> > +static void quirk_intel_ptm_enable_resume(struct pci_dev *dev)
-> > +{
-> > +       int pos;
-> > +       u32 ctrl;
-> > +
-> > +       pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-> > +       if (!pos)
-> > +               return;
-> > +
-> > +       pci_dbg(dev, "quirk: re-enabling PTM\n");
-> > +
-> > +       pci_read_config_dword(dev, pos + PCI_PTM_CTRL, &ctrl);
-> > +       ctrl |= PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT;
-> > +       pci_write_config_dword(dev, pos + PCI_PTM_CTRL, ctrl);
-> > +
-> > +       dev->ptm_enabled = 1;
-> > +       dev->ptm_root = 1;
-> > +}
-> > +
-> > +DECLARE_PCI_FIXUP_CLASS_SUSPEND(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
-> > +                               PCI_CLASS_BRIDGE_PCI, 8,
-> > +                               quirk_intel_ptm_disable_suspend)
-> > +DECLARE_PCI_FIXUP_CLASS_RESUME(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
-> > +                              PCI_CLASS_BRIDGE_PCI, 8,
-> > +                              quirk_intel_ptm_enable_resume)
-> > +#endif
-> > --
-> > 2.20.1
-> >
