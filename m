@@ -2,107 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF28286358
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:14:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51B9C2863F9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:30:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgJGQOh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 12:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgJGQOh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Oct 2020 12:14:37 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA7DD20789;
-        Wed,  7 Oct 2020 16:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602087276;
-        bh=W+PsYeZ1rL2UkEz2izQCDDL4aqter95eSf8vS/CL9hA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=crBXhtTMwMrn1fnSCY/i0BkiOZID/MnQTF2G9kdgMljIa7fnZ0zuT38LoG9mVs/4j
-         4AGrCY7nEqpSHivw6SlnEVoHJS8otrFVXwKb/4YSRALfKuUxMbdpn7rYFUDz0mnIhN
-         IaOfVg4GruzdOJCXVcV20nVjmDD8VPpyBjLTfyDE=
-Date:   Wed, 7 Oct 2020 11:14:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Yinghai Lu <yinghai@kernel.org>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
-Message-ID: <20201007161434.GA3247067@bjorn-Precision-5520>
+        id S1727608AbgJGQ3v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 12:29:51 -0400
+Received: from sonic313-13.consmr.mail.bf2.yahoo.com ([74.6.133.123]:35919
+        "EHLO sonic313-13.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727278AbgJGQ3t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 12:29:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602088187; bh=PxMwWzXvs+dqOoH0/FHvFmQpYH2JguaCUHYAVLLmaiw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=JLxmg9ckCbNPLhWzaCODHUYo+vlCuvD4y5WNb7+Bzfic05G/CAiE3XJIHdlnO3ExFSTWksFge6TR0lxsTAft01/MKPArYAdRub6IKSmnJyP2soDHi1CCaFB+wAKu1EbNkXIefKulPOjVFShl9Gao4AQ7IObnWCf09LJAd7PW5Az7tA3ZsqLw82zxIC0cYsWcI4mb8yalAJGe6s7+cWMbIU5BmcZfNfNfUqfUvdq67UXalxjzscwnhv9YwPYphqpmpSeZRu7Byh06CtyqHyyv63lxfJalSQcvYcd6WZF6n06nqo5ImjLs5VOx3NVrZ2KKB6Ubx7aaCaFUujpyEPMU0A==
+X-YMail-OSG: m7.UIRAVM1k9IHpsSF_9aOSrQGJM2c4H6eM3UVt7KHA9_uvFmf8kxv63vpI5KFK
+ oqpQz4emE_LEUvajcmQvgNurTCqVEb9z__yfjJhX.2gkFZ9Rr0CGqIUSM5Rw3.91b7mAjg3ukNYy
+ epxkbDeWCdDVkIFU3pooljRZHDXumcdKwrfoq3TZBZhHmRay1mzV9dTilii0QPx1rkvAhdBoqYUl
+ SehPFlTG.isQQziUHz.pAF6yfK5pF7Uh1Dvfi6tYh9z9JToUjQ6i2addZxo71RL.Ssmv762zveim
+ 5NcN1RttpvH53m7dDm9OofCKTgrFS0dCVgjtw8WhoPX1m_XUdZIvl_Gcd2Cizw5UocYDoqUzuWB7
+ 5V7dTn9Tdb.3RudtT7NbKceKrc8N_1Jwauesoz6ox7z8SV1WGQAu_adgu5a1VoT3OOVLAVofrsJ0
+ ywMoMVA4hFF2NwCHHxl21bXUChzFfdLvTf5IlRYunem1M8jBCPuQelIGZBBqXiubBsdQL0J2.2xz
+ 5cMkOWU_QJ_cGYVzaVGQrsjRNgshYgvaoPj0GNofARp_20UXZt4BKbXHuuzAdhb.Z68kHWpcZ8wE
+ P3dM1cIVFw5pnxLkMlZOI5JlEokhn2mw31DRru_vRFNiKvlfSEwcNLhFrvGyiEadq7iLcbCrW1Zu
+ Hy21m_X88ZZr3ub52OXe_RlA5GYP4owS.lMAtuRq737JtpEl.Dn6HsONlDd_yfsvTfKyolrCyiqu
+ egeaDGYMzW45sKiwJwNPsv2t9MMt5y83pAof3nLNMpovkUIXO1LkYIjFyXg47RzLoHYouR7315Qq
+ Xa7dMdQgeneTSUJXaa4jnUZWrBTlz8o9ce4UcatJOq.JSFGdmQdwLmcYsgiogUK3xr1Rzn05.v5n
+ z.pjGwpN5hTQkseHe3l71ljxtQyRQpeTJhcgnEHDJaChiZ.RrQCy6uC_ResaiTSdfTbrMGxVjo7I
+ ciAQ4aQWHFzcbbSBAqDkm_7Bb9r3Cfmwnwyv8C9M.CER7r.dudz0VQP0mlXF52iLVEDKEYnC0G9o
+ txVVtQX4nP7gXL.ehF1Z_E3xVpyIhFRv9.dSVzOjPXcRrBvjE6BK.u2Td4gfz8j.nT9g6o06HSMg
+ rs_BVzOdU9cn5QqWcXG7fOf0YDe.nAX9ELK1RQgj7YXqDJPzhmXwVQiOXDKwv_wmrMpm_6z03BwZ
+ cBjpLsNhGeq7DQ0MYneJi_JRjEgvo_cfG5dyRH6vHQQMSyfNDSzbYHZ9pKM4xLXYMCt6hLZc7KNV
+ MLR_jZ2MTttfkX9eMEk6zmBQESLqdCe764s54wcWa8KJ54wS3_PgHkQHuQ0j79Up6qpEaqd0PFDs
+ Mh09gB9wox6T_xTVJAIOq5GMiQePep_KuniV5n3OYkogucvacxszVNY8jFiUVFyXg9bcMzv5XNRx
+ ioAas8T0CausajOUReODHctMqqj0c8aNZWVMGWw--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.bf2.yahoo.com with HTTP; Wed, 7 Oct 2020 16:29:47 +0000
+Date:   Wed, 7 Oct 2020 16:29:34 +0000 (UTC)
+From:   Marilyn Robert <fredodinga22@gmail.com>
+Reply-To: marilyobert@gmail.com
+Message-ID: <1390213149.148810.1602088174847@mail.yahoo.com>
+Subject: =?UTF-8?B?0J3QsNGY0LzQuNC70LAg0LrQsNGYINCz0L7RgdC/0L7QtNCw0YDQvtGC?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201007081400.tmoisrk2be5gkkhh@pali>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+References: <1390213149.148810.1602088174847.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 10:14:00AM +0200, Pali Rohár wrote:
-> On Wednesday 07 October 2020 12:47:40 Oliver O'Halloran wrote:
-> > On Wed, Oct 7, 2020 at 10:26 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > I'm not really a fan of this because pci_sysfs_init() is a bit of a
-> > > hack to begin with, and this makes it even more complicated.
-> > >
-> > > It's not obvious from the code why we need pci_sysfs_init(), but
-> > > Yinghai hinted [1] that we need to create sysfs after assigning
-> > > resources.  I experimented by removing pci_sysfs_init() and skipping
-> > > the ROM BAR sizing.  In that case, we create sysfs files in
-> > > pci_bus_add_device() and later assign space for the ROM BAR, so we
-> > > fail to create the "rom" sysfs file.
-> > >
-> > > The current solution to that is to delay the sysfs files until
-> > > pci_sysfs_init(), a late_initcall(), which runs after resource
-> > > assignments.  But I think it would be better if we could create the
-> > > sysfs file when we assign the BAR.  Then we could get rid of the
-> > > late_initcall() and that implicit ordering requirement.
-> > 
-> > You could probably fix that by using an attribute_group to control
-> > whether the attribute shows up in sysfs or not. The .is_visible() for
-> > the group can look at the current state of the device and hide the rom
-> > attribute if the BAR isn't assigned or doesn't exist. That way we
-> > don't need to care when the actual assignment occurs.
-> 
-> And cannot we just return e.g. -ENODATA (or other error code) for those
-> problematic sysfs nodes until late_initcall() is called?
-
-I really like Oliver's idea and I think we should push on that to see
-if it can be made to work.  If so, we can remove the late_initcall()
-completely.
-
-> > > But I haven't tried to code it up, so it's probably more complicated
-> > > than this.  I guess ideally we would assign all the resources before
-> > > pci_bus_add_device().  If we could do that, we could just remove
-> > > pci_sysfs_init() and everything would just work, but I think that's a
-> > > HUGE can of worms.
-> > 
-> > I was under the impression the whole point of pci_bus_add_device() was
-> > to handle any initialisation that needed to be done after resources
-> > were assigned. Is the ROM BAR being potentially unassigned an x86ism
-> > or is there some bigger point I'm missing?
-
-We can't assign resources for each device as we enumerate it because
-we don't know what's in use by other devices yet to be enumerated.
-That part is generic, not x86-specific.
-
-The part that is x86-specific (or at least specific to systems using
-ACPI) is that the ACPI core doesn't reserve resources used by ACPI
-devices.  Sometimes those resources are included in the PCI host
-bridge windows, and we don't want to assign them to PCI devices.
-
-I didn't trace this all the way, but the pcibios_assign_resources()
-and pnp_system_init() comments look relevant.  It's a little concerning
-that they're both fs_initcalls() and the ordering looks important, but
-it would only be by accident of link ordering that pnp_system_init()
-happens first.
-
-Bjorn
+DQoNCtCd0LDRmNC80LjQu9CwINC60LDRmCDQs9C+0YHQv9C+0LTQsNGA0L7Rgg0KDQrQiNCw0YEg
+0YHRg9C8IDY4LdCz0L7QtNC40YjQvdCwINC20LXQvdCwLCDQutC+0ZjQsCDRgdGC0YDQsNC00LAg
+0L7QtCDQv9GA0L7QtNC+0LvQttC10L0g0LrQsNGA0YbQuNC90L7QvCDQvdCwINC00L7RmNC60LAs
+INC+0LQg0YHQuNGC0LUg0LzQtdC00LjRhtC40L3RgdC60Lgg0LjQvdC00LjQutCw0YbQuNC4LCDQ
+vNC+0ZjQsNGC0LAg0YHQvtGB0YLQvtGY0LHQsCDQvdCw0LLQuNGB0YLQuNC90LAg0YHQtSDQstC7
+0L7RiNC4INC4INC+0YfQuNCz0LvQtdC00L3QviDQtSDQtNC10LrQsCDQvNC+0LbQtdCx0Lgg0L3Q
+tdC80LAg0LTQsCDQttC40LLQtdCw0Lwg0L/QvtCy0LXRnNC1INC+0LQg0YjQtdGB0YIg0LzQtdGB
+0LXRhtC4INC60LDQutC+INGA0LXQt9GD0LvRgtCw0YIg0L3QsCDQsdGA0LfQuNC+0YIg0YDQsNGB
+0YIg0Lgg0LHQvtC70LrQsNGC0LAg0YjRgtC+INGB0LUg0ZjQsNCy0YPQstCwINC60LDRmCDQvdC1
+0LAuINCc0L7RmNC+0YIg0YHQvtC/0YDRg9CzINC/0L7Rh9C40L3QsCDQvdC10LrQvtC70LrRgyDQ
+s9C+0LTQuNC90Lgg0L3QsNC90LDQt9Cw0LQg0Lgg0L3QsNGI0LjRgtC1INC00L7Qu9Cz0Lgg0LPQ
+vtC00LjQvdC4INCx0YDQsNC6INC90LUg0LHQtdCwINCx0LvQsNCz0L7RgdC70L7QstC10L3QuCDR
+gdC+INC90LjRgtGDINC10LTQvdC+INC00LXRgtC1LCDQv9C+INC90LXQs9C+0LLQsNGC0LAg0YHQ
+vNGA0YIg0LPQviDQvdCw0YHQu9C10LTQuNCyINGG0LXQu9C+0YLQviDQvdC10LPQvtCy0L4g0LHQ
+vtCz0LDRgtGB0YLQstC+Lg0KDQrQlNC+0LDRk9Cw0Lwg0LrQsNGYINCy0LDRgSDQvtGC0LrQsNC6
+0L4g0YHQtSDQv9C+0LzQvtC70LjQsiDQt9CwINGC0L7QsCwg0L/QvtC00LPQvtGC0LLQtdC9INGB
+0YPQvCDQtNCwINC00L7QvdC40YDQsNC8INGB0YPQvNCwINC+0LQgMiwgMzAwLCAwMDAg0LXQstGA
+0LAg0LfQsCDQv9C+0LzQvtGIINC90LAg0YHQuNGA0L7QvNCw0YjQvdC40YLQtSwg0YHQuNGA0L7Q
+vNCw0YjQvdC40YLQtSDQuCDQv9C+0LzQsNC70LrRgyDQv9GA0LjQstC40LvQtdCz0LjRgNCw0L3Q
+uNGC0LUg0LzQtdGT0YMg0LLQsNGI0LjRgtC1INGB0L7QsdGA0LDQvdC40ZjQsCAvINC+0L/RiNGC
+0LXRgdGC0LLQvi4g0JfQsNCx0LXQu9C10LbQtdGC0LUg0LTQtdC60LAg0L7QstC+0Zgg0YTQvtC9
+0LQg0LUg0LTQtdC/0L7QvdC40YDQsNC9INCy0L4g0LHQsNC90LrQsCDQutCw0LTQtSDRiNGC0L4g
+0YDQsNCx0L7RgtC10YjQtSDQvNC+0ZjQvtGCINGB0L7Qv9GA0YPQsy4gQXBwcmVjaWF0ZdC1INGG
+0LXQvdCw0Lwg0LDQutC+INC+0LHRgNC90LXRgtC1INCy0L3QuNC80LDQvdC40LUg0L3QsCDQvNC+
+0LXRgtC+INCx0LDRgNCw0ZrQtSDQt9CwINC/0YDQvtC/0LDQs9C40YDQsNGa0LUg0L3QsCDQvNCw
+0YHQsNC20LDRgtCwINC90LAg0LrRgNCw0LvRgdGC0LLQvtGC0L4sINGc0LUg0LLQuCDQtNCw0LTQ
+sNC8INC/0L7QstC10ZzQtSDQtNC10YLQsNC70Lgg0LfQsCDRgtC+0LAg0LrQsNC60L4g0LTQsCDQ
+v9C+0YHRgtCw0L/QuNGC0LUuDQoNCtCR0LvQsNCz0L7QtNCw0YDQsNC8DQrQky3Rk9CwINCc0LXR
+gNC40LvQuNC9INCg0L7QsdC10YDRgg==
