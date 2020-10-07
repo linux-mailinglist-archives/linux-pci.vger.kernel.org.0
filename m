@@ -2,156 +2,273 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5186A285BDC
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 11:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87B84285C25
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 11:56:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgJGJ3X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 05:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41712 "EHLO
+        id S1727376AbgJGJ4p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 05:56:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbgJGJ3W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 05:29:22 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836DBC0613D3
-        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 02:29:22 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r24so1271918ljm.3
-        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 02:29:22 -0700 (PDT)
+        with ESMTP id S1727068AbgJGJ4p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 05:56:45 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEF1C061755
+        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 02:56:44 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id x20so1374573ybs.8
+        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 02:56:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SceNR/oD7tQAm04CP/j4aCTT/R0rZhZ+UNIW4isI3tY=;
-        b=HxjsgaPs/YW7Kb1vjNYC3Tv/LiJo53znWxtLkXB7gYYA2GnjLM/F3+1ylTvx1FCbpn
-         geQdbezZxe75ZA7zyN/wUYDb+uhgVAFz7O5yCmW5RWh6cqHw//S+OzFaS6OoUAS1wtwJ
-         02LUW0BWd+ANlv1yb9KM1WcO9I8LOzlEjhbzsU3dUzmom+4HfqZSr/oMNCCvoj2+fkqI
-         nyx2k9DPKpjglWrROYh9wr5HW9l6KMCvCaqMpawQGlQqMJ74qu3aXfIWzVkBo2XcDlmr
-         Kk0rY5Xc5Y3XiumzzYBNVYNO5vFD7T6fjhDd/c230vfaEhrbYX6HXEM2KSpVJcqTw8vZ
-         suiA==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=59U5YHRhYoK3QiwxwbVozJdpsBtw0yLMXKBGhphwwaY=;
+        b=OZ/sjR1iCEl5q0iUoXcvfXEKQfuNj2qXQsseHAIxikYfNefqhZR2sjZjtJEZo0a9my
+         Xt9uP85cVOlRIImn+wV2Thr8ehOFz4FQmUFkKRcoL5ncta4tRGgPrJTw/mynNU+Wbgma
+         dGWV9npmoN2dTI28E2+mlcG16wWLOvVOhWmk7IKPbjWMpeCYIRdW0SF6rICe2GaYjFHM
+         WWvxliex92LCnBTW7J/rCHum8BFI5a8jLWR4Aik+pal7Mv+bplFVJyYl3gU4B4CU3p/t
+         lioCcXuRfD1jOVrbxgdS4hngaArknmScq3vmnESUY19CG0SaT1jdausXuJCEhbYWny70
+         ulhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SceNR/oD7tQAm04CP/j4aCTT/R0rZhZ+UNIW4isI3tY=;
-        b=Q+JXV2il34akB7OzP4MeH+pOjObp5vZ1OEiFk7qg25k4RrcOmGJ+MfvbTx9uQLrkHx
-         aTEHs+Fc/n6D8YK5TbpP17yQl2Qu4IQYvAFhYk7FuDr9m8G/V6/hAS83ZbtLJ2RGwCqD
-         FP3/kiF003s2nAEPQnSsMpqa4q+ucvxUQ5aQIHvId+QEHQ9n150iIIrrQ16xWVuE2Tgi
-         P2DoOvg6k2BF7OAKlqsL0V3FWBMPW0MltgIgoqeEA52ilQb9GDcW8id/xGXfjyPH8yhR
-         TtH4ZOFzVbUIIzwCDm2rm6NboXJAggvIo2LXD5zKRepunmLy9h6+TmXiWhiiBgHY+qMd
-         rCJg==
-X-Gm-Message-State: AOAM533ii0siCZnKairhravE9nONxcvF0gZQPuie6Frrm6jEbT9TTIk7
-        +sOrpDH/hPYfPTl0RzSoZ/rqp4ND9oSFjIv+PKbivA==
-X-Google-Smtp-Source: ABdhPJxEYSsSuRDWwIFH21xkK1z8YuIysSAPgqRwcgIzF62aIUR6ckFZLkJy4pS50xJ0uLTavSR+G3JTA2JzzbqsX9I=
-X-Received: by 2002:a2e:9b0c:: with SMTP id u12mr782404lji.338.1602062960819;
- Wed, 07 Oct 2020 02:29:20 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=59U5YHRhYoK3QiwxwbVozJdpsBtw0yLMXKBGhphwwaY=;
+        b=LKLU1lpM4C2Q4EMlWmozDYIfEY0+9gv7At8Z0f60+TyftK9YPqSw6fEFYnn9aNy9sW
+         2LfrLGZ/dZn17nkzJAyf9Ea5ZuVYhf1KcHlhM7V0cf5yykUBWhFdkeoSwetM/SEgfgnc
+         32GspwdxjvBUjlkkdFNSlRbhJ+nnlEbz+Q+yBV0Ntaojspgv+lR9HpHqWWjBiefwvtR3
+         S2dHt7EcpYKFJwUulIlBI5lXWmsqZu3PfvJz6ASzpJAt23sb9E9q+YKWEo45+/0jqw6F
+         HE5TWO6QcdcIqkXKiLrq9b7xNZHuaQBkrdiWevOSylWXr1dG6tuFJysFrfMuwpuOoPxZ
+         bz3Q==
+X-Gm-Message-State: AOAM530ByTJNEkxUc4JhqR4eY7OSIm7uU+vTSKsMjle2Jj7w9ddtP6Sk
+        L5LOn1NbZLGbqNTSqrzPIrMpMyG1QYEc+BwWZ5dQYKZexH1Q73Zn
+X-Google-Smtp-Source: ABdhPJyhD80ag5l1ruhWN8m472kLlem+t8D1rZ/gBKG4jTVFr/LBo/Guh42C7itiUuSbOn9K/5m6I/U6YUNEarkYZao=
+X-Received: by 2002:a25:8505:: with SMTP id w5mr2842089ybk.486.1602064603858;
+ Wed, 07 Oct 2020 02:56:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com> <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Oct 2020 11:29:10 +0200
-Message-ID: <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] gpio: ej1x8: Add GPIO driver for Etron Tech Inc. EJ168/EJ188/EJ198
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-usb <linux-usb@vger.kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
+From:   Billy Araujo <billyaraujo@gmail.com>
+Date:   Wed, 7 Oct 2020 10:56:33 +0100
+Message-ID: <CAEt4U6V22Abudp1TRJ2SGkYH=2o+RFWa8nrGbKDoLFXcZJV7qA@mail.gmail.com>
+Subject: PCI IRQ assignment broken from 4.9 onwards (swizzle?)
+To:     linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Martin,
+Hi,
 
-thanks for your patch!
+I have been testing a TI AM57xx board and a NXP iMX8 board with a GPIB
+PCIe card.
 
-As noted on the earlier patches I think this should be folded into the
-existing XHCI USB driver in drivers/usb/host/xhci-pci.c or, if that
-gets messy, as a separate bolt-on, something like
-xhci-pci-gpio.[c|h] in the drivers/usb/host/* directory.
-You can use a Kconfig symbol for the GPIO portions or not.
+TI board (Phytec): https://www.phytec.com/product/phycore-am57x/
+NXP board (Variscite):
+https://www.variscite.com/product/system-on-module-som/cortex-a53-krait/var-som-mx8m-mini-nxp-i-mx8m-mini/
 
-On Sun, Oct 4, 2020 at 8:00 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+The GPIB PCIe card has a Texas Instruments XIO2000(A)/XIO2200A PCI
+Express-to-PCI Bridge.
 
-> EJ168/EJ188/EJ198 are USB xHCI controllers. They also contain four GPIO
-> lines which are used on some systems to toggle an LED based on whether a
-> USB device is connected.
->
-> There is no public datasheet available for this hardware. All
-> information in this driver is taken from the
-> "F9K1115v2.03.97-GPL-10.2.85-20140313" GPL code dump of the Belkin
-> F9K1115v2. This board comes with an EJ168 USB xHCI controller and the
-> USB 3.0 LED is connected to one of the GPIOs. Inside the GPL source
-> archive the related code can be found in:
->   linux/kernels/mips-linux-2.6.31/drivers/usb/host/etxhci-pci.c
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-(...)
+Issue:
+I have noticed is that on Linux kernel 4.9, the Linux PCI driver
+assigns correctly an IRQ number:
 
-> +config GPIO_EJ1X8
-> +       tristate "Etron Tech Inc. EJ168/EJ188/EJ198 GPIO driver"
-> +       depends on OF_GPIO && PCI
+Linux am5728-phycore-rdk 4.9.41-ga962b18-BSP-Yocto-TISDK-AM57xx-PD18.1.0
+02:00.0 Communication controller: National Instruments PCIe-GPIB (rev 02)
+        Subsystem: National Instruments PCIe-GPIB
+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
+>TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 470
 
-It is fine to just select GPIOLIB if you want this to always be
-compiled-in (if the USB maintainers agree).
+On a newer kernel (this case 4.19), PCI driver doesn't assign an IRQ number.
 
-> +       help
-> +         Selecting this option will enable the GPIO pins present on
-> +         the Etron Tech Inc. EJ168/EJ188/EJ198 USB xHCI controllers.
-> +
-> +         If unsure, say N.
+Linux am57xx-phycore-kit 4.19.79-g35d36cd54d #1 SMP PREEMPT Wed Sep 30
+14:04:18 UTC 2020 armv7l GNU/Linux
+02:00.0 Communication controller: National Instruments PCIe-GPIB (rev 02)
+        Subsystem: National Instruments PCIe-GPIB
+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
+>TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 0
 
-(...)
-> +#define EJ1X8_GPIO_INIT                                        0x44
-> +#define EJ1X8_GPIO_WRITE                               0x68
-> +#define EJ1X8_GPIO_READ                                        0x6c
-> +
-> +#define EJ1X8_GPIO_CTRL                                        0x18005020
-> +#define EJ1X8_GPIO_CTRL_READ_ALL_MASK                  GENMASK(7, 0)
-> +#define EJ1X8_GPIO_CTRL_WRITE_ALL_MASK                 GENMASK(23, 16)
-> +#define EJ1X8_GPIO_CTRL_OUT_LOW                                0x0
-> +#define EJ1X8_GPIO_CTRL_OUT_HIGH                       0x1
-> +#define EJ1X8_GPIO_CTRL_IN                             0x2
-> +#define EJ1X8_GPIO_CTRL_MASK                           0x3
-> +
-> +#define EJ1X8_GPIO_MODE                                        0x18005022
-> +#define EJ1X8_GPIO_MODE_READ_WRITE_ALL_MASK            GENMASK(23, 16)
-> +#define EJ1X8_GPIO_MODE_DISABLE                                0x0
-> +#define EJ1X8_GPIO_MODE_ENABLE                         0x1
-> +#define EJ1X8_GPIO_MODE_MASK                           0x3
+Same issue happened on the NXP board, so it seems Linux related. I
+have tested kernels 4.14, 4.19 and 5.4.3.
 
-Nice that you got all of this out of reverse-engineering!
+The IRQ is important to get the legacy interrupts working.
 
-> +static LIST_HEAD(ej1x8_gpios);
+Looking at the code there has been some refactoring of how PCI assigns
+IRQ number when there is a chain of bridges. I am not too familiar
+with how the code works but I wonder if this has affected how the PCI
+assignment works.
 
-This should not be necessary. Tie the GPIO state into the PCI device
-driver state, possibly using some #ifdefs.
+Looking in setup-irq.c:
 
-> +static u8 ej1x8_gpio_shift(unsigned int gpio, u8 mask)
-> +{
-> +       return (gpio * fls(mask));
-> +}
-> +
-> +static u8 ej1x8_gpio_mask(unsigned int gpio, u8 mask)
-> +{
-> +       return mask << ej1x8_gpio_shift(gpio, mask);
-> +}
+/* If this device is not on the primary bus, we need to figure out
+   which interrupt pin it will come in on.   We know which slot it
+   will come in on 'cos that slot is where the bridge is.   Each
+   time the interrupt line passes through a PCI-PCI bridge we must
+   apply the swizzle function.  */
 
-This looks a bit like regmap but trying to use regmap for this
-would probably be overengineering.
+Line 44: if (hbrg->swizzle_irq)
 
-Looking at the code I get annoyed that it uses the config space to
-manipulate the GPIOs, else you could have used GPIO_GENERIC
-but now you can't, how typical.
+From my understanding, this "if" didn't exist in Linux kernel 4.9. If
+swizzle function isn't assigned in the newer kernels it just stays as
+0.
 
-Other than that the code looks nice, but fold it into the USB
-host driver somehow unless there is a compelling argument
-as to why not.
+This might be completely unrelated as I said I have no understanding
+how this code is supposed to work.
 
-Yours,
-Linus Walleij
+What I ask is if anyone has experienced any issues similar to this in
+these more recent kernel versions.
+
+Regards,
+
+Billy.
+
+Debug output with the issue:
+
+root@am57xx-phycore-kit:~# uname -a
+Linux am57xx-phycore-kit 4.19.79-g35d36cd54d #1 SMP PREEMPT Wed Sep 30
+14:04:18 UTC 2020 armv7l GNU/Linux
+
+root@am57xx-phycore-kit:~# lspci -vv
+00:00.0 PCI bridge: Texas Instruments Multicore DSP+ARM KeyStone II
+SOC (rev 01) (prog-if 00 [Normal decode])
+        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+ParErr+ Stepping- SERR+ FastB2B- DisINTx+
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 180
+        Region 0: Memory at 20100000 (64-bit, non-prefetchable) [size=1M]
+        Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
+        I/O behind bridge: None
+        Memory behind bridge: 20200000-202fffff [size=1M]
+        Prefetchable memory behind bridge: None
+        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort+ <SERR- <PERR-
+        BridgeCtl: Parity+ SERR- NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1+ D2- AuxCurrent=0mA
+PME(D0+,D1+,D2-,D3hot+,D3cold-)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit+
+                Address: 00000000ae15b000  Data: 0000
+        Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
+                DevCap: MaxPayload 256 bytes, PhantFunc 0
+                        ExtTag- RBE+
+                DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+                        RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+                        MaxPayload 128 bytes, MaxReadReq 512 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+AuxPwr- TransPend-
+                LnkCap: Port #0, Speed 5GT/s, Width x2, ASPM L0s L1,
+Exit Latency L0s <512ns, L1 <64us
+                        ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
+                LnkCtl: ASPM Disabled; RCB 128 bytes Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s (downgraded), Width x1 (downgraded)
+                        TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
+                RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
+PMEIntEna+ CRSVisible-
+                RootCap: CRSVisible-
+                RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+                DevCap2: Completion Timeout: Range ABCD, TimeoutDis+,
+LTR-, OBFF Not Supported ARIFwd-
+                         AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+                DevCtl2: Completion Timeout: 50us to 50ms,
+TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
+                         AtomicOpsCtl: ReqEn- EgressBlck-
+                LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
+                         Transmit Margin: Normal Operating Range,
+EnterModifiedCompliance- ComplianceSOS-
+                         Compliance De-emphasis: -6dB
+                LnkSta2: Current De-emphasis Level: -3.5dB,
+EqualizationComplete-, EqualizationPhase1-
+                         EqualizationPhase2-, EqualizationPhase3-,
+LinkEqualizationRequest-
+        Capabilities: [100 v2] Advanced Error Reporting
+                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt-
+UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+AdvNonFatalErr-
+                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+AdvNonFatalErr+
+                AERCap: First Error Pointer: 00, ECRCGenCap+
+ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+                HeaderLog: 00000000 00000000 00000000 00000000
+                RootCmd: CERptEn+ NFERptEn+ FERptEn+
+                RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
+                         FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
+                ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
+        Kernel driver in use: pcieport
+
+01:00.0 PCI bridge: Texas Instruments XIO2000(A)/XIO2200A PCI
+Express-to-PCI Bridge (rev 03) (prog-if 00 [Normal decode])
+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+        Bus: primary=01, secondary=02, subordinate=02, sec-latency=0
+        I/O behind bridge: None
+        Memory behind bridge: 20200000-202fffff [size=1M]
+        Prefetchable memory behind bridge: None
+        Secondary status: 66MHz- FastB2B+ ParErr- DEVSEL=medium
+>TAbort- <TAbort- <MAbort+ <SERR- <PERR-
+        BridgeCtl: Parity+ SERR- NoISA- VGA- VGA16- MAbort+ >Reset- FastB2B+
+                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+        Capabilities: [50] Power Management version 2
+                Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA
+PME(D0-,D1-,D2-,D3hot-,D3cold-)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+                Bridge: PM- B3+
+        Capabilities: [60] MSI: Enable- Count=1/16 Maskable- 64bit+
+                Address: 0000000000000000  Data: 0000
+        Capabilities: [80] Subsystem: Device 0000:0000
+        Capabilities: [90] Express (v1) PCI-Express to PCI/PCI-X Bridge, MSI 00
+                DevCap: MaxPayload 512 bytes, PhantFunc 0
+                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE-
+SlotPowerLimit 0.000W
+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop+ BrConfRtry-
+                        MaxPayload 128 bytes, MaxReadReq 512 bytes
+                DevSta: CorrErr- NonFatalErr+ FatalErr- UnsupReq-
+AuxPwr- TransPend-
+                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1,
+Exit Latency L0s <1us, L1 <16us
+                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
+                        TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+        Capabilities: [100 v1] Advanced Error Reporting
+                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UESvrt: DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt-
+UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+AdvNonFatalErr-
+                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+AdvNonFatalErr-
+                AERCap: First Error Pointer: 00, ECRCGenCap+
+ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+                HeaderLog: 00000000 00000000 00000000 00000000
+
+02:00.0 Communication controller: National Instruments PCIe-GPIB (rev 02)
+        Subsystem: National Instruments PCIe-GPIB
+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
+>TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 0
+        Region 0: Memory at 20204000 (32-bit, non-prefetchable)
+[disabled] [size=2K]
+        Region 1: Memory at 20200000 (32-bit, non-prefetchable)
+[disabled] [size=16K]
