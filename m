@@ -2,92 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A74F285A32
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 10:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94803285BB0
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 11:14:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgJGIOE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 04:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgJGIOE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Oct 2020 04:14:04 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41CBB2076C;
-        Wed,  7 Oct 2020 08:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602058443;
-        bh=G6wo9pRH97NvVw3CieOpfHR9XdQR26XJkAPylVPt2tA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kj8+eaKiCxKooT7aHfCi18I6OkpyQmWSDLq6PbSjhW9ufLJGdvMkgx66f8Zist++X
-         lTLK0/v+r0ZIS1CmjSPnPJFJtId6qMPsuwC1UXbPal60EEPVC495wq1vbStQcsAUjy
-         Fwx2yXpkc7vUCOkys3zSTO6JddWOP5iPs02wQuC8=
-Received: by pali.im (Postfix)
-        id DFF224F1; Wed,  7 Oct 2020 10:14:00 +0200 (CEST)
-Date:   Wed, 7 Oct 2020 10:14:00 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Yinghai Lu <yinghai@kernel.org>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
-Message-ID: <20201007081400.tmoisrk2be5gkkhh@pali>
-References: <20200909112850.hbtgkvwqy2rlixst@pali>
- <20201006222222.GA3221382@bjorn-Precision-5520>
- <CAOSf1CHss03DBSDO4PmTtMp0tCEu5kScn704ZEwLKGXQzBfqaA@mail.gmail.com>
+        id S1726131AbgJGJOU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 05:14:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbgJGJOT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 05:14:19 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCA8C0613D4
+        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 02:14:19 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 133so1246246ljj.0
+        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 02:14:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R38D306cOdCH6gNOKn2dfXzMIdx9cVWTJ2EnhMSHPgI=;
+        b=K8VM3Lt7he4DbXomcBl3P1LJNqMltD6OgLwpi66vIZr+U4091oDg8WzFZwthUfNZxM
+         7C3DSeIGUrUU442GfpAuHECgrAXYpLu2i7jiJ+tc6NndlzfBRXWLyNPCYaNORPl5LkFO
+         j3yVM1TBGLTi9OzIO8xmg8KIb9XE9xmNm50yhZZUafUFC94LNH6xELqQcJEXdcb/FW4z
+         44xqj1ig+cU6YFysClUu3zjTOkqGuvBvWXZiSdDxbhsSmOFnipKSHBKJ+wUCBXNHBrs5
+         uGh4kXbK7c8M4OfTPTFIVLc9+ICXIqD7n5c2eMHJ2raESyevz/KFuf+fgzJR7Sc1K+iE
+         CkyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R38D306cOdCH6gNOKn2dfXzMIdx9cVWTJ2EnhMSHPgI=;
+        b=KlsTJ90YQBIGReqVepp3w4fA5pScZK1IqTW7B4Bqw92qClS+fUvLXHZ+T3NrWiO94f
+         GOnXbRpYdWQkt7bYfB5FFVeMm/V+Xb5nxJBAQZC0oXbVLKB/fj7QcoEga8YRfh5vxXj5
+         XPxzKwlvJV/bu9pr4MnFfNbQxn4nVpMQhv07VJmqtTcVXqpNHA30n/kVeBykPukDRMJA
+         auLb1sKbRs/5NZfJJ5GZXJcR6mFPhNnYqPKtWOf64lpyY24t01WZgayjRHSHl3FLsfv0
+         Qy5fnqC3nAtiuX6L4WUf45Pux2QXcD9K+MYr20YFgyNzrriBd8lyhlfOlPbuGBJWO2v3
+         IGdw==
+X-Gm-Message-State: AOAM533Fcllxgdg/UgaaVn7a7iEFvd+nmPbN6vaSQsvJeeYulBUspvYv
+        Flgsz8cdIkY30cR0Oq4iUEqLbIVfkmNd21VtpNfVCw==
+X-Google-Smtp-Source: ABdhPJxbc/bmd6ODDC9I5vRdhThK0GMJxuWPkDmiYh8tJC4/GZdchNUlcn3p1SbgotwVnTnpAIL7su86RHImnlHNlZE=
+X-Received: by 2002:a2e:810e:: with SMTP id d14mr941823ljg.100.1602062057729;
+ Wed, 07 Oct 2020 02:14:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOSf1CHss03DBSDO4PmTtMp0tCEu5kScn704ZEwLKGXQzBfqaA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com> <20201004162908.3216898-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20201004162908.3216898-2-martin.blumenstingl@googlemail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 7 Oct 2020 11:14:06 +0200
+Message-ID: <CACRpkdbscEpV6oP7q1AcbCcR-XUBG2PnnapQ695xug63VQ830w@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] PCI: Add the IDs for Etron EJ168 and EJ188
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-usb <linux-usb@vger.kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 07 October 2020 12:47:40 Oliver O'Halloran wrote:
-> On Wed, Oct 7, 2020 at 10:26 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > I'm not really a fan of this because pci_sysfs_init() is a bit of a
-> > hack to begin with, and this makes it even more complicated.
-> >
-> > It's not obvious from the code why we need pci_sysfs_init(), but
-> > Yinghai hinted [1] that we need to create sysfs after assigning
-> > resources.  I experimented by removing pci_sysfs_init() and skipping
-> > the ROM BAR sizing.  In that case, we create sysfs files in
-> > pci_bus_add_device() and later assign space for the ROM BAR, so we
-> > fail to create the "rom" sysfs file.
-> >
-> > The current solution to that is to delay the sysfs files until
-> > pci_sysfs_init(), a late_initcall(), which runs after resource
-> > assignments.  But I think it would be better if we could create the
-> > sysfs file when we assign the BAR.  Then we could get rid of the
-> > late_initcall() and that implicit ordering requirement.
-> 
-> You could probably fix that by using an attribute_group to control
-> whether the attribute shows up in sysfs or not. The .is_visible() for
-> the group can look at the current state of the device and hide the rom
-> attribute if the BAR isn't assigned or doesn't exist. That way we
-> don't need to care when the actual assignment occurs.
+On Sun, Oct 4, 2020 at 8:00 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
-And cannot we just return e.g. -ENODATA (or other error code) for those
-problematic sysfs nodes until late_initcall() is called?
+> Add the vendor ID for Etron Technology, Inc. as well as the device IDs
+> for the two USB xHCI controllers EJ168 and EJ188.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-> > But I haven't tried to code it up, so it's probably more complicated
-> > than this.  I guess ideally we would assign all the resources before
-> > pci_bus_add_device().  If we could do that, we could just remove
-> > pci_sysfs_init() and everything would just work, but I think that's a
-> > HUGE can of worms.
-> 
-> I was under the impression the whole point of pci_bus_add_device() was
-> to handle any initialisation that needed to be done after resources
-> were assigned. Is the ROM BAR being potentially unassigned an x86ism
-> or is there some bigger point I'm missing?
-> 
-> Oliver
+(...)
+
+>  #define PCI_VENDOR_ID_REDHAT           0x1b36
+>
+> +#define PCI_VENDOR_ID_ETRON            0x1b6f
+> +#define PCI_DEVICE_ID_ETRON_EJ168      0x7023
+> +#define PCI_DEVICE_ID_ETRON_EJ188      0x7052
+
+If you're defining that here, I think it should also be
+removed in
+drivers/usb/host/xhci-pci.c
+by including this file instead?
+
+Yours,
+Linus Walleij
