@@ -2,197 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AB1E2859E5
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 09:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAF32285A2B
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 10:12:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgJGHu7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 03:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgJGHu7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 03:50:59 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B26D6C061755;
-        Wed,  7 Oct 2020 00:50:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a3so1566029ejy.11;
-        Wed, 07 Oct 2020 00:50:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yK+TtzICLfp2nmfuxf7NcvdpIVXOd86cA4QsKvR9tAw=;
-        b=T5If2aVVQ1EmHDS4G7YpniQUAAHw3cazxRaBnXZngdOln2rLvZRaReHiJGMyyOUXCk
-         4wQlgf4ciKX+UGHX8PCzh360qR45avxLd82CKHobdiAze8lKiUMzGDOY9iWyecr4eMmm
-         A8W8ltDRG6Vj09RzaSNRkTgdnlGuVMFzy3Hs/47xYe9VADfF0bg6Y9iWpgX0DXRGUXf5
-         n5wdlWsAGoOgUMqdCsw8Juy6UQUgk//Q6Ff2NuoiulkiBLhSCID3EqCgyexIgFBZBWXP
-         OXahofka0k6YRnniQLe5mBxgFBCUlEXNE9gVdA0uefWJU+fGmE70LH9yL2xLePMIDnmi
-         1e2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yK+TtzICLfp2nmfuxf7NcvdpIVXOd86cA4QsKvR9tAw=;
-        b=P1aONDvkp8FQkwNjp3vvweluFUyNBs2ES4Z4ZYHNVjebKn1ev7FXzOhghCEwW9vGUg
-         dQvC1JqETB4hr/p5OltmfJk+b/Svx8nTYmVJDqVFmU85hmZmc3Dk8V0ghEx6zHwIqCqU
-         biFDkSlzS5M4LxEnfUZzO8WVIpkUgE3GiYa3x9/V7qQ/Cg7pQDUnNx4NHiNh2JF0C6T9
-         tz0M8p7Vmqwp9wQn5SL7jhFhlsExrkLYOBJzYPbDYHRz8/ksuqXqX6qQpfXs3qqnmpIl
-         vQ6RZXetHDnJmo2tFWal7HDxhOzR+GJW2ounfCsBudHWWRHv6GOx3FQaEqvX/6tM+7SC
-         jXxw==
-X-Gm-Message-State: AOAM5313qhgz/t2iijMJkhGUQu8FZodLTK5HAuardMChjOPXjhQoqr9I
-        JwsiEvTTLSArkyC/hjcSyDZXZc2pWXvGUAO3D2Y=
-X-Google-Smtp-Source: ABdhPJzmMxBLRZJzVbKi7vX/b/OeOCkQJSCC2GgVJ4WaH4XiYfF+kJx9bt6J5OE9zmgh1Fdl1FArhkkA9Fs1wLvljTk=
-X-Received: by 2002:a17:906:6409:: with SMTP id d9mr2040618ejm.344.1602057057351;
- Wed, 07 Oct 2020 00:50:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201003075514.32935-5-haifeng.zhao@intel.com> <20201003164421.GA2883839@bjorn-Precision-5520>
-In-Reply-To: <20201003164421.GA2883839@bjorn-Precision-5520>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Wed, 7 Oct 2020 15:50:45 +0800
-Message-ID: <CAKF3qh0Dy6eUfpXqXkpd7Xbt8yLfxzrTKyqBNqXeUs95421vcg@mail.gmail.com>
-Subject: Re: [PATCH v7 4/5] PCI: only return true when dev io state is really changed
+        id S1726702AbgJGIMc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 04:12:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgJGIMb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Oct 2020 04:12:31 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 140DC2076C;
+        Wed,  7 Oct 2020 08:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602058350;
+        bh=+X8RyOK4jxSzI37UzsmNCnIyY+gYv0ytCMDVV0Ob920=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kve9oP5HO8PhsbvSGA7sgQsuzUZkeERXIRZiOSkw3ImlAMgcJGdkoWjo/AWUAjMZ8
+         TZN1GGKUVysJW7ICaJPENdt59UFewupFm2cyBL4UawtLYXLczeqbL6kug5r/1n+drI
+         srNjHklXp2UhffYCuZyM2ODyn9TPyAaYJDqFb1Xw=
+Received: by pali.im (Postfix)
+        id A0F2A4F1; Wed,  7 Oct 2020 10:12:27 +0200 (CEST)
+Date:   Wed, 7 Oct 2020 10:12:27 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ethan Zhao <haifeng.zhao@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Oliver <oohall@gmail.com>,
-        ruscur@russell.cc, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Yinghai Lu <yinghai@kernel.org>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
+Message-ID: <20201007081227.d6f6otfsnmlgvegi@pali>
+References: <20200909112850.hbtgkvwqy2rlixst@pali>
+ <20201006222222.GA3221382@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201006222222.GA3221382@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
+On Tuesday 06 October 2020 17:22:22 Bjorn Helgaas wrote:
+> [+cc Krzysztof, Yinghai]
+> 
+> On Wed, Sep 09, 2020 at 01:28:50PM +0200, Pali Rohár wrote:
+> > Hello! I'm adding more people to loop.
+> > 
+> > Can somebody look at these race conditions and my patch?
+> > 
+> > On Friday 14 August 2020 10:08:24 Pali Rohár wrote:
+> > > Hello! I would like to remind this issue which I reported month ago.
+> > > 
+> > > On Thursday 16 July 2020 13:04:23 Pali Rohár wrote:
+> > > > Hello Bjorn!
+> > > > 
+> > > > I see following error message in dmesg which looks like a race condition:
+> > > > 
+> > > > sysfs: cannot create duplicate filename '/devices/platform/soc/d0070000.pcie/pci0000:00/0000:00:00.0/config'
+> > > > 
+> > > > I looked at it deeper and found out that in PCI subsystem code is race
+> > > > condition between pci_bus_add_device() and pci_sysfs_init() calls. Both
+> > > > of these functions calls pci_create_sysfs_dev_files() and calling this
+> > > > function more times for same pci device throws above error message.
+> > > > 
+> > > > There can be two different race conditions:
+> > > > 
+> > > > 1. pci_bus_add_device() called pcibios_bus_add_device() or
+> > > > pci_fixup_device() but have not called pci_create_sysfs_dev_files() yet.
+> > > > Meanwhile pci_sysfs_init() is running and pci_create_sysfs_dev_files()
+> > > > was called for newly registered device. In this case function
+> > > > pci_create_sysfs_dev_files() is called two times, ones from
+> > > > pci_bus_add_device() and once from pci_sysfs_init().
+> > > > 
+> > > > 2. pci_sysfs_init() is called. It first sets sysfs_initialized to 1
+> > > > which unblock calling pci_create_sysfs_dev_files(). Then another bus
+> > > > registers new PCI device and calls pci_bus_add_device() which calls
+> > > > pci_create_sysfs_dev_files() and registers sysfs files. Function
+> > > > pci_sysfs_init() continues execution and calls function
+> > > > pci_create_sysfs_dev_files() also for this newly registered device. So
+> > > > pci_create_sysfs_dev_files() is again called two times.
+> > > > 
+> > > > 
+> > > > I workaround both race conditions I created following hack patch. After
+> > > > applying it I'm not getting that 'sysfs: cannot create duplicate filename'
+> > > > error message anymore.
+> > > > 
+> > > > Can you look at it how to fix both race conditions in proper way?
+> > > 
+> > > Is this workaround diff enough? Or are you going to prepare
+> > > something better?
+> > > 
+> > > Please let me know if I should send this diff as regular patch.
+> 
+> I'm not really a fan of this because pci_sysfs_init() is a bit of a
+> hack to begin with, and this makes it even more complicated.
 
-On Sun, Oct 4, 2020 at 12:44 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sat, Oct 03, 2020 at 03:55:13AM -0400, Ethan Zhao wrote:
-> > When uncorrectable error happens, AER driver and DPC driver interrupt
-> > handlers likely call
-> >
-> >    pcie_do_recovery()
-> >    ->pci_walk_bus()
-> >      ->report_frozen_detected()
-> >
-> > with pci_channel_io_frozen the same time.
-> >    If pci_dev_set_io_state() return true even if the original state is
-> > pci_channel_io_frozen, that will cause AER or DPC handler re-enter
-> > the error detecting and recovery procedure one after another.
-> >    The result is the recovery flow mixed between AER and DPC.
-> > So simplify the pci_dev_set_io_state() function to only return true
-> > when dev->error_state is really changed.
-> >
-> > Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-> > Tested-by: Wen Jin <wen.jin@intel.com>
-> > Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
-> > Reviewed-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > ---
-> > Changnes:
-> >  v2: revise description and code according to suggestion from Andy.
-> >  v3: change code to simpler.
-> >  v4: no change.
-> >  v5: no change.
-> >  v6: no change.
-> >  v7: changed based on Bjorn's code and truth table.
-> >
-> >  drivers/pci/pci.h | 53 ++++++++++++++++++-----------------------------
-> >  1 file changed, 20 insertions(+), 33 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 455b32187abd..47af1ff2a286 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -354,44 +354,31 @@ struct pci_sriov {
-> >   *
-> >   * Must be called with device_lock held.
-> >   *
-> > - * Returns true if state has been changed to the requested state.
-> > + * Returns true if state has been really changed to the requested state.
-> >   */
-> >  static inline bool pci_dev_set_io_state(struct pci_dev *dev,
-> >                                       pci_channel_state_t new)
-> >  {
-> > -     bool changed = false;
-> > -
-> >       device_lock_assert(&dev->dev);
-> > -     switch (new) {
-> > -     case pci_channel_io_perm_failure:
-> > -             switch (dev->error_state) {
-> > -             case pci_channel_io_frozen:
-> > -             case pci_channel_io_normal:
-> > -             case pci_channel_io_perm_failure:
-> > -                     changed = true;
-> > -                     break;
-> > -             }
-> > -             break;
-> > -     case pci_channel_io_frozen:
-> > -             switch (dev->error_state) {
-> > -             case pci_channel_io_frozen:
-> > -             case pci_channel_io_normal:
-> > -                     changed = true;
-> > -                     break;
-> > -             }
-> > -             break;
-> > -     case pci_channel_io_normal:
-> > -             switch (dev->error_state) {
-> > -             case pci_channel_io_frozen:
-> > -             case pci_channel_io_normal:
-> > -                     changed = true;
-> > -                     break;
-> > -             }
-> > -             break;
-> > -     }
-> > -     if (changed)
-> > -             dev->error_state = new;
-> > -     return changed;
-> > +
-> > +/*
-> > + *                   Truth table:
-> > + *                   requested new state
-> > + *     current          ------------------------------------------
-> > + *     state            normal         frozen         perm_failure
-> > + *     ------------  +  -------------  -------------  ------------
-> > + *     normal        |  normal         frozen         perm_failure
-> > + *     frozen        |  normal         frozen         perm_failure
-> > + *     perm_failure  |  perm_failure*  perm_failure*  perm_failure
-> > + */
-> > +
-> > +     if (dev->error_state == pci_channel_io_perm_failure)
-> > +             return false;
-> > +     else if (dev->error_state == new)
-> > +             return false;
-> > +
-> > +     dev->error_state = new;
-> > +     return true;
->
-> No, you missed the point.  I want
->
->   1) One patch that converts the "switch" to the shorter "if"
->      statements.  This one will be big and ugly, but should not change
->      the functionality at all, and it should be pretty easy to verify
->      that since there aren't very many states involved.
->
->      Since this one is pure code simplification, the commit log won't
->      say anything at all about AER or DPC or their requirements
->      because it's not changing any behavior.
->
->   2) A separate patch that's tiny and makes whatever functional change
->      you need.
+I understand, but the two race conditions are in this pci_sysfs_init()
+function. So either it needs to be fixed or code changed, so this
+function can be removed.
 
-       Make sense, clear,  this time.
+I'm hitting these race conditions randomly on pci aardvark controller
+driver- I prepared patch which speed up initialization of this driver,
+but also increase probability that it hits above race conditions :-(
 
-     Thanks,
-     Ethan
->
-> >  }
-> >
-> >  static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
-> > --
-> > 2.18.4
-> >
+> It's not obvious from the code why we need pci_sysfs_init(), but
+> Yinghai hinted [1] that we need to create sysfs after assigning
+> resources.  I experimented by removing pci_sysfs_init() and skipping
+> the ROM BAR sizing.  In that case, we create sysfs files in
+> pci_bus_add_device() and later assign space for the ROM BAR, so we
+> fail to create the "rom" sysfs file.
+
+Thank you for explanation. I think it should be documented somewhere in
+the code as it is really not obvious.
+
+> The current solution to that is to delay the sysfs files until
+> pci_sysfs_init(), a late_initcall(), which runs after resource
+> assignments.  But I think it would be better if we could create the
+> sysfs file when we assign the BAR.  Then we could get rid of the
+> late_initcall() and that implicit ordering requirement.
+> 
+> But I haven't tried to code it up, so it's probably more complicated
+> than this.  I guess ideally we would assign all the resources before
+> pci_bus_add_device().  If we could do that, we could just remove
+> pci_sysfs_init() and everything would just work, but I think that's a
+> HUGE can of worms.
+> 
+> [1] https://lore.kernel.org/linux-pci/CAE9FiQWBXHgz-gWCmpWLaBOfQQJwtRZemV6Ut9GVw_KJ-dTGTA@mail.gmail.com/
+> 
+> > > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > > > index 8e40b3e6da77..691be2258c4e 100644
+> > > > --- a/drivers/pci/bus.c
+> > > > +++ b/drivers/pci/bus.c
+> > > > @@ -316,7 +316,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+> > > >  	 */
+> > > >  	pcibios_bus_add_device(dev);
+> > > >  	pci_fixup_device(pci_fixup_final, dev);
+> > > > -	pci_create_sysfs_dev_files(dev);
+> > > > +	pci_create_sysfs_dev_files(dev, false);
+> > > >  	pci_proc_attach_device(dev);
+> > > >  	pci_bridge_d3_update(dev);
+> > > >  
+> > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > > index 6d78df981d41..b0c4852a51dd 100644
+> > > > --- a/drivers/pci/pci-sysfs.c
+> > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > @@ -1328,13 +1328,13 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+> > > >  	return retval;
+> > > >  }
+> > > >  
+> > > > -int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+> > > > +int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing)
+> > > >  {
+> > > >  	int retval;
+> > > >  	int rom_size;
+> > > >  	struct bin_attribute *attr;
+> > > >  
+> > > > -	if (!sysfs_initialized)
+> > > > +	if (!sysfs_initializing && !sysfs_initialized)
+> > > >  		return -EACCES;
+> > > >  
+> > > >  	if (pdev->cfg_size > PCI_CFG_SPACE_SIZE)
+> > > > @@ -1437,18 +1437,21 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
+> > > >  static int __init pci_sysfs_init(void)
+> > > >  {
+> > > >  	struct pci_dev *pdev = NULL;
+> > > > -	int retval;
+> > > > +	int retval = 0;
+> > > >  
+> > > > -	sysfs_initialized = 1;
+> > > >  	for_each_pci_dev(pdev) {
+> > > > -		retval = pci_create_sysfs_dev_files(pdev);
+> > > > +		if (!pci_dev_is_added(pdev))
+> > > > +			continue;
+> > > > +		retval = pci_create_sysfs_dev_files(pdev, true);
+> > > >  		if (retval) {
+> > > >  			pci_dev_put(pdev);
+> > > > -			return retval;
+> > > > +			goto out;
+> > > >  		}
+> > > >  	}
+> > > >  
+> > > > -	return 0;
+> > > > +out:
+> > > > +	sysfs_initialized = 1;
+> > > > +	return retval;
+> > > >  }
+> > > >  late_initcall(pci_sysfs_init);
+> > > >  
+> > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > > index 6d3f75867106..304294c7171e 100644
+> > > > --- a/drivers/pci/pci.h
+> > > > +++ b/drivers/pci/pci.h
+> > > > @@ -19,7 +19,7 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> > > >  
+> > > >  /* Functions internal to the PCI core code */
+> > > >  
+> > > > -int pci_create_sysfs_dev_files(struct pci_dev *pdev);
+> > > > +int pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing);
+> > > >  void pci_remove_sysfs_dev_files(struct pci_dev *pdev);
+> > > >  #if !defined(CONFIG_DMI) && !defined(CONFIG_ACPI)
+> > > >  static inline void pci_create_firmware_label_files(struct pci_dev *pdev)
+> > > > 
