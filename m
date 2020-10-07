@@ -2,109 +2,254 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47A27285F42
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 14:34:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58B8A285FB5
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 15:03:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgJGMeX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 08:34:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59144 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgJGMeX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 08:34:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097CTfeg068683;
-        Wed, 7 Oct 2020 12:34:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=zfRpUmFdpQCTso0em57C+RfmRphvB3ppoW0Mb2JBIFA=;
- b=FlwDhldIThrx9SvZ4+mmvr+WsTRsTmNb29z2YT/24vrTG2AfqxarvrNrwXGEExxop2fx
- p+t2BRSC6DnkL+ohey50qloUHihjeyH3S9WiJwnwegI/SlWhkB8krG7RvS48lmA82quc
- SXfgNyL5hjvwjVaKzQi+KCoR1VRJSajax+n8ZPXPYy1bGEq3rqVx9HBmCmHCICcTQVQA
- BjxuQamKMUSTz/zKK/X7OwvxEgTrTuo4hoDF5bdPdH94qEg97ICKkLcufSHjzWZyZmof
- 3vQ5ZXycmof9D9YeQC7R2ilqxMrUsvwEMIJguWdRKQleGz6WWPdPF3AriYXRHrk55/BU aA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 33xhxn1ck9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 07 Oct 2020 12:34:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097CVR0h193191;
-        Wed, 7 Oct 2020 12:34:07 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 33yyjh5a7a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Oct 2020 12:34:07 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 097CY4EF009867;
-        Wed, 7 Oct 2020 12:34:05 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Oct 2020 05:34:03 -0700
-Date:   Wed, 7 Oct 2020 15:33:45 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: fix a potential uninitentional integer overflow
- issue
-Message-ID: <20201007123045.GS4282@kadam>
-References: <20201007114615.19966-1-colin.king@canonical.com>
+        id S1728283AbgJGNDy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 09:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728253AbgJGNDy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Oct 2020 09:03:54 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8363E206F4;
+        Wed,  7 Oct 2020 13:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602075833;
+        bh=Abf/kHoHzQbKZESvmRd9KXIWoPUi4+5bt5dpHv5IVAk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KZu4VIrMaZ7VKNfV7shFjJr2iviUsoI0b1dHHmoI0tF0X88nLKfehsXDe02XMm7Al
+         PBNK2Hxe6ofNfORqhLZKUX76qU6WZfXw39+cZOwo+Ag14BChcX4YAKinDNXNhvq2aG
+         rnw3ci33Z7yKnIAK+TFiWZbDpIg73xzkik0AaHys=
+Date:   Wed, 7 Oct 2020 08:03:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
+Message-ID: <20201007130352.GA3235876@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201007114615.19966-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9766 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010070086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9766 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
- impostorscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 clxscore=1011 spamscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010070086
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA85sZsVKCbcHfxjNA83==YFDP_va=qp8JQEcbMFYJXNJP=1NQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 12:46:15PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Wed, Oct 07, 2020 at 01:31:48PM +0200, Ian Kumlien wrote:
+> On Mon, Oct 5, 2020 at 9:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Mon, Oct 05, 2020 at 08:38:55PM +0200, Ian Kumlien wrote:
+> > > On Mon, Oct 5, 2020 at 8:31 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >
+> > > > On Mon, Aug 03, 2020 at 04:58:32PM +0200, Ian Kumlien wrote:
+> > > > > Changes:
+> > > > > * Handle L0s correclty as well, making it per direction
+> > > > > * Moved the switch cost in to the if statement since a non L1 switch has
+> > > > >   no additional cost.
+> > > > >
+> > > > > For L0s:
+> > > > > We sumarize the entire latency per direction to see if it's acceptable
+> > > > > for the PCIe endpoint.
+> > > > >
+> > > > > If it's not, we clear the link for the path that had too large latency.
+> > > > >
+> > > > > For L1:
+> > > > > Currently we check the maximum latency of upstream and downstream
+> > > > > per link, not the maximum for the path
+> > > > >
+> > > > > This would work if all links have the same latency, but:
+> > > > > endpoint -> c -> b -> a -> root  (in the order we walk the path)
+> > > > >
+> > > > > If c or b has the higest latency, it will not register
+> > > > >
+> > > > > Fix this by maintaining the maximum latency value for the path
+> > > > >
+> > > > > This change fixes a regression introduced (but not caused) by:
+> > > > > 66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
+> > > > >
+> > > > > Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+> > > >
+> > > > I'm not sure where we're at with this.  If we can come up with:
+> > > >
+> > > >   - "lspci -vv" for the entire affected hierarchy before the fix
+> > > >
+> > > >   - specific identification of incorrect configuration per spec
+> > > >
+> > > >   - patch that fixes that specific misconfiguration
+> > > >
+> > > >   - "lspci -vv" for the entire affected hierarchy after the fix
+> > > >
+> > > > then we have something to work with.  It doesn't have to (and should
+> > > > not) fix all the problems at once.
+> > >
+> > > So detail the changes on my specific machine and then mention
+> > > 5.4.1.2.2 of the pci spec
+> > > detailing the exit from PCIe ASPM L1?
+> >
+> > Like I said, I need to see the current ASPM configuration, a note
+> > about what is wrong with it (this probably involves a comparison with
+> > what the spec says it *should* be), and the configuration after the
+> > patch showing that it's now fixed.
+> >
+> > > Basically writing a better changelog for the first patch?
+> > >
+> > > Any comments on the L0s patch?
+> >
+> > Not yet.  When it's packaged up in mergeable form I'll review it.  I
+> > just don't have time to extract everything myself.
 > 
-> The shift of 1 by align_order is evaluated using 32 bit arithmetic
-> and the result is assigned to a resource_size_t type variable that
-> is a 64 bit unsigned integer on 64 bit platforms. Fix an overflow
-> before widening issue by using the BIT_ULL macro to perform the
-> shift.
+> So, did it like this, since I don't think the output from my system
+> actually is important.
+> (I added some descriptive text that is loosely based on the spec)
+
+I think the before/after lspci from your system *is* important.
+Concrete examples are a big help.
+
+The commit log below looks accurate, but of course needs to be
+attached to a specific patch.  Can you please post the complete patch
+with commit log all by itself so it's not buried in the middle of this
+long thread?
+
+> ----
+> Use maximum latency when determining L1 ASPM
 > 
-> Addresses-Coverity: ("Uninitentional integer overflow")
-> Fixes: 07d8d7e57c28 ("PCI: Make specifying PCI devices in kernel parameters reusable")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Make pcie_aspm_check_latency comply with the PCIe spec, specifically:
+> "5.4.1.2.2. Exit from the L1 State"
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6d4d5a2f923d..1a5844d7af35 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6209,7 +6209,7 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
->  			if (align_order == -1)
->  				align = PAGE_SIZE;
->  			else
-> -				align = 1 << align_order;
-> +				align = BIT_ULL(align_order);
-
-"align_order" comes from sscanf() so Smatch thinks it's not trusted.
-Anything above 63 is undefined behavior.  There should be a bounds check
-on this but I don't know what the valid values of "align" are.
-
-regards,
-dan carpenter
-
+> Which makes it clear that each switch is required to initiate a
+> transition within 1μs from receiving it, accumulating this latency and
+> then we have to wait for the slowest link along the path before
+> entering L0 state from L1.
+> 
+> The current code doesn't take the maximum latency into account.
+> 
+> From the example:
+>    +----------------+
+>    |                |
+>    |  Root complex  |
+>    |                |
+>    |    +-----+     |
+>    |    |32 μs|     |
+>    +----------------+
+>            |
+>            |  Link 1
+>            |
+>    +----------------+
+>    |     |8 μs|     |
+>    |     +----+     |
+>    |    Switch A    |
+>    |     +----+     |
+>    |     |8 μs|     |
+>    +----------------+
+>            |
+>            |  Link 2
+>            |
+>    +----------------+
+>    |    |32 μs|     |
+>    |    +-----+     |
+>    |    Switch B    |
+>    |    +-----+     |
+>    |    |32 μs|     |
+>    +----------------+
+>            |
+>            |  Link 3
+>            |
+>    +----------------+
+>    |     |8μs|      |
+>    |     +---+      |
+>    |   Endpoint C   |
+>    |                |
+>    |                |
+>    +----------------+
+> 
+> Links 1, 2 and 3 are all in L1 state - endpoint C initiates the
+> transition to L0 at time T. Since switch B takes 32 μs to exit L1 on
+> it's ports, Link 3 will transition to L0 at T+32 (longest time
+> considering T+8 for endpoint C and T+32 for switch B).
+> 
+> Switch B is required to initiate a transition from the L1 state on it's
+> upstream port after no more than 1 μs from the beginning of the
+> transition from L1 state on the downstream port. Therefore, transition from
+> L1 to L0 will begin on link 2 at T+1, this will cascade up the path.
+> 
+> The path will exit L1 at T+34.
+> 
+> Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+> ----
+> 
+> > > > > ---
+> > > > >  drivers/pci/pcie/aspm.c | 41 ++++++++++++++++++++++++++---------------
+> > > > >  1 file changed, 26 insertions(+), 15 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > > > index b17e5ffd31b1..bc512e217258 100644
+> > > > > --- a/drivers/pci/pcie/aspm.c
+> > > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > > @@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+> > > > >
+> > > > >  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+> > > > >  {
+> > > > > -     u32 latency, l1_switch_latency = 0;
+> > > > > +     u32 latency, l1_max_latency = 0, l1_switch_latency = 0,
+> > > > > +             l0s_latency_up = 0, l0s_latency_dw = 0;
+> > > > >       struct aspm_latency *acceptable;
+> > > > >       struct pcie_link_state *link;
+> > > > >
+> > > > > @@ -447,15 +448,22 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+> > > > >       acceptable = &link->acceptable[PCI_FUNC(endpoint->devfn)];
+> > > > >
+> > > > >       while (link) {
+> > > > > -             /* Check upstream direction L0s latency */
+> > > > > -             if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
+> > > > > -                 (link->latency_up.l0s > acceptable->l0s))
+> > > > > -                     link->aspm_capable &= ~ASPM_STATE_L0S_UP;
+> > > > > -
+> > > > > -             /* Check downstream direction L0s latency */
+> > > > > -             if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+> > > > > -                 (link->latency_dw.l0s > acceptable->l0s))
+> > > > > -                     link->aspm_capable &= ~ASPM_STATE_L0S_DW;
+> > > > > +             if (link->aspm_capable & ASPM_STATE_L0S) {
+> > > > > +                     /* Check upstream direction L0s latency */
+> > > > > +                     if (link->aspm_capable & ASPM_STATE_L0S_UP) {
+> > > > > +                             l0s_latency_up += link->latency_up.l0s;
+> > > > > +                             if (l0s_latency_up > acceptable->l0s)
+> > > > > +                                     link->aspm_capable &= ~ASPM_STATE_L0S_UP;
+> > > > > +                     }
+> > > > > +
+> > > > > +                     /* Check downstream direction L0s latency */
+> > > > > +                     if (link->aspm_capable & ASPM_STATE_L0S_DW) {
+> > > > > +                             l0s_latency_dw += link->latency_dw.l0s;
+> > > > > +                             if (l0s_latency_dw > acceptable->l0s)
+> > > > > +                                     link->aspm_capable &= ~ASPM_STATE_L0S_DW;
+> > > > > +                     }
+> > > > > +             }
+> > > > > +
+> > > > >               /*
+> > > > >                * Check L1 latency.
+> > > > >                * Every switch on the path to root complex need 1
+> > > > > @@ -469,11 +477,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+> > > > >                * L1 exit latencies advertised by a device include L1
+> > > > >                * substate latencies (and hence do not do any check).
+> > > > >                */
+> > > > > -             latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> > > > > -             if ((link->aspm_capable & ASPM_STATE_L1) &&
+> > > > > -                 (latency + l1_switch_latency > acceptable->l1))
+> > > > > -                     link->aspm_capable &= ~ASPM_STATE_L1;
+> > > > > -             l1_switch_latency += 1000;
+> > > > > +             if (link->aspm_capable & ASPM_STATE_L1) {
+> > > > > +                     latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> > > > > +                     l1_max_latency = max_t(u32, latency, l1_max_latency);
+> > > > > +                     if (l1_max_latency + l1_switch_latency > acceptable->l1)
+> > > > > +                             link->aspm_capable &= ~ASPM_STATE_L1;
+> > > > > +
+> > > > > +                     l1_switch_latency += 1000;
+> > > > > +             }
+> > > > >
+> > > > >               link = link->parent;
+> > > > >       }
+> > > > > --
+> > > > > 2.28.0
+> > > > >
