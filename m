@@ -2,117 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAC77286736
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 20:29:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ADF028678D
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 20:41:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgJGS3j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 14:29:39 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35769 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgJGS3j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 14:29:39 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w141so3538396oia.2;
-        Wed, 07 Oct 2020 11:29:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bDzHhW9LDGPASDV0QrY0c30B4pdX3NkGe7Qj/I5UDy0=;
-        b=MgVnYN5FtrPMV1FrNsS8WNFkAwChEEnaCt7P/DJIG/f5FgERSq1SttDMCuTpPnyEt+
-         o34otXXTf1eL4wDwIV9ZcvhY6LvdcRmI2krRSJ/urcPblYFi+Fx/faMvWqVkJixe/pht
-         YCnJEHapOq7bX4hc0Wpcqkml0iCeDhIEewslsD25ZAzqUm/t0AnWnU1K2ENdbNQytEZ7
-         ZHvcd3D3foIVyU4O38LkFxzmCAG2PPQosr+syrfQAH9l9UCOuwgMw7VBuCKGb1b76geT
-         CBQGOPXGg3LTw9+8n45XgCrwEyaiJn9jHDcpwQQFTonfoWXOTd0VlB7amMXi/72q49Cl
-         vBAA==
-X-Gm-Message-State: AOAM53348ggbcdZyamv+6y1iygQJ6znE7jn+sAX9aT8GWx24c/jAlhjn
-        5bjN16zhAZVIb/IbxfJLYDBwkyDjiDUN
-X-Google-Smtp-Source: ABdhPJxuO6ZUOxhlR8smJRkNCcIJPWRBNHriJqSRdlivM3fxZMy5dXZSJOQCIb+YblujJ33XhJ1u+w==
-X-Received: by 2002:aca:d17:: with SMTP id 23mr2844662oin.9.1602095378349;
-        Wed, 07 Oct 2020 11:29:38 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 92sm2201349otl.1.2020.10.07.11.29.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Oct 2020 11:29:37 -0700 (PDT)
-Received: (nullmailer pid 497563 invoked by uid 1000);
-        Wed, 07 Oct 2020 18:29:36 -0000
-Date:   Wed, 7 Oct 2020 13:29:36 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH V2] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20201007182936.GA470998@bogus>
-References: <20200926160934.136182-1-marek.vasut@gmail.com>
- <CAMuHMdURuSsYRwi10FT+s-rVjok0f-FgS6G8rmpg46u98scMkQ@mail.gmail.com>
- <1431d12a-0e19-6795-b2e0-fb652f8a95c1@gmail.com>
- <CAMuHMdWtj=c=y7a2+W10HgYNj3rh2P6nSDd-j4RKKuUiztCxjA@mail.gmail.com>
+        id S1727242AbgJGSle (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 14:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbgJGSle (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Oct 2020 14:41:34 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E5DE2168B;
+        Wed,  7 Oct 2020 18:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602096093;
+        bh=jybj9lxB9HDSUiFTDfX0tbqIYHCI2WD8V2Srcj/Y2q0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fvTSDoaSFaR5f+GW+1VfPgc/eLGyZstXFPM0Pbbd72KBA+ecoTEtBddTdYZhtlYj3
+         bsFSSKkvJi72PjhGp9tmM7ZEtUUSjRP9PU6yME2u3FWvCct89TVsvj/po3TnsMWfeR
+         J1+3vx2h0ip+tE/J1MK3LQud3yRzf+O7RxgCuZrk=
+Date:   Wed, 7 Oct 2020 13:41:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
+Message-ID: <20201007184131.GA3259154@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWtj=c=y7a2+W10HgYNj3rh2P6nSDd-j4RKKuUiztCxjA@mail.gmail.com>
+In-Reply-To: <20201007164426.1812530-11-daniel.vetter@ffwll.ch>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 05, 2020 at 09:31:54AM +0200, Geert Uytterhoeven wrote:
-> Hi Marek,
+Capitalize subject, like other patches in this series and previous
+drivers/pci history.
+
+On Wed, Oct 07, 2020 at 06:44:23PM +0200, Daniel Vetter wrote:
+> Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
+> the region") /dev/kmem zaps ptes when the kernel requests exclusive
+> acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
+> the default for all driver uses.
 > 
-> On Sun, Oct 4, 2020 at 4:16 PM Marek Vasut <marek.vasut@gmail.com> wrote:
-> > On 9/28/20 11:35 AM, Geert Uytterhoeven wrote:
-> > [...]
-> > >> +static int __init rcar_pcie_init(void)
-> > >> +{
-> > >> +#ifdef CONFIG_ARM_LPAE
-> > >> +       hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > >> +                       "asynchronous external abort");
-> > >> +#else
-> > >> +       hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > >> +                       "imprecise external abort");
-> > >> +#endif
-> > >
-> > > As there can be only a single handler, this may interfere with a handler
-> > > for another platform in a multi-platform kernel.
-> > > Hence I think this should not be done unconditionally, but be moved to
-> > > the driver's .probe() callback.
-> >
-> > Why is nobody doing this in the probe code then ? It seems all the other
+> Except there's two more ways to access pci bars: sysfs and proc mmap
+> support. Let's plug that hole.
+
+s/pci/PCI/ in commit logs and comments.
+
+> For revoke_devmem() to work we need to link our vma into the same
+> address_space, with consistent vma->vm_pgoff. ->pgoff is already
+> adjusted, because that's how (io_)remap_pfn_range works, but for the
+> mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
+> at ->open time, but that's a bit tricky here with all the entry points
+> and arch code. So instead create a fake file and adjust vma->vm_file.
 > 
-> drivers/pci/controller/dwc/pci-keystone.c is:
+> Note this only works for ARCH_GENERIC_PCI_MMAP_RESOURCE. But that
+> seems to be a subset of architectures support STRICT_DEVMEM, so we
+> should be good.
 > 
->   ks_pcie_probe()
->     ks_pcie_add_pcie_port()
->       dw_pcie_host_init()
->         pp->ops->host_init(pp) = ks_pcie_host_init()
->           hook_fault_code()
+> The only difference in access checks left is that sysfs pci mmap does
+> not check for CAP_RAWIO. But I think that makes some sense compared to
+> /dev/mem and proc, where one file gives you access to everything and
+> no ownership applies.
 
-Looks broken in deferred probe case as hook_fault_code is __init.
+> --- a/drivers/char/mem.c
+> +++ b/drivers/char/mem.c
+> @@ -810,6 +810,7 @@ static loff_t memory_lseek(struct file *file, loff_t offset, int orig)
+>  }
+>  
+>  static struct inode *devmem_inode;
+> +static struct vfsmount *devmem_vfs_mount;
+>  
+>  #ifdef CONFIG_IO_STRICT_DEVMEM
+>  void revoke_devmem(struct resource *res)
+> @@ -843,6 +844,20 @@ void revoke_devmem(struct resource *res)
+>  
+>  	unmap_mapping_range(inode->i_mapping, res->start, resource_size(res), 1);
+>  }
+> +
+> +struct file *devmem_getfile(void)
+> +{
+> +	struct file *file;
+> +
+> +	file = alloc_file_pseudo(devmem_inode, devmem_vfs_mount, "devmem",
+> +				 O_RDWR, &kmem_fops);
+> +	if (IS_ERR(file))
+> +		return NULL;
+> +
+> +	file->f_mapping = devmem_indoe->i_mapping;
 
-Really, hook_fault_code needs to be exported so these drivers can be 
-modules. Or we split out all the abort handlers to a separate broken, 
-aborting PCI hosts module.
+"devmem_indoe"?  Obviously not compiled, I guess?
 
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -304,8 +304,10 @@ struct resource *request_free_mem_region(struct resource *base,
+>  
+>  #ifdef CONFIG_IO_STRICT_DEVMEM
+>  void revoke_devmem(struct resource *res);
+> +struct file *devm_getfile(void);
+>  #else
+>  static inline void revoke_devmem(struct resource *res) { };
+> +static inline struct file *devmem_getfile(void) { return NULL; };
 
-> > drivers which hook fault code do it in init as well. I can imagine that
+I guess these names are supposed to match?
+
+>  #endif
+>  
+>  #endif /* __ASSEMBLY__ */
+> -- 
+> 2.28.0
 > 
-> Probably nobody bothered exercising the external abort handler on
-> multi-platform kernels?
-> 
-> > something might trip the fault handler even before probe is called, e.g.
-> > some PM handling or simply user accessing that PCIe area using setpci.
-
-I don't see how that's possible. You'd first hit translation faults as 
-nothing is mapped.
-
-
-> If that is the case, it must indeed by done earlier, but still
-> conditional on the presence of the actual PCIe controller.
-
-imx6 should be conditional too.
-
-Rob
