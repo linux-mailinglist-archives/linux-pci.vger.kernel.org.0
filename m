@@ -2,149 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D84A12865E8
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 19:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E0228661E
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 19:41:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgJGR2y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 13:28:54 -0400
-Received: from mga12.intel.com ([192.55.52.136]:7786 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbgJGR2x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Oct 2020 13:28:53 -0400
-IronPort-SDR: K0HIRN/KUmkODLSWpTxVne3OH/b885xBH1cORRpNKIkshKiihbSY9Phg4KQ5dCIh9fItQH9g2K
- TSZXShCO5ETg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9767"; a="144411819"
-X-IronPort-AV: E=Sophos;i="5.77,347,1596524400"; 
-   d="scan'208";a="144411819"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 10:28:51 -0700
-IronPort-SDR: 0e/WL67OF1SS3EUzmvW2mir+firZR9ovDYD8JbaZS63+sZHvwi1Am/7iTu3v5+y1B01G4PiStF
- BEp+pd2EnllQ==
-X-IronPort-AV: E=Sophos;i="5.77,347,1596524400"; 
-   d="scan'208";a="311835366"
-Received: from jdelcan-mobl.amr.corp.intel.com (HELO [10.254.64.135]) ([10.254.64.135])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 10:28:51 -0700
-Subject: Re: [PATCH v8 2/6] PCI/DPC: define a function to check and wait till
- port finish DPC handling
-To:     Ethan Zhao <haifeng.zhao@intel.com>, bhelgaas@google.com,
-        oohall@gmail.com, ruscur@russell.cc, lukas@wunner.de,
-        andriy.shevchenko@linux.intel.com, stuart.w.hayes@gmail.com,
-        mr.nuke.me@gmail.com, mika.westerberg@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@linux.intel.com, xerces.zhao@gmail.com
-References: <20201007113158.48933-1-haifeng.zhao@intel.com>
- <20201007113158.48933-3-haifeng.zhao@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
-Message-ID: <4bedeb35-942e-5ad3-9721-62495af1f09a@intel.com>
-Date:   Wed, 7 Oct 2020 10:28:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728344AbgJGRlW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 13:41:22 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37505 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728275AbgJGRlW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 13:41:22 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t77so3360435oie.4;
+        Wed, 07 Oct 2020 10:41:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2tkejhV+QuFeIWOyFwduIfZWNAaS8WIxtLLItp9kA84=;
+        b=L151bja/s2zb73U7gBm/c3OSxCePybbayb9duBOIdWPXSMd9PZXNfsLbAarpMRRFi7
+         HN326jClVhXF8gHoLLNoLngjoiQwI/CQRddN8ANLocE3KLIFu97NootDe3/3JFNNa5wl
+         xKTYz365lpeP7KmosfwEBcZR1xjMRu099OW4r/2Vm+fspWWigea/AKJSOJ5KSeOJpTTK
+         2eivzL3VaUrFYPT+Pm77/El/DlyI8VehJEPTQzoZf/U9TLP/eNOf3MTQfKnYHUtOzDHq
+         auackWy8ANgrKWeEk71LGP+sHbwSJlb8mUElVm1T5Is4P2EWHFUqMTrBVOrvi0VfbpSM
+         p0jg==
+X-Gm-Message-State: AOAM530g+5Kinw0S7dtS9ancWXIjGM2p6GveLh+Nu6esSFajp2dfWrzy
+        aejGyFdSCPXrakSRyfsLzan6iYCDadHM
+X-Google-Smtp-Source: ABdhPJxy4/uInRR/gtoRZx5s94r1PKrLbTZqexPwokp6bMvw8z07Hv/IAIrmZFrzABmlkeIG7hXUGQ==
+X-Received: by 2002:aca:d17:: with SMTP id 23mr2722546oin.9.1602092481310;
+        Wed, 07 Oct 2020 10:41:21 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g7sm2027896otk.56.2020.10.07.10.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Oct 2020 10:41:20 -0700 (PDT)
+Received: (nullmailer pid 432483 invoked by uid 1000);
+        Wed, 07 Oct 2020 17:41:19 -0000
+Date:   Wed, 7 Oct 2020 12:41:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] PCI: dwc: Fix MSI page leakage in suspend/resume
+Message-ID: <20201007174119.GA376477@bogus>
+References: <20200930091205.792d6c7c@xhacker.debian>
+ <20200930091449.50ae0caf@xhacker.debian>
 MIME-Version: 1.0
-In-Reply-To: <20201007113158.48933-3-haifeng.zhao@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200930091449.50ae0caf@xhacker.debian>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 10/7/20 4:31 AM, Ethan Zhao wrote:
-> Once root port DPC capability is enabled and triggered, at the beginning
-> of DPC is triggered, the DPC status bits are set by hardware and then
-> sends DPC/DLLSC/PDC interrupts to OS DPC and pciehp drivers, it will
-> take the port and software DPC interrupt handler 10ms to 50ms (test data
-> on ICS(Ice Lake SP platform, see
-> https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server)
-> & stable 5.9-rc6) to complete the DPC containment procedure
-This data is based on one particular architecture. So using this
-to create a timed loop in pci_wait_port_outdpc() looks incorrect.
-
-I still recommend looking for some locking model to fix this
-issue (may be atomic state flag or lock).
-> till the DPC status is cleared at the end of the DPC interrupt handler.
->
-> We use this function to check if the root port is in DPC handling status
-> and wait till the hardware and software completed the procedure.
->
-> Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-> Tested-by: Wen Jin <wen.jin@intel.com>
-> Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
+On Wed, Sep 30, 2020 at 09:15:25AM +0800, Jisheng Zhang wrote:
+> Currently, dw_pcie_msi_init() allocates and maps page for msi, then
+> program the PCIE_MSI_ADDR_LO and PCIE_MSI_ADDR_HI. The Root Complex
+> may lose power during suspend-to-RAM, so when we resume, we want to
+> redo the latter but not the former. If designware based driver (for
+> example, pcie-tegra194.c) calls dw_pcie_msi_init() in resume path, the
+> msi page will be leaked.
+> 
+> As pointed out by Rob and Ard, there's no need to allocate a page for
+> the MSI address, we could use an address in the driver data.
+> 
+> To avoid map the MSI msg again during resume, we move the map MSI msg
+> from dw_pcie_msi_init() to dw_pcie_host_init().
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 > ---
-> changes:
->   v2：align ICS code name to public doc.
->   v3: no change.
->   v4: response to Christoph's (Christoph Hellwig <hch@infradead.org>)
->       tip, move pci_wait_port_outdpc() to DPC driver and its declaration
->       to pci.h.
->   v5: fix building issue reported by lkp@intel.com with some config.
->   v6: move from [1/5] to [2/5].
->   v7: no change.
->   v8: no change.
->
->   drivers/pci/pci.h      |  2 ++
->   drivers/pci/pcie/dpc.c | 27 +++++++++++++++++++++++++++
->   2 files changed, 29 insertions(+)
->
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index fa12f7cbc1a0..455b32187abd 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -455,10 +455,12 @@ void pci_restore_dpc_state(struct pci_dev *dev);
->   void pci_dpc_init(struct pci_dev *pdev);
->   void dpc_process_error(struct pci_dev *pdev);
->   pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
-> +bool pci_wait_port_outdpc(struct pci_dev *pdev);
->   #else
->   static inline void pci_save_dpc_state(struct pci_dev *dev) {}
->   static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
->   static inline void pci_dpc_init(struct pci_dev *pdev) {}
-> +static inline bool pci_wait_port_outdpc(struct pci_dev *pdev) { return false; }
->   #endif
->   
->   #ifdef CONFIG_PCI_ATS
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index daa9a4153776..2e0e091ce923 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -71,6 +71,33 @@ void pci_restore_dpc_state(struct pci_dev *dev)
->   	pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
->   }
->   
-> +bool pci_wait_port_outdpc(struct pci_dev *pdev)
-> +{
-> +	u16 cap = pdev->dpc_cap, status;
-> +	u16 loop = 0;
-> +
-> +	if (!cap) {
-> +		pci_WARN_ONCE(pdev, !cap, "No DPC capability initiated\n");
-> +		return false;
-> +	}
-> +	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-> +	pci_dbg(pdev, "DPC status %x, cap %x\n", status, cap);
-> +
-> +	while (status & PCI_EXP_DPC_STATUS_TRIGGER && loop < 100) {
-> +		msleep(10);
-> +		loop++;
-> +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-> +	}
-> +
-> +	if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-> +		pci_dbg(pdev, "Out of DPC %x, cost %d ms\n", status, loop*10);
-> +		return true;
-> +	}
-> +
-> +	pci_dbg(pdev, "Timeout to wait port out of DPC status\n");
-> +	return false;
-> +}
-> +
->   static int dpc_wait_rp_inactive(struct pci_dev *pdev)
->   {
->   	unsigned long timeout = jiffies + HZ;
+>  drivers/pci/controller/dwc/pci-dra7xx.c       | 18 ++++++++++-
+>  .../pci/controller/dwc/pcie-designware-host.c | 32 +++++++++----------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
+>  3 files changed, 34 insertions(+), 18 deletions(-)
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I'm working on some larger MSI clean-ups which should eliminate the 
+dra7xx addition, but this is good enough for now.
 
+Reviewed-by: Rob Herring <robh@kernel.org>
