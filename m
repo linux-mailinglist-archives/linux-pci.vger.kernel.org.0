@@ -2,266 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B16286A8A
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 23:54:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88910286AD2
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 00:24:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgJGVyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 17:54:49 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37023 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbgJGVyt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Oct 2020 17:54:49 -0400
-IronPort-SDR: ATO7u6xTVJmak99nNDBAlisrVn4SN51RpeRAkc63m6bltuWiUoyS8YLWZJVvpfog8dXnDidLSo
- VNRc46nAznsg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9767"; a="165273717"
-X-IronPort-AV: E=Sophos;i="5.77,348,1596524400"; 
-   d="scan'208";a="165273717"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 14:54:48 -0700
-IronPort-SDR: 4qfMTZo4u5Fv8wibns12ZIoRmV3MLV1iH96g1M1EcAG5Lxb3/GxNyeVD/JEo9YANCtarMT2JER
- z5DhGfCrwOgA==
-X-IronPort-AV: E=Sophos;i="5.77,348,1596524400"; 
-   d="scan'208";a="311949651"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.241.84]) ([10.212.241.84])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 14:54:45 -0700
-Subject: Re: [PATCH v3 11/18] dmaengine: idxd: ims setup for the vdcm
-To:     Thomas Gleixner <tglx@linutronix.de>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
- <160021253189.67751.12686144284999931703.stgit@djiang5-desk3.ch.intel.com>
- <87mu17ghr1.fsf@nanos.tec.linutronix.de>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com>
-Date:   Wed, 7 Oct 2020 14:54:40 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S1728742AbgJGWYK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 18:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbgJGWYK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 18:24:10 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE39C0613D6
+        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 15:24:09 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id o18so3848830edq.4
+        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 15:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zic23vwE4RxhL64QubFNAgrR6bPLwF/Sw808vPXOvcE=;
+        b=QQSRcBFI6KAV++JS9/GFj7Fmw4j7a/iMiUg1ZTuLmVxWhkZMKv0QD8k1ukWq7eq/is
+         aqhku7tesefyyeplMfP+uZ40G5Eu5h32eX3quWRsYX4t93t8hfPAksy+eKFnntLzh659
+         XKe6EgVkLvN8qFLGttYIbd5R75etFF329oIsGVg7tFamYwMf914oOqvj5Aj57gMZmmXn
+         BdX+R3HH+c0ZbeHsryryJmXxzi8LbxHVyDfXa28xyWATs9steaqxyt3ORz7tJ5iS3p0B
+         /C9lomlbRYU4nllCvXcMpiVBxaPdCxNSDAwt+Wnv7NkDlHC0AVoEJJmmbnIbcEEDMbkk
+         VNvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zic23vwE4RxhL64QubFNAgrR6bPLwF/Sw808vPXOvcE=;
+        b=OUEqHlQ7XAt/qpeA5SI/9akQzNzqt9jXvtWvjB/ofkC/h1E2aHC9054A7wmW9j3Hhs
+         liI5p7MXWzgIWuhU2FHUPgvRkBOEi4LU637CWP4m3iD+zlLGVxu9m9nyLk/d3j+sXFNT
+         eWECJvriQKK+GQZ4N6e1wkoGyp0qkQmkPDEzNEyXn+txK+ELyr2HJdkD/UB2YVcBT23U
+         PfDAbLXX9ii9WqpJrDYrMdQN71qxvrFDd1xO4Q86IVcwKhdFiv9AckwmeAslrQDVoBKO
+         YLpNPrgXTkNwo/YPakoQV1NE4ynR6F/SP6JSfu7Zb1VZjtgDfqfUVp637HdRA+aO0WRs
+         qvLw==
+X-Gm-Message-State: AOAM533aTA0LbyxqWvddU5hhryhzoXqTUzKvGmOBnZj95P7m+9WVgFOs
+        /Rfj7bQ3XN0kFP+1qdFMGRsU1nw8JKYvtmzGE7LqMQ==
+X-Google-Smtp-Source: ABdhPJyEbSoLmGrub89sZew46mtuYR5cC3wqZnDpHg2eEdBRv6ndP1ZtRmu/HFaFG/gOZx15NdgN0Q/4bhJSTz4VXAk=
+X-Received: by 2002:a50:d0d0:: with SMTP id g16mr5862132edf.18.1602109448239;
+ Wed, 07 Oct 2020 15:24:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87mu17ghr1.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
+ <20201007164426.1812530-11-daniel.vetter@ffwll.ch> <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
+ <CAKMK7uFoxiPdjO-yhd-mKqumnTpjcENEReb1sOYhOwRRCL0wpQ@mail.gmail.com>
+In-Reply-To: <CAKMK7uFoxiPdjO-yhd-mKqumnTpjcENEReb1sOYhOwRRCL0wpQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 7 Oct 2020 15:23:57 -0700
+Message-ID: <CAPcyv4jGxsB5so8mKqYrsn2CEc7nO2yPvzZZ_mvM_-R=BZfKHg@mail.gmail.com>
+Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Oct 7, 2020 at 12:49 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+>
+> On Wed, Oct 7, 2020 at 9:33 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Wed, Oct 7, 2020 at 11:11 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> > >
+> > > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
+> > > the region") /dev/kmem zaps ptes when the kernel requests exclusive
+> > > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
+> > > the default for all driver uses.
+> > >
+> > > Except there's two more ways to access pci bars: sysfs and proc mmap
+> > > support. Let's plug that hole.
+> >
+> > Ooh, yes, lets.
+> >
+> > > For revoke_devmem() to work we need to link our vma into the same
+> > > address_space, with consistent vma->vm_pgoff. ->pgoff is already
+> > > adjusted, because that's how (io_)remap_pfn_range works, but for the
+> > > mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
+> > > at ->open time, but that's a bit tricky here with all the entry points
+> > > and arch code. So instead create a fake file and adjust vma->vm_file.
+> >
+> > I don't think you want to share the devmem inode for this, this should
+> > be based off the sysfs inode which I believe there is already only one
+> > instance per resource. In contrast /dev/mem can have multiple inodes
+> > because anyone can just mknod a new character device file, the same
+> > problem does not exist for sysfs.
+>
+> But then I need to find the right one, plus I also need to find the
+> right one for the procfs side. That gets messy, and I already have no
+> idea how to really test this. Shared address_space is the same trick
+> we're using in drm (where we have multiple things all pointing to the
+> same underlying resources, through different files), and it gets the
+> job done. So that's why I figured the shared address_space is the
+> cleaner solution since then unmap_mapping_range takes care of
+> iterating over all vma for us. I guess I could reimplement that logic
+> with our own locking and everything in revoke_devmem, but feels a bit
+> silly. But it would also solve the problem of having mutliple
+> different mknod of /dev/kmem with different address_space behind them.
+> Also because of how remap_pfn_range works, all these vma do use the
+> same pgoff already anyway.
 
-
-On 9/30/2020 12:57 PM, Thomas Gleixner wrote:
-> On Tue, Sep 15 2020 at 16:28, Dave Jiang wrote:
->> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->> index a39392157dc2..115a8f49aab3 100644
->> --- a/drivers/dma/Kconfig
->> +++ b/drivers/dma/Kconfig
->> @@ -301,6 +301,7 @@ config INTEL_IDXD_MDEV
->>   	depends on INTEL_IDXD
->>   	depends on VFIO_MDEV
->>   	depends on VFIO_MDEV_DEVICE
->> +	depends on IMS_MSI_ARRAY
-> 
-> select?
-
-Will fix
-
-> 
->> int idxd_mdev_host_init(struct idxd_device *idxd)
->> {
->> 	struct device *dev = &idxd->pdev->dev;
-> 
->> +	ims_info.max_slots = idxd->ims_size;
->> +	ims_info.slots = idxd->reg_base + idxd->ims_offset;
->> +	dev->msi_domain =
->> pci_ims_array_create_msi_irq_domain(idxd->pdev, &ims_info);
-> 
-> 1) creating the domain can fail and checking the return code is overrated
-> 
-> 2) dev_set_msi_domain() exists for a reason. If we change any of this in
->     struct device then we can chase all the open coded mess in drivers
->     like this.
-> 
-> Also can you please explain how this is supposed to work?
-> 
-> idxd->pdev is the host PCI device. So why are you overwriting the MSI
-> domain of the underlying host device? This works by chance because you
-> allocate the regular MSIX interrupts for the host device _before_
-> invoking this.
-> 
-> IIRC, I provided you ASCII art to show how all of this is supposed to be
-> structured...
-
-Yes. I see now that the implementation is wrong. In the updated code for next rev, I'm saving the domain to the idxd driver context. 
-
-	ims_info.max_slots = idxd->ims_size;
-	ims_info.slots = idxd->reg_base + idxd->ims_offset;
-	idxd->ims_domain = pci_ims_array_create_msi_irq_domain(idxd->pdev, &ims_info);
-
-dev_set_msi_domain() will be called with mdev later on when mdevs are being created. 
-
-	struct device *dev = mdev_dev(mdev);
-
-        irq_domain = idxd->ims_domain;
-        dev_set_msi_domain(dev, irq_domain);
-        rc = msi_domain_alloc_irqs(irq_domain, dev, vecs);
-        if (rc < 0)
-                return rc;
-
-        for_each_msi_entry(entry, dev) {
-                irq_entry = &vidxd->irq_entries[i];
-                irq_entry->vidxd = vidxd;
-                irq_entry->entry = entry;
-                irq_entry->id = i;
-                i++;
-        }
-
-
-> 
->>   int vidxd_send_interrupt(struct vdcm_idxd *vidxd, int msix_idx)
->>   {
->>   	int rc = -1;
->> @@ -44,15 +46,63 @@ int vidxd_send_interrupt(struct vdcm_idxd *vidxd, int msix_idx)
->>   	return rc;
->>   }
->>   
->> +#define IMS_PASID_ENABLE	0x8
->>   int vidxd_disable_host_ims_pasid(struct vdcm_idxd *vidxd, int ims_idx)
-> 
-> Yet more unreadable glue. The coding style of this stuff is horrible.
-> 
->>   {
->> -	/* PLACEHOLDER */
->> +	struct mdev_device *mdev = vidxd->vdev.mdev;
->> +	struct device *dev = mdev_dev(mdev);
->> +	unsigned int ims_offset;
->> +	struct idxd_device *idxd = vidxd->idxd;
->> +	u32 val;
->> +
->> +	/*
->> +	 * Current implementation limits to 1 WQ for the vdev and therefore
->> +	 * also only 1 IMS interrupt for that vdev.
->> +	 */
->> +	if (ims_idx >= VIDXD_MAX_WQS) {
->> +		dev_warn(dev, "ims_idx greater than vidxd allowed: %d\n", ims_idx);
-> 
-> This warning text makes no sense whatsoever.
-> 
->> +		return -EINVAL;
->> +	}
->> +
->> +	ims_offset = idxd->ims_offset + vidxd->ims_index[ims_idx] * 0x10;
->> +	val = ioread32(idxd->reg_base + ims_offset + 12);
->> +	val &= ~IMS_PASID_ENABLE;
->> +	iowrite32(val, idxd->reg_base + ims_offset + 12);
-> 
-> *0x10 + 12 !?!?
-> 
-> Reusing struct ims_slot from the irq chip driver would not be convoluted
-> enough, right?
-
-Yes. Fixing that.
-
-> 
-> Aside of that this is fiddling in the IMS storage array behind the irq
-> chips back without any comment here and a big fat comment about the
-> shared usage of ims_slot::ctrl in the irq chip driver.
-> 
-
-This is to program the pasid fields in the IMS table entry. Was thinking the pasid fields may be considered device specific so didn't attempt to add the support to the core code. 
-
-> This is kernel programming, not the obfuscated C code contest.
-> 
->> +	/* Setup the PASID filtering */
->> +	pasid = idxd_get_mdev_pasid(mdev);
->> +
->> +	if (pasid >= 0) {
->> +		ims_offset = idxd->ims_offset + vidxd->ims_index[ims_idx] * 0x10;
->> +		val = ioread32(idxd->reg_base + ims_offset + 12);
->> +		val |= IMS_PASID_ENABLE | (pasid << 12) | (val & 0x7);
->> +		iowrite32(val, idxd->reg_base + ims_offset + 12);
-> 
-> More magic numbers and more fiddling in the IMS slot.
-> 
->> +	} else {
->> +		dev_warn(dev, "pasid setup failed for ims entry %lld\n", vidxd->ims_index[ims_idx]);
->> +		return -ENXIO;
->> +	}
->> +
->>   	return 0;
->>   }
->>   
->> @@ -839,12 +889,43 @@ static void vidxd_wq_disable(struct vdcm_idxd *vidxd, int wq_id_mask)
->>   
->>   void vidxd_free_ims_entries(struct vdcm_idxd *vidxd)
->>   {
->> -	/* PLACEHOLDER */
->> +	struct irq_domain *irq_domain;
->> +	struct mdev_device *mdev = vidxd->vdev.mdev;
->> +	struct device *dev = mdev_dev(mdev);
->> +	int i;
->> +
->> +	for (i = 0; i < VIDXD_MAX_MSIX_VECS - 1; i++)
->> +		vidxd->ims_index[i] = -1;
->> +
->> +	irq_domain = vidxd->idxd->pdev->dev.msi_domain;
-> 
-> See above.
-
-struct device *dev = mdev_dev(mdev);
-
-irq_domain = dev_get_msi_domain(dev);
-
-> 
->> +	msi_domain_free_irqs(irq_domain, dev);
-> 
->>   int vidxd_setup_ims_entries(struct vdcm_idxd *vidxd)
->>   {
->> -	/* PLACEHOLDER */
->> +	struct irq_domain *irq_domain;
->> +	struct idxd_device *idxd = vidxd->idxd;
->> +	struct mdev_device *mdev = vidxd->vdev.mdev;
->> +	struct device *dev = mdev_dev(mdev);
->> +	int vecs = VIDXD_MAX_MSIX_VECS - 1;
->> +	struct msi_desc *entry;
->> +	struct ims_irq_entry *irq_entry;
->> +	int rc, i = 0;
->> +
->> +	irq_domain = idxd->pdev->dev.msi_domain;
-> 
-> Ditto.
-> 
->> +	rc = msi_domain_alloc_irqs(irq_domain, dev, vecs);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	for_each_msi_entry(entry, dev) {
->> +		irq_entry = &vidxd->irq_entries[i];
->> +		irq_entry->vidxd = vidxd;
->> +		irq_entry->int_src = i;
-> 
-> Redundant information because it's the index in the array. What for?
-
-Yes. I'm setting a ptr to the entry in order to retrieve the needed info. No more duplication.
-
-> 
->> +		irq_entry->irq = entry->irq;
->> +		vidxd->ims_index[i] = entry->device_msi.hwirq;
-> 
-> The point of having two arrays to store related information is?
-> 
-> It's at least orders of magnitudes better than the previous trainwreck,
-> but oh well...
-> 
-> Thanks,
-> 
->          tglx
-> 
+True, remap_pfn_range() makes sure that ->pgoff is an absolute
+physical address offset for all use cases. So you might be able to
+just point proc_bus_pci_open() at the shared devmem address space. For
+sysfs it's messier. I think you would need to somehow get the inode
+from kernfs_fop_open() to adjust its address space, but only if the
+bin_file will ultimately be used for PCI memory.
