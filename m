@@ -2,73 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A7872864B7
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:42:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C78D228650F
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:46:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgJGQm0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 12:42:26 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45658 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgJGQm0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 12:42:26 -0400
-Received: by mail-oi1-f193.google.com with SMTP id z26so3085389oih.12;
-        Wed, 07 Oct 2020 09:42:25 -0700 (PDT)
+        id S1728768AbgJGQpq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 12:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbgJGQor (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 12:44:47 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6453DC0613D6
+        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 09:44:47 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t10so3007216wrv.1
+        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 09:44:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=P02GBIE7m0UGj1Ja16VfRtl1rny8rrQDbz10f0cDTbo=;
+        b=jOfg2aPb+p2PctbbcpGPk2VTV8x+SKSCmFeHr5kNnGpMzP9+KndzTdMPcmKSmVIBOL
+         Sn8AtpmXpRju+60FUKJKw5WoTBtH4QSJvymhz/0+3ZeCxQuRUo3jPklVq4Ib9EuOwEj2
+         sPoeQoG2BgasR1J/L7Iui7jQ8XopY468hCzwc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OcQk4vNKYoAU5xLAeaS2OBiQjx+TCKWc3Rt58ihVV48=;
-        b=M3I40p8AaDhDMN2CTJRnXOJhKjz4h3BTxv4LT6ayv04VLUd/JUkdyeshQ3ycQNgVBK
-         6PvZRt79GyxH5fo+nXECbvgfS6JvHq/NPcmulCRxFpQks2WfXxVq13UHdQJX4tNP/bWT
-         b98WCejVh1mBLQEcXv3DE727uzGIoKQwmIed9U+fqh/HuLX8muSvBueUQBuXBDRNHSDW
-         11eZh2CiXAZcVs6EWRegdJtpHmuB7tvTRfU1kyEixwqF7vFIRzhav/62YpCmQaQ16s7q
-         bXr8Cp/tYOsLTducl0pHmIHThq8zD+SQ/v6XaNpz1DpJ2dSGBQcs5aESUQClHceW1Lzu
-         njXA==
-X-Gm-Message-State: AOAM532FarhN6zioHoMBQm9vg2XFP9zYTEJ5k0TH7z0YbA+oeC1FVVvE
-        EBPcg06Jp3cKKjDKGjnuGg==
-X-Google-Smtp-Source: ABdhPJyJ4rc4KEsnlW3T0id3xM2TvSrswV7rdUJfn6O/JZoNU7d7hv/5P3+OGAKWVzFQ5AI5NM+KnA==
-X-Received: by 2002:a05:6808:198:: with SMTP id w24mr2482678oic.69.1602088945453;
-        Wed, 07 Oct 2020 09:42:25 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m187sm2265653oia.39.2020.10.07.09.42.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=P02GBIE7m0UGj1Ja16VfRtl1rny8rrQDbz10f0cDTbo=;
+        b=FTp4Oh48U0NZeVQ62NP0cuJVEOSR7UEPXrn408the1yPGhUSpWoGYeptvR+k2rf04m
+         KiOHPSCjyqvTRDKPNzsDsZyRBrDHtrhWDD/GnE1xQUHqlu26WrEmn7LMl4774R0fGu/q
+         0LsYk+FzgqGGzctuJmoltl/CKb7LvTh+8bT4uPISi4O310PMSqNGd8txrU89PhEsaJBu
+         yzNGl5l1kbymNbF93NxNBF8Ju+gkXnRFu+DBw4Rjn6n/Fue8KqqoEL+6DSKMQUKhLN66
+         K9U0zlcYgKVldTfAB+tMeD9wgoWN4LdxAXg4pauJFaNeZ0sRjOOjYhAp0/azBc3Wk3M0
+         8UXw==
+X-Gm-Message-State: AOAM531D3K1XZQMvzas+4Tdlv5vHSGxw9lHuLzUVbUBQuAnD029t0f/d
+        HrNxQSxNS4eby9+T5mYqBcSTHQ==
+X-Google-Smtp-Source: ABdhPJzCDfyCaOqONShrGzC8VJoQgNBmutXD42q/UwtrqERpH1arTrrensBhgkJDw5zkDOp6xBcjVA==
+X-Received: by 2002:adf:ba4f:: with SMTP id t15mr4383017wrg.335.1602089086053;
+        Wed, 07 Oct 2020 09:44:46 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id z191sm3332280wme.40.2020.10.07.09.44.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Oct 2020 09:42:24 -0700 (PDT)
-Received: (nullmailer pid 354734 invoked by uid 1000);
-        Wed, 07 Oct 2020 16:42:23 -0000
-Date:   Wed, 7 Oct 2020 11:42:23 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH v7 1/3] PCI: portdrv: Add pcie_port_service_get_irq()
- function
-Message-ID: <20201007164223.GA354699@bogus>
-References: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1599816814-16515-2-git-send-email-hayashi.kunihiko@socionext.com>
+        Wed, 07 Oct 2020 09:44:45 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 09/13] PCI: obey iomem restrictions for procfs mmap
+Date:   Wed,  7 Oct 2020 18:44:22 +0200
+Message-Id: <20201007164426.1812530-10-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
+References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599816814-16515-2-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 11 Sep 2020 18:33:32 +0900, Kunihiko Hayashi wrote:
-> Add pcie_port_service_get_irq() that returns the virtual IRQ number
-> for specified portdrv service.
-> 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/pci/pcie/portdrv.h      |  1 +
->  drivers/pci/pcie/portdrv_core.c | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
+There's three ways to access pci bars from userspace: /dev/mem, sysfs
+files, and the old proc interface. Two check against
+iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
+this starts to matter, since we don't want random userspace having
+access to pci bars while a driver is loaded and using it.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fix this.
+
+References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-mm@kvack.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+---
+ drivers/pci/proc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+index d35186b01d98..3a2f90beb4cb 100644
+--- a/drivers/pci/proc.c
++++ b/drivers/pci/proc.c
+@@ -274,6 +274,11 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
+ 		else
+ 			return -EINVAL;
+ 	}
++
++	if (dev->resource[i].flags & IORESOURCE_MEM &&
++	    iomem_is_exclusive(dev->resource[i].start))
++		return -EINVAL;
++
+ 	ret = pci_mmap_page_range(dev, i, vma,
+ 				  fpriv->mmap_state, write_combine);
+ 	if (ret < 0)
+-- 
+2.28.0
+
