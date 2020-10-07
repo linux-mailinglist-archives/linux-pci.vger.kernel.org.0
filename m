@@ -2,97 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA2628685E
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 21:33:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAF71286880
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 21:45:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgJGTd1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 15:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50942 "EHLO
+        id S1728042AbgJGTpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 15:45:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgJGTdY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 15:33:24 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABEDC0613D2
-        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 12:33:20 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id t25so4592855ejd.13
-        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 12:33:20 -0700 (PDT)
+        with ESMTP id S1727698AbgJGTpE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 15:45:04 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295DBC061755;
+        Wed,  7 Oct 2020 12:45:04 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id 33so3400622edq.13;
+        Wed, 07 Oct 2020 12:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RmnEZ1FdPT1UPs7kQcpuXD7GC8rLG+yumUNPCpNpOGc=;
-        b=N8r/yrLDPKroMQCnakJtgQlEsxQFffAa7XjZXv3NwJKYhW6cGY3P32N/wys8kUmeLc
-         Z3cf4MV0FjcxNYHuUtP7Oj2/h/K2d2euOJU/PSS52ypyRDR0EBh1cJO1YDWaJVba6fQ/
-         H6alqkWn1zpA9cwsKPV0dohBNC66x1N6cRfq2ZiKrJCwD803V9/8UX+b9D3jMVPIj2FY
-         NiVc6lfVxwhoQC3sLujKgSkr8KPyal/ezBglcD4d9hDhYk/CQ3pPnvtXwA7Ku8FHDzUO
-         W0Kvwl/89Un3CcMfnS9Y//x9EccKgDRIV41sKknRM3LIym9lfBoDuNoTYkQr+aKovhyr
-         Mbmw==
+        bh=oM1KSjc+Cmt4y9Jj6zCUXHMJeHtERnQiykUH9iP1mAs=;
+        b=X2MaHONZDjMMlot2K0Pp4HEsKv73KiL7KKKLkTAfaFw90cV1qYFyDIE2mgXka0Ztz+
+         1JOUbW8L8JRv0UE5x1l4Nr/c6o+Sp0mXSLRi76LAD5vxnmHQ27MF72zL7/C0kOKzWQiv
+         /cdarhUUZjaQftwXRyN3cIree84pfhAGuYrYaE/oV47i+9z9G2YEG5luyO+T2O4BL2CY
+         R6O8X0bgn711qKaEZPyPEH8UWdKnnKYOJZQBhAJG8GYGNOHYFEUTX1kUUwaVjkqUOHDY
+         EdHnf9glGr1Dnmyv86V7ZIrFzgz19iHheA+5+vr6xdcxZyO7O24HdDgW0g+WZZtRzqnw
+         EM7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RmnEZ1FdPT1UPs7kQcpuXD7GC8rLG+yumUNPCpNpOGc=;
-        b=PE0eFSufkd/CRIQJSbI7m7a3fhzq5waVP6jr2oZ/ePJ3hjMjRgSW20cJTmHHyfgr13
-         Yte2qK0Stp43kQQB1gmy4LPVmmL5vjYoFF/UMZMfswIOYNctC8+YUMF+wTwdycl+iaUk
-         n+OZYgLxT1yXSFrOhF6XAWI8zaskq5iQ/nqOHCKyRDOCfiX6XosUALSt989zAgC/fGqD
-         7kq6oUuyuNxs2DC9Z422Le3deMGOaEkDsUnfcrtm+Dkc0529i3Z/GyaM/RKGIWsms3SN
-         9hZ0mvTpGaf9MCE1K+mPMtU3l/ad160TKcF+t6w1nr5XfokS2LnPHzI+FvCm1DPlJssb
-         K3VA==
-X-Gm-Message-State: AOAM531CO81FPuijMycJfdcyxheYtEF/zg0Rfs/fVegdxHltK5HYyHzq
-        Jv764bHLUnA2j+qDyiUDCqn9dfuS2QoYG/BM4eAMRQ==
-X-Google-Smtp-Source: ABdhPJwxGpDKjE8M6aFCtzChdIqpmhlJGveNVqW3bvq/Ql2n/UAIW/iMsi5CJ7xIyexOlAXnBF03c4LTBSDYYkOBolI=
-X-Received: by 2002:a17:906:1a0b:: with SMTP id i11mr4984968ejf.472.1602099198813;
- Wed, 07 Oct 2020 12:33:18 -0700 (PDT)
+        bh=oM1KSjc+Cmt4y9Jj6zCUXHMJeHtERnQiykUH9iP1mAs=;
+        b=Og0lfQ/CQY3Y6oq38nndT61hZEQIpM7BS1Bpvoa7dgsZ79i+fPc6J70txieRlLCfW8
+         SmR8xQzWXm6BW9f5r/aAp3Vi0spJFIyAXooFhlaQjK1OcJ0OA5YhYQYxvdMUeoMxrGTj
+         Nk0rdXr/mJBt+oTN8pRu4xI+27l4C1MmPsyRRJX05zA75wgzMnQVj4hnAOpEs5pnXBzp
+         LQohS4zwgXVha/tZPWBbY1Ut+4e1+kywxR6lVhsD2yf2nD8C2fT/a0oBANArspmtk6JA
+         eG6QEDTFBatVoEGqfRJVvbfHzzVtksRcUlredv4HBo6srBpVz7oNonJHgr0U5Z325INN
+         SrmQ==
+X-Gm-Message-State: AOAM530kHFrGQnGsm3j5/r0AY9frdMs+799XcXRhUILF9CwEjJq4Up3v
+        zM6Ie9JsxU0117qwX6MoIdnfj37FLrRwZMh6inQ=
+X-Google-Smtp-Source: ABdhPJwPdwGlw4IFKDK4W2jf3Z76PcuSjeAnAyU0yA3tEwciGwk1gnziLCS9g/iYuCY63ApZS0IY8pd5+rJCqSemS3o=
+X-Received: by 2002:a50:9ea6:: with SMTP id a35mr5591929edf.52.1602099902773;
+ Wed, 07 Oct 2020 12:45:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch> <20201007164426.1812530-11-daniel.vetter@ffwll.ch>
-In-Reply-To: <20201007164426.1812530-11-daniel.vetter@ffwll.ch>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 7 Oct 2020 12:33:06 -0700
-Message-ID: <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
-Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
+References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com>
+ <20201004162908.3216898-4-martin.blumenstingl@googlemail.com> <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
+In-Reply-To: <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 7 Oct 2020 21:44:51 +0200
+Message-ID: <CAFBinCCLubmDvxfabQHx2-ucgAsm1NArMUrtPx-UA2nX5xoFFA@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] gpio: ej1x8: Add GPIO driver for Etron Tech Inc. EJ168/EJ188/EJ198
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-usb <linux-usb@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 11:11 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
->
-> Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-> the region") /dev/kmem zaps ptes when the kernel requests exclusive
-> acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-> the default for all driver uses.
->
-> Except there's two more ways to access pci bars: sysfs and proc mmap
-> support. Let's plug that hole.
+Hi Linus,
 
-Ooh, yes, lets.
-
+On Wed, Oct 7, 2020 at 11:29 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> For revoke_devmem() to work we need to link our vma into the same
-> address_space, with consistent vma->vm_pgoff. ->pgoff is already
-> adjusted, because that's how (io_)remap_pfn_range works, but for the
-> mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
-> at ->open time, but that's a bit tricky here with all the entry points
-> and arch code. So instead create a fake file and adjust vma->vm_file.
+> Hi Martin,
+>
+> thanks for your patch!
+thank you for reviewing the whole series!
 
-I don't think you want to share the devmem inode for this, this should
-be based off the sysfs inode which I believe there is already only one
-instance per resource. In contrast /dev/mem can have multiple inodes
-because anyone can just mknod a new character device file, the same
-problem does not exist for sysfs.
+> As noted on the earlier patches I think this should be folded into the
+> existing XHCI USB driver in drivers/usb/host/xhci-pci.c or, if that
+> gets messy, as a separate bolt-on, something like
+> xhci-pci-gpio.[c|h] in the drivers/usb/host/* directory.
+> You can use a Kconfig symbol for the GPIO portions or not.
+OK, I will do that if there are no objections from other developers
+I am intending to place the relevant code in xhci-pci-etron.c, similar
+to what we already have with xhci-pci-renesas.c
+
+[...]
+> This should not be necessary. Tie the GPIO state into the PCI device
+> driver state, possibly using some #ifdefs.
+>
+> > +static u8 ej1x8_gpio_shift(unsigned int gpio, u8 mask)
+> > +{
+> > +       return (gpio * fls(mask));
+> > +}
+> > +
+> > +static u8 ej1x8_gpio_mask(unsigned int gpio, u8 mask)
+> > +{
+> > +       return mask << ej1x8_gpio_shift(gpio, mask);
+> > +}
+>
+> This looks a bit like regmap but trying to use regmap for this
+> would probably be overengineering.
+the problem is also the "INIT" register which needs to be set before
+writing the registers
+
+> Looking at the code I get annoyed that it uses the config space to
+> manipulate the GPIOs, else you could have used GPIO_GENERIC
+> but now you can't, how typical.
+I think this won't work in practice because of the EJ1X8_GPIO_CTRL for
+which we have to read from bits [7:0] but write to bits [23:16]
+due to this (and the INIT register as mentioned above) I did not
+consider GPIO_GENERIC any further
+
+> Other than that the code looks nice, but fold it into the USB
+> host driver somehow unless there is a compelling argument
+> as to why not.
+will do so, thanks!
+
+
+Best regards,
+Martin
