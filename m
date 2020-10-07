@@ -2,254 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58B8A285FB5
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 15:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC730286013
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 15:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgJGNDy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 09:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbgJGNDy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Oct 2020 09:03:54 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8363E206F4;
-        Wed,  7 Oct 2020 13:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602075833;
-        bh=Abf/kHoHzQbKZESvmRd9KXIWoPUi4+5bt5dpHv5IVAk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KZu4VIrMaZ7VKNfV7shFjJr2iviUsoI0b1dHHmoI0tF0X88nLKfehsXDe02XMm7Al
-         PBNK2Hxe6ofNfORqhLZKUX76qU6WZfXw39+cZOwo+Ag14BChcX4YAKinDNXNhvq2aG
-         rnw3ci33Z7yKnIAK+TFiWZbDpIg73xzkik0AaHys=
-Date:   Wed, 7 Oct 2020 08:03:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ian Kumlien <ian.kumlien@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] Use maximum latency when determining L1/L0s ASPM v2
-Message-ID: <20201007130352.GA3235876@bjorn-Precision-5520>
+        id S1728271AbgJGN2T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 09:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbgJGN2T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 09:28:19 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC8CC061755
+        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 06:28:19 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a23so1186557ljp.5
+        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 06:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mq2vXogLrE4mrcxtzJAiV6BR/XBBtnAndUYq1j5CMTQ=;
+        b=GpCzORY6FCZ9lOByDZu2xbXmEplNJvEfaafmUeUbL9NRXZN8YvsEwqVmDJpNfneb8M
+         P/9bN4KtiHY/LYzD4qvCMxrMpCgqwSvax2R5G8O/uC0aw6EYSkZ5fis58PBijPNvzXpk
+         NeV9Ma2SPRrxVM9X2GWInpJ/8b9OGbIC3a/UkgZkdHjIFIn90bIziMO3T5U9A2sPrlUw
+         Zd2K9i1CTYeGjjpFUKwWugp/kyJgP43/1lkNH1Z6Ux5wz7/gbu3QzmrGdhwKvv5VIcdg
+         t02PIVQ0XTXo/3kBqJcH3LhUPxdPy5gyPZY8l2XblyZMH0XNLBhGRazMnFAHBguRUXpr
+         +W/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mq2vXogLrE4mrcxtzJAiV6BR/XBBtnAndUYq1j5CMTQ=;
+        b=hCgbw2PkXj2LiNsZvHE7SsOu/cSREOhmbvRo6wSzPTaDKeS2kgbtyLMhissgIgmDlu
+         I5UHrP2h4/wtBgQUtrFJTLmnrJFouOm94IW067VcXiJCumb+6wej6PG1j/6Cwy/t4CFs
+         DzLGI8tbncrAQjW3NdShqsEkQ5erz5JDBrB8kewX3rUGrgq9mvGzcmXECPX/3zo7RN0W
+         TMfHEhAP5kFG4/gf7vo8dI9nOvFb2dy0DIESs3XraFsbuL+iIoVAtZvm4KQKts4xRUiu
+         eFHWldFROORAVrZ0VsdjZ7bsN8GzpXTFpeRV7//a33bLiZke+7Y/eFmgr8G2LHY5zlG7
+         mebw==
+X-Gm-Message-State: AOAM5307fJDiQwRJVoY2rPdB4DViVSlOoywxg3jQyC8Y7VOggJY5yW0V
+        vl+JQ0sgqRlgdfqEU8JuM2g=
+X-Google-Smtp-Source: ABdhPJy7grSE80xKPlk8M9kbB9ITdxA91p6krxiYZ9WjC68v6JlMtLvop+FEYO+cxTuR+b7BQI0+Aw==
+X-Received: by 2002:a2e:9ed5:: with SMTP id h21mr1102600ljk.178.1602077297330;
+        Wed, 07 Oct 2020 06:28:17 -0700 (PDT)
+Received: from octa.pomac.com (c-f0d2225c.013-195-6c756e10.bbcust.telenor.se. [92.34.210.240])
+        by smtp.gmail.com with ESMTPSA id 21sm330263lfk.206.2020.10.07.06.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Oct 2020 06:28:16 -0700 (PDT)
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+To:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        alexander.duyck@gmail.com, refactormyself@gmail.com,
+        puranjay12@gmail.com, kai.heng.feng@canonical.com
+Cc:     Ian Kumlien <ian.kumlien@gmail.com>
+Subject: [PATCH] Use maximum latency when determining L1 ASPM
+Date:   Wed,  7 Oct 2020 15:28:08 +0200
+Message-Id: <20201007132808.647589-1-ian.kumlien@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA85sZsVKCbcHfxjNA83==YFDP_va=qp8JQEcbMFYJXNJP=1NQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 01:31:48PM +0200, Ian Kumlien wrote:
-> On Mon, Oct 5, 2020 at 9:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Mon, Oct 05, 2020 at 08:38:55PM +0200, Ian Kumlien wrote:
-> > > On Mon, Oct 5, 2020 at 8:31 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >
-> > > > On Mon, Aug 03, 2020 at 04:58:32PM +0200, Ian Kumlien wrote:
-> > > > > Changes:
-> > > > > * Handle L0s correclty as well, making it per direction
-> > > > > * Moved the switch cost in to the if statement since a non L1 switch has
-> > > > >   no additional cost.
-> > > > >
-> > > > > For L0s:
-> > > > > We sumarize the entire latency per direction to see if it's acceptable
-> > > > > for the PCIe endpoint.
-> > > > >
-> > > > > If it's not, we clear the link for the path that had too large latency.
-> > > > >
-> > > > > For L1:
-> > > > > Currently we check the maximum latency of upstream and downstream
-> > > > > per link, not the maximum for the path
-> > > > >
-> > > > > This would work if all links have the same latency, but:
-> > > > > endpoint -> c -> b -> a -> root  (in the order we walk the path)
-> > > > >
-> > > > > If c or b has the higest latency, it will not register
-> > > > >
-> > > > > Fix this by maintaining the maximum latency value for the path
-> > > > >
-> > > > > This change fixes a regression introduced (but not caused) by:
-> > > > > 66ff14e59e8a (PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges)
-> > > > >
-> > > > > Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
-> > > >
-> > > > I'm not sure where we're at with this.  If we can come up with:
-> > > >
-> > > >   - "lspci -vv" for the entire affected hierarchy before the fix
-> > > >
-> > > >   - specific identification of incorrect configuration per spec
-> > > >
-> > > >   - patch that fixes that specific misconfiguration
-> > > >
-> > > >   - "lspci -vv" for the entire affected hierarchy after the fix
-> > > >
-> > > > then we have something to work with.  It doesn't have to (and should
-> > > > not) fix all the problems at once.
-> > >
-> > > So detail the changes on my specific machine and then mention
-> > > 5.4.1.2.2 of the pci spec
-> > > detailing the exit from PCIe ASPM L1?
-> >
-> > Like I said, I need to see the current ASPM configuration, a note
-> > about what is wrong with it (this probably involves a comparison with
-> > what the spec says it *should* be), and the configuration after the
-> > patch showing that it's now fixed.
-> >
-> > > Basically writing a better changelog for the first patch?
-> > >
-> > > Any comments on the L0s patch?
-> >
-> > Not yet.  When it's packaged up in mergeable form I'll review it.  I
-> > just don't have time to extract everything myself.
-> 
-> So, did it like this, since I don't think the output from my system
-> actually is important.
-> (I added some descriptive text that is loosely based on the spec)
+Make pcie_aspm_check_latency comply with the PCIe spec, specifically:
+"5.4.1.2.2. Exit from the L1 State"
 
-I think the before/after lspci from your system *is* important.
-Concrete examples are a big help.
+Which makes it clear that each switch is required to initiate a
+transition within 1μs from receiving it, accumulating this latency and
+then we have to wait for the slowest link along the path before
+entering L0 state from L1.
 
-The commit log below looks accurate, but of course needs to be
-attached to a specific patch.  Can you please post the complete patch
-with commit log all by itself so it's not buried in the middle of this
-long thread?
+The current code doesn't take the maximum latency into account.
 
-> ----
-> Use maximum latency when determining L1 ASPM
-> 
-> Make pcie_aspm_check_latency comply with the PCIe spec, specifically:
-> "5.4.1.2.2. Exit from the L1 State"
-> 
-> Which makes it clear that each switch is required to initiate a
-> transition within 1μs from receiving it, accumulating this latency and
-> then we have to wait for the slowest link along the path before
-> entering L0 state from L1.
-> 
-> The current code doesn't take the maximum latency into account.
-> 
-> From the example:
->    +----------------+
->    |                |
->    |  Root complex  |
->    |                |
->    |    +-----+     |
->    |    |32 μs|     |
->    +----------------+
->            |
->            |  Link 1
->            |
->    +----------------+
->    |     |8 μs|     |
->    |     +----+     |
->    |    Switch A    |
->    |     +----+     |
->    |     |8 μs|     |
->    +----------------+
->            |
->            |  Link 2
->            |
->    +----------------+
->    |    |32 μs|     |
->    |    +-----+     |
->    |    Switch B    |
->    |    +-----+     |
->    |    |32 μs|     |
->    +----------------+
->            |
->            |  Link 3
->            |
->    +----------------+
->    |     |8μs|      |
->    |     +---+      |
->    |   Endpoint C   |
->    |                |
->    |                |
->    +----------------+
-> 
-> Links 1, 2 and 3 are all in L1 state - endpoint C initiates the
-> transition to L0 at time T. Since switch B takes 32 μs to exit L1 on
-> it's ports, Link 3 will transition to L0 at T+32 (longest time
-> considering T+8 for endpoint C and T+32 for switch B).
-> 
-> Switch B is required to initiate a transition from the L1 state on it's
-> upstream port after no more than 1 μs from the beginning of the
-> transition from L1 state on the downstream port. Therefore, transition from
-> L1 to L0 will begin on link 2 at T+1, this will cascade up the path.
-> 
-> The path will exit L1 at T+34.
-> 
-> Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
-> ----
-> 
-> > > > > ---
-> > > > >  drivers/pci/pcie/aspm.c | 41 ++++++++++++++++++++++++++---------------
-> > > > >  1 file changed, 26 insertions(+), 15 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > > > index b17e5ffd31b1..bc512e217258 100644
-> > > > > --- a/drivers/pci/pcie/aspm.c
-> > > > > +++ b/drivers/pci/pcie/aspm.c
-> > > > > @@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
-> > > > >
-> > > > >  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> > > > >  {
-> > > > > -     u32 latency, l1_switch_latency = 0;
-> > > > > +     u32 latency, l1_max_latency = 0, l1_switch_latency = 0,
-> > > > > +             l0s_latency_up = 0, l0s_latency_dw = 0;
-> > > > >       struct aspm_latency *acceptable;
-> > > > >       struct pcie_link_state *link;
-> > > > >
-> > > > > @@ -447,15 +448,22 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> > > > >       acceptable = &link->acceptable[PCI_FUNC(endpoint->devfn)];
-> > > > >
-> > > > >       while (link) {
-> > > > > -             /* Check upstream direction L0s latency */
-> > > > > -             if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
-> > > > > -                 (link->latency_up.l0s > acceptable->l0s))
-> > > > > -                     link->aspm_capable &= ~ASPM_STATE_L0S_UP;
-> > > > > -
-> > > > > -             /* Check downstream direction L0s latency */
-> > > > > -             if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
-> > > > > -                 (link->latency_dw.l0s > acceptable->l0s))
-> > > > > -                     link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-> > > > > +             if (link->aspm_capable & ASPM_STATE_L0S) {
-> > > > > +                     /* Check upstream direction L0s latency */
-> > > > > +                     if (link->aspm_capable & ASPM_STATE_L0S_UP) {
-> > > > > +                             l0s_latency_up += link->latency_up.l0s;
-> > > > > +                             if (l0s_latency_up > acceptable->l0s)
-> > > > > +                                     link->aspm_capable &= ~ASPM_STATE_L0S_UP;
-> > > > > +                     }
-> > > > > +
-> > > > > +                     /* Check downstream direction L0s latency */
-> > > > > +                     if (link->aspm_capable & ASPM_STATE_L0S_DW) {
-> > > > > +                             l0s_latency_dw += link->latency_dw.l0s;
-> > > > > +                             if (l0s_latency_dw > acceptable->l0s)
-> > > > > +                                     link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-> > > > > +                     }
-> > > > > +             }
-> > > > > +
-> > > > >               /*
-> > > > >                * Check L1 latency.
-> > > > >                * Every switch on the path to root complex need 1
-> > > > > @@ -469,11 +477,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
-> > > > >                * L1 exit latencies advertised by a device include L1
-> > > > >                * substate latencies (and hence do not do any check).
-> > > > >                */
-> > > > > -             latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> > > > > -             if ((link->aspm_capable & ASPM_STATE_L1) &&
-> > > > > -                 (latency + l1_switch_latency > acceptable->l1))
-> > > > > -                     link->aspm_capable &= ~ASPM_STATE_L1;
-> > > > > -             l1_switch_latency += 1000;
-> > > > > +             if (link->aspm_capable & ASPM_STATE_L1) {
-> > > > > +                     latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> > > > > +                     l1_max_latency = max_t(u32, latency, l1_max_latency);
-> > > > > +                     if (l1_max_latency + l1_switch_latency > acceptable->l1)
-> > > > > +                             link->aspm_capable &= ~ASPM_STATE_L1;
-> > > > > +
-> > > > > +                     l1_switch_latency += 1000;
-> > > > > +             }
-> > > > >
-> > > > >               link = link->parent;
-> > > > >       }
-> > > > > --
-> > > > > 2.28.0
-> > > > >
+From the example:
+   +----------------+
+   |                |
+   |  Root complex  |
+   |                |
+   |    +-----+     |
+   |    |32 μs|     |
+   +----------------+
+           |
+           |  Link 1
+           |
+   +----------------+
+   |     |8 μs|     |
+   |     +----+     |
+   |    Switch A    |
+   |     +----+     |
+   |     |8 μs|     |
+   +----------------+
+           |
+           |  Link 2
+           |
+   +----------------+
+   |    |32 μs|     |
+   |    +-----+     |
+   |    Switch B    |
+   |    +-----+     |
+   |    |32 μs|     |
+   +----------------+
+           |
+           |  Link 3
+           |
+   +----------------+
+   |     |8μs|      |
+   |     +---+      |
+   |   Endpoint C   |
+   |                |
+   |                |
+   +----------------+
+
+Links 1, 2 and 3 are all in L1 state - endpoint C initiates the
+transition to L0 at time T. Since switch B takes 32 μs to exit L1 on
+it's ports, Link 3 will transition to L0 at T+32 (longest time
+considering T+8 for endpoint C and T+32 for switch B).
+
+Switch B is required to initiate a transition from the L1 state on it's
+upstream port after no more than 1 μs from the beginning of the
+transition from L1 state on the downstream port. Therefore, transition from
+L1 to L0 will begin on link 2 at T+1, this will cascade up the path.
+
+The path will exit L1 at T+34.
+
+On my specific system:
+lspci -PP -s 04:00.0
+00:01.2/01:00.0/02:04.0/04:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. Device 816e (rev 1a)
+
+lspci -vvv -s 04:00.0
+		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, L1 <64us
+...
+		LnkCap:	Port #0, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s unlimited, L1 <64us
+...
+
+Which means that it can't be followed by any switch that is in L1 state.
+
+This patch fixes it by disabling L1 on 02:04.0, 01:00.0 and 00:01.2.
+
+                                                    LnkCtl    LnkCtl
+           ------DevCap-------  ----LnkCap-------  -Before-  -After--
+  00:01.2                                L1 <32us       L1+       L1-
+  01:00.0                                L1 <32us       L1+       L1-
+  02:04.0                                L1 <32us       L1+       L1-
+  04:00.0  L0s <512 L1 <64us             L1 <64us       L1+       L1-
+
+Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+---
+ drivers/pci/pcie/aspm.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 253c30cc1967..893b37669087 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+ 
+ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ {
+-	u32 latency, l1_switch_latency = 0;
++	u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+ 	struct aspm_latency *acceptable;
+ 	struct pcie_link_state *link;
+ 
+@@ -456,10 +456,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 		if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+ 		    (link->latency_dw.l0s > acceptable->l0s))
+ 			link->aspm_capable &= ~ASPM_STATE_L0S_DW;
++
+ 		/*
+ 		 * Check L1 latency.
+-		 * Every switch on the path to root complex need 1
+-		 * more microsecond for L1. Spec doesn't mention L0s.
++		 *
++		 * PCIe r5.0, sec 5.4.1.2.2 states:
++		 * A Switch is required to initiate an L1 exit transition on its
++		 * Upstream Port Link after no more than 1 μs from the beginning of an
++		 * L1 exit transition on any of its Downstream Port Links.
+ 		 *
+ 		 * The exit latencies for L1 substates are not advertised
+ 		 * by a device.  Since the spec also doesn't mention a way
+@@ -469,11 +473,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 		 * L1 exit latencies advertised by a device include L1
+ 		 * substate latencies (and hence do not do any check).
+ 		 */
+-		latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+-		if ((link->aspm_capable & ASPM_STATE_L1) &&
+-		    (latency + l1_switch_latency > acceptable->l1))
+-			link->aspm_capable &= ~ASPM_STATE_L1;
+-		l1_switch_latency += 1000;
++		if (link->aspm_capable & ASPM_STATE_L1) {
++			latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
++			l1_max_latency = max_t(u32, latency, l1_max_latency);
++			if (l1_max_latency + l1_switch_latency > acceptable->l1)
++				link->aspm_capable &= ~ASPM_STATE_L1;
++
++			l1_switch_latency += 1000;
++		}
+ 
+ 		link = link->parent;
+ 	}
+-- 
+2.28.0
+
