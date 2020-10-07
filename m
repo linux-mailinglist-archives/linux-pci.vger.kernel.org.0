@@ -2,199 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 448D9286502
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:46:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A3EB286519
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:46:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgJGQpc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 12:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbgJGQou (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 12:44:50 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEDD0C0613DA
-        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 09:44:48 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e2so3154259wme.1
-        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 09:44:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nwvirki0A8lJPE+AYl74w0fQ2EaO5tAbqC5bxM8kl0c=;
-        b=BrDuHver6w7p5ZRQIzaxr9X28nldTZHPs6TeyR3rufkPUprK+7Pd7YvnCY9V+/ntoj
-         rZAaEGBxdMEd6l9H14pKva/3vm5MWV5Hx2NleOTAHYs4Cd1KzpFCG+Sm6tIWC/JSTsWT
-         wFRHzHOiKTlq+UBh4t8T/9Kw/KRf+ey2pudIg=
+        id S1728762AbgJGQp7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 12:45:59 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44282 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728781AbgJGQp5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 12:45:57 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e20so2394504otj.11;
+        Wed, 07 Oct 2020 09:45:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nwvirki0A8lJPE+AYl74w0fQ2EaO5tAbqC5bxM8kl0c=;
-        b=ZAHLKSTrjxr9wsFXDtF16NEXPYeBmhqCnMYJch9nM4Cz6JzDAwup+Tm7IcNiqMtNWl
-         fmVaTGMn6O/PonflbQ0iooXaxoFbEWlzosHwzfVnZ+NvVwpRJkEEUmWMVgzkSV6tR9vp
-         GAH/55oQod5Tgv2m2wTdRbToaG3BDo+gJTfuC3di75MLuTB+u+UrFcsLUAUV0WtetmAR
-         ZCGQ3L1atsjHq0S+nElgkQSH6M/ytDljDMvj4KQZ8rVSi/9CZpL3afNrx2tzWO6ROp0k
-         oamJCj+Hn+Zn9XGnoV55+y9s12itqQe147wmDxsLpJjU4USBaYFAcfyltkefsG9nXGMR
-         ijXw==
-X-Gm-Message-State: AOAM532YpPCBYRDCkxAgXMGj/9/fUnF8VvqEXNn/i/zVySPPRQVi8GHc
-        b4PovoNktehF3xzNjXzgoHOUEA==
-X-Google-Smtp-Source: ABdhPJw1zUoIbUqRt+OcQIxyRCGoJAtVTtOUoH3PCLKd4mzA2jl8YcAArzeHuhJ7i3WhTCjkjS4Rxg==
-X-Received: by 2002:a7b:c08c:: with SMTP id r12mr4042397wmh.184.1602089087475;
-        Wed, 07 Oct 2020 09:44:47 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id z191sm3332280wme.40.2020.10.07.09.44.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WnM1HniI+irqMb3dL1ZWNe6hwPnKvmLnla78RIiBA8M=;
+        b=X9UHGgkrPVqE6KzJgpQRRE7JDF/S7KLWp/D8t6YWxAhgAvAx08klcpA+8Ca11PGaKL
+         WEcpJg4x2ZGMD8fNXH5zKFHiDoDnUkLNeX9A1lrLoiml5ueyKR1KFiuXZbYbwnHVVSDY
+         GbZp5njG4ceFZ8jBfnMKK0T8SwCQEuD1SDC5TCB3GqLI28qmnbNzSvfWRMMIS4kKyWfK
+         tQClYX5rm0DwIN6J6tI051lANOpFZMAXx4oNJSsMEXkh2pG91PAnvgsxNK6s/Kzjo4Bp
+         XnSmDLgf0O8O7sSsoNBa0b9Elix6ImcXNhlipDxUZ9BjXW30OpuFRvF7oqiij3sFNSSR
+         fLoA==
+X-Gm-Message-State: AOAM533Qq1+9/miDNS7I29tA/cwA9yuAzUW3I18whDDT4R7EUIWY6nNJ
+        u1JyxlBLghMRPBZ1r940ag==
+X-Google-Smtp-Source: ABdhPJwWdqTIyji6u3rGbBmzEdV7sRf9Y12L76pNZty+mjhrPlNN9ExtnBOuM4E38ARk8hcq/w/+DQ==
+X-Received: by 2002:a05:6830:196:: with SMTP id q22mr2270160ota.221.1602089157027;
+        Wed, 07 Oct 2020 09:45:57 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j75sm2290342oih.10.2020.10.07.09.45.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Oct 2020 09:44:46 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
+        Wed, 07 Oct 2020 09:45:56 -0700 (PDT)
+Received: (nullmailer pid 359382 invoked by uid 1000);
+        Wed, 07 Oct 2020 16:45:55 -0000
+Date:   Wed, 7 Oct 2020 11:45:55 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 10/13] PCI: revoke mappings like devmem
-Date:   Wed,  7 Oct 2020 18:44:23 +0200
-Message-Id: <20201007164426.1812530-11-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Subject: Re: [PATCH v7 3/3] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+Message-ID: <20201007164555.GA359326@bogus>
+References: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1599816814-16515-4-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599816814-16515-4-git-send-email-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-the region") /dev/kmem zaps ptes when the kernel requests exclusive
-acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-the default for all driver uses.
+On Fri, 11 Sep 2020 18:33:34 +0900, Kunihiko Hayashi wrote:
+> This patch adds misc interrupt handler to detect and invoke PME/AER event.
+> 
+> In UniPhier PCIe controller, PME/AER signals are assigned to the same
+> signal as MSI by the internal logic. These signals should be detected by
+> the internal register, however, DWC MSI handler can't handle these signals.
+> 
+> DWC MSI handler calls .msi_host_isr() callback function, that detects
+> PME/AER signals with the internal register and invokes the interrupt
+> with PME/AER vIRQ numbers.
+> 
+> These vIRQ numbers is obtained from portdrv in uniphier_add_pcie_port()
+> function.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 77 +++++++++++++++++++++++++-----
+>  1 file changed, 66 insertions(+), 11 deletions(-)
+> 
 
-Except there's two more ways to access pci bars: sysfs and proc mmap
-support. Let's plug that hole.
-
-For revoke_devmem() to work we need to link our vma into the same
-address_space, with consistent vma->vm_pgoff. ->pgoff is already
-adjusted, because that's how (io_)remap_pfn_range works, but for the
-mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
-at ->open time, but that's a bit tricky here with all the entry points
-and arch code. So instead create a fake file and adjust vma->vm_file.
-
-Note this only works for ARCH_GENERIC_PCI_MMAP_RESOURCE. But that
-seems to be a subset of architectures support STRICT_DEVMEM, so we
-should be good.
-
-The only difference in access checks left is that sysfs pci mmap does
-not check for CAP_RAWIO. But I think that makes some sense compared to
-/dev/mem and proc, where one file gives you access to everything and
-no ownership applies.
-
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/char/mem.c     | 16 +++++++++++++++-
- drivers/pci/mmap.c     |  3 +++
- include/linux/ioport.h |  2 ++
- 3 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index abd4ffdc8cde..5e58a326d4ee 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -810,6 +810,7 @@ static loff_t memory_lseek(struct file *file, loff_t offset, int orig)
- }
- 
- static struct inode *devmem_inode;
-+static struct vfsmount *devmem_vfs_mount;
- 
- #ifdef CONFIG_IO_STRICT_DEVMEM
- void revoke_devmem(struct resource *res)
-@@ -843,6 +844,20 @@ void revoke_devmem(struct resource *res)
- 
- 	unmap_mapping_range(inode->i_mapping, res->start, resource_size(res), 1);
- }
-+
-+struct file *devmem_getfile(void)
-+{
-+	struct file *file;
-+
-+	file = alloc_file_pseudo(devmem_inode, devmem_vfs_mount, "devmem",
-+				 O_RDWR, &kmem_fops);
-+	if (IS_ERR(file))
-+		return NULL;
-+
-+	file->f_mapping = devmem_indoe->i_mapping;
-+
-+	return file;
-+}
- #endif
- 
- static int open_port(struct inode *inode, struct file *filp)
-@@ -1010,7 +1025,6 @@ static struct file_system_type devmem_fs_type = {
- 
- static int devmem_init_inode(void)
- {
--	static struct vfsmount *devmem_vfs_mount;
- 	static int devmem_fs_cnt;
- 	struct inode *inode;
- 	int rc;
-diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
-index b8c9011987f4..63786cc9c746 100644
---- a/drivers/pci/mmap.c
-+++ b/drivers/pci/mmap.c
-@@ -7,6 +7,7 @@
-  * Author: David Woodhouse <dwmw2@infradead.org>
-  */
- 
-+#include <linux/file.h>
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/pci.h>
-@@ -64,6 +65,8 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
- 		vma->vm_pgoff += (pci_resource_start(pdev, bar) >> PAGE_SHIFT);
- 
- 	vma->vm_ops = &pci_phys_vm_ops;
-+	fput(vma->vm_file);
-+	vma->vm_file = devmem_getfile();
- 
- 	return io_remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
- 				  vma->vm_end - vma->vm_start,
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 6c2b06fe8beb..83238cba19fe 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -304,8 +304,10 @@ struct resource *request_free_mem_region(struct resource *base,
- 
- #ifdef CONFIG_IO_STRICT_DEVMEM
- void revoke_devmem(struct resource *res);
-+struct file *devm_getfile(void);
- #else
- static inline void revoke_devmem(struct resource *res) { };
-+static inline struct file *devmem_getfile(void) { return NULL; };
- #endif
- 
- #endif /* __ASSEMBLY__ */
--- 
-2.28.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
