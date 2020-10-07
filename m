@@ -2,85 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A3EB286519
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:46:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FC90286522
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 18:46:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgJGQp7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 12:45:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44282 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbgJGQp5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 12:45:57 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e20so2394504otj.11;
-        Wed, 07 Oct 2020 09:45:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WnM1HniI+irqMb3dL1ZWNe6hwPnKvmLnla78RIiBA8M=;
-        b=X9UHGgkrPVqE6KzJgpQRRE7JDF/S7KLWp/D8t6YWxAhgAvAx08klcpA+8Ca11PGaKL
-         WEcpJg4x2ZGMD8fNXH5zKFHiDoDnUkLNeX9A1lrLoiml5ueyKR1KFiuXZbYbwnHVVSDY
-         GbZp5njG4ceFZ8jBfnMKK0T8SwCQEuD1SDC5TCB3GqLI28qmnbNzSvfWRMMIS4kKyWfK
-         tQClYX5rm0DwIN6J6tI051lANOpFZMAXx4oNJSsMEXkh2pG91PAnvgsxNK6s/Kzjo4Bp
-         XnSmDLgf0O8O7sSsoNBa0b9Elix6ImcXNhlipDxUZ9BjXW30OpuFRvF7oqiij3sFNSSR
-         fLoA==
-X-Gm-Message-State: AOAM533Qq1+9/miDNS7I29tA/cwA9yuAzUW3I18whDDT4R7EUIWY6nNJ
-        u1JyxlBLghMRPBZ1r940ag==
-X-Google-Smtp-Source: ABdhPJwWdqTIyji6u3rGbBmzEdV7sRf9Y12L76pNZty+mjhrPlNN9ExtnBOuM4E38ARk8hcq/w/+DQ==
-X-Received: by 2002:a05:6830:196:: with SMTP id q22mr2270160ota.221.1602089157027;
-        Wed, 07 Oct 2020 09:45:57 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j75sm2290342oih.10.2020.10.07.09.45.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Oct 2020 09:45:56 -0700 (PDT)
-Received: (nullmailer pid 359382 invoked by uid 1000);
-        Wed, 07 Oct 2020 16:45:55 -0000
-Date:   Wed, 7 Oct 2020 11:45:55 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Subject: Re: [PATCH v7 3/3] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-Message-ID: <20201007164555.GA359326@bogus>
-References: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1599816814-16515-4-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1727862AbgJGQqK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 12:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727981AbgJGQqK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Oct 2020 12:46:10 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349AC206FC;
+        Wed,  7 Oct 2020 16:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602089169;
+        bh=qYpMzqtsjrMMyezfget5SScdy07//sseqBRdxccpfOw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nujV02s3Ysb0QSClSvUD2TcWeztSBkfBGzPQeZ6TqFzFc7xXFVMSyy/tWquSTXT23
+         YR96KWfVKcaAn1TwfPb4N+ogjlSakBAGGFesUFpon79l4H0RtRAtiBBYLzRyPnMiY8
+         7Ge1jg8/9+BBkOqYQmVIbx1knEK0f2B3DKeBti7I=
+Date:   Wed, 7 Oct 2020 09:46:07 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: spammy dmesg about fluctuating pcie bandwidth on 5.9
+Message-ID: <20201007164607.GB961537@dhcp-10-100-145-180.wdl.wdc.com>
+References: <CAHmME9r_cNx04yuUN+TPPY=xDHuDxRrLb8KqR7C69YtXMajAJg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599816814-16515-4-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <CAHmME9r_cNx04yuUN+TPPY=xDHuDxRrLb8KqR7C69YtXMajAJg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 11 Sep 2020 18:33:34 +0900, Kunihiko Hayashi wrote:
-> This patch adds misc interrupt handler to detect and invoke PME/AER event.
-> 
-> In UniPhier PCIe controller, PME/AER signals are assigned to the same
-> signal as MSI by the internal logic. These signals should be detected by
-> the internal register, however, DWC MSI handler can't handle these signals.
-> 
-> DWC MSI handler calls .msi_host_isr() callback function, that detects
-> PME/AER signals with the internal register and invokes the interrupt
-> with PME/AER vIRQ numbers.
-> 
-> These vIRQ numbers is obtained from portdrv in uniphier_add_pcie_port()
-> function.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 77 +++++++++++++++++++++++++-----
->  1 file changed, 66 insertions(+), 11 deletions(-)
-> 
+On Wed, Oct 07, 2020 at 06:09:06PM +0200, Jason A. Donenfeld wrote:
+> Since 5.9 I've been seeing lots of the below in my logs. I'm wondering
+> if this is a case of "ASPM finally working properly," or if I'm
+> actually running into aberrant behavior that I should look into
+> further. I run with `pcie_aspm=force pcie_aspm.policy=powersave` on my
+> command line. But I wasn't seeing these messages in 5.8.
+ 
+> [79960.801929] pcieport 0000:04:00.0: 31.504 Gb/s available PCIe bandwidth, limited by 8.0 GT/s PCIe x4 link at 0000:00:1b.4 (capable of 1984.941 Gb/s with 32.0 GT/s PCIe x63 link)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+A x63 gen5 capable link?! No such encoding exists, so something is
+definitely wrong. Looks like all 1's was returned when reading the link
+capabilities register, as that equals the mask's 0x3f value. The code
+ought to skip reporting a device returning all 1's.
