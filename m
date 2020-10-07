@@ -2,102 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A31B7285679
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 03:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4AE52856DE
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Oct 2020 05:08:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgJGBrx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Oct 2020 21:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgJGBrw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Oct 2020 21:47:52 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0A7C061755;
-        Tue,  6 Oct 2020 18:47:52 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id n6so658961ioc.12;
-        Tue, 06 Oct 2020 18:47:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Q9bSmskWSEkb9gd9wms6mpxggsv5bcsjx2/k1X765I=;
-        b=ou4pOjTXlapUdIXJIJdGYGjfsLyiC/GDbq31d7UEU4ayikIQkDv8xsrzNBimSiQvRD
-         hyj4uIqxBJbbfFUzV9mNGYK6Irh+77wP+oSkeVtxdGrZsBqBMXwmqVJKIZIOdaf7+1QJ
-         Hy839G7LOS20O+F292EwGXIXRc2zQm+pORwba/k/bE0kCoSgTOoRmImcCd3UCtcU3ept
-         pFNZ+OFMCwDEvNcOUIRYqg4SG2F+0RTDpWczShOlDY4KO8oQMJvCQV2VoHf07gyeh2hw
-         P5JL5fdoFvr8ZLLR1FtP+IZTvg+Ul2z3aFcti/Y2p3Ju6fnkm74+cwTT9X1bxG1vKEoj
-         NMiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Q9bSmskWSEkb9gd9wms6mpxggsv5bcsjx2/k1X765I=;
-        b=cHEg9XBW+s8eqP/yZDu6Zh/i2uUfGs6e4TgsbsIb/76ra/G+Z7SQJMkZHUVmiKE0xn
-         CtyxmG8f4B52nM+Mt3cZBe7tgsba/JY6TvDjBX7s5U6zsleburv+muvukhCefuq+t9O/
-         NaIH2h5hXpwfHVMTHasEmnElHbPYCNiu+TB5TMpYzNvzLlXJBF5h0fAjLn9+smudOgGO
-         8qtYA/K7izws7I3bDDPVtKsME/d5syByZO5h4fqGct3ySEFKuDrbMKz0B2QKnAdeWLvS
-         K73Pg9sPEQmaVU0opV+p9gV9dmaCfhs7drtueoxqqyeBen5SW3V0a0LWoAncKnlAQ0E5
-         bgdA==
-X-Gm-Message-State: AOAM530fSUDqebzQ3ZQlSM0G3aCEz92zzdUCVHgKcozoK29N4vpWhFZS
-        abCOlFZqQAcJ4P/jkjn1bIpymzzNXdZCQ8R5dbE=
-X-Google-Smtp-Source: ABdhPJzujMbko+gE4wSgDhZfWwRJP9QqOAvVvhXxZfo/MT29qGeeAZDLhXX/kdhSjuk+OF6zh7B8J+mN87oT00y8/8Q=
-X-Received: by 2002:a02:c914:: with SMTP id t20mr921216jao.117.1602035271378;
- Tue, 06 Oct 2020 18:47:51 -0700 (PDT)
+        id S1726627AbgJGDIV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Oct 2020 23:08:21 -0400
+Received: from mail-eopbgr1320120.outbound.protection.outlook.com ([40.107.132.120]:12672
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbgJGDIU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Oct 2020 23:08:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bDrnslNDs70HjiTztT9FEdwXNHQop7O1cMDEhvNeAe7ThC8eIPKrDfDs56s61utzq+zyTy9nmx1y7SKP03qJ3A9pxibKU16V6l4gqOO6Oli+LgiT9X10YdRGRgI3+5IB1ZQs9KIBS9MZ/jzFapn2tmXtxxJXRGYlGsce9PPkOhUhW0brS6v8Hf9zobX8KILSfQP+RwzcQuPNoPrzwmVMgdgy49jdKjXnjB4m8BR5VSVWsbkH4BF8PvcOv7IGjWaI/drcfXToHt+OqyQkPDv0KFjF3iPF+VGlJeaIaWuzU1Y+Hbp9xZquVqlotT7SxEg40iVjuDrNvUqG683H8f8Wlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xj+Ao37Ogc4x8ba32f77IOp/xoSW6A0ibSoyqJZYEiQ=;
+ b=Et+y21xUXx0bjstVSLQ9GBQgesKB8jgNQwKq38Ey/6UCUY2Du5F0OZ2+VTuRgCV87Pk9fFaUbmD375ObrGjnp0gttHQZ+8vTgrSQw0hEc9aLusHuDZEsP8wO/PSqxMb4Amxysa0HVzb1cDzbisXNNwfOqt7Ahz3Rhxz0bKp5eqjWxOQhGNu+vcvQ29D1mEqxDIHrPwg8xzqQ+5WbJvCcLX0REQeFrhRZDpxHsHRRMUjDmJ5ocnJhBw7vKm7zh6O2KsoDIyXx+5aFcHY2UE7vAV2gDZThJ9Q7zfqYp2XqY8K8NlaDCJsOv2ZD2/HhS/9q5ZMXAXSRKJ/IDrp6SwLurA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xj+Ao37Ogc4x8ba32f77IOp/xoSW6A0ibSoyqJZYEiQ=;
+ b=SYe3fQE+ZluG/z9O4ZCczkrEjDXp9U3sxwUmjL7tFJtG4B5xmc60dtMafqf8VBePTYKpGaA4kzQfGglw8xabqp5J7AN70/bZvYWX/K86Uieu7fVxOIlqwoLIlNDSgc8L6oxvyL4Igkth/1xOTwgWvegQ29fB6mU/EBSlrrmQqaY=
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM (2603:1096:802:1a::17)
+ by KU1P153MB0168.APCP153.PROD.OUTLOOK.COM (2603:1096:802:1b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.10; Wed, 7 Oct
+ 2020 03:08:10 +0000
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::31a4:e5b8:86ec:1413]) by KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::31a4:e5b8:86ec:1413%9]) with mapi id 15.20.3477.011; Wed, 7 Oct 2020
+ 03:08:10 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Stefan Haberland <sth@linux.vnet.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Long Li <longli@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: irq_build_affinity_masks() allocates improper affinity if
+ num_possible_cpus() > num_present_cpus()?
+Thread-Topic: irq_build_affinity_masks() allocates improper affinity if
+ num_possible_cpus() > num_present_cpus()?
+Thread-Index: AdabnwA0SBdvouNFQ4iAnKm72ZKc6QAc4+aAABDIuTA=
+Date:   Wed, 7 Oct 2020 03:08:09 +0000
+Message-ID: <KU1P153MB0120B72473E50B1B723E25E6BF0A0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+References: <KU1P153MB0120D20BC6ED8CF54168EEE6BF0D0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+ <87lfgj6v30.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87lfgj6v30.fsf@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2f1cefce-f90a-4392-8907-2db5c9b0b06e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-10-07T02:58:14Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2601:600:a280:7f70:e92f:2b81:6f33:777]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 12dfaa24-504f-485a-8c78-08d86a6e38bf
+x-ms-traffictypediagnostic: KU1P153MB0168:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <KU1P153MB01680C1299D0DC1CADB6CAEABF0A0@KU1P153MB0168.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: j+O755Cg1hltxZ72quYpQvpwhos3QvCj3nkIHZZOPJcJkJ/6r1zr1g0Jpx3/TWO0x8BkZgcC06zDiumNrsQcOY/qrp3GVDxmCG1C+q+RnCga1mN8xRHI2fgLKQ8OF372rY7YcFuZISEiblAHp04EsOAC0vIA0TF1RbJlj5MVT3d0Kbk13Yup3BjBtsLl3VygVgSRnQCZPJrp8+TAogFlExzqMwBBOXqIhrB0WyN5o9CYYdmRv0p86tYWEcO97XllEPWt5wzVTlN4SnOAOiiuCKpIo034B5DE4eLKVrmqc2O51vtriND6kiPf2edsvNRd0X4aqZ2zSG9UUBZUL3I81w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0120.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(136003)(346002)(396003)(39860400002)(55016002)(10290500003)(6506007)(52536014)(316002)(5660300002)(4326008)(76116006)(2906002)(8936002)(82960400001)(82950400001)(478600001)(107886003)(8676002)(33656002)(66556008)(64756008)(66476007)(54906003)(86362001)(186003)(66446008)(66946007)(8990500004)(83380400001)(7696005)(9686003)(71200400001)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ENNaE+et+V7TGE/O1wZ8vZk8ZZAsK2USQxZTwl0s43CARmMLCPRh1trhfbdzVsEYjtw7BKRZlJ8/7uTLT4eNzC4r2n0lFPiz9kxJUUBv9gm00bUEq5YF1qGfwIsWfukNfPIBajHdqtPIdyVFopjXe3OQ6RwF1dOR1wpDIgYtrGdlQh/9e8Gck03Rvhbnhx1tFm5aI7m8O4iX+TQ7xPw8W8w59DV4GoJOGLJzkwzZzr1GtmaDi88tI+Yh2E1sTQ4IEPQMjrMRSJxNO2rJ7q6BwcDJUI47E8Euki4/V5Oj3Ht8LyhMwmGrbtc2S+kKsCeA/0LL213ZGhPYW/hK6gJXrnL2LZES0cKZ8BQuBsKU+lcKkiHAo26PxjBfyw+Xbg3krEuVcSvsKaMV3vf7zqNxc6UrtydD1owT2MfwBcx3JGSpdzQ8o0JI61ITfRd62B/EH1TOZQUv9b0ErOoZkrpfTxih3X1q99tLMof77e2EeZju/Ez/M4uYP8eQ8nS2uFcp3JW7N0y48ilN8G6KdxDjibWBiNLZtS373Krd30A4ayPJlPrzNOdz0uhZXOhfjYirnna7fZ07HBbcha8FMDYQu2fRW6F3nP/hgH4oJjeUfaAsmprCe5K3y6aT5849PD8RFYCeO7AS+XAPVJ9kHiBWaHLvCr//e7Rlk8813YXo4jJ2hEFjrM4XeSU2QxNMXyKYiHRT9KtToYC/fwiyZXSvhg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200909112850.hbtgkvwqy2rlixst@pali> <20201006222222.GA3221382@bjorn-Precision-5520>
-In-Reply-To: <20201006222222.GA3221382@bjorn-Precision-5520>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 7 Oct 2020 12:47:40 +1100
-Message-ID: <CAOSf1CHss03DBSDO4PmTtMp0tCEu5kScn704ZEwLKGXQzBfqaA@mail.gmail.com>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Yinghai Lu <yinghai@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12dfaa24-504f-485a-8c78-08d86a6e38bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2020 03:08:09.9381
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rJ4WBD8G3716gL5Pnum1ckEuan/hUEJu0TU3XfuHYHHqz9zd/ZyEvQBx6yH5b9INP98EiCYfr9iG5jDrFj4P5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0168
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 10:26 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> I'm not really a fan of this because pci_sysfs_init() is a bit of a
-> hack to begin with, and this makes it even more complicated.
->
-> It's not obvious from the code why we need pci_sysfs_init(), but
-> Yinghai hinted [1] that we need to create sysfs after assigning
-> resources.  I experimented by removing pci_sysfs_init() and skipping
-> the ROM BAR sizing.  In that case, we create sysfs files in
-> pci_bus_add_device() and later assign space for the ROM BAR, so we
-> fail to create the "rom" sysfs file.
->
-> The current solution to that is to delay the sysfs files until
-> pci_sysfs_init(), a late_initcall(), which runs after resource
-> assignments.  But I think it would be better if we could create the
-> sysfs file when we assign the BAR.  Then we could get rid of the
-> late_initcall() and that implicit ordering requirement.
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Sent: Tuesday, October 6, 2020 11:58 AM
+> > ...
+> > I pass through an MSI-X-capable PCI device to the Linux VM (which has
+> > only 1 virtual CPU), and the below code does *not* report any error
+> > (i.e. pci_alloc_irq_vectors_affinity() returns 2, and request_irq()
+> > returns 0), but the code does not work: the second MSI-X interrupt is n=
+ot
+> > happening while the first interrupt does work fine.
+> >
+> > int nr_irqs =3D 2;
+> > int i, nvec, irq;
+> >
+> > nvec =3D pci_alloc_irq_vectors_affinity(pdev, nr_irqs, nr_irqs,
+> >                 PCI_IRQ_MSIX | PCI_IRQ_AFFINITY, NULL);
+>=20
+> Why should it return an error?
 
-You could probably fix that by using an attribute_group to control
-whether the attribute shows up in sysfs or not. The .is_visible() for
-the group can look at the current state of the device and hide the rom
-attribute if the BAR isn't assigned or doesn't exist. That way we
-don't need to care when the actual assignment occurs.
+The above code returns -ENOSPC if num_possible_cpus() is also 1, and
+returns 0 if num_possible_cpus() is 128. So it looks the above code is
+not using the API correctly, and hence gets undefined results.
 
-> But I haven't tried to code it up, so it's probably more complicated
-> than this.  I guess ideally we would assign all the resources before
-> pci_bus_add_device().  If we could do that, we could just remove
-> pci_sysfs_init() and everything would just work, but I think that's a
-> HUGE can of worms.
+> > for (i =3D 0; i < nvec; i++) {
+> >         irq =3D pci_irq_vector(pdev, i);
+> >         err =3D request_irq(irq, test_intr, 0, "test_intr", &intr_cxt[i=
+]);
+> > }
+>=20
+> And why do you expect that the second interrupt works?
+>=20
+> This is about managed interrupts and the spreading code has two vectors
+> to which it can spread the interrupts. One is assigned to one half of
+> the possible CPUs and the other one to the other half. Now you have only
+> one CPU online so only the interrupt with has the online CPU in the
+> assigned affinity mask is started up.
+>=20
+> That's how managed interrupts work. If you don't want managed interrupts
+> then don't use them.
+>=20
+> Thanks,
+>=20
+>         tglx
 
-I was under the impression the whole point of pci_bus_add_device() was
-to handle any initialisation that needed to be done after resources
-were assigned. Is the ROM BAR being potentially unassigned an x86ism
-or is there some bigger point I'm missing?
+Thanks for the clarification! It looks with PCI_IRQ_AFFINITY the kernel=20
+guarantees that the allocated interrutps are 1:1 bound to CPUs, and the
+userspace is unable to change the affinities. This is very useful to suppor=
+t
+per-CPU I/O queues.
 
-Oliver
+Thanks,
+-- Dexuan
