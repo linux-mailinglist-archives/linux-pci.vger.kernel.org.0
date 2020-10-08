@@ -2,120 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D775F286B7D
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 01:24:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14D49286CB8
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 04:24:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgJGXYz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Oct 2020 19:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58430 "EHLO
+        id S1727605AbgJHCXv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Oct 2020 22:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbgJGXYw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 19:24:52 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F396CC0613D6
-        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 16:24:50 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id r8so3535863qtp.13
-        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 16:24:50 -0700 (PDT)
+        with ESMTP id S1727080AbgJHCXv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Oct 2020 22:23:51 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B77C061755
+        for <linux-pci@vger.kernel.org>; Wed,  7 Oct 2020 19:23:49 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id d20so4636117iop.10
+        for <linux-pci@vger.kernel.org>; Wed, 07 Oct 2020 19:23:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=grnZFDXCMGq7gJnj3rv4Eh6ohpICuLZnEtrVn22rZIo=;
-        b=Bk3vyARb7iuiAU0SAUq2s6xtQRFkx0zrhk9G+DPyvRRbTItWJ6gpJPPsdXndWqM30C
-         q+51nknw/1tIIM/cbEQqZbvmH3mHkhAx0ZhbONTIkwW+SkBnLf5drgGQk3B1JkUtZLQv
-         md+QvQFk56zu60Z3GjZl1EqhU0rhhNSdsHAK30qke9EYBs5AaSpcAL2z/rCUCwa8FQqH
-         2eNBU8guUIVdzfovxzjr065TJHAf7Ql5Nk2Q1fuOqG9vuautugZBwiS50HM9Bf6R7BJy
-         wX6YvRVCp5ueNYkN+1r4/AuMm2/5dBOzuXJknmpl6H2z8DDtJhmovZxfsbStATmFT07H
-         6VSA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=INuLJfBeUmEH0uw1bq9WIrK5i8dKmvSaFB92Q9UojBM=;
+        b=MrTISALNzlXJ3QturtANcCCaH81gaQRCvQaKmxGXiT1m7ZQDBPIYxg9XvvMH6q6VzC
+         eYN2wQQ24Q5uhbPjRvNNbGVkjUtSwUAfp5RBGdGK5on6rFkHH6tzET+iGK81n9gL6RWG
+         Fby/zu30BO2aiHkUx4/tObTTfJ9Nsv3EzNmBEamA0C/kCaSpplFFWbPi2R8QmLS/rEe+
+         NSxO49PFtRdAJFJ70oFbmMVsgy2GK6GlRSI4RY8dEiC+YiLwgFI6eiYjmFTEpi1lllBZ
+         scXqdVXjNulHWr4KPdJuWW7kzhTTc5DE1maMVfseZ6F5pvNUeAAA3Z7tP96xsQ2S/evT
+         fUUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=grnZFDXCMGq7gJnj3rv4Eh6ohpICuLZnEtrVn22rZIo=;
-        b=LXTVSvxmNS4wb5uo3uQqwBPIyhMxxqGYk9FUROHe8+p+afYH0Z8TALGLk0WJADGs4E
-         JYHRs5fbywketbbkWdaISc7b5/R7ZQJqLPMfVr+DlE0OwYBvaLA4JUfwPHEwuZkxmMLx
-         zqUi9cF/uZ3RqmkjB3xRLwyvl0zlQ+scGsXpEA1tr2qMi2Fl7aB2qLQOlZ2eSWg37l5v
-         ydBQ4eYk7wnekHRhzW5+Lr93gbsragv4a96VKlS+3DsKyLQsaiGYz+UoSK9I5+xWronC
-         MT5hi1SFnRIFjDnZ+1SK5/RIEXlKNQ5YXWH3offjaXTiBwyfpaBis1lPakPjlVoRHmoM
-         h6FA==
-X-Gm-Message-State: AOAM533KXwPvUS9d9irHh3A7iw32eVk3Ngoa26Ay8G/TfSgpM/43eyc6
-        UQcs0p+oKQwRQfZzklA5DR9Ppw==
-X-Google-Smtp-Source: ABdhPJwQSs4RGdtelbtYNd2YLomE1YhjE8V063EOvVpVE89mpXbPIH2mKCjwjLbwP7cugbXVynYwbw==
-X-Received: by 2002:aed:3282:: with SMTP id z2mr6021380qtd.375.1602113090013;
-        Wed, 07 Oct 2020 16:24:50 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id r17sm2946100qtc.22.2020.10.07.16.24.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Oct 2020 16:24:49 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kQIng-001Ing-AW; Wed, 07 Oct 2020 20:24:48 -0300
-Date:   Wed, 7 Oct 2020 20:24:48 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
-Message-ID: <20201007232448.GC5177@ziepe.ca>
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
- <20201007164426.1812530-11-daniel.vetter@ffwll.ch>
- <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=INuLJfBeUmEH0uw1bq9WIrK5i8dKmvSaFB92Q9UojBM=;
+        b=ZALqL2VOo/9p/3doc8ffNHV4H9a14Wp4YlQRFTeKzkvBrbVXnBpzFLx23doOaW/SUA
+         YrJHQisCcwwvurxeoapcGUnIa1lNwpwIFc4B6roen+NoY41nwtws+LCVTYNG5ReCV2QU
+         +UnaIby+OdtMVBYUgRp6nsqC7XFuyZnwFE5iYu8BqMu9IfxXCZBU+Ouy0AhcIcKk6Dlb
+         4bJ1OZU48v+vP1OKuyBjC95m9ZinX3/eGIZc4IWvVB7AB4KTc6TUgjKDv4HMCvApIORe
+         icTP0F00hQORpyxb6KkdFgMcGmZgS5DfHUsG8Uk+DlCgdgf611HRi8NxWQpd97j5sk8c
+         6WmQ==
+X-Gm-Message-State: AOAM5331+e8gy06TdtqYS62FwHdim4/KOHCHwVlVPr9e+j0GCE2wipm3
+        d+1oq+2enQA/eOY8gZLsyttuzO9BjGtnUAq0iQuFz6qyky7Yxw==
+X-Google-Smtp-Source: ABdhPJwF6c8p7byaDZ5CZ7geEmWRHlc118O6oGWP7oHgpK6Pe3PVCKbbt6qqxjFcqUyRy/3SySScPNlFxuN3oRTjWME=
+X-Received: by 2002:a6b:5907:: with SMTP id n7mr4451249iob.75.1602123828699;
+ Wed, 07 Oct 2020 19:23:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
+References: <20200925092258.525079-1-clg@kaod.org>
+In-Reply-To: <20200925092258.525079-1-clg@kaod.org>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Thu, 8 Oct 2020 13:23:37 +1100
+Message-ID: <CAOSf1CGW7ocYm2BXFiy9Nmi+G+xwVcqQzTqPo_nss_tmpG_V=w@mail.gmail.com>
+Subject: Re: [PATCH] powerpc/pci: Fix PHB removal/rescan on PowerNV
+To:     =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 12:33:06PM -0700, Dan Williams wrote:
-> On Wed, Oct 7, 2020 at 11:11 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> >
-> > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-> > the region") /dev/kmem zaps ptes when the kernel requests exclusive
-> > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-> > the default for all driver uses.
-> >
-> > Except there's two more ways to access pci bars: sysfs and proc mmap
-> > support. Let's plug that hole.
-> 
-> Ooh, yes, lets.
-> 
-> >
-> > For revoke_devmem() to work we need to link our vma into the same
-> > address_space, with consistent vma->vm_pgoff. ->pgoff is already
-> > adjusted, because that's how (io_)remap_pfn_range works, but for the
-> > mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
-> > at ->open time, but that's a bit tricky here with all the entry points
-> > and arch code. So instead create a fake file and adjust vma->vm_file.
-> 
-> I don't think you want to share the devmem inode for this, this should
-> be based off the sysfs inode which I believe there is already only one
-> instance per resource. In contrast /dev/mem can have multiple inodes
-> because anyone can just mknod a new character device file, the same
-> problem does not exist for sysfs.
+On Fri, Sep 25, 2020 at 7:23 PM C=C3=A9dric Le Goater <clg@kaod.org> wrote:
+>
+> To fix an issue with PHB hotplug on pSeries machine (HPT/XIVE), commit
+> 3a3181e16fbd introduced a PPC specific pcibios_remove_bus() routine to
+> clear all interrupt mappings when the bus is removed. This routine
+> frees an array allocated in pcibios_scan_phb().
+>
+> This broke PHB hotplug on PowerNV because, when a PHB is removed and
+> re-scanned through sysfs, the PCI layer un-assigns and re-assigns
+> resources to the PHB but does not destroy and recreate the PCI
+> controller structure. Since pcibios_remove_bus() does not clear the
+> 'irq_map' array pointer, a second removal of the PHB will try to free
+> the array a second time and corrupt memory.
 
-The inode does not come from the filesystem char/mem.c creates a
-singular anon inode in devmem_init_inode()
+"PHB hotplug" and "hot-plugging devices under a PHB" are different
+things. What you're saying here doesn't make a whole lot of sense to
+me unless you're conflating the two. The distinction is important
+since on pseries we can use DLPAR to add and remove actual PHBs (i.e.
+the pci_controller) at runtime, but there's no corresponding mechanism
+on PowerNV.
 
-Seems OK to use this more widely, but it feels a bit weird to live in
-char/memory.c.
+> Free the 'irq_map' array in pcibios_free_controller() to fix
+> corruption and clear interrupt mapping after it has been
+> disposed. This to avoid filling up the array with successive
+> remove/rescan of a bus.
 
-This is what got me thinking maybe this needs to be a bit bigger
-generic infrastructure - eg enter this scheme from fops mmap and
-everything else is in mm/user_iomem.c
+Even with this patch I think we're still broken. With this patch
+applied the init path is something like:
 
-Jason
+per-phb init:
+    allocate phb->irq_map array
+per-bus init:
+    nothing
+per-device init:
+    pcibios_bus_add_device()
+       pci_read_irq_line()
+            pci_irq_map_register(pci_dev, virq)
+               *record the device's interrupt in phb->irq_map*
+
+And the teardown path:
+
+per-device teardown:
+    nothing
+per-bus teardown:
+    pcibios_remove_bus()
+        pci_irq_map_dispose()
+            *walk phb->irq_map and dispose of each mapped interrupt*
+per-phb teardown:
+    free(phb->irq_map)
+
+There's a lot of asymmetry here, which is a problem in itself, but the
+real issue is that when removing *any* pci_bus under a PHB we dispose
+of the LSI\ for *every* device under that PHB. Not good.
+
+Ideally we should be fixing this by having the per-device teardown
+handle disposing the mapping. Unfortunately, there's no pcibios hook
+that's called when removing a pci_dev. However, we can register a bus
+notifier which will be called when the pci_dev is removed from its bus
+and we already do that for the per-device EEH teardown and to handle
+IOMMU TCE invalidation when the device is removed.
