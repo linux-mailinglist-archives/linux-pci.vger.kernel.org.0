@@ -2,247 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3BD287012
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 09:55:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 842CC287081
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 10:10:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgJHHzD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 03:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52112 "EHLO
+        id S1728383AbgJHIKG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 04:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbgJHHzB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 03:55:01 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7426C0613D7;
-        Thu,  8 Oct 2020 00:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=iNj0XTohSMg9ap2gZ3XpRxKtNYvsOWR27IOBV0TND0g=; b=aBcf/AA1i/iDk/5fBHXYNPlM5M
-        JEsBCpEHOZDpDHes8XJ2YL3QKPSwAHFF4IiiJQb0sb2yXU9IB2NelaLwVVgVNO3bKA7M9hD7MiGJe
-        r5vWrnDuCVKDvGp1T68odu7aBjlW1Asye5LSf6zjrPUM2DbUaWSHltmgVLNxdLNKHKezidGEPdign
-        TpO2lKsypODnzTYGDCTJw+tY7689Dgz2rM0mvimSNWBUz9JcCYYFnuksVsAOhp/niu3SFLdPsRIhZ
-        U5QBuETtdmNfIBpMmf/u1fYb16K5DxNvO7w0llX8jAtJyTiPn0AwQ+2rNV/7iwlz4+MOGOsqcgVDr
-        clh1VKpQ==;
-Received: from [54.239.6.188] (helo=freeip.amazon.com)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kQQlA-0001OG-3u; Thu, 08 Oct 2020 07:54:44 +0000
-Message-ID: <8c035e92ec982d5ac257aeef4ec1f6f1f5d8c5c8.camel@infradead.org>
-Subject: Re: [PATCH v3 02/18] iommu/vt-d: Add DEV-MSI support
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Date:   Thu, 08 Oct 2020 08:54:38 +0100
-In-Reply-To: <87zh57glow.fsf@nanos.tec.linutronix.de>
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
-         <160021246905.67751.1674517279122764758.stgit@djiang5-desk3.ch.intel.com>
-         <87zh57glow.fsf@nanos.tec.linutronix.de>
-Content-Type: multipart/signed; micalg="sha-256";
-        protocol="application/x-pkcs7-signature";
-        boundary="=-eHYTrBM9bGmhIl4PBJ9d"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
+        with ESMTP id S1728477AbgJHIKG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 04:10:06 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F183EC0613D3
+        for <linux-pci@vger.kernel.org>; Thu,  8 Oct 2020 01:10:05 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id f10so4741316otb.6
+        for <linux-pci@vger.kernel.org>; Thu, 08 Oct 2020 01:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wCjCa64MStwiq1yR7OaeNvk7N1NN2BleqQckjLbhNYU=;
+        b=C53LylVZwMO0g2+JAqtSBtMgpBv+ulmsaRO6I2h41YCH/cKnnJ2tt3EfS3lZw6Rhw0
+         MUO4icylwPq5djGkpDWWyO5lhz5aT49NTtxjLsnsfxd1PvP6W6t98VP0roBxwIJCy+Bl
+         vpajr9+5TXFrcHadQv/pRUWTQ9v7fI3MyQ+kM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wCjCa64MStwiq1yR7OaeNvk7N1NN2BleqQckjLbhNYU=;
+        b=rVaSCtlfTS6VkIOAibtyILcfiMxoHblVHVnO4DkcU4uY5AT+HoI3odYqJ6PsLq83hh
+         vmfbmRhBFKxDEgKSt52zu5r+Z16Np9xbCZiVSPbJU2tSAce1+2p7coEh2j4KNx0+IFOd
+         TLI+KOPWrGOkQdbTYKTBdptlObTLZkBOOruDYX2fUf4aw/uy5M3derGEGJKX74uGtmtx
+         pM59Nuagz5g0oi0lGV998IPa30poJYm/RJQF6Ti0S3RIIPFmd6Cwi0RrArlsrCyKdmp8
+         Mm5vn03XwsCJ04bxB2LzyDhPfk8DSmstcCmqQoP2kgfB0TV6VKKIXm0UJ0ul125Bu/Bc
+         QN9A==
+X-Gm-Message-State: AOAM531HgRnEfI5V1emJfEKngjEWZmpccYtwJYqUj0s5zKr9l7Ek9+Tj
+        Thg5+u2d184dRJ8Od/JIiBmnJ2ROIzWYsZl2cgHGMg==
+X-Google-Smtp-Source: ABdhPJz2Aux80kUsEM7YHCXCuraur5IrUAmiithdZ9pp1HS0einrpaKxMEfTYuxGd6kEaO0zfYuPyPuQ741ZEEETeSg=
+X-Received: by 2002:a05:6830:1e56:: with SMTP id e22mr4190355otj.303.1602144605250;
+ Thu, 08 Oct 2020 01:10:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
+ <20201007164426.1812530-11-daniel.vetter@ffwll.ch> <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
+ <CAKMK7uFoxiPdjO-yhd-mKqumnTpjcENEReb1sOYhOwRRCL0wpQ@mail.gmail.com>
+ <CAPcyv4jGxsB5so8mKqYrsn2CEc7nO2yPvzZZ_mvM_-R=BZfKHg@mail.gmail.com> <CAPcyv4iN1q0LUVTO6igMKPe-8hnR5ULF+mBnWy6bdXfY2M6YmA@mail.gmail.com>
+In-Reply-To: <CAPcyv4iN1q0LUVTO6igMKPe-8hnR5ULF+mBnWy6bdXfY2M6YmA@mail.gmail.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Thu, 8 Oct 2020 10:09:54 +0200
+Message-ID: <CAKMK7uEETcQrPBC=4URQZtD73nA9MvQpBx-TOv95bdwzNOOA2g@mail.gmail.com>
+Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Oct 8, 2020 at 12:29 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Wed, Oct 7, 2020 at 3:23 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Wed, Oct 7, 2020 at 12:49 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> > >
+> > > On Wed, Oct 7, 2020 at 9:33 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > On Wed, Oct 7, 2020 at 11:11 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> > > > >
+> > > > > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
+> > > > > the region") /dev/kmem zaps ptes when the kernel requests exclusive
+> > > > > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
+> > > > > the default for all driver uses.
+> > > > >
+> > > > > Except there's two more ways to access pci bars: sysfs and proc mmap
+> > > > > support. Let's plug that hole.
+> > > >
+> > > > Ooh, yes, lets.
+> > > >
+> > > > > For revoke_devmem() to work we need to link our vma into the same
+> > > > > address_space, with consistent vma->vm_pgoff. ->pgoff is already
+> > > > > adjusted, because that's how (io_)remap_pfn_range works, but for the
+> > > > > mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
+> > > > > at ->open time, but that's a bit tricky here with all the entry points
+> > > > > and arch code. So instead create a fake file and adjust vma->vm_file.
+> > > >
+> > > > I don't think you want to share the devmem inode for this, this should
+> > > > be based off the sysfs inode which I believe there is already only one
+> > > > instance per resource. In contrast /dev/mem can have multiple inodes
+> > > > because anyone can just mknod a new character device file, the same
+> > > > problem does not exist for sysfs.
+> > >
+> > > But then I need to find the right one, plus I also need to find the
+> > > right one for the procfs side. That gets messy, and I already have no
+> > > idea how to really test this. Shared address_space is the same trick
+> > > we're using in drm (where we have multiple things all pointing to the
+> > > same underlying resources, through different files), and it gets the
+> > > job done. So that's why I figured the shared address_space is the
+> > > cleaner solution since then unmap_mapping_range takes care of
+> > > iterating over all vma for us. I guess I could reimplement that logic
+> > > with our own locking and everything in revoke_devmem, but feels a bit
+> > > silly. But it would also solve the problem of having mutliple
+> > > different mknod of /dev/kmem with different address_space behind them.
+> > > Also because of how remap_pfn_range works, all these vma do use the
+> > > same pgoff already anyway.
+> >
+> > True, remap_pfn_range() makes sure that ->pgoff is an absolute
+> > physical address offset for all use cases. So you might be able to
+> > just point proc_bus_pci_open() at the shared devmem address space. For
+> > sysfs it's messier. I think you would need to somehow get the inode
+> > from kernfs_fop_open() to adjust its address space, but only if the
+> > bin_file will ultimately be used for PCI memory.
 
---=-eHYTrBM9bGmhIl4PBJ9d
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Just read the code  a bit more, and for proc it's impossible. There's
+only a single file, and before you mmap it you have to call a few
+ioctl to select the right pci resource on that device you want to
+mmap. Which includes legacy ioport stuff, and at least for now those
+don't get revoked (maybe they should, but I'm looking at iomem here
+now). Setting the mapping too early in ->open means that on
+architectures which can do ioport as mmaps (not many, but powerpc is
+among them) we'd shoot down these mmaps too.
 
-On Wed, 2020-09-30 at 20:32 +0200, Thomas Gleixner wrote:
-> On Tue, Sep 15 2020 at 16:27, Dave Jiang wrote:
-> > @@ -1303,9 +1303,10 @@ static void intel_irq_remapping_prepare_irte(str=
-uct intel_ir_data *data,
-> >  	case X86_IRQ_ALLOC_TYPE_HPET:
-> >  	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
-> >  	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
-> > +	case X86_IRQ_ALLOC_TYPE_DEV_MSI:
-> >  		if (info->type =3D=3D X86_IRQ_ALLOC_TYPE_HPET)
-> >  			set_hpet_sid(irte, info->devid);
-> > -		else
-> > +		else if (info->type !=3D X86_IRQ_ALLOC_TYPE_DEV_MSI)
-> >  			set_msi_sid(irte,
-> >  			msi_desc_to_pci_dev(info->desc));
->=20
-> Gah. this starts to become unreadable.
->=20
-> diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/ir=
-q_remapping.c
-> index 8f4ce72570ce..0c1ea8ceec31 100644
-> --- a/drivers/iommu/intel/irq_remapping.c
-> +++ b/drivers/iommu/intel/irq_remapping.c
-> @@ -1271,6 +1271,16 @@ static struct irq_chip intel_ir_chip =3D {
->  	.irq_set_vcpu_affinity	=3D intel_ir_set_vcpu_affinity,
->  };
-> =20
-> +static void irte_prepare_msg(struct msi_msg *msg, int index, int subhand=
-le)
-> +{
-> +	msg->address_hi =3D MSI_ADDR_BASE_HI;
-> +	msg->data =3D sub_handle;
-> +	msg->address_lo =3D MSI_ADDR_BASE_LO | MSI_ADDR_IR_EXT_INT |
-> +			  MSI_ADDR_IR_SHV |
-> +			  MSI_ADDR_IR_INDEX1(index) |
-> +			  MSI_ADDR_IR_INDEX2(index);
-> +}
-> +
->  static void intel_irq_remapping_prepare_irte(struct intel_ir_data *data,
->  					     struct irq_cfg *irq_cfg,
->  					     struct irq_alloc_info *info,
-> @@ -1312,19 +1322,18 @@ static void intel_irq_remapping_prepare_irte(stru=
-ct intel_ir_data *data,
->  		break;
-> =20
->  	case X86_IRQ_ALLOC_TYPE_HPET:
-> +		set_hpet_sid(irte, info->hpet_id);
-> +		irte_prepare_msg(msg, index, sub_handle);
-> +		break;
-> +
->  	case X86_IRQ_ALLOC_TYPE_MSI:
->  	case X86_IRQ_ALLOC_TYPE_MSIX:
-> -		if (info->type =3D=3D X86_IRQ_ALLOC_TYPE_HPET)
-> -			set_hpet_sid(irte, info->hpet_id);
-> -		else
-> -			set_msi_sid(irte, info->msi_dev);
-> -
-> -		msg->address_hi =3D MSI_ADDR_BASE_HI;
-> -		msg->data =3D sub_handle;
-> -		msg->address_lo =3D MSI_ADDR_BASE_LO | MSI_ADDR_IR_EXT_INT |
-> -				  MSI_ADDR_IR_SHV |
-> -				  MSI_ADDR_IR_INDEX1(index) |
-> -				  MSI_ADDR_IR_INDEX2(index);
-> +		set_msi_sid(irte, info->msi_dev);
-> +		irte_prepare_msg(msg, index, sub_handle);
-> +		break;
-> +
-> +	case X86_IRQ_ALLOC_TYPE_DEV_MSI:
-> +		irte_prepare_msg(msg, index, sub_handle);
->  		break;
-> =20
->  	default:
->=20
-> Hmm?
+Looking at the code there's the generic implementation, which consults
+pci_iobar_pfn. And the only other implementation for sparc looks
+similar, they separate iomem vs ioport through different pfn. So I
+think this should indeed work.
 
-It'd get a bit nicer if you *always* did the irte_prepare_msg() part to
-generate the MSI message. Let the IOAPIC driver swizzle that into the
-IOAPIC RTE for itself. You have no business composing an IOAPIC RTE
-here.
+> To me this seems like a new sysfs_create_bin_file() flavor that
+> registers the file with the common devmem address_space.
 
-Then your switch statement is *only* for setting the SID in the IRTE
-appropriately.
+Hm I think we could just add a i_mapping member to bin_attributes and
+let the normal open code set that up for us. That should work.
+mmapable binary sysfs file is already a similar special case.
+-Daniel
 
 
---=-eHYTrBM9bGmhIl4PBJ9d
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAx
-MDA4MDc1NDM4WjAvBgkqhkiG9w0BCQQxIgQgsPZisSspQDX8lo800FXb/FoMmU3hsViMoKCrGFY+
-cXgwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAGQ7bh6Q94SO/MBPYS4cTJcTxO40rhX1EXwzVsrO5oHI7JGIii35PkuRMBCavOzp
-NdpqyrcJELiZjuUcLrp64OJqMSv/I+gYtC5+LVVsi1YySbjzIKx0z2FafeyEyjjgfgEUrOFJqwDj
-IpbyCwxDMb9N2u7rtFMGvExIMYiGSvWw5XHfRPDfelyFS02lSUbM1dszkalm0lCZsRuvhLtrY8YM
-vnly43LFd/BKLBqSQt3Md1WpuIjw55DkwkvQianSbhmmAPlaLo50CidkU/+X3PbYDmw4MyjF4IiU
-suP6yBm1G+AaxMssjkTEwQ9gNGfen1EJIvGd1j4j5HyWlRISergAAAAAAAA=
 
 
---=-eHYTrBM9bGmhIl4PBJ9d--
-
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
