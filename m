@@ -2,127 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4969F286DCC
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 06:46:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1F1286E20
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 07:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgJHEqa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 00:46:30 -0400
-Received: from smtpout1.mo804.mail-out.ovh.net ([79.137.123.220]:36891 "EHLO
-        smtpout1.mo804.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726216AbgJHEqa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 00:46:30 -0400
-X-Greylist: delayed 564 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Oct 2020 00:46:29 EDT
-Received: from mxplan5.mail.ovh.net (unknown [10.108.20.120])
-        by mo804.mail-out.ovh.net (Postfix) with ESMTPS id 3FB4569D7289;
-        Thu,  8 Oct 2020 06:37:03 +0200 (CEST)
-Received: from kaod.org (37.59.142.95) by DAG4EX1.mxp5.local (172.16.2.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Thu, 8 Oct 2020
- 06:37:02 +0200
-Authentication-Results: garm.ovh; auth=pass (GARM-95G00109f5673c-ab6b-4e8f-a576-265daca88b5f,
-                    B62477DDF3291A3D82A50BEDF84162C512859302) smtp.auth=clg@kaod.org
-Subject: Re: [PATCH] powerpc/pci: Fix PHB removal/rescan on PowerNV
-To:     Oliver O'Halloran <oohall@gmail.com>
-CC:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <20200925092258.525079-1-clg@kaod.org>
- <CAOSf1CGW7ocYm2BXFiy9Nmi+G+xwVcqQzTqPo_nss_tmpG_V=w@mail.gmail.com>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Message-ID: <06bf1b7b-e9b4-44b0-1aad-60b938f8e924@kaod.org>
-Date:   Thu, 8 Oct 2020 06:37:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1728111AbgJHFdW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 01:33:22 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12999 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgJHFdW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 01:33:22 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f7ea4670000>; Wed, 07 Oct 2020 22:32:23 -0700
+Received: from [10.25.74.27] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Oct
+ 2020 05:32:58 +0000
+Subject: Re: [PATCH v2 0/5] PCI: dwc: improve msi handling
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "NXP Linux Team" <linux-imx@nxp.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        "Kevin Hilman" <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Kunihiko Hayashi" <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20200924190421.549cb8fc@xhacker.debian>
+ <b977d9b4-cc98-e817-0d51-8f2c6ba1445d@nvidia.com>
+ <20201006143647.3f989340@xhacker.debian>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <435c8cf8-8f4a-c491-4aca-3ec5b7abe49a@nvidia.com>
+Date:   Thu, 8 Oct 2020 11:02:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CGW7ocYm2BXFiy9Nmi+G+xwVcqQzTqPo_nss_tmpG_V=w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20201006143647.3f989340@xhacker.debian>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.95]
-X-ClientProxiedBy: DAG5EX2.mxp5.local (172.16.2.42) To DAG4EX1.mxp5.local
- (172.16.2.31)
-X-Ovh-Tracer-GUID: e8ea91ac-b18a-4a3a-8e39-5e1bee2158f7
-X-Ovh-Tracer-Id: 10911658948260891555
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedujedrgeejgdekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefuvfhfhffkffgfgggjtgfgihesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeejkeduueduveelgeduueegkeelffevledujeetffeivdelvdfgkeeufeduheehfeenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddrleehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehoohhhrghllhesghhmrghilhdrtghomh
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1602135143; bh=J4CEG7z41t4fftMpaxkaa5Era9zth5z8jjZg7k+ZCts=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=gGiVTnDKnvH3IW3q8erfoIHhPlDmnbH2thdoY4rptWoPCwmwQxfo0RIcd6vK7za+a
+         qgXLjiuv+uk3BJx5tDpmSQbDqUWKoQT3pRifw4gmZgEkA3RCj+BkqAEyGD6U4bOMRW
+         7YyxCLCtjO6qbXeESHYlP9z93kG3O82AA69UQ3ntIr7k056NtyNn++sDetOOUG9on9
+         TLtrQofmOFFUqspaxJYSK34woIeLsROw+yztJ5/3W8Z0lg/zdHFQ7f3LuLDNI6K7bW
+         8eHbfb3P1ff5T55KfN3H8s00wH7Fd2T5ZOlcWCQii/0bU80nfxDTNlQkTNzGgPp5vF
+         Rmin14uLeUy0A==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/8/20 4:23 AM, Oliver O'Halloran wrote:
-> On Fri, Sep 25, 2020 at 7:23 PM Cédric Le Goater <clg@kaod.org> wrote:
+
+
+On 10/6/2020 12:06 PM, Jisheng Zhang wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Tue, 6 Oct 2020 11:56:34 +0530 Vidya Sagar wrote:
+> 
 >>
->> To fix an issue with PHB hotplug on pSeries machine (HPT/XIVE), commit
->> 3a3181e16fbd introduced a PPC specific pcibios_remove_bus() routine to
->> clear all interrupt mappings when the bus is removed. This routine
->> frees an array allocated in pcibios_scan_phb().
 >>
->> This broke PHB hotplug on PowerNV because, when a PHB is removed and
->> re-scanned through sysfs, the PCI layer un-assigns and re-assigns
->> resources to the PHB but does not destroy and recreate the PCI
->> controller structure. Since pcibios_remove_bus() does not clear the
->> 'irq_map' array pointer, a second removal of the PHB will try to free
->> the array a second time and corrupt memory.
+>> Hi,
 > 
-> "PHB hotplug" and "hot-plugging devices under a PHB" are different
-> things. What you're saying here doesn't make a whole lot of sense to
-> me unless you're conflating the two. The distinction is important
-> since on pseries we can use DLPAR to add and remove actual PHBs (i.e.
-> the pci_controller) at runtime, but there's no corresponding mechanism
-> on PowerNV.
-
-And it's even different on QEMU. 
-
->> Free the 'irq_map' array in pcibios_free_controller() to fix
->> corruption and clear interrupt mapping after it has been
->> disposed. This to avoid filling up the array with successive
->> remove/rescan of a bus.
+> Hi,
 > 
-> Even with this patch I think we're still broken. With this patch
-> applied the init path is something like:
+>> I would like to verify this series along with the other series "PCI:
+>> dwc: fix two MSI issues" on Tegra194. I tried to apply these series on
+>> both linux-next and Lorenzo's pci/dwc branches but there seem to be non
+>> trivial conflicts. Could you please tell me which branch I can use and
+>> apply these series cleanly?
 > 
-> per-phb init:
->     allocate phb->irq_map array
-> per-bus init:
->     nothing
-> per-device init:
->     pcibios_bus_add_device()
->        pci_read_irq_line()
->             pci_irq_map_register(pci_dev, virq)
->                *record the device's interrupt in phb->irq_map*
+> This is a fix, so I thought the series would be picked up in v5.9, so the
+> series is patched against v5.9-rcN
 > 
-> And the teardown path:
-> 
-> per-device teardown:
->     nothing
-> per-bus teardown:
->     pcibios_remove_bus()
->         pci_irq_map_dispose()
->             *walk phb->irq_map and dispose of each mapped interrupt*
-> per-phb teardown:
->     free(phb->irq_map)
-> 
-> There's a lot of asymmetry here, which is a problem in itself, but the
-> real issue is that when removing *any* pci_bus under a PHB we dispose
-> of the LSI\ for *every* device under that PHB. Not good.
-> 
-> Ideally we should be fixing this by having the per-device teardown
-> handle disposing the mapping. Unfortunately, there's no pcibios hook
-> that's called when removing a pci_dev. However, we can register a bus
-> notifier which will be called when the pci_dev is removed from its bus
-> and we already do that for the per-device EEH teardown and to handle
-> IOMMU TCE invalidation when the device is removed.
-
-I lack the knowledge here and I think some else should take over,
-as I am not doing a good job. 
-
-Michael, can you drop the initial patch again :/ It is better not
-to merge anything.
+> could you please try v5 https://lkml.org/lkml/2020/9/29/2511 on v5.9-rc7?
+I tried this series on top of v5.9-rc7 and it worked as expected on 
+Tegra194 platform. Also, I couldn't cleanly apply the other series 'PCI: 
+dwc: fix two MSI issues' on top. Could you please rebase them?
 
 Thanks,
-
-C. 
-
-
+Vidya Sagar
+> 
+> 
+> Thanks
+> 
+>> FWIW, I acknowledge that the existing code does leak MSI target page
+>> every time system goes through suspend-resume sequence on Tegra194.
+>>
+>> Thanks,
+>> Vidya Sagar
+>>
+>> On 9/24/2020 4:35 PM, Jisheng Zhang wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> Improve the msi code:
+>>> 1. Add proper error handling.
+>>> 2. Move dw_pcie_msi_init() from each users to designware host to solve
+>>> msi page leakage in resume path.
+>>>
+>>> Since v1:
+>>>     - add proper error handling patches.
+>>>     - solve the msi page leakage by moving dw_pcie_msi_init() from each
+>>>       users to designware host
+>>>
+>>>
+>>> Jisheng Zhang (5):
+>>>     PCI: dwc: Call dma_unmap_page() before freeing the msi page
+>>>     PCI: dwc: Check alloc_page() return value
+>>>     PCI: dwc: Rename dw_pcie_free_msi to dw_pcie_msi_deinit
+>>>     PCI: dwc: Skip PCIE_MSI_INTR0* programming if MSI is disabled
+>>>     PCI: dwc: Move dw_pcie_msi_init() from each users to designware host
+>>>
+>>>    drivers/pci/controller/dwc/pci-dra7xx.c       |  1 +
+>>>    drivers/pci/controller/dwc/pci-exynos.c       |  2 -
+>>>    drivers/pci/controller/dwc/pci-imx6.c         |  3 --
+>>>    drivers/pci/controller/dwc/pci-meson.c        |  8 ----
+>>>    drivers/pci/controller/dwc/pcie-artpec6.c     | 10 -----
+>>>    .../pci/controller/dwc/pcie-designware-host.c | 43 +++++++++++++------
+>>>    .../pci/controller/dwc/pcie-designware-plat.c |  3 --
+>>>    drivers/pci/controller/dwc/pcie-designware.h  |  9 +++-
+>>>    drivers/pci/controller/dwc/pcie-histb.c       |  3 --
+>>>    drivers/pci/controller/dwc/pcie-kirin.c       |  3 --
+>>>    drivers/pci/controller/dwc/pcie-qcom.c        |  3 --
+>>>    drivers/pci/controller/dwc/pcie-spear13xx.c   |  1 -
+>>>    drivers/pci/controller/dwc/pcie-tegra194.c    |  2 -
+>>>    drivers/pci/controller/dwc/pcie-uniphier.c    |  9 +---
+>>>    14 files changed, 38 insertions(+), 62 deletions(-)
+>>>
+>>> --
+>>> 2.28.0
+>>>
+> 
