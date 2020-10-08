@@ -2,117 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81733286F77
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 09:31:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE063286F81
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 09:32:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgJHHbu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 03:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48400 "EHLO
+        id S1727232AbgJHHcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 03:32:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgJHHbu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 03:31:50 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3028C0613D2
-        for <linux-pci@vger.kernel.org>; Thu,  8 Oct 2020 00:31:49 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id m7so5399201oie.0
-        for <linux-pci@vger.kernel.org>; Thu, 08 Oct 2020 00:31:49 -0700 (PDT)
+        with ESMTP id S1726491AbgJHHcT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 03:32:19 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F22C061755
+        for <linux-pci@vger.kernel.org>; Thu,  8 Oct 2020 00:32:18 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z1so5388752wrt.3
+        for <linux-pci@vger.kernel.org>; Thu, 08 Oct 2020 00:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ogkw1NmOSWleETzvxYwVZZIizSINMS0qQkiw0aowwRQ=;
-        b=dAa4UrodoeKqvvGBic2n/ikfUtGXIrA84JDvhHoeTG0wQyvzwM6zRb58ASAp90bOAP
-         Z0Gq9W2/rAIbo9tt/Rdw3PX+Bn1vOefBbbpajIIFIeMsYr0JsELM1frkf/Q6RzY+4q6w
-         KwDjwJvmHbSV+DyPoGD+FRH2axWgRzr70NSco=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=6Q5cOldM6q5JrfqCs8qEdwrhCyVv/oMVbGGujp3ARP4=;
+        b=D/9VgxnWJBnhCcPwvZUCvpvCPL0ACCOx02s1jjCFHNcO1bQpTc/6jAQ/1M14PLM4VK
+         sPI0HOsTSm80tYxBfJ4riYN/1etxSuVl2C51EXSNtj6h/s+v06IiS2SPGWhdaQIYFT1e
+         HG13yQC4Vc3hvBvPW4+/fmGfKMTvLSP7cPaU0Roda0PNrmFUEuX/899X9NPxyBgmOELK
+         MOtP7NAadyRrh2lJBFRSGZ0bkrum2Lk1pRjvWJe0+KuQShTsWRbaliz0M84CN1q4i9Jc
+         5HDeXGJW+zZuj1GLe4a5TppeuWXh2vvtHXSa722XxGMJQSGCh2r543oOcljRjmwNzxWi
+         vp2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ogkw1NmOSWleETzvxYwVZZIizSINMS0qQkiw0aowwRQ=;
-        b=A8E0sHq6f2Qa0gCjT8h699QUA2jqJx5WrDaRBd27boasu1bm4XJdF5Sgso5oVU5XBM
-         hQj0ONZx+lBGGlB7V6w+YGHRZHXpcREM/kJ72VcKru4wdqQTA3CeqteTLecbQKWL5mVX
-         qWdWf/KgQWPpys8ysmPHAdApBh+qCkpKMWZaYZcDbLs3UYrQrktGlSaIYL1K682cCcFI
-         Xq+foHjExExiaB4sA4zE+eViDVHjZIw17iBrZalQ86dQVLzfKDihF2lyjIE3iKiDBikO
-         8ho/Eydp471l4ytsJu45XAMd4rFkUdyx2pXSyYqsdwS30LHKRoaV+/yDeWw++Ti8Ce6p
-         yxhw==
-X-Gm-Message-State: AOAM532vomKuI5kMw4CdY0Y84iifpQ+G8CbNYZWevy6LbQv95MDZx/Lt
-        yxM22tJFou5wZjShUDmCZOeFAggE4m1d35+NqhztcQ==
-X-Google-Smtp-Source: ABdhPJx491RwkFJI9puzs4morldhkHhy8TQN885mw0wtSqvJNbvAlJbcViFwT+IWX3hheU/oD67HmER0Hab3kMQkGCo=
-X-Received: by 2002:aca:6083:: with SMTP id u125mr4379406oib.14.1602142309051;
- Thu, 08 Oct 2020 00:31:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=6Q5cOldM6q5JrfqCs8qEdwrhCyVv/oMVbGGujp3ARP4=;
+        b=nKqAsshOPr9uRIopRZz+JaSAj/iIIKEpWQNAIr1nP0deUnUXF2n8Tq/U909sOXEF9H
+         UCDCaiiFSZXbH/zJYoIKz/2MUtu09DfdwyRu1DrPzdEYtIj4MgQGXPezr6owqQXnZioy
+         xVlOpsMvTiMHE5UvsqkH5A159g9lCsU2JVjRp+oUEX7YUBD6Es6l81h8itCEfwXEHd7g
+         5owB0FE5tHNFPBGip3FfztTbcD3qAGFsz6ckJde/uI6j7D3G6D/rDbH/z+vWtrkIEr44
+         NNqLZhutpd1ancXDtXTzMlQCZ0fCcCxSN6C9R9G1iIiWLIuLlXCkDEAZn3NG9vf4byOY
+         +W3w==
+X-Gm-Message-State: AOAM530FkUQQpt8rwBn5+jcIwt8tU6uyWdg4utpdmkfMN46h361gkCPo
+        hslmj7rq6UcVDDDtxQNRTG3R8w==
+X-Google-Smtp-Source: ABdhPJxFjGV/yxOiFqpYLTyRD7i+NgV9Bw3QiP14XQdh13hJO+WlbWlBg3JHxI4WR5vxKchmzx73uw==
+X-Received: by 2002:adf:e4c5:: with SMTP id v5mr7371061wrm.320.1602142337036;
+        Thu, 08 Oct 2020 00:32:17 -0700 (PDT)
+Received: from dell ([91.110.221.232])
+        by smtp.gmail.com with ESMTPSA id n6sm6423368wrx.58.2020.10.08.00.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2020 00:32:16 -0700 (PDT)
+Date:   Thu, 8 Oct 2020 08:32:14 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        hdegoede@redhat.com, alexey.budankov@linux.intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
+Message-ID: <20201008073214.GF1763265@dell>
+References: <20201003013123.20269-1-david.e.box@linux.intel.com>
+ <20201003013123.20269-3-david.e.box@linux.intel.com>
+ <20201007065751.GA1763265@dell>
+ <09930d0783d6a5f17f9af872b4fc7a244c6dc5e1.camel@linux.intel.com>
 MIME-Version: 1.0
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
- <20201007164426.1812530-11-daniel.vetter@ffwll.ch> <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
- <20201007232448.GC5177@ziepe.ca>
-In-Reply-To: <20201007232448.GC5177@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 8 Oct 2020 09:31:37 +0200
-Message-ID: <CAKMK7uF6pdQScwcihBq+9BZ7bSrNXimi-ddN8w7zg2ANhSduWw@mail.gmail.com>
-Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <09930d0783d6a5f17f9af872b4fc7a244c6dc5e1.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 8, 2020 at 1:24 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Oct 07, 2020 at 12:33:06PM -0700, Dan Williams wrote:
-> > On Wed, Oct 7, 2020 at 11:11 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> > >
-> > > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-> > > the region") /dev/kmem zaps ptes when the kernel requests exclusive
-> > > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-> > > the default for all driver uses.
-> > >
-> > > Except there's two more ways to access pci bars: sysfs and proc mmap
-> > > support. Let's plug that hole.
-> >
-> > Ooh, yes, lets.
-> >
-> > >
-> > > For revoke_devmem() to work we need to link our vma into the same
-> > > address_space, with consistent vma->vm_pgoff. ->pgoff is already
-> > > adjusted, because that's how (io_)remap_pfn_range works, but for the
-> > > mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
-> > > at ->open time, but that's a bit tricky here with all the entry points
-> > > and arch code. So instead create a fake file and adjust vma->vm_file.
-> >
-> > I don't think you want to share the devmem inode for this, this should
-> > be based off the sysfs inode which I believe there is already only one
-> > instance per resource. In contrast /dev/mem can have multiple inodes
-> > because anyone can just mknod a new character device file, the same
-> > problem does not exist for sysfs.
->
-> The inode does not come from the filesystem char/mem.c creates a
-> singular anon inode in devmem_init_inode()
->
-> Seems OK to use this more widely, but it feels a bit weird to live in
-> char/memory.c.
->
-> This is what got me thinking maybe this needs to be a bit bigger
-> generic infrastructure - eg enter this scheme from fops mmap and
-> everything else is in mm/user_iomem.c
+On Wed, 07 Oct 2020, David E. Box wrote:
 
-Yeah moving it to iomem and renaming it to have an iomem_prefix
-instead of devmem sounds like a good idea.
--Daniel
+> On Wed, 2020-10-07 at 07:57 +0100, Lee Jones wrote:
+> > On Fri, 02 Oct 2020, David E. Box wrote:
+> > 
+> > > Intel Platform Monitoring Technology (PMT) is an architecture for
+> > > enumerating and accessing hardware monitoring facilities. PMT
+> > > supports
+> > > multiple types of monitoring capabilities. This driver creates
+> > > platform
+> > > devices for each type so that they may be managed by capability
+> > > specific
+> > > drivers (to be introduced). Capabilities are discovered using PCIe
+> > > DVSEC
+> > > ids. Support is included for the 3 current capability types,
+> > > Telemetry,
+> > > Watcher, and Crashlog. The features are available on new Intel
+> > > platforms
+> > > starting from Tiger Lake for which support is added. This patch
+> > > adds
+> > > support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band
+> > > Management
+> > > Services Module (OOBMSM).
+> > > 
+> > > Also add a quirk mechanism for several early hardware differences
+> > > and bugs.
+> > > For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
+> > > capabilities since they will not be compatible with future product.
+> > > Also,
+> > > fix use a quirk to fix the discovery table offset.
+> > > 
+> > > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
+> > > >
+> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > ---
+> > >  MAINTAINERS             |   5 +
+> > >  drivers/mfd/Kconfig     |  10 ++
+> > >  drivers/mfd/Makefile    |   1 +
+> > >  drivers/mfd/intel_pmt.c | 226
+> > > ++++++++++++++++++++++++++++++++++++++++
+> > >  4 files changed, 242 insertions(+)
+> > >  create mode 100644 drivers/mfd/intel_pmt.c
+> > 
+> > I Acked this back in August.
+> > 
+> > Any reason why you didn't carry it forward?
+> 
+> So that you could review changes made after the Ack.
+> Please let me know if this is not preferred. Thanks.
+
+No, that is the correct way to do things (see below).
+
+> You did and you requested fixups which were made.
+
+Keeping the status of each and every patch-set currently in my inbox
+would be a very difficult task.
+
+This is why I recommend patch-level changelogs (just below the '---'
+marker).
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
