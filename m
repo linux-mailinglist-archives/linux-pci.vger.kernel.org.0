@@ -2,196 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCA0F286E4D
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 07:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36A9E286F63
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 09:29:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgJHFtT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 01:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60834 "EHLO
+        id S1726164AbgJHH3R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 03:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgJHFtT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 01:49:19 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955D4C061755;
-        Wed,  7 Oct 2020 22:49:18 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l24so4544746edj.8;
-        Wed, 07 Oct 2020 22:49:18 -0700 (PDT)
+        with ESMTP id S1725853AbgJHH3R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 03:29:17 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC5C1C0613D3
+        for <linux-pci@vger.kernel.org>; Thu,  8 Oct 2020 00:29:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 13so5331942wmf.0
+        for <linux-pci@vger.kernel.org>; Thu, 08 Oct 2020 00:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xqJb4tKz/ltZxNaefybynSTwdqwbSiQGZQzPyiEmBu4=;
-        b=kxz/wNcz6U2zjID3oBwEebNr5Iiq1J5uqSPDfYQXcQj4SNa7GHnWOokxZyAJYPkYLo
-         cNsaZF71b2vHLBzqmti6dEJE0LI56iZ8mIcAL/R64Jck74X6aqWMs4K5UFzZXiHOeyUe
-         SExzrWO/DiZ8lL4744qAVpYPWp+BCXb+9KbY2uDmpqAp3kzywaLiWg210h0AgHBTvgsK
-         xtbrfPIWILcl3xv9OFJDeM9vo1mtRQipXspvgX4TRODh86d6E3IlNAmt1D1hY9SzlLQo
-         9ImlTFkxBfly/3fiV5wQu19Zy8Y7gbzN2uK7N16Q0yR0ocWD15/pg5jMLfzbAcy6Hdzf
-         MCxg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=83OQc7yj1ycxNTqltziVLrghBwISxh6MY5DYj2Gusr8=;
+        b=PyZni2Zig8mPvwxEQBVJ4I67bKxcD4vwVJR47XIlRlSXEuOUq4n7MVlTpfNC0GWLDH
+         l4T6OetvE+jrEHdNqux3z2DndvxLy6QNO7lAMKBKHqYds/8Jqrlp46ktC+THd1G3FbPa
+         +JphX/earyN9jx2cjoo7ywgYLcju/BZOHSAP+PUQLRWZROopETRrIckziHxV0vfdzQSP
+         i2ARfAOYhLWpEHsiYf0+Ace0FQsVF7JVIfNtfnRuxDCArmnIerEuaUc9JtLm7DHSB0F5
+         ubxE0k94gwYz8Y8702i1x9AUVudi1Sbw2p7VOrK060w6EHqch1a7hnkwNLGK6J6IPLVf
+         4S8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xqJb4tKz/ltZxNaefybynSTwdqwbSiQGZQzPyiEmBu4=;
-        b=cyDIdLpQ5xXwKrN0vt7vdDqChbu4mxWtEf1mbk9DtP6xdchnSAaartPu3aJVJmnxwV
-         gsyGRYBaTtZSLW51b5Kah76k7hy2lUMey39z3StDJXcVCX4AAFjJRaOHhSlcPPpvQOAc
-         nLnrBDuZr/fGhjGOz1vIRyxI2xjYlsbhzDprHwvXUM0K5KkOHMqtM00U1Spnbl0Dluz4
-         1zGU3urAINDtBVgZEFOEKujoowoES9GbTbWZ9IPXcpSlhfltA6j1eQxsSgD7BNWFCTc2
-         seGJamqI/MRV8ALrBknmwQtGGmbJXYdwqI6GqvtuGZPXCuKGFEqJPxIqXB7v1BVTJbqm
-         rHYw==
-X-Gm-Message-State: AOAM533MXInKimCskIA3nSV2hXYzExP4owZYvV4UzI/8luM2z+8Y7vcr
-        JVR2ydDN/OyGqthB9aQNMgUvEVBaFJNQFphUKxY=
-X-Google-Smtp-Source: ABdhPJwtdpx+Ob874jjidxrnRlqRCy0+heDk8Kq3lxBa19M92/3yFGgFI03uwnYRQlZ9Oj667eoTn3cJm/PvxHOKvdE=
-X-Received: by 2002:a05:6402:1779:: with SMTP id da25mr7099096edb.60.1602136157243;
- Wed, 07 Oct 2020 22:49:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=83OQc7yj1ycxNTqltziVLrghBwISxh6MY5DYj2Gusr8=;
+        b=K0/M1rROW7ifLivSQo6bnEnnlUaW0a4K7KLoaS8tTefkQu7XpDu4D7cd29vTeWglrQ
+         E61RpsE2My/3SRT0XH0H2IJphYBShUzR3le39YSStxNYRgRkz4VYJNNHu6FeJh6+FpEZ
+         /xCatJAkSoFVYfgi5EnS1VMAWEZuBf0LSdnjwFE/mEU2my80XsaQktXjfsNPyoGspxhn
+         crm7Z7e9Kh5kY5RI9ObkUTiDvZwqcmdDIb+vUCckLS9WKJM+pKgfcF4vxoMZwRPeNVUs
+         KyaxzmgHi5fRXTpgVoh5ptXnGq8WpjQnUTnlNv+i5/onKysilEczRlJytA/9w1JW1Yby
+         LwIw==
+X-Gm-Message-State: AOAM530Zo3wYfT1Hpc4cvglVLkFOPmE9xJR9wbYkOD4p7YFhO3feXBnX
+        9bk0mPKWoYAsMma4xE/CqOT9Hg==
+X-Google-Smtp-Source: ABdhPJyuC3XwwRXUfeZuE1phg/rUbjcM5TrrxmGrK81G52/bQqiA/CR6+U3wLYGb34QTxTgS95ZQkw==
+X-Received: by 2002:a1c:28a:: with SMTP id 132mr7184593wmc.9.1602142155147;
+        Thu, 08 Oct 2020 00:29:15 -0700 (PDT)
+Received: from dell ([91.110.221.232])
+        by smtp.gmail.com with ESMTPSA id 1sm6266201wre.61.2020.10.08.00.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2020 00:29:14 -0700 (PDT)
+Date:   Thu, 8 Oct 2020 08:29:12 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, dvhart@infradead.org,
+        andy@infradead.org, bhelgaas@google.com,
+        alexey.budankov@linux.intel.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 1/5] PCI: Add defines for Designated Vendor-Specific
+ Extended Capability
+Message-ID: <20201008072912.GE1763265@dell>
+References: <20201007005118.GA3230211@bjorn-Precision-5520>
+ <dcaea6b4e1d5b4a452c304fadb034b7b1e1c40af.camel@linux.intel.com>
+ <20201007065451.GB6148@dell>
+ <e09f4c44-e3d0-e14b-297f-6981516ea3bf@redhat.com>
 MIME-Version: 1.0
-References: <20201007113158.48933-1-haifeng.zhao@intel.com>
- <20201007113158.48933-3-haifeng.zhao@intel.com> <4bedeb35-942e-5ad3-9721-62495af1f09a@intel.com>
-In-Reply-To: <4bedeb35-942e-5ad3-9721-62495af1f09a@intel.com>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Thu, 8 Oct 2020 13:49:05 +0800
-Message-ID: <CAKF3qh3KqgJmbS6v=O_Z6+1_k7vAN2kv=_YGUcsJNjqKKi3NSg@mail.gmail.com>
-Subject: Re: [PATCH v8 2/6] PCI/DPC: define a function to check and wait till
- port finish DPC handling
-To:     "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
-Cc:     Ethan Zhao <haifeng.zhao@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Oliver <oohall@gmail.com>,
-        ruscur@russell.cc, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e09f4c44-e3d0-e14b-297f-6981516ea3bf@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 8, 2020 at 2:16 AM Kuppuswamy, Sathyanarayanan
-<sathyanarayanan.kuppuswamy@intel.com> wrote:
->
->
-> On 10/7/20 4:31 AM, Ethan Zhao wrote:
-> > Once root port DPC capability is enabled and triggered, at the beginnin=
-g
-> > of DPC is triggered, the DPC status bits are set by hardware and then
-> > sends DPC/DLLSC/PDC interrupts to OS DPC and pciehp drivers, it will
-> > take the port and software DPC interrupt handler 10ms to 50ms (test dat=
-a
-> > on ICS(Ice Lake SP platform, see
-> > https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server)
-> > & stable 5.9-rc6) to complete the DPC containment procedure
-> This data is based on one particular architecture. So using this
-> to create a timed loop in pci_wait_port_outdpc() looks incorrect.
->
-> I still recommend looking for some locking model to fix this
-> issue (may be atomic state flag or lock).
- It is actually a device semaphore. DLLSC/PDC handler needs to wait
-for the critical
-area is clear to enter by monitoring the DPC triggered status is
-cleaned or not.
+On Wed, 07 Oct 2020, Hans de Goede wrote:
 
- Another  problem is,  DPC reset/interrupt is initiated by hardware,
-you couldn't place
- a software lock between interrupt handler and device resetting.
+> Hi,
+> 
+> On 10/7/20 8:54 AM, Lee Jones wrote:
+> > On Tue, 06 Oct 2020, David E. Box wrote:
+> > 
+> > > On Tue, 2020-10-06 at 19:51 -0500, Bjorn Helgaas wrote:
+> > > > On Tue, Oct 06, 2020 at 03:45:54PM -0700, David E. Box wrote:
+> > > > > Hi Bjorn,
+> > > > > 
+> > > > > This patch has been acked and unchanged for weeks. Is it possible
+> > > > > to
+> > > > > get this pulled into next? We have SIOV and CXL related work that
+> > > > > is
+> > > > > using these definitions. Thanks.
+> > > > 
+> > > > I acked it because I expected you to merge it along with the rest of
+> > > > the series.
+> > > > 
+> > > > I guess I could merge this patch via the PCI tree if you really want,
+> > > > but that ends up being a hassle because we have to worry about which
+> > > > order things get merged to Linus' tree.  Better if the whole series
+> > > > is
+> > > > merged via the same tree.
+> > > 
+> > > Agreed. The hope is that this series is ready for the next merge window
+> > > but no ack yet on V8. And if the series does not make it I'd like this
+> > > patch to at least get in.
+> > 
+> > If Bjorn is happy to take this patch so late in the release cycle then
+> > please go ahead.  The other patches are due for v5.11.
+> 
+> I agree (that the other patches are for 5.11) talking about merging
+> this series patch 2 is a mfd patch and patches 3-5 are drivers/platform/x86
+> patches.
+> 
+> Lee, FYI I'm taking over drivers/platform/x86 maintainership from Andy.
 
-While device semaphore--- DPC triggered status is the right one to wait for=
-.
+Congratulations, Hans.
 
-Better idea ?
+> I suggest that we merge the entire series through a single tree
+> (with acks or reviewed-by-s from the other maintainer)
+> either through the mfd tree or through the drivers/platform/x86
+> tree. Since most changes are in drivers/platform/x86 the latter
+> probably makes more sense, but either way works for me.
+> So how would you like to proceed with this series ?
 
-Thanks,
-Ethan
+I'm happy either way, but bear in mind that, due to the intrinsic
+heterogeneous nature of MFD, I already have infrastructure to easily
+apply (and send pull-requests for) cross-subsystem patch-sets.
 
-> > till the DPC status is cleared at the end of the DPC interrupt handler.
-> >
-> > We use this function to check if the root port is in DPC handling statu=
-s
-> > and wait till the hardware and software completed the procedure.
-> >
-> > Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-> > Tested-by: Wen Jin <wen.jin@intel.com>
-> > Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
-> > ---
-> > changes:
-> >   v2=EF=BC=9Aalign ICS code name to public doc.
-> >   v3: no change.
-> >   v4: response to Christoph's (Christoph Hellwig <hch@infradead.org>)
-> >       tip, move pci_wait_port_outdpc() to DPC driver and its declaratio=
-n
-> >       to pci.h.
-> >   v5: fix building issue reported by lkp@intel.com with some config.
-> >   v6: move from [1/5] to [2/5].
-> >   v7: no change.
-> >   v8: no change.
-> >
-> >   drivers/pci/pci.h      |  2 ++
-> >   drivers/pci/pcie/dpc.c | 27 +++++++++++++++++++++++++++
-> >   2 files changed, 29 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index fa12f7cbc1a0..455b32187abd 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -455,10 +455,12 @@ void pci_restore_dpc_state(struct pci_dev *dev);
-> >   void pci_dpc_init(struct pci_dev *pdev);
-> >   void dpc_process_error(struct pci_dev *pdev);
-> >   pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
-> > +bool pci_wait_port_outdpc(struct pci_dev *pdev);
-> >   #else
-> >   static inline void pci_save_dpc_state(struct pci_dev *dev) {}
-> >   static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
-> >   static inline void pci_dpc_init(struct pci_dev *pdev) {}
-> > +static inline bool pci_wait_port_outdpc(struct pci_dev *pdev) { return=
- false; }
-> >   #endif
-> >
-> >   #ifdef CONFIG_PCI_ATS
-> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > index daa9a4153776..2e0e091ce923 100644
-> > --- a/drivers/pci/pcie/dpc.c
-> > +++ b/drivers/pci/pcie/dpc.c
-> > @@ -71,6 +71,33 @@ void pci_restore_dpc_state(struct pci_dev *dev)
-> >       pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
-> >   }
-> >
-> > +bool pci_wait_port_outdpc(struct pci_dev *pdev)
-> > +{
-> > +     u16 cap =3D pdev->dpc_cap, status;
-> > +     u16 loop =3D 0;
-> > +
-> > +     if (!cap) {
-> > +             pci_WARN_ONCE(pdev, !cap, "No DPC capability initiated\n"=
-);
-> > +             return false;
-> > +     }
-> > +     pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-> > +     pci_dbg(pdev, "DPC status %x, cap %x\n", status, cap);
-> > +
-> > +     while (status & PCI_EXP_DPC_STATUS_TRIGGER && loop < 100) {
-> > +             msleep(10);
-> > +             loop++;
-> > +             pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &sta=
-tus);
-> > +     }
-> > +
-> > +     if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-> > +             pci_dbg(pdev, "Out of DPC %x, cost %d ms\n", status, loop=
-*10);
-> > +             return true;
-> > +     }
-> > +
-> > +     pci_dbg(pdev, "Timeout to wait port out of DPC status\n");
-> > +     return false;
-> > +}
-> > +
-> >   static int dpc_wait_rp_inactive(struct pci_dev *pdev)
-> >   {
-> >       unsigned long timeout =3D jiffies + HZ;
->
-> --
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
->
+If however, you decide that you'd really like to take the set, that's
+also fine but I will require a pull-request from an immutable branch.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
