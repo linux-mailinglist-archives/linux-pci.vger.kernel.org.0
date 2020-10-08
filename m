@@ -2,177 +2,362 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87A00287E27
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 23:41:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2643D287F06
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 01:18:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgJHVkv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 17:40:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48196 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728962AbgJHVku (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 17:40:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602193248;
+        id S1730754AbgJHXRn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 19:17:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53524 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728996AbgJHXRn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 19:17:43 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1602199059;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=WcXXjV46s1bUQqy4uPRXgKfYRGboA2UeGxiflOgLZl8=;
-        b=Fh7BaPwvo5wqmGlqzyRqQGM+JcKQFcUUxbHhBBW8LhjIxJUEuXLBObASXDZh1Q45pigzdE
-        NYzN9kncR937TI4j/6vygtoLMNRN8oUkFWh+USrc6Ts6a1wZkmo9IAUho3fE2hhWhtCXcW
-        d9TV7mw7YT/qHFdKtWaEpbMteGTpwnY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-NWkLUk2COMq4KN2q7EFluw-1; Thu, 08 Oct 2020 17:40:47 -0400
-X-MC-Unique: NWkLUk2COMq4KN2q7EFluw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AF0210BBEC3;
-        Thu,  8 Oct 2020 21:40:44 +0000 (UTC)
-Received: from [10.10.116.35] (ovpn-116-35.rdu2.redhat.com [10.10.116.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9B13A5D9E8;
-        Thu,  8 Oct 2020 21:40:38 +0000 (UTC)
-Subject: Re: [PATCH v4 0/4] isolation: limit msix vectors to housekeeping CPUs
-To:     Frederic Weisbecker <frederic@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        mtosatti@redhat.com, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jiri@nvidia.com, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, lgoncalv@redhat.com
-References: <20200928183529.471328-1-nitesh@redhat.com>
- <20201001154949.GA7303@lothringen>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <9c55624f-2a01-b71c-7f66-3747cb844e5a@redhat.com>
-Date:   Thu, 8 Oct 2020 17:40:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+         in-reply-to:in-reply-to:references:references;
+        bh=T7apZwGHYCTEDNSPiTkzSbbIXwX8iIGpZEuOQe4bpNU=;
+        b=0pvtE5qWMUCSidIMbMBal6F3MY8HayVW6Kqmwj+3Jew6K/zgRZwBw1N63/7Xh7aGvhpWrn
+        ygPnki/HLljXj+Oye+KiIe8w6Qe/iomPgTiWjLyW8n9RZu25jcHAtqpTKP1tU41IKx8374
+        IwRF+/ch1/CEKSc7Lwlsu1Sgk28Fi6h+pwAdl2fqm1uTU9pHjwSOvixV2yRsGEtM5w+jtz
+        z7rikjHUs5FVlLwhCUqEUSpKWiHUus7XtYxVALMfijlDTgSY70373v8U8WHo4CER//7dOW
+        BLOI/zFcK3n65MneSl1In6nzEpvSr5zuyhy+FdNmZLLrl2EXEM7BO5J1hxMUcg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1602199059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=T7apZwGHYCTEDNSPiTkzSbbIXwX8iIGpZEuOQe4bpNU=;
+        b=YVvxbcs5PStoUIk4hwuoxYfFb32Ad4+RRpd975rk5cF2MVkppLoCj4EEq6bVrDhJT/eaZk
+        fdKxAwJysv2BYkBw==
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v3 11/18] dmaengine: idxd: ims setup for the vdcm
+In-Reply-To: <44e19c5d-a0d2-0ade-442c-61727701f4d8@intel.com>
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com> <160021253189.67751.12686144284999931703.stgit@djiang5-desk3.ch.intel.com> <87mu17ghr1.fsf@nanos.tec.linutronix.de> <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com> <87r1q92mkx.fsf@nanos.tec.linutronix.de> <44e19c5d-a0d2-0ade-442c-61727701f4d8@intel.com>
+Date:   Fri, 09 Oct 2020 01:17:38 +0200
+Message-ID: <87y2kgux2l.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20201001154949.GA7303@lothringen>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="heeEo5bPSt8tDxfLevOi2iHjIVyCmRRtx"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---heeEo5bPSt8tDxfLevOi2iHjIVyCmRRtx
-Content-Type: multipart/mixed; boundary="UTa52EjRe2zfZcHcSODI6jAoxYBPRp7mX"
+Dave,
 
---UTa52EjRe2zfZcHcSODI6jAoxYBPRp7mX
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-
-
-On 10/1/20 11:49 AM, Frederic Weisbecker wrote:
-> On Mon, Sep 28, 2020 at 02:35:25PM -0400, Nitesh Narayan Lal wrote:
->> Nitesh Narayan Lal (4):
->>   sched/isolation: API to get number of housekeeping CPUs
->>   sched/isolation: Extend nohz_full to isolate managed IRQs
->>   i40e: Limit msix vectors to housekeeping CPUs
->>   PCI: Limit pci_alloc_irq_vectors() to housekeeping CPUs
->>
->>  drivers/net/ethernet/intel/i40e/i40e_main.c |  3 ++-
->>  drivers/pci/msi.c                           | 18 ++++++++++++++++++
->>  include/linux/sched/isolation.h             |  9 +++++++++
->>  kernel/sched/isolation.c                    |  2 +-
->>  4 files changed, 30 insertions(+), 2 deletions(-)
-> Acked-by: Frederic Weisbecker <frederic@kernel.org>
+On Thu, Oct 08 2020 at 09:51, Dave Jiang wrote:
+> On 10/8/2020 12:39 AM, Thomas Gleixner wrote:
+>> On Wed, Oct 07 2020 at 14:54, Dave Jiang wrote:
+>>> On 9/30/2020 12:57 PM, Thomas Gleixner wrote:
+>>>> Aside of that this is fiddling in the IMS storage array behind the irq
+>>>> chips back without any comment here and a big fat comment about the
+>>>> shared usage of ims_slot::ctrl in the irq chip driver.
+>>>>
+>>> This is to program the pasid fields in the IMS table entry. Was
+>>> thinking the pasid fields may be considered device specific so didn't
+>>> attempt to add the support to the core code.
+>> 
+>> Well, the problem is that this is not really irq chip functionality.
+>> 
+>> But the PASID programming needs to touch the IMS storage which is also
+>> touched by the irq chip.
+>> 
+>> This might be correct as is, but without a big fat comment explaining
+>> WHY it is safe to do so without any form of serialization this is just
+>> voodoo and unreviewable.
+>> 
+>> Can you please explain when the PASID is programmed and what the state
+>> of the interrupt is at that point? Is this a one off setup operation or
+>> does this happen dynamically at random points during runtime?
 >
-> Peter, if you're ok with the set, I guess this should go through
-> the scheduler tree?
->
-> Thanks.
+> I will put in comments for the function to explain why and when we modify the 
+> pasid field for the IMS entry. Programming of the pasid is done right before we 
+> request irq. And the clearing is done after we free the irq. We will not be 
+> touching the IMS field at runtime. So the touching of the entry should be safe.
 
-Hi Peter,
+Thanks for clarifying that.
 
-I wanted follow up to check if you have any concerns/suggestions that I
-should address in this patch-set before this can be picked?
+Thinking more about it, that very same thing will be needed for any
+other IMS device and of course this is not going to end well because
+some driver will fiddle with the PASID at the wrong time.
 
---=20
-Thanks
-Nitesh
+Find below an infrastructure patch which adds ASID support to the core
+and a delta patch for the IMS irq chip. All of it neither compiled nor
+tested.
 
+Setting IMS_PASID_ENABLE might have other conditions which I don't know
+of, so the IMS part might be completely wrong, but you get the idea.
 
---UTa52EjRe2zfZcHcSODI6jAoxYBPRp7mX--
+Thanks,
 
---heeEo5bPSt8tDxfLevOi2iHjIVyCmRRtx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+        tglx
 
------BEGIN PGP SIGNATURE-----
+8<-----------
+Subject: genirq: Provide irq_set_asid()
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Thu, 08 Oct 2020 23:32:16 +0200
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9/h1QACgkQo4ZA3AYy
-oznxaxAAq437n/C4ULMSr9ziKrTkK3qofMr7jMAxbHIMUU4kLdFunyz7EJUoVsap
-z/hyYjVBVBnHsdMiOFLT1uZHAcgDP4bxDkMr6iI8514eu0pYRlrRvifAZZ36+ZXw
-RCc/WnxPWodTp1793s3pCp25IghplWBLvGHVxQ49vtI++FGErB0J2eHVzPY6wtK4
-PMX0Nu2kAf3wiD36aS3HHlLwNSdCtuLL5xgctOfu/SU3ksmWSHyAy7yWmLyUce1G
-SYiIOCMG/nlavgdYEu6k/jiFOGhuPlBMWUvVGgyjlvpxEIx0+nCOu84A7cz6Zv0q
-AajATl37Lvex3kBYQz+ffZh514pBeVuYIhBFsO2ZRn5t0I3eK2Q46BwjK+iJzMft
-zvR0BZkZHFUHETFF6DHcs8k7iymCBjLAlF3XWohPu0sRsY9C70tNzNgi3fW63yLn
-SQiggHg+AsefRE6N0a4k0KSlbBr+lz8o6IhJnHWmwVQi5islK1JvbOkCOnaPXla6
-nrjxaq4c3uUSOuIrWPKacbRoLMnOECxQEzpRZ46XhTyJ1Xc5rpUUQlXasftTO5X/
-3Kbwix7VsiIuyl0kzOkdsv+6jE0TMUZg4Rg6tApa89/iOGsN5PGZwd+2R94VqnYp
-nulQKS+oAZkYlJmNF6X/1H1XJNNsGofeMYHISHoF3isaRVolJ8E=
-=4dfe
------END PGP SIGNATURE-----
+Provide storage and a setter for an Address Space IDentifier.
 
---heeEo5bPSt8tDxfLevOi2iHjIVyCmRRtx--
+The identifier is stored in the top level irq_data and it only can be
+modified when the interrupt is not requested.
 
+Add the necessary storage and helper functions and validate that interrupts
+which require an ASID have one assigned.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/irq.h    |    8 ++++++++
+ kernel/irq/internals.h |   10 ++++++++++
+ kernel/irq/irqdesc.c   |    1 +
+ kernel/irq/manage.c    |   40 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 59 insertions(+)
+
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -161,6 +161,7 @@ struct irq_common_data {
+  * @mask:		precomputed bitmask for accessing the chip registers
+  * @irq:		interrupt number
+  * @hwirq:		hardware interrupt number, local to the interrupt domain
++ * @asid:		Optional address space ID for this interrupt.
+  * @common:		point to data shared by all irqchips
+  * @chip:		low level interrupt hardware access
+  * @domain:		Interrupt translation domain; responsible for mapping
+@@ -174,6 +175,7 @@ struct irq_data {
+ 	u32			mask;
+ 	unsigned int		irq;
+ 	unsigned long		hwirq;
++	u32			asid;
+ 	struct irq_common_data	*common;
+ 	struct irq_chip		*chip;
+ 	struct irq_domain	*domain;
+@@ -183,6 +185,8 @@ struct irq_data {
+ 	void			*chip_data;
+ };
+ 
++#define IRQ_INVALID_ASID	U32_MAX
++
+ /*
+  * Bit masks for irq_common_data.state_use_accessors
+  *
+@@ -555,6 +559,8 @@ struct irq_chip {
+  * IRQCHIP_EOI_THREADED:	Chip requires eoi() on unmask in threaded mode
+  * IRQCHIP_SUPPORTS_LEVEL_MSI	Chip can provide two doorbells for Level MSIs
+  * IRQCHIP_SUPPORTS_NMI:	Chip can deliver NMIs, only for root irqchips
++ * IRQCHIP_REQUIRES_ASID:	Interrupt chip requires a valid Address Space
++ *				IDentifier
+  */
+ enum {
+ 	IRQCHIP_SET_TYPE_MASKED		= (1 <<  0),
+@@ -566,6 +572,7 @@ enum {
+ 	IRQCHIP_EOI_THREADED		= (1 <<  6),
+ 	IRQCHIP_SUPPORTS_LEVEL_MSI	= (1 <<  7),
+ 	IRQCHIP_SUPPORTS_NMI		= (1 <<  8),
++	IRQCHIP_REQUIRES_ASID		= (1 <<  9),
+ };
+ 
+ #include <linux/irqdesc.h>
+@@ -792,6 +799,7 @@ extern int irq_set_irq_type(unsigned int
+ extern int irq_set_msi_desc(unsigned int irq, struct msi_desc *entry);
+ extern int irq_set_msi_desc_off(unsigned int irq_base, unsigned int irq_offset,
+ 				struct msi_desc *entry);
++extern int irq_set_asid(unsigned int irq, u32 asid);
+ extern struct irq_data *irq_get_irq_data(unsigned int irq);
+ 
+ static inline struct irq_chip *irq_get_chip(unsigned int irq)
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -281,6 +281,16 @@ static inline void
+ irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action) { }
+ #endif
+ 
++static inline bool irq_requires_asid(struct irq_desc *desc)
++{
++	return desc->irq_data.chip->flags & IRQCHIP_REQUIRES_ASID;
++}
++
++static inline bool irq_invalid_asid(struct irq_desc *desc)
++{
++	return desc->irq_data.asid == IRQ_INVALID_ASID;
++}
++
+ #ifdef CONFIG_IRQ_TIMINGS
+ 
+ #define IRQ_TIMINGS_SHIFT	5
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -115,6 +115,7 @@ static void desc_set_defaults(unsigned i
+ 	irq_settings_clr_and_set(desc, ~0, _IRQ_DEFAULT_INIT_FLAGS);
+ 	irqd_set(&desc->irq_data, IRQD_IRQ_DISABLED);
+ 	irqd_set(&desc->irq_data, IRQD_IRQ_MASKED);
++	desc->irq_data.asid = IRQ_INVALID_ASID;
+ 	desc->handle_irq = handle_bad_irq;
+ 	desc->depth = 1;
+ 	desc->irq_count = 0;
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -1520,6 +1520,22 @@ static int
+ 	}
+ 
+ 	/*
++	 * If the topmost interrupt chip requires that a valid Address
++	 * Space IDentifier is set, validate that the interrupt is not
++	 * shared and that a valid ASID is set.
++	 */
++	if (irq_requires_asid(desc)) {
++		if (shared || irq_invalid_asid(desc)) {
++			ret = -EINVAL;
++			goto out_unlock;
++		}
++		/*
++		 * CHECKME: Is there a way to figure out that the ASID
++		 * makes sense in the context of the caller?
++		 */
++	}
++
++	/*
+ 	 * Setup the thread mask for this irqaction for ONESHOT. For
+ 	 * !ONESHOT irqs the thread mask is 0 so we can avoid a
+ 	 * conditional in irq_wake_thread().
+@@ -1848,6 +1864,8 @@ static struct irqaction *__free_irq(stru
+ 		 */
+ 		raw_spin_lock_irqsave(&desc->lock, flags);
+ 		irq_domain_deactivate_irq(&desc->irq_data);
++		/* Invalidate the ASID associated to this interrupt */
++		desc->irq_data.asid = IRQ_INVALID_ASID;
+ 		raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 
+ 		irq_release_resources(desc);
+@@ -2752,3 +2770,25 @@ int irq_set_irqchip_state(unsigned int i
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(irq_set_irqchip_state);
++
++int irq_set_asid(unsigned int irq, u32 asid)
++{
++	struct irq_desc *desc;
++	struct irq_data *data;
++	unsigned long flags;
++	int err = -EBUSY;
++
++	desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
++	if (!desc)
++		return -EINVAL;
++
++	/* If the interrupt is active changig ASID is a NONO */
++	if (!desc->action) {
++		data = irq_desc_get_irq_data(desc);
++		data->asid = asid;
++	}
++
++	irq_put_desc_busunlock(desc, flags);
++	return err;
++}
++EXPORT_SYMBOL_GPL(irq_set_asid);
+
+8<------------------
+
+Subject: irqchip/ims: PASID support
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Fri, 09 Oct 2020 01:02:09 +0200
+
+NOT-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ drivers/irqchip/irq-ims-msi.c       |   29 ++++++++++++++++++++++-------
+ include/linux/irqchip/irq-ims-msi.h |    2 ++
+ 2 files changed, 24 insertions(+), 7 deletions(-)
+
+--- a/drivers/irqchip/irq-ims-msi.c
++++ b/drivers/irqchip/irq-ims-msi.c
+@@ -18,14 +18,26 @@ struct ims_array_data {
+ 	unsigned long		map[0];
+ };
+ 
++#define IMS_ASID_SHIFT		12
++
++static inline u32 ims_ctrl_val(struct irq_data *data, u32 ctrl)
++{
++	return ctrl | (data->asid) << 12 | IMS_PASID_ENABLE;
++}
++
++static inline void iowrite32_and_flush(u32 value, void __iomem *addr)
++{
++	iowrite32(value, addr);
++	ioread32(addr);
++}
++
+ static void ims_array_mask_irq(struct irq_data *data)
+ {
+ 	struct msi_desc *desc = irq_data_get_msi_desc(data);
+ 	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+ 	u32 __iomem *ctrl = &slot->ctrl;
+ 
+-	iowrite32(ioread32(ctrl) | IMS_VECTOR_CTRL_MASK, ctrl);
+-	ioread32(ctrl); /* Flush write to device */
++	iowrite32_and_flush(ims_ctrl_val(data, IMS_VECTOR_CTRL_MASK), ctrl);
+ }
+ 
+ static void ims_array_unmask_irq(struct irq_data *data)
+@@ -34,7 +46,10 @@ static void ims_array_unmask_irq(struct
+ 	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+ 	u32 __iomem *ctrl = &slot->ctrl;
+ 
+-	iowrite32(ioread32(ctrl) & ~IMS_VECTOR_CTRL_MASK, ctrl);
++	if (!WARN_ON_ONCE(data->asid == IRQ_INVALID_ASID))
++		return;
++
++	iowrite32_and_flush(ims_ctrl_val(data, 0), ctrl);
+ }
+ 
+ static void ims_array_write_msi_msg(struct irq_data *data, struct msi_msg *msg)
+@@ -44,8 +59,7 @@ static void ims_array_write_msi_msg(stru
+ 
+ 	iowrite32(msg->address_lo, &slot->address_lo);
+ 	iowrite32(msg->address_hi, &slot->address_hi);
+-	iowrite32(msg->data, &slot->data);
+-	ioread32(slot);
++	iowrite32_and_flush(msg->data, &slot->data);
+ }
+ 
+ static const struct irq_chip ims_array_msi_controller = {
+@@ -54,7 +68,8 @@ static const struct irq_chip ims_array_m
+ 	.irq_unmask		= ims_array_unmask_irq,
+ 	.irq_write_msi_msg	= ims_array_write_msi_msg,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+-	.flags			= IRQCHIP_SKIP_SET_WAKE,
++	.flags			= IRQCHIP_SKIP_SET_WAKE |
++				  IRQCHIP_REQUIRES_ASID,
+ };
+ 
+ static void ims_array_reset_slot(struct ims_slot __iomem *slot)
+@@ -62,7 +77,7 @@ static void ims_array_reset_slot(struct
+ 	iowrite32(0, &slot->address_lo);
+ 	iowrite32(0, &slot->address_hi);
+ 	iowrite32(0, &slot->data);
+-	iowrite32(0, &slot->ctrl);
++	iowrite32_and_flush(IMS_VECTOR_CTRL_MASK, &slot->ctrl);
+ }
+ 
+ static void ims_array_free_msi_store(struct irq_domain *domain,
+--- a/include/linux/irqchip/irq-ims-msi.h
++++ b/include/linux/irqchip/irq-ims-msi.h
+@@ -25,6 +25,8 @@ struct ims_slot {
+ 
+ /* Bit to mask the interrupt in ims_hw_slot::ctrl */
+ #define IMS_VECTOR_CTRL_MASK	0x01
++/* Bit to enable PASID in ims_hw_slot::ctrl */
++#define IMS_PASID_ENABLE	0x08
+ 
+ /**
+  * struct ims_array_info - Information to create an IMS array domain
