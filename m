@@ -2,140 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE063286F81
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 09:32:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DA34286FA7
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 09:39:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgJHHcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 03:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48484 "EHLO
+        id S1727689AbgJHHj2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 03:39:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgJHHcT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 03:32:19 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F22C061755
-        for <linux-pci@vger.kernel.org>; Thu,  8 Oct 2020 00:32:18 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z1so5388752wrt.3
-        for <linux-pci@vger.kernel.org>; Thu, 08 Oct 2020 00:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=6Q5cOldM6q5JrfqCs8qEdwrhCyVv/oMVbGGujp3ARP4=;
-        b=D/9VgxnWJBnhCcPwvZUCvpvCPL0ACCOx02s1jjCFHNcO1bQpTc/6jAQ/1M14PLM4VK
-         sPI0HOsTSm80tYxBfJ4riYN/1etxSuVl2C51EXSNtj6h/s+v06IiS2SPGWhdaQIYFT1e
-         HG13yQC4Vc3hvBvPW4+/fmGfKMTvLSP7cPaU0Roda0PNrmFUEuX/899X9NPxyBgmOELK
-         MOtP7NAadyRrh2lJBFRSGZ0bkrum2Lk1pRjvWJe0+KuQShTsWRbaliz0M84CN1q4i9Jc
-         5HDeXGJW+zZuj1GLe4a5TppeuWXh2vvtHXSa722XxGMJQSGCh2r543oOcljRjmwNzxWi
-         vp2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6Q5cOldM6q5JrfqCs8qEdwrhCyVv/oMVbGGujp3ARP4=;
-        b=nKqAsshOPr9uRIopRZz+JaSAj/iIIKEpWQNAIr1nP0deUnUXF2n8Tq/U909sOXEF9H
-         UCDCaiiFSZXbH/zJYoIKz/2MUtu09DfdwyRu1DrPzdEYtIj4MgQGXPezr6owqQXnZioy
-         xVlOpsMvTiMHE5UvsqkH5A159g9lCsU2JVjRp+oUEX7YUBD6Es6l81h8itCEfwXEHd7g
-         5owB0FE5tHNFPBGip3FfztTbcD3qAGFsz6ckJde/uI6j7D3G6D/rDbH/z+vWtrkIEr44
-         NNqLZhutpd1ancXDtXTzMlQCZ0fCcCxSN6C9R9G1iIiWLIuLlXCkDEAZn3NG9vf4byOY
-         +W3w==
-X-Gm-Message-State: AOAM530FkUQQpt8rwBn5+jcIwt8tU6uyWdg4utpdmkfMN46h361gkCPo
-        hslmj7rq6UcVDDDtxQNRTG3R8w==
-X-Google-Smtp-Source: ABdhPJxFjGV/yxOiFqpYLTyRD7i+NgV9Bw3QiP14XQdh13hJO+WlbWlBg3JHxI4WR5vxKchmzx73uw==
-X-Received: by 2002:adf:e4c5:: with SMTP id v5mr7371061wrm.320.1602142337036;
-        Thu, 08 Oct 2020 00:32:17 -0700 (PDT)
-Received: from dell ([91.110.221.232])
-        by smtp.gmail.com with ESMTPSA id n6sm6423368wrx.58.2020.10.08.00.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2020 00:32:16 -0700 (PDT)
-Date:   Thu, 8 Oct 2020 08:32:14 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        hdegoede@redhat.com, alexey.budankov@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
-Message-ID: <20201008073214.GF1763265@dell>
-References: <20201003013123.20269-1-david.e.box@linux.intel.com>
- <20201003013123.20269-3-david.e.box@linux.intel.com>
- <20201007065751.GA1763265@dell>
- <09930d0783d6a5f17f9af872b4fc7a244c6dc5e1.camel@linux.intel.com>
+        with ESMTP id S1727224AbgJHHj2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 03:39:28 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BDC9C061755;
+        Thu,  8 Oct 2020 00:39:28 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1602142766;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wGS8RvPqjWluL2zEoasmPYr+Mt5G8eg7w6trwMiIRys=;
+        b=g9sr7Db6oViY7+CNLNPLqR2diLWAEuYBHLUy/gNyBzuAWzXRUgeUCs6sNOZpxLofDhl+i6
+        68Fd1xmKCe2rwDvq/sd7PiT7+B5XvK8VScniD1E/1UG5GG5n3PQaEjVFd5Stx1YlLqKv7B
+        9XwIRII8xSs4awPsfGqvHoLy5muOKShFWHqOW0jSXflOCow69afm+4nz71foETF3RSbH7s
+        ePMmR11SPMWL2vmoJMViNcwI0n3TsbNss5yxMEWcJ3pjyRWKyv5VJsUUwrjOU9UixwRzZf
+        bpfq+sDP8CfUzrSK65nj/ZFfGBlny2Z6RTdEfPu0VMOUudDamZtQg4b5EmyRww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1602142766;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wGS8RvPqjWluL2zEoasmPYr+Mt5G8eg7w6trwMiIRys=;
+        b=usUoY8ncbtaKaCM2W+geUKP8rahFbzcy+Er9Fhx50RETPyNpyWBGA5efdMzHwrX80a2EbK
+        iU4RrqW+LMMyioDQ==
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v3 11/18] dmaengine: idxd: ims setup for the vdcm
+In-Reply-To: <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com>
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com> <160021253189.67751.12686144284999931703.stgit@djiang5-desk3.ch.intel.com> <87mu17ghr1.fsf@nanos.tec.linutronix.de> <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com>
+Date:   Thu, 08 Oct 2020 09:39:26 +0200
+Message-ID: <87r1q92mkx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <09930d0783d6a5f17f9af872b4fc7a244c6dc5e1.camel@linux.intel.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 07 Oct 2020, David E. Box wrote:
+On Wed, Oct 07 2020 at 14:54, Dave Jiang wrote:
+> On 9/30/2020 12:57 PM, Thomas Gleixner wrote:
+>> Aside of that this is fiddling in the IMS storage array behind the irq
+>> chips back without any comment here and a big fat comment about the
+>> shared usage of ims_slot::ctrl in the irq chip driver.
+>> 
+> This is to program the pasid fields in the IMS table entry. Was
+> thinking the pasid fields may be considered device specific so didn't
+> attempt to add the support to the core code.
 
-> On Wed, 2020-10-07 at 07:57 +0100, Lee Jones wrote:
-> > On Fri, 02 Oct 2020, David E. Box wrote:
-> > 
-> > > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > > enumerating and accessing hardware monitoring facilities. PMT
-> > > supports
-> > > multiple types of monitoring capabilities. This driver creates
-> > > platform
-> > > devices for each type so that they may be managed by capability
-> > > specific
-> > > drivers (to be introduced). Capabilities are discovered using PCIe
-> > > DVSEC
-> > > ids. Support is included for the 3 current capability types,
-> > > Telemetry,
-> > > Watcher, and Crashlog. The features are available on new Intel
-> > > platforms
-> > > starting from Tiger Lake for which support is added. This patch
-> > > adds
-> > > support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band
-> > > Management
-> > > Services Module (OOBMSM).
-> > > 
-> > > Also add a quirk mechanism for several early hardware differences
-> > > and bugs.
-> > > For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
-> > > capabilities since they will not be compatible with future product.
-> > > Also,
-> > > fix use a quirk to fix the discovery table offset.
-> > > 
-> > > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
-> > > >
-> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > ---
-> > >  MAINTAINERS             |   5 +
-> > >  drivers/mfd/Kconfig     |  10 ++
-> > >  drivers/mfd/Makefile    |   1 +
-> > >  drivers/mfd/intel_pmt.c | 226
-> > > ++++++++++++++++++++++++++++++++++++++++
-> > >  4 files changed, 242 insertions(+)
-> > >  create mode 100644 drivers/mfd/intel_pmt.c
-> > 
-> > I Acked this back in August.
-> > 
-> > Any reason why you didn't carry it forward?
-> 
-> So that you could review changes made after the Ack.
-> Please let me know if this is not preferred. Thanks.
+Well, the problem is that this is not really irq chip functionality.
 
-No, that is the correct way to do things (see below).
+But the PASID programming needs to touch the IMS storage which is also
+touched by the irq chip.
 
-> You did and you requested fixups which were made.
+This might be correct as is, but without a big fat comment explaining
+WHY it is safe to do so without any form of serialization this is just
+voodoo and unreviewable.
 
-Keeping the status of each and every patch-set currently in my inbox
-would be a very difficult task.
+Can you please explain when the PASID is programmed and what the state
+of the interrupt is at that point? Is this a one off setup operation or
+does this happen dynamically at random points during runtime?
 
-This is why I recommend patch-level changelogs (just below the '---'
-marker).
+This needs to be clarified first.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+
+        tglx
+
+
