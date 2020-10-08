@@ -2,282 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB663287797
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 17:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCDBC2879BC
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Oct 2020 18:13:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbgJHPiM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 11:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33656 "EHLO mail.kernel.org"
+        id S1726065AbgJHQNP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 12:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729833AbgJHPiM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Oct 2020 11:38:12 -0400
+        id S1725802AbgJHQNP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Oct 2020 12:13:15 -0400
 Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1715D205F4;
-        Thu,  8 Oct 2020 15:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00D421D7D;
+        Thu,  8 Oct 2020 16:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602171491;
-        bh=Lo+Ap4zRCjenNW7Fb5dJ2YnscRwGuIdIjuVspUv4odY=;
+        s=default; t=1602173594;
+        bh=8ZKrJvFjYcqF7yWTHLfBpFKASIzzL+rwwIWL3y+OoZY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ln+V59TQjiEUFr6uaCcv6mcl8Wd9lY7bUNP4rAIXw2ccveiATvRJ2Jf9zJg/1Ku8U
-         JXq9qH3gtO2ceWwhvnTdEkOCrql6+miUNJx9F5s542X+bSaiS5KDVPR/qDAL96vcAO
-         J2I71LK/rxOMytYSjpHin/DZgDzSot8LCFbo+r0M=
-Date:   Thu, 8 Oct 2020 10:38:09 -0500
+        b=rXv9bsXrRpPh8l0k7R6hR53t09aVDkCld6H/ofPtBsza2urJRNUN2J0mBdbmLnHwZ
+         KMo4e/HSIOE1qmUbzCawBUtoUQChL0KZK0g8SkVXnXnoDXmrhLt+XfPWQQ88EbrHjX
+         w2Yz1ieraHz6PQsWWwZR18U6fTmur8gxoa3IFf5I=
+Date:   Thu, 8 Oct 2020 11:13:12 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Billy Araujo <billyaraujo@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-omap@vger.kernel.org
-Subject: Re: PCI IRQ assignment broken from 4.9 onwards (swizzle?)
-Message-ID: <20201008153809.GA3327800@bjorn-Precision-5520>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     linux-pci@vger.kernel.org, alexander.duyck@gmail.com,
+        refactormyself@gmail.com, puranjay12@gmail.com,
+        kai.heng.feng@canonical.com
+Subject: Re: [PATCH] Use maximum latency when determining L1 ASPM
+Message-ID: <20201008161312.GA3261279@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAEt4U6Xqo8GU6VtBi86iK2-Q3usyHazoASdj1qb_BK-_Gso2kA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201007132808.647589-1-ian.kumlien@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 08, 2020 at 09:39:23AM +0100, Billy Araujo wrote:
-> Hi Bjorn,
+On Wed, Oct 07, 2020 at 03:28:08PM +0200, Ian Kumlien wrote:
+> Make pcie_aspm_check_latency comply with the PCIe spec, specifically:
+> "5.4.1.2.2. Exit from the L1 State"
 > 
-> Thanks for your answer. Yes, that would be my next step.
-> I am also hoping the latest kernel doesn't have this issue because
-> that would mean I would be stuck with version 4.9.
-> Also I could discover from which patch this stopped working but that
-> would be very time consuming. If I was to add some debug prints where
-> should I start? Would this be done in setup-irq.c?
-> In other words, is "pci_assign_irq" function responsible for all irq
-> assignments?
+> Which makes it clear that each switch is required to initiate a
+> transition within 1μs from receiving it, accumulating this latency and
+> then we have to wait for the slowest link along the path before
+> entering L0 state from L1.
+> 
+> The current code doesn't take the maximum latency into account.
+> 
+> From the example:
+>    +----------------+
+>    |                |
+>    |  Root complex  |
+>    |                |
+>    |    +-----+     |
+>    |    |32 μs|     |
+>    +----------------+
+>            |
+>            |  Link 1
+>            |
+>    +----------------+
+>    |     |8 μs|     |
+>    |     +----+     |
+>    |    Switch A    |
+>    |     +----+     |
+>    |     |8 μs|     |
+>    +----------------+
+>            |
+>            |  Link 2
+>            |
+>    +----------------+
+>    |    |32 μs|     |
+>    |    +-----+     |
+>    |    Switch B    |
+>    |    +-----+     |
+>    |    |32 μs|     |
+>    +----------------+
+>            |
+>            |  Link 3
+>            |
+>    +----------------+
+>    |     |8μs|      |
+>    |     +---+      |
+>    |   Endpoint C   |
+>    |                |
+>    |                |
+>    +----------------+
+> 
+> Links 1, 2 and 3 are all in L1 state - endpoint C initiates the
+> transition to L0 at time T. Since switch B takes 32 μs to exit L1 on
+> it's ports, Link 3 will transition to L0 at T+32 (longest time
+> considering T+8 for endpoint C and T+32 for switch B).
+> 
+> Switch B is required to initiate a transition from the L1 state on it's
+> upstream port after no more than 1 μs from the beginning of the
+> transition from L1 state on the downstream port. Therefore, transition from
+> L1 to L0 will begin on link 2 at T+1, this will cascade up the path.
+> 
+> The path will exit L1 at T+34.
+> 
+> On my specific system:
+> lspci -PP -s 04:00.0
+> 00:01.2/01:00.0/02:04.0/04:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. Device 816e (rev 1a)
+> 
+> lspci -vvv -s 04:00.0
+> 		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, L1 <64us
+> ...
+> 		LnkCap:	Port #0, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s unlimited, L1 <64us
+> ...
+> 
+> Which means that it can't be followed by any switch that is in L1 state.
+> 
+> This patch fixes it by disabling L1 on 02:04.0, 01:00.0 and 00:01.2.
+> 
+>                                                     LnkCtl    LnkCtl
+>            ------DevCap-------  ----LnkCap-------  -Before-  -After--
+>   00:01.2                                L1 <32us       L1+       L1-
+>   01:00.0                                L1 <32us       L1+       L1-
+>   02:04.0                                L1 <32us       L1+       L1-
+>   04:00.0  L0s <512 L1 <64us             L1 <64us       L1+       L1-
 
-Start by testing the latest kernel.  Don't bother trying to debug it
-from first principles until you know whether somebody has already
-fixed it.
+OK, now we're getting close.  We just need to flesh out the
+justification.  We need:
 
-> On Wed, Oct 7, 2020 at 5:41 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Kishon, linux-omap (maybe this is dra7xx-related?)]
-> >
-> > On Wed, Oct 07, 2020 at 10:56:33AM +0100, Billy Araujo wrote:
-> > > Hi,
-> > >
-> > > I have been testing a TI AM57xx board and a NXP iMX8 board with a GPIB
-> > > PCIe card.
-> > >
-> > > TI board (Phytec): https://www.phytec.com/product/phycore-am57x/
-> > > NXP board (Variscite):
-> > > https://www.variscite.com/product/system-on-module-som/cortex-a53-krait/var-som-mx8m-mini-nxp-i-mx8m-mini/
-> > >
-> > > The GPIB PCIe card has a Texas Instruments XIO2000(A)/XIO2200A PCI
-> > > Express-to-PCI Bridge.
-> > >
-> > > Issue:
-> > > I have noticed is that on Linux kernel 4.9, the Linux PCI driver
-> > > assigns correctly an IRQ number:
-> > >
-> > > Linux am5728-phycore-rdk 4.9.41-ga962b18-BSP-Yocto-TISDK-AM57xx-PD18.1.0
-> > > 02:00.0 Communication controller: National Instruments PCIe-GPIB (rev 02)
-> > >         Subsystem: National Instruments PCIe-GPIB
-> > >         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
-> > > ParErr+ Stepping- SERR+ FastB2B- DisINTx-
-> > >         Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
-> > > >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > >         Interrupt: pin A routed to IRQ 470
-> > >
-> > > On a newer kernel (this case 4.19), PCI driver doesn't assign an IRQ number.
-> > >
-> > > Linux am57xx-phycore-kit 4.19.79-g35d36cd54d #1 SMP PREEMPT Wed Sep 30
-> > > 14:04:18 UTC 2020 armv7l GNU/Linux
-> > > 02:00.0 Communication controller: National Instruments PCIe-GPIB (rev 02)
-> > >         Subsystem: National Instruments PCIe-GPIB
-> > >         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
-> > > ParErr+ Stepping- SERR+ FastB2B- DisINTx-
-> > >         Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
-> > > >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > >         Interrupt: pin A routed to IRQ 0
-> > >
-> > > Same issue happened on the NXP board, so it seems Linux related. I
-> > > have tested kernels 4.14, 4.19 and 5.4.3.
-> > >
-> > > The IRQ is important to get the legacy interrupts working.
-> > >
-> > > Looking at the code there has been some refactoring of how PCI assigns
-> > > IRQ number when there is a chain of bridges. I am not too familiar
-> > > with how the code works but I wonder if this has affected how the PCI
-> > > assignment works.
-> > >
-> > > Looking in setup-irq.c:
-> > >
-> > > /* If this device is not on the primary bus, we need to figure out
-> > >    which interrupt pin it will come in on.   We know which slot it
-> > >    will come in on 'cos that slot is where the bridge is.   Each
-> > >    time the interrupt line passes through a PCI-PCI bridge we must
-> > >    apply the swizzle function.  */
-> > >
-> > > Line 44: if (hbrg->swizzle_irq)
-> > >
-> > > From my understanding, this "if" didn't exist in Linux kernel 4.9. If
-> > > swizzle function isn't assigned in the newer kernels it just stays as
-> > > 0.
-> > >
-> > > This might be completely unrelated as I said I have no understanding
-> > > how this code is supposed to work.
-> > >
-> > > What I ask is if anyone has experienced any issues similar to this in
-> > > these more recent kernel versions.
-> >
-> > Sorry for the issue, and thanks very much for the report.  Is it
-> > possible to test a current kernel, e.g., v5.8 or v5.9-rc8?
-> >
-> > My guess is this is related to the PCI controller driver; would that
-> > be pci-dra7xx.c?
-> >
-> > > Debug output with the issue:
-> > >
-> > > root@am57xx-phycore-kit:~# uname -a
-> > > Linux am57xx-phycore-kit 4.19.79-g35d36cd54d #1 SMP PREEMPT Wed Sep 30
-> > > 14:04:18 UTC 2020 armv7l GNU/Linux
-> > >
-> > > root@am57xx-phycore-kit:~# lspci -vv
-> > > 00:00.0 PCI bridge: Texas Instruments Multicore DSP+ARM KeyStone II
-> > > SOC (rev 01) (prog-if 00 [Normal decode])
-> > >         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-> > > ParErr+ Stepping- SERR+ FastB2B- DisINTx+
-> > >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> > > <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > >         Latency: 0, Cache Line Size: 64 bytes
-> > >         Interrupt: pin A routed to IRQ 180
-> > >         Region 0: Memory at 20100000 (64-bit, non-prefetchable) [size=1M]
-> > >         Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> > >         I/O behind bridge: None
-> > >         Memory behind bridge: 20200000-202fffff [size=1M]
-> > >         Prefetchable memory behind bridge: None
-> > >         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> > > <TAbort- <MAbort+ <SERR- <PERR-
-> > >         BridgeCtl: Parity+ SERR- NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
-> > >                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-> > >         Capabilities: [40] Power Management version 3
-> > >                 Flags: PMEClk- DSI- D1+ D2- AuxCurrent=0mA
-> > > PME(D0+,D1+,D2-,D3hot+,D3cold-)
-> > >                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-> > >         Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit+
-> > >                 Address: 00000000ae15b000  Data: 0000
-> > >         Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
-> > >                 DevCap: MaxPayload 256 bytes, PhantFunc 0
-> > >                         ExtTag- RBE+
-> > >                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-> > >                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-> > >                         MaxPayload 128 bytes, MaxReadReq 512 bytes
-> > >                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> > > AuxPwr- TransPend-
-> > >                 LnkCap: Port #0, Speed 5GT/s, Width x2, ASPM L0s L1,
-> > > Exit Latency L0s <512ns, L1 <64us
-> > >                         ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-> > >                 LnkCtl: ASPM Disabled; RCB 128 bytes Disabled- CommClk-
-> > >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > >                 LnkSta: Speed 2.5GT/s (downgraded), Width x1 (downgraded)
-> > >                         TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
-> > >                 RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
-> > > PMEIntEna+ CRSVisible-
-> > >                 RootCap: CRSVisible-
-> > >                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-> > >                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+,
-> > > LTR-, OBFF Not Supported ARIFwd-
-> > >                          AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-> > >                 DevCtl2: Completion Timeout: 50us to 50ms,
-> > > TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
-> > >                          AtomicOpsCtl: ReqEn- EgressBlck-
-> > >                 LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
-> > >                          Transmit Margin: Normal Operating Range,
-> > > EnterModifiedCompliance- ComplianceSOS-
-> > >                          Compliance De-emphasis: -6dB
-> > >                 LnkSta2: Current De-emphasis Level: -3.5dB,
-> > > EqualizationComplete-, EqualizationPhase1-
-> > >                          EqualizationPhase2-, EqualizationPhase3-,
-> > > LinkEqualizationRequest-
-> > >         Capabilities: [100 v2] Advanced Error Reporting
-> > >                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-> > > UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> > >                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-> > > UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> > >                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt-
-> > > UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-> > >                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
-> > > AdvNonFatalErr-
-> > >                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
-> > > AdvNonFatalErr+
-> > >                 AERCap: First Error Pointer: 00, ECRCGenCap+
-> > > ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-> > >                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-> > >                 HeaderLog: 00000000 00000000 00000000 00000000
-> > >                 RootCmd: CERptEn+ NFERptEn+ FERptEn+
-> > >                 RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-> > >                          FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-> > >                 ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-> > >         Kernel driver in use: pcieport
-> > >
-> > > 01:00.0 PCI bridge: Texas Instruments XIO2000(A)/XIO2200A PCI
-> > > Express-to-PCI Bridge (rev 03) (prog-if 00 [Normal decode])
-> > >         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
-> > > ParErr+ Stepping- SERR+ FastB2B- DisINTx-
-> > >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> > > <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > >         Bus: primary=01, secondary=02, subordinate=02, sec-latency=0
-> > >         I/O behind bridge: None
-> > >         Memory behind bridge: 20200000-202fffff [size=1M]
-> > >         Prefetchable memory behind bridge: None
-> > >         Secondary status: 66MHz- FastB2B+ ParErr- DEVSEL=medium
-> > > >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
-> > >         BridgeCtl: Parity+ SERR- NoISA- VGA- VGA16- MAbort+ >Reset- FastB2B+
-> > >                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-> > >         Capabilities: [50] Power Management version 2
-> > >                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA
-> > > PME(D0-,D1-,D2-,D3hot-,D3cold-)
-> > >                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-> > >                 Bridge: PM- B3+
-> > >         Capabilities: [60] MSI: Enable- Count=1/16 Maskable- 64bit+
-> > >                 Address: 0000000000000000  Data: 0000
-> > >         Capabilities: [80] Subsystem: Device 0000:0000
-> > >         Capabilities: [90] Express (v1) PCI-Express to PCI/PCI-X Bridge, MSI 00
-> > >                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-> > >                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE-
-> > > SlotPowerLimit 0.000W
-> > >                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> > >                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop+ BrConfRtry-
-> > >                         MaxPayload 128 bytes, MaxReadReq 512 bytes
-> > >                 DevSta: CorrErr- NonFatalErr+ FatalErr- UnsupReq-
-> > > AuxPwr- TransPend-
-> > >                 LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1,
-> > > Exit Latency L0s <1us, L1 <16us
-> > >                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-> > >                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
-> > >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > >                 LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
-> > >                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-> > >         Capabilities: [100 v1] Advanced Error Reporting
-> > >                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-> > > UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> > >                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-> > > UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> > >                 UESvrt: DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt-
-> > > UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-> > >                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
-> > > AdvNonFatalErr-
-> > >                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
-> > > AdvNonFatalErr-
-> > >                 AERCap: First Error Pointer: 00, ECRCGenCap+
-> > > ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-> > >                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-> > >                 HeaderLog: 00000000 00000000 00000000 00000000
-> > >
-> > > 02:00.0 Communication controller: National Instruments PCIe-GPIB (rev 02)
-> > >         Subsystem: National Instruments PCIe-GPIB
-> > >         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
-> > > ParErr+ Stepping- SERR+ FastB2B- DisINTx-
-> > >         Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
-> > > >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > >         Interrupt: pin A routed to IRQ 0
-> > >         Region 0: Memory at 20204000 (32-bit, non-prefetchable)
-> > > [disabled] [size=2K]
-> > >         Region 1: Memory at 20200000 (32-bit, non-prefetchable)
-> > > [disabled] [size=16K]
+  - Tidy subject line.  Use "git log --oneline drivers/pci/pcie/aspm.c"
+    and follow the example.
+
+  - Description of the problem.  I think it's poor bandwidth on your
+    Intel I211 device, but we don't have the complete picture because
+    that NIC is 03:00.0, which doesn't appear above at all.
+
+  - Explanation of what's wrong with the "before" ASPM configuration.
+    I want to identify what is wrong on your system.  The generic
+    "doesn't match spec" part is good, but step 1 is the specific
+    details, step 2 is the generalization to relate it to the spec.
+
+  - Complete "sudo lspci -vv" information for before and after the
+    patch below.  https://bugzilla.kernel.org/show_bug.cgi?id=208741
+    has some of this, but some of the lspci output appears to be
+    copy/pasted and lost all its formatting, and it's not clear how
+    some was collected (what kernel version, with/without patch, etc).
+    Since I'm asking for bugzilla attachments, there's no space
+    constraint, so just attach the complete unedited output for the
+    whole system.
+
+  - URL to the bugzilla.  Please open a new one with just the relevant
+    problem report ("NIC is slow") and attach (1) "before" lspci
+    output, (2) proposed patch, (3) "after" lspci output.  The
+    existing 208741 report is full of distractions and jumps to the
+    conclusion without actually starting with the details of the
+    problem.
+
+Some of this I would normally just do myself, but I can't get the
+lspci info.  It would be really nice if Kai-Heng could also add
+before/after lspci output from the system he tested.
+
+> Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 23 +++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 253c30cc1967..893b37669087 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+>  
+>  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  {
+> -	u32 latency, l1_switch_latency = 0;
+> +	u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+>  	struct aspm_latency *acceptable;
+>  	struct pcie_link_state *link;
+>  
+> @@ -456,10 +456,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  		if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+>  		    (link->latency_dw.l0s > acceptable->l0s))
+>  			link->aspm_capable &= ~ASPM_STATE_L0S_DW;
+> +
+>  		/*
+>  		 * Check L1 latency.
+> -		 * Every switch on the path to root complex need 1
+> -		 * more microsecond for L1. Spec doesn't mention L0s.
+> +		 *
+> +		 * PCIe r5.0, sec 5.4.1.2.2 states:
+> +		 * A Switch is required to initiate an L1 exit transition on its
+> +		 * Upstream Port Link after no more than 1 μs from the beginning of an
+> +		 * L1 exit transition on any of its Downstream Port Links.
+>  		 *
+>  		 * The exit latencies for L1 substates are not advertised
+>  		 * by a device.  Since the spec also doesn't mention a way
+> @@ -469,11 +473,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  		 * L1 exit latencies advertised by a device include L1
+>  		 * substate latencies (and hence do not do any check).
+>  		 */
+> -		latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> -		if ((link->aspm_capable & ASPM_STATE_L1) &&
+> -		    (latency + l1_switch_latency > acceptable->l1))
+> -			link->aspm_capable &= ~ASPM_STATE_L1;
+> -		l1_switch_latency += 1000;
+> +		if (link->aspm_capable & ASPM_STATE_L1) {
+> +			latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> +			l1_max_latency = max_t(u32, latency, l1_max_latency);
+> +			if (l1_max_latency + l1_switch_latency > acceptable->l1)
+> +				link->aspm_capable &= ~ASPM_STATE_L1;
+> +
+> +			l1_switch_latency += 1000;
+> +		}
+>  
+>  		link = link->parent;
+>  	}
+> -- 
+> 2.28.0
+> 
