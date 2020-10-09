@@ -2,174 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB107288479
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 10:01:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64D6E2884E8
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 10:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732785AbgJIIAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 04:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732786AbgJIIAS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 04:00:18 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400D6C0613D8
-        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 01:00:18 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y12so3870871wrp.6
-        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 01:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VnPfmIw9ZEJAdxqVy4AIvj5gzcDwS/bnZ7Vl10D80aI=;
-        b=AmZWcTmTMY3aRt6Gxo6D+cFSlAKtbo7rzcAhKQblXce5J0bM+0jidwIuX1SJM78PW3
-         a4CzgO4OyPIunTZ40M8qjiQpRIe+CXuCN2QeQz0Nq3eitwpnmxf1tCSrmdU7BFARQUrJ
-         TsYEd08BMm8jvttMOB5N0WbB01Om3gekKiY/Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VnPfmIw9ZEJAdxqVy4AIvj5gzcDwS/bnZ7Vl10D80aI=;
-        b=nw3XP/dVY3WvlJrKtFmhhEJKFeXZThZQP/oVutFLAQk9kaJW3rA8Ep+8A5Pv8gZP3I
-         FjrlEjo0d8SXPYXw2zCG69Kvb9YnxryvBDjb/QxncLYa1//kYVVd5CAOziCZJjZWBqHP
-         TR2iMrT/1boxi+JjcAhnBQqe66ca9fdxfiLcA45q2tVDUmYHWE/ROhuw0bx+ymqQuB9g
-         I7MyV9HiIYqqnAAiXDzYJAISIrKVLxi/Wx2QAlhYkdALToyD4M295HjGseCCACFfG1z8
-         sZx8WaLbzXeEyaEOyYyqW0lXa5eesuJfRFbE+/OkVjXQAbim+WnO8LIqNCUAQwtO8DYy
-         LpcA==
-X-Gm-Message-State: AOAM531VeDExbPO/hAar4iJYrtK0FuvzmrYaAv5jmAhtt4T9O6PIlaPG
-        HObqD/7hjCP3kbENoclRmBA/3g==
-X-Google-Smtp-Source: ABdhPJyIgZ0DKgvAk38zXma7Xw6CtJtdY0QGkVhgcnr9L1zZ08hj8no1NH+SgdXtl2+3a6urGujNzQ==
-X-Received: by 2002:adf:fa02:: with SMTP id m2mr13160452wrr.273.1602230416967;
-        Fri, 09 Oct 2020 01:00:16 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id u17sm11634118wri.45.2020.10.09.01.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2020 01:00:16 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v2 17/17] drm/i915: Properly request PCI BARs
-Date:   Fri,  9 Oct 2020 09:59:34 +0200
-Message-Id: <20201009075934.3509076-18-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
-References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
+        id S1732483AbgJIII6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 04:08:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732445AbgJIII5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Oct 2020 04:08:57 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61CB9221FC;
+        Fri,  9 Oct 2020 08:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602230936;
+        bh=KIWMTbdcl+R/AR1R/W9XGA1i5VIAs+lUecjjfIWMiNU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FbxaZ2piy1y28IDSENRyIKs8MY2HQMPSmVh8EFMPHKhChPa9Sa/ufQHv3oJclKNGB
+         CYg6o+9zaC23JXfCjTED687aM99ef6aS5aMUtyJTx/lg6yyO2f50l7naIxkjefKpQY
+         s3//eCdUlkY5G0m80tpCJZrGNuRvam78vqd04Uq0=
+Received: by pali.im (Postfix)
+        id C5CE1515; Fri,  9 Oct 2020 10:08:53 +0200 (CEST)
+Date:   Fri, 9 Oct 2020 10:08:53 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Yinghai Lu <yinghai@kernel.org>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
+Message-ID: <20201009080853.bxzyirmaja6detk4@pali>
+References: <20201007161434.GA3247067@bjorn-Precision-5520>
+ <20201008195907.GA3359851@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201008195907.GA3359851@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When trying to test my CONFIG_IO_STRICT_DEVMEM changes I realized they
-do nothing for i915. Because i915 doesn't request any regions, like
-pretty much all drm pci drivers. I guess this is some very old
-remnants from the userspace modesetting days, when we wanted to
-co-exist with the fbdev driver. Which usually requested these
-resources.
+On Thursday 08 October 2020 14:59:07 Bjorn Helgaas wrote:
+> On Wed, Oct 07, 2020 at 11:14:34AM -0500, Bjorn Helgaas wrote:
+> > On Wed, Oct 07, 2020 at 10:14:00AM +0200, Pali Rohár wrote:
+> > > On Wednesday 07 October 2020 12:47:40 Oliver O'Halloran wrote:
+> > > > On Wed, Oct 7, 2020 at 10:26 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >
+> > > > > I'm not really a fan of this because pci_sysfs_init() is a bit of a
+> > > > > hack to begin with, and this makes it even more complicated.
+> > > > >
+> > > > > It's not obvious from the code why we need pci_sysfs_init(), but
+> > > > > Yinghai hinted [1] that we need to create sysfs after assigning
+> > > > > resources.  I experimented by removing pci_sysfs_init() and skipping
+> > > > > the ROM BAR sizing.  In that case, we create sysfs files in
+> > > > > pci_bus_add_device() and later assign space for the ROM BAR, so we
+> > > > > fail to create the "rom" sysfs file.
+> > > > >
+> > > > > The current solution to that is to delay the sysfs files until
+> > > > > pci_sysfs_init(), a late_initcall(), which runs after resource
+> > > > > assignments.  But I think it would be better if we could create the
+> > > > > sysfs file when we assign the BAR.  Then we could get rid of the
+> > > > > late_initcall() and that implicit ordering requirement.
+> > > > 
+> > > > You could probably fix that by using an attribute_group to control
+> > > > whether the attribute shows up in sysfs or not. The .is_visible() for
+> > > > the group can look at the current state of the device and hide the rom
+> > > > attribute if the BAR isn't assigned or doesn't exist. That way we
+> > > > don't need to care when the actual assignment occurs.
+> > > 
+> > > And cannot we just return e.g. -ENODATA (or other error code) for those
+> > > problematic sysfs nodes until late_initcall() is called?
+> > 
+> > I really like Oliver's idea and I think we should push on that to see
+> > if it can be made to work.  If so, we can remove the late_initcall()
+> > completely.
+> > 
+> > > > > But I haven't tried to code it up, so it's probably more complicated
+> > > > > than this.  I guess ideally we would assign all the resources before
+> > > > > pci_bus_add_device().  If we could do that, we could just remove
+> > > > > pci_sysfs_init() and everything would just work, but I think that's a
+> > > > > HUGE can of worms.
+> > > > 
+> > > > I was under the impression the whole point of pci_bus_add_device() was
+> > > > to handle any initialisation that needed to be done after resources
+> > > > were assigned. Is the ROM BAR being potentially unassigned an x86ism
+> > > > or is there some bigger point I'm missing?
+> > 
+> > We can't assign resources for each device as we enumerate it because
+> > we don't know what's in use by other devices yet to be enumerated.
+> > That part is generic, not x86-specific.
+> > 
+> > The part that is x86-specific (or at least specific to systems using
+> > ACPI) is that the ACPI core doesn't reserve resources used by ACPI
+> > devices.  Sometimes those resources are included in the PCI host
+> > bridge windows, and we don't want to assign them to PCI devices.
+> > 
+> > I didn't trace this all the way, but the pcibios_assign_resources()
+> > and pnp_system_init() comments look relevant.  It's a little concerning
+> > that they're both fs_initcalls() and the ordering looks important, but
+> > it would only be by accident of link ordering that pnp_system_init()
+> > happens first.
+> 
+> Pali, what's your thought on this?  Do you plan to work on this
+> yourself?  If not and if you can live with your workaround a while
+> longer, I think Krzysztof might be interested in taking a crack at it.
+> I would just hate to see you guys duplicate each others' work :)
 
-But makes me wonder why the pci subsystem doesn't just request
-resource automatically when we map a bar and a pci driver is bound?
+Hello Bjorn!
 
-Knowledge about which pci bars we need kludged together from
-intel_uncore.c and intel_gtt.c from i915 and intel-gtt.c over in the
-fake agp driver.
+If Krzysztof wants and would be working on this issue I can let it as is
+for now.
 
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/gpu/drm/i915/intel_uncore.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+But we should think how to deliver fix for this issue also into stable
+kernels where this race condition is happening.
 
-diff --git a/drivers/gpu/drm/i915/intel_uncore.c b/drivers/gpu/drm/i915/intel_uncore.c
-index 54e201fdeba4..ce39049d8919 100644
---- a/drivers/gpu/drm/i915/intel_uncore.c
-+++ b/drivers/gpu/drm/i915/intel_uncore.c
-@@ -1692,10 +1692,13 @@ static int uncore_mmio_setup(struct intel_uncore *uncore)
- 	struct pci_dev *pdev = i915->drm.pdev;
- 	int mmio_bar;
- 	int mmio_size;
-+	int bar_selection;
-+	int ret;
- 
- 	mmio_bar = IS_GEN(i915, 2) ? 1 : 0;
-+	bar_selection = BIT (2) | BIT(mmio_bar);
- 	/*
--	 * Before gen4, the registers and the GTT are behind different BARs.
-+	 * On gen3 the registers and the GTT are behind different BARs.
- 	 * However, from gen4 onwards, the registers and the GTT are shared
- 	 * in the same BAR, so we want to restrict this ioremap from
- 	 * clobbering the GTT which we want ioremap_wc instead. Fortunately,
-@@ -1703,6 +1706,8 @@ static int uncore_mmio_setup(struct intel_uncore *uncore)
- 	 * generations up to Ironlake.
- 	 * For dgfx chips register range is expanded to 4MB.
- 	 */
-+	if (INTEL_GEN(i915) == 3)
-+		bar_selection |= BIT(3);
- 	if (INTEL_GEN(i915) < 5)
- 		mmio_size = 512 * 1024;
- 	else if (IS_DGFX(i915))
-@@ -1710,8 +1715,15 @@ static int uncore_mmio_setup(struct intel_uncore *uncore)
- 	else
- 		mmio_size = 2 * 1024 * 1024;
- 
-+	ret = pci_request_selected_regions(pdev, bar_selection, "i915");
-+	if (ret < 0) {
-+		drm_err(&i915->drm, "failed to request pci bars\n");
-+		return ret;
-+	}
-+
- 	uncore->regs = pci_iomap(pdev, mmio_bar, mmio_size);
- 	if (uncore->regs == NULL) {
-+		pci_release_selected_regions(pdev, bar_selection);
- 		drm_err(&i915->drm, "failed to map registers\n");
- 		return -EIO;
- 	}
-@@ -1721,9 +1733,18 @@ static int uncore_mmio_setup(struct intel_uncore *uncore)
- 
- static void uncore_mmio_cleanup(struct intel_uncore *uncore)
- {
--	struct pci_dev *pdev = uncore->i915->drm.pdev;
-+	struct drm_i915_private *i915 = uncore->i915;
-+	struct pci_dev *pdev = i915->drm.pdev;
-+	int mmio_bar;
-+	int bar_selection;
-+
-+	mmio_bar = IS_GEN(i915, 2) ? 1 : 0;
-+	bar_selection = BIT (2) | BIT(mmio_bar);
-+	if (INTEL_GEN(i915) == 3)
-+		bar_selection |= BIT(3);
- 
- 	pci_iounmap(pdev, uncore->regs);
-+	pci_release_selected_regions(pdev, bar_selection);
- }
- 
- void intel_uncore_init_early(struct intel_uncore *uncore,
--- 
-2.28.0
+I think that my workaround avoid those two race conditions and if proper
+fix (= removal of pci_sysfs_init function) would take a long, what about
+trying to workaround that race condition for now?
 
+My "fix" is relatively small and simple, so it should not be much hard
+to review it.
+
+Krzysztof, what do you think?
