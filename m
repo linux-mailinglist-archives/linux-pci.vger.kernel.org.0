@@ -2,230 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EF882895BA
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 21:58:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F6AB289A05
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 22:50:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731392AbgJIT5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 15:57:47 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38540 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389523AbgJITxe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 15:53:34 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i12so10098107ota.5
-        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 12:53:32 -0700 (PDT)
+        id S2390883AbgJIUuw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 16:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbgJIUuu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 16:50:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED68C0613D5
+        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 13:50:48 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a200so7839515pfa.10
+        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 13:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wTcVu4oETJELTBTO9Qx9E6QynJ2qRr0RMhI6Lss/kRo=;
+        b=KqYQl09nzQc++fy4ixa3glsFIZci442nzrDG0fcwmUtpLC5GdJDecIntJaTr9BnU+k
+         mHQV/FbLDSsp3LtFLsRl7T/zeVjv8Twr5lMP3mtNmGjMAycuhVQeNy6SxCfwNFW224a7
+         0aTYXNZMa+jC7UhkQneYNe71rwlQlYDitPklTa97BhEb1m7+mN8rfc5c/j9aVJULK1tK
+         kXqyUbQ8e7mPIF4Q1d2YHCkekuQkecmqoGoo0ONdt2lmrDHm6ydQldiw4prAm7vbUqOP
+         n+GwBtayqaO7D2OKGp8MP+pmirMixqou37jYYe5EkC/YvLWRQkL0zC9bekBaZ8qVYuhi
+         m9ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RuJMRkm/6mOfAA06cZuhfs1T0jl6aR1m0eqVuTh18Xg=;
-        b=OpRx27J+Tz+68Rkazo5bLukNQL3yPQNt2LTtfucAMdIb0i5tANt1dG+09rGajSobkk
-         k9+PTbZTkyGhh0ke8NJPhPR1i/3m2XWQw2zIsiBHzJ5rv2OI+deOtA4DW7B3RJQmVsb0
-         nUwVspvS9RY3NaVsrNmef1iZaOdYoz9ujrFosbFJljEVHY6HeUvaUAkIIXzbyxFPncdN
-         o1zWCcCo2tiMj5g3Fiie8D6XUXi1Datg6VkSWDlentVNSqrdlkoXFJjOKhnN0gJadRpY
-         kaGhAK20OGT9YCXvr0LRmMfb2mfOgbAQ2KxKurXhDP3vVq84NbUJO3Hmx0QLGeCK0AGx
-         JIow==
-X-Gm-Message-State: AOAM5302zPuppUTjbnYG7dtAN7MQ+6uTMCrJlj7fSfEeeMCURO1uaili
-        UhfNZcnwPjrt9XxwhBDzKvaofZ4GV1n6
-X-Google-Smtp-Source: ABdhPJwi1Nt0bUQebv1yfgeFfw3DTpd+okHMVMA/kAzJwhWYLHi73v6K/4pHkplIlP85ycCMJBtTgA==
-X-Received: by 2002:a9d:638d:: with SMTP id w13mr9789206otk.32.1602273212011;
-        Fri, 09 Oct 2020 12:53:32 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id t20sm8316526oot.22.2020.10.09.12.53.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wTcVu4oETJELTBTO9Qx9E6QynJ2qRr0RMhI6Lss/kRo=;
+        b=rAfXLFsBdEmZuShd9frRJW0K9mk/LSeLSRqSZMRIPuiaGUeqQn2+D7zxafCpbO/de8
+         Z/AOItk7OpaDSe2DlT52mcENurbgnrvLvQYnr4Bgr8kaJDtKXuIl6lDKWtMkJkf7FaKu
+         Dv+WdCKkypbDE07YWVfafsH9JnslFt0VRj4JHuEipqF0CRDGcuGzLNhM9owbXVTGg97n
+         dJA64xBlgR17stWXOE9+RjVZJqn4kWn8quiNb8/rAzenBSRIcP0ZNyBXJmgYn61nGdGl
+         oAkDInswY6LgAkQtoM5yZZxuPHSPl4VWua1Ph+LYKnSbqY4AKO9Rqyrz6ptXrYFohI+P
+         UnRw==
+X-Gm-Message-State: AOAM533G3zvAvvtDnlQKC4KWcKU84BYa0EjqAxG1YyiFVAJdJtliyrXl
+        gaHGOjWRteWMpUz8xSswUAylzw==
+X-Google-Smtp-Source: ABdhPJxVwMwto7ILPuyT8ZZD/+7fv8lOOoXOE+RyXcVgFRqpvoLioQmgYU/5kPeWbujatJFVPXtviQ==
+X-Received: by 2002:a17:90b:19c9:: with SMTP id nm9mr6551747pjb.6.1602276647984;
+        Fri, 09 Oct 2020 13:50:47 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id n4sm10981225pgv.89.2020.10.09.13.50.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2020 12:53:31 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH] PCI: Move Rockchip driver to Cadence directory
-Date:   Fri,  9 Oct 2020 14:53:30 -0500
-Message-Id: <20201009195330.396775-1-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 09 Oct 2020 13:50:47 -0700 (PDT)
+Date:   Fri, 9 Oct 2020 13:50:41 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v5 00/29] Add support for Clang LTO
+Message-ID: <20201009205041.GA1448445@google.com>
+References: <20201009161338.657380-1-samitolvanen@google.com>
+ <CA+icZUVWdRWfhPhPy79Hpjmqbfw+n8xsgMKv_RU+hoh1bphXdg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUVWdRWfhPhPy79Hpjmqbfw+n8xsgMKv_RU+hoh1bphXdg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Rockchip PCIe host controller is in fact a Cadence based PCIe host.
-This is most evident by comparing the address translation registers.
+On Fri, Oct 09, 2020 at 06:30:24PM +0200, Sedat Dilek wrote:
+> Will clang-cfi be based on this, too?
 
-As a first step to merge the Rockchip driver into the Cadence driver,
-let's just move the Rockchip driver into the Cadence directoy. This at
-least makes the relationship obvious.
+At least until the prerequisite patches are merged into mainline. In the
+meanwhile, I have a CFI tree based on this series here:
 
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Tom Joseph <tjoseph@cadence.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-This is going to conflict at least with 'PCI: rockchip: Fix bus checks 
-in rockchip_pcie_valid_device()' and the common ECAM defines. 
+  https://github.com/samitolvanen/linux/tree/tip/clang-lto
 
- drivers/pci/controller/Kconfig                | 28 -------------------
- drivers/pci/controller/Makefile               |  3 --
- drivers/pci/controller/cadence/Kconfig        | 28 +++++++++++++++++++
- drivers/pci/controller/cadence/Makefile       |  3 ++
- .../{ => cadence}/pcie-rockchip-ep.c          |  0
- .../{ => cadence}/pcie-rockchip-host.c        |  2 +-
- .../controller/{ => cadence}/pcie-rockchip.c  |  2 +-
- .../controller/{ => cadence}/pcie-rockchip.h  |  0
- 8 files changed, 33 insertions(+), 33 deletions(-)
- rename drivers/pci/controller/{ => cadence}/pcie-rockchip-ep.c (100%)
- rename drivers/pci/controller/{ => cadence}/pcie-rockchip-host.c (99%)
- rename drivers/pci/controller/{ => cadence}/pcie-rockchip.c (99%)
- rename drivers/pci/controller/{ => cadence}/pcie-rockchip.h (100%)
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index f18c3725ef80..3ffc4ad01a33 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -202,34 +202,6 @@ config PCI_HOST_THUNDER_ECAM
- 	help
- 	  Say Y here if you want ECAM support for CN88XX-Pass-1.x Cavium Thunder SoCs.
- 
--config PCIE_ROCKCHIP
--	bool
--	depends on PCI
--
--config PCIE_ROCKCHIP_HOST
--	tristate "Rockchip PCIe host controller"
--	depends on ARCH_ROCKCHIP || COMPILE_TEST
--	depends on OF
--	depends on PCI_MSI_IRQ_DOMAIN
--	select MFD_SYSCON
--	select PCIE_ROCKCHIP
--	help
--	  Say Y here if you want internal PCI support on Rockchip SoC.
--	  There is 1 internal PCIe port available to support GEN2 with
--	  4 slots.
--
--config PCIE_ROCKCHIP_EP
--	bool "Rockchip PCIe endpoint controller"
--	depends on ARCH_ROCKCHIP || COMPILE_TEST
--	depends on OF
--	depends on PCI_ENDPOINT
--	select MFD_SYSCON
--	select PCIE_ROCKCHIP
--	help
--	  Say Y here if you want to support Rockchip PCIe controller in
--	  endpoint mode on Rockchip SoC. There is 1 internal PCIe port
--	  available to support GEN2 with 4 slots.
--
- config PCIE_MEDIATEK
- 	tristate "MediaTek PCIe controller"
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index bcdbf49ab1e4..1c03d1178df0 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -23,9 +23,6 @@ obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
- obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
- obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
- obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
--obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
--obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
--obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
- obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
-diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-index 5d30564190e1..2bdf6eb03ed8 100644
---- a/drivers/pci/controller/cadence/Kconfig
-+++ b/drivers/pci/controller/cadence/Kconfig
-@@ -65,4 +65,32 @@ config PCI_J721E_EP
- 	  Say Y here if you want to support the TI J721E PCIe platform
- 	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
- 	  core.
-+
-+config PCIE_ROCKCHIP
-+	bool
-+
-+config PCIE_ROCKCHIP_HOST
-+	tristate "Rockchip PCIe host controller"
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
-+	depends on OF
-+	depends on PCI_MSI_IRQ_DOMAIN
-+	select MFD_SYSCON
-+	select PCIE_ROCKCHIP
-+	help
-+	  Say Y here if you want internal PCI support on Rockchip SoC.
-+	  There is 1 internal PCIe port available to support GEN2 with
-+	  4 slots.
-+
-+config PCIE_ROCKCHIP_EP
-+	bool "Rockchip PCIe endpoint controller"
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
-+	depends on OF
-+	depends on PCI_ENDPOINT
-+	select MFD_SYSCON
-+	select PCIE_ROCKCHIP
-+	help
-+	  Say Y here if you want to support Rockchip PCIe controller in
-+	  endpoint mode on Rockchip SoC. There is 1 internal PCIe port
-+	  available to support GEN2 with 4 slots.
-+
- endmenu
-diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
-index 9bac5fb2f13d..eb1aeae6c52b 100644
---- a/drivers/pci/controller/cadence/Makefile
-+++ b/drivers/pci/controller/cadence/Makefile
-@@ -4,3 +4,6 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
- obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
- obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
- obj-$(CONFIG_PCI_J721E) += pci-j721e.o
-+obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
-+obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
-+obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
-diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/cadence/pcie-rockchip-ep.c
-similarity index 100%
-rename from drivers/pci/controller/pcie-rockchip-ep.c
-rename to drivers/pci/controller/cadence/pcie-rockchip-ep.c
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/cadence/pcie-rockchip-host.c
-similarity index 99%
-rename from drivers/pci/controller/pcie-rockchip-host.c
-rename to drivers/pci/controller/cadence/pcie-rockchip-host.c
-index 0bb2fb3e8a0b..1ee409d7b7e5 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/cadence/pcie-rockchip-host.c
-@@ -36,7 +36,7 @@
- #include <linux/reset.h>
- #include <linux/regmap.h>
- 
--#include "../pci.h"
-+#include "../../pci.h"
- #include "pcie-rockchip.h"
- 
- static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/cadence/pcie-rockchip.c
-similarity index 99%
-rename from drivers/pci/controller/pcie-rockchip.c
-rename to drivers/pci/controller/cadence/pcie-rockchip.c
-index 904dec0d3a88..72ba71bab8e9 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/cadence/pcie-rockchip.c
-@@ -19,7 +19,7 @@
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- 
--#include "../pci.h"
-+#include "../../pci.h"
- #include "pcie-rockchip.h"
- 
- int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/cadence/pcie-rockchip.h
-similarity index 100%
-rename from drivers/pci/controller/pcie-rockchip.h
-rename to drivers/pci/controller/cadence/pcie-rockchip.h
--- 
-2.25.1
-
+Sami
